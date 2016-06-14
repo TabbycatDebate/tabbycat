@@ -175,14 +175,14 @@ class VueTableMixin:
         }]
         return round_info
 
-    def adj_cells(self, adjudicator, tournament):
+    def adj_cells(self, adjudicator, tournament, hide_institution=False):
 
         adj_info = [{
             'head': {'key': 'Name'},
             'cell': {'text': adjudicator.name}
         }]
 
-        if tournament.pref('show_institutions'):
+        if tournament.pref('show_institutions') and not hide_institution:
             adj_info.append({
                 'head': {'key': 'Institution'},
                 'cell': {'text': adjudicator.institution.code}

@@ -5,17 +5,16 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
-from results.models import SpeakerScoreByAdj
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from utils.misc import reverse_tournament
@@ -26,8 +25,7 @@ from utils.views import admin_required, tournament_view
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
-from .progress import get_feedback_progress, progress_cells
-from .utils import gather_adj_feedback, gather_adj_scores
+from .utils import get_feedback_progress, get_feedback_overview, progress_cells
 
 
 @admin_required
@@ -41,48 +39,91 @@ def adj_scores(request, t):
     return HttpResponse(json.dumps(data), content_type="text/json")
 
 
-@admin_required
-@tournament_view
-def feedback_overview(request, t):
-    breaking_count = 0
+class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
 
-    if t.pref('share_adjs'):
-        adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
-            'tournament', 'tournament__current_round') | Adjudicator.objects.filter(tournament=None)
-    else:
-        adjudicators = Adjudicator.objects.filter(tournament=t).select_related(
-            'tournament', 'tournament__current_round')
+    template_name = 'feedback_overview.html'
+    page_title = 'Adjudicator Feedback Summary'
+    page_emoji = '🙅'
 
-    all_debate_adjudicators = list(DebateAdjudicator.objects.select_related('adjudicator').all())
+    def get_adjudicators(self):
+        t = self.get_tournament()
+        if t.pref('share_adjs'):
+            return Adjudicator.objects.filter(Q(tournament=t) | Q(tournament__isnull=True))
+        else:
+            return Adjudicator.objects.filter(tournament=t)
 
-    all_adj_feedbacks = list(
-        AdjudicatorFeedback.objects.filter(confirmed=True).exclude(
-            source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).select_related(
-                'adjudicator', 'source_adjudicator__debate__round', 'source_team__debate__round'))
+    def get_context_data(self, **kwargs):
+        kwargs['breaking_count'] = self.get_adjudicators().count()
+        return super().get_context_data(**kwargs)
 
-    all_adj_scores = list(
-        SpeakerScoreByAdj.objects.select_related('debate_adjudicator', 'ballot_submission').filter(
-            ballot_submission__confirmed=True))
+    def get_table_data(self):
+        t = self.get_tournament()
+        adjudicators = get_feedback_overview(t, self.get_adjudicators())
 
-    feedback_data = {}
-    for adj in adjudicators:
-        if adj.breaking:
-            breaking_count += 1
-        # Gather feedback scores for graphs
-        adj_feedbacks = [f for f in all_adj_feedbacks if f.adjudicator == adj]
-        feedback_data[adj.id] = gather_adj_feedback(adj, t.prelim_rounds(until=t.current_round), adj_feedbacks, all_debate_adjudicators)
-        # Gather awarded scores for stats
-        debate_adjudications = [a for a in all_debate_adjudicators if a.adjudicator.id is adj.id]
-        scores = [s for s in all_adj_scores if s.debate_adjudicator.id is adj.id]
-        adj = gather_adj_scores(adj, scores, debate_adjudications)
+        feedback_data = []
+        for adj in adjudicators:
+            ddict = []
+            ddict.extend(self.adj_cells(adj, t, hide_institution=True))
+            ddict[0]['cell']['text'] += "<br><em>%s</em>" % adj.institution.code
 
-    context = {
-        'adjudicators'      : adjudicators,
-        'breaking_count'    : breaking_count,
-        'feedback_headings' : [q.name for q in t.adj_feedback_questions],
-        'feedback_data'     : json.dumps(feedback_data),
-    }
-    return render(request, 'feedback_overview.html', context)
+            checkbox = '<input type="checkbox" adj_id=%s' % adj.id
+            checkbox += ' checked >' if adj.breaking else '>'
+            ddict.append({
+                'head': {'key': 'B', 'icon': 'glyphicon-star'},
+                'cell': {'text': checkbox, 'sort': adj.breaking, 'cell-class': 'toggle_breaking_status'}
+            })
+
+            ddict.append({
+                'head': {'key': 'Score'},
+                'cell': {'text': self.format_cell_number(adj.feedback_score)}
+            })
+
+            ddict.append({
+                'head': {'key': 'Test'},
+                'cell': {
+                    'text': self.format_cell_number(adj.score),
+                    'modal': adj.id,
+                    'cell-class': 'edit-test-score',
+                    'tooltip': 'Click to edit test score'
+                }
+            })
+            # TODO: feedback trend
+            if t.pref('show_unaccredited'):
+                ddict.append({
+                    'head': {'key': 'N', 'icon': 'glyphicon-leaf', 'tooltip': 'Novice Status'},
+                    'cell': {'icon': "glyphicon-ok" if adj.novice else ""}
+                })
+            ddict.append({
+                'head': {'key': 'VF', 'icon': 'glyphicon-question-sign'},
+                'cell': {'text': "View<br>Feedback",
+                         'cell-class': 'view-feedback',
+                         'link': '',
+                         'modal': adj.id}
+            })
+            # TODO
+            if t.pref('enable_adj_notes'):
+                ddict.append({
+                    'head': {'key': 'NO', 'icon': 'glyphicon-list-alt'},
+                    'cell': {'text': "Edit<br>Note", 'cell-class': 'edit-note', 'modal': str(adj.id) + "===" + str(adj.notes)}
+                })
+            # TODO: adj checkbox
+            ddict.append({
+                'head': {'key': 'DD', 'icon': 'glyphicon-eye-open', 'tooltip': "Debates adjudicated"},
+                'cell': {'text': adj.debates}
+            })
+            ddict.append({
+                'head': {'key': 'DD', 'icon': 'glyphicon-resize-full', 'tooltip': "Average Margin"},
+                'cell': {'text': self.format_cell_number(adj.avg_margin)}
+            })
+            ddict.append({
+                'head': {'key': 'DD', 'icon': 'glyphicon-stats', 'tooltip': "Average Score"},
+                'cell': {'text': self.format_cell_number(adj.avg_score)}
+            })
+
+            feedback_data.append(ddict)
+
+        return feedback_data
+
 
 
 class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, TemplateView):

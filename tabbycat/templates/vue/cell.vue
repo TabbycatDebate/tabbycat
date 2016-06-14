@@ -20,10 +20,16 @@
           :data-toggle="cellData['tooltip'] ? 'tooltip' : null"
           :v-on:hover="cellData['tooltip'] ? showTooltip  : null">
 
-      <!-- Text (with link if needed) -->
-      <a v-if="cellData['link']" :href="cellData['link']" >
-        <span v-html="cellData['text']"></span>
-      </a>
+      <!-- Links and modals -->
+      <template v-if="cellData['link'] || cellData['modal']">
+        <a v-if="cellData['link']" :href="cellData['link']" >
+          <span v-html="cellData['text']"></span>
+        </a>
+        <a v-if="cellData['modal']" :data-target="cellData['modal']" >
+          <span v-html="cellData['text']"></span>
+        </a>
+      </template>
+
       <span v-else v-html="cellData['text']"></span>
 
     </span>

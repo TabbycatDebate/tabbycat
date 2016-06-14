@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
     # Overviews
     url(r'^$',
-        views.feedback_overview,
+        views.FeedbackOverview.as_view(),
         name='adjfeedback-overview'),
     url(r'^progress/$',
         views.FeedbackProgress.as_view(),
