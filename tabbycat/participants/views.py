@@ -29,12 +29,12 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
 class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, CacheMixin, HeadlessTemplateView):
 
     public_page_preference = 'public_participants'
-    template_name = 'base_double_vue_table.html'
     page_title = 'Participants'
     page_emoji = '🚌'
     sort_key = 'Name'
+    tables_titles = ['Adjudicators', 'Speakers']
 
-    def get_context_data(self, **kwargs):
+    def get_tables_data(self):
         t = self.get_tournament()
 
         adjs_data = []
@@ -43,9 +43,6 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
             ddict = self.adj_cells(adjudicator, t)
             adjs_data.append(ddict)
 
-        kwargs["table_a_title"] = "Adjudicators"
-        kwargs["tableDataA"] = json.dumps(adjs_data)
-
         speakers_data = []
         speakers = Speaker.objects.filter(team__tournament=t).select_related('team', 'team__institution')
         for speaker in speakers:
@@ -53,10 +50,7 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
             ddict.extend(self.team_cells(speaker.team, t))
             speakers_data.append(ddict)
 
-        kwargs["table_b_title"] = "Speakers"
-        kwargs["tableDataB"] = json.dumps(speakers_data)
-
-        return super().get_context_data(**kwargs)
+        return [adjs_data, speakers_data]
 
 
 class AllTournamentsAllInstitutionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):

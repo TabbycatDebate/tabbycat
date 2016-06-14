@@ -48,10 +48,38 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
 
     template_name = 'results.html'
     sort_key = 'Status'
+    draw = None
+
+    def get_or_set_draw(self):
+        if self.draw:
+            return self.draw
+        else:
+            self.draw = self.get_round().get_draw()
+            return self.draw
+
+
+    def get_table_data(self):
+        t = self.get_tournament()
+        draw = self.get_or_set_draw()
+
+        draw_data = []
+        for d in draw:
+            ddict = self.status_cells(d)
+            ddict.extend(self.ballot_entry_cells(d, t))
+            ddict.append({
+                'head': {'tooltip': 'Bracket', 'key': 'B', 'icon': 'glyphicon-stats'},
+                'cell': {'text': d.bracket}
+            })
+            ddict.extend(self.venue_cells(d, t))
+            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
+            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
+            ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
+            draw_data.append(ddict)
+
+        return draw_data
 
     def get_context_data(self, **kwargs):
-        draw = self.get_round().get_draw()
-        t = self.get_tournament()
+        draw = self.get_or_set_draw()
 
         kwargs["stats"] = {
             'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
@@ -60,23 +88,6 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
             'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
         }
-
-        draw_data = []
-        for d in draw:
-            ddict = self.status_cells(d)
-            ddict.extend(self.ballot_entry_cells(d, t))
-            # ddict.append(('bracket', {'text': d.bracket}))
-            ddict.extend(self.venue_cells(d, t))
-            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
-
-            # for value in ddict:
-            #     value[1]['cell-class'] = "test"
-
-            draw_data.append(ddict)
-
-        kwargs["tableData"] = json.dumps(draw_data)
 
         return super().get_context_data(**kwargs)
 
@@ -118,7 +129,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
     page_emoji = '💥'
     sort_key = 'Team'
 
-    def get_context_data(self, **kwargs):
+    def get_table_data(self):
         round = self.get_round()
         t = self.get_tournament()
         draw = round.get_draw()
@@ -160,10 +171,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
 
                 draw_data.append(ddict)  # Only one team's result per line
 
-        kwargs['draw'] = draw  # To deprecate
-        kwargs['tableData'] = json.dumps(draw_data)
-
-        return super().get_context_data(**kwargs)
+        return draw_data
 
     def get(self, request, *args, **kwargs):
         tournament = self.get_tournament()

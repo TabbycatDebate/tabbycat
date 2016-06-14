@@ -149,8 +149,11 @@ def times(number):
 
 
 @register.simple_tag
-def divide(number_a, number_b):
-    return number_a / number_b
+def divide_to_int(number_a, number_b):
+    try:
+        return int(int(number_a) / int(number_b))
+    except (ValueError, ZeroDivisionError):
+        return None
 
 
 @register.simple_tag

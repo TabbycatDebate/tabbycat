@@ -134,8 +134,12 @@
         var index = null
         if (typeof(this.tableContent[0]) !== 'undefined') { // Check table is not empty
           for (var i = 0; i < this.tableContent[0].length; i++) {
-            if (this.tableContent[0][i]['head'].key === this.defaultSortKey) {
-              index = i
+            if (this.defaultSortKey !== "") {
+              if (this.tableContent[0][i]['head'].key === this.defaultSortKey) {
+                index = i
+              }
+            } else {
+              index = 0; // if defaultSortKey is not set
             }
           }
         }

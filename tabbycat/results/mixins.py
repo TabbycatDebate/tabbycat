@@ -85,9 +85,9 @@ class DebateResultCellsMixin:
 
         if not d.ballotsubmission_set_by_version_except_discarded:
             link = reverse_tournament('new_ballotset', t, kwargs={'debate_id': d.id})
-            ballotsets_info += "<a href=" + link + ">Enter New</a>"
+            ballotsets_info += "<a href=" + link + ">Enter New Ballot</a>"
 
-        ballot_cells = [{'head': {'key':'enter ballots'}, 'cell': {'text': ballotsets_info}}]
+        ballot_cells = [{'head': {'key':'EB', 'icon': 'glyphicon-plus'}, 'cell': {'text': ballotsets_info}}]
 
         if t.pref('enable_postponements'):
             pcell = {'link': reverse_tournament('toggle_postponed', t, kwargs={'debate_id': d.id})}

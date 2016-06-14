@@ -82,7 +82,7 @@ class StandingsView(RoundMixin, VueTableMixin):
                 iterator_cell['cell']['sort'] = value[0]
             else:
                 iterator_cell['cell']['text'] = 'N/A'
-                iterator_cell['cell']['sort'] = ''
+                iterator_cell['cell']['sort'] = 99999
         elif isinstance(value, float):  # Metric
             iterator_cell['cell']['text'] = self.format_cell_number(value)
         else:
@@ -105,7 +105,7 @@ class BaseSpeakerStandingsView(StandingsView, HeadlessTemplateView):
 
     rankings = ('rank',)
 
-    def get_context_data(self, **kwargs):
+    def get_table_data(self):
         tournament = self.get_tournament()
         round = self.get_round()
 
@@ -142,9 +142,7 @@ class BaseSpeakerStandingsView(StandingsView, HeadlessTemplateView):
 
             standings_data.append(ddict)
 
-        kwargs["tableData"] = json.dumps(standings_data)
-
-        return super().get_context_data(**kwargs)
+        return standings_data
 
     def get_rank_filter(self):
         return None
@@ -269,7 +267,7 @@ class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
     page_title = 'Team Standings'
     page_emoji = '👯'
 
-    def get_context_data(self, **kwargs):
+    def get_table_data(self):
         tournament = self.get_tournament()
         round = self.get_round()
 
@@ -318,9 +316,7 @@ class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
         # if 'round' not in kwargs:
         #     kwargs['round'] = self.get_round()
 
-        kwargs["tableData"] = json.dumps(teams_data)
-
-        return super().get_context_data(**kwargs)
+        return teams_data
 
     def show_ballots(self):
         return False
@@ -364,7 +360,7 @@ class BaseMotionStandingsView(RoundMixin, VueTableMixin, HeadlessTemplateView):
     page_title = 'Motions Tab'
     page_emoji = '💭'
 
-    def get_context_data(self, **kwargs):
+    def get_table_data(self):
         r = self.get_round()
         t = self.get_tournament()
         motions_data = []
@@ -393,9 +389,7 @@ class BaseMotionStandingsView(RoundMixin, VueTableMixin, HeadlessTemplateView):
             }])
             motions_data.append(ddict)
 
-        kwargs["tableData"] = json.dumps(motions_data)
-
-        return super().get_context_data(**kwargs)
+        return motions_data
 
 
 class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):

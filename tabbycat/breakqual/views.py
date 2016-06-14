@@ -27,9 +27,9 @@ def public_break_index(request, t):
 class PublicBreakingTeams(PublicTournamentPageMixin, CacheMixin, VueTableMixin, HeadlessTemplateView):
 
     public_page_preference = 'public_breaking_teams'
-    page_emoji = "👑"
+    page_emoji = '👑'
 
-    def get_context_data(self, **kwargs):
+    def get_table_data(self):
         t = self.get_tournament()
         bc = get_object_or_404(BreakCategory, slug=self.kwargs.get('category'), tournament=t)
 
@@ -45,8 +45,7 @@ class PublicBreakingTeams(PublicTournamentPageMixin, CacheMixin, VueTableMixin, 
             teams_data.append(ddict)
 
         self.page_title = bc.name
-        kwargs["tableData"] = json.dumps(teams_data)
-        return super().get_context_data(**kwargs)
+        return teams_data
 
 
 @admin_required
@@ -117,15 +116,14 @@ class BreakingAdjudicators(TournamentMixin, VueTableMixin, HeadlessTemplateView)
     page_title = 'Breaking Adjudicators'
     page_emoji = '🎉'
 
-    def get_context_data(self, **kwargs):
+    def get_table_data(self):
         t = self.get_tournament()
 
         adjs_data = []
         for adj in Adjudicator.objects.filter(breaking=True, tournament=t):
             adjs_data.append(self.adj_cells(adj, t))
 
-        kwargs["tableData"] = json.dumps(adjs_data)
-        return super().get_context_data(**kwargs)
+        return adjs_data
 
 
 class AdminBreakingAdjudicators(LoginRequiredMixin, BreakingAdjudicators):

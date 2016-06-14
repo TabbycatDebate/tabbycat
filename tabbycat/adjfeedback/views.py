@@ -449,12 +449,12 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
 
 class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixin, HeadlessTemplateView):
 
-    template_name = 'base_double_vue_table.html'
     page_title = "Missing Feedback Ballots"
     page_emoji = "🆘"
     sort_key = 'Coverage'
+    tables_titles = ['Adjudicators', 'Speakers']
 
-    def get_context_data(self, **kwargs):
+    def get_tables_data(self):
         t = self.get_tournament()
         team_progress, adj_progress = get_feedback_progress(t)
 
@@ -472,10 +472,7 @@ class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixi
             ddict.extend(self.adj_cells(adj, t))
             adjs_progress_data.append(ddict)
 
-        kwargs["tableDataA"] = json.dumps(teams_progress_data)
-        kwargs["tableDataB"] = json.dumps(adjs_progress_data)
-
-        return super().get_context_data(**kwargs)
+        return [teams_progress_data, adjs_progress_data]
 
 
 class FeedbackProgress(BaseFeedbackProgress):

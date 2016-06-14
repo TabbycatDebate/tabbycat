@@ -66,6 +66,10 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
         return ddict
 
     def get_context_data(self, **kwargs):
+        kwargs['round'] = self.get_round()
+        return super().get_context_data(**kwargs)
+
+    def get_table_data(self):
         round = self.get_round()
         draw = round.get_draw()
         t = self.get_tournament()
@@ -78,9 +82,7 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
         else:
             draw_data = [self.create_row(debate, t) for debate in draw]
 
-        kwargs['tableData'] = json.dumps(draw_data)
-        kwargs['round'] = self.get_round()
-        return super().get_context_data(**kwargs)
+        return draw_data
 
 
 # ==============================================================================

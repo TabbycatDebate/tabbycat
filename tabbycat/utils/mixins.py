@@ -1,4 +1,5 @@
 import logging
+import json
 
 from django.conf import settings
 from django.contrib import messages
@@ -131,11 +132,23 @@ class VueTableMixin:
      a team name row, but also institution/category status as needed)."""
 
     sort_key = ''
+    tables_titles = ['']
     template_name = 'base_vue_table.html'
 
     def get_context_data(self, **kwargs):
-        kwargs["sortKey"] = self.sort_key
+        table_data = self.get_tables_data()
+        kwargs["tables_sort"] = self.sort_key
+        kwargs["tables_titles"] = self.tables_titles
+        # Slightly abusrd but means we can loop over it in django templates
+        kwargs["tables_count"] = [i for i in range(0, len(table_data))]
+        kwargs["tables_data"] = json.dumps(table_data)
         return super().get_context_data(**kwargs)
+
+    def get_table_data(self, **kwargs):
+        pass
+
+    def get_tables_data(self, **kwargs):
+        return [self.get_table_data()] # Default to return single table
 
     def format_cell_number(self, value):
         if isinstance(value, float):
@@ -168,22 +181,33 @@ class VueTableMixin:
             'head': {'key': 'Name'},
             'cell': {'text': adjudicator.name}
         }]
+
         if tournament.pref('show_institutions'):
-            if adjudicator.adj_core:
-                adj_info.append({
-                    'head': {'key': 'Institution'},
-                    'cell': {'text': "Adj Core / " + adjudicator.institution.code}
-                })
-            elif adjudicator.independent:
-                adj_info.append({
-                    'head': {'key': 'Institution'},
-                    'cell': {'text': "Independent / " + adjudicator.institution.code}
-                })
-            else:
-                adj_info.append({
-                    'head': {'key': 'Institution'},
-                    'cell': {'text': adjudicator.institution.code}
-                })
+            adj_info.append({
+                'head': {'key': 'Institution'},
+                'cell': {'text': adjudicator.institution.code}
+            })
+
+        adj_info.append({
+            'head': {
+                'tooltip': 'Member of the Adjudication Core',
+                'icon': 'glyphicon-sunglasses',
+            },
+            'cell': {
+                'icon': 'glyphicon-ok' if adjudicator.adj_core else '',
+                'sort': 1 if adjudicator.adj_core else 0,
+            }
+        })
+        adj_info.append({
+            'head': {
+                'tooltip': 'Independent Adjudicator',
+                'icon': 'glyphicon-knight',
+            },
+            'cell': {
+                'icon': 'glyphicon-ok' if adjudicator.independent else '',
+                'sort': 1 if adjudicator.independent else 0
+            }
+        })
         return adj_info
 
     def adjudicators_cells(self, debate, tournament, key='Adjudicators', show_splits=False):
@@ -250,11 +274,16 @@ class VueTableMixin:
             'cell': {'text': speaker.name}
         }]
         if tournament.pref('show_novices'):
-            icon = "glyphicon-ok" if speaker.novice else "glyphicon-remove"
-            sort = 1 if speaker.novice else 0
             speaker_info.append({
-                'head': {'key': 'Novice', 'icon': 'glyphicon-leaf', 'tooltip': "Novice Status"},
-                'cell': {'icon': icon, 'sort': sort}
+                'head': {
+                    'key': 'Novice',
+                    'icon': "glyphicon-leaf",
+                    'tooltip': "Novice Status"
+                },
+                'cell': {
+                    'icon': "glyphicon-ok" if speaker.novice else "",
+                    'sort': 1 if speaker.novice else 0
+                }
             })
 
         return speaker_info

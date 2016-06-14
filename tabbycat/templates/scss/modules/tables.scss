@@ -92,9 +92,11 @@ table thead .sorting_desc_disabled:after {
   position: absolute;
   right: 8px;
 }
-//
+
+//------------------------------------------------------------------------------
 // CELL STYLES
-//
+//------------------------------------------------------------------------------
+
 .table > tbody > tr > th,
 .table > tbody > tr > td {
   border-left: 0;
@@ -102,67 +104,9 @@ table thead .sorting_desc_disabled:after {
 }
 
 //------------------------------------------------------------------------------
-// Row States
+// SPECIFIC DECORATORS
 //------------------------------------------------------------------------------
 
-.panel-body .table > tbody,
-.panel-heading .btn-group {
-  @include table-row-variant('debate-status-in', $state-warning-bg);
-  .debate-status-in {
-    @include button-variant(darken($state-warning-bg, 70%), $state-warning-bg, $state-warning-bg);
-    a {
-      color: darken($state-warning-bg, 70%);
-    }
-  }
-
-  @include table-row-variant('debate-status-unknown', $state-danger-bg);
-  .debate-status-unknown,
-  .debate-status-N {
-    @include button-variant(darken($state-danger-bg, 70%), $state-danger-bg, $state-danger-bg);
-    a {
-      color: darken($state-warning-bg, 70%);
-    }
-  }
-
-  @include table-row-variant('debate-status-unconfirmed', lighten($brand-info, 40%));
-  .debate-status-unconfirmed,
-  .debate-status-D {
-    @include button-variant(darken($brand-info, 30%), lighten($brand-info, 40%), lighten($brand-info, 40%));
-    a {
-      color: darken($brand-info, 30%);
-    }
-  }
-
-  @include table-row-variant('debate-status-confirmed', $state-success-bg);
-  .debate-status-confirmed,
-  .debate-status-C {
-    @include button-variant(darken($state-success-bg, 70%), $state-success-bg, $state-success-bg);
-    a {
-      color: darken($state-success-bg, 70%);
-    }
-  }
-
-  @include table-row-variant('debate-status-postponed', $state-info-bg);
-  .debate-status-postponed,
-  .debate-status-P {
-    @include button-variant(darken($table-bg-active, 70%), $state-info-bg, $state-info-bg);
-    a {
-      color: darken($table-bg-active, 70%);
-    }
-  }
-
-  @include table-row-variant('debate-status-bye', $table-bg-active);
-  .debate-status-bye {
-    @include button-variant(#000, $table-bg-active, $table-bg-active);
-    a {
-      color: darken($table-bg-active, 60%);
-    }
-  }
-
-}
-//
-// SPECIFIC DECORATORS
-//
 .draw-with-standings .em {
   font-weight: bold;
   color: chocolate;

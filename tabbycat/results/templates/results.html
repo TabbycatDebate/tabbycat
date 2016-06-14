@@ -31,35 +31,34 @@
 
   <div class="row">
     <div class="col-sm-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <div class="btn-group btn-group-justified" role="group">
-            <span class="btn btn-default debate-status-in">
-              <span class="glyphicon glyphicon-inbox"></span> {{ stats.ballot_in }} Checked In
-            </span>
-            <span class="btn btn-default debate-status-unknown">
-              <span class="glyphicon glyphicon-remove"></span> {{ stats.none }} Unknown
-            </span>
-            <span class="btn btn-default debate-status-unconfirmed">
-              <span class="glyphicon glyphicon-adjust"></span> {{ stats.draft }} Unconfirmed
-            </span>
-            <span class="btn btn-default debate-status-confirmed">
-              <span class="glyphicon glyphicon-ok"></span> {{ stats.confirmed }} Confirmed
-            </span>
-            {% if pref.enable_postponements %}
-              <span class="btn btn-default debate-status-postponed">
-                <span class="glyphicon glyphicon-pause"></span> {{ stats.postponed }} Postponed
-              </span>
-              <span class="btn btn-default debate-status-bye">
-                <span class="glyphicon glyphicon-fast-forward"></span> Bye
-              </span>
-            {% endif %}
-          </div>
-        </div>
-        {{ block.super }}
-      </div><!-- end panel content -->
+
+      <div class="btn-group btn-group-justified vertical-spacing" role="group">
+        <span class="btn btn-warning">
+          <span class="glyphicon glyphicon-inbox"></span> {{ stats.ballot_in }} Checked In
+        </span>
+        <span class="btn btn-danger">
+          <span class="glyphicon glyphicon-remove"></span> {{ stats.none }} Unknown
+        </span>
+        <span class="btn btn-primary">
+          <span class="glyphicon glyphicon-adjust"></span> {{ stats.draft }} Unconfirmed
+        </span>
+        <span class="btn btn-success">
+          <span class="glyphicon glyphicon-ok"></span> {{ stats.confirmed }} Confirmed
+        </span>
+        {% if pref.enable_postponements %}
+          <span class="btn btn-default">
+            <span class="glyphicon glyphicon-pause"></span> {{ stats.postponed }} Postponed
+          </span>
+          <span class="btn btn-default">
+            <span class="glyphicon glyphicon-fast-forward"></span> Bye
+          </span>
+        {% endif %}
+      </div>
+
     </div><!-- end col -->
   </div><!-- end row -->
+
+  {{ block.super }}
 
 {% endblock content %}
 
