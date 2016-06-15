@@ -16,6 +16,7 @@
         </div>
         <div class="panel-body">
           <smart-table
+            :table-headers="tableHeaders"
             :table-content="gridData"
             :filter-key="searchQuery"
             :default-sort-key="sortKey">
@@ -35,21 +36,21 @@
   {% include "vue/table.vue" %}
   <script>
 
-    var tablesCount = {% if tables_count %}{{ tables_count }}{% else %}null{% endif %};
+    var tablesCount = {% if tables_data %}{{ tables_data|length }}{% else %}null{% endif %};
     var tablesData = {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %};
-    var tablesSort = {% if tables_sort %}'{{ tables_sort }}'{% else %}null{% endif %};
-    var tablesTitles = {% if tables_titles %}{{ tables_titles|safe }}{% else %}null{% endif %};
     var tablesVue = [];
 
-    for (var tableIndex in tablesCount) {
+    for (var tableIndex = 0; tableIndex < tablesData.length; tableIndex++) {
+      var tableData = tablesData[tableIndex];
       tablesVue.push(
-        new Vue({ // Create a new Vue context fir each table
+        new Vue({ // Create a new Vue context for each table
           el: String('#tableContainer' + tableIndex),
           data: {
             searchQuery: '',
-            gridData: tablesData[tableIndex],
-            sortKey: tablesSort,
-            tableTitle: tablesTitles[tableIndex],
+            tableHeaders: tableData['head'],
+            gridData: tableData['data'],
+            sortKey: tableData['sort_key'],
+            tableTitle: tableData['title'],
           },
           ready: function() {
             var thisTable = this; // this in the next context is the element

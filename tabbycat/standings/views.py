@@ -10,12 +10,15 @@ from participants.models import Speaker, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
+from utils.misc import reverse_tournament
 from utils.mixins import HeadlessTemplateView, SuperuserRequiredMixin, VueTableMixin
+from utils.tables import TabbycatTableBuilder
 
 from .diversity import get_diversity_data_sets
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
 from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
+from .templatetags.standingsformat import metricformat
 
 
 class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
@@ -63,37 +66,7 @@ class PublicTabMixin(PublicTournamentPageMixin):
 # ==============================================================================
 
 class StandingsView(RoundMixin, VueTableMixin):
-
-    sort_key = 'Rk'
-
-    def format_iterators(self, key, value, infos):
-        """Shared function for creating cells from metrics or ranks"""
-        ranking_or_metric_info = [r for r in infos if r['key'] == key][0]
-        iterator_cell = {
-            'head': {
-                'key': ranking_or_metric_info['abbr'],
-                'tooltip': ranking_or_metric_info['name']},
-            'cell': {}
-        }
-
-        if isinstance(value, tuple) and len(value) == 2:  # Rank
-            if value[0] is not None:
-                iterator_cell['cell']['text'] = str(value[0]) + ('=' if value[1] else '')
-                iterator_cell['cell']['sort'] = value[0]
-            else:
-                iterator_cell['cell']['text'] = 'N/A'
-                iterator_cell['cell']['sort'] = 99999
-        elif isinstance(value, float):  # Metric
-            iterator_cell['cell']['text'] = self.format_cell_number(value)
-        else:
-            iterator_cell['cell']['text'] = str(value)
-
-        if hasattr(ranking_or_metric_info, 'glyphicon'):
-            iterator_cell['head']['icon'] = ranking_or_metric_info['glyphicon']
-        elif ranking_or_metric_info['abbr'] is "Rk":
-            iterator_cell['head']['icon'] = 'glyphicon-signal'
-
-        return iterator_cell
+    pass
 
 
 # ==============================================================================
@@ -105,7 +78,7 @@ class BaseSpeakerStandingsView(StandingsView, HeadlessTemplateView):
 
     rankings = ('rank',)
 
-    def get_table_data(self):
+    def get_standings(self):
         tournament = self.get_tournament()
         round = self.get_round()
 
@@ -121,28 +94,23 @@ class BaseSpeakerStandingsView(StandingsView, HeadlessTemplateView):
         self.add_round_results(standings, rounds)
         self.populate_result_missing(standings)
 
-        standings_data = []
-        for standing in standings:
-            ddict = []
+        return standings, rounds
 
-            for key, value in zip(standings.ranking_keys, standing.iterrankings()):
-                ddict.append(self.format_iterators(key, value, standings.rankings_info()))
+    def get_table(self):
+        standings, rounds = self.get_standings()
+        table = TabbycatTableBuilder(view=self, sort_key="Rk")
 
-            ddict.extend(self.speaker_cells(standing.speaker, tournament))
-            ddict.extend(self.team_cells(standing.speaker.team, tournament))
+        table.add_ranking_columns(standings)
+        table.add_speaker_columns([info.speaker for info in standings])
+        table.add_team_columns([info.speaker.team for info in standings])
 
-            for round, score in zip(rounds, standing.scores):
-                ddict.append({
-                    'head': {'key': round.abbreviation},
-                    'cell': {'text': self.format_cell_number(score)}
-                })
+        scores_headers = [round.abbreviation for round in rounds]
+        scores_data = [list(map(metricformat, standing.scores)) for standing in standings]
+        table.add_columns(scores_headers, scores_data)
 
-            for key, value in zip(standings.metric_keys, standing.itermetrics()):
-                ddict.append(self.format_iterators(key, value, standings.metrics_info()))
+        table.add_metric_columns(standings)
 
-            standings_data.append(ddict)
-
-        return standings_data
+        return table
 
     def get_rank_filter(self):
         return None
@@ -267,7 +235,7 @@ class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
     page_title = 'Team Standings'
     page_emoji = '👯'
 
-    def get_table_data(self):
+    def get_standings(self):
         tournament = self.get_tournament()
         round = self.get_round()
 
@@ -281,42 +249,43 @@ class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
         add_team_round_results(standings, rounds)
         self.populate_result_missing(standings)
 
-        teams_data = []
+        return standings, rounds
+
+    def get_table(self):
+        standings, rounds = self.get_standings()
+
+        table = TabbycatTableBuilder(view=self, sort_key="Rk")
+        table.add_ranking_columns(standings)
+        table.add_team_columns([info.team for info in standings])
+
+        headers = [{'key': round.abbreviation} for round in rounds]
+        data = []
         for standing in standings:
-            ddict = []
+            cells = []
+            for team_score in standing.round_results:
+                opposition = team_score.opposition
+                cell = {'text': "vs " + opposition.emoji + "<br>" + metricformat(team_score.score)}
 
-            for key, value in zip(standings.ranking_keys, standing.iterrankings()):
-                ddict.append(self.format_iterators(key, value, standings.rankings_info()))
+                if team_score.win:
+                    cell['icon'] = "glyphicon-arrow-up text-success"
+                    cell['tooltip'] = "Won against "
+                else:
+                    cell['icon'] = "glyphicon-arrow-down text-danger"
+                    cell['tooltip'] = "Lost to "
 
-            ddict.extend(self.team_cells(standing.team, tournament))
+                cell['tooltip'] += opposition.long_name + "<br>Received " + metricformat(team_score.score) + " total speaks"
 
-            for round, team_score in zip(rounds, standing.round_results):
+                if self.show_ballots():
+                    cell['link'] = reverse_tournament('public_ballots_view',
+                            self.get_tournament(), kwargs={'debate_id': team_score.debate_team.debate.id})
 
-                rr = {'head': {'key': round.abbreviation}, 'cell': {'text': ''}}
-                if team_score:
-                    if team_score.win:
-                        rr['cell']['icon'] = "glyphicon-arrow-up text-success"
-                        rr['cell']['tooltip'] = "Won against "
-                    else:
-                        rr['cell']['icon'] = "glyphicon-arrow-up text-danger"
-                        rr['cell']['tooltip'] = "Lost to "
+                cells.append(cell)
+            data.append(cells)
+        table.add_columns(headers, data)
 
-                    rr['cell']['text'] += "vs " + team_score.opposition.emoji + "<br>" + self.format_cell_number(team_score.score)
-                    rr['cell']['tooltip'] += team_score.opposition.short_name + " and received " + self.format_cell_number(team_score.score) + " total speaks"
+        table.add_metric_columns(standings)
 
-                ddict.append(rr)
-
-            for key, value in zip(standings.metric_keys, standing.itermetrics()):
-                ddict.append(self.format_iterators(key, value, standings.metrics_info()))
-
-            teams_data.append(ddict)
-
-        # if 'show_ballots' not in kwargs:
-        #     kwargs['show_ballots'] = self.show_ballots()
-        # if 'round' not in kwargs:
-        #     kwargs['round'] = self.get_round()
-
-        return teams_data
+        return table
 
     def show_ballots(self):
         return False
@@ -349,6 +318,9 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     public_page_preference = 'team_tab_released'
     rankings = ('rank',)
 
+    def show_ballots(self):
+        return self.get_tournament().pref('ballots_released')
+
 
 # ==============================================================================
 # Motion standings
@@ -356,40 +328,22 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 
 class BaseMotionStandingsView(RoundMixin, VueTableMixin, HeadlessTemplateView):
 
-    sort_key = 'Round'
     page_title = 'Motions Tab'
     page_emoji = '💭'
 
-    def get_table_data(self):
-        r = self.get_round()
-        t = self.get_tournament()
-        motions_data = []
-        for motion in motion_statistics.statistics(round=r):
-            ddict = []
-            ddict.extend(self.round_cells(motion.round))
-            ddict.extend(self.motion_cells(motion, t))
-            ddict.append({
-                'head': {'key': 'Selected'},
-                'cell': {'text': motion.chosen_in}
-            })
-            if t.pref('motion_vetoes_enabled'):
-                ddict.extend([{
-                    'head': {'key': 'Aff Vetoes'},
-                    'cell': {'text': motion.aff_vetoes}
-                },{
-                    'head': {'key': 'Neg Vetoes'},
-                    'cell': {'text': motion.neg_vetoes}
-                }])
-            ddict.extend([{
-                'head': {'key': 'Aff Wins'},
-                'cell': {'text': motion.aff_wins}
-            },{
-                'head': {'key': 'Neg Wins'},
-                'cell': {'text': motion.neg_wins}
-            }])
-            motions_data.append(ddict)
+    def get_table(self):
+        motions = motion_statistics.statistics(round=self.get_round())
+        table = TabbycatTableBuilder(view=self, sort_key="Round")
 
-        return motions_data
+        table.add_round_column([motion.round for motion in motions])
+        table.add_motion_column(motions)
+        table.add_column("Selected", [motion.chosen_in for motion in motions])
+        if self.get_tournament().pref('motion_vetoes_enabled'):
+            table.add_column("Aff Vetoes", [motion.aff_vetoes for motion in motions])
+            table.add_column("Neg Vetoes", [motion.neg_vetoes for motion in motions])
+        table.add_column("Aff Wins", [motion.aff_wins for motion in motions])
+        table.add_column("Neg Wins", [motion.neg_wins for motion in motions])
+        return table
 
 
 class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
@@ -404,10 +358,12 @@ class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
 # Current team standings (win-loss records only)
 # ==============================================================================
 
-class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, HeadlessTemplateView):
-    public_page_preference = 'public_team_standings'
+class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
 
-    def get_context_data(self, **kwargs):
+    public_page_preference = 'public_team_standings'
+    page_title = "Current Team Standings"
+
+    def get_table(self):
         tournament = self.get_tournament()
 
         # Find the most recent non-silent preliminary round
@@ -415,20 +371,38 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, HeadlessTemplate
         while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
             round = round.prev
 
-        if round is not None and round.silent is False:
-            teams = tournament.team_set.order_by('institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
-            rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
-            add_team_round_results_public(teams, rounds)
+        if round is None or round.silent:
+            return TabbycatTableBuilder() # empty (as precaution)
 
-            kwargs["teams"] = teams
-            kwargs["rounds"] = rounds
-            kwargs["round"] = round
-        else:
-            kwargs["teams"] = []
-            kwargs["rounds"] = []
-            kwargs["round"] = None
+        teams = tournament.team_set.order_by('institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
+        rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
+        add_team_round_results_public(teams, rounds)
 
-        return super().get_context_data(**kwargs)
+        table = TabbycatTableBuilder(view=self, sort_key="Wins")
+        table.add_team_columns(teams)
+
+        table.add_column("Wins", [team.wins for team in teams])
+
+        headers = [round.abbreviation for round in rounds]
+        data = []
+        for team in teams:
+            cells = []
+            for team_score in team.round_results:
+                opposition = team_score.opposition
+                cell = {'text': "vs " + opposition.emoji}
+
+                if team_score.win:
+                    cell['icon'] = "glyphicon-arrow-up text-success"
+                    cell['tooltip'] = "Won against " + opposition.short_name
+                else:
+                    cell['icon'] = "glyphicon-arrow-down text-danger"
+                    cell['tooltip'] = "Lost to " + opposition.short_name
+
+                cells.append(cell)
+            data.append(cells)
+        table.add_columns(headers, data)
+
+        return table
 
 
 # ==============================================================================

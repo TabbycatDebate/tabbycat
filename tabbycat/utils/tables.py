@@ -1,6 +1,6 @@
-import json
-
 from adjallocation.models import DebateAdjudicator
+from draw.models import Debate
+from standings.templatetags.standingsformat import metricformat, rankingformat
 
 from .mixins import SuperuserRequiredMixin
 
@@ -19,9 +19,11 @@ class BaseTableBuilder:
 
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.headers = []
         self.data = []
+        self.title = kwargs.get('title', "")
+        self.sort_key = kwargs.get('sort_key', '')
 
     @staticmethod
     def _convert_header(header):
@@ -29,13 +31,17 @@ class BaseTableBuilder:
 
     @staticmethod
     def _convert_cell(cell):
-        return {'text': cell} if isinstance(cell, str) else cell
+        if isinstance(cell, int):
+            return {'text': str(cell)}
+        if isinstance(cell, str):
+            return {'text': cell}
+        return cell
 
     def add_column(self, header, data):
         """Adds a column to the table.
 
         - `header` must be either a string or a header dict (see class docstring).
-        - `data` should be a list of cells (in the column). Each cell should
+        - `data` must be a list of cells (in the column). Each cell should
           either be a string or a cell dict (see class docstring). If this is
           not the first column, then there must be as many elements in `data` as
           there are in the existing columns.
@@ -48,8 +54,23 @@ class BaseTableBuilder:
         self.headers.append(header)
 
         data = map(self._convert_cell, data)
-        for row, cell in zip(self.data, data):
-            row.append(cell)
+        if len(self.data) == 0:
+            self.data = [[cell] for cell in data]
+        else:
+            for row, cell in zip(self.data, data):
+                row.append(cell)
+
+    def add_boolean_column(self, header, data):
+        """Convenience function for adding a column based on boolean data.
+
+        - `header` must be either a string or a header dict.
+        - `data` must be an iterable of booleans.
+        """
+        cells = [{
+            'icon': 'glyphicon-ok' if datum else '',
+            'sort':  1 if datum else 2,
+        } for datum in data]
+        self.add_column(header, cells)
 
     def add_columns(self, headers, data):
         """Adds columns to the table.
@@ -73,13 +94,21 @@ class BaseTableBuilder:
         headers = map(self._convert_header, headers)
         self.headers.extend(headers)
 
-        for row, cells in zip(self.data, data):
-            cells = map(self._convert_cell, cells)
-            row.extend(cells)
+        if len(self.data) == 0:
+            self.data = [[self._convert_cell(cell) for cell in row] for row in data]
+        else:
+            for row, cells in zip(self.data, data):
+                cells = map(self._convert_cell, cells)
+                row.extend(cells)
 
-    def json(self):
-        """Returns the JSON string for the table."""
-        return json.dumps({'head': self.headers, 'data': self.data})
+    def jsondict(self):
+        """Returns the JSON dict for the table."""
+        return {
+            'head': self.headers,
+            'data': self.data,
+            'title': self.title,
+            'sort_key': self.sort_key
+        }
 
 
 class TabbycatTableBuilder(BaseTableBuilder):
@@ -111,6 +140,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             self.admin = kwargs.get('admin', False)
 
+        return super().__init__(**kwargs)
+
     def add_round_column(self, rounds, key="Round"):
         data = [{
             'sort': round.seq,
@@ -125,19 +156,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('show_institutions') and not hide_institution:
             self.add_column("Institution", [adj.institution.code for adj in adjudicators])
 
-        adjcore_header = {'tooltip': "Member of the Adjudication Core", 'icon': 'glyphicon-sunglasses'}
-        adjcore_data = [{
-            'icon': 'glyphicon-ok' if adj.adj_core else '',
-            'sort': int(adj.adj_core),
-        } for adj in adjudicators]
-        self.add_column(adjcore_header, adjcore_data)
+        adjcore_header = {
+            'tooltip': "Member of the Adjudication Core",
+            'icon': 'glyphicon-sunglasses',
+        }
+        self.add_boolean_column(adjcore_header, [adj.adj_core for adj in adjudicators])
 
-        independent_header = {'tooltip': "Independent Adjudicator", 'icon': 'glyphicon-knight'}
-        independent_data = [{
-            'icon': 'glyphicon-ok' if adj.independent else '',
-            'sort': int(adj.independent),
-        } for adj in adjudicators]
-        self.add_column(independent_header, independent_data)
+        independent_header = {
+            'tooltip': "Independent Adjudicator",
+            'icon': 'glyphicon-knight',
+        }
+        self.add_boolean_column(independent_header, [adj.independent for adj in adjudicators])
 
     def add_debate_adjudicators_column(self, debates, key="Adjudicators", show_splits=False):
         data = []
@@ -168,7 +197,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } for motion in motions]
         self.add_column(key, motion_data)
 
-    def add_team_column(self, teams, break_categories=False, show_speakers=False,
+    def add_team_columns(self, teams, break_categories=False, show_speakers=False,
             hide_institution=False, key="Team"):
 
         team_data = [{
@@ -185,3 +214,68 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if self.tournament.pref('show_institutions') and not hide_institution:
             self.add_column("Institution", [team.institution.code for team in teams])
+
+    def add_speaker_columns(self, speakers, key="Name"):
+        self.add_column(key, [speaker.name for speaker in speakers])
+        if self.tournament.pref('show_novices'):
+            novice_header = {
+                'key': "Novice",
+                'icon': 'glyphicon-leaf',
+                'tooltip': "Novice Status",
+            }
+            self.add_boolean(novice_header, [speaker.novice for speaker in speakers])
+
+    def add_debate_venue_columns(self, debates, with_times=False):
+        if self.tournament.pref('enable_divisions'):
+            self.add_column("Division", [debate.division.name for debate in debates])
+
+        venue_header = {
+            'key': "Venue",
+            'icon': 'glyphicon glyphicon-map-marker',
+        }
+        if self.tournament.pref('enable_venue_groups'):
+            venue_data = [
+                debate.division.venue_group.short_name if debate.division
+                else (debate.venue.group.short_name + debate.venue.name)
+                for debate in debates
+            ]
+        else:
+            venue_data = [debate.venue.name for debate in debates]
+        self.add_column(venue_header, venue_data)
+
+        if with_times and self.tournament.pref('enable_debate_scheduling'):
+            times_headers = ["Date", "Time"]
+            times_data = []
+            for debate in debates:
+                if debate.aff_team.type == Debate.TYPE_BYE or debate.neg_team.type == Debate.TYPE_BYE:
+                    times_data.append(["", "Bye"])
+                elif debate.result_status == Debate.STATUS_POSTPONED:
+                    times_data.append(["", "Postponed"])
+                elif debate.confirmed_ballot.forfeit:
+                    times_data.append(["", "Forfeit"])
+                else:
+                    times_data.append([debate.time.strftime("D jS F"), debate.time.strftime("h:i A")])
+            self.add_columns(times_headers, times_data)
+
+    def add_ranking_columns(self, standings):
+        headers = [{
+            'key': info['abbr'],
+            'tooltip': info['name'].title(),
+            'glyphicon': info['glyphicon'],
+        } for info in standings.rankings_info()]
+        data = []
+        for standing in standings:
+            data.append([{
+                'text': rankingformat(ranking),
+                'sort': ranking[0] or "99999",
+            } for ranking in standing.iterrankings()])
+        self.add_columns(headers, data)
+
+    def add_metric_columns(self, standings):
+        headers = [{
+            'key': info['abbr'],
+            'tooltip': info['name'].title(),
+            'glyphicon': info['glyphicon'],
+        } for info in standings.metrics_info()]
+        data = [list(map(metricformat, standing.itermetrics())) for standing in standings]
+        self.add_columns(headers, data)

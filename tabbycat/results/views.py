@@ -21,11 +21,12 @@ from tournaments.models import Round
 from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round, reverse_tournament
 from utils.mixins import HeadlessTemplateView, SuperuserRequiredMixin, VueTableMixin
+from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
 from .result import BallotSet
 from .forms import BallotSetForm
-from .models import BallotSubmission
+from .models import BallotSubmission, TeamScore
 from .mixins import DebateResultCellsMixin
 
 logger = logging.getLogger(__name__)
@@ -128,49 +129,50 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
     page_emoji = '💥'
     sort_key = 'Team'
 
-    def get_table_data(self):
+    def get_table(self):
         round = self.get_round()
-        t = self.get_tournament()
-        draw = round.get_draw()
+        tournament = self.get_tournament()
+        teamscores = TeamScore.objects.filter(debate_team__debate__round=round)
+        debates = [ts.debate_team.debate for ts in teamscores]
 
-        draw_data = []
-        for d in draw:
-            for team in (d.aff_team, d.neg_team):
-                ddict = []
-                ddict.extend(self.venue_cells(d, t))
+        table = TabbycatTableBuilder(view=self, sort_key="Team")
 
-                if t.pref('ballots_released'):
-                    if d.confirmed_ballot:
-                        ddict.append({
-                            'head': {'key': 'Ballot', 'icon': 'glyphicon-search'},
-                            'cell': {
-                                'text': "View Ballot",
-                                'link': reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id})
-                            }
-                        })
-                result_text, result_icon, bs = "", "", d.confirmed_ballot.ballot_set
+        table.add_team_columns([ts.debate_team.team for ts in teamscores])
 
-                if bs.aff_win and team is d.aff_team or bs.neg_win and team is d.neg_team:
-                    result_icon = "glyphicon-arrow-up text-success"
-                else:
-                    result_icon = "glyphicon-arrow-down text-danger"
-                if team is d.aff_team:
-                    result_text += " vs " + d.neg_team.short_name + " (Neg)"
-                else:
-                    result_text += " vs " + d.aff_team.short_name + " (Aff)"
+        if tournament.pref('ballots_released'):
+            ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
+            ballot_links_data = [{
+                'text': "View Ballot",
+                'link': reverse_tournament('public_ballots_view', tournament, kwargs={'debate_id': debate.id})
+            } if debate else "" for debate in debates]
+            table.add_column(ballot_links_header, ballot_links_data)
 
-                ddict.append({'head': {'key': 'Result'}, 'cell': {
-                    'text': result_text, 'icon': result_icon}})
+        results_data = []
+        for ts in teamscores:
+            opposition = ts.debate_team.opposition.team
+            result = {'text': " vs " + opposition.short_name}
+            if ts.win is True:
+                result['icon'] = "glyphicon-arrow-up text-success"
+                result['sort'] = 1
+                result['tooltip'] = "Won against " + opposition.long_name
+            elif ts.win is False:
+                result['icon'] = "glyphicon-arrow-down text-danger"
+                result['sort'] = 2
+                result['tooltip'] = "Lost to " + opposition.long_name
+            else: # None
+                result['icon'] = ""
+                result['sort'] = 3
+                result['tooltip'] = "No result for debate against " + opposition.long_name
+            results_data.append(result)
+        table.add_column("Result", results_data)
 
-                ddict.extend(self.team_cells(team, t))
-                ddict.extend(self.adjudicators_cells(d, t, show_splits=False))
+        table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
+        table.add_debate_adjudicators_column(debates, show_splits=False)
 
-                if t.pref('show_motions_in_results'):
-                    ddict.extend(self.motion_cells(d.confirmed_ballot.motion, t))
+        if tournament.pref('show_motions_in_results'):
+            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 
-                draw_data.append(ddict)  # Only one team's result per line
-
-        return draw_data
+        return table
 
     def get(self, request, *args, **kwargs):
         tournament = self.get_tournament()

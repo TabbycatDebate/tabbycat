@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      <h4 v-if="typeof tableContent[0] === 'undefined'">No Data Available</h4>
+      <h4 v-if="typeof tableHeaders === 'undefined'">No Data Available</h4>
       <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder" >
         <template v-for="(cellIndex, cellData) in row">
           <smart-cell v-if="!cellData['component']" :cell-data="cellData"></smart-cell>
@@ -67,6 +67,7 @@
   Vue.component('smart-table', {
     template: '#smart-table',
     props: {
+      tableHeaders: Array,
       tableContent: Array,
       filterKey: String,
       defaultSortKey: String
@@ -82,10 +83,10 @@
       getDefaultSortIndex: function() {
         // Find the index of the column that matches the default sorting key
         var index = null
-        if (typeof(this.tableContent[0]) !== 'undefined') { // Check table is not empty
-          for (var i = 0; i < this.tableContent[0].length; i++) {
+        if (typeof(this.tableHeaders) !== 'undefined') { // Check table is not empty
+          for (var i = 0; i < this.tableHeaders.length; i++) {
             if (this.defaultSortKey !== "") {
-              if (this.tableContent[0][i]['head'].key === this.defaultSortKey) {
+              if (this.tableHeaders[i].key === this.defaultSortKey) {
                 index = i
               }
             } else {
@@ -115,7 +116,7 @@
           // For each row and cell type push it to the master list
           var rowCells = []
           for (var j = 0; j < this.tableContent[i].length; j++) {
-            rowCells.push(this.tableContent[i][j]['cell']);
+            rowCells.push(this.tableContent[i][j]);
           }
           rows.push(rowCells);
         };
@@ -125,8 +126,8 @@
         // For each cell in the rows push its head value to a consolidated list
         var headers = [];
         if (typeof(this.tableContent[0]) !== 'undefined') { // Check table is not empty
-          for (var i = 0; i < this.tableContent[0].length; i++) {
-            headers.push(this.tableContent[0][i]['head'])
+          for (var i = 0; i < this.tableHeaders.length; i++) {
+            headers.push(this.tableHeaders[i])
           }
         }
         return headers

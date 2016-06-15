@@ -17,6 +17,7 @@ from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
 from utils.mixins import CacheMixin, JsonDataResponseView, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
 from utils.mixins import HeadlessTemplateView, PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin, VueTableMixin
+from utils.tables import TabbycatTableBuilder
 from utils.urlkeys import populate_url_keys
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
@@ -139,7 +140,21 @@ class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin, H
     template_name = "feedback_base.html"
     page_title = 'Find Feedback on Adjudicator'
     page_emoji = '🔍'
-    sort_key = 'Name'
+
+    def get_table(self):
+        tournament = self.get_tournament()
+        table = TabbycatTableBuilder(view=self, sort_key="Name")
+        table.add_adjudicator_columns(tournament.adjudicator_set.all())
+
+        feedback_data = []
+        for adj in tournament.adjudicator_set.all():
+            count = adj.adjudicatorfeedback_set.count()
+            feedback_data.append({
+                'text': "{:d} Feedbacks".format(count),
+                'link': reverse_tournament('adjfeedback-view-on-adjudicator', tournament, kwargs={'pk': adj.id}),
+            })
+        table.add_column("Feedbacks", feedback_data)
+        return table
 
     def get_table_data(self):
         t = self.get_tournament()

@@ -9,6 +9,7 @@ from django.views.generic.base import TemplateView, View
 from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import PublicTournamentPageMixin
 from utils.mixins import CacheMixin, HeadlessTemplateView, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin, VueTableMixin
+from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, Team
 
@@ -34,23 +35,19 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
     sort_key = 'Name'
     tables_titles = ['Adjudicators', 'Speakers']
 
-    def get_tables_data(self):
+    def get_tables(self):
         t = self.get_tournament()
 
-        adjs_data = []
         adjudicators = Adjudicator.objects.filter(tournament=t).select_related('institution')
-        for adjudicator in adjudicators:
-            ddict = self.adj_cells(adjudicator, t)
-            adjs_data.append(ddict)
+        adjs_table = TabbycatTableBuilder(view=self, title="Adjudicators", sort_key="Name")
+        adjs_table.add_adjudicator_columns(adjudicators)
 
-        speakers_data = []
         speakers = Speaker.objects.filter(team__tournament=t).select_related('team', 'team__institution')
-        for speaker in speakers:
-            ddict = self.speaker_cells(speaker, t)
-            ddict.extend(self.team_cells(speaker.team, t))
-            speakers_data.append(ddict)
+        speakers_table = TabbycatTableBuilder(view=self, title="Speakers", sort_key="Name")
+        speakers_table.add_speaker_columns(speakers)
+        speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
-        return [adjs_data, speakers_data]
+        return [adjs_table, speakers_table]
 
 
 class AllTournamentsAllInstitutionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
