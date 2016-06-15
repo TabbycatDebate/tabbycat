@@ -158,10 +158,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell = {'text': adj.name}
             if self.admin:
                 cell['link'] = reverse_tournament('participants-adjudicator-summary',
-                    tournament, kwargs={'pk': adj.pk})
+                    self.tournament, kwargs={'pk': adj.pk})
             elif self.tournament.pref('public_summary'):
                 cell['link'] = reverse_tournament('participants-public-adjudicator-summary',
-                    tournament, kwargs={'pk': adj.pk})
+                    self.tournament, kwargs={'pk': adj.pk})
             adj_data.append(cell)
         self.add_column("Name", adj_data)
 
@@ -223,10 +223,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             if self.admin:
                 cell['link'] = reverse_tournament('participants-team-summary',
-                    tournament, kwargs={'pk': team.pk})
+                    self.tournament, kwargs={'pk': team.pk})
             elif self.tournament.pref('public_summary'):
                 cell['link'] = reverse_tournament('participants-public-team-summary',
-                    tournament, kwargs={'pk': team.pk})
+                    self.tournament, kwargs={'pk': team.pk})
             team_data.append(cell)
         self.add_column(key, team_data)
 

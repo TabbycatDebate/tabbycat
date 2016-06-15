@@ -13,8 +13,6 @@ from django.views.generic.detail import SingleObjectMixin
 
 from tournaments.mixins import TournamentMixin
 
-from .misc import reverse_tournament
-
 logger = logging.getLogger(__name__)
 
 
