@@ -19,7 +19,7 @@ from motions.models import Motion
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
-from utils.misc import get_ip_address, redirect_round, reverse_tournament
+from utils.misc import get_ip_address, redirect_round
 from utils.mixins import HeadlessTemplateView, SuperuserRequiredMixin, VueTableMixin
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
@@ -124,20 +124,57 @@ def results(request, round):
 
 class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
 
+    template_name = "public_results_for_round.html"
     public_page_preference = 'public_results'
     page_emoji = '💥'
+    default_view = 'team'
 
     def get_page_title(self):
         return "Results for " + self.get_round().name
 
     def get_table(self):
+        view_type = self.request.session.get('results_view', 'team')
+        if view_type == 'debate':
+            return self.get_table_by_debate()
+        else:
+            return self.get_table_by_team()
+
+    def get_table_by_debate(self):
+        round = self.get_round()
+        tournament = self.get_tournament()
+        debates = round.get_draw()
+
+        table = TabbycatTableBuilder(view=self, sort_key="Venue")
+        table.add_debate_venue_columns(debates)
+
+        results_data = []
+        for debate in debates:
+            affirmative = {'text': debate.aff_team.short_name}
+            negative = {'text': debate.neg_team.short_name}
+            if debate.confirmed_ballot:
+                if debate.confirmed_ballot.ballot_set.aff_win:
+                    affirmative['icon'] = "glyphicon-arrow-up text-success"
+                    negative['icon'] = "glyphicon-arrow-down text-danger"
+                elif debate.confirmed_ballot.ballot_set.neg_win:
+                    negative['icon'] = "glyphicon-arrow-up text-success"
+                    affirmative['icon'] = "glyphicon-arrow-down text-danger"
+            results_data.append([affirmative, negative])
+        table.add_columns(["Affirmative", "Negative"], results_data)
+
+        table.add_debate_ballot_link_column(debates)
+        table.add_debate_adjudicators_column(debates, show_splits=False)
+        if tournament.pref('show_motions_in_results'):
+            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+
+        return table
+
+    def get_table_by_team(self):
         round = self.get_round()
         tournament = self.get_tournament()
         teamscores = TeamScore.objects.filter(debate_team__debate__round=round)
         debates = [ts.debate_team.debate for ts in teamscores]
 
         table = TabbycatTableBuilder(view=self, sort_key="Team")
-
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
 
         results_data = []
@@ -161,16 +198,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
 
         table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
 
-        if tournament.pref('ballots_released'):
-            ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
-            ballot_links_data = [{
-                'text': "View Ballot",
-                'link': reverse_tournament('public_ballots_view', tournament, kwargs={'debate_id': debate.id})
-            } if debate else "" for debate in debates]
-            table.add_column(ballot_links_header, ballot_links_data)
-
+        table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=False)
-
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 
@@ -185,7 +214,16 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         if round.seq >= tournament.current_round.seq and not tournament.release_all:
             logger.info("Refused results for %s: not yet available", round.name)
             return render(request, 'public_results_not_available.html')
+
+        # If there's a query string, store the session setting
+        if request.GET.get('view') in ['team', 'debate']:
+            request.session['results_view'] = request.GET['view']
+
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        kwargs['view_type'] = self.request.session.get('results_view', self.default_view)
+        return super().get_context_data(**kwargs)
 
 
 class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):

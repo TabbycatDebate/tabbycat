@@ -1,6 +1,7 @@
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from standings.templatetags.standingsformat import metricformat, rankingformat
+from utils.misc import reverse_tournament
 
 from .mixins import SuperuserRequiredMixin
 
@@ -279,3 +280,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } for info in standings.metrics_info()]
         data = [list(map(metricformat, standing.itermetrics())) for standing in standings]
         self.add_columns(headers, data)
+
+    def add_debate_ballot_link_column(self, debates):
+        if self.tournament.pref('ballots_released'):
+            ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
+            ballot_links_data = [{
+                'text': "View Ballot",
+                'link': reverse_tournament('public_ballots_view', self.tournament, kwargs={'debate_id': debate.id})
+            } if debate else "" for debate in debates]
+            self.add_column(ballot_links_header, ballot_links_data)
