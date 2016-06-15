@@ -126,10 +126,16 @@ class HeadlessTemplateView(TemplateView):
     page_title = ''
     page_emoji = ''
 
+    def get_page_title(self):
+        return self.page_title
+
+    def get_page_emoji(self):
+        return self.page_emoji
+
     def get_context_data(self, **kwargs):
 
-        kwargs["page_title"] = self.page_title
-        kwargs["page_emoji"] = self.page_emoji
+        kwargs["page_title"] = self.get_page_title()
+        kwargs["page_emoji"] = self.get_page_emoji()
 
         return super().get_context_data(**kwargs)
 

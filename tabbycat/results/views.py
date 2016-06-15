@@ -125,9 +125,10 @@ def results(request, round):
 class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
 
     public_page_preference = 'public_results'
-    page_title = 'Results'
     page_emoji = '💥'
-    sort_key = 'Team'
+
+    def get_page_title(self):
+        return "Results for " + self.get_round().name
 
     def get_table(self):
         round = self.get_round()
@@ -138,14 +139,6 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table = TabbycatTableBuilder(view=self, sort_key="Team")
 
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
-
-        if tournament.pref('ballots_released'):
-            ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
-            ballot_links_data = [{
-                'text': "View Ballot",
-                'link': reverse_tournament('public_ballots_view', tournament, kwargs={'debate_id': debate.id})
-            } if debate else "" for debate in debates]
-            table.add_column(ballot_links_header, ballot_links_data)
 
         results_data = []
         for ts in teamscores:
@@ -167,6 +160,15 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table.add_column("Result", results_data)
 
         table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
+
+        if tournament.pref('ballots_released'):
+            ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
+            ballot_links_data = [{
+                'text': "View Ballot",
+                'link': reverse_tournament('public_ballots_view', tournament, kwargs={'debate_id': debate.id})
+            } if debate else "" for debate in debates]
+            table.add_column(ballot_links_header, ballot_links_data)
+
         table.add_debate_adjudicators_column(debates, show_splits=False)
 
         if tournament.pref('show_motions_in_results'):
