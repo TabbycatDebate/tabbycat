@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Feedback from {{ source_name }}{% endblock %}
-{% block page-title %}Feedback from {{ source_name }}{% endblock %}
+{% block head-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
+{% block page-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
 {% block page-subnav-sections %}{% endblock %}
 
 {% block content %}
@@ -11,9 +11,7 @@
   {% for feedback in feedbacks %}
 
     <div class="col-md-4">
-
       {% include 'feedback_card.html' %}
-
     </div>
 
     {% if forloop.counter|divisibleby:3 %}
@@ -27,7 +25,3 @@
   </div>
 
 {% endblock content %}
-
-{% block extra-js %}
-
-{% endblock extra-js %}

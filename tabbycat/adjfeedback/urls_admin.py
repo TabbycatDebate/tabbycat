@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
     # Overviews
     url(r'^$',
-        views.feedback_overview,
+        views.FeedbackOverview.as_view(),
         name='adjfeedback-overview'),
     url(r'^progress/$',
         views.FeedbackProgress.as_view(),
@@ -15,10 +15,10 @@ urlpatterns = [
 
     # Getting/setting values
     url(r'^scores/all/$',
-        views.adj_scores,
+        views.GetAdjScores.as_view(),
         name='adj_scores'),
     url(r'^scores/get/$',
-        views.get_adj_feedback,
+        views.GetAdjFeedback.as_view(),
         name='get_adj_feedback'),
     url(r'^test/set/$',
         views.SetAdjudicatorTestScoreView.as_view(),
@@ -43,6 +43,12 @@ urlpatterns = [
     url(r'^source/adjudicator/(?P<pk>\d+)/$',
         views.FeedbackFromAdjudicatorView.as_view(),
         name='adjfeedback-view-from-adjudicator'),
+    url(r'^target/list/$',
+        views.FeedbackByTargetView.as_view(),
+        name='adjfeedback-view-by-target'),
+    url(r'^target/adjudicator/(?P<pk>\d+)/$',
+        views.FeedbackOnAdjudicatorView.as_view(),
+        name='adjfeedback-view-on-adjudicator'),
 
     # Adding
     url(r'^add/$',

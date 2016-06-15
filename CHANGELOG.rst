@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+?.?.?
+-----
+- Add a 'Diversity Tab' to display demographic information about participants
+- Added basic linting to the continuous integration tests
+- Moved the majority of table views to rendering on the front-end to improve performance
+- Restructured app directory slightly
+- Various bug fixes, optimisations, and documentation edits
+
+
 0.9.0
 -----
 - Added a beta implementation of the break rounds workflow

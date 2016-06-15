@@ -1,39 +1,66 @@
 {% extends "base.html" %}
+{% load debate_tags %}
 
 {% block page-subnav-sections %}
   {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block content %}
-  <div class="panel panel-default">
-    <div class="panel-body" id="tableContainer">
-      <smart-table
-        :table-content="gridData"
-        :filter-key="searchQuery"
-        :default-sort-key="sortKey"
-      >
-      </smart-table>
-    </div>
-  </div>
+
+  {% for table_index in tables_count %}
+    {% if tables_count|length > 1 %}<div class="col-md-{% divide_to_int 12 tables_count|length %}">{% endif %}
+
+      <div class="panel panel-default" id="tableContainer{{ table_index }}">
+        <div class="panel-heading" v-if="tableTitle">
+          <h4 v-html="tableTitle"></h4>
+        </div>
+        <div class="panel-body">
+          <smart-table
+            :table-headers="tableHeaders"
+            :table-content="gridData"
+            :filter-key="searchQuery"
+            :default-sort-key="sortKey">
+          </smart-table>
+        </div>
+      </div>
+
+    {% if tables_count|length > 1 %}</div>{% endif %}
+  {% endfor %}
+
 {% endblock content %}
 
 {% block extra-js %}
   {{ block.super }}
+  {% include "vue/cell.vue" %}
+  {% include "vue/header.vue" %}
   {% include "vue/table.vue" %}
   <script>
-    var fromTeamsTable = new Vue({
-      el: '#tableContainer',
-      data: {
-        searchQuery: '',
-        gridData: {{ tableData|safe }},
-        sortKey: '{{ sortKey }}',
-      },
-      ready: function() {
-        var thisTable = this; // this in the next context is the element
-        document.getElementById('table-search').onkeyup = function (e) {
-          thisTable.$set('searchQuery', this.value);
-        }
-      },
-    });
+
+    var tablesCount = {% if tables_data %}{{ tables_data|length }}{% else %}null{% endif %};
+    var tablesData = {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %};
+    var tablesVue = [];
+
+    for (var tableIndex = 0; tableIndex < tablesData.length; tableIndex++) {
+      var tableData = tablesData[tableIndex];
+      tablesVue.push(
+        new Vue({ // Create a new Vue context for each table
+          el: String('#tableContainer' + tableIndex),
+          data: {
+            searchQuery: '',
+            tableHeaders: tableData['head'],
+            gridData: tableData['data'],
+            sortKey: tableData['sort_key'],
+            tableTitle: tableData['title'],
+          },
+          ready: function() {
+            var thisTable = this; // this in the next context is the element
+            document.getElementById('table-search').onkeyup = function (e) {
+              thisTable.$set('searchQuery', this.value);
+            }
+          },
+        })
+      );
+    }
+
   </script>
 {% endblock extra-js %}

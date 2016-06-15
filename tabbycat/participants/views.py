@@ -10,6 +10,7 @@ from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from utils.mixins import CacheMixin, HeadlessTemplateView, SingleObjectByRandomisedUrlMixin, \
         SuperuserRequiredMixin, SingleObjectFromTournamentMixin, VueTableMixin
+from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, Team
 
@@ -30,34 +31,24 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
 class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, CacheMixin, HeadlessTemplateView):
 
     public_page_preference = 'public_participants'
-    template_name = 'base_double_vue_table.html'
     page_title = 'Participants'
     page_emoji = '🚌'
     sort_key = 'Name'
+    tables_titles = ['Adjudicators', 'Speakers']
 
-    def get_context_data(self, **kwargs):
+    def get_tables(self):
         t = self.get_tournament()
 
-        adjs_data = []
         adjudicators = t.adjudicator_set.select_related('institution')
-        for adjudicator in adjudicators:
-            ddict = self.adj_cells(adjudicator, t)
-            adjs_data.append(ddict)
+        adjs_table = TabbycatTableBuilder(view=self, title="Adjudicators", sort_key="Name")
+        adjs_table.add_adjudicator_columns(adjudicators)
 
-        kwargs["table_a_title"] = "Adjudicators"
-        kwargs["tableDataA"] = json.dumps(adjs_data)
-
-        speakers_data = []
         speakers = Speaker.objects.filter(team__tournament=t).select_related('team', 'team__institution')
-        for speaker in speakers:
-            ddict = self.speaker_cells(speaker, t)
-            ddict.extend(self.team_cells(speaker.team, t))
-            speakers_data.append(ddict)
+        speakers_table = TabbycatTableBuilder(view=self, title="Speakers", sort_key="Name")
+        speakers_table.add_speaker_columns(speakers)
+        speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
-        kwargs["table_b_title"] = "Speakers"
-        kwargs["tableDataB"] = json.dumps(speakers_data)
-
-        return super().get_context_data(**kwargs)
+        return [adjs_table, speakers_table]
 
 
 # ==============================================================================
@@ -66,35 +57,24 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
 
 class ParticipantsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixin, TemplateView):
 
-    template_name = 'base_double_vue_table.html'
     page_title = 'Team and Adjudicator Summary Pages'
     page_emoji = '🌸'
-    sort_key = 'Name'
 
-    def get_context_data(self, **kwargs):
+    def get_tables(self):
         t = self.get_tournament()
 
-        adjs_data = []
         adjudicators = t.adjudicator_set.select_related('institution')
-        for adj in adjudicators:
-            ddict = self.adj_cells(adj, t)
-            adjs_data.append(ddict)
+        adjs_table = TabbycatTableBuilder(view=self, title="Adjudicators", sort_key="Name")
+        adjs_table.add_adjudicator_columns(adjudicators)
 
-        kwargs["table_a_title"] = "Adjudicators"
-        kwargs["tableDataA"] = json.dumps(adjs_data)
-
-        teams_data = []
         teams = t.team_set.select_related('institution')
-        for team in teams:
-            ddict = self.team_cells(team, t, key='Name')
-            teams_data.append(ddict)
+        teams_table = TabbycatTableBuilder(view=self, title="Teams", sort_key="Name")
+        teams_table.add_team_columns(teams, key="Name")
 
-        kwargs["table_b_title"] = "Teams"
-        kwargs["tableDataB"] = json.dumps(teams_data)
+        return [adjs_table, teams_table]
 
-        return super().get_context_data(**kwargs)
 
-class BaseSummaryView(SingleObjectFromTournamentMixin, VueTableMixin, TemplateView):
+class BaseSummaryView(SingleObjectFromTournamentMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()

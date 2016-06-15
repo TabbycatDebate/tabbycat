@@ -8,7 +8,7 @@
 
 # E261 = at least two spaces before inline comment
 # E128 = E128 continuation line under-indented for visual indent
-# I101 = Imported names are in the wrong order.
+# I100 = Imported names are in the wrong order.
 
 # Q000 = double quotes
 

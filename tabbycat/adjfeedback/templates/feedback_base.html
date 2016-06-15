@@ -1,0 +1,30 @@
+{% extends "base_vue_table.html" %}
+{% load debate_tags %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-overview %}">
+    Overview
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-latest %}">
+    Latest
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-source %}">
+    Find by Source
+  </a>
+  <a class="btn btn-default submit-disable" href="{% tournament_url adjfeedback-view-by-target %}">
+    Find by Target
+  </a>
+  {% if pref.public_ballots_randomised or pref.public_feedback_randomised or pref.allocation_confirmations %}
+    <a class="btn btn-default submit-disable" href="{% tournament_url randomised-urls-view %}">
+      Randomised URLs
+    </a>
+  {% endif %}
+  <a class="btn btn-default submit-disable" href="{% tournament_url feedback_progress %}">
+    Unsubmitted Ballots
+  </a>
+  {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <a class="btn btn-success" href="{% tournament_url adjfeedback-add-index %}">Add Feedback</a>
+{% endblock %}

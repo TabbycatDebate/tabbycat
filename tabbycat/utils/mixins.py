@@ -1,16 +1,16 @@
 import logging
+import json
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import SingleObjectMixin
 
-from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import TournamentMixin
 
 from .misc import reverse_tournament
@@ -51,6 +51,17 @@ class PostOnlyRedirectView(View):
 
     def post(self, request, *args, **kwargs):
         return HttpResponseRedirect(self.get_redirect_url())
+
+
+class JsonDataResponseView(View):
+    """Mixings for views that dump back a json response"""
+
+    def get_data():
+        pass
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        return HttpResponse(json.dumps(self.get_data()), content_type="text/json")
 
 
 class SuperuserRequiredMixin(UserPassesTestMixin):
@@ -117,10 +128,16 @@ class HeadlessTemplateView(TemplateView):
     page_title = ''
     page_emoji = ''
 
+    def get_page_title(self):
+        return self.page_title
+
+    def get_page_emoji(self):
+        return self.page_emoji
+
     def get_context_data(self, **kwargs):
 
-        kwargs["page_title"] = self.page_title
-        kwargs["page_emoji"] = self.page_emoji
+        kwargs["page_title"] = self.get_page_title()
+        kwargs["page_emoji"] = self.get_page_emoji()
 
         return super().get_context_data(**kwargs)
 
@@ -132,213 +149,16 @@ class VueTableMixin:
     (emoji, links, etc). Functions below return blocks of content (ie not just
      a team name row, but also institution/category status as needed)."""
 
-    sort_key = ''
     template_name = 'base_vue_table.html'
 
     def get_context_data(self, **kwargs):
-        kwargs["sortKey"] = self.sort_key
+        tables = self.get_tables()
+        kwargs["tables_count"] = list(range(len(tables)))
+        kwargs["tables_data"] = json.dumps([table.jsondict() for table in tables])
         return super().get_context_data(**kwargs)
 
-    def format_cell_number(self, value):
-        if isinstance(value, float):
-            return "{0:.2f}".format(value)
-        else:
-            return value
+    def get_table(self):
+        raise NotImplementedError("subclasses must implement get_table()")
 
-    def get_adj_symbol(self, adj_type):
-        if adj_type == DebateAdjudicator.TYPE_CHAIR:
-            return "Ⓒ"
-        elif adj_type == DebateAdjudicator.TYPE_PANEL:
-            return ""
-        else:
-            return "Ⓣ"
-
-    def round_cells(self, round):
-        round_info = [{
-            'head': {'key': 'Round'},
-            'cell': {
-                'sort': round.seq,
-                'text': round.abbreviation,
-                'tooltip': round.name
-            }
-        }]
-        return round_info
-
-    def adj_cells(self, adjudicator, tournament):
-
-        adj_info = [{
-            'head': {'key': 'Name'},
-            'cell': {'text': adjudicator.name}
-        }]
-
-        if isinstance(self, SuperuserRequiredMixin):
-            adj_info[0]['cell']['link'] = reverse_tournament('participants-adjudicator-summary',
-                    tournament, kwargs={'pk': adjudicator.pk})
-        elif tournament.pref('public_summary'):
-            adj_info[0]['cell']['link'] = reverse_tournament('participants-public-adjudicator-summary',
-                    tournament, kwargs={'pk': adjudicator.pk})
-
-        if tournament.pref('show_institutions'):
-            if adjudicator.adj_core:
-                adj_info.append({
-                    'head': {'key': 'Institution'},
-                    'cell': {'text': "Adj Core / " + adjudicator.institution.code}
-                })
-            elif adjudicator.independent:
-                adj_info.append({
-                    'head': {'key': 'Institution'},
-                    'cell': {'text': "Independent / " + adjudicator.institution.code}
-                })
-            else:
-                adj_info.append({
-                    'head': {'key': 'Institution'},
-                    'cell': {'text': adjudicator.institution.code}
-                })
-        return adj_info
-
-    def adjudicators_cells(self, debate, tournament, key='Adjudicators', show_splits=False):
-
-        adjs_text = ''
-        if debate.confirmed_ballot and show_splits:
-            for type, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
-                adjs_info = adj.name + " " + self.get_adj_symbol(type) + " , "
-                if split:
-                    adjs_text += "<span class='text-danger'>" + adjs_info + "</span>"
-                else:
-                    adjs_text += adjs_info
-        else:
-            for type, adj in debate.adjudicators:
-                adjs_text += adj.name + " " + self.get_adj_symbol(type) + " , "
-
-        adjs_info = [{
-            'head': {'key': key},
-            'cell': {'text': adjs_text[:-2]} # Remove trailing comma
-        }]
-        return adjs_info
-
-    def motion_cells(self, motion, tournament, key='Motion'):
-        motion_info = []
-
-        if tournament.pref('enable_motions'):
-            motion_info.append({
-                'head': {'key': 'Order'},
-                'cell': {'text': motion.seq}
-            })
-
-        motion_info.append({
-            'head': {'key': key},
-            'cell': {'text': motion.reference, 'tooltip': motion.text}
-        })
-        return motion_info
-
-    def team_cells(self, team, tournament, break_categories=None, show_speakers=False, hide_institution=False, key='Team'):
-        team_info = [{
-            'head': {'key': key},
-            'cell': {
-                'text':     team.short_name,
-                'emoji':    team.emoji if tournament.pref('show_emoji') else None,
-                'sort':     team.short_name,
-                'tooltip':  [" " + s.name for s in team.speakers] if tournament.pref('show_speakers_in_draw') or show_speakers else None
-            }
-        }]
-
-        if isinstance(self, SuperuserRequiredMixin):
-            team_info[0]['cell']['link'] = reverse_tournament('participants-team-summary',
-                    tournament, kwargs={'pk': team.pk})
-        elif tournament.pref('public_summary'):
-            team_info[0]['cell']['link'] = reverse_tournament('participants-public-team-summary',
-                    tournament, kwargs={'pk': team.pk})
-
-        if break_categories is not None:
-            team_info.append({
-                'head': {'key': 'Categories'},
-                'cell': {'text': break_categories}
-            })
-        if tournament.pref('show_institutions') and not hide_institution:
-            team_info.append({
-                'head': {'key': 'Institution'},
-                'cell': {'text': team.institution.code}
-            })
-        return team_info
-
-    def speaker_cells(self, speaker, tournament, key='Name'):
-        speaker_info = [{
-            'head': {'key': key},
-            'cell': {'text': speaker.name}
-        }]
-        if tournament.pref('show_novices'):
-            icon = "glyphicon-ok" if speaker.novice else "glyphicon-remove"
-            sort = 1 if speaker.novice else 0
-            speaker_info.append({
-                'head': {'key': 'Novice', 'icon': 'glyphicon-leaf', 'tooltip': "Novice Status"},
-                'cell': {'icon': icon, 'sort': sort}
-            })
-
-        return speaker_info
-
-    def venue_cells(self, debate, tournament, with_times=False):
-        venue_info = []
-        if tournament.pref('enable_divisions'):
-            venue_info.append({
-                'head': {'key': 'Division'},
-                'cell': {'text': debate.division.name}
-            })
-
-        if tournament.pref('enable_venue_groups') and debate.division:
-            venue_info.append({
-                'head': {'key': 'Venue', 'icon': "glyphicon glyphicon-map-marker"},
-                'cell': {'text': debate.division.venue_group.short_name}
-            })
-        elif tournament.pref('enable_venue_groups'):
-            venue_info.append({
-                'head': {'key': 'Venue', 'icon': "glyphicon glyphicon-map-marker"},
-                'cell': {'text': debate.venue.group.short_name + debate.venue.name}
-            })
-        else:
-            venue_info.append({
-                'head': {'key': 'Venue', 'icon': "glyphicon glyphicon-map-marker"},
-                'cell': {'text': debate.venue.name}
-            })
-
-        if with_times and tournament.pref('enable_debate_scheduling'):
-            if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
-                venue_info.append({'head': {'key': ' '}, 'cell':  {'text': ""}})
-                venue_info.append({'head': {'key': ' '}, 'cell':  {'text': "Bye"}})
-            elif debate.result_status == "P":
-                venue_info.append({'head': {'key': ' '}, 'cell':  {'text': ""}})
-                venue_info.append({'head': {'key': ' '}, 'cell':  {'text': "Postponed"}})
-            elif debate.confirmed_ballot.forfeit:
-                venue_info.append({'head': {'key': ' '}, 'cell':  {'text': ""}})
-                venue_info.append({'head': {'key': ' '}, 'cell':  {'text': "Forfeit"}})
-            else:
-                venue_info.append({'head': {'key': 'status'}, 'cell': {'text': debate.time.strftime("D jS F")}})
-                venue_info.append({'head': {'key': 'status'}, 'cell': {'text': debate.time.strftime('h:i A')}})
-
-        return venue_info
-
-    def ranking_cells(self, standing):
-        ddict = []
-        for key, value in standing.rankings.items():
-            if value[1]:
-                ddict.append({'head': {'key': key}, 'cell': {'text': str(value[0]) + '='}})
-            else:
-                ddict.append({'head': {'key': key}, 'cell': {'text': str(value[0])}})
-        if hasattr(standing, 'break_rank'):
-            ddict.append({'head': {'key': 'Break'}, 'cell': {'text': standing.break_rank}})
-
-        return ddict
-
-    def metric_cells(self, metrics):
-        ddict = []
-        for key, value in metrics.items():
-            # Bit of a hack; although probably best place to have an interface
-            if key is 'speaks_avg':
-                key = "AVG Speaks"
-            elif key is 'speaks_stddev':
-                key = "STD Dev Speaks"
-            elif key is 'speaks_sum':
-                key = "Total Speaks"
-
-            ddict.append({'head': {'key': key}, 'cell': {'text': self.format_cell_number(value)}})
-
-        return ddict
+    def get_tables(self):
+        return [self.get_table()]
