@@ -162,7 +162,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table.add_columns(["Affirmative", "Negative"], results_data)
 
         table.add_debate_ballot_link_column(debates)
-        table.add_debate_adjudicators_column(debates, show_splits=False)
+        table.add_debate_adjudicators_column(debates, show_splits=True)
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 
@@ -199,7 +199,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
 
         table.add_debate_ballot_link_column(debates)
-        table.add_debate_adjudicators_column(debates, show_splits=False)
+        table.add_debate_adjudicators_column(debates, show_splits=True)
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 

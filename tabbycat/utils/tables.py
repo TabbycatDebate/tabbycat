@@ -174,11 +174,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for debate in debates:
             adj_strings = []
 
-            if debate.confirmed_ballot and show_splits:
+            if debate.confirmed_ballot and show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
                 for adjtype, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
                     adj_string = adj.name + self.ADJ_SYMBOLS[adjtype]
                     if split:
-                        adj_string = "<span class='text-danger'>" + adj_string + "</span>"
+                        adj_string = "<span class='text-danger'>" + adj_string + " 💢</span>"
                     adj_strings.append(adj_string)
             else:
                 for adjtype, adj in debate.adjudicators:
@@ -188,8 +188,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_column(key, data)
 
-    def add_motion_column(self, motions, key="Motion"):
-        if self.tournament.pref('enable_motions'):
+    def add_motion_column(self, motions, key="Motion", show_order=False):
+        if show_order and self.tournament.pref('enable_motions'):
             self.add_column("Order", [motion.seq for motion in motions])
 
         motion_data = [{

@@ -336,7 +336,7 @@ class BaseMotionStandingsView(RoundMixin, VueTableMixin, HeadlessTemplateView):
         table = TabbycatTableBuilder(view=self, sort_key="Round")
 
         table.add_round_column([motion.round for motion in motions])
-        table.add_motion_column(motions)
+        table.add_motion_column(motions, show_order=True)
         table.add_column("Selected", [motion.chosen_in for motion in motions])
         if self.get_tournament().pref('motion_vetoes_enabled'):
             table.add_column("Aff Vetoes", [motion.aff_vetoes for motion in motions])
