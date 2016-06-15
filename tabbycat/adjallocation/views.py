@@ -2,7 +2,7 @@ import json
 import logging
 
 from django.db.utils import IntegrityError
-from django.views.generic.base import View
+from django.views.generic.base import View, TemplateView
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 
@@ -10,7 +10,7 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -237,3 +237,54 @@ def adj_conflicts(request, round):
             pass  # For when a Debate/DebateTeam may have been deleted
 
     return HttpResponse(json.dumps(data), content_type="text/json")
+
+
+class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
+
+    template_name = 'edit_adj_allocation.html'
+    sort_key = 'Venue'
+    tables_class = 'table-condensed table-edit-allocation'
+
+    def get_context_data(self, **kwargs):
+        kwargs['round'] = self.get_round()
+        return super().get_context_data(**kwargs)
+
+    def get_table_data(self):
+        t = self.get_tournament()
+        draw = self.get_round().get_draw()
+
+        allocation_data = []
+        for d in draw:
+            ddict = []
+
+            ddict.extend(self.bracket_cells(d))
+            ddict[-1]['cell']['class'] = 'double-height'
+
+            ddict.append({
+                'head': {'key': 'VIP', 'icon': 'glyphicon-fire', 'tooltip': "Set a debate's importance (higher receives higher adjs)"},
+                'cell': {'text': '<select class="form-control">' +
+                                    '<option value="1">1</option>' +
+                                    '<option value="2" selected="">2</option>' +
+                                    '<option value="3">3</option>' +
+                                    '<option value="4">4</option>' +
+                                    '<option value="5">5</option>' +
+                                  '</select>'}
+            })
+
+            ddict.extend(self.venue_cells(d, t))
+            ddict[-1]['cell']['class'] = 'double-height'
+
+            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
+            ddict[-1]['cell']['text'] += '<br><small class="text-muted hide-underline">on %s wins</small>' % d.aff_team.wins_count
+
+            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
+            ddict[-1]['cell']['text'] += '<br><small class="text-muted hide-underline">on %s wins</small>' % d.neg_team.wins_count
+            ddict.append({
+                'head': {'key': 'Panel'},
+                'cell': {'text': ''}
+            })
+
+            allocation_data.append(ddict)
+
+        print(allocation_data)
+        return allocation_data

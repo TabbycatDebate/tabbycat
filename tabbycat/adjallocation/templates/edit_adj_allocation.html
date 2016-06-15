@@ -1,0 +1,65 @@
+{% extends "base_vue_table.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block body-id %}body-edit-allocation{% endblock %}<!-- Need to push header down -->
+{% block nav %}{% endblock %}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block page-subnav-sections %}{% endblock page-subnav-sections %}
+
+{% block content %}
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+
+    <div class="navbar-form navbar-left btn-group btn-group-sm">
+      <button type="button" class="btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-chevron-left"></span>Back to Draw
+      </button>
+      <button type="button" class="btn btn-success btn-sm">
+        Auto Allocate Adjudicators
+      </button>
+    </div>
+
+    <div class="navbar-form navbar-right btn-group btn-group-sm input-group-sm">
+      {% include "tables/table_search.html" %}
+    </div>
+
+    <div class="navbar-form navbar-right btn-group btn-group-sm">
+      <button class="btn btn-default nav-link hoverable">
+        <span class="glyphicon glyphicon glyphicon-eye-open"></span> Show Region
+      </button>
+      <button class="btn btn-default nav-link hoverable">
+        <span class="glyphicon glyphicon glyphicon-eye-open"></span> Show Gender
+      </button>
+      <button class="btn btn-default nav-link hoverable">
+        <span class="glyphicon glyphicon glyphicon-eye-open"></span> Show Language
+      </button>
+    </div>
+
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="alert alert-warning alert-dismissible small" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong>Alert!</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ block.super }}
+
+  <nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+      Adjs go here
+    </div>
+  </nav>
+
+{% endblock content %}
+
+{% block extra-js %}
+  {{ block.super }}
+{% endblock extra-js %}

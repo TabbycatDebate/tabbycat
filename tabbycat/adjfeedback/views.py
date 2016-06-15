@@ -71,13 +71,13 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
             checkbox += ' checked >' if adj.breaking else '>'
             ddict.append({
                 'head': {'key': 'B', 'icon': 'glyphicon-star', 'tooltip': 'Whether the adj is marked as breaking (click to mark)'},
-                'cell': {'text': checkbox, 'sort': adj.breaking, 'cell-class': 'toggle_breaking_status'}
+                'cell': {'text': checkbox, 'sort': adj.breaking, 'class': 'double-height toggle_breaking_status'}
             })
 
             current_score = str(self.format_cell_number(adj.feedback_score, dp=1)) if adj.feedback_score else 'N/A'
             ddict.append({
                 'head': {'key': 'Score', 'icon': 'glyphicon-signal', 'tooltip': 'Current weighted score'},
-                'cell': {'text': '<strong>%s</strong>' % current_score, 'tooltip': 'Current weighted average of all feedback'}
+                'cell': {'text': '<strong>%s</strong>' % current_score, 'tooltip': 'Current weighted average of all feedback', 'class': 'double-height'}
             })
 
             ddict.append({
@@ -87,7 +87,7 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
                 'cell': {
                     'text': self.format_cell_number(adj.score, dp=1),
                     'modal': adj.id,
-                    'cell-class': 'edit-test-score',
+                    'class': 'edit-test-score double-height',
                     'tooltip': 'Click to edit test score'
                 }
             })
@@ -111,19 +111,19 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
             ddict.append({
                 'head': {'key': 'VF', 'icon': 'glyphicon-question-sign'},
                 'cell': {'text': 'View<br>Feedback',
-                         'cell-class': 'view-feedback',
+                         'class': 'view-feedback',
                          'link': reverse_tournament('adjfeedback-view-on-adjudicator', t, kwargs={'pk': adj.pk})}
             })
             # TODO
             if t.pref('enable_adj_notes'):
                 ddict.append({
                     'head': {'key': 'NO', 'icon': 'glyphicon-list-alt'},
-                    'cell': {'text': 'Edit<br>Note', 'cell-class': 'edit-note', 'modal': str(adj.id) + '===' + str(adj.notes)}
+                    'cell': {'text': 'Edit<br>Note', 'class': 'edit-note', 'modal': str(adj.id) + '===' + str(adj.notes)}
                 })
             # TODO: adj checkbox
             ddict.append({
                 'head': {'key': 'DD', 'icon': 'glyphicon-eye-open', 'tooltip': 'Debates adjudicated'},
-                'cell': {'text': adj.debates}
+                'cell': {'text': adj.debates, 'class': 'double-height'}
             })
             ddict.append({
                 'head': {'key': 'DD', 'icon': 'glyphicon-resize-full', 'tooltip': 'Average Margin (top) and Average Score (bottom)'},

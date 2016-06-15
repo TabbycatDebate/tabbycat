@@ -1,7 +1,7 @@
 <!-- Table Template -->
 <script type="text/x-template" id="smart-table">
 
-  <table class="table">
+  <table class="table" :class="tableClass">
     <thead>
       <tr>
         <template v-for="(headerIndex, headerData) in headers">
@@ -69,7 +69,8 @@
     props: {
       tableContent: Array,
       filterKey: String,
-      defaultSortKey: String
+      defaultSortKey: String,
+      tableClass: String
     },
     components: tableComponents,
     data: function () {

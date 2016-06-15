@@ -18,9 +18,13 @@
 .text-muted {
   color: $gray-light;
 }
+// Override headings
 .text-body {
-  // Override headings
   font-family: $font-family-sans-serif;
+}
+// Mostly for hiding it in extra lines on table cells
+.hide-underline {
+  border-bottom: 2px solid #fff;
 }
 
 // EMOJI

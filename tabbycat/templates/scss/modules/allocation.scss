@@ -1,3 +1,22 @@
+#body-edit-allocation {
+  padding-top: 55px; // compensate for fixed header
+  padding-bottom: 300px; // compensate for fixed footer
+  #table-search { // recreating input-group-sm (wont inherit)
+    height: 30px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .alert {
+    margin-bottom: 10px;
+  }
+}
+.table-edit-allocation {
+  // margin
+}
+
+// Below is being refactored
+
 //------------------------------------------------------------------------------
 // Edit Adjs, Matchups, and Venues Pages
 //------------------------------------------------------------------------------

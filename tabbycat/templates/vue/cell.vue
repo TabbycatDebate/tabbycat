@@ -1,7 +1,7 @@
 <!-- Table Template -->
 <script type="text/x-template" id="smart-cell">
 
-  <td :class="cellData['cell-class'] ? cellData['cell-class'] : null">
+  <td :class="cellData['class'] ? cellData['class'] : null">
 
     <!-- Sorting key -->
     <span v-if="cellData['sort']" class="hidden">

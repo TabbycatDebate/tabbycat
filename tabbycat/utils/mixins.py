@@ -144,11 +144,14 @@ class VueTableMixin:
 
     sort_key = ''
     tables_titles = ['']
+    tables_class = ''
+
     template_name = 'base_vue_table.html'
 
     def get_context_data(self, **kwargs):
         table_data = self.get_tables_data()
         kwargs["tables_sort"] = self.sort_key
+        kwargs["tables_class"] = self.tables_class
         kwargs["tables_titles"] = self.tables_titles
         # Slightly abusrd but means we can loop over it in django templates
         kwargs["tables_count"] = [i for i in range(0, len(table_data))]
@@ -188,6 +191,13 @@ class VueTableMixin:
             }
         }]
         return round_info
+
+    def bracket_cells(self, debate):
+        bracket_info = [{
+            'head': {'tooltip': 'Bracket', 'key': 'B', 'icon': 'glyphicon-stats'},
+            'cell': {'text': debate.bracket}
+        }]
+        return bracket_info
 
     def adj_cells(self, adjudicator, tournament, hide_institution=False):
 

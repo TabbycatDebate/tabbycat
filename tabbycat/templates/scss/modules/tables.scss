@@ -6,6 +6,9 @@
   margin-bottom: 0; // Panel body has its own bottom padding
   > tbody > tr:hover td {
     background-color: $table-bg-hover;
+    .hide-underline {
+      border-bottom-color: $table-bg-hover;
+    }
   }
 }
 
@@ -101,6 +104,9 @@ table thead .sorting_desc_disabled:after {
 .table > tbody > tr > td {
   &.unpadded-cell {
     padding: 0px;
+  }
+  &.double-height {
+    line-height: 40px;
   }
 }
 

@@ -17,6 +17,7 @@
         <div class="panel-body">
           <smart-table
             :table-content="gridData"
+            :table-class="tableClass"
             :filter-key="searchQuery"
             :default-sort-key="sortKey">
           </smart-table>
@@ -35,6 +36,7 @@
   {% include "vue/table.vue" %}
   <script>
 
+    var tablesClass = {% if tables_class %}'{{ tables_class }}'{% else %}''{% endif %};
     var tablesCount = {% if tables_count %}{{ tables_count }}{% else %}null{% endif %};
     var tablesData = {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %};
     var tablesSort = {% if tables_sort %}'{{ tables_sort }}'{% else %}null{% endif %};
@@ -50,6 +52,7 @@
             gridData: tablesData[tableIndex],
             sortKey: tablesSort,
             tableTitle: tablesTitles[tableIndex],
+            tableClass: tablesClass,
           },
           ready: function() {
             var thisTable = this; // this in the next context is the element
