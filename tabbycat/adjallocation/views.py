@@ -2,7 +2,7 @@ import json
 import logging
 
 from django.db.utils import IntegrityError
-from django.views.generic.base import View, TemplateView
+from django.views.generic.base import TemplateView, View
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 
@@ -263,12 +263,12 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
             ddict.append({
                 'head': {'key': 'VIP', 'icon': 'glyphicon-fire', 'tooltip': "Set a debate's importance (higher receives higher adjs)"},
                 'cell': {'text': '<select class="form-control">' +
-                                    '<option value="1">1</option>' +
-                                    '<option value="2" selected="">2</option>' +
-                                    '<option value="3">3</option>' +
-                                    '<option value="4">4</option>' +
-                                    '<option value="5">5</option>' +
-                                  '</select>'}
+                        '<option value="1">1</option>' +
+                        '<option value="2" selected="">2</option>' +
+                        '<option value="3">3</option>' +
+                        '<option value="4">4</option>' +
+                        '<option value="5">5</option>' +
+                        '</select>'}
             })
 
             ddict.extend(self.venue_cells(d, t))
