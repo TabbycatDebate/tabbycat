@@ -24,6 +24,11 @@
                           :round-seq="cellData['round-seq']"
                           :graph-data="cellData['data']">
             </feedback-trend>
+            <debate-importance v-if="cellData['component'] === 'debate-importance'"
+                            :id="cellData['id']"
+                            :importance="cellData['importance']"
+                            :url="cellData['url']">
+            </debate-importance>
           </template>
         </template>
       </tr>

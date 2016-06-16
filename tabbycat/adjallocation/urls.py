@@ -26,4 +26,8 @@ urlpatterns = [
     url(r'^edit/$',
         views.EditAdjudicatorAllocationView.as_view(),
         name='edit_adj_allocation'),
+    url(r'^importance/set/$',
+        views.SetDebateImportance.as_view(),
+        name='set_debate_importance'),
+
 ]

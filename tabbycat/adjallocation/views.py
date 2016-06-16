@@ -10,7 +10,8 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
-from utils.mixins import SuperuserRequiredMixin, VueTableMixin
+from utils.misc import reverse_tournament
+from utils.mixins import SuperuserRequiredMixin, TournamentMixin, VueTableMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -251,7 +252,8 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
 
     def get_table_data(self):
         t = self.get_tournament()
-        draw = self.get_round().get_draw()
+        r = self.get_round()
+        draw = r.get_draw()
 
         allocation_data = []
         for d in draw:
@@ -261,14 +263,8 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
 
             ddict.append({
                 'head': {'key': 'VIP', 'icon': 'glyphicon-fire', 'tooltip': "Set a debate's importance (higher receives higher adjs)"},
-                'cell': {'text': '<select class="form-control input-sm">' +
-                        '<option value="1">1</option>' +
-                        '<option value="2" selected="">2</option>' +
-                        '<option value="3">3</option>' +
-                        '<option value="4">4</option>' +
-                        '<option value="5">5</option>' +
-                        '</select>'}
-            })
+                'cell': {'component': 'debate-importance', 'id': d.id, 'importance': d.importance,
+                         'url': reverse_tournament('set_debate_importance', t, kwargs={'round_seq': r.seq})}})
 
             ddict.extend(self.venue_cells(d, t))
 
@@ -294,3 +290,7 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
             allocation_data.append(ddict)
 
         return allocation_data
+
+
+class SetDebateImportance(TournamentMixin, SuperuserRequiredMixin, View):
+    pass
