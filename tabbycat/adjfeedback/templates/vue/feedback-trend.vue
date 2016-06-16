@@ -66,7 +66,7 @@
     var element = $(vueContext.$el).children(".d3-graph")[0]
     var svg = d3.select(element).insert("svg", ":first-child")
         .attr("width", vueContext.width + vueContext.padding + vueContext.padding)
-        .attr("height", vueContext.height + vueContext.padding)
+        .attr("height", vueContext.height + vueContext.padding  + vueContext.padding)
       .append("g")
         .attr("transform", "translate(" + vueContext.padding + "," + vueContext.padding + ")");
 
@@ -140,7 +140,7 @@
       roundSeq: Number,
       graphData: Array,
       width: { type: Number, default: 320 },
-      height: { type: Number, default: 46 },
+      height: { type: Number, default: 42 },
       padding: { type: Number, default: 5 },
     },
     ready: function() {

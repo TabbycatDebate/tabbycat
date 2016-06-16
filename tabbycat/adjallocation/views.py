@@ -258,11 +258,10 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
             ddict = []
 
             ddict.extend(self.bracket_cells(d))
-            ddict[-1]['cell']['class'] = 'double-height'
 
             ddict.append({
                 'head': {'key': 'VIP', 'icon': 'glyphicon-fire', 'tooltip': "Set a debate's importance (higher receives higher adjs)"},
-                'cell': {'text': '<select class="form-control">' +
+                'cell': {'text': '<select class="form-control input-sm">' +
                         '<option value="1">1</option>' +
                         '<option value="2" selected="">2</option>' +
                         '<option value="3">3</option>' +
@@ -272,13 +271,21 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
             })
 
             ddict.extend(self.venue_cells(d, t))
-            ddict[-1]['cell']['class'] = 'double-height'
 
-            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
-            ddict[-1]['cell']['text'] += '<br><small class="text-muted hide-underline">on %s wins</small>' % d.aff_team.wins_count
+            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True, hide_emoji=True))
 
-            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
-            ddict[-1]['cell']['text'] += '<br><small class="text-muted hide-underline">on %s wins</small>' % d.neg_team.wins_count
+            ddict.append({
+                'head': {'key': 'AWins', 'icon': 'glyphicon glyphicon-star', 'tooltip': "Aff Wins; highlight here break potential"},
+                'cell': {'text': d.aff_team.wins_count}
+            })
+
+            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True, hide_emoji=True))
+
+            ddict.append({
+                'head': {'key': 'NWins', 'icon': 'glyphicon glyphicon-star', 'tooltip': "Aff Wins; highlight here break potential"},
+                'cell': {'text': d.aff_team.wins_count}
+            })
+
             ddict.append({
                 'head': {'key': 'Panel'},
                 'cell': {'text': ''}
@@ -286,5 +293,4 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
 
             allocation_data.append(ddict)
 
-        print(allocation_data)
         return allocation_data

@@ -16,7 +16,7 @@ from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from utils.misc import reverse_tournament
 from utils.mixins import CacheMixin, JsonDataResponseView, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
-from utils.mixins import HeadlessTemplateView, PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin, VueTableMixin
 from utils.urlkeys import populate_url_keys
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
@@ -33,7 +33,7 @@ class GetAdjScores(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
         return data
 
 
-class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
+class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin):
 
     template_name = 'feedback_overview.html'
     page_title = 'Adjudicator Feedback Summary'
@@ -59,7 +59,7 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
         for adj in adjudicators:
             ddict = []
             ddict.extend(self.adj_cells(adj, t, hide_institution=True))
-            ddict[0]['cell']['text'] += "<br><em>%s</em>" % adj.institution.code
+            ddict[0]['cell']['subtext'] = adj.institution.code
 
             if t.pref('show_unaccredited'):
                 ddict.append({
@@ -135,7 +135,7 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
         return feedback_data
 
 
-class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
+class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin):
     template_name = "feedback_base.html"
     page_title = 'Find Feedback on Adjudicator'
     page_emoji = '🔍'
@@ -161,7 +161,7 @@ class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin, H
         return on_adjs_data
 
 
-class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
+class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin):
 
     template_name = "feedback_base.html"
     tables_titles = ['From Teams', 'From Adjudicators', 'On Adjudicators']
@@ -549,7 +549,7 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
         adjudicator.save()
 
 
-class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixin, HeadlessTemplateView):
+class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixin):
 
     page_title = "Missing Feedback Ballots"
     page_emoji = "🆘"

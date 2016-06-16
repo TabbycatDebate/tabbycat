@@ -34,6 +34,10 @@
 
     </span>
 
+    <template v-if="cellData['subtext']">
+      <br><span class="small" v-html="cellData['subtext']"></span>
+    </template>
+
   </td>
 
 </script>

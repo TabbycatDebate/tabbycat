@@ -44,7 +44,7 @@ TPA_MAP = {
 # Viewing Draw
 # ==============================================================================
 
-class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
+class DrawTablePage(RoundMixin, VueTableMixin):
 
     template_name = 'draw_display_by.html'
     sort_key = 'Venue'

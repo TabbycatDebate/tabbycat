@@ -120,33 +120,18 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     slug_url_kwarg = 'url_key'
 
 
-class HeadlessTemplateView(TemplateView):
-    """Mixin for views that sets context data for the page and html header
-    directly into the base template, obviating the need for page templates in
-    many instances"""
-    page_title = ''
-    page_emoji = ''
-
-    def get_context_data(self, **kwargs):
-
-        kwargs["page_title"] = self.page_title
-        kwargs["page_emoji"] = self.page_emoji
-
-        return super().get_context_data(**kwargs)
-
-
-class VueTableMixin:
+class VueTableMixin(TemplateView):
     """Mixing that provides shortcuts for adding data when building arrays that
     will end up as rows within a Vue table. Each cell can be represented
     either as a string value or a dictionary to enable richer inline content
     (emoji, links, etc). Functions below return blocks of content (ie not just
      a team name row, but also institution/category status as needed)."""
 
+    template_name = 'base_vue_table.html'
+
     sort_key = ''
     tables_titles = ['']
     tables_class = ''
-
-    template_name = 'base_vue_table.html'
 
     def get_context_data(self, **kwargs):
         table_data = self.get_tables_data()
@@ -269,12 +254,13 @@ class VueTableMixin:
         })
         return motion_info
 
-    def team_cells(self, team, tournament, break_categories=None, show_speakers=False, hide_institution=False, key='Team'):
+    def team_cells(self, team, tournament, break_categories=None, show_speakers=False, hide_institution=False, hide_emoji=False, key='Team'):
+        emoji = True if tournament.pref('show_emoji') and not hide_emoji else False
         team_info = [{
             'head': {'key': key},
             'cell': {
                 'text':     team.short_name,
-                'emoji':    team.emoji if tournament.pref('show_emoji') else None,
+                'emoji':    team.emoji if emoji else None,
                 'sort':     team.short_name,
                 'tooltip':  [" " + s.name for s in team.speakers] if tournament.pref('show_speakers_in_draw') or show_speakers else None
             }
@@ -290,6 +276,7 @@ class VueTableMixin:
                 'head': {'key': 'Institution'},
                 'cell': {'text': team.institution.code}
             })
+
         return team_info
 
     def speaker_cells(self, speaker, tournament, key='Name'):

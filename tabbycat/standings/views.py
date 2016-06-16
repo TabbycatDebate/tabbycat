@@ -10,7 +10,7 @@ from participants.models import Speaker, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
-from utils.mixins import HeadlessTemplateView, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 
 from .diversity import get_diversity_data_sets
 from .teams import TeamStandingsGenerator
@@ -100,7 +100,7 @@ class StandingsView(RoundMixin, VueTableMixin):
 # Speaker standings
 # ==============================================================================
 
-class BaseSpeakerStandingsView(StandingsView, HeadlessTemplateView):
+class BaseSpeakerStandingsView(StandingsView):
     """Base class for views that display speaker standings."""
 
     rankings = ('rank',)
@@ -221,7 +221,7 @@ class PublicProTabView(PublicTabMixin, BaseProStandingsView):
     public_page_preference = 'pros_tab_released'
 
 
-class BaseReplyStandingsView(BaseSpeakerStandingsView, HeadlessTemplateView):
+class BaseReplyStandingsView(BaseSpeakerStandingsView):
     """Speaker standings view for replies."""
     page_title = 'Reply Speaker Standings'
     page_emoji = '💁'
@@ -261,7 +261,7 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
 # Team standings
 # ==============================================================================
 
-class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
+class BaseTeamStandingsView(StandingsView):
     """Base class for views that display team standings."""
 
     page_title = 'Team Standings'
@@ -301,8 +301,9 @@ class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
                         rr['cell']['icon'] = "glyphicon-arrow-up text-danger"
                         rr['cell']['tooltip'] = "Lost to "
 
-                    rr['cell']['text'] += "vs " + team_score.opposition.emoji + "<br>" + self.format_cell_number(team_score.score)
-                    rr['cell']['tooltip'] += team_score.opposition.short_name + " and received " + self.format_cell_number(team_score.score) + " total speaks"
+                    rr['cell']['text'] += "vs " + team_score.opposition.emoji
+                    rr['cell']['subtext'] = self.format_cell_number(team_score.score)
+                    rr['cell']['tooltip'] += team_score.opposition.short_name + " and received " + self.format_cell_number(team_score.score) + " team points"
 
                 ddict.append(rr)
 
@@ -354,7 +355,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 # Motion standings
 # ==============================================================================
 
-class BaseMotionStandingsView(RoundMixin, VueTableMixin, HeadlessTemplateView):
+class BaseMotionStandingsView(RoundMixin, VueTableMixin):
 
     sort_key = 'Round'
     page_title = 'Motions Tab'
@@ -404,7 +405,7 @@ class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
 # Current team standings (win-loss records only)
 # ==============================================================================
 
-class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, HeadlessTemplateView):
+class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableMixin):
     public_page_preference = 'public_team_standings'
 
     def get_context_data(self, **kwargs):

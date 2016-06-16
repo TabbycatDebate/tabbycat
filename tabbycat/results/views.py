@@ -20,7 +20,7 @@ from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round, reverse_tournament
-from utils.mixins import HeadlessTemplateView, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 from venues.models import Venue
 
 from .result import BallotSet
@@ -118,7 +118,7 @@ def results(request, round):
                   show_motions_column=show_motions_column, has_motions=has_motions))
 
 
-class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
+class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin):
 
     public_page_preference = 'public_results'
     page_title = 'Results'
