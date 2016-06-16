@@ -18,12 +18,13 @@ from breakqual.models import BreakingTeam
 from motions.models import Motion
 from participants.models import Team
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Division, Round, Tournament
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import CacheMixin, HeadlessTemplateView, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableMixin
 from utils.misc import reverse_round
+from utils.tables import TabbycatTableBuilder
 from utils.views import admin_required, expect_post
-from utils.views import public_optional_tournament_view, redirect_round, round_view, tournament_view
+from utils.views import redirect_round, round_view, tournament_view
 from venues.models import Venue, VenueGroup
 from venues.allocator import allocate_venues
 
@@ -36,7 +37,7 @@ logger = logging.getLogger(__name__)
 TPA_MAP = {
     TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
     TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
-    None: "-"
+    None: "—"
 }
 
 
@@ -329,20 +330,35 @@ def unrelease_draw(request, round):
     return redirect_round('draw', round)
 
 
-@admin_required
-@tournament_view
-def side_allocations(request, t):
-    # TODO: move to draws app
-    teams = Team.objects.filter(tournament=t)
-    rounds = Round.objects.filter(tournament=t).order_by("seq")
-    tpas = dict()
-    for tpa in TeamPositionAllocation.objects.all():
-        tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
-    for team in teams:
-        team.side_allocations = [tpas.get(
-            (team.id, round.id), "-") for round in rounds]
-    return render(request, "side_allocations.html", dict(
-        teams=teams, rounds=rounds))
+class BaseSideAllocationsView(TournamentMixin, VueTableMixin, HeadlessTemplateView):
+
+    page_title = "Side Pre-Allocations"
+
+    def get_table(self):
+        tournament = self.get_tournament()
+        teams = tournament.team_set.all()
+        rounds = tournament.prelim_rounds()
+
+        tpas = dict()
+        for tpa in TeamPositionAllocation.objects.filter(round__in=rounds):
+            tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
+
+        table = TabbycatTableBuilder(view=self)
+        table.add_team_columns(teams)
+
+        headers = [round.abbreviation for round in rounds]
+        data = [[tpas.get((team.id, round.id), "—") for round in rounds] for team in teams]
+        table.add_columns(headers, data)
+
+        return table
+
+
+class SideAllocationsView(SuperuserRequiredMixin, BaseSideAllocationsView):
+    pass
+
+
+class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsView):
+    public_page_preference = 'public_side_allocations'
 
 
 class SetRoundStartTimeView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
@@ -494,22 +510,6 @@ def public_all_draws(request, t):
 
     return render(request, 'public_draw_display_all.html', dict(
         all_rounds=all_rounds))
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_side_allocations')
-def public_side_allocations(request, t):
-    # TODO: move to draws app
-    teams = Team.objects.filter(tournament=t)
-    rounds = Round.objects.filter(tournament=t).order_by("seq")
-    tpas = dict()
-    for tpa in TeamPositionAllocation.objects.all():
-        tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
-    for team in teams:
-        team.side_allocations = [tpas.get(
-            (team.id, round.id), "-") for round in rounds]
-    return render(request, "side_allocations.html", dict(
-        teams=teams, rounds=rounds))
 
 
 @login_required

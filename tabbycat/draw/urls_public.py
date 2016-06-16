@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^all/$',
         views.public_all_draws,
         name='public_all_draws'),
-    url(r'^side_allocations/$',
-        views.public_side_allocations,
-        name='public_side_allocations'),
+    url(r'^sides/$',
+        views.PublicSideAllocationsView.as_view(),
+        name='draw-public-side-allocations'),
 ]

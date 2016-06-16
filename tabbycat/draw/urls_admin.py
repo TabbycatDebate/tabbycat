@@ -57,9 +57,9 @@ urlpatterns = [
         name='unrelease_draw'),
 
     # Side Editing
-    url(r'^side_allocations/$',
-        views.side_allocations,
-        name='side_allocations'),
+    url(r'^sides/$',
+        views.SideAllocationsView.as_view(),
+        name='draw-side-allocations'),
     url(r'^round/(?P<round_seq>\d+)/matchups/edit/$',
         views.draw_matchups_edit,
         name='draw_matchups_edit'),
