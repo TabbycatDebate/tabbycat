@@ -40,7 +40,7 @@ As a general principle, Tabbycat requires all ballots to be looked at by two peo
 Speakers who speak twice
 ========================
 
-Note that the ballot entry interface will not let you have a single person speak in more than one position. If a speaker is 'iron manning' the best approach is to go into the **Edit Data** section (under **Setup** in the admin area's menu) and add a new speaker to that team for this purpose. Once in the Edit Data section, go to **Participants** then **Teams** then the **Speakers** tab. Typically it is best practice to indicate in their name they are delivering a second speech (ie "Jane Smith Repeat") and to assign them the position that received the lower of the two scores.
+Note that the ballot entry interface will not let you have a single person speak in more than one position. If a speaker is 'iron manning' the best approach is to go into the **Edit Database** section (under **Setup** in the admin area's menu) and add a new speaker to that team for this purpose. Once in the Edit Data section, go to **Participants** then **Teams** then the **Speakers** tab. Typically it is best practice to indicate in their name they are delivering a second speech (ie "Jane Smith Repeat") and to assign them the position that received the lower of the two scores.
 
 .. tip:: There is a option under **Standings** in the **Config** section that specifies the number of debates that you can miss before you will not show on the tab. By default it is set to 1, but if need be this can be increased to hide these 'fake' speakers from the final speaker tab.
 

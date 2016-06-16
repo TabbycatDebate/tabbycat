@@ -13,7 +13,7 @@ Once you've got Tabbycat installed, the next step is to import data for the tour
 Manual setup
 ============
 
-For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface (under Setup > Edit Data).
+For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface (under Setup > Edit Database).
 
 .. caution:: The Django administrative interface is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. When you're setting up a tournament for the first time, this is highly unlikely to happen, but it's worth keeping in mind.
 

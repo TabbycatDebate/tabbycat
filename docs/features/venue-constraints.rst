@@ -27,7 +27,7 @@ save human effort (and time) in specially allocating rooms.
 
 Adding venue constraints
 ========================
-To add a venue constraint, go to the **Edit Data** section (under Setup), scroll
+To add a venue constraint, go to the **Edit Database** section (under Setup), scroll
 down to "Venues", and you will see four times of venue constraints:
 
 - Adjudicator venue constraints

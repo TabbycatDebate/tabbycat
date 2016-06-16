@@ -7,7 +7,7 @@ Creating Break Categories
 
 Each tournament may have a single or multiple break categories that group a particular series of out-rounds such as an "Open" or "ESL" break.
 
-At the moment new break rounds must be added through the **edit data** interface (available in the **Setup** section once in a tournament). Once there go to **Break Qualification** > **break categories** and click **Add break category**. The fields required for each category should be relatively self-explanatory.
+At the moment new break rounds must be added through the **Edit Database** interface (available in the **Setup** section once in a tournament). Once there go to **Break Qualification** > **break categories** and click **Add break category**. The fields required for each category should be relatively self-explanatory.
 
 Setting Break Eligibility
 =========================

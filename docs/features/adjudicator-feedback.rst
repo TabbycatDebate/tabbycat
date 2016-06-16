@@ -6,7 +6,7 @@ Adjudicator Feedback
 
 You can set the questions that are used on adjudicator feedback forms. The only field that is permanently there is the ``score`` field, which is an overall score assessing the adjudicator. All other questions (including a generic comments section) must be defined if you want them to be on the form.
 
-The only current method of setting questions is through the :ref:`edit data interface <user-accounts>`. Go to the **Edit Data**, then click **Change** next to *Adjudicator feedback questions*. You can add questions here.
+The only current method of setting questions is through the :ref:`edit database interface <user-accounts>`. Go to the **Edit Database**, then click **Change** next to *Adjudicator feedback questions*. You can add questions here.
 
 Most of what you need to know is explained in help text on that page. Some more details are here.
 

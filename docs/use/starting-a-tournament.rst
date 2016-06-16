@@ -19,7 +19,7 @@ Here you can adjust the debate rules and interface options to your liking then h
 Special data types and options
 ==============================
 
-There are a few optional fields that are not covered in the initial data templates, in the visual importer, or that may only be relevant in particular scenarios. It's worth going over these quickly to see if they are needed for your tournament. You can view and edit these fields in the **Edit Data** area (link is in the menu under **Setup**).
+There are a few optional fields that are not covered in the initial data templates, in the visual importer, or that may only be relevant in particular scenarios. It's worth going over these quickly to see if they are needed for your tournament. You can view and edit these fields in the **Edit Database** area (link is in the menu under **Setup**).
 
 Adjudicator Feedback > Adj Feedback Questions
   - As described in :ref:`adjudicator-feedback`, the types of questions that can be posed for adjudicator feedback are able to be heavily customised. If you are customising your feedback form it should be done here, and before the tournament starts.
