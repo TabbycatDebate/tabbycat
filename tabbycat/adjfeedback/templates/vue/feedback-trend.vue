@@ -34,11 +34,11 @@
     // Range is the pixel coordinates; domain is the axes range
     var xScale = d3.scale.linear()
       .range([0, vueContext.width])
-      .domain([0, vueContext.roundSeq])
+      .domain([0, vueContext.componentData.roundSeq])
 
     var yScale = d3.scale.linear()
       .range([vueContext.height, 0])
-      .domain([vueContext.minScore, vueContext.maxScore])
+      .domain([vueContext.componentData.minScore, vueContext.componentData.maxScore])
 
     // Scale axis to fit the range specified
     var xAxis = d3.svg.axis()
@@ -47,7 +47,7 @@
       .innerTickSize(-vueContext.height)
       .outerTickSize(0)
       .tickFormat(function (d) { return ''; }) // Hide ticks
-      .tickValues(d3.range(0, vueContext.roundSeq + 0.5, 1)) // Set tick increments
+      .tickValues(d3.range(0, vueContext.componentData.roundSeq + 0.5, 1)) // Set tick increments
 
     var yAxis = d3.svg.axis()
       .scale(yScale)
@@ -56,7 +56,7 @@
       .outerTickSize(0)
       .tickPadding(10)
       .tickFormat(function (d) { return ''; }) // Hide ticks
-      .tickValues(d3.range(vueContext.minScore, vueContext.maxScore + 0.5, 1))  // Set tick increments
+      .tickValues(d3.range(vueContext.componentData.minScore, vueContext.componentData.maxScore + 0.5, 1))  // Set tick increments
 
     // Define the div for the tooltip
     var div = d3.select("body").append("div")
@@ -81,9 +81,9 @@
 
 
     // create series for regression
-    var xLabels = vueContext.graphData.map(function (d) { return d['x']; })
+    var xLabels = vueContext.componentData.graphData.map(function (d) { return d['x']; })
     var xSeries = d3.range(1, xLabels.length + 1);
-		var ySeries = vueContext.graphData.map(function(d) { return parseFloat(d['y']); });
+		var ySeries = vueContext.componentData.graphData.map(function(d) { return parseFloat(d['y']); });
 		var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
     if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
@@ -109,7 +109,7 @@
     }
 
 
-    var circles = svg.selectAll("circle").data(vueContext.graphData)
+    var circles = svg.selectAll("circle").data(vueContext.componentData.graphData)
     circles
       .enter().append('circle')
       .attr("cx", function (d) { return xScale (d.x); })
@@ -129,22 +129,18 @@
           .duration(500)
           .style("opacity", 0);
       });
-
   }
 
   var feedbackTrend = Vue.extend({
     template: '#feedback-trend',
     props: {
-      minScore: Number,
-      maxScore: Number,
-      roundSeq: Number,
-      graphData: Array,
+      componentData: Object,
       width: { type: Number, default: 320 },
       height: { type: Number, default: 42 },
       padding: { type: Number, default: 5 },
     },
     ready: function() {
-      if (this.graphData !== undefined) {
+      if (this.componentData.graphData !== undefined) {
         InitChart(this); // Only init if we have some info
       }
     },

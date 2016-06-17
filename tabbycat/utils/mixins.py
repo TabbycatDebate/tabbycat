@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
@@ -14,6 +14,16 @@ from django.views.generic.detail import SingleObjectMixin
 from tournaments.mixins import TournamentMixin
 
 logger = logging.getLogger(__name__)
+
+
+class ExpectPost(View):
+    """Ensures a POST was made and provides super call with POST data """
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method != "POST":
+            return HttpResponseBadRequest("Expected POST")
+        else:
+            return super().dispatch(request, *args, **kwargs)
 
 
 class PostOnlyRedirectView(View):

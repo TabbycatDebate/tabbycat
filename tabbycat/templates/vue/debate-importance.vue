@@ -4,10 +4,10 @@
   <td>
 
     <span class="hidden">
-      [[ importance ]]
+      [[ componentData.importance ]]
     </span>
 
-    <select class="form-control input-sm" v-model="importance">
+    <select class="form-control input-sm" v-model="componentData.importance" v-on:change="updateImportance">
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -26,25 +26,31 @@
   var debateImportance = Vue.extend({
     template: '#debate-importance',
     props: {
-      importance: Number,
-      id: Number,
-      url: String
+      componentData: Object,
     },
-    computed: {
-      example: function () {
-        console.log(this.importance);
+    methods: {
+      updateImportance: function () {
         $.ajax({
           type: "POST",
-          url: this.id,
+          url: this.componentData.url,
           data: {
-            debate_id: this.id,
-            value: this.importance
+            debate_id: this.componentData.id,
+            importance: this.componentData.importance
           },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            $('#modalAlert').modal();
+            $('#modalAlert').find('.modal-title').text('Save Failed')
+            $('#modalAlert').find('.modal-body').text(
+              'Failed to save a change to a debates importance. ' +
+              'Try making the change again, otherwise try refreshing the page.'
+            )
+            console.log("Status: " + textStatus);
+            console.log("Error: " + errorThrown);
+          }
         });
       }
     }
   })
-
   pluginComponents.push({
     template: 'debate-importance',
     reference: debateImportance

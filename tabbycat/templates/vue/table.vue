@@ -17,19 +17,7 @@
       <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder" >
         <template v-for="(cellIndex, cellData) in row">
           <smart-cell v-if="!cellData['component']" :cell-data="cellData"></smart-cell>
-          <template v-else>
-            <feedback-trend v-if="cellData['component'] === 'feedback-trend'"
-                          :min-score="cellData['min-score']"
-                          :max-score="cellData['max-score']"
-                          :round-seq="cellData['round-seq']"
-                          :graph-data="cellData['data']">
-            </feedback-trend>
-            <debate-importance v-if="cellData['component'] === 'debate-importance'"
-                            :id="cellData['id']"
-                            :importance="cellData['importance']"
-                            :url="cellData['url']">
-            </debate-importance>
-          </template>
+          <component v-else :is="cellData['component']" :component-data="cellData"></component>
         </template>
       </tr>
     </tbody>

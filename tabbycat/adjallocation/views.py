@@ -11,7 +11,7 @@ from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
 from utils.misc import reverse_tournament
-from utils.mixins import SuperuserRequiredMixin, TournamentMixin, VueTableMixin
+from utils.mixins import ExpectPost, SuperuserRequiredMixin, TournamentMixin, VueTableMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import admin_required, expect_post, round_view
 
@@ -268,6 +268,7 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
         table.add_column(importance_head, [{
             'component': 'debate-importance',
             'id': d.id,
+            'sort': d.importance,
             'importance': d.importance,
             'url': reverse_tournament(
                 'set_debate_importance', t, kwargs={'round_seq': r.seq})
@@ -288,5 +289,19 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
         return table
 
 
-class SetDebateImportance(TournamentMixin, SuperuserRequiredMixin, View):
-    pass
+class SetDebateImportance(TournamentMixin, SuperuserRequiredMixin, ExpectPost, View):
+
+    def dispatch(self, request, *args, **kwargs):
+        debate_id = request.POST.get('debate_id')
+        debate_importance = request.POST.get('importance')
+
+        debate = Debate.objects.get(pk=debate_id)
+        debate.importance = debate_importance
+        debate.save()
+
+        ActionLogEntry.objects.log(
+            type=ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
+            user=request.user, debate=debate,
+            tournament=debate.round.tournament)
+
+        return HttpResponse()
