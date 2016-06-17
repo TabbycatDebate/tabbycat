@@ -52,88 +52,18 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin, Headl
         kwargs['breaking_count'] = self.get_adjudicators().count()
         return super().get_context_data(**kwargs)
 
-    def get_table_data(self):
+    def get_table(self):
         t = self.get_tournament()
         adjudicators = get_feedback_overview(t, self.get_adjudicators())
+        table = FeedbackTableBuilder(view=self, sort_key="")
 
-        feedback_data = []
-        for adj in adjudicators:
-            ddict = []
-            ddict.extend(self.adj_cells(adj, t, hide_institution=True))
-            ddict[0]['cell']['text'] += "<br><em>%s</em>" % adj.institution.code
-
-            if t.pref('show_unaccredited'):
-                ddict.append({
-                    'head': {'key': 'N', 'icon': 'glyphicon-leaf', 'tooltip': 'Novice Status'},
-                    'cell': {'icon': 'glyphicon-ok' if adj.novice else ''}
-                })
-
-            checkbox = '<input type="checkbox" adj_id=%s' % adj.id
-            checkbox += ' checked >' if adj.breaking else '>'
-            ddict.append({
-                'head': {'key': 'B', 'icon': 'glyphicon-star', 'tooltip': 'Whether the adj is marked as breaking (click to mark)'},
-                'cell': {'text': checkbox, 'sort': adj.breaking, 'cell-class': 'toggle_breaking_status'}
-            })
-
-            current_score = str(self.format_cell_number(adj.feedback_score, dp=1)) if adj.feedback_score else 'N/A'
-            ddict.append({
-                'head': {'key': 'Score', 'icon': 'glyphicon-signal', 'tooltip': 'Current weighted score'},
-                'cell': {'text': '<strong>%s</strong>' % current_score, 'tooltip': 'Current weighted average of all feedback'}
-            })
-
-            ddict.append({
-                'head': {
-                    'key': 'Test', 'icon': 'glyphicon-scale', 'tooltip': 'Test Score Result'
-                },
-                'cell': {
-                    'text': self.format_cell_number(adj.score, dp=1),
-                    'modal': adj.id,
-                    'cell-class': 'edit-test-score',
-                    'tooltip': 'Click to edit test score'
-                }
-            })
-
-            ddict.append({
-                'head': {
-                    'key': 'Feedback',
-                    'text': 'Feedback as <span class="position-display chair">&nbsp;Chair&nbsp;</span>' +
-                    ' <span class="position-display panellist">&nbsp;Panellist&nbsp;</span>' +
-                    ' <span class="position-display trainee">&nbsp;Trainee&nbsp;</span>'
-                },
-                'cell': {
-                    'data': adj.feedback_data,
-                    'component': 'feedback-trend',
-                    'min-score': t.pref('adj_min_score'),
-                    'max-score': t.pref('adj_max_score'),
-                    'round-seq': t.current_round.seq,
-                }
-            })
-
-            ddict.append({
-                'head': {'key': 'VF', 'icon': 'glyphicon-question-sign'},
-                'cell': {'text': 'View<br>Feedback',
-                         'cell-class': 'view-feedback',
-                         'link': reverse_tournament('adjfeedback-view-on-adjudicator', t, kwargs={'pk': adj.pk})}
-            })
-            # TODO
-            if t.pref('enable_adj_notes'):
-                ddict.append({
-                    'head': {'key': 'NO', 'icon': 'glyphicon-list-alt'},
-                    'cell': {'text': 'Edit<br>Note', 'cell-class': 'edit-note', 'modal': str(adj.id) + '===' + str(adj.notes)}
-                })
-            # TODO: adj checkbox
-            ddict.append({
-                'head': {'key': 'DD', 'icon': 'glyphicon-eye-open', 'tooltip': 'Debates adjudicated'},
-                'cell': {'text': adj.debates}
-            })
-            ddict.append({
-                'head': {'key': 'DD', 'icon': 'glyphicon-resize-full', 'tooltip': 'Average Margin (top) and Average Score (bottom)'},
-                'cell': {'text': "%s<br>%s" % (self.format_cell_number(adj.avg_margin, dp=1), self.format_cell_number(adj.avg_score, dp=1))}
-            })
-
-            feedback_data.append(ddict)
-
-        return feedback_data
+        table.add_adjudicator_columns(adjudicators, hide_institution=True)
+        table.add_breaking_checkbox(adjudicators)
+        table.add_score_columns(adjudicators)
+        table.add_feedback_graphs(adjudicators)
+        table.add_feedback_link_columns(adjudicators)
+        table.add_feedback_misc_columns(adjudicators)
+        return table
 
 
 class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):

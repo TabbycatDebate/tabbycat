@@ -169,6 +169,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
         }
         self.add_boolean_column(independent_header, [adj.independent for adj in adjudicators])
 
+        if self.tournament.pref('show_unaccredited'):
+            accreddited_header = {
+                'tooltip': "Is Accredited",
+                'icon': 'glyphicon-leaf',
+            }
+            self.add_boolean_column(accreddited_header, [adj.novice for adj in adjudicators])
+
     def add_debate_adjudicators_column(self, debates, key="Adjudicators", show_splits=False):
         data = []
         for debate in debates:
