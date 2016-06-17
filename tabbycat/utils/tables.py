@@ -233,6 +233,16 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(novice_header, [speaker.novice for speaker in speakers])
 
+    def add_debate_bracket_columns(self, debates):
+        bracket_header = {
+            'key': "Bracket",
+            'icon': 'glyphicon-stats',
+            'tooltip': 'Bracket of this debate'
+        }
+        bracket_data = [{'text': debate.bracket} for debate in debates]
+        self.add_column(bracket_header, bracket_data)
+
+
     def add_debate_venue_columns(self, debates, with_times=False):
         if self.tournament.pref('enable_divisions'):
             self.add_column("Division", [debate.division.name for debate in debates])

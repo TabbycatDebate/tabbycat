@@ -1,4 +1,5 @@
 from utils.misc import get_ip_address, reverse_tournament
+from utils.tables import TabbycatTableBuilder
 
 from .models import Submission
 
@@ -28,51 +29,51 @@ class PublicSubmissionFieldsMixin:
         }
 
 
-class DebateResultCellsMixin:
+class ResultsTableBuilder(TabbycatTableBuilder):
     """Painfully construct the edit links; this is the only case where
     a cell has multiple links; hence the creating HTML directly"""
 
-    def status_cells(self, debate, key="Status"):
+    def get_status_meta(self, debate):
         if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
-            icon, sorting, tooltip = "glyphicon-fast-forward", 5, "Bye Debate"
+            return "glyphicon-fast-forward", 5, "Bye Debate"
         elif debate.result_status == debate.STATUS_NONE and not debate.ballot_in:
-            icon, sorting, tooltip = "glyphicon-remove text-danger", 0, "No Ballot"
+            return "glyphicon-remove text-danger", 0, "No Ballot"
         elif debate.result_status == debate.STATUS_NONE and debate.ballot_in:
-            icon, sorting, tooltip = "glyphicon-inbox text-warning", 1, "Ballot is In"
+            return "glyphicon-inbox text-warning", 1, "Ballot is In"
         elif debate.result_status == debate.STATUS_DRAFT:
-            icon, sorting, tooltip = "glyphicon-adjust text-info", 2, "Ballot is Unconfirmed"
+            return "glyphicon-adjust text-info", 2, "Ballot is Unconfirmed"
         elif debate.result_status == debate.STATUS_CONFIRMED:
-            icon, sorting, tooltip = "glyphicon-ok text-success", 3, "Ballot is Confirmed"
+            return "glyphicon-ok text-success", 3, "Ballot is Confirmed"
         elif debate.result_status == debate.STATUS_POSTPONED:
-            icon, sorting, tooltip = "glyphicon-pause", 4, "Debate was Postponed"
+            return "glyphicon-pause", 4, "Debate was Postponed"
         else:
             raise ValueError('Debate has no discernable status')
 
-        result_header = {
+    def add_ballot_status_columns(self, debates, key="Status"):
+
+        status_header = {
             'key': key,
             'tooltip': "Status of this debate's ballot",
             'icon': "glyphicon-th-list",
         }
-        result_cell = {
-            'icon': icon,
-            'sort': sorting,
-            'tooltip': tooltip
-        }
-        result_info = [{'head': result_header, 'cell': result_cell}]
-        return result_info
+        status_cell = [{
+            'icon': self.get_status_meta(debate)[0],
+            'sort': self.get_status_meta(debate)[1],
+            'tooltip': self.get_status_meta(debate)[2]
+        } for debate in debates]
+        self.add_column(status_header, status_cell)
 
-    def ballot_entry_cells(self, d, t):
-
+    def get_ballot_text(self, debate):
         ballotsets_info = " "
-        for ballotset in d.ballotsubmission_set_by_version:
-            link = reverse_tournament('edit_ballotset', t, kwargs={'ballotsub_id': ballotset.id})
+        for ballotset in debate.ballotsubmission_set_by_version:
+            link = reverse_tournament('edit_ballotset',
+                                      self.tournament,
+                                      kwargs={'ballotsub_id': ballotset.id})
             ballotsets_info = "<a href=" + link + ">"
-
             if ballotset.confirmed:
                 edit_status = "Re-edit v" + str(ballotset.version)
             else:
                 edit_status = "Edit v" + str(ballotset.version)
-
             if ballotset.discarded:
                 ballotsets_info += "<strike class='text-muted'>" + edit_status + "</strike></a><small> discarded; "
             else:
@@ -83,19 +84,25 @@ class DebateResultCellsMixin:
             elif ballotset.submitter_type == ballotset.SUBMITTER_PUBLIC:
                 ballotsets_info += " <em>a public submission by " + ballotset.ip_address + "</em></small><br>"
 
-        if not d.ballotsubmission_set_by_version_except_discarded:
-            link = reverse_tournament('new_ballotset', t, kwargs={'debate_id': d.id})
+        if not debate.ballotsubmission_set_by_version_except_discarded:
+            link = reverse_tournament('new_ballotset',
+                                      self.tournament,
+                                      kwargs={'debate_id': debate.id})
             ballotsets_info += "<a href=" + link + ">Enter Ballot</a>"
 
-        ballot_cells = [{'head': {'key':'EB', 'icon': 'glyphicon-plus'}, 'cell': {'text': ballotsets_info}}]
+        return ballotsets_info
 
-        if t.pref('enable_postponements'):
-            pcell = {'link': reverse_tournament('toggle_postponed', t, kwargs={'debate_id': d.id})}
-            if d.result_status == d.STATUS_POSTPONED:
-                pcell['text'] = 'Un-Postpone'
-            else:
-                pcell['text'] = 'Postpone'
+    def add_ballot_entry_columns(self, debates):
 
-            ballot_cells.append({'head': 'postpone'}, {'cell': pcell})
+        entry_header = {'key': 'EB', 'icon': "glyphicon-plus"}
+        entry_cells = [{'text': self.get_ballot_text(d)} for d in debates]
+        self.add_column(entry_header, entry_cells)
 
-        return ballot_cells
+        if self.tournament.pref('enable_postponements'):
+            postpones_header = {'key': 'Postpone'}
+            postpones_cells = [{
+                'text': 'Un-Postpone' if d.result_status == d.STATUS_POSTPONED else 'Postpone',
+                'link': reverse_tournament('toggle_postponed', self.tournament, kwargs={'debate_id': d.id})
+            } for d in debates]
+            self.add_column(postpones_header, postpones_cells)
+

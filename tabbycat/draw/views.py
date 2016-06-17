@@ -45,45 +45,47 @@ TPA_MAP = {
 # Viewing Draw
 # ==============================================================================
 
-class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
+class DrawTablePage(RoundMixin, VueTableMixin, HeadlessTemplateView):
 
     template_name = 'draw_display_by.html'
-    sort_key = 'Venue'
-
-    def create_row(self, d, t, sort_key=None, sort_value=None):
-        ddict = []
-        if sort_key and sort_value:
-            ddict.append((sort_key, sort_value))
-
-        ddict.extend(self.venue_cells(d, t, with_times=True))
-        ddict.extend(self.team_cells(d.aff_team, t))
-        ddict.extend(self.team_cells(d.neg_team, t))
-
-        if t.pref('enable_division_motions'):
-            ddict.append(('motion', [m.reference for m in d.division_motions]))
-        if not t.pref('enable_divisions'):
-            ddict.extend(self.adjudicators_cells(d, t, show_splits=False))
-
-        return ddict
 
     def get_context_data(self, **kwargs):
         kwargs['round'] = self.get_round()
         return super().get_context_data(**kwargs)
 
-    def get_table_data(self):
+    def create_rows(self, draw, table, tournament, by_team=False):
+
+        if by_team:
+            draw = list(draw) + list(draw) # Double up the draw
+            draw_slice = int(len(draw) / 2) # Top half gets affs; bottom negs
+            table.add_team_columns(
+                [d.aff_team for d in draw[:draw_slice]] +
+                [d.neg_team for d in draw[draw_slice:]],
+                hide_institution=True,
+                key="Team")
+
+        table.add_debate_venue_columns(draw)
+        table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key="Aff")
+        table.add_team_columns([d.neg_team for d in draw], hide_institution=True, key="Neg")
+        if tournament.pref('enable_division_motions'):
+            for debate in draw:
+                table.add_motion_column([m.reference for m in debate.division_motions])
+        if not tournament.pref('enable_divisions'):
+            table.add_debate_adjudicators_column(draw)
+
+    def get_table(self):
+        tournament = self.get_tournament()
         round = self.get_round()
         draw = round.get_draw()
-        t = self.get_tournament()
-        if self.sorting is 'team':
-            draw_data = []
-            for d in draw:
-                aff_row = self.create_row(d, t, 'Team', d.aff_team.short_name)
-                neg_row = self.create_row(d, t, 'Team', d.neg_team.short_name)
-                draw_data.extend([aff_row, neg_row])
+        sorting = self.sorting
+        print(sorting)
+        table = TabbycatTableBuilder(view=self, sort_key=sorting)
+        if self.sorting is 'Team':  # Add extra rows
+            self.create_rows(draw, table, tournament, by_team=True)
         else:
-            draw_data = [self.create_row(debate, t) for debate in draw]
+            self.create_rows(draw, table, tournament)
 
-        return draw_data
+        return table
 
 
 # ==============================================================================
@@ -93,7 +95,7 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
 class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, CacheMixin):
 
     public_page_preference = 'public_draw'
-    sorting = 'venue'
+    sorting = 'Venue'
 
     def get_template_names(self):
         round = self.get_round()
@@ -118,11 +120,11 @@ class PublicDrawForCurrentRound(PublicDrawForRound):
 
 
 class AdminDrawForRoundByVenue(DrawTablePage, LoginRequiredMixin):
-    sorting = 'venue'
+    sorting = 'Venue'
 
 
 class AdminDrawForRoundByTeam(DrawTablePage, LoginRequiredMixin):
-    sorting = 'team'
+    sorting = 'Team'
 
 
 @login_required

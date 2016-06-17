@@ -75,7 +75,6 @@ class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin, H
         tournament = self.get_tournament()
         table = TabbycatTableBuilder(view=self, sort_key="Name")
         table.add_adjudicator_columns(tournament.adjudicator_set.all())
-
         feedback_data = []
         for adj in tournament.adjudicator_set.all():
             count = adj.adjudicatorfeedback_set.count()
@@ -86,70 +85,50 @@ class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin, H
         table.add_column("Feedbacks", feedback_data)
         return table
 
-    def get_table_data(self):
-        t = self.get_tournament()
-
-        on_adjs_data = []
-        for adj in Adjudicator.objects.filter(tournament=t):
-            ddict = self.adj_cells(adj, t)
-
-            feedbacks = AdjudicatorFeedback.objects.filter(adjudicator=adj).count(),
-            ddict.append({
-                'head': {'key': 'Feedbacks'},
-                'cell': {
-                    'text': "%s Feedbacks" % feedbacks,
-                    'link': reverse_tournament('adjfeedback-view-on-adjudicator', t, kwargs={'pk': adj.id})
-                }
-            })
-            on_adjs_data.append(ddict)
-
-        return on_adjs_data
-
 
 class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin, HeadlessTemplateView):
 
     template_name = "feedback_base.html"
-    tables_titles = ['From Teams', 'From Adjudicators', 'On Adjudicators']
+    tables_titles = ['From Teams', 'From Adjudicators']
     page_title = 'Find Feedback'
     page_emoji = '🔍'
-    sort_key = 'Feedbacks'
 
-    def get_tables_data(self):
-        t = self.get_tournament()
+    def get_tables(self):
+        tournament = self.get_tournament()
 
-        teams_data = []
-        for team in Team.objects.filter(tournament=t):
-            ddict = self.team_cells(team, t)
-
-            feedbacks = AdjudicatorFeedback.objects.filter(
+        teams = tournament.team_set.all()
+        team_table = TabbycatTableBuilder(view=self, sort_key="Feedbacks")
+        team_table.add_team_columns(teams)
+        team_feedback_data = []
+        for team in teams:
+            count = AdjudicatorFeedback.objects.filter(
                 source_team__team=team).select_related(
                 'source_team__team').count()
-            ddict.append({
-                'head': {'key': 'Feedbacks'},
-                'cell': {
-                    'text': "%s Feedbacks" % feedbacks,
-                    'link': reverse_tournament('adjfeedback-view-from-team', t, kwargs={'pk': team.id})
-                }
+            team_feedback_data.append({
+                'text': "{:d} Feedbacks".format(count),
+                'link': reverse_tournament('adjfeedback-view-from-team',
+                                           tournament,
+                                           kwargs={'pk': team.id}),
             })
-            teams_data.append(ddict)
+        team_table.add_column("Feedbacks", team_feedback_data)
 
-        from_adjs_data = []
-        for adj in Adjudicator.objects.filter(tournament=t):
-            ddict = self.adj_cells(adj, t)
-
-            feedbacks = AdjudicatorFeedback.objects.filter(
+        adjs = tournament.adjudicator_set.all()
+        adj_table = TabbycatTableBuilder(view=self, sort_key="Feedbacks")
+        adj_table.add_adjudicator_columns(adjs)
+        adj_feedback_data = []
+        for adj in adjs:
+            count = AdjudicatorFeedback.objects.filter(
                 source_adjudicator__adjudicator=adj).select_related(
-                'source_adjudicator__adjudicator').count(),
-            ddict.append({
-                'head': {'key': 'Feedbacks'},
-                'cell': {
-                    'text': "%s Feedbacks" % feedbacks,
-                    'link': reverse_tournament('adjfeedback-view-from-adjudicator', t, kwargs={'pk': adj.id})
-                }
+                'source_adjudicator__adjudicator').count()
+            adj_feedback_data.append({
+                'text': "{:d} Feedbacks".format(count),
+                'link': reverse_tournament('adjfeedback-view-from-adjudicator',
+                                           tournament,
+                                           kwargs={'pk': adj.id}),
             })
-            from_adjs_data.append(ddict)
+        adj_table.add_column("Feedbacks", adj_feedback_data)
 
-        return [teams_data, from_adjs_data]
+        return [team_table, adj_table]
 
 
 class FeedbackCardsView(LoginRequiredMixin, TournamentMixin, TemplateView):

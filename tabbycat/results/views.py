@@ -27,7 +27,7 @@ from venues.models import Venue
 from .result import BallotSet
 from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
-from .mixins import DebateResultCellsMixin
+from .mixins import ResultsTableBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ def toggle_postponed(request, t, debate_id):
     return redirect_round('results', debate.round)
 
 
-class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, DebateResultCellsMixin, TemplateView):
+class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
 
     template_name = 'results.html'
     sort_key = 'Status'
@@ -58,29 +58,20 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             self.draw = self.get_round().get_draw()
             return self.draw
 
-    def get_table_data(self):
-        t = self.get_tournament()
+    def get_table(self):
         draw = self.get_or_set_draw()
-
-        draw_data = []
-        for d in draw:
-            ddict = self.status_cells(d)
-            ddict.extend(self.ballot_entry_cells(d, t))
-            ddict.append({
-                'head': {'tooltip': 'Bracket', 'key': 'B', 'icon': 'glyphicon-stats'},
-                'cell': {'text': d.bracket}
-            })
-            ddict.extend(self.venue_cells(d, t))
-            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
-            draw_data.append(ddict)
-
-        return draw_data
+        table = ResultsTableBuilder(view=self, sort_key="")
+        table.add_ballot_status_columns(draw)
+        table.add_ballot_entry_columns(draw)
+        table.add_debate_venue_columns(draw)
+        table.add_debate_bracket_columns(draw)
+        table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
+        table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
+        table.add_debate_adjudicators_column(draw)
+        return table
 
     def get_context_data(self, **kwargs):
         draw = self.get_or_set_draw()
-
         kwargs["stats"] = {
             'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
             'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
@@ -88,7 +79,6 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
             'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
         }
-
         return super().get_context_data(**kwargs)
 
 

@@ -116,14 +116,11 @@ class BreakingAdjudicators(TournamentMixin, VueTableMixin, HeadlessTemplateView)
     page_title = 'Breaking Adjudicators'
     page_emoji = '🎉'
 
-    def get_table_data(self):
-        t = self.get_tournament()
-
-        adjs_data = []
-        for adj in Adjudicator.objects.filter(breaking=True, tournament=t):
-            adjs_data.append(self.adj_cells(adj, t))
-
-        return adjs_data
+    def get_table(self):
+        table = TabbycatTableBuilder(view=self)
+        table.add_adjudicator_columns(Adjudicator.objects.filter(
+            breaking=True, tournament=self.get_tournament()))
+        return table
 
 
 class AdminBreakingAdjudicators(LoginRequiredMixin, BreakingAdjudicators):
