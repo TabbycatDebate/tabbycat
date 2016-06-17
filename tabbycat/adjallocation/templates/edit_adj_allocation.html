@@ -43,21 +43,25 @@
   </nav>
 
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="alert alert-warning alert-dismissible small" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Alert!</strong>
-        </div>
+
+    <div class="col-md-6">
+      <div class="alert alert-warning small" role="alert">
+        <span class="glyphicon glyphicon-refresh spinning"></span><strong> Loading conflicts data...</strong>
       </div>
     </div>
+    <div class="col-md-6">
+      <div class="alert alert-warning small" role="alert">
+        <span class="glyphicon glyphicon-refresh spinning"></span><strong> Loading history data...</strong>
+      </div>
+    </div>
+
   </div>
 
   {{ block.super }}
 
   <nav class="navbar navbar-default navbar-fixed-bottom">
-    <div class="container">
-      Adjs go here
+    <div class="container" id="unAllocatedAdjs">
+      <unallocated-droppable :adjs="adjs"></unallocated-droppable>
     </div>
   </nav>
 
@@ -82,7 +86,18 @@
 
 {% block extra-js %}
 
-  {% include "vue/debate-importance.vue" %}
+  {% include "vue/allocations/ajax-mixin.vue" %}
+  {% include "vue/allocations/debate-importance.vue" %}
+  {% include "vue/allocations/unallocated-droppable.vue" %}
+  {% include "vue/allocations/adj-draggable.vue" %}
   {{ block.super }}
+  <script>
+    new Vue({
+      el: '#unAllocatedAdjs',
+      data: {
+        'adjs': {{ unAllocatedAdjs|safe }}
+      },
+    })
+  </script>
 
 {% endblock extra-js %}

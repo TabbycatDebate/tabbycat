@@ -33,9 +33,9 @@
 
 {% block extra-js %}
   {{ block.super }}
-  {% include "vue/cell.vue" %}
-  {% include "vue/header.vue" %}
-  {% include "vue/table.vue" %}
+  {% include "vue/tables/cell.vue" %}
+  {% include "vue/tables/header.vue" %}
+  {% include "vue/tables/table.vue" %}
   <script>
 
     var tablesData = {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %};

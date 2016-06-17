@@ -25,29 +25,18 @@
   // Define the component
   var debateImportance = Vue.extend({
     template: '#debate-importance',
+    mixins: [ajaxMixin],
     props: {
       componentData: Object,
     },
     methods: {
-      updateImportance: function () {
-        $.ajax({
-          type: "POST",
-          url: this.componentData.url,
-          data: {
+      // Call into the ajax mixin
+      updateImportance: function() {
+        var data = {
             debate_id: this.componentData.id,
             importance: this.componentData.importance
-          },
-          error: function(XMLHttpRequest, textStatus, errorThrown) {
-            $('#modalAlert').modal();
-            $('#modalAlert').find('.modal-title').text('Save Failed')
-            $('#modalAlert').find('.modal-body').text(
-              'Failed to save a change to a debates importance. ' +
-              'Try making the change again, otherwise try refreshing the page.'
-            )
-            console.log("Status: " + textStatus);
-            console.log("Error: " + errorThrown);
-          }
-        });
+        }
+        this.update(this.componentData.url, data, 'debate importance')
       }
     }
   })

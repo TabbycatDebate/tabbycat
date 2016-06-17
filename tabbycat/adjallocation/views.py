@@ -12,12 +12,12 @@ from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
 from utils.misc import reverse_tournament
 from utils.mixins import ExpectPost, SuperuserRequiredMixin, TournamentMixin, VueTableMixin
-from utils.tables import TabbycatTableBuilder
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
+from .utils import AllocationTableBuilder, adjsToJson
 
 logger = logging.getLogger(__name__)
 
@@ -246,7 +246,8 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
     template_name = 'edit_adj_allocation.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['round'] = self.get_round()
+        unused_adjs = self.get_round().unused_adjudicators()
+        kwargs['unAllocatedAdjs'] = [adjsToJson(a) for a in unused_adjs]
         return super().get_context_data(**kwargs)
 
     def get_table(self):
@@ -254,36 +255,19 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
         r = self.get_round()
         draw = r.get_draw()
 
-        table = TabbycatTableBuilder(
-            view=self, sort_order='desc', sort_key='importance',
+        table = AllocationTableBuilder(view=self, sort_order='desc',
+            sort_key='importance',
             table_class='table-condensed table-edit-allocation')
 
         table.add_debate_bracket_columns(draw)
-
-        importance_head = {
-            'key': 'importance',
-            'icon': 'glyphicon-fire',
-            'tooltip': "Set a debate's importance (higher receives better adjs)"
-        }
-        table.add_column(importance_head, [{
-            'component': 'debate-importance',
-            'id': d.id,
-            'sort': d.importance,
-            'importance': d.importance,
-            'url': reverse_tournament(
-                'set_debate_importance', t, kwargs={'round_seq': r.seq})
-        } for d in draw])
-
+        table.add_debate_importances(draw, r)
         table.add_debate_venue_columns(draw)
-
         table.add_team_columns([d.aff_team for d in draw],
            key='Aff', hide_institution=True, hide_emoji=True)
         table.add_column("AW", [{'text': d.aff_team.wins_count} for d in draw])
-
         table.add_team_columns([d.neg_team for d in draw],
            key='Neg', hide_institution=True, hide_emoji=True)
         table.add_column("NW", [{ 'text': d.neg_team.wins_count} for d in draw])
-
         table.add_column("Panel", [{'text': ''} for d in draw])
 
         return table
