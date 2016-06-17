@@ -39,7 +39,6 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin):
     template_name = 'feedback_overview.html'
     page_title = 'Adjudicator Feedback Summary'
     page_emoji = '🙅'
-    sort_key = 'Score'
 
     def get_adjudicators(self):
         t = self.get_tournament()
@@ -55,7 +54,7 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin):
     def get_table(self):
         t = self.get_tournament()
         adjudicators = get_feedback_overview(t, self.get_adjudicators())
-        table = FeedbackTableBuilder(view=self, sort_key="")
+        table = FeedbackTableBuilder(view=self, sort_key='Score')
 
         table.add_adjudicator_columns(adjudicators, hide_institution=True, subtext='institution')
         table.add_breaking_checkbox(adjudicators)
@@ -89,7 +88,6 @@ class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin):
 class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin):
 
     template_name = "feedback_base.html"
-    tables_titles = ['From Teams', 'From Adjudicators']
     page_title = 'Find Feedback'
     page_emoji = '🔍'
 
@@ -97,7 +95,8 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin):
         tournament = self.get_tournament()
 
         teams = tournament.team_set.all()
-        team_table = TabbycatTableBuilder(view=self, sort_key="Feedbacks")
+        team_table = TabbycatTableBuilder(
+            view=self, title='From Teams', sort_key='Feedbacks')
         team_table.add_team_columns(teams)
         team_feedback_data = []
         for team in teams:
@@ -113,7 +112,8 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin):
         team_table.add_column("Feedbacks", team_feedback_data)
 
         adjs = tournament.adjudicator_set.all()
-        adj_table = TabbycatTableBuilder(view=self, sort_key="Feedbacks")
+        adj_table = TabbycatTableBuilder(
+            view=self, title='From Adjudicators', sort_key='Feedbacks')
         adj_table.add_adjudicator_columns(adjs)
         adj_feedback_data = []
         for adj in adjs:
@@ -477,17 +477,15 @@ class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixi
 
     page_title = "Missing Feedback Ballots"
     page_emoji = "🆘"
-    sort_key = 'Coverage'
-    tables_titles = ['Adjudicators', 'Speakers']
 
     def get_tables(self):
         teams_progress, adjs_progress = get_feedback_progress(self.get_tournament())
 
-        adjs_table = FeedbackTableBuilder(view=self, title="Adjudicators", sort_key="")
+        adjs_table = FeedbackTableBuilder(view=self, title="Adjudicators", sort_key="Coverage")
         adjs_table.add_feedback_progress_columns(adjs_progress)
         adjs_table.add_adjudicator_columns(adjs_progress)
 
-        teams_table = FeedbackTableBuilder(view=self, title="Teams", sort_key="")
+        teams_table = FeedbackTableBuilder(view=self, title="Teams", sort_key="Coverage")
         teams_table.add_feedback_progress_columns(teams_progress)
         teams_table.add_team_columns(teams_progress)
 

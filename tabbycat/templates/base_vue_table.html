@@ -20,7 +20,8 @@
             :table-content="gridData"
             :table-class="tableClass"
             :filter-key="searchQuery"
-            :default-sort-key="sortKey">
+            :default-sort-key="sortKey"
+            :default-sort-order="sortOrder">
           </smart-table>
         </div>
       </div>
@@ -37,8 +38,6 @@
   {% include "vue/table.vue" %}
   <script>
 
-    var tablesClass = {% if tables_class %}'{{ tables_class }}'{% else %}''{% endif %};
-    var tablesCount = {% if tables_data %}{{ tables_data|length }}{% else %}null{% endif %};
     var tablesData = {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %};
     var tablesVue = [];
 
@@ -50,9 +49,11 @@
           data: {
             searchQuery: '',
             tableHeaders: tableData['head'],
+            tableClass: tableData['class'],
+            tableTitle: tableData['title'],
             gridData: tableData['data'],
             sortKey: tableData['sort_key'],
-            tableTitle: tableData['title'],
+            sortOrder: tableData['sort_order'],
           },
           ready: function() {
             var thisTable = this; // this in the next context is the element

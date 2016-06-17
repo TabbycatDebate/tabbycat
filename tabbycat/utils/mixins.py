@@ -128,10 +128,6 @@ class VueTableMixin(TemplateView):
 
     template_name = 'base_vue_table.html'
 
-    sort_key = ''
-    tables_titles = ['']
-    tables_class = ''
-
     def get_context_data(self, **kwargs):
         tables = self.get_tables()
         kwargs["tables_count"] = list(range(len(tables)))

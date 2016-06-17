@@ -244,8 +244,6 @@ def adj_conflicts(request, round):
 class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
 
     template_name = 'edit_adj_allocation.html'
-    sort_key = 'Venue'
-    tables_class = 'table-condensed table-edit-allocation'
 
     def get_context_data(self, **kwargs):
         kwargs['round'] = self.get_round()
@@ -256,11 +254,14 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
         r = self.get_round()
         draw = r.get_draw()
 
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(
+            view=self, sort_order='desc', sort_key='importance',
+            table_class='table-condensed table-edit-allocation')
+
         table.add_debate_bracket_columns(draw)
 
         importance_head = {
-            'key': 'VIP',
+            'key': 'importance',
             'icon': 'glyphicon-fire',
             'tooltip': "Set a debate's importance (higher receives better adjs)"
         }

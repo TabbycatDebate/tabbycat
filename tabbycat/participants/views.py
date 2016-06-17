@@ -32,8 +32,6 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
     public_page_preference = 'public_participants'
     page_title = 'Participants'
     page_emoji = '🚌'
-    sort_key = 'Name'
-    tables_titles = ['Adjudicators', 'Speakers']
 
     def get_tables(self):
         t = self.get_tournament()

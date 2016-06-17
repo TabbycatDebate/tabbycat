@@ -48,7 +48,6 @@ def toggle_postponed(request, t, debate_id):
 class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
 
     template_name = 'results.html'
-    sort_key = 'Status'
     draw = None
 
     def get_or_set_draw(self):
@@ -60,7 +59,7 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
 
     def get_table(self):
         draw = self.get_or_set_draw()
-        table = ResultsTableBuilder(view=self, sort_key="")
+        table = ResultsTableBuilder(view=self, sort_key='Status')
         table.add_ballot_status_columns(draw)
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw)

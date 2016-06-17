@@ -47,12 +47,14 @@
     // sort on a copy to avoid mutating original array
     return arr.slice().sort(function (a, b) {
       // Check if cell has custom sorting
-      if (a && b && typeof(a[sortIndex].sort) !== 'undefined') {
+      if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].sort) !== 'undefined') {
         a = a[sortIndex].sort
         b = b[sortIndex].sort
-      } else if (a && b && typeof(a[sortIndex].text) !== 'undefined') {
+      } else if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].text) !== 'undefined') {
         a = a[sortIndex].text
         b = b[sortIndex].text
+      } else {
+        console.log('Error sorting; sort key probably doesnt exist');
       }
       return a === b ? 0 : a > b ? order : -order
     })
@@ -76,16 +78,24 @@
       tableContent: Array,
       filterKey: String,
       defaultSortKey: String,
+      defaultSortOrder: String,
       tableClass: String
     },
     components: tableComponents,
     data: function () {
       return {
         sortIndex: this.getDefaultSortIndex(),
-        sortOrder: 1
+        sortOrder: this.getDefaultSortOrder()
       }
     },
     methods: {
+      getDefaultSortOrder: function() {
+        if (this.defaultSortOrder === "desc") {
+          return -1;
+        } else {
+          return 1;
+        }
+      },
       getDefaultSortIndex: function() {
         // Find the index of the column that matches the default sorting key
         var index = null

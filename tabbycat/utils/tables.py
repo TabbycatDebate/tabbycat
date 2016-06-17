@@ -24,7 +24,9 @@ class BaseTableBuilder:
         self.headers = []
         self.data = []
         self.title = kwargs.get('title', "")
+        self.table_class = kwargs.get('table_class', "")
         self.sort_key = kwargs.get('sort_key', '')
+        self.sort_order = kwargs.get('sort_order', '')
 
     @staticmethod
     def _convert_header(header):
@@ -108,7 +110,9 @@ class BaseTableBuilder:
             'head': self.headers,
             'data': self.data,
             'title': self.title,
-            'sort_key': self.sort_key
+            'class': self.table_class,
+            'sort_key': self.sort_key,
+            'sort_order': self.sort_order
         }
 
 
