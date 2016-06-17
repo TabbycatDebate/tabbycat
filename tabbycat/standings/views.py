@@ -263,23 +263,26 @@ class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
         for standing in standings:
             cells = []
             for team_score in standing.round_results:
-                opposition = team_score.opposition
-                cell = {'text': "vs " + opposition.emoji + "<br>" + metricformat(team_score.score)}
+                cell = {'text': ''}
+                if hasattr(team_score, 'opposition'):
+                    opposition = team_score.opposition
+                    cell['text'] = "vs " + opposition.emoji + "<br>" + metricformat(team_score.score)
 
-                if team_score.win:
-                    cell['icon'] = "glyphicon-arrow-up text-success"
-                    cell['tooltip'] = "Won against "
-                else:
-                    cell['icon'] = "glyphicon-arrow-down text-danger"
-                    cell['tooltip'] = "Lost to "
+                    if team_score.win:
+                        cell['icon'] = "glyphicon-arrow-up text-success"
+                        cell['tooltip'] = "Won against "
+                    else:
+                        cell['icon'] = "glyphicon-arrow-down text-danger"
+                        cell['tooltip'] = "Lost to "
 
-                cell['tooltip'] += opposition.long_name + "<br>Received " + metricformat(team_score.score) + " total speaks"
+                    cell['tooltip'] += opposition.long_name + "<br>Received " + metricformat(team_score.score) + " total speaks"
 
-                if self.show_ballots():
-                    cell['link'] = reverse_tournament('public_ballots_view',
-                            self.get_tournament(), kwargs={'debate_id': team_score.debate_team.debate.id})
+                    if self.show_ballots():
+                        cell['link'] = reverse_tournament('public_ballots_view',
+                                self.get_tournament(), kwargs={'debate_id': team_score.debate_team.debate.id})
 
                 cells.append(cell)
+
             data.append(cells)
         table.add_columns(headers, data)
 

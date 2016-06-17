@@ -22,7 +22,7 @@ from utils.urlkeys import populate_url_keys
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
-from .utils import get_feedback_overview, get_feedback_progress, progress_cells
+from .utils import FeedbackTableBuilder, get_feedback_overview, get_feedback_progress
 
 
 class GetAdjScores(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
@@ -571,25 +571,18 @@ class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixi
     sort_key = 'Coverage'
     tables_titles = ['Adjudicators', 'Speakers']
 
-    def get_tables_data(self):
-        t = self.get_tournament()
-        team_progress, adj_progress = get_feedback_progress(t)
+    def get_tables(self):
+        teams_progress, adjs_progress = get_feedback_progress(self.get_tournament())
 
-        teams_progress_data = []
-        for team in team_progress:
-            ddict = []
-            ddict.extend(progress_cells(team))
-            ddict.extend(self.team_cells(team, t))
-            teams_progress_data.append(ddict)
+        adjs_table = FeedbackTableBuilder(view=self, title="Adjudicators", sort_key="")
+        adjs_table.add_feedback_progress_columns(adjs_progress)
+        adjs_table.add_adjudicator_columns(adjs_progress)
 
-        adjs_progress_data = []
-        for adj in adj_progress:
-            ddict = []
-            ddict.extend(progress_cells(team))
-            ddict.extend(self.adj_cells(adj, t))
-            adjs_progress_data.append(ddict)
+        teams_table = FeedbackTableBuilder(view=self, title="Teams", sort_key="")
+        teams_table.add_feedback_progress_columns(teams_progress)
+        teams_table.add_team_columns(teams_progress)
 
-        return [teams_progress_data, adjs_progress_data]
+        return [adjs_table, teams_table]
 
 
 class FeedbackProgress(BaseFeedbackProgress):

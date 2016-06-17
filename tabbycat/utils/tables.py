@@ -224,7 +224,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'icon': 'glyphicon-leaf',
                 'tooltip': "Novice Status",
             }
-            self.add_boolean(novice_header, [speaker.novice for speaker in speakers])
+            self.add_boolean_column(novice_header, [speaker.novice for speaker in speakers])
 
     def add_debate_venue_columns(self, debates, with_times=False):
         if self.tournament.pref('enable_divisions'):

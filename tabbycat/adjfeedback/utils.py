@@ -2,8 +2,44 @@ from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
 from tournaments.models import Round
+from utils.tables import TabbycatTableBuilder
 
 from .models import AdjudicatorFeedback
+
+
+class FeedbackTableBuilder(TabbycatTableBuilder):
+
+    def add_feedback_progress_columns(self, progress, key="P"):
+
+        coverage_header = {
+            'key': 'Coverage',
+            'icon': 'glyphicon-eye-open',
+            'tooltip': 'Percentage of feedback returned',
+        }
+        coverage_data = [{
+            'text': str(team_or_adj.coverage) + "%"
+        } for team_or_adj in progress]
+        self.add_column(coverage_header, coverage_data)
+
+        owed_header = {
+            'key': 'Owed',
+            'icon': 'glyphicon-remove',
+            'tooltip': 'Unsubmitted feedback ballots',
+        }
+        owed_data = [{
+            'text': str(team_or_adj.owed_ballots)
+        } for team_or_adj in progress]
+        self.add_column(owed_header, owed_data)
+
+        submitted_header = {
+            'key': 'Submitted',
+            'icon': 'glyphicon-ok',
+            'tooltip': 'Submitted feedback ballots',
+        }
+        submitted_data = [{
+            'text': str(team_or_adj.submitted_ballots)
+        } for team_or_adj in progress]
+        self.add_column(submitted_header, submitted_data)
 
 
 def get_feedback_overview(t, adjudicators):
@@ -98,36 +134,6 @@ def scoring_stats(adj, scores, debate_adjudications):
             adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
 
     return adj
-
-
-def progress_cells(team_or_adj):
-    ddict = []
-    ddict.append({
-        'head': {
-            'key': 'Coverage',
-            'icon': 'glyphicon-eye-open',
-            'tooltip': 'Percentage Returned',
-        },
-        'cell': {'text': str(team_or_adj.coverage) + "%"}
-    })
-    ddict.append({
-        'head': {
-            'key': 'Owed',
-            'icon': 'glyphicon-remove',
-            'tooltip': 'Unsubmitted Feedbacks',
-        },
-        'cell': {'text': str(team_or_adj.owed_ballots) + "%"}
-    })
-    ddict.append({
-        'head': {
-            'key': 'Submitted',
-            'icon': 'glyphicon-ok',
-            'tooltip': 'Submitted Feedbacks',
-        },
-        'cell': {'text': str(team_or_adj.submitted_ballots) + "%"}
-    })
-
-    return ddict
 
 
 def get_feedback_progress(t):
