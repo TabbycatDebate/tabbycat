@@ -2,8 +2,143 @@ from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
 from tournaments.models import Round
+from utils.tables import TabbycatTableBuilder
+from utils.misc import reverse_tournament
 
 from .models import AdjudicatorFeedback
+
+
+class FeedbackTableBuilder(TabbycatTableBuilder):
+
+    def add_breaking_checkbox(self, adjudicators, key="Breaking"):
+        breaking_header = {
+            'key': 'B',
+            'icon': 'glyphicon-star',
+            'tooltip': 'Whether the adj is marked as breaking (click to mark)',
+        }
+        breaking_data = [{
+            'text': '<input type="checkbox" adj_id="%s" %s>' % (adj.id, 'checked' if adj.breaking else ''),
+            'sort': adj.breaking,
+            'cell-class': 'toggle_breaking_status'
+        } for adj in adjudicators]
+
+        self.add_column(breaking_header, breaking_data)
+
+    def add_score_columns(self, adjudicators):
+        overall_header = {
+            'key': 'Overall Score',
+            'icon': 'glyphicon-signal',
+            'tooltip': 'Current weighted score',
+        }
+        overall_data = [{
+            'text': '<strong>%0.1f</strong>' % (adj.feedback_score) if adj.feedback_score else 'N/A',
+            'tooltip': 'Current weighted average of all feedback',
+        } for adj in adjudicators]
+        self.add_column(overall_header, overall_data)
+
+        test_header = {
+            'key': 'Test Score',
+            'icon': 'glyphicon-scale',
+            'tooltip': 'Test score result',
+        }
+        test_data = [{
+            'text': "%0.1f" % (adj.score if adj.score else 'N/A'),
+            'modal': adj.id,
+            'cell-class': 'edit-test-score',
+            'tooltip': 'Click to edit test score',
+        } for adj in adjudicators]
+        self.add_column(test_header, test_data)
+
+    def add_feedback_graphs(self, adjudicators):
+        feedback_head = {
+            'key': 'Feedback',
+            'text': 'Feedback as <span class="position-display chair">&nbsp;Chair&nbsp;</span>' +
+            ' <span class="position-display panellist">&nbsp;Panellist&nbsp;</span>' +
+            ' <span class="position-display trainee">&nbsp;Trainee&nbsp;</span>'
+        }
+        feedback_data = [{
+            'data': adj.feedback_data,
+            'component': 'feedback-trend',
+            'min-score': self.tournament.pref('adj_min_score'),
+            'max-score': self.tournament.pref('adj_max_score'),
+            'round-seq': self.tournament.current_round.seq,
+        } for adj in adjudicators]
+        self.add_column(feedback_head, feedback_data)
+
+    def add_feedback_link_columns(self, adjudicators):
+        link_head = {
+            'key': 'VF',
+            'icon': 'glyphicon-question-sign'
+        }
+        link_cell = [{
+            'text': 'View<br>Feedback',
+            'cell-class': 'view-feedback',
+            'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk})
+        } for adj in adjudicators]
+        self.add_column(link_head, link_cell)
+
+    def add_feedback_misc_columns(self, adjudicators):
+        if self.tournament.pref('enable_adj_notes'):
+            note_head = {
+                'key': 'NO',
+                'icon': 'glyphicon-list-alt'
+            }
+            note_cell = [{
+                'text': 'Edit<br>Note',
+                'cell-class': 'edit-note',
+                'modal': str(adj.id) + '===' + str(adj.notes)
+            } for adj in adjudicators]
+            self.add_column(note_head, note_cell)
+
+        adjudications_head = {
+            'key': 'DD',
+            'icon': 'glyphicon-eye-open',
+            'tooltip': 'Debates adjudicated'
+        }
+        adjudications_cell = [{'text': adj.debates} for adj in adjudicators]
+        self.add_column(adjudications_head, adjudications_cell)
+
+        avgs_head = {
+            'key': 'AVGS',
+            'icon': 'glyphicon-resize-full',
+            'tooltip': 'Average Margin (top) and Average Score (bottom)'
+        }
+        avgs_cell = [{
+            'text': "%0.1f<br>%0.1f" % (adj.avg_margin if adj.avg_margin else 0, adj.avg_score if adj.avg_margin else 0)
+        } for adj in adjudicators]
+        self.add_column(avgs_head, avgs_cell)
+
+    def add_feedback_progress_columns(self, progress, key="P"):
+
+        coverage_header = {
+            'key': 'Coverage',
+            'icon': 'glyphicon-eye-open',
+            'tooltip': 'Percentage of feedback returned',
+        }
+        coverage_data = [{
+            'text': str(team_or_adj.coverage) + "%"
+        } for team_or_adj in progress]
+        self.add_column(coverage_header, coverage_data)
+
+        owed_header = {
+            'key': 'Owed',
+            'icon': 'glyphicon-remove',
+            'tooltip': 'Unsubmitted feedback ballots',
+        }
+        owed_data = [{
+            'text': str(team_or_adj.owed_ballots)
+        } for team_or_adj in progress]
+        self.add_column(owed_header, owed_data)
+
+        submitted_header = {
+            'key': 'Submitted',
+            'icon': 'glyphicon-ok',
+            'tooltip': 'Submitted feedback ballots',
+        }
+        submitted_data = [{
+            'text': str(team_or_adj.submitted_ballots)
+        } for team_or_adj in progress]
+        self.add_column(submitted_header, submitted_data)
 
 
 def get_feedback_overview(t, adjudicators):
@@ -98,36 +233,6 @@ def scoring_stats(adj, scores, debate_adjudications):
             adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
 
     return adj
-
-
-def progress_cells(team_or_adj):
-    ddict = []
-    ddict.append({
-        'head': {
-            'key': 'Coverage',
-            'icon': 'glyphicon-eye-open',
-            'tooltip': 'Percentage Returned',
-        },
-        'cell': {'text': str(team_or_adj.coverage) + "%"}
-    })
-    ddict.append({
-        'head': {
-            'key': 'Owed',
-            'icon': 'glyphicon-remove',
-            'tooltip': 'Unsubmitted Feedbacks',
-        },
-        'cell': {'text': str(team_or_adj.owed_ballots) + "%"}
-    })
-    ddict.append({
-        'head': {
-            'key': 'Submitted',
-            'icon': 'glyphicon-ok',
-            'tooltip': 'Submitted Feedbacks',
-        },
-        'cell': {'text': str(team_or_adj.submitted_ballots) + "%"}
-    })
-
-    return ddict
 
 
 def get_feedback_progress(t):

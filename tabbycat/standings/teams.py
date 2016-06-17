@@ -202,7 +202,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     the precedence."""
 
     key_prefix = "wbw"
-    name_prefix = "WBW"
+    name_prefix = "Who-beat-whom"
     abbr_prefix = "WBW"
     choice_name = "who-beat-whom"
 
@@ -249,7 +249,7 @@ class DivisionsWhoBeatWhomMetricAnnotator(WhoBeatWhomMetricAnnotator):
     every who-beat-whom in the precedence."""
 
     key_prefix = "wbwd"
-    name_prefix = "WBWD"
+    name_prefix = "Who-beat-whom (in division)"
     abbr_prefix = "WBWD"
     choice_name = "who-beat-whom (in divisions)"
 

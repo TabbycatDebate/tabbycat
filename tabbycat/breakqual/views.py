@@ -8,7 +8,8 @@ from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from utils.misc import get_ip_address
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_tournament, tournament_view
-from utils.mixins import CacheMixin, VueTableMixin
+from utils.mixins import CacheMixin, SingleObjectFromTournamentMixin, VueTableMixin
+from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from .models import BreakCategory, BreakingTeam
@@ -22,28 +23,29 @@ def public_break_index(request, t):
     return render(request, "public_break_index.html")
 
 
-class PublicBreakingTeams(PublicTournamentPageMixin, CacheMixin, VueTableMixin):
+class PublicBreakingTeams(SingleObjectFromTournamentMixin, PublicTournamentPageMixin, CacheMixin, VueTableMixin):
 
     public_page_preference = 'public_breaking_teams'
     page_emoji = '👑'
+    model = BreakCategory
+    slug_url_kwarg = 'category'
 
-    def get_table_data(self):
+    def get_table(self):
         t = self.get_tournament()
-        bc = get_object_or_404(BreakCategory, slug=self.kwargs.get('category'), tournament=t)
+        bc = self.get_object()
 
         standings = breaking.get_breaking_teams(bc, include_all=True, include_categories=t.pref('public_break_categories'))
-        # generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
 
-        teams_data = []
-        for info in standings.standings:
-            ddict = []
-            ddict.extend(self.ranking_cells(info))
-            ddict.extend(self.team_cells(info.team, t))
-            ddict.extend(self.metric_cells(info.metrics))
-            teams_data.append(ddict)
+        table = TabbycatTableBuilder(view=self, title=bc.name)
+        table.add_ranking_columns(standings)
+        table.add_column("Break", [standing.break_rank for standing in standings])
+        table.add_team_columns([info.team for info in standings])
+        table.add_metric_columns(standings)
+        return table
 
-        self.page_title = bc.name
-        return teams_data
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
 
 
 @admin_required
@@ -114,14 +116,11 @@ class BreakingAdjudicators(TournamentMixin, VueTableMixin):
     page_title = 'Breaking Adjudicators'
     page_emoji = '🎉'
 
-    def get_table_data(self):
-        t = self.get_tournament()
-
-        adjs_data = []
-        for adj in Adjudicator.objects.filter(breaking=True, tournament=t):
-            adjs_data.append(self.adj_cells(adj, t))
-
-        return adjs_data
+    def get_table(self):
+        table = TabbycatTableBuilder(view=self)
+        table.add_adjudicator_columns(Adjudicator.objects.filter(
+            breaking=True, tournament=self.get_tournament()))
+        return table
 
 
 class AdminBreakingAdjudicators(LoginRequiredMixin, BreakingAdjudicators):

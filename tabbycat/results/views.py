@@ -19,14 +19,15 @@ from motions.models import Motion
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
-from utils.misc import get_ip_address, redirect_round, reverse_tournament
+from utils.misc import get_ip_address, redirect_round
 from utils.mixins import SuperuserRequiredMixin, VueTableMixin
+from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
 from .result import BallotSet
 from .forms import BallotSetForm
-from .models import BallotSubmission
-from .mixins import DebateResultCellsMixin
+from .models import BallotSubmission, TeamScore
+from .mixins import ResultsTableBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,7 @@ def toggle_postponed(request, t, debate_id):
     return redirect_round('results', debate.round)
 
 
-class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, DebateResultCellsMixin, TemplateView):
+class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
 
     template_name = 'results.html'
     sort_key = 'Status'
@@ -57,26 +58,20 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             self.draw = self.get_round().get_draw()
             return self.draw
 
-    def get_table_data(self):
-        t = self.get_tournament()
+    def get_table(self):
         draw = self.get_or_set_draw()
-
-        draw_data = []
-        for d in draw:
-            ddict = self.status_cells(d)
-            ddict.extend(self.ballot_entry_cells(d, t))
-            ddict.extend(self.bracket_cells(d))
-            ddict.extend(self.venue_cells(d, t))
-            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
-            draw_data.append(ddict)
-
-        return draw_data
+        table = ResultsTableBuilder(view=self, sort_key="")
+        table.add_ballot_status_columns(draw)
+        table.add_ballot_entry_columns(draw)
+        table.add_debate_venue_columns(draw)
+        table.add_debate_bracket_columns(draw)
+        table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
+        table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
+        table.add_debate_adjudicators_column(draw)
+        return table
 
     def get_context_data(self, **kwargs):
         draw = self.get_or_set_draw()
-
         kwargs["stats"] = {
             'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
             'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
@@ -84,7 +79,6 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
             'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
         }
-
         return super().get_context_data(**kwargs)
 
 
@@ -120,54 +114,87 @@ def results(request, round):
 
 class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin):
 
+    template_name = "public_results_for_round.html"
     public_page_preference = 'public_results'
     page_title = 'Results'
     page_emoji = '💥'
-    sort_key = 'Team'
+    default_view = 'team'
 
-    def get_table_data(self):
+    def get_page_title(self):
+        return "Results for " + self.get_round().name
+
+    def get_table(self):
+        view_type = self.request.session.get('results_view', 'team')
+        if view_type == 'debate':
+            return self.get_table_by_debate()
+        else:
+            return self.get_table_by_team()
+
+    def get_table_by_debate(self):
         round = self.get_round()
-        t = self.get_tournament()
-        draw = round.get_draw()
+        tournament = self.get_tournament()
+        debates = round.get_draw()
 
-        draw_data = []
-        for d in draw:
-            for team in (d.aff_team, d.neg_team):
-                ddict = []
-                ddict.extend(self.venue_cells(d, t))
+        table = TabbycatTableBuilder(view=self, sort_key="Venue")
+        table.add_debate_venue_columns(debates)
 
-                if t.pref('ballots_released'):
-                    if d.confirmed_ballot:
-                        ddict.append({
-                            'head': {'key': 'Ballot', 'icon': 'glyphicon-search'},
-                            'cell': {
-                                'text': "View Ballot",
-                                'link': reverse_tournament('public_ballots_view', t, kwargs={'debate_id': d.id})
-                            }
-                        })
-                result_text, result_icon, bs = "", "", d.confirmed_ballot.ballot_set
+        results_data = []
+        for debate in debates:
+            affirmative = {'text': debate.aff_team.short_name}
+            negative = {'text': debate.neg_team.short_name}
+            if debate.confirmed_ballot:
+                if debate.confirmed_ballot.ballot_set.aff_win:
+                    affirmative['icon'] = "glyphicon-arrow-up text-success"
+                    negative['icon'] = "glyphicon-arrow-down text-danger"
+                elif debate.confirmed_ballot.ballot_set.neg_win:
+                    negative['icon'] = "glyphicon-arrow-up text-success"
+                    affirmative['icon'] = "glyphicon-arrow-down text-danger"
+            results_data.append([affirmative, negative])
+        table.add_columns(["Affirmative", "Negative"], results_data)
 
-                if bs.aff_win and team is d.aff_team or bs.neg_win and team is d.neg_team:
-                    result_icon = "glyphicon-arrow-up text-success"
-                else:
-                    result_icon = "glyphicon-arrow-down text-danger"
-                if team is d.aff_team:
-                    result_text += " vs " + d.neg_team.short_name + " (Neg)"
-                else:
-                    result_text += " vs " + d.aff_team.short_name + " (Aff)"
+        table.add_debate_ballot_link_column(debates)
+        table.add_debate_adjudicators_column(debates, show_splits=True)
+        if tournament.pref('show_motions_in_results'):
+            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 
-                ddict.append({'head': {'key': 'Result'}, 'cell': {
-                    'text': result_text, 'icon': result_icon}})
+        return table
 
-                ddict.extend(self.team_cells(team, t))
-                ddict.extend(self.adjudicators_cells(d, t, show_splits=False))
+    def get_table_by_team(self):
+        round = self.get_round()
+        tournament = self.get_tournament()
+        teamscores = TeamScore.objects.filter(debate_team__debate__round=round)
+        debates = [ts.debate_team.debate for ts in teamscores]
 
-                if t.pref('show_motions_in_results'):
-                    ddict.extend(self.motion_cells(d.confirmed_ballot.motion, t))
+        table = TabbycatTableBuilder(view=self, sort_key="Team")
+        table.add_team_columns([ts.debate_team.team for ts in teamscores])
 
-                draw_data.append(ddict)  # Only one team's result per line
+        results_data = []
+        for ts in teamscores:
+            opposition = ts.debate_team.opposition.team
+            result = {'text': " vs " + opposition.short_name}
+            if ts.win is True:
+                result['icon'] = "glyphicon-arrow-up text-success"
+                result['sort'] = 1
+                result['tooltip'] = "Won against " + opposition.long_name
+            elif ts.win is False:
+                result['icon'] = "glyphicon-arrow-down text-danger"
+                result['sort'] = 2
+                result['tooltip'] = "Lost to " + opposition.long_name
+            else: # None
+                result['icon'] = ""
+                result['sort'] = 3
+                result['tooltip'] = "No result for debate against " + opposition.long_name
+            results_data.append(result)
+        table.add_column("Result", results_data)
 
-        return draw_data
+        table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
+
+        table.add_debate_ballot_link_column(debates)
+        table.add_debate_adjudicators_column(debates, show_splits=True)
+        if tournament.pref('show_motions_in_results'):
+            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+
+        return table
 
     def get(self, request, *args, **kwargs):
         tournament = self.get_tournament()
@@ -178,7 +205,16 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         if round.seq >= tournament.current_round.seq and not tournament.release_all:
             logger.info("Refused results for %s: not yet available", round.name)
             return render(request, 'public_results_not_available.html')
+
+        # If there's a query string, store the session setting
+        if request.GET.get('view') in ['team', 'debate']:
+            request.session['results_view'] = request.GET['view']
+
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        kwargs['view_type'] = self.request.session.get('results_view', self.default_view)
+        return super().get_context_data(**kwargs)
 
 
 class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
