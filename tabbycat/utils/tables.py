@@ -213,11 +213,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(key, motion_data)
 
     def add_team_columns(self, teams, break_categories=False, show_speakers=False,
-            hide_institution=False, key="Team"):
+            hide_institution=False, hide_emoji=False, key="Team"):
 
         team_data = [{
             'text': team.short_name,
-            'emoji': team.emoji if self.tournament.pref('show_emoji') else None,
+            'emoji': team.emoji if self.tournament.pref('show_emoji') and not hide_emoji else None,
             'sort': team.short_name,
             'tooltip': [" " + s.name for s in team.speakers]
                 if self.tournament.pref('show_speakers_in_draw') or show_speakers else None # noqa

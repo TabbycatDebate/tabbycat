@@ -12,6 +12,7 @@ from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
 from utils.misc import reverse_tournament
 from utils.mixins import SuperuserRequiredMixin, TournamentMixin, VueTableMixin
+from utils.tables import TabbycatTableBuilder
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -250,46 +251,40 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
         kwargs['round'] = self.get_round()
         return super().get_context_data(**kwargs)
 
-    def get_table_data(self):
+    def get_table(self):
         t = self.get_tournament()
         r = self.get_round()
         draw = r.get_draw()
 
-        allocation_data = []
-        for d in draw:
-            ddict = []
+        table = TabbycatTableBuilder(view=self)
+        table.add_debate_bracket_columns(draw)
 
-            ddict.extend(self.bracket_cells(d))
+        importance_head = {
+            'key': 'VIP',
+            'icon': 'glyphicon-fire',
+            'tooltip': "Set a debate's importance (higher receives better adjs)"
+        }
+        table.add_column(importance_head, [{
+            'component': 'debate-importance',
+            'id': d.id,
+            'importance': d.importance,
+            'url': reverse_tournament(
+                'set_debate_importance', t, kwargs={'round_seq': r.seq})
+        } for d in draw])
 
-            ddict.append({
-                'head': {'key': 'VIP', 'icon': 'glyphicon-fire', 'tooltip': "Set a debate's importance (higher receives higher adjs)"},
-                'cell': {'component': 'debate-importance', 'id': d.id, 'importance': d.importance,
-                         'url': reverse_tournament('set_debate_importance', t, kwargs={'round_seq': r.seq})}})
+        table.add_debate_venue_columns(draw)
 
-            ddict.extend(self.venue_cells(d, t))
+        table.add_team_columns([d.aff_team for d in draw],
+           key='Aff', hide_institution=True, hide_emoji=True)
+        table.add_column("AW", [{'text': d.aff_team.wins_count} for d in draw])
 
-            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True, hide_emoji=True))
+        table.add_team_columns([d.neg_team for d in draw],
+           key='Neg', hide_institution=True, hide_emoji=True)
+        table.add_column("NW", [{ 'text': d.neg_team.wins_count} for d in draw])
 
-            ddict.append({
-                'head': {'key': 'AWins', 'icon': 'glyphicon glyphicon-star', 'tooltip': "Aff Wins; highlight here break potential"},
-                'cell': {'text': d.aff_team.wins_count}
-            })
+        table.add_column("Panel", [{'text': ''} for d in draw])
 
-            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True, hide_emoji=True))
-
-            ddict.append({
-                'head': {'key': 'NWins', 'icon': 'glyphicon glyphicon-star', 'tooltip': "Aff Wins; highlight here break potential"},
-                'cell': {'text': d.aff_team.wins_count}
-            })
-
-            ddict.append({
-                'head': {'key': 'Panel'},
-                'cell': {'text': ''}
-            })
-
-            allocation_data.append(ddict)
-
-        return allocation_data
+        return table
 
 
 class SetDebateImportance(TournamentMixin, SuperuserRequiredMixin, View):
