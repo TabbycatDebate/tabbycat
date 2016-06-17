@@ -29,9 +29,9 @@ class TabbycatBaseView():
         return self.page_sub_title
 
     def get_context_data(self, **kwargs):
-        kwargs["page_title"] = self.page_title
-        kwargs["page_title"] = self.page_sub_title
-        kwargs["page_emoji"] = self.page_emoji
+        kwargs["page_title"] = self.get_page_title
+        kwargs["page_sub_title"] = self.get_page_sub_title
+        kwargs["page_emoji"] = self.get_page_emoji
 
         return super().get_context_data(**kwargs)
 

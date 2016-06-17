@@ -119,9 +119,6 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
     page_emoji = '💥'
     default_view = 'team'
 
-    def get_page_title(self):
-        return "Results for " + self.get_round().name
-
     def get_table(self):
         view_type = self.request.session.get('results_view', 'team')
         if view_type == 'debate':
