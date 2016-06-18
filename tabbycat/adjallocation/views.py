@@ -10,7 +10,7 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
-from utils.mixins import ExpectPost, SuperuserRequiredMixin, TournamentMixin, VueTableMixin
+from utils.mixins import ExpectPost, JsonDataResponseView, SuperuserRequiredMixin, TournamentMixin, VueTableMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -141,6 +141,116 @@ def draw_adjudicators_get(request, round):
     return _json_adj_allocation(draw, round.unused_adjudicators())
 
 
+@admin_required
+@round_view
+def adj_conflicts(request, round):
+
+    data = {
+        'personal': {},
+        'history': {},
+        'institutional': {},
+        'adjudicator': {},
+    }
+
+    def add(type, adj_id, target_id):
+        if adj_id not in data[type]:
+            data[type][adj_id] = []
+        data[type][adj_id].append(target_id)
+
+    for ac in AdjudicatorConflict.objects.all():
+        add('personal', ac.adjudicator_id, ac.team_id)
+
+    for ic in AdjudicatorInstitutionConflict.objects.all():
+        for team in Team.objects.filter(institution=ic.institution):
+            add('institutional', ic.adjudicator_id, team.id)
+
+    for ac in AdjudicatorAdjudicatorConflict.objects.all():
+        add('adjudicator', ac.adjudicator_id, ac.conflict_adjudicator.id)
+
+    history = DebateAdjudicator.objects.filter(
+        debate__round__seq__lt=round.seq,
+    )
+
+    for da in history:
+        try:
+            add('history', da.adjudicator_id, da.debate.aff_team.id)
+        except DebateTeam.DoesNotExist:
+            pass  # For when a Debate/DebateTeam may have been deleted
+        try:
+            add('history', da.adjudicator_id, da.debate.neg_team.id)
+        except DebateTeam.DoesNotExist:
+            pass  # For when a Debate/DebateTeam may have been deleted
+
+    return HttpResponse(json.dumps(data), content_type="text/json")
+
+
+class CreateAdjAllocation(RoundMixin, SuperuserRequiredMixin, JsonDataResponseView, ExpectPost):
+
+    def get_data(self):
+        pass
+
+
+class GetAdjConflicts(RoundMixin, SuperuserRequiredMixin, JsonDataResponseView):
+
+    def get_data(self):
+        pass
+
+
+class GetAdjHistories(RoundMixin, SuperuserRequiredMixin, JsonDataResponseView):
+
+    def get_data(self):
+        pass
+
+
+class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
+
+    template_name = 'edit_adj_allocation.html'
+
+    def get_context_data(self, **kwargs):
+        unused_adjs = self.get_round().unused_adjudicators()
+        kwargs['unAllocatedAdjs'] = [adjs_to_json(a) for a in unused_adjs]
+        return super().get_context_data(**kwargs)
+
+    def get_table(self):
+        r = self.get_round()
+        draw = r.get_draw()
+
+        table = AllocationTableBuilder(view=self, sort_order='desc',
+            sort_key='importance',
+            table_class='table-condensed table-edit-allocation')
+
+        table.add_debate_bracket_columns(draw)
+        table.add_debate_importances(draw, r)
+        table.add_debate_venue_columns(draw)
+        table.add_team_columns([d.aff_team for d in draw],
+           key='Aff', hide_institution=True, hide_emoji=True)
+        table.add_team_wins(draw, r, "AW")
+        table.add_team_columns([d.neg_team for d in draw],
+           key='Neg', hide_institution=True, hide_emoji=True)
+        table.add_team_wins(draw, r, "NW")
+        table.add_column("Panel", [{'text': ''} for d in draw])
+
+        return table
+
+
+class SaveDebateImportance(TournamentMixin, SuperuserRequiredMixin, ExpectPost, View):
+
+    def dispatch(self, request, *args, **kwargs):
+        debate_id = request.POST.get('debate_id')
+        debate_importance = request.POST.get('importance')
+
+        debate = Debate.objects.get(pk=debate_id)
+        debate.importance = debate_importance
+        debate.save()
+
+        ActionLogEntry.objects.log(
+            type=ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
+            user=request.user, debate=debate,
+            tournament=debate.round.tournament)
+
+        return HttpResponse()
+
+
 class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
 
     def post(self, request, *args, **kwargs):
@@ -195,95 +305,3 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
                                    tournament=self.get_tournament())
 
         return HttpResponse("Saved changes for {} debates!".format(changed))
-
-
-@admin_required
-@round_view
-def adj_conflicts(request, round):
-
-    data = {
-        'personal': {},
-        'history': {},
-        'institutional': {},
-        'adjudicator': {},
-    }
-
-    def add(type, adj_id, target_id):
-        if adj_id not in data[type]:
-            data[type][adj_id] = []
-        data[type][adj_id].append(target_id)
-
-    for ac in AdjudicatorConflict.objects.all():
-        add('personal', ac.adjudicator_id, ac.team_id)
-
-    for ic in AdjudicatorInstitutionConflict.objects.all():
-        for team in Team.objects.filter(institution=ic.institution):
-            add('institutional', ic.adjudicator_id, team.id)
-
-    for ac in AdjudicatorAdjudicatorConflict.objects.all():
-        add('adjudicator', ac.adjudicator_id, ac.conflict_adjudicator.id)
-
-    history = DebateAdjudicator.objects.filter(
-        debate__round__seq__lt=round.seq,
-    )
-
-    for da in history:
-        try:
-            add('history', da.adjudicator_id, da.debate.aff_team.id)
-        except DebateTeam.DoesNotExist:
-            pass  # For when a Debate/DebateTeam may have been deleted
-        try:
-            add('history', da.adjudicator_id, da.debate.neg_team.id)
-        except DebateTeam.DoesNotExist:
-            pass  # For when a Debate/DebateTeam may have been deleted
-
-    return HttpResponse(json.dumps(data), content_type="text/json")
-
-
-class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
-
-    template_name = 'edit_adj_allocation.html'
-
-    def get_context_data(self, **kwargs):
-        unused_adjs = self.get_round().unused_adjudicators()
-        kwargs['unAllocatedAdjs'] = [adjs_to_json(a) for a in unused_adjs]
-        return super().get_context_data(**kwargs)
-
-    def get_table(self):
-        r = self.get_round()
-        draw = r.get_draw()
-
-        table = AllocationTableBuilder(view=self, sort_order='desc',
-            sort_key='importance',
-            table_class='table-condensed table-edit-allocation')
-
-        table.add_debate_bracket_columns(draw)
-        table.add_debate_importances(draw, r)
-        table.add_debate_venue_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw],
-           key='Aff', hide_institution=True, hide_emoji=True)
-        table.add_team_wins(draw, r, "AW")
-        table.add_team_columns([d.neg_team for d in draw],
-           key='Neg', hide_institution=True, hide_emoji=True)
-        table.add_team_wins(draw, r, "NW")
-        table.add_column("Panel", [{'text': ''} for d in draw])
-
-        return table
-
-
-class SetDebateImportance(TournamentMixin, SuperuserRequiredMixin, ExpectPost, View):
-
-    def dispatch(self, request, *args, **kwargs):
-        debate_id = request.POST.get('debate_id')
-        debate_importance = request.POST.get('importance')
-
-        debate = Debate.objects.get(pk=debate_id)
-        debate.importance = debate_importance
-        debate.save()
-
-        ActionLogEntry.objects.log(
-            type=ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
-            user=request.user, debate=debate,
-            tournament=debate.round.tournament)
-
-        return HttpResponse()

@@ -157,6 +157,7 @@ def round_increment(request, round):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
+    # Should be a JsonDataResponseView
     teams = list(Team.objects.filter(tournament=t).all().values(
         'id', 'short_reference', 'division', 'use_institution_prefix', 'institution__code', 'institution__id'))
 

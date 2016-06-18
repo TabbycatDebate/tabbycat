@@ -381,6 +381,7 @@ def new_ballotset(request, t, debate_id):
 @tournament_view
 def ballots_status(request, t):
     # Draw Status for Tournament Homepage
+    # Should be a JsonDataResponseView
     intervals = 20
 
     def minutes_ago(time):
@@ -418,6 +419,7 @@ def ballots_status(request, t):
 @tournament_view
 def latest_results(request, t):
     # Latest Results for Tournament Homepage
+    # Should be a JsonDataResponseView
     results_objects = []
     ballots = BallotSubmission.objects.filter(
         debate__round__tournament=t, confirmed=True).order_by(
@@ -479,6 +481,7 @@ def ballot_checkin_number_left(round):
 @admin_required
 @round_view
 def ballot_checkin_get_details(request, round):
+    # Should be a JsonDataResponseView
     try:
         debate = get_debate_from_ballot_checkin_request(request, round)
     except DebateBallotCheckinError as e:
@@ -505,6 +508,7 @@ def ballot_checkin_get_details(request, round):
 @admin_required
 @round_view
 def post_ballot_checkin(request, round):
+    # Should be a JsonDataResponseView
     try:
         debate = get_debate_from_ballot_checkin_request(request, round)
     except DebateBallotCheckinError as e:

@@ -13,9 +13,6 @@ urlpatterns = [
     url(r'^_get_old/$',
         views.draw_adjudicators_get,
         name='draw_adjudicators_get'),
-    url(r'^save_old/$',
-        views.SaveAdjudicatorsView.as_view(),
-        name='save_adjudicators'),
     url(r'^_update_importance/$',
         views.update_debate_importance,
         name='update_debate_importance'),
@@ -27,7 +24,10 @@ urlpatterns = [
         views.EditAdjudicatorAllocationView.as_view(),
         name='edit_adj_allocation'),
     url(r'^importance/set/$',
-        views.SetDebateImportance.as_view(),
+        views.SaveDebateImportance.as_view(),
         name='set_debate_importance'),
+    url(r'^save/$',
+        views.SaveAdjudicatorsView.as_view(),
+        name='save_adjudicators'),
 
 ]
