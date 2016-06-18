@@ -10,14 +10,13 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
-from utils.misc import reverse_tournament
 from utils.mixins import ExpectPost, SuperuserRequiredMixin, TournamentMixin, VueTableMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
-from .utils import AllocationTableBuilder, adjsToJson
+from .utils import adjs_to_json, AllocationTableBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -247,11 +246,10 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
 
     def get_context_data(self, **kwargs):
         unused_adjs = self.get_round().unused_adjudicators()
-        kwargs['unAllocatedAdjs'] = [adjsToJson(a) for a in unused_adjs]
+        kwargs['unAllocatedAdjs'] = [adjs_to_json(a) for a in unused_adjs]
         return super().get_context_data(**kwargs)
 
     def get_table(self):
-        t = self.get_tournament()
         r = self.get_round()
         draw = r.get_draw()
 
@@ -264,10 +262,10 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
         table.add_debate_venue_columns(draw)
         table.add_team_columns([d.aff_team for d in draw],
            key='Aff', hide_institution=True, hide_emoji=True)
-        table.add_column("AW", [{'text': d.aff_team.wins_count} for d in draw])
+        table.add_team_wins(draw, r, "AW")
         table.add_team_columns([d.neg_team for d in draw],
            key='Neg', hide_institution=True, hide_emoji=True)
-        table.add_column("NW", [{ 'text': d.neg_team.wins_count} for d in draw])
+        table.add_team_wins(draw, r, "NW")
         table.add_column("Panel", [{'text': ''} for d in draw])
 
         return table

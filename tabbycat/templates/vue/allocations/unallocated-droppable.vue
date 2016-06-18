@@ -11,7 +11,5 @@
         adjs: Array
     },
     template: 'unallocated-droppable',
-
-    }
   })
 </script>
