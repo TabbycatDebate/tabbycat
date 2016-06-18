@@ -1,5 +1,4 @@
-<!-- Table Template -->
-<script type="text/x-template" id="smart-table">
+<template>
 
   <table class="table" :class="tableClass">
     <thead>
@@ -13,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <h4 v-if="typeof tableHeaders === 'undefined'">No Data Available</h4>
+      <tr v-if="typeof tableHeaders === 'undefined'"><td class="h4">No Data Available</td></tr>
       <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder" >
         <template v-for="(cellIndex, cellData) in row">
           <smart-cell v-if="!cellData['component']" :cell-data="cellData"></smart-cell>
@@ -23,43 +22,13 @@
     </tbody>
   </table>
 
-</script>
+</template>
 
-<!-- Table Component Behaviour -->
 <script>
+  import SmartHeader from './Header.vue'
+  import SmartCell from './Cell.vue'
 
-  Vue.filter('caseInsensitiveOrderBy', function (arr, sortIndex, reverse) {
-    // This is basically a copy of Vue's native orderBy except we are overriding
-    // the last part to see if the cell has custom sort attributes
-    var order = (reverse && reverse < 0) ? -1 : 1
-    // sort on a copy to avoid mutating original array
-    return arr.slice().sort(function (a, b) {
-      // Check if cell has custom sorting
-      if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].sort) !== 'undefined') {
-        a = a[sortIndex].sort
-        b = b[sortIndex].sort
-      } else if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].text) !== 'undefined') {
-        a = a[sortIndex].text
-        b = b[sortIndex].text
-      } else {
-        console.log('Error sorting; sort key probably doesnt exist');
-      }
-      return a === b ? 0 : a > b ? order : -order
-    })
-
-  });
-
-  // Setup base components
-  var tableComponents = {
-      'smart-cell': smartCell,
-      'smart-header': smartHeader,
-  }
-  // Extend
-  for (var i = 0; i < pluginComponents.length; i++) {
-    tableComponents[pluginComponents[i].template] = pluginComponents[i].reference
-  }
-
-  Vue.component('smart-table', {
+  export default {
     template: '#smart-table',
     props: {
       tableHeaders: Array,
@@ -69,7 +38,10 @@
       defaultSortOrder: String,
       tableClass: String
     },
-    components: tableComponents,
+    components: {
+      SmartHeader,
+      SmartCell
+    },
     data: function () {
       return {
         sortIndex: this.getDefaultSortIndex(),
@@ -137,5 +109,5 @@
         return headers
       },
     }
-  })
+  }
 </script>

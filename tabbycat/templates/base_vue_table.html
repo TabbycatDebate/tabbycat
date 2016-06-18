@@ -7,63 +7,14 @@
 
 {% block content %}
 
-  {% for table_index in tables_count %}
-    {% if tables_count|length > 1 %}<div class="col-md-{% divide_to_int 12 tables_count|length %}">{% endif %}
-
-      <div class="panel panel-default" id="tableContainer{{ table_index }}">
-        <div class="panel-heading" v-if="tableTitle">
-          <h4 v-html="tableTitle"></h4>
-        </div>
-        <div class="panel-body">
-          <smart-table
-            :table-headers="tableHeaders"
-            :table-content="gridData"
-            :table-class="tableClass"
-            :filter-key="searchQuery"
-            :default-sort-key="sortKey"
-            :default-sort-order="sortOrder">
-          </smart-table>
-        </div>
-      </div>
-
-    {% if tables_count|length > 1 %}</div>{% endif %}
-  {% endfor %}
+  <app :tables-data=tablesData></app>
 
 {% endblock content %}
 
 {% block extra-js %}
-  {{ block.super }}
-  {% include "vue/tables/cell.vue" %}
-  {% include "vue/tables/header.vue" %}
-  {% include "vue/tables/table.vue" %}
   <script>
-
+    // Set global from template variables
     var tablesData = {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %};
-    var tablesVue = [];
-
-    for (var tableIndex = 0; tableIndex < tablesData.length; tableIndex++) {
-      var tableData = tablesData[tableIndex];
-      tablesVue.push(
-        new Vue({ // Create a new Vue context for each table
-          el: String('#tableContainer' + tableIndex),
-          data: {
-            searchQuery: '',
-            tableHeaders: tableData['head'],
-            tableClass: tableData['class'],
-            tableTitle: tableData['title'],
-            gridData: tableData['data'],
-            sortKey: tableData['sort_key'],
-            sortOrder: tableData['sort_order'],
-          },
-          ready: function() {
-            var thisTable = this; // this in the next context is the element
-            document.getElementById('table-search').onkeyup = function (e) {
-              thisTable.$set('searchQuery', this.value);
-            }
-          },
-        })
-      );
-    }
-
   </script>
+  {{ block.super }}
 {% endblock extra-js %}

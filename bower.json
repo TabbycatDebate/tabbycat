@@ -13,7 +13,6 @@
   "dependencies": {
     "jquery": "^2.2.3",
     "d3": "^3.5.17",
-    "vue": "^1.0.22",
     "jquery-validation": "^1.15.0",
     "jquery-ui": "^1.11.4",
     "lato": "^0.3.0",

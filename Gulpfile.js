@@ -9,6 +9,12 @@ var concat = require('gulp-concat');
 var minifyCSS = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
 
+// Browserify
+var browserify = require('browserify');
+var babelify = require('babelify');
+var vueify = require('vueify');
+var source = require('vinyl-source-stream');
+var gutil = require('gulp-util');
 
 gulp.task('fonts-compile', function() {
   gulp.src([
@@ -37,7 +43,6 @@ gulp.task('styles-dev', function() {
       'tabbycat/templates/scss/style.scss'])
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('tabbycat/static/css/'))
-    .pipe(gulp.dest('tabbycat/staticfiles/css/')); // Copy directly to static files
 });
 
 // Creates task for collecting dependencies
@@ -53,19 +58,15 @@ gulp.task('js-dev', function() {
   gulp.src(['tabbycat/templates/js/*.js'])
   .pipe(rename({dirname: ''})) // Remove folder structure
   .pipe(gulp.dest('tabbycat/static/js/'))
-  .pipe(gulp.dest('tabbycat/staticfiles/js/')); // Copy directly to static files
 });
 
 gulp.task('js-base-vendor-compile', function() {
-  gulp.src(['bower_components/jquery/dist/jquery.js', // deprecate?
+  gulp.src(['bower_components/jquery/dist/jquery.js',
             'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
             'bower_components/vue/dist/vue.js',
           ])
   .pipe(concat('vendor-base.js'))
   .pipe(uglify())
-  .pipe(rename(function (path) {
-    path.basename += ".min";
-  }))
   .pipe(rename({dirname: ''})) // Remove folder structure
   .pipe(gulp.dest('tabbycat/static/js/vendor/'));
 });
@@ -83,6 +84,20 @@ gulp.task('js-optional-vendor-compile', function() {
   .pipe(rename({dirname: ''})) // Remove folder structure
   .pipe(gulp.dest('tabbycat/static/js/vendor/'));
 });
+
+
+gulp.task("vue", function() {
+  return browserify('./tabbycat/templates/main.js')
+    .transform(vueify).on('error', gutil.log)
+    .transform([babelify, {
+        presets: ["es2015"],
+        plugins: ['transform-runtime']
+    }]).on('error', gutil.log)
+    .bundle()
+    .pipe(source('main.js'))
+    .pipe(gulp.dest('tabbycat/static/js'))
+});
+
 
 // Build task for production
 gulp.task('build-prod', [
@@ -104,7 +119,8 @@ gulp.task('build-dev', [
 
 // Not default runs when 'dj runserver' does
 // Watch the CSS/JS for changes and copy over to static AND static files when done
-gulp.task('default', ['styles-dev'], function() {
+gulp.task('default', ['styles-dev', 'vue'], function() {
+  gulp.watch('tabbycat/templates/vue/**/*.vue', ['vue']);
   gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-dev']);
   gulp.watch('tabbycat/templates/js/**/*.js', ['js-dev']);
 });
