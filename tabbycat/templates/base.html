@@ -8,7 +8,7 @@
   <title>{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
   <link rel="icon" type="image/png" href="/static/favicon.ico" />
   <!--[if IE]><link rel="shortcut icon" href="{% static 'favicon.ico' %}"/><![endif]-->
-  <link rel="stylesheet" type="text/css" href="{% static 'css/style.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
   {% block extra-css %}{% endblock %}
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
@@ -96,63 +96,62 @@
 
   <!-- Dependencies and JS for all pages -->
 
-    <script src="{% static 'js/vendor/vendor-base.min.js' %}"></script>
+  <script src="{% static 'js/vendor/vendor-base.js' %}"></script>
+  {% if 'admin/' in request.path %}
+  <script src="{% static 'js/vendor/vendor-admin.js' %}"></script>
+  <script>
+    jQuery.extend( true, $.fn.dataTable.defaults, {
+      // Default Data Table options
+      "sDom":
+        "<'row'<'table-container'lr" + "t"+ "f<p>",
+      "bPaginate": false,
+      "oLanguage": {
+        "sSearch": "Search: "
+      }
+    });
+  </script>
+  {% endif %}
 
-    {% if 'admin/' in request.path %}
-    <script src="{% static 'js/vendor/vendor-admin.min.js' %}"></script>
-    <script>
-      jQuery.extend( true, $.fn.dataTable.defaults, {
-        // Default Data Table options
-        "sDom":
-          "<'row'<'table-container'lr" + "t"+ "f<p>",
-        "bPaginate": false,
-        "oLanguage": {
-          "sSearch": "Search: "
-        }
+  <script>
+    $(document).ready(function(){
+      // Enable hover tooltips for all elements
+      $('[data-toggle=tooltip]').tooltip({
+        'html': true,
+        'placement': 'bottom'
       });
-    </script>
-    {% endif %}
-
-    <script>
-      $(document).ready(function(){
-        // Enable hover tooltips for all elements
-        $('[data-toggle=tooltip]').tooltip({
-          'html': true,
-          'placement': 'bottom'
-        });
-        // Disable buttons post submission
-        $('.submit-disable').on('click', function () {
-          var $btn = $(this).button('loading');
-        });
-        // Popovers for team names
-        $('[data-toggle="popover"]').popover({
-          trigger: 'hover',
-          container: 'body',
-          content: getTeamSpeakers,
-          html: true,
-          placement: 'bottom'
-        });
-        // Dynamic lookup speakers on hover
-        var cachedData = Array();
-        function getTeamSpeakers(){
-          var id = $(this).attr('id').replace("team_speakers_", "");
-          var localData = "error";
-          $.ajax('{{ tournament.get_public_url }}participants/team_list/' + id + '/', {
-            async: false,
-            success: function(data){
-              localData = data[0] + data[1] + data[2];
-            }
-          });
-          return localData;
-        }
+      // Disable buttons post submission
+      $('.submit-disable').on('click', function () {
+        var $btn = $(this).button('loading');
       });
-    </script>
+      // Popovers for team names
+      $('[data-toggle="popover"]').popover({
+        trigger: 'hover',
+        container: 'body',
+        content: getTeamSpeakers,
+        html: true,
+        placement: 'bottom'
+      });
+      // Dynamic lookup speakers on hover
+      var cachedData = Array();
+      function getTeamSpeakers(){
+        var id = $(this).attr('id').replace("team_speakers_", "");
+        var localData = "error";
+        $.ajax('{{ tournament.get_public_url }}participants/team_list/' + id + '/', {
+          async: false,
+          success: function(data){
+            localData = data[0] + data[1] + data[2];
+          }
+        });
+        return localData;
+      }
+    });
+  </script>
 
-    {% if debug %}<script>Vue.config.debug = true;</script>{% endif %}
-    <script>
-      Vue.config.delimiters = ["[[", "]]"];
-      var pluginComponents = [] // For adding extra components to load
-    </script>
+  {% if debug %}<script>Vue.config.debug = true;</script>{% endif %}
+  <script>
+    Vue.config.delimiters = ["[[", "]]"];
+    var pluginComponents = [] // For adding extra components to load
+  </script>
 
   <!-- Page specific JS and dependencies -->
   {% block extra-js %}{% endblock extra-js %}

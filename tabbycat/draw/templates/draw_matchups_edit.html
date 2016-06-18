@@ -93,7 +93,7 @@
 {% block footer %}{% endblock footer %}
 
 {% block extra-js %}
-<script src="{% static 'js/vendor/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/vendor/jquery-ui.js' %}"></script>
 <script>
   $(document).ready( function() {
 
@@ -128,7 +128,7 @@
         var replacing = $(".team", this); // if dragged onto a prexisting spot
         var newHomeOff;
         var curOff = team.offset();
-        
+
         if (replacing.length == 0) {
           replacing = $(document.createElement("div"));
           replacing.addClass("team");
