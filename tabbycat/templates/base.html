@@ -94,26 +94,8 @@
 
   {% endblock body %}
 
-  <script src="{% static 'js/vendor/vendor-base.js' %}"></script>
-
-  {% block extra-js %}
-    <script src="{% static 'js/main.js' %}"></script>
-  {% endblock extra-js %}
-
-  {% if 'admin/' in request.path %}
-  <script>
-    jQuery.extend( true, $.fn.dataTable.defaults, {
-      // Default Data Table options
-      "sDom":
-        "<'row'<'table-container'lr" + "t"+ "f<p>",
-      "bPaginate": false,
-      "oLanguage": {
-        "sSearch": "Search: "
-      }
-    });
-  </script>
-  {% endif %}
-
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra-js %}{% endblock extra-js %}
 
   <!-- Analytics -->
   {% if not debug %}

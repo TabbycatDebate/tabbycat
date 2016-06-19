@@ -1,9 +1,6 @@
-// The base template with universal or near-universal functionality
-// Imported on every page
-
 var $ = require('jquery');
 var Vue = require('vue')
-var App = require('./vue/App.vue')
+var App = require('../js-vue/App.vue')
 
 Vue.config.debug = true;
 Vue.config.devtools = true;

@@ -117,8 +117,8 @@
 {% block extra-js %}
 
   <script src="{% static 'js/vendor/d3.js' %}"></script>
-  {% include "vue/donut-chart.vue" %}
-  {% include "vue/text-display.vue" %}
+  {% include "vue/graphs/DonutChart.vue" %}
+  {% include "vue/graphs/TextDisplay.vue" %}
   <script>
     var latests = new Vue({
       el: '#diversityData',

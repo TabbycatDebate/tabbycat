@@ -1,10 +1,11 @@
-
 <!-- Streaming Item Updates for TournamentOverview -->
 <script type="text/x-template" id="updates-list">
 
   <li class='list-group-item'>
-    <span class='badge'>[[ timestamp ]]</span>
-    <strong>[[ user ]]</strong> [[ type ]] <em>[[ param ]]</em>
+    <span class='badge'>
+      {{ timestamp }}
+    </span>
+    <strong>{{ user }}</strong> {{ type }} <em>{{ param }}</em>
   </li>
 
 </script>

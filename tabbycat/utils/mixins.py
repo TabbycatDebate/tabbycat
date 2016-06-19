@@ -69,7 +69,7 @@ class JsonDataResponseView(View):
 
     def get(self, request, *args, **kwargs):
         self.request = request
-        return JsonResponse(self.get_data())
+        return JsonResponse(self.get_data(), safe=False)
 
 
 class SuperuserRequiredMixin(UserPassesTestMixin):

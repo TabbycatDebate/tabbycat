@@ -27,7 +27,7 @@ INTERNAL_IPS = (
 # Dont use whitenoise with debug enabled
 if DEBUG:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-    GULP_PRODUCTION_COMMAND = "npm run gulp build-dev"
+    GULP_PRODUCTION_COMMAND = "npm run gulp build"
 
 # ==============================================================================
 # Caching

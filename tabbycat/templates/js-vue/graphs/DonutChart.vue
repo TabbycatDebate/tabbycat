@@ -6,7 +6,9 @@
       display: 'inline-block'
     }">
 
-    <h5 class="text-center no-top-padding vertical-spacing">[[ title ]]<br>([[ total ]])</h5
+    <h5 class="text-center no-top-padding vertical-spacing">
+      {{ title }}<br>({{ total }})
+    </h5>
 
   </div>
 
