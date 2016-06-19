@@ -1,7 +1,12 @@
-var $ = require('jquery');
+// The base template with universal or near-universal functionality (imported on all pages)
+
+// jQuery and Bootstrap
+window.$ = window.jQuery = require('jquery');
+var bootstrapjs = require('bootstrap-sass');
+
+// Vue and the main app
 var Vue = require('vue')
 var App = require('../js-vue/App.vue')
-
 Vue.config.debug = true;
 Vue.config.devtools = true;
 
@@ -28,7 +33,6 @@ Vue.filter('caseInsensitiveOrderBy', function (arr, sortIndex, reverse) {
 
 // Create the base vue instance
 /* eslint-disable no-new */
-
 if (typeof tablesData !== 'undefined') {
   var tables = tablesData;
 } else {
@@ -44,7 +48,7 @@ new Vue({
   }
 });
 
-// Mount global jquery stuff
+// Mount global jquery stuff here
 $(document).ready(function(){
   // Enable hover tooltips for all elements
   $('[data-toggle=tooltip]').tooltip({

@@ -26,14 +26,19 @@ var config = {
 
 gulp.task('fonts-compile', function() {
   gulp.src([
-      'bower_components/**/*.eot',
-      'bower_components/**/*.svg',
-      'bower_components/**/*.ttf',
-      'bower_components/**/*.woff',
-      'bower_components/**/*.woff2',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.eot',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.svg',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.ttf',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
+      'node_modules/lato-font/fonts/**/*.eot',
+      'node_modules/lato-font/fonts/**/*.svg',
+      'node_modules/lato-font/fonts/**/*.ttf',
+      'node_modules/lato-font/fonts/**/*.woff',
+      'node_modules/lato-font/fonts/**/*.woff2',
     ])
     .pipe(rename({dirname: ''})) // Remove folder structure
-    .pipe(gulp.dest(config.outputDir + 'fonts/vendor/'));
+    .pipe(gulp.dest(config.outputDir + 'fonts/'));
 });
 
 gulp.task('styles-compile', function() {
@@ -44,7 +49,6 @@ gulp.task('styles-compile', function() {
     .pipe(config.production ? minifyCSS() : gutil.noop())
     .pipe(gulp.dest(config.outputDir + '/css/'));
 });
-
 
 gulp.task("js-compile", function() {
     // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
@@ -73,17 +77,17 @@ gulp.task("js-compile", function() {
     return es.merge.apply(null, tasks);
 });
 
-// Build task for production
+// Primary build task
 gulp.task('build', [
   'fonts-compile',
   'styles-compile',
   'js-compile',
  ]);
 
-// Not default runs when 'dj runserver' does
+// Note that default runs when 'dj runserver' does
 // Watch the CSS/JS for changes and copy over to static AND static files when done
-gulp.task('default', ['styles-dev', 'js-compile'], function() {
-  gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-dev']);
+gulp.task('default', ['styles-compile', 'js-compile'], function() {
+  gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
   gulp.watch('tabbycat/templates/**/*.js', ['js-compile']);
   gulp.watch('tabbycat/templates/**/*.vue', ['js-compile']);
 });
