@@ -29,7 +29,6 @@
   import SmartCell from './Cell.vue'
 
   export default {
-    template: '#smart-table',
     props: {
       tableHeaders: Array,
       tableContent: Array,
@@ -46,6 +45,27 @@
       return {
         sortIndex: this.getDefaultSortIndex(),
         sortOrder: this.getDefaultSortOrder()
+      }
+    },
+    filters: {
+      caseInsensitiveOrderBy: function (arr, sortIndex, reverse) {
+        // This is basically a copy of Vue's native orderBy except we are overriding
+        // the last part to see if the cell has custom sort attributes
+        var order = (reverse && reverse < 0) ? -1 : 1;
+        // sort on a copy to avoid mutating original array
+        return arr.slice().sort(function (a, b) {
+          // Check if cell has custom sorting
+          if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].sort) !== 'undefined') {
+            a = a[sortIndex].sort;
+            b = b[sortIndex].sort;
+          } else if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].text) !== 'undefined') {
+            a = a[sortIndex].text;
+            b = b[sortIndex].text;
+          } else {
+            console.log('Error sorting; sort key probably doesnt exist');
+          }
+          return a === b ? 0 : a > b ? order : -order;
+        });
       }
     },
     methods: {

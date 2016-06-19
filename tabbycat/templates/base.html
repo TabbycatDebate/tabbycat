@@ -94,8 +94,9 @@
 
   {% endblock body %}
 
-  <script src="{% static 'js/main.bundle.js' %}"></script>
-  {% block extra-js %}{% endblock extra-js %}
+  {% block js %}
+    <script src="{% static 'js/main.bundle.js' %}"></script>
+  {% endblock js %}
 
   <!-- Analytics -->
   {% if not debug %}

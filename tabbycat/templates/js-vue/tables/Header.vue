@@ -25,7 +25,6 @@
 <!-- Table Component Behaviour -->
 <script>
 export default {
-  template: '#smart-header',
   props: {
     headerData: Object,
     headerIndex: Number,

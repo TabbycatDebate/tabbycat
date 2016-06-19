@@ -54,7 +54,8 @@ gulp.task("js-compile", function() {
     // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
     // We define our input files, which we want to have bundled
     var files = [
-        'tabbycat/templates/js-bundles/main.js'
+        'tabbycat/templates/js-bundles/main.js',
+        'tabbycat/templates/js-bundles/tournament-home.js'
     ];
     // map them to our stream function
     var tasks = files.map(function(entry) {
@@ -88,7 +89,7 @@ gulp.task('build', [
 // Watch the CSS/JS for changes and copy over to static AND static files when done
 gulp.task('default', ['styles-compile', 'js-compile'], function() {
   gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
-  gulp.watch('tabbycat/templates/**/*.js', ['js-compile']);
-  gulp.watch('tabbycat/templates/**/*.vue', ['js-compile']);
+  gulp.watch('tabbycat/templates/js*/**/*.js', ['js-compile']);
+  gulp.watch('tabbycat/templates/js*/**/*.vue', ['js-compile']);
 });
 

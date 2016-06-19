@@ -7,14 +7,14 @@
 
 {% block content %}
 
-  <app :tables-data=tablesData></app>
+  <tables-container :tables-data=tablesData></table-container>
 
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
   <script>
-    // Set global from template variables
+    // Set table data as a global from template variable
     var tablesData = {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %};
   </script>
   {{ block.super }}
-{% endblock extra-js %}
+{% endblock js %}

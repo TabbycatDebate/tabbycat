@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import SmartTable from './tables/Table.vue'
+import SmartTable from './Table.vue'
 
 export default {
   components: {

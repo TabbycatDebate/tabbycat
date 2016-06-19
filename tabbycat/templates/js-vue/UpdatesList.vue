@@ -1,5 +1,5 @@
 <!-- Streaming Item Updates for TournamentOverview -->
-<script type="text/x-template" id="updates-list">
+<template>
 
   <li class='list-group-item'>
     <span class='badge'>
@@ -8,16 +8,15 @@
     <strong>{{ user }}</strong> {{ type }} <em>{{ param }}</em>
   </li>
 
-</script>
+</template>
 
 <script>
-  Vue.component('updates-list', {
-    template: '#updates-list',
-    props: {
-      timestamp: String,
-      user: String,
-      type: String,
-      param: String,
-    },
-  })
+export default {
+  props: {
+    timestamp: String,
+    user: String,
+    type: String,
+    param: String,
+  },
+}
 </script>

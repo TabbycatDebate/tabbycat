@@ -44,7 +44,6 @@
 
 <script>
 export default {
-  template: '#smart-cell',
   props: {
     cellData: Object,
   },
