@@ -1,4 +1,5 @@
 from adjallocation.models import DebateAdjudicator
+from breakqual.models import BreakingTeam
 from draw.models import Debate
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from utils.misc import reverse_tournament
@@ -285,6 +286,33 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     times_data.append([debate.time.strftime("D jS F"), debate.time.strftime("h:i A")])
             self.add_columns(times_headers, times_data)
 
+    def add_draw_conflicts(self, draw):
+        conflicts_header = {'key': "Conflicts/Flags"}
+        conflicts_data = [{
+            'text': debate.draw_conflicts + debate.flags_all,
+            'class': 'text-danger'
+        } for debate in draw]
+        self.add_column(conflicts_header, conflicts_data)
+
+    def add_breakrank_columns(self, teams, round):
+        breakrank_header = {'key': 'Breaking'}
+        breakrank_data = [{
+            'text': BreakingTeam.objects.get(
+                break_category=round.break_category,
+                team=team.id).break_rank
+        } for team in teams]
+        self.add_column(breakrank_header, breakrank_data)
+
+    def add_subrank_columns(self, draw, key):
+        subrank_header = {'key': key}
+        subrank_data = []
+        for d in draw:
+            sub_rank = d.aff_subrank[0] if key is 'ASR' else d.neg_subrank[0]
+            sub_rank += "=" if key is 'ASR' and d.aff_subrank[1] else ''
+            sub_rank += "=" if key is 'NSR' and d.neg_subrank[1] else ''
+            subrank_data.append({'text': sub_rank})
+        self.add_column(subrank_header, subrank_data)
+
     def add_ranking_columns(self, standings):
         headers = [{
             'key': info['abbr'],
@@ -307,6 +335,29 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } for info in standings.metrics_info()]
         data = [list(map(metricformat, standing.itermetrics())) for standing in standings]
         self.add_columns(headers, data)
+
+    def add_affs_count(self, teams, round, type):
+        affs_header = {
+            'key':  'aaffs' if type is 'aff' else 'naffs',
+            'tooltip': 'Number of times the current ' + type + ' has been in the affirmative position before'
+        }
+        affs_data = [{
+            'text': t.get_aff_count(round.seq) if round.prev else '',
+        } for t in teams]
+        self.add_columns(affs_header, affs_data)
+
+    # def add_draw_metric_columns(self, teams, round, standings):
+    #     aff_standings = [standings.get_standing(t) for t in teams]
+
+    #     if round.is_break_round:
+    #         self.add_breakrank_columns(teams, round)
+    #     else:
+    #         if "points" in standings.metric_keys:
+    #             aff_is_pullup = abs(aff_standing.metrics["points"] - debate.bracket) >= 1
+
+    #         aff_subrank = aff_standing.rankings["subrank"]
+
+    #     # debate.metrics = [(a, n) for a, n in zip(aff_standing.itermetrics(), neg_standing.itermetrics())]
 
     def add_debate_ballot_link_column(self, debates):
         if self.tournament.pref('ballots_released'):

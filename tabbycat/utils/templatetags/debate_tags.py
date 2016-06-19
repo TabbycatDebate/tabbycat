@@ -34,20 +34,6 @@ def version(path_string, base_url=settings.MEDIA_URL):
 
 
 @register.simple_tag
-def aff_count(team, round):
-    if round is None:
-        return 0
-    return team.get_aff_count(round.seq)
-
-
-@register.simple_tag
-def neg_count(team, round):
-    if round is None:
-        return 0
-    return team.get_neg_count(round.seq)
-
-
-@register.simple_tag
 def team_status_classes(team):
     classes = list()
     if team.region is not None:
