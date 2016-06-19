@@ -90,6 +90,6 @@ gulp.task('build', [
 gulp.task('default', ['styles-compile', 'js-compile'], function() {
   gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
   gulp.watch('tabbycat/templates/js*/**/*.js', ['js-compile']);
-  gulp.watch('tabbycat/templates/js*/**/*.vue', ['js-compile']);
+  gulp.watch('tabbycat/templates/js-vue/**/*.vue', ['js-compile']);
 });
 

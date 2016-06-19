@@ -2,11 +2,11 @@
 var Vue = require('vue')
 
 // Components
-var UpdatesList = require('../js-vue/UpdatesList.vue')
-var BallotsGraph = require('../js-vue/graphs/BallotsGraph.vue')
+import UpdatesList from '../js-vue/UpdatesList.vue'
+import BallotsGraph from '../js-vue/graphs/BallotsGraph.vue'
 
 new Vue({
-  el: '#tournamentOverview',
+  el: 'body',
   components: {
     UpdatesList, BallotsGraph
   },
@@ -14,6 +14,8 @@ new Vue({
     latestActions: 'loading',
     latestResults: 'loading',
     pollFrequency: 30000, // 30 seconds
+    updateActionsURL: updateActionsURL,
+    updateResultsURL: updateResultsURL,
   },
   created: function () {
     this.updateActions();

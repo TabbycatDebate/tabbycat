@@ -1,5 +1,5 @@
 <!-- Streaming Item Updates for TournamentOverview -->
-<template>
+<template id="ballots-graph">
 
   <svg id="ballotsStatusGraph" class="d3-graph" style="margin-top: -15px; margin-bottom: -15px;" width="100%"></svg>
   <div v-if="graphData.length === 0" class="text-center">No ballots in for this round yet</div>
@@ -93,6 +93,7 @@ function initChart(vueContext){
 };
 
 export default {
+  template: '#ballots-graph',
   props: {
     pollUrl: String,
     height: { type: Number, default: 200 },

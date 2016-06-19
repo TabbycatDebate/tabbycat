@@ -19,21 +19,18 @@ $(document).ready(function(){
 
 // Vue and the main app
 var Vue = require('vue')
-var TablesContainer = require('../js-vue/tables/TablesContainer.vue')
+import TablesContainer from '../js-vue/tables/TablesContainer.vue'
 
 if (typeof tablesData !== 'undefined') {
-  var tables = tablesData;
-} else {
-  var tables = null;
+  // All vue data table views must provide this base tablesData in the template
+  // If its setup we mount the main vue instance
+  new Vue({
+    el: 'body',
+    components: {
+      TablesContainer
+    },
+    data: {
+      tablesData: tablesData // Import from global setting on base-vue-table
+    }
+  });
 }
-
-// Mount the main vue instance
-new Vue({
-  el: 'body',
-  components: {
-    TablesContainer
-  },
-  data: {
-    tablesData: tables // Import from global setting on base-vue-table
-  }
-});
