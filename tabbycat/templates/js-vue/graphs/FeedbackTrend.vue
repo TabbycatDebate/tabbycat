@@ -1,11 +1,26 @@
 <!-- Adjudicator's Mini Feedback Graph -->
-<script type="text/x-template" id="feedback-trend">
+<template>
   <td class="unpadded-cell">
     <div class="d3-graph d3-feedback-trend"></div>
   </td>
-</script>
+</template>
 
 <script>
+
+  var d3 = require("d3");
+  export default {
+    props: {
+      componentData: Object,
+      width: { type: Number, default: 320 },
+      height: { type: Number, default: 42 },
+      padding: { type: Number, default: 5 },
+    },
+    ready: function() {
+      if (this.componentData.graphData !== undefined) {
+        InitChart(this); // Only init if we have some info
+      }
+    },
+  }
 
   // returns slope, intercept and r-square of the line
   function leastSquares(xSeries, ySeries) {
@@ -130,25 +145,4 @@
           .style("opacity", 0);
       });
   }
-
-  var feedbackTrend = Vue.extend({
-    template: '#feedback-trend',
-    props: {
-      componentData: Object,
-      width: { type: Number, default: 320 },
-      height: { type: Number, default: 42 },
-      padding: { type: Number, default: 5 },
-    },
-    ready: function() {
-      if (this.componentData.graphData !== undefined) {
-        InitChart(this); // Only init if we have some info
-      }
-    },
-  })
-
-  pluginComponents.push({
-    template: 'feedback-trend',
-    reference: feedbackTrend
-  })
-
 </script>

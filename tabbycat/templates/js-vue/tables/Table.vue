@@ -27,6 +27,7 @@
 <script>
   import SmartHeader from './Header.vue'
   import SmartCell from './Cell.vue'
+  import FeedbackTrend from '../graphs/FeedbackTrend.vue'
 
   export default {
     props: {
@@ -39,7 +40,8 @@
     },
     components: {
       SmartHeader,
-      SmartCell
+      SmartCell,
+      FeedbackTrend
     },
     data: function () {
       return {

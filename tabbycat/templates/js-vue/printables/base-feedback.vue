@@ -39,7 +39,7 @@
 
 </script>
 
-{% include "vue/printables/feedback-question.vue" %}
+{% include "js-vue/printables/feedback-question.vue" %}
 <script>
   Vue.component('base-feedback', {
     template: '#base-feedback',

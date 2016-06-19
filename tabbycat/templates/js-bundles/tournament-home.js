@@ -14,8 +14,8 @@ new Vue({
     latestActions: 'loading',
     latestResults: 'loading',
     pollFrequency: 30000, // 30 seconds
-    updateActionsURL: updateActionsURL,
-    updateResultsURL: updateResultsURL,
+    updateActionsURL: updateActionsURL, // From template
+    updateResultsURL: updateResultsURL, // From template
   },
   created: function () {
     this.updateActions();

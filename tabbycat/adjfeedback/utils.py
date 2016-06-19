@@ -19,7 +19,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         breaking_data = [{
             'text': '<input type="checkbox" adj_id="%s" %s>' % (adj.id, 'checked' if adj.breaking else ''),
             'sort': adj.breaking,
-            'cell-class': 'toggle_breaking_status'
+            'class': 'toggle_breaking_status'
         } for adj in adjudicators]
 
         self.add_column(breaking_header, breaking_data)
@@ -44,7 +44,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         test_data = [{
             'text': "%0.1f" % (adj.score if adj.score else 'N/A'),
             'modal': adj.id,
-            'cell-class': 'edit-test-score',
+            'class': 'edit-test-score',
             'tooltip': 'Click to edit test score',
         } for adj in adjudicators]
         self.add_column(test_header, test_data)
@@ -72,7 +72,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         }
         link_cell = [{
             'text': 'View<br>Feedback',
-            'cell-class': 'view-feedback',
+            'class': 'view-feedback',
             'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk})
         } for adj in adjudicators]
         self.add_column(link_head, link_cell)
@@ -85,7 +85,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             }
             note_cell = [{
                 'text': 'Edit<br>Note',
-                'cell-class': 'edit-note',
+                'class': 'edit-note',
                 'modal': str(adj.id) + '===' + str(adj.notes)
             } for adj in adjudicators]
             self.add_column(note_head, note_cell)

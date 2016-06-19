@@ -52,15 +52,25 @@ gulp.task('styles-compile', function() {
 
 gulp.task("js-compile", function() {
 
-  gulp.src('tabbycat/templates/js-standalones/*.js')
+  gulp.src([
+    'tabbycat/templates/js-standalones/*.js',
+    ])
+    .pipe(config.production ? uglify() : gutil.noop())
     .pipe(gulp.dest(config.outputDir + '/js/'));
+
+  gulp.src([
+    'node_modules/datatables.net/js/jquery.dataTables.js', // Deprecate,
+    'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
+    'tabbycat/templates/js-vendor/*.js', // Deprecate,
+    ])
+    .pipe(config.production ? uglify() : gutil.noop())
+    .pipe(gulp.dest(config.outputDir + '/js/vendor/'));
 
   // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
   // We define our input files, which we want to have bundled
   var files = [
       'tabbycat/templates/js-bundles/main.js',
-      'tabbycat/templates/js-bundles/graphs.js',
-      'tabbycat/templates/js-bundles/tournament-home.js'
+      'tabbycat/templates/js-bundles/tournament-home.js',
   ];
   // map them to our stream function
   var tasks = files.map(function(entry) {

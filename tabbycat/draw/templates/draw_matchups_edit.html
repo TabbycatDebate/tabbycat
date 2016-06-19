@@ -92,7 +92,8 @@
 
 {% block footer %}{% endblock footer %}
 
-{% block extra-js %}
+{% block js %}
+  {{ block.super }}
 <script src="{% static 'js/vendor/jquery-ui.js' %}"></script>
 <script>
   $(document).ready( function() {
@@ -203,4 +204,4 @@
   });
 
 </script>
-{% endblock extra-js %}
+{% endblock js %}

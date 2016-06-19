@@ -83,7 +83,8 @@
   </form>
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
+  {{ block.super }}
   <script src="{% static 'js/vendor/jquery.validate.js' %}"></script>
   <script>
     $(document).ready( function() {

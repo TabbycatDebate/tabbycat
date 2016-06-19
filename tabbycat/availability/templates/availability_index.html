@@ -146,7 +146,8 @@
 
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
+  {{ block.super }}
   <script>
     $(document).ready( function() {
       $("#createDraw").click( function() {
@@ -155,4 +156,4 @@
       } );
     } );
   </script>
-{% endblock extra-js %}
+{% endblock js %}

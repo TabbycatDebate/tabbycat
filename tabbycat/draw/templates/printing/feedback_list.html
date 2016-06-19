@@ -19,14 +19,13 @@
 {% endblock content %}
 
 
-{% block extra-js %}
-
-  
-  {% include "vue/printables/base-ballot.vue" %}
-  {% include "vue/printables/base-ballot-header.vue" %}
-  {% include "vue/printables/base-ballot-footer.vue" %}
-  {% include "vue/printables/base-scoresheet.vue" %}
-  {% include "vue/printables/base-feedback.vue" %}
+{% block js %}
+  {{ block.super }}
+  {% include "js-vue/printables/base-ballot.vue" %}
+  {% include "js-vue/printables/base-ballot-header.vue" %}
+  {% include "js-vue/printables/base-ballot-footer.vue" %}
+  {% include "js-vue/printables/base-scoresheet.vue" %}
+  {% include "js-vue/printables/base-feedback.vue" %}
   <script>
     var baseData = {
       // Strings to Fill In
@@ -46,4 +45,4 @@
     })
   </script>
 
-{% endblock extra-js %}
+{% endblock js %}

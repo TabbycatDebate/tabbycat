@@ -75,7 +75,8 @@
 
 {% endblock %}
 
-{% block extra-js %}
+{% block js %}
+  {{ block.super }}
   <script>
     $(document).ready( function() {
       $(".jquery-division-time").on("change",function() {
@@ -100,4 +101,4 @@
       });
     });
   </script>
-{% endblock extra-js %}
+{% endblock js %}

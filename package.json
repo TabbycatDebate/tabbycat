@@ -24,7 +24,6 @@
     "gulp-util": "^3.0.7",
     "gutil": "^1.6.4",
     "jquery": "^2.2.3",
-    "jquery-ui": "^1.10.5",
     "jquery-validation": "^1.15.0",
     "lato-font": "^1.1.1",
     "node-glob": "^1.2.0",

@@ -73,10 +73,11 @@
 {% endblock content %}
 
 {% block js %}
-  {{ block.super }}
   <script>
     var updateActionsURL = '{% tournament_url latest_actions %}';
     var updateResultsURL = '{% tournament_url latest_results %}';
+    var bypassMainVue = true;
   </script>
+  {{ block.super }}
   <script src="{% static 'js/tournament-home.bundle.js' %}"></script>
 {% endblock %}

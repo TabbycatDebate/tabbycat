@@ -84,12 +84,14 @@
 
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
 
-  {% include "vue/allocations/ajax-mixin.vue" %}
-  {% include "vue/allocations/debate-importance.vue" %}
-  {% include "vue/allocations/unallocated-droppable.vue" %}
-  {% include "vue/allocations/adj-draggable.vue" %}
+  {{ block.super }}
+  <!-- TODO: bundle -->
+  {% include "js-vue/allocations/ajax-mixin.vue" %}
+  {% include "js-vue/allocations/debate-importance.vue" %}
+  {% include "js-vue/allocations/unallocated-droppable.vue" %}
+  {% include "js-vue/allocations/adj-draggable.vue" %}
   {{ block.super }}
   <script>
     new Vue({
@@ -100,4 +102,4 @@
     })
   </script>
 
-{% endblock extra-js %}
+{% endblock js %}

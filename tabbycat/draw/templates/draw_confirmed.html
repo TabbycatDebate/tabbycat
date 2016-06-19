@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load debate_tags %}
 {% load break_rank %}
 
@@ -293,8 +294,12 @@
   </div>
 {% endblock content %}
 
-{% block extra-js %}
-   <script>
+{% block js %}
+
+  {{ block.super }}
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
+  <script>
     $(document).ready( function() {
       var dTable = $('#dataTable').DataTable({
         'bPaginate': false,
@@ -304,6 +309,6 @@
       $('#table-search').keyup(function(){
         dTable.search($(this).val()).draw();
       })
-    } );
+    });
   </script>
-{% endblock extra-js %}
+{% endblock js %}
