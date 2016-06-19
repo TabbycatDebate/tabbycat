@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^admin/divisions/allocate/$',
         views.division_allocations,
         name='division_allocations'),
+
     # POST METHODS
     url(r'^admin/divisions/set_venue_group/$',
         views.set_division_venue_group,
@@ -35,6 +36,7 @@ urlpatterns = [
     url(r'^admin/divisions/set_time/$',
         views.set_division_time,
         name='set_division_time'),
+
     # MANUAL ACTIONS
     url(r'^admin/divisions/create/$',
         views.create_division,
@@ -46,7 +48,7 @@ urlpatterns = [
         views.create_byes,
         name='create_byes'),
 
-    # WADL-specific; unclear if draws or participants
+    # TODO WADL-specific; unclear if draws or participants
     url(r'^all_tournaments_all_venues/$',
         views.all_tournaments_all_venues,
         name='all_tournaments_all_venues'),
@@ -58,7 +60,8 @@ urlpatterns = [
         name='all_draws_for_institution'),
 
     # Action Logs App
-    url(r'^admin/action_log/', include('actionlog.urls')),
+    url(r'^admin/action_log/',
+        include('actionlog.urls')),
 
     # Allocations App
     url(r'^admin/allocations/round/(?P<round_seq>\d+)/',
@@ -69,41 +72,60 @@ urlpatterns = [
         include('availability.urls')),
 
     # Breaks App
-    url(r'^break/', include('breakqual.urls_public')),
-    url(r'^admin/break/', include('breakqual.urls_admin')),
+    url(r'^break/',
+        include('breakqual.urls_public')),
+    url(r'^admin/break/',
+        include('breakqual.urls_admin')),
 
     # Draws App
-    url(r'^draw/', include('draw.urls_public')),
-    url(r'^admin/draw/', include('draw.urls_admin')),
+    url(r'^draw/',
+        include('draw.urls_public')),
+    url(r'^admin/draw/',
+        include('draw.urls_admin')),
 
     # Feedbacks App
-    url(r'^feedback/', include('adjfeedback.urls_public')),
-    url(r'^admin/feedback/', include('adjfeedback.urls_admin')),
+    url(r'^feedback/',
+        include('adjfeedback.urls_public')),
+    url(r'^admin/feedback/',
+        include('adjfeedback.urls_admin')),
 
     # Importer App
-    url(r'^admin/import/', include('importer.urls')),
+    url(r'^admin/import/',
+        include('importer.urls')),
 
     # Motions App
-    url(r'^motions/', include('motions.urls_public')),
+    url(r'^motions/',
+        include('motions.urls_public')),
     url(r'^admin/motions/round/(?P<round_seq>\d+)/',
         include('motions.urls_admin')),
 
     # Options App
-    url(r'^admin/options/', include('options.urls')),
+    url(r'^admin/options/',
+        include('options.urls')),
+
+    # Printing App
+    url(r'^participants/',
+        include('printing.urls_admin')),
 
     # Participants App
-    url(r'^participants/', include('participants.urls_public')),
+    url(r'^participants/',
+        include('participants.urls_public')),
 
     # Results App
-    url(r'^results/', include('results.urls_public')),
-    url(r'^admin/results/', include('results.urls_admin')),
+    url(r'^results/',
+        include('results.urls_public')),
+    url(r'^admin/results/',
+        include('results.urls_admin')),
 
     # Standings App
-    url(r'^standings/', include('standings.urls_public')),
-    url(r'^tab/', include('standings.urls_public')),
+    url(r'^standings/',
+        include('standings.urls_public')),
+    url(r'^tab/',
+        include('standings.urls_public')),
     url(r'^admin/standings/round/(?P<round_seq>\d+)/',
         include('standings.urls_admin')),
 
     # Venues App
-    url(r'^admin/venues/', include('venues.urls_admin')),
+    url(r'^admin/venues/',
+        include('venues.urls_admin')),
 ]
