@@ -21,7 +21,7 @@ $(document).ready(function(){
 var Vue = require('vue')
 import TablesContainer from '../js-vue/tables/TablesContainer.vue'
 
-if (typeof tablesData !== 'undefined') {
+if (typeof tablesData !== 'undefined' && tablesData !== null) {
   // All vue data table views must provide this base tablesData in the template
   // If its setup we mount the main vue instance
   new Vue({

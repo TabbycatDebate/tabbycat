@@ -5,8 +5,6 @@
 {% block page-title %}🗃Diversity Overview{% endblock %}
 {% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
 {% block diversity_active %}active{% endblock %}
-{% block body-id %}diversityData{% endblock %}
-
 {% if for_public %}{% block page-subnav-sections %}{% endblock %}{% endif %}
 
 {% block page-alerts %}
@@ -114,20 +112,10 @@
 </div>
 {% endblock content %}
 
-{% block extra-js %}
-
-  <script src="{% static 'js/vendor/d3.js' %}"></script>
-  {% include "vue/graphs/DonutChart.vue" %}
-  {% include "vue/graphs/TextDisplay.vue" %}
+{% block js %}
+  {{ block.super }}
   <script>
-    var latests = new Vue({
-      el: '#diversityData',
-      data: {
-        dataSets: {{ data_sets|safe }}
-      },
-      methods: {
-      }
-    });
+    var graphsData = {{ data_sets|safe }};
   </script>
-
-{% endblock extra-js %}
+  <script src="{% static 'js/graphs.bundle.js' %}"></script>
+{% endblock js %}

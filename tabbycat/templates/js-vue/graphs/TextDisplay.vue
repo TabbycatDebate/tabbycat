@@ -1,5 +1,5 @@
 <!-- Pie Graphs for Diversity Reports -->
-<script type="text/x-template" id="text-display">
+<template>
 
   <div class="row">
 
@@ -24,15 +24,13 @@
   </div>
 
   <div class="row">
-   <h5 class="text-center vertical-spacing">[[ title ]]</h5>
+   <h5 class="text-center vertical-spacing">{{ title }}</h5>
   </div>
 
-</script>
+</template>
 
 <script>
-
-  Vue.component('text-display', {
-    template: '#text-display',
+  export default {
     props: {
       title: String,
       graphData: Array,
@@ -51,6 +49,5 @@
         }
       }
     }
-  })
-
+  }
 </script>

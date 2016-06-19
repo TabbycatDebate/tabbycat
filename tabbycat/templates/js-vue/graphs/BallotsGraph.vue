@@ -8,6 +8,36 @@
 
 <script>
 
+var d3 = require("d3");
+
+export default {
+  props: {
+    pollUrl: String,
+    height: { type: Number, default: 200 },
+    padding: { type: Number, default: 30 },
+    pollFrequency: { type: Number, default: 30000 }, // 30s
+    graphData: { type: Number,  default: function () { return [] } }
+  },
+  methods: {
+    fetchData: function () {
+      var xhr = new XMLHttpRequest()
+      var self = this
+      xhr.open('GET', self.pollUrl)
+      xhr.onload = function () {
+        self.graphData = JSON.parse(xhr.responseText)
+        if (self.graphData.length > 0) {
+          initChart(self); // Don't init if no data is present
+        }
+        setTimeout(self.fetchData, self.pollFrequency);
+      }
+      xhr.send()
+    }
+  },
+  created: function() {
+    this.fetchData();
+  },
+}
+
 function initChart(vueContext){
 
   // Responsive width
@@ -61,64 +91,9 @@ function initChart(vueContext){
     .orient("bottom")
     .tickFormat(function(d) { return "-" + d + "m"; }) // Format result
 
-
   svg.append("g").attr("class", "x axis")
     .call(xAxis)
 
-  // disable y axis for now
-  // var yAxis = d3.svg.axis()
-  //   .scale(y)
-  //   .orient("left")
-  // svg.append("g").attr("class", "y axis")
-  //   .call(yAxis);
-
-  // Horizontal grid
-  // svg.selectAll("line.horizontalGrid").data(y.ticks()).enter()
-  // .append("line")
-  //     .attr({
-  //         "class":"horizontalGrid",
-  //         "x1" : 0,
-  //         "x2" : vueContext.width,
-  //         "y1" : function(d){
-  //           return y(d);},
-  //         "y2" : function(d){
-  //           return y(d);},
-  //         "fill" : "none",
-  //         "shape-rendering" : "crispEdges",
-  //         "stroke" : "white",
-  //         "stroke-width" : "1px"
-  //     });
-
-
 };
-
-export default {
-  template: '#ballots-graph',
-  props: {
-    pollUrl: String,
-    height: { type: Number, default: 200 },
-    padding: { type: Number, default: 30 },
-    pollFrequency: { type: Number, default: 30000 }, // 30s
-    graphData: { type: Number,  default: function () { return [] } }
-  },
-  methods: {
-    fetchData: function () {
-      var xhr = new XMLHttpRequest()
-      var self = this
-      xhr.open('GET', self.pollUrl)
-      xhr.onload = function () {
-        self.graphData = JSON.parse(xhr.responseText)
-        if (self.graphData.length > 0) {
-          initChart(self); // Don't init if no data is present
-        }
-        setTimeout(self.fetchData, self.pollFrequency);
-      }
-      xhr.send()
-    }
-  },
-  created: function() {
-    this.fetchData();
-  },
-}
 
 </script>

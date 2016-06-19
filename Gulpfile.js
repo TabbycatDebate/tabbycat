@@ -51,31 +51,37 @@ gulp.task('styles-compile', function() {
 });
 
 gulp.task("js-compile", function() {
-    // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
-    // We define our input files, which we want to have bundled
-    var files = [
-        'tabbycat/templates/js-bundles/main.js',
-        'tabbycat/templates/js-bundles/tournament-home.js'
-    ];
-    // map them to our stream function
-    var tasks = files.map(function(entry) {
-      return browserify({ entries: [entry] })
-        .transform(vueify).on('error', gutil.log)
-        .transform([babelify, {
-            presets: ["es2015"],
-            plugins: ['transform-runtime']
-        }]).on('error', gutil.log)
-        .bundle()
-        .pipe(source(entry))
-        .pipe(config.production ? streamify(uglify()) : gutil.noop())
-        .pipe(rename({
-            extname: '.bundle.js',
-            dirname: ''
-        }))
-        .pipe(gulp.dest(config.outputDir + '/js/'))
-    });
-    // create a merged stream
-    return es.merge.apply(null, tasks);
+
+  gulp.src('tabbycat/templates/js-standalones/*.js')
+    .pipe(gulp.dest(config.outputDir + '/js/'));
+
+  // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
+  // We define our input files, which we want to have bundled
+  var files = [
+      'tabbycat/templates/js-bundles/main.js',
+      'tabbycat/templates/js-bundles/graphs.js',
+      'tabbycat/templates/js-bundles/tournament-home.js'
+  ];
+  // map them to our stream function
+  var tasks = files.map(function(entry) {
+    return browserify({ entries: [entry] })
+      .transform(vueify).on('error', gutil.log)
+      .transform([babelify, {
+          presets: ["es2015"],
+          plugins: ['transform-runtime']
+      }]).on('error', gutil.log)
+      .bundle()
+      .pipe(source(entry))
+      .pipe(config.production ? streamify(uglify()) : gutil.noop())
+      .pipe(rename({
+          extname: '.bundle.js',
+          dirname: ''
+      }))
+      .pipe(gulp.dest(config.outputDir + '/js/'))
+  });
+  // create a merged stream
+  return es.merge.apply(null, tasks);
+
 });
 
 // Primary build task

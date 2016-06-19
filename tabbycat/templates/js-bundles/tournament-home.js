@@ -2,7 +2,7 @@
 var Vue = require('vue')
 
 // Components
-import UpdatesList from '../js-vue/UpdatesList.vue'
+import UpdatesList from  '../js-vue/UpdatesList.vue'
 import BallotsGraph from '../js-vue/graphs/BallotsGraph.vue'
 
 new Vue({
