@@ -13,6 +13,8 @@
     "d3": "^3.5.17",
     "datatables.net": "^1.10.12",
     "event-stream": "^3.3.3",
+    "eslint": "^1.10.3",
+    "eslint-plugin-html": "^1.1.0",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^2.0.10",
     "gulp-concat": "^2.6.0",
@@ -35,7 +37,8 @@
     "vueify": "^8.5.4"
   },
   "scripts": {
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "lint": "eslint --ext .js,.vue tabbycat/templates/js-bundles tabbycat/templates/js-vue"
   },
   "repository": "https://github.com/czlee/tabbycat",
   "license": "UNLICENSED"

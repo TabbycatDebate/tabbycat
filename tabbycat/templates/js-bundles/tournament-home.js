@@ -1,6 +1,5 @@
 // Libraries
 var Vue = require('vue')
-
 // Components
 import UpdatesList from  '../js-vue/UpdatesList.vue'
 import BallotsGraph from '../js-vue/graphs/BallotsGraph.vue'
@@ -18,8 +17,8 @@ new Vue({
     updateResultsURL: updateResultsURL, // From template
   },
   created: function () {
-    this.updateActions();
-    this.updateResults();
+    this.updateActions()
+    this.updateResults()
   },
   methods: {
     updateActions: function() {
@@ -34,11 +33,11 @@ new Vue({
       xhr.open('GET', apiURL)
       xhr.onload = function () {
         if (resource === 'actions') {
-          self.latestActions = JSON.parse(xhr.responseText);
-          setTimeout(self.updateActions, self.pollFrequency);
+          self.latestActions = JSON.parse(xhr.responseText)
+          setTimeout(self.updateActions, self.pollFrequency)
         } else {
-          self.latestResults = JSON.parse(xhr.responseText);
-          setTimeout(self.updateResults, self.pollFrequency);
+          self.latestResults = JSON.parse(xhr.responseText)
+          setTimeout(self.updateResults, self.pollFrequency)
         }
       }
       xhr.send()
