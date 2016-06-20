@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util'); // Error logging + NoOop
 
 // Compilation
 var sass = require('gulp-sass');
@@ -6,9 +7,8 @@ var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 
 // Compression
-var minifyCSS = require('gulp-minify-css');
+var cleanCSS = require('gulp-clean-css');
 var uglify = require('gulp-uglify');
-var gutil = require('gulp-util'); // Error logging + ENV check
 
 // Browserify
 var browserify = require('browserify'); // Bundling modules
@@ -16,13 +16,11 @@ var babelify = require('babelify'); // Use ES syntax
 var vueify = require('vueify');
 var source = require('vinyl-source-stream'); // Use browserify in gulp
 var es = require('event-stream'); // Browserify multiple files at once
-var streamify = require('gulp-streamify')
+var streamify = require('gulp-streamify');
 
 // Config
-var config = {
-    outputDir: 'tabbycat/static/',
-    production: !!gutil.env.production // !! = turns undefined to false
-};
+var outputDir = 'tabbycat/static/';
+var isProduction = (gutil.env.production === true) ? true: false;
 
 gulp.task('fonts-compile', function() {
   gulp.src([
@@ -38,7 +36,7 @@ gulp.task('fonts-compile', function() {
       'node_modules/lato-font/fonts/**/*.woff2',
     ])
     .pipe(rename({dirname: ''})) // Remove folder structure
-    .pipe(gulp.dest(config.outputDir + 'fonts/'));
+    .pipe(gulp.dest(outputDir + 'fonts/'));
 });
 
 gulp.task('styles-compile', function() {
@@ -46,8 +44,9 @@ gulp.task('styles-compile', function() {
       'tabbycat/templates/scss/printables.scss',
       'tabbycat/templates/scss/style.scss'])
     .pipe(sass().on('error', sass.logError))
-    .pipe(config.production ? minifyCSS() : gutil.noop())
-    .pipe(gulp.dest(config.outputDir + '/css/'));
+    // '*' compatability = IE9+
+    .pipe(isProduction ? cleanCSS({compatibility: '*'}) : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/css/'));
 });
 
 gulp.task("js-compile", function() {
@@ -55,16 +54,16 @@ gulp.task("js-compile", function() {
   gulp.src([
     'tabbycat/templates/js-standalones/*.js',
     ])
-    .pipe(config.production ? uglify() : gutil.noop())
-    .pipe(gulp.dest(config.outputDir + '/js/'));
+    .pipe(isProduction ? uglify() : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/js/'));
 
   gulp.src([
     'node_modules/datatables.net/js/jquery.dataTables.js', // Deprecate,
     'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
     'tabbycat/templates/js-vendor/*.js', // Deprecate,
     ])
-    .pipe(config.production ? uglify() : gutil.noop())
-    .pipe(gulp.dest(config.outputDir + '/js/vendor/'));
+    .pipe(isProduction ? uglify() : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/js/vendor/'));
 
   // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
   // We define our input files, which we want to have bundled
@@ -82,12 +81,12 @@ gulp.task("js-compile", function() {
       }]).on('error', gutil.log)
       .bundle()
       .pipe(source(entry))
-      .pipe(config.production ? streamify(uglify()) : gutil.noop())
+      .pipe(isProduction ? streamify(uglify()) : gutil.noop())
       .pipe(rename({
           extname: '.bundle.js',
           dirname: ''
       }))
-      .pipe(gulp.dest(config.outputDir + '/js/'))
+      .pipe(gulp.dest(outputDir + '/js/'))
   });
   // create a merged stream
   return es.merge.apply(null, tasks);
