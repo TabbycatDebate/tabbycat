@@ -25,9 +25,10 @@ INTERNAL_IPS = (
 # ==============================================================================
 
 # Dont use whitenoise with debug enabled
+# When local dont compress assets (not --production) and use watchify if debug
 if DEBUG:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-    GULP_PRODUCTION_COMMAND = "npm run gulp build -- --development"
+    GULP_DEVELOP_COMMAND = "npm run gulp watch"
 
 # ==============================================================================
 # Caching
