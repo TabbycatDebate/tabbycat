@@ -18,9 +18,17 @@ var source = require('vinyl-source-stream'); // Use browserify in gulp
 var es = require('event-stream'); // Browserify multiple files at once
 var streamify = require('gulp-streamify');
 
+// Debug
+var livereload = require('gulp-livereload');
+
 // Config
 var outputDir = 'tabbycat/static/';
 var isProduction = (gutil.env.production === true) ? true: false;
+if (isProduction === true) {
+  console.log('Building for production');
+} else if (isProduction === false) {
+  console.log('Building for development');
+}
 
 gulp.task('fonts-compile', function() {
   gulp.src([
@@ -46,25 +54,31 @@ gulp.task('styles-compile', function() {
     .pipe(sass().on('error', sass.logError))
     // '*' compatability = IE9+
     .pipe(isProduction ? cleanCSS({compatibility: '*'}) : gutil.noop())
-    .pipe(gulp.dest(outputDir + '/css/'));
+    .pipe(gulp.dest(outputDir + '/css/'))
+    .pipe(isProduction ? gutil.noop() : livereload());
+});
+
+gulp.task("js-vendor-compile", function() {
+  gulp.src([
+    'node_modules/jquery/dist/jquery.js', // For Debug Toolbar
+    'node_modules/datatables.net/js/jquery.dataTables.js', // Deprecate,
+    'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
+    'tabbycat/templates/js-vendor/juqyer-ui.min.js', // Deprecate,
+    ])
+    .pipe(isProduction ? uglify() : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/js/vendor/'));
 });
 
 gulp.task("js-compile", function() {
-
   gulp.src([
     'tabbycat/templates/js-standalones/*.js',
     ])
     .pipe(isProduction ? uglify() : gutil.noop())
-    .pipe(gulp.dest(outputDir + '/js/'));
+    .pipe(gulp.dest(outputDir + '/js/'))
+    .pipe(isProduction ? gutil.noop() : livereload());
+});
 
-  gulp.src([
-    'node_modules/datatables.net/js/jquery.dataTables.js', // Deprecate,
-    'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
-    'tabbycat/templates/js-vendor/*.js', // Deprecate,
-    ])
-    .pipe(isProduction ? uglify() : gutil.noop())
-    .pipe(gulp.dest(outputDir + '/js/vendor/'));
-
+gulp.task("js-browserify", function() {
   // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
   // We define our input files, which we want to have bundled
   var files = [
@@ -87,24 +101,29 @@ gulp.task("js-compile", function() {
           dirname: ''
       }))
       .pipe(gulp.dest(outputDir + '/js/'))
+      // .pipe(isProduction ? gutil.noop() : livereload());
+      // TODO: get proper hot reloading going?
   });
   // create a merged stream
   return es.merge.apply(null, tasks);
-
 });
 
 // Primary build task
 gulp.task('build', [
   'fonts-compile',
   'styles-compile',
+  'js-vendor-compile',
   'js-compile',
+  'js-browserify',
  ]);
 
 // Note that default runs when 'dj runserver' does
 // Watch the CSS/JS for changes and copy over to static AND static files when done
-gulp.task('default', ['styles-compile', 'js-compile'], function() {
+gulp.task('watch', ['build'], function() {
+  livereload.listen();
   gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
-  gulp.watch('tabbycat/templates/js*/**/*.js', ['js-compile']);
-  gulp.watch('tabbycat/templates/js-vue/**/*.vue', ['js-compile']);
+  gulp.watch('tabbycat/templates/js-standalones/*.js', ['js-compile']);
+  gulp.watch('tabbycat/templates/js-bundles/*.js', ['js-broswerify']);
+  gulp.watch('tabbycat/templates/js-vue/**/*.vue', ['js-broswerify']);
 });
 

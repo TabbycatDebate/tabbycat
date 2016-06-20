@@ -27,7 +27,7 @@ INTERNAL_IPS = (
 # Dont use whitenoise with debug enabled
 if DEBUG:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-    GULP_PRODUCTION_COMMAND = "npm run gulp build"
+    GULP_PRODUCTION_COMMAND = "npm run gulp build -- --development"
 
 # ==============================================================================
 # Caching
@@ -82,7 +82,7 @@ if ENABLE_DEBUG_TOOLBAR:
 
     DEBUG_TOOLBAR_CONFIG = {
         'INTERCEPT_REDIRECTS': False,
-        'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
+        'JQUERY_URL': '/static/js/jquery.js', # Enables offline work
     }
 
 # ==============================================================================
