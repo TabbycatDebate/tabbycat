@@ -1,20 +1,25 @@
 // The base template with universal or near-universal functionality (imported on all pages)
 
 // jQuery and Bootstrap
-window.$ = window.jQuery = require('jquery');
-var bootstrapjs = require('bootstrap-sass');
+var $ = require("jquery");
+global.jQuery = $; // Set for bootstrap
+window.$ = $; // Set for browser window
+require("bootstrap");
 
 // Mount global jquery stuff here
-window.$(document).ready(function(){
+$(document).ready(function(){
+
   // Enable hover tooltips for all elements
-  window.$('[data-toggle=tooltip]').tooltip({
+  $('[data-toggle=tooltip]').tooltip({
     'html': true,
-    'placement': 'bottom'
+    'placement': 'top'
   });
+
   // Disable buttons post submission
-  window.$('.submit-disable').on('click', function () {
+  $('.submit-disable').on('click', function () {
     var $btn = $(this).button('loading');
   });
+
 });
 
 // Vue and the main app

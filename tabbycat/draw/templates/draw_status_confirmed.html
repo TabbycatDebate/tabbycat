@@ -73,7 +73,7 @@
     <div class="btn-group">
       <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_venue round %}">
         <span class="text-primary">
-          Display Draw by Venue<span class="glyphicon glyphicon-share"></span>
+          Display Draw by Venue <span class="glyphicon glyphicon-share"></span>
         </span>
       </a>
       <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_team round %}">
@@ -106,7 +106,7 @@
     <div class="btn-group pull-right">
       <div class="btn-group">
         {% if not pref.enable_debate_scheduling %}
-          <a class="btn btn-sm pull-right {% if round.starts_at %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#start-time-form">
+          <a class="btn btn-sm pull-right {% if round.starts_at %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#editStartTime">
             {% if round.starts_at %}
               Starts at {{ round.starts_at }}
             {% else %}
@@ -153,9 +153,7 @@
 
   </div>
 
-  {{ block.super }}
-
-  <div class="modal fade" id="start-time-form" tabindex="-1" role="dialog" aria-labelledby="start-time-form" aria-hidden="true">
+  <div class="modal fade" id="editStartTime" tabindex="-1" role="dialog" aria-labelledby="editStartTime">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
@@ -183,4 +181,12 @@
     </div>
   </div>
 
+  {{ block.super }}
+
 {% endblock content %}
+
+{% block js %}
+
+  {{ block.super }}
+
+{% endblock %}
