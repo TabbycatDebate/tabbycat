@@ -1,7 +1,7 @@
 import datetime
 import logging
 
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -11,7 +11,6 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
 from participants.models import Adjudicator, Team
-from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
 from utils.mixins import CacheMixin, ExpectPost, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableMixin
@@ -208,32 +207,32 @@ class AdminDrawWithDetailsView(AdminDrawEditView):
 
     def get_table(self):
         r = self.get_round()
-        draw = r.get_draw()
+        standings, draw = get_draw_with_standings(r)
 
-        teams = r.tournament.team_set.select_related('institution')
-        metrics = r.tournament.pref('team_standings_precedence')
-        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
-        standings = generator.generate(teams, round=r.prev)
+        table = TabbycatTableBuilder(view=self)
+        table.add_debate_bracket_columns(draw)
+        table.add_debate_venue_columns(draw)
+        table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
+        table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
+        if r.is_break_round:
+            table.add_beak_ranks(draw)
+        else:
+            table.add_sub_ranks(draw)
 
-        print(standings, draw)
+        for info in standings.metrics_info():
+            # Metrics go here
+            # {% for info in standings.metrics_info %}
+            # {% for metric in debate.metrics %}
+            print(info['name'])
 
-        # for debate in draw:
-        #     aff_standing = standings.get_standing(debate.aff_team)
-        #     neg_standing = standings.get_standing(debate.neg_team)
-        #     debate.metrics = [(a, n) for a, n in zip(aff_standing.itermetrics(), neg_standing.itermetrics())]
-        #     if round.is_break_round:
-        #         debate.aff_breakrank = BreakingTeam.objects.get(
-        #                 break_category=round.break_category,
-        #                 team=debate.aff_team.id).break_rank
-        #         debate.neg_breakrank = BreakingTeam.objects.get(
-        #                 break_category=round.break_category,
-        #                 team=debate.neg_team.id).break_rank
-        #     else:
-        #         if "points" in standings.metric_keys:
-        #             debate.aff_is_pullup = abs(aff_standing.metrics["points"] - debate.bracket) >= 1
-        #             debate.neg_is_pullup = abs(neg_standing.metrics["points"] - debate.bracket) >= 1
-        #         debate.aff_subrank = aff_standing.rankings["subrank"]
-        #         debate.neg_subrank = neg_standing.rankings["subrank"
+        # print([list(map(metricformat, standing.itermetrics())) for standing in standings])
+        # table.add_metric_columns(standings)
+
+        table.add_affs_count([d.aff_team for d in draw], r, 'aff')
+        table.add_affs_count([d.neg_team for d in draw], r, 'neg')
+        table.add_draw_conflicts(draw)
+
+        return table
 
 
 # ==============================================================================
