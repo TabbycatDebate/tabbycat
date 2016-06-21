@@ -190,9 +190,9 @@ class RoundCommand(TournamentCommand):
             if options.get("all_rounds", False):
                 rounds.extend(tournament.round_set.all())
             if options.get("prelim_rounds", False):
-                rounds.extend(tournament.prelim_rounds.all())
+                rounds.extend(tournament.prelim_rounds().all())
             if options.get("break_rounds", False):
-                rounds.extend(tournament.break_rounds.all())
+                rounds.extend(tournament.break_rounds().all())
         if not rounds and self.rounds_required:
             raise CommandError("No rounds were given. (Use --help for more info.)")
 
