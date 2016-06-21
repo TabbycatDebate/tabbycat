@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django import forms
 
-from divisions.models import Division
 from draw.models import TeamPositionAllocation
 from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict
 from adjfeedback.models import AdjudicatorTestScoreHistory

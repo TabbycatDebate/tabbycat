@@ -30,6 +30,7 @@ def public_divisions(request, t):
 
     return render(request, 'public_divisions.html', dict(venue_groups=venue_groups))
 
+
 @admin_required
 @tournament_view
 def division_allocations(request, t):
