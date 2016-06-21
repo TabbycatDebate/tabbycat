@@ -90,7 +90,7 @@ class InstitutionVenueConstraint(BaseVenueConstraint):
 
 
 class DivisionVenueConstraint(BaseVenueConstraint):
-    division = models.ForeignKey('tournaments.Division')
+    division = models.ForeignKey('divisions.Division')
 
     @property
     def subject(self):

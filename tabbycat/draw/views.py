@@ -9,10 +9,11 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
+from divisions.models import Division
 from participants.models import Adjudicator, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
-from tournaments.models import Division, Round
+from tournaments.models import Round
 from utils.mixins import CacheMixin, ExpectPost, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableMixin
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
