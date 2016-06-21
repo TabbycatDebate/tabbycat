@@ -1,14 +1,12 @@
 from django.db import models
 from django.utils.functional import cached_property
 
-from tournaments.models import Tournament
-
 
 class Division(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name or suffix")
     seq = models.IntegerField(blank=True, null=True,
         help_text="The order in which divisions are displayed")
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey('tournaments.Tournament')
     time_slot = models.TimeField(blank=True, null=True)
     venue_group = models.ForeignKey('venues.VenueGroup', blank=True, null=True)
 
