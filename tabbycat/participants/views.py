@@ -8,7 +8,8 @@ from django.views.generic.base import TemplateView, View
 
 from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin, VueTableMixin
+from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, Team
