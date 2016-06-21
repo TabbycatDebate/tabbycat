@@ -62,7 +62,7 @@ gulp.task("js-vendor-compile", function() {
     'node_modules/jquery/dist/jquery.js', // For Debug Toolbar
     'node_modules/datatables.net/js/jquery.dataTables.js', // Deprecate,
     'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
-    'tabbycat/templates/js-vendor/juqyer-ui.min.js', // Deprecate,
+    'tabbycat/templates/js-vendor/jquery-ui.min.js', // Deprecate,
     ])
     .pipe(isProduction ? uglify() : gutil.noop()) // Doesnt crash
     .pipe(gulp.dest(outputDir + '/js/vendor/'));
