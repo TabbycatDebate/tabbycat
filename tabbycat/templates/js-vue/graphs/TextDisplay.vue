@@ -1,20 +1,20 @@
 <!-- Pie Graphs for Diversity Reports -->
-<script type="text/x-template" id="text-display">
+<template>
 
   <div class="row">
 
     <template v-for="(index, d) in graphData">
 
       <div class="col-md-4 text-center">
-        <h4 class="no-bottom-margin text-body gender-text [[ d.label.toLowerCase() ]]">
-          [[ offset(d.count) ]]
+        <h4 class="no-bottom-margin text-body gender-text {{ d.label.toLowerCase() }}">
+          {{ offset(d.count) }}
         </h4>
       </div>
 
       <template v-if="datum && index == 0">
         <div class="col-md-4 text-center">
           <h4 class="no-bottom-margin text-body">
-          [[ round(datum) ]]
+          {{ round(datum) }}
           </h4>
         </div>
       </template>
@@ -24,15 +24,13 @@
   </div>
 
   <div class="row">
-   <h5 class="text-center vertical-spacing">[[ title ]]</h5>
+   <h5 class="text-center vertical-spacing">{{ title }}</h5>
   </div>
 
-</script>
+</template>
 
 <script>
-
-  Vue.component('text-display', {
-    template: '#text-display',
+  export default {
     props: {
       title: String,
       graphData: Array,
@@ -51,6 +49,5 @@
         }
       }
     }
-  })
-
+  }
 </script>

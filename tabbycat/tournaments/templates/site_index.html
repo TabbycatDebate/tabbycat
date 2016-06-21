@@ -33,7 +33,7 @@
         </li>
       {% endfor %}
       <li class="list-group-item">
-        <span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;<a href="/admin/"><em>Edit data area</em></a>
+        <span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;<a href="/admin/"><em>Edit database area</em></a>
       </li>
       <li class="list-group-item">
         <span class="emoji">➕</span><a href="{% url 'tournament-create' %}"><em>Create new tournament</em></a>
@@ -46,7 +46,6 @@
     {% endif %}
 
   {% else %}
-
     {% for tournament in tournaments %}
       <li class="list-group-item">
         <a href="{{ tournament.get_public_url }}">
@@ -58,7 +57,6 @@
           There are currently no tournaments set up on this site.
         </p>
     {% endfor %}
-
   {% endif %}
 
   {% if tournaments.0.preferences.league_options__enable_mass_draws %}

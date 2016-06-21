@@ -131,7 +131,7 @@ CACHES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
-# Static Files
+# Static Files and Compilation
 # ==============================================================================
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -147,14 +147,9 @@ STATICFILES_FINDERS = (
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# ==============================================================================
-# Compilation
-# ==============================================================================
-
-# Run with collectstatic with DEBUG as False
-GULP_PRODUCTION_COMMAND = "npm run gulp build --production"
-# Run with collectstatic with DEBUG as True
-GULP_DEVELOP_COMMAND = "npm run gulp"
+# When running server side always use build not watch
+GULP_PRODUCTION_COMMAND = "npm run gulp build -- --production"
+GULP_DEVELOP_COMMAND = "npm run gulp build -- --development"
 
 # ==============================================================================
 # Logging

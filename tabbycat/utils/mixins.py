@@ -1,11 +1,11 @@
-import logging
 import json
+import logging
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
@@ -14,6 +14,16 @@ from django.views.generic.detail import SingleObjectMixin
 from tournaments.mixins import TournamentMixin
 
 logger = logging.getLogger(__name__)
+
+
+class ExpectPost(View):
+    """Ensures a POST was made and provides super call with POST data """
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method != "POST":
+            return HttpResponseBadRequest("Expected POST")
+        else:
+            return super().dispatch(request, *args, **kwargs)
 
 
 class PostOnlyRedirectView(View):
@@ -59,7 +69,7 @@ class JsonDataResponseView(View):
 
     def get(self, request, *args, **kwargs):
         self.request = request
-        return HttpResponse(json.dumps(self.get_data()), content_type="text/json")
+        return JsonResponse(self.get_data(), safe=False)
 
 
 class SuperuserRequiredMixin(UserPassesTestMixin):
@@ -119,28 +129,7 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     slug_url_kwarg = 'url_key'
 
 
-class HeadlessTemplateView(TemplateView):
-    """Mixin for views that sets context data for the page and html header
-    directly into the base template, obviating the need for page templates in
-    many instances"""
-    page_title = ''
-    page_emoji = ''
-
-    def get_page_title(self):
-        return self.page_title
-
-    def get_page_emoji(self):
-        return self.page_emoji
-
-    def get_context_data(self, **kwargs):
-
-        kwargs["page_title"] = self.get_page_title()
-        kwargs["page_emoji"] = self.get_page_emoji()
-
-        return super().get_context_data(**kwargs)
-
-
-class VueTableMixin:
+class VueTableMixin(TemplateView):
     """Mixing that provides shortcuts for adding data when building arrays that
     will end up as rows within a Vue table. Each cell can be represented
     either as a string value or a dictionary to enable richer inline content

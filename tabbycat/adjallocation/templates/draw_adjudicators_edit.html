@@ -216,12 +216,14 @@
 
 {% endblock content %}
 
-{% block extra-js %}
-  <script src="{% static 'js/vendor/jquery-ui.min.js' %}"></script>
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
+  <script src="{% static 'js/vendor/jquery-ui.js' %}"></script>
   <script>
   $(document).ready( function() {
     {% include 'js/draw_adjs_edit_allocation.js' %}
     {% include 'js/draw_adjs_edit_flags.js' %}
   });
   </script>
-{% endblock extra-js %}
+{% endblock js %}

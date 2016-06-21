@@ -105,7 +105,7 @@
 {% endif %}
 {% if pref.public_side_allocations %}
   <li class="{% if sides_nav %}active{% endif %}">
-    <a href="{% tournament_url public_side_allocations %}">Sides</a>
+    <a href="{% tournament_url draw-public-side-allocations %}">Sides</a>
   </li>
 {% endif %}
 {% if pref.public_team_standings > 0 and current_round.prev and pref.team_tab_released == 0 %}

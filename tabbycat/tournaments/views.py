@@ -78,7 +78,7 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
                 if tournament.current_round is None:
                     return HttpResponse('<p>Error: This tournament has no rounds; '
                                         ' you\'ll need to add some in the '
-                                        '<a href="/admin/">Edit Data</a> area.'
+                                        '<a href="/admin/">Edit Database</a> area.'
                                         '</p>')
                 messages.warning(self.request, "The current round wasn't set, "
                                  "so it's been automatically set to the first round.")
@@ -157,6 +157,7 @@ def round_increment(request, round):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
+    # Should be a JsonDataResponseView
     teams = list(Team.objects.filter(tournament=t).all().values(
         'id', 'short_reference', 'division', 'use_institution_prefix', 'institution__code', 'institution__id'))
 

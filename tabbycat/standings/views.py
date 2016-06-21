@@ -11,7 +11,7 @@ from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
-from utils.mixins import HeadlessTemplateView, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 from utils.tables import TabbycatTableBuilder
 
 from .diversity import get_diversity_data_sets
@@ -73,7 +73,7 @@ class StandingsView(RoundMixin, VueTableMixin):
 # Speaker standings
 # ==============================================================================
 
-class BaseSpeakerStandingsView(StandingsView, HeadlessTemplateView):
+class BaseSpeakerStandingsView(StandingsView):
     """Base class for views that display speaker standings."""
 
     rankings = ('rank',)
@@ -107,7 +107,6 @@ class BaseSpeakerStandingsView(StandingsView, HeadlessTemplateView):
         scores_headers = [round.abbreviation for round in rounds]
         scores_data = [list(map(metricformat, standing.scores)) for standing in standings]
         table.add_columns(scores_headers, scores_data)
-
         table.add_metric_columns(standings)
 
         return table
@@ -189,7 +188,7 @@ class PublicProTabView(PublicTabMixin, BaseProStandingsView):
     public_page_preference = 'pros_tab_released'
 
 
-class BaseReplyStandingsView(BaseSpeakerStandingsView, HeadlessTemplateView):
+class BaseReplyStandingsView(BaseSpeakerStandingsView):
     """Speaker standings view for replies."""
     page_title = 'Reply Speaker Standings'
     page_emoji = '💁'
@@ -229,7 +228,7 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
 # Team standings
 # ==============================================================================
 
-class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
+class BaseTeamStandingsView(StandingsView):
     """Base class for views that display team standings."""
 
     page_title = 'Team Standings'
@@ -263,23 +262,27 @@ class BaseTeamStandingsView(StandingsView, HeadlessTemplateView):
         for standing in standings:
             cells = []
             for team_score in standing.round_results:
-                opposition = team_score.opposition
-                cell = {'text': "vs " + opposition.emoji + "<br>" + metricformat(team_score.score)}
+                cell = {'text': ''}
+                if hasattr(team_score, 'opposition'):
+                    opposition = team_score.opposition
+                    cell['text'] = "vs " + opposition.emoji
 
-                if team_score.win:
-                    cell['icon'] = "glyphicon-arrow-up text-success"
-                    cell['tooltip'] = "Won against "
-                else:
-                    cell['icon'] = "glyphicon-arrow-down text-danger"
-                    cell['tooltip'] = "Lost to "
+                    if team_score.win:
+                        cell['icon'] = "glyphicon-arrow-up text-success"
+                        cell['tooltip'] = "Won against "
+                    else:
+                        cell['icon'] = "glyphicon-arrow-down text-danger"
+                        cell['tooltip'] = "Lost to "
 
-                cell['tooltip'] += opposition.long_name + "<br>Received " + metricformat(team_score.score) + " total speaks"
+                    cell['subtext'] = metricformat(team_score.score)
+                    cell['tooltip'] += opposition.long_name + "<br>Received " + metricformat(team_score.score) + " total speaks"
 
-                if self.show_ballots():
-                    cell['link'] = reverse_tournament('public_ballots_view',
-                            self.get_tournament(), kwargs={'debate_id': team_score.debate_team.debate.id})
+                    if self.show_ballots():
+                        cell['link'] = reverse_tournament('public_ballots_view',
+                                self.get_tournament(), kwargs={'debate_id': team_score.debate_team.debate.id})
 
                 cells.append(cell)
+
             data.append(cells)
         table.add_columns(headers, data)
 
@@ -326,7 +329,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 # Motion standings
 # ==============================================================================
 
-class BaseMotionStandingsView(RoundMixin, VueTableMixin, HeadlessTemplateView):
+class BaseMotionStandingsView(RoundMixin, VueTableMixin):
 
     page_title = 'Motions Tab'
     page_emoji = '💭'
@@ -336,7 +339,7 @@ class BaseMotionStandingsView(RoundMixin, VueTableMixin, HeadlessTemplateView):
         table = TabbycatTableBuilder(view=self, sort_key="Round")
 
         table.add_round_column([motion.round for motion in motions])
-        table.add_motion_column(motions)
+        table.add_motion_column(motions, show_order=True)
         table.add_column("Selected", [motion.chosen_in for motion in motions])
         if self.get_tournament().pref('motion_vetoes_enabled'):
             table.add_column("Aff Vetoes", [motion.aff_vetoes for motion in motions])
@@ -358,7 +361,7 @@ class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
 # Current team standings (win-loss records only)
 # ==============================================================================
 
-class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
+class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableMixin):
 
     public_page_preference = 'public_team_standings'
     page_title = "Current Team Standings"

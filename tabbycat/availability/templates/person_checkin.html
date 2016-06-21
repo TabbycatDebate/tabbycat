@@ -30,7 +30,8 @@
   </div>
 {% endblock %}
 
-{% block extra-js %}
+{% block js %}
+  {{ block.super }}
   <script>
     $(document).ready(function() {
       setInterval( function() {

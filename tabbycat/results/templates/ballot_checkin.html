@@ -56,7 +56,8 @@
   </div>
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
+  {{ block.super }}
   <script>
     $(document).ready(function() {
       $('#venue').focus();
@@ -146,4 +147,4 @@
       });
     });
   </script>
-{% endblock extra-js %}
+{% endblock js %}

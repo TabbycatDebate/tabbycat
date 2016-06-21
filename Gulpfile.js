@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util'); // Error logging + NoOop
 
 // Compilation
 var sass = require('gulp-sass');
@@ -6,20 +7,43 @@ var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 
 // Compression
-var minifyCSS = require('gulp-minify-css');
+var cleanCSS = require('gulp-clean-css');
 var uglify = require('gulp-uglify');
 
+// Browserify
+var browserify = require('browserify'); // Bundling modules
+var babelify = require('babelify'); // Use ES syntax
+var vueify = require('vueify');
+var source = require('vinyl-source-stream'); // Use browserify in gulp
+var es = require('event-stream'); // Browserify multiple files at once
+var streamify = require('gulp-streamify');
 
+// Debug & Config
+var livereload = require('gulp-livereload');
+var outputDir = 'tabbycat/static/';
+var isProduction = (gutil.env.development === true) ? false: true;
+if (isProduction === true) {
+  console.log('Building for production');
+} else if (isProduction === false) {
+  console.log('Building for development');
+}
+
+// Tasks
 gulp.task('fonts-compile', function() {
   gulp.src([
-      'bower_components/**/*.eot',
-      'bower_components/**/*.svg',
-      'bower_components/**/*.ttf',
-      'bower_components/**/*.woff',
-      'bower_components/**/*.woff2',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.eot',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.svg',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.ttf',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
+      'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
+      'node_modules/lato-font/fonts/**/*.eot',
+      'node_modules/lato-font/fonts/**/*.svg',
+      'node_modules/lato-font/fonts/**/*.ttf',
+      'node_modules/lato-font/fonts/**/*.woff',
+      'node_modules/lato-font/fonts/**/*.woff2',
     ])
     .pipe(rename({dirname: ''})) // Remove folder structure
-    .pipe(gulp.dest('tabbycat/static/fonts/vendor/'));
+    .pipe(gulp.dest(outputDir + 'fonts/'));
 });
 
 gulp.task('styles-compile', function() {
@@ -27,78 +51,78 @@ gulp.task('styles-compile', function() {
       'tabbycat/templates/scss/printables.scss',
       'tabbycat/templates/scss/style.scss'])
     .pipe(sass().on('error', sass.logError))
-    .pipe(minifyCSS())
-    .pipe(rename(function (path) {
-      path.basename += ".min";
-    }))
-    .pipe(gulp.dest('tabbycat/static/css/'));
+    // '*' compatability = IE9+
+    .pipe(isProduction ? cleanCSS({compatibility: '*'}) : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/css/'))
+    .pipe(isProduction ? gutil.noop() : livereload());
 });
 
-// Creates task for collecting dependencies
-gulp.task('js-compile', function() {
-  gulp.src(['tabbycat/templates/js/*.js'])
-  .pipe(uglify())
-  .pipe(rename(function (path) {
-    path.basename += ".min";
-  }))
-  .pipe(rename({dirname: ''})) // Remove folder structure
-  .pipe(gulp.dest('tabbycat/static/js/'));
+gulp.task("js-vendor-compile", function() {
+  gulp.src([
+    'node_modules/jquery/dist/jquery.js', // For Debug Toolbar
+    'node_modules/datatables.net/js/jquery.dataTables.js', // Deprecate,
+    'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
+    'tabbycat/templates/js-vendor/jquery-ui.min.js', // Deprecate,
+    ])
+    .pipe(isProduction ? uglify() : gutil.noop()) // Doesnt crash
+    .pipe(gulp.dest(outputDir + '/js/vendor/'));
 });
 
-
-gulp.task('js-base-vendor-compile', function() {
-  gulp.src(['bower_components/jquery/dist/jquery.js', // deprecate?
-            'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-            'bower_components/vue/dist/vue.js',
-          ])
-  .pipe(concat('vendor-base.js'))
-  .pipe(uglify())
-  .pipe(rename(function (path) {
-    path.basename += ".min";
-  }))
-  .pipe(rename({dirname: ''})) // Remove folder structure
-  .pipe(gulp.dest('tabbycat/static/js/vendor/'));
+gulp.task("js-compile", function() {
+  gulp.src([
+    'tabbycat/templates/js-standalones/*.js',
+    ])
+    // Can't run uglify() until django logic is out of standalone js files
+    // .pipe(isProduction ? uglify() : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/js/'))
+    .pipe(isProduction ? gutil.noop() : livereload());
 });
 
-
-gulp.task('js-admin-vendor-compile', function() {
-  gulp.src(['tabbycat/templates/js/vendor/jquery.dataTables.js',
-            'tabbycat/templates/js/vendor/fixed-header.js',
-          ])
-  .pipe(concat('vendor-admin.js'))
-  .pipe(uglify())
-  .pipe(rename(function (path) {
-    path.basename += ".min";
-  }))
-  .pipe(rename({dirname: ''})) // Remove folder structure
-  .pipe(gulp.dest('tabbycat/static/js/vendor/'));
+gulp.task("js-browserify", function() {
+  // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
+  // We define our input files, which we want to have bundled
+  var files = [
+      'tabbycat/templates/js-bundles/main.js',
+      'tabbycat/templates/js-bundles/tournament-home.js',
+  ];
+  // map them to our stream function
+  var tasks = files.map(function(entry) {
+    return browserify({ entries: [entry] })
+      .transform(vueify).on('error', gutil.log)
+      .transform([babelify, {
+          presets: ["es2015"],
+          plugins: ['transform-runtime']
+      }]).on('error', gutil.log)
+      .bundle()
+      .pipe(source(entry))
+      .pipe(isProduction ? streamify(uglify()) : gutil.noop())
+      .pipe(rename({
+          extname: '.bundle.js',
+          dirname: ''
+      }))
+      .pipe(gulp.dest(outputDir + '/js/'));
+      // .pipe(isProduction ? gutil.noop() : livereload());
+      // TODO: get proper hot reloading going?
+  });
+  // create a merged stream
+  return es.merge.apply(null, tasks);
 });
 
-// Creates task for collecting optional dependencies (loaded per page)
-gulp.task('js-optional-vendor-compile', function() {
-  gulp.src(['bower_components/jquery/dist/jquery.min.js', // Redundant but needed for debug toolbar
-            'bower_components/d3/d3.min.js',
-            'bower_components/jquery-ui/jquery-ui.min.js',
-            'bower_components/jquery-validation/dist/jquery.validate.min.js',
-            'bower_components/vue/dist/vue.js', // For when debug is on
-          ])
-  .pipe(uglify())
-  .pipe(rename({dirname: ''})) // Remove folder structure
-  .pipe(gulp.dest('tabbycat/static/js/vendor/'));
-});
-
-// Automatically build and watch the CSS folder for when a file changes
-gulp.task('default', ['build'], function() {
-  gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
-  gulp.watch('tabbycat/templates/js/**/*.js', ['js-compress']);
-});
-
-// Build task for production
+// Runs with --production if debug is false or there's no local settings
 gulp.task('build', [
-                    'fonts-compile',
-                    'styles-compile',
-                    'js-compile',
-                    'js-base-vendor-compile',
-                    'js-admin-vendor-compile',
-                    'js-optional-vendor-compile'
-                   ]);
+  'fonts-compile',
+  'styles-compile',
+  'js-vendor-compile',
+  'js-compile',
+  'js-browserify',
+ ]);
+
+// Runs when debug is True and when runserver/collectstatic is called
+// Watch the CSS/JS for changes and copy over to static AND static files when done
+gulp.task('watch', ['build'], function() {
+  livereload.listen();
+  gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
+  gulp.watch('tabbycat/templates/js-standalones/*.js', ['js-compile']);
+  gulp.watch('tabbycat/templates/js-bundles/*.js', ['js-broswerify']);
+  gulp.watch('tabbycat/templates/js-vue/**/*.vue', ['js-broswerify']);
+});

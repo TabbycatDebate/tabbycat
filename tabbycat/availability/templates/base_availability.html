@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block page-subnav-sections %}
   {% if round.seq > 1 %}
@@ -36,7 +37,12 @@
   </form>
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
+
+  {{ block.super }}
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
+
   <script>
     var dTable;
     var venueState = [];

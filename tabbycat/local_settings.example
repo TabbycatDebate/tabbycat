@@ -20,13 +20,18 @@ INTERNAL_IPS = (
     '127.0.0.1'
 )
 
-MIDDLEWARE_CLASSES += (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-)
+# ==============================================================================
+# Static Files & Compilation
+# ==============================================================================
 
-INSTALLED_APPS += (
-    'debug_toolbar',
-)
+# collectstatic always runs GULP_PRODUCTION_COMMAND, even on debug
+GULP_PRODUCTION_COMMAND = "npm run gulp build -- --development"
+GULP_DEVELOP_COMMAND = "npm run gulp watch -- --development"
+
+# Dont use whitenoise with debug enabled
+# When local dont compress assets (not --production) and use watchify if debug
+if DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # ==============================================================================
 # Caching
@@ -51,27 +56,38 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 # Debug Toolbar
 # ==============================================================================
 
-DEBUG_TOOLBAR_PATCH_SETTINGS = False
+ENABLE_DEBUG_TOOLBAR = True
 
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.logging.LoggingPanel',
-    #'debug_toolbar.panels.redirects.RedirectsPanel',
-)
+if ENABLE_DEBUG_TOOLBAR:
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
 
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-    'JQUERY_URL': '/static/js/vendor/jquery.min.js', # Enables offline work
-}
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
+
+    DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+    DEBUG_TOOLBAR_PANELS = (
+        'debug_toolbar.panels.versions.VersionsPanel',
+        'debug_toolbar.panels.timer.TimerPanel',
+        'debug_toolbar.panels.settings.SettingsPanel',
+        'debug_toolbar.panels.headers.HeadersPanel',
+        'debug_toolbar.panels.request.RequestPanel',
+        'debug_toolbar.panels.sql.SQLPanel',
+        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+        'debug_toolbar.panels.templates.TemplatesPanel',
+        'debug_toolbar.panels.cache.CachePanel',
+        'debug_toolbar.panels.signals.SignalsPanel',
+        'debug_toolbar.panels.logging.LoggingPanel',
+        #'debug_toolbar.panels.redirects.RedirectsPanel',
+    )
+
+    DEBUG_TOOLBAR_CONFIG = {
+        'INTERCEPT_REDIRECTS': False,
+        'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
+    }
 
 # ==============================================================================
 # Database Settings

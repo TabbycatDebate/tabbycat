@@ -13,9 +13,10 @@
   </div>
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
   {{ block.super }}
-  <script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery.validate.js' %}"></script>
   <script>
     $(document).ready( function() {
       {% include "js/enter_results.js" %}

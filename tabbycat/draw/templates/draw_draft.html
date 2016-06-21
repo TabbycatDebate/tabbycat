@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load debate_tags %}
+{% load static %}
 
 {% block page-title %}Draw for {{ round.name }} (DRAFT){% endblock %}
 {% block head-title %}<span class="emoji"> 👀</span>Draw for {{ round.name }}{% endblock %}
@@ -22,7 +23,12 @@
   {% include "draw_with_standings_content.html" %}
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
+
+  {{ block.super }}
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
+
   <script>
 
     $(document).ready( function() {
@@ -41,4 +47,4 @@
     } );
 
   </script>
-{% endblock extra-js %}
+{% endblock js %}

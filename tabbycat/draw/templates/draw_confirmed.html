@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load debate_tags %}
 {% load break_rank %}
 
@@ -19,7 +20,10 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-default submit-disable" href="{% round_url draw_adjudicators_edit %}" class="btn btn-default submit-disable">
-    Edit Adjudicators
+    Edit Adjs (old UI)
+  </a>
+  <a class="btn btn-default submit-disable" href="{% round_url edit_adj_allocation %}" class="btn btn-default submit-disable">
+    Edit Adjs (new UI)
   </a>
   <a class="btn btn-default submit-disable" href="{% round_url motions_edit %}" class="btn btn-default submit-disable">
     Edit Motions
@@ -42,7 +46,7 @@
   {% endif %}
 
   <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
-    View Draw Details
+    Draw Details
   </a>
   <a class="btn btn-default submit-disable" href="{% round_url draw_confirm_regenerate %}" class="btn btn-default submit-disable">
     Regenerate Draw
@@ -290,8 +294,12 @@
   </div>
 {% endblock content %}
 
-{% block extra-js %}
-   <script>
+{% block js %}
+
+  {{ block.super }}
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
+  <script>
     $(document).ready( function() {
       var dTable = $('#dataTable').DataTable({
         'bPaginate': false,
@@ -301,6 +309,6 @@
       $('#table-search').keyup(function(){
         dTable.search($(this).val()).draw();
       })
-    } );
+    });
   </script>
-{% endblock extra-js %}
+{% endblock js %}

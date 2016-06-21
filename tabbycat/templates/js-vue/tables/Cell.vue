@@ -1,18 +1,18 @@
 <!-- Table Template -->
-<script type="text/x-template" id="smart-cell">
+<template>
 
-  <td :class="cellData['cell-class'] ? cellData['cell-class'] : null">
+  <td :class="cellData['class'] ? cellData['class'] : null">
 
     <!-- Sorting key -->
     <span v-if="cellData['sort']" class="hidden">
-      [[ cellData["sort"] ]]
+      {{ cellData["sort"] }}
     </span>
 
     <!-- Icons or Emoji -->
     <span v-if="cellData['icon']" class="glyphicon" :class="cellData['icon']">
     </span>
     <span class="emoji" v-if="cellData['emoji']">
-      [[ cellData["emoji"] ]]
+      {{ cellData["emoji"] }}
     </span>
 
     <!-- Tooltip Hovers Wrapper -->
@@ -34,24 +34,23 @@
 
     </span>
 
+    <template v-if="cellData['subtext']">
+      <br><span class="small" v-html="cellData['subtext']"></span>
+    </template>
+
   </td>
 
-</script>
+</template>
 
-<!-- Table Component Behaviour -->
 <script>
-
-  // Define the component
-  var smartCell = Vue.extend({
-    template: '#smart-cell',
-    props: {
-      cellData: Object,
-    },
-    methods: {
-      showTooltip: function(event) {
-        $(event.target).tooltip('show')
-      }
-    },
-  })
-
+export default {
+  props: {
+    cellData: Object,
+  },
+  methods: {
+    showTooltip: function(event) {
+      $(event.target).tooltip('show')
+    }
+  },
+}
 </script>

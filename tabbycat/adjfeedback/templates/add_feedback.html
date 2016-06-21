@@ -1,5 +1,6 @@
 {% extends "feedback_base.html" %}
 {% load debate_tags %}
+{% load static %}
 
 {% block head-title %}Who is the feedback from?{% endblock %}
 {% block page-title %}Enter Feedback{% endblock %}
@@ -80,8 +81,10 @@
 </div>
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
   {{ block.super }}
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
   <script>
     $(document).ready( function() {
       var dTableA = $('#dataTableA').DataTable({
@@ -98,4 +101,4 @@
       })
     } );
   </script>
-{% endblock extra-js %}
+{% endblock js %}

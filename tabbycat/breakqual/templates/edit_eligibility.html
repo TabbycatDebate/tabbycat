@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load debate_tags %}
+{% load static %}
 
 {% block head-title %}Break Eligibility{% endblock %}
 {% block page-title %}Break Eligibility{% endblock %}
@@ -70,7 +71,12 @@
 
 {% endblock %}
 
-{% block extra-js %}
+{% block js %}
+
+  {{ block.super }}
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
+
   <script>
     $(document).ready( function() {
 

@@ -56,10 +56,12 @@
 
 {% endblock content %}
 
-{% block extra-js %}
-  
-  {% include "vue/team-draggable.vue" %}
-  {% include "vue/division-droppable.vue" %}
+{% block js %}
+
+  {{ block.super }}
+  <!-- TODO: bundle -->
+  {% include "js-vue/team-draggable.vue" %}
+  {% include "js-vue/division-droppable.vue" %}
 
   <script>
 
@@ -105,4 +107,4 @@
 
   </script>
 
-{% endblock extra-js %}
+{% endblock js %}

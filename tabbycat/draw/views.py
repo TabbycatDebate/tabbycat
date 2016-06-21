@@ -18,12 +18,13 @@ from breakqual.models import BreakingTeam
 from motions.models import Motion
 from participants.models import Team
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Division, Round, Tournament
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableMixin
 from utils.misc import reverse_round
+from utils.tables import TabbycatTableBuilder
 from utils.views import admin_required, expect_post
-from utils.views import public_optional_tournament_view, redirect_round, round_view, tournament_view
+from utils.views import redirect_round, round_view, tournament_view
 from venues.models import Venue, VenueGroup
 from venues.allocator import allocate_venues
 
@@ -36,7 +37,7 @@ logger = logging.getLogger(__name__)
 TPA_MAP = {
     TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
     TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
-    None: "-"
+    None: "—"
 }
 
 
@@ -44,45 +45,47 @@ TPA_MAP = {
 # Viewing Draw
 # ==============================================================================
 
-class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
+class DrawTablePage(RoundMixin, VueTableMixin):
 
     template_name = 'draw_display_by.html'
-    sort_key = 'Venue'
-
-    def create_row(self, d, t, sort_key=None, sort_value=None):
-        ddict = []
-        if sort_key and sort_value:
-            ddict.append((sort_key, sort_value))
-
-        ddict.extend(self.venue_cells(d, t, with_times=True))
-        ddict.extend(self.team_cells(d.aff_team, t))
-        ddict.extend(self.team_cells(d.neg_team, t))
-
-        if t.pref('enable_division_motions'):
-            ddict.append(('motion', [m.reference for m in d.division_motions]))
-        if not t.pref('enable_divisions'):
-            ddict.extend(self.adjudicators_cells(d, t, show_splits=False))
-
-        return ddict
 
     def get_context_data(self, **kwargs):
         kwargs['round'] = self.get_round()
         return super().get_context_data(**kwargs)
 
-    def get_table_data(self):
+    def create_rows(self, draw, table, tournament, by_team=False):
+
+        if by_team:
+            draw = list(draw) + list(draw) # Double up the draw
+            draw_slice = int(len(draw) / 2) # Top half gets affs; bottom negs
+            table.add_team_columns(
+                [d.aff_team for d in draw[:draw_slice]] +
+                [d.neg_team for d in draw[draw_slice:]],
+                hide_institution=True,
+                key="Team")
+
+        table.add_debate_venue_columns(draw)
+        table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key="Aff")
+        table.add_team_columns([d.neg_team for d in draw], hide_institution=True, key="Neg")
+        if tournament.pref('enable_division_motions'):
+            for debate in draw:
+                table.add_motion_column([m.reference for m in debate.division_motions])
+        if not tournament.pref('enable_divisions'):
+            table.add_debate_adjudicators_column(draw)
+
+    def get_table(self):
+        tournament = self.get_tournament()
         round = self.get_round()
         draw = round.get_draw()
-        t = self.get_tournament()
-        if self.sorting is 'team':
-            draw_data = []
-            for d in draw:
-                aff_row = self.create_row(d, t, 'Team', d.aff_team.short_name)
-                neg_row = self.create_row(d, t, 'Team', d.neg_team.short_name)
-                draw_data.extend([aff_row, neg_row])
+        sorting = self.sorting
+        print(sorting)
+        table = TabbycatTableBuilder(view=self, sort_key=sorting)
+        if self.sorting is 'Team':  # Add extra rows
+            self.create_rows(draw, table, tournament, by_team=True)
         else:
-            draw_data = [self.create_row(debate, t) for debate in draw]
+            self.create_rows(draw, table, tournament)
 
-        return draw_data
+        return table
 
 
 # ==============================================================================
@@ -92,7 +95,7 @@ class DrawTablePage(RoundMixin, TemplateView, VueTableMixin):
 class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, CacheMixin):
 
     public_page_preference = 'public_draw'
-    sorting = 'venue'
+    sorting = 'Venue'
 
     def get_template_names(self):
         round = self.get_round()
@@ -117,11 +120,11 @@ class PublicDrawForCurrentRound(PublicDrawForRound):
 
 
 class AdminDrawForRoundByVenue(DrawTablePage, LoginRequiredMixin):
-    sorting = 'venue'
+    sorting = 'Venue'
 
 
 class AdminDrawForRoundByTeam(DrawTablePage, LoginRequiredMixin):
-    sorting = 'team'
+    sorting = 'Team'
 
 
 @login_required
@@ -329,20 +332,35 @@ def unrelease_draw(request, round):
     return redirect_round('draw', round)
 
 
-@admin_required
-@tournament_view
-def side_allocations(request, t):
-    # TODO: move to draws app
-    teams = Team.objects.filter(tournament=t)
-    rounds = Round.objects.filter(tournament=t).order_by("seq")
-    tpas = dict()
-    for tpa in TeamPositionAllocation.objects.all():
-        tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
-    for team in teams:
-        team.side_allocations = [tpas.get(
-            (team.id, round.id), "-") for round in rounds]
-    return render(request, "side_allocations.html", dict(
-        teams=teams, rounds=rounds))
+class BaseSideAllocationsView(TournamentMixin, VueTableMixin):
+
+    page_title = "Side Pre-Allocations"
+
+    def get_table(self):
+        tournament = self.get_tournament()
+        teams = tournament.team_set.all()
+        rounds = tournament.prelim_rounds()
+
+        tpas = dict()
+        for tpa in TeamPositionAllocation.objects.filter(round__in=rounds):
+            tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
+
+        table = TabbycatTableBuilder(view=self)
+        table.add_team_columns(teams)
+
+        headers = [round.abbreviation for round in rounds]
+        data = [[tpas.get((team.id, round.id), "—") for round in rounds] for team in teams]
+        table.add_columns(headers, data)
+
+        return table
+
+
+class SideAllocationsView(SuperuserRequiredMixin, BaseSideAllocationsView):
+    pass
+
+
+class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsView):
+    public_page_preference = 'public_side_allocations'
 
 
 class SetRoundStartTimeView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
@@ -494,22 +512,6 @@ def public_all_draws(request, t):
 
     return render(request, 'public_draw_display_all.html', dict(
         all_rounds=all_rounds))
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_side_allocations')
-def public_side_allocations(request, t):
-    # TODO: move to draws app
-    teams = Team.objects.filter(tournament=t)
-    rounds = Round.objects.filter(tournament=t).order_by("seq")
-    tpas = dict()
-    for tpa in TeamPositionAllocation.objects.all():
-        tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
-    for team in teams:
-        team.side_allocations = [tpas.get(
-            (team.id, round.id), "-") for round in rounds]
-    return render(request, "side_allocations.html", dict(
-        teams=teams, rounds=rounds))
 
 
 @login_required

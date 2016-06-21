@@ -103,7 +103,7 @@
 
 </script>
 
-{% include "vue/printables/team-scores.vue" %}
+{% include "js-vue/printables/team-scores.vue" %}
 <script>
   Vue.component('base-scoresheet', {
     template: '#base-scoresheet',

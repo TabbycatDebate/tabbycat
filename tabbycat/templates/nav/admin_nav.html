@@ -50,7 +50,7 @@
 
       {% if pref.side_allocations_enabled == 'preallocated' %}
         <li class="standalone">
-          <a href="{% tournament_url side_allocations %}" class="{% if sides_nav %}active{% endif %}">
+          <a href="{% tournament_url draw-side-allocations %}" class="{% if sides_nav %}active{% endif %}">
             <span class="glyphicon glyphicon-resize-horizontal"></span> Sides
           </a>
         </li>
@@ -102,7 +102,7 @@
             </li>
             <li>
               <a href="/admin/" target="_blank">
-                <span class="glyphicon glyphicon-edit"></span>Edit Data
+                <span class="glyphicon glyphicon-edit"></span>Edit Database
               </a>
             </li>
           </ul>

@@ -18,10 +18,9 @@
 
 {% endblock content %}
 
-{% block extra-js %}
-
-  
-  {% include "vue/printables/base-ballot.vue" %}
+{% block js %}
+  {{ block.super }}
+  {% include "js-vue/printables/base-ballot.vue" %}
   <script>
     var baseData = {
       // Strings to Fill In
@@ -49,4 +48,4 @@
     })
   </script>
 
-{% endblock extra-js %}
+{% endblock js %}

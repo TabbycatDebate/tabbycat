@@ -3,11 +3,10 @@
 // WEB FONTS
 @font-face {
   font-family: 'LatoLatinWeb';
-  src: url('/static/fonts/vendor/lato-regular.eot');
-  src:  url('/static/fonts/vendor/lato-regular.eot?#iefix') format('embedded-opentype'),
-        url('/static/fonts/vendor/lato-regular.woff2') format('woff2'),
-        url('/static/fonts/vendor/lato-regular.woff') format('woff'),
-        url('/static/fonts/vendor/lato-regular.ttf') format('truetype');
+  src: url('/static/fonts/lato-normal.eot');
+  src:  url('/static/fonts/lato-normal.eot?#iefix') format('embedded-opentype'),
+        url('/static/fonts/lato-normal.woff') format('woff'),
+        url('/static/fonts/lato-normal.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
@@ -18,9 +17,13 @@
 .text-muted {
   color: $gray-light;
 }
+// Override headings
 .text-body {
-  // Override headings
   font-family: $font-family-sans-serif;
+}
+// Mostly for hiding it in extra lines on table cells
+.hide-underline {
+  border-bottom: 2px solid #fff;
 }
 
 // EMOJI

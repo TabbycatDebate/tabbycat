@@ -5,8 +5,6 @@
 {% block page-title %}🗃Diversity Overview{% endblock %}
 {% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
 {% block diversity_active %}active{% endblock %}
-{% block body-id %}diversityData{% endblock %}
-
 {% if for_public %}{% block page-subnav-sections %}{% endblock %}{% endif %}
 
 {% block page-alerts %}
@@ -49,12 +47,12 @@
         Speaker Demographics
       </div>
       <div class="panel-body text-center no-side-padding">
-        <template v-for="set in dataSets['speakers_gender']">
+        <template v-for="set in graphsData['speakers_gender']">
           <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
         </template>
         <hr>
-        <template v-for="set in dataSets['speakers_region']">
-          <donut-chart :graph-data="set['data']" :title="set['title']" :regions="dataSets['regions']"></donut-chart>
+        <template v-for="set in graphsData['speakers_region']">
+          <donut-chart :graph-data="set['data']" :title="set['title']" :regions="graphsData['regions']"></donut-chart>
         </template>
       </div>
     </div>
@@ -66,12 +64,12 @@
         Adjudicator Demographics
       </div>
       <div class="panel-body text-center no-side-padding">
-        <template v-for="set in dataSets['adjudicators_gender']">
+        <template v-for="set in graphsData['adjudicators_gender']">
           <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
         </template>
         <hr>
-        <template v-for="set in dataSets['adjudicators_region']">
-          <donut-chart :graph-data="set['data']" :title="set['title']" :regions="dataSets['regions']"></donut-chart>
+        <template v-for="set in graphsData['adjudicators_region']">
+          <donut-chart :graph-data="set['data']" :title="set['title']" :regions="graphsData['regions']"></donut-chart>
         </template>
       </div>
     </div>
@@ -83,11 +81,11 @@
         Speaker Results
       </div>
       <div class="panel-body text-center">
-        <template v-for="set in dataSets['speakers_results']">
+        <template v-for="set in graphsData['speakers_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
         <hr>
-        <template v-for="set in dataSets['detailed_speakers_results']">
+        <template v-for="set in graphsData['detailed_speakers_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
       </div>
@@ -100,11 +98,11 @@
         Adudicator Results
       </div>
       <div class="panel-body">
-        <template v-for="set in dataSets['adjudicators_results']">
+        <template v-for="set in graphsData['adjudicators_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
         <hr>
-        <template v-for="set in dataSets['detailed_adjudicators_results']">
+        <template v-for="set in graphsData['detailed_adjudicators_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
       </div>
@@ -114,20 +112,9 @@
 </div>
 {% endblock content %}
 
-{% block extra-js %}
-
-  <script src="{% static 'js/vendor/d3.min.js' %}"></script>
-  {% include "vue/donut-chart.vue" %}
-  {% include "vue/text-display.vue" %}
+{% block js %}
   <script>
-    var latests = new Vue({
-      el: '#diversityData',
-      data: {
-        dataSets: {{ data_sets|safe }}
-      },
-      methods: {
-      }
-    });
+    var graphsData = {{ data_sets|safe }};
   </script>
-
-{% endblock extra-js %}
+  {{ block.super }}
+{% endblock js %}

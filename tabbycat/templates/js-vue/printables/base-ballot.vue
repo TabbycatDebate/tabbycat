@@ -16,10 +16,10 @@
 </script>
 
 <!-- Division Droppable Component Behaviour -->
-{% include "vue/printables/base-ballot-header.vue" %}
-{% include "vue/printables/base-ballot-footer.vue" %}
-{% include "vue/printables/base-scoresheet.vue" %}
-{% include "vue/printables/base-feedback.vue" %}
+{% include "js-vue/printables/base-ballot-header.vue" %}
+{% include "js-vue/printables/base-ballot-footer.vue" %}
+{% include "js-vue/printables/base-scoresheet.vue" %}
+{% include "js-vue/printables/base-feedback.vue" %}
 <script>
   Vue.component('base-ballot', {
     template: '#base-ballot',

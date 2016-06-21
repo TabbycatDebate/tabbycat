@@ -42,7 +42,8 @@
   </form>
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
+  {{ block.super }}
   <script>
 
     $(document).ready( function() {
@@ -55,4 +56,4 @@
     });
 
   </script>
-{% endblock extra-js %}
+{% endblock js %}

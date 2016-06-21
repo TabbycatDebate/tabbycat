@@ -8,8 +8,7 @@ from django.views.generic.base import TemplateView, View
 
 from adjallocation.models import DebateAdjudicator
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from utils.mixins import CacheMixin, HeadlessTemplateView, SingleObjectByRandomisedUrlMixin, \
-        SuperuserRequiredMixin, SingleObjectFromTournamentMixin, VueTableMixin
+from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin, VueTableMixin
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, Team
@@ -28,13 +27,11 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, CacheMixin, HeadlessTemplateView):
+class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, CacheMixin):
 
     public_page_preference = 'public_participants'
     page_title = 'Participants'
     page_emoji = '🚌'
-    sort_key = 'Name'
-    tables_titles = ['Adjudicators', 'Speakers']
 
     def get_tables(self):
         t = self.get_tournament()

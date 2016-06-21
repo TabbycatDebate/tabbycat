@@ -24,7 +24,9 @@ class BaseTableBuilder:
         self.headers = []
         self.data = []
         self.title = kwargs.get('title', "")
+        self.table_class = kwargs.get('table_class', "")
         self.sort_key = kwargs.get('sort_key', '')
+        self.sort_order = kwargs.get('sort_order', '')
 
     @staticmethod
     def _convert_header(header):
@@ -108,7 +110,9 @@ class BaseTableBuilder:
             'head': self.headers,
             'data': self.data,
             'title': self.title,
-            'sort_key': self.sort_key
+            'class': self.table_class,
+            'sort_key': self.sort_key,
+            'sort_order': self.sort_order
         }
 
 
@@ -151,7 +155,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } for round in rounds]
         self.add_column(key, data)
 
-    def add_adjudicator_columns(self, adjudicators, hide_institution=False):
+    def add_adjudicator_columns(self, adjudicators, hide_institution=False, subtext=None):
 
         adj_data = []
         for adj in adjudicators:
@@ -162,6 +166,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             elif self.tournament.pref('public_summary'):
                 cell['link'] = reverse_tournament('participants-public-adjudicator-summary',
                     self.tournament, kwargs={'pk': adj.pk})
+            if subtext is 'institution':
+                cell['subtext'] = adj.institution.code
             adj_data.append(cell)
         self.add_column("Name", adj_data)
 
@@ -180,16 +186,23 @@ class TabbycatTableBuilder(BaseTableBuilder):
         }
         self.add_boolean_column(independent_header, [adj.independent for adj in adjudicators])
 
+        if self.tournament.pref('show_unaccredited'):
+            accreddited_header = {
+                'tooltip': "Is Accredited",
+                'icon': 'glyphicon-leaf',
+            }
+            self.add_boolean_column(accreddited_header, [adj.novice for adj in adjudicators])
+
     def add_debate_adjudicators_column(self, debates, key="Adjudicators", show_splits=False):
         data = []
         for debate in debates:
             adj_strings = []
 
-            if debate.confirmed_ballot and show_splits:
+            if debate.confirmed_ballot and show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
                 for adjtype, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
                     adj_string = adj.name + self.ADJ_SYMBOLS[adjtype]
                     if split:
-                        adj_string = "<span class='text-danger'>" + adj_string + "</span>"
+                        adj_string = "<span class='text-danger'>" + adj_string + " 💢</span>"
                     adj_strings.append(adj_string)
             else:
                 for adjtype, adj in debate.adjudicators:
@@ -199,8 +212,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_column(key, data)
 
-    def add_motion_column(self, motions, key="Motion"):
-        if self.tournament.pref('enable_motions'):
+    def add_motion_column(self, motions, key="Motion", show_order=False):
+        if show_order and self.tournament.pref('enable_motions'):
             self.add_column("Order", [motion.seq for motion in motions])
 
         motion_data = [{
@@ -210,16 +223,16 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(key, motion_data)
 
     def add_team_columns(self, teams, break_categories=False, show_speakers=False,
-            hide_institution=False, key="Team"):
+            hide_institution=False, hide_emoji=False, key="Team"):
 
         team_data = []
         for team in teams:
             cell = {
                 'text': team.short_name,
-                'emoji': team.emoji if self.tournament.pref('show_emoji') else None,
+                'emoji': team.emoji if self.tournament.pref('show_emoji') and not hide_emoji else None,
                 'sort': team.short_name,
                 'tooltip': [" " + s.name for s in team.speakers]
-                    if self.tournament.pref('show_speakers_in_draw') or show_speakers else None, # noqa
+                    if self.tournament.pref('show_speakers_in_draw') or show_speakers else None # noqa
             }
             if self.admin:
                 cell['link'] = reverse_tournament('participants-team-summary',
@@ -244,7 +257,16 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'icon': 'glyphicon-leaf',
                 'tooltip': "Novice Status",
             }
-            self.add_boolean(novice_header, [speaker.novice for speaker in speakers])
+            self.add_boolean_column(novice_header, [speaker.novice for speaker in speakers])
+
+    def add_debate_bracket_columns(self, debates):
+        bracket_header = {
+            'key': "Bracket",
+            'icon': 'glyphicon-stats',
+            'tooltip': 'Bracket of this debate'
+        }
+        bracket_data = [{'text': debate.bracket} for debate in debates]
+        self.add_column(bracket_header, bracket_data)
 
     def add_debate_venue_columns(self, debates, with_times=False):
         if self.tournament.pref('enable_divisions'):

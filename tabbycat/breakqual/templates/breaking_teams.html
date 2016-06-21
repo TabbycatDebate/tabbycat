@@ -63,7 +63,7 @@
         then you may have to iterate through remark editing and saving a few times
         for the algorithm to get what you want. As a last resort, you can edit the
         breaking teams list directly in the database through the
-        Edit Data section (under Setup in the menu).
+        Edit Database section (under Setup in the menu).
       </p>
     </div>
   {% else %}
@@ -165,8 +165,12 @@
   {% endif %}
 {% endblock content %}
 
-{% block extra-js %}
+{% block js %}
+
   {{ block.super }}
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
+
   <script>
     $(document).ready( function() {
       var dTable = $("#dataTable").DataTable({
@@ -178,4 +182,4 @@
       })
     });
   </script>
-{% endblock extra-js %}
+{% endblock js %}

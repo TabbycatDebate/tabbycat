@@ -20,14 +20,14 @@ from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round
-from utils.mixins import HeadlessTemplateView, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
 from .result import BallotSet
 from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
-from .mixins import DebateResultCellsMixin
+from .mixins import ResultsTableBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -45,10 +45,9 @@ def toggle_postponed(request, t, debate_id):
     return redirect_round('results', debate.round)
 
 
-class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, DebateResultCellsMixin, TemplateView):
+class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
 
     template_name = 'results.html'
-    sort_key = 'Status'
     draw = None
 
     def get_or_set_draw(self):
@@ -58,29 +57,20 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             self.draw = self.get_round().get_draw()
             return self.draw
 
-    def get_table_data(self):
-        t = self.get_tournament()
+    def get_table(self):
         draw = self.get_or_set_draw()
-
-        draw_data = []
-        for d in draw:
-            ddict = self.status_cells(d)
-            ddict.extend(self.ballot_entry_cells(d, t))
-            ddict.append({
-                'head': {'tooltip': 'Bracket', 'key': 'B', 'icon': 'glyphicon-stats'},
-                'cell': {'text': d.bracket}
-            })
-            ddict.extend(self.venue_cells(d, t))
-            ddict.extend(self.team_cells(d.aff_team, t, key="affirmative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.team_cells(d.neg_team, t, key="negative", show_speakers=True, hide_institution=True))
-            ddict.extend(self.adjudicators_cells(d, t, show_splits=True))
-            draw_data.append(ddict)
-
-        return draw_data
+        table = ResultsTableBuilder(view=self, sort_key='Status')
+        table.add_ballot_status_columns(draw)
+        table.add_ballot_entry_columns(draw)
+        table.add_debate_venue_columns(draw)
+        table.add_debate_bracket_columns(draw)
+        table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
+        table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
+        table.add_debate_adjudicators_column(draw)
+        return table
 
     def get_context_data(self, **kwargs):
         draw = self.get_or_set_draw()
-
         kwargs["stats"] = {
             'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
             'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
@@ -88,7 +78,6 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
             'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
         }
-
         return super().get_context_data(**kwargs)
 
 
@@ -122,15 +111,13 @@ def results(request, round):
                   show_motions_column=show_motions_column, has_motions=has_motions))
 
 
-class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin, HeadlessTemplateView):
+class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin):
 
     template_name = "public_results_for_round.html"
     public_page_preference = 'public_results'
+    page_title = 'Results'
     page_emoji = '💥'
     default_view = 'team'
-
-    def get_page_title(self):
-        return "Results for " + self.get_round().name
 
     def get_table(self):
         view_type = self.request.session.get('results_view', 'team')
@@ -162,7 +149,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table.add_columns(["Affirmative", "Negative"], results_data)
 
         table.add_debate_ballot_link_column(debates)
-        table.add_debate_adjudicators_column(debates, show_splits=False)
+        table.add_debate_adjudicators_column(debates, show_splits=True)
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 
@@ -199,7 +186,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
 
         table.add_debate_ballot_link_column(debates)
-        table.add_debate_adjudicators_column(debates, show_splits=False)
+        table.add_debate_adjudicators_column(debates, show_splits=True)
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 
@@ -394,6 +381,7 @@ def new_ballotset(request, t, debate_id):
 @tournament_view
 def ballots_status(request, t):
     # Draw Status for Tournament Homepage
+    # Should be a JsonDataResponseView
     intervals = 20
 
     def minutes_ago(time):
@@ -431,6 +419,7 @@ def ballots_status(request, t):
 @tournament_view
 def latest_results(request, t):
     # Latest Results for Tournament Homepage
+    # Should be a JsonDataResponseView
     results_objects = []
     ballots = BallotSubmission.objects.filter(
         debate__round__tournament=t, confirmed=True).order_by(
@@ -492,6 +481,7 @@ def ballot_checkin_number_left(round):
 @admin_required
 @round_view
 def ballot_checkin_get_details(request, round):
+    # Should be a JsonDataResponseView
     try:
         debate = get_debate_from_ballot_checkin_request(request, round)
     except DebateBallotCheckinError as e:
@@ -518,6 +508,7 @@ def ballot_checkin_get_details(request, round):
 @admin_required
 @round_view
 def post_ballot_checkin(request, round):
+    # Should be a JsonDataResponseView
     try:
         debate = get_debate_from_ballot_checkin_request(request, round)
     except DebateBallotCheckinError as e:

@@ -35,7 +35,7 @@
   </table>
 {% endblock %}
 
-{% block extra-js %}
+{% block js %}
   {{ block.super }}
   <script>
     $(document).ready( function() {
@@ -45,4 +45,4 @@
       new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
     } );
   </script>
-{% endblock extra-js %}
+{% endblock js %}
