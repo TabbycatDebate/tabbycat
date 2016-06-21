@@ -128,7 +128,7 @@ gulp.task('watch', ['build'], function() {
   livereload.listen();
   gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
   gulp.watch('tabbycat/templates/js-standalones/*.js', ['js-compile']);
-  gulp.watch('tabbycat/templates/js-bundles/*.js', ['js-broswerify']);
-  gulp.watch('tabbycat/templates/js-vue/**/*.vue', ['js-broswerify']);
+  gulp.watch('tabbycat/templates/js-bundles/*.js', ['js-browserify']);
+  gulp.watch('tabbycat/templates/js-vue/**/*.vue', ['js-browserify']);
   gulp.watch('tabbycat/**/*.html', ['html-reload']);
 });

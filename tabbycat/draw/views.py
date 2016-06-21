@@ -35,7 +35,7 @@ TPA_MAP = {
 
 
 # ==============================================================================
-# Viewing Draw
+# Viewing Draw (Public)
 # ==============================================================================
 
 class DrawTablePage(RoundMixin, VueTableMixin):
@@ -149,7 +149,7 @@ class AdminDrawDisplayForRoundByTeam(DrawTablePage, LoginRequiredMixin):
 
 
 # ==============================================================================
-# Draw Creating
+# Draw Creation (Admin)
 # ==============================================================================
 
 class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
@@ -162,8 +162,11 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
         else:
             draw = round.get_draw()
             table.add_debate_bracket_columns(draw)
+            table.add_debate_venue_columns(draw)
             table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
             table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
+            table.add_debate_adjudicators_column(draw)
+            table.add_draw_conflicts(draw)
             if round.draw_status == round.STATUS_DRAFT:
                 return table
             elif round.draw_status == round.STATUS_CONFIRMED:
@@ -194,31 +197,14 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
             raise
 
     def get_context_data(self, **kwargs):
-        round = self.get_round()
-        kwargs['active_teams'] = round.active_teams.all()
-        kwargs['rooms'] = float(kwargs['active_teams'].count()) // 2
-        kwargs['active_adjs'] = round.active_adjudicators.count()
-
-        if round.draw_status == round.STATUS_NONE:
-            kwargs['all_teams_count'] = Team.objects.filter(tournament=round.tournament).count()
-            kwargs['active_venues_count'] = round.active_venues.count()
-            if round.prev:
-                kwargs['previous_unconfirmed'] = round.prev.get_draw().filter(
-                    result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
-            self.template = 'draw_none'
-        elif round.draw_status == round.STATUS_DRAFT:
-            pass
-        elif round.draw_status == round.STATUS_CONFIRMED:
-            pass
-        elif round.draw_status == round.STATUS_RELEASED:
-            pass
         return super().get_context_data(**kwargs)
 
 
-class AdminDrawWithDetailsView(View):
+class AdminDrawWithDetailsView(AdminDrawEditView):
 
-    page_tile = "Draw with Details"
-    template = "draw_base.html"
+    def get_template_names(self):
+        self.page_tile = "Draw with Details"
+        return ["draw_base.html"]
 
     def get_table(self):
         r = self.get_round()

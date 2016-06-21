@@ -51,3 +51,7 @@ body {
     display: inline-block; // Need this to bring their alignment up
   }
 }
+// Fix for buttons on edit draw page
+.btn-group form {
+  margin-left: 3px;
+}
