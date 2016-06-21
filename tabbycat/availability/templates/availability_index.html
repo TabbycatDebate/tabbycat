@@ -23,11 +23,11 @@
     Check In Venues
   </a>
   <a class="btn btn-default submit-disable" href="{% round_url adjudicator_availability round %}">
-    Check In Adjudicators
+    Check In Adjs
   </a>
   {% if round.is_break_round %}
     <a class="btn btn-success submit-disable" href="{% round_url update_availability_breaking_adjs round %}">
-      Check In All Breaking Adjudicators
+      Check In All Breaking Adjs
     </a>
   {% else %}
     <a class="btn btn-default submit-disable" href="{% round_url update_availability_all round %}">

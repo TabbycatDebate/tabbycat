@@ -158,7 +158,7 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
         round = self.get_round()
         table = TabbycatTableBuilder(view=self)
         if round.draw_status == round.STATUS_NONE:
-            return table
+            return table # Return Blank
         else:
             draw = round.get_draw()
             table.add_debate_bracket_columns(draw)
@@ -183,13 +183,13 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
             return ["base.html"]
         elif round.draw_status == round.STATUS_DRAFT:
             self.page_title = 'Draft draw for %s' % round.name
-            return ["draw_draft.html"]
+            return ["draw_status_draft.html"]
         elif round.draw_status == round.STATUS_CONFIRMED:
             self.page_title = 'Draw for %s' % round.name
-            return ["draw_confirmed.html"]
+            return ["draw_status_confirmed.html"]
         elif round.draw_status == round.STATUS_RELEASED:
             self.page_title = 'Released draw for %s' % round.name
-            return ["draw_confirmed.html"]
+            return ["draw_status_confirmed.html"]
         else:
             raise
 
