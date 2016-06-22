@@ -80,25 +80,3 @@
   </div>
 </div>
 {% endblock content %}
-
-{% block js %}
-  {{ block.super }}
-  <!-- TODO: bundle -->
-  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
-  <script>
-    $(document).ready( function() {
-      var dTableA = $('#dataTableA').DataTable({
-        "aaSorting": [[ 0, "asc" ]],
-      });
-      var dTableB = $('#dataTableB').DataTable({
-        "aaSorting": [[ 0, "asc" ]],
-      });
-      new $.fn.dataTable.FixedHeader( dTableA, {alwaysCloneTop: true});
-      new $.fn.dataTable.FixedHeader( dTableB, {alwaysCloneTop: true});
-      $('#table-search').keyup(function(){
-        dTableA.search($(this).val()).draw();
-        dTableB.search($(this).val()).draw();
-      })
-    } );
-  </script>
-{% endblock js %}

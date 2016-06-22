@@ -43,7 +43,7 @@ class MasterSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
 
 class RoomSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
-    template_name = 'master_sheets_view.html'
+    template_name = 'room_sheets_view.html'
 
     def get_context_data(self, **kwargs):
         venue_group_id = self.kwargs['venue_group_id']

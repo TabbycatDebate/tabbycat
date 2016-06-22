@@ -313,7 +313,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } for debate in draw]
         self.add_column(conflicts_header, conflicts_data)
 
-    def add_ranking_columns(self, standings, subset=None, prefix=''):
+    def add_ranking_columns(self, standings, subset=None, prefix=' '):
         standings_list = subset if subset else standings
         headers = [{
             'key': prefix[0] + info['abbr'],
@@ -337,7 +337,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_ranking_columns(standings,
             subset=[s for s in ordered_standings], prefix="Neg's ")
 
-    def add_metric_columns(self, standings, subset=None, prefix=''):
+    def add_metric_columns(self, standings, subset=None, prefix=' '):
         # For pages where standings are per-debate not per-team
         standings_list = subset if subset else standings
         headers = [{

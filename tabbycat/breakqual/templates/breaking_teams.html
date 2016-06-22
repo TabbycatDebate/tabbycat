@@ -99,7 +99,7 @@
       <div class="panel panel-default">
         <div class="panel-body">
 
-          <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
+          <table class="table" cellspacing="0" cellpadding="0">
             <thead>
               <tr>
                 <th>Rank</th>
@@ -176,7 +176,7 @@
       var dTable = $("#dataTable").DataTable({
         "aaSorting": [[ 0, "asc" ]],
       });
-      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+
       $('#table-search').keyup(function(){
         dTable.search($(this).val()).draw();
       })

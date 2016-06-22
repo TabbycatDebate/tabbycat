@@ -25,8 +25,7 @@
     {% csrf_token %}
     <div class="panel panel-default">
       <div class="panel-body">
-
-        <table id="dataTable" class="table">
+        <table class="table">
           {% block table-contents %}
           {% endblock table-contents %}
         </table>
@@ -41,8 +40,6 @@
 
   {{ block.super }}
   <!-- TODO: bundle -->
-  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
-
   <script>
     var dTable;
     var venueState = [];

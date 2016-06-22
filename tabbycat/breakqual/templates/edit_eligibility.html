@@ -27,7 +27,7 @@
     {% csrf_token %}
     <div class="panel panel-default">
       <div class="panel-body">
-        <table id="dataTable" class="table">
+        <table class="table">
           <thead>
             <tr>
               <th>Team</th>
@@ -74,8 +74,6 @@
 {% block js %}
 
   {{ block.super }}
-  <!-- TODO: bundle -->
-  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
 
   <script>
     $(document).ready( function() {
@@ -84,7 +82,7 @@
         "aaSorting": [[ 0, "asc" ]],
         "orderCellsTop": true,
       });
-      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
+
       $('#table-search').keyup(function(){
         dTable.search($(this).val()).draw();
       });
