@@ -329,13 +329,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             } for ranking in standing.iterrankings()])
         self.add_columns(headers, data)
 
-    def add_debate_ranking_columns(self, standings):
+    def add_debate_ranking_columns(self, draw, standings):
         # First half (ie all aff metrics) then second (ie all neg metrics)
-        print(standings.metric_keys)
+        ordered_standings = [standings.get_standing(d.aff_team) for d in draw]
         self.add_ranking_columns(standings,
-            subset=[s for s in standings][::2], prefix="Aff's ")
+            subset=[s for s in ordered_standings], prefix="Aff's ")
+        ordered_standings = [standings.get_standing(d.neg_team) for d in draw]
         self.add_ranking_columns(standings,
-            subset=[s for s in standings][1::2], prefix="Neg's ")
+            subset=[s for s in ordered_standings], prefix="Neg's ")
 
     def add_metric_columns(self, standings, subset=None, prefix=''):
         # For pages where standings are per-debate not per-team
@@ -348,12 +349,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
         data = [list(map(metricformat, s.itermetrics())) for s in standings_list]
         self.add_columns(headers, data)
 
-    def add_debate_metric_columns(self, standings):
+    def add_debate_metric_columns(self, draw, standings):
         # First half (ie all aff metrics) then second (ie all neg metrics)
+        ordered_standings = [standings.get_standing(d.aff_team) for d in draw]
         self.add_metric_columns(standings,
-            subset=[s for s in standings][::2], prefix="Aff's ")
+            subset=[s for s in ordered_standings], prefix="Aff's ")
+        ordered_standings = [standings.get_standing(d.neg_team) for d in draw]
         self.add_metric_columns(standings,
-            subset=[s for s in standings][1::2], prefix="Neg's ")
+            subset=[s for s in ordered_standings], prefix="Neg's ")
 
     def set_bracket_highlights(self):
         for i in range(1, len(self.data)):

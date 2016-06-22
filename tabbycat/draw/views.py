@@ -89,7 +89,6 @@ class DrawTablePage(RoundMixin, VueTableMixin):
         round = self.get_round()
         draw = round.get_draw()
         sorting = self.sorting
-        print(sorting)
         table = TabbycatTableBuilder(view=self, sort_key=sorting)
         if self.sorting is 'Team':  # Add extra rows
             self.create_rows(draw, table, round, tournament, by_team=True)
@@ -161,42 +160,41 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
         table = TabbycatTableBuilder(view=self)
         if r.draw_status == r.STATUS_NONE:
             return table # Return Blank
-        else:
-            draw = r.get_draw()
+
+        draw = r.get_draw()
+        if not r.is_break_round:
+            table.add_debate_bracket_columns(draw)
+
+        table.add_debate_venue_columns(draw)
+        table.add_team_columns([d.aff_team for d in draw], key="Aff",
+            hide_institution=True)
+        table.add_team_columns([d.neg_team for d in draw], key="Neg",
+            hide_institution=True)
+
+        # For draw details and draw draft pages
+        if (r.draw_status == r.STATUS_DRAFT or self.isDetailed) and r.prev:
+            teams = Team.objects.filter(debateteam__debate__round=r)
+            metrics = r.tournament.pref('team_standings_precedence')
+            generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
+            standings = generator.generate(teams, round=r.prev)
             if not r.is_break_round:
-                table.add_debate_bracket_columns(draw)
-
-            if (r.draw_status == r.STATUS_DRAFT or self.isDetailed) and r.prev:
-                table.add_team_columns([d.aff_team for d in draw], key="Aff",
-                    hide_institution=True, hide_emoji=True)
-                table.add_team_columns([d.neg_team for d in draw], key="Neg",
-                    hide_institution=True, hide_emoji=True)
-            else:
-                table.add_debate_venue_columns(draw)
-                table.add_team_columns([d.aff_team for d in draw], key="Aff",
-                    hide_institution=True)
-                table.add_team_columns([d.neg_team for d in draw], key="Neg",
-                    hide_institution=True)
-
-            table.add_draw_conflicts(draw)
-            if (r.draw_status == r.STATUS_DRAFT or self.isDetailed) and r.prev:
-                # Just get teams active in this round
-                teams = Team.objects.filter(debateteam__debate__round=r)
-                metrics = r.tournament.pref('team_standings_precedence')
-                generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
-                standings = generator.generate(teams, round=r.prev)
-                if "points" in standings.metric_keys and not r.is_break_round:
+                if "points" in standings.metric_keys:
                     table.add_team_pullup_columns(draw, standings)
-                table.add_debate_ranking_columns(standings)
-                table.add_debate_metric_columns(standings)
-                table.add_affs_count([d.aff_team for d in draw], r, 'aff')
-                table.add_affs_count([d.neg_team for d in draw], r, 'neg')
-                if not r.is_break_round:
-                    table.set_bracket_highlights()
+                table.add_debate_ranking_columns(draw, standings)
             else:
-                table.add_debate_adjudicators_column(draw)
+                table.add_column("Aff Break Rank", [d.aff_team.break_rank_for_category(r.break_category) for d in draw])
+                table.add_column("Neg Break Rank", [d.neg_team.break_rank_for_category(r.break_category) for d in draw])
+            table.add_debate_metric_columns(draw, standings)
+            table.add_affs_count([d.aff_team for d in draw], r, 'aff')
+            table.add_affs_count([d.neg_team for d in draw], r, 'neg')
+        else:
+            table.add_debate_adjudicators_column(draw)
 
-            return table
+        table.add_draw_conflicts(draw)
+        if not r.is_break_round:
+            table.set_bracket_highlights()
+
+        return table
 
     def get_template_names(self):
         round = self.get_round()
