@@ -7,8 +7,6 @@
 
 {% block content %}
 
-  {{ block.super }}
-
   <div class="modal fade" id="edit-test-score" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
@@ -73,6 +71,8 @@
       </div>
     </div>
   {% endif %}
+
+  {{ block.super }}
 
 {% endblock %}
 
