@@ -309,7 +309,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         conflicts_header = {'key': "Conflicts/Flags"}
         conflicts_data = [{
             'text': debate.draw_conflicts + debate.flags_all,
-            'class': 'text-danger'
+            'class': 'text-danger small'
         } for debate in draw]
         self.add_column(conflicts_header, conflicts_data)
 
