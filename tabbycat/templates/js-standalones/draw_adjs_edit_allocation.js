@@ -15,8 +15,9 @@ function removeConflictClasses(el) {
 }
 
 function removeUnusedRow(oldHolder) {
-  var old_row = oldHolder.parent(); // Get the <tr>
-  unusedAdjTable.row(old_row).remove().draw();
+  var old_row = oldHolder.parent()[0]; // Get the <tr>
+  // Below is buggy; but disabling only makes a few extra lines in the table
+  // unusedAdjTable.row(old_row).remove().draw();
 }
 
 function rebindHoverEvents(el) {
