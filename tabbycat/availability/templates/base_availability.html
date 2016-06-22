@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_vue_table.html" %}
 {% load static %}
 
 {% block page-subnav-sections %}
@@ -18,23 +18,6 @@
 {% block page-subnav-actions %}
   <button id="submit_availability" class="btn btn-success" >Save Selected</button>
 {% endblock %}
-
-{% block content %}
-  <div id="alerts-holder"></div>
-  <form id="form">
-    {% csrf_token %}
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <table class="table">
-          {% block table-contents %}
-          {% endblock table-contents %}
-        </table>
-        <div class="status"></div>
-
-      </div>
-    </div>
-  </form>
-{% endblock content %}
 
 {% block js %}
 
@@ -77,13 +60,6 @@
     }
 
     $(document).ready( function() {
-
-      var dTable = $('#dataTable').DataTable({
-        "aaSorting": [[ 0, "asc" ]],
-      });
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      })
 
       $('#select_all').click(function() {
         $(":checkbox").each(function(){

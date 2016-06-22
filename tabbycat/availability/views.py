@@ -1,113 +1,171 @@
 from django.contrib import messages
 from django.shortcuts import render
+from django.views.generic.base import TemplateView, RedirectView
 
-from tournaments.models import Round
-from participants.models import Person
-from actionlog.models import ActionLogEntry
 from .models import ActiveVenue, ActiveTeam, ActiveAdjudicator
 
+from draw.models import Debate
+from participants.models import Person
+from actionlog.models import ActionLogEntry
+from tournaments.mixins import RoundMixin
+from tournaments.models import Round
+from utils.tables import TabbycatTableBuilder
 from utils.views import admin_required, expect_post, round_view, redirect_round, public_optional_round_view, public_optional_tournament_view, tournament_view
+from utils.mixins import SuperuserRequiredMixin, VueTableMixin, PostOnlyRedirectView
+from utils.misc import reverse_round
 
 
-@admin_required
-@round_view
-def availability_index(request, round):
-    from draw.models import Debate
-    if round.prev:
-        previous_unconfirmed = round.prev.get_draw().filter(
-            result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
-    else:
-        previous_unconfirmed = None
+class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+    template_name = 'availability_index.html'
+    page_title = 'Checkins Overview'
+    page_emoji = '📍'
 
-    t = round.tournament
+    def get_context_data(self, **kwargs):
+        r = self.get_round()
+        t = self.get_tournament()
+        total_adjs = r.tournament.adjudicator_set.count()
+        total_venues = r.tournament.venue_set.count()
 
-    total_adjs = round.tournament.adjudicator_set.count()
-    if t.pref('share_adjs'):
-        total_adjs += Adjudicator.objects.filter(tournament=None).count()
+        if r.prev:
+            kwargs['previous_unconfirmed'] = r.prev.get_draw().filter(
+                result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
+        if t.pref('share_adjs'):
+            total_adjs += Adjudicator.objects.filter(tournament=None).count()
+        if t.pref('share_venues'):
+            total_venues += Venue.objects.filter(tournament=None).count()
 
-    total_venues = round.tournament.venue_set.count()
-    if t.pref('share_venues'):
-        total_venues += Venue.objects.filter(tournament=None).count()
+        checks = [{
+            'type'      : 'Team',
+            'total'     : t.teams.count(),
+            'in_now'    : ActiveTeam.objects.filter(round=r).count(),
+            'in_before' : ActiveTeam.objects.filter(round=r.prev).count() if r.prev else None,
+        }, {
+            'type'      : 'Adjudicator',
+            'total'     : total_adjs,
+            'in_now'    : ActiveAdjudicator.objects.filter(round=r).count(),
+            'in_before' : ActiveAdjudicator.objects.filter(round=r.prev).count() if r.prev else None,
+        }, {
+            'type'      : 'Venue',
+            'total'     : total_venues,
+            'in_now'    : ActiveVenue.objects.filter(round=r).count(),
+            'in_before' : ActiveVenue.objects.filter(round=r.prev).count() if r.prev else None,
+        }]
 
-    checks = [{
-        'type'      : 'Team',
-        'total'     : t.teams.count(),
-        'in_now'    : ActiveTeam.objects.filter(round=round).count(),
-        'in_before' : ActiveTeam.objects.filter(round=round.prev).count() if round.prev else None,
-    }, {
-        'type'      : 'Adjudicator',
-        'total'     : total_adjs,
-        'in_now'    : ActiveAdjudicator.objects.filter(round=round).count(),
-        'in_before' : ActiveAdjudicator.objects.filter(round=round.prev).count() if round.prev else None,
-    }, {
-        'type'      : 'Venue',
-        'total'     : total_venues,
-        'in_now'    : ActiveVenue.objects.filter(round=round).count(),
-        'in_before' : ActiveVenue.objects.filter(round=round.prev).count() if round.prev else None,
-    }]
+        # Basic check before enable the button to advance
+        if all([checks[0]['in_now'] > 1, checks[1]['in_now'] > 0, checks[2]['in_now'] > 0]):
+            kwargs['can_advance'] = True
+        else:
+            kwargs['can_advance'] = False
 
-    # Basic check before enable the button to advance
-    if all([checks[0]['in_now'] > 1, checks[1]['in_now'] > 0, checks[2]['in_now'] > 0]):
-        can_advance = True
-    else:
-        can_advance = False
-
-    min_adjudicators = int(checks[0]['in_now'] / 2)
-    min_venues = int(checks[0]['in_now'] / 2)
-
-    return render(request, 'availability_index.html', dict(
-        checkin_types=checks, can_advance=can_advance, previous_unconfirmed=previous_unconfirmed,
-        min_adjudicators=min_adjudicators, min_venues=min_venues))
+        kwargs['checkin_types'] = checks
+        kwargs['min_adjudicators'] = int(checks[0]['in_now'] / 2)
+        kwargs['min_venues'] = int(checks[0]['in_now'] / 2)
+        return super().get_context_data(**kwargs)
 
 
-@admin_required
-@round_view
-def update_availability_all(request, round):
-    round.activate_all()
-    messages.add_message(
-        request, messages.SUCCESS, 'Checked in all teams, adjudicators, and venues')
-    return redirect_round('availability_index', round)
+# ==============================================================================
+# Bulk Activations
+# ==============================================================================
 
-@admin_required
-@round_view
-def update_availability_previous(request, round):
-    round.activate_previous()
-    messages.add_message(request, messages.SUCCESS,
-                         'Checked in all teams, adjudicators, and venues from previous round')
-    return redirect_round('availability_index', round)
+class AvailabilityActivateBase(RoundMixin, SuperuserRequiredMixin, RedirectView):
 
+    def get_redirect_url(self, *args, **kwargs):
+        self.activate_function()
+        messages.add_message(self.request, messages.SUCCESS,
+            self.activation_msg)
+        return reverse_round('availability_index', self.get_round())
 
-@admin_required
-@round_view
-def update_availability_breaking_adjs(request, round):
-    round.activate_all_breaking_adjs()
-    messages.add_message(
-        request, messages.SUCCESS, 'Checked in all breaking adjudicators')
-    return redirect_round('availability_index', round)
+class AvailabilityActivateAll(AvailabilityActivateBase):
+    activation_msg = 'Checked in all teams, adjs and venues'
+    def activate_function(self):
+        self.get_round().activate_all()
 
 
-@admin_required
-@round_view
-def update_availability_breaking_teams(request, round):
-    round.activate_all_breaking_teams()
-    messages.add_message(
-        request, messages.SUCCESS, 'Checked in all breaking teams')
-    return redirect_round('availability_index', round)
+class AvailabilityActivateFromPrevious(AvailabilityActivateBase):
+    activation_msg = 'Checked in all teams, adjs and venues from previous round'
+    def activate_function(self):
+        self.get_round().activate_previous()
 
 
-@admin_required
-@round_view
-def update_availability_advancing_teams(request, round):
-    round.activate_all_advancing_teams()
-    messages.add_message(request, messages.SUCCESS,
-        'Checked in all advancing teams')
-    return redirect_round('availability_index', round)
+class AvailabilityActivateBreakingAdjs(AvailabilityActivateBase):
+    activation_msg = 'Checked in all breaking adjudicators'
+    def activate_function(self):
+        self.get_round().round.activate_all_breaking_adjs()
 
 
-def _availability(request, round, model, context_name):
-    items = getattr(round, '%s_availability' % model)()
-    context = {context_name: items}
-    return render(request, '%s_availability.html' % model, context)
+class AvailabilityActivateBreakingTeams(AvailabilityActivateBase):
+    activation_msg = 'Checked in all breaking teams'
+    def activate_function(self):
+        self.get_round().round.activate_all_breaking_teams()
+
+
+class AvailabilityActivateAdvancingTeams(AvailabilityActivateBase):
+    activation_msg = 'Checked in all advancing teams'
+    def activate_function(self):
+        self.get_round().round.activate_all_advancing_teams()
+
+
+# ==============================================================================
+# Specific Activation Pages
+# ==============================================================================
+
+class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
+    template_name = "base_availability.html"
+
+
+class AvailabilityTypeTeamView(AvailabilityTypeBase):
+    page_emoji = '👂'
+    page_title = 'Team Checkins'
+
+    def get_table(self):
+        round = self.get_round()
+        table = TabbycatTableBuilder(view=self)
+        teams = round.team_availability()
+        table.add_column("Active", ['' for t in teams])
+        table.add_team_columns(teams)
+        return table
+
+
+class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
+    page_emoji = '👂'
+    page_title = 'Adjudicator Checkins'
+
+    def get_table(self):
+        round = self.get_round()
+        table = TabbycatTableBuilder(view=self)
+        adjudicators = round.adjudicator_availability()
+        table.add_column("Active", ['Test' for a in adjudicators])
+        table.add_adjudicator_columns(adjudicators)
+        return table
+
+
+class AvailabilityTypePersonView(AvailabilityTypeBase):
+    page_emoji = '👱'
+    page_title = 'People Checkins'
+
+    def get_table(self):
+        round = self.get_round()
+        table = TabbycatTableBuilder(view=self)
+        people = round.person_availability()
+        return table
+
+class AvailabilityTypeVenueView(AvailabilityTypeBase):
+    page_emoji = '🎪'
+    page_title = 'Venue Checkins'
+
+    def get_table(self):
+        round = self.get_round()
+        table = TabbycatTableBuilder(view=self)
+        venues = round.venue_availability()
+        table.add_column("Active", ['Test' for v in venues])
+        table.add_column("Venue", [v.name for v in venues])
+        table.add_column("Group", [v.group.name if v.group else '' for v in venues])
+        table.add_column("Priority", [v.priority for v in venues])
+        return table
+
+# ==============================================================================
+# Specific Activation Pages Actions
+# ==============================================================================
 
 # Public (for barcode checkins)
 @round_view
@@ -154,12 +212,6 @@ def post_checkin(request, round):
 
 @round_view
 def checkin_results(request, round, model, context_name):
-    return _availability(request, round, model, context_name)
-
-
-@admin_required
-@round_view
-def availability(request, round, model, context_name):
     return _availability(request, round, model, context_name)
 
 

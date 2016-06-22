@@ -78,15 +78,6 @@
   <script>
     $(document).ready( function() {
 
-      var dTable = $('#dataTable').DataTable({
-        "aaSorting": [[ 0, "asc" ]],
-        "orderCellsTop": true,
-      });
-
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      });
-
       $("#submit-nav").click( function() {
         $("#breakEligibilityForm").submit();
       });

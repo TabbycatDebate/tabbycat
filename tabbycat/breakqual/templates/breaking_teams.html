@@ -164,22 +164,3 @@
     </form>
   {% endif %}
 {% endblock content %}
-
-{% block js %}
-
-  {{ block.super }}
-  <!-- TODO: bundle -->
-  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
-
-  <script>
-    $(document).ready( function() {
-      var dTable = $("#dataTable").DataTable({
-        "aaSorting": [[ 0, "asc" ]],
-      });
-
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      })
-    });
-  </script>
-{% endblock js %}

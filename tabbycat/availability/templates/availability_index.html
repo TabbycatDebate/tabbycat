@@ -1,12 +1,7 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block page-title %}{{ round.name }} Check-Ins{% endblock %}
-{% block head-title %}<span class="emoji">📍</span>️Check-Ins Overview{% endblock %}
-{% block sub-title %}For {{ round.name }}{% endblock %}
-
 {% block page-subnav-sections %}
-
   <a class="btn btn-default submit-disable" href="{% round_url team_availability round %}">
     Check In Teams
   </a>
@@ -26,7 +21,7 @@
     Check In Adjs
   </a>
   {% if round.is_break_round %}
-    <a class="btn btn-success submit-disable" href="{% round_url update_availability_breaking_adjs round %}">
+    <a class="btn btn-success submit-disable" href="{% round_url update_availability_breaking_adjs  %}">
       Check In All Breaking Adjs
     </a>
   {% else %}
