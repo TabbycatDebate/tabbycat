@@ -1,6 +1,6 @@
 import random
 
-from tournaments.models import Division
+from .models import Division
 
 
 class DivisionAllocator():

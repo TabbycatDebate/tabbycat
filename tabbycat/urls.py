@@ -55,10 +55,10 @@ if settings.DEBUG:
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
 
+
 # ==============================================================================
 # Logout/Login Confirmations
 # ==============================================================================
-
 
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
@@ -75,10 +75,10 @@ def on_user_logged_in(sender, request, **kwargs):
     else: # should never happen, but just in case
         messages.success(request, 'Welcome! You just logged in!')
 
+
 # ==============================================================================
 # Redirect Method
 # ==============================================================================
-
 
 def redirect(view):
     from django.http import HttpResponseRedirect

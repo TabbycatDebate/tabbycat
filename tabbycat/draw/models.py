@@ -36,7 +36,7 @@ class Debate(models.Model):
 
     round = models.ForeignKey('tournaments.Round', db_index=True)
     venue = models.ForeignKey('venues.Venue', blank=True, null=True)
-    division = models.ForeignKey('tournaments.Division', blank=True, null=True)
+    division = models.ForeignKey('divisions.Division', blank=True, null=True)
 
     bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)

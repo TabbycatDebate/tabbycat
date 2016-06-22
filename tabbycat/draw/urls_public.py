@@ -10,7 +10,7 @@ urlpatterns = [
         views.PublicDrawForRound.as_view(),
         name='public_draw_by_round'),
     url(r'^all/$',
-        views.public_all_draws,
+        views.PublicAllDrawsAllTournamentsView.as_view(),
         name='public_all_draws'),
     url(r'^sides/$',
         views.PublicSideAllocationsView.as_view(),

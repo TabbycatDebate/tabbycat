@@ -135,7 +135,7 @@ class Team(models.Model):
                              choices=EMOJI_LIST)
     institution = models.ForeignKey(Institution)
     tournament = models.ForeignKey('tournaments.Tournament')
-    division = models.ForeignKey('tournaments.Division',
+    division = models.ForeignKey('divisions.Division',
                                  blank=True,
                                  null=True,
                                  on_delete=models.SET_NULL)
