@@ -43,9 +43,9 @@ function initChart(vueContext){
   // Responsive width
   vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10)
 
-  x = d3.scale.ordinal().rangeRoundBands([0, vueContext.width])
-  y = d3.scale.linear().range([0, vueContext.height])
-  z = d3.scale.ordinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
+  var x = d3.scale.ordinal().rangeRoundBands([0, vueContext.width])
+  var y = d3.scale.linear().range([0, vueContext.height])
+  var z = d3.scale.ordinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
 
   d3.selectAll("svg > *").remove(); // Remove prior graph
 
@@ -85,11 +85,25 @@ function initChart(vueContext){
     .attr("height", function(d) { return y(d.y); })
     .attr("width", x.rangeBand());
 
+  function formatTimeAgo(time) {
+    console.log(time);
+    if (time < 120) {
+      // Less than two hours
+      return "-" + time + "m";
+    } else if (time < 2880) {
+      // Less than 48 hours
+      return "-" + Math.floor(time / 60) + "h";
+    } else {
+      // Greater than 48 hours
+      return "-" + Math.floor(time / 24 / 60) + "d";
+    }
+  }
+
   // Add Scales
   var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
-    .tickFormat(function(d) { return "-" + d + "m"; }) // Format result
+    .tickFormat(function(d) { return formatTimeAgo(d) }) // Format result
 
   svg.append("g").attr("class", "x axis")
     .call(xAxis)
