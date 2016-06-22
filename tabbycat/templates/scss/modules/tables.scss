@@ -12,6 +12,10 @@
   }
 }
 
+//------------------------------------------------------------------------------
+// HEADER STYLES
+//------------------------------------------------------------------------------
+
 thead {
   background: #fff; // Fixed header needs a background while scrolling
   text-transform: uppercase;
@@ -22,14 +26,39 @@ thead {
   }
 }
 
-// Deprecate after datatables removed
-.dataTables_filter {
-  display: none; // Hide the default search box
+.vue-sortable {
+  &:hover, &:hover .glyphicon {
+    color: $brand-success;
+    cursor: pointer;
+  }
+}
+
+//------------------------------------------------------------------------------
+// CELL STYLES
+//------------------------------------------------------------------------------
+
+.table > tbody > tr > th,
+.table > tbody > tr > td {
+  &.unpadded-cell {
+    padding: 0px;
+  }
+  &.double-height {
+    line-height: 40px;
+  }
+  // For highlighting bracket boundaries
+  &.highlight-row {
+    border-top: 3px solid $brand-info;
+  }
 }
 
 //------------------------------------------------------------------------------
 // Sorting
 //------------------------------------------------------------------------------
+
+// Deprecate after datatables removed
+.dataTables_filter {
+  display: none; // Hide the default search box
+}
 
 .table > thead > tr > th {
 
@@ -53,13 +82,6 @@ thead {
 
   &:hover {
     color: $brand-success;
-  }
-}
-
-.vue-sortable {
-  &:hover, &:hover .glyphicon {
-    color: $brand-success;
-    cursor: pointer;
   }
 }
 
@@ -94,34 +116,4 @@ table thead .sorting_desc_disabled:after {
   font-family: 'Glyphicons Halflings';
   position: absolute;
   right: 8px;
-}
-
-//------------------------------------------------------------------------------
-// CELL STYLES
-//------------------------------------------------------------------------------
-
-.table > tbody > tr > th,
-.table > tbody > tr > td {
-  &.unpadded-cell {
-    padding: 0px;
-  }
-  &.double-height {
-    line-height: 40px;
-  }
-}
-
-//------------------------------------------------------------------------------
-// SPECIFIC DECORATORS
-//------------------------------------------------------------------------------
-
-// Deprecate after draw_with_standings_content converted
-.draw-with-standings .em {
-  font-weight: bold;
-  color: chocolate;
-  font-style: normal;
-}
-
-// Deprecate after draw_with_standings_content converted
-.draw-with-standings .first-in-bracket {
-  border-top: 3px solid chocolate;
 }

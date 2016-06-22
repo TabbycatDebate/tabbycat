@@ -1,4 +1,5 @@
 {% extends "base_vue_table.html" %}
+{% load debate_tags %}
 
 {% block page-subnav-actions %}
   <form id="confirmForm" method="POST" action="{% round_url confirm_draw %}">

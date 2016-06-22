@@ -11,7 +11,7 @@
       <span v-if="headerData['text']" v-html="headerData['text']"></span>
 
       <template v-if="!headerData.hasOwnProperty('icon') && !headerData.hasOwnProperty('text')">
-        {{ headerData['key'] }}
+        <span>{{ headerData['key'] }}</span>
       </template>
 
     </span>

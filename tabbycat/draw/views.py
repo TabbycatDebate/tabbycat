@@ -11,6 +11,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
 from participants.models import Adjudicator, Team
+from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
 from utils.mixins import CacheMixin, ExpectPost, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableMixin
@@ -21,7 +22,6 @@ from venues.allocator import allocate_venues
 from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamPositionAllocation
 from .dbutils import delete_round_draw
-from .utils import get_draw_with_standings
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ class DrawTablePage(RoundMixin, VueTableMixin):
         kwargs['round'] = self.get_round()
         return super().get_context_data(**kwargs)
 
-    def create_rows(self, draw, table, tournament, by_team=False):
+    def create_rows(self, draw, table, round, tournament, by_team=False):
         if by_team:
             draw = list(draw) + list(draw) # Double up the draw
             draw_slice = int(len(draw) / 2) # Top half gets affs; bottom negs
@@ -79,6 +79,8 @@ class DrawTablePage(RoundMixin, VueTableMixin):
         if tournament.pref('enable_division_motions'):
             for debate in draw:
                 table.add_motion_column([m.reference for m in debate.division_motions])
+        if round.is_break_round:
+            table.add_beak_ranks(draw)
         if not tournament.pref('enable_divisions'):
             table.add_debate_adjudicators_column(draw)
 
@@ -90,9 +92,9 @@ class DrawTablePage(RoundMixin, VueTableMixin):
         print(sorting)
         table = TabbycatTableBuilder(view=self, sort_key=sorting)
         if self.sorting is 'Team':  # Add extra rows
-            self.create_rows(draw, table, tournament, by_team=True)
+            self.create_rows(draw, table, round, tournament, by_team=True)
         else:
-            self.create_rows(draw, table, tournament)
+            self.create_rows(draw, table, round, tournament)
 
         return table
 
@@ -152,32 +154,56 @@ class AdminDrawDisplayForRoundByTeam(DrawTablePage, LoginRequiredMixin):
 # ==============================================================================
 
 class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
+    isDetailed = False
 
     def get_table(self):
-        round = self.get_round()
+        r = self.get_round()
         table = TabbycatTableBuilder(view=self)
-        if round.draw_status == round.STATUS_NONE:
+        if r.draw_status == r.STATUS_NONE:
             return table # Return Blank
         else:
-            draw = round.get_draw()
-            table.add_debate_bracket_columns(draw)
-            table.add_debate_venue_columns(draw)
-            table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
-            table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
-            table.add_debate_adjudicators_column(draw)
-            table.add_draw_conflicts(draw)
-            if round.draw_status == round.STATUS_DRAFT:
-                return table
-            elif round.draw_status == round.STATUS_CONFIRMED:
-                return table
-            elif round.draw_status == round.STATUS_RELEASED:
-                return table
+            draw = r.get_draw()
+            if not r.is_break_round:
+                table.add_debate_bracket_columns(draw)
+
+            if (r.draw_status == r.STATUS_DRAFT or self.isDetailed) and r.prev:
+                table.add_team_columns([d.aff_team for d in draw], key="Aff",
+                    hide_institution=True, hide_emoji=True)
+                table.add_team_columns([d.neg_team for d in draw], key="Neg",
+                    hide_institution=True, hide_emoji=True)
             else:
-                raise
+                table.add_debate_venue_columns(draw)
+                table.add_team_columns([d.aff_team for d in draw], key="Aff",
+                    hide_institution=True)
+                table.add_team_columns([d.neg_team for d in draw], key="Neg",
+                    hide_institution=True)
+
+            table.add_draw_conflicts(draw)
+            if (r.draw_status == r.STATUS_DRAFT or self.isDetailed) and r.prev:
+                # Just get teams active in this round
+                teams = Team.objects.filter(debateteam__debate__round=r)
+                metrics = r.tournament.pref('team_standings_precedence')
+                generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
+                standings = generator.generate(teams, round=r.prev)
+                if "points" in standings.metric_keys and not r.is_break_round:
+                    table.add_team_pullup_columns(draw, standings)
+                table.add_debate_ranking_columns(standings)
+                table.add_debate_metric_columns(standings)
+                table.add_affs_count([d.aff_team for d in draw], r, 'aff')
+                table.add_affs_count([d.neg_team for d in draw], r, 'neg')
+                if not r.is_break_round:
+                    table.set_bracket_highlights()
+            else:
+                table.add_debate_adjudicators_column(draw)
+
+            return table
 
     def get_template_names(self):
         round = self.get_round()
         self.page_emoji = '👀'
+        if self.isDetailed:
+            self.page_title = 'Draw with Details for %s' % round.name
+            return ["draw_base.html"]
         if round.draw_status == round.STATUS_NONE:
             self.page_title = 'No draw for %s' % round.name
             messages.warning(self.request, 'No draw exists yet — go to the ' +
@@ -195,45 +221,8 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
         else:
             raise
 
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
-
-
 class AdminDrawWithDetailsView(AdminDrawEditView):
-
-    def get_template_names(self):
-        self.page_tile = "Draw with Details"
-        return ["draw_base.html"]
-
-    def get_table(self):
-        r = self.get_round()
-        standings, draw = get_draw_with_standings(r)
-
-        table = TabbycatTableBuilder(view=self)
-        table.add_debate_bracket_columns(draw)
-        table.add_debate_venue_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
-        table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
-        if r.is_break_round:
-            table.add_beak_ranks(draw)
-        else:
-            table.add_sub_ranks(draw)
-
-        for info in standings.metrics_info():
-            # Metrics go here
-            # {% for info in standings.metrics_info %}
-            # {% for metric in debate.metrics %}
-            print(info['name'])
-
-        # print([list(map(metricformat, standing.itermetrics())) for standing in standings])
-        # table.add_metric_columns(standings)
-
-        table.add_affs_count([d.aff_team for d in draw], r, 'aff')
-        table.add_affs_count([d.neg_team for d in draw], r, 'neg')
-        table.add_draw_conflicts(draw)
-
-        return table
-
+    isDetailed = True
 
 # ==============================================================================
 # Draw Status POSTS
@@ -428,7 +417,6 @@ class DrawMatchupsEditView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
-        kwargs['standings'], kwargs['draw'] = get_draw_with_standings(round)
         kwargs['unused_teams'] = round.unused_teams()
         possible_debates = len(kwargs['unused_teams']) // 2 + 1
         kwargs['possible_debates'] = [None] * possible_debates

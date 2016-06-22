@@ -129,6 +129,6 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
   gulp.watch('tabbycat/templates/js-standalones/*.js', ['js-compile']);
   gulp.watch('tabbycat/templates/js-bundles/*.js', ['js-browserify']);
-  gulp.watch('tabbycat/templates/js-vue/**/*.vue', ['js-browserify']);
+  gulp.watch('tabbycat/templates/**/*.vue', ['js-browserify']);
   gulp.watch('tabbycat/**/*.html', ['html-reload']);
 });
