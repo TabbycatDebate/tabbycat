@@ -39,11 +39,16 @@ TPA_MAP = {
 
 class DrawTablePage(RoundMixin, VueTableMixin):
 
+    page_sub_title = 'Use ESC to cancel scrolling'
     template_name = 'draw_display_by.html'
 
     def get_page_title(self):
-        round = self.get_round()
-        return 'Draw for %s' % round.name
+        r = self.get_round()
+        if r.starts_at:
+            time = r.starts_at.strftime('%I:%M')
+            return 'Draw for %s; debates start at %s' % (r.name, time)
+        else:
+            return 'Draw for %s' % r.name
 
     def get_page_emoji(self):
         round = self.get_round()
@@ -53,11 +58,7 @@ class DrawTablePage(RoundMixin, VueTableMixin):
             return '😴'
 
     def get_page_sub_title(self):
-        round = self.get_round()
-        if round.starts_at:
-            return 'debates start at %s' % round.starts_at
-        else:
-            return ''
+        return 'Use ESC to stop scrolling'
 
     def get_context_data(self, **kwargs):
         kwargs['round'] = self.get_round()
