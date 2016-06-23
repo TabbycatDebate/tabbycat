@@ -1,7 +1,6 @@
 from django.conf.urls import url
 
 from . import views
-from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
 
 urlpatterns = [
     # Overview
@@ -18,10 +17,7 @@ urlpatterns = [
     # Adjs
     url(r'adjudicators/$', views.AvailabilityTypeAdjudicatorView.as_view(),
         name='adjudicator_availability'),
-    url(r'adjudicators/update/$', views.update_availability,
-        {'active_attr': 'adjudicator',
-         'active_model': ActiveAdjudicator,
-         'update_method': 'set_available_adjudicators'},
+    url(r'adjudicators/update/$', views.AvailabilityUpdateAdjudicators.as_view(),
         name='update_adjudicator_availability'),
     url(r'adjudicators/update/breaking/$', views.AvailabilityActivateBreakingAdjs.as_view(),
         name='update_availability_breaking_adjs'),
@@ -29,10 +25,7 @@ urlpatterns = [
     # Teams
     url(r'teams/$', views.AvailabilityTypeTeamView.as_view(),
         name='team_availability'),
-    url(r'teams/update/$', views.update_availability,
-        {'active_attr': 'team',
-         'active_model': ActiveTeam,
-         'update_method': 'set_available_teams'},
+    url(r'teams/update/$', views.AvailabilityUpdateTeams.as_view(),
         name='update_team_availability'),
     url(r'teams/update/breaking/$', views.AvailabilityActivateBreakingTeams.as_view(),
         name='update_availability_breaking_teams'),
@@ -43,19 +36,7 @@ urlpatterns = [
     # Venues
     url(r'venues/$', views.AvailabilityTypeVenueView.as_view(),
         name='venue_availability'),
-    url(r'venues/update/$', views.update_availability,
-        {'active_attr': 'venue',
-         'active_model': ActiveVenue,
-         'update_method': 'set_available_venues'},
+    url(r'venues/update/$', views.AvailabilityUpdateVenues.as_view(),
         name='update_venue_availability'),
-
-    # People
-    url(r'people/$', views.AvailabilityTypePersonView.as_view(),
-        name='people_availability'),
-    url(r'people/update/$', views.checkin_update,
-        {'active_attr': None,
-         'active_model': None,
-         'update_method': 'set_available_people'},
-        name='update_people_availability'),
 
 ]

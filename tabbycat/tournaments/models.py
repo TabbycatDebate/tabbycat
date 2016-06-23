@@ -404,16 +404,6 @@ class Round(models.Model):
             setattr(m, id_column, id)
             m.save()
 
-    def set_available_people(self, ids):
-        from availability.models import Checkin
-        from participants.models import Person
-        return self.set_available_base(ids,
-                                       Person,
-                                       Checkin,
-                                       self.checkins,
-                                       'person_id',
-                                       'person__id',
-                                       remove=False)
 
     def set_available_venues(self, ids):
         from availability.models import ActiveVenue

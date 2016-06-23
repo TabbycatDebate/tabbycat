@@ -1,170 +1,88 @@
 {% extends "base_vue_table.html" %}
+{% load debate_tags %}
 {% load static %}
 
 {% block page-subnav-sections %}
   {% if round.seq > 1 %}
-    {% block copy_btn %}
-      <button id="btn_copy" class="btn btn-primary" type="button">Copy from Previous</button>
-    {% endblock %}
+    <button id="select_previous" class="btn btn-primary" type="button">
+      Copy from Previous
+    </button>
   {% endif %}
-  <button id="select_all" class="btn btn-primary" href="#all">Select All</button>
-  {% if adjudicators %}
-    <button id="select_breaking" class="btn btn-primary" href="#">Select Breaking</button>
-  {% endif %}
-  <button id="select_none" class="btn btn-primary" href="#none">Select None</button>
-  {% include "tables/table_search.html" %}
+  <button id="select_all" class="btn btn-primary">
+    Select All
+  </button>
+  <button id="select_none" class="btn btn-primary">
+    Select None
+  </button>
+  {{ block.super }}
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <button id="submit_availability" class="btn btn-success" >Save Selected</button>
+  <button id="save_availability" class="btn btn-success submit-disable" >
+    Save Selected
+  </button>
 {% endblock %}
 
 {% block js %}
 
   {{ block.super }}
-  <!-- TODO: bundle -->
   <script>
-    var dTable;
-    var venueState = [];
-    var newState = [];
-    var unsavedChanges = 0;
 
-    var updateCheckbox = function(cb) {
-      var jp = $(cb).parents("tr");
-      if (cb.checked) {
-        jp.addClass("success");
-        jp.removeClass("danger");
-        if (venueState[cb.value]) {
-          jp.removeClass("pendingChange");
-        } else {
-          jp.addClass("pendingChange");
-        }
-      } else {
-        jp.addClass("danger");
-        jp.removeClass("success");
-        if (venueState[cb.value]) {
-          jp.addClass("pendingChange");
-        } else {
-          jp.removeClass("pendingChange");
-        }
-      }
-    };
+    var updateURL = '{{ update_url }}';
+    var overviewURL = '{% round_url availability_index round %}';
 
-    var changeHappened = function (e) {
-      unsavedChanges++;
-      if (!unsavedChanges) {
-        $(".status").append("<span>Unsaved changes</span");
-        unsavedChanges = true;
-      }
-
-    }
-
-    $(document).ready( function() {
-
-      $('#select_all').click(function() {
-        $(":checkbox").each(function(){
-          if (!this.checked) {
-            $(this).click();
-            updateCheckbox(this);
-          }
-        });
-        return false;
+    $('#select_all').click(function() {
+      $(":checkbox").each(function(){
+        $(this).prop('checked', true);
       });
-
-      $('#select_none').click(function() {
-        $(":checkbox").each(function(){
-          if (this.checked) {
-            $(this).click();
-            updateCheckbox(this);
-          }
-        });
-        return false;
-      });
-
-      $('#select_breaking').click(function() {
-        $(".breaking-adj :checkbox").each(function(){
-          if (!this.checked) {
-            $(this).click();
-            updateCheckbox(this);
-          }
-        });
-        return false;
-      });
-
-      $(":checkbox").each( function(){
-        var cb = $(this)[0];
-        venueState[cb.value] = cb.checked;
-        updateCheckbox(this);
-      });
-
-      $(":checkbox").click( function(){
-        updateCheckbox(this);
-        changeHappened(this);
-      });
-
-
-      $("#dataTable tbody tr").click( function(event) {
-        if (event.target.type !== "checkbox") {
-          var jc = $(":checkbox", this);
-          jc[0].checked = !jc[0].checked;
-          jc.triggerHandler("click");
-        }
-      });
-
-      var update_url = "{% block update-url %}{% endblock %}";
-
-      $('#btn_copy').click(function() {
-        var form = document.createElement("form");
-        $(form).attr('method', 'POST').attr('action', update_url).appendTo($('body'));
-        var input = document.createElement("input");
-        $(input).attr('type', 'hidden').attr('name', 'copy').attr('value', '1').appendTo(form);
-        form.submit();
-        return false;
-
-      });
-
-      $("#submit_availability").click( function() {
-        $(":checkbox").each( function(){
-          var cb = $(this)[0];
-          newState[cb.value] = cb.checked;
-        });
-        // Note new method for getting rows
-        var sData = $("input", dTable.rows().nodes()).serialize();
-        $("#saved_availability").alert('close'); // hide the previous alert
-        $.ajax({
-          type: "POST",
-          url: update_url,
-          data: sData,
-          success: function(data, txtStatus) {
-            venueState = newState;
-            $(":checkbox").each( function() {
-              updateCheckbox(this);
-            });
-            {% block post-success %}{% endblock %}
-            var draw_url = '{% block draw-url %}{% endblock %}';
-            $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id="saved_availability">' +
-              '<button type="button" class="close" data-dismiss="alert">' +
-              '&times;</button>' +
-              'Saved successfully! ' +
-              '<a href="' +
-              draw_url +
-              '" class="alert-link">Return to the checkins overview</a>' +
-              '</div>');
-          },
-          error: function(req, txtStatus, err) {
-            $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id="saved_availability">' +
-              '<button type="button" class="close" data-dismiss="alert">' +
-              '&times;</button>' +
-              'There was an error saving availability. (' +
-              err +
-              ')</div>');
-          },
-        });
-        $(this).removeClass("active");
-        return false;
-      });
-
+      return false;
     });
+
+    $('#select_none').click(function() {
+      $(":checkbox").each(function(){
+        $(this).prop('checked', false);
+      });
+      return false;
+    });
+
+    $('#select_previous').click(function() {
+      $(":checkbox").each(function(){
+        var prev_round = $(this).parents("td").siblings("td").first();
+        var prev_active = prev_round.children(".hidden").text().trim();
+        if (prev_active === 'true') {
+          $(this).prop('checked', true);
+        } else {
+          $(this).prop('checked', false);
+        }
+      });
+      return false;
+    });
+
+    $('#save_availability').click(function() {
+      var references = [], btn = $(this);
+      $(":checkbox").each(function(){
+        if ($(this).prop('checked')) {
+          references.push(parseInt($(this).attr('data-target')));
+        }
+      });
+      $.ajax({
+        type: "POST",
+        url: updateURL,
+        data: {
+          references: references,
+        },
+        success: function(data, status) {
+          $.fn.showAlert('success', 'Saved availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the checkins overview page?</a>', 2000);
+          btn.button('reset');
+        },
+        error: function(xhr, error, ex) {
+          $.fn.showAlert('danger', 'Error saving availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the checkins overview page?</a>', 5000);
+          btn.button('reset');
+        }
+      });
+      return false;
+    });
+
   </script>
 
 {% endblock %}

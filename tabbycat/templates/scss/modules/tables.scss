@@ -49,4 +49,7 @@ thead {
   &.highlight-row {
     border-top: 3px solid $brand-info;
   }
+  &.checkbox-target:hover, &.checkbox-target input:hover {
+    cursor: pointer;
+  }
 }

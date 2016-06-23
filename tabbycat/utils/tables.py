@@ -389,6 +389,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     #     # debate.metrics = [(a, n) for a, n in zip(aff_standing.itermetrics(), neg_standing.itermetrics())]
 
+    def add_checkbox_columns(self, states, references, key):
+        state_header = {'key': key}
+        state_data = [{
+            'sort': state,
+            'class': 'toggle_active_status checkbox-target',
+            'text': '<input type="checkbox" data-target="%s" %s>' % (reference, 'checked' if state else ''),
+        } for state, reference in zip(states, references)]
+        self.add_column(state_header, state_data)
+
     def add_debate_ballot_link_column(self, debates):
         if self.tournament.pref('ballots_released'):
             ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
