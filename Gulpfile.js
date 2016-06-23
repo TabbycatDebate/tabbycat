@@ -82,8 +82,8 @@ gulp.task("js-browserify", function() {
   // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
   // We define our input files, which we want to have bundled
   var files = [
-      'tabbycat/templates/js-bundles/main.js',
-      'tabbycat/templates/js-bundles/tournament-home.js',
+      'tabbycat/templates/js-bundles/public.js',
+      'tabbycat/templates/js-bundles/admin.js',
   ];
   // map them to our stream function
   var tasks = files.map(function(entry) {

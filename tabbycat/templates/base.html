@@ -95,7 +95,11 @@
   {% endblock body %}
 
   {% block js %}
-    <script src="{% static 'js/main.bundle.js' %}"></script>
+    {% if 'admin/' in request.path %}
+      <script src="{% static 'js/admin.bundle.js' %}"></script>
+    {% else %}
+      <script src="{% static 'js/public.bundle.js' %}"></script>
+    {% endif %}
   {% endblock js %}
 
   <!-- Analytics -->

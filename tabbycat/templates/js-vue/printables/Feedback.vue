@@ -1,5 +1,5 @@
 <!-- Base Scoresheet Template -->
-<script type="text/x-template" id="base-feedback">
+<template>
 
   <template v-if="ballot.position === 'Team'">
     <section class="db-margins-m db-bordered db-flex-row db-flex-item-1">
@@ -37,12 +37,14 @@
     <feedback-question v-for="question in data.questions | filterBy 'true' in 'team_on_orallist' | orderBy 'seq'" :question="question" ></feedback-question>
   </template>
 
-</script>
+</template>
 
-{% include "js-vue/printables/feedback-question.vue" %}
 <script>
-  Vue.component('base-feedback', {
-    template: '#base-feedback',
+  import FeedbackQuestion from './FeedbackQuestion.vue'
+  export default {
+    components: {
+      FeedbackQuestion
+    },
     props: ['data', 'ballot'],
-  })
+  }
 </script>

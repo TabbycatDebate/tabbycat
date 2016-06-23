@@ -1,4 +1,4 @@
-<script type="text/x-template" id="team-scores">
+<template>
 
   <div class="db-flex-item-2 db-flex-row db-bottom-border">
     <div class="db-padding-horizontal db-flex-item db-align-vertical-center">
@@ -63,18 +63,16 @@
     </div>
   </div>
 
-</script>
+</template>
 
-<!-- Register Table Component Behaviour -->
 <script>
-  Vue.component('team-scores', {
-    template: '#team-scores',
-    props: {
-      data: Object,
-      name: String,
-      emoji: String,
-      speakers: Array,
-      position: String,
-    },
-  })
+export default {
+  props: {
+    data: Object,
+    name: String,
+    emoji: String,
+    speakers: Array,
+    position: String,
+  },
+}
 </script>

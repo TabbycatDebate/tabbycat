@@ -1,5 +1,5 @@
 <!-- Base Scoresheet Template -->
-<script type="text/x-template" id="base-scoresheet">
+<template>
 
   <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="ballot.panel.length > 1">
     <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
@@ -101,23 +101,25 @@
     </div>
   </section>
 
-</script>
+</template>
 
-{% include "js-vue/printables/team-scores.vue" %}
 <script>
-  Vue.component('base-scoresheet', {
-    template: '#base-scoresheet',
-    props: ['data', 'ballot', 'motions'],
-    computed: {
-      ballotsExcludingSelf: function() {
-        var authorIndex = this.ballot.panel.indexOf(this.ballot.author);
-        if (authorIndex > -1) {
-          return this.ballot.panel.splice(authorIndex, 1);
-        } else {
-          return this.ballot.panel
-        }
+import TeamScores from './TeamScores.vue'
+
+export default {
+  props: ['data', 'ballot', 'motions'],
+  components: {
+    TeamScores
+  },
+  computed: {
+    ballotsExcludingSelf: function() {
+      var authorIndex = this.ballot.panel.indexOf(this.ballot.author);
+      if (authorIndex > -1) {
+        return this.ballot.panel.splice(authorIndex, 1);
+      } else {
+        return this.ballot.panel
       }
     }
-
-  })
+  }
+}
 </script>

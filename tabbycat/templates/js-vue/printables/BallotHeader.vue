@@ -1,5 +1,4 @@
-<!-- Base Ballot Header Template -->
-<script type="text/x-template" id="base-ballot-header">
+<template>
 
   <header class="db-margins-m db-flex-row db-flex-item-1">
 
@@ -22,12 +21,10 @@
 
   </header>
 
-</script>
+</template>
 
-<!-- Division Droppable Component Behaviour -->
 <script>
-  Vue.component('base-ballot-header', {
-    template: '#base-ballot-header',
-    props: ['data', 'ballot'],
-  })
+export default {
+  props: ['data', 'ballot'],
+}
 </script>

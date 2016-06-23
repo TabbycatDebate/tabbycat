@@ -2,16 +2,16 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block nav %}<div class="col-md-12">{% endblock %}
 
-{% block head-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
-{% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
+{% block nav %}{% endblock %}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
 {% block page-subnav-sections %}
   {% include "tables/table_search.html" %}
   <a class="btn btn-success" id="save">Save Matchups</a>
   <a class="btn btn-danger" href="{% round_url draw %}">Quit</a>
 {% endblock %}
-
 
 {% block content %}
 <div class="row">
@@ -82,126 +82,121 @@
           {% endfor %}
           </tbody>
         </table>
-
       </div>
     </div>
-
   </div>
 </div>
 {% endblock content %}
 
-{% block footer %}{% endblock footer %}
-
 {% block js %}
   {{ block.super }}
-<script src="{% static 'js/vendor/jquery-ui.js' %}"></script>
-<script>
-  $(document).ready( function() {
+  <script src="{% static 'js/vendor/jquery-ui.js' %}"></script>
+  <script>
+    $(document).ready( function() {
 
+      $(".team").draggable( {
+        revert: 'invalid', // revert to initial position if not dropped on a droppable element
+        zIndex: 1000,
+        appendTo: "body",
+        helper: 'clone',
+      });
 
-    $(".team").draggable( {
-      revert: 'invalid', // revert to initial position if not dropped on a droppable element
-      zIndex: 1000,
-      appendTo: "body",
-      helper: 'clone',
-    });
-
-    $("#scratch").droppable( {
-      accept: '.team',
-      hoverClass: 'bg-success',
-      drop: function(event, ui) {
-        var team = ui.draggable; // the object being dragged
-        var oldHolder = team.parent("td");
-        team.appendTo($(this))
-        team.css({left:'0px', top:'0px'}) // reset position so it sits nicely
-      }
-    });
-
-    // Droppable elements are targets for draggable elements
-    $(".team-holder").droppable({
-
-      accept: '.team',
-      hoverClass: 'bg-success',
-      drop: function(event, ui) {
-        var team = ui.draggable;
-        var oldHolder = team.parent("td");
-
-        var replacing = $(".team", this); // if dragged onto a prexisting spot
-        var newHomeOff;
-        var curOff = team.offset();
-
-        if (replacing.length == 0) {
-          replacing = $(document.createElement("div"));
-          replacing.addClass("team");
-          replacing[0].style.visibility = "hidden";
-          $(this).append(replacing);
-          newHomeOff = replacing.offset();
-          replacing.remove();
-        } else {
-          newHomeOff = replacing.offset();
-          $("#scratch").append(replacing);
+      $("#scratch").droppable( {
+        accept: '.team',
+        hoverClass: 'bg-success',
+        drop: function(event, ui) {
+          var team = ui.draggable; // the object being dragged
+          var oldHolder = team.parent("td");
+          team.appendTo($(this))
+          team.css({left:'0px', top:'0px'}) // reset position so it sits nicely
         }
+      });
 
-        $(this).append(team);
+      // Droppable elements are targets for draggable elements
+      $(".team-holder").droppable({
 
-        team.css('top', curOff.top - newHomeOff.top);
-        team.css('left', curOff.left - newHomeOff.left);
-        team.animate({'top': '0', 'left': '0'}, 300);
+        accept: '.team',
+        hoverClass: 'bg-success',
+        drop: function(event, ui) {
+          var team = ui.draggable;
+          var oldHolder = team.parent("td");
 
-      }
+          var replacing = $(".team", this); // if dragged onto a prexisting spot
+          var newHomeOff;
+          var curOff = team.offset();
+
+          if (replacing.length == 0) {
+            replacing = $(document.createElement("div"));
+            replacing.addClass("team");
+            replacing[0].style.visibility = "hidden";
+            $(this).append(replacing);
+            newHomeOff = replacing.offset();
+            replacing.remove();
+          } else {
+            newHomeOff = replacing.offset();
+            $("#scratch").append(replacing);
+          }
+
+          $(this).append(team);
+
+          team.css('top', curOff.top - newHomeOff.top);
+          team.css('left', curOff.left - newHomeOff.left);
+          team.animate({'top': '0', 'left': '0'}, 300);
+
+        }
+      });
+
+      $('#save').click( function() {
+
+          var btn = $(this)
+          btn.attr("disabled", true);
+          var data = {};
+          var i = 0;
+          $("#matchups tbody tr").each( function() {
+            if (this.id) {
+              var debateId = this.id;
+              data['debate_' + this.id] = this.id;
+            } else {
+              var debateId = i;
+              data['new_debate_' + i] = true;
+              i += 1
+            }
+            var aff = $(".aff-holder", this);
+            var aff = $(".team", aff)[0];
+            if (typeof aff !== 'undefined') {
+              data['aff_' + debateId] = aff.id
+            } else {
+              data['aff_' + debateId] = '';
+            }
+
+            var neg = $(".neg-holder", this);
+            var neg = $(".team", neg)[0];
+            if (typeof neg !== 'undefined') {
+              data['neg_' + debateId] = neg.id
+            } else {
+              data['neg_' + debateId] = '';
+            }
+          });
+
+          $.ajax( {
+            type: "POST",
+            url: "{% round_url save_matchups %}",
+            data: data,
+            success: function(data, status) {
+              btn.attr("disabled", false);
+              $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved successfully!</div>');
+            },
+            error: function(xhr, error, ex) {
+              btn.attr("disabled", false);
+              $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed!</div>');
+            }
+          });
+
+          return false;
+
+      });
+
     });
 
-    $('#save').click( function() {
-
-        var btn = $(this)
-        btn.attr("disabled", true);
-        var data = {};
-        var i = 0;
-        $("#matchups tbody tr").each( function() {
-          if (this.id) {
-            var debateId = this.id;
-            data['debate_' + this.id] = this.id;
-          } else {
-            var debateId = i;
-            data['new_debate_' + i] = true;
-            i += 1
-          }
-          var aff = $(".aff-holder", this);
-          var aff = $(".team", aff)[0];
-          if (typeof aff !== 'undefined') {
-            data['aff_' + debateId] = aff.id
-          } else {
-            data['aff_' + debateId] = '';
-          }
-
-          var neg = $(".neg-holder", this);
-          var neg = $(".team", neg)[0];
-          if (typeof neg !== 'undefined') {
-            data['neg_' + debateId] = neg.id
-          } else {
-            data['neg_' + debateId] = '';
-          }
-        });
-
-        $.ajax( {
-          type: "POST",
-          url: "{% round_url save_matchups %}",
-          data: data,
-          success: function(data, status) {
-            btn.attr("disabled", false);
-            $("#alerts-holder").html('<div class="alert alert-success alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved successfully!</div>');
-          },
-          error: function(xhr, error, ex) {
-            btn.attr("disabled", false);
-            $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed!</div>');
-          }
-        });
-
-        return false;
-
-    });
-
-  });
-
-</script>
+  </script>
 {% endblock js %}
