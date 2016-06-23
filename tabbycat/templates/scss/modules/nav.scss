@@ -1,13 +1,14 @@
 @import "partials/variables";
 
-//
-// OVERALL LAYOUT
-//
-// ADMIN SIDEBAR STRUCTURE
+//------------------------------------------------------------------------------
+// Admin Sidebar
+//------------------------------------------------------------------------------
 
+// Offset the sidebar; should be nav-sidebar + 15
 .nav-sidebar-offset {
-  padding-left: $sidebar-width + 15px; // Offset the sidebar; should be nav-sidebar + 15
+  padding-left: $sidebar-width + 15px;
 }
+
 .nav-sidebar {
   background: $sidebar-bg;
   width: $sidebar-width;
@@ -16,11 +17,13 @@
   z-index: 100;
   padding-left: 0;
   padding-top: 0; // So the pill hover isn't flush
+
   .overflow-scroll-wrapper {
     overflow-y: scroll;
     height: 100%;
   }
-  // Title
+
+  // Title Element
   #tournament_select {
     padding: 16px 16px 16px 16px;
     margin-left: 0;
@@ -42,6 +45,11 @@
     width: 100%;
   }
 }
+
+//------------------------------------------------------------------------------
+// Tournament Drop Down Menu
+//------------------------------------------------------------------------------
+
 // Tournament Nav
 #tournament_select_menu {
   width: $sidebar-width - 7px;
@@ -55,121 +63,4 @@
     }
   }
 }
-// Navigation Elements
-.nav-accordion {
-  // Structure and background highlights
-  li.panel, li.standalone {
-    margin: 0px 0 0 0; // override
-    background: none; // override
-    border: 0;
-    box-shadow: none;
-    // All Buttons
-    a {
-      color: $sidebar-muted-text;
-      font-size: $font-size-h6;
-      font-family: $font-family-sans-serif;
-      padding: 6px 16px 6px 19px;
-      display: block;
-      .glyphicon {
-        margin-right: 12px; // Top categories for left hand menu
-      }
-      &:hover, &.active, &:focus {
-        text-decoration: none;
-        color: #fff;
-        background: $sidebar-bg-highlight;
-      }
-    }
-  }
-  li.panel li a .glyphicon {
-    margin-right: 15px; // For the options in the Setup sub menu
-  }
-  .panel-collapse {
-    background: $sidebar-bg-highlight;
-  }
-  // Just top level buttons
-  // EXPANDED
-  li.panel div[role="tab"] a[aria-expanded="true"] {
-    background: $sidebar-bg-highlight;
-    .caret {
-      margin-top: 7px;
-      transform: rotate(0deg);
-    }
-  }
-  // NOT EXPANDED
-  li.panel div[role="tab"] a[aria-expanded="false"] {
-    .caret {
-      margin-top: 7px;
-      transform: rotate(90deg);
-      transition: 0.3s ease-in-out;
-    }
-  }
-}
 
-// Elements
-.progress-line {
-  position: absolute;
-  width: 8px;
-  height: 100%;
-  margin: 20px 0 0 21px;
-  z-index: -10;
-  &.standard-line {
-    background: $gray;
-  }
-}
-.circle-icon {
-  background: #fff;
-  border: 3px solid #444;
-  width: 22px;
-  height: 22px;
-  border-radius: 21.5px;
-  display: inline-block;
-  float: left;
-  margin: -1px 10px 0px -5px;
-  z-index: 10;
-
-  .glyphicon {
-    margin-left: 2px;
-  }
-  &.btn-success {
-    background: $btn-success-bg;
-  }
-  &.btn-info {
-    background: $btn-info-bg;
-  }
-  &.btn-inactive {
-    background: darken($gray-lighter, 3);
-  }
-  &.icon-container {
-    background: #444;
-  }
-}
-.nav-stacked .nav-stacked {
-  .progress-line {
-    margin: -3px 0 0 21px;
-    height: 35px;
-    z-index: 10;
-  }
-  a {
-    z-index: 20;
-  }
-}
-.nav-accordion li.panel a:hover {
-  .circle-icon {
-    border-color: #888;
-  }
-  .icon-container {
-    color: #fff;
-    border-color: #444;
-  }
-}
-.sub-nav {
-  .circle-icon {
-    width: 18px;
-    height: 18px;
-    margin: -2px 12px -3px -6px;
-  }
-  .progress-line {
-    width: 6px;
-    margin-left: 27px;
-  }
-}

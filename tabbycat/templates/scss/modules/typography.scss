@@ -1,6 +1,9 @@
 @import '../partials/variables';
 
-// WEB FONTS
+//------------------------------------------------------------------------------
+// Web Fonts
+//------------------------------------------------------------------------------
+
 @font-face {
   font-family: 'LatoLatinWeb';
   src: url('/static/fonts/lato-normal.eot');
@@ -12,21 +15,24 @@
   text-rendering: optimizeLegibility;
 }
 
-// UTILITIES
+//------------------------------------------------------------------------------
+// Text Utilities
+//------------------------------------------------------------------------------
 
 .text-muted {
   color: $gray-light;
 }
-// Override headings
+
+// Override option for headings
 .text-body {
   font-family: $font-family-sans-serif;
 }
+
 // Mostly for hiding it in extra lines on table cells
 .hide-underline {
   border-bottom: 2px solid #fff;
 }
 
-// EMOJI
 .emoji {
   display: inline-block;
   font-family: sans-serif; // Need to be a system font or they wont show
@@ -35,11 +41,15 @@
   margin-right: 1px;
   min-width: 20px;
 }
+
 .small .emoji {
   min-width: 13px;
 }
 
-// BUTTONS
+//------------------------------------------------------------------------------
+// Buttons
+//------------------------------------------------------------------------------
+
 .nav {
   // Actionable elements (buttons, navs) should be distinct
   font-family: $headings-font-family;
@@ -47,21 +57,4 @@
 
 .nav-pills a.btn-default {
   color: $brand-primary;
-}
-
-.nav-tabs a {
-  letter-spacing: .5px;
-}
-
-// Tooltips
-[data-toggle='tooltip'] {
-  &:hover {
-    cursor: pointer; // for tooltips
-    span {
-      border-color: $brand-primary;
-    }
-  }
-  span {
-    border-bottom: 2px dotted #ccc;
-  }
 }

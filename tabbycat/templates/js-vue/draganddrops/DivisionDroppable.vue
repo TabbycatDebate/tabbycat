@@ -1,3 +1,10 @@
+<style>
+  .division-droppable {
+    min-height: 66px; // Don't expand when the first team is added
+    padding: 5px;
+  }
+</style>
+
 <template>
   <div class="col-md-3">
     <div class="panel panel-default" v-bind:class="{ 'panel-danger': hasEvenNumbers }">

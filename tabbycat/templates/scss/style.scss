@@ -1,70 +1,23 @@
-//------------------------------------------------------------------------------
-// Bootstrap
-//------------------------------------------------------------------------------
 
-// Our overrides
+// Our overrides (load before bootstrap)
 @import 'partials/variables';
-// Core variables and mixins
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
-// Reset
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/normalize';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/print';
-// Core CSS
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/type';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/code';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/grid';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/tables';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/forms';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/buttons';
-// Components
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/component-animations';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/glyphicons';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/dropdowns';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/button-groups';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/input-groups';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navs';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navbar';
-// @import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/breadcrumbs';
-// @import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/pagination';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/pager';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/labels';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/badges';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/jumbotron';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/thumbnails';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/alerts';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/progress-bars';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/media';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/list-group';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/panels';
-// @import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/wells';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/close';
-// Components w/ JavaScript
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/modals';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/tooltip';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/popovers';
-// @import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/carousel';
-// Utility classes
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/utilities';
-@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities';
+@import 'components/bootstrap';
 
-//------------------------------------------------------------------------------
-// Tabbycat
-//------------------------------------------------------------------------------
-
-@import 'modules/typography';
-@import 'modules/nav';
+@import 'modules/allocation-old';
 @import 'modules/footer';
-@import 'modules/tables';
 @import 'modules/forms';
-@import 'modules/base';
-@import 'modules/colors';
 @import 'modules/interaction';
-@import 'modules/datavis';
-
-@import 'modules/allocation';
+@import 'modules/layout';
+@import 'modules/nav';
 @import 'modules/print';
+@import 'modules/tables';
+@import 'modules/typography';
+
+@import 'components/datavis';
+@import 'components/drag-and-drop';
+@import 'components/page-specific';
+@import 'components/status-highlights';
+@import 'components/sidebar-round-progress';
 
 //------------------------------------------------------------------------------
 // Below should be refactored
@@ -74,261 +27,228 @@
   display: none; // Remove when jquery UI is removed
 }
 
-@import 'components/page-specific';
-@include text-emphasis-variant('.text-success', $brand-success);
-@include text-emphasis-variant('.text-info', $brand-info);
-@include text-emphasis-variant('.text-warning', $brand-warning);
-@include text-emphasis-variant('.text-danger', $brand-danger);
+// // For the collapsedmdouble menu
+// .navbar-nav {
+//   @media (max-width: $screen-xs-max) {
+//     &.navbar-left {
+//       float: left;
+//       width: 40%;
+//     }
 
-.no-vertical-spacing,
-table.table > thead > tr > th.no-vertical-spacing,
-table.table > tbody > tr > td.no-vertical-spacing {
-  padding-top: 0;
-  padding-bottom: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-}
+//     &.navbar-right {
+//       float: right;
+//       width: 60%;
+//     }
 
-.no-horizontal-spacing,
-table.table > thead > tr > th.no-horizontal-spacing,
-table.table > tbody > tr > td.no-horizontal-spacing {
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: 0;
-  margin-right: 0;
-}
+//     .dropdown-menu .dropdown.open ul {
+//       clear: both;
+//     }
 
-.no-borders,
-.table > thead > tr > th.no-borders,
-.table > tbody > tr > td.no-borders {
-  border-bottom: 0;
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-}
+//     .dropdown.open li {
+//       display: block;
+//     }
 
-// For the collapsedmdouble menu
-.navbar-nav {
-  @media (max-width: $screen-xs-max) {
-    &.navbar-left {
-      float: left;
-      width: 40%;
-    }
+//     .dropdown.open li a {
+//       padding-left: 15px;
+//       padding-right: 0;
+//     }
 
-    &.navbar-right {
-      float: right;
-      width: 60%;
-    }
+//     .dropdown.open .divider {
+//       display: none;
+//     }
 
-    .dropdown-menu .dropdown.open ul {
-      clear: both;
-    }
+//     .dropdown.open .dropdown-menu {}
+//   }
+// }
+// // Universal Style overrides
+// .page-header h1 {
+//   margin-top: 0; // fixes button alignment easily
+// }
 
-    .dropdown.open li {
-      display: block;
-    }
+// .alert-link {
+//   text-decoration: underline;
+//   font-weight: normal;
+// }
 
-    .dropdown.open li a {
-      padding-left: 15px;
-      padding-right: 0;
-    }
+// .check_target {
+//   cursor: pointer;
+// }
+// // Forms
+// #resultsForm {
+//   overflow: hidden;
+// }
 
-    .dropdown.open .divider {
-      display: none;
-    }
+// input.error,
+// select.error,
+// .error input {
+//   background: $state-danger-bg;
+//   border-color: $state-danger-text;
+//   color: $state-danger-text;
+// }
 
-    .dropdown.open .dropdown-menu {}
-  }
-}
-// Universal Style overrides
-.page-header h1 {
-  margin-top: 0; // fixes button alignment easily
-}
+// .errorlist {
+//   list-style-type: none;
+//   margin: 0;
+//   padding: 0;
+// }
 
-.alert-link {
-  text-decoration: underline;
-  font-weight: normal;
-}
+// .error,
+// .errorlist li {
+//   border-color: $state-danger-text;
+//   color: $state-danger-text;
+// }
 
-.check_target {
-  cursor: pointer;
-}
-// Forms
-#resultsForm {
-  overflow: hidden;
-}
+// .form-control-parent input {
+//   @extend .form-control;
+// }
 
-input.error,
-select.error,
-.error input {
-  background: $state-danger-bg;
-  border-color: $state-danger-text;
-  color: $state-danger-text;
-}
+// .ballot-errors .errorlist {
+//   list-style-type: disc;
+//   margin: 0 2.5em;
+//   padding: 0;
+// }
 
-.errorlist {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
+// .forfeits-group ul {
+//   list-style-type: none;
 
-.error,
-.errorlist li {
-  border-color: $state-danger-text;
-  color: $state-danger-text;
-}
+//   label {
+//     width: 200px;
+//     input[type='radio'].form-control {
+//       float: left;
+//       margin-right: 6px;
+//       margin-top: -8px;
+//     }
+//   }
 
-.form-control-parent input {
-  @extend .form-control;
-}
+//   li {
+//     display: inline;
+//   }
+// }
 
-.ballot-errors .errorlist {
-  list-style-type: disc;
-  margin: 0 2.5em;
-  padding: 0;
-}
+// input[type='radio'].form-control,
+// input[type='checkbox'].form-control {
+//   display: inline;
+//   margin-top: 0;
+//   max-width: 20px;
+// }
+// // Modals
+// .modal-body {
+//   overflow: auto;
+// }
 
-.forfeits-group ul {
-  list-style-type: none;
+// .modal-lg {
+//   width: 98%;
+// }
+// // Tables - Specific
+// .adj-chair {
+//   text-decoration: underline;
+// }
 
-  label {
-    width: 200px;
-    input[type='radio'].form-control {
-      float: left;
-      margin-right: 6px;
-      margin-top: -8px;
-    }
-  }
+// .adj-trainee {
+//   font-style: italic;
+// }
+// // Ballots
+// .scoresheet {
+//   .score input {
+//     width: 70px;
+//   }
 
-  li {
-    display: inline;
-  }
-}
+//   .aff_total,
+//   .neg_total {
+//     width: 70px;
+//     font-weight: bold;
+//     cursor: default;
+//   }
+// }
 
-input[type='radio'].form-control,
-input[type='checkbox'].form-control {
-  display: inline;
-  margin-top: 0;
-  max-width: 20px;
-}
-// Modals
-.modal-body {
-  overflow: auto;
-}
+// // Motions
+// .assign-motions .list-group-item-text {
+//   height: 54px;
+//   overflow: hidden;
+// }
 
-.modal-lg {
-  width: 98%;
-}
-// Tables - Specific
-.adj-chair {
-  text-decoration: underline;
-}
+// // Scoresheets
+// .scoresheet-view {
+//   .control-label {
+//     text-align: right;
+//     vertical-align: middle;
+//   }
 
-.adj-trainee {
-  font-style: italic;
-}
-// Ballots
-.scoresheet {
-  .score input {
-    width: 70px;
-  }
+//   .score {
+//     width: 70px;
+//     text-align: right;
+//   }
 
-  .aff_total,
-  .neg_total {
-    width: 70px;
-    font-weight: bold;
-    cursor: default;
-  }
-}
+//   .total {
+//     padding-top: 5px;
+//     padding-bottom: 5px;
+//   }
 
-// Motions
-.assign-motions .list-group-item-text {
-  height: 54px;
-  overflow: hidden;
-}
+//   .total.score {
+//     font-weight: bold;
+//     border-radius: 3px;
+//   }
 
-// Scoresheets
-.scoresheet-view {
-  .control-label {
-    text-align: right;
-    vertical-align: middle;
-  }
+//   .win {
+//     background-color: #47a447;
+//     color: white;
+//     border-color: #398439;
+//   }
 
-  .score {
-    width: 70px;
-    text-align: right;
-  }
+//   .loss {
+//     background-color: #d2322d;
+//     color: white;
+//     border-color: #ac2925;
+//   }
 
-  .total {
-    padding-top: 5px;
-    padding-bottom: 5px;
-  }
+//   .motion-veto {
+//     text-decoration: line-through;
+//   }
+// }
 
-  .total.score {
-    font-weight: bold;
-    border-radius: 3px;
-  }
+// .team-tab a.team-score {
+//   // Darker than normal link, but not black
+//   color: #285379;
+// }
 
-  .win {
-    background-color: #47a447;
-    color: white;
-    border-color: #398439;
-  }
+// .feedback-integer-scale-table {
+//   width: 100%;
+// }
 
-  .loss {
-    background-color: #d2322d;
-    color: white;
-    border-color: #ac2925;
-  }
+// .feedback-integer-scale-table td {
+//   text-align: center;
+// }
 
-  .motion-veto {
-    text-decoration: line-through;
-  }
-}
+// .feedback-integer-scale-table input[type='radio'].form-control {
+//   width: 20px;
+//   margin: 0 auto;
+//   vertical-align: middle;
+//   display: block;
+// }
 
-.team-tab a.team-score {
-  // Darker than normal link, but not black
-  color: #285379;
-}
+// .feedback-multiple-select .feedback-option {
+//   display: inline-block;
+// }
 
-.feedback-integer-scale-table {
-  width: 100%;
-}
+// .feedback-multiple-select .feedback-option label {
+//   margin-right: 20pt;
+// }
 
-.feedback-integer-scale-table td {
-  text-align: center;
-}
+// .feedback-multiple-select input[type='checkbox'].form-control {
+//   vertical-align: middle;
+//   width: 20px;
+// }
 
-.feedback-integer-scale-table input[type='radio'].form-control {
-  width: 20px;
-  margin: 0 auto;
-  vertical-align: middle;
-  display: block;
-}
+// .forms-block-inline form {
+//   display: inline-block;
+// }
 
-.feedback-multiple-select .feedback-option {
-  display: inline-block;
-}
+// @media (max-width: $screen-xs-max) {
+//   .page-header {
+//     margin-top: 0;
+//   }
 
-.feedback-multiple-select .feedback-option label {
-  margin-right: 20pt;
-}
-
-.feedback-multiple-select input[type='checkbox'].form-control {
-  vertical-align: middle;
-  width: 20px;
-}
-
-.forms-block-inline form {
-  display: inline-block;
-}
-
-@media (max-width: $screen-xs-max) {
-  .page-header {
-    margin-top: 0;
-  }
-
-  #header-options {
-    min-height: 82px;
-  }
-}
+//   #header-options {
+//     min-height: 82px;
+//   }
+// }

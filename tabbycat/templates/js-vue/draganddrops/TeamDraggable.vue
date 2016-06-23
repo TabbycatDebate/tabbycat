@@ -1,3 +1,15 @@
+<style>
+.slideover-info {
+  width: auto;
+  position: fixed;
+  height: 75px;
+  bottom: 0;
+  right: 15px;
+  left: 15px;
+  z-index: 1040; // See boostrap zindex list; this puts it above the navs
+}
+</style>
+
 <template>
 
   <div class="vue-draggable btn btn-sm"
