@@ -84,7 +84,6 @@ function initChart(vueContext){
     .attr("width", x.rangeBand());
 
   function formatTimeAgo(time) {
-    console.log(time);
     if (time < 120) {
       // Less than two hours
       return "-" + time + "m";

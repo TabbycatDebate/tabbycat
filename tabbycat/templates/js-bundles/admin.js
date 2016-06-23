@@ -5,8 +5,7 @@ import vueBases from './main.js';
 // Redefine so they can be edited
 var vueComponents = vueBases.baseComponents;
 var vueData = vueBases.baseData;
-var vueMethods = null;
-var vueCreated = null;
+var vueMethods = null, vueCreated = null, vueFilters = null, vueEvents = null;
 
 //------------------------------------------------------------------------------
 // Tournament Homepage
@@ -66,6 +65,22 @@ if (typeof printableBaseData !== 'undefined' && printableBaseData !== null) {
 }
 
 //------------------------------------------------------------------------------
+// Divisons Allocator
+//------------------------------------------------------------------------------
+
+import DivisionDroppable from  '../js-vue/draganddrops/DivisionDroppable.vue'
+import TeamDraggable from  '../js-vue/draganddrops/TeamDraggable.vue'
+
+if (typeof divisionsBaseData !== 'undefined' && divisionsBaseData !== null) {
+  vueData = divisionsBaseData; // From Template
+  vueMethods = divisionsMethods; // From Template
+  vueEvents = divisionsEvents; // From Template
+  vueFilters = divisionsFilters; // From Template
+  vueComponents['DivisionDroppable'] = DivisionDroppable;
+  vueComponents['TeamDraggable'] = TeamDraggable;
+}
+
+//------------------------------------------------------------------------------
 // Main Vue Instance
 //------------------------------------------------------------------------------
 
@@ -73,8 +88,10 @@ if (typeof bypassMainVue === 'undefined') {
   new Vue({
     el: 'body',
     components: vueComponents,
+    created: vueCreated,
     data: vueData,
-    methods: vueMethods,
-    created: vueCreated
+    events: vueEvents,
+    filters: vueFilters,
+    methods: vueMethods
   });
 }

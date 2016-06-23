@@ -1,5 +1,4 @@
-<!-- Table Template -->
-<script type="text/x-template" id="debate-importance">
+<template>
 
   <td>
 
@@ -17,32 +16,24 @@
 
   </td>
 
-</script>
+</template>
 
 <!-- Table Component Behaviour -->
 <script>
-
-  // Define the component
-  var debateImportance = Vue.extend({
-    template: '#debate-importance',
-    mixins: [ajaxMixin],
-    props: {
-      componentData: Object,
-    },
-    methods: {
-      // Call into the ajax mixin
-      updateImportance: function() {
-        var data = {
-            debate_id: this.componentData.id,
-            importance: this.componentData.importance
-        }
-        this.update(this.componentData.url, data, 'debate importance')
+export default {
+  mixins: [ajaxMixin],
+  props: {
+    componentData: Object,
+  },
+  methods: {
+    // Call into the ajax mixin
+    updateImportance: function() {
+      var data = {
+          debate_id: this.componentData.id,
+          importance: this.componentData.importance
       }
+      this.update(this.componentData.url, data, 'debate importance')
     }
-  })
-  pluginComponents.push({
-    template: 'debate-importance',
-    reference: debateImportance
-  })
-
+  }
+}
 </script>

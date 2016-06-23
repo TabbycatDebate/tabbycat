@@ -1,15 +1,11 @@
-
-<script type="text/x-template" id="unallocated-droppable">
-
-    <adj-draggable v-for="adj in adjs" :adj="adj"></adj-draggable>
-
-</script>
+<template>
+  <adj-draggable v-for="adj in adjs" :adj="adj"></adj-draggable>
+</template>
 
 <script>
-  Vue.component('unallocated-droppable', {
-    props: {
-        adjs: Array
-    },
-    template: 'unallocated-droppable',
-  })
+export default {
+  props: {
+    adjs: Array
+  },
+}
 </script>

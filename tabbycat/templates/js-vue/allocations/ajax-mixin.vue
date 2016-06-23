@@ -1,5 +1,5 @@
 <script>
-var ajaxMixin = {
+export default {
   methods: {
     update: function (url, data, resourceType) {
       $.ajax({

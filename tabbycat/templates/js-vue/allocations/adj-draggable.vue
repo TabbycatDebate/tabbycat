@@ -1,29 +1,13 @@
-<!-- Table Template -->
-<script type="text/x-template" id="adj-draggable">
+<template>
 
   <div>
 
   </div>
 
-</script>
+</template>
 
-<!-- Team Draggable Component Behaviour -->
 <script>
+export default {
 
-  // Define the component
-  var adjDraggable = Vue.extend({
-    template: '#adj-draggable',
-    // mixins: [ajaxMixin],
-    // props: {
-    //    componentData: Object,
-    // },
-    // methods: {
-    // }
-  })
-
-  pluginComponents.push({
-    template: 'adj-draggable',
-    reference: adjDraggable
-  })
-
+}
 </script>

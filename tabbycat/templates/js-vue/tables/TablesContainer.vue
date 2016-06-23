@@ -8,12 +8,12 @@
       </div>
       <div class="panel-body">
         <smart-table
-            :table-headers="tableData['head']"
-            :table-content="tableData['data']"
-            :table-class="tableData['class']"
-            :filter-key=""
-            :default-sort-key="tableData['sort_key']"
-            :default-sort-order="tableData['sort_order']">
+          :table-headers="tableData['head']"
+          :table-content="tableData['data']"
+          :table-class="tableData['class']"
+          :filter-key=""
+          :default-sort-key="tableData['sort_key']"
+          :default-sort-order="tableData['sort_order']">
         </smart-table>
       </div>
     </div>

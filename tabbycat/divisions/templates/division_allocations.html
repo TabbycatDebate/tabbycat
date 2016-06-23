@@ -23,88 +23,78 @@
 
 {% block content %}
 
-  <!-- demo root element -->
-  <div id="app">
+  <div class="row divisions-holder">
+    <template v-for="division in divisions | orderBy 'parseInt(name)'" track-by="id">
+      <division-droppable
+        save-vg-at="{% tournament_url set_division_venue_group %}"
+        save-division-at="{% tournament_url set_team_division %}"
+        :division="division"
+        :teams="teams | exactFilterBy division.id in 'division'"
+        :vgs="venueGroups">
+      </division-droppable>
+    </template>
+  </div>
 
-    <div class="row divisions-holder">
-
-      <template v-for="division in divisions | orderBy 'parseInt(name)'" track-by="id">
-        <division-droppable save-vg-at="{% tournament_url set_division_venue_group %}" save-division-at="{% tournament_url set_team_division %}"
-        :division="division" :teams="teams | exactFilterBy division.id in 'division'" :vgs="venueGroups"></division-droppable>
-      </template>
-
-    </div>
-
-    <div class="row">
-      <div class="col-md-12" class="row">
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4>Teams without Divisions</h4>
-          </div>
-          <div class="panel-body" v-on:dragover.prevent v-on:drop="unallocateTeam" data-id=null>
-            <template v-for="team in teams | exactFilterBy null in 'division' | orderBy 'institution__code'" track-by="id">
-              <team-draggable :team="team" save-division-at="{% tournament_url set_team_division %}"></team-draggable>
-            </template>
-          </div>
+  <div class="row">
+    <div class="col-md-12" class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Teams without Divisions</h4>
         </div>
-
+        <div class="panel-body"
+          v-on:dragover.prevent
+          v-on:drop="unallocateTeam"
+          data-id=null>
+          <template v-for="team in teams | exactFilterBy null in 'division' | orderBy 'institution__code'" track-by="id">
+            <team-draggable
+              :team="team"
+              save-division-at="{% tournament_url set_team_division %}">
+            </team-draggable>
+          </template>
+        </div>
       </div>
     </div>
-
   </div>
+
 
 {% endblock content %}
 
 {% block js %}
-
-  {{ block.super }}
-  <!-- TODO: bundle -->
-  {% include "js-vue/team-draggable.vue" %}
-  {% include "js-vue/division-droppable.vue" %}
-
   <script>
-
-  // Normal vue filterBy thinks 1 is in 12
-  Vue.filter('exactFilterBy', function(array, needle, inKeyword, key) {
-    return array.filter(function(item) {
-        return item[key] == needle;
-    });
-  });
-  /* globals Vue */
-  var App = new Vue({
-    el: '#app',
-    data: {
-      draggedComponent: null,
-      teams: {{ teams | safe }},
-      divisions: {{ divisions | safe }},
-      venueGroups: {{ venue_groups | safe }}
-    },
-    methods: {
-      unallocateTeam: function(ev) {
-        console.log('unallocate');
-        this.draggedComponent.team.division = null;
-        this.draggedComponent.saveDivision();
-      }
-    },
-    events: {
-      // Set a global record of what is being dragged
-      'dragging-team': function (component) {
-        //console.log('started dragging team:' + teamID)
-        this.draggedComponent = component;
-      },
-      'stopped-dragging': function () {
-        //console.log('stopped dragging')
-        this.draggedComponent = null;
-      },
-      'assign-team-to-division': function (droppedDivision) {
-        console.log('team id ' + this.draggedComponent.team.id + ' to divison ' + droppedDivision.id);
-        this.draggedComponent.team.division = droppedDivision.id;
-        this.draggedComponent.saveDivision();
-      }
+  var divisionsBaseData = {
+    draggedComponent: null,
+    teams: {{ teams | safe }},
+    divisions: {{ divisions | safe }},
+    venueGroups: {{ venue_groups | safe }}
+  }
+  // Todo: create a DivisionsContainer; move these methods there
+  var divisionsMethods = {
+    unallocateTeam: function(ev) {
+      this.draggedComponent.team.division = null;
+      this.draggedComponent.saveDivision();
     }
-  });
-
+  }
+  var divisionsEvents = {
+    // Set a global record of what is being dragged
+    'dragging-team': function (component) {
+      this.draggedComponent = component;
+    },
+    'stopped-dragging': function () {
+      this.draggedComponent = null;
+    },
+    'assign-team-to-division': function (droppedDivision) {
+      this.draggedComponent.team.division = droppedDivision.id;
+      this.draggedComponent.saveDivision();
+    }
+  }
+  var divisionsFilters = {
+    exactFilterBy: function(array, needle, inKeyword, key) {
+      return array.filter(function(item) {
+          return item[key] == needle;
+      });
+    }
+  }
   </script>
+  {{ block.super }}
 
 {% endblock js %}
