@@ -1,13 +1,24 @@
 from django.db import models
 from django.db.models import signals
 from django.core.cache import cache
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.functional import cached_property
 
 from participants.emoji import EMOJI_LIST
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+PROHIBITED_TOURNAMENT_SLUGS = ['start', 'create', 'jet', 'admin', 'accounts', 'favicon.ico', 't', '__debug__']
+
+def validate_tournament_slug(value):
+    if value in PROHIBITED_TOURNAMENT_SLUGS:
+        raise ValidationError(
+            "You can't use any of the following as tournament slugs, because "
+            "they're reserved for Tabbycat system URLs: %(prohibited_list)s.",
+            params={'prohibited_list': ", ".join(PROHIBITED_TOURNAMENT_SLUGS)}
+        )
 
 
 class Tournament(models.Model):
@@ -18,7 +29,7 @@ class Tournament(models.Model):
     emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
     seq = models.IntegerField(blank=True, null=True,
         help_text="A number that determines the relative order in which tournaments are displayed on the homepage.")
-    slug = models.SlugField(unique=True,
+    slug = models.SlugField(unique=True, validators=[validate_tournament_slug],
         help_text="The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\"")
     current_round = models.ForeignKey('Round', null=True, blank=True, related_name='tournament_',
         help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
