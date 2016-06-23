@@ -8,20 +8,19 @@
 
 {% block content %}
 
-    <template v-for="ballot in ballots">
-      <div class="db-page-holder">
-  		  <main role="main" class="db-page db-flex-column db-page-landscape">
-          <base-ballot :data="$data" :ballot="ballot" :motions="motions"></base-ballot>
-        </main>
-      </div>
-    </template>
+  <template v-for="ballot in ballots">
+    <div class="db-page-holder">
+		  <main role="main" class="db-page db-flex-column db-page-landscape">
+        <ballot :data="$data" :ballot="ballot" :motions="motions"></ballot>
+      </main>
+    </div>
+  </template>
 
 {% endblock content %}
 
 {% block js %}
-  {{ block.super }}
   <script>
-    var baseData = {
+    var printableBaseData = {
       // Strings to Fill In
       tournamentName: "{{ tournament }}",
       returnLocation: "{{ pref.score_return_location }}",
@@ -41,10 +40,7 @@
       ballots: {{ ballots|safe }},
       motions: {{ motions|safe }},
     }
-    new Vue({
-      el: '#debateballots',
-      data: baseData,
-    })
   </script>
+  {{ block.super }}
 
 {% endblock js %}

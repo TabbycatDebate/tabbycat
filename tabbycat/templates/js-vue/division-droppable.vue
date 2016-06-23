@@ -6,13 +6,13 @@
 
       <div class="panel-heading division-heading">
 
-        <h5>D[[ division.name ]] ([[ teams.length ]])</h5>
+        <h5>D{{ division.name }} ({{ teams.length }})</h5>
 
         <select name="select" class="form-control" v-model="division.venue_group">
 
           <option value=""></option>
-          <option v-for="vg in vgs" value="[[ vg.id ]]" v-bind:value="vg.id">
-            [[ vg.short_name ]]
+          <option v-for="vg in vgs" value="{{ vg.id }}" v-bind:value="vg.id">
+            {{ vg.short_name }}
           </option>
 
         </select>
@@ -21,7 +21,7 @@
 
       <div class="panel-body division-droppable" v-on:dragover.prevent v-on:drop="receiveTeam"
         v-on:dragenter="handleDragEnter" v-on:dragleave="handleDragLeave"
-        v-bind:class="{ 'vue-is-drag-enter': isDroppable }" data-id="[[ division.id ]]">
+        v-bind:class="{ 'vue-is-drag-enter': isDroppable }" data-id="{{ division.id }}">
         <template v-for="team in teams" track-by="id">
           <team-draggable :team="team" :vg="division.venue_group" :save-division-at="saveDivisionAt"></team-draggable>
         </template>

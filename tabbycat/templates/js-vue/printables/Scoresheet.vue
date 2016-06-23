@@ -6,10 +6,10 @@
       <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
         Your panellists are
         <span v-for="(i, adj) in ballotsExcludingSelf">
-          <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>[[ adj.name ]]</strong>
-          <span v-if="adj.position === 'C'">(Chair, [[ adj.institution]])</span>
-          <span v-if="adj.position === 'P'">(Panellist, [[ adj.institution]])</span>
-          <span v-if="adj.position === 'T'">(Trainee, [[ adj.institution]])</span>
+          <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ adj.name }}</strong>
+          <span v-if="adj.position === 'C'">(Chair, {{ adj.institution }})</span>
+          <span v-if="adj.position === 'P'">(Panellist, {{ adj.institution }})</span>
+          <span v-if="adj.position === 'T'">(Trainee, {{ adj.institution }})</span>
         </span>
       </div>
     </div>
@@ -21,7 +21,7 @@
         Motion:
       </div>
       <div class="db-flex-item db-align-vertical-center">
-        <em>[[ motions[0].text ]]</em>
+        <em>{{ motions[0].text }}</em>
       </div>
     </div>
   </section>
@@ -34,7 +34,7 @@
       </div>
       <div class="db-flex-item-1 db-flex-row">
         <div v-for="(index, item) in motions" class="db-align-horizontal-center db-align-vertical-center db-align-horizontal-center db-flex-item-1 db-center-text db-vertical-center-text">
-          <span class="db-fill-in">[[ index + 1 ]]</span>
+          <span class="db-fill-in">{{ index + 1 }}</span>
         </div>
       </div>
       <div class="db-item-gutter"></div>
@@ -43,7 +43,7 @@
       </div>
       <div class="db-flex-item-1 db-flex-row">
         <div v-for="(index, item) in motions" class="db-align-horizontal-center db-align-vertical-center db-align-horizontal-center db-flex-item-1 db-center-text db-vertical-center-text">
-          <span class="db-fill-in">[[ index + 1 ]]</span>
+          <span class="db-fill-in">{{ index + 1 }}</span>
         </div>
       </div>
       <div class="db-item-gutter"></div>
@@ -52,14 +52,14 @@
       </div>
       <div class="db-flex-item-1 db-flex-row">
         <div v-for="(index, item) in motions" class="db-align-horizontal-center db-align-vertical-center db-align-horizontal-center db-flex-item-1 db-center-text db-vertical-center-text">
-          <span class="db-fill-in">[[ index + 1 ]]</span>
+          <span class="db-fill-in">{{ index + 1 }}</span>
         </div>
       </div>
     </div>
     <div class="db-item-gutter"></div>
     <div class="db-flex-item-2 db-flex-row db-align-vertical-center">
       <template v-for="(index, item) in motions">
-        [[ index + 1]]: [[ item.text ]]<br>
+        {{ index + 1 }}: {{ item.text }}<br>
       </template>
     </div>
 
@@ -96,7 +96,7 @@
   <section class="db-margins-m db-bordered db-flex-row db-flex-item-1 db-flex-item-1" v-if="showInfo">
     <div class="db-padding-horizontal db-flex-item-1 db-flex-row"><!-- Aff holder -->
       <div class="db-flex-item db-align-vertical-center db-flex-static db-vertical-center-text">
-        [[ infoText ]]
+        {{ infoText }}
       </div>
     </div>
   </section>

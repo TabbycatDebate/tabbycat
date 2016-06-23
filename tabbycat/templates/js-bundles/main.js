@@ -70,5 +70,4 @@ if (typeof graphsData !== 'undefined' && graphsData !== null) {
 export default {
   baseComponents: baseComponents,
   baseData: baseData,
-  test: 'test'
 }

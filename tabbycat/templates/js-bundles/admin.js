@@ -15,7 +15,7 @@ var vueCreated = null;
 import UpdatesList from  '../js-vue/UpdatesList.vue'
 import BallotsGraph from '../js-vue/graphs/BallotsGraph.vue'
 
-if (typeof updateActionsURL !== 'undefined' && updateResultsURL !== null) {
+if (typeof updateActionsURL !== 'undefined' && updateResultsURL !== 'undefined') {
   vueComponents['UpdatesList'] = UpdatesList;
   vueComponents['BallotsGraph'] = BallotsGraph;
   vueData = {
@@ -52,6 +52,17 @@ if (typeof updateActionsURL !== 'undefined' && updateResultsURL !== null) {
     this.updateActions()
     this.updateResults()
   };
+}
+
+//------------------------------------------------------------------------------
+// Printables
+//------------------------------------------------------------------------------
+
+import Ballot from  '../js-vue/printables/Ballot.vue'
+
+if (typeof printableBaseData !== 'undefined' && printableBaseData !== null) {
+  vueData = printableBaseData; // From Template
+  vueComponents['Ballot'] = Ballot;
 }
 
 //------------------------------------------------------------------------------

@@ -1,4 +1,3 @@
-<!-- Streaming Item Updates for TournamentOverview -->
 <template id="ballots-graph">
 
   <svg id="ballotsStatusGraph" class="d3-graph" style="margin-top: -15px; margin-bottom: -15px;" width="100%"></svg>
@@ -7,7 +6,6 @@
 </template>
 
 <script>
-
 var d3 = require("d3");
 
 export default {

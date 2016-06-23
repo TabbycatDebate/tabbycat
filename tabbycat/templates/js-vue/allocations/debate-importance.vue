@@ -4,7 +4,7 @@
   <td>
 
     <span class="hidden">
-      [[ componentData.importance ]]
+      {{ componentData.importance }}
     </span>
 
     <select class="form-control input-sm" v-model="componentData.importance" v-on:change="updateImportance">

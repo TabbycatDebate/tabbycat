@@ -2,13 +2,13 @@
 
   <div class="db-flex-item-2 db-flex-row db-bottom-border">
     <div class="db-padding-horizontal db-flex-item db-align-vertical-center">
-      <h6><span class="emoji" v-if="emoji">[[ emoji ]]</span>&nbsp;[[ name ]]&nbsp;</h6>
+      <h6><span class="emoji" v-if="emoji">{{ emoji }}</span>&nbsp;{{ name }}&nbsp;</h6>
       <em v-for="(index, speaker) in speakers">
-        <span v-if="index !== 0">, </span>[[ speaker ]]
+        <span v-if="index !== 0">, </span>{{ speaker }}
       </em>
     </div>
     <div class="db-padding-horizontal db-flex-static db-align-vertical-center db-flex-static">
-      [[ position ]]
+      {{ position }}
     </div>
     <div class="db-padding-horizontal db-flex-static "></div>
   </div>
@@ -29,7 +29,7 @@
 
   <div class="db-flex-item-2 db-flex-row" v-for="x in data.speakersCount"><!-- Speakers -->
     <div class="db-align-vertical-center db-right-text db-flex-item-fws">
-      [[ x + 1 ]]
+      {{ x + 1 }}
     </div>
     <div v-show="data.showPronouns" class="db-fill-in db-flex-item-fwl">
     </div>

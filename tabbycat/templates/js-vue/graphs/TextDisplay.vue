@@ -1,4 +1,3 @@
-<!-- Pie Graphs for Diversity Reports -->
 <template>
 
   <div class="row">
@@ -30,24 +29,24 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      title: String,
-      graphData: Array,
-      datum: Number,
+export default {
+  props: {
+    title: String,
+    graphData: Array,
+    datum: Number,
+  },
+  methods: {
+    round: function(value) {
+      return parseFloat(Math.round(value * 100) / 100).toFixed(2);
     },
-    methods: {
-      round: function(value) {
-        return parseFloat(Math.round(value * 100) / 100).toFixed(2);
-      },
-      offset: function(value) {
-        var off = this.datum - value
-        if (off > 0) {
-          return "+" + this.round(off)
-        } else {
-          return this.round(off)
-        }
+    offset: function(value) {
+      var off = this.datum - value
+      if (off > 0) {
+        return "+" + this.round(off)
+      } else {
+        return this.round(off)
       }
     }
   }
+}
 </script>

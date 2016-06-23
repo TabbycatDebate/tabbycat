@@ -95,7 +95,7 @@
   {% endblock body %}
 
   {% block js %}
-    {% if 'admin/' in request.path %}
+    {% if user.is_superuser %}
       <script src="{% static 'js/admin.bundle.js' %}"></script>
     {% else %}
       <script src="{% static 'js/public.bundle.js' %}"></script>

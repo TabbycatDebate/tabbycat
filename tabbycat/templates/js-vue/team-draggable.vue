@@ -2,11 +2,11 @@
 <script type="text/x-template" id="team-draggable">
 
   <div class="vue-draggable btn btn-sm" v-bind:class="[preference_allocated, isDragging ? vue-is-dragging : '']"
-    draggable=true v-on:dragstart="handleDragStart" v-on:dragend="handleDragEnd" data-id="[[ team.id ]]"
+    draggable=true v-on:dragstart="handleDragStart" v-on:dragend="handleDragEnd" data-id="{{ team.id }}"
     v-on:mouseenter="show = true" v-on:mouseleave="show = false">
     <span>
-      <span v-if="team.institution__code != 'Byes'">[[ team.institution__code ]]</span>
-      [[ team.short_reference ]]
+      <span v-if="team.institution__code != 'Byes'">{{ team.institution__code }}</span>
+      {{ team.short_reference }}
     </span>
   </div>
 
@@ -17,7 +17,7 @@
           Institutional
         </button>
         <button class="btn tbn-sm btn-default" v-for="preference in team.institutional_preferences">
-          [[ preference.venue_group__short_name ]] <span class="badge">[[ preference.priority]]</span>
+          {{ preference.venue_group__short_name }} <span class="badge">{{ preference.priority }}</span>
         </button>
       </div>
       <div class="btn-group pull-right" role="group">
@@ -25,7 +25,7 @@
           Individual
         </button>
         <button class="btn tbn-sm btn-default" v-for="preference in team.team_preferences">
-          [[ preference.venue_group__short_name ]] <span class="badge">[[ preference.priority]]</span>
+          {{ preference.venue_group__short_name }} <span class="badge">{{ preference.priority }}</span>
         </button>
       </div>
     </div>
