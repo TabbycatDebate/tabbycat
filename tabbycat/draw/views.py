@@ -419,9 +419,9 @@ class DrawMatchupsEditView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     def get_context_data(self, **kwargs):
         round = self.get_round()
         kwargs['unused_teams'] = round.unused_teams()
+        kwargs['draw'] = round.get_draw()
         possible_debates = len(kwargs['unused_teams']) // 2 + 1
         kwargs['possible_debates'] = [None] * possible_debates
-
         return super().get_context_data(**kwargs)
 
 

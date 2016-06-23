@@ -26,7 +26,7 @@
       <tbody>
       </tbody>
     </table>
-    {% for team in round.unused_teams %}
+    {% for team in unused_teams %}
       <div id="team_{{ team.id }}" class="btn btn-default btn-block team">
         <span>{{ team.short_name }} {% if team.division %}<em>(Div{{ team.division.name }})</em>{% endif %}</span>
       </div>
