@@ -27,7 +27,9 @@
 <script>
   import SmartHeader from './Header.vue'
   import SmartCell from './Cell.vue'
+  // Items below here should be admin only ideally
   import FeedbackTrend from '../graphs/FeedbackTrend.vue'
+  import DebateImportance from '../allocations/DebateImportance.vue'
 
   export default {
     props: {
@@ -41,7 +43,8 @@
     components: {
       SmartHeader,
       SmartCell,
-      FeedbackTrend
+      FeedbackTrend,
+      DebateImportance
     },
     data: function () {
       return {

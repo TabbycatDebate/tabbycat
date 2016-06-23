@@ -8,6 +8,18 @@ var vueData = vueBases.baseData;
 var vueMethods = null, vueCreated = null, vueFilters = null, vueEvents = null;
 
 //------------------------------------------------------------------------------
+// Adj Allocation
+//------------------------------------------------------------------------------
+
+import AllocationContainer from '../js-vue/allocations/AllocationContainer.vue'
+
+if (typeof unusedAdjs !== 'undefined' && unusedAdjs !== null) {
+  // All vue data table views must provide this base tablesData in the template
+  vueComponents['AllocationsContainer'] = AllocationContainer;
+  vueData['unusedAdjs'] = unusedAdjs;
+}
+
+//------------------------------------------------------------------------------
 // Tournament Homepage
 //------------------------------------------------------------------------------
 

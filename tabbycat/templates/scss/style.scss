@@ -54,16 +54,17 @@
 //------------------------------------------------------------------------------
 
 @import 'modules/typography';
-@import 'modules/print';
 @import 'modules/nav';
 @import 'modules/footer';
 @import 'modules/tables';
 @import 'modules/forms';
 @import 'modules/base';
 @import 'modules/colors';
-@import 'modules/allocation';
 @import 'modules/interaction';
 @import 'modules/datavis';
+
+@import 'modules/allocation';
+@import 'modules/print';
 
 //------------------------------------------------------------------------------
 // Below should be refactored

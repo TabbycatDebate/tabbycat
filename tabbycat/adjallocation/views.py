@@ -208,7 +208,7 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
 
     def get_context_data(self, **kwargs):
         unused_adjs = self.get_round().unused_adjudicators()
-        kwargs['unAllocatedAdjs'] = [adjs_to_json(a) for a in unused_adjs]
+        kwargs['unAllocatedAdjs'] = adjs_to_json(unused_adjs)
         return super().get_context_data(**kwargs)
 
     def get_table(self):

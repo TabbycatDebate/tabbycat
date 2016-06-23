@@ -4,20 +4,22 @@ from utils.tables import TabbycatTableBuilder
 from utils.misc import reverse_tournament
 
 
-def adjs_to_json(adj):
+def adjs_to_json(adjs):
     """Converts to a standard JSON object for Vue components to use"""
-    data = {
+    data = [{
         'id': adj.id,
         'name': adj.name,
         'gender': adj.gender,
         'institution': {
             'id': adj.institution.id,
             'name': adj.institution.code,
+            'code' : adj.institution.code,
+            'abbreviation' : adj.institution.abbreviation
         },
         'score': 4,
         'conflicts': [],
         'seen': [],
-    }
+    } for adj in adjs]
     return json.dumps(data)
 
 

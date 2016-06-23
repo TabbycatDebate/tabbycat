@@ -1,11 +1,8 @@
 <template>
-
   <td>
-
     <span class="hidden">
       {{ componentData.importance }}
     </span>
-
     <select class="form-control input-sm" v-model="componentData.importance" v-on:change="updateImportance">
       <option value="1">1</option>
       <option value="2">2</option>
@@ -13,15 +10,14 @@
       <option value="4">4</option>
       <option value="5">5</option>
     </select>
-
   </td>
-
 </template>
 
-<!-- Table Component Behaviour -->
 <script>
+import AjaxMixin from '../mixins/AjaxMixin.vue'
+
 export default {
-  mixins: [ajaxMixin],
+  mixins: [AjaxMixin],
   props: {
     componentData: Object,
   },
