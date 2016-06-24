@@ -5,11 +5,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_page
-from django.views.generic.base import TemplateView
+from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.edit import CreateView, FormView
 
 from draw.models import Debate, DebateTeam
@@ -77,8 +77,8 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
                 if tournament.current_round is None:
                     return HttpResponse('<p>Error: This tournament has no rounds; '
                                         ' you\'ll need to add some in the '
-                                        '<a href="/admin/">Edit Database</a> area.'
-                                        '</p>')
+                                        '<a href="' + reverse('admin:tournaments_round_changelist') +
+                                        '">Edit Database</a> area.</p>')
                 messages.warning(self.request, "The current round wasn't set, "
                                  "so it's been automatically set to the first round.")
                 logger.warning("Automatically set current round to {}".format(tournament.current_round))
@@ -183,3 +183,17 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     model = Tournament
     form_class = TournamentForm
     template_name = "create_tournament.html"
+
+
+class TournamentPermanentRedirectView(RedirectView):
+    """Redirect old-style /t/<slug>/... URLs to new-style /<slug>/... URLs."""
+
+    url = "/%(slug)s/%(page)s"
+    permanent = True
+
+    def get_redirect_url(self, *args, **kwargs):
+        slug = kwargs['slug']
+        if not Tournament.objects.filter(slug=slug).exists():
+            logger.error("Tried to redirect non-existent tournament slug '%s'" % slug)
+            raise Http404("There isn't a tournament with slug '%s'." % slug)
+        return super().get_redirect_url(*args, **kwargs)
