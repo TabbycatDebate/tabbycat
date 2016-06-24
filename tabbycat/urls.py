@@ -30,7 +30,7 @@ urlpatterns = [
     # Admin area
     url(r'^jet/',
         include('jet.urls', 'jet')),
-    url(r'^admin/',
+    url(r'^database/',
         include(admin.site.urls)),
 
     # Accounts

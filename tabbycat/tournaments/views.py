@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_page
@@ -78,8 +78,8 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
                 if tournament.current_round is None:
                     return HttpResponse('<p>Error: This tournament has no rounds; '
                                         ' you\'ll need to add some in the '
-                                        '<a href="/admin/">Edit Database</a> area.'
-                                        '</p>')
+                                        '<a href="' + reverse('admin:tournaments_round_changelist') + \
+                                        '">Edit Database</a> area.</p>')
                 messages.warning(self.request, "The current round wasn't set, "
                                  "so it's been automatically set to the first round.")
                 logger.warning("Automatically set current round to {}".format(tournament.current_round))

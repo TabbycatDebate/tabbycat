@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-PROHIBITED_TOURNAMENT_SLUGS = ['start', 'create', 'jet', 'admin', 'accounts', 'favicon.ico', 't', '__debug__']
+PROHIBITED_TOURNAMENT_SLUGS = ['start', 'create', 'jet', 'database', 'admin', 'accounts', 'favicon.ico', 't', '__debug__']
 
 def validate_tournament_slug(value):
     if value in PROHIBITED_TOURNAMENT_SLUGS:
