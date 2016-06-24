@@ -16,7 +16,7 @@ from utils.views import admin_required, expect_post, round_view
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
-from .utils import adjs_to_json, populate_adjs_data, AllocationTableBuilder
+from .utils import adjs_to_json, AllocationTableBuilder, populate_adjs_data
 
 logger = logging.getLogger(__name__)
 
@@ -212,8 +212,8 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
         return super().get_context_data(**kwargs)
 
     def get_table(self):
-        r = self.get_round()
-        draw = r.get_draw()
+        # r = self.get_round()
+        # draw = r.get_draw()
 
         table = AllocationTableBuilder(view=self, sort_order='desc',
             sort_key='importance',

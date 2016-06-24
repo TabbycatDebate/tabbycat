@@ -1,12 +1,13 @@
 import json
 
-from .models import DebateAdjudicator, AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict
+from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
 from availability.models import ActiveAdjudicator
 from draw.models import DebateTeam
 from participants.models import Adjudicator
 from utils.tables import TabbycatTableBuilder
 from utils.misc import reverse_tournament
+
 
 def populate_adjs_data(r):
     t = r.tournament
