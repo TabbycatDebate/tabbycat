@@ -154,7 +154,7 @@ class AdminDrawDisplayForRoundByTeam(DrawTablePage, LoginRequiredMixin):
 # ==============================================================================
 
 class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
-    isDetailed = False
+    detailed = False
 
     def get_table(self):
         r = self.get_round()
@@ -173,7 +173,7 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
             hide_institution=True)
 
         # For draw details and draw draft pages
-        if (r.draw_status == r.STATUS_DRAFT or self.isDetailed) and r.prev:
+        if (r.draw_status == r.STATUS_DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = r.tournament.pref('team_standings_precedence')
             generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
@@ -200,7 +200,7 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
     def get_template_names(self):
         round = self.get_round()
         self.page_emoji = '👀'
-        if self.isDetailed:
+        if self.detailed:
             self.page_title = 'Draw with Details for %s' % round.name
             return ["draw_base.html"]
         if round.draw_status == round.STATUS_NONE:
@@ -222,7 +222,7 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
 
 
 class AdminDrawWithDetailsView(AdminDrawEditView):
-    isDetailed = True
+    detailed = True
 
 
 # ==============================================================================
