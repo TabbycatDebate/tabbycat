@@ -1,5 +1,7 @@
 <template>
 
+  <allocation-actions></allocation-actions>
+
   <div class="container-fluid">
     <div class="col-md-6">
       <div class="alert alert-warning small" role="alert">
@@ -26,6 +28,31 @@
     </div>
   </div>
 
+  <div class="panel panel-default" id="tableContainer{{ table_index }}">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3">
+          <position-droppable
+            :adjudicators="[adjudicators[0]]"
+            :position="C">
+          </position-droppable>
+        </div>
+        <div class="col-md-6">
+          <position-droppable
+            :adjudicators="[adjudicators[3],adjudicators[1]]"
+            :position="P">
+          </position-droppable>
+        </div>
+        <div class="col-md-3">
+          <position-droppable
+            :adjudicators="[adjudicators[4],adjudicators[5]]"
+            :position="T">
+          </position-droppable>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <unallocated-adjudicators
     :adjudicators="unusedAdjudicators">
   </unallocated-adjudicators>
@@ -33,16 +60,26 @@
 </template>
 
 <script>
+import AllocationActions from './AllocationActions.vue'
 import SmartTable from '../tables/Table.vue'
 import UnallocatedAdjudicators from './UnallocatedAdjudicators.vue'
+import PositionDroppable from './PositionDroppable.vue'
 
 export default {
   components: {
-    SmartTable, UnallocatedAdjudicators
+    AllocationActions, SmartTable, UnallocatedAdjudicators, PositionDroppable
   },
   props: {
     adjudicators: Array,
     tableData: Object // Passed down from main.js
+  },
+  methods: {
+    moveToUnused: function(adjId) {
+      var adjToMove = this.adjudidcators.filter(function( adj ) {
+        return adj.id == adjId;
+      });
+      adjToMove.debate = null;
+    }
   },
   computed: {
     unusedAdjudicators: function () {

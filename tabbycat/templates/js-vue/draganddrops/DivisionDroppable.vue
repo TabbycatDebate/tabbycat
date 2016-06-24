@@ -68,12 +68,10 @@ export default {
     'TeamDraggable': TeamDraggable
   },
   methods: {
-    receiveTeam: function(ev) {
+    receiveDrop: function(ev) {
       // This calls up to the parent component
       console.log('child component (' + this.division.id + ') received a team');
       this.$dispatch('assign-team-to-division', this.division);
-      this.isDroppable = false;
-      this.dragCounter = 0;
     }
   }
 }

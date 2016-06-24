@@ -1,19 +1,24 @@
+<style>
+.vue-droppable {
+  min-height: 0;
+}
+</style>
+
 <template>
 
-  <nav class="navbar navbar-default navbar-fixed-bottom">
-    <div
-      v-on:dragover.prevent
-      v-on:dragenter="handleDragEnter"
-      v-on:dragleave="handleDragLeave"
-      v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
-      class="vue-droppable">
+  <nav
+    v-on:dragover.prevent
+    v-on:dragenter="handleDragEnter"
+    v-on:dragleave="handleDragLeave"
+    v-on:drop="handleDrop"
+    v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
+    class="navbar navbar-default navbar-fixed-bottom vue-droppable">
 
-      <adjudicator-draggable
-        v-for="adj in adjudicators | orderBy 'score' -1"
-        :adj="adj">
-      </adjudicator-draggable>
+    <adjudicator-draggable
+      v-for="adj in adjudicators | orderBy 'score' -1"
+      :adj="adj">
+    </adjudicator-draggable>
 
-    </div>
   </nav>
 
 </template>
@@ -29,6 +34,12 @@ export default {
   },
   components: {
     'AdjudicatorDraggable': AdjudicatorDraggable
+  },
+  methods: {
+    receiveDrop: function(ev) {
+      console.log('Received an adj');
+      this.$dispatch('moveToUnused', this.division);
+    }
   }
 }
 </script>

@@ -2,12 +2,13 @@
 
 .adj-draggable {
   text-align: left;
+  padding-top: 3px;
   div {
     float: left;
   }
   .h4 {
     margin: 0;
-    padding: 2px 6px 3px 2px; // Center the Score
+    padding: 3px 6px 0px 2px; // Center the Score
   }
   span {
     border-bottom: none;
@@ -57,9 +58,10 @@
 
 <script>
 import DraggableMixin from '../mixins/DraggableMixin.vue'
+import AjaxMixin from '../mixins/AjaxMixin.vue'
 
 export default {
-  mixins: [DraggableMixin],
+  mixins: [DraggableMixin, AjaxMixin],
   props: {
     adj: Object
   },
@@ -67,6 +69,12 @@ export default {
     short_name: function() {
       var names = this.adj.name.split(" ")
       return names[0] + " " + names[1][0] + ".";
+    }
+  },
+  watch: {
+    adj: function(newVal, oldVal) {
+      // Call into the ajax mixing
+      this.update(url, data, "adjudicator's allocation");
     }
   }
 }
