@@ -32,6 +32,8 @@ urlpatterns = [
         include('jet.urls', 'jet')),
     url(r'^database/',
         include(admin.site.urls)),
+    url(r'^admin/(?P<page>[-\w_/]*)$',
+        RedirectView.as_view(url='/database/%(page)s', permanent=True)),
 
     # Accounts
     url(r'^accounts/login/$',
