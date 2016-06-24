@@ -27,8 +27,10 @@
   </div>
 
   <nav class="navbar navbar-default navbar-fixed-bottom">
-    <div class="container" id="unAllocatedAdjs">
-      <unallocated-adjudicators :adjs="unusedAdjs"></unallocated-adjudicators>
+    <div class="container-fluid">
+      <unallocated-adjudicators
+        :adjudicators="unusedAdjudicators">
+      </unallocated-adjudicators>
     </div>
   </nav>
 
@@ -43,9 +45,17 @@ export default {
     SmartTable, UnallocatedAdjudicators
   },
   props: {
-    unusedAdjs: Array,
+    adjudicators: Array,
     tableData: Object // Passed down from main.js
+  },
+  computed: {
+    unusedAdjudicators: function () {
+      return this.adjudicators.filter(function (adj) {
+        return adj.debate === null;
+      })
+    }
   }
+
 }
 
 </script>

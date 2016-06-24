@@ -1,6 +1,6 @@
 <style>
   .division-droppable {
-    min-height: 66px; // Don't expand when the first team is added
+    min-height: 66px;
     padding: 5px;
   }
 </style>

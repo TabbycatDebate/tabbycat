@@ -1,7 +1,5 @@
 <style>
-.adj-draggable {
-  background: red;
-}
+
 </style>
 
 <template>

@@ -42,17 +42,17 @@
 
   </nav>
 
-  <allocations-container
-    :unused-adjs=unusedAdjs
+  <allocation-container
+    :adjudicators=allAdjudicators
     :table-data=tablesData[0]>
-  </allocations-container>
+  </allocation-container>
 
 {% endblock content %}
 
 {% block js %}
 
   <script>
-    var unusedAdjs = {{ unAllocatedAdjs|safe }}
+    var allAdjudicators = {{ allAdjudicators|safe }}
   </script>
   {{ block.super }}
 

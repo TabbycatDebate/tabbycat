@@ -6,7 +6,7 @@
   bottom: 0;
   right: 15px;
   left: 15px;
-  z-index: 1040; // See boostrap zindex list; this puts it above the navs
+  z-index: 1040;
 }
 </style>
 

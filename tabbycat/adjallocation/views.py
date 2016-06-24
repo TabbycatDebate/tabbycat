@@ -16,7 +16,7 @@ from utils.views import admin_required, expect_post, round_view
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
-from .utils import adjs_to_json, AllocationTableBuilder
+from .utils import adjs_to_json, populate_adjs_data, AllocationTableBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -207,27 +207,8 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
     template_name = 'edit_adj_allocation.html'
 
     def get_context_data(self, **kwargs):
-        # Get unused adjs; add a blank debate value
-        round_adjs = self.get_round().unused_adjudicators()
-        for a in round_adjs:
-            a.debate = None
-
-        # Grab a list of adj ID and debate IDs
-        used_ids = DebateAdjudicator.objects.select_related(
-            'debate__round', 'adjudicator').filter(
-            debate__round=self.get_round()).values_list(
-            'adjudicator', 'debate')
-        used_adjs = Adjudicator.objects.select_related(
-            'institution').in_bulk(
-            [a[0] for a in used_ids])
-        # Set debate ID for each adjudicator object
-        for used_id, used_adj in zip(used_ids, list(used_adjs.values())):
-            used_adj.debate = used_id[1]
-            round_adjs.append(used_adj)
-
+        round_adjs = populate_adjs_data(self.get_round())
         kwargs['allAdjudicators'] = adjs_to_json(round_adjs)
-
-
         return super().get_context_data(**kwargs)
 
     def get_table(self):

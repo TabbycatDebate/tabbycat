@@ -1,7 +1,82 @@
 import json
 
+from .models import DebateAdjudicator, AdjudicatorConflict, AdjudicatorInstitutionConflict, AdjudicatorAdjudicatorConflict
+
+from availability.models import ActiveAdjudicator
+from draw.models import DebateTeam
+from participants.models import Adjudicator
 from utils.tables import TabbycatTableBuilder
 from utils.misc import reverse_tournament
+
+def populate_adjs_data(r):
+    t = r.tournament
+
+    active = ActiveAdjudicator.objects.filter(
+        round=r).values_list(
+        'adjudicator')
+    active = [(a[0], None) for a in active]
+
+    allocated_adjs = DebateAdjudicator.objects.select_related(
+        'debate__round', 'adjudicator').filter(
+        debate__round=r).values_list(
+        'adjudicator', 'debate')
+    allocated_ids = [a[0] for a in allocated_adjs]
+
+    # Remove active adjs that have been assigned to debates
+    unallocated_adjs = [a for a in active if a[0] not in allocated_ids]
+    all_ids = list(allocated_adjs) + list(unallocated_adjs)
+
+    # Grab all the actual adjudicator objects
+    active_adjs = Adjudicator.objects.select_related(
+        'institution', 'tournament', 'tournament__current_round').in_bulk(
+        [a[0] for a in all_ids])
+
+    # Build a list of adjudicator objects (after setting their debate property)
+    round_adjs = []
+    for round_id, round_adj in zip(all_ids, list(active_adjs.values())):
+        round_adj.debate = round_id[1]
+        round_adjs.append(round_adj)
+
+    # Grab all conflicts data and assign it
+    teamconflicts = AdjudicatorConflict.objects.filter(
+        adjudicator__in=round_adjs).values_list(
+        'adjudicator', 'team')
+    institutionconflicts = AdjudicatorInstitutionConflict.objects.filter(
+        adjudicator__in=round_adjs).values_list(
+        'adjudicator', 'institution')
+    adjconflicts = AdjudicatorAdjudicatorConflict.objects.filter(
+        adjudicator__in=round_adjs).values_list(
+        'adjudicator', 'adjudicator')
+    for a in round_adjs:
+        a.adjteam = [c[1] for c in teamconflicts if c[0] is a.id]
+        a.adjinstitution = [c[1] for c in institutionconflicts if c[0] is a.id]
+        a.adjadj = [c[1] for c in adjconflicts if c[0] is a.id]
+
+    da_histories = DebateAdjudicator.objects.filter(
+        debate__round__tournament=t, debate__round__seq__lte=r.seq, adjudicator__in=round_adjs).select_related(
+        'debate__round').values_list(
+        'adjudicator', 'debate', 'debate__round__seq', 'debate__round__name')
+    dt_histories = DebateTeam.objects.filter(
+        debate__in=[c[1] for c in da_histories]).values_list(
+        'team', 'debate')
+
+    for a in round_adjs:
+        hists = []
+        # Iterate over all DebateAdjudications from this adj
+        for dah in [dah for dah in da_histories if dah[0] is a.id]:
+            # Find the relevant DebateTeams from the matching debates
+            for dat in [dat for dat in dt_histories if dat[1] is dah[1]]:
+                hists.append({
+                    'team': dat[0],
+                    'round_seq': dah[2],
+                    'round_name': dah[3]
+                })
+        a.histories = hists
+
+    for ra in round_adjs:
+        ra.rating = ra.score,
+
+    return round_adjs
 
 
 def adjs_to_json(adjs):
@@ -17,9 +92,14 @@ def adjs_to_json(adjs):
             'code' : adj.institution.code,
             'abbreviation' : adj.institution.abbreviation
         },
-        'score': 4,
-        'conflicts': [],
-        'seen': [],
+        'score': adj.rating,
+        'conflicts': {
+            'adjteam': adj.adjteam,
+            'adjinstitution': adj.adjinstitution,
+            'adjadj': adj.adjadj,
+        },
+        'histories': adj.histories
+
     } for adj in adjs]
     return json.dumps(data)
 
