@@ -78,7 +78,7 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
                 if tournament.current_round is None:
                     return HttpResponse('<p>Error: This tournament has no rounds; '
                                         ' you\'ll need to add some in the '
-                                        '<a href="' + reverse('admin:tournaments_round_changelist') + \
+                                        '<a href="' + reverse('admin:tournaments_round_changelist') +
                                         '">Edit Database</a> area.</p>')
                 messages.warning(self.request, "The current round wasn't set, "
                                  "so it's been automatically set to the first round.")
