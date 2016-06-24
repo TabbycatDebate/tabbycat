@@ -1,3 +1,5 @@
+// Draggables
+
 .vue-draggable {
   // Don't let text selections get in the way of dragging
   -moz-user-select: none;
@@ -7,29 +9,23 @@
   /* Required to make elements draggable in old WebKit */
   -khtml-user-drag: element;
   -webkit-user-drag: element;
-  display: inline-block;
-  border: 1px solid #ccc;
-  // border-radius: 5px;
-  padding: 3px 6px 3px 0;
-  margin: 2px;
-  text-align: left;
-  // background: #fff;
-  // height: 32px;
-  // line-height: 32px;
-  // position: relative;
-  span {
-    padding: 6px 0 0 6px;
-  }
   &:hover {
     cursor: move;
   }
+  padding: 6px;
+  margin-right: 3px;
 }
-
 .vue-is-dragging {
   opacity: 0.5 !important;
   cursor: move;
 }
 
+// Droppables
+
+.vue-droppable {
+  background: $gray-lighter;
+  padding: 4px;
+}
 .vue-is-drag-enter {
   // text-decoration: underline;
   background: $state-success-bg;

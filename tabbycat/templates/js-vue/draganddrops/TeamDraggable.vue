@@ -57,7 +57,10 @@
 </template>
 
 <script>
+import DraggableMixin from '../mixins/DraggableMixin.vue'
+
 export default {
+  mixins: [DraggableMixin],
   props: {
     'team': {},
     'vg': { default: null },
@@ -127,16 +130,6 @@ export default {
     },
     showPreferences: function() {
       this.show = !this.show;
-    },
-    handleDragStart: function(elem) {
-      // console.log('handleDragStart', elem);
-      this.isDragging = true;
-      this.$dispatch('dragging-team', this);
-    },
-    handleDragEnd: function(elem) {
-      this.isDragging = false;
-      // console.log('handleDragEnd', elem);
-      this.$dispatch('stopped-dragging');
     },
   }
 }

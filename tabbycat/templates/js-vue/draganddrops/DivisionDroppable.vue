@@ -6,33 +6,28 @@
 </style>
 
 <template>
-  <div class="col-md-3">
-    <div class="panel panel-default" v-bind:class="{ 'panel-danger': hasEvenNumbers }">
-      <div class="panel-heading division-heading">
-        <h5>D{{ division.name }} ({{ teams.length }})</h5>
-        <select name="select" class="form-control" v-model="division.venue_group">
-          <option value=""></option>
-          <option v-for="vg in vgs" value="{{ vg.id }}" v-bind:value="vg.id">
-            {{ vg.short_name }}
-          </option>
-        </select>
-      </div>
-      <div class="panel-body division-droppable" v-on:dragover.prevent v-on:drop="receiveTeam"
-        v-on:dragenter="handleDragEnter" v-on:dragleave="handleDragLeave"
-        v-bind:class="{ 'vue-is-drag-enter': isDroppable }" data-id="{{ division.id }}">
-        <template v-for="team in teams" track-by="id">
-          <team-draggable :team="team" :vg="division.venue_group" :save-division-at="saveDivisionAt"></team-draggable>
-        </template>
-      </div>
-    </div>
+
+  <div class="panel-body division-droppable"
+    v-on:dragover.prevent
+    v-on:drop="receiveTeam"
+    v-on:dragenter="handleDragEnter"
+    v-on:dragleave="handleDragLeave"
+    v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
+    data-id="{{ division.id }}">
+    <template v-for="team in teams" track-by="id">
+      <team-draggable :team="team" :vg="division.venue_group" :save-division-at="saveDivisionAt"></team-draggable>
+    </template>
   </div>
+
 </template>
 
 <!-- Division Droppable Component Behaviour -->
 <script>
+import DroppableMixin from '../mixins/DroppableMixin.vue'
 import TeamDraggable from  './TeamDraggable.vue'
 
 export default {
+  mixins: [DroppableMixin],
   props: {
     'division': {},
     'vgs': {},
@@ -73,19 +68,6 @@ export default {
     'TeamDraggable': TeamDraggable
   },
   methods: {
-    handleDragEnter: function(elem) {
-      // console.log('handleDragStart', elem);
-      this.dragCounter++;
-      console.log(this.dragCounter);
-      this.isDroppable = true;
-    },
-    handleDragLeave: function(elem) {
-      this.dragCounter--;
-      console.log(this.dragCounter);
-      if (this.dragCounter == 0) {
-        this.isDroppable = false;
-      }
-    },
     receiveTeam: function(ev) {
       // This calls up to the parent component
       console.log('child component (' + this.division.id + ') received a team');

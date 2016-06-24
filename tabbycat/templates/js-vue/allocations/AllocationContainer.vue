@@ -26,13 +26,9 @@
     </div>
   </div>
 
-  <nav class="navbar navbar-default navbar-fixed-bottom">
-    <div class="container-fluid">
-      <unallocated-adjudicators
-        :adjudicators="unusedAdjudicators">
-      </unallocated-adjudicators>
-    </div>
-  </nav>
+  <unallocated-adjudicators
+    :adjudicators="unusedAdjudicators">
+  </unallocated-adjudicators>
 
 </template>
 

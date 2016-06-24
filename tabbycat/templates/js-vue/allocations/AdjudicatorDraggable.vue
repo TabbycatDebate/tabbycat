@@ -1,29 +1,65 @@
-<style>
+<style lang="sass">
+
+.adj-draggable {
+  text-align: left;
+  div {
+    float: left;
+  }
+  .h4 {
+    margin: 0;
+    padding: 2px 6px 3px 2px; // Center the Score
+  }
+  span {
+    border-bottom: none;
+  }
+  .small {
+    text-transform: uppercase;
+    font-size: 70%;
+    display: block;
+    line-height: 3px;
+  }
+}
 
 </style>
 
 <template>
 
-  <div class="vue-draggable adj-draggable btn btn-sm">
+  <div
+    draggable=true
+    v-on:dragstart="handleDragStart"
+    v-on:dragend="handleDragEnd"
+    v-bind:class="[isDragging ? vue-is-dragging : '']"
+    class="vue-draggable adj-draggable btn btn-default"
+    data-toggle="tooltip"
+    title="{{ adj.name }} of {{ adj.institution.name }}">
 
-    <span data-toggle="tooltip" title="{{ adj.name }} of {{ adj.institution.name }}">
-      {{ short_name }}<br>
-    </span>
+    <div class="h4">
+      {{ adj.score }}
+    </div>
 
-    <span v-if="adj.institution.code" class="small">
-      {{ adj.institution.code }}
-    </span>
-    <span v-else>
-      {{ adj.institution.name }}
-    </span>
+    <div>
+      <span>
+        {{ short_name }}
+      </span>
+      <span class="small text-muted">
+        <template v-if="adj.institution.code">
+          {{ adj.institution.code }}
+        </template>
+        <template v-else>
+          {{ adj.institution.name }}
+        </template>
+      </span>
+    </div>
 
-     {{ adj.score }}
   </div>
 
 </template>
 
 <script>
+import DraggableMixin from '../mixins/DraggableMixin.vue'
+
 export default {
+  mixins: [DraggableMixin],
   props: {
     adj: Object
   },
