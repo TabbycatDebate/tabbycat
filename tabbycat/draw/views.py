@@ -80,8 +80,8 @@ class DrawTablePage(RoundMixin, VueTableMixin):
         if tournament.pref('enable_division_motions'):
             for debate in draw:
                 table.add_motion_column([m.reference for m in debate.division_motions])
-        if round.is_break_round:
-            table.add_beak_ranks(draw)
+        # if round.is_break_round:
+        #     table.add_breakrank_columns(draw)
         if not tournament.pref('enable_divisions'):
             table.add_debate_adjudicators_column(draw)
 

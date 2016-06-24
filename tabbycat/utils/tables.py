@@ -322,7 +322,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(conflicts_header, conflicts_data)
 
     def add_ranking_columns(self, standings, subset=None, prefix=' '):
-        standings_list = subset if subset else standings
+        standings_list = standings.get_standings(subset) if subset is not None else standings
         headers = [{
             'key': prefix[0] + info['abbr'],
             'tooltip': prefix + info['name'].title(),
@@ -338,16 +338,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_debate_ranking_columns(self, draw, standings):
         # First half (ie all aff metrics) then second (ie all neg metrics)
-        ordered_standings = [standings.get_standing(d.aff_team) for d in draw]
-        self.add_ranking_columns(standings,
-            subset=[s for s in ordered_standings], prefix="Aff's ")
-        ordered_standings = [standings.get_standing(d.neg_team) for d in draw]
-        self.add_ranking_columns(standings,
-            subset=[s for s in ordered_standings], prefix="Neg's ")
+        self.add_ranking_columns(standings, subset=[d.aff_team for d in draw], prefix="Aff's ")
+        self.add_ranking_columns(standings, subset=[d.neg_team for d in draw], prefix="Neg's ")
 
     def add_metric_columns(self, standings, subset=None, prefix=' '):
-        # For pages where standings are per-debate not per-team
-        standings_list = subset if subset else standings
+        standings_list = standings.get_standings(subset) if subset is not None else standings
         headers = [{
             'key': prefix[0] + info['abbr'],
             'tooltip': prefix + info['name'].title(),
@@ -358,12 +353,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_debate_metric_columns(self, draw, standings):
         # First half (ie all aff metrics) then second (ie all neg metrics)
-        ordered_standings = [standings.get_standing(d.aff_team) for d in draw]
-        self.add_metric_columns(standings,
-            subset=[s for s in ordered_standings], prefix="Aff's ")
-        ordered_standings = [standings.get_standing(d.neg_team) for d in draw]
-        self.add_metric_columns(standings,
-            subset=[s for s in ordered_standings], prefix="Neg's ")
+        self.add_metric_columns(standings, subset=[d.aff_team for d in draw], prefix="Aff's ")
+        self.add_metric_columns(standings, subset=[d.neg_team for d in draw], prefix="Neg's ")
 
     def set_bracket_highlights(self):
         for i in range(1, len(self.data)):
