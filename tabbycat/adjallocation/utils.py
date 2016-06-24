@@ -9,6 +9,7 @@ def adjs_to_json(adjs):
     data = [{
         'id': adj.id,
         'name': adj.name,
+        'debate': adj.debate,
         'gender': adj.gender,
         'institution': {
             'id': adj.institution.id,

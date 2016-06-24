@@ -496,7 +496,7 @@ class Round(models.Model):
         self.set_available_teams(
             [t.team.id for t in ActiveTeam.objects.filter(round=self.prev)])
 
-    @property
+    @cached_property
     def prev(self):
         try:
             return Round.objects.get(seq=self.seq - 1,

@@ -207,8 +207,27 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
     template_name = 'edit_adj_allocation.html'
 
     def get_context_data(self, **kwargs):
-        unused_adjs = self.get_round().unused_adjudicators()
-        kwargs['unAllocatedAdjs'] = adjs_to_json(unused_adjs)
+        # Get unused adjs; add a blank debate value
+        round_adjs = self.get_round().unused_adjudicators()
+        for a in round_adjs:
+            a.debate = None
+
+        # Grab a list of adj ID and debate IDs
+        used_ids = DebateAdjudicator.objects.select_related(
+            'debate__round', 'adjudicator').filter(
+            debate__round=self.get_round()).values_list(
+            'adjudicator', 'debate')
+        used_adjs = Adjudicator.objects.select_related(
+            'institution').in_bulk(
+            [a[0] for a in used_ids])
+        # Set debate ID for each adjudicator object
+        for used_id, used_adj in zip(used_ids, list(used_adjs.values())):
+            used_adj.debate = used_id[1]
+            round_adjs.append(used_adj)
+
+        kwargs['allAdjudicators'] = adjs_to_json(round_adjs)
+
+
         return super().get_context_data(**kwargs)
 
     def get_table(self):
@@ -219,16 +238,16 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
             sort_key='importance',
             table_class='table-condensed table-edit-allocation')
 
-        table.add_debate_bracket_columns(draw)
-        table.add_debate_importances(draw, r)
-        table.add_debate_venue_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw],
-           key='Aff', hide_institution=True, hide_emoji=True)
-        table.add_team_wins(draw, r, "AW")
-        table.add_team_columns([d.neg_team for d in draw],
-           key='Neg', hide_institution=True, hide_emoji=True)
-        table.add_team_wins(draw, r, "NW")
-        table.add_column("Panel", [{'text': ''} for d in draw])
+        # table.add_debate_bracket_columns(draw)
+        # table.add_debate_importances(draw, r)
+        # table.add_debate_venue_columns(draw)
+        # table.add_team_columns([d.aff_team for d in draw],
+        #    key='Aff', hide_institution=True, hide_emoji=True)
+        # table.add_team_wins(draw, r, "AW")
+        # table.add_team_columns([d.neg_team for d in draw],
+        #    key='Neg', hide_institution=True, hide_emoji=True)
+        # table.add_team_wins(draw, r, "NW")
+        # table.add_column("Panel", [{'text': ''} for d in draw])
 
         return table
 
