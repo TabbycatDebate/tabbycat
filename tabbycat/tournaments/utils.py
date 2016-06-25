@@ -11,6 +11,7 @@ BREAK_ROUND_NAMES = [
     ('Triple-Octofinals', 'TOF'),
 ]
 
+
 def auto_make_rounds(tournament, num_rounds):
     """Makes the number of rounds specified. The first one is random and the
     rest are all power-paired. The last one is silent. This is intended as a
