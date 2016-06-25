@@ -68,6 +68,9 @@ class AdjudicatorAllocation:
         a.extend(self.panel)
         return a
 
+    def __len__(self):
+        return (0 if self.chair is None else 1) + len(self.panel) + len(self.trainees)
+
     def __str__(self):
         items = [str(getattr(x, "name", x)) for x in self.list]
         return ", ".join(items)

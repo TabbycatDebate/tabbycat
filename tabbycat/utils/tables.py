@@ -197,16 +197,20 @@ class TabbycatTableBuilder(BaseTableBuilder):
         data = []
         for debate in debates:
             adj_strings = []
-
             if debate.confirmed_ballot and show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
                 for adjtype, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
-                    adj_string = adj.name + self.ADJ_SYMBOLS[adjtype]
+                    adj_string = adj.name
+                    if debate.adjudicators.is_panel or adjtype is DebateAdjudicator.TYPE_TRAINEE:
+                        adj_string += self.ADJ_SYMBOLS[adjtype]
                     if split:
                         adj_string = "<span class='text-danger'>" + adj_string + " 💢</span>"
                     adj_strings.append(adj_string)
             else:
                 for adjtype, adj in debate.adjudicators:
-                    adj_strings.append(adj.name + self.ADJ_SYMBOLS[adjtype])
+                    adj_string = adj.name
+                    if debate.adjudicators.is_panel or adjtype is DebateAdjudicator.TYPE_TRAINEE:
+                        adj_string += self.ADJ_SYMBOLS[adjtype]
+                    adj_strings.append(adj_string)
 
             data.append(", ".join(adj_strings))
 

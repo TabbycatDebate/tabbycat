@@ -2,11 +2,13 @@ import json
 
 from django.conf import settings
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 
 from adjallocation.models import DebateAdjudicator
+from results.models import TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
 from utils.mixins import SuperuserRequiredMixin, VueTableMixin
@@ -72,7 +74,7 @@ class ParticipantsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixi
         return [adjs_table, teams_table]
 
 
-class BaseSummaryView(SingleObjectFromTournamentMixin, TemplateView):
+class BaseSummaryView(SingleObjectFromTournamentMixin, VueTableMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -92,11 +94,64 @@ class BaseAdjudicatorSummaryView(BaseSummaryView):
 
 
 class TeamSummaryView(SuperuserRequiredMixin, BaseTeamSummaryView):
-    pass
 
+    def get_context_data(self, **kwargs):
+        try:
+            kwargs['debateteam'] = self.object.debateteam_set.get(
+                debate__round=self.get_tournament().current_round)
+        except ObjectDoesNotExist:
+            kwargs['debateteam'] = None
+
+        return super().get_context_data(**kwargs)
+
+    def get_table(self):
+        # TODO this is a copy of PublicResultsForRoundView.get_table_by_team in
+        # results/views.py. It should be abstracted into "teamscore_columns" or
+        # something.
+
+        teamscores = TeamScore.objects.filter(debate_team__team=self.object)
+        debates = [ts.debate_team.debate for ts in teamscores]
+
+        table = TabbycatTableBuilder(view=self, sort_key="Team")
+        table.add_round_column([ts.debate_team.debate.round for ts in teamscores])
+
+        results_data = []
+        for ts in teamscores:
+            opposition = ts.debate_team.opposition.team
+            result = {'text': " vs " + opposition.short_name}
+            if ts.win is True:
+                result['icon'] = "glyphicon-arrow-up text-success"
+                result['sort'] = 1
+                result['tooltip'] = "Won against " + opposition.long_name
+            elif ts.win is False:
+                result['icon'] = "glyphicon-arrow-down text-danger"
+                result['sort'] = 2
+                result['tooltip'] = "Lost to " + opposition.long_name
+            else: # None
+                result['icon'] = ""
+                result['sort'] = 3
+                result['tooltip'] = "No result for debate against " + opposition.long_name
+            results_data.append(result)
+        table.add_column("Result", results_data)
+
+        table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
+
+        table.add_debate_ballot_link_column(debates)
+        table.add_debate_adjudicators_column(debates, show_splits=True)
+        if self.get_tournament().pref('show_motions_in_results'):
+            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+
+        return table
 
 class AdjudicatorSummaryView(SuperuserRequiredMixin, BaseAdjudicatorSummaryView):
-    pass
+
+    def get_context_data(self, **kwargs):
+        try:
+            kwargs['debateadjudicator'] = self.object.debateadjudicator_set.get(
+                debate__round=self.get_tournament().current_round)
+        except ObjectDoesNotExist:
+            kwargs['debateadjudicator'] = None
+        return super().get_context_data(**kwargs)
 
 
 class PublicTeamSummaryView(PublicTournamentPageMixin, TeamSummaryView):

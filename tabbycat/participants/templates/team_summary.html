@@ -1,4 +1,115 @@
-{% extends "base.html" %}
+{% extends "base_vue_table.html" %}
 
 {% block page-title %}{{ object.short_name }}{% endblock page-title %}
 {% block head-title %}{{ object.short_name }}{% endblock head-title %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-6 col-md-push-6">
+
+      <div class="panel panel-default">
+
+        <div class="panel-heading">
+          Basic Information
+        </div>
+
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-3"><strong>Name</strong></div>
+            <div class="col-sm-9">{{ team.long_name }}</div>
+          </div>
+          {% if pref.show_institutions %}
+            <div class="row">
+              <div class="col-sm-3"><strong>Institution</strong></div>
+              <div class="col-sm-9">{{ team.institution }}</div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3"><strong>Region</strong></div>
+              <div class="col-sm-9">{{ team.institution.region|default_if_none:"–" }}</div>
+            </div>
+          {% endif %}
+          <div class="row">
+            <div class="col-sm-3"><strong>Speakers</strong></div>
+            <div class="col-sm-9">
+              {% for speaker in team.speakers %}
+                {{ speaker.name }}<br />
+              {% endfor %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3"><strong>Eligible for</strong></div>
+            <div class="col-sm-9">
+              {% for category in team.break_categories.all %}
+                {{ category.name }}<br />
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-md-6 col-md-pull-6">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          This Round ({{ current_round.name }})
+        </div>
+
+        <div class="panel-body">
+
+          {% if debateteam %}
+            <div class="row">
+              <div class="col-sm-3"><strong>Venue</strong></div>
+              <div class="col-sm-9">{{ debateteam.debate.venue.name }}</div>
+            </div>
+            {% if current_round.starts_at %}
+              <div class="row">
+                <div class="col-sm-3"><strong>Round starts at</strong></div>
+                <div class="col-sm-9">{{ current_round.starts_at }}</div>
+              </div>
+            {% endif %}
+            <div class="row">
+              <div class="col-sm-3"><strong>Against</strong></div>
+              <div class="col-sm-9">{{ debateteam.opposition.team.short_name }}</div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3"><strong>Side</strong></div>
+              <div class="col-sm-9">{{ debateteam.get_position_display }}</div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3"><strong>Motion{{ debateteam.debate.round.motion_set.count|pluralize }}</strong></div>
+              <div class="col-sm-9">
+                {# TODO hide motions if not released #}
+                {% for motion in debateteam.debate.round.motion_set.all %}
+                  {{ motion.text }}<br />
+                {% endfor %}
+              </div>
+            </div>
+            <div class="row">
+              {% with adjudicators=debateteam.debate.adjudicators %}
+                <div class="col-sm-3"><strong>Adjudicator{{ adjudicators|length|pluralize }}</strong></div>
+                <div class="col-sm-9">
+                  {% for adjtype, adj in adjudicators %}
+                    {{ adj.name }}
+                    {% if adjtype == 'C' and adjudicators.is_panel %}Ⓒ{% elif adjtype == 'T' %}Ⓣ{% endif %}
+                    <br />
+                  {% endfor %}
+                </div>
+                {% endwith %}
+            </div>
+
+          {% else %}
+            {{ team.short_name }} does not have a debate this round.
+          {% endif %}
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  {{ block.super }}
+
+{% endblock content %}
