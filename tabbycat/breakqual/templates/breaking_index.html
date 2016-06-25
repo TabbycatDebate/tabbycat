@@ -7,9 +7,9 @@
 
 {% block page-subnav-sections %}
   {% for category in tournament.breakcategory_set.all %}
-    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">{{ category.name }} Break</a>
+    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">View {{ category.name }} Break</a>
   {% endfor %}
-  <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">Adjudicators</a>
+  <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">View Adjudicators Break</a>
 {% endblock %}
 
 {% block page-subnav-actions %}
