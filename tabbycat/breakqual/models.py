@@ -39,7 +39,7 @@ class BreakCategory(models.Model):
                                             through='BreakingTeam')
 
     def __str__(self):
-        return self.name
+        return "[{}] {}".format(self.tournament.slug, self.name)
 
     class Meta:
         unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
