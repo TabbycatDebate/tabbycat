@@ -24,7 +24,7 @@
       {% for category in tournament.breakcategory_set.all %}
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4 class="panel-title">Teams Eligible for the {{ category }} Break</h4>
+            <h4 class="panel-title">Teams Eligible for the {{ category.name }} Break</h4>
           </div>
           <div class="panel-body round-progresses">
             <div class="progress">
