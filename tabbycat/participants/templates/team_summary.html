@@ -1,4 +1,5 @@
 {% extends "base_vue_table.html" %}
+{% load debate_tags %}
 
 {% block page-title %}{{ object.short_name }}{% endblock page-title %}
 {% block head-title %}{{ object.short_name }}{% endblock head-title %}
@@ -72,7 +73,12 @@
             {% endif %}
             <div class="row">
               <div class="col-sm-3"><strong>Against</strong></div>
-              <div class="col-sm-9">{{ debateteam.opposition.team.short_name }}</div>
+              {# TODO switch to appropriate summary link on a public page (or hide) #}
+              <div class="col-sm-9">
+                <a href="{% tournament_url participants-team-summary debateteam.opposition.team.pk %}">
+                  {{ debateteam.opposition.team.short_name }}
+                </a>
+              </div>
             </div>
             <div class="row">
               <div class="col-sm-3"><strong>Side</strong></div>
@@ -92,8 +98,14 @@
                 <div class="col-sm-3"><strong>Adjudicator{{ adjudicators|length|pluralize }}</strong></div>
                 <div class="col-sm-9">
                   {% for adjtype, adj in adjudicators %}
-                    {{ adj.name }}
-                    {% if adjtype == 'C' and adjudicators.is_panel %}Ⓒ{% elif adjtype == 'T' %}Ⓣ{% endif %}
+                    <a href="{% tournament_url participants-adjudicator-summary adj.pk %}">
+                      {{ adj.name }}
+                    </a>
+                    {% if adjtype == 'C' and adjudicators.is_panel %}
+                      Ⓒ
+                    {% elif adjtype == 'T' %}
+                      Ⓣ
+                    {% endif %}
                     <br />
                   {% endfor %}
                 </div>

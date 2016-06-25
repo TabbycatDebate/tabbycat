@@ -147,6 +147,30 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         return super().__init__(**kwargs)
 
+    @property
+    def _show_summary_links(self):
+        return self.admin or self.tournament.pref('public_summary')
+
+    def _adjudicator_summary_link(self, adj):
+        if self.admin:
+            return reverse_tournament('participants-adjudicator-summary',
+                self.tournament, kwargs={'pk': adj.pk})
+        elif self.tournament.pref('public_summary'):
+            return reverse_tournament('participants-public-adjudicator-summary',
+                self.tournament, kwargs={'pk': adj.pk})
+        else:
+            return None
+
+    def _team_summary_link(self, team):
+        if self.admin:
+            return reverse_tournament('participants-team-summary',
+                self.tournament, kwargs={'pk': team.pk})
+        elif self.tournament.pref('public_summary'):
+            return reverse_tournament('participants-public-team-summary',
+                self.tournament, kwargs={'pk': team.pk})
+        else:
+            return None
+
     def add_round_column(self, rounds, key="Round"):
         data = [{
             'sort': round.seq,
@@ -160,12 +184,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         adj_data = []
         for adj in adjudicators:
             cell = {'text': adj.name}
-            if self.admin:
-                cell['link'] = reverse_tournament('participants-adjudicator-summary',
-                    self.tournament, kwargs={'pk': adj.pk})
-            elif self.tournament.pref('public_summary'):
-                cell['link'] = reverse_tournament('participants-public-adjudicator-summary',
-                    self.tournament, kwargs={'pk': adj.pk})
+            if self._show_summary_links:
+                cell['link'] = self._adjudicator_summary_link(adj)
             if subtext is 'institution':
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
@@ -200,6 +220,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if debate.confirmed_ballot and show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
                 for adjtype, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
                     adj_string = adj.name
+                    if self._show_summary_links:
+                        adj_string = "<a href=\"" + self._adjudicator_summary_link(adj) + "\"" + \
+                                ("class='text-danger'" if split else "") + ">" + adj_string + "</a>"
                     if debate.adjudicators.is_panel or adjtype is DebateAdjudicator.TYPE_TRAINEE:
                         adj_string += self.ADJ_SYMBOLS[adjtype]
                     if split:
@@ -238,12 +261,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': [" " + s.name for s in team.speakers]
                     if self.tournament.pref('show_speakers_in_draw') or show_speakers else None # noqa
             }
-            if self.admin:
-                cell['link'] = reverse_tournament('participants-team-summary',
-                    self.tournament, kwargs={'pk': team.pk})
-            elif self.tournament.pref('public_summary'):
-                cell['link'] = reverse_tournament('participants-public-team-summary',
-                    self.tournament, kwargs={'pk': team.pk})
+            if self._show_summary_links:
+                cell['link'] = self._team_summary_link(team)
             team_data.append(cell)
         self.add_column(key, team_data)
 
