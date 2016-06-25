@@ -163,28 +163,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
 
         table = TabbycatTableBuilder(view=self, sort_key="Team")
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
-
-        results_data = []
-        for ts in teamscores:
-            opposition = ts.debate_team.opposition.team
-            result = {'text': " vs " + opposition.short_name}
-            if ts.win is True:
-                result['icon'] = "glyphicon-arrow-up text-success"
-                result['sort'] = 1
-                result['tooltip'] = "Won against " + opposition.long_name
-            elif ts.win is False:
-                result['icon'] = "glyphicon-arrow-down text-danger"
-                result['sort'] = 2
-                result['tooltip'] = "Lost to " + opposition.long_name
-            else: # None
-                result['icon'] = ""
-                result['sort'] = 3
-                result['tooltip'] = "No result for debate against " + opposition.long_name
-            results_data.append(result)
-        table.add_column("Result", results_data)
-
-        table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
-
+        table.add_debate_result_by_team_columns(teamscores)
         table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True)
         if tournament.pref('show_motions_in_results'):

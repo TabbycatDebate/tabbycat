@@ -424,3 +424,32 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'link': reverse_tournament('public_ballots_view', self.tournament, kwargs={'debate_id': debate.id})
             } if debate else "" for debate in debates]
             self.add_column(ballot_links_header, ballot_links_data)
+
+    def add_debate_result_by_team_columns(self, teamscores):
+        """Takes an iterable of TeamScore objects."""
+
+        results_data = []
+        for ts in teamscores:
+            opposition = ts.debate_team.opposition.team
+            opposition_str = opposition.short_name
+            if self._show_summary_links:
+                opposition_str = "<a href=\"" + self._team_summary_link(opposition) + "\">" + \
+                        opposition_str + "</a>"
+
+            result = {'text': " vs " + opposition_str}
+            if ts.win is True:
+                result['icon'] = "glyphicon-arrow-up text-success"
+                result['sort'] = 1
+                result['tooltip'] = "Won against " + opposition.long_name
+            elif ts.win is False:
+                result['icon'] = "glyphicon-arrow-down text-danger"
+                result['sort'] = 2
+                result['tooltip'] = "Lost to " + opposition.long_name
+            else: # None
+                result['icon'] = ""
+                result['sort'] = 3
+                result['tooltip'] = "No result for debate against " + opposition.long_name
+            results_data.append(result)
+        self.add_column("Result", results_data)
+
+        self.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])

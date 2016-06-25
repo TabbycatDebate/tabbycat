@@ -105,37 +105,11 @@ class TeamSummaryView(SuperuserRequiredMixin, BaseTeamSummaryView):
         return super().get_context_data(**kwargs)
 
     def get_table(self):
-        # TODO this is a copy of PublicResultsForRoundView.get_table_by_team in
-        # results/views.py. It should be abstracted into "teamscore_columns" or
-        # something.
-
         teamscores = TeamScore.objects.filter(debate_team__team=self.object)
         debates = [ts.debate_team.debate for ts in teamscores]
-
-        table = TabbycatTableBuilder(view=self, sort_key="Team")
+        table = TabbycatTableBuilder(view=self, title="Previous Rounds")
         table.add_round_column([ts.debate_team.debate.round for ts in teamscores])
-
-        results_data = []
-        for ts in teamscores:
-            opposition = ts.debate_team.opposition.team
-            result = {'text': " vs " + opposition.short_name}
-            if ts.win is True:
-                result['icon'] = "glyphicon-arrow-up text-success"
-                result['sort'] = 1
-                result['tooltip'] = "Won against " + opposition.long_name
-            elif ts.win is False:
-                result['icon'] = "glyphicon-arrow-down text-danger"
-                result['sort'] = 2
-                result['tooltip'] = "Lost to " + opposition.long_name
-            else: # None
-                result['icon'] = ""
-                result['sort'] = 3
-                result['tooltip'] = "No result for debate against " + opposition.long_name
-            results_data.append(result)
-        table.add_column("Result", results_data)
-
-        table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
-
+        table.add_debate_result_by_team_columns(teamscores)
         table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True)
         if self.get_tournament().pref('show_motions_in_results'):
