@@ -54,7 +54,7 @@
     {% endblock %}
 
     <div class="row ">
-      <div class="col-md-12 hidden-print page-sub-nav">
+      <div class="col-md-12 page-sub-nav">
         <ul class="nav nav-pills navbar-left">
           {% block page-subnav-sections %}{% endblock %}
         </ul>
@@ -66,17 +66,17 @@
 
     <div class="row">
       <div class="col-md-12">
-        {% if messages %}
-          <div class="form-inline hidden-print" id="messages">
+        <div class="form-inline messages" id="messages-container">
+          {% if messages %}
             {% for message in messages %}
               <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 {{ message }}
               </div>
             {% endfor %}
-          </div>
-        {% endif %}
-        {% block page-alerts %}{% endblock %}
+          {% endif %}
+          {% block page-alerts %}{% endblock %}
+        </div>
       </div>
     </div>
 
@@ -95,7 +95,11 @@
   {% endblock body %}
 
   {% block js %}
-    <script src="{% static 'js/main.bundle.js' %}"></script>
+    {% if user.is_superuser %}
+      <script src="{% static 'js/admin.bundle.js' %}"></script>
+    {% else %}
+      <script src="{% static 'js/public.bundle.js' %}"></script>
+    {% endif %}
   {% endblock js %}
 
   <!-- Analytics -->

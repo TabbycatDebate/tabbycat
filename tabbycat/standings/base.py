@@ -184,6 +184,12 @@ class Standings:
         except KeyError:
             raise ValueError("{!r} isn't in these standings.".format(instance))
 
+    def get_standings(self, instances):
+        try:
+            return [self.infos[instance] for instance in instances]
+        except KeyError as e:
+            raise ValueError("{!r} isn't in these standings.".format(e.args[0]))
+
     def record_added_metric(self, key, name, abbr, glyphicon):
         self.metric_keys.append(key)
         self._metric_specs.append((key, name, abbr, glyphicon))

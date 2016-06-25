@@ -249,6 +249,26 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('show_institutions') and not hide_institution:
             self.add_column("Institution", [team.institution.code for team in teams])
 
+    def add_team_pullup_columns(self, debates, standings):
+        pullups_header = {
+            'key': "Pullups",
+            'text': 'Pull',
+            'tooltip': "Whether or not a team was a pull-up",
+        }
+        pullups_data = []
+        for debate in debates:
+            a_team_standing = standings.get_standing(debate.aff_team)
+            a_is_pullup = abs(a_team_standing.metrics["points"] - debate.bracket) >= 1
+            n_team_standing = standings.get_standing(debate.neg_team)
+            n_is_pullup = abs(n_team_standing.metrics["points"] - debate.bracket) >= 1
+            text = 'Aff' if a_is_pullup else ''
+            text += 'Neg' if n_is_pullup else ''
+            pullups_data.append({
+                'sort': 1 if a_is_pullup or n_is_pullup else 0,
+                'text': text
+            })
+        self.add_column(pullups_header, pullups_data)
+
     def add_speaker_columns(self, speakers, key="Name"):
         self.add_column(key, [speaker.name for speaker in speakers])
         if self.tournament.pref('show_novices'):
@@ -270,11 +290,19 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_debate_venue_columns(self, debates, with_times=False):
         if self.tournament.pref('enable_divisions'):
-            self.add_column("Division", [debate.division.name for debate in debates])
+            divisions_header = {
+                'key': 'Division',
+                'icon': 'glyphicon-th-list',
+                'tooltip': 'Division'
+            }
+            divisions_data = [{
+                'text': 'D' + d.division.name if d.division else ''
+            } for d in debates]
+            self.add_column(divisions_header, divisions_data)
 
         venue_header = {
             'key': "Venue",
-            'icon': 'glyphicon glyphicon-map-marker',
+            'icon': 'glyphicon-map-marker',
         }
         if self.tournament.pref('enable_venue_groups'):
             venue_data = [
@@ -300,28 +328,89 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     times_data.append([debate.time.strftime("D jS F"), debate.time.strftime("h:i A")])
             self.add_columns(times_headers, times_data)
 
-    def add_ranking_columns(self, standings):
+    def add_draw_conflicts(self, draw):
+        conflicts_header = {'key': "Conflicts/Flags"}
+        conflicts_data = [{
+            'text': debate.draw_conflicts + debate.flags_all,
+            'class': 'text-danger small'
+        } for debate in draw]
+        self.add_column(conflicts_header, conflicts_data)
+
+    def add_ranking_columns(self, standings, subset=None, prefix=' '):
+        standings_list = standings.get_standings(subset) if subset is not None else standings
         headers = [{
-            'key': info['abbr'],
-            'tooltip': info['name'].title(),
+            'key': prefix[0] + info['abbr'],
+            'tooltip': prefix + info['name'].title(),
             'glyphicon': info['glyphicon'],
         } for info in standings.rankings_info()]
         data = []
-        for standing in standings:
+        for standing in standings_list:
             data.append([{
                 'text': rankingformat(ranking),
                 'sort': ranking[0] or "99999",
             } for ranking in standing.iterrankings()])
         self.add_columns(headers, data)
 
-    def add_metric_columns(self, standings):
+    def add_debate_ranking_columns(self, draw, standings):
+        # First half (ie all aff metrics) then second (ie all neg metrics)
+        self.add_ranking_columns(standings, subset=[d.aff_team for d in draw], prefix="Aff's ")
+        self.add_ranking_columns(standings, subset=[d.neg_team for d in draw], prefix="Neg's ")
+
+    def add_metric_columns(self, standings, subset=None, prefix=' '):
+        standings_list = standings.get_standings(subset) if subset is not None else standings
         headers = [{
-            'key': info['abbr'],
-            'tooltip': info['name'].title(),
+            'key': prefix[0] + info['abbr'],
+            'tooltip': prefix + info['name'].title(),
             'glyphicon': info['glyphicon'],
         } for info in standings.metrics_info()]
-        data = [list(map(metricformat, standing.itermetrics())) for standing in standings]
+        data = [list(map(metricformat, s.itermetrics())) for s in standings_list]
         self.add_columns(headers, data)
+
+    def add_debate_metric_columns(self, draw, standings):
+        # First half (ie all aff metrics) then second (ie all neg metrics)
+        self.add_metric_columns(standings, subset=[d.aff_team for d in draw], prefix="Aff's ")
+        self.add_metric_columns(standings, subset=[d.neg_team for d in draw], prefix="Neg's ")
+
+    def set_bracket_highlights(self):
+        for i in range(1, len(self.data)):
+            if self.data[i][0]['text'] != self.data[i-1][0]['text']:
+                for cell in self.data[i]:
+                    if hasattr(cell, 'class'):
+                        cell['class'] += 'highlight-row'
+                    else:
+                        cell['class'] = 'highlight-row'
+
+    def add_affs_count(self, teams, round, team_type):
+        affs_header = {
+            'key':  'aaffs' if team_type is 'aff' else 'naffs',
+            'tooltip': 'Number of times the current ' + team_type + ' has been in the affirmative position before'
+        }
+        affs_data = [{
+            'text': t.get_aff_count(round.seq) if round.prev else '',
+        } for t in teams]
+        self.add_column(affs_header, affs_data)
+
+    # def add_draw_metric_columns(self, teams, round, standings):
+    #     aff_standings = [standings.get_standing(t) for t in teams]
+
+    #     if round.is_break_round:
+    #         self.add_breakrank_columns(teams, round)
+    #     else:
+    #         if "points" in standings.metric_keys:
+    #             aff_is_pullup = abs(aff_standing.metrics["points"] - debate.bracket) >= 1
+
+    #         aff_subrank = aff_standing.rankings["subrank"]
+
+    #     # debate.metrics = [(a, n) for a, n in zip(aff_standing.itermetrics(), neg_standing.itermetrics())]
+
+    def add_checkbox_columns(self, states, references, key):
+        state_header = {'key': key}
+        state_data = [{
+            'sort': state,
+            'class': 'toggle_active_status checkbox-target',
+            'text': '<input type="checkbox" data-target="%s" %s>' % (reference, 'checked' if state else ''),
+        } for state, reference in zip(states, references)]
+        self.add_column(state_header, state_data)
 
     def add_debate_ballot_link_column(self, debates):
         if self.tournament.pref('ballots_released'):

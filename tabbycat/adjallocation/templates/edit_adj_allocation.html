@@ -10,96 +10,19 @@
 
 {% block content %}
 
-  <nav class="navbar navbar-default navbar-fixed-top">
-
-    <div class="navbar-form navbar-left btn-group btn-group-sm">
-      <button type="button" class="btn btn-default btn-sm">
-        <span class="glyphicon glyphicon-chevron-left"></span>Back to Draw
-      </button>
-      <button type="button" class="btn btn-success btn-sm">
-        Auto Allocate Adjudicators
-      </button>
-    </div>
-
-    <div class="navbar-form navbar-right btn-group btn-group-sm input-group-sm">
-      {% include "tables/table_search.html" %}
-    </div>
-
-    <div class="navbar-form navbar-right btn-group btn-group-sm">
-      <button class="btn btn-default nav-link hoverable">
-        <span class="glyphicon glyphicon glyphicon-eye-open"></span> Show Venues
-      </button>
-      <button class="btn btn-default nav-link hoverable">
-        <span class="glyphicon glyphicon glyphicon-eye-open"></span> Show Region
-      </button>
-      <button class="btn btn-default nav-link hoverable">
-        <span class="glyphicon glyphicon glyphicon-eye-open"></span> Show Gender
-      </button>
-      <button class="btn btn-default nav-link hoverable">
-        <span class="glyphicon glyphicon glyphicon-eye-open"></span> Show Language
-      </button>
-    </div>
-
-  </nav>
-
-  <div class="container-fluid">
-
-    <div class="col-md-6">
-      <div class="alert alert-warning small" role="alert">
-        <span class="glyphicon glyphicon-refresh spinning"></span><strong> Loading conflicts data...</strong>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="alert alert-warning small" role="alert">
-        <span class="glyphicon glyphicon-refresh spinning"></span><strong> Loading history data...</strong>
-      </div>
-    </div>
-
-  </div>
-
-  {{ block.super }}
-
-  <nav class="navbar navbar-default navbar-fixed-bottom">
-    <div class="container" id="unAllocatedAdjs">
-      <unallocated-droppable :adjs="adjs"></unallocated-droppable>
-    </div>
-  </nav>
-
-  <div class="modal fade" tabindex="-1" role="dialog" id="modalAlert">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title"></h4>
-        </div>
-        <div class="modal-body">
-          <p></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
+  <allocation-container
+    :adjudicators=allAdjudicators
+    :table-data=tablesData[0]>
+  </allocation-container>
 
 {% endblock content %}
 
 {% block js %}
 
-  {{ block.super }}
-  <!-- TODO: bundle -->
-  {% include "js-vue/allocations/ajax-mixin.vue" %}
-  {% include "js-vue/allocations/debate-importance.vue" %}
-  {% include "js-vue/allocations/unallocated-droppable.vue" %}
-  {% include "js-vue/allocations/adj-draggable.vue" %}
-  {{ block.super }}
   <script>
-    new Vue({
-      el: '#unAllocatedAdjs',
-      data: {
-        'adjs': {{ unAllocatedAdjs|safe }}
-      },
-    })
+    var allAdjudicators = {{ allAdjudicators|safe }};
+    var backURL = '{% round_url draw %}';
   </script>
+  {{ block.super }}
 
 {% endblock js %}

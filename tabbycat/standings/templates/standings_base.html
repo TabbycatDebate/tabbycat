@@ -36,6 +36,6 @@
   <a class="btn btn-default {% block diversity_active %}{% endblock %}" href="{% round_url standings-diversity current_round %}">
     Diversity
   </a>
-  {% include "tables/table_search.html" %}
+  {{ block.super }}
 
 {% endblock %}

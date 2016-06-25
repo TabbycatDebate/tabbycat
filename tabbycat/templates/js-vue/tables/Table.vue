@@ -27,7 +27,9 @@
 <script>
   import SmartHeader from './Header.vue'
   import SmartCell from './Cell.vue'
+  // Items below here should be admin only ideally
   import FeedbackTrend from '../graphs/FeedbackTrend.vue'
+  import DebateImportance from '../allocations/DebateImportance.vue'
 
   export default {
     props: {
@@ -41,7 +43,8 @@
     components: {
       SmartHeader,
       SmartCell,
-      FeedbackTrend
+      FeedbackTrend,
+      DebateImportance
     },
     data: function () {
       return {
@@ -53,21 +56,25 @@
       caseInsensitiveOrderBy: function (arr, sortIndex, reverse) {
         // This is basically a copy of Vue's native orderBy except we are overriding
         // the last part to see if the cell has custom sort attributes
-        var order = (reverse && reverse < 0) ? -1 : 1;
-        // sort on a copy to avoid mutating original array
-        return arr.slice().sort(function (a, b) {
-          // Check if cell has custom sorting
-          if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].sort) !== 'undefined') {
-            a = a[sortIndex].sort;
-            b = b[sortIndex].sort;
-          } else if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].text) !== 'undefined') {
-            a = a[sortIndex].text;
-            b = b[sortIndex].text;
-          } else {
-            console.log('Error sorting; sort key probably doesnt exist');
-          }
-          return a === b ? 0 : a > b ? order : -order;
-        });
+        if (sortIndex === null) {
+          console.log('no sortindex');
+          return arr; // If not set then return default order (can be desirable)
+        } else {
+          var order = (reverse && reverse < 0) ? -1 : 1;
+          return arr.slice().sort(function (a, b) {
+            // Check if cell has custom sorting
+            if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].sort) !== 'undefined') {
+              a = a[sortIndex].sort;
+              b = b[sortIndex].sort;
+            } else if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].text) !== 'undefined') {
+              a = a[sortIndex].text;
+              b = b[sortIndex].text;
+            } else {
+              console.log('Error sorting; sort key probably doesnt exist for that cell');
+            }
+            return a === b ? 0 : a > b ? order : -order;
+          });
+        }
       }
     },
     methods: {
@@ -80,15 +87,13 @@
       },
       getDefaultSortIndex: function() {
         // Find the index of the column that matches the default sorting key
-        var index = null
+        var index = null // if no defaultSortKey is set leave as null
         if (typeof(this.tableHeaders) !== 'undefined') { // Check table is not empty
           for (var i = 0; i < this.tableHeaders.length; i++) {
             if (this.defaultSortKey !== "") {
               if (this.tableHeaders[i].key === this.defaultSortKey) {
                 index = i
               }
-            } else {
-              index = 0; // if defaultSortKey is not set
             }
           }
         }

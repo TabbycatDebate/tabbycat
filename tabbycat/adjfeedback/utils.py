@@ -19,7 +19,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         breaking_data = [{
             'text': '<input type="checkbox" adj_id="%s" %s>' % (adj.id, 'checked' if adj.breaking else ''),
             'sort': adj.breaking,
-            'class': 'toggle_breaking_status'
+            'class': 'toggle_breaking_status checkbox-target'
         } for adj in adjudicators]
 
         self.add_column(breaking_header, breaking_data)

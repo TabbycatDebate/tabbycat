@@ -16,7 +16,7 @@ class Motion(models.Model):
         default=False,
         help_text="For WADL: Allows for particular motions to be flagged as contentious")
     round = models.ForeignKey('tournaments.Round')
-    divisions = models.ManyToManyField('tournaments.Division', blank=True)
+    divisions = models.ManyToManyField('divisions.Division', blank=True)
 
     class Meta:
         ordering = ('seq', )

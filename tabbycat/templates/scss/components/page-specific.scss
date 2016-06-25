@@ -29,7 +29,6 @@
   height: 60px;  // Need to be fixed height so below rows all align
   overflow: hidden;
 }
-
 .division-heading {
   // Shift up the select to be adjavent to the title
   padding: 5px 10px;
@@ -42,11 +41,11 @@
     float: right;
   }
 }
-.division-droppable {
-  min-height: 66px; // Don't expand when the first team is added
-  padding: 5px;
-}
 // DRAW
+// Fix for buttons on edit draw page
+.btn-group form {
+  margin-left: 3px;
+}
 .draw-xs {
   font-size: $font-size-base * 1.25;
 }

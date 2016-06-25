@@ -7,7 +7,8 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django.forms.models import ModelMultipleChoiceField
 
 from actionlog.models import ActionLogEntry
-from tournaments.models import Division, Round
+from divisions.models import Division
+from tournaments.models import Round
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view
 
 from .models import Motion

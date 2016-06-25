@@ -99,7 +99,7 @@
       <div class="panel panel-default">
         <div class="panel-body">
 
-          <table id="dataTable" class="table" cellspacing="0" cellpadding="0">
+          <table class="table" cellspacing="0" cellpadding="0">
             <thead>
               <tr>
                 <th>Rank</th>
@@ -152,7 +152,7 @@
 
           <div class="row">
             <div class="form-inline col-md-12">
-              <button class="btn btn-default form-control btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
+              <button class="btn btn-default btn-block btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
                   Save remarks
               </button>
             </div>
@@ -164,22 +164,3 @@
     </form>
   {% endif %}
 {% endblock content %}
-
-{% block js %}
-
-  {{ block.super }}
-  <!-- TODO: bundle -->
-  <script src="{% static 'js/vendor/jquery.dataTables.js' %}"></script>
-
-  <script>
-    $(document).ready( function() {
-      var dTable = $("#dataTable").DataTable({
-        "aaSorting": [[ 0, "asc" ]],
-      });
-      new $.fn.dataTable.FixedHeader( dTable, {alwaysCloneTop: true});
-      $('#table-search').keyup(function(){
-        dTable.search($(this).val()).draw();
-      })
-    });
-  </script>
-{% endblock js %}

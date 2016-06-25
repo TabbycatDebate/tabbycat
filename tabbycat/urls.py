@@ -20,20 +20,20 @@ urlpatterns = [
     url(r'^$',
         tournaments.views.index,
         name='tabbycat-index'),
-    url(r'^t/(?P<tournament_slug>[-\w_]+)/',
-        include('tournaments.urls')),
     url(r'^start/',
         tournaments.views.BlankSiteStartView.as_view(),
         name='blank-site-start'),
-    url(r'^tournament/create/',
+    url(r'^create/',
         tournaments.views.CreateTournamentView.as_view(),
         name='tournament-create'),
 
     # Admin area
     url(r'^jet/',
         include('jet.urls', 'jet')),
-    url(r'^admin/',
+    url(r'^database/',
         include(admin.site.urls)),
+    url(r'^admin/(?P<page>[-\w_/]*)$',
+        RedirectView.as_view(url='/database/%(page)s', permanent=True)),
 
     # Accounts
     url(r'^accounts/login/$',
@@ -45,20 +45,29 @@ urlpatterns = [
 
     # Favicon for old browsers that ignore the head link
     url(r'^favicon\.ico$',
-        RedirectView.as_view(url='/static/favicon.ico'))
+        RedirectView.as_view(url='/static/favicon.ico')),
+
+    # Redirect for old-style tournament URLs
+    # Avoid keyword argument name 'tournament_slug' to avoid triggering DebateMiddleware
+    url(r'^t/(?P<slug>[-\w_]+)/(?P<page>[-\w_/]*)$',
+        tournaments.views.TournamentPermanentRedirectView.as_view()),
+
+    # Tournament URLs
+    url(r'^(?P<tournament_slug>[-\w_]+)/',
+        include('tournaments.urls'))
 ]
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += [
+    urlpatterns.insert(-1, # insert before the tournament URLs catch-all
         # Only serve debug toolbar when on DEBUG
         url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]
+    )
+
 
 # ==============================================================================
 # Logout/Login Confirmations
 # ==============================================================================
-
 
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
@@ -75,10 +84,10 @@ def on_user_logged_in(sender, request, **kwargs):
     else: # should never happen, but just in case
         messages.success(request, 'Welcome! You just logged in!')
 
+
 # ==============================================================================
 # Redirect Method
 # ==============================================================================
-
 
 def redirect(view):
     from django.http import HttpResponseRedirect

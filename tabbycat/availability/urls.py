@@ -1,79 +1,42 @@
 from django.conf.urls import url
 
 from . import views
-from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
 
 urlpatterns = [
-
     # Overview
     url(r'^$',
-        views.availability_index,
+        views.AvailabilityIndexView.as_view(),
         name='availability_index'),
 
-    # All
-    url(r'all/update/$',
-        views.update_availability_all,
+    # # Bulk Updates
+    url(r'all/update/$', views.AvailabilityActivateAll.as_view(),
         name='update_availability_all'),
-    url(r'all/update_previous/$',
-        views.update_availability_previous,
+    url(r'previous/update/$', views.AvailabilityActivateFromPrevious.as_view(),
         name='update_availability_previous'),
 
-    # People
-    url(r'people/$',
-        views.checkin_results,
-        {'model': 'person',
-         'context_name': 'people'},
-        name='people_availability'),
-    url(r'people/update/$',
-        views.checkin_update,
-        {'active_attr': None,
-         'active_model': None,
-         'update_method': 'set_available_people'},
-        name='update_people_availability'),
+    # Adjs
+    url(r'adjudicators/$', views.AvailabilityTypeAdjudicatorView.as_view(),
+        name='adjudicator_availability'),
+    url(r'adjudicators/update/$', views.AvailabilityUpdateAdjudicators.as_view(),
+        name='update_adjudicator_availability'),
+    url(r'adjudicators/update/breaking/$', views.AvailabilityActivateBreakingAdjs.as_view(),
+        name='update_availability_breaking_adjs'),
 
     # Teams
-    url(r'teams/$',
-        views.availability,
-        {'model': 'team',
-         'context_name': 'teams'},
+    url(r'teams/$', views.AvailabilityTypeTeamView.as_view(),
         name='team_availability'),
-    url(r'teams/update/$',
-        views.update_availability,
-        {'active_attr': 'team',
-         'active_model': ActiveTeam,
-         'update_method': 'set_available_teams'},
+    url(r'teams/update/$', views.AvailabilityUpdateTeams.as_view(),
         name='update_team_availability'),
-    url(r'teams/update/breaking/$',
-        views.update_availability_breaking_teams,
+    url(r'teams/update/breaking/$', views.AvailabilityActivateBreakingTeams.as_view(),
         name='update_availability_breaking_teams'),
     url(r'teams/update/advancing/$',
-        views.update_availability_advancing_teams,
+        views.AvailabilityActivateAdvancingTeams.as_view(),
         name='update_availability_advancing_teams'),
 
     # Venues
-    url(r'venues/$', views.availability, {'model': 'venue',
-                                          'context_name': 'venues'},
-        'venue_availability'),
-    url(r'venues/update/$',
-        views.update_availability,
-        {'active_attr': 'venue',
-         'active_model': ActiveVenue,
-         'update_method': 'set_available_venues'},
+    url(r'venues/$', views.AvailabilityTypeVenueView.as_view(),
+        name='venue_availability'),
+    url(r'venues/update/$', views.AvailabilityUpdateVenues.as_view(),
         name='update_venue_availability'),
 
-    # Adjs
-    url(r'adjudicators/$',
-        views.availability,
-        {'model': 'adjudicator',
-         'context_name': 'adjudicators'},
-        name='adjudicator_availability'),
-    url(r'adjudicators/update/$',
-        views.update_availability,
-        {'active_attr': 'adjudicator',
-         'active_model': ActiveAdjudicator,
-         'update_method': 'set_available_adjudicators'},
-        name='update_adjudicator_availability'),
-    url(r'adjudicators/update/breaking/$',
-        views.update_availability_breaking_adjs,
-        name='update_availability_breaking_adjs'),
 ]

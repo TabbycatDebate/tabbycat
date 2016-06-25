@@ -1,4 +1,3 @@
-import json
 import logging
 from threading import Lock
 
@@ -6,24 +5,24 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.urlresolvers import reverse_lazy
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_page
-from django.views.generic.base import TemplateView
+from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.edit import CreateView, FormView
 
 from draw.models import Debate, DebateTeam
-from participants.models import Institution, Team
+from participants.models import Institution
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view
 from utils.misc import redirect_tournament
-from venues.models import InstitutionVenueConstraint, TeamVenueConstraint, VenueGroup
+from venues.models import VenueGroup
 
 from .forms import TournamentForm
 from .mixins import TournamentMixin
-from .models import Division, Tournament
+from .models import Tournament
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -78,8 +77,8 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
                 if tournament.current_round is None:
                     return HttpResponse('<p>Error: This tournament has no rounds; '
                                         ' you\'ll need to add some in the '
-                                        '<a href="/admin/">Edit Database</a> area.'
-                                        '</p>')
+                                        '<a href="' + reverse('admin:tournaments_round_changelist') +
+                                        '">Edit Database</a> area.</p>')
                 messages.warning(self.request, "The current round wasn't set, "
                                  "so it's been automatically set to the first round.")
                 logger.warning("Automatically set current round to {}".format(tournament.current_round))
@@ -88,18 +87,6 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
             else:
                 raise Http404()
         return super().get(self, request, *args, **kwargs)
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_divisions')
-def public_divisions(request, t):
-    divisions = Division.objects.filter(tournament=t).all().select_related('venue_group')
-    divisions = sorted(divisions, key=lambda x: x.name)
-    venue_groups = set(d.venue_group for d in divisions)
-    for uvg in venue_groups:
-        uvg.divisions = [d for d in divisions if d.venue_group == uvg]
-
-    return render(request, 'public_divisions.html', dict(venue_groups=venue_groups))
 
 
 @cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
@@ -154,139 +141,6 @@ def round_increment(request, round):
     return redirect_round('availability_index', request.tournament.current_round)
 
 
-@admin_required
-@tournament_view
-def division_allocations(request, t):
-    # Should be a JsonDataResponseView
-    teams = list(Team.objects.filter(tournament=t).all().values(
-        'id', 'short_reference', 'division', 'use_institution_prefix', 'institution__code', 'institution__id'))
-
-    for team in teams:
-        team['institutional_preferences'] = list(
-            InstitutionVenueConstraint.objects.filter(
-                institution=team['institution__id']).values(
-                    'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
-        team['team_preferences'] = list(
-            TeamVenueConstraint.objects.filter(
-                team=team['id']).values(
-                    'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
-
-        # team['institutional_preferences'] = "test"
-        # team['individual_preferences'] = "test"
-
-    teams = json.dumps(teams)
-
-    venue_groups = json.dumps(list(
-        VenueGroup.objects.all().values(
-            'id', 'short_name', 'team_capacity')))
-
-    divisions = json.dumps(list(Division.objects.filter(tournament=t).all().values(
-        'id', 'name', 'venue_group')))
-
-    return render(request, "division_allocations.html", dict(
-        teams=teams, divisions=divisions, venue_groups=venue_groups))
-
-
-@admin_required
-@tournament_view
-def create_division(request, t):
-    division = Division.objects.create(name="temporary_name", tournament=t)
-    division.save()
-    division.name = "%s" % division.id
-    division.save()
-    return redirect_tournament('division_allocations', t)
-
-
-@admin_required
-@tournament_view
-def create_byes(request, t):
-    divisions = Division.objects.filter(tournament=t)
-    Team.objects.filter(tournament=t, type=Team.TYPE_BYE).delete()
-    for division in divisions:
-        teams_count = Team.objects.filter(division=division).count()
-        if teams_count % 2 != 0:
-            bye_institution, created = Institution.objects.get_or_create(
-                name="Byes", code="Byes")
-            Team(
-                institution=bye_institution,
-                reference="Bye for Division " + division.name,
-                short_reference="Bye",
-                tournament=t,
-                division=division,
-                use_institution_prefix=False,
-                type=Team.TYPE_BYE
-            ).save()
-
-    return redirect_tournament('division_allocations', t)
-
-
-@admin_required
-@tournament_view
-def create_division_allocation(request, t):
-    from tournaments.division_allocator import DivisionAllocator
-
-    teams = list(Team.objects.filter(tournament=t))
-    institutions = Institution.objects.all()
-    venue_groups = VenueGroup.objects.all()
-
-    # Delete all existing divisions - this shouldn't affect teams (on_delete=models.SET_NULL))
-    divisions = Division.objects.filter(tournament=t).delete()
-
-    alloc = DivisionAllocator(teams=teams, divisions=divisions,
-                              venue_groups=venue_groups, tournament=t,
-                              institutions=institutions)
-    success = alloc.allocate()
-
-    if success:
-        return redirect_tournament('division_allocations', t)
-    else:
-        return HttpResponseBadRequest("Couldn't create divisions")
-
-
-@admin_required
-@expect_post
-@tournament_view
-def set_division_venue_group(request, t):
-    division = Division.objects.get(pk=int(request.POST['division']))
-    if request.POST['venueGroup'] == '':
-        division.venue_group = None
-    else:
-        division.venue_group = VenueGroup.objects.get(pk=int(request.POST['venueGroup']))
-
-    print("saved venue group for for", division.name)
-    division.save()
-    return HttpResponse("ok")
-
-
-@admin_required
-@expect_post
-@tournament_view
-def set_team_division(request, t):
-    team = Team.objects.get(pk=int(request.POST['team']))
-    if request.POST['division'] == '':
-        team.division = None
-    else:
-        team.division = Division.objects.get(pk=int(request.POST['division']))
-        team.save()
-        print("saved divison for ", team.short_name)
-
-    return HttpResponse("ok")
-
-
-@admin_required
-@expect_post
-@tournament_view
-def set_division_time(request, t):
-    division = Division.objects.get(pk=int(request.POST['division']))
-    if request.POST['division'] == '':
-        division = None
-    else:
-        division.time_slot = request.POST['time']
-        division.save()
-
-    return HttpResponse("ok")
-
-
 class BlankSiteStartView(FormView):
     """This view is presented to the user when there are no tournaments and no
     user accounts. It prompts the user to create a first superuser. It rejects
@@ -329,3 +183,17 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     model = Tournament
     form_class = TournamentForm
     template_name = "create_tournament.html"
+
+
+class TournamentPermanentRedirectView(RedirectView):
+    """Redirect old-style /t/<slug>/... URLs to new-style /<slug>/... URLs."""
+
+    url = "/%(slug)s/%(page)s"
+    permanent = True
+
+    def get_redirect_url(self, *args, **kwargs):
+        slug = kwargs['slug']
+        if not Tournament.objects.filter(slug=slug).exists():
+            logger.error("Tried to redirect non-existent tournament slug '%s'" % slug)
+            raise Http404("There isn't a tournament with slug '%s'." % slug)
+        return super().get_redirect_url(*args, **kwargs)

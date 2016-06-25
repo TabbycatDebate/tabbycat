@@ -16,7 +16,7 @@ from utils.views import admin_required, expect_post, round_view
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
-from .utils import adjs_to_json, AllocationTableBuilder
+from .utils import adjs_to_json, AllocationTableBuilder, populate_adjs_data
 
 logger = logging.getLogger(__name__)
 
@@ -207,28 +207,28 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
     template_name = 'edit_adj_allocation.html'
 
     def get_context_data(self, **kwargs):
-        unused_adjs = self.get_round().unused_adjudicators()
-        kwargs['unAllocatedAdjs'] = [adjs_to_json(a) for a in unused_adjs]
+        round_adjs = populate_adjs_data(self.get_round())
+        kwargs['allAdjudicators'] = adjs_to_json(round_adjs)
         return super().get_context_data(**kwargs)
 
     def get_table(self):
-        r = self.get_round()
-        draw = r.get_draw()
+        # r = self.get_round()
+        # draw = r.get_draw()
 
         table = AllocationTableBuilder(view=self, sort_order='desc',
             sort_key='importance',
             table_class='table-condensed table-edit-allocation')
 
-        table.add_debate_bracket_columns(draw)
-        table.add_debate_importances(draw, r)
-        table.add_debate_venue_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw],
-           key='Aff', hide_institution=True, hide_emoji=True)
-        table.add_team_wins(draw, r, "AW")
-        table.add_team_columns([d.neg_team for d in draw],
-           key='Neg', hide_institution=True, hide_emoji=True)
-        table.add_team_wins(draw, r, "NW")
-        table.add_column("Panel", [{'text': ''} for d in draw])
+        # table.add_debate_bracket_columns(draw)
+        # table.add_debate_importances(draw, r)
+        # table.add_debate_venue_columns(draw)
+        # table.add_team_columns([d.aff_team for d in draw],
+        #    key='Aff', hide_institution=True, hide_emoji=True)
+        # table.add_team_wins(draw, r, "AW")
+        # table.add_team_columns([d.neg_team for d in draw],
+        #    key='Neg', hide_institution=True, hide_emoji=True)
+        # table.add_team_wins(draw, r, "NW")
+        # table.add_column("Panel", [{'text': ''} for d in draw])
 
         return table
 

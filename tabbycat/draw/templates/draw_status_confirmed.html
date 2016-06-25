@@ -1,0 +1,191 @@
+{% extends "draw_base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block page-title %}Draw for {{ round.name }}{% endblock %}
+{% block head-title %}
+  <span class="emoji"> 👀</span>Draw for {{ round.name }}
+{% endblock %}
+{% block sub-title %}
+  {% if round.draw_status = round.STATUS_CONFIRMED %}
+    draw is confirmed but not released;
+  {% elif round.draw_status = round.STATUS_RELEASED %}
+    draw is confirmed and released;
+  {% else %}
+    DRAW STATUS ERROR,
+  {% endif %}
+  motions {{ round.motions_released|yesno:",are not" }} released
+{% endblock %}
+
+{% block page-alerts %}
+  {% if round.motion_set.all.count == 0 %}
+  <div class="alert alert-danger">
+    There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit round %}" class="alert-link">Edit the motions.</a>
+  </div>
+  {% endif %}
+  {% if not round.venue_allocation_valid %}
+    <div class="alert alert-danger" id="">
+      One or more debates does not have a venue <a href="{% round_url venues-edit round %}" class="alert-link">Edit the venues</a>.
+    </div>
+  {% endif %}
+  {% if active_adjs.count < draw.count %}
+    <div class="alert alert-danger" id="">
+      There are currently fewer checked-in adjudicators than there are rooms. <a href="{% round_url adjudicator_availability round %}" class="alert-link">Check in some more adjudicators</a>.
+    </div>
+  {% else %}
+    {% if round.adjudicators_allocation_validity > 0 %}
+      <div class="alert alert-warning">
+        {% if round.adjudicators_allocation_validity == 1 %}
+          One or more debates don't have a chair.
+        {% elif round.adjudicators_allocation_validity == 2 %}
+          One or more debates have panels with an even number of adjudicators.
+        {% endif %}
+        <a class="alert-link" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {% if round.draw_status = round.STATUS_RELEASED and not pref.public_draw %}
+    <div class="alert alert-warning">
+      You have released the draw, but it will not show to the public unless
+      'public view of draw' setting is enabled in
+      <a class="alert-link" href="{% tournament_url options-tournament-index %}"> this tournament's
+       configuration</a>.
+    </div>
+  {% endif %}
+
+  {% if round.motions_released and not pref.public_motions %}
+    <div class="alert alert-warning">
+      You have released the motions, but they will not show to the public unless the
+      'public view of motions' setting is enabled in
+      <a class="alert-link" href="{% tournament_url options-tournament-index %}"> this tournament's
+       configuration</a>.
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+  <div class="vertical-spacing">
+
+    <div class="btn-group">
+      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_venue round %}">
+        <span class="text-primary">
+          Display Draw by Venue <span class="glyphicon glyphicon-share"></span>
+        </span>
+      </a>
+      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_team round %}">
+        <span class="text-primary">
+          Display Draw by Team <span class="glyphicon glyphicon-share"></span>
+        </span>
+      </a>
+    </div>
+
+    <div class="btn-group">
+      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_print_scoresheets round %}">
+        <span class="text-primary">
+          Print Ballots <span class="glyphicon glyphicon-share"></span>
+        </span>
+      </a>
+      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_print_feedback round %}">
+        <span class="text-primary">
+          Print Feedback Forms <span class="glyphicon glyphicon-share"></span>
+        </span>
+      </a>
+      {% if pref.public_divisions %}
+      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url master_sheets_list round %}">
+        <span class="text-primary">
+          Print Division Sheets<span class="glyphicon glyphicon-share"></span>
+        </span>
+      </a>
+      {% endif %}
+    </div>
+
+    <div class="btn-group pull-right">
+      <div class="btn-group">
+        {% if not pref.enable_debate_scheduling %}
+          <a class="btn btn-sm pull-right {% if round.starts_at %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#editStartTime">
+            {% if round.starts_at %}
+              Starts at {{ round.starts_at }}
+            {% else %}
+              Add Start Time
+            {% endif %}
+          </a>
+        {% else %}
+          <a href="{% round_url schedule_debates %}" class="btn btn-sm btn-default submit-disable">
+            Schedule Debates
+          </a>
+        {% endif %}
+      </div>
+      {% if round.motions_released %}
+        <form class="btn-group-input pull-right" id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}">
+          {% csrf_token %}
+          <button class="btn btn-sm btn-danger submit-disable" type="submit">
+            Unrelease Motions
+          </button>
+        </form>
+      {% else %}
+        <form class="btn-group-input pull-right" id="releaseForm" method="POST" action="{% round_url release_motions %}">
+          {% csrf_token %}
+          <button class="btn btn-sm btn-primary submit-disable" type="submit">
+            Release Motions
+          </button>
+        </form>
+      {% endif %}
+      {% if round.draw_status = round.STATUS_CONFIRMED %}
+        <form class="pull-right" id="releaseForm" method="POST" action="{% round_url release_draw %}">
+          {% csrf_token %}
+          <button class="btn btn-sm btn-primary submit-disable" type="submit">
+            Release Draw
+          </button>
+        </form>
+      {% elif round.draw_status = round.STATUS_RELEASED %}
+        <form class="pull-right" id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}">
+          {% csrf_token %}
+          <button class="btn btn-sm btn-danger submit-disable" type="submit">
+            Unrelease Draw
+          </button>
+        </form>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <div class="modal fade" id="editStartTime" tabindex="-1" role="dialog" aria-labelledby="editStartTime">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Change Start Time</h3>
+        </div>
+        <div class="modal-body">
+          <form id="startTimeForm" method="POST" action="{% round_url set_round_start_time %}" class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-4 control-label">
+                Start at
+              </label>
+              <div class="col-sm-6">
+                <input placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time" class="form-control"></input>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-4 control-label"></label>
+              <div class="col-sm-6">
+                <button type="submit" value="Save" class="btn btn-success submit-disable" data-loading-text="Saving...">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ block.super }}
+
+{% endblock content %}
+
+{% block js %}
+
+  {{ block.super }}
+
+{% endblock %}

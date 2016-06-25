@@ -6,7 +6,7 @@
 {% block sub-title %}(click your name on this list){% endblock %}
 
 {% block content %}
-  <table id="dataTable" class="table">
+  <table class="table">
     <thead>
       <tr>
         <th>Adj<span class="hidden-xs">udicator</span></th>
@@ -34,15 +34,3 @@
     {% endfor %}
   </table>
 {% endblock %}
-
-{% block js %}
-  {{ block.super }}
-  <script>
-    $(document).ready( function() {
-      var table = $("#dataTable").dataTable( {
-        "aaSorting": [[ 0, "asc" ]],
-      });
-      new $.fn.dataTable.FixedHeader( table, {alwaysCloneTop: true});
-    } );
-  </script>
-{% endblock js %}

@@ -49,7 +49,7 @@
         <li class="list-group-item" v-if="latestActions === 'loading'">
           Loading...
         </li>
-        <li class="list-group-item" v-if="latestActions.length > 0">
+        <li class="list-group-item" v-if="latestActions.length === 0">
           No Actions In
         </li>
       </ul>
@@ -63,7 +63,7 @@
         <li class="list-group-item" v-if="latestResults === 'loading'">
           Loading...
         </li>
-        <li class="list-group-item" v-if="latestResults.length > 0">
+        <li class="list-group-item" v-if="latestResults.length === 0">
           No Results In
         </li>
       </ul>
@@ -76,8 +76,6 @@
   <script>
     var updateActionsURL = '{% tournament_url latest_actions %}';
     var updateResultsURL = '{% tournament_url latest_results %}';
-    var bypassMainVue = true;
   </script>
   {{ block.super }}
-  <script src="{% static 'js/tournament-home.bundle.js' %}"></script>
 {% endblock %}

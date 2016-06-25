@@ -1,13 +1,25 @@
 from django.db import models
 from django.db.models import signals
 from django.core.cache import cache
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.functional import cached_property
 
 from participants.emoji import EMOJI_LIST
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+PROHIBITED_TOURNAMENT_SLUGS = ['start', 'create', 'jet', 'database', 'admin', 'accounts',
+    'favicon.ico', 't', '__debug__', 'static']
+
+def validate_tournament_slug(value):
+    if value in PROHIBITED_TOURNAMENT_SLUGS:
+        raise ValidationError(
+            "You can't use any of the following as tournament slugs, because "
+            "they're reserved for Tabbycat system URLs: %(prohibited_list)s.",
+            params={'prohibited_list': ", ".join(PROHIBITED_TOURNAMENT_SLUGS)}
+        )
 
 
 class Tournament(models.Model):
@@ -18,7 +30,7 @@ class Tournament(models.Model):
     emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
     seq = models.IntegerField(blank=True, null=True,
         help_text="A number that determines the relative order in which tournaments are displayed on the homepage.")
-    slug = models.SlugField(unique=True,
+    slug = models.SlugField(unique=True, validators=[validate_tournament_slug],
         help_text="The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\"")
     current_round = models.ForeignKey('Round', null=True, blank=True, related_name='tournament_',
         help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
@@ -133,33 +145,6 @@ def update_tournament_cache(sender, instance, created, **kwargs):
 
 # Update the cached tournament object when model is changed)
 signals.post_save.connect(update_tournament_cache, sender=Tournament)
-
-
-class Division(models.Model):
-    name = models.CharField(max_length=50, verbose_name="Name or suffix")
-    seq = models.IntegerField(blank=True, null=True,
-        help_text="The order in which divisions are displayed")
-    tournament = models.ForeignKey(Tournament)
-    time_slot = models.TimeField(blank=True, null=True)
-    venue_group = models.ForeignKey('venues.VenueGroup', blank=True, null=True)
-
-    @property
-    def teams_count(self):
-        return self.team_set.count()
-
-    @cached_property
-    def teams(self):
-        return self.team_set.all().order_by(
-            'institution', 'reference').select_related('institution')
-
-    def __str__(self):
-        return "%s - %s" % (self.tournament, self.name)
-
-    class Meta:
-        unique_together = [('tournament', 'name')]
-        ordering = ['tournament', 'seq']
-        index_together = ['tournament', 'seq']
-
 
 class RoundManager(models.Manager):
     use_for_related_Fields = True
@@ -431,16 +416,6 @@ class Round(models.Model):
             setattr(m, id_column, id)
             m.save()
 
-    def set_available_people(self, ids):
-        from availability.models import Checkin
-        from participants.models import Person
-        return self.set_available_base(ids,
-                                       Person,
-                                       Checkin,
-                                       self.checkins,
-                                       'person_id',
-                                       'person__id',
-                                       remove=False)
 
     def set_available_venues(self, ids):
         from availability.models import ActiveVenue
@@ -533,7 +508,7 @@ class Round(models.Model):
         self.set_available_teams(
             [t.team.id for t in ActiveTeam.objects.filter(round=self.prev)])
 
-    @property
+    @cached_property
     def prev(self):
         try:
             return Round.objects.get(seq=self.seq - 1,
