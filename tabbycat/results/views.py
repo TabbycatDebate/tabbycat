@@ -434,7 +434,7 @@ def latest_results(request, t):
             looser = b.ballot_set.debate.aff_team.short_name + " (Aff)"
 
         results_objects.append({
-            'user': winner + " won vs " + looser,
+            'user': winner + " beat " + looser,
             'timestamp': timestamp_template.render(Context({'t': b.timestamp})),
         })
 
