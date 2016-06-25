@@ -7,12 +7,13 @@
 # E231 = missing whitespace after ','
 
 # E261 = at least two spaces before inline comment
-# E128 = E128 continuation line under-indented for visual indent
+# E126 = continuation line over-indented for hanging indent
+# E128 = continuation line under-indented for visual indent
 # I100 = Imported names are in the wrong order.
 
 # Q000 = double quotes
 
-ignore = E128,E221,E226,E261,E203,E231,E241,Q000,I100
+ignore = E126,E128,E221,E226,E261,E203,E231,E241,Q000,I100
 
 max-line-length = 200
 
