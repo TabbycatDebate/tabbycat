@@ -246,7 +246,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         motion_data = [{
             'text': motion.reference,
             'tooltip': motion.text,
-        } for motion in motions]
+        } if motion else "—" for motion in motions]
         self.add_column(key, motion_data)
 
     def add_team_columns(self, teams, break_categories=False, show_speakers=False,
@@ -436,7 +436,16 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(state_header, state_data)
 
     def add_debate_ballot_link_column(self, debates):
-        if self.tournament.pref('ballots_released'):
+        ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
+
+        if self.admin:
+            ballot_links_data = [{
+                'text': "View/Edit Ballot",
+                'link': reverse_tournament('edit_ballotset', self.tournament, kwargs={'ballotsub_id': debate.confirmed_ballot.id})
+            } if debate.confirmed_ballot else "" for debate in debates]
+            self.add_column(ballot_links_header, ballot_links_data)
+
+        elif self.tournament.pref('ballots_released'):
             ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
             ballot_links_data = [{
                 'text': "View Ballot",

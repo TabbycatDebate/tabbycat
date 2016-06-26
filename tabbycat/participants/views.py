@@ -86,15 +86,6 @@ class BaseTeamSummaryView(BaseSummaryView):
     model = Team
     template_name = 'team_summary.html'
 
-
-class BaseAdjudicatorSummaryView(BaseSummaryView):
-
-    model = Adjudicator
-    template_name = 'adjudicator_summary.html'
-
-
-class TeamSummaryView(SuperuserRequiredMixin, BaseTeamSummaryView):
-
     def get_context_data(self, **kwargs):
         try:
             kwargs['debateteam'] = self.object.debateteam_set.get(
@@ -110,14 +101,17 @@ class TeamSummaryView(SuperuserRequiredMixin, BaseTeamSummaryView):
         table = TabbycatTableBuilder(view=self, title="Previous Rounds")
         table.add_round_column([ts.debate_team.debate.round for ts in teamscores])
         table.add_debate_result_by_team_columns(teamscores)
-        table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True)
-        if self.get_tournament().pref('show_motions_in_results'):
-            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+        table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+        table.add_debate_ballot_link_column(debates)
 
         return table
 
-class AdjudicatorSummaryView(SuperuserRequiredMixin, BaseAdjudicatorSummaryView):
+
+class BaseAdjudicatorSummaryView(BaseSummaryView):
+
+    model = Adjudicator
+    template_name = 'adjudicator_summary.html'
 
     def get_context_data(self, **kwargs):
         try:
@@ -128,11 +122,19 @@ class AdjudicatorSummaryView(SuperuserRequiredMixin, BaseAdjudicatorSummaryView)
         return super().get_context_data(**kwargs)
 
 
-class PublicTeamSummaryView(PublicTournamentPageMixin, TeamSummaryView):
+class TeamSummaryView(SuperuserRequiredMixin, BaseTeamSummaryView):
+    pass
+
+
+class AdjudicatorSummaryView(SuperuserRequiredMixin, BaseAdjudicatorSummaryView):
+    pass
+
+
+class PublicTeamSummaryView(PublicTournamentPageMixin, BaseTeamSummaryView):
     public_page_preference = 'public_summary'
 
 
-class PublicAdjudicatorSummaryView(PublicTournamentPageMixin, AdjudicatorSummaryView):
+class PublicAdjudicatorSummaryView(PublicTournamentPageMixin, BaseAdjudicatorSummaryView):
     public_page_preference = 'public_summary'
 
 
