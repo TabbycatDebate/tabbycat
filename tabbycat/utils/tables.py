@@ -189,6 +189,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_debate_adjudicators_column(self, debates, key="Adjudicators", show_splits=False):
         data = []
+
+        def add_adj_tooltip(adj, adj_string):
+            return '<span title="%s" data-toggle="tooltip"><span>%s</span></span>' % (
+                adj.institution.name, adj_string)
+
         for debate in debates:
             adj_strings = []
 
@@ -197,10 +202,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     adj_string = adj.name + self.ADJ_SYMBOLS[adjtype]
                     if split:
                         adj_string = "<span class='text-danger'>" + adj_string + " 💢</span>"
-                    adj_strings.append(adj_string)
+                    adj_strings.append(add_adj_tooltip(adj, adj_string))
             else:
                 for adjtype, adj in debate.adjudicators:
-                    adj_strings.append(adj.name + self.ADJ_SYMBOLS[adjtype])
+                    adj_string = adj.name + self.ADJ_SYMBOLS[adjtype]
+                    adj_strings.append(add_adj_tooltip(adj, adj_string))
 
             data.append(", ".join(adj_strings))
 

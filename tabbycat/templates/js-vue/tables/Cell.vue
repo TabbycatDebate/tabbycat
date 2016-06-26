@@ -16,9 +16,9 @@
     </span>
 
     <!-- Tooltip Hovers Wrapper -->
-    <span :title="cellData['tooltip']"
-          :data-toggle="cellData['tooltip'] ? 'tooltip' : null"
-          :v-on:hover="cellData['tooltip'] ? showTooltip  : null">
+    <span
+      :title="cellData['tooltip']"
+      :data-toggle="cellData['tooltip'] ? 'tooltip' : null">
 
       <!-- Links and modals -->
       <template v-if="cellData['link'] || cellData['modal']">
@@ -46,11 +46,6 @@
 export default {
   props: {
     cellData: Object,
-  },
-  methods: {
-    showTooltip: function(event) {
-      $(event.target).tooltip('show')
-    }
-  },
+  }
 }
 </script>
