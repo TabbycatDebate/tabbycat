@@ -1,12 +1,4 @@
 // For feedback graph
-.break-display {
-  &.break-1 {
-    background: #C70062;
-  }
-  &.break-2 {
-    background: #00C79B;
-  }
-}
 .position-display {
   &.chair {
     background-color: #b10095; // Purpleish
@@ -25,26 +17,30 @@
   }
 }
 // For diversity graphs and allocation
+.break-display {
+  &.break-1 {
+    @include button-variant(#fff, #C70062, darken(#C70062, 10%));
+  }
+  &.break-2 {
+    @include button-variant(#fff, #00C79B, darken(#00C79B, 10%));
+  }
+}
 .gender-display {
   &.male {
-    background-color: $male;
+    @include button-variant(#fff, $male, darken($male, 10%));
     fill: $male;
-    color: #fff;
   }
   &.female, &.nm {
-    background-color: $female;
+    @include button-variant(#fff, $female, darken($female, 10%));
     fill: $female;
-    color: #fff;
   }
   &.other {
-    background-color: $other;
+    @include button-variant(#fff, $other, darken($other, 10%));
     fill: $other;
-    color: #fff;
   }
   &.unknown {
-    background-color: $unknown;
+    @include button-variant(#fff, $unknown, darken($unknown, 10%));
     fill: $unknown;
-    color: #fff;
   }
   .text-muted {
     color: #fff;
@@ -71,52 +67,43 @@
     color: #fff;
   }
   &.region-1 {
-    background-color: #C70062;
+    @include button-variant(#fff, #C70062, darken(#C70062, 10%));
     fill: #C70062;
-    color: #fff;
   }
   &.region-2 {
-    background-color: #00C79B;
+    @include button-variant(#fff, #00C79B, darken(#00C79B, 10%));
     fill: #00C79B;
-    color: #fff;
   }
   &.region-3 {
-    background-color: #B1E001;
+    @include button-variant(#fff, #B1E001, darken(#B1E001, 10%));
     fill: #B1E001;
-    color: #fff;
   }
   &.region-4 {
-    background-color: #476C5E;
+    @include button-variant(#fff, #476C5E, darken(#476C5E, 10%));
     fill: #476C5E;
-    color: #fff;
   }
   &.region-5 {
-    background-color: #FF2983;
+    @include button-variant(#fff, #FF2983, darken(#FF2983, 10%));
     fill: #FF2983;
-    color: #fff;
   }
   &.region-6 {
-    background-color: #6A268C;
+    @include button-variant(#fff, #6A268C, darken(#6A268C, 10%));
     fill: #6A268C;
-    color: #fff;
   }
   &.region-7 {
-    background-color: #00C0CF;
+    @include button-variant(#fff, #00C0CF, darken(#00C0CF, 10%));
     fill: #00C0CF;
-    color: #fff;
   }
   &.region-8 {
-    background-color: #0051CF;
+    @include button-variant(#fff, #0051CF, darken(#0051CF, 10%));
     fill: #0051CF;
-    color: #fff;
   }
   &.region-9 {
-    background-color: #777;
+    @include button-variant(#fff, #777, darken(#777, 10%));
     fill: #777;
-    color: #fff;
   }
 }
-
+// Subheadings for adj allocations
 .region-display, .gender-display {
   .text-muted {
     color: #fff;
