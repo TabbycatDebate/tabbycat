@@ -79,9 +79,9 @@ class Person(models.Model):
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
     GENDER_OTHER = 'O'
-    GENDER_CHOICES = ((GENDER_MALE, 'Male'),
-                      (GENDER_FEMALE, 'Female'),
-                      (GENDER_OTHER, 'Other'), )
+    GENDER_CHOICES = ((GENDER_MALE,     'Male'),
+                      (GENDER_FEMALE,   'Female'),
+                      (GENDER_OTHER,    'Other'))
     gender = models.CharField(
         max_length=1,
         choices=GENDER_CHOICES,

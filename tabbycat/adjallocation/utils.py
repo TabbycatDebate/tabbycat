@@ -82,12 +82,13 @@ def populate_adjs_data(r):
 
 def adjs_to_json(adjs):
     """Converts to a standard JSON object for Vue components to use"""
+
     data = [{
         'id': adj.id,
         'name': adj.name,
         'debate': adj.debate,
         'gender': adj.gender,
-        'gender_name': "Male",
+        'gender_name': [g[1] for g in adj.GENDER_CHOICES if g[0] is adj.gender],
         'region': adj.institution.region.id if adj.institution.region else '',
         'region_name': adj.institution.region.name if adj.institution.region else '',
         'institution': {

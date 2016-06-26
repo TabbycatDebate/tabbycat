@@ -83,7 +83,7 @@ gulp.task("js-browserify", function() {
   // We define our input files, which we want to have bundled
   var files = [
       'tabbycat/templates/js-bundles/public.js',
-      'tabbycat/templates/js-bundles/admin.js',
+      'tabbycat/templates/js-bundles/admin.js'
   ];
   // map them to our stream function
   var tasks = files.map(function(entry) {
@@ -93,9 +93,9 @@ gulp.task("js-browserify", function() {
           presets: ["es2015"],
           plugins: ['transform-runtime']
       }]).on('error', gutil.log)
-      .bundle()
-      .pipe(source(entry))
-      .pipe(isProduction ? streamify(uglify()) : gutil.noop())
+      .bundle().on('error', gutil.log)
+      .pipe(source(entry)).on('error', gutil.log)
+      .pipe(isProduction ? streamify(uglify()) : gutil.noop()).on('error', gutil.log)
       .pipe(rename({
           extname: '.bundle.js',
           dirname: ''

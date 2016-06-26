@@ -65,3 +65,9 @@
 .speaker-name {
   text-align: left;
 }
+// Allocations
+// ALternate highlight color (red and orange are used)
+.panel-incomplete,
+.chair-incomplete {
+  @include button-variant(#fff, $brand-danger-alt, darken($brand-danger-alt, 10%));
+}

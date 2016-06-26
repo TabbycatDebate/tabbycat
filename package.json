@@ -32,6 +32,7 @@
     "lato-font": "^1.1.1",
     "live-reload": "^1.1.0",
     "node-glob": "^1.2.0",
+    "node-sass": "^3.8.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
     "vue": "^1.0.25",

@@ -1,4 +1,12 @@
 // For feedback graph
+.break-display {
+  &.break-1 {
+    background: #C70062;
+  }
+  &.break-2 {
+    background: #00C79B;
+  }
+}
 .position-display {
   &.chair {
     background-color: #b10095; // Purpleish
@@ -13,11 +21,6 @@
   &.trainee {
     background-color: $female;
     fill: $female;
-    color: #fff;
-  }
-  &.test {
-    background-color: $unknown;
-    fill: $unknown;
     color: #fff;
   }
 }
@@ -42,6 +45,10 @@
     background-color: $unknown;
     fill: $unknown;
     color: #fff;
+  }
+  .text-muted {
+    color: #fff;
+    opacity: 0.5;
   }
 }
 .gender-text {
@@ -107,5 +114,12 @@
     background-color: #777;
     fill: #777;
     color: #fff;
+  }
+}
+
+.region-display, .gender-display {
+  .text-muted {
+    color: #fff;
+    opacity: 0.66;
   }
 }

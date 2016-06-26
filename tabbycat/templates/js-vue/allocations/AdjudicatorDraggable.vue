@@ -32,7 +32,8 @@
     v-bind:class="[isDragging ? vue-is-dragging : '', diversityHighlights]"
     class="vue-draggable adj-draggable btn btn-default"
     data-toggle="tooltip"
-    title="{{ adj.name }} of {{ adj.institution.name }}">
+    title="{{ adj.name }} of {{ adj.institution.name }}
+      ({{ adj.gender_name }}{{ adj.region_name ? '; ' + adj.region_name : '' }})">
 
     <div class="h4">
       {{ adj.score }}
