@@ -87,6 +87,9 @@ def adjs_to_json(adjs):
         'name': adj.name,
         'debate': adj.debate,
         'gender': adj.gender,
+        'gender_name': "Male",
+        'region': adj.institution.region.id if adj.institution.region else '',
+        'region_name': adj.institution.region.name if adj.institution.region else '',
         'institution': {
             'id': adj.institution.id,
             'name': adj.institution.code,

@@ -1,41 +1,47 @@
 // For feedback graph
 .position-display {
-  color: #fff;
   &.chair {
     background-color: #b10095; // Purpleish
     fill: #b10095;
+    color: #fff;
   }
   &.panellist {
     background-color: $male;
     fill: $male;
+    color: #fff;
   }
   &.trainee {
     background-color: $female;
     fill: $female;
+    color: #fff;
   }
   &.test {
     background-color: $unknown;
     fill: $unknown;
+    color: #fff;
   }
 }
 // For diversity graphs and allocation
 .gender-display {
-  color: #fff;
   &.male {
     background-color: $male;
     fill: $male;
+    color: #fff;
   }
   &.female, &.nm {
     background-color: $female;
     fill: $female;
+    color: #fff;
   }
   &.other {
     background-color: $other;
     fill: $other;
+    color: #fff;
   }
   &.unknown {
     background-color: $unknown;
     fill: $unknown;
+    color: #fff;
   }
 }
 .gender-text {
@@ -54,44 +60,52 @@
 }
 // For diversity graphs and allocation
 .region-display {
-  color: #fff;
   span a {
     color: #fff;
   }
   &.region-1 {
     background-color: #C70062;
     fill: #C70062;
+    color: #fff;
   }
   &.region-2 {
     background-color: #00C79B;
     fill: #00C79B;
+    color: #fff;
   }
   &.region-3 {
     background-color: #B1E001;
     fill: #B1E001;
+    color: #fff;
   }
   &.region-4 {
     background-color: #476C5E;
     fill: #476C5E;
+    color: #fff;
   }
   &.region-5 {
     background-color: #FF2983;
     fill: #FF2983;
+    color: #fff;
   }
   &.region-6 {
     background-color: #6A268C;
     fill: #6A268C;
+    color: #fff;
   }
   &.region-7 {
     background-color: #00C0CF;
     fill: #00C0CF;
+    color: #fff;
   }
   &.region-8 {
     background-color: #0051CF;
     fill: #0051CF;
+    color: #fff;
   }
   &.region-9 {
     background-color: #777;
     fill: #777;
+    color: #fff;
   }
 }

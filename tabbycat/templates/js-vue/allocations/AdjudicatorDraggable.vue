@@ -2,7 +2,7 @@
 
 .adj-draggable {
   text-align: left;
-  padding-top: 3px;
+  padding-top: 2px;
   div {
     float: left;
   }
@@ -29,7 +29,7 @@
     draggable=true
     v-on:dragstart="handleDragStart"
     v-on:dragend="handleDragEnd"
-    v-bind:class="[isDragging ? vue-is-dragging : '']"
+    v-bind:class="[isDragging ? vue-is-dragging : '', diversityHighlights]"
     class="vue-draggable adj-draggable btn btn-default"
     data-toggle="tooltip"
     title="{{ adj.name }} of {{ adj.institution.name }}">
@@ -59,9 +59,10 @@
 <script>
 import DraggableMixin from '../mixins/DraggableMixin.vue'
 import AjaxMixin from '../mixins/AjaxMixin.vue'
+import DiversityHighlights from '../mixins/DiversityHighlights.vue'
 
 export default {
-  mixins: [DraggableMixin, AjaxMixin],
+  mixins: [DraggableMixin, AjaxMixin, DiversityHighlights],
   props: {
     adj: Object
   },
