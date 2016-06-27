@@ -1,5 +1,3 @@
-@import '../partials/variables';
-
 //------------------------------------------------------------------------------
 // Web Fonts
 //------------------------------------------------------------------------------
@@ -33,25 +31,12 @@
   border-bottom: 2px solid #fff;
 }
 
-.emoji {
-  display: inline-block;
-  font-family: sans-serif; // Need to be a system font or they wont show
-  font-style: normal;
-  font-weight: normal;
-  margin-right: 1px;
-  min-width: 20px;
-}
-
-.small .emoji {
-  min-width: 13px;
-}
-
 //------------------------------------------------------------------------------
 // Buttons
 //------------------------------------------------------------------------------
 
+// Actionable elements (buttons, navs) should be distinct
 .nav {
-  // Actionable elements (buttons, navs) should be distinct
   font-family: $headings-font-family;
 }
 
