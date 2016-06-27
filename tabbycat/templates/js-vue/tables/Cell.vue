@@ -1,4 +1,3 @@
-<!-- Table Template -->
 <template>
 
   <td :class="cellData['class'] ? cellData['class'] : null">
@@ -7,18 +6,18 @@
     <span v-if="cellData['sort']" class="hidden">
       {{ cellData["sort"] }}
     </span>
-
     <!-- Icons or Emoji -->
     <span v-if="cellData['icon']" class="glyphicon" :class="cellData['icon']">
     </span>
-    <span class="emoji" v-if="cellData['emoji']">
+    <span v-if="cellData['emoji']" class="emoji" >
       {{ cellData["emoji"] }}
     </span>
 
-    <!-- Tooltip Hovers Wrapper -->
+    <!-- Tooltip/Popovers Hovers Wrapper -->
     <span
       :title="cellData['tooltip']"
-      :data-toggle="cellData['tooltip'] ? 'tooltip' : null">
+      :data-toggle="cellData['popover'] || cellData['tooltip'] ? 'popover' : ''"
+      v-on:mouseover="checkForPopover">
 
       <!-- Links and modals -->
       <template v-if="cellData['link'] || cellData['modal']">
@@ -29,8 +28,9 @@
           <span v-html="cellData['text']"></span>
         </a>
       </template>
-
-      <span v-else v-html="cellData['text']"></span>
+      <template v-else>
+        <span v-html="cellData['text']"></span>
+      </template>
 
     </span>
 
@@ -38,14 +38,39 @@
       <br><span class="small" v-html="cellData['subtext']"></span>
     </template>
 
+    <div class="popover-raw hide" v-if="cellData['popover']">
+      <p v-for="popContent in cellData['popover']['content']">
+        <a v-if="popContent['link']" :href="popContent['link']">
+          {{ popContent['text'] }}
+        </a>
+        <span v-else>
+          {{ popContent['text'] }}
+        </span>
+      </p>
+    </div>
+
   </td>
 
 </template>
 
 <script>
+import Popover from '../mixins/Popover.vue'
+
 export default {
+  mixins: [Popover],
   props: {
     cellData: Object,
+  },
+  methods: {
+    getPopOverTitle: function() {
+      return this.cellData['popover']['title'];
+    },
+    checkForPopover: function(event) {
+      // Need to check the data exists for a popover before constructing it
+      if (typeof this.cellData['popover'] !== 'undefined') {
+        this.setupPopover(event);
+      }
+    },
   }
 }
 </script>

@@ -229,8 +229,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'text': team.short_name,
             'emoji': team.emoji if self.tournament.pref('show_emoji') and not hide_emoji else None,
             'sort': team.short_name,
-            'tooltip': [" " + s.name for s in team.speakers]
-                if self.tournament.pref('show_speakers_in_draw') or show_speakers else None # noqa
+            'popover': {
+                'title': team.long_name,
+                'content' : [
+                    {'text': [" " + s.name for s in team.speakers] if self.tournament.pref('show_speakers_in_draw') or show_speakers else None}, # noqa
+                    {'text': 'View Record', 'link': '/test'},
+                ]}
         } for team in teams]
         self.add_column(key, team_data)
 

@@ -2,21 +2,15 @@
 // Hover Items
 //------------------------------------------------------------------------------
 
-[data-toggle='tooltip'] {
+[data-toggle='tooltip'], [data-toggle="popover"] {
   &:hover {
-    cursor: pointer; // for tooltips
+    cursor: help; // for tooltips
     span {
       border-color: $brand-primary;
     }
   }
   span {
     border-bottom: 2px dotted #ccc;
-  }
-}
-[data-toggle="popover"] {
-  border-bottom: 2px dotted #999;
-  &:hover {
-    cursor: help;
   }
 }
 
