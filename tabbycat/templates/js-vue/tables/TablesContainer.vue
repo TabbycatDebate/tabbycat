@@ -4,7 +4,7 @@
 
     <div class="panel panel-default" id="tableContainer{{ table_index }}">
       <div class="panel-heading" v-if="tableData['title']">
-        <h4>{{ tableData['title'] }}</h4>
+        <h4 class="panel-title">{{ tableData['title'] }}</h4>
       </div>
       <div class="panel-body">
         <smart-table

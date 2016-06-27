@@ -90,6 +90,10 @@ class BaseTeamSummaryView(BaseSummaryView):
         try:
             kwargs['debateteam'] = self.object.debateteam_set.get(
                 debate__round=self.get_tournament().current_round)
+            kwargs['page_title'] = self.object.long_name
+            if self.get_tournament().pref('show_emoji'):
+                kwargs['page_emoji'] = self.object.emoji
+
         except ObjectDoesNotExist:
             kwargs['debateteam'] = None
 
@@ -98,7 +102,7 @@ class BaseTeamSummaryView(BaseSummaryView):
     def get_table(self):
         teamscores = TeamScore.objects.filter(debate_team__team=self.object)
         debates = [ts.debate_team.debate for ts in teamscores]
-        table = TabbycatTableBuilder(view=self, title="Previous Rounds")
+        table = TabbycatTableBuilder(view=self, title="Results")
         table.add_round_column([ts.debate_team.debate.round for ts in teamscores])
         table.add_debate_result_by_team_columns(teamscores)
         table.add_debate_adjudicators_column(debates, show_splits=True)
