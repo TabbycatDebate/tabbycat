@@ -188,29 +188,32 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_boolean_column(accreddited_header, [adj.novice for adj in adjudicators])
 
     def add_debate_adjudicators_column(self, debates, key="Adjudicators", show_splits=False):
-        data = []
-
-        def add_adj_tooltip(adj, adj_string):
-            return '<span title="%s" data-toggle="tooltip"><span>%s</span></span>' % (
-                adj.institution.name, adj_string)
+        da_data = []
 
         for debate in debates:
             adj_strings = []
-
             if debate.confirmed_ballot and show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
                 for adjtype, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
                     adj_string = adj.name + self.ADJ_SYMBOLS[adjtype]
                     if split:
                         adj_string = "<span class='text-danger'>" + adj_string + " 💢</span>"
-                    adj_strings.append(add_adj_tooltip(adj, adj_string))
+                    adj_strings.append(adj_string)
             else:
                 for adjtype, adj in debate.adjudicators:
                     adj_string = adj.name + self.ADJ_SYMBOLS[adjtype]
-                    adj_strings.append(add_adj_tooltip(adj, adj_string))
+                    adj_strings.append(adj_string)
 
-            data.append(", ".join(adj_strings))
+            da_data.append({
+                'text': ", ".join(adj_strings),
+                'popover': {
+                    'title': 'Debate Adjudicators',
+                    'content' : [
+                        {'text': 'Adjudicator Name (Institution)'},
+                        {'text': 'View Adjudicators Record', 'link': 'TODO: new adjs page'},
+                    ]}
+            })
 
-        self.add_column(key, data)
+        self.add_column(key, da_data)
 
     def add_motion_column(self, motions, key="Motion", show_order=False):
         if show_order and self.tournament.pref('enable_motions'):
@@ -233,7 +236,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'title': team.long_name,
                 'content' : [
                     {'text': [" " + s.name for s in team.speakers] if self.tournament.pref('show_speakers_in_draw') or show_speakers else None}, # noqa
-                    {'text': 'View Record', 'link': '/test'},
+                    {'text': 'View Team Record', 'link': 'TODO: new teams page'},
                 ]}
         } for team in teams]
         self.add_column(key, team_data)
