@@ -13,6 +13,9 @@
     border-bottom: 2px dotted #ccc;
   }
 }
+.popover {
+  max-width: 350px;
+}
 .popover-content {
   // For popovers we use list-groups which need to remove the original padding
   padding: 0px;

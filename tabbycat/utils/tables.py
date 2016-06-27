@@ -121,9 +121,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
     Tabbycat."""
 
     ADJ_SYMBOLS = {
-        DebateAdjudicator.TYPE_CHAIR: " Ⓒ",
+        DebateAdjudicator.TYPE_CHAIR: "Ⓒ",
         DebateAdjudicator.TYPE_PANEL: "",
-        DebateAdjudicator.TYPE_TRAINEE: " Ⓣ",
+        DebateAdjudicator.TYPE_TRAINEE: "Ⓣ",
+    }
+
+    ADJ_TYPES = {
+        DebateAdjudicator.TYPE_CHAIR: "Chair",
+        DebateAdjudicator.TYPE_PANEL: "Panellist",
+        DebateAdjudicator.TYPE_TRAINEE: "Trainee",
     }
 
     def __init__(self, view=None, **kwargs):
@@ -190,27 +196,44 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_debate_adjudicators_column(self, debates, key="Adjudicators", show_splits=False):
         da_data = []
 
+        def construct_text(adjs_data):
+            return ["%s %s %s" % (a['name'], self.ADJ_SYMBOLS[a['type']],
+                "<span class='text-danger'>💢</span>" if a['split'] else '') for a in adjs_data]
+
+        def construct_popover(adjs_data):
+            popover_data = []
+            for a in adjs_data:
+                popover_data.append({
+                    'text': "%s (%s%s; from %s)" % (
+                        a['name'],
+                        "<span class='text-danger'>Split</span>; " if a['split'] else '',
+                        self.ADJ_TYPES[a['type']],
+                        a['inst'])
+                })
+                popover_data.append({
+                    'text': "View %s's Adjudication Record" % a['name'].split(" ")[0],
+                    'link': 'TODO adj record link'
+                })
+            return popover_data
+
         for debate in debates:
-            adj_strings = []
+            adjs_data = []
+
             if debate.confirmed_ballot and show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
                 for adjtype, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
-                    adj_string = adj.name + self.ADJ_SYMBOLS[adjtype]
-                    if split:
-                        adj_string = "<span class='text-danger'>" + adj_string + " 💢</span>"
-                    adj_strings.append(adj_string)
+                    adjs_data.append(
+                        {'name': adj.name, 'type': adjtype, 'inst': adj.institution.code, 'split': True if split else False})
             else:
                 for adjtype, adj in debate.adjudicators:
-                    adj_string = adj.name + self.ADJ_SYMBOLS[adjtype]
-                    adj_strings.append(adj_string)
+                    adjs_data.append(
+                        {'name': adj.name, 'type': adjtype, 'inst': adj.institution.code, 'split': None})
 
             da_data.append({
-                'text': ", ".join(adj_strings),
+                'text': construct_text(adjs_data),
                 'popover': {
                     'title': 'Debate Adjudicators',
-                    'content' : [
-                        {'text': 'Adjudicator Name (Institution)'},
-                        {'text': 'View Adjudicators Record', 'link': 'TODO: new adjs page'},
-                    ]}
+                    'content' : construct_popover(adjs_data)
+                }
             })
 
         self.add_column(key, da_data)
@@ -236,7 +259,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'title': team.long_name,
                 'content' : [
                     {'text': [" " + s.name for s in team.speakers] if self.tournament.pref('show_speakers_in_draw') or show_speakers else None}, # noqa
-                    {'text': 'View Team Record', 'link': 'TODO: new teams page'},
+                    {'text': "View %s's Team Record" % team.short_name, 'link': 'TODO: new teams page'},
                 ]}
         } for team in teams]
         self.add_column(key, team_data)
