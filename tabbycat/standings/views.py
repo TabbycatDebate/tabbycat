@@ -10,7 +10,6 @@ from participants.models import Speaker, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import reverse_tournament
 from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 from utils.tables import TabbycatTableBuilder
 
@@ -257,35 +256,7 @@ class BaseTeamStandingsView(StandingsView):
         table.add_ranking_columns(standings)
         table.add_team_columns([info.team for info in standings])
 
-        headers = [{'key': round.abbreviation} for round in rounds]
-        data = []
-        for standing in standings:
-            cells = []
-            for team_score in standing.round_results:
-                cell = {'text': ''}
-                if hasattr(team_score, 'opposition'):
-                    opposition = team_score.opposition
-                    cell['text'] = "vs " + opposition.emoji
-
-                    if team_score.win:
-                        cell['icon'] = "glyphicon-arrow-up text-success"
-                        cell['tooltip'] = "Won against "
-                    else:
-                        cell['icon'] = "glyphicon-arrow-down text-danger"
-                        cell['tooltip'] = "Lost to "
-
-                    cell['subtext'] = metricformat(team_score.score)
-                    cell['tooltip'] += opposition.long_name + "<br>Received " + metricformat(team_score.score) + " total speaks"
-
-                    if self.show_ballots():
-                        cell['link'] = reverse_tournament('public_ballots_view',
-                                self.get_tournament(), kwargs={'debate_id': team_score.debate_team.debate.id})
-
-                cells.append(cell)
-
-            data.append(cells)
-        table.add_columns(headers, data)
-
+        table.add_standings_results_columns(standings, rounds, self.show_ballots())
         table.add_metric_columns(standings)
 
         return table
@@ -379,32 +350,13 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableMixin):
 
         teams = tournament.team_set.order_by('institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
         rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
+
         add_team_round_results_public(teams, rounds)
 
         table = TabbycatTableBuilder(view=self, sort_key='Wins', sort_order='desc')
         table.add_team_columns(teams)
-
         table.add_column("Wins", [team.wins for team in teams])
-
-        headers = [round.abbreviation for round in rounds]
-        data = []
-        for team in teams:
-            cells = []
-            for team_score in team.round_results:
-                if hasattr(team_score, 'win') and team_score.win is True:
-                    cell = {'text': "vs " + team_score.opposition.emoji}
-                    cell['icon'] = "glyphicon-arrow-up text-success"
-                    cell['tooltip'] = "Won against " + team_score.opposition.short_name
-                elif hasattr(team_score, 'win') and team_score.win is False:
-                    cell = {'text': "vs " + team_score.opposition.emoji}
-                    cell['icon'] = "glyphicon-arrow-down text-danger"
-                    cell['tooltip'] = "Lost to " + team_score.opposition.short_name
-                else:
-                    cell = {'text': "-"}
-
-                cells.append(cell)
-            data.append(cells)
-        table.add_columns(headers, data)
+        table.add_team_results_columns(teams, rounds)
 
         return table
 

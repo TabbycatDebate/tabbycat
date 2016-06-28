@@ -606,7 +606,7 @@ class PublicSummaryPages(BooleanPreference):
     verbose_name = "Enable public summary pages"
     section = public_features
     name = "public_summary"
-    default = False
+    default = True
 
 
 @tournament_preferences_registry.register

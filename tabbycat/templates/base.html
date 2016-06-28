@@ -37,7 +37,7 @@
       <div class="col-md-12">
         <h3>
           {% if page_title %}
-            {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
+            {% if page_emoji %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
           {% else %}
             {% block head-title %}{% endblock %}
           {% endif %}

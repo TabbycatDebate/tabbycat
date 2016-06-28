@@ -172,7 +172,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     self.tournament, kwargs={'pk': adj.pk})
             }
         else:
-            return None
+            return {'text': False, 'link': False}
 
     def _team_summary_link(self, team):
         if self.admin:
@@ -186,7 +186,46 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'link': reverse_tournament('participants-public-team-summary', self.tournament, kwargs={'pk': team.pk})
             }
         else:
-            return None
+            return {'text': False, 'link': False}
+
+    def _result_cell(self, ts, compress=False, show_score=False, show_ballots=False):
+        if not hasattr(ts, 'debate_team'):
+            return {'text': '-'}
+
+        opp = ts.debate_team.opposition.team
+        result = {
+            'text': " vs " + opp.emoji if compress else opp.short_name,
+            'popover': {'content': [{'text': ''}]}
+        }
+        result_popover = result['popover']['content'][0]
+        if ts.win is True:
+            result['icon'] = "glyphicon-arrow-up text-success"
+            result['sort'] = 1
+            result_popover['text'] = "Won against " + opp.long_name
+        elif ts.win is False:
+            result['icon'] = "glyphicon-arrow-down text-danger"
+            result['sort'] = 2
+            result_popover['text'] = "Lost to " + opp.long_name
+        else: # None
+            result['icon'] = ""
+            result['sort'] = 3
+            result_popover['text'] = "No result for debate against " + opp.long_name
+
+        if show_score:
+            result['subtext'] = metricformat(ts.score)
+            result['popover']['content'].append(
+                {'text': 'Received %s team points' % metricformat(ts.score)})
+
+        if show_ballots:
+            result['popover']['content'].append(
+                {'text': 'View Debate Ballot', 'link': reverse_tournament('public_ballots_view',
+                    self.tournament, kwargs={'debate_id': ts.debate_team.debate.id})})
+
+        if self._show_summary_links:
+            result['popover']['content'].append(
+                self._team_summary_link(opp))
+
+        return result
 
     def add_round_column(self, rounds, key="Round"):
         data = [{
@@ -297,7 +336,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'title': team.long_name,
                 'content' : [
                     {'text': [" " + s.name for s in team.speakers]} if display_speakers else None,
-                    self._team_summary_link(team),
+                    self._team_summary_link(team)
                 ]}
         } for team in teams]
         self.add_column(key, team_data)
@@ -492,35 +531,24 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_debate_result_by_team_columns(self, teamscores):
         """Takes an iterable of TeamScore objects."""
 
-        results_data = []
-        for ts in teamscores:
-            opposition = ts.debate_team.opposition.team
-            opposition_str = opposition.short_name
-
-            result = {
-                'text': " vs " + opposition_str,
-                'popover': {'title': 'Debate Result', 'content': [{'text': ''}]}
-            }
-            result_popover = result['popover']['content'][0]
-            if ts.win is True:
-                result['icon'] = "glyphicon-arrow-up text-success"
-                result['sort'] = 1
-                result_popover['text'] = "Won against " + opposition.long_name
-            elif ts.win is False:
-                result['icon'] = "glyphicon-arrow-down text-danger"
-                result['sort'] = 2
-                result_popover['text'] = "Lost to " + opposition.long_name
-            else: # None
-                result['icon'] = ""
-                result['sort'] = 3
-                result_popover['text'] = "No result for debate against " + opposition.long_name
-
-            if self._show_summary_links:
-                result['popover']['content'].append(
-                    self._team_summary_link(opposition))
-
-            results_data.append(result)
-
+        results_data = [self._result_cell(ts) for ts in teamscores]
         self.add_column("Result", results_data)
-
         self.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
+
+    def add_team_results_columns(self, teams, rounds):
+        """ Takes an iterable of Teams, assumes their round_results match rounds"""
+        for round_seq, round in enumerate(rounds):
+            results = [self._result_cell(
+                t.round_results[round_seq]) for t in teams]
+            self.add_column(round.abbreviation, results)
+
+    def add_standings_results_columns(self, standings, rounds, show_ballots):
+
+        for round_seq, round in enumerate(rounds):
+            results = [self._result_cell(
+                s.round_results[round_seq],
+                compress=True,
+                show_score=True,
+                show_ballots=show_ballots
+            ) for s in standings]
+            self.add_column(round.abbreviation, results)
