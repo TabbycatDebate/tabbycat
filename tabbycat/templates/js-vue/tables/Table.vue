@@ -57,7 +57,6 @@
         // This is basically a copy of Vue's native orderBy except we are overriding
         // the last part to see if the cell has custom sort attributes
         if (sortIndex === null) {
-          console.log('no sortindex');
           return arr; // If not set then return default order (can be desirable)
         } else {
           var order = (reverse && reverse < 0) ? -1 : 1;

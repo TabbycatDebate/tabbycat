@@ -9,9 +9,10 @@ export default {
     setConflictHighlights: function() {
       var entity = this.getEntity()[0];
       this.$dispatch('set-conflicts', {
-        adjudicators: entity.conflicts.adjadj,
-        institutions: entity.conflicts.adjinstitution,
-        teams: entity.conflicts.adjteam,
+        personal_adjudicators: entity.conflicts.personal_adjudicators,
+        personal_teams: entity.conflicts.personal_teams,
+        institutional_institutions: entity.conflicts.institutional_institutions,
+        institutional_adjudicators: entity.conflicts.institutional_adjudicators,
         uid: this._uid // To determine if hover target == conflict target
       })
     },
@@ -28,31 +29,63 @@ export default {
         return '';
       } else {
         var entity = this.getEntity()[0];
-        // Institutional
-        if (conflicts.institutions && typeof conflicts.institutions !== 'undefined') {
-          var conflictedInsts = conflicts.institutions;
-          if (conflictedInsts.indexOf(entity.institution.id) > -1) {
+
+        // Both
+        if (conflicts.institutional_institutions && typeof conflicts.institutional_institutions !== 'undefined') {
+          if (conflicts.institutional_institutions.indexOf(entity.institution.id) > -1) {
             return 'conflicts-display institutional-conflict'
           }
         }
+
+        // Only for adjs
         if (this.getEntity()[1] === 'adj') {
-          // Personal (adj-adj)
-          if (conflicts.adjudicators && typeof conflicts.adjudicators !== 'undefined') {
-            var conflictedAdjs = conflicts.adjudicators;
-            if (conflictedAdjs.indexOf(entity.id) > -1) {
+          if (conflicts.personal_adjudicators && typeof conflicts.personal_adjudicators !== 'undefined') {
+            if (conflicts.personal_adjudicators.indexOf(entity.id) > -1) {
               return 'conflicts-display personal-conflict'
             }
           }
+          if (conflicts.institutional_adjudicators && typeof conflicts.institutional_adjudicators !== 'undefined') {
+            if (conflicts.institutional_adjudicators.indexOf(entity.id) > -1) {
+              return 'conflicts-display institutional-conflict'
+            }
+          }
         }
+
+        // Only for Teams
         if (this.getEntity()[1] === 'team') {
-          // Personal (adj-adj)
-          if (conflicts.teams && typeof conflicts.teams !== 'undefined') {
-            var conflictedTeams = conflicts.teams;
-            if (conflictedTeams.indexOf(entity.id) > -1) {
+          if (conflicts.personal_teams && typeof conflicts.personal_teams !== 'undefined') {
+            if (conflicts.personal_teams.indexOf(entity.id) > -1) {
               return 'conflicts-display personal-conflict'
             }
           }
         }
+
+
+        // // Adj - Team's Institutions
+        // if (this.getEntity()[1] === 'adj') {
+        //   if (conflicts.institutions && typeof conflicts.institutions !== 'undefined') {
+        //     if (conflicts.institutions.indexOf(entity.institution.id) > -1) {
+        //       return 'conflicts-display institutional-conflict'
+        //     }
+        //   }
+        // }
+        // // Teams - Adj's Institutional Conflicts
+        // if (this.getEntity()[1] === 'team') {
+        //   if (conflicts.institutions && typeof conflicts.institutions !== 'undefined') {
+        //     if (conflicts.institutions.indexOf(entity.id) > -1) {
+        //       return 'conflicts-display institutional-conflict'
+        //     }
+        //   }
+        // }
+        // if (this.getEntity()[1] === 'team') {
+        //   // Personal (adj-adj)
+        //   if (conflicts.teams && typeof conflicts.teams !== 'undefined') {
+        //     var conflictedTeams = conflicts.teams;
+        //     if (conflictedTeams.indexOf(entity.id) > -1) {
+        //       return 'conflicts-display personal-conflict'
+        //     }
+        //   }
+        // }
 
       }
     }

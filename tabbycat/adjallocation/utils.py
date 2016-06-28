@@ -9,7 +9,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.misc import reverse_tournament
 
 
-def populate_adjs_data(r):
+def get_adjs(r):
     t = r.tournament
 
     active = ActiveAdjudicator.objects.filter(
@@ -38,49 +38,75 @@ def populate_adjs_data(r):
         round_adj.debate = round_id[1]
         round_adjs.append(round_adj)
 
+    for ra in round_adjs:
+        ra.rating = ra.score,
+
+    return round_adjs
+
+
+def populate_conflicts(adjs, teams):
     # Grab all conflicts data and assign it
     teamconflicts = AdjudicatorConflict.objects.filter(
-        adjudicator__in=round_adjs).values_list(
+        adjudicator__in=adjs).values_list(
         'adjudicator', 'team')
     institutionconflicts = AdjudicatorInstitutionConflict.objects.filter(
-        adjudicator__in=round_adjs).values_list(
+        adjudicator__in=adjs).values_list(
         'adjudicator', 'institution')
     adjconflicts = AdjudicatorAdjudicatorConflict.objects.filter(
-        adjudicator__in=round_adjs).values_list(
+        adjudicator__in=adjs).values_list(
         'adjudicator', 'conflict_adjudicator')
 
-    for a in round_adjs:
-        a.adjteam = [c[1] for c in teamconflicts if c[0] is a.id]
-        a.adjinstitution = [c[1] for c in institutionconflicts if c[0] is a.id]
-        # adj-adj conflicts should be symmetric
-        a.adjadj = [c[1] for c in adjconflicts if c[0] is a.id]
-        a.adjadj += [c[0] for c in adjconflicts if c[1] is a.id]
+    for a in adjs:
+        a.personal_teams = [c[1] for c in teamconflicts if c[0] is a.id]
+        a.institutional_institutions = [c[1] for c in institutionconflicts if c[0] is a.id]
+        # Adj-adj conflicts should be symmetric
+        a.personal_adjudicators = [c[1] for c in adjconflicts if c[0] is a.id]
+        a.personal_adjudicators += [c[0] for c in adjconflicts if c[1] is a.id]
+
+    for t in teams:
+        t.personal_adjudicators = [c[0] for c in teamconflicts if c[1] is t.id]
+        # For teams conflicted_institutions is a list of adjs due to the asymetric
+        # nature of adjs having multiple instutitonal conflicts
+        t.institutional_adjudicators = [c[0] for c in institutionconflicts if c[1] is t.institution.id]
+
+    return adjs, teams
+
+
+def populate_histories(adjs, teams, t, r):
 
     da_histories = DebateAdjudicator.objects.filter(
-        debate__round__tournament=t, debate__round__seq__lte=r.seq, adjudicator__in=round_adjs).select_related(
+        debate__round__tournament=t, debate__round__seq__lte=r.seq, adjudicator__in=adjs).select_related(
         'debate__round').values_list(
         'adjudicator', 'debate', 'debate__round__seq', 'debate__round__name')
     dt_histories = DebateTeam.objects.filter(
         debate__in=[c[1] for c in da_histories]).values_list(
         'team', 'debate')
 
-    for a in round_adjs:
+    for a in adjs:
         hists = []
         # Iterate over all DebateAdjudications from this adj
         for dah in [dah for dah in da_histories if dah[0] is a.id]:
             # Find the relevant DebateTeams from the matching debates
-            for dat in [dat for dat in dt_histories if dat[1] is dah[1]]:
-                hists.append({
-                    'team': dat[0],
-                    'round_seq': dah[2],
-                    'round_name': dah[3]
-                })
+            hists.append([{
+                'team': dat[0],
+                'round_seq': dah[2],
+                'round_name': dah[3]
+            } for dat in dt_histories if dat[1] is dah[1]])
         a.histories = hists
 
-    for ra in round_adjs:
-        ra.rating = ra.score,
+    for t in teams:
+        hists = []
+        # Iterate over the DebateTeams for the matching teams
+        for dat in [dat for dat in dt_histories if dat[0] is t.id]:
+            # Iterate over the DebateAdjudicators to find the matching debates
+            hists.append([{
+                'adj': dah[0],
+                'round_seq': dah[2],
+                'round_name': dah[3]
+            } for dah in da_histories if dah[1] is dat[1]])
+        t.histories = hists
 
-    return round_adjs
+    return adjs, teams
 
 
 def adjs_to_json(adjs):
@@ -102,11 +128,14 @@ def adjs_to_json(adjs):
         },
         'score': adj.rating,
         'conflicts': {
-            'adjteam': adj.adjteam,
-            'adjinstitution': adj.adjinstitution,
-            'adjadj': adj.adjadj,
+            'personal_teams': adj.personal_teams,
+            'institutional_institutions': adj.institutional_institutions,
+            'institutional_adjudicators': None,
+            'personal_adjudicators': adj.personal_adjudicators,
         },
         'histories': adj.histories
+
+
 
     } for adj in adjs]
     return json.dumps(data)
@@ -133,11 +162,12 @@ def teams_to_json(teams):
             'abbreviation' : team.institution.abbreviation
         },
         'conflicts': {
-            'adjteam': None,
-            'adjinstitution': None,
-            'adjadj': None,
+            'personal_teams': [],
+            'institutional_institutions': None,
+            'institutional_adjudicators': team.institutional_adjudicators,
+            'personal_adjudicators': team.personal_adjudicators
         },
-        # 'histories': team.histories
+        'histories': team.histories
 
     } for team in teams]
     return json.dumps(data)

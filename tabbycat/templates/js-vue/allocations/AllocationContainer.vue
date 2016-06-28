@@ -19,31 +19,25 @@
   <div class="panel panel-default" id="tableContainer{{ table_index }}">
     <div class="panel-body">
       <div class="row">
-        <div class="col-md-2">
-          <debate-team
-            :team="teams[0]"
-            :current-conflict-highlights="currentConflictHighlights">
-          </debate-team>
-          <debate-team
-            :team="teams[1]"
-            :current-conflict-highlights="currentConflictHighlights">
-          </debate-team>
-          <debate-team
-            :team="teams[2]"
-            :current-conflict-highlights="currentConflictHighlights">
-          </debate-team>
-          <debate-team
-            :team="teams[3]"
-            :current-conflict-highlights="currentConflictHighlights">
-          </debate-team>
-        </div>
+        <debate-team
+          v-for="team in teams"
+          :team="team"
+          :current-conflict-highlights="currentConflictHighlights">
+        </debate-team>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default" id="tableContainer{{ table_index }}">
+    <div class="panel-body">
+      <div class="row">
         <div class="col-md-3">
           <position-droppable
             :adjudicators="[adjudicators[0]]"
             :position="C">
           </position-droppable>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <position-droppable
             :adjudicators="[adjudicators[3],adjudicators[1]]"
             :position="P">
