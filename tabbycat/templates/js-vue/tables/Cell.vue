@@ -16,7 +16,7 @@
     <!-- Tooltip/Popovers Hovers Wrapper -->
     <span
       :title="cellData['tooltip']"
-      :data-toggle="cellData['popover'] || cellData['tooltip'] ? 'popover' : ''"
+      :data-toggle="cellData['popover'] || cellData['tooltip'] ? 'tooltip' : ''"
       v-on:mouseover="checkForPopover">
 
       <!-- Links and modals -->
