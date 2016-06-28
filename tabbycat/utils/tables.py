@@ -16,7 +16,7 @@ class BaseTableBuilder:
       `"visible-sm"`, `"visible-md"` and `"visible-lg"`.
     - A *cell dict* is a dict that contains a value under `"text"` that is a
       string, and may optionally contain entries under `"sort"`, `"icon"`,
-      `"emoji"`, `"tooltip"` and `"link"`.
+      `"emoji"`, `"popover"` and `"link"`.
 
     """
 
@@ -158,22 +158,33 @@ class TabbycatTableBuilder(BaseTableBuilder):
         return self.admin or self.tournament.pref('public_summary')
 
     def _adjudicator_summary_link(self, adj):
+        adj_short_name = adj.name.split(" ")[0]
         if self.admin:
-            return reverse_tournament('participants-adjudicator-summary',
-                self.tournament, kwargs={'pk': adj.pk})
+            return {
+                'text': "View %s's Adjudication Record" % adj_short_name,
+                'link': reverse_tournament('participants-adjudicator-summary',
+                    self.tournament, kwargs={'pk': adj.pk})
+            }
         elif self.tournament.pref('public_summary'):
-            return reverse_tournament('participants-public-adjudicator-summary',
-                self.tournament, kwargs={'pk': adj.pk})
+            return {
+                'text': "View %s's Adjudication Record" % adj_short_name,
+                'link': reverse_tournament('participants-public-adjudicator-summary',
+                    self.tournament, kwargs={'pk': adj.pk})
+            }
         else:
             return None
 
     def _team_summary_link(self, team):
         if self.admin:
-            return reverse_tournament('participants-team-summary',
-                self.tournament, kwargs={'pk': team.pk})
+            return {
+                'text': "View %s's Team Record" % team.short_name,
+                'link': reverse_tournament('participants-team-summary', self.tournament, kwargs={'pk': team.pk})
+            }
         elif self.tournament.pref('public_summary'):
-            return reverse_tournament('participants-public-team-summary',
-                self.tournament, kwargs={'pk': team.pk})
+            return {
+                'text': "View %s's Team Record" % team.short_name,
+                'link': reverse_tournament('participants-public-team-summary', self.tournament, kwargs={'pk': team.pk})
+            }
         else:
             return None
 
@@ -191,7 +202,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for adj in adjudicators:
             cell = {'text': adj.name}
             if self._show_summary_links:
-                cell['link'] = self._adjudicator_summary_link(adj)
+                cell['popover'] = {'content' : [self._adjudicator_summary_link(adj)]}
             if subtext is 'institution':
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
@@ -223,7 +234,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         da_data = []
 
         def construct_text(adjs_data):
-            return ["%s %s %s" % (a['name'], self.ADJ_SYMBOLS[a['type']],
+            return ["%s %s %s" % (a['adj'].name, self.ADJ_SYMBOLS[a['type']],
                 "<span class='text-danger'>💢</span>" if a['split'] else '') for a in adjs_data]
 
         def construct_popover(adjs_data):
@@ -231,15 +242,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             for a in adjs_data:
                 popover_data.append({
                     'text': "%s (%s%s; from %s)" % (
-                        a['name'],
+                        a['adj'].name,
                         "<span class='text-danger'>Split</span>; " if a['split'] else '',
                         self.ADJ_TYPES[a['type']],
-                        a['inst'])
+                        a['adj'].institution.code)
                 })
-                popover_data.append({
-                    'text': "View %s's Adjudication Record" % a['name'].split(" ")[0],
-                    'link': 'TODO adj record link'
-                })
+                if self._show_summary_links:
+                    popover_data.append(self._adjudicator_summary_link(a['adj']))
+
             return popover_data
 
         for debate in debates:
@@ -247,13 +257,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if debate.confirmed_ballot and show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
                 for adjtype, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
                     adjs_data.append(
-                        {'name': adj.name, 'type': adjtype, 'inst': adj.institution.code, 'split': True if split else False})
+                        {'adj': adj, 'type': adjtype, 'split': True if split else False})
             else:
                 for adjtype, adj in debate.adjudicators:
                     adjs_data.append(
-                        {'name': adj.name, 'type': adjtype, 'inst': adj.institution.code, 'split': None})
-                        adj_string += self.ADJ_SYMBOLS[adjtype]
-                    adj_strings.append(adj_string)
+                        {'adj': adj, 'type': adjtype, 'split': None})
 
             da_data.append({
                 'text': construct_text(adjs_data),
@@ -271,12 +279,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         motion_data = [{
             'text': motion.reference,
-            'tooltip': motion.text,
+            'popover': {'content' : [{'text': motion.text}]}
         } if motion else "—" for motion in motions]
         self.add_column(key, motion_data)
 
     def add_team_columns(self, teams, break_categories=False, show_speakers=False,
             hide_institution=False, hide_emoji=False, key="Team"):
+
+        display_speakers = True if self.tournament.pref(
+            'show_speakers_in_draw') or show_speakers else False
 
         team_data = [{
             'text': team.short_name,
@@ -285,8 +296,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'popover': {
                 'title': team.long_name,
                 'content' : [
-                    {'text': [" " + s.name for s in team.speakers] if self.tournament.pref('show_speakers_in_draw') or show_speakers else None}, # noqa
-                    {'text': "View %s's Team Record" % team.short_name, 'link': 'TODO: new teams page'},
+                    {'text': [" " + s.name for s in team.speakers]} if display_speakers else None,
+                    self._team_summary_link(team),
                 ]}
         } for team in teams]
         self.add_column(key, team_data)
@@ -485,24 +496,31 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for ts in teamscores:
             opposition = ts.debate_team.opposition.team
             opposition_str = opposition.short_name
-            if self._show_summary_links:
-                opposition_str = "<a href=\"" + self._team_summary_link(opposition) + "\">" + \
-                        opposition_str + "</a>"
 
-            result = {'text': " vs " + opposition_str}
+            result = {
+                'text': " vs " + opposition_str,
+                'popover': {'title': 'Debate Result', 'content': [{'text': ''}]}
+            }
+            result_popover = result['popover']['content'][0]
             if ts.win is True:
                 result['icon'] = "glyphicon-arrow-up text-success"
                 result['sort'] = 1
-                result['tooltip'] = "Won against " + opposition.long_name
+                result_popover['text'] = "Won against " + opposition.long_name
             elif ts.win is False:
                 result['icon'] = "glyphicon-arrow-down text-danger"
                 result['sort'] = 2
-                result['tooltip'] = "Lost to " + opposition.long_name
+                result_popover['text'] = "Lost to " + opposition.long_name
             else: # None
                 result['icon'] = ""
                 result['sort'] = 3
-                result['tooltip'] = "No result for debate against " + opposition.long_name
+                result_popover['text'] = "No result for debate against " + opposition.long_name
+
+            if self._show_summary_links:
+                result['popover']['content'].append(
+                    self._team_summary_link(opposition))
+
             results_data.append(result)
+
         self.add_column("Result", results_data)
 
         self.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
