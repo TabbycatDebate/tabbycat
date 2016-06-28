@@ -381,7 +381,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableMixin):
         rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
         add_team_round_results_public(teams, rounds)
 
-        table = TabbycatTableBuilder(view=self, sort_key="Wins")
+        table = TabbycatTableBuilder(view=self, sort_key='Wins', sort_order='desc')
         table.add_team_columns(teams)
 
         table.add_column("Wins", [team.wins for team in teams])
@@ -391,15 +391,16 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableMixin):
         for team in teams:
             cells = []
             for team_score in team.round_results:
-                opposition = team_score.opposition
-                cell = {'text': "vs " + opposition.emoji}
-
-                if team_score.win:
+                if hasattr(team_score, 'win') and team_score.win is True:
+                    cell = {'text': "vs " + team_score.opposition.emoji}
                     cell['icon'] = "glyphicon-arrow-up text-success"
-                    cell['tooltip'] = "Won against " + opposition.short_name
-                else:
+                    cell['tooltip'] = "Won against " + team_score.opposition.short_name
+                elif hasattr(team_score, 'win') and team_score.win is False:
+                    cell = {'text': "vs " + team_score.opposition.emoji}
                     cell['icon'] = "glyphicon-arrow-down text-danger"
-                    cell['tooltip'] = "Lost to " + opposition.short_name
+                    cell['tooltip'] = "Lost to " + team_score.opposition.short_name
+                else:
+                    cell = {'text': "-"}
 
                 cells.append(cell)
             data.append(cells)
