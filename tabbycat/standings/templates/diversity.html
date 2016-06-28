@@ -15,23 +15,23 @@
     reliable; particularly at small tournaments.
   </div>
 
-  <div class="nav nav-pills navbar-left vertical-spacing">
-    <span class="btn btn-default gender-display male h6">
+  <div class="nav nav-pills navbar-left btn-group vertical-spacing">
+    <button disabled class="btn btn-default gender-display male h6">
       Male identifying
-    </span>
-    <span class="btn btn-default gender-display nm h6">
+    </button>
+    <button disabled class="btn btn-default gender-display nm h6">
       Female identifying or non-binary
-    </span>
-    <span class="btn btn-default gender-display unknown h6">
+    </button>
+    <button disabled class="btn btn-default gender-display unknown h6">
       Unknown
-    </span>
+    </button>
   </div>
 
-  <div class="nav nav-pills pull-right vertical-spacing">
-    {% for key, value in regions %}
-      <span class="btn btn-default region-display region-{{ forloop.counter }} h6">
-        {{ key }}
-      </span>
+  <div class="nav nav-pills pull-right btn-group vertical-spacing">
+    {% for r in regions %}
+      <button disabled class="btn btn-default region-display region-{{ r.seq }} h6">
+        {{ r.name }}
+      </button>
     {% endfor %}
   </div>
 

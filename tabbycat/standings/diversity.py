@@ -2,7 +2,8 @@ from django.db.models import Avg, Q
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
-from participants.models import Adjudicator, Person, Region, Speaker, Team
+from participants.models import Adjudicator, Person, Speaker, Team
+from participants.utils import regions_ordered
 from results.models import SpeakerScore
 from tournaments.models import Round
 
@@ -73,10 +74,8 @@ def quartile(ordered_values, lower=False, upper=False):
 
 def get_diversity_data_sets(t, for_public):
 
-    all_regions = []
-    for region in list(Region.objects.all().order_by('name')):
-        if Team.objects.filter(institution__region_id=region.id).count() > 0:
-            all_regions.append({region.name: region.name})
+    all_regions = regions_ordered()
+    region_filters = [{r['seq']:r['name']} for r in all_regions]
 
     data_sets = {
         'speakers_gender': [],
@@ -126,18 +125,18 @@ def get_diversity_data_sets(t, for_public):
     if Team.objects.exclude(institution__region__isnull=True).count() > 0:
         data_sets['speakers_region'].append(compile_data(
             'All', Speaker.objects.filter(
-                team__tournament=t), 'team__institution__region__name', filters=all_regions, count=True))
+                team__tournament=t), 'team__institution__region__name', filters=region_filters, count=True))
         if t.pref('public_breaking_teams') is True or for_public is False:
             data_sets['speakers_region'].append(compile_data(
                 'Breaking', Speaker.objects.filter(
-                    team__tournament=t, team__breakingteam__isnull=False), 'team__institution__region__name', filters=all_regions, count=True))
+                    team__tournament=t, team__breakingteam__isnull=False), 'team__institution__region__name', filters=region_filters, count=True))
         if Speaker.objects.filter(team__tournament=t).filter(novice=True).count() > 0:
             data_sets['speakers_region'].append(compile_data(
                 'Pros', Speaker.objects.filter(
-                    team__tournament=t, novice=False), 'team__institution__region__name', filters=all_regions, count=True))
+                    team__tournament=t, novice=False), 'team__institution__region__name', filters=region_filters, count=True))
             data_sets['speakers_region'].append(compile_data(
                 'Novices', Speaker.objects.filter(
-                    team__tournament=t, novice=True), 'team__institution__region__name', filters=all_regions, count=True))
+                    team__tournament=t, novice=True), 'team__institution__region__name', filters=region_filters, count=True))
 
     # ==========================================================================
     # Adjudicators Demographics
@@ -194,10 +193,10 @@ def get_diversity_data_sets(t, for_public):
     if DebateAdjudicator.objects.exclude(adjudicator__institution__region__isnull=True).count() > 0:
         data_sets['adjudicators_region'].append(compile_data(
             'All', Adjudicator.objects.filter(
-                tournament=t), 'institution__region__name', filters=all_regions, count=True))
+                tournament=t), 'institution__region__name', filters=region_filters, count=True))
         data_sets['adjudicators_region'].append(compile_data(
             'Breaking', Adjudicator.objects.filter(
-                tournament=t, breaking=True), 'institution__region__name', filters=all_regions, count=True))
+                tournament=t, breaking=True), 'institution__region__name', filters=region_filters, count=True))
 
     # ==========================================================================
     # Adjudicators Results

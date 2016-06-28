@@ -17,6 +17,7 @@ if (typeof allAdjudicators !== 'undefined' && allAdjudicators !== null) {
   // All vue data table views must provide this base tablesData in the template
   vueComponents['AllocationContainer'] = AllocationContainer;
   vueData['allAdjudicators'] = allAdjudicators;
+  vueData['allRegions'] = allRegions;
 }
 
 //------------------------------------------------------------------------------

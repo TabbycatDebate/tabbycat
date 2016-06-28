@@ -36,12 +36,7 @@ export default {
       if (this.regions == null) {
         return "gender-display " + label.toLowerCase();
       } else {
-        var regionid = this.regions.map(function(obj, index) {
-            if(obj[label] == label) {
-                return index;
-            }
-        }).filter(isFinite)
-        return "region-display region-" + String(Number(regionid) + 1);
+        return "region-display region-" + label;
       }
     },
     nicelabel: function (label) {
@@ -52,7 +47,7 @@ export default {
       } else if (label == "Unknown") {
         return "Unspecified";
       } else {
-        return label;
+        return this.regions[label -1].name;
       }
     },
     percentage: function(quantity) {

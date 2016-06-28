@@ -9,6 +9,7 @@ from django.shortcuts import render
 from actionlog.models import ActionLogEntry
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
+from participants.utils import regions_to_json
 from tournaments.mixins import RoundMixin
 from utils.mixins import ExpectPost, JsonDataResponseView, SuperuserRequiredMixin, TournamentMixin, VueTableMixin
 from utils.views import admin_required, expect_post, round_view
@@ -209,6 +210,7 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
     def get_context_data(self, **kwargs):
         round_adjs = populate_adjs_data(self.get_round())
         kwargs['allAdjudicators'] = adjs_to_json(round_adjs)
+        kwargs['allRegions'] = regions_to_json()
         return super().get_context_data(**kwargs)
 
     def get_table(self):

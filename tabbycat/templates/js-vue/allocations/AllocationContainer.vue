@@ -1,6 +1,7 @@
 <template>
 
-  <allocation-actions></allocation-actions>
+  <allocation-actions
+    :regions="regions"></allocation-actions>
 
   <div class="container-fluid">
     <div class="col-md-6">
@@ -71,6 +72,7 @@ export default {
   },
   props: {
     adjudicators: Array,
+    regions: Array,
     tableData: Object // Passed down from main.js
   },
   methods: {

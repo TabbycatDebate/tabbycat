@@ -2,9 +2,9 @@
 // Hover Items
 //------------------------------------------------------------------------------
 
-[data-toggle='tooltip'] {
+[data-toggle='tooltip'], [data-toggle="popover"] {
   &:hover {
-    cursor: pointer; // for tooltips
+    cursor: help; // for tooltips
     span {
       border-color: $brand-primary;
     }
@@ -13,10 +13,19 @@
     border-bottom: 2px dotted #ccc;
   }
 }
-[data-toggle="popover"] {
-  border-bottom: 2px dotted #999;
-  &:hover {
-    cursor: help;
+.popover {
+  max-width: 350px;
+}
+.popover-content {
+  // For popovers we use list-groups which need to remove the original padding
+  padding: 0px;
+  .list-group-item:first-child {
+    border-top: 0;
+  }
+  .list-group-item {
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 0;
   }
 }
 

@@ -12,6 +12,7 @@
 
   <allocation-container
     :adjudicators=allAdjudicators
+    :regions=allRegions
     :table-data=tablesData[0]>
   </allocation-container>
 
@@ -22,6 +23,7 @@
   <script>
     var allAdjudicators = {{ allAdjudicators|safe }};
     var backURL = '{% round_url draw %}';
+    var allRegions = {{ allRegions|safe }};
   </script>
   {{ block.super }}
 

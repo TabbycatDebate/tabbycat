@@ -1,0 +1,49 @@
+// Note these take precedences over bootstrap as they are not set as default
+
+// Custom Typography
+$font-family-sans-serif: "LatoLatinWeb", Helvetica, Arial, sans-serif;
+$headings-font-family: Helvetica, Arial, sans-serif;
+$headings-font-weight: bold;
+
+// Custom Colors
+$brand-primary:           #3498db;
+
+$brand-success:           #43ca75;
+$state-success-text:      #3c763d;
+$state-success-bg:        #dff0d8;
+
+$brand-info:              #3b9ad8;
+$state-info-text:         #31708f;
+$state-info-bg:           #d9edf7;
+
+$brand-warning:           #f0c230;
+$state-warning-text:      #8a6d3b;
+$state-warning-bg:        #fcf8e3;
+
+$brand-danger:            #e34e42;
+$state-danger-text:       #a94442;
+$state-danger-bg:         #f2dede;
+
+$brand-danger-alt:        #a700a5;
+
+// Layout Colors
+$body-bg:                 #f3f4f9;
+$table-bg-hover:          #e3e3e3;
+$sidebar-bg:              #30404f;
+$sidebar-bg-highlight:    darken($sidebar-bg, 3);
+$sidebar-muted-text:      #adb6bf;
+
+// Gender Highlights
+$male:                    #36b6c0;
+$female:                  #FF9451;
+$other:                   #d600ff;
+$unknown:                 #CCC;
+
+// Override Path
+$icon-font-path: '/static/fonts/';
+
+// Layout
+$sidebar-width: 155px;
+$adj-button-width: 180
+
+px;
