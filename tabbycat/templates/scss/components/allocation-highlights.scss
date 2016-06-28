@@ -19,22 +19,45 @@
 }
 
 .conflicts-display {
-
   &.personal-conflict {
     @include button-variant(#fff, $brand-danger, darken($brand-danger, 10%));
   }
   &.institutional-conflict {
     @include button-variant(#fff, $brand-warning, darken($brand-warning, 10%));
   }
-
   &.panel-incomplete,
   &.chair-incomplete {
     @include button-variant(#fff, $brand-danger-alt, darken($brand-danger-alt, 10%));
   }
-
 }
 
 // For allocations page
-.history-display {
-
+.histories-display {
+  &.seen-1-ago {
+    @include button-variant(#fff, $brand-primary, $brand-primary);
+  }
+  &.seen-2-ago {
+    @include button-variant(#fff, lighten($brand-primary, 7%), $brand-primary);
+  }
+  &.seen-3-ago {
+    @include button-variant(#fff, lighten($brand-primary, 14%), $brand-primary);
+  }
+  &.seen-4-ago {
+    @include button-variant(#fff, lighten($brand-primary, 21%), $brand-primary);
+  }
+  &.seen-5-ago {
+    @include button-variant(default, lighten($brand-primary, 32%), $brand-primary);
+  }
+  &.seen-6-ago {
+    @include button-variant(default, lighten($brand-primary, 36%), $brand-primary);
+  }
+  &.seen-7-ago {
+    @include button-variant(default, lighten($brand-primary, 40%), $brand-primary);
+  }
+  &.seen-8-ago {
+    @include button-variant(default, lighten($brand-primary, 44%), $brand-primary);
+  }
+  &.seen-9-ago {
+    @include button-variant(default, lighten($brand-primary, 48%), $brand-primary);
+  }
 }

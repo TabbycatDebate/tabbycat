@@ -7,17 +7,17 @@
       v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
       class="vue-droppable">
 
-      <adjudicator-draggable
+      <debate-adjudicator
         v-for="adj in adjudicators | orderBy 'score' -1"
         :adj="adj">
-      </adjudicator-draggable>
+      </debate-adjudicator>
 
     </div>
 
 </template>
 
 <script>
-import AdjudicatorDraggable from './AdjudicatorDraggable.vue'
+import DebateAdjudicator from './DebateAdjudicator.vue'
 import DroppableMixin from '../mixins/DroppableMixin.vue'
 
 export default {
@@ -26,7 +26,7 @@ export default {
     adjudicators: Array
   },
   components: {
-    'AdjudicatorDraggable': AdjudicatorDraggable
+    'DebateAdjudicator': DebateAdjudicator
   }
 }
 </script>

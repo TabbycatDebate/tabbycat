@@ -4,9 +4,9 @@
     draggable=true
     v-on:dragstart="handleDragStart"
     v-on:dragend="handleDragEnd"
-    v-on:mouseover="setConflictHighlights"
-    v-on:mouseout="unsetConflictHighlights"
-    v-bind:class="[isDragging ? vue-is-dragging : '', diversityHighlights, conflictsHighlights]"
+    v-on:mouseover="setHighlights"
+    v-on:mouseout="unsetHighlights"
+    v-bind:class="[isDragging ? vue-is-dragging : '', diversityHighlights, historiesHighlights, conflictsHighlights]"
     class="vue-draggable adj-draggable btn btn-default popover-parent">
 
       <div class="popover-anchor" v-on:mouseover="setupPopover"></div>
@@ -45,12 +45,14 @@ import DraggableMixin from '../mixins/DraggableMixin.vue'
 import AjaxMixin from '../mixins/AjaxMixin.vue'
 import DiversityHighlightsMixin from '../mixins/DiversityHighlightsMixin.vue'
 import ConflictsHighlightsMixin from '../mixins/ConflictsHighlightsMixin.vue'
+import HistoriesHighlightsMixin from '../mixins/HistoriesHighlightsMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, AjaxMixin, DiversityHighlightsMixin, PopoverMixin, ConflictsHighlightsMixin],
+  mixins: [DraggableMixin, AjaxMixin, PopoverMixin, DiversityHighlightsMixin, HistoriesHighlightsMixin, ConflictsHighlightsMixin],
   props: {
     adj: Object,
-    currentConflictHighlights: Object
+    currentConflictHighlights: Object,
+    currentHistoriesHighlights: Array
   },
   computed: {
     short_name: function() {
@@ -64,6 +66,14 @@ export default {
     },
     getEntity: function() {
       return [this.adj, 'adj'];
+    },
+    setHighlights: function() {
+      this.setConflictHighlights()
+      this.setHistoriesHighlights()
+    },
+    unsetHighlights: function() {
+      this.setConflictHighlights()
+      this.setHistoriesHighlights()
     }
   },
   watch: {

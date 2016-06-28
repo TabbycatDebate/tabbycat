@@ -22,7 +22,8 @@
         <debate-team
           v-for="team in teams"
           :team="team"
-          :current-conflict-highlights="currentConflictHighlights">
+          :current-conflict-highlights="currentConflictHighlights"
+          :current-histories-highlights="currentHistoriesHighlights">
         </debate-team>
       </div>
     </div>
@@ -55,7 +56,8 @@
 
   <unallocated-adjudicators
     :adjudicators="unusedAdjudicators"
-    :current-conflict-highlights="currentConflictHighlights">
+    :current-conflict-highlights="currentConflictHighlights"
+    :current-histories-highlights="currentHistoriesHighlights">
   </unallocated-adjudicators>
 
 </template>
@@ -77,7 +79,8 @@ export default {
     regions: Array,
     categories: Array,
     tableData: Object, // Passed down from main.js
-    currentConflictHighlights: {default: null }
+    currentConflictHighlights: {default: null },
+    currentHistoriesHighlights: {default: null }
   },
   methods: {
     moveToUnused: function(adjId) {
@@ -99,6 +102,12 @@ export default {
       this.currentConflictHighlights = conflicts_dict;
     },
     'unset-conflicts': function () {
+      // this.currentConflictHighlights = null;
+    },
+    'set-histories': function (histories_dict) {
+      this.currentHistoriesHighlights = histories_dict;
+    },
+    'unset-histories': function () {
       // this.currentConflictHighlights = null;
     }
   }

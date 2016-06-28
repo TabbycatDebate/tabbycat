@@ -8,28 +8,30 @@
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
     class="navbar navbar-default navbar-fixed-bottom vue-droppable">
 
-    <adjudicator-draggable
+    <debate-adjudicator
       v-for="adj in adjudicators | orderBy 'score' -1"
       :adj="adj"
-      :current-conflict-highlights="currentConflictHighlights">
-    </adjudicator-draggable>
+      :current-conflict-highlights="currentConflictHighlights"
+      :current-histories-highlights="currentHistoriesHighlights">
+    </debate-adjudicator>
 
   </nav>
 
 </template>
 
 <script>
-import AdjudicatorDraggable from './AdjudicatorDraggable.vue'
+import DebateAdjudicator from './DebateAdjudicator.vue'
 import DroppableMixin from '../mixins/DroppableMixin.vue'
 
 export default {
   mixins: [DroppableMixin],
   props: {
     adjudicators: Array,
-    currentConflictHighlights: Object
+    currentConflictHighlights: Object,
+    currentHistoriesHighlights: Array
   },
   components: {
-    'AdjudicatorDraggable': AdjudicatorDraggable
+    'DebateAdjudicator': DebateAdjudicator
   },
   methods: {
     receiveDrop: function(ev) {

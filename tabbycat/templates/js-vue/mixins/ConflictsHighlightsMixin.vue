@@ -60,33 +60,6 @@ export default {
           }
         }
 
-
-        // // Adj - Team's Institutions
-        // if (this.getEntity()[1] === 'adj') {
-        //   if (conflicts.institutions && typeof conflicts.institutions !== 'undefined') {
-        //     if (conflicts.institutions.indexOf(entity.institution.id) > -1) {
-        //       return 'conflicts-display institutional-conflict'
-        //     }
-        //   }
-        // }
-        // // Teams - Adj's Institutional Conflicts
-        // if (this.getEntity()[1] === 'team') {
-        //   if (conflicts.institutions && typeof conflicts.institutions !== 'undefined') {
-        //     if (conflicts.institutions.indexOf(entity.id) > -1) {
-        //       return 'conflicts-display institutional-conflict'
-        //     }
-        //   }
-        // }
-        // if (this.getEntity()[1] === 'team') {
-        //   // Personal (adj-adj)
-        //   if (conflicts.teams && typeof conflicts.teams !== 'undefined') {
-        //     var conflictedTeams = conflicts.teams;
-        //     if (conflictedTeams.indexOf(entity.id) > -1) {
-        //       return 'conflicts-display personal-conflict'
-        //     }
-        //   }
-        // }
-
       }
     }
   }

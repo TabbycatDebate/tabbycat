@@ -13,7 +13,7 @@
     <div class="navbar-form pull-right">
       <div class="btn-group btn-group-sm">
         <div v-if="!showingGender && !showingLanguage && !showingRegion"class="btn-group btn-group-sm">
-          <div disabled class="btn btn-sm history-display">Seen Before</div>
+          <div disabled class="btn btn-sm histories-display seen-1-ago">Seen Before</div>
           <div disabled class="btn btn-sm conflicts-display institutional-conflict">Institutional Conflicts</div>
           <div disabled class="btn btn-sm conflicts-display personal-conflict">Personal Conflicts</div>
           <div disabled class="btn btn-sm conflicts-display panel-incomplete">No Chair/Odd Panel</div>

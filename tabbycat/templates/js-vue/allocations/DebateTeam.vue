@@ -1,9 +1,9 @@
 <template>
 
   <div
-    v-on:mouseover="setConflictHighlights"
-    v-on:mouseout="unsetConflictHighlights"
-    v-bind:class="[diversityHighlights, conflictsHighlights]"
+    v-on:mouseover="setHighlights"
+    v-on:mouseout="unsetHighlights"
+    v-bind:class="[diversityHighlights, historiesHighlights, conflictsHighlights]"
     class="btn btn-default popover-parent">
 
       <div class="popover-anchor" v-on:mouseover="setupPopover"></div>
@@ -32,13 +32,15 @@
 <script>
 import DiversityHighlightsMixin from '../mixins/DiversityHighlightsMixin.vue'
 import ConflictsHighlightsMixin from '../mixins/ConflictsHighlightsMixin.vue'
+import HistoriesHighlightsMixin from '../mixins/HistoriesHighlightsMixin.vue'
 import PopoverMixin from '../mixins/PopoverMixin.vue'
 
 export default {
-  mixins: [DiversityHighlightsMixin, ConflictsHighlightsMixin, PopoverMixin],
+  mixins: [DiversityHighlightsMixin, ConflictsHighlightsMixin, HistoriesHighlightsMixin, PopoverMixin],
   props: {
     team: Object,
-    currentConflictHighlights: Object
+    currentConflictHighlights: Object,
+    currentHistoriesHighlights: Array
   },
   methods: {
     getPopOverTitle: function() {
@@ -50,6 +52,14 @@ export default {
     },
     getEntity: function() {
       return [this.team, 'team'];
+    },
+    setHighlights: function() {
+      this.setConflictHighlights()
+      this.setHistoriesHighlights()
+    },
+    unsetHighlights: function() {
+      this.setConflictHighlights()
+      this.setHistoriesHighlights()
     }
   },
 }

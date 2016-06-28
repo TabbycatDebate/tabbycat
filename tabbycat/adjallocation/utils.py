@@ -10,7 +10,6 @@ from utils.misc import reverse_tournament
 
 
 def get_adjs(r):
-    t = r.tournament
 
     active = ActiveAdjudicator.objects.filter(
         round=r).values_list(
@@ -75,22 +74,23 @@ def populate_conflicts(adjs, teams):
 def populate_histories(adjs, teams, t, r):
 
     da_histories = DebateAdjudicator.objects.filter(
-        debate__round__tournament=t, debate__round__seq__lte=r.seq, adjudicator__in=adjs).select_related(
+        debate__round__tournament=t, debate__round__seq__lt=r.seq, adjudicator__in=adjs).select_related(
         'debate__round').values_list(
-        'adjudicator', 'debate', 'debate__round__seq', 'debate__round__name')
+        'adjudicator', 'debate', 'debate__round__seq', 'debate__round__name').order_by('-debate__round__seq')
     dt_histories = DebateTeam.objects.filter(
-        debate__in=[c[1] for c in da_histories]).values_list(
-        'team', 'debate')
+        debate__in=[c[1] for c in da_histories]).select_related(
+        'debate__round').values_list(
+        'team', 'debate').order_by('-debate__round__seq')
 
     for a in adjs:
         hists = []
         # Iterate over all DebateAdjudications from this adj
         for dah in [dah for dah in da_histories if dah[0] is a.id]:
             # Find the relevant DebateTeams from the matching debates
-            hists.append([{
+            hists.extend([{
                 'team': dat[0],
-                'round_seq': dah[2],
-                'round_name': dah[3]
+                'ago': r.seq - dah[2],
+                'name': dah[3]
             } for dat in dt_histories if dat[1] is dah[1]])
         a.histories = hists
 
@@ -99,10 +99,10 @@ def populate_histories(adjs, teams, t, r):
         # Iterate over the DebateTeams for the matching teams
         for dat in [dat for dat in dt_histories if dat[0] is t.id]:
             # Iterate over the DebateAdjudicators to find the matching debates
-            hists.append([{
+            hists.extend([{
                 'adj': dah[0],
-                'round_seq': dah[2],
-                'round_name': dah[3]
+                'ago': r.seq - dah[2],
+                'name': dah[3]
             } for dah in da_histories if dah[1] is dat[1]])
         t.histories = hists
 
