@@ -1,9 +1,3 @@
-<style>
-.vue-droppable {
-  min-height: 0;
-}
-</style>
-
 <template>
 
   <nav
@@ -16,7 +10,8 @@
 
     <adjudicator-draggable
       v-for="adj in adjudicators | orderBy 'score' -1"
-      :adj="adj">
+      :adj="adj"
+      :current-conflict-highlights="currentConflictHighlights">
     </adjudicator-draggable>
 
   </nav>
@@ -30,7 +25,8 @@ import DroppableMixin from '../mixins/DroppableMixin.vue'
 export default {
   mixins: [DroppableMixin],
   props: {
-    adjudicators: Array
+    adjudicators: Array,
+    currentConflictHighlights: Object
   },
   components: {
     'AdjudicatorDraggable': AdjudicatorDraggable

@@ -12,7 +12,9 @@
 
   <allocation-container
     :adjudicators=allAdjudicators
+    :teams=allTeams
     :regions=allRegions
+    :categories=allCategories
     :table-data=tablesData[0]>
   </allocation-container>
 
@@ -22,8 +24,10 @@
 
   <script>
     var allAdjudicators = {{ allAdjudicators|safe }};
+    var allTeams = {{ allTeams|safe }};
     var backURL = '{% round_url draw %}';
     var allRegions = {{ allRegions|safe }};
+    var allCategories = {{ allCategories|safe }};
   </script>
   {{ block.super }}
 

@@ -1,27 +1,11 @@
-// For feedback graph
-.position-display {
-  &.chair {
-    background-color: #b10095; // Purpleish
-    fill: #b10095;
-    color: #fff;
-  }
-  &.panellist {
-    background-color: $male;
-    fill: $male;
-    color: #fff;
-  }
-  &.trainee {
-    background-color: $female;
-    fill: $female;
-    color: #fff;
-  }
-}
-// For diversity graphs and allocation
 .break-display {
   &.break-1 {
-    @include button-variant(#fff, #C70062, darken(#C70062, 10%));
+    @extend .btn-default; // Break1 = general
   }
   &.break-2 {
+    @include button-variant(#fff, #C70062, darken(#C70062, 10%));
+  }
+  &.break-3 {
     @include button-variant(#fff, #00C79B, darken(#00C79B, 10%));
   }
 }
@@ -41,10 +25,6 @@
   &.unknown {
     @include button-variant(#fff, $unknown, darken($unknown, 10%));
     fill: $unknown;
-  }
-  .text-muted {
-    color: #fff;
-    opacity: 0.5;
   }
 }
 .gender-text {
@@ -101,12 +81,5 @@
   &.region-9 {
     @include button-variant(#fff, #777, darken(#777, 10%));
     fill: #777;
-  }
-}
-// Subheadings for adj allocations
-.region-display, .gender-display {
-  .text-muted {
-    color: #fff;
-    opacity: 0.66;
   }
 }

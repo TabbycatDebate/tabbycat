@@ -1,4 +1,6 @@
+//------------------------------------------------------------------------------
 // Draggables
+//------------------------------------------------------------------------------
 
 .vue-draggable {
   // Don't let text selections get in the way of dragging
@@ -20,13 +22,20 @@
   cursor: move;
 }
 
+//------------------------------------------------------------------------------
 // Droppables
+//------------------------------------------------------------------------------
 
 .vue-droppable {
   background: $gray-lighter;
   padding: 4px;
+  min-height: 0;
+}
+.division-droppable {
+  min-height: 66px;
 }
 .vue-is-drag-enter {
   // text-decoration: underline;
   background: $state-success-bg;
 }
+

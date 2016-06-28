@@ -47,11 +47,14 @@ def populate_adjs_data(r):
         'adjudicator', 'institution')
     adjconflicts = AdjudicatorAdjudicatorConflict.objects.filter(
         adjudicator__in=round_adjs).values_list(
-        'adjudicator', 'adjudicator')
+        'adjudicator', 'conflict_adjudicator')
+
     for a in round_adjs:
         a.adjteam = [c[1] for c in teamconflicts if c[0] is a.id]
         a.adjinstitution = [c[1] for c in institutionconflicts if c[0] is a.id]
+        # adj-adj conflicts should be symmetric
         a.adjadj = [c[1] for c in adjconflicts if c[0] is a.id]
+        a.adjadj += [c[0] for c in adjconflicts if c[1] is a.id]
 
     da_histories = DebateAdjudicator.objects.filter(
         debate__round__tournament=t, debate__round__seq__lte=r.seq, adjudicator__in=round_adjs).select_related(
@@ -88,7 +91,7 @@ def adjs_to_json(adjs):
         'name': adj.name,
         'debate': adj.debate,
         'gender': adj.gender,
-        'gender_name': [g[1] for g in adj.GENDER_CHOICES if g[0] is adj.gender],
+        'gender_name': adj.get_gender_display(),
         'region': adj.institution.region.id if adj.institution.region else '',
         'region_name': adj.institution.region.name if adj.institution.region else '',
         'institution': {
@@ -106,6 +109,37 @@ def adjs_to_json(adjs):
         'histories': adj.histories
 
     } for adj in adjs]
+    return json.dumps(data)
+
+
+def teams_to_json(teams):
+
+    # TODO: histories and conflicts should be populated in a combined function along with adjs
+
+    data = [{
+        'id': team.id,
+        'name': team.short_name,
+        'long_name': team.long_name,
+        'uses_prefix': team.use_institution_prefix,
+        'speakers': [" " + s.name for s in team.speakers],
+        # 'gender': adj.gender,
+        'gender_name': team.gender_names,
+        'region': team.institution.region.id if team.institution.region else '',
+        'region_name': team.institution.region.name if team.institution.region else '',
+        'institution': {
+            'id': team.institution.id,
+            'name': team.institution.code,
+            'code' : team.institution.code,
+            'abbreviation' : team.institution.abbreviation
+        },
+        'conflicts': {
+            'adjteam': None,
+            'adjinstitution': None,
+            'adjadj': None,
+        },
+        # 'histories': team.histories
+
+    } for team in teams]
     return json.dumps(data)
 
 

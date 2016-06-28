@@ -13,10 +13,10 @@
     <div class="navbar-form pull-right">
       <div class="btn-group btn-group-sm">
         <div v-if="!showingGender && !showingLanguage && !showingRegion"class="btn-group btn-group-sm">
-          <div disabled class="btn btn-sm btn-primary">Seen Before</div>
-          <div disabled class="btn btn-sm btn-warning">Institutional Conflicts</div>
-          <div disabled class="btn btn-sm btn-danger">Personal Conflicts</div>
-          <div disabled class="btn btn-sm panel-incomplete">No Chair/Odd Panel</div>
+          <div disabled class="btn btn-sm history-display">Seen Before</div>
+          <div disabled class="btn btn-sm conflicts-display institutional-conflict">Institutional Conflicts</div>
+          <div disabled class="btn btn-sm conflicts-display personal-conflict">Personal Conflicts</div>
+          <div disabled class="btn btn-sm conflicts-display panel-incomplete">No Chair/Odd Panel</div>
         </div>
         <div v-if="showingGender" class="btn-group btn-group-sm">
           <button disabled class="btn male gender-display">Male</button>
@@ -30,8 +30,10 @@
           </button>
         </div>
         <div v-if="showingLanguage" class="btn-group btn-group-sm">
-          <button disabled class="btn break-display break-1">ESL</button>
-          <button disabled class="btn break-display break-2">EFL</button>
+          <button disabled v-for="category in categories"
+            class="btn btn-default break-display break-{{ category.seq }}">
+            {{ category.name }}
+          </button>
         </div>
         <button class="btn btn-default nav-link hoverable" v-on:click="showVenues" v-bind:class="showingVenue ? 'active' : 'notactive'">
           <span class="glyphicon" v-bind:class="showingVenue ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
@@ -47,7 +49,7 @@
         </button>
         <button class="btn btn-default nav-link hoverable" v-on:click="showLanguage" v-bind:class="showingLanguage ? 'active' : ''">
           <span class="glyphicon" v-bind:class="showingLanguage ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
-          Language
+          Category
         </button>
       </div>
     </div>
@@ -59,6 +61,7 @@
 export default {
   props: {
     regions: Array,
+    categories: Array,
     showingVenue: { default: false },
     showingRegion: { default: false },
     showingGender: { default: false },

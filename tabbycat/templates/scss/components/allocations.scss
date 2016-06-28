@@ -1,0 +1,30 @@
+
+// Dim the subheadings appropriately when highlighted
+.conflicts-display, .history-display, .position-display, .region-display, .gender-display, .break-display {
+  .text-muted {
+    color: #fff;
+    opacity: 0.66;
+  }
+}
+
+// Adjudicator Draggable Element
+
+.adj-draggable {
+  text-align: left;
+  div {
+    float: left;
+  }
+  .h4 {
+    margin: 0;
+    padding: 3px 6px 3px 2px; // Center the Score
+  }
+  span {
+    border-bottom: none;
+  }
+  .small {
+    text-transform: uppercase;
+    font-size: 70%;
+    display: block;
+    line-height: 3px;
+  }
+}

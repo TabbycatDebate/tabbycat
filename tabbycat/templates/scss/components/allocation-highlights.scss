@@ -1,0 +1,40 @@
+
+// For feedback graph
+.position-display {
+  &.chair {
+    background-color: #b10095; // Purpleish
+    fill: #b10095;
+    color: #fff;
+  }
+  &.panellist {
+    background-color: $male;
+    fill: $male;
+    color: #fff;
+  }
+  &.trainee {
+    background-color: $female;
+    fill: $female;
+    color: #fff;
+  }
+}
+
+.conflicts-display {
+
+  &.personal-conflict {
+    @include button-variant(#fff, $brand-danger, darken($brand-danger, 10%));
+  }
+  &.institutional-conflict {
+    @include button-variant(#fff, $brand-warning, darken($brand-warning, 10%));
+  }
+
+  &.panel-incomplete,
+  &.chair-incomplete {
+    @include button-variant(#fff, $brand-danger-alt, darken($brand-danger-alt, 10%));
+  }
+
+}
+
+// For allocations page
+.history-display {
+
+}

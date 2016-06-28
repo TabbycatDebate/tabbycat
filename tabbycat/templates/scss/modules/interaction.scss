@@ -13,6 +13,7 @@
     border-bottom: 2px dotted #ccc;
   }
 }
+
 .popover {
   max-width: 350px;
 }
@@ -27,6 +28,28 @@
     border-left: 0;
     border-bottom: 0;
   }
+}
+// Sometimes we need an anchor that covers the entire div so that the popovers
+// target/origin doesn't shift as it gets picked up by sub elements
+.popover-parent {
+  position: relative; // Contain the popover's absolute position
+}
+.popover-anchor {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+}
+
+.slideover-info {
+  width: auto;
+  position: fixed;
+  height: 75px;
+  bottom: 0;
+  right: 15px;
+  left: 15px;
+  z-index: 1040;
 }
 
 //------------------------------------------------------------------------------

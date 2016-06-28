@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 
 from actionlog.models import ActionLogEntry
+from breakqual.utils import categories_to_json
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from participants.utils import regions_to_json
@@ -17,7 +18,7 @@ from utils.views import admin_required, expect_post, round_view
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
-from .utils import adjs_to_json, AllocationTableBuilder, populate_adjs_data
+from .utils import adjs_to_json, AllocationTableBuilder, populate_adjs_data, teams_to_json
 
 logger = logging.getLogger(__name__)
 
@@ -211,6 +212,11 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
         round_adjs = populate_adjs_data(self.get_round())
         kwargs['allAdjudicators'] = adjs_to_json(round_adjs)
         kwargs['allRegions'] = regions_to_json()
+        kwargs['allCategories'] = categories_to_json(self.get_tournament())
+
+        draw = self.get_round().get_draw()
+        teams = [d.aff_team for d in draw]
+        kwargs['allTeams'] = teams_to_json(teams)
         return super().get_context_data(**kwargs)
 
     def get_table(self):

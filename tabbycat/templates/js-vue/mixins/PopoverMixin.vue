@@ -33,7 +33,6 @@ export default {
           var _this = this;
           $(this).popover("show");
           $(".popover").on("mouseleave", function () {
-            console.log('left child');
             $(_this).popover('hide');
           });
         })
@@ -45,7 +44,6 @@ export default {
           var _this = this;
           setTimeout(function () {
             if (!$(".popover:hover").length) {
-              console.log('left parent');
               $(_this).popover("hide");
             }
           }, 300);

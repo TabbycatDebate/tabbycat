@@ -1,13 +1,6 @@
-<style>
-  .division-droppable {
-    min-height: 66px;
-    padding: 5px;
-  }
-</style>
-
 <template>
 
-  <div class="panel-body division-droppable"
+  <div class="panel-body vue-droppable division-droppable"
     v-on:dragover.prevent
     v-on:drop="receiveTeam"
     v-on:dragenter="handleDragEnter"

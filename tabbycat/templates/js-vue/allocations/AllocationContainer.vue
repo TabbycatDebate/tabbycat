@@ -1,20 +1,7 @@
 <template>
 
   <allocation-actions
-    :regions="regions"></allocation-actions>
-
-  <div class="container-fluid">
-    <div class="col-md-6">
-      <div class="alert alert-warning small" role="alert">
-        <span class="glyphicon glyphicon-refresh spinning"></span><strong> Loading conflicts data...</strong>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="alert alert-warning small" role="alert">
-        <span class="glyphicon glyphicon-refresh spinning"></span><strong> Loading history data...</strong>
-      </div>
-    </div>
-  </div>
+    :regions="regions" :categories="categories"></allocation-actions>
 
   <div class="panel panel-default" id="tableContainer{{ table_index }}">
     <div class="panel-body">
@@ -32,13 +19,31 @@
   <div class="panel panel-default" id="tableContainer{{ table_index }}">
     <div class="panel-body">
       <div class="row">
+        <div class="col-md-2">
+          <debate-team
+            :team="teams[0]"
+            :current-conflict-highlights="currentConflictHighlights">
+          </debate-team>
+          <debate-team
+            :team="teams[1]"
+            :current-conflict-highlights="currentConflictHighlights">
+          </debate-team>
+          <debate-team
+            :team="teams[2]"
+            :current-conflict-highlights="currentConflictHighlights">
+          </debate-team>
+          <debate-team
+            :team="teams[3]"
+            :current-conflict-highlights="currentConflictHighlights">
+          </debate-team>
+        </div>
         <div class="col-md-3">
           <position-droppable
             :adjudicators="[adjudicators[0]]"
             :position="C">
           </position-droppable>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <position-droppable
             :adjudicators="[adjudicators[3],adjudicators[1]]"
             :position="P">
@@ -55,12 +60,14 @@
   </div>
 
   <unallocated-adjudicators
-    :adjudicators="unusedAdjudicators">
+    :adjudicators="unusedAdjudicators"
+    :current-conflict-highlights="currentConflictHighlights">
   </unallocated-adjudicators>
 
 </template>
 
 <script>
+import DebateTeam from './DebateTeam.vue'
 import AllocationActions from './AllocationActions.vue'
 import SmartTable from '../tables/Table.vue'
 import UnallocatedAdjudicators from './UnallocatedAdjudicators.vue'
@@ -68,12 +75,15 @@ import PositionDroppable from './PositionDroppable.vue'
 
 export default {
   components: {
-    AllocationActions, SmartTable, UnallocatedAdjudicators, PositionDroppable
+    AllocationActions, SmartTable, UnallocatedAdjudicators, PositionDroppable, DebateTeam
   },
   props: {
     adjudicators: Array,
+    teams: Array,
     regions: Array,
-    tableData: Object // Passed down from main.js
+    categories: Array,
+    tableData: Object, // Passed down from main.js
+    currentConflictHighlights: {default: null }
   },
   methods: {
     moveToUnused: function(adjId) {
@@ -88,6 +98,14 @@ export default {
       return this.adjudicators.filter(function (adj) {
         return adj.debate === null;
       })
+    }
+  },
+  events: {
+    'set-conflicts': function (conflicts_dict) {
+      this.currentConflictHighlights = conflicts_dict;
+    },
+    'unset-conflicts': function () {
+      // this.currentConflictHighlights = null;
     }
   }
 

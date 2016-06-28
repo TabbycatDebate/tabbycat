@@ -1,6 +1,6 @@
 import json
 
-from participants.models import Region
+from .models import Region
 
 
 def regions_to_json():

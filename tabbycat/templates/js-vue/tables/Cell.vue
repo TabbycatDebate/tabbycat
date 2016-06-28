@@ -54,10 +54,10 @@
 </template>
 
 <script>
-import Popover from '../mixins/Popover.vue'
+import PopoverMixin from '../mixins/PopoverMixin.vue'
 
 export default {
-  mixins: [Popover],
+  mixins: [PopoverMixin],
   props: {
     cellData: Object,
   },

@@ -6,7 +6,6 @@
 @import 'components/bootstrap-custom';
 
 // General styles
-@import 'modules/allocation-old';
 @import 'modules/footer';
 @import 'modules/forms';
 @import 'modules/icons';
@@ -18,10 +17,13 @@
 @import 'modules/typography';
 
 // Function specific styles
+@import 'components/allocation-old';
+@import 'components/allocations';
 @import 'components/datavis';
 @import 'components/drag-and-drop';
 @import 'components/page-specific';
 @import 'components/diversity-highlights';
+@import 'components/allocation-highlights';
 @import 'components/sidebar-round-progress';
 
 //------------------------------------------------------------------------------
