@@ -28,10 +28,10 @@ export default {
   props: {
     adjudicators: Array,
     currentConflictHighlights: Object,
-    currentHistoriesHighlights: Array
+    currentHistoriesHighlights: Array,
   },
   components: {
-    'DebateAdjudicator': DebateAdjudicator
+  'DebateAdjudicator': DebateAdjudicator
   },
   methods: {
     receiveDrop: function(ev) {

@@ -109,7 +109,7 @@ def populate_histories(adjs, teams, t, r):
     return adjs, teams
 
 
-def adjs_to_json(adjs):
+def adjs_to_json(adjs, regions):
     """Converts to a standard JSON object for Vue components to use"""
 
     data = [{
@@ -118,8 +118,8 @@ def adjs_to_json(adjs):
         'debate': adj.debate,
         'gender': adj.gender,
         'gender_name': adj.get_gender_display(),
-        'region': adj.institution.region.id if adj.institution.region else '',
-        'region_name': adj.institution.region.name if adj.institution.region else '',
+        'region': [r for r in regions if r['id'] is adj.institution.region.id][0]
+            if adj.institution.region else None,
         'institution': {
             'id': adj.institution.id,
             'name': adj.institution.code,
@@ -141,9 +141,7 @@ def adjs_to_json(adjs):
     return json.dumps(data)
 
 
-def teams_to_json(teams):
-
-    # TODO: histories and conflicts should be populated in a combined function along with adjs
+def teams_to_json(teams, regions, categories):
 
     data = [{
         'id': team.id,
@@ -151,10 +149,11 @@ def teams_to_json(teams):
         'long_name': team.long_name,
         'uses_prefix': team.use_institution_prefix,
         'speakers': [" " + s.name for s in team.speakers],
-        # 'gender': adj.gender,
         'gender_name': team.gender_names,
-        'region': team.institution.region.id if team.institution.region else '',
-        'region_name': team.institution.region.name if team.institution.region else '',
+        'region': [r for r in regions if r['id'] is team.institution.region.id][0]
+            if team.institution.region else None,
+        # TODO: Searching for break cats here incurs extra queries; should be done earlier
+        'categories': [bc for bc in categories if bc['id'] in team.break_categories.all().values_list('id', flat=True)],
         'institution': {
             'id': team.institution.id,
             'name': team.institution.code,

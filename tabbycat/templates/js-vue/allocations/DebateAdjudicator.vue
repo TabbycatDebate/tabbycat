@@ -31,7 +31,10 @@
 
       <div class="popover-raw hide">
         <li class="list-group-item">
-          {{ adj.gender_name }}{{ adj.region_name ? '; ' + adj.region_name + ' Region': '' }}
+          {{ adj.gender_name }}
+        </li>
+        <li class="list-group-item">
+          {{ adj.region ? '; ' + adj.region.name + ' Region': '' }}
         </li>
       </div>
 
@@ -72,8 +75,8 @@ export default {
       this.setHistoriesHighlights()
     },
     unsetHighlights: function() {
-      this.setConflictHighlights()
-      this.setHistoriesHighlights()
+      this.unsetConflictHighlights()
+      this.unsetHistoriesHighlights()
     }
   },
   watch: {

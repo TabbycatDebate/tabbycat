@@ -207,9 +207,9 @@ class Team(models.Model):
     @property
     def gender_names(self):
         gender_names = ""
-        for s in self.speakers:
-            gender_names += " %s," % s.get_gender_display() if s.gender else "Unknown"
-        return gender_names[:-1]
+        for s in self.speakers.order_by('gender'):
+            gender_names += " %s," % s.get_gender_display() if s.gender else " Unknown,"
+        return gender_names[1:-1]
 
     @property
     def break_categories_nongeneral(self):

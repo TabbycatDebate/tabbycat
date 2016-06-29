@@ -3,7 +3,7 @@
   <allocation-actions
     :regions="regions" :categories="categories"></allocation-actions>
 
-  <div class="panel panel-default" id="tableContainer{{ table_index }}">
+  <div class="panel panel-default" :id="'tableContainer' + table_index">
     <div class="panel-body">
       <smart-table
         :table-headers="tableData['head']"
@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <div class="panel panel-default" id="tableContainer{{ table_index }}">
+  <div class="panel panel-default" :id="'tableContainer' + table_index">
     <div class="panel-body">
       <div class="row">
         <debate-team
@@ -29,7 +29,7 @@
     </div>
   </div>
 
-  <div class="panel panel-default" id="tableContainer{{ table_index }}">
+<!--   <div class="panel panel-default" :id="'tableContainer' + table_index">
     <div class="panel-body">
       <div class="row">
         <div class="col-md-3">
@@ -53,6 +53,7 @@
       </div>
     </div>
   </div>
+ -->
 
   <unallocated-adjudicators
     :adjudicators="unusedAdjudicators"
@@ -102,13 +103,13 @@ export default {
       this.currentConflictHighlights = conflicts_dict;
     },
     'unset-conflicts': function () {
-      // this.currentConflictHighlights = null;
+      this.currentConflictHighlights = null;
     },
     'set-histories': function (histories_dict) {
       this.currentHistoriesHighlights = histories_dict;
     },
     'unset-histories': function () {
-      // this.currentConflictHighlights = null;
+      this.currentConflictHighlights = null;
     }
   }
 

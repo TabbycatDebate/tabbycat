@@ -12,16 +12,16 @@
 
     <div class="navbar-form pull-right">
       <div class="btn-group btn-group-sm">
-        <div v-if="!showingGender && !showingLanguage && !showingRegion"class="btn-group btn-group-sm">
+        <div v-if="!showingGender && !showingCategory && !showingRegion"class="btn-group btn-group-sm">
           <div disabled class="btn btn-sm histories-display seen-1-ago">Seen Before</div>
           <div disabled class="btn btn-sm conflicts-display institutional-conflict">Institutional Conflicts</div>
           <div disabled class="btn btn-sm conflicts-display personal-conflict">Personal Conflicts</div>
           <div disabled class="btn btn-sm conflicts-display panel-incomplete">No Chair/Odd Panel</div>
         </div>
         <div v-if="showingGender" class="btn-group btn-group-sm">
-          <button disabled class="btn male gender-display">Male</button>
-          <button disabled class="btn nm gender-display">Non-Male</button>
-          <button disabled class="btn unknown gender-display">Unknown</button>
+          <button disabled class="btn gender-display gender-male">Male</button>
+          <button disabled class="btn gender-display gender-nm">Non-Male</button>
+          <button disabled class="btn gender-display gender-unknown">Unknown</button>
         </div>
         <div v-if="showingRegion" class="btn-group btn-group-sm">
           <button disabled v-for="region in regions"
@@ -29,9 +29,9 @@
             {{ region.name }}
           </button>
         </div>
-        <div v-if="showingLanguage" class="btn-group btn-group-sm">
+        <div v-if="showingCategory" class="btn-group btn-group-sm">
           <button disabled v-for="category in categories"
-            class="btn btn-default break-display break-{{ category.seq }}">
+            class="btn btn-default category-display category-{{ category.seq }}">
             {{ category.name }}
           </button>
         </div>
@@ -47,8 +47,8 @@
           <span class="glyphicon" v-bind:class="showingGender ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
           Gender
         </button>
-        <button class="btn btn-default nav-link hoverable" v-on:click="showLanguage" v-bind:class="showingLanguage ? 'active' : ''">
-          <span class="glyphicon" v-bind:class="showingLanguage ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
+        <button class="btn btn-default nav-link hoverable" v-on:click="showCategory" v-bind:class="showingCategory ? 'active' : ''">
+          <span class="glyphicon" v-bind:class="showingCategory ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
           Category
         </button>
       </div>
@@ -65,7 +65,7 @@ export default {
     showingVenue: { default: false },
     showingRegion: { default: false },
     showingGender: { default: false },
-    showingLanguage: { default: false }
+    showingCategory: { default: false }
   },
   methods: {
     autoAllocate: function() {
@@ -78,18 +78,19 @@ export default {
       this.showingRegion = !this.showingRegion;
       $(".diversity-highlightable").toggleClass("region-display");
       this.showingGender = false;
-      this.showingLanguage = false;
-      $(".diversity-highlightable").removeClass("gender-display language-display");
+      this.showingCategory = false;
+      $(".diversity-highlightable").removeClass("gender-display category-display");
     },
     showGender: function() {
       this.showingGender = !this.showingGender;
       $(".diversity-highlightable").toggleClass("gender-display");
       this.showingRegion = false;
-      this.showingLanguage = false;
-      $(".diversity-highlightable").removeClass("region-display language-display");
+      this.showingCategory = false;
+      $(".diversity-highlightable").removeClass("region-display category-display");
     },
-    showLanguage: function() {
-      this.showingLanguage = !this.showingLanguage;
+    showCategory: function() {
+      $(".diversity-highlightable").toggleClass("category-display");
+      this.showingCategory = !this.showingCategory;
       this.showingGender = false;
       this.showingRegion = false;
       $(".diversity-highlightable").removeClass("region-display gender-display");

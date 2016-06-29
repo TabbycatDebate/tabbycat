@@ -16,7 +16,6 @@ export default {
   },
   computed: {
     historiesHighlights: function() {
-      console.log('looking for histss');
       var histories = this.currentHistoriesHighlights;
       if (!histories || histories === null) {
         return '';
@@ -26,7 +25,6 @@ export default {
 
         // Search for first matching adj element
         if (this.getEntity()[1] === 'adj') {
-          console.log('looking for adj hist');
           for (var i=0, iLen=histories.length; i<iLen; i++) {
             if (histories[i].adj == entity.id) {
               match = 'histories-display seen-' + histories[i].ago + '-ago';
@@ -36,7 +34,6 @@ export default {
         }
         // Search for first matching team element
         if (this.getEntity()[1] === 'team') {
-          console.log('looking for team hist');
           for (var i=0, iLen=histories.length; i<iLen; i++) {
             if (histories[i].team == entity.id) {
               match = 'histories-display seen-' + histories[i].ago + '-ago';

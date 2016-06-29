@@ -1,10 +1,4 @@
-import json
-
 from .models import BreakCategory
-
-
-def categories_to_json(t):
-    return json.dumps(categories_ordered(t))
 
 
 def categories_ordered(t):

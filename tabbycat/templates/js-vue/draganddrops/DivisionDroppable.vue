@@ -6,7 +6,7 @@
     v-on:dragenter="handleDragEnter"
     v-on:dragleave="handleDragLeave"
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
-    data-id="{{ division.id }}">
+    :data-id="division.id">
     <template v-for="team in teams" track-by="id">
       <team-draggable :team="team" :vg="division.venue_group" :save-division-at="saveDivisionAt"></team-draggable>
     </template>

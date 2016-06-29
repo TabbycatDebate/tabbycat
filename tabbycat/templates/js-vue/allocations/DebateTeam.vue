@@ -18,10 +18,12 @@
         </li>
         <li class="list-group-item">
           {{ team.gender_name }}
-          {{ team.region_name ? '; ' + team.region_name + ' Region' : '' }}
+          {{ team.region ? '; ' + team.region.name + ' Region' : '' }}
         </li>
-        <li class="list-group-item">
-          Break Categories
+        <li class="list-group-item" v-if="team.categories">
+          <span v-for="bc in team.categories">
+            {{ bc.name }}
+          </span>
         </li>
       </div>
 
@@ -58,8 +60,8 @@ export default {
       this.setHistoriesHighlights()
     },
     unsetHighlights: function() {
-      this.setConflictHighlights()
-      this.setHistoriesHighlights()
+      this.unsetConflictHighlights()
+      this.unsetHistoriesHighlights()
     }
   },
 }

@@ -5,7 +5,7 @@
     v-bind:class="[preference_allocated, isDragging ? vue-is-dragging : '']"
     v-on:dragstart="handleDragStart"
     v-on:dragend="handleDragEnd"
-    data-id="{{ team.id }}"
+    :data-id="team.id"
     v-on:mouseenter="show = true"
     v-on:mouseleave="show = false">
     <span>

@@ -4,16 +4,19 @@
     <thead>
       <tr>
         <template v-for="(headerIndex, headerData) in headers">
-          <smart-header :header-index="headerIndex"
-                        :header-data="headerData"
-                        :sort-index="sortIndex"
-                        :sort-order="sortOrder"></smart-header>
+          <smart-header
+            :header-index="headerIndex"
+            :header-data="headerData"
+            :sort-index="sortIndex"
+            :sort-order="sortOrder"></smart-header>
         </template>
       </tr>
     </thead>
     <tbody>
-      <tr v-if="typeof tableHeaders === 'undefined'"><td class="h4">No Data Available</td></tr>
-      <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder" >
+      <tr v-if="typeof tableHeaders === 'undefined'">
+        <td class="h4">No Data Available</td>
+      </tr>
+      <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder">
         <template v-for="(cellIndex, cellData) in row">
           <smart-cell v-if="!cellData['component']" :cell-data="cellData"></smart-cell>
           <component v-else :is="cellData['component']" :component-data="cellData"></component>

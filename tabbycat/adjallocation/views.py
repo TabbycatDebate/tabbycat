@@ -7,10 +7,10 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 
 from actionlog.models import ActionLogEntry
-from breakqual.utils import categories_to_json
+from breakqual.utils import categories_ordered
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
-from participants.utils import regions_to_json
+from participants.utils import regions_ordered
 from tournaments.mixins import RoundMixin
 from utils.mixins import ExpectPost, JsonDataResponseView, SuperuserRequiredMixin, TournamentMixin, VueTableMixin
 from utils.views import admin_required, expect_post, round_view
@@ -19,6 +19,7 @@ from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 from .utils import adjs_to_json, AllocationTableBuilder, get_adjs, populate_conflicts, populate_histories, teams_to_json
+
 
 logger = logging.getLogger(__name__)
 
@@ -215,14 +216,16 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
 
         teams = [d.aff_team for d in draw] + [d.neg_team for d in draw]
         adjs = get_adjs(self.get_round())
+        categories = categories_ordered(t)
+        regions = regions_ordered(t)
 
         adjs, teams = populate_conflicts(adjs, teams)
         adjs, teams = populate_histories(adjs, teams, t, r)
 
-        kwargs['allTeams'] = teams_to_json(teams)
-        kwargs['allAdjudicators'] = adjs_to_json(adjs)
-        kwargs['allRegions'] = regions_to_json()
-        kwargs['allCategories'] = categories_to_json(self.get_tournament())
+        kwargs['allTeams'] = teams_to_json(teams, regions, categories)
+        kwargs['allAdjudicators'] = adjs_to_json(adjs, regions)
+        kwargs['allRegions'] = json.dumps(regions)
+        kwargs['allCategories'] = json.dumps(categories)
 
         return super().get_context_data(**kwargs)
 
