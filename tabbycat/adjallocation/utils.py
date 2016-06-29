@@ -5,7 +5,6 @@ from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, Adjudic
 from availability.models import ActiveAdjudicator
 from draw.models import DebateTeam
 from participants.models import Adjudicator
-from utils.tables import TabbycatTableBuilder
 from utils.misc import reverse_tournament
 
 
@@ -109,133 +108,149 @@ def populate_histories(adjs, teams, t, r):
     return adjs, teams
 
 
-def adjs_to_json(adjs, regions):
-    """Converts to a standard JSON object for Vue components to use"""
+def debates_to_json(draw, t, r):
 
     data = [{
-        'id': adj.id,
-        'name': adj.name,
-        'debate': adj.debate,
-        'gender': adj.gender,
-        'gender_name': adj.get_gender_display(),
-        'region': [r for r in regions if r['id'] is adj.institution.region.id][0]
-            if adj.institution.region else None,
-        'institution': {
-            'id': adj.institution.id,
-            'name': adj.institution.code,
-            'code' : adj.institution.code,
-            'abbreviation' : adj.institution.abbreviation
-        },
-        'score': adj.rating,
-        'conflicts': {
-            'personal_teams': adj.personal_teams,
-            'institutional_institutions': adj.institutional_institutions,
-            'institutional_adjudicators': None,
-            'personal_adjudicators': adj.personal_adjudicators,
-        },
-        'histories': adj.histories
+        'id': debate.id,
+        'bracket': debate.bracket,
+        'importance': debate.importance,
+        'importance_url': reverse_tournament(
+            'set_debate_importance', t, kwargs={'round_seq': r.seq}),
+        'aff_team': debate.aff_team.id,
+        'neg_team': debate.neg_team.id,
+        'panel': [{
+            'id': a[1].id,
+            'position': a[0]
+        } for a in debate.adjudicators],
+
+    } for debate in draw]
+    return json.dumps(data)
 
 
+def adjs_to_json(adjs, regions):
+    """Converts to a standard JSON object for Vue components to use"""
+    data = {}
+    for adj in adjs:
+        data[adj.id] = {
+            'id': adj.id,
+            'name': adj.name,
+            'allocated': True if adj.debate else False,
+            'gender': adj.gender,
+            'gender_name': adj.get_gender_display(),
+            'region': [r for r in regions if r['id'] is adj.institution.region.id][0] if adj.institution.region else None,
+            'institution': {
+                'id': adj.institution.id,
+                'name': adj.institution.code,
+                'code' : adj.institution.code,
+                'abbreviation' : adj.institution.abbreviation
+            },
+            'score': "%.1f" % adj.rating,
+            'conflicts': {
+                'personal_teams': adj.personal_teams,
+                'institutional_institutions': adj.institutional_institutions,
+                'institutional_adjudicators': None,
+                'personal_adjudicators': adj.personal_adjudicators,
+            },
+            'histories': adj.histories
+        }
 
-    } for adj in adjs]
     return json.dumps(data)
 
 
 def teams_to_json(teams, regions, categories):
-
-    data = [{
-        'id': team.id,
-        'name': team.short_name,
-        'long_name': team.long_name,
-        'uses_prefix': team.use_institution_prefix,
-        'speakers': [" " + s.name for s in team.speakers],
-        'gender_name': team.gender_names,
-        'region': [r for r in regions if r['id'] is team.institution.region.id][0]
-            if team.institution.region else None,
-        # TODO: Searching for break cats here incurs extra queries; should be done earlier
-        'categories': [bc for bc in categories if bc['id'] in team.break_categories.all().values_list('id', flat=True)],
-        'institution': {
-            'id': team.institution.id,
-            'name': team.institution.code,
-            'code' : team.institution.code,
-            'abbreviation' : team.institution.abbreviation
-        },
-        'conflicts': {
-            'personal_teams': [],
-            'institutional_institutions': None,
-            'institutional_adjudicators': team.institutional_adjudicators,
-            'personal_adjudicators': team.personal_adjudicators
-        },
-        'histories': team.histories
-
-    } for team in teams]
+    data = {}
+    for team in teams:
+        data[team.id] = {
+            'id': team.id,
+            'name': team.short_name,
+            'long_name': team.long_name,
+            'uses_prefix': team.use_institution_prefix,
+            'speakers': [" " + s.name for s in team.speakers],
+            'gender_name': team.gender_names,
+            'region': [r for r in regions if r['id'] is team.institution.region.id][0] if team.institution.region else None,
+            # TODO: Searching for break cats here incurs extra queries; should be done earlier
+            'categories': [bc for bc in categories if bc['id'] in team.break_categories.all().values_list('id', flat=True)],
+            'institution': {
+                'id': team.institution.id,
+                'name': team.institution.code,
+                'code' : team.institution.code,
+                'abbreviation' : team.institution.abbreviation
+            },
+            'conflicts': {
+                'personal_teams': [],
+                'institutional_institutions': None,
+                'institutional_adjudicators': team.institutional_adjudicators,
+                'personal_adjudicators': team.personal_adjudicators
+            },
+            'histories': team.histories
+        }
     return json.dumps(data)
 
+# REDUNDANT; although parts worth translating
+# class AllocationTableBuilder(TabbycatTableBuilder):
 
-class AllocationTableBuilder(TabbycatTableBuilder):
+#     def liveness(self, team, teams_count, prelims, current_round):
+#         live_info = {'text': team.wins_count, 'tooltip': ''}
 
-    def liveness(self, team, teams_count, prelims, current_round):
-        live_info = {'text': team.wins_count, 'tooltip': ''}
+#         # The actual calculation should be shifed to be a cached method on
+#         # the relevant break category
+#         # print("teams count", teams_count)
+#         # print("prelims", prelims)
+#         # print("current_round", current_round)
 
-        # The actual calculation should be shifed to be a cached method on
-        # the relevant break category
-        # print("teams count", teams_count)
-        # print("prelims", prelims)
-        # print("current_round", current_round)
+#         highest_liveness = 3
+#         for bc in team.break_categories.all():
+#             # print(bc.name, bc.break_size)
+#             import random
+#             status = random.choice([1,2,3])
+#             highest_liveness = 3
+#             if status is 1:
+#                 live_info['tooltip'] += 'Definitely in for the %s break<br>test' % bc.name
+#                 if highest_liveness != 2:
+#                     highest_liveness = 1  # Live not ins are the most important highlight
+#             elif status is 2:
+#                 live_info['tooltip'] += 'Still live for the %s break<br>test' % bc.name
+#                 highest_liveness = 2
+#             elif status is 3:
+#                 live_info['tooltip'] += 'Cannot break in %s break<br>test' % bc.name
 
-        highest_liveness = 3
-        for bc in team.break_categories.all():
-            # print(bc.name, bc.break_size)
-            import random
-            status = random.choice([1,2,3])
-            highest_liveness = 3
-            if status is 1:
-                live_info['tooltip'] += 'Definitely in for the %s break<br>test' % bc.name
-                if highest_liveness != 2:
-                    highest_liveness = 1  # Live not ins are the most important highlight
-            elif status is 2:
-                live_info['tooltip'] += 'Still live for the %s break<br>test' % bc.name
-                highest_liveness = 2
-            elif status is 3:
-                live_info['tooltip'] += 'Cannot break in %s break<br>test' % bc.name
+#         if highest_liveness is 1:
+#             live_info['class'] = 'bg-success'
+#         elif highest_liveness is 2:
+#             live_info['class'] = 'bg-warning'
 
-        if highest_liveness is 1:
-            live_info['class'] = 'bg-success'
-        elif highest_liveness is 2:
-            live_info['class'] = 'bg-warning'
+#         return live_info
 
-        return live_info
+#     def add_team_wins(self, draw, round, key):
+#         prelims = self.tournament.prelim_rounds(until=round).count()
+#         teams_count = self.tournament.team_set.count()
 
-    def add_team_wins(self, draw, round, key):
-        prelims = self.tournament.prelim_rounds(until=round).count()
-        teams_count = self.tournament.team_set.count()
+#         wins_head = {
+#             'key': key,
+#             'tooltip': "Number of wins a team is on; "
+#         }
+#         wins_data = []
+#         for d in draw:
+#             team = d.aff_team if key is "AW" else d.neg_team
+#             wins_data.append(self.liveness(team, teams_count, prelims, round.seq))
 
-        wins_head = {
-            'key': key,
-            'tooltip': "Number of wins a team is on; "
-        }
-        wins_data = []
-        for d in draw:
-            team = d.aff_team if key is "AW" else d.neg_team
-            wins_data.append(self.liveness(team, teams_count, prelims, round.seq))
+#         self.add_column(wins_head, wins_data)
 
-        self.add_column(wins_head, wins_data)
+#     def add_debate_importances(self, draw, round):
+#         importance_head = {
+#             'key': 'importance',
+#             'icon': 'glyphicon-fire',
+#             'tooltip': "Set a debate's importance (higher receives better adjs)"
+#         }
+#         importance_data = [{
+#             'component': 'debate-importance',
+#             'id': d.id,
+#             'sort': d.importance,
+#             'importance': d.importance,
+#             'url': reverse_tournament(
+#                 'set_debate_importance',
+#                 self.tournament,
+#                 kwargs={'round_seq': round.seq})
+#         } for d in draw]
 
-    def add_debate_importances(self, draw, round):
-        importance_head = {
-            'key': 'importance',
-            'icon': 'glyphicon-fire',
-            'tooltip': "Set a debate's importance (higher receives better adjs)"
-        }
-        importance_data = [{
-            'component': 'debate-importance',
-            'id': d.id,
-            'sort': d.importance,
-            'importance': d.importance,
-            'url': reverse_tournament(
-                'set_debate_importance',
-                self.tournament,
-                kwargs={'round_seq': round.seq})
-        } for d in draw]
-
-        self.add_column(importance_head, importance_data)
+#         self.add_column(importance_head, importance_data)

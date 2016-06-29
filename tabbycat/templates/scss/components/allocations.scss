@@ -1,10 +1,20 @@
 
+#body-edit-allocation {
+  padding-top: 55px; // Need to compensate for the fixed header
+}
+
 // Dim the subheadings appropriately when highlighted
 .conflicts-display, .histories-display, .position-display, .region-display, .gender-display, .break-display {
   .text-muted {
     color: #fff;
     opacity: 0.66;
   }
+}
+
+// Unallocated Area
+
+.unallocated-adjs {
+  min-height: 100px;
 }
 
 // Adjudicator Draggable Element

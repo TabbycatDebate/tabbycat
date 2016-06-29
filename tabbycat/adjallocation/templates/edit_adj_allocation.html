@@ -1,4 +1,4 @@
-{% extends "base_vue_table.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
 
@@ -11,11 +11,11 @@
 {% block content %}
 
   <allocation-container
+    :debates=allDebates
     :adjudicators=allAdjudicators
     :teams=allTeams
     :regions=allRegions
-    :categories=allCategories
-    :table-data=tablesData[0]>
+    :categories=allCategories>
   </allocation-container>
 
 {% endblock content %}
@@ -23,6 +23,7 @@
 {% block js %}
 
   <script>
+    var allDebates = {{ allDebates|safe }};
     var allAdjudicators = {{ allAdjudicators|safe }};
     var allTeams = {{ allTeams|safe }};
     var backURL = '{% round_url draw %}';

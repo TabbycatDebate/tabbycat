@@ -12,13 +12,13 @@ from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from participants.utils import regions_ordered
 from tournaments.mixins import RoundMixin
-from utils.mixins import ExpectPost, JsonDataResponseView, SuperuserRequiredMixin, TournamentMixin, VueTableMixin
+from utils.mixins import ExpectPost, JsonDataResponseView, SuperuserRequiredMixin, TournamentMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
-from .utils import adjs_to_json, AllocationTableBuilder, get_adjs, populate_conflicts, populate_histories, teams_to_json
+from .utils import adjs_to_json, debates_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
 
 
 logger = logging.getLogger(__name__)
@@ -205,7 +205,7 @@ class GetAdjHistories(RoundMixin, SuperuserRequiredMixin, JsonDataResponseView):
         pass
 
 
-class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
+class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = 'edit_adj_allocation.html'
 
@@ -222,33 +222,13 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTable
         adjs, teams = populate_conflicts(adjs, teams)
         adjs, teams = populate_histories(adjs, teams, t, r)
 
+        kwargs['allDebates'] = debates_to_json(draw, t, r)
         kwargs['allTeams'] = teams_to_json(teams, regions, categories)
         kwargs['allAdjudicators'] = adjs_to_json(adjs, regions)
         kwargs['allRegions'] = json.dumps(regions)
         kwargs['allCategories'] = json.dumps(categories)
 
         return super().get_context_data(**kwargs)
-
-    def get_table(self):
-        # r = self.get_round()
-        # draw = r.get_draw()
-
-        table = AllocationTableBuilder(view=self, sort_order='desc',
-            sort_key='importance',
-            table_class='table-condensed table-edit-allocation')
-
-        # table.add_debate_bracket_columns(draw)
-        # table.add_debate_importances(draw, r)
-        # table.add_debate_venue_columns(draw)
-        # table.add_team_columns([d.aff_team for d in draw],
-        #    key='Aff', hide_institution=True, hide_emoji=True)
-        # table.add_team_wins(draw, r, "AW")
-        # table.add_team_columns([d.neg_team for d in draw],
-        #    key='Neg', hide_institution=True, hide_emoji=True)
-        # table.add_team_wins(draw, r, "NW")
-        # table.add_column("Panel", [{'text': ''} for d in draw])
-
-        return table
 
 
 class SaveDebateImportance(TournamentMixin, SuperuserRequiredMixin, ExpectPost, View):

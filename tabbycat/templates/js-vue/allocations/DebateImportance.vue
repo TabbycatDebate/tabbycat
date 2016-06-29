@@ -1,9 +1,9 @@
 <template>
   <td>
     <span class="hidden">
-      {{ componentData.importance }}
+      {{ importance }}
     </span>
-    <select class="form-control input-sm" v-model="componentData.importance" v-on:change="updateImportance">
+    <select class="form-control input-sm" v-model="importance" v-on:change="updateImportance">
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -19,16 +19,18 @@ import AjaxMixin from '../mixins/AjaxMixin.vue'
 export default {
   mixins: [AjaxMixin],
   props: {
-    componentData: Object,
+    id: Number,
+    importance: Number,
+    url: String,
   },
   methods: {
     // Call into the ajax mixin
     updateImportance: function() {
       var data = {
-          debate_id: this.componentData.id,
-          importance: this.componentData.importance
+          debate_id: this.id,
+          importance: this.importance
       }
-      this.update(this.componentData.url, data, 'debate importance')
+      this.update(this.url, data, 'debate importance')
     }
   }
 }

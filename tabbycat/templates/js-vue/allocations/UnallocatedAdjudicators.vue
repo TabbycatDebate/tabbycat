@@ -6,10 +6,11 @@
     v-on:dragleave="handleDragLeave"
     v-on:drop="handleDrop"
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
-    class="navbar navbar-default navbar-fixed-bottom vue-droppable">
+    class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-adjs">
 
     <debate-adjudicator
       v-for="adj in adjudicators | orderBy 'score' -1"
+      v-if="!adj.allocated"
       :adj="adj"
       :current-conflict-highlights="currentConflictHighlights"
       :current-histories-highlights="currentHistoriesHighlights">
@@ -26,7 +27,7 @@ import DroppableMixin from '../mixins/DroppableMixin.vue'
 export default {
   mixins: [DroppableMixin],
   props: {
-    adjudicators: Array,
+    adjudicators: Object,
     currentConflictHighlights: Object,
     currentHistoriesHighlights: Array,
   },

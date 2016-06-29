@@ -4,7 +4,7 @@
     v-on:mouseover="setHighlights"
     v-on:mouseout="unsetHighlights"
     v-bind:class="[diversityHighlights, historiesHighlights, conflictsHighlights]"
-    class="btn btn-default popover-parent">
+    class="popover-parent">
 
       <div class="popover-anchor" v-on:mouseover="setupPopover"></div>
 

@@ -21,7 +21,7 @@ export default {
         }
       }
 
-      if (typeof entity.gender_name !== 'undefined') {
+      if (entity.gender_name && typeof entity.gender_name !== 'undefined') {
         var speaker_genders = entity.gender_name.toLowerCase().split(",")
         var men_count = 0, notmen_count = 0;
         for (var i = 0; i < speaker_genders.length; ++i) {
@@ -35,7 +35,6 @@ export default {
         class_string += ' gender-men-' + men_count
         class_string += ' gender-notmen-' + notmen_count
       }
-
 
       if (entity.region && typeof entity.region !== "undefined") {
         class_string += " region-" + entity.region['seq']
