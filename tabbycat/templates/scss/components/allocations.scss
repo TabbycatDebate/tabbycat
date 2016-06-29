@@ -11,6 +11,15 @@
   }
 }
 
+// Within a Panel
+
+.positions-parent > div {
+  border-left: 1px solid $table-border-color;
+  &:first-child {
+    border-left: 0;
+  }
+}
+
 // Unallocated Area
 
 .unallocated-adjs {

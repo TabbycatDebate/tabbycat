@@ -20,65 +20,67 @@
 
 <body id="{% block body-id %}{% endblock %}" class="">
 
-{% block body %}
+  {% block body %}
 
-  {% block nav %}
-    {% if 'admin/' in request.path and user.is_superuser %}
-      {% include "nav/admin_nav.html" %}
-  <div class="col-md-12 accommodate-footer nav-sidebar-offset">
-    {% else %}
-      {% include "nav/top_nav_base.html" %}
-  <div class="col-md-12 accommodate-footer">
-    {% endif %}
-  {% endblock %}
-
-    {% block header %}
-    <div class="row head-title {% if 'admin/' in request.path and user.is_superuser %}white-bg vertical-spacing{% endif %}">
-      <div class="col-md-12">
-        <h3>
-          {% if page_title %}
-            {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
-          {% else %}
-            {% block head-title %}{% endblock %}
-          {% endif %}
-          <small class="pull-right">
-            {% if page_sub_title %}
-              {{ page_sub_title }}
-            {% else %}
-              {% block sub-title %}{% endblock %}
-            {% endif %}
-          </small>
-        </h3>
-      </div>
-    </div>
+    {% block nav %}
+      {% if 'admin/' in request.path and user.is_superuser %}
+        {% include "nav/admin_nav.html" %}
+    <div class="col-md-12 accommodate-footer nav-sidebar-offset">
+      {% else %}
+        {% include "nav/top_nav_base.html" %}
+    <div class="col-md-12 accommodate-footer">
+      {% endif %}
     {% endblock %}
 
-    <div class="row ">
-      <div class="col-md-12 page-sub-nav">
-        <ul class="nav nav-pills navbar-left">
-          {% block page-subnav-sections %}{% endblock %}
-        </ul>
-        <div class="nav btn-group navbar-right">
-          {% block page-subnav-actions %}{% endblock %}
+    {% block header %}
+      <div class="row head-title {% if 'admin/' in request.path and user.is_superuser %}white-bg vertical-spacing{% endif %}">
+        <div class="col-md-12">
+          <h3>
+            {% if page_title %}
+              {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
+            {% else %}
+              {% block head-title %}{% endblock %}
+            {% endif %}
+            <small class="pull-right">
+              {% if page_sub_title %}
+                {{ page_sub_title }}
+              {% else %}
+                {% block sub-title %}{% endblock %}
+              {% endif %}
+            </small>
+          </h3>
         </div>
       </div>
-    </div>
+    {% endblock %}
 
-    <div class="row">
-      <div class="col-md-12">
-        <div class="form-inline messages" id="messages-container">
-          {% if messages %}
-            {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-          {% block page-alerts %}{% endblock %}
+    {% block subheader %}
+      <div class="row ">
+        <div class="col-md-12 page-sub-nav">
+          <ul class="nav nav-pills navbar-left">
+            {% block page-subnav-sections %}{% endblock %}
+          </ul>
+          <div class="nav btn-group navbar-right">
+            {% block page-subnav-actions %}{% endblock %}
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-inline messages" id="messages-container">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+            {% block page-alerts %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    {% endblock %}
 
     {% block content %}{% endblock content %}
 

@@ -1,28 +1,24 @@
 <template>
 
-  <div>
+  <allocation-actions
+    :regions="regions" :categories="categories"></allocation-actions>
 
-    <allocation-actions
-      :regions="regions" :categories="categories"></allocation-actions>
-
-    <div class="panel panel-default" :id="'tableContainer' + table_index">
-      <div class="panel-body">
-        <debate v-for="debate in debates"
-          :debate="debate"
-          :aff="teams[debate.aff_team]"
-          :neg="teams[debate.neg_team]"
-          :all-adjudicators="adjudicators">
-        </debate>
-      </div>
+  <div class="panel panel-default" :id="'tableContainer' + table_index">
+    <div class="panel-body">
+      <debate v-for="debate in debates"
+        :debate="debate"
+        :aff="teams[debate.aff_team]"
+        :neg="teams[debate.neg_team]"
+        :all-adjudicators="adjudicators">
+      </debate>
     </div>
-
-    <unallocated-adjudicators
-      :adjudicators="adjudicators"
-      :current-conflict-highlights="currentConflictHighlights"
-      :current-histories-highlights="currentHistoriesHighlights">
-    </unallocated-adjudicators>
-
   </div>
+
+  <unallocated-adjudicators
+    :adjudicators="adjudicators"
+    :current-conflict-highlights="currentConflictHighlights"
+    :current-histories-highlights="currentHistoriesHighlights">
+  </unallocated-adjudicators>
 
 </template>
 

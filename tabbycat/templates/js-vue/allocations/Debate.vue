@@ -23,30 +23,22 @@
 
     <div class="col-md-8">
       <div class="panel panel-default">
+        <div class="flex-horizontal positions-parent">
 
-        <div class="row">
-          <div class="col-md-3">
-            <position-droppable
-              :adjudicators="debateAdjudicators.chair"
-              :position="T">
-            </position-droppable>
-          </div>
+          <position-droppable
+            :adjudicators="debateAdjudicators.chair"
+            :position="C">
+          </position-droppable>
+          <position-droppable
+            :adjudicators="debateAdjudicators.panelists"
+            :position="P">
+          </position-droppable>
+          <position-droppable
+            :adjudicators="debateAdjudicators.trainees"
+            :position="T">
+          </position-droppable>
 
-          <div class="col-md-6">
-            <position-droppable
-              :adjudicators="debateAdjudicators.panelists"
-              :position="T">
-            </position-droppable>
-          </div>
-
-          <div class="col-md-3">
-            <position-droppable
-              :adjudicators="debateAdjudicators.trainees"
-              :position="T">
-            </position-droppable>
-          </div>
         </div>
-
       </div>
     </div>
 
