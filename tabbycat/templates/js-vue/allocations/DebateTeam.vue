@@ -10,7 +10,7 @@
 
       <div class="">
         <strong>{{ team.name }}</strong><br>
-        <small>3 Wins</small>
+        <span class="small text-muted">3 Wins</span>
       </div>
 
       <div class="popover-raw hide">

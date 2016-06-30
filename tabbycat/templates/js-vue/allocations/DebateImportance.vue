@@ -1,13 +1,10 @@
 <template>
-  <td>
-    <span class="hidden">
-      {{ importance }}
-    </span>
+  <div>
     <input max="2" min="-2" step="1" type="range" v-model="importance">
-    <span class="small text-center">
-      {{ importance }}
-    </span>
-  </td>
+    <div class="small text-center text-muted">
+      {{ importanceDescription }}
+    </div>
+  </div>
 </template>
 
 <script>
@@ -28,6 +25,21 @@ export default {
           importance: this.importance + 2
       }
       this.update(this.url, data, 'debate importance')
+    }
+  },
+  computed: {
+    importanceDescription: function() {
+      if (this.importance === 2) {
+        return "VIP"
+      } else if (this.importance === 1) {
+        return "Important"
+      } else if (this.importance === 0) {
+        return "Neutral"
+      } else if (this.importance === -1) {
+        return "Unimportant"
+      } else if (this.importance === -2) {
+        return "¯\\_(ツ)_/¯"
+      }
     }
   }
 }

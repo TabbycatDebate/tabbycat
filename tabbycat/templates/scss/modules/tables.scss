@@ -16,7 +16,7 @@
 // HEADER STYLES
 //------------------------------------------------------------------------------
 
-thead {
+thead, .thead {
   @extend .subtitle;
   background: #fff; // Fixed header needs a background while scrolling
   line-height: 18px; // Otherwise the border is too clone to the text
@@ -38,11 +38,9 @@ thead {
 
 .table > tbody > tr > th,
 .table > tbody > tr > td {
+  vertical-align: middle;
   &.unpadded-cell {
     padding: 0px;
-  }
-  &.double-height {
-    line-height: 40px;
   }
   // For highlighting bracket boundaries
   &.highlight-row {

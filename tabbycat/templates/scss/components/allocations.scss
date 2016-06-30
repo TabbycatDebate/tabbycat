@@ -1,8 +1,57 @@
+//------------------------------------------------------------------------------
+// General Layout
+//------------------------------------------------------------------------------
 
 #body-edit-allocation {
   padding-top: 65px; // Need to compensate for the fixed header
   background: #fff;
 }
+
+.unallocated-adjs {
+  min-height: 100px;
+}
+
+.thead {
+  border-bottom: 2px solid $table-border-color;
+  padding-bottom: $table-cell-padding;
+  .glyphicon {
+    line-height: 15px;
+  }
+}
+
+.flex-cell {
+  padding-left: $table-cell-padding;
+  padding-right: $table-cell-padding;
+  min-width: 40px;
+}
+
+.bordered-bottom {
+  border-bottom: 1px solid $table-border-color;
+}
+
+.importance-container {
+  width: 90px;
+}
+
+//------------------------------------------------------------------------------
+// Debate Layout
+//------------------------------------------------------------------------------
+
+.panel-debate {
+  // Overwrite .panel defaults
+  box-shadow: 0;
+  margin-bottom: 0;
+}
+.positions-parent > div {
+  border-left: 2px solid $table-border-color;
+  &:first-child {
+    border-left: 0;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Highlights
+//------------------------------------------------------------------------------
 
 // Dim the subheadings appropriately when highlighted
 .conflicts-display, .histories-display, .position-display, .region-display, .gender-display, .break-display {
@@ -12,22 +61,9 @@
   }
 }
 
-// Within a Panel
-
-.positions-parent > div {
-  border-left: 1px solid $table-border-color;
-  &:first-child {
-    border-left: 0;
-  }
-}
-
-// Unallocated Area
-
-.unallocated-adjs {
-  min-height: 100px;
-}
-
-// Adjudicator Draggable Element
+//------------------------------------------------------------------------------
+// Draggable Elements
+//------------------------------------------------------------------------------
 
 .adj-draggable {
   text-align: left;
@@ -42,7 +78,7 @@
     border-bottom: none;
   }
   .small {
-    text-transform: uppercase;
+    font-weight: bold;
     font-size: 70%;
     display: block;
     line-height: 3px;

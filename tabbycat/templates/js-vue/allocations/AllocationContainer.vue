@@ -1,34 +1,45 @@
 <template>
+  <div>
 
-  <allocation-actions
-    :regions="regions" :categories="categories"></allocation-actions>
+    <allocation-actions
+      :regions="regions" :categories="categories"></allocation-actions>
 
-  <div class="col-md-12">
-    <div class="row flex-horizontal subtitle">
-      <div class="col-md-1">Bracket</div>
-      <div class="col-md-1 ">Importance</div>
-      <div class="col-md-1">Aff</div>
-      <div class="col-md-1">Neg</div>
-      <div class="col-md-8 flex-horizontal ">
-        <div class="flex-1">Chair</div>
-        <div class="flex-1">Panelists</div>
-        <div class="flex-1">Trainees</div>
+    <div class="col-md-12">
+      <div class="row flex-horizontal subtitle">
+        <div class="thead flex-cell" data-toggle="tooltip" title="Debate Bracket">
+          <span class="glyphicon glyphicon-stats"></span>
+        </div>
+        <div class="thead flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
+          <span>Importance</span>
+        </div>
+        <div class="thead flex-1">Aff</div>
+        <div class="thead flex-1">Neg</div>
+        <div class="thead flex-8 flex-horizontal">
+          <div class="flex-1 text-center">Chair</div>
+          <div class="flex-2 text-center">Panelists</div>
+          <div class="flex-2 text-center">Trainees</div>
+        </div>
+        <div class="thead flex-cell" data-toggle="tooltip" title="Average score of the voting majority (assumes top adjs in majority)">
+          <span class="glyphicon glyphicon-stats"></span>
+        </div>
       </div>
+
+      <debate v-for="debate in debates"
+        :debate="debate"
+        :aff="teams[debate.aff_team]"
+        :neg="teams[debate.neg_team]"
+        :all-adjudicators="adjudicators">
+      </debate>
+
     </div>
-    <debate v-for="debate in debates"
-      :debate="debate"
-      :aff="teams[debate.aff_team]"
-      :neg="teams[debate.neg_team]"
-      :all-adjudicators="adjudicators">
-    </debate>
+
+    <unallocated-adjudicators
+      :adjudicators="adjudicators"
+      :current-conflict-highlights="currentConflictHighlights"
+      :current-histories-highlights="currentHistoriesHighlights">
+    </unallocated-adjudicators>
+
   </div>
-
-  <unallocated-adjudicators
-    :adjudicators="adjudicators"
-    :current-conflict-highlights="currentConflictHighlights"
-    :current-histories-highlights="currentHistoriesHighlights">
-  </unallocated-adjudicators>
-
 </template>
 
 <script>

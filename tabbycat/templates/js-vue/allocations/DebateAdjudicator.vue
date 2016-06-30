@@ -19,7 +19,7 @@
         <span>
           {{ short_name }}
         </span>
-        <span class="small text-muted">
+        <span class="small text-muted subtitle">
           <template v-if="adj.institution.code">
             {{ adj.institution.code }}
           </template>
