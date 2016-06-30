@@ -163,7 +163,9 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
             return table # Return Blank
 
         draw = r.get_draw()
-        if not r.is_break_round:
+        if r.is_break_round:
+            table.add_room_rank_columns(draw)
+        else:
             table.add_debate_bracket_columns(draw)
 
         table.add_debate_venue_columns(draw)

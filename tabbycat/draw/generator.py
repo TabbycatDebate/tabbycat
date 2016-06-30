@@ -45,6 +45,16 @@ class Pairing(object):
         else:
             self._winner_index = self.teams.index(winner)
 
+    @classmethod
+    def from_debate(cls, debate):
+        teams = [debate.aff_team, debate.neg_team] # order matters
+        bracket = debate.bracket
+        room_rank = debate.room_rank
+        flags = debate.flags.split(",")
+        division = debate.division
+        winner = debate.confirmed_ballot.ballot_set.winner
+        return cls(teams, bracket, room_rank, flags, winner, division)
+
     def __repr__(self):
         return "<Pairing object: {0} vs {1} ({2}/{3})>".format(
             self.teams[0], self.teams[1], self.bracket, self.room_rank)
@@ -1038,11 +1048,14 @@ class FirstEliminationDrawGenerator(BaseDrawGenerator):
 
         # Determine who debates
         bypassing, debating = self._bypass_debate_split(break_size)
+        logger.info("There are %d teams bypassing this round and %d teams debating in it.", bypassing, debating)
         if bypassing + debating != break_size:
-            raise DrawError("The number of debating (%s) and bypassing (%s) teams in this round is not equal to the break size (%s)" % (debating, bypassing, break_size))
+            raise DrawError("The number of debating (%d) and bypassing (%d) teams in this round is not equal to the break size (%s)" % (debating, bypassing, break_size))
+        if debating == 0:
+            raise DrawError("Whoops! Strangely, it looks like no teams are meant to debate in this round.")
 
         self._bypassing_teams = self.teams[:bypassing]
-        debating_teams = self.teams[-debating:]
+        debating_teams = self.teams[bypassing:bypassing+debating]
 
         # Pair the debating teams
         debates = len(debating_teams) // 2
@@ -1060,7 +1073,7 @@ class FirstEliminationDrawGenerator(BaseDrawGenerator):
     def _bypass_debate_split(number):
         next_pow2 = 1 << (number.bit_length() - 1)
         if next_pow2 == number:  # No partial elimination
-            return number, 0
+            return 0, number
         debates = number - next_pow2
         return next_pow2 - debates, 2*debates
 
@@ -1078,7 +1091,7 @@ class EliminationDrawGenerator(BaseDrawGenerator):
 
     can_be_first_round = False
     requires_even_teams = False  # It does but enabling trips it at init rather than the DrawError() below
-    requires_prev_results = False
+    requires_prev_results = True
     draw_type = "elimination"
 
     def generate(self):
@@ -1095,7 +1108,10 @@ class EliminationDrawGenerator(BaseDrawGenerator):
 
         self.results.sort(key=lambda x: x.room_rank)
         teams = list(self.teams)
-        teams.extend([p.winner for p in self.results])
+        winners = [p.winner for p in self.results]
+        if winners.count(None) > 0:
+            raise DrawError("{:d} debates in the previous round don't have a result.".format(winners.count(None)))
+        teams.extend(winners)
 
         debates = len(teams) // 2
         top = teams[:debates]
@@ -1103,6 +1119,7 @@ class EliminationDrawGenerator(BaseDrawGenerator):
         bottom.reverse()
         pairings = list()
         for i, ts in enumerate(zip(top, bottom), start=1):
+            print(ts)
             pairing = Pairing(ts, bracket=0, room_rank=i)
             pairings.append(pairing)
         return pairings

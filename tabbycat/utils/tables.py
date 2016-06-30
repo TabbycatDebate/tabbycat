@@ -300,14 +300,21 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(novice_header, [speaker.novice for speaker in speakers])
 
+    def add_room_rank_columns(self, debates):
+        header = {
+            'key': "Room rank",
+            'icon': 'glyphicon-stats',
+            'tooltip': 'Room rank of this debate'
+        }
+        self.add_column(header, [debate.room_rank for debate in debates])
+
     def add_debate_bracket_columns(self, debates):
-        bracket_header = {
+        header = {
             'key': "Bracket",
             'icon': 'glyphicon-stats',
             'tooltip': 'Bracket of this debate'
         }
-        bracket_data = [debate.bracket for debate in debates]
-        self.add_column(bracket_header, bracket_data)
+        self.add_column(header, [debate.bracket for debate in debates])
 
     def add_debate_venue_columns(self, debates, with_times=False):
         if self.tournament.pref('enable_divisions'):
@@ -326,11 +333,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('enable_venue_groups'):
             venue_data = [
                 debate.division.venue_group.short_name if debate.division
-                else (debate.venue.group.short_name + debate.venue.name)
+                else (debate.venue.group.short_name + debate.venue.name) if debate.venue
+                else ''
                 for debate in debates
             ]
         else:
-            venue_data = [debate.venue.name for debate in debates]
+            venue_data = [debate.venue.name if debate.venue else '' for debate in debates]
         self.add_column(venue_header, venue_data)
 
         if with_times and self.tournament.pref('enable_debate_scheduling'):

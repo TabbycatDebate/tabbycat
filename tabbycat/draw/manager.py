@@ -4,7 +4,7 @@ from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
 from .models import Debate, DebateTeam, TeamPositionAllocation
-from .generator import DrawGenerator
+from .generator import DrawGenerator, Pairing
 
 OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_institution"     : "draw_rules__avoid_same_institution",
@@ -37,7 +37,14 @@ class BaseDrawManager:
         self.active_only = active_only
 
     def get_teams(self):
-        return self.round.active_teams.all() if self.active_only else self.round.tournament.team_set.all()
+        if self.active_only:
+            return self.round.active_teams.all()
+        else:
+            return self.round.tournament.team_set.all()
+
+    def get_results(self):
+        # Only needed for EliminationDrawManager
+        return None
 
     def _populate_aff_counts(self, teams):
         if self.round.prev:
@@ -82,6 +89,7 @@ class BaseDrawManager:
         self.delete()
 
         teams = self.get_teams()
+        results = self.get_results()
         self._populate_aff_counts(teams)
         self._populate_team_position_allocations(teams)
 
@@ -91,7 +99,7 @@ class BaseDrawManager:
         if options["side_allocations"] == "manual-ballot":
             options["side_allocations"] = "balance"
 
-        drawer = DrawGenerator(self.draw_type, teams, self.round, results=None, **options)
+        drawer = DrawGenerator(self.draw_type, teams, self.round, results=results, **options)
         pairings = drawer.generate()
         self._make_debates(pairings)
         self.round.draw_status = Round.STATUS_DRAFT
@@ -132,9 +140,25 @@ class RoundRobinDrawManager(BaseDrawManager):
 class FirstEliminationDrawManager(BaseDrawManager):
     draw_type = "first_elimination"
 
+    def get_teams(self):
+        breaking_teams = self.round.break_category.breakingteam_set.filter(break_rank__isnull=False).select_related('team')
+        return [bt.team for bt in breaking_teams]
+
 
 class EliminationDrawManager(BaseDrawManager):
     draw_type = "elimination"
+
+    def get_teams(self):
+        pass
+        # continue here
+
+
+    def get_results(self):
+        last_round = self.round.break_category.round_set.filter(seq__lt=self.round.seq).order_by('-seq').first()
+        debates = last_round.debate_set.all()
+        result = [Pairing.from_debate(debate) for debate in debates]
+        print("results: " + repr(result))
+        return result
 
 
 DRAW_MANAGER_CLASSES = {

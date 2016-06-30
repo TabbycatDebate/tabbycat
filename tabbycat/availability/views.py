@@ -168,21 +168,21 @@ class AvailabilityActivateBreakingAdjs(AvailabilityActivateBase):
     activation_msg = 'Checked in all breaking adjudicators'
 
     def activate_function(self):
-        self.get_round().round.activate_all_breaking_adjs()
+        self.get_round().activate_all_breaking_adjs()
 
 
 class AvailabilityActivateBreakingTeams(AvailabilityActivateBase):
     activation_msg = 'Checked in all breaking teams'
 
     def activate_function(self):
-        self.get_round().round.activate_all_breaking_teams()
+        self.get_round().activate_all_breaking_teams()
 
 
 class AvailabilityActivateAdvancingTeams(AvailabilityActivateBase):
     activation_msg = 'Checked in all advancing teams'
 
     def activate_function(self):
-        self.get_round().round.activate_all_advancing_teams()
+        self.get_round().activate_all_advancing_teams()
 
 
 class AvailabilityActivateFromPrevious(AvailabilityActivateBase):
