@@ -1,4 +1,5 @@
 import json
+import math
 
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
@@ -6,6 +7,28 @@ from availability.models import ActiveAdjudicator
 from draw.models import DebateTeam
 from participants.models import Adjudicator
 from utils.misc import reverse_tournament
+
+
+def percentile(n, percent, key=lambda x:x):
+    """
+    Find the percentile of a list of values.
+
+    @parameter N - is a list of values. Note N MUST BE already sorted.
+    @parameter percent - a float value from 0.0 to 1.0.
+    @parameter key - optional key function to compute value from each element of N.
+
+    @return - the percentile of the values
+    """
+    if not n:
+        return None
+    k = (len(n)-1) * percent
+    f = math.floor(k)
+    c = math.ceil(k)
+    if f == c:
+        return key(n[int(k)])
+    d0 = key(n[int(f)]) * (c-k)
+    d1 = key(n[int(c)]) * (k-f)
+    return d0+d1
 
 
 def get_adjs(r):
@@ -35,9 +58,6 @@ def get_adjs(r):
     for round_id, round_adj in zip(all_ids, list(active_adjs.values())):
         round_adj.debate = round_id[1]
         round_adjs.append(round_adj)
-
-    for ra in round_adjs:
-        ra.rating = ra.score,
 
     return round_adjs
 
@@ -129,6 +149,12 @@ def debates_to_json(draw, t, r):
 
 def adjs_to_json(adjs, regions):
     """Converts to a standard JSON object for Vue components to use"""
+
+    absolute_scores = [adj.score for adj in adjs]
+    absolute_scores.sort()
+    percentile_cutoffs = [(100 - i, percentile(absolute_scores, i/100)) for i in range(0,100,10)]
+    percentile_cutoffs.reverse()
+
     data = {}
     for adj in adjs:
         data[adj.id] = {
@@ -144,7 +170,8 @@ def adjs_to_json(adjs, regions):
                 'code' : adj.institution.code,
                 'abbreviation' : adj.institution.abbreviation
             },
-            'score': "%.1f" % adj.rating,
+            'score': "%.1f" % adj.score,
+            'ranking': next(pc[0] for pc in percentile_cutoffs if pc[1] <= adj.score),
             'conflicts': {
                 'personal_teams': adj.personal_teams,
                 'institutional_institutions': adj.institutional_institutions,

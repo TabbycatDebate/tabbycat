@@ -2,10 +2,11 @@
 
     <div
       v-on:dragover.prevent
-      v-on:dragenter="handleDragEnter"
-      v-on:dragleave="handleDragLeave"
-      v-on:drop="setAdjPosition"
+      v-on:dragenter="dragEnter"
+      v-on:dragleave="dragLeave"
+      v-on:drop="drop"
       v-bind:class="['vue-droppable', {
+          'panel-incomplete conflicts-display': isIncomplete,
           'vue-is-drag-enter': isDroppable,
           'flex-1': position === 'C',
           'flex-2': position !== 'C'
@@ -14,7 +15,9 @@
 
       <debate-adjudicator
         v-for="adj in adjudicators | orderBy 'score' -1"
-        :adj="adj">
+        :adj="adj"
+        :position="position"
+        :debate-id="debateId">
       </debate-adjudicator>
 
     </div>
@@ -29,14 +32,26 @@ export default {
   mixins: [DroppableMixin],
   props: {
     adjudicators: Array,
-    position: String
+    position: String,
+    debateId: Number
+  },
+  computed: {
+    isIncomplete: function () {
+      if (this.position === "C" && this.adjudicators.length === 0) {
+        return true
+      } else if (this.position === "P" && Math.abs(this.adjudicators.length % 2) == 1) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   components: {
     'DebateAdjudicator': DebateAdjudicator
   },
   methods: {
-    'setAdjPosition': function(event) {
-      console.log(this.position, event)
+    'handleDrop': function(event) {
+      this.$dispatch('set-adj-panel', this.debateId, this.position)
     }
   }
 }

@@ -33,14 +33,17 @@
 
           <position-droppable
             :adjudicators="debateAdjudicators.chair"
+            :debate-id="debate.id"
             :position="'C'">
           </position-droppable>
           <position-droppable
             :adjudicators="debateAdjudicators.panelists"
+            :debate-id="debate.id"
             :position="'P'">
           </position-droppable>
           <position-droppable
             :adjudicators="debateAdjudicators.trainees"
+            :debate-id="debate.id"
             :position="'T'">
           </position-droppable>
 
@@ -93,18 +96,26 @@ export default {
       return debateAdjudicators;
     },
     panelScore: function () {
-      var voting_adjs_scores = [Number(this.debateAdjudicators.chair[0].score)]
-      for (var i = 0; i < this.debateAdjudicators.panelists.length; i++) {
-        voting_adjs_scores.push(Number(this.debateAdjudicators.panelists[i].score));
+      if (typeof this.panel === 'undefined') {
+        return ''
       }
-      voting_adjs_scores.sort(function(a,b){return b - a}) // Force numeric sort
-      var majority = Math.ceil(voting_adjs_scores.length / 2)
-      voting_adjs_scores = voting_adjs_scores.slice(0, majority)
+      // Build an array of each adjs scores
+      var adjs_scores = []
+      for (var i = 0; i < this.panel.length; i++) {
+        if (this.panel[i].position !== "T") {
+          adjs_scores.push(allAdjudicators[this.panel[i].id].score);
+        }
+      }
+      adjs_scores.sort(function(a,b){return b - a}) // Force numeric sort
+
+      // Cull the scores from the presumed voting minority
+      var majority = Math.ceil(adjs_scores.length / 2)
+      adjs_scores = adjs_scores.slice(0, majority)
       var total = 0.0;
-      for(var i = 0; i < voting_adjs_scores.length; i++) {
-          total = total + voting_adjs_scores[i];
+      for(var i = 0; i < adjs_scores.length; i++) {
+          total = total + adjs_scores[i];
       }
-      return (total / voting_adjs_scores.length).toFixed(1);
+      return (total / adjs_scores.length).toFixed(1);
     }
   }
 }

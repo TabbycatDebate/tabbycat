@@ -44,6 +44,7 @@
 }
 .positions-parent > div {
   border-left: 2px solid $table-border-color;
+  min-height: 47px;
   &:first-child {
     border-left: 0;
   }
@@ -71,8 +72,9 @@
     float: left;
   }
   .h4 {
+    min-width: 30px;
     margin: 0;
-    padding: 3px 6px 3px 2px; // Center the Score
+    padding: 3px 0 3px 2px; // Center the Score
   }
   span {
     border-bottom: none;

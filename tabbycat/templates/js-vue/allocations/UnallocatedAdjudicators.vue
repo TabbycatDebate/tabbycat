@@ -2,9 +2,9 @@
 
   <nav
     v-on:dragover.prevent
-    v-on:dragenter="handleDragEnter"
-    v-on:dragleave="handleDragLeave"
-    v-on:drop="handleDrop"
+    v-on:dragenter="dragEnter"
+    v-on:dragleave="dragLeave"
+    v-on:drop="drop"
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
     class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-adjs">
 
@@ -35,9 +35,8 @@ export default {
   'DebateAdjudicator': DebateAdjudicator
   },
   methods: {
-    receiveDrop: function(ev) {
-      console.log('Received an adj');
-      this.$dispatch('moveToUnused', this.division);
+    handleDrop: function(ev) {
+      this.$dispatch('set-adj-unused');
     }
   }
 }

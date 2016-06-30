@@ -88,14 +88,22 @@ gulp.task("js-browserify", function() {
   // map them to our stream function
   var tasks = files.map(function(entry) {
     return browserify({ entries: [entry] })
-      .transform(vueify).on('error', gutil.log)
+      .transform(vueify)
+        .on('error', gutil.log)
       .transform([babelify, {
           presets: ["es2015"],
           plugins: ['transform-runtime']
-      }]).on('error', gutil.log)
+      }])
+        .on('error', gutil.log)
       .bundle().on('error', gutil.log)
-      .pipe(source(entry)).on('error', gutil.log)
-      .pipe(isProduction ? streamify(uglify()) : gutil.noop()).on('error', gutil.log)
+        .on('error', function() {
+          gutil.log
+          this.emit('end');
+        })
+      .pipe(source(entry))
+        .on('error', gutil.log)
+      .pipe(isProduction ? streamify(uglify()) : gutil.noop())
+        .on('error', gutil.log)
       .pipe(rename({
           extname: '.bundle.js',
           dirname: ''
