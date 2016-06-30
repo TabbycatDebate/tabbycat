@@ -193,7 +193,7 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
 
         table.add_draw_conflicts(draw)
         if not r.is_break_round:
-            table.set_bracket_highlights()
+            table.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
 
         return table
 
