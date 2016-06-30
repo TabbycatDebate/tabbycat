@@ -3,15 +3,24 @@
   <allocation-actions
     :regions="regions" :categories="categories"></allocation-actions>
 
-  <div class="panel panel-default" :id="'tableContainer' + table_index">
-    <div class="panel-body">
-      <debate v-for="debate in debates"
-        :debate="debate"
-        :aff="teams[debate.aff_team]"
-        :neg="teams[debate.neg_team]"
-        :all-adjudicators="adjudicators">
-      </debate>
+  <div class="col-md-12">
+    <div class="row flex-horizontal subtitle">
+      <div class="col-md-1">Bracket</div>
+      <div class="col-md-1 ">Importance</div>
+      <div class="col-md-1">Aff</div>
+      <div class="col-md-1">Neg</div>
+      <div class="col-md-8 flex-horizontal ">
+        <div class="flex-1">Chair</div>
+        <div class="flex-1">Panelists</div>
+        <div class="flex-1">Trainees</div>
+      </div>
     </div>
+    <debate v-for="debate in debates"
+      :debate="debate"
+      :aff="teams[debate.aff_team]"
+      :neg="teams[debate.neg_team]"
+      :all-adjudicators="adjudicators">
+    </debate>
   </div>
 
   <unallocated-adjudicators

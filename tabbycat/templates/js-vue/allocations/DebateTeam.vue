@@ -9,7 +9,8 @@
       <div class="popover-anchor" v-on:mouseover="setupPopover"></div>
 
       <div class="">
-        {{ team.name }}
+        <strong>{{ team.name }}</strong><br>
+        <small>3 Wins</small>
       </div>
 
       <div class="popover-raw hide">

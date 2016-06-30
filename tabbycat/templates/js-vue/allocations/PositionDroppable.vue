@@ -5,11 +5,12 @@
       v-on:dragenter="handleDragEnter"
       v-on:dragleave="handleDragLeave"
       v-on:drop="setAdjPosition"
-      v-bind:class="{
-        'vue-is-drag-enter': isDroppable,
-        'flex-1': position === "C"
-      }"
-      class="vue-droppable flex-1">
+      v-bind:class="['vue-droppable', {
+          'vue-is-drag-enter': isDroppable,
+          'flex-1': position === 'C',
+          'flex-2': position !== 'C'
+      }]"
+      class="">
 
       <debate-adjudicator
         v-for="adj in adjudicators | orderBy 'score' -1"

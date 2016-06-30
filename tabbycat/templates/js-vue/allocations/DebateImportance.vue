@@ -3,13 +3,10 @@
     <span class="hidden">
       {{ importance }}
     </span>
-    <select class="form-control input-sm" v-model="importance" v-on:change="updateImportance">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
+    <input max="2" min="-2" step="1" type="range" v-model="importance">
+    <span class="small text-center">
+      {{ importance }}
+    </span>
   </td>
 </template>
 
@@ -28,7 +25,7 @@ export default {
     updateImportance: function() {
       var data = {
           debate_id: this.id,
-          importance: this.importance
+          importance: this.importance + 2
       }
       this.update(this.url, data, 'debate importance')
     }

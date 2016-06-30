@@ -1,16 +1,16 @@
 <template>
-  <div class="row">
+  <div class="row flex-horizontal">
 
     <div class="col-md-1">
+      {{ debate.bracket }}
+    </div>
+
+    <div class="col-md-1 ">
       <debate-importance
         :id="debate.id"
         :importance="debate.importance"
         :url="debate.importance_url">
       </debate-importance>
-    </div>
-
-    <div class="col-md-1">
-      {{ debate.bracket }}
     </div>
 
     <div class="col-md-1">
@@ -27,15 +27,15 @@
 
           <position-droppable
             :adjudicators="debateAdjudicators.chair"
-            :position="C">
+            :position="'C'">
           </position-droppable>
           <position-droppable
             :adjudicators="debateAdjudicators.panelists"
-            :position="P">
+            :position="'P'">
           </position-droppable>
           <position-droppable
             :adjudicators="debateAdjudicators.trainees"
-            :position="T">
+            :position="'T'">
           </position-droppable>
 
         </div>
