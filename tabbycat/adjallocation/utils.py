@@ -6,7 +6,6 @@ from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, Adjudic
 from availability.models import ActiveAdjudicator
 from draw.models import DebateTeam
 from participants.models import Adjudicator
-from utils.misc import reverse_tournament
 
 
 def percentile(n, percent, key=lambda x:x):
@@ -134,8 +133,6 @@ def debates_to_json(draw, t, r):
         'id': debate.id,
         'bracket': debate.bracket,
         'importance': debate.importance,
-        'importance_url': reverse_tournament(
-            'set_debate_importance', t, kwargs={'round_seq': r.seq}),
         'aff_team': debate.aff_team.id,
         'neg_team': debate.neg_team.id,
         'panel': [{

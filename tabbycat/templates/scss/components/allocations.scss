@@ -2,13 +2,15 @@
 // General Layout
 //------------------------------------------------------------------------------
 
-#body-edit-allocation {
+.allocation-container {
   padding-top: 65px; // Need to compensate for the fixed header
+  padding-bottom: 450px; // Need to offset the adjs panel
   background: #fff;
 }
 
 .unallocated-adjs {
-  min-height: 100px;
+  min-height: 48px;
+  max-height: 450px;
 }
 
 .thead {
@@ -30,7 +32,16 @@
 }
 
 .importance-container {
-  width: 90px;
+  width: 95px;
+}
+
+.panel-incomplete {
+  background: $brand-danger-alt;
+  border: 1px solid darken($brand-danger-alt, 10%);
+  color: #fff;
+}
+.panel-incomplete.vue-is-drag-enter {
+  background: $state-success-bg;
 }
 
 //------------------------------------------------------------------------------
@@ -44,7 +55,7 @@
 }
 .positions-parent > div {
   border-left: 2px solid $table-border-color;
-  min-height: 47px;
+  min-height: 47px; // Dont let it collapse when no adjs are present
   &:first-child {
     border-left: 0;
   }

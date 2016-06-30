@@ -11,6 +11,7 @@
   /* Required to make elements draggable in old WebKit */
   -khtml-user-drag: element;
   -webkit-user-drag: element;
+  user-select: none; // Text should be unselectable or highlights go crazy
   &:hover {
     cursor: move;
   }
@@ -35,7 +36,6 @@
   min-height: 66px;
 }
 .vue-is-drag-enter {
-  // text-decoration: underline;
   background: $state-success-bg;
 }
 

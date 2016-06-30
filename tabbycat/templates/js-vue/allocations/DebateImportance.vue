@@ -17,16 +17,6 @@ export default {
     importance: Number,
     url: String,
   },
-  methods: {
-    // Call into the ajax mixin
-    updateImportance: function() {
-      var data = {
-          debate_id: this.id,
-          importance: this.importance + 2
-      }
-      this.update(this.url, data, 'debate importance')
-    }
-  },
   computed: {
     importanceDescription: function() {
       if (this.importance === 2) {
@@ -40,6 +30,15 @@ export default {
       } else if (this.importance === -2) {
         return "¯\\_(ツ)_/¯"
       }
+    }
+  },
+  watch: {
+    'importance': function (newVal, oldVal) {
+      var data = {
+          debate_id: this.id,
+          importance: this.importance
+      }
+      this.update(this.url, data, 'debate ' + this.id + '\'s importance')
     }
   }
 }

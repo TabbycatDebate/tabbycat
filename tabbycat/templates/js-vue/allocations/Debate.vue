@@ -5,16 +5,6 @@
       <div class="flex-1">{{ debate.bracket }}</div>
     </div>
 
-    <div class="flex-cell importance-container flex-vertical-center bordered-bottom">
-      <div class="flex-1">
-        <debate-importance
-          :id="debate.id"
-          :importance="debate.importance"
-          :url="debate.importance_url">
-        </debate-importance>
-      </div>
-    </div>
-
     <div class="flex-1 flex-vertical-center bordered-bottom">
       <div class="flex-1">
         <debate-team :team="aff"></debate-team>
@@ -27,10 +17,19 @@
       </div>
     </div>
 
+    <div class="flex-cell importance-container flex-vertical-center bordered-bottom">
+      <div class="flex-1">
+        <debate-importance
+          :id="debate.id"
+          :importance="debate.importance"
+          :url="this.urls['updateImportance']">
+        </debate-importance>
+      </div>
+    </div>
+
     <div class="flex-8">
       <div class="panel panel-default panel-debate">
         <div class="flex-horizontal positions-parent">
-
           <position-droppable
             :adjudicators="debateAdjudicators.chair"
             :debate-id="debate.id"
@@ -46,7 +45,6 @@
             :debate-id="debate.id"
             :position="'T'">
           </position-droppable>
-
         </div>
       </div>
     </div>
@@ -61,6 +59,7 @@
 </template>
 
 <script>
+import AjaxMixin from '../mixins/AjaxMixin.vue'
 import DebateTeam from './DebateTeam.vue'
 import DebateImportance from './DebateImportance.vue'
 import PositionDroppable from './PositionDroppable.vue'
@@ -69,11 +68,15 @@ export default {
   components: {
     DebateTeam, DebateImportance, PositionDroppable
   },
+  mixins: [
+    AjaxMixin
+  ],
   props: {
     allAdjudicators: Object,
     debate: Object,
     aff: Object,
-    neg: Object
+    neg: Object,
+    urls: Object
   },
   computed: {
     debateAdjudicators: function () {
@@ -113,9 +116,20 @@ export default {
       adjs_scores = adjs_scores.slice(0, majority)
       var total = 0.0;
       for(var i = 0; i < adjs_scores.length; i++) {
-          total = total + adjs_scores[i];
+        total = total + adjs_scores[i];
       }
       return (total / adjs_scores.length).toFixed(1);
+    }
+  },
+  watch: {
+    'debate.panel': function (newVal, oldVal) {
+      // var test = this.debate.panel;
+      var resource = "change to panel on  " + this.aff.name + " vs " + this.neg.name
+      var data = {
+        'debate_id': this.debate.id,
+        'panel': JSON.stringify(this.debate.panel)
+      }
+      this.update(this.urls['updatePanel'], data, resource)
     }
   }
 }

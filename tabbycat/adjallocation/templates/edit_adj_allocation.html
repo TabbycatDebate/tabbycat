@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% load debate_tags %}
-{% load static %}
 
-{% block body-id %}body-edit-allocation{% endblock %}<!-- Need to push header down -->
 {% block nav %}{% endblock %}
 {% block header %}{% endblock %}
 {% block subheader %}{% endblock %}
@@ -16,8 +14,18 @@
     :adjudicators=allAdjudicators
     :teams=allTeams
     :regions=allRegions
-    :categories=allCategories>
+    :categories=allCategories
+    :urls=urls>
   </allocation-container>
+
+  <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header h4 text-danger"></div>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+  </div>
 
 {% endblock content %}
 
@@ -27,9 +35,16 @@
     var allDebates = {{ allDebates|safe }};
     var allAdjudicators = {{ allAdjudicators|safe }};
     var allTeams = {{ allTeams|safe }};
-    var backURL = '{% round_url draw %}';
     var allRegions = {{ allRegions|safe }};
     var allCategories = {{ allCategories|safe }};
+
+    var urls = {
+      'back': '{% round_url draw %}',
+      'updateImportance': '{% round_url save_debate_importance %}',
+      'updatePanel': '{% round_url save_debate_panel %}',
+    }
+
+
   </script>
   {{ block.super }}
 

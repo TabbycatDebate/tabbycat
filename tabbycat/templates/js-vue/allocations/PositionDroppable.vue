@@ -1,26 +1,26 @@
 <template>
 
-    <div
-      v-on:dragover.prevent
-      v-on:dragenter="dragEnter"
-      v-on:dragleave="dragLeave"
-      v-on:drop="drop"
-      v-bind:class="['vue-droppable', {
-          'panel-incomplete conflicts-display': isIncomplete,
-          'vue-is-drag-enter': isDroppable,
-          'flex-1': position === 'C',
-          'flex-2': position !== 'C'
-      }]"
-      class="">
+  <div
+    v-on:dragover.prevent
+    v-on:dragenter="dragEnter"
+    v-on:dragleave="dragLeave"
+    v-on:drop="drop"
+    v-bind:class="['vue-droppable', {
+        'panel-incomplete': isIncomplete,
+        'vue-is-drag-enter': isDroppable,
+        'flex-1': position === 'C',
+        'flex-2': position !== 'C'
+    }]"
+    class="">
 
-      <debate-adjudicator
-        v-for="adj in adjudicators | orderBy 'score' -1"
-        :adj="adj"
-        :position="position"
-        :debate-id="debateId">
-      </debate-adjudicator>
+    <debate-adjudicator
+      v-for="adj in adjudicators | orderBy 'score' -1"
+      :adj="adj"
+      :position="position"
+      :debate-id="debateId">
+    </debate-adjudicator>
 
-    </div>
+  </div>
 
 </template>
 

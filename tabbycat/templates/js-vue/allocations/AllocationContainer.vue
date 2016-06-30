@@ -2,18 +2,19 @@
   <div>
 
     <allocation-actions
-      :regions="regions" :categories="categories"></allocation-actions>
+      :regions="regions" :categories="categories" :urls="urls">
+    </allocation-actions>
 
-    <div class="col-md-12">
+    <div class="col-md-12 allocation-container">
       <div class="row flex-horizontal subtitle">
         <div class="thead flex-cell" data-toggle="tooltip" title="Debate Bracket">
           <span class="glyphicon glyphicon-stats"></span>
         </div>
+        <div class="thead flex-1">Aff</div>
+        <div class="thead flex-1">Neg</div>
         <div class="thead flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
           <span>Importance</span>
         </div>
-        <div class="thead flex-1">Aff</div>
-        <div class="thead flex-1">Neg</div>
         <div class="thead flex-8 flex-horizontal">
           <div class="flex-1 text-center">Chair</div>
           <div class="flex-2 text-center">Panelists</div>
@@ -28,7 +29,8 @@
         :debate="debate"
         :aff="teams[debate.aff_team]"
         :neg="teams[debate.neg_team]"
-        :all-adjudicators="adjudicators">
+        :all-adjudicators="adjudicators"
+        :urls="urls">
       </debate>
 
     </div>
@@ -57,7 +59,7 @@ export default {
     teams: Object,
     regions: Array,
     categories: Array,
-    tableData: Object, // Passed down from main.js
+    urls: Object,
     currentlyDragging: Object,
     currentConflictHighlights: {default: null },
     currentHistoriesHighlights: {default: null }
@@ -91,7 +93,17 @@ export default {
       this.currentlyDragging = null;
     },
     'set-adj-unused': function() {
-      this.adjudicators[this.currentlyDragging].allocated = false
+      var adj = this.currentlyDragging.adj
+      adj.allocated = false
+      // Remove adj from any panels they came from
+      if (typeof this.currentlyDragging.debateId !== 'undefined') {
+        var fromDebateId = this.currentlyDragging.debateId
+        var fromPanel = this.debatesByID[fromDebateId].panel
+        var toRemoveIndex = fromPanel.findIndex(function(value) {
+          return value.id === adj.id;
+        });
+        fromPanel.splice(toRemoveIndex, 1);
+      }
       this.currentlyDragging = null;
     },
     'set-adj-panel': function(toDebateId, toPosition) {

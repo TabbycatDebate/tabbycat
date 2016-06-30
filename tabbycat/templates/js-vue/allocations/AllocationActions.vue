@@ -18,7 +18,7 @@
             <div disabled class="btn btn-sm histories-display seen-1-ago">Seen Before</div>
             <div disabled class="btn btn-sm conflicts-display institutional-conflict">Institutional Conflicts</div>
             <div disabled class="btn btn-sm conflicts-display personal-conflict">Personal Conflicts</div>
-            <div disabled class="btn btn-sm conflicts-display panel-incomplete">No Chair/Odd Panel</div>
+            <div disabled class="btn btn-sm panel-incomplete">No Chair/Odd Panel</div>
           </div>
           <div v-if="showingGender" class="btn-group btn-group-sm">
             <button disabled class="btn gender-display gender-male">Male</button>
