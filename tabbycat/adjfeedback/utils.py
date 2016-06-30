@@ -31,7 +31,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Current weighted score',
         }
         overall_data = [{
-            'text': '<strong>%0.1f</strong>' % (adj.feedback_score) if adj.feedback_score else 'N/A',
+            'text': '<strong>%0.1f</strong>' % adj.feedback_score if adj.feedback_score is not None else 'N/A',
             'tooltip': 'Current weighted average of all feedback',
         } for adj in adjudicators]
         self.add_column(overall_header, overall_data)
@@ -42,7 +42,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Test score result',
         }
         test_data = [{
-            'text': "%0.1f" % (adj.score if adj.score else 'N/A'),
+            'text': '%0.1f' % adj.score if adj.score is not None else 'N/A',
             'modal': adj.id,
             'class': 'edit-test-score',
             'tooltip': 'Click to edit test score',
