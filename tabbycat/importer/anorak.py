@@ -194,7 +194,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         Each line has:
             name, institution, team_name, use_team_name_as_prefix, gender,
-                pronoun, novice_status.
+            pronoun, email, novice_status.
         """
 
         if auto_create_teams:
