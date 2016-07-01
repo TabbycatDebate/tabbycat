@@ -39,6 +39,9 @@ thead, .thead {
 .table > tbody > tr > th,
 .table > tbody > tr > td {
   vertical-align: middle;
+  &.empty-cell {
+    border: none;
+  }
   &.unpadded-cell {
     padding: 0px;
   }

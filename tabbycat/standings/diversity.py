@@ -74,7 +74,7 @@ def quartile(ordered_values, lower=False, upper=False):
 
 def get_diversity_data_sets(t, for_public):
 
-    all_regions = regions_ordered()
+    all_regions = regions_ordered(t)
     region_filters = [{r['seq']:r['name']} for r in all_regions]
 
     data_sets = {
@@ -93,12 +93,13 @@ def get_diversity_data_sets(t, for_public):
     # Speakers Demographics
     # ==========================================================================
 
-    data_sets['speakers_gender'].append(compile_data(
-        'All', Speaker.objects.filter(team__tournament=t), 'gender', filters=[
-            {'Unknown':  None},
-            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
-            {'Male':     Person.GENDER_MALE},
-        ], count=True))
+    if Speaker.objects.filter(team__tournament=t).count() > 0:
+        data_sets['speakers_gender'].append(compile_data(
+            'All', Speaker.objects.filter(team__tournament=t), 'gender', filters=[
+                {'Unknown':  None},
+                {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+                {'Male':     Person.GENDER_MALE},
+            ], count=True))
 
     if Speaker.objects.filter(team__tournament=t).filter(team__breakingteam__isnull=False).count() > 0:
         data_sets['speakers_gender'].append(compile_data(
@@ -142,12 +143,13 @@ def get_diversity_data_sets(t, for_public):
     # Adjudicators Demographics
     # ==========================================================================
 
-    data_sets['adjudicators_gender'].append(compile_data(
-        'All', Adjudicator.objects.filter(tournament=t), 'gender', filters=[
-            {'Unknown':  None},
-            {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
-            {'Male':     Person.GENDER_MALE},
-        ], count=True))
+    if Adjudicator.objects.filter(tournament=t).count() > 0:
+        data_sets['adjudicators_gender'].append(compile_data(
+            'All', Adjudicator.objects.filter(tournament=t), 'gender', filters=[
+                {'Unknown':  None},
+                {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
+                {'Male':     Person.GENDER_MALE},
+            ], count=True))
 
     if Adjudicator.objects.filter(tournament=t).filter(independent=True).count() > 0:
         data_sets['adjudicators_gender'].append(compile_data(

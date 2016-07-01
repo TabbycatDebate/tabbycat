@@ -1,58 +1,43 @@
 {% load debate_tags %}
 
 
-{% if all_tournaments.count > 1 %}
-  <ul class="nav nav-stacked" role="tablist">
-    <li role="presentation" class="dropdown">
-      <a id="tournament_select"
-         href="#"
-         class="dropdown-toggle {% if overview_nav %}active{% endif %}"
-         data-toggle="dropdown"
-         role="button"
-         aria-haspopup="true"
-         aria-expanded="false">
-        <h5>
-          {{ tournament }}<span class="caret pull-right"></span>
-        </h5>
-      </a>
-      <ul id="tournament_select_menu"
-          class="dropdown-menu"
-          aria-labelledby="tournament_select">
-        {% for t in all_tournaments %}
-          <li>
-            <a class="small" href="{{ t.get_absolute_url  }}">
-              {{ t }} <span class="badge small pull-right">Admin</span>
-            </a>
-          </li>
-          <li>
-            <a class="small" href="{{ t.get_public_url  }}">
-              {{ t }} <span class="badge small pull-right">Public</span>
-            </a>
-          </li>
-          <li role="separator" class="divider"></li>
-        {% endfor %}
+<ul class="nav nav-stacked" role="tablist">
+  <li role="presentation" class="dropdown">
+    <a id="tournament_select"
+       href="#"
+       class="dropdown-toggle {% if overview_nav %}active{% endif %}"
+       data-toggle="dropdown"
+       role="button"
+       aria-haspopup="true"
+       aria-expanded="false">
+      <h5>
+        {{ tournament }}<span class="caret pull-right"></span>
+      </h5>
+    </a>
+    <ul id="tournament_select_menu"
+        class="dropdown-menu"
+        aria-labelledby="tournament_select">
+      {% for t in all_tournaments %}
         <li>
-          <a class="small" href="{% url 'tournament-create' %}">
-            New Tournament
+          <a class="small" href="{{ t.get_absolute_url  }}">
+            {{ t }} <span class="badge small pull-right">Admin</span>
           </a>
         </li>
-      </ul>
-    </li>
-  </ul>
-{% else %}
-  <ul class="nav nav-stacked" role="tablist">
-    <li role="presentation" class="">
-      <a id="tournament_select" href="{{ tournament.get_absolute_url }}">
-        <h4>
-          {% if tournament.emoji %}
-            <span class="emoji">{{ tournament.emoji }}</span>
-          {% endif %}
-          {{ tournament }}
-        </h4>
-      </a>
-    </li>
-  </ul>
-{% endif %}
+        <li>
+          <a class="small" href="{{ t.get_public_url  }}">
+            {{ t }} <span class="badge small pull-right">Public</span>
+          </a>
+        </li>
+        <li role="separator" class="divider"></li>
+      {% endfor %}
+      <li>
+        <a class="small" href="{% url 'tournament-create' %}">
+          New Tournament
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 <ul class="nav nav-stacked nav-accordion"
     id="accordion"
