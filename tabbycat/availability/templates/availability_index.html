@@ -12,24 +12,24 @@
     Checkin Adjs
   </a>
   {% if round.draw_type == "F" %}
-    <a class="btn btn-success submit-disable" href="{% round_url update_availability_breaking_teams round %}">
+    <a class="btn btn-primary submit-disable" href="{% round_url update_availability_breaking_teams round %}">
       Checkin All Breaking Teams
     </a>
   {% elif round.draw_type == "B" %}
-    <a class="btn btn-success submit-disable" href="{% round_url update_availability_advancing_teams round %}">
+    <a class="btn btn-primary submit-disable" href="{% round_url update_availability_advancing_teams round %}">
       Checkin All Advancing Teams
     </a>
   {% endif %}
   {% if round.is_break_round %}
-    <a class="btn btn-success submit-disable" href="{% round_url update_availability_breaking_adjs  %}">
+    <a class="btn btn-primary submit-disable" href="{% round_url update_availability_breaking_adjs  %}">
       Checkin All Breaking Adjs
     </a>
   {% else %}
-    <a class="btn btn-success submit-disable" href="{% round_url update_availability_all round %}">
+    <a class="btn btn-primary submit-disable" href="{% round_url update_availability_all round %}">
       Checkin Everything
     </a>
     {% if round.prev %}
-      <a class="btn btn-success submit-disable" href="{% round_url update_availability_previous round %}">
+      <a class="btn btn-primary submit-disable" href="{% round_url update_availability_previous round %}">
         Checkin Everything Active in {{ round.prev.abbreviation }}
       </a>
     {% endif %}

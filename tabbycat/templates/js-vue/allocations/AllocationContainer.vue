@@ -75,16 +75,16 @@ export default {
   },
   events: {
     'set-conflicts': function (conflicts_dict) {
-      // this.currentConflictHighlights = conflicts_dict;
+      this.currentConflictHighlights = conflicts_dict;
     },
     'unset-conflicts': function () {
-      // this.currentConflictHighlights = null;
+      this.currentConflictHighlights = null;
     },
     'set-histories': function (histories_dict) {
-      // this.currentHistoriesHighlights = histories_dict;
+      this.currentHistoriesHighlights = histories_dict;
     },
     'unset-histories': function() {
-      // this.currentConflictHighlights = null;
+      this.currentConflictHighlights = null;
     },
     'set-dragged-adj': function(adjId) {
       this.currentlyDragging = adjId;

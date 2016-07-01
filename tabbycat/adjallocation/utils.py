@@ -191,6 +191,7 @@ def teams_to_json(teams, regions, categories):
             'uses_prefix': team.use_institution_prefix,
             'speakers': [" " + s.name for s in team.speakers],
             'gender_name': team.gender_names,
+            'wins': team.wins_count,
             'region': [r for r in regions if r['id'] is team.institution.region.id][0] if team.institution.region else None,
             # TODO: Searching for break cats here incurs extra queries; should be done earlier
             'categories': [bc for bc in categories if bc['id'] in team.break_categories.all().values_list('id', flat=True)],

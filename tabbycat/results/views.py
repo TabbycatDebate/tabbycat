@@ -78,37 +78,9 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
             'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
         }
+        num_motions = Motion.objects.filter(round=self.get_round()).count()
+        kwargs["has_motions"] = num_motions > 0
         return super().get_context_data(**kwargs)
-
-
-@login_required
-@round_view
-def results(request, round):
-
-    draw = round.get_draw()
-    stats = {
-        'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
-        'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
-        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
-        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
-        'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
-    }
-
-    if not request.user.is_superuser:
-        if round != request.tournament.current_round:
-            raise Http404()
-        template = "assistant_results.html"
-        draw = draw.filter(result_status__in=(
-            Debate.STATUS_NONE, Debate.STATUS_DRAFT, Debate.STATUS_POSTPONED))
-    else:
-        template = "results.html"
-
-    num_motions = Motion.objects.filter(round=round).count()
-    show_motions_column = num_motions > 1
-    has_motions = num_motions > 0
-
-    return render(request, template, dict(draw=draw, stats=stats,
-                  show_motions_column=show_motions_column, has_motions=has_motions))
 
 
 class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin):
