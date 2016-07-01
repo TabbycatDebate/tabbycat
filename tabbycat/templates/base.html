@@ -24,7 +24,11 @@
 
     {% block nav %}
       {% if 'admin/' in request.path and user.is_superuser %}
-        {% include "nav/admin_nav.html" %}
+      <div class="nav-sidebar">
+        <div class="overflow-scroll-wrapper">
+          {% include "nav/admin_nav.html" %}
+        </div>
+      </div><!-- /.main-col -->
     <div class="col-md-12 accommodate-footer nav-sidebar-offset">
       {% else %}
         {% include "nav/top_nav_base.html" %}
