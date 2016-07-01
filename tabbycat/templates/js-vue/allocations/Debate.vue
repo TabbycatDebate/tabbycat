@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class="flex-8">
+    <div class="flex-7">
       <div class="panel panel-default panel-debate">
         <div class="flex-horizontal positions-parent">
           <position-droppable

@@ -15,7 +15,7 @@
         <div class="thead flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
           <span>Importance</span>
         </div>
-        <div class="thead flex-8 flex-horizontal">
+        <div class="thead flex-7 flex-horizontal">
           <div class="flex-1 text-center">Chair</div>
           <div class="flex-2 text-center">Panelists</div>
           <div class="flex-2 text-center">Trainees</div>

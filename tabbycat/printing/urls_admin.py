@@ -24,4 +24,7 @@ urlpatterns = [
         views.RoomSheetsView.as_view(),
         name='room_sheets_view'),
 
+    url(r'^/feedback_urls_sheets/',
+        views.FeedbackURLsView.as_view(),
+        name='feedback_urls_sheets'),
 ]

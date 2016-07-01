@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from draw.models import Debate
 from motions.models import Motion
-from tournaments.mixins import RoundMixin
+from tournaments.mixins import RoundMixin, TournamentMixin
 from tournaments.models import Tournament
 from utils.mixins import SuperuserRequiredMixin
 from venues.models import Venue, VenueGroup
@@ -186,3 +186,9 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                     kwargs['ballots'].append(ballot_data)
 
         return super().get_context_data(**kwargs)
+
+
+class FeedbackURLsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
+
+    template_name = 'scoresheet_list.html'
+
