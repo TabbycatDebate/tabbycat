@@ -437,7 +437,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         state_data = [{
             'sort': state,
             'class': 'toggle_active_status checkbox-target',
-            'text': '<input type="checkbox" data-target="%s" %s>' % (reference, 'checked' if state else ''),
+            'text': '<input type="checkbox" class="vue-table-checkbox" data-target="%s" %s>' % (reference, 'checked' if state else ''),
         } for state, reference in zip(states, references)]
         self.add_column(state_header, state_data)
 

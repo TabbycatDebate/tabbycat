@@ -32,21 +32,21 @@
     var overviewURL = '{% round_url availability_index round %}';
 
     $('#select_all').click(function() {
-      $(":checkbox").each(function(){
+      $(":checkbox.vue-table-checkbox").each(function(){
         $(this).prop('checked', true);
       });
       return false;
     });
 
     $('#select_none').click(function() {
-      $(":checkbox").each(function(){
+      $(":checkbox.vue-table-checkbox").each(function(){
         $(this).prop('checked', false);
       });
       return false;
     });
 
     $('#select_previous').click(function() {
-      $(":checkbox").each(function(){
+      $(":checkbox.vue-table-checkbox").each(function(){
         var prev_round = $(this).parents("td").siblings("td").first();
         var prev_active = prev_round.children(".hidden").text().trim();
         if (prev_active === 'true') {
@@ -60,8 +60,9 @@
 
     $('#save_availability').click(function() {
       var references = [], btn = $(this);
-      $(":checkbox").each(function(){
+      $(":checkbox.vue-table-checkbox").each(function(){
         if ($(this).prop('checked')) {
+          console.log(this);
           references.push(parseInt($(this).attr('data-target')));
         }
       });
