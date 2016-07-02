@@ -29,7 +29,7 @@ def DrawManager(round, active_only=True):  # flake8: noqa
 class BaseDrawManager:
     """Creates, modifies and retrieves relevant Debate objects relating to a draw."""
 
-    relevant_options = ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty", "side_allocations"]
+    relevant_options = ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty"]
 
     def __init__(self, round, active_only=True):
         self.round = round
@@ -96,7 +96,7 @@ class BaseDrawManager:
         options = dict()
         for key in self.relevant_options:
             options[key] = self.round.tournament.preferences[OPTIONS_TO_CONFIG_MAPPING[key]]
-        if options["side_allocations"] == "manual-ballot":
+        if options.get("side_allocations") == "manual-ballot":
             options["side_allocations"] = "balance"
 
         drawer = DrawGenerator(self.draw_type, teams, self.round, results=results, **options)
@@ -108,7 +108,7 @@ class BaseDrawManager:
 
 class RandomDrawManager(BaseDrawManager):
     draw_type = "random"
-    relevant_options = BaseDrawManager.relevant_options + ["avoid_conflicts"]
+    relevant_options = BaseDrawManager.relevant_options + ["avoid_conflicts", "side_allocations"]
 
 
 class ManualDrawManager(BaseDrawManager):
@@ -117,7 +117,7 @@ class ManualDrawManager(BaseDrawManager):
 
 class PowerPairedDrawManager(BaseDrawManager):
     draw_type = "power_paired"
-    relevant_options = BaseDrawManager.relevant_options + ["avoid_conflicts", "odd_bracket", "pairing_method"]
+    relevant_options = BaseDrawManager.relevant_options + ["avoid_conflicts", "odd_bracket", "pairing_method", "side_allocations"]
 
     def get_teams(self):
         metrics = self.round.tournament.pref('team_standings_precedence')
@@ -137,27 +137,24 @@ class RoundRobinDrawManager(BaseDrawManager):
     draw_type = "round_robin"
 
 
-class FirstEliminationDrawManager(BaseDrawManager):
-    draw_type = "first_elimination"
-
+class BaseEliminationDrawManager(BaseDrawManager):
     def get_teams(self):
-        breaking_teams = self.round.break_category.breakingteam_set.filter(break_rank__isnull=False).select_related('team')
+        breaking_teams = self.round.break_category.breakingteam_set.filter(
+                break_rank__isnull=False).order_by('break_rank').select_related('team')
         return [bt.team for bt in breaking_teams]
 
 
-class EliminationDrawManager(BaseDrawManager):
+class FirstEliminationDrawManager(BaseEliminationDrawManager):
+    draw_type = "first_elimination"
+
+
+class EliminationDrawManager(BaseEliminationDrawManager):
     draw_type = "elimination"
-
-    def get_teams(self):
-        pass
-        # continue here
-
 
     def get_results(self):
         last_round = self.round.break_category.round_set.filter(seq__lt=self.round.seq).order_by('-seq').first()
         debates = last_round.debate_set.all()
         result = [Pairing.from_debate(debate) for debate in debates]
-        print("results: " + repr(result))
         return result
 
 

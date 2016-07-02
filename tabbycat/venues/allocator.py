@@ -101,6 +101,8 @@ class VenueAllocator:
                 for i, dc in enumerate(debate_constraints):
                     if new_priority >= dc[1][0].priority:
                         break
+                else:
+                    i = 0
                 debate_constraints.insert(i, (debate, constraints))
                 continue
 

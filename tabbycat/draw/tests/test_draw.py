@@ -4,6 +4,7 @@ import copy
 from collections import OrderedDict
 
 from .. import DrawError, DrawGenerator, Pairing
+from ..utils import partial_break_round_split
 from .utils import TestRound, TestTeam
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
@@ -707,23 +708,37 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             self.assertEqual(b2[0], {"aff": [], "neg": []})
 
 
+class TestPartialBreakRoundSplit(unittest.TestCase):
+
+    def test_split(self):
+        self.assertRaises(AssertionError, partial_break_round_split, -1)
+        self.assertRaises(AssertionError, partial_break_round_split, 0)
+        self.assertRaises(AssertionError, partial_break_round_split, 1)
+        self.assertEqual(partial_break_round_split(2),  (1, 0))
+        self.assertEqual(partial_break_round_split(3),  (1, 1))
+        self.assertEqual(partial_break_round_split(4),  (2, 0))
+        self.assertEqual(partial_break_round_split(5),  (1, 3))
+        self.assertEqual(partial_break_round_split(6),  (2, 2))
+        self.assertEqual(partial_break_round_split(7),  (3, 1))
+        self.assertEqual(partial_break_round_split(8),  (4, 0))
+        self.assertEqual(partial_break_round_split(11), (3, 5))
+        self.assertEqual(partial_break_round_split(21), (5, 11))
+        self.assertEqual(partial_break_round_split(24), (8, 8))
+        self.assertEqual(partial_break_round_split(27), (11, 5))
+        self.assertEqual(partial_break_round_split(31), (15, 1))
+        self.assertEqual(partial_break_round_split(32), (16, 0))
+        self.assertEqual(partial_break_round_split(45), (13, 19))
+        self.assertEqual(partial_break_round_split(48), (16, 16))
+        self.assertEqual(partial_break_round_split(61), (29, 3))
+        self.assertEqual(partial_break_round_split(64), (32, 0))
+        self.assertEqual(partial_break_round_split(99), (35, 29))
+
+
 class TestPartialEliminationDrawGenerator(unittest.TestCase):
 
     # (Team Name, Team Institution)
     teams = [(1, 'A', 1), (2, 'B', 2), (3, 'A', 3), (4, 'B', 4), (5, 'C', 5), (6, 'D', 6),
              (7, 'E', 7), (8, 'A', 8), (9, 'D', 9), (10, 'E', 10), (11, 'D', 11), (12, 'A', 12)]
-
-    def test_split(self):
-        self.fed = DrawGenerator("first_elimination", DUMMY_TEAMS, None)
-        self.assertEqual(self.fed._bypass_debate_split(3),  (1,  2))
-        self.assertEqual(self.fed._bypass_debate_split(5),  (3,  2))
-        self.assertEqual(self.fed._bypass_debate_split(8),  (8,  0))
-        self.assertEqual(self.fed._bypass_debate_split(11), (5,  6))
-        self.assertEqual(self.fed._bypass_debate_split(21), (11, 10))
-        self.assertEqual(self.fed._bypass_debate_split(24), (8,  16))
-        self.assertEqual(self.fed._bypass_debate_split(31), (1,  30))
-        self.assertEqual(self.fed._bypass_debate_split(32), (32, 0))
-        del self.fed
 
     def test_even_numbers(self):
         # Run a draw with break size of 2; expect the each team's ID to be paired up as follows
