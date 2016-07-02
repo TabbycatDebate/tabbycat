@@ -54,7 +54,8 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin):
     def get_table(self):
         t = self.get_tournament()
         adjudicators = get_feedback_overview(t, self.get_adjudicators())
-        table = FeedbackTableBuilder(view=self, sort_key='Overall Score')
+        table = FeedbackTableBuilder(view=self, sort_key='Overall Score',
+                                     sort_order='desc')
         table.add_adjudicator_columns(adjudicators, hide_institution=True, subtext='institution')
         table.add_breaking_checkbox(adjudicators)
         table.add_score_columns(adjudicators)
