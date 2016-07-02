@@ -86,7 +86,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
 
     def get_table(self):
         round = self.get_round()
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key='team')
         teams = round.team_availability()
         table.add_checkbox_columns([t.is_active for t in teams],
             [t.id for t in teams], 'Active Now')
@@ -107,7 +107,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
 
     def get_table(self):
         round = self.get_round()
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key='name')
         adjudicators = round.adjudicator_availability()
         table.add_checkbox_columns([a.is_active for a in adjudicators],
             [a.id for a in adjudicators], 'Active Now')
@@ -128,7 +128,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 
     def get_table(self):
         round = self.get_round()
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key='venue')
         venues = round.venue_availability()
         table.add_checkbox_columns([v.is_active for v in venues],
             [v.id for v in venues], 'Active Now')

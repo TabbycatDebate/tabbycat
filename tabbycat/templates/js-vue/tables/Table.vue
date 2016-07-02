@@ -96,8 +96,8 @@
         var index = null // if no defaultSortKey is set leave as null
         if (typeof(this.tableHeaders) !== 'undefined') { // Check table is not empty
           for (var i = 0; i < this.tableHeaders.length; i++) {
-            if (this.defaultSortKey !== "") {
-              if (this.tableHeaders[i].key === this.defaultSortKey) {
+            if (typeof this.tableHeaders[i].key !== 'undefined' && this.defaultSortKey !== "") {
+              if (this.tableHeaders[i].key.toLowerCase() === this.defaultSortKey.toLowerCase()) {
                 index = i
               }
             }
