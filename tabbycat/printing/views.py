@@ -191,4 +191,3 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 class FeedbackURLsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = 'scoresheet_list.html'
-
