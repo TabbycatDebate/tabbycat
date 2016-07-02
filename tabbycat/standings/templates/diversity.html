@@ -127,14 +127,14 @@
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
         <template v-if="graphsData['adjudicators_results'].length === 0">
-          <p>No Gender Information</p>
+          <p>No Adjudicator Ratings Yet</p>
         </template>
         <hr>
         <template v-for="set in graphsData['detailed_adjudicators_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
         <template v-if="graphsData['detailed_adjudicators_results'].length === 0">
-          <p>No Region Information</p>
+          <p>No Adjudicator-Adjudicator Feedbacks Yet</p>
         </template>
       </div>
     </div>

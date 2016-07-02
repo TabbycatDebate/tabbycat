@@ -196,9 +196,10 @@ def get_diversity_data_sets(t, for_public):
         data_sets['adjudicators_region'].append(compile_data(
             'All', Adjudicator.objects.filter(
                 tournament=t), 'institution__region__name', filters=region_filters, count=True))
-        data_sets['adjudicators_region'].append(compile_data(
-            'Breaking', Adjudicator.objects.filter(
-                tournament=t, breaking=True), 'institution__region__name', filters=region_filters, count=True))
+        if t.pref('public_breaking_adjs') is True or for_public is False:
+            data_sets['adjudicators_region'].append(compile_data(
+                'Breaking', Adjudicator.objects.filter(
+                    tournament=t, breaking=True), 'institution__region__name', filters=region_filters, count=True))
 
     # ==========================================================================
     # Adjudicators Results
@@ -229,14 +230,15 @@ def get_diversity_data_sets(t, for_public):
                 {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
             ], lowerq=True, datum=True))
 
-        data_sets['adjudicators_results'].append(compile_data(
-            'Average Rating Given', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, source_adjudicator__isnull=False),
+    if AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, source_adjudicator__isnull=False).count() > 0:
+        data_sets['detailed_adjudicators_results'].append(compile_data(
+            'Average Rating Given by Teams', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, source_adjudicator__isnull=False),
             'source_adjudicator__adjudicator__gender', filters=[
                 {'Male':     Person.GENDER_MALE},
                 {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
             ], average=True, datum=True))
 
-        data_sets['adjudicators_results'].append(compile_data(
+        data_sets['detailed_adjudicators_results'].append(compile_data(
             'Average Rating Given by Chairs', AdjudicatorFeedback.objects.filter(
                 adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_CHAIR, source_adjudicator__isnull=False),
             'source_adjudicator__adjudicator__gender', filters=[
@@ -244,7 +246,7 @@ def get_diversity_data_sets(t, for_public):
                 {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
             ], average=True, datum=True))
 
-        data_sets['adjudicators_results'].append(compile_data(
+        data_sets['detailed_adjudicators_results'].append(compile_data(
             'Average Rating Given by Panelists', AdjudicatorFeedback.objects.filter(
                 adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_PANEL, source_adjudicator__isnull=False),
             'source_adjudicator__adjudicator__gender', filters=[
@@ -252,7 +254,7 @@ def get_diversity_data_sets(t, for_public):
                 {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
             ], average=True, datum=True))
 
-        data_sets['adjudicators_results'].append(compile_data(
+        data_sets['detailed_adjudicators_results'].append(compile_data(
             'Average Rating Given by Trainees', AdjudicatorFeedback.objects.filter(
                 adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE, source_adjudicator__isnull=False),
             'source_adjudicator__adjudicator__gender', filters=[
