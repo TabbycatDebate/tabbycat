@@ -20,12 +20,12 @@
       {% for t in all_tournaments %}
         <li>
           <a class="small" href="{{ t.get_absolute_url  }}">
-            {{ t }} <span class="badge small pull-right">Admin</span>
+            <strong>{{ t }}</strong> (Admin)
           </a>
         </li>
         <li>
           <a class="small" href="{{ t.get_public_url  }}">
-            {{ t }} <span class="badge small pull-right">Public</span>
+            <strong>{{ t }}</strong> (Public)
           </a>
         </li>
         <li role="separator" class="divider"></li>

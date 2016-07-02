@@ -19,17 +19,31 @@
             <ul class="dropdown-menu">
               {% for tournament in all_tournaments %}
                 {% if user.is_superuser %}
-                  <li><a href="{{ tournament.get_absolute_url  }}"><span class="badge small">Admin</span> {{ tournament }}</a></li>
-                  <li><a href="{{ tournament.get_public_url  }}"><span class="badge small">Public</span> {{ tournament }}</a></li>
+                  <li>
+                    <a href="{{ tournament.get_absolute_url  }}">
+                      Admin area for <strong>{{ tournament }}</strong>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{ tournament.get_public_url  }}">
+                      Public area for <strong>{{ tournament }}</strong>
+                    </a>
+                  </li>
                 {% else %}
-                  <li><a href="{{ tournament.get_public_url  }}">{{ tournament }}</a></li>
+                  <li>
+                    <a href="{{ tournament.get_public_url  }}">
+                      {{ tournament }}
+                    </a>
+                  </li>
                 {% endif %}
               {% endfor %}
             </ul>
           </li>
         </ul>
       {% else %}
-        <a class="navbar-brand" href="{{ tournament.get_public_url  }}">{{ tournament }}</a>
+        <a class="navbar-brand" href="{{ tournament.get_public_url  }}">
+          {{ tournament }}
+        </a>
       {% endif %}
 
     </div><!-- /.navbar-header -->
