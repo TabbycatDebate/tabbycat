@@ -1,3 +1,5 @@
+import traceback
+
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.base import RedirectView, TemplateView, View
@@ -204,6 +206,7 @@ class AvailabilityUpdateBase(RoundMixin, SuperuserRequiredMixin, View, LogAction
             self.set_availabilities(self.get_round(), references)
             return HttpResponse('ok')
         except:
+            traceback.print_exc()
             return HttpResponseBadRequest()
 
 
