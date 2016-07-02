@@ -33,17 +33,23 @@
           <position-droppable
             :adjudicators="debateAdjudicators.chair"
             :debate-id="debate.id"
-            :position="'C'">
+            :position="'C'"
+            :current-conflict-highlights="currentConflictHighlights"
+            :current-histories-highlights="currentHistoriesHighlights">
           </position-droppable>
           <position-droppable
             :adjudicators="debateAdjudicators.panelists"
             :debate-id="debate.id"
-            :position="'P'">
+            :position="'P'"
+            :current-conflict-highlights="currentConflictHighlights"
+            :current-histories-highlights="currentHistoriesHighlights">
           </position-droppable>
           <position-droppable
             :adjudicators="debateAdjudicators.trainees"
             :debate-id="debate.id"
-            :position="'T'">
+            :position="'T'"
+            :current-conflict-highlights="currentConflictHighlights"
+            :current-histories-highlights="currentHistoriesHighlights">
           </position-droppable>
         </div>
       </div>

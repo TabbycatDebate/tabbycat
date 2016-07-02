@@ -59,9 +59,7 @@ export default {
   props: {
     adj: Object,
     position: String,
-    debateId: Number,
-    currentConflictHighlights: Object,
-    currentHistoriesHighlights: Array
+    debateId: Number
   },
   computed: {
     short_name: function() {

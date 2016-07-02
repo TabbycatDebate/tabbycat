@@ -18,7 +18,7 @@
             <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament }}<b class="caret"></b></a>
             <ul class="dropdown-menu">
               {% for tournament in all_tournaments %}
-                {% if user.is_superuser %}
+                {% if user.is_authenticated %}
                   <li>
                     <a href="{{ tournament.get_absolute_url  }}">
                       Admin area for <strong>{{ tournament }}</strong>

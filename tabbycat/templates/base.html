@@ -101,7 +101,7 @@
   {% endblock body %}
 
   {% block js %}
-    {% if user.is_superuser %}
+    {% if user.is_authenticated %}
       <script src="{% static 'js/admin.bundle.js' %}"></script>
     {% else %}
       <script src="{% static 'js/public.bundle.js' %}"></script>

@@ -27,9 +27,7 @@ import DroppableMixin from '../mixins/DroppableMixin.vue'
 export default {
   mixins: [DroppableMixin],
   props: {
-    adjudicators: Object,
-    currentConflictHighlights: Object,
-    currentHistoriesHighlights: Array,
+    adjudicators: Object
   },
   components: {
   'DebateAdjudicator': DebateAdjudicator

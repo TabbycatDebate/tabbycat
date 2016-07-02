@@ -30,7 +30,9 @@
         :aff="teams[debate.aff_team]"
         :neg="teams[debate.neg_team]"
         :all-adjudicators="adjudicators"
-        :urls="urls">
+        :urls="urls"
+        :current-conflict-highlights="currentConflictHighlights"
+        :current-histories-highlights="currentHistoriesHighlights">
       </debate>
 
     </div>
@@ -75,10 +77,12 @@ export default {
   },
   events: {
     'set-conflicts': function (conflicts_dict) {
+      // set by ID all in current array
       this.currentConflictHighlights = conflicts_dict;
     },
     'unset-conflicts': function () {
-      this.currentConflictHighlights = null;
+      // unset by ID all in current array
+      // this.currentConflictHighlights = null;
     },
     'set-histories': function (histories_dict) {
       this.currentHistoriesHighlights = histories_dict;

@@ -2,6 +2,7 @@ import json
 import datetime
 import logging
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -45,7 +46,7 @@ def toggle_postponed(request, t, debate_id):
     return redirect_round('results', debate.round)
 
 
-class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
+class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableMixin, TemplateView):
 
     template_name = 'results.html'
     draw = None
