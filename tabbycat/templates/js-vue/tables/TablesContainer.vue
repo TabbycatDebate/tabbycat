@@ -3,7 +3,8 @@
   <div class="row">
 
     <div v-for="(tableIndex, tableData) in tablesData"
-         v-bind:class="{'col-md-6': tablesData.length === 2}">
+         v-bind:class="{'col-md-6': tablesData.length === 2,
+                        'col-md-12': tablesData.length === 1}">
 
       <div class="panel panel-default" id="tableContainer{{ table_index }}">
         <div class="panel-heading" v-if="tableData['title']">
