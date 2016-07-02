@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block page-title %}Printable Feedback URLs{% endblock %}
+
+{% block header %}{% endblock %}
+{% block nav %}{% endblock %}
+{% block footer %}{% endblock footer %}
+
+{% block page-alerts %}
+  <div class="alert alert-info hidden-print">
+    This page is designed to be printed as double sided A4 sheets, with the
+    outside facing side showing the team/adj name and the inside facing side
+    showing the URL. Use CTRL-P to print.
+  </div>
+{% endblock %}
+
+{% block content %}
+
+  {% for adj in adjs %}
+    <div class="h1 text-center printable-page-break">
+      <br><br><br><br><br>
+      Feedback URL for {{ adj.name }}
+    </div>
+    <div class="h4 text-center printable-page-break">
+      <br><br><br><br><br><br><br><br><br>
+      {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.url_key %}
+    </div>
+  {% endfor %}
+
+  {% for team in teams %}
+    <div class="h1 text-center printable-page-break">
+      <br><br><br><br><br>
+      Feedback URL for {{ team.short_name }}
+    </div>
+    <div class="h4 text-center printable-page-break">
+      <br><br><br><br><br><br><br><br><br>
+      {% tournament_absurl adjfeedback-public-add-from-team-randomised team.url_key %}
+    </div>
+  {% endfor %}
+
+{% endblock content %}

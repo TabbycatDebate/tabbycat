@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from draw.models import Debate
 from motions.models import Motion
+from participants.models import Adjudicator
 from tournaments.mixins import RoundMixin, TournamentMixin
 from tournaments.models import Tournament
 from utils.mixins import SuperuserRequiredMixin
@@ -190,4 +191,16 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
 class FeedbackURLsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
 
-    template_name = 'scoresheet_list.html'
+    template_name = 'feedback_url_sheets.html'
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['teams'] = tournament.team_set.all()
+        if not tournament.pref('share_adjs'):
+            kwargs['adjs'] = tournament.adjudicator_set.all()
+        else:
+            kwargs['adjs'] = Adjudicator.objects.all()
+        kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
+            tournament.team_set.filter(url_key__isnull=False).exists()
+        kwargs['tournament_slug'] = tournament.slug
+        return super().get_context_data(**kwargs)

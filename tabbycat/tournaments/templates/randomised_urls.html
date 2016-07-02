@@ -35,7 +35,8 @@
 
     <p>If you want to delete these, run this command in a shell on your server:
     <code>python manage.py randomisedurls delete --tournament {{ tournament_slug }}</code>.</p>
-    <p>If you want to print these for distribution, <a href="{% tournament_url feedback_urls_sheets %}">use this page</a>.
+    <p>If you want to print these for distribution, <a target="_blank"
+    href="{% tournament_url feedback_urls_sheets %}">use this page</a>.
     {% if not pref.public_ballots_randomised and not pref.public_feedback_randomised and not pref.allocation_confirmations %}
       <div class="alert alert-danger">
         The <strong>public ballots randomised</strong> and <strong>public feedback
