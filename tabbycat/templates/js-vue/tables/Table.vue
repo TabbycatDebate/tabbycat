@@ -13,13 +13,19 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-if="typeof tableHeaders === 'undefined'">
-        <td class="h4">No Data Available</td>
+      <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
+        <td class="empty-cell text-center text-muted">No Data Available</td>
       </tr>
       <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder">
         <template v-for="(cellIndex, cellData) in row">
-          <smart-cell v-if="!cellData['component']" :cell-data="cellData"></smart-cell>
-          <component v-else :is="cellData['component']" :component-data="cellData"></component>
+          <smart-cell
+            v-if="!cellData['component']"
+            :cell-data="cellData">
+          </smart-cell>
+          <component v-else
+            :is="cellData['component']"
+            :component-data="cellData">
+          </component>
         </template>
       </tr>
     </tbody>
@@ -55,8 +61,8 @@
     },
     filters: {
       caseInsensitiveOrderBy: function (arr, sortIndex, reverse) {
-        // This is basically a copy of Vue's native orderBy except we are overriding
-        // the last part to see if the cell has custom sort attributes
+        // This is basically a copy of Vue's native orderBy except we are
+        // overriding the last part to see if the cell has custom sorting
         if (sortIndex === null) {
           return arr; // If not set then return default order (can be desirable)
         } else {
@@ -90,8 +96,8 @@
         var index = null // if no defaultSortKey is set leave as null
         if (typeof(this.tableHeaders) !== 'undefined') { // Check table is not empty
           for (var i = 0; i < this.tableHeaders.length; i++) {
-            if (this.defaultSortKey !== "") {
-              if (this.tableHeaders[i].key === this.defaultSortKey) {
+            if (typeof this.tableHeaders[i].key !== 'undefined' && this.defaultSortKey !== "") {
+              if (this.tableHeaders[i].key.toLowerCase() === this.defaultSortKey.toLowerCase()) {
                 index = i
               }
             }

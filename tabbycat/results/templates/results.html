@@ -33,23 +33,23 @@
     <div class="col-sm-12">
 
       <div class="btn-group btn-group-justified vertical-spacing" role="group">
-        <span class="btn btn-warning">
+        <span class="btn btn-warning" disabled>
           <span class="glyphicon glyphicon-inbox"></span> {{ stats.ballot_in }} Checked In
         </span>
-        <span class="btn btn-danger">
+        <span class="btn btn-danger" disabled>
           <span class="glyphicon glyphicon-remove"></span> {{ stats.none }} Unknown
         </span>
-        <span class="btn btn-primary">
+        <span class="btn btn-primary" disabled>
           <span class="glyphicon glyphicon-adjust"></span> {{ stats.draft }} Unconfirmed
         </span>
-        <span class="btn btn-success">
+        <span class="btn btn-success" disabled>
           <span class="glyphicon glyphicon-ok"></span> {{ stats.confirmed }} Confirmed
         </span>
         {% if pref.enable_postponements %}
-          <span class="btn btn-default">
+          <span class="btn btn-default" disabled>
             <span class="glyphicon glyphicon-pause"></span> {{ stats.postponed }} Postponed
           </span>
-          <span class="btn btn-default">
+          <span class="btn btn-default" disabled>
             <span class="glyphicon glyphicon-fast-forward"></span> Bye
           </span>
         {% endif %}

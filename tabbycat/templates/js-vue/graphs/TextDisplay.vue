@@ -13,7 +13,7 @@
       <template v-if="datum && index == 0">
         <div class="col-md-4 text-center">
           <h4 class="no-bottom-margin text-body">
-          {{ round(datum) }}
+            {{ round(datum) }}
           </h4>
         </div>
       </template>

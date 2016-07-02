@@ -1,44 +1,63 @@
 <template>
   <div class="row flex-horizontal">
 
-    <div class="col-md-1">
-      {{ debate.bracket }}
+    <div class="flex-cell flex-vertical-center bordered-bottom">
+      <div class="flex-1">{{ debate.bracket }}</div>
     </div>
 
-    <div class="col-md-1 ">
-      <debate-importance
-        :id="debate.id"
-        :importance="debate.importance"
-        :url="debate.importance_url">
-      </debate-importance>
+    <div class="flex-1 flex-vertical-center bordered-bottom">
+      <div class="flex-1">
+        <debate-team :team="aff"></debate-team>
+      </div>
     </div>
 
-    <div class="col-md-1">
-      <debate-team :team="aff"></debate-team>
+    <div class="flex-1 flex-vertical-center bordered-bottom">
+      <div class="flex-1">
+        <debate-team :team="neg"></debate-team>
+      </div>
     </div>
 
-    <div class="col-md-1">
-      <debate-team :team="neg"></debate-team>
+    <div class="flex-cell importance-container flex-vertical-center bordered-bottom">
+      <div class="flex-1">
+        <debate-importance
+          :id="debate.id"
+          :importance="debate.importance"
+          :url="this.urls['updateImportance']">
+        </debate-importance>
+      </div>
     </div>
 
-    <div class="col-md-8">
-      <div class="panel panel-default">
+    <div class="flex-7">
+      <div class="panel panel-default panel-debate">
         <div class="flex-horizontal positions-parent">
-
           <position-droppable
             :adjudicators="debateAdjudicators.chair"
-            :position="'C'">
+            :debate-id="debate.id"
+            :position="'C'"
+            :current-conflict-highlights="currentConflictHighlights"
+            :current-histories-highlights="currentHistoriesHighlights">
           </position-droppable>
           <position-droppable
             :adjudicators="debateAdjudicators.panelists"
-            :position="'P'">
+            :debate-id="debate.id"
+            :position="'P'"
+            :current-conflict-highlights="currentConflictHighlights"
+            :current-histories-highlights="currentHistoriesHighlights">
           </position-droppable>
           <position-droppable
             :adjudicators="debateAdjudicators.trainees"
-            :position="'T'">
+            :debate-id="debate.id"
+            :position="'T'"
+            :current-conflict-highlights="currentConflictHighlights"
+            :current-histories-highlights="currentHistoriesHighlights">
           </position-droppable>
-
         </div>
+      </div>
+    </div>
+
+    <div class="flex-cell flex-vertical-center bordered-bottom">
+      <div class="flex-1">
+        {{ panelScore }}
       </div>
     </div>
 
@@ -46,6 +65,7 @@
 </template>
 
 <script>
+import AjaxMixin from '../mixins/AjaxMixin.vue'
 import DebateTeam from './DebateTeam.vue'
 import DebateImportance from './DebateImportance.vue'
 import PositionDroppable from './PositionDroppable.vue'
@@ -54,11 +74,15 @@ export default {
   components: {
     DebateTeam, DebateImportance, PositionDroppable
   },
+  mixins: [
+    AjaxMixin
+  ],
   props: {
     allAdjudicators: Object,
     debate: Object,
     aff: Object,
-    neg: Object
+    neg: Object,
+    urls: Object
   },
   computed: {
     debateAdjudicators: function () {
@@ -79,6 +103,39 @@ export default {
         }
       }
       return debateAdjudicators;
+    },
+    panelScore: function () {
+      if (typeof this.panel === 'undefined') {
+        return ''
+      }
+      // Build an array of each adjs scores
+      var adjs_scores = []
+      for (var i = 0; i < this.panel.length; i++) {
+        if (this.panel[i].position !== "T") {
+          adjs_scores.push(allAdjudicators[this.panel[i].id].score);
+        }
+      }
+      adjs_scores.sort(function(a,b){return b - a}) // Force numeric sort
+
+      // Cull the scores from the presumed voting minority
+      var majority = Math.ceil(adjs_scores.length / 2)
+      adjs_scores = adjs_scores.slice(0, majority)
+      var total = 0.0;
+      for(var i = 0; i < adjs_scores.length; i++) {
+        total = total + adjs_scores[i];
+      }
+      return (total / adjs_scores.length).toFixed(1);
+    }
+  },
+  watch: {
+    'debate.panel': function (newVal, oldVal) {
+      // var test = this.debate.panel;
+      var resource = "change to panel on  " + this.aff.name + " vs " + this.neg.name
+      var data = {
+        'debate_id': this.debate.id,
+        'panel': JSON.stringify(this.debate.panel)
+      }
+      this.update(this.urls['updatePanel'], data, resource)
     }
   }
 }

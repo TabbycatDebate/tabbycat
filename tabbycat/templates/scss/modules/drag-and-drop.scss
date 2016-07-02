@@ -11,11 +11,12 @@
   /* Required to make elements draggable in old WebKit */
   -khtml-user-drag: element;
   -webkit-user-drag: element;
+  user-select: none; // Text should be unselectable or highlights go crazy
   &:hover {
     cursor: move;
   }
+  margin: 0 4px 4px 0;
   padding: 6px;
-  margin-right: 3px;
 }
 .vue-is-dragging {
   opacity: 0.5 !important;
@@ -28,14 +29,13 @@
 
 .vue-droppable {
   background: $gray-lighter;
-  padding: 4px;
+  padding: 4px 0 0 4px;
   min-height: 0;
 }
 .division-droppable {
   min-height: 66px;
 }
 .vue-is-drag-enter {
-  // text-decoration: underline;
   background: $state-success-bg;
 }
 

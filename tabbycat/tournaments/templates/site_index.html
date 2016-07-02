@@ -15,9 +15,8 @@
       {% for tournament in tournaments %}
         <li class="list-group-item">
           <a href="{{ tournament.get_absolute_url }}">
-            <span class="emoji">🔧</span>{{ tournament.name }}
+            <span class="emoji">🔧</span>Admin area for <strong>{{ tournament.name }}</strong>
           </a>
-          <span class="badge">ADMIN SITE</span>
         </li>
         <li class="list-group-item">
           <a href="{{ tournament.get_public_url }}">
@@ -27,16 +26,21 @@
               {% else %}
                 🏆
               {% endif %}
-            </span>{{ tournament.name }}
+            </span>Public area for <strong>{{ tournament.name }}</strong>
           </a>
-          <span class="badge">PUBLIC SITE</span>
         </li>
       {% endfor %}
       <li class="list-group-item">
-        <span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;<a href="{% url 'admin:index' %}"><em>Edit database area</em></a>
+        <span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin:index' %}">
+          Edit database area
+        </a>
       </li>
       <li class="list-group-item">
-        <span class="emoji">➕</span><a href="{% url 'tournament-create' %}"><em>Create new tournament</em></a>
+        <span class="emoji">➕</span>
+        <a href="{% url 'tournament-create' %}">
+          Create new tournament
+        </a>
       </li>
     {% else %}
       <p>

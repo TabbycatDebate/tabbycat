@@ -5,6 +5,7 @@
 // v-on:dragend="handleDragEnd"
 // class="vue-draggable"
 // v-bind:class="[isDragging ? vue-is-dragging : '']"
+// Subclass can provide handleDragStart() and handleDragEnd()
 
 export default {
   props: {
@@ -13,15 +14,19 @@ export default {
   start: 'parent-start',
   end: 'parent-end',
   methods: {
-    handleDragStart: function(elem) {
-      console.log('handleDragStart', elem);
+    dragStart: function(event) {
       this.isDragging = true;
       this.$dispatch('dragging-team', this);
+      if (typeof this.handledragEnd === 'function') {
+        this.handledragEnd(event);
+      }
     },
-    handleDragEnd: function(elem) {
+    dragEnd: function(event) {
       this.isDragging = false;
-      console.log('handleDragEnd', elem);
       this.$dispatch('stopped-dragging');
+      if (typeof this.handledragEnd === 'function') {
+        this.handledragEnd(event);
+      }
     },
   }
 }

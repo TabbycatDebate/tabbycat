@@ -1,0 +1,77 @@
+{% load debate_tags %}
+
+<li class="panel">
+
+  {% if r.is_break_round and forloop.last %}
+  {% else %}
+    <div class="progress-line standard-line"></div>
+  {% endif %}
+
+  <div class="" role="tab" id="rh{{ r.id }}">
+    <a class="{% if r.seq == round.seq %}active{% else %}collapsed{% endif %}"
+       role="button"
+       data-toggle="collapse"
+       data-parent="#accordion"
+       href="#rp{{ r.id }}"
+       aria-expanded="{% if r.seq == round.seq %}true{% else %}false{% endif %}"
+       aria-controls="rp{{ r.id }}">
+      <span class="circle-icon
+            {% if r == current_round %}btn-info
+            {% elif r.seq > current_round.seq %}btn-inactive
+            {% elif r.seq < current_round.seq %}btn-success{% endif %}">
+        <span class="emoji"></span>
+      </span>
+      {{ r.abbreviation }} <span class="caret pull-right"></span>
+    </a>
+  </div>
+
+  <div id="rp{{ r.id }}"
+       class="panel-collapse collapse
+             {% if r.seq == round.seq %}in{% endif %}"
+       role="tabpanel"
+       aria-labelledby="rh{{ r.id }}">
+    <ul class="nav nav-stacked">
+      <div class="progress-line standard-line"></div>
+      <li>
+        <div class="progress-line standard-line"></div>
+        <a href="{% round_url availability_index r %}"
+           class="{% if availability_nav and round == r %}active{% endif %}">
+          <span class="circle-icon small-circle
+            {% if r.seq < current_round.seq %} btn-success
+            {% elif r == current_round and r.draw_status == r.STATUS_NONE %} btn-info
+            {% elif r.draw_status == r.STATUS_DRAFT %} btn-success
+            {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
+            {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
+            {% else %} btn-inactive{% endif %}">
+          <span class="emoji"></span></span>Check-Ins
+        </a>
+      </li>
+      <li>
+        <div class="progress-line standard-line"></div>
+        <a href="{% round_url draw r %}"
+           class="{% if draw_nav and round == r %}active{% endif %}">
+          <span class="circle-icon small-circle
+            {% if r.seq < current_round.seq %} btn-success
+            {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
+            {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
+            {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
+            {% else %} btn-info{% endif %}">
+          <span class="emoji"></span></span>Draw
+        </a>
+      </li>
+      <li>
+        <div class="progress-line standard-line"></div>
+        <a href="{% round_url results r %}"
+           class="{% if ballots_nav and round == r %}active{% endif %}">
+          <span class="circle-icon small-circle
+            {% if r.seq < current_round.seq %} btn-success
+            {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-info
+            {% elif r.draw_status == r.STATUS_RELEASED %} btn-info
+            {% else %} btn-inactive{% endif %}">
+          <span class="emoji"></span></span>Results
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</li>

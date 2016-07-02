@@ -4,7 +4,7 @@
     <nav class="navbar navbar-default navbar-fixed-top">
 
       <div class="navbar-form navbar-left btn-group btn-group-sm">
-        <a href="backURL" class="btn btn-default btn-sm">
+        <a href="{{ urls.back }}" class="btn btn-default btn-sm">
           <span class="glyphicon glyphicon-chevron-left"></span>Back to Draw
         </a>
         <button class="btn btn-success btn-sm" v-on:click="autoAllocate">
@@ -18,7 +18,7 @@
             <div disabled class="btn btn-sm histories-display seen-1-ago">Seen Before</div>
             <div disabled class="btn btn-sm conflicts-display institutional-conflict">Institutional Conflicts</div>
             <div disabled class="btn btn-sm conflicts-display personal-conflict">Personal Conflicts</div>
-            <div disabled class="btn btn-sm conflicts-display panel-incomplete">No Chair/Odd Panel</div>
+            <div disabled class="btn btn-sm panel-incomplete">No Chair/Odd Panel</div>
           </div>
           <div v-if="showingGender" class="btn-group btn-group-sm">
             <button disabled class="btn gender-display gender-male">Male</button>
@@ -65,6 +65,7 @@ export default {
   props: {
     regions: Array,
     categories: Array,
+    urls: Object,
     showingVenue: { default: false },
     showingRegion: { default: false },
     showingGender: { default: false },

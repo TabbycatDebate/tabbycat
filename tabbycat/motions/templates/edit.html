@@ -34,6 +34,9 @@
             <div class="col-sm-6">
               {{form.text|addcss:"form-control help-anchor required"}}
             </div>
+            <div class="col-sm-5 help-block">
+              {{form.text.help_text}}
+            </div>
           </div>
           <div class="form-group">
             <label for="{{ form.reference.id_for_label }}" class="col-sm-1 control-label" {% if form.reference.help_text %}data-toggle="tooltip" title="{{ form.reference.help_text }}"{% endif %}>
@@ -42,14 +45,22 @@
             <div class="col-sm-6">
               {{form.reference|addcss:"form-control required"}}
             </div>
+            <div class="col-sm-5 help-block">
+              {{form.reference.help_text}}
+            </div>
           </div>
           <div class="form-group">
             <label for="{{ form.seq.id_for_label }}" class="col-sm-1 control-label" {% if form.seq.help_text %}data-toggle="tooltip" title="{{ form.seq.help_text }}"{% endif %}>
               Sequence {{ form.seq.errors }}
             </label>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
               {{form.seq|addcss:"form-control required"}}{{ form.id }}
             </div>
+            <div class="col-sm-5 help-block">
+              {{form.seq.help_text}}
+            </div>
+          </div>
+          <div class="form-group">
             <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
               {{ form.DELETE.label }}
             </label>

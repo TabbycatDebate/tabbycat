@@ -43,16 +43,29 @@
 
   <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading text-center">
+      <div class="panel-heading panel-title text-center">
         Speaker Demographics
       </div>
       <div class="panel-body text-center no-side-padding">
         <template v-for="set in graphsData['speakers_gender']">
-          <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
+          <donut-chart
+            :graph-data="set['data']"
+            :title="set['title']">
+          </donut-chart>
+        </template>
+        <template v-if="graphsData['speakers_gender'].length === 0">
+          <p>No Gender Information</p>
         </template>
         <hr>
         <template v-for="set in graphsData['speakers_region']">
-          <donut-chart :graph-data="set['data']" :title="set['title']" :regions="graphsData['regions']"></donut-chart>
+          <donut-chart
+            :graph-data="set['data']"
+            :title="set['title']"
+            :regions="graphsData['regions']">
+          </donut-chart>
+        </template>
+        <template v-if="graphsData['speakers_region'].length === 0">
+          <p>No Regions Information</p>
         </template>
       </div>
     </div>
@@ -60,16 +73,22 @@
 
   <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading text-center">
+      <div class="panel-heading panel-title text-center">
         Adjudicator Demographics
       </div>
       <div class="panel-body text-center no-side-padding">
         <template v-for="set in graphsData['adjudicators_gender']">
           <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
         </template>
+        <template v-if="graphsData['adjudicators_gender'].length === 0">
+          <p>No Gender Information</p>
+        </template>
         <hr>
         <template v-for="set in graphsData['adjudicators_region']">
           <donut-chart :graph-data="set['data']" :title="set['title']" :regions="graphsData['regions']"></donut-chart>
+        </template>
+        <template v-if="graphsData['adjudicators_region'].length === 0">
+          <p>No Region Information</p>
         </template>
       </div>
     </div>
@@ -77,16 +96,22 @@
 
   <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading text-center">
+      <div class="panel-heading panel-title text-center">
         Speaker Results
       </div>
       <div class="panel-body text-center">
         <template v-for="set in graphsData['speakers_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
+        <template v-if="graphsData['speakers_results'].length === 0">
+          <p>No Gender Information</p>
+        </template>
         <hr>
         <template v-for="set in graphsData['detailed_speakers_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+        </template>
+        <template v-if="graphsData['detailed_speakers_results'].length === 0">
+          <p>No Region Information</p>
         </template>
       </div>
     </div>
@@ -94,16 +119,22 @@
 
   <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading text-center">
+      <div class="panel-heading panel-title text-center">
         Adudicator Results
       </div>
-      <div class="panel-body">
+      <div class="panel-body text-center">
         <template v-for="set in graphsData['adjudicators_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+        </template>
+        <template v-if="graphsData['adjudicators_results'].length === 0">
+          <p>No Adjudicator Ratings Yet</p>
         </template>
         <hr>
         <template v-for="set in graphsData['detailed_adjudicators_results']">
           <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+        </template>
+        <template v-if="graphsData['detailed_adjudicators_results'].length === 0">
+          <p>No Adjudicator-Adjudicator Feedback</p>
         </template>
       </div>
     </div>

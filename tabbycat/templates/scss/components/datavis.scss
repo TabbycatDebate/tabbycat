@@ -20,6 +20,7 @@
 }
 
 .d3-feedback-trend {
+  margin-bottom: -4px; // Correct for wierd height blow out
   // For Feedback Page
   .tick line, .axis line {
     fill: none;

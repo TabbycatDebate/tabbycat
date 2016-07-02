@@ -9,8 +9,8 @@
       <div class="popover-anchor" v-on:mouseover="setupPopover"></div>
 
       <div class="">
-        <strong>{{ team.name }}</strong><br>
-        <small>3 Wins</small>
+        <strong class="debate-team-name">{{ team.name }}</strong><br>
+        <span class="small text-muted">{{ team.wins }} Wins</span>
       </div>
 
       <div class="popover-raw hide">
@@ -41,9 +41,7 @@ import PopoverMixin from '../mixins/PopoverMixin.vue'
 export default {
   mixins: [DiversityHighlightsMixin, ConflictsHighlightsMixin, HistoriesHighlightsMixin, PopoverMixin],
   props: {
-    team: Object,
-    currentConflictHighlights: Object,
-    currentHistoriesHighlights: Array
+    team: Object
   },
   methods: {
     getPopOverTitle: function() {

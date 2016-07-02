@@ -25,10 +25,6 @@
   &.institutional-conflict {
     @include button-variant(#fff, $brand-warning, darken($brand-warning, 10%));
   }
-  &.panel-incomplete,
-  &.chair-incomplete {
-    @include button-variant(#fff, $brand-danger-alt, darken($brand-danger-alt, 10%));
-  }
 }
 
 // For allocations page

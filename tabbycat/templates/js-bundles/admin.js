@@ -21,6 +21,7 @@ if (typeof allAdjudicators !== 'undefined' && allAdjudicators !== null) {
   vueData['allTeams'] = allTeams;
   vueData['allRegions'] = allRegions;
   vueData['allCategories'] = allCategories;
+  vueData['urls'] = urls;
 }
 
 //------------------------------------------------------------------------------

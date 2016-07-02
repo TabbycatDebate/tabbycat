@@ -175,12 +175,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column("Institution", [adj.institution.code for adj in adjudicators])
 
         adjcore_header = {
+            'key': 'adjcore',
             'tooltip': "Member of the Adjudication Core",
             'icon': 'glyphicon-sunglasses',
         }
         self.add_boolean_column(adjcore_header, [adj.adj_core for adj in adjudicators])
 
         independent_header = {
+            'key': 'independent',
             'tooltip': "Independent Adjudicator",
             'icon': 'glyphicon-knight',
         }
@@ -188,6 +190,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if self.tournament.pref('show_unaccredited'):
             accreddited_header = {
+                'key': 'accredited',
                 'tooltip': "Is Accredited",
                 'icon': 'glyphicon-leaf',
             }
