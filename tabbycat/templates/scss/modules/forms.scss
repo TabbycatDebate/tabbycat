@@ -14,11 +14,12 @@
 //------------------------------------------------------------------------------
 
 // Give buttons more padding
-.form-control,
-.form-control-parent input {
+.form-control, .form-control-parent input {
   border-width: 2px;
   border-radius: 6px;
   height: 39px;
+  max-width: 100%;
+  @extend .form-control;
 }
 
 // Center number inputs
