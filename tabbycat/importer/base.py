@@ -235,7 +235,7 @@ class BaseTournamentDataImporter(object):
                     inst = model(**kwargs)
                 except MultipleObjectsReturned as e:
                     if expect_unique:
-                        errors.add(lineno, model, e.message)
+                        errors.add(lineno, model, str(e))
                     continue
                 except FieldError as e:
                     match = re.match("Cannot resolve keyword '(\w+)' into field.", str(e))
@@ -251,7 +251,7 @@ class BaseTournamentDataImporter(object):
                     else:
                         raise
                 except ValueError as e:
-                    errors.add(lineno, model, e.message)
+                    errors.add(lineno, model, str(e))
                     continue
                 else:
                     skipped_because_existing += 1

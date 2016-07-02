@@ -201,13 +201,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             self.initialise_emoji_options()
 
             def team_interpreter(line):
-                return {
+                interpreted = {
                     'tournament':  self.tournament,
                     'institution':  pm.Institution.objects.lookup(line['institution']),
                     'reference':  line['team_name'],
                     'short_reference':  line['team_name'][:34],
-                    'use_institution_prefix': line.get('use_institution_prefix') or None,
                 }
+                if line.get('use_institution_prefix'):
+                    interpreted['use_institution_prefix'] = line['use_institution_prefix']
+                return interpreted
             counts, errors = self._import(f, pm.Team, team_interpreter,
                                           expect_unique=False,
                                           generated_fields={'emoji': self.get_emoji})
@@ -253,11 +255,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         def test_score_interpreter(line):
             institution = pm.Institution.objects.lookup(line['institution'])
-            return {
-                'adjudicator' : pm.Adjudicator.objects.get(name=line['name'], institution=institution, tournament=self.tournament),
-                'score'       : float(line['test_score']),
-                'round'       : None,
-            }
+            if line['test_score']:
+                return {
+                    'adjudicator' : pm.Adjudicator.objects.get(name=line['name'], institution=institution, tournament=self.tournament),
+                    'score'       : line['test_score'],
+                    'round'       : None,
+                }
         counts, errors = self._import(f, fm.AdjudicatorTestScoreHistory,
                                       test_score_interpreter, counts=counts,
                                       errors=errors)
@@ -295,6 +298,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             adjudicator = pm.Adjudicator.objects.get(name=line['name'],
                 institution=adj_inst, tournament=self.tournament)
             for team_name in line['team_conflicts'].split(","):
+                team_name = team_name.strip()
                 team = pm.Team.objects.lookup(team_name)
                 yield {
                     'adjudicator' : adjudicator,
