@@ -21,7 +21,7 @@ from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round
-from utils.mixins import SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import VueTableMixin
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
