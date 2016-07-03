@@ -11,9 +11,7 @@
     <debate-adjudicator
       v-for="adj in adjudicators | orderBy 'score' -1"
       v-if="!adj.allocated"
-      :adj="adj"
-      :current-conflict-highlights="currentConflictHighlights"
-      :current-histories-highlights="currentHistoriesHighlights">
+      :adj="adj">
     </debate-adjudicator>
 
   </nav>

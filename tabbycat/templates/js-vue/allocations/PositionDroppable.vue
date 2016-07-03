@@ -17,9 +17,7 @@
       v-for="adj in adjudicators | orderBy 'score' -1"
       :adj="adj"
       :position="position"
-      :debate-id="debateId"
-      :current-conflict-highlights="currentConflictHighlights"
-      :current-histories-highlights="currentHistoriesHighlights">
+      :debate-id="debateId">
     </debate-adjudicator>
 
   </div>

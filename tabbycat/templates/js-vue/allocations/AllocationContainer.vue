@@ -30,17 +30,13 @@
         :aff="teams[debate.aff_team]"
         :neg="teams[debate.neg_team]"
         :all-adjudicators="adjudicators"
-        :urls="urls"
-        :current-conflict-highlights="currentConflictHighlights"
-        :current-histories-highlights="currentHistoriesHighlights">
+        :urls="urls">
       </debate>
 
     </div>
 
     <unallocated-adjudicators
-      :adjudicators="adjudicators"
-      :current-conflict-highlights="currentConflictHighlights"
-      :current-histories-highlights="currentHistoriesHighlights">
+      :adjudicators="adjudicators">
     </unallocated-adjudicators>
 
   </div>
@@ -75,20 +71,78 @@ export default {
       return lookup;
     }
   },
+  methods: {
+    toggleConflictsValues: function(value) {
+      var conflicts = this.currentConflictHighlights;
+      var _this = this;
+      if (typeof conflicts.personal_adjudicators !== 'undefined') {
+        conflicts.personal_adjudicators.forEach(function(currentValue) {
+          _this.adjudicators[currentValue].hasPersonalConflict = true
+          console.log('setting adj conflict to ' + _this.adjudicators[currentValue].hasPersonalConflict
+            + ' on ' + _this.adjudicators[currentValue].name);
+        })
+      }
+      if (typeof conflicts.personal_teams !== 'undefined') {
+        conflicts.personal_teams.forEach(function(currentValue) {
+          console.log('setting team conflict to ' + _this.teams[currentValue].hasPersonalConflict
+            + ' on ' + _this.teams[currentValue].name);
+          _this.teams[currentValue].hasPersonalConflict = true
+        })
+      }
+      // TODO: need to loop through and find by institution
+      // if (typeof conflicts.institutional_adjudicators !== 'undefined') {
+      //   conflicts.personal_adjudicators.forEach(function(currentValue) {
+      //     this.adjudicators[currentValue].hasPersonalConflict = True
+      //   })
+      // }
+      // if (typeof conflicts.institutional_institutions !== 'undefined') {
+      //   conflicts.personal_teams.forEach(function(currentValue) {
+      //     this.teams[currentValue].hasPersonalConflict = True
+      //   })
+      // }
+    },
+    toggleHistoriesValues: function(conflicts_dict, setValue) {
+      // For each entry in the currently-hovered adj/team step through it and
+      // set hasHistory/historyRoundsAgo values for each adj/team affected
+      var histories = this.currentHistoriesHighlights;
+      if (histories.length > 0) {
+        var _this = this;
+        histories.forEach(function(conflict) {
+          if (typeof conflict.team !== 'undefined') {
+            _this.teams[conflict.team].hasHistoryConflict = setValue;
+            if (setValue) {
+              _this.teams[conflict.team].historyRoundsAgo = conflict.ago;
+            } else {
+              _this.teams[conflict.team].historyRoundsAgo = 0;
+            }
+          } else if (typeof conflict.adj !== 'undefined') {
+            _this.adjudicators[conflict.adj].hasHistoryConflict = setValue;
+            if (setValue) {
+              _this.adjudicators[conflict.adj].historyRoundsAgo = conflict.ago;
+            } else {
+              _this.adjudicators[conflict.adj].historyRoundsAgo = 0;
+            }
+          }
+        });
+      }
+    }
+  },
   events: {
     'set-conflicts': function (conflicts_dict) {
-      // set by ID all in current array
       this.currentConflictHighlights = conflicts_dict;
+      this.toggleConflictsValues(true);
     },
     'unset-conflicts': function () {
-      // unset by ID all in current array
+      // this.toggleConflictsValues(false);
       // this.currentConflictHighlights = null;
     },
     'set-histories': function (histories_dict) {
       this.currentHistoriesHighlights = histories_dict;
+      this.toggleHistoriesValues(true);
     },
     'unset-histories': function() {
-      this.currentConflictHighlights = null;
+      // this.toggleHistoriesValues(false)
+      // this.currentConflictHighlights = null;
     },
     'set-dragged-adj': function(adjId) {
       this.currentlyDragging = adjId;

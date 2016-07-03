@@ -43,6 +43,11 @@ export default {
   props: {
     team: Object
   },
+  computed: {
+    entity: function() {
+      return this.team;
+    }
+  },
   methods: {
     getPopOverTitle: function() {
       if (this.team.uses_prefix === true) {
@@ -50,9 +55,6 @@ export default {
       } else {
         return this.team.long_name + " of " + this.team.institution.name
       }
-    },
-    getEntity: function() {
-      return [this.team, 'team'];
     },
     setHighlights: function() {
       this.setConflictHighlights()

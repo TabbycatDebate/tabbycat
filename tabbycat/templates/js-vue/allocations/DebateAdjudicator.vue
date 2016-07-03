@@ -6,7 +6,9 @@
     v-on:dragend="handleDragEnd"
     v-on:mouseover="setHighlights"
     v-on:mouseout="unsetHighlights"
-    v-bind:class="[isDragging ? vue-is-dragging : '', diversityHighlights, historiesHighlights, conflictsHighlights]"
+    v-bind:class="[isDragging ? 'vue-is-dragging' : '',
+                   diversityHighlights,
+                  ]"
     :id="adj.id"
     class="vue-draggable adj-draggable btn btn-default popover-parent">
 
@@ -62,6 +64,9 @@ export default {
     debateId: Number
   },
   computed: {
+    entity: function() {
+      return this.adj;
+    },
     short_name: function() {
       var names = this.adj.name.split(" ");
       return names[0] + " " + names[1][0] + ".";
@@ -95,9 +100,6 @@ export default {
   methods: {
     getPopOverTitle: function() {
       return this.adj.name + " of " + this.adj.institution.name
-    },
-    getEntity: function() {
-      return [this.adj, 'adj'];
     },
     setHighlights: function() {
       this.setConflictHighlights()

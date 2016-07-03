@@ -1,12 +1,12 @@
 <script>
-// Note that subscribing objects must provide a getEntity() that
+// Note that subscribing objects must provide a entity property that
 // provides gender/region info
 // Their classes should be bound to a diversityHighlights somewhere
 
 export default {
   computed: {
     diversityHighlights: function () {
-      var entity = this.getEntity()[0];
+      var entity = this.entity;
       var class_string = " diversity-highlightable"
 
       if (typeof entity.gender !== 'undefined') {
