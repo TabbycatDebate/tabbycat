@@ -33,7 +33,6 @@ class BaseDrawManager:
 
     def __init__(self, round, active_only=True):
         self.round = round
-        self.debate_set = round.debate_set
         self.active_only = active_only
 
     def get_teams(self):
@@ -78,7 +77,7 @@ class BaseDrawManager:
             DebateTeam(debate=debate, team=pairing.teams[1], position=DebateTeam.POSITION_NEGATIVE).save()
 
     def delete(self):
-        self.debate_set.all().delete()
+        self.round.debate_set.all().delete()
 
     def create(self):
         """Generates a draw and populates the database with it."""
