@@ -4,7 +4,7 @@ import logging
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -19,6 +19,7 @@ from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
 
+from .generator import DrawError
 from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamPositionAllocation
 from .dbutils import delete_round_draw
@@ -249,7 +250,11 @@ class CreateDrawView(DrawStatusEdit):
             return super().post(request, *args, **kwargs)
 
         manager = DrawManager(round)
-        manager.create()
+        try:
+            manager.create()
+        except DrawError as e:
+            messages.error(request, "There was a problem creating the draw: " + str(e) + " If this issue persists, please contact the developers.")
+            return HttpResponseRedirect(reverse_round('availability_index', round))
 
         allocate_venues(round)
 
