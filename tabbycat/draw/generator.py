@@ -1152,6 +1152,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     def generate_pairings(self, brackets):
         pairings = OrderedDict()
 
+        # TODO see if there's a way to remove this dependency on self.round, since it's the only
+        # place in any DrawGenerator where self.round is used.
         effective_round = self.round.seq
         print("-------\nTaking as effective round of %s" % effective_round)
 

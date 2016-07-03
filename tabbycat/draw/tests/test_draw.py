@@ -795,13 +795,13 @@ class TestEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
         return list(map(_t, args))
 
     def test_no_bypass(self):
-        teams = list()
+        teams = self._teams(1, 3, 4, 2, 5, 8, 9, 11, 10, 12) # it should take none of these
         results = self._results(1, ([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
         self.run_draw(teams, results, [(1, 8), (7, 3)])
 
     def test_bypass(self):
-        # Test when a series of teams (9-12) have had a partial elimination round
-        teams = self._teams(9, 11, 10, 12)
+        # teams 9 through 12 qualified 1st through 4th, so bypassed the first round
+        teams = self._teams(9, 11, 10, 12, 1, 2, 3, 4, 5, 6, 7, 8)
         results = self._results(5, ([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
         self.run_draw(teams, results, [(9, 8), (11, 3), (10, 7), (12, 1)])
 
