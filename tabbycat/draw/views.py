@@ -81,8 +81,6 @@ class DrawTablePage(RoundMixin, VueTableMixin):
         if tournament.pref('enable_division_motions'):
             for debate in draw:
                 table.add_motion_column([m.reference for m in debate.division_motions])
-        # if round.is_break_round:
-        #     table.add_breakrank_columns(draw)
         if not tournament.pref('enable_divisions'):
             table.add_debate_adjudicators_column(draw)
 
@@ -192,7 +190,7 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
             table.add_affs_count([d.aff_team for d in draw], r, 'aff')
             table.add_affs_count([d.neg_team for d in draw], r, 'neg')
         else:
-            table.add_debate_adjudicators_column(draw)
+            table.add_debate_adjudicators_column(draw, show_splits=True)
 
         table.add_draw_conflicts(draw)
         if not r.is_break_round:

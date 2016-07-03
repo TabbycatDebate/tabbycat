@@ -31,16 +31,11 @@
         </li>
       {% endfor %}
       <li class="list-group-item">
-        <span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;
-        <a href="{% url 'admin:index' %}">
-          Edit database area
-        </a>
+        <span class="glyphicon glyphicon-edit"></span>&nbsp;
+        <a href="{% url 'admin:index' %}">Edit database area</a>
       </li>
       <li class="list-group-item">
-        <span class="emoji">➕</span>
-        <a href="{% url 'tournament-create' %}">
-          Create new tournament
-        </a>
+        <span class="emoji">➕</span><a href="{% url 'tournament-create' %}">Create new tournament</a>
       </li>
     {% else %}
       <p>

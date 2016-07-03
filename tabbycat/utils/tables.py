@@ -121,9 +121,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
     Tabbycat."""
 
     ADJ_SYMBOLS = {
-        DebateAdjudicator.TYPE_CHAIR: "Ⓒ",
+        DebateAdjudicator.TYPE_CHAIR: " Ⓒ",
         DebateAdjudicator.TYPE_PANEL: "",
-        DebateAdjudicator.TYPE_TRAINEE: "Ⓣ",
+        DebateAdjudicator.TYPE_TRAINEE: " Ⓣ",
     }
 
     ADJ_TYPES = {
@@ -200,8 +200,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         da_data = []
 
         def construct_text(adjs_data):
-            return ["%s %s %s" % (a['name'], self.ADJ_SYMBOLS[a['type']],
-                "<span class='text-danger'>💢</span>" if a['split'] else '') for a in adjs_data]
+            adjs_list = ["%s%s%s" % (
+                a['name'],
+                self.ADJ_SYMBOLS[a['type']],
+                "<span class='text-danger'>💢</span>" if a['split'] else ''
+            ) for a in adjs_data]
+            return ', '.join([str(ad) for ad in adjs_list])
 
         def construct_popover(adjs_data):
             popover_data = []
