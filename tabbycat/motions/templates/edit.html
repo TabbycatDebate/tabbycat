@@ -10,14 +10,11 @@
   <form method="POST" action="" class="form-horizontal">
     {% csrf_token %}
     <div class="panel panel-default">
-
       <div class="panel-heading">
         <h4>Motion Options</h4>
       </div>
       <ul class="list-group">
-
         {{ formset.management_form }}
-
         {% for form in formset %}
         <li class="list-group-item">
 
@@ -83,18 +80,15 @@
 
         </li>
         {% endfor %}
-
+        <li class="list-group-item col-sm-offset-1">
+          <input class="btn btn-success submit-disable" type="submit" name="submit" value="Save All" data-loading-text="Saving..." />
+          <input class="btn btn-success submit-disable" type="submit" name="submit_add_more" value="Save & Add More" data-loading-text="Saving..." />
+          <a class="btn btn-danger" href="{% round_url draw %}">Cancel</a>
+        </li>
       </ul>
-
     </div>
-
-    <div class="col-sm-11 col-sm-offset-1">
-      <input class="btn btn-success submit-disable" type="submit" name="submit" value="Save All" data-loading-text="Saving..." />
-      <input class="btn btn-success submit-disable" type="submit" name="submit_add_more" value="Save & Add More" data-loading-text="Saving..." />
-      <a class="btn btn-danger" href="{% round_url motions %}">Cancel</a>
-    </div>
-
   </form>
+
 {% endblock content %}
 
 {% block js %}

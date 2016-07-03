@@ -22,7 +22,7 @@
   {% if not has_motions %}
     <div class="alert alert-danger">
       Currently there are no motions entered for this round, so debate results
-      cannot be entered. <a href="{% round_url motions current_round %}" class="alert-link">Add Motions.</a>
+      cannot be entered. <a href="{% round_url motions_edit current_round %}" class="alert-link">Add Motions.</a>
     </div>
   {% endif %}
 {% endblock %}

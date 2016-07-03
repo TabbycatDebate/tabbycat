@@ -52,6 +52,16 @@
   z-index: 1040;
 }
 
+// For motions page; probably feedback also
+.modal-xl {
+  width: 95%;
+  height: 92%;
+  .modal-content {
+    height: 100%;
+    padding: 40px;
+  }
+}
+
 //------------------------------------------------------------------------------
 // Animated Items
 //------------------------------------------------------------------------------

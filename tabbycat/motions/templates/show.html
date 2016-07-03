@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load add_field_css %}
+{% load debate_tags %}
+
+{% block nav %}<div class="col-md-12">{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+
+  <div class="container-fluid flex-vertical-center" style="height: 600px">
+    <div class="row flex-1">
+      <div class="col-md-4 col-md-offset-4">
+        <button class="btn btn-lg btn-success btn-block"
+                data-toggle="modal" data-target="#myModal">
+          Reveal Motions for {{ round.name }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content flex-vertical">
+        <div class="modal-body flex-1 flex-vertical">
+          {% for m in motions %}
+            <div class="flex-1 flex-vertical-center">
+              <h1 class="display-1">
+                {% if motions|length > 1 %}
+                  <span class="text-muted">{{ forloop.counter }}.</span>
+                {% endif %}
+                {{ m.text }}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

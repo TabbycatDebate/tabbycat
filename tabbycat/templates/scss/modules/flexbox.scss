@@ -3,6 +3,10 @@
   display: flex;
   flex-direction: row;
 }
+.flex-vertical {
+  display: flex;
+  flex-direction: column;
+}
 .flex-vertical-center {
   display: flex;
   align-items: center;
