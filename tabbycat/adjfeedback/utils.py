@@ -17,9 +17,9 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Whether the adj is marked as breaking (click to mark)',
         }
         breaking_data = [{
-            'text': '<input type="checkbox" adj_id="%s" %s>' % (adj.id, 'checked' if adj.breaking else ''),
+            'text': '<input type="checkbox" class="toggle_breaking_status vue-table-checkbox" adj_id="%s" %s>' % (adj.id, 'checked' if adj.breaking else ''),
             'sort': adj.breaking,
-            'class': 'toggle_breaking_status checkbox-target'
+            'class': 'checkbox-target'
         } for adj in adjudicators]
 
         self.add_column(breaking_header, breaking_data)

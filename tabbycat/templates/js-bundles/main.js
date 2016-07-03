@@ -25,6 +25,7 @@ $(document).ready(function(){
     if (e.target == this) { // Don't trigger when clicking the input itself
       var checkBox = $("input[type=checkbox]", this).first();
       checkBox.prop("checked", !checkBox.prop("checked"));
+      checkBox.trigger("change");
     }
   });
 });

@@ -103,27 +103,25 @@
           $('#edit-note').modal();
         });
       });
-      $(".toggle_breaking_status input").each(function() {
-        $(this).change( function() {
-          var adj_id = parseInt($(this).attr("adj_id"));
-          var breaking_status = null;
-          if (this.checked) {
-            breaking_status = true;
-            $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)+1);
-          } else {
-            breaking_status = false;
-            $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)-1);
+      $(".toggle_breaking_status").change(function() {
+        var adj_id = parseInt($(this).attr("adj_id"));
+        var breaking_status = null;
+        if (this.checked) {
+          breaking_status = true;
+          $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)+1);
+        } else {
+          breaking_status = false;
+          $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)-1);
+        }
+        $.ajax({
+          type: "POST",
+          url: setBreakingURL,
+          data: {adj_id: adj_id, adj_breaking_status: breaking_status},
+          error: function(xhr, error, ex) {
+            alert("error setting adj status");
           }
-          $.ajax({
-            type: "POST",
-            url: setBreakingURL,
-            data: {adj_id: adj_id, adj_breaking_status: breaking_status},
-            error: function(xhr, error, ex) {
-              alert("error setting adj status");
-            }
-          });
-          return false;
         });
+        return false;
       });
     });
   </script>
