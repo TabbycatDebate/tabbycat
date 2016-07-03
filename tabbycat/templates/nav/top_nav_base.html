@@ -12,7 +12,7 @@
         <span class="icon-bar"></span>
       </button>
 
-      {% if all_tournaments.count > 1 or user.is_superuser %}
+      {% if all_tournaments.count > 1 or user.is_authenticated %}
         <ul id="nav_brand" class="nav navbar-nav navbar-left">
           <li class="dropdown">
             <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament }}<b class="caret"></b></a>
