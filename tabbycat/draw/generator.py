@@ -1094,7 +1094,7 @@ class EliminationDrawGenerator(BaseEliminationDrawGenerator):
         logger.info("%d teams bypassed the previous round and %d teams won the last round" % (bypassing, len(winners)))
 
         if len(teams) & (len(teams) - 1) != 0:
-            raise DrawError("The number of teams (%s) in this round is not a power of two" % num_teams)
+            raise DrawError("The number of teams (%s) in this round is not a power of two" % len(teams))
 
         return self._make_pairings(teams, 0)
 
