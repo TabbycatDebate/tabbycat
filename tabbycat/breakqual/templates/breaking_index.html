@@ -6,14 +6,23 @@
 {% block page-title %}Breaks{% endblock %}
 
 {% block page-subnav-sections %}
+  <a class="btn btn-default" href="{% tournament_url breaking_index %}">
+    Overview
+  </a>
   {% for category in tournament.breakcategory_set.all %}
-    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">View {{ category.name }} Break</a>
+    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">
+      View {{ category.name }} Break
+    </a>
   {% endfor %}
-  <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">View Adjudicators Break</a>
+  <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">
+    View Adjudicators Break
+  </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a class="btn btn-success" href="{% tournament_url edit_eligibility %}">Edit Eligibility</a></li>
+  <a class="btn btn-success" href="{% tournament_url edit_eligibility %}">
+    Edit Team's Eligibility
+  </a>
 {% endblock %}
 
 {% block content %}

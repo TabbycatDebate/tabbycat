@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "breaking_index.html" %}
 {% load static %}
 {% load debate_tags %}
 {% load add_field_css %}
@@ -8,24 +8,24 @@
 {% block sub-title %}{{ pref.public_breaking_teams|yesno:",not "}}publicly visible{% endblock %}
 {% block page-title %}👑{{ category.name }} Break{% endblock %}
 
-{% block page-subnav-sections %}
+{% block page-subnav-actions %}
   {% if generated %}
     <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
-        Delete and regenerate the break for all categories
+        Delete & Regenerate All Breaks
       </button>
     </form>
     <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
-        Update the break for all categories
+        Update All Breaks
       </button>
     </form>
     <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
-        Update the break for this category ({{ category.name }})
+        Update The {{ category.name }} Break
       </button>
     </form>
   {% else %}

@@ -78,7 +78,7 @@ def generate_all_breaking_teams(tournament):
 
 
 def update_all_breaking_teams(tournament):
-    """Runs update_breaking_teams for all categories, taking taking break
+    """Runs update_breaking_teams for all categories, taking break
     category priorities into account appropriately.
     """
     teams_broken_higher_priority = set()
