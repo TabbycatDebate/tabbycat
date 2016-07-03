@@ -10,7 +10,7 @@ export default {
   },
   methods: {
     setHistoriesHighlights: function() {
-      this.$dispatch('set-histories', this.entity.histories)
+      this.$dispatch('set-histories', this.adjorteam.histories)
     },
     unsetHistoriesHighlights: function() {
       this.$dispatch('unset-histories')
@@ -22,7 +22,6 @@ export default {
       if (!histories || histories === null) {
         return '';
       } else {
-        var entity = this.entity;
         var match = '';
 
         // Redo the below to be team or adj agnostic

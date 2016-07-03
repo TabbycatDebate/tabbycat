@@ -6,10 +6,9 @@
     v-on:dragend="handleDragEnd"
     v-on:mouseover="setHighlights"
     v-on:mouseout="unsetHighlights"
-    v-bind:class="[isDragging ? 'vue-is-dragging' : '',
-                   diversityHighlights,
-                  ]"
-    :id="adj.id"
+    v-bind:class="[isDragging ? 'vue-is-dragging' : '', diversityHighlights,
+                   historiesHighlights, conflictsHighlights]"
+    :id="adjorteam.id"
     class="vue-draggable adj-draggable btn btn-default popover-parent">
 
       <div class="popover-anchor" v-on:mouseover="setupPopover"></div>
@@ -23,24 +22,24 @@
           {{ short_name }}
         </span>
         <span class="small text-muted subtitle">
-          <template v-if="adj.institution.code">
-            {{ adj.institution.code }}
+          <template v-if="adjorteam.institution.code">
+            {{ adjorteam.institution.code }}
           </template>
           <template v-else>
-            {{ adj.institution.name }}
+            {{ adjorteam.institution.name }}
           </template>
         </span>
       </div>
 
       <div class="popover-raw hide">
         <li class="list-group-item">
-          Score of {{ adj.score }} (in the top {{ adj.ranking }})
+          Score of {{ adjorteam.score }} (in the top {{ adjorteam.ranking }})
         </li>
         <li class="list-group-item">
-          {{ adj.gender_name }}
+          {{ adjorteam.gender_name }}
         </li>
         <li class="list-group-item">
-          {{ adj.region ? '; ' + adj.region.name + ' Region': '' }}
+          {{ adjorteam.region ? '; ' + adjorteam.region.name + ' Region': '' }}
         </li>
       </div>
 
@@ -59,47 +58,44 @@ import HistoriesHighlightsMixin from '../mixins/HistoriesHighlightsMixin.vue'
 export default {
   mixins: [DraggableMixin, AjaxMixin, PopoverMixin, DiversityHighlightsMixin, HistoriesHighlightsMixin, ConflictsHighlightsMixin],
   props: {
-    adj: Object,
+    adjorteam: Object,
     position: String,
     debateId: Number
   },
   computed: {
-    entity: function() {
-      return this.adj;
-    },
     short_name: function() {
-      var names = this.adj.name.split(" ");
+      var names = this.adjorteam.name.split(" ");
       return names[0] + " " + names[1][0] + ".";
     },
     letter_ranking: function() {
-      if (this.adj.ranking === 10) {
+      if (this.adjorteam.ranking === 10) {
         return "A+"
-      } else if (this.adj.ranking === 10) {
+      } else if (this.adjorteam.ranking === 10) {
         return "A "
-      } else if (this.adj.ranking === 20) {
+      } else if (this.adjorteam.ranking === 20) {
         return "A-"
-      } else if (this.adj.ranking === 30) {
+      } else if (this.adjorteam.ranking === 30) {
         return "B+"
-      } else if (this.adj.ranking === 40) {
+      } else if (this.adjorteam.ranking === 40) {
         return "B "
-      } else if (this.adj.ranking === 50) {
+      } else if (this.adjorteam.ranking === 50) {
         return "B-"
-      } else if (this.adj.ranking === 60) {
+      } else if (this.adjorteam.ranking === 60) {
         return "C+"
-      } else if (this.adj.ranking === 70) {
+      } else if (this.adjorteam.ranking === 70) {
         return "C"
-      } else if (this.adj.ranking === 80) {
+      } else if (this.adjorteam.ranking === 80) {
         return "C-"
-      } else if (this.adj.ranking === 90) {
+      } else if (this.adjorteam.ranking === 90) {
         return "F "
-      } else if (this.adj.ranking === 100) {
+      } else if (this.adjorteam.ranking === 100) {
         return "F "
       }
     }
   },
   methods: {
     getPopOverTitle: function() {
-      return this.adj.name + " of " + this.adj.institution.name
+      return this.adjorteam.name + " of " + this.adjorteam.institution.name
     },
     setHighlights: function() {
       this.setConflictHighlights()
@@ -122,7 +118,7 @@ export default {
     },
   },
   watch: {
-    adj: function(newVal, oldVal) {
+    adjorteam: function(newVal, oldVal) {
       // Call into the ajax mixing
       this.update(url, data, "adjudicator's allocation");
     }

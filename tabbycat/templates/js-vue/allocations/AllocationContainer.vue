@@ -72,34 +72,44 @@ export default {
     }
   },
   methods: {
-    toggleConflictsValues: function(value) {
+    toggleConflictsValues: function(conflictValue) {
       var conflicts = this.currentConflictHighlights;
       var _this = this;
-      if (typeof conflicts.personal_adjudicators !== 'undefined') {
+      if (conflicts.personal_adjudicators) {
         conflicts.personal_adjudicators.forEach(function(currentValue) {
-          _this.adjudicators[currentValue].hasPersonalConflict = true
-          console.log('setting adj conflict to ' + _this.adjudicators[currentValue].hasPersonalConflict
-            + ' on ' + _this.adjudicators[currentValue].name);
+          _this.adjudicators[currentValue].hasPersonalConflict = conflictValue
         })
       }
-      if (typeof conflicts.personal_teams !== 'undefined') {
+      if (conflicts.personal_teams) {
         conflicts.personal_teams.forEach(function(currentValue) {
-          console.log('setting team conflict to ' + _this.teams[currentValue].hasPersonalConflict
-            + ' on ' + _this.teams[currentValue].name);
-          _this.teams[currentValue].hasPersonalConflict = true
+          _this.teams[currentValue].hasPersonalConflict = conflictValue
         })
       }
-      // TODO: need to loop through and find by institution
-      // if (typeof conflicts.institutional_adjudicators !== 'undefined') {
-      //   conflicts.personal_adjudicators.forEach(function(currentValue) {
-      //     this.adjudicators[currentValue].hasPersonalConflict = True
-      //   })
-      // }
-      // if (typeof conflicts.institutional_institutions !== 'undefined') {
-      //   conflicts.personal_teams.forEach(function(currentValue) {
-      //     this.teams[currentValue].hasPersonalConflict = True
-      //   })
-      // }
+      if (conflicts.institutional_conflicts) {
+        conflicts.institutional_conflicts.forEach(function(currentValue) {
+          // Loop through all adjudicators
+          for (var adjudicatorID in _this.adjudicators) {
+            if (_this.adjudicators.hasOwnProperty(adjudicatorID)) {
+              var adjToTest = _this.adjudicators[adjudicatorID];
+              if (adjToTest.institution.id === currentValue) {
+                adjToTest.hasInstitutionalConflict = conflictValue;
+              }
+            }
+          }
+          // Loop through all teams
+          for (var teamID in _this.teams) {
+            if (_this.teams.hasOwnProperty(teamID)) {
+              var teamToTest = _this.teams[teamID];
+              if (teamToTest.institution.id === currentValue) {
+                teamToTest.hasInstitutionalConflict = conflictValue;
+              }
+            }
+          }
+        });
+      }
+      // Don't highlight current thing being hovered
+      conflicts.currentOrigin.hasPersonalConflict = false;
+      conflicts.currentOrigin.hasInstitutionalConflict = false;
     },
     toggleHistoriesValues: function(conflicts_dict, setValue) {
       // For each entry in the currently-hovered adj/team step through it and
@@ -133,16 +143,16 @@ export default {
       this.toggleConflictsValues(true);
     },
     'unset-conflicts': function () {
-      // this.toggleConflictsValues(false);
-      // this.currentConflictHighlights = null;
+      this.toggleConflictsValues(false);
+      this.currentConflictHighlights = null;
     },
     'set-histories': function (histories_dict) {
       this.currentHistoriesHighlights = histories_dict;
       this.toggleHistoriesValues(true);
     },
     'unset-histories': function() {
-      // this.toggleHistoriesValues(false)
-      // this.currentConflictHighlights = null;
+      this.toggleHistoriesValues(false);
+      this.currentConflictHighlights = null;
     },
     'set-dragged-adj': function(adjId) {
       this.currentlyDragging = adjId;

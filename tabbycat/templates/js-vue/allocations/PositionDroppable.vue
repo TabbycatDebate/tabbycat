@@ -15,7 +15,7 @@
 
     <debate-adjudicator
       v-for="adj in adjudicators | orderBy 'score' -1"
-      :adj="adj"
+      :adjorteam="adj"
       :position="position"
       :debate-id="debateId">
     </debate-adjudicator>

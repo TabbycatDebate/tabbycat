@@ -7,13 +7,13 @@
 
     <div class="flex-1 flex-vertical-center bordered-bottom">
       <div class="flex-1">
-        <debate-team :team="aff"></debate-team>
+        <debate-team :adjorteam="aff"></debate-team>
       </div>
     </div>
 
     <div class="flex-1 flex-vertical-center bordered-bottom">
       <div class="flex-1">
-        <debate-team :team="neg"></debate-team>
+        <debate-team :adjorteam="neg"></debate-team>
       </div>
     </div>
 

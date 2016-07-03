@@ -3,26 +3,27 @@
   <div
     v-on:mouseover="setHighlights"
     v-on:mouseout="unsetHighlights"
-    v-bind:class="[diversityHighlights, historiesHighlights, conflictsHighlights]"
+    v-bind:class="[diversityHighlights, historiesHighlights,
+                   conflictsHighlights]"
     class="popover-parent">
 
       <div class="popover-anchor" v-on:mouseover="setupPopover"></div>
 
       <div class="">
-        <strong class="debate-team-name">{{ team.name }}</strong><br>
-        <span class="small text-muted">{{ team.wins }} Wins</span>
+        <strong class="debate-team-name">{{ adjorteam.name }}</strong><br>
+        <span class="small text-muted">{{ adjorteam.wins }} Wins</span>
       </div>
 
       <div class="popover-raw hide">
         <li class="list-group-item">
-          {{ team.speakers }}
+          {{ adjorteam.speakers }}
         </li>
         <li class="list-group-item">
-          {{ team.gender_name }}
-          {{ team.region ? '; ' + team.region.name + ' Region' : '' }}
+          {{ adjorteam.gender_name }}
+          {{ adjorteam.region ? '; ' + adjorteam.region.name + ' Region' : '' }}
         </li>
-        <li class="list-group-item" v-if="team.categories">
-          <span v-for="bc in team.categories">
+        <li class="list-group-item" v-if="adjorteam.categories">
+          <span v-for="bc in adjorteam.categories">
             {{ bc.name }}
           </span>
         </li>
@@ -41,19 +42,14 @@ import PopoverMixin from '../mixins/PopoverMixin.vue'
 export default {
   mixins: [DiversityHighlightsMixin, ConflictsHighlightsMixin, HistoriesHighlightsMixin, PopoverMixin],
   props: {
-    team: Object
-  },
-  computed: {
-    entity: function() {
-      return this.team;
-    }
+    adjorteam: Object
   },
   methods: {
     getPopOverTitle: function() {
-      if (this.team.uses_prefix === true) {
-        return this.team.long_name
+      if (this.adjorteam.uses_prefix === true) {
+        return this.adjorteam.long_name
       } else {
-        return this.team.long_name + " of " + this.team.institution.name
+        return this.adjorteam.long_name + " of " + this.adjorteam.institution.name
       }
     },
     setHighlights: function() {

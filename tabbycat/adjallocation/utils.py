@@ -84,7 +84,7 @@ def populate_conflicts(adjs, teams):
         t.personal_adjudicators = [c[0] for c in teamconflicts if c[1] is t.id]
         # For teams conflicted_institutions is a list of adjs due to the asymetric
         # nature of adjs having multiple instutitonal conflicts
-        t.institutional_adjudicators = [c[0] for c in institutionconflicts if c[1] is t.institution.id]
+        t.institutional_institutions = [c[1] for c in institutionconflicts if c[0] is t.institution.id]
 
     return adjs, teams
 
@@ -171,11 +171,12 @@ def adjs_to_json(adjs, regions):
             'ranking': next(pc[0] for pc in percentile_cutoffs if pc[1] <= adj.score),
             'conflicts': {
                 'personal_teams': adj.personal_teams,
-                'institutional_institutions': adj.institutional_institutions,
-                'institutional_adjudicators': None,
+                'institutional_conflicts': adj.institutional_institutions,
                 'personal_adjudicators': adj.personal_adjudicators,
             },
-            'histories': adj.histories
+            'hasPersonalConflict': False,
+            'hasInstitutionalConflict': False,
+            'histories': adj.histories,
         }
 
     return json.dumps(data)
@@ -202,12 +203,13 @@ def teams_to_json(teams, regions, categories):
                 'abbreviation' : team.institution.abbreviation
             },
             'conflicts': {
-                'personal_teams': [],
-                'institutional_institutions': None,
-                'institutional_adjudicators': team.institutional_adjudicators,
+                'personal_teams': [], # No team-team conflicts
+                'institutional_conflicts': team.institutional_institutions,
                 'personal_adjudicators': team.personal_adjudicators
             },
-            'histories': team.histories
+            'hasPersonalConflict': False,
+            'hasInstitutionalConflict': False,
+            'histories': team.histories,
         }
     return json.dumps(data)
 

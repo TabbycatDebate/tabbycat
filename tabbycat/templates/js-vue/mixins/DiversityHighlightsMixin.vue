@@ -6,23 +6,23 @@
 export default {
   computed: {
     diversityHighlights: function () {
-      var entity = this.entity;
       var class_string = " diversity-highlightable"
+      var adjorteam = this.adjorteam;
 
-      if (typeof entity.gender !== 'undefined') {
-        if (entity.gender === "M") {
+      if (typeof adjorteam.gender !== 'undefined') {
+        if (adjorteam.gender === "M") {
           class_string += " gender-male"
-        } else if (entity.gender === "F") {
+        } else if (adjorteam.gender === "F") {
           class_string += " gender-nm"
-        } else if (entity.gender === "O") {
+        } else if (adjorteam.gender === "O") {
           class_string += " gender-other"
         } else {
           class_string += " gender-unknown"
         }
       }
 
-      if (entity.gender_name && typeof entity.gender_name !== 'undefined') {
-        var speaker_genders = entity.gender_name.toLowerCase().split(",")
+      if (adjorteam.gender_name && typeof adjorteam.gender_name !== 'undefined') {
+        var speaker_genders = adjorteam.gender_name.toLowerCase().split(",")
         var men_count = 0, notmen_count = 0;
         for (var i = 0; i < speaker_genders.length; ++i) {
           if (speaker_genders[i].trim() === "male") {
@@ -36,14 +36,14 @@ export default {
         class_string += ' gender-notmen-' + notmen_count
       }
 
-      if (entity.region && typeof entity.region !== "undefined") {
-        class_string += " region-" + entity.region['seq']
+      if (adjorteam.region && typeof adjorteam.region !== "undefined") {
+        class_string += " region-" + adjorteam.region['seq']
       }
 
-      if (entity.categories && typeof entity.categories !== "undefined") {
+      if (adjorteam.categories && typeof adjorteam.categories !== "undefined") {
         // As above we need to normalise
-        for (var i = 0; i < entity.categories.length; ++i) {
-          class_string += " category-" + entity.categories[i].seq
+        for (var i = 0; i < adjorteam.categories.length; ++i) {
+          class_string += " category-" + adjorteam.categories[i].seq
         }
       }
 
