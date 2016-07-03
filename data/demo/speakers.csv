@@ -1,7 +1,7 @@
 name,institution,team_name,use_institution_prefix,gender,pronoun,novice,email
-Georgia Crawford,California Institute of Technology,Custom Name,0,F,she,0,georgiacrawford@fakemail.com
-Wanda Griffin,California Institute of Technology,Custom Name,0,F,she,1,wandagriffin@fakemail.com
-Helen Keller,California Institute of Technology,Custom Name,0,F,she,0,helenkeller@fakemail.com
+Georgia Crawford,California Institute of Technology,CustomRef,0,F,she,0,georgiacrawford@fakemail.com
+Wanda Griffin,California Institute of Technology,CustomRef,0,F,she,1,wandagriffin@fakemail.com
+Helen Keller,California Institute of Technology,CustomRef,0,F,she,0,helenkeller@fakemail.com
 Russell Warren,California Institute of Technology,2,1,M,he,0,russellwarren@fakemail.com
 Angel Rhodes,California Institute of Technology,2,1,,they,1,angelrhodes@fakemail.com
 Terry Henderson,California Institute of Technology,2,1,M,he,0,terryhenderson@fakemail.com

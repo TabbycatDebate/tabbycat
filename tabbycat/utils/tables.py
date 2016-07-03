@@ -34,7 +34,7 @@ class BaseTableBuilder:
 
     @staticmethod
     def _convert_cell(cell):
-        if isinstance(cell, int):
+        if isinstance(cell, int) or isinstance(cell, float):
             return {'text': str(cell)}
         if isinstance(cell, str):
             return {'text': cell}
@@ -303,14 +303,21 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(novice_header, [speaker.novice for speaker in speakers])
 
+    def add_room_rank_columns(self, debates):
+        header = {
+            'key': "Room rank",
+            'icon': 'glyphicon-stats',
+            'tooltip': 'Room rank of this debate'
+        }
+        self.add_column(header, [debate.room_rank for debate in debates])
+
     def add_debate_bracket_columns(self, debates):
-        bracket_header = {
+        header = {
             'key': "Bracket",
             'icon': 'glyphicon-stats',
             'tooltip': 'Bracket of this debate'
         }
-        bracket_data = [{'text': debate.bracket} for debate in debates]
-        self.add_column(bracket_header, bracket_data)
+        self.add_column(header, [debate.bracket for debate in debates])
 
     def add_debate_venue_columns(self, debates, with_times=False):
         if self.tournament.pref('enable_divisions'):
@@ -319,9 +326,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'icon': 'glyphicon-th-list',
                 'tooltip': 'Division'
             }
-            divisions_data = [{
-                'text': 'D' + d.division.name if d.division else ''
-            } for d in debates]
+            divisions_data = ['D' + d.division.name if d.division else '' for d in debates]
             self.add_column(divisions_header, divisions_data)
 
         venue_header = {
@@ -331,11 +336,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('enable_venue_groups'):
             venue_data = [
                 debate.division.venue_group.short_name if debate.division
-                else (debate.venue.group.short_name + debate.venue.name)
+                else (debate.venue.group.short_name + debate.venue.name) if debate.venue
+                else ''
                 for debate in debates
             ]
         else:
-            venue_data = [debate.venue.name for debate in debates]
+            venue_data = [debate.venue.name if debate.venue else '' for debate in debates]
         self.add_column(venue_header, venue_data)
 
         if with_times and self.tournament.pref('enable_debate_scheduling'):
@@ -395,14 +401,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_metric_columns(standings, subset=[d.aff_team for d in draw], prefix="Aff's ")
         self.add_metric_columns(standings, subset=[d.neg_team for d in draw], prefix="Neg's ")
 
-    def set_bracket_highlights(self):
-        for i in range(1, len(self.data)):
-            if self.data[i][0]['text'] != self.data[i-1][0]['text']:
-                for cell in self.data[i]:
-                    if hasattr(cell, 'class'):
-                        cell['class'] += 'highlight-row'
-                    else:
-                        cell['class'] = 'highlight-row'
+    def highlight_rows_by_column_value(self, column):
+        highlighted_rows = [i for i in range(1, len(self.data))
+                if self.data[i][column] != self.data[i-1][column]]
+        for i in highlighted_rows:
+            self.data[i] = [self._convert_cell(cell) for cell in self.data[i]]
+            for cell in self.data[i]:
+                cell['class'] = cell.get('class', '') + ' highlight-row'
 
     def add_affs_count(self, teams, round, team_type):
         affs_header = {

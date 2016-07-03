@@ -87,7 +87,7 @@ class TestImporterAnorak(TestCase):
         counts, errors = self.importer.import_adjudicators(f)
         self.assertEqual(counts, {
             pm.Adjudicator: 27,
-            fm.AdjudicatorTestScoreHistory: 27,
+            fm.AdjudicatorTestScoreHistory: 24,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorConflict: 7,
         })
