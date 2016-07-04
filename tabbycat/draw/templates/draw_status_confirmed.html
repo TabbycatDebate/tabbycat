@@ -20,17 +20,26 @@
 {% block page-alerts %}
   {% if round.motion_set.all.count == 0 %}
   <div class="alert alert-danger">
-    There are currently no motions entered, which means results cannot be entered. <a href="{% round_url motions_edit round %}" class="alert-link">Edit the motions.</a>
+    There are currently no motions entered, which means results cannot be entered.
+    <a href="{% round_url motions_edit round %}" class="alert-link">
+      Edit the motions.
+    </a>
   </div>
   {% endif %}
   {% if not round.venue_allocation_valid %}
     <div class="alert alert-danger" id="">
-      One or more debates does not have a venue <a href="{% round_url venues-edit round %}" class="alert-link">Edit the venues</a>.
+      One or more debates does not have a venue
+      <a href="{% round_url venues-edit round %}" class="alert-link">
+        Edit the venues<
+      /a>.
     </div>
   {% endif %}
   {% if active_adjs.count < draw.count %}
     <div class="alert alert-danger" id="">
-      There are currently fewer checked-in adjudicators than there are rooms. <a href="{% round_url adjudicator_availability round %}" class="alert-link">Check in some more adjudicators</a>.
+      There are currently fewer checked-in adjudicators than there are rooms.
+      <a href="{% round_url adjudicator_availability round %}" class="alert-link">
+        Check in some more adjudicators
+      </a>.
     </div>
   {% else %}
     {% if round.adjudicators_allocation_validity > 0 %}
@@ -40,7 +49,9 @@
         {% elif round.adjudicators_allocation_validity == 2 %}
           One or more debates have panels with an even number of adjudicators.
         {% endif %}
-        <a class="alert-link" href="{% round_url draw_adjudicators_edit %}">Edit adjudicators</a>.
+        <a href="{% round_url draw_adjudicators_edit %}" class="alert-link">
+          Edit adjudicators
+        </a>.
       </div>
     {% endif %}
   {% endif %}
@@ -49,17 +60,19 @@
     <div class="alert alert-warning">
       You have released the draw, but it will not show to the public unless
       'public view of draw' setting is enabled in
-      <a class="alert-link" href="{% tournament_url options-tournament-index %}"> this tournament's
-       configuration</a>.
+      <a class="alert-link" href="{% tournament_url options-tournament-index %}">
+         this tournament's configuration
+      </a>.
     </div>
   {% endif %}
 
   {% if round.motions_released and not pref.public_motions %}
     <div class="alert alert-warning">
-      You have released the motions, but they will not show to the public unless the
-      'public view of motions' setting is enabled in
-      <a class="alert-link" href="{% tournament_url options-tournament-index %}"> this tournament's
-       configuration</a>.
+      You have released the motions, but they will not show to the public unless
+      the 'public view of motions' setting is enabled in
+      <a class="alert-link" href="{% tournament_url options-tournament-index %}">
+        this tournament's configuration
+      </a>.
     </div>
   {% endif %}
 

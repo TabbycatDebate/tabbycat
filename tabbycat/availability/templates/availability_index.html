@@ -7,26 +7,32 @@
       Checkin Teams
     </a>
   {% else %}
-    <a class="btn btn-default submit-disable" href="{% round_url team_availability round %}">
+    <a class="btn btn-default submit-disable"
+       href="{% round_url team_availability round %}">
       Checkin Teams
     </a>
   {% endif %}
-  <a class="btn btn-default submit-disable" href="{% round_url venue_availability round %}">
+  <a class="btn btn-default submit-disable"
+     href="{% round_url venue_availability round %}">
     Checkin Venues
   </a>
-  <a class="btn btn-default submit-disable" href="{% round_url adjudicator_availability round %}">
+  <a class="btn btn-default submit-disable"
+     href="{% round_url adjudicator_availability round %}">
     Checkin Adjs
   </a>
   {% if round.is_break_round %}
-    <a class="btn btn-primary submit-disable" href="{% round_url update_availability_breaking_adjs  %}">
+    <a class="btn btn-primary submit-disable"
+       href="{% round_url update_availability_breaking_adjs  %}">
       Checkin All Breaking Adjs
     </a>
   {% else %}
-    <a class="btn btn-primary submit-disable" href="{% round_url update_availability_all round %}">
+    <a class="btn btn-primary submit-disable"
+       href="{% round_url update_availability_all round %}">
       Checkin Everything
     </a>
     {% if round.prev %}
-      <a class="btn btn-primary submit-disable" href="{% round_url update_availability_previous round %}">
+      <a class="btn btn-primary submit-disable"
+         href="{% round_url update_availability_previous round %}">
         Checkin Everything Active in {{ round.prev.abbreviation }}
       </a>
     {% endif %}
@@ -98,7 +104,8 @@
   {% if previous_unconfirmed > 0 and not round.is_break_round %}
     <div class="alert alert-danger">
       Note: {{ previous_unconfirmed }} debates from <strong>{{ round.prev.name }}
-       do not have a completed ballot</strong> — this may lead to a draw that fails or is incorrect <em>depending</em> on your draw rules.
+       do not have a completed ballot</strong> — this may lead to a draw that
+       fails or is incorrect <em>depending</em> on your draw rules.
     </div>
   {% endif %}
 
@@ -110,13 +117,25 @@
 
   {% if min_adjudicators > checkin_types.1.in_now %}
     <div class="alert alert-warning">
-      There need to be at least {{ min_adjudicators }} checked in adjudicators given the number of debates.
+      There need to be at least {{ min_adjudicators }} checked in adjudicators
+      given the number of debates.
     </div>
   {% endif %}
 
   {% if min_venues > checkin_types.2.in_now %}
     <div class="alert alert-warning">
-      There need to be at least {{ min_venues }} checked in venues given the number of debates.
+      There need to be at least {{ min_venues }} checked in venues given the
+      number of debates.
+    </div>
+  {% endif %}
+
+  {% if round.seq > current_round.seq and not round.is_break_round %}
+    <div class="alert alert-warning">
+      This is a page for <strong>{{ round.name }}</strong>, however the current
+      round is still set to <strong>{{ current_round.name }}</strong>. Did you
+      forget to <a href="{% round_url round_increment_check current_round %}"
+                   class="alert-link">
+      advance to the next round?</a>
     </div>
   {% endif %}
 

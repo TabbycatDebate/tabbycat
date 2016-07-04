@@ -6,21 +6,25 @@
 {% block page-title %}Breaks{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default" href="{% tournament_url breaking_index %}">
+  <a class="btn btn-default"
+     href="{% tournament_url breaking_index %}">
     Overview
   </a>
   {% for category in tournament.breakcategory_set.all %}
-    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">
+    <a class="btn btn-default"
+       href="{% tournament_url breaking_teams category.slug %}">
       View {{ category.name }} Break
     </a>
   {% endfor %}
-  <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">
+  <a class="btn btn-default"
+     href="{% tournament_url breaking_adjs %}">
     View Adjudicators Break
   </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a class="btn btn-success" href="{% tournament_url edit_eligibility %}">
+  <a class="btn btn-success"
+     href="{% tournament_url edit_eligibility %}">
     Edit Team's Eligibility
   </a>
 {% endblock %}
@@ -33,20 +37,31 @@
       {% for category in tournament.breakcategory_set.all %}
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4 class="panel-title">Teams Eligible for the {{ category.name }} Break</h4>
+            <h4 class="panel-title">
+              Teams Eligible for the {{ category.name }} Break
+            </h4>
           </div>
           <div class="panel-body round-progresses">
             <div class="progress">
-              <div class="progress-bar progress-bar-success {% if category.team_set.count == 0 %}progress-empty{% endif %}" role="progressbar" aria-valuenow=""
-              aria-valuemin="0" aria-valuemax="{{ tournament.teams.count }}" style="width: {% percentage category.team_set.count tournament.teams.count %}%;">
+              <div class="progress-bar progress-bar-success
+                   {% if category.team_set.count == 0 %}progress-empty{% endif %}"
+                   role="progressbar" aria-valuenow="" aria-valuemin="0"
+                   aria-valuemax="{{ tournament.teams.count }}"
+                   style="width: {% percentage category.team_set.count tournament.teams.count %}%;">
                 <span>{{ category.team_set.count }}/{{ tournament.teams.count }}</span>
               </div>
             </div>
           </div>
         </div>
       {% empty %}
-        <div class="alert alert-warning" role="alert">This tournament does not have any break categories setup. You can read about how to
-        create breaks <a href="http://tabbycat.readthedocs.io/en/stable/features/breaks.html">at our documentation.</a></div>
+        <div class="alert alert-warning" role="alert">
+          This tournament does not have any break categories setup. You can read
+           about how to create breaks
+          <a href="http://tabbycat.readthedocs.io/en/stable/features/breaks.html"
+              class="alert-link">
+            at our documentation.
+          </a>
+        </div>
       {% endfor %}
 
     </div>

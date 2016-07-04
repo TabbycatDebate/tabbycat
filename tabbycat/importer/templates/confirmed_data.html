@@ -8,7 +8,12 @@
 {% block content %}
 
 <div class="alert alert-success alert-dismissable" id="">
-  <p>{{ confirmed.quantity }} {{ confirmed.kind }} created. <a href="{% tournament_url data_index %}">Add more data.</a></p>
+  <p>
+    {{ confirmed.quantity }} {{ confirmed.kind }} created.
+    <a href="{% tournament_url data_index %}" class="alert-link">
+      Add more data.
+    </a>
+  </p>
 </div>
 
 {% endblock content %}

@@ -24,7 +24,7 @@
 
 {% endblock %}
 
-{% block content %}
+{% block page-alerts %}
 
   {% if increment_ok %}
     <div class="alert alert-success">
@@ -35,6 +35,22 @@
       There are still {{ num_unconfirmed }}
       ballots that are not confirmed. You should <strong>not</strong>
       proceed to the next round until all ballots are confirmed.
+    </div>
+  {% endif %}
+
+  {% if pref.public_results > 0 %}
+    <div class="alert alert-info">
+      The "show public results" setting is on and this round
+      {% if round.is_silent %}
+        <strong>is marked as a silent round</strong>, so no <strong>results
+        will show on the public page</strong> when you advance.
+      {% else %}
+        <strong>is not marked as a silent round</strong> so the <strong>results
+        will show on the public</strong> page when you advance.
+      {% endif %}<br>
+      A round can be marked/unmarked as silent in the
+      <a href="{% url 'admin:index' %}">edit database area</a>
+       under <em>Tournaments > Rounds</em>.
     </div>
   {% endif %}
 
