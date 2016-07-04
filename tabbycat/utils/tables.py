@@ -155,36 +155,36 @@ class TabbycatTableBuilder(BaseTableBuilder):
         return super().__init__(**kwargs)
 
     @property
-    def _show_summary_links(self):
-        return self.admin or self.tournament.pref('public_summary')
+    def _show_record_links(self):
+        return self.admin or self.tournament.pref('public_record')
 
-    def _adjudicator_summary_link(self, adj):
+    def _adjudicator_record_link(self, adj):
         adj_short_name = adj.name.split(" ")[0]
         if self.admin:
             return {
                 'text': "View %s's Adjudication Record" % adj_short_name,
-                'link': reverse_tournament('participants-adjudicator-summary',
+                'link': reverse_tournament('participants-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk})
             }
-        elif self.tournament.pref('public_summary'):
+        elif self.tournament.pref('public_record'):
             return {
                 'text': "View %s's Adjudication Record" % adj_short_name,
-                'link': reverse_tournament('participants-public-adjudicator-summary',
+                'link': reverse_tournament('participants-public-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk})
             }
         else:
             return {'text': False, 'link': False}
 
-    def _team_summary_link(self, team):
+    def _team_record_link(self, team):
         if self.admin:
             return {
                 'text': "View %s's Team Record" % team.short_name,
-                'link': reverse_tournament('participants-team-summary', self.tournament, kwargs={'pk': team.pk})
+                'link': reverse_tournament('participants-team-record', self.tournament, kwargs={'pk': team.pk})
             }
-        elif self.tournament.pref('public_summary'):
+        elif self.tournament.pref('public_record'):
             return {
                 'text': "View %s's Team Record" % team.short_name,
-                'link': reverse_tournament('participants-public-team-summary', self.tournament, kwargs={'pk': team.pk})
+                'link': reverse_tournament('participants-public-team-record', self.tournament, kwargs={'pk': team.pk})
             }
         else:
             return {'text': False, 'link': False}
@@ -222,9 +222,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 {'text': 'View Debate Ballot', 'link': reverse_tournament('public_ballots_view',
                     self.tournament, kwargs={'debate_id': ts.debate_team.debate.id})})
 
-        if self._show_summary_links:
+        if self._show_record_links:
             result['popover']['content'].append(
-                self._team_summary_link(opp))
+                self._team_record_link(opp))
 
         return result
 
@@ -241,8 +241,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         adj_data = []
         for adj in adjudicators:
             cell = {'text': adj.name}
-            if self._show_summary_links:
-                cell['popover'] = {'content' : [self._adjudicator_summary_link(adj)]}
+            if self._show_record_links:
+                cell['popover'] = {'content' : [self._adjudicator_record_link(adj)]}
             if subtext is 'institution':
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
@@ -294,8 +294,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                         self.ADJ_TYPES[a['type']],
                         a['adj'].institution.code)
                 })
-                if self._show_summary_links:
-                    popover_data.append(self._adjudicator_summary_link(a['adj']))
+                if self._show_record_links:
+                    popover_data.append(self._adjudicator_record_link(a['adj']))
 
             return popover_data
 
@@ -344,7 +344,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'title': team.long_name,
                 'content' : [
                     {'text': [" " + s.name for s in team.speakers]} if display_speakers else None,
-                    self._team_summary_link(team)
+                    self._team_record_link(team)
                 ]}
         } for team in teams]
         self.add_column(key, team_data)

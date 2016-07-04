@@ -18,7 +18,7 @@
               <strong><u>{{ debateteam.get_position_display }}</u></strong>
               against
               <strong><u>
-                <a href="{% tournament_url participants-team-summary debateteam.opposition.team.pk %}">
+                <a href="{% tournament_url participants-team-record debateteam.opposition.team.pk %}">
                 {{ debateteam.opposition.team.short_name }}
                 </a>
               </u></strong>
@@ -32,7 +32,7 @@
             {% with adjudicators=debateteam.debate.adjudicators %}
               {% for adjtype, adj in adjudicators %}
                 {% if not forloop.first %},{% if forloop.last %} and{% endif %}{% endif %}
-                <a href="{% tournament_url participants-adjudicator-summary adj.pk %}">
+                <a href="{% tournament_url participants-adjudicator-record adj.pk %}">
                   {{ adj.name }}
                 </a>
                 {% if adjtype == 'C' and adjudicators.is_panel %}

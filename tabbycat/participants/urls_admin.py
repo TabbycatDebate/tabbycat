@@ -7,9 +7,9 @@ urlpatterns = [
         views.ParticipantsListView.as_view(),
         name='participants-list'),
     url(r'^team/(?P<pk>\d+)/$',
-        views.TeamSummaryView.as_view(),
-        name='participants-team-summary'),
+        views.TeamRecordView.as_view(),
+        name='participants-team-record'),
     url(r'^adjudicator/(?P<pk>\d+)/$',
-        views.AdjudicatorSummaryView.as_view(),
-        name='participants-adjudicator-summary'),
+        views.AdjudicatorRecordView.as_view(),
+        name='participants-adjudicator-record'),
 ]

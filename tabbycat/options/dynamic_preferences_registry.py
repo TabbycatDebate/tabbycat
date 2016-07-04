@@ -601,11 +601,11 @@ class PublicTeamStandings(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class PublicSummaryPages(BooleanPreference):
-    help_text = "Enables the public page for each team and adjudicator showing a summary of information for them"
-    verbose_name = "Enable public summary pages"
+class PublicRecordPages(BooleanPreference):
+    help_text = "Enables the public page for each team and adjudicator showing their records"
+    verbose_name = "Enable public record pages"
     section = public_features
-    name = "public_summary"
+    name = "public_record"
     default = True
 
 
@@ -651,7 +651,7 @@ class ShowSplittingAdjudicators(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowMotionsInResults(BooleanPreference):
-    help_text = "If showing results to public, show which motions were selected in the summary"
+    help_text = "If showing results to public, show which motions were selected in the record"
     verbose_name = 'Show motions in results'
     section = ui_options
     name = 'show_motions_in_results'

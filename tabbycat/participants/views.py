@@ -52,12 +52,12 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
 
 
 # ==============================================================================
-# Team and adjudicator summary pages
+# Team and adjudicator record pages
 # ==============================================================================
 
 class ParticipantsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixin, TemplateView):
 
-    page_title = 'Team and Adjudicator Summary Pages'
+    page_title = 'Team and Adjudicator Record Pages'
     page_emoji = '🌸'
 
     def get_tables(self):
@@ -74,17 +74,17 @@ class ParticipantsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixi
         return [adjs_table, teams_table]
 
 
-class BaseSummaryView(SingleObjectFromTournamentMixin, VueTableMixin, TemplateView):
+class BaseRecordView(SingleObjectFromTournamentMixin, VueTableMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
 
 
-class BaseTeamSummaryView(BaseSummaryView):
+class BaseTeamRecordView(BaseRecordView):
 
     model = Team
-    template_name = 'team_summary.html'
+    template_name = 'team_record.html'
 
     def get_context_data(self, **kwargs):
         try:
@@ -112,10 +112,10 @@ class BaseTeamSummaryView(BaseSummaryView):
         return table
 
 
-class BaseAdjudicatorSummaryView(BaseSummaryView):
+class BaseAdjudicatorRecordView(BaseRecordView):
 
     model = Adjudicator
-    template_name = 'adjudicator_summary.html'
+    template_name = 'adjudicator_record.html'
 
     def get_context_data(self, **kwargs):
         try:
@@ -126,20 +126,20 @@ class BaseAdjudicatorSummaryView(BaseSummaryView):
         return super().get_context_data(**kwargs)
 
 
-class TeamSummaryView(SuperuserRequiredMixin, BaseTeamSummaryView):
+class TeamRecordView(SuperuserRequiredMixin, BaseTeamRecordView):
     pass
 
 
-class AdjudicatorSummaryView(SuperuserRequiredMixin, BaseAdjudicatorSummaryView):
+class AdjudicatorRecordView(SuperuserRequiredMixin, BaseAdjudicatorRecordView):
     pass
 
 
-class PublicTeamSummaryView(PublicTournamentPageMixin, BaseTeamSummaryView):
-    public_page_preference = 'public_summary'
+class PublicTeamRecordView(PublicTournamentPageMixin, BaseTeamRecordView):
+    public_page_preference = 'public_record'
 
 
-class PublicAdjudicatorSummaryView(PublicTournamentPageMixin, BaseAdjudicatorSummaryView):
-    public_page_preference = 'public_summary'
+class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorRecordView):
+    public_page_preference = 'public_record'
 
 
 # ==============================================================================
