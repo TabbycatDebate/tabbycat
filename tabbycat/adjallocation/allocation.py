@@ -16,6 +16,7 @@ class AdjudicatorAllocation:
         if from_db:
             if chair or panellists or trainees:
                 warn("The chair, panellists and trainees arguments are ignored when from_db is used.")
+            self.chair = None
             self.panellists = []
             self.trainees = []
             for a in self.debate.debateadjudicator_set.all():
@@ -123,7 +124,7 @@ class AdjudicatorAllocation:
 
     @property
     def list(self):
-        warn("AdjudicatorAllocation.list() is deprecated, use AdjudicatorAllocation.voting() instead", stacklevel=2)
+        warn("AdjudicatorAllocation.list is deprecated, use AdjudicatorAllocation.voting() instead", stacklevel=2)
         a = [self.chair]
         a.extend(self.panellists)
         return a

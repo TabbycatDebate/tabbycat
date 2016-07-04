@@ -1,4 +1,5 @@
 import logging
+from warnings import warn
 
 from django.db import models
 from django.utils.functional import cached_property
@@ -236,28 +237,37 @@ class DebateTeam(models.Model):
     def __str__(self):
         return '{} in {}'.format(self.team.short_name, self.debate)
 
-    @cached_property  # TODO: this slows down the standings pages reasonably heavily
+    @cached_property
     def opposition(self):
         try:
-            return DebateTeam.objects.exclude(
-                position=self.position).select_related(
+            return DebateTeam.objects.exclude(position=self.position).select_related(
                     'team', 'team__institution').get(debate=self.debate)
         except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
-            logger.error("Error finding opposition: %s, %s", self.debate,
-                         self.position)
+            logger.error("Error finding opposition: %s, %s", self.debate, self.position)
             return None
 
-    @cached_property
+    @property
     def result(self):
-        """Returns 'won' if won, 'lost' if lost, 'result unknown' if no result confirmed."""
-        if self.debate.confirmed_ballot and self.debate.confirmed_ballot.ballot_set:
-            ballotset = self.debate.confirmed_ballot.ballot_set
-            if ballotset.aff_win and self.position == DebateTeam.POSITION_AFFIRMATIVE:
-                return 'won'
-            if ballotset.neg_win and self.position == DebateTeam.POSITION_NEGATIVE:
-                return 'won'
+        # Added 4/7/2016, remove after 4/8/2016
+        warn("DebateTeam.result is deprecated, use DebateTeam.get_result_display() instead.", stacklevel=2)
+
+        if self.win is True:
+            return 'won'
+        elif self.win is False:
             return 'lost'
-        return 'result unknown'
+        else:
+            return 'result unknown'
+
+    @cached_property
+    def win(self):
+        """Convenience function. Returns True if this team won, False if this
+        team lost, or None if there isn't a confirmed result."""
+        """Returns 'won' if won, 'lost' if lost, 'result unknown' if no result confirmed."""
+        try:
+            ts = self.teamscore_set.get(ballot_submission__confirmed=True)
+        except ObjectDoesNotExist:
+            return None
+        return ts.win
 
 
 class TeamPositionAllocation(models.Model):
