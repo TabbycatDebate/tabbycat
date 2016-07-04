@@ -2,6 +2,7 @@ import json
 import datetime
 import logging
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -20,7 +21,7 @@ from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round
-from utils.mixins import SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import VueTableMixin
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
@@ -45,7 +46,7 @@ def toggle_postponed(request, t, debate_id):
     return redirect_round('results', debate.round)
 
 
-class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
+class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableMixin, TemplateView):
 
     template_name = 'results.html'
     draw = None
@@ -66,7 +67,7 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
         table.add_debate_bracket_columns(draw)
         table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
         table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
-        table.add_debate_adjudicators_column(draw)
+        table.add_debate_adjudicators_column(draw, show_splits=True)
         return table
 
     def get_context_data(self, **kwargs):
@@ -78,37 +79,9 @@ class ResultsEntryForRoundView(RoundMixin, SuperuserRequiredMixin, VueTableMixin
             'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
             'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
         }
+        num_motions = Motion.objects.filter(round=self.get_round()).count()
+        kwargs["has_motions"] = num_motions > 0
         return super().get_context_data(**kwargs)
-
-
-@login_required
-@round_view
-def results(request, round):
-
-    draw = round.get_draw()
-    stats = {
-        'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
-        'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
-        'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
-        'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
-        'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
-    }
-
-    if not request.user.is_superuser:
-        if round != request.tournament.current_round:
-            raise Http404()
-        template = "assistant_results.html"
-        draw = draw.filter(result_status__in=(
-            Debate.STATUS_NONE, Debate.STATUS_DRAFT, Debate.STATUS_POSTPONED))
-    else:
-        template = "results.html"
-
-    num_motions = Motion.objects.filter(round=round).count()
-    show_motions_column = num_motions > 1
-    has_motions = num_motions > 0
-
-    return render(request, template, dict(draw=draw, stats=stats,
-                  show_motions_column=show_motions_column, has_motions=has_motions))
 
 
 class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin):
@@ -149,7 +122,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table.add_columns(["Affirmative", "Negative"], results_data)
 
         table.add_debate_ballot_link_column(debates)
-        table.add_debate_adjudicators_column(debates, show_splits=True)
+        table.add_debate_adjudicators_column(debates,
+            show_splits=tournament.pref('show_splitting_adjudicators'))
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 
@@ -165,7 +139,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
         table.add_debate_result_by_team_columns(teamscores)
         table.add_debate_ballot_link_column(debates)
-        table.add_debate_adjudicators_column(debates, show_splits=True)
+        table.add_debate_adjudicators_column(debates,
+            show_splits=tournament.pref('show_splitting_adjudicators'))
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 

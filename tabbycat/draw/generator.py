@@ -3,6 +3,7 @@ import logging
 from collections import OrderedDict
 
 from .one_up_one_down import OneUpOneDownSwapper
+from .utils import partial_break_round_split
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,16 @@ class Pairing(object):
             self._winner_index = None
         else:
             self._winner_index = self.teams.index(winner)
+
+    @classmethod
+    def from_debate(cls, debate):
+        teams = [debate.aff_team, debate.neg_team] # order matters
+        bracket = debate.bracket
+        room_rank = debate.room_rank
+        flags = debate.flags.split(",")
+        division = debate.division
+        winner = debate.confirmed_ballot.ballot_set.winner
+        return cls(teams, bracket, room_rank, flags, winner, division)
 
     def __repr__(self):
         return "<Pairing object: {0} vs {1} ({2}/{3})>".format(
@@ -261,7 +272,7 @@ class BaseDrawGenerator(object):
                 if team in self.team_flags:
                     pairing.add_flags(self.team_flags[team])
 
-    def balance_sides(self, pairings):
+    def allocate_sides(self, pairings):
         if self.options["side_allocations"] == "balance":
             for pairing in pairings:
                 pairing.balance_sides()
@@ -329,7 +340,7 @@ class RandomDrawGenerator(BaseDrawGenerator):
     def generate(self):
         self._draw = self._make_initial_pairings()
         self.avoid_conflicts(self._draw)  # Operates in-place
-        self.balance_sides(self._draw)  # Operates in-place
+        self.allocate_sides(self._draw)  # Operates in-place
         return self._draw
 
     def _make_initial_pairings(self):
@@ -454,7 +465,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         for bracket in self._pairings.values():
             self._draw.extend(bracket)
 
-        self.balance_sides(self._draw)  # Operates in-place
+        self.allocate_sides(self._draw)  # Operates in-place
         self.annotate_team_flags(self._draw)  # Operates in-place
         return self._draw
 
@@ -1019,93 +1030,73 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         return cls._pairings(brackets, shuffle)
 
 
-class FirstEliminationDrawGenerator(BaseDrawGenerator):
-    """Class for draw for a round that is a first w round, with
-    a number of teams breaking that is not a power of two."""
+class BaseEliminationDrawGenerator(BaseDrawGenerator):
 
     can_be_first_round = False
     requires_even_teams = False
-    requires_prev_results = False
     draw_type = "elimination"
 
+    DEFAULT_OPTIONS = {"side_allocations": "random"}
+
     def generate(self):
-        # Sort by break rank
-        for team in self.teams:
-            team.break_rank = team.break_rank_for_category(self.round.break_category)
-
-        self.teams = sorted(self.teams, key=lambda x: x.break_rank)
-        break_size = self.round.break_size
-
-        # Determine who debates
-        bypassing, debating = self._bypass_debate_split(break_size)
-        if bypassing + debating != break_size:
-            raise DrawError("The number of debating (%s) and bypassing (%s) teams in this round is not equal to the break size (%s)" % (debating, bypassing, break_size))
-
-        self._bypassing_teams = self.teams[:bypassing]
-        debating_teams = self.teams[-debating:]
-
-        # Pair the debating teams
-        debates = len(debating_teams) // 2
-        top = debating_teams[:debates]
-        bottom = debating_teams[debates:]
-        bottom.reverse()
-        pairings = list()
-        for i, teams in enumerate(zip(top, bottom), start=bypassing+1):
-            pairing = Pairing(teams, bracket=0, room_rank=i)
-            pairings.append(pairing)
-
+        pairings = self.make_pairings()
+        self.allocate_sides(pairings)
         return pairings
 
-    @staticmethod
-    def _bypass_debate_split(number):
-        next_pow2 = 1 << (number.bit_length() - 1)
-        if next_pow2 == number:  # No partial elimination
-            return number, 0
-        debates = number - next_pow2
-        return next_pow2 - debates, 2*debates
+    def make_pairings(self):
+        raise NotImplementedError
 
-    def get_bypassing_teams(self):
-        if hasattr(self, "_bypassing_teams"):
-            return self._bypassing_teams
-        raise RuntimeError("get_bypassing_teams() must not be called before generate().")
-
-
-class EliminationDrawGenerator(BaseDrawGenerator):
-    """Class for second or subsequent elimination round.
-    For this draw type, 'teams' should be the teams that automatically
-    advanced to this round (i.e., bypassed the previous break round).
-    'results' should be a list of Pairings with winners indicated."""
-
-    can_be_first_round = False
-    requires_even_teams = False  # It does but enabling trips it at init rather than the DrawError() below
-    requires_prev_results = False
-    draw_type = "elimination"
-
-    def generate(self):
-        # Sort by break rank
-        for team in self.teams:
-            team.break_rank = team.break_rank_for_category(self.round.break_category)
-
-        teams = sorted(self.teams, key=lambda x: x.break_rank)
-
-        # Check for argument sanity.
-        num_teams = len(self.teams) + len(self.results)
-        if num_teams != 1 << (num_teams.bit_length() - 1):
-            raise DrawError("The number of teams (%s) in this round is not a power of two" % num_teams)
-
-        self.results.sort(key=lambda x: x.room_rank)
-        teams = list(self.teams)
-        teams.extend([p.winner for p in self.results])
+    def _make_pairings(self, teams, num_bye_rooms):
+        """Folds the teams in `teams`, assigning consecutive room ranks starting
+        from `num_bye_rooms+1`.  Subclasses can use this method to generate
+        pairings from a list of teams."""
 
         debates = len(teams) // 2
         top = teams[:debates]
         bottom = teams[debates:]
         bottom.reverse()
         pairings = list()
-        for i, ts in enumerate(zip(top, bottom), start=1):
+        for i, ts in enumerate(zip(top, bottom), start=num_bye_rooms+1):
             pairing = Pairing(ts, bracket=0, room_rank=i)
             pairings.append(pairing)
         return pairings
+
+
+class FirstEliminationDrawGenerator(BaseEliminationDrawGenerator):
+    """Class for draw for a round that is a first elimination round, with
+    a number of teams breaking that is not a power of two."""
+
+    requires_prev_results = False
+
+    def make_pairings(self):
+        debates, bypassing = partial_break_round_split(len(self.teams))
+        logger.info("There will be %d debates in this round and %d teams bypassing it.", debates, bypassing)
+        teams = self.teams[bypassing:]
+        return self._make_pairings(teams, bypassing)
+
+
+class EliminationDrawGenerator(BaseEliminationDrawGenerator):
+    """Class for second or subsequent elimination round.
+    For this draw type, 'teams' should be the teams that automatically
+    advanced to this round (i.e., bypassed the previous break round).
+    'results' should be a list of Pairings with winners indicated."""
+
+    requires_prev_results = True
+
+    def make_pairings(self):
+        self.results.sort(key=lambda x: x.room_rank)
+        winners = [p.winner for p in self.results]
+        if winners.count(None) > 0:
+            raise DrawError("%d debates in the previous round don't have a result." % winners.count(None))
+
+        bypassing = self.results[0].room_rank - 1  # e.g. if lowest room rank was 7, then 6 teams should bypass
+        teams = self.teams[:bypassing] + winners
+        logger.info("%d teams bypassed the previous round and %d teams won the last round" % (bypassing, len(winners)))
+
+        if len(teams) & (len(teams) - 1) != 0:
+            raise DrawError("The number of teams (%s) in this round is not a power of two" % len(teams))
+
+        return self._make_pairings(teams, 0)
 
 
 class RoundRobinDrawGenerator(BaseDrawGenerator):
@@ -1115,7 +1106,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     requires_even_teams = False
     requires_prev_results = False
     draw_type = "preliminary"
-    side_allocations = "balance"
 
     PAIRING_FUNCTIONS = {
         "random": "_pairings_random"
@@ -1132,7 +1122,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         for bracket in self._pairings.values():
             self._draw.extend(bracket)
 
-        self.balance_sides(self._draw)  # Operates in-place
+        self.allocate_sides(self._draw)  # Operates in-place
         return self._draw
 
     def _make_raw_brackets_from_divisions(self):
@@ -1162,6 +1152,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     def generate_pairings(self, brackets):
         pairings = OrderedDict()
 
+        # TODO see if there's a way to remove this dependency on self.round, since it's the only
+        # place in any DrawGenerator where self.round is used.
         effective_round = self.round.seq
         print("-------\nTaking as effective round of %s" % effective_round)
 

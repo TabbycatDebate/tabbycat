@@ -34,7 +34,7 @@ export default {
   methods: {
     colorclass: function(label) {
       if (this.regions == null) {
-        return "gender-display " + label.toLowerCase();
+        return "gender-display gender-" + label.toLowerCase();
       } else {
         return "region-display region-" + label;
       }

@@ -1,3 +1,5 @@
+import traceback
+
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.base import RedirectView, TemplateView, View
@@ -6,6 +8,7 @@ from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
 
 from actionlog.mixins import LogActionMixin
 from draw.models import Debate
+from draw.utils import partial_break_round_split
 from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
@@ -34,22 +37,45 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         if t.pref('share_venues'):
             total_venues += Venue.objects.filter(tournament=None).count()
 
-        checks = [{
-            'type'      : 'Team',
-            'total'     : t.teams.count(),
-            'in_now'    : ActiveTeam.objects.filter(round=r).count(),
-            'in_before' : ActiveTeam.objects.filter(round=r.prev).count() if r.prev else None,
-        }, {
+        checks = []
+        if r.draw_type is r.DRAW_FIRSTBREAK:
+            break_size = r.break_category.break_size
+            break_details = partial_break_round_split(break_size)
+            checks.append({
+                'type'      : 'Team',
+                'total'     : break_size,
+                'in_now'    : break_details[0] * 2,
+                'message'   : '%s breaking teams are debating this round; %s teams are bypassing' % (break_details[0] * 2, break_details[1])
+            })
+        elif r.draw_type is r.DRAW_BREAK:
+            last_round = r.break_category.round_set.filter(seq__lt=r.seq).order_by('-seq').first()
+            advancing_teams = last_round.debate_set.count()
+            checks.append({
+                'type'      : 'Team',
+                'total'     : advancing_teams,
+                'in_now'    : advancing_teams,
+                'message'   : '%s advancing teams are debating this round' % advancing_teams
+            })
+        else:
+            checks.append({
+                'type'      : 'Team',
+                'total'     : t.teams.count(),
+                'in_now'    : ActiveTeam.objects.filter(round=r).count(),
+                'in_before' : ActiveTeam.objects.filter(round=r.prev).count() if r.prev else None,
+            })
+
+        checks.append({
             'type'      : 'Adjudicator',
             'total'     : total_adjs,
             'in_now'    : ActiveAdjudicator.objects.filter(round=r).count(),
             'in_before' : ActiveAdjudicator.objects.filter(round=r.prev).count() if r.prev else None,
-        }, {
+        })
+        checks.append({
             'type'      : 'Venue',
             'total'     : total_venues,
             'in_now'    : ActiveVenue.objects.filter(round=r).count(),
             'in_before' : ActiveVenue.objects.filter(round=r.prev).count() if r.prev else None,
-        }]
+        })
 
         # Basic check before enable the button to advance
         if all([checks[0]['in_now'] > 1, checks[1]['in_now'] > 0, checks[2]['in_now'] > 0]):
@@ -86,7 +112,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
 
     def get_table(self):
         round = self.get_round()
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key='team')
         teams = round.team_availability()
         table.add_checkbox_columns([t.is_active for t in teams],
             [t.id for t in teams], 'Active Now')
@@ -107,7 +133,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
 
     def get_table(self):
         round = self.get_round()
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key='name')
         adjudicators = round.adjudicator_availability()
         table.add_checkbox_columns([a.is_active for a in adjudicators],
             [a.id for a in adjudicators], 'Active Now')
@@ -128,7 +154,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 
     def get_table(self):
         round = self.get_round()
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key='venue')
         venues = round.venue_availability()
         table.add_checkbox_columns([v.is_active for v in venues],
             [v.id for v in venues], 'Active Now')
@@ -168,21 +194,7 @@ class AvailabilityActivateBreakingAdjs(AvailabilityActivateBase):
     activation_msg = 'Checked in all breaking adjudicators'
 
     def activate_function(self):
-        self.get_round().round.activate_all_breaking_adjs()
-
-
-class AvailabilityActivateBreakingTeams(AvailabilityActivateBase):
-    activation_msg = 'Checked in all breaking teams'
-
-    def activate_function(self):
-        self.get_round().round.activate_all_breaking_teams()
-
-
-class AvailabilityActivateAdvancingTeams(AvailabilityActivateBase):
-    activation_msg = 'Checked in all advancing teams'
-
-    def activate_function(self):
-        self.get_round().round.activate_all_advancing_teams()
+        self.get_round().activate_all_breaking_adjs()
 
 
 class AvailabilityActivateFromPrevious(AvailabilityActivateBase):
@@ -204,6 +216,7 @@ class AvailabilityUpdateBase(RoundMixin, SuperuserRequiredMixin, View, LogAction
             self.set_availabilities(self.get_round(), references)
             return HttpResponse('ok')
         except:
+            traceback.print_exc()
             return HttpResponseBadRequest()
 
 

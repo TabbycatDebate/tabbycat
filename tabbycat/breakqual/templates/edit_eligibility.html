@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "breaking_index.html" %}
 {% load debate_tags %}
 {% load static %}
 
@@ -6,7 +6,17 @@
 {% block page-title %}Break Eligibility{% endblock %}
 
 {% block page-subnav-sections %}
+  {{ block.super }}
   {% include "tables/table_search.html" %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <button class="btn btn-success submit-disable" id="submit-nav" data-loading-text="Saving...">
+    Save Team Break Eligibility
+  </button>
+{% endblock %}
+
+{% block page-alerts %}
   {% if form.errors %}
     <div class="alert alert-danger alert-dismissable">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -14,11 +24,6 @@
       {{ form.errors }}
     </div>
   {% endif %}
-{% endblock %}
-{% block page-subnav-actions %}
-  <button class="btn btn-success submit-disable" id="submit-nav" data-loading-text="Saving...">
-    Save Team Break Eligibility
-  </button>
 {% endblock %}
 
 {% block content %}

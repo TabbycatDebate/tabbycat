@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 def generate_url_key(length=8):
     """Generates a randomised URL key."""
-    chars = string.ascii_lowercase + string.ascii_uppercase + string.digits
+    chars = string.ascii_lowercase + string.digits
     return ''.join(random.SystemRandom().choice(chars) for _ in range(length))
 
 

@@ -103,20 +103,20 @@
               </td>
               <td class="importance">
                 <select class="form-control">
+                  <option value="-2" {% if debate.importance == -2 %}selected{% endif %}>
+                    -2
+                  </option>
+                  <option value="-1" {% if debate.importance == -1 %}selected{% endif %}>
+                    -1
+                  </option>
+                  <option value="0" {% if debate.importance == 0 %}selected{% endif %}>
+                    0
+                  </option>
                   <option value="1" {% if debate.importance == 1 %}selected{% endif %}>
                     1
                   </option>
                   <option value="2" {% if debate.importance == 2 %}selected{% endif %}>
                     2
-                  </option>
-                  <option value="3" {% if debate.importance == 3 %}selected{% endif %}>
-                    3
-                  </option>
-                  <option value="4" {% if debate.importance == 4 %}selected{% endif %}>
-                    4
-                  </option>
-                  <option value="5" {% if debate.importance == 5 %}selected{% endif %}>
-                    5
                   </option>
                 </select>
               </td>
@@ -157,7 +157,7 @@
   </div>
 
   <div id="scratch" class="fixed-right">
-    <table id="unusedAdjTable" class="table ">
+    <table id="unusedAdjTable" class="table">
       <thead>
         <tr>
           <th>Unused Adjudicators <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>

@@ -1,0 +1,22 @@
+
+.flex-horizontal {
+  display: flex;
+  flex-direction: row;
+}
+.flex-vertical {
+  display: flex;
+  flex-direction: column;
+}
+.flex-vertical-center {
+  display: flex;
+  align-items: center;
+}
+.flex-1 {
+  flex: 1;
+}
+.flex-2 {
+  flex: 2;
+}
+.flex-7 {
+  flex: 7;
+}

@@ -16,10 +16,9 @@
 // HEADER STYLES
 //------------------------------------------------------------------------------
 
-thead {
+thead, .thead {
+  @extend .subtitle;
   background: #fff; // Fixed header needs a background while scrolling
-  text-transform: uppercase;
-  font-size: $font-size-h6;
   line-height: 18px; // Otherwise the border is too clone to the text
   .glyphicon {
     line-height: 18px; // Otherwise the border is too clone to the text
@@ -39,11 +38,12 @@ thead {
 
 .table > tbody > tr > th,
 .table > tbody > tr > td {
+  vertical-align: middle;
+  &.empty-cell {
+    border: none;
+  }
   &.unpadded-cell {
     padding: 0px;
-  }
-  &.double-height {
-    line-height: 40px;
   }
   // For highlighting bracket boundaries
   &.highlight-row {

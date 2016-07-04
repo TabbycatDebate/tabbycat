@@ -7,7 +7,7 @@
     margin-left: 10px;
   }
 }
-// DIVISIONS
+// DIVISIONS ASSIGNMENT
 .divisions-holder {
   // Align them in equal height rows
   display: flex;
@@ -64,10 +64,4 @@
 // BALLOT ENTRY
 .speaker-name {
   text-align: left;
-}
-// Allocations
-// ALternate highlight color (red and orange are used)
-.panel-incomplete,
-.chair-incomplete {
-  @include button-variant(#fff, $brand-danger-alt, darken($brand-danger-alt, 10%));
 }

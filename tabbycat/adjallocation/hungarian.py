@@ -11,15 +11,17 @@ logger = logging.getLogger(__name__)
 class HungarianAllocator(Allocator):
 
     MAX_SCORE = 5.0
-    MIN_SCORE = 1.5
+    MIN_SCORE = 0.0
+    MIN_VOTING_SCORE = 1.5
 
     DEFAULT_IMPORTANCE = 2
 
     def __init__(self, *args, **kwargs):
         super(HungarianAllocator, self).__init__(*args, **kwargs)
         t = self.debates[0].round.tournament
+        self.MIN_SCORE = t.pref('adj_min_score')
         self.MAX_SCORE = t.pref('adj_max_score')
-        self.MIN_SCORE = t.pref('adj_min_voting_score')
+        self.MIN_VOTING_SCORE = t.pref('adj_min_voting_score')
 
         self.CONFLICT_PENALTY = t.pref('adj_conflict_penalty')
         self.HISTORY_PENALTY = t.pref('adj_history_penalty')
@@ -31,12 +33,24 @@ class HungarianAllocator(Allocator):
     def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
 
+        # Normalise importances back to the 0-5 range expected
+        normalised_importance = debate.importance + 2
+        # Similarly normalise adj scores to the 0-5 range expected
+        adj_score_range = self.MAX_SCORE - self.MIN_SCORE
+        adj_score_scale = adj_score_range / 5
+        normalised_adj_score = adj.score / adj_score_scale
+
+        if normalised_adj_score > 5.0:
+            logger.warning("%s's score is larger than the range" % adj.name)
+        elif normalised_adj_score < 0.0:
+            logger.warning("%s's score is smaller than the range" % adj.name)
+
         cost += self.CONFLICT_PENALTY * adj.conflict_with(debate.aff_team)
         cost += self.CONFLICT_PENALTY * adj.conflict_with(debate.neg_team)
         cost += self.HISTORY_PENALTY * adj.seen_team(debate.aff_team, debate.round)
         cost += self.HISTORY_PENALTY * adj.seen_team(debate.neg_team, debate.round)
 
-        impt = (debate.importance or self.DEFAULT_IMPORTANCE) + adjustment
+        impt = (normalised_importance or self.DEFAULT_IMPORTANCE) + adjustment
         diff = 5 + impt - adj.score
         if diff > 0.25:
             cost += 100000 * exp(diff - 0.25)
@@ -49,7 +63,7 @@ class HungarianAllocator(Allocator):
         from adjallocation.models import AdjudicatorAllocation
 
         # Remove trainees
-        self.adjudicators = [a for a in self.adjudicators if a.score >= self.MIN_SCORE]
+        self.adjudicators = [a for a in self.adjudicators if a.score >= self.MIN_VOTING_SCORE]
         logger.info("Have %s non-trainee adjudidcators", len(self.adjudicators))
 
         # Sort adjudicators and debates in descending score/importance

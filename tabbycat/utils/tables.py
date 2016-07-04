@@ -34,7 +34,7 @@ class BaseTableBuilder:
 
     @staticmethod
     def _convert_cell(cell):
-        if isinstance(cell, int):
+        if isinstance(cell, int) or isinstance(cell, float):
             return {'text': str(cell)}
         if isinstance(cell, str):
             return {'text': cell}
@@ -121,9 +121,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
     Tabbycat."""
 
     ADJ_SYMBOLS = {
-        DebateAdjudicator.TYPE_CHAIR: "Ⓒ",
+        DebateAdjudicator.TYPE_CHAIR: " Ⓒ",
         DebateAdjudicator.TYPE_PANEL: "",
-        DebateAdjudicator.TYPE_TRAINEE: "Ⓣ",
+        DebateAdjudicator.TYPE_TRAINEE: " Ⓣ",
     }
 
     ADJ_TYPES = {
@@ -251,12 +251,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column("Institution", [adj.institution.code for adj in adjudicators])
 
         adjcore_header = {
+            'key': 'adjcore',
             'tooltip': "Member of the Adjudication Core",
             'icon': 'glyphicon-sunglasses',
         }
         self.add_boolean_column(adjcore_header, [adj.adj_core for adj in adjudicators])
 
         independent_header = {
+            'key': 'independent',
             'tooltip': "Independent Adjudicator",
             'icon': 'glyphicon-knight',
         }
@@ -264,6 +266,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if self.tournament.pref('show_unaccredited'):
             accreddited_header = {
+                'key': 'accredited',
                 'tooltip': "Is Accredited",
                 'icon': 'glyphicon-leaf',
             }
@@ -273,8 +276,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         da_data = []
 
         def construct_text(adjs_data):
-            return ["%s %s %s" % (a['adj'].name, self.ADJ_SYMBOLS[a['type']],
-                "<span class='text-danger'>💢</span>" if a['split'] else '') for a in adjs_data]
+            adjs_list = ["%s%s%s" % (
+                a['adj'].name,
+                self.ADJ_SYMBOLS[a['type']],
+                "<span class='text-danger'>💢</span>" if hasattr(a, 'split') else ''
+            ) for a in adjs_data]
+            return ', '.join([str(ad) for ad in adjs_list])
 
         def construct_popover(adjs_data):
             popover_data = []
@@ -282,7 +289,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 popover_data.append({
                     'text': "%s (%s%s; from %s)" % (
                         a['adj'].name,
-                        "<span class='text-danger'>Split</span>; " if a['split'] else '',
+                        "<span class='text-danger'>Split</span>; " if hasattr(a, 'split') else '',
                         self.ADJ_TYPES[a['type']],
                         a['adj'].institution.code)
                 })
@@ -377,14 +384,21 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(novice_header, [speaker.novice for speaker in speakers])
 
+    def add_room_rank_columns(self, debates):
+        header = {
+            'key': "Room rank",
+            'icon': 'glyphicon-stats',
+            'tooltip': 'Room rank of this debate'
+        }
+        self.add_column(header, [debate.room_rank for debate in debates])
+
     def add_debate_bracket_columns(self, debates):
-        bracket_header = {
+        header = {
             'key': "Bracket",
             'icon': 'glyphicon-stats',
             'tooltip': 'Bracket of this debate'
         }
-        bracket_data = [{'text': debate.bracket} for debate in debates]
-        self.add_column(bracket_header, bracket_data)
+        self.add_column(header, [debate.bracket for debate in debates])
 
     def add_debate_venue_columns(self, debates, with_times=False):
         if self.tournament.pref('enable_divisions'):
@@ -393,9 +407,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'icon': 'glyphicon-th-list',
                 'tooltip': 'Division'
             }
-            divisions_data = [{
-                'text': 'D' + d.division.name if d.division else ''
-            } for d in debates]
+            divisions_data = ['D' + d.division.name if d.division else '' for d in debates]
             self.add_column(divisions_header, divisions_data)
 
         venue_header = {
@@ -405,11 +417,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('enable_venue_groups'):
             venue_data = [
                 debate.division.venue_group.short_name if debate.division
-                else (debate.venue.group.short_name + debate.venue.name)
+                else (debate.venue.group.short_name + debate.venue.name) if debate.venue
+                else ''
                 for debate in debates
             ]
         else:
-            venue_data = [debate.venue.name for debate in debates]
+            venue_data = [debate.venue.name if debate.venue else '' for debate in debates]
         self.add_column(venue_header, venue_data)
 
         if with_times and self.tournament.pref('enable_debate_scheduling'):
@@ -469,14 +482,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_metric_columns(standings, subset=[d.aff_team for d in draw], prefix="Aff's ")
         self.add_metric_columns(standings, subset=[d.neg_team for d in draw], prefix="Neg's ")
 
-    def set_bracket_highlights(self):
-        for i in range(1, len(self.data)):
-            if self.data[i][0]['text'] != self.data[i-1][0]['text']:
-                for cell in self.data[i]:
-                    if hasattr(cell, 'class'):
-                        cell['class'] += 'highlight-row'
-                    else:
-                        cell['class'] = 'highlight-row'
+    def highlight_rows_by_column_value(self, column):
+        highlighted_rows = [i for i in range(1, len(self.data))
+                if self.data[i][column] != self.data[i-1][column]]
+        for i in highlighted_rows:
+            self.data[i] = [self._convert_cell(cell) for cell in self.data[i]]
+            for cell in self.data[i]:
+                cell['class'] = cell.get('class', '') + ' highlight-row'
 
     def add_affs_count(self, teams, round, team_type):
         affs_header = {
@@ -505,8 +517,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         state_header = {'key': key}
         state_data = [{
             'sort': state,
-            'class': 'toggle_active_status checkbox-target',
-            'text': '<input type="checkbox" data-target="%s" %s>' % (reference, 'checked' if state else ''),
+            'class': 'checkbox-target',
+            'text': '<input type="checkbox" class="vue-table-checkbox" data-target="%s" %s>' % (reference, 'checked' if state else ''),
         } for state, reference in zip(states, references)]
         self.add_column(state_header, state_data)
 

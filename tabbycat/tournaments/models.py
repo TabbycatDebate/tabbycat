@@ -241,25 +241,11 @@ class Round(models.Model):
         return 0
 
     def venue_allocation_valid(self):
-        debates = self.cached_draw
-        if all(debate.venue for debate in debates):
-            return True
-        else:
-            return False
+        return all(debate.venue for debate in self.cached_draw)
 
     @cached_property
     def is_break_round(self):
-        if self.stage is self.STAGE_ELIMINATION:
-            return True
-        else:
-            return False
-
-    @cached_property
-    def break_size(self):
-        if self.break_category:
-            return self.break_category.break_size
-        else:
-            return False
+        return self.stage is self.STAGE_ELIMINATION
 
     @cached_property
     def cached_draw(self):

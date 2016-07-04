@@ -38,7 +38,7 @@ admin.site.register(Institution, InstitutionAdmin)
 # ==============================================================================
 
 class SpeakerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'team', 'novice')
+    list_display = ('name', 'team', 'novice', 'gender')
     search_fields = ('name', )
     raw_id_fields = ('team', )
 
@@ -71,7 +71,7 @@ class TeamForm(forms.ModelForm):
 
     def clean_url_key(self):
         return self.cleaned_data[
-            'url_key'] or None  # So that the url key can be unique and also set to blank
+            'url_key'] or None  # So that the url key can be unique and be blank
 
 
 class TeamAdmin(admin.ModelAdmin):
@@ -127,13 +127,13 @@ class AdjudicatorForm(forms.ModelForm):
 
     def clean_url_key(self):
         return self.cleaned_data[
-            'url_key'] or None  # So that the url key can be unique and also set to blank
+            'url_key'] or None  # So that the url key can be unique and be blank
 
 
 class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'novice',
-                    'independent', 'adj_core')
+                    'independent', 'adj_core', 'gender')
     search_fields = ('name',
                      'tournament__name',
                      'institution__name',

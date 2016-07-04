@@ -1,0 +1,99 @@
+//------------------------------------------------------------------------------
+// General Layout
+//------------------------------------------------------------------------------
+
+.allocation-container {
+  padding-top: 65px; // Need to compensate for the fixed header
+  padding-bottom: 450px; // Need to offset the adjs panel
+  background: #fff;
+}
+
+.unallocated-adjs {
+  min-height: 48px;
+  max-height: 450px;
+}
+
+.thead {
+  border-bottom: 2px solid $table-border-color;
+  padding-bottom: $table-cell-padding;
+  .glyphicon {
+    line-height: 15px;
+  }
+}
+
+.flex-cell {
+  padding-left: $table-cell-padding;
+  padding-right: $table-cell-padding;
+  min-width: 40px;
+}
+
+.bordered-bottom {
+  border-bottom: 1px solid $table-border-color;
+}
+
+.importance-container {
+  width: 95px;
+}
+
+.panel-incomplete {
+  background: $brand-danger-alt;
+  border: 1px solid darken($brand-danger-alt, 10%);
+  color: #fff;
+}
+.panel-incomplete.vue-is-drag-enter {
+  background: $state-success-bg;
+}
+
+//------------------------------------------------------------------------------
+// Debate Layout
+//------------------------------------------------------------------------------
+
+.panel-debate {
+  // Overwrite .panel defaults
+  box-shadow: 0;
+  margin-bottom: 0;
+}
+.positions-parent > div {
+  border-left: 2px solid $table-border-color;
+  min-height: 47px; // Dont let it collapse when no adjs are present
+  &:first-child {
+    border-left: 0;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Highlights
+//------------------------------------------------------------------------------
+
+// Dim the subheadings appropriately when highlighted
+.conflicts-display, .histories-display, .position-display, .region-display, .gender-display, .break-display {
+  .text-muted {
+    color: #fff;
+    opacity: 0.66;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Draggable Elements
+//------------------------------------------------------------------------------
+
+.adj-draggable {
+  text-align: left;
+  div {
+    float: left;
+  }
+  .h4 {
+    min-width: 30px;
+    margin: 0;
+    padding: 3px 0 3px 2px; // Center the Score
+  }
+  span {
+    border-bottom: none;
+  }
+  .small {
+    font-weight: bold;
+    font-size: 70%;
+    display: block;
+    line-height: 3px;
+  }
+}

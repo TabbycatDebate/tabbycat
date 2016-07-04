@@ -11,8 +11,8 @@ export default {
   props: {
     componentData: Object,
     width: { type: Number, default: 320 },
-    height: { type: Number, default: 42 },
-    padding: { type: Number, default: 5 },
+    height: { type: Number, default: 55 },
+    padding: { type: Number, default: 6 },
   },
   ready: function() {
     if (this.componentData.graphData !== undefined) {
@@ -93,8 +93,7 @@ function InitChart(vueContext){
       .attr("class", "y axis")
       .call(yAxis)
 
-
-  // create series for regression
+  // Create series for regression
   var xLabels = vueContext.componentData.graphData.map(function (d) { return d['x']; })
   var xSeries = d3.range(1, xLabels.length + 1);
 	var ySeries = vueContext.componentData.graphData.map(function(d) { return parseFloat(d['y']); });

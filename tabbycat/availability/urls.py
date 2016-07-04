@@ -27,11 +27,6 @@ urlpatterns = [
         name='team_availability'),
     url(r'teams/update/$', views.AvailabilityUpdateTeams.as_view(),
         name='update_team_availability'),
-    url(r'teams/update/breaking/$', views.AvailabilityActivateBreakingTeams.as_view(),
-        name='update_availability_breaking_teams'),
-    url(r'teams/update/advancing/$',
-        views.AvailabilityActivateAdvancingTeams.as_view(),
-        name='update_availability_advancing_teams'),
 
     # Venues
     url(r'venues/$', views.AvailabilityTypeVenueView.as_view(),

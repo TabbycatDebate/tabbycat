@@ -1,16 +1,10 @@
 <template>
-  <td>
-    <span class="hidden">
-      {{ componentData.importance }}
-    </span>
-    <select class="form-control input-sm" v-model="componentData.importance" v-on:change="updateImportance">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
-  </td>
+  <div>
+    <input max="2" min="-2" step="1" type="range" v-model="importance">
+    <div class="small text-center text-muted">
+      {{ importanceDescription }}
+    </div>
+  </div>
 </template>
 
 <script>
@@ -19,16 +13,32 @@ import AjaxMixin from '../mixins/AjaxMixin.vue'
 export default {
   mixins: [AjaxMixin],
   props: {
-    componentData: Object,
+    id: Number,
+    importance: Number,
+    url: String,
   },
-  methods: {
-    // Call into the ajax mixin
-    updateImportance: function() {
-      var data = {
-          debate_id: this.componentData.id,
-          importance: this.componentData.importance
+  computed: {
+    importanceDescription: function() {
+      if (this.importance === 2) {
+        return "VIP"
+      } else if (this.importance === 1) {
+        return "Important"
+      } else if (this.importance === 0) {
+        return "Neutral"
+      } else if (this.importance === -1) {
+        return "Unimportant"
+      } else if (this.importance === -2) {
+        return "¯\\_(ツ)_/¯"
       }
-      this.update(this.componentData.url, data, 'debate importance')
+    }
+  },
+  watch: {
+    'importance': function (newVal, oldVal) {
+      var data = {
+          debate_id: this.id,
+          importance: this.importance
+      }
+      this.update(this.url, data, 'debate ' + this.id + '\'s importance')
     }
   }
 }

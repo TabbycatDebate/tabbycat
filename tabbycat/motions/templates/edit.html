@@ -10,14 +10,11 @@
   <form method="POST" action="" class="form-horizontal">
     {% csrf_token %}
     <div class="panel panel-default">
-
       <div class="panel-heading">
         <h4>Motion Options</h4>
       </div>
       <ul class="list-group">
-
         {{ formset.management_form }}
-
         {% for form in formset %}
         <li class="list-group-item">
 
@@ -34,6 +31,9 @@
             <div class="col-sm-6">
               {{form.text|addcss:"form-control help-anchor required"}}
             </div>
+            <div class="col-sm-5 help-block">
+              {{form.text.help_text}}
+            </div>
           </div>
           <div class="form-group">
             <label for="{{ form.reference.id_for_label }}" class="col-sm-1 control-label" {% if form.reference.help_text %}data-toggle="tooltip" title="{{ form.reference.help_text }}"{% endif %}>
@@ -42,14 +42,22 @@
             <div class="col-sm-6">
               {{form.reference|addcss:"form-control required"}}
             </div>
+            <div class="col-sm-5 help-block">
+              {{form.reference.help_text}}
+            </div>
           </div>
           <div class="form-group">
             <label for="{{ form.seq.id_for_label }}" class="col-sm-1 control-label" {% if form.seq.help_text %}data-toggle="tooltip" title="{{ form.seq.help_text }}"{% endif %}>
               Sequence {{ form.seq.errors }}
             </label>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
               {{form.seq|addcss:"form-control required"}}{{ form.id }}
             </div>
+            <div class="col-sm-5 help-block">
+              {{form.seq.help_text}}
+            </div>
+          </div>
+          <div class="form-group">
             <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
               {{ form.DELETE.label }}
             </label>
@@ -72,18 +80,15 @@
 
         </li>
         {% endfor %}
-
+        <li class="list-group-item col-sm-offset-1">
+          <input class="btn btn-success submit-disable" type="submit" name="submit" value="Save All" data-loading-text="Saving..." />
+          <input class="btn btn-success submit-disable" type="submit" name="submit_add_more" value="Save & Add More" data-loading-text="Saving..." />
+          <a class="btn btn-danger" href="{% round_url draw %}">Cancel</a>
+        </li>
       </ul>
-
     </div>
-
-    <div class="col-sm-11 col-sm-offset-1">
-      <input class="btn btn-success submit-disable" type="submit" name="submit" value="Save All" data-loading-text="Saving..." />
-      <input class="btn btn-success submit-disable" type="submit" name="submit_add_more" value="Save & Add More" data-loading-text="Saving..." />
-      <a class="btn btn-danger" href="{% round_url motions %}">Cancel</a>
-    </div>
-
   </form>
+
 {% endblock content %}
 
 {% block js %}

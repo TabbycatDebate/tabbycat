@@ -4,7 +4,7 @@ import logging
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -19,6 +19,7 @@ from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
 
+from .generator import DrawError
 from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamPositionAllocation
 from .dbutils import delete_round_draw
@@ -80,8 +81,6 @@ class DrawTablePage(RoundMixin, VueTableMixin):
         if tournament.pref('enable_division_motions'):
             for debate in draw:
                 table.add_motion_column([m.reference for m in debate.division_motions])
-        # if round.is_break_round:
-        #     table.add_breakrank_columns(draw)
         if not tournament.pref('enable_divisions'):
             table.add_debate_adjudicators_column(draw)
 
@@ -163,7 +162,9 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
             return table # Return Blank
 
         draw = r.get_draw()
-        if not r.is_break_round:
+        if r.is_break_round:
+            table.add_room_rank_columns(draw)
+        else:
             table.add_debate_bracket_columns(draw)
 
         table.add_debate_venue_columns(draw)
@@ -189,11 +190,11 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
             table.add_affs_count([d.aff_team for d in draw], r, 'aff')
             table.add_affs_count([d.neg_team for d in draw], r, 'neg')
         else:
-            table.add_debate_adjudicators_column(draw)
+            table.add_debate_adjudicators_column(draw, show_splits=True)
 
         table.add_draw_conflicts(draw)
         if not r.is_break_round:
-            table.set_bracket_highlights()
+            table.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
 
         return table
 
@@ -247,7 +248,11 @@ class CreateDrawView(DrawStatusEdit):
             return super().post(request, *args, **kwargs)
 
         manager = DrawManager(round)
-        manager.create()
+        try:
+            manager.create()
+        except DrawError as e:
+            messages.error(request, "There was a problem creating the draw: " + str(e) + " If this issue persists, please contact the developers.")
+            return HttpResponseRedirect(reverse_round('availability_index', round))
 
         allocate_venues(round)
 

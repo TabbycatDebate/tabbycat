@@ -1,63 +1,56 @@
-// For feedback graph
-.position-display {
-  &.chair {
-    background-color: #b10095; // Purpleish
-    fill: #b10095;
-    color: #fff;
+.category-display {
+  &.category-1 {
+    @extend .btn-default; // Break1 = general
   }
-  &.panellist {
-    background-color: $male;
-    fill: $male;
-    color: #fff;
-  }
-  &.trainee {
-    background-color: $female;
-    fill: $female;
-    color: #fff;
-  }
-}
-// For diversity graphs and allocation
-.break-display {
-  &.break-1 {
+  &.category-2 {
     @include button-variant(#fff, #C70062, darken(#C70062, 10%));
   }
-  &.break-2 {
+  &.category-3 {
     @include button-variant(#fff, #00C79B, darken(#00C79B, 10%));
   }
 }
 .gender-display {
-  &.male {
+  &.gender-male {
     @include button-variant(#fff, $male, darken($male, 10%));
     fill: $male;
   }
-  &.female, &.nm {
+  &.gender-female, &.gender-nm {
     @include button-variant(#fff, $female, darken($female, 10%));
     fill: $female;
   }
-  &.other {
+  &.gender-other {
     @include button-variant(#fff, $other, darken($other, 10%));
     fill: $other;
   }
-  &.unknown {
+  &.gender-unknown {
     @include button-variant(#fff, $unknown, darken($unknown, 10%));
     fill: $unknown;
   }
-  .text-muted {
-    color: #fff;
-    opacity: 0.5;
+  // For Teams
+  &.gender-men-2 {
+    @include button-variant(#fff, lighten($male, 5%), $male);
+  }
+  &.gender-notmen-2 {
+    @include button-variant(#fff, lighten($female, 5%), $female);
+  }
+  &.gender-men-3 {
+    @include button-variant(#fff, darken($male, 15%), darken($male, 25%));
+  }
+  &.gender-notmen-3 {
+    @include button-variant(#fff, darken($female, 15%), darken($female, 25%));
   }
 }
 .gender-text {
-  &.male {
+  &.gender-male {
     color: $male;
   }
-  &.female, &.nm {
+  &.gender-female, &.gender-nm {
     color: $female;
   }
-  &.other {
+  &.gender-other {
     color: $other;
   }
-  &.unknown {
+  &.gender-unknown {
     color: $unknown;
   }
 }
@@ -101,12 +94,5 @@
   &.region-9 {
     @include button-variant(#fff, #777, darken(#777, 10%));
     fill: #777;
-  }
-}
-// Subheadings for adj allocations
-.region-display, .gender-display {
-  .text-muted {
-    color: #fff;
-    opacity: 0.66;
   }
 }

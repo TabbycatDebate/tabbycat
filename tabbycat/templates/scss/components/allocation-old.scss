@@ -1,3 +1,5 @@
+$adj-button-width: 180px;
+
 #old-edit-allocation {
 
   #body-edit-allocation {
@@ -63,9 +65,8 @@
     overflow-y: scroll;
     padding-left: 5px;
     padding-right: 5px;
-    margin-top: 55px;
     z-index: 10;
-    width: $adj-button-width + 25px;
+    width: $adj-button-width + 5px;
     &.bg-success {
       background: $state-success-bg;
     }
@@ -74,7 +75,7 @@
       right: 0;
       height: 100%;
       padding-bottom: 50px; // ensure no footer overlaps
-      padding-top: 18px;
+      padding-top: 63px;
     }
     &.fixed-bottom {
       bottom: 0;

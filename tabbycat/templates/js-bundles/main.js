@@ -21,9 +21,12 @@ $(document).ready(function(){
     var $btn = $(this).button('loading');
   });
   // Make larger click targets for checkboxes in tables
-  $('.checkbox-target').on('click', function () {
-    var checkBox = $("input[type=checkbox]", this).first();
-    checkBox.prop("checked", !checkBox.prop("checked"));
+  $('.checkbox-target').on('click', function (e) {
+    if (e.target == this) { // Don't trigger when clicking the input itself
+      var checkBox = $("input[type=checkbox]", this).first();
+      checkBox.prop("checked", !checkBox.prop("checked"));
+      checkBox.trigger("change");
+    }
   });
 });
 

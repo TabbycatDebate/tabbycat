@@ -48,7 +48,7 @@ class Debate(models.Model):
     # comma-separated list of strings
     flags = models.CharField(max_length=100, blank=True, null=True)
 
-    importance = models.IntegerField(default=2)
+    importance = models.IntegerField(default=0)
     result_status = models.CharField(max_length=1,
                                      choices=STATUS_CHOICES,
                                      default=STATUS_NONE)

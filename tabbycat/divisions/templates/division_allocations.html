@@ -56,7 +56,7 @@
         </div>
         <div class="panel-body"
           v-on:dragover.prevent
-          v-on:drop="unallocateTeam"
+          v-on:drop="drop"
           data-id=null>
           <template v-for="team in teams | exactFilterBy null in 'division' | orderBy 'institution__code'" track-by="id">
             <team-draggable
@@ -82,17 +82,17 @@
   }
   // Todo: create a DivisionsContainer; move these methods there
   var divisionsMethods = {
-    unallocateTeam: function(ev) {
+    handleDrop: function(ev) {
       this.draggedComponent.team.division = null;
       this.draggedComponent.saveDivision();
     }
   }
   var divisionsEvents = {
     // Set a global record of what is being dragged
-    'dragging-team': function (component) {
+    'started-dragging-team': function (component) {
       this.draggedComponent = component;
     },
-    'stopped-dragging': function () {
+    'stopped-dragging-team': function () {
       this.draggedComponent = null;
     },
     'assign-team-to-division': function (droppedDivision) {

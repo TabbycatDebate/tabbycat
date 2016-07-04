@@ -17,9 +17,9 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Whether the adj is marked as breaking (click to mark)',
         }
         breaking_data = [{
-            'text': '<input type="checkbox" adj_id="%s" %s>' % (adj.id, 'checked' if adj.breaking else ''),
+            'text': '<input type="checkbox" class="toggle_breaking_status vue-table-checkbox" adj_id="%s" %s>' % (adj.id, 'checked' if adj.breaking else ''),
             'sort': adj.breaking,
-            'class': 'toggle_breaking_status checkbox-target'
+            'class': 'checkbox-target'
         } for adj in adjudicators]
 
         self.add_column(breaking_header, breaking_data)
@@ -31,7 +31,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Current weighted score',
         }
         overall_data = [{
-            'text': '<strong>%0.1f</strong>' % (adj.feedback_score) if adj.feedback_score else 'N/A',
+            'text': '<strong>%0.1f</strong>' % adj.score if adj.score is not None else 'N/A',
             'tooltip': 'Current weighted average of all feedback',
         } for adj in adjudicators]
         self.add_column(overall_header, overall_data)
@@ -42,7 +42,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Test score result',
         }
         test_data = [{
-            'text': "%0.1f" % (adj.score if adj.score else 'N/A'),
+            'text': '%0.1f' % adj.test_score if adj.test_score is not None else 'N/A',
             'modal': adj.id,
             'class': 'edit-test-score',
             'tooltip': 'Click to edit test score',

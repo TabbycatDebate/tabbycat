@@ -1,15 +1,3 @@
-<style>
-.slideover-info {
-  width: auto;
-  position: fixed;
-  height: 75px;
-  bottom: 0;
-  right: 15px;
-  left: 15px;
-  z-index: 1040;
-}
-</style>
-
 <template>
 
   <div class="vue-draggable btn btn-sm"
@@ -17,7 +5,7 @@
     v-bind:class="[preference_allocated, isDragging ? vue-is-dragging : '']"
     v-on:dragstart="handleDragStart"
     v-on:dragend="handleDragEnd"
-    data-id="{{ team.id }}"
+    :data-id="team.id"
     v-on:mouseenter="show = true"
     v-on:mouseleave="show = false">
     <span>
@@ -26,32 +14,6 @@
       </span>
       {{ team.short_reference }}
     </span>
-  </div>
-
-  <div class="panel panel-info slideover-info" v-show="show" transition="expand">
-    <div class="panel-body" v-if="hasPreferences">
-      <div class="btn-group" role="group">
-        <button class="btn btn-sm btn-link" v-if="team.institutional_preferences.length > 0">
-          Institutional
-        </button>
-        <button class="btn tbn-sm btn-default" v-for="preference in team.institutional_preferences">
-          {{ preference.venue_group__short_name }}
-          <span class="badge">{{ preference.priority }}</span>
-        </button>
-      </div>
-      <div class="btn-group pull-right" role="group">
-        <button class="btn btn-sm btn-link" v-if="team.team_preferences.length > 0">
-          Individual
-        </button>
-        <button class="btn tbn-sm btn-default" v-for="preference in team.team_preferences">
-          {{ preference.venue_group__short_name }}
-          <span class="badge">{{ preference.priority }}</span>
-        </button>
-      </div>
-    </div>
-    <div class="panel-body" v-else="hasPreferences">
-      No division preferences set
-    </div>
   </div>
 
 </template>
@@ -130,6 +92,12 @@ export default {
     },
     showPreferences: function() {
       this.show = !this.show;
+    },
+    handleDragStart: function(event) {
+      this.$dispatch('started-dragging-team', this);
+    },
+    handleDragEnd: function(event) {
+      this.$dispatch('stopped-dragging-team');
     },
   }
 }

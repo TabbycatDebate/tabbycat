@@ -41,10 +41,10 @@
     <div class="popover-raw hide" v-if="cellData['popover']">
       <li v-if="popContent['text']" v-for="popContent in cellData['popover']['content']" class="list-group-item">
         <a v-if="popContent['link']" :href="popContent['link']">
-          {{ popContent['text'] }}
+          {{{ popContent['text'] }}}
         </a>
         <span v-else>
-          {{ popContent['text'] }}
+          {{{ popContent['text'] }}}
         </span>
       </li>
     </div>
@@ -54,10 +54,10 @@
 </template>
 
 <script>
-import Popover from '../mixins/Popover.vue'
+import PopoverMixin from '../mixins/PopoverMixin.vue'
 
 export default {
-  mixins: [Popover],
+  mixins: [PopoverMixin],
   props: {
     cellData: Object,
   },

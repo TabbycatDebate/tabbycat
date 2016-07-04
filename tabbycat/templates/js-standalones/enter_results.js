@@ -18,6 +18,8 @@ function refresh_totals(scoresheet) {
   $scoresheet = $(scoresheet);
   $aff_total = $('.aff_total', $scoresheet);
   $neg_total = $('.neg_total', $scoresheet);
+  $aff_margin = $('.aff_margin', $scoresheet);
+  $neg_margin = $('.neg_margin', $scoresheet);
 
   var aff = sum($('.aff.score input', $scoresheet));
   var neg = sum($('.neg.score input', $scoresheet));
@@ -27,12 +29,18 @@ function refresh_totals(scoresheet) {
   if (aff > neg) {
     $aff_total.addClass('btn-success').removeClass('btn-danger');
     $neg_total.addClass('btn-danger').removeClass('btn-success');
+    $aff_margin.text("+" + Number(aff - neg));
+    $neg_margin.text(Number(neg - aff));
   } else if (neg > aff) {
     $aff_total.addClass('btn-danger').removeClass('btn-success');
     $neg_total.addClass('btn-success').removeClass('btn-danger');
+    $aff_margin.text(Number(aff - neg));
+    $neg_margin.text("+" + Number(neg - aff));
   } else {
     $aff_total.addClass('btn-danger').removeClass('btn-success');
     $neg_total.addClass('btn-danger').removeClass('btn-success');
+    $aff_margin.text(Number(aff - neg));
+    $neg_margin.text(Number(neg - aff));
   }
 }
 

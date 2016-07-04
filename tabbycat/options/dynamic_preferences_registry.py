@@ -245,7 +245,7 @@ feedback = Section('feedback')
 
 @tournament_preferences_registry.register
 class MinimumAdjScore(FloatPreference):
-    help_text = "Minimum possible adjudicator score"
+    help_text = "Minimum possible adjudicator score that can be given"
     verbose_name = 'Minimum adjudicator score'
     section = feedback
     name = 'adj_min_score'
@@ -254,7 +254,7 @@ class MinimumAdjScore(FloatPreference):
 
 @tournament_preferences_registry.register
 class MaximumAdjScore(FloatPreference):
-    help_text = "Maximum possible adjudicator score"
+    help_text = "Maximum possible adjudicator score that can be given"
     verbose_name = 'Maximum adjudicator score'
     section = feedback
     name = 'adj_max_score'

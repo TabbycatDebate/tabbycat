@@ -1,44 +1,38 @@
-<style>
-.vue-droppable {
-  min-height: 0;
-}
-</style>
-
 <template>
 
   <nav
     v-on:dragover.prevent
-    v-on:dragenter="handleDragEnter"
-    v-on:dragleave="handleDragLeave"
-    v-on:drop="handleDrop"
+    v-on:dragenter="dragEnter"
+    v-on:dragleave="dragLeave"
+    v-on:drop="drop"
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
-    class="navbar navbar-default navbar-fixed-bottom vue-droppable">
+    class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-adjs">
 
-    <adjudicator-draggable
+    <debate-adjudicator
       v-for="adj in adjudicators | orderBy 'score' -1"
-      :adj="adj">
-    </adjudicator-draggable>
+      v-if="!adj.allocated"
+      :adjorteam="adj">
+    </debate-adjudicator>
 
   </nav>
 
 </template>
 
 <script>
-import AdjudicatorDraggable from './AdjudicatorDraggable.vue'
+import DebateAdjudicator from './DebateAdjudicator.vue'
 import DroppableMixin from '../mixins/DroppableMixin.vue'
 
 export default {
   mixins: [DroppableMixin],
   props: {
-    adjudicators: Array
+    adjudicators: Object
   },
   components: {
-    'AdjudicatorDraggable': AdjudicatorDraggable
+  'DebateAdjudicator': DebateAdjudicator
   },
   methods: {
-    receiveDrop: function(ev) {
-      console.log('Received an adj');
-      this.$dispatch('moveToUnused', this.division);
+    handleDrop: function(ev) {
+      this.$dispatch('set-adj-unused');
     }
   }
 }

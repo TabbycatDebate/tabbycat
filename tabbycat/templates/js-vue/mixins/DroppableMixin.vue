@@ -1,11 +1,11 @@
 <script>
 // Subclass should set on root:
 // v-on:dragover.prevent
-// v-on:dragenter="handleDragEnter"
-// v-on:dragleave="handleDragLeave"
+// v-on:dragenter="dragEnter"
+// v-on:dragleave="dragLeave"
 // v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
-// v-on:drop="handleDrop"
-// Should then implement a receiveDrop() function
+// v-on:drop="drop"
+// Subclasses can implement a handleDragEnter() handleDragLeave() handleDrop()
 
 export default {
   props: {
@@ -13,23 +13,28 @@ export default {
     'dragCounter': { default: 0 },
   },
   methods: {
-    handleDragEnter: function(elem) {
+    dragEnter: function(event) {
       this.dragCounter++;
-      // console.log('handleDragStart', elem);
       this.isDroppable = true;
+      if (typeof this.handleDragEnter === 'function') {
+        this.handleDragEnter(event);
+      }
     },
-    handleDragLeave: function(elem) {
+    dragLeave: function(event) {
       this.dragCounter--;
-      // console.log('handleDragEnd', elem);
       if (this.dragCounter == 0) {
         this.isDroppable = false;
       }
+      if (typeof this.handleDragLeave === 'function') {
+        this.handleDragLeave(event);
+      }
     },
-    handleDrop:  function(event) {
-      // console.log('handleDrop', elem);
-      this.isDroppable = false;
+    drop:  function(event) {
       this.dragCounter = 0;
-      this.receiveDrop(event);
+      this.isDroppable = false;
+      if (typeof this.handleDrop === 'function') {
+        this.handleDrop(event);
+      }
     },
   }
 }

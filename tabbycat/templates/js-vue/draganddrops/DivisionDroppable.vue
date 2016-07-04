@@ -1,19 +1,12 @@
-<style>
-  .division-droppable {
-    min-height: 66px;
-    padding: 5px;
-  }
-</style>
-
 <template>
 
-  <div class="panel-body division-droppable"
+  <div class="panel-body vue-droppable division-droppable"
     v-on:dragover.prevent
-    v-on:drop="receiveTeam"
-    v-on:dragenter="handleDragEnter"
-    v-on:dragleave="handleDragLeave"
+    v-on:drop="drop"
+    v-on:dragenter="dragEnter"
+    v-on:dragleave="dragLeave"
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
-    data-id="{{ division.id }}">
+    :data-id="division.id">
     <template v-for="team in teams" track-by="id">
       <team-draggable :team="team" :vg="division.venue_group" :save-division-at="saveDivisionAt"></team-draggable>
     </template>
@@ -68,7 +61,7 @@ export default {
     'TeamDraggable': TeamDraggable
   },
   methods: {
-    receiveDrop: function(ev) {
+    handleDrop: function(ev) {
       // This calls up to the parent component
       console.log('child component (' + this.division.id + ') received a team');
       this.$dispatch('assign-team-to-division', this.division);

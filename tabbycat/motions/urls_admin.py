@@ -3,9 +3,6 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$',
-        views.motions,
-        name='motions'),
     url(r'^edit/$',
         views.motions_edit,
         name='motions_edit'),
@@ -18,4 +15,7 @@ urlpatterns = [
     url(r'^unrelease/$',
         views.unrelease_motions,
         name='unrelease_motions'),
+    url(r'^display/$',
+        views.DisplayMotionsView.as_view(),
+        name='draw_display_motions'),
 ]

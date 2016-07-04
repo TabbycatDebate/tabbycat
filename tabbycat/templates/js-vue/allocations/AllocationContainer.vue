@@ -1,93 +1,223 @@
 <template>
+  <div>
 
-  <allocation-actions
-    :regions="regions"></allocation-actions>
+    <allocation-actions
+      :regions="regions" :categories="categories" :urls="urls">
+    </allocation-actions>
 
-  <div class="container-fluid">
-    <div class="col-md-6">
-      <div class="alert alert-warning small" role="alert">
-        <span class="glyphicon glyphicon-refresh spinning"></span><strong> Loading conflicts data...</strong>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="alert alert-warning small" role="alert">
-        <span class="glyphicon glyphicon-refresh spinning"></span><strong> Loading history data...</strong>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel panel-default" id="tableContainer{{ table_index }}">
-    <div class="panel-body">
-      <smart-table
-        :table-headers="tableData['head']"
-        :table-content="tableData['data']"
-        :table-class="tableData['class']"
-        :filter-key=""
-        :default-sort-key="tableData['sort_key']"
-        :default-sort-order="tableData['sort_order']">
-      </smart-table>
-    </div>
-  </div>
-
-  <div class="panel panel-default" id="tableContainer{{ table_index }}">
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-md-3">
-          <position-droppable
-            :adjudicators="[adjudicators[0]]"
-            :position="C">
-          </position-droppable>
+    <div class="col-md-12 allocation-container">
+      <div class="row flex-horizontal subtitle">
+        <div class="thead flex-cell" data-toggle="tooltip" title="Debate Bracket">
+          <span class="glyphicon glyphicon-stats"></span>
         </div>
-        <div class="col-md-6">
-          <position-droppable
-            :adjudicators="[adjudicators[3],adjudicators[1]]"
-            :position="P">
-          </position-droppable>
+        <div class="thead flex-1">Aff</div>
+        <div class="thead flex-1">Neg</div>
+        <div class="thead flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
+          <span>Importance</span>
         </div>
-        <div class="col-md-3">
-          <position-droppable
-            :adjudicators="[adjudicators[4],adjudicators[5]]"
-            :position="T">
-          </position-droppable>
+        <div class="thead flex-7 flex-horizontal">
+          <div class="flex-1 text-center">Chair</div>
+          <div class="flex-2 text-center">Panelists</div>
+          <div class="flex-2 text-center">Trainees</div>
+        </div>
+        <div class="thead flex-cell" data-toggle="tooltip" title="Average score of the voting majority (assumes top adjs in majority)">
+          <span class="glyphicon glyphicon-stats"></span>
         </div>
       </div>
+
+      <debate v-for="debate in debates"
+        :debate="debate"
+        :aff="teams[debate.aff_team]"
+        :neg="teams[debate.neg_team]"
+        :all-adjudicators="adjudicators"
+        :urls="urls">
+      </debate>
+
     </div>
+
+    <unallocated-adjudicators
+      :adjudicators="adjudicators">
+    </unallocated-adjudicators>
+
   </div>
-
-  <unallocated-adjudicators
-    :adjudicators="unusedAdjudicators">
-  </unallocated-adjudicators>
-
 </template>
 
 <script>
+import Debate from './Debate.vue'
 import AllocationActions from './AllocationActions.vue'
-import SmartTable from '../tables/Table.vue'
 import UnallocatedAdjudicators from './UnallocatedAdjudicators.vue'
-import PositionDroppable from './PositionDroppable.vue'
 
 export default {
   components: {
-    AllocationActions, SmartTable, UnallocatedAdjudicators, PositionDroppable
+    AllocationActions, Debate, UnallocatedAdjudicators
   },
   props: {
-    adjudicators: Array,
+    debates: Array,
+    adjudicators: Object,
+    teams: Object,
     regions: Array,
-    tableData: Object // Passed down from main.js
-  },
-  methods: {
-    moveToUnused: function(adjId) {
-      var adjToMove = this.adjudidcators.filter(function( adj ) {
-        return adj.id == adjId;
-      });
-      adjToMove.debate = null;
-    }
+    categories: Array,
+    urls: Object,
+    currentlyDragging: Object,
+    currentConflictHighlights: {default: null },
+    currentHistoriesHighlights: {default: null }
   },
   computed: {
-    unusedAdjudicators: function () {
-      return this.adjudicators.filter(function (adj) {
-        return adj.debate === null;
-      })
+    debatesByID: function() {
+      var lookup = {};
+      for (var i = 0, len = this.debates.length; i < len; i++) {
+        lookup[this.debates[i].id] = this.debates[i];
+      }
+      return lookup;
+    }
+  },
+  methods: {
+    toggleConflictsValues: function(conflictValue) {
+      var conflicts = this.currentConflictHighlights;
+      var _this = this;
+      if (conflicts.personal_adjudicators) {
+        conflicts.personal_adjudicators.forEach(function(currentValue) {
+          _this.adjudicators[currentValue].hasPersonalConflict = conflictValue
+        })
+      }
+      if (conflicts.personal_teams) {
+        conflicts.personal_teams.forEach(function(currentValue) {
+          _this.teams[currentValue].hasPersonalConflict = conflictValue
+        })
+      }
+      if (conflicts.institutional_conflicts) {
+        conflicts.institutional_conflicts.forEach(function(currentValue) {
+          // Loop through all adjudicators
+          for (var adjudicatorID in _this.adjudicators) {
+            if (_this.adjudicators.hasOwnProperty(adjudicatorID)) {
+              var adjToTest = _this.adjudicators[adjudicatorID];
+              if (adjToTest.institution.id === currentValue) {
+                adjToTest.hasInstitutionalConflict = conflictValue;
+              }
+            }
+          }
+          // Loop through all teams
+          for (var teamID in _this.teams) {
+            if (_this.teams.hasOwnProperty(teamID)) {
+              var teamToTest = _this.teams[teamID];
+              if (teamToTest.institution.id === currentValue) {
+                teamToTest.hasInstitutionalConflict = conflictValue;
+              }
+            }
+          }
+        });
+      }
+      // Don't highlight current thing being hovered
+      conflicts.currentOrigin.hasPersonalConflict = false;
+      conflicts.currentOrigin.hasInstitutionalConflict = false;
+    },
+    toggleHistoriesValues: function(conflicts_dict, setValue) {
+      // For each entry in the currently-hovered adj/team step through it and
+      // set hasHistory/historyRoundsAgo values for each adj/team affected
+      var histories = this.currentHistoriesHighlights;
+      if (histories.length > 0) {
+        var _this = this;
+        histories.forEach(function(conflict) {
+          if (typeof conflict.team !== 'undefined') {
+            _this.teams[conflict.team].hasHistoryConflict = setValue;
+            if (setValue) {
+              _this.teams[conflict.team].historyRoundsAgo = conflict.ago;
+            } else {
+              _this.teams[conflict.team].historyRoundsAgo = 0;
+            }
+          } else if (typeof conflict.adj !== 'undefined') {
+            _this.adjudicators[conflict.adj].hasHistoryConflict = setValue;
+            if (setValue) {
+              _this.adjudicators[conflict.adj].historyRoundsAgo = conflict.ago;
+            } else {
+              _this.adjudicators[conflict.adj].historyRoundsAgo = 0;
+            }
+          }
+        });
+      }
+    }
+  },
+  events: {
+    'set-conflicts': function (conflicts_dict) {
+      this.currentConflictHighlights = conflicts_dict;
+      this.toggleConflictsValues(true);
+    },
+    'unset-conflicts': function () {
+      this.toggleConflictsValues(false);
+      this.currentConflictHighlights = null;
+    },
+    'set-histories': function (histories_dict) {
+      this.currentHistoriesHighlights = histories_dict;
+      this.toggleHistoriesValues(true);
+    },
+    'unset-histories': function() {
+      this.toggleHistoriesValues(false);
+      this.currentConflictHighlights = null;
+    },
+    'set-dragged-adj': function(adjId) {
+      this.currentlyDragging = adjId;
+    },
+    'unset-dragged-adj': function() {
+      this.currentlyDragging = null;
+    },
+    'set-adj-unused': function() {
+      var adj = this.currentlyDragging.adj
+      adj.allocated = false
+      // Remove adj from any panels they came from
+      if (typeof this.currentlyDragging.debateId !== 'undefined') {
+        var fromDebateId = this.currentlyDragging.debateId
+        var fromPanel = this.debatesByID[fromDebateId].panel
+        var toRemoveIndex = fromPanel.findIndex(function(value) {
+          return value.id === adj.id;
+        });
+        fromPanel.splice(toRemoveIndex, 1);
+      }
+      this.currentlyDragging = null;
+    },
+    'set-adj-panel': function(toDebateId, toPosition) {
+      // Construct a lookup object to find the debate by it's ID
+      var adj = this.currentlyDragging.adj
+      var toPanel = this.debatesByID[toDebateId].panel
+      if (typeof this.currentlyDragging.debateId !== 'undefined') {
+        var fromDebateId = this.currentlyDragging.debateId
+        var fromPosition = this.currentlyDragging.position
+        var fromPanel = this.debatesByID[fromDebateId].panel
+      } else {
+        var fromDebateId = false
+        var fromPosition = false
+      }
+
+      // If moving to become a chair; remove/swap the current chair first
+      if (toPosition === "C") {
+        // Check if there is a current chair
+        var currentChairIndex = toPanel.findIndex(function(value) {
+          return value.position === "C";
+        });
+        if (currentChairIndex !== -1) {
+          // If there is infact a current chair; check if we need to do a swap
+          // If moving from a previous position do a swap
+          if (fromDebateId !== false) {
+            // Find the about to be replaced chair & add to old position
+            var oldChairID = toPanel[currentChairIndex].id;
+            fromPanel.push({'id': oldChairID, 'position': fromPosition});
+          }
+          // Remove original chair
+          toPanel.splice(toRemoveIndex, 1);
+        }
+      }
+
+      if (fromDebateId === false) {
+        adj.allocated = true; // Triggers remove from unused area
+      } else {
+        var toRemoveIndex = fromPanel.findIndex(function(value) {
+          return value.id === adj.id;
+        });
+        fromPanel.splice(toRemoveIndex, 1);
+      }
+
+      // Find the debate object that was dropped into and add the adj to it
+      toPanel.push({'id': adj.id, 'position': toPosition})
+      this.currentlyDragging = null;
     }
   }
 

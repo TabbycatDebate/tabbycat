@@ -125,6 +125,8 @@ class BreakingAdjudicators(TournamentMixin, VueTableMixin):
 
 class AdminBreakingAdjudicators(LoginRequiredMixin, BreakingAdjudicators):
 
+    template_name = 'breaking_adjs.html'
+
     def get(self, request, *args, **kwargs):
         messages.info(self.request, "Adjudicators can be marked as breaking in the Feedback section.")
         return super().get(self, request, *args, **kwargs)

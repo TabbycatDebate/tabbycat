@@ -6,18 +6,21 @@ from django.views.generic.base import TemplateView, View
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 
+from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from breakqual.utils import categories_ordered
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
-from participants.utils import regions_to_json
+from participants.utils import regions_ordered
 from tournaments.mixins import RoundMixin
-from utils.mixins import ExpectPost, JsonDataResponseView, SuperuserRequiredMixin, TournamentMixin, VueTableMixin
+from utils.mixins import ExpectPost, JsonDataResponseView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
-from .utils import adjs_to_json, AllocationTableBuilder, populate_adjs_data
+from .utils import adjs_to_json, debates_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
+
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +101,62 @@ def draw_adjudicators_edit(request, round):
                                                 len(colors))))
 
     return render(request, "draw_adjudicators_edit.html", context)
+
+
+class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, ExpectPost, View):
+
+    def post(self, request, *args, **kwargs):
+
+        # Example request.POST:
+        # {'debate_6': ['true'], 'chair_7': ['79'], 'panel_1[]': ['89', '94']}
+
+        def _extract_id(s):
+            return int(s.replace('[]', '').split('_')[1])
+
+        debate_ids = [_extract_id(key) for key in request.POST if key.startswith("debate_")]
+        debates = Debate.objects.in_bulk(debate_ids)
+        allocations = {d_id: AdjudicatorAllocation(debate) for d_id, debate in debates.items()}
+
+        for key, values in request.POST.lists():
+            if key.startswith("debate_"):
+                continue
+
+            alloc = allocations[_extract_id(key)]
+            adjs = [Adjudicator.objects.get(id=int(x)) for x in values]
+            if key.startswith("chair_"):
+                if len(adjs) > 1:
+                    logger.warning("There was more than one chair for debate {}, only saving the first".format(alloc.debate))
+                alloc.chair = adjs[0]
+            elif key.startswith("panel_"):
+                alloc.panel.extend(adjs)
+            elif key.startswith("trainees_"):
+                alloc.trainees.extend(adjs)
+
+        changed = 0
+        for d_id, debate in debates.items():
+            existing = debate.adjudicators
+            revised = allocations[d_id]
+            if existing != revised:
+                changed += 1
+                logger.info("Saving adjudicators for debate {}".format(debate))
+                logger.info("{} --> {}".format(existing, revised))
+                existing.delete()
+                try:
+                    revised.save()
+                except IntegrityError:
+                    return HttpResponseBadRequest("""An adjudicator
+                        was allocated to the same debate multiple times. Please
+                        remove them and re-save.""")
+
+        if not changed:
+            logger.warning("Didn't save any adjudicator allocations, nothing changed.")
+            return HttpResponse("There aren't any changes to save.")
+
+        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,
+                                   user=request.user, round=self.get_round(),
+                                   tournament=self.get_tournament())
+
+        return HttpResponse("Saved changes for {} debates!".format(changed))
 
 
 def _json_adj_allocation(debates, unused_adj):
@@ -191,51 +250,42 @@ class CreateAdjAllocation(RoundMixin, SuperuserRequiredMixin, JsonDataResponseVi
         pass
 
 
-class GetAdjConflicts(RoundMixin, SuperuserRequiredMixin, JsonDataResponseView):
+# ==============================================================================
+# New UI
+# ==============================================================================
 
-    def get_data(self):
-        pass
-
-
-class GetAdjHistories(RoundMixin, SuperuserRequiredMixin, JsonDataResponseView):
-
-    def get_data(self):
-        pass
-
-
-class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, VueTableMixin, TemplateView):
+class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = 'edit_adj_allocation.html'
 
     def get_context_data(self, **kwargs):
-        round_adjs = populate_adjs_data(self.get_round())
-        kwargs['allAdjudicators'] = adjs_to_json(round_adjs)
-        kwargs['allRegions'] = regions_to_json()
+        t = self.get_tournament()
+        r = self.get_round()
+        draw = r.get_draw()
+
+        teams = [d.aff_team for d in draw] + [d.neg_team for d in draw]
+        adjs = get_adjs(self.get_round())
+        categories = categories_ordered(t)
+        regions = regions_ordered(t)
+
+        adjs, teams = populate_conflicts(adjs, teams)
+        adjs, teams = populate_histories(adjs, teams, t, r)
+
+        kwargs['allDebates'] = debates_to_json(draw, t, r)
+        kwargs['allTeams'] = teams_to_json(teams, regions, categories)
+        kwargs['allAdjudicators'] = adjs_to_json(adjs, regions)
+        kwargs['allRegions'] = json.dumps(regions)
+        kwargs['allCategories'] = json.dumps(categories)
+
         return super().get_context_data(**kwargs)
 
-    def get_table(self):
-        # r = self.get_round()
-        # draw = r.get_draw()
 
-        table = AllocationTableBuilder(view=self, sort_order='desc',
-            sort_key='importance',
-            table_class='table-condensed table-edit-allocation')
-
-        # table.add_debate_bracket_columns(draw)
-        # table.add_debate_importances(draw, r)
-        # table.add_debate_venue_columns(draw)
-        # table.add_team_columns([d.aff_team for d in draw],
-        #    key='Aff', hide_institution=True, hide_emoji=True)
-        # table.add_team_wins(draw, r, "AW")
-        # table.add_team_columns([d.neg_team for d in draw],
-        #    key='Neg', hide_institution=True, hide_emoji=True)
-        # table.add_team_wins(draw, r, "NW")
-        # table.add_column("Panel", [{'text': ''} for d in draw])
-
-        return table
+class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, ExpectPost, View):
+    pass
 
 
-class SaveDebateImportance(TournamentMixin, SuperuserRequiredMixin, ExpectPost, View):
+class SaveDebateImportance(SaveDebateInfo):
+    action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
     def dispatch(self, request, *args, **kwargs):
         debate_id = request.POST.get('debate_id')
@@ -245,65 +295,26 @@ class SaveDebateImportance(TournamentMixin, SuperuserRequiredMixin, ExpectPost, 
         debate.importance = debate_importance
         debate.save()
 
-        ActionLogEntry.objects.log(
-            type=ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
-            user=request.user, debate=debate,
-            tournament=debate.round.tournament)
-
         return HttpResponse()
 
 
-class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
+class SaveDebatePanel(SaveDebateInfo):
+    action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
+        debate_id = request.POST.get('debate_id')
+        debate_panel = json.loads(request.POST.get('panel'))
 
-        # Example request.POST:
-        # {'debate_6': ['true'], 'chair_7': ['79'], 'panel_1[]': ['89', '94']}
+        # TODO: more efficient method than just wiping and remarking the data
+        # Build a dict and compare the two sets?
 
-        def _extract_id(s):
-            return int(s.replace('[]', '').split('_')[1])
+        old_da = DebateAdjudicator.objects.filter(debate=debate_id)
+        old_da.delete()
 
-        debate_ids = [_extract_id(key) for key in request.POST if key.startswith("debate_")]
-        debates = Debate.objects.in_bulk(debate_ids)
-        allocations = {d_id: AdjudicatorAllocation(debate) for d_id, debate in debates.items()}
+        [DebateAdjudicator(
+            debate_id=debate_id,
+            adjudicator_id=da['id'],
+            type=da['position']
+        ).save() for da in debate_panel]
 
-        for key, values in request.POST.lists():
-            if key.startswith("debate_"):
-                continue
-
-            alloc = allocations[_extract_id(key)]
-            adjs = [Adjudicator.objects.get(id=int(x)) for x in values]
-            if key.startswith("chair_"):
-                if len(adjs) > 1:
-                    logger.warning("There was more than one chair for debate {}, only saving the first".format(alloc.debate))
-                alloc.chair = adjs[0]
-            elif key.startswith("panel_"):
-                alloc.panel.extend(adjs)
-            elif key.startswith("trainees_"):
-                alloc.trainees.extend(adjs)
-
-        changed = 0
-        for d_id, debate in debates.items():
-            existing = debate.adjudicators
-            revised = allocations[d_id]
-            if existing != revised:
-                changed += 1
-                logger.info("Saving adjudicators for debate {}".format(debate))
-                logger.info("{} --> {}".format(existing, revised))
-                existing.delete()
-                try:
-                    revised.save()
-                except IntegrityError:
-                    return HttpResponseBadRequest("""An adjudicator
-                        was allocated to the same debate multiple times. Please
-                        remove them and re-save.""")
-
-        if not changed:
-            logger.warning("Didn't save any adjudicator allocations, nothing changed.")
-            return HttpResponse("There aren't any changes to save.")
-
-        ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,
-                                   user=request.user, round=self.get_round(),
-                                   tournament=self.get_tournament())
-
-        return HttpResponse("Saved changes for {} debates!".format(changed))
+        return HttpResponse()
