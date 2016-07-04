@@ -106,21 +106,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
 
         table = TabbycatTableBuilder(view=self, sort_key="Venue")
         table.add_debate_venue_columns(debates)
-
-        results_data = []
-        for debate in debates:
-            affirmative = {'text': debate.aff_team.short_name}
-            negative = {'text': debate.neg_team.short_name}
-            if debate.confirmed_ballot:
-                if debate.confirmed_ballot.ballot_set.aff_win:
-                    affirmative['icon'] = "glyphicon-arrow-up text-success"
-                    negative['icon'] = "glyphicon-arrow-down text-danger"
-                elif debate.confirmed_ballot.ballot_set.neg_win:
-                    negative['icon'] = "glyphicon-arrow-up text-success"
-                    affirmative['icon'] = "glyphicon-arrow-down text-danger"
-            results_data.append([affirmative, negative])
-        table.add_columns(["Affirmative", "Negative"], results_data)
-
+        table.add_debate_results_columns(debates)
         table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates,
             show_splits=tournament.pref('show_splitting_adjudicators'))

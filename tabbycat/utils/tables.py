@@ -1,5 +1,6 @@
 from adjallocation.models import DebateAdjudicator
-from draw.models import Debate
+from draw.models import Debate, DebateTeam
+from results.models import TeamScore
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from utils.misc import reverse_tournament
 
@@ -553,6 +554,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
             results = [self._result_cell(
                 t.round_results[round_seq]) for t in teams]
             self.add_column(round.abbreviation, results)
+
+    def add_debate_results_columns(self, debates):
+        teamscores = TeamScore.objects.filter(debate_team__debate__in=debates)
+        results = {}
+        for ts in teamscores:
+            results[(ts.debate_team.debate, ts.debate_team.position)] = ts
+        results_data = []
+        for debate in debates:
+            aff_ts = results.get((debate, DebateTeam.POSITION_AFFIRMATIVE))
+            neg_ts = results.get((debate, DebateTeam.POSITION_NEGATIVE))
+            results_data.append([self._result_cell(ts) for ts in (aff_ts, neg_ts)])
+        self.add_columns(["Affirmative", "Negative"], results_data)
 
     def add_standings_results_columns(self, standings, rounds, show_ballots):
 
