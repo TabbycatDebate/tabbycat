@@ -23,7 +23,7 @@
   <div class="col-md-5">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4>Assign Dates to Venue Groups</h4>
+        <h4 class="panel-title">Assign Dates to Venue Groups</h4>
       </div>
       <form id="assignForm" method="POST" action="{% round_url apply_schedule %}">
         {% csrf_token %}
@@ -47,7 +47,7 @@
   <div class="col-md-7">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4>Assign Times to Divisions</h4>
+        <h4 class="panel-title">Assign Times to Divisions</h4>
       </div>
       <ul class="list-group">
         {% for d in divisions %}

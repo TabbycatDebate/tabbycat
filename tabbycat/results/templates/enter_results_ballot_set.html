@@ -34,7 +34,7 @@
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4>Motion</h4>
+            <h4 class="panel-title">Motion</h4>
           </div>
           <div class="panel-body form-panel">
             {% if pref.enable_motions %}
@@ -73,7 +73,7 @@
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4>Ballot from {{ adj.adj }}
+            <h4 class="panel-title">Ballot from {{ adj.adj }}
               {% if pref.side_allocations_unknown == 'manual-ballot' %}
                 <p class="text-warning col-xs-12">Assign sides before entering scores</p>
               {% endif %}
@@ -157,7 +157,7 @@
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4>Forfeits</h4>
+            <h4 class="panel-title">Forfeits</h4>
           </div>
           <div class="panel-body form-panel forfeits-group">
             {{ form.forfeits|addcss:"form-control" }}
