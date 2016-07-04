@@ -29,19 +29,17 @@
           </div>
           <p>
             They will be adjudicated by
-            {% with adjudicators=debateteam.debate.adjudicators %}
-              {% for adjtype, adj in adjudicators %}
-                {% if not forloop.first %},{% if forloop.last %} and{% endif %}{% endif %}
-                <a href="{% tournament_url participants-adjudicator-record adj.pk %}">
-                  {{ adj.name }}
-                </a>
-                {% if adjtype == 'C' and adjudicators.is_panel %}
-                  Ⓒ
-                {% elif adjtype == 'T' %}
-                  Ⓣ
-                {% endif %}
-              {% endfor %}
-            {% endwith %}
+            {% for adj, adjtype in debateteam.debate.adjudicators.with_positions %}
+              {% if not forloop.first %},{% if forloop.last %} and{% endif %}{% endif %}
+              <a href="{% tournament_url participants-adjudicator-record adj.pk %}">
+                {{ adj.name }}
+              </a>
+              {% if adjtype == 'C' %}
+                Ⓒ
+              {% elif adjtype == 'T' %}
+                Ⓣ
+              {% endif %}
+            {% endfor %}
           .
           </p>
           <p>

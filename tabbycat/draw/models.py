@@ -4,7 +4,8 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
 
-from adjallocation.models import AdjudicatorAllocation, DebateAdjudicator
+from adjallocation.allocation import AdjudicatorAllocation
+from adjallocation.models import DebateAdjudicator
 from tournaments.models import SRManager
 from participants.models import Team
 from venues.conflicts import venue_conflicts
@@ -196,24 +197,16 @@ class Debate(models.Model):
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
-        adjs = DebateAdjudicator.objects.filter(
-            debate=self).select_related('adjudicator')
-        alloc = AdjudicatorAllocation(self)
-        for a in adjs:
-            if a.type == a.TYPE_CHAIR:
-                alloc.chair = a.adjudicator
-            if a.type == a.TYPE_PANEL:
-                alloc.panel.append(a.adjudicator)
-            if a.type == a.TYPE_TRAINEE:
-                alloc.trainees.append(a.adjudicator)
-        return alloc
+        return AdjudicatorAllocation(self, from_db=True)
 
     @property
     def chair(self):
-        from adjallocation.models import DebateAdjudicator
-        da_adj = list(DebateAdjudicator.objects.filter(debate=self, type="C"))
-        a_adj = da_adj[0].adjudicator
-        return a_adj
+        # Deprecated 4/7/2016, remove completely after 4/8/2016
+        raise RuntimeError("Debate.chair is deprecated, use Debate.adjudicators.chair instead")
+        # from adjallocation.models import DebateAdjudicator
+        # da_adj = list(DebateAdjudicator.objects.filter(debate=self, type="C"))
+        # a_adj = da_adj[0].adjudicator
+        # return a_adj
 
     @property
     def matchup(self):

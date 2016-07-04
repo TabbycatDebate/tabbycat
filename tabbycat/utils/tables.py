@@ -1,4 +1,4 @@
-from adjallocation.models import DebateAdjudicator
+from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate, DebateTeam
 from results.models import TeamScore
 from standings.templatetags.standingsformat import metricformat, rankingformat
@@ -122,15 +122,16 @@ class TabbycatTableBuilder(BaseTableBuilder):
     Tabbycat."""
 
     ADJ_SYMBOLS = {
-        DebateAdjudicator.TYPE_CHAIR: " Ⓒ",
-        DebateAdjudicator.TYPE_PANEL: "",
-        DebateAdjudicator.TYPE_TRAINEE: " Ⓣ",
+        AdjudicatorAllocation.POSITION_CHAIR: " Ⓒ",
+        AdjudicatorAllocation.POSITION_PANELLIST: "",
+        AdjudicatorAllocation.POSITION_TRAINEE: " Ⓣ",
+        AdjudicatorAllocation.POSITION_ONLY: "",
     }
 
-    ADJ_TYPES = {
-        DebateAdjudicator.TYPE_CHAIR: "Chair",
-        DebateAdjudicator.TYPE_PANEL: "Panellist",
-        DebateAdjudicator.TYPE_TRAINEE: "Trainee",
+    ADJ_POSITION_NAMES = {
+        AdjudicatorAllocation.POSITION_CHAIR: "chair",
+        AdjudicatorAllocation.POSITION_PANELLIST: "panellist",
+        AdjudicatorAllocation.POSITION_TRAINEE: "trainee",
     }
 
     def __init__(self, view=None, **kwargs):
@@ -279,21 +280,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
         def construct_text(adjs_data):
             adjs_list = ["%s%s%s" % (
                 a['adj'].name,
-                self.ADJ_SYMBOLS[a['type']],
-                "<span class='text-danger'>💢</span>" if hasattr(a, 'split') else ''
+                self.ADJ_SYMBOLS[a['position']],
+                " <span class='text-danger'>💢</span>" if a.get('split', False) else ''
             ) for a in adjs_data]
             return ', '.join([str(ad) for ad in adjs_list])
 
         def construct_popover(adjs_data):
             popover_data = []
             for a in adjs_data:
-                popover_data.append({
-                    'text': "%s (%s%s; from %s)" % (
-                        a['adj'].name,
-                        "<span class='text-danger'>Split</span>; " if hasattr(a, 'split') else '',
-                        self.ADJ_TYPES[a['type']],
-                        a['adj'].institution.code)
-                })
+                descriptors = []
+                if a['position'] != AdjudicatorAllocation.POSITION_ONLY:
+                    descriptors.append(self.ADJ_POSITION_NAMES[a['position']])
+                descriptors.append("from %s" % a['adj'].institution.code)
+                if a.get('split', False):
+                    descriptors.append("<span class='text-danger'>in minority</span>")
+
+                popover_data.append({'text': "%s (%s)" % (a['adj'].name, ", ".join(descriptors))})
                 if self._show_record_links:
                     popover_data.append(self._adjudicator_record_link(a['adj']))
 
@@ -302,13 +304,16 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for debate in debates:
             adjs_data = []
             if debate.confirmed_ballot and show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
-                for adjtype, adj, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
+                for adj, position, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
                     adjs_data.append(
-                        {'adj': adj, 'type': adjtype, 'split': True if split else False})
+                        {'adj': adj, 'position': position, 'split': bool(split)})
             else:
-                for adjtype, adj in debate.adjudicators:
+                for adj, position in debate.adjudicators.with_types():
                     adjs_data.append(
-                        {'adj': adj, 'type': adjtype, 'split': None})
+                        {'adj': adj, 'position': position})
+
+            if not debate.adjudicators.has_chair and debate.adjudicators.is_panel:
+                adjs_data[0]['type'] = 'O'
 
             da_data.append({
                 'text': construct_text(adjs_data),

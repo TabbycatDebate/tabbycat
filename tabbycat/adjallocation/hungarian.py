@@ -60,7 +60,7 @@ class HungarianAllocator(Allocator):
         return cost
 
     def allocate(self):
-        from adjallocation.models import AdjudicatorAllocation
+        from adjallocation.allocation import AdjudicatorAllocation
 
         # Remove trainees
         self.adjudicators = [a for a in self.adjudicators if a.score >= self.MIN_VOTING_SCORE]
