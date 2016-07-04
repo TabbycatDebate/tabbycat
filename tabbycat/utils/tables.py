@@ -1,6 +1,5 @@
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate, DebateTeam
-from results.models import TeamScore
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from utils.misc import reverse_tournament
 

@@ -6,7 +6,6 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
 
 from adjallocation.allocation import AdjudicatorAllocation
-from adjallocation.models import DebateAdjudicator
 from tournaments.models import SRManager
 from participants.models import Team
 from venues.conflicts import venue_conflicts

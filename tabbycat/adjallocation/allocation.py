@@ -2,6 +2,7 @@ from warnings import warn
 
 from .models import DebateAdjudicator
 
+
 class AdjudicatorAllocation:
     """Class for handling the adjudicators on a panel."""
 
