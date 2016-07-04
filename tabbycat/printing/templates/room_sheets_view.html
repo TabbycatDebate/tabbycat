@@ -22,7 +22,10 @@
       {% for debate in venue.debates %}
         <div class="panel panel-default">
           <div class="panel-heading text-center">
-            <h3>{{ debate.round.tournament.short_name }} Division {{ debate.aff_team.division.name }}</h3>
+            <h3 class="panel-title">
+              {{ debate.round.tournament.short_name }} Division
+              {{ debate.aff_team.division.name }}
+            </h3>
           </div>
           <ul class="list-group h4 text-center">
             {% for motion in debate.division_motion %}

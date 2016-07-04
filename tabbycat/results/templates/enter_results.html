@@ -11,7 +11,9 @@
 {% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}{% endblock %}
 {% block page-subnav-sections %}
   {% if not new %}
-    <a class="btn btn-default" href="{% tournament_url new_ballotset debate.id %}">Create a new ballot set for this debate</a>
+    <a class="btn btn-default" href="{% tournament_url new_ballotset debate.id %}">
+      Create a new ballot set for this debate
+    </a>
   {% endif %}
 {% endblock %}
 
@@ -25,10 +27,9 @@
     {% include "enter_results_ballot_set.html" %}
     <div class="row">
         <div class="col-sm-12">
-
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4>Ballot Status</h4>
+              <h4 class="panel-title">Ballot Status</h4>
             </div>
             <div class="panel-body form-panel">
               <div class="form-group col-md-6">
@@ -61,7 +62,10 @@
         <div class="col-sm-12">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4>Debate Status <small>(for the debate itself, not just this particular ballot set)</small></h4>
+              <h4 class="panel-title">
+                Debate Status <small>(for the debate itself, not just this
+                particular ballot set)</small>
+              </h4>
             </div>
             <div class="panel-body form-panel">
               <div class="form-group">

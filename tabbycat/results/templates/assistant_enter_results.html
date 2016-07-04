@@ -18,7 +18,9 @@
 
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4>{% if new %}Save{% else %}Check{% endif %}</h4>
+            <h4 class="panel-title">
+              {% if new %}Save{% else %}Check{% endif %}
+            </h4>
             {% if disable_confirm %}
               <div class="alert alert-danger">
                 You can't confirm this ballot set because you entered it.
