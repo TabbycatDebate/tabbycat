@@ -410,10 +410,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'icon': 'glyphicon-stats',
             'tooltip': 'Bracket of this debate'
         }
+
         def _fmt(x):
             if int(x) == x:
                 return int(x)
             return x
+
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
     def add_debate_venue_columns(self, debates, with_times=False):
