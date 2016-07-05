@@ -247,7 +247,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_motion_column(self, motions, key="Motion", show_order=False):
         if show_order and self.tournament.pref('enable_motions'):
-            self.add_column("Order", [motion.seq for motion in motions])
+            self.add_column("Order", [{
+                'text': motion.seq,
+                'sort': motion.round.seq + (motion.seq * 0.1)
+                } for motion in motions])
 
         motion_data = [{
             'text': motion.reference,

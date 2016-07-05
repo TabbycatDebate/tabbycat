@@ -49,6 +49,9 @@ def calculate_result(queryset, keywords):
 
 
 def median_value(ordered_values):
+    if len(ordered_values) is 0:
+        return None
+
     mid = len(ordered_values) / 2
 
     if (len(ordered_values) % 2 == 0):
