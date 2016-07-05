@@ -250,7 +250,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column("Order", [{
                 'text': motion.seq,
                 'sort': motion.round.seq + (motion.seq * 0.1)
-                } for motion in motions])
+            } for motion in motions])
 
         motion_data = [{
             'text': motion.reference,
