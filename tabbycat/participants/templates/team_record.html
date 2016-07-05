@@ -6,118 +6,100 @@
 {% block content %}
 
   <div class="row">
-    <div class="col-md-12">
 
-      <div class="alert alert-info">
-        <h5>In {{ current_round.name }}</h5>
+    <div class="col-md-6">
+      <div class="panel {% if debateteam %}panel-primary{% else %}panel-default{% endif %}">
+        <div class="panel-heading">
+          <h4 class="panel-title">This Round ({{ current_round.name }})</h4>
+        </div>
+
         {% if debateteam %}
-          <div class="vertical-spacing">
-            <p class="lead">
-              {{ team.short_name }} is
-              debating as the
-              <strong><u>{{ debateteam.get_position_display }}</u></strong>
+          <ul class="list-group">
+            <li class="list-group-item active">
+              {{ team.short_name }} is debating
+              {% if debateteam.position != debateteam.POSITION_UNALLOCATED %}
+                as the <strong>{{ debateteam.get_position_display|lower }}</strong> team
+              {% endif %}
               against
-              <strong><u>
-                <a href="{% tournament_url participants-team-record debateteam.opposition.team.pk %}">
-                {{ debateteam.opposition.team.short_name }}
-                </a>
-              </u></strong>
-              in <strong><u>{{ debateteam.debate.venue.name }}</u></strong>{% if current_round.starts_at %}
-                starting at <strong><u>{{ current_round.starts_at }}</u></strong>
+              <strong><a href="{% tournament_url participants-team-record debateteam.opposition.team.pk %}" class="list-group-item-text">
+                {{ debateteam.opposition.team.short_name }}</a></strong>
+              in <strong>{{ debateteam.debate.venue.name }}</strong>.
+            </strong></li>
+            <li class="list-group-item">
+              The round begins at {{ current_round.starts_at }}
+            </li>
+            <li class="list-group-item">
+              {% with adjudicators=debateteam.debate.adjudicators %}
+                <strong>Adjudicator{{ adjudicators|length|pluralize }}:</strong>
+                {% for adj, adjtype in adjudicators.with_positions %}
+                  <a href="{% tournament_url participants-adjudicator-record adj.pk %}">
+                    {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              {% endwith %}
+            </li>
+            <li class="list-group-item">
+              <strong>Motion{{ debateteam.debate.round.motion_set.count|pluralize }}:</strong>
+              {% if debateteam.debate.round.motion_set.all|length == 1 %}
+                {{ debateteam.debate.round.motion_set.first.text }}
+              {% else %}
+                {% for motion in debateteam.debate.round.motion_set.all %}
+                  <br />{{ motion.text }}
+                {% endfor %}
               {% endif %}
-            </p>
-          </div>
-          <p>
-            They will be adjudicated by
-            {% for adj, adjtype in debateteam.debate.adjudicators.with_positions %}
-              {% if not forloop.first %},{% if forloop.last %} and{% endif %}{% endif %}
-              <a href="{% tournament_url participants-adjudicator-record adj.pk %}">
-                {{ adj.name }}
-              </a>
-              {% if adjtype == 'C' %}
-                Ⓒ
-              {% elif adjtype == 'T' %}
-                Ⓣ
-              {% endif %}
-            {% endfor %}
-          .
-          </p>
-          <p>
-            They will debate
-            {% if debateteam.debate.round.motion_set.all|length == 1 %}
-              <em>"{{ debateteam.debate.round.motion_set.first.text }}"</em>
-            {% else %}
-              on one
-              {% for motion in debateteam.debate.round.motion_set.all %}
-                {% if not forloop.first %},{% if forloop.last %} or{% endif %}{% endif %}
-                <em>"{{ motion.text }}"</em>
-              {% endfor %}
-            {% endif %}
-            .
-          </p>
+            </li>
+          </ul>
         {% else %}
-          <p class="lead">
-            {{ team.short_name }} does not have a debate this round.
-          </p>
+          <div class="panel-body">
+            <em>{{ team.short_name }} does not have a debate this round.</em>
+          </div>
         {% endif %}
       </div>
-
     </div>
-  </div>
 
-  <div class="row">
-
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="panel-title">Speakers</h4>
+          <h4 class="panel-title">About {{ team.short_name }}</h4>
         </div>
+
         <ul class="list-group">
-          {% for speaker in team.speakers %}
+          {% if team.reference != team.short_reference %}
             <li class="list-group-item">
-              {{ speaker.name }}
+              <strong>Full name:</strong>
+              {{ team.long_name }}
             </li>
-          {% endfor %}
+          {% endif %}
+          <li class="list-group-item">
+            <strong>Speakers:</strong>
+            {% for speaker in team.speakers %}
+              {{ speaker.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </li>
+          {% if team.division %}
+            <li class="list-group-item">
+              <strong>Division:</strong>
+              {{ team.division.name }}
+            </li>
+          {% endif %}
+          <li class="list-group-item">
+            <strong>Eligible for:</strong>
+            {% for category in team.break_categories.all %}
+              {{ category.name }} Break{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </li>
+          <li class="list-group-item">
+            <strong>Institution:</strong>
+            {{ team.institution.name }}
+          </li>
+          {% if team.institution.region %}
+            <li class="list-group-item">
+              <strong>Region:</strong>
+              {{ team.institution.region }}
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>
-
-    <div class="col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">Eligiblility</h4>
-        </div>
-        <ul class="list-group">
-          {% for category in team.break_categories.all %}
-            <li class="list-group-item">
-              <span class="glyphicon glyphicon-ok"></span>
-              {{ category.name }} Break
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-
-    {% if pref.show_institutions %}
-      <div class="col-md-4">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">Institution</h4>
-          </div>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <strong>{{ team.institution.name }}</strong>
-              ({{ team.institution.code }})
-            </li>
-            {% if team.institution.region %}
-              <li class="list-group-item">
-                From the '<strong>{{ team.institution.region }}</strong>' region.
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    {% endif %}
 
   </div>
 
