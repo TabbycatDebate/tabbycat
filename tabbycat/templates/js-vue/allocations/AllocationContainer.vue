@@ -10,12 +10,12 @@
         <div class="thead flex-cell" data-toggle="tooltip" title="Debate Bracket">
           <span class="glyphicon glyphicon-stats"></span>
         </div>
-        <div class="thead flex-1">Aff</div>
-        <div class="thead flex-1">Neg</div>
-        <div class="thead flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
+        <div class="thead flex-cell debate-team">Aff</div>
+        <div class="thead flex-cell debate-team">Neg</div>
+        <div class="thead flex-cell flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
           <span>Importance</span>
         </div>
-        <div class="thead flex-7 flex-horizontal">
+        <div class="thead flex-6 flex-horizontal">
           <div class="flex-1 text-center">Chair</div>
           <div class="flex-2 text-center">Panelists</div>
           <div class="flex-2 text-center">Trainees</div>

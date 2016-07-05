@@ -6,17 +6,6 @@ from standings.teams import TeamStandingsGenerator
 from .models import BreakingTeam
 
 
-def calculate_liveness(break_category, tournament, round):
-    current_round = round.seq
-    total_rounds = tournament.prelim_rounds(until=round).count()
-    total_teams = break_category.team_set.count()
-    break_spots = break_category.break_size
-    print(current_round)
-    print(total_rounds)
-    print(total_teams)
-    print(break_spots)
-
-
 def get_breaking_teams(category, include_all=False, include_categories=False):
     """Returns a list of Teams, with additional attributes. For each Team t in
     the returned list:

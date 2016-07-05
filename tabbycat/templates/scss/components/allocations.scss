@@ -32,7 +32,7 @@
 }
 
 .importance-container {
-  width: 95px;
+  width: 85px;
 }
 
 .panel-incomplete {
@@ -74,7 +74,20 @@
 }
 
 //------------------------------------------------------------------------------
-// Draggable Elements
+// Debate Teams
+//------------------------------------------------------------------------------
+
+.debate-team {
+  width: 120px;
+  // Truncate Long Team Names
+  .debate-team-title {
+    width: 110px;
+    @include text-overflow;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Adjudicators
 //------------------------------------------------------------------------------
 
 .adj-draggable {

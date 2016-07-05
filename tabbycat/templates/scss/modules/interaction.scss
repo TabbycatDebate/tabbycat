@@ -42,14 +42,19 @@
   position: absolute;
 }
 
+// For Division Drag and Drops
 .slideover-info {
   width: auto;
   position: fixed;
-  height: 75px;
-  bottom: 0;
-  right: 15px;
-  left: 15px;
+  height: auto;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
   z-index: 1040;
+}
+.slideover-top {
+  bottom: auto;
+  top: 0px;
 }
 
 // For motions page; probably feedback also

@@ -4,6 +4,7 @@ import math
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
 from availability.models import ActiveAdjudicator
+from breakqual.utils import determine_liveness
 from draw.models import DebateTeam
 from participants.models import Adjudicator
 
@@ -185,9 +186,17 @@ def adjs_to_json(adjs, regions):
     return json.dumps(data)
 
 
-def teams_to_json(teams, regions, categories):
+def teams_to_json(teams, regions, categories, t, r):
     data = {}
     for team in teams:
+        team_categories = team.break_categories.all().values_list('id', flat=True)
+        break_categories = [{
+            'id': bc['id'],
+            'name': bc['name'],
+            'seq': bc['seq'],
+            'will_break': determine_liveness(bc, t, r, team.wins_count)
+        } for bc in categories if bc['id'] in team_categories]
+
         data[team.id] = {
             'id': team.id,
             'name': team.short_name,
@@ -198,7 +207,7 @@ def teams_to_json(teams, regions, categories):
             'wins': team.wins_count,
             'region': [r for r in regions if r['id'] is team.institution.region.id][0] if team.institution.region else None,
             # TODO: Searching for break cats here incurs extra queries; should be done earlier
-            'categories': [bc for bc in categories if bc['id'] in team.break_categories.all().values_list('id', flat=True)],
+            'categories': break_categories,
             'institution': {
                 'id': team.institution.id,
                 'name': team.institution.code,
