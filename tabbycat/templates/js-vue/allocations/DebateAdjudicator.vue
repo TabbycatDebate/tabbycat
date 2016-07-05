@@ -108,7 +108,7 @@ export default {
     handleDragStart: function(event) {
       // Set this adj's id as the data for receiving object
       this.$dispatch('set-dragged-adj', {
-        'adj': this.adj,
+        'adj': this.adjorteam,
         'position': this.position,
         'debateId': this.debateId
       })

@@ -1,11 +1,12 @@
 <template>
 
-  <div
+  <div class="flex-1 flex-vertical-center bordered-bottom"
     v-on:mouseover="setHighlights"
     v-on:mouseout="unsetHighlights"
     v-bind:class="[diversityHighlights, historiesHighlights,
-                   conflictsHighlights]"
-    class="popover-parent">
+                   conflictsHighlights]">
+
+    <div class="flex-1 popover-parent">
 
       <div class="popover-anchor" v-on:mouseover="setupPopover"></div>
 
@@ -30,6 +31,7 @@
       </div>
 
     </div>
+  </div>
 
 </template>
 

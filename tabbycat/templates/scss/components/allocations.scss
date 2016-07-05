@@ -55,7 +55,7 @@
 }
 .positions-parent > div {
   border-left: 2px solid $table-border-color;
-  min-height: 47px; // Dont let it collapse when no adjs are present
+  min-height: 50px; // Dont let it collapse when no adjs are present
   &:first-child {
     border-left: 0;
   }

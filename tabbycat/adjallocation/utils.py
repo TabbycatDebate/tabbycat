@@ -75,7 +75,10 @@ def populate_conflicts(adjs, teams):
 
     for a in adjs:
         a.personal_teams = [c[1] for c in teamconflicts if c[0] is a.id]
-        a.institutional_institutions = [c[1] for c in institutionconflicts if c[0] is a.id]
+        a.institutional_institutions = [a.institution.id]
+        a.institutional_institutions.extend(
+            [c[1] for c in institutionconflicts if c[0] is a.id and c[1] is not a.institution.id])
+
         # Adj-adj conflicts should be symmetric
         a.personal_adjudicators = [c[1] for c in adjconflicts if c[0] is a.id]
         a.personal_adjudicators += [c[0] for c in adjconflicts if c[1] is a.id]
@@ -84,7 +87,7 @@ def populate_conflicts(adjs, teams):
         t.personal_adjudicators = [c[0] for c in teamconflicts if c[1] is t.id]
         # For teams conflicted_institutions is a list of adjs due to the asymetric
         # nature of adjs having multiple instutitonal conflicts
-        t.institutional_institutions = [c[1] for c in institutionconflicts if c[0] is t.institution.id]
+        t.institutional_institutions = [t.institution.id]
 
     return adjs, teams
 

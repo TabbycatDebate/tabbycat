@@ -75,17 +75,17 @@ export default {
     toggleConflictsValues: function(conflictValue) {
       var conflicts = this.currentConflictHighlights;
       var _this = this;
-      if (conflicts.personal_adjudicators) {
+      if (conflicts.personal_adjudicators.length > 0) {
         conflicts.personal_adjudicators.forEach(function(currentValue) {
           _this.adjudicators[currentValue].hasPersonalConflict = conflictValue
         })
       }
-      if (conflicts.personal_teams) {
+      if (conflicts.personal_teams.length > 0) {
         conflicts.personal_teams.forEach(function(currentValue) {
           _this.teams[currentValue].hasPersonalConflict = conflictValue
         })
       }
-      if (conflicts.institutional_conflicts) {
+      if (conflicts.institutional_conflicts.length > 0) {
         conflicts.institutional_conflicts.forEach(function(currentValue) {
           // Loop through all adjudicators
           for (var adjudicatorID in _this.adjudicators) {
@@ -154,8 +154,8 @@ export default {
       this.toggleHistoriesValues(false);
       this.currentConflictHighlights = null;
     },
-    'set-dragged-adj': function(adjId) {
-      this.currentlyDragging = adjId;
+    'set-dragged-adj': function(dragInfo) {
+      this.currentlyDragging = dragInfo;
     },
     'unset-dragged-adj': function() {
       this.currentlyDragging = null;
@@ -178,6 +178,7 @@ export default {
       // Construct a lookup object to find the debate by it's ID
       var adj = this.currentlyDragging.adj
       var toPanel = this.debatesByID[toDebateId].panel
+
       if (typeof this.currentlyDragging.debateId !== 'undefined') {
         var fromDebateId = this.currentlyDragging.debateId
         var fromPosition = this.currentlyDragging.position
