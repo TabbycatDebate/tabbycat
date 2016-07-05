@@ -190,7 +190,7 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
             table.add_affs_count([d.aff_team for d in draw], r, 'aff')
             table.add_affs_count([d.neg_team for d in draw], r, 'neg')
         else:
-            table.add_debate_adjudicators_column(draw, show_splits=True)
+            table.add_debate_adjudicators_column(draw, show_splits=False)
 
         table.add_draw_conflicts(draw)
         if not r.is_break_round:

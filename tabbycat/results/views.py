@@ -67,7 +67,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableMixin, Te
         table.add_debate_bracket_columns(draw)
         table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
         table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
-        table.add_debate_adjudicators_column(draw, show_splits=True)
+        table.add_debate_adjudicators_column(draw, show_splits=False)
         return table
 
     def get_context_data(self, **kwargs):
