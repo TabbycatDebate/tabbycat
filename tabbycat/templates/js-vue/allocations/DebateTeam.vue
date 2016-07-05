@@ -28,37 +28,44 @@
       </div>
 
       <div class="slideover-info slideover-top">
-        <li class="list-group-item">
+        <li class="list-group-item flex-horizontal">
 
-          <div class="btn-toolbar">
-            <div class="btn-group btn-group-sm" role="group">
-              <div class="btn btn-default text-uppercase ">
-                {{ adjorteam.long_name }}
-              </div>
+          <div class="flex-1 btn-toolbar">
+            <div class="btn-group btn-group-sm " role="group">
               <div class="btn btn-default">{{ adjorteam.speakers }}</div>
             </div>
-
-          <div class="btn-group btn-group-sm pull-right" role="group">
-            <div class="btn btn-default">
-              <span class="glyphicon glyphicon-globe"></span>
-            </div>
-            <div class="btn btn-default btn-sm">
-              {{ adjorteam.region.name }}
-            </div>
           </div>
 
-          <div class="btn-group btn-group-sm pull-right" role="group">
-            <div class="btn btn-default">
-              <span class="glyphicon glyphicon-globe"></span>
-            </div>
-            <div class="btn btn-default btn-sm">
-              break category
-            </div>
-          </div>
+          <h4 class="flex-1 slideover-title text-center">
+            {{ adjorteam.long_name }}
+          </h4>
 
+          <div class="flex-1 btn-toolbar">
+
+            <div class="btn-group btn-group-sm pull-right" role="group">
+              <div class="btn btn-default region-display region-{{ adjorteam.region.seq }}">
+                <span class="glyphicon glyphicon-globe"></span>
+              </div>
+              <div class="btn btn-default btn-sm">
+                {{ adjorteam.region.name }}
+              </div>
+            </div>
+
+            <div class="btn-group btn-group-sm pull-right" role="group" v-for="category in adjorteam.categories">
+              <div class="btn btn-default">
+                <span class="glyphicon glyphicon-globe category-display category-{{ category.seq }}"></span>
+              </div>
+              <div class="btn btn-default btn-sm">
+                {{ category.name }} Break
+              </div>
+            </div>
+
+          </div>
         </li>
-        <li>
-        seen history
+        <li class="list-group-item">
+
+          seen history
+
         </li>
       </div>
 
