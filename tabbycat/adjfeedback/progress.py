@@ -6,6 +6,7 @@ There are a few possibilities for how to characterise a feedback submission:
 
 from .models import AdjudicatorFeedback
 
+from adjallocation.models import DebateAdjudicator
 
 class BaseFeedbackExpectedSubmissionTracker:
     """Represents a single piece of expected feedback."""
@@ -93,7 +94,7 @@ class FeedbackUnexpectedSubmissionTracker:
 
     @property
     def round(self):
-        return self.feedback.source.debate.round
+        return self.feedback.round
 
     @property
     def count(self):
@@ -101,6 +102,9 @@ class FeedbackUnexpectedSubmissionTracker:
 
     def related_submissions(self):
         return [self.feedback]
+
+    def submission(self):
+        return self.feedback
 
 
 class BaseFeedbackProgress:
@@ -170,26 +174,42 @@ class BaseFeedbackProgress:
 
 
 class FeedbackProgressForTeam(BaseFeedbackProgress):
-    """Class to compute feedback submitted or owed by a team.
-
-    A team owes feedback on every orallist. There are therefore three types of
-    entries:
-     - Feedback submitted as expected
-     - Feedback that is expected on an orallist, but has not been submitted
-     - Feedback that has been submitted, but was not expected from that team
-    """
+    """Class to compute feedback submitted or owed by a team."""
 
     def __init__(self, team):
         self.team = team
-
-    def _debateteams(self):
-        """Returns all of the DebateTeam instances for which a team owes
-        feedback, which is all the debates for which there is a confirmed
-        ballot."""
-        return self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True)
 
     def get_submitted_feedback(self):
         return AdjudicatorFeedback.objects.filter(source_team__team=self.team)
 
     def get_expected_trackers(self):
-        return [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in self._debateteams()]
+        # There is one tracker for each debate for which there is a confirmed ballot.
+        return [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in
+                self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True)]
+
+
+class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
+    """Class to compute feedback submitted or owed by an adjudicator."""
+
+    def __init__(self, adjudicator):
+        self.adjudicator = adjudicator
+
+    def get_submitted_feedback(self):
+        return AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=self.adjudicator)
+
+    def get_expected_trackers(self):
+        """Trackers are as follows:
+          - Chairs owe on everyone in their panel.
+          - Panellists owe on chairs if the relevant tournament preference is enabled.
+        """
+        trackers = []
+        for debateadj in self.adjudicator.debateadjudicator_set.filter(debate__ballotsubmission__confirmed=True):
+            if debateadj.type == DebateAdjudicator.TYPE_CHAIR:
+                adjudicators = debateadj.debate.adjudicators
+                for target in adjudicators.all():
+                    if target == self.adjudicator:
+                        continue
+                    trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
+            elif debateadj.type == DebateAdjudicator.TYPE_PANEL and debateadj.debate.round.tournament.pref('panellist_feedback_enabled'):
+                trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, debateadj.debate.adjudicators.chair))
+        return trackers

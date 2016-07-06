@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 
 from adjallocation.models import DebateAdjudicator
-from adjfeedback.progress import FeedbackProgressForTeam
+from adjfeedback.progress import FeedbackProgressForTeam, FeedbackProgressForAdjudicator
 from results.models import TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from tournaments.models import Round
@@ -110,14 +110,16 @@ class BaseTeamRecordView(BaseRecordView):
 
     def get_table(self):
         """On team record pages, the table is the results table."""
+        tournament = self.get_tournament()
         teamscores = TeamScore.objects.filter(debate_team__team=self.object)
         debates = [ts.debate_team.debate for ts in teamscores]
-        table = TabbycatTableBuilder(view=self, title="Results")
-        table.add_round_column([ts.debate_team.debate.round for ts in teamscores])
+        table = TabbycatTableBuilder(view=self, title="Results", sort_key="Round")
+        table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_columns(teamscores)
-        table.add_debate_adjudicators_column(debates, show_splits=True)
+        table.add_debate_adjudicators_column(debates, show_splits=self.admin
+                or tournament.pref('show_splitting_adjudicators'))
 
-        if self.admin or self.get_tournament().pref('public_motions'):
+        if self.admin or tournament.pref('public_motions'):
             table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
 
         table.add_debate_ballot_link_column(debates)
@@ -136,8 +138,28 @@ class BaseAdjudicatorRecordView(BaseRecordView):
                 debate__round=self.get_tournament().current_round)
         except ObjectDoesNotExist:
             kwargs['debateadjudicator'] = None
+
+        kwargs['page_title'] = 'Record for ' + self.object.name
+        kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object)
+
         return super().get_context_data(**kwargs)
 
+    def get_table(self):
+        """On adjudicator record pages, the table is the previous debates table."""
+        tournament = self.get_tournament()
+        debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.object)
+        debates = [da.debate for da in debateadjs]
+        table = TabbycatTableBuilder(view=self, title="Previous Rounds", sort_key="Round")
+        table.add_round_column([debate.round for debate in debates])
+        table.add_debate_results_columns(debates)
+        table.add_debate_adjudicators_column(debates, show_splits=self.admin
+                or tournament.pref('show_splitting_adjudicators'))
+
+        if self.admin or tournament.pref('public_motions'):
+            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+
+        table.add_debate_ballot_link_column(debates)
+        return table
 
 class TeamRecordView(SuperuserRequiredMixin, BaseTeamRecordView):
     admin = True
