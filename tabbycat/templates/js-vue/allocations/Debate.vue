@@ -5,17 +5,9 @@
       <div class="flex-1">{{ debate.bracket }}</div>
     </div>
 
-    <div class="flex-1 flex-vertical-center bordered-bottom">
-      <div class="flex-1">
-        <debate-team :adjorteam="aff"></debate-team>
-      </div>
-    </div>
+    <debate-team :adjorteam="aff"></debate-team>
 
-    <div class="flex-1 flex-vertical-center bordered-bottom">
-      <div class="flex-1">
-        <debate-team :adjorteam="neg"></debate-team>
-      </div>
-    </div>
+    <debate-team :adjorteam="neg"></debate-team>
 
     <div class="flex-cell importance-container flex-vertical-center bordered-bottom">
       <div class="flex-1">
@@ -27,7 +19,7 @@
       </div>
     </div>
 
-    <div class="flex-7">
+    <div class="flex-6">
       <div class="panel panel-default panel-debate">
         <div class="flex-horizontal positions-parent">
           <position-droppable
@@ -80,12 +72,14 @@ export default {
   },
   computed: {
     debateAdjudicators: function () {
+      // Find the panel array set from JSON
       var panel = this.debate.panel;
       var debateAdjudicators = {
         chair: [],
         panelists: [],
         trainees: []
       }
+      // Loop through it and match up the adjudicators by ID
       for (var i = 0; i < panel.length; ++i) {
         var foundAdj = this.allAdjudicators[panel[i].id]
         if (panel[i].position === "C") {

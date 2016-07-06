@@ -266,14 +266,14 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, Template
 
         teams = [d.aff_team for d in draw] + [d.neg_team for d in draw]
         adjs = get_adjs(self.get_round())
-        categories = categories_ordered(t)
         regions = regions_ordered(t)
 
         adjs, teams = populate_conflicts(adjs, teams)
         adjs, teams = populate_histories(adjs, teams, t, r)
 
         kwargs['allDebates'] = debates_to_json(draw, t, r)
-        kwargs['allTeams'] = teams_to_json(teams, regions, categories)
+        categories = categories_ordered(t)
+        kwargs['allTeams'] = teams_to_json(teams, regions, categories, t, r)
         kwargs['allAdjudicators'] = adjs_to_json(adjs, regions)
         kwargs['allRegions'] = json.dumps(regions)
         kwargs['allCategories'] = json.dumps(categories)

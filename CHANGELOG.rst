@@ -4,10 +4,13 @@ Change Log
 
 ?.?.?
 -----
-- Add a 'Diversity Tab' to display demographic information about participants
+- Redesigned and improved adjudicator allocation page
+- Completed break rounds support and workflow
+- Moved the majority of table view rendering to Vue.js to improve performance
+- Feedback lookups now rendered in a cards based format
+- Added a 'Summary Page' for each Team and Adjudicator
+- Added a 'Diversity Tab' to display demographic information about participants
 - Added basic linting to the continuous integration tests
-- Moved the majority of table views to rendering on the front-end to improve performance
-- Restructured app directory slightly
 - Various bug fixes, optimisations, and documentation edits
 
 

@@ -5,9 +5,6 @@
 // Must provide a getEntity() that has an ID property to match with conflicts
 
 export default {
-  props: {
-    debateId: Number,
-  },
   computed: {
     conflictsHighlights: function () {
       var class_string = " "
@@ -21,7 +18,6 @@ export default {
   },
   methods: {
     setConflictHighlights: function() {
-      console.log('setting highs');
       var adjorteam = this.adjorteam;
       this.$dispatch('set-conflicts', {
         personal_adjudicators: adjorteam.conflicts.personal_adjudicators,

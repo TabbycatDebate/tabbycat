@@ -32,7 +32,7 @@
 }
 
 .importance-container {
-  width: 95px;
+  width: 85px;
 }
 
 .panel-incomplete {
@@ -55,7 +55,7 @@
 }
 .positions-parent > div {
   border-left: 2px solid $table-border-color;
-  min-height: 47px; // Dont let it collapse when no adjs are present
+  min-height: 50px; // Dont let it collapse when no adjs are present
   &:first-child {
     border-left: 0;
   }
@@ -74,7 +74,20 @@
 }
 
 //------------------------------------------------------------------------------
-// Draggable Elements
+// Debate Teams
+//------------------------------------------------------------------------------
+
+.debate-team {
+  width: 120px;
+  // Truncate Long Team Names
+  .debate-team-title {
+    width: 110px;
+    @include text-overflow;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Adjudicators
 //------------------------------------------------------------------------------
 
 .adj-draggable {

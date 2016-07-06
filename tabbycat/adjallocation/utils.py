@@ -4,6 +4,7 @@ import math
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
 from availability.models import ActiveAdjudicator
+from breakqual.utils import determine_liveness
 from draw.models import DebateTeam
 from participants.models import Adjudicator
 
@@ -75,7 +76,10 @@ def populate_conflicts(adjs, teams):
 
     for a in adjs:
         a.personal_teams = [c[1] for c in teamconflicts if c[0] is a.id]
-        a.institutional_institutions = [c[1] for c in institutionconflicts if c[0] is a.id]
+        a.institutional_institutions = [a.institution.id]
+        a.institutional_institutions.extend(
+            [c[1] for c in institutionconflicts if c[0] is a.id and c[1] is not a.institution.id])
+
         # Adj-adj conflicts should be symmetric
         a.personal_adjudicators = [c[1] for c in adjconflicts if c[0] is a.id]
         a.personal_adjudicators += [c[0] for c in adjconflicts if c[1] is a.id]
@@ -84,7 +88,7 @@ def populate_conflicts(adjs, teams):
         t.personal_adjudicators = [c[0] for c in teamconflicts if c[1] is t.id]
         # For teams conflicted_institutions is a list of adjs due to the asymetric
         # nature of adjs having multiple instutitonal conflicts
-        t.institutional_institutions = [c[1] for c in institutionconflicts if c[0] is t.institution.id]
+        t.institutional_institutions = [t.institution.id]
 
     return adjs, teams
 
@@ -182,9 +186,17 @@ def adjs_to_json(adjs, regions):
     return json.dumps(data)
 
 
-def teams_to_json(teams, regions, categories):
+def teams_to_json(teams, regions, categories, t, r):
     data = {}
     for team in teams:
+        team_categories = team.break_categories.all().values_list('id', flat=True)
+        break_categories = [{
+            'id': bc['id'],
+            'name': bc['name'],
+            'seq': bc['seq'],
+            'will_break': determine_liveness(bc, t, r, team.wins_count)
+        } for bc in categories if bc['id'] in team_categories]
+
         data[team.id] = {
             'id': team.id,
             'name': team.short_name,
@@ -195,7 +207,7 @@ def teams_to_json(teams, regions, categories):
             'wins': team.wins_count,
             'region': [r for r in regions if r['id'] is team.institution.region.id][0] if team.institution.region else None,
             # TODO: Searching for break cats here incurs extra queries; should be done earlier
-            'categories': [bc for bc in categories if bc['id'] in team.break_categories.all().values_list('id', flat=True)],
+            'categories': break_categories,
             'institution': {
                 'id': team.institution.id,
                 'name': team.institution.code,

@@ -212,7 +212,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         opp = ts.debate_team.opposition.team
         cell = {
-            'text': " vs " + opp.emoji if compress else opp.short_name,
+            'text': " vs " + (opp.emoji or "…") if compress else opp.short_name,
             'popover': {'content': [{'text': ''}]}
         }
         result_popover = cell['popover']['content'][0]
@@ -346,7 +346,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_motion_column(self, motions, key="Motion", show_order=False):
         if show_order and self.tournament.pref('enable_motions'):
-            self.add_column("Order", [motion.seq for motion in motions])
+            self.add_column("Order", [{
+                'text': motion.seq,
+                'sort': motion.round.seq + (motion.seq * 0.1)
+            } for motion in motions])
 
         motion_data = [{
             'text': motion.reference,

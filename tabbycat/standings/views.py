@@ -307,7 +307,7 @@ class BaseMotionStandingsView(RoundMixin, VueTableMixin):
 
     def get_table(self):
         motions = motion_statistics.statistics(round=self.get_round())
-        table = TabbycatTableBuilder(view=self, sort_key="Round")
+        table = TabbycatTableBuilder(view=self, sort_key="Order")
 
         table.add_round_column([motion.round for motion in motions])
         table.add_motion_column(motions, show_order=True)
