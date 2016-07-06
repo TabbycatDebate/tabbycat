@@ -1,30 +1,33 @@
+
+.region-display.has-region, .gender-display.has-gender, .category-display.has-category {
+  span a, .text-muted {
+    color: #fff;
+  }
+}
+
 .category-display {
   &.category-1 {
-    @extend .btn-default; // Break1 = general
+    @include button-variant(#fff, $break-cat-1, darken($break-cat-1, 10%));
   }
   &.category-2 {
-    @include button-variant(#fff, #C70062, darken(#C70062, 10%));
+    @include button-variant(#fff, $break-cat-2, darken($break-cat-2, 10%));
   }
   &.category-3 {
-    @include button-variant(#fff, #00C79B, darken(#00C79B, 10%));
+    @include button-variant(#fff, $break-cat-3, darken($break-cat-3, 10%));
   }
 }
 .gender-display {
-  &.gender-male {
+  &.gender-male, &.gender-m, &.gender-M  {
     @include button-variant(#fff, $male, darken($male, 10%));
     fill: $male;
   }
-  &.gender-female, &.gender-nm {
+  &.gender-female, &.gender-f,  &.gender-F, &.gender-nm {
     @include button-variant(#fff, $female, darken($female, 10%));
     fill: $female;
   }
-  &.gender-other {
+  &.gender-other, &.gender-o, &.gender-O {
     @include button-variant(#fff, $other, darken($other, 10%));
     fill: $other;
-  }
-  &.gender-unknown {
-    @include button-variant(#fff, $unknown, darken($unknown, 10%));
-    fill: $unknown;
   }
   // For Teams
   &.gender-men-2 {
@@ -56,9 +59,7 @@
 }
 // For diversity graphs and allocation
 .region-display {
-  span a {
-    color: #fff;
-  }
+
   &.region-1 {
     @include button-variant(#fff, #C70062, darken(#C70062, 10%));
     fill: #C70062;

@@ -11,39 +11,41 @@ export default {
 
       if (typeof adjorteam.gender !== 'undefined') {
         if (adjorteam.gender === "M") {
-          class_string += " gender-male"
+          class_string += " has-gender gender-male"
         } else if (adjorteam.gender === "F") {
-          class_string += " gender-nm"
+          class_string += " has-gender gender-nm"
         } else if (adjorteam.gender === "O") {
-          class_string += " gender-other"
+          class_string += " has-gender gender-other"
         } else {
           class_string += " gender-unknown"
         }
       }
 
-      if (adjorteam.gender_name && typeof adjorteam.gender_name !== 'undefined') {
-        var speaker_genders = adjorteam.gender_name.toLowerCase().split(",")
+      if (adjorteam.speakers && typeof adjorteam.speakers !== 'undefined') {
         var men_count = 0, notmen_count = 0;
-        for (var i = 0; i < speaker_genders.length; ++i) {
-          if (speaker_genders[i].trim() === "male") {
+        for (var i = 0; i < adjorteam.speakers.length; ++i) {
+          if (adjorteam.speakers[i].gender === "M") {
             men_count += 1
           }
-          if (speaker_genders[i].trim() === "female") {
+          if (adjorteam.speakers[i].gender === "F" || adjorteam.speakers[i].gender === "O" ) {
             notmen_count += 1
           }
+        }
+        if (notmen_count > 0 || men_count > 0) {
+          class_string += ' has-gender '
         }
         class_string += ' gender-men-' + men_count
         class_string += ' gender-notmen-' + notmen_count
       }
 
       if (adjorteam.region && typeof adjorteam.region !== "undefined") {
-        class_string += " region-" + adjorteam.region['seq']
+        class_string += " has-region region-" + adjorteam.region['seq']
       }
 
       if (adjorteam.categories && typeof adjorteam.categories !== "undefined") {
         // As above we need to normalise
         for (var i = 0; i < adjorteam.categories.length; ++i) {
-          class_string += " category-" + adjorteam.categories[i].seq
+          class_string += " has-category category-" + adjorteam.categories[i].seq
         }
       }
 

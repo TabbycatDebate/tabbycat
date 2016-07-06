@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------------
 
 .text-muted {
-  color: $gray-light;
+  opacity: 0.8; // We use opacity so we can change the color
 }
 
 // Override option for headings

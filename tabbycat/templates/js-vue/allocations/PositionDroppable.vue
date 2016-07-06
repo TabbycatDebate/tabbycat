@@ -8,8 +8,8 @@
     v-bind:class="['vue-droppable', {
         'panel-incomplete': isIncomplete,
         'vue-is-drag-enter': isDroppable,
-        'flex-1': position === 'C',
-        'flex-2': position !== 'C'
+        'flex-1': position !== 'P',
+        'flex-2': position === 'P'
     }]"
     class="">
 

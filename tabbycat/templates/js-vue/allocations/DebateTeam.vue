@@ -7,68 +7,55 @@
                    conflictsHighlights]">
 
     <div class="flex-1 slideover-parent">
+      <p class="debate-team-title no-bottom-margin">
+        <strong>{{ adjorteam.name }}</strong>
+      </p>
+    </div>
 
-      <div class="slideover-anchor" v-on:mouseover=""></div>
+  </div>
 
-      <div class="">
-        <p class="debate-team-title no-bottom-margin">
-          <strong>{{ adjorteam.name }}</strong>
-        </p>
-        <template v-for="bc in adjorteam.categories">
-          <span v-if="bc.will_break === true" class=" small subtitle text-success">
-            SAFE ({{ adjorteam.wins }} Wins)
-          </span>
-          <span v-if="bc.will_break === false" class=" small subtitle text-muted">
-            DEAD ({{ adjorteam.wins }} Wins)
-          </span>
-          <span v-if="bc.will_break === null" class=" small subtitle text-danger">
-            LIVE ({{ adjorteam.wins }} Wins)
-          </span>
-        </template>
-      </div>
-
-      <div class="slideover-info slideover-top">
-        <li class="list-group-item flex-horizontal">
-
-          <div class="flex-1 btn-toolbar">
-            <div class="btn-group btn-group-sm " role="group">
-              <div class="btn btn-default">{{ adjorteam.speakers }}</div>
+  <div class="panel slideover-info slideover-top" v-if="showSlideOver" transition="expand">
+    <div class="list-group">
+      <li class="list-group-item">
+        <h4 class="no-bottom-margin no-top-margin text-center">
+          {{ adjorteam.name }} ({{ adjorteam.institution.name }})
+        </h4>
+      </li>
+      <li class="list-group-item flex-horizontal">
+        <div class="flex-1 btn-toolbar">
+          <div class="btn-group btn-group-sm " role="group">
+            <template v-for="speaker in adjorteam.speakers">
+              <div class="btn btn-default gender-display gender-{{ speaker.gender }}">
+                {{ speaker.name }}
+              </div>
+            </template>
+          </div>
+          <div class="btn-group btn-group-sm" role="group">
+            <div class="btn btn-default region-display region-{{ adjorteam.region.seq }}">
+              <span class="glyphicon glyphicon-globe"></span>
+                {{ adjorteam.institution.name }} {{ adjorteam.region.name }}
             </div>
           </div>
-
-          <h4 class="flex-1 slideover-title text-center">
-            {{ adjorteam.long_name }}
-          </h4>
-
-          <div class="flex-1 btn-toolbar">
-
-            <div class="btn-group btn-group-sm pull-right" role="group">
-              <div class="btn btn-default region-display region-{{ adjorteam.region.seq }}">
-                <span class="glyphicon glyphicon-globe"></span>
-              </div>
-              <div class="btn btn-default btn-sm">
-                {{ adjorteam.region.name }}
-              </div>
+        </div>
+        <div class="btn-toolbar pull-right">
+          <div class="btn-group btn-group-sm pull-right" role="group" v-for="bc in adjorteam.categories">
+            <div class="btn category-display category-{{ bc.seq }}">
+              <span class="glyphicon glyphicon-globe"></span> {{ bc.name }}
             </div>
-
-            <div class="btn-group btn-group-sm pull-right" role="group" v-for="category in adjorteam.categories">
-              <div class="btn btn-default">
-                <span class="glyphicon glyphicon-globe category-display category-{{ category.seq }}"></span>
-              </div>
-              <div class="btn btn-default btn-sm">
-                {{ category.name }} Break
-              </div>
+            <div class="btn btn-success" v-if="bc.will_break === true">
+              SAFE ({{ adjorteam.wins }} Wins)
             </div>
-
+            <div class="btn btn-default" v-if="bc.will_break === false">
+              DEAD ({{ adjorteam.wins }} Wins)
+            </div>
+            <div class="btn btn-danger" v-if="bc.will_break === null">
+              LIVE ({{ adjorteam.wins }} Wins)
+            </div>
           </div>
-        </li>
-        <li class="list-group-item">
-
-          seen history
-
-        </li>
-      </div>
-
+        </div>
+      </li>
+      <li class="list-group-item">
+      </li>
     </div>
   </div>
 
@@ -82,7 +69,8 @@ import HistoriesHighlightsMixin from '../mixins/HistoriesHighlightsMixin.vue'
 export default {
   mixins: [DiversityHighlightsMixin, ConflictsHighlightsMixin, HistoriesHighlightsMixin],
   props: {
-    adjorteam: Object
+    adjorteam: Object,
+    showSlideOver: { default: false }
   },
   methods: {
     getPopOverTitle: function() {
@@ -95,10 +83,12 @@ export default {
     setHighlights: function() {
       this.setConflictHighlights()
       this.setHistoriesHighlights()
+      this.showSlideOver = true
     },
     unsetHighlights: function() {
       this.unsetConflictHighlights()
       this.unsetHistoriesHighlights()
+      this.showSlideOver = false
     }
   },
 }

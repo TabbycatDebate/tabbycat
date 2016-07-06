@@ -11,44 +11,72 @@
     :id="adjorteam.id"
     class="vue-draggable adj-draggable btn btn-default popover-parent">
 
-      <div class="popover-anchor" v-on:mouseover="setupPopover"></div>
-
-      <div class="h4">
-        {{ letter_ranking }}
-      </div>
-
-      <div>
-        <span>
-          {{ short_name }}
-        </span>
-        <span class="small text-muted subtitle">
-          <template v-if="adjorteam.institution.code">
-            {{ adjorteam.institution.code }}
-          </template>
-          <template v-else>
-            {{ adjorteam.institution.name }}
-          </template>
-        </span>
-      </div>
-
-      <div class="popover-raw hide">
-        <li class="list-group-item">
-          Score of {{ adjorteam.score }} (in the top {{ adjorteam.ranking }})
-        </li>
-        <li class="list-group-item">
-          {{ adjorteam.gender_name }}
-        </li>
-        <li class="list-group-item">
-          {{ adjorteam.region ? '; ' + adjorteam.region.name + ' Region': '' }}
-        </li>
-      </div>
-
+    <div class="h4">
+      {{ letter_ranking }}
     </div>
+
+    <div>
+      <span>
+        {{ short_name }}
+      </span>
+      <span class="small text-muted subtitle">
+        <template v-if="adjorteam.institution.code">
+          {{ adjorteam.institution.code }}
+        </template>
+        <template v-else>
+          {{ adjorteam.institution.name }}
+        </template>
+      </span>
+    </div>
+
+  </div>
+
+  <div class="panel slideover-info slideover-top" v-if="showSlideOver" transition="expand">
+    <div class="list-group">
+      <li class="list-group-item">
+        <h4 class="no-bottom-margin no-top-margin text-center">
+          {{ adjorteam.name }} ({{ adjorteam.institution.name }})
+        </h4>
+      </li>
+      <li class="list-group-item flex-horizontal">
+        <div class="flex-1 btn-toolbar">
+          <div class="btn-group btn-group-sm " role="group">
+            <div class="btn btn-default gender-display gender-{{ adjorteam.gender }}">
+              {{ adjorteam.name }}
+            </div>
+          </div>
+          <div class="btn-group btn-group-sm" role="group">
+            <div class="btn btn-default region-display region-{{ adjorteam.region.seq }}">
+              <span class="glyphicon glyphicon-globe"></span>
+              {{ adjorteam.institution.name }} {{ adjorteam.region.name }}
+            </div>
+          </div>
+        </div>
+        <div class="btn-toolbar pull-right">
+          <div class="btn-group btn-group-sm " role="group">
+            <div class="btn btn-default">
+              {{ adjorteam.score }}
+            </div>
+            <div class="btn btn-default">
+              Feedback Rating
+            </div>
+          </div>
+          <div class="btn-group btn-group-sm " role="group">
+            <div class="btn btn-default">
+              {{ letter_ranking }}
+            </div>
+            <div class="btn btn-default">
+              Feedback Scale ({{ adjorteam.ranking }}th Percentile)
+            </div>
+          </div>
+        </div>
+      </li>
+    </div>
+  </div>
 
 </template>
 
 <script>
-import PopoverMixin from '../mixins/PopoverMixin.vue'
 import DraggableMixin from '../mixins/DraggableMixin.vue'
 import AjaxMixin from '../mixins/AjaxMixin.vue'
 import DiversityHighlightsMixin from '../mixins/DiversityHighlightsMixin.vue'
@@ -56,11 +84,12 @@ import ConflictsHighlightsMixin from '../mixins/ConflictsHighlightsMixin.vue'
 import HistoriesHighlightsMixin from '../mixins/HistoriesHighlightsMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, AjaxMixin, PopoverMixin, DiversityHighlightsMixin, HistoriesHighlightsMixin, ConflictsHighlightsMixin],
+  mixins: [DraggableMixin, AjaxMixin, DiversityHighlightsMixin, HistoriesHighlightsMixin, ConflictsHighlightsMixin],
   props: {
     adjorteam: Object,
     position: String,
-    debateId: Number
+    debateId: Number,
+    showSlideOver: { default: false }
   },
   computed: {
     short_name: function() {
@@ -100,10 +129,12 @@ export default {
     setHighlights: function() {
       this.setConflictHighlights()
       this.setHistoriesHighlights()
+      this.showSlideOver = true
     },
     unsetHighlights: function() {
       this.unsetConflictHighlights()
       this.unsetHistoriesHighlights()
+      this.showSlideOver = false
     },
     handleDragStart: function(event) {
       // Set this adj's id as the data for receiving object

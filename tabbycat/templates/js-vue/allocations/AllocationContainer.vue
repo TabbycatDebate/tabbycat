@@ -7,21 +7,24 @@
 
     <div class="col-md-12 allocation-container">
       <div class="row flex-horizontal subtitle">
-        <div class="thead flex-cell" data-toggle="tooltip" title="Debate Bracket">
+        <div class="thead flex-cell text-center" data-toggle="tooltip" title="Debate Bracket">
           <span class="glyphicon glyphicon-stats"></span>
+        </div>
+        <div class="thead flex-cell importance-container" data-toggle="tooltip" title="How many teams are live">
+          LIVES
+        </div>
+        <div class="thead flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
+          <span>Importance</span>
         </div>
         <div class="thead flex-cell debate-team">Aff</div>
         <div class="thead flex-cell debate-team">Neg</div>
-        <div class="thead flex-cell flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
-          <span>Importance</span>
-        </div>
         <div class="thead flex-6 flex-horizontal">
+          <div class="flex-cell text-center" data-toggle="tooltip" title="Average score of the voting majority (assumes top adjs in majority)">
+            <span class="glyphicon glyphicon-stats"></span>
+          </div>
           <div class="flex-1 text-center">Chair</div>
           <div class="flex-2 text-center">Panelists</div>
-          <div class="flex-2 text-center">Trainees</div>
-        </div>
-        <div class="thead flex-cell" data-toggle="tooltip" title="Average score of the voting majority (assumes top adjs in majority)">
-          <span class="glyphicon glyphicon-stats"></span>
+          <div class="flex-1 text-center">Trainees</div>
         </div>
       </div>
 

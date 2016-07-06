@@ -5,9 +5,9 @@
       <div class="flex-1">{{ debate.bracket }}</div>
     </div>
 
-    <debate-team :adjorteam="aff"></debate-team>
-
-    <debate-team :adjorteam="neg"></debate-team>
+    <div class="flex-cell importance-container flex-vertical-center bordered-bottom">
+      <div class="flex-1">?</div>
+    </div>
 
     <div class="flex-cell importance-container flex-vertical-center bordered-bottom">
       <div class="flex-1">
@@ -19,9 +19,18 @@
       </div>
     </div>
 
+    <debate-team :adjorteam="aff"></debate-team>
+
+    <debate-team :adjorteam="neg"></debate-team>
+
     <div class="flex-6">
       <div class="panel panel-default panel-debate">
         <div class="flex-horizontal positions-parent">
+          <div class="flex-cell flex-vertical-center bordered-bottom">
+            <div class="flex-1">
+              {{ panelScore }}
+            </div>
+          </div>
           <position-droppable
             :adjudicators="debateAdjudicators.chair"
             :debate-id="debate.id"
@@ -41,11 +50,6 @@
       </div>
     </div>
 
-    <div class="flex-cell flex-vertical-center bordered-bottom">
-      <div class="flex-1">
-        {{ panelScore }}
-      </div>
-    </div>
 
   </div>
 </template>
@@ -93,15 +97,19 @@ export default {
       return debateAdjudicators;
     },
     panelScore: function () {
-      if (typeof this.panel === 'undefined') {
+      var panel = this.debate.panel;
+      if (typeof panel === 'undefined' || panel.length === 0) {
         return ''
       }
       // Build an array of each adjs scores
       var adjs_scores = []
-      for (var i = 0; i < this.panel.length; i++) {
-        if (this.panel[i].position !== "T") {
-          adjs_scores.push(allAdjudicators[this.panel[i].id].score);
+      for (var i = 0; i < panel.length; i++) {
+        if (panel[i].position !== "T") {
+          adjs_scores.push(allAdjudicators[panel[i].id].score);
         }
+      }
+      if (adjs_scores.length === 0) {
+        return ''
       }
       adjs_scores.sort(function(a,b){return b - a}) // Force numeric sort
 

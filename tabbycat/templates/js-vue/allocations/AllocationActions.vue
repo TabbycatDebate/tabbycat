@@ -22,8 +22,9 @@
           </div>
           <div v-if="showingGender" class="btn-group btn-group-sm">
             <button disabled class="btn gender-display gender-male">Male</button>
-            <button disabled class="btn gender-display gender-nm">Non-Male</button>
-            <button disabled class="btn gender-display gender-unknown">Unknown</button>
+            <button disabled class="btn gender-display gender-f">Female</button>
+            <button disabled class="btn gender-display gender-o">Other</button>
+            <button disabled class="btn btn-default">Unknown</button>
           </div>
           <div v-if="showingRegion" class="btn-group btn-group-sm">
             <button disabled v-for="region in regions"
@@ -34,9 +35,11 @@
           <div v-if="showingCategory" class="btn-group btn-group-sm">
             <button disabled v-for="category in categories"
               class="btn btn-default category-display category-{{ category.seq }}">
-              {{ category.name }}
+              {{ category.name }} Break
             </button>
           </div>
+        </div>
+        <div class="btn-group btn-group-sm">
           <button class="btn btn-default nav-link hoverable" v-on:click="showVenues" v-bind:class="showingVenue ? 'active' : 'notactive'">
             <span class="glyphicon" v-bind:class="showingVenue ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
             Venues
