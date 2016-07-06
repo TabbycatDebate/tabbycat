@@ -10,12 +10,12 @@
     <div class="col-md-6">
       <div class="panel {% if debateteam %}panel-primary{% else %}panel-default{% endif %}">
         <div class="panel-heading">
-          <h4 class="panel-title">This Round ({{ current_round.name }})</h4>
+          <h4 class="panel-title">In This Round ({{ current_round.name }})</h4>
         </div>
 
         {% if debateteam %}
           <ul class="list-group">
-            <li class="list-group-item active">
+            <li class="list-group-item active lead">
               {{ team.short_name }} is debating
               {% if debateteam.position != debateteam.POSITION_UNALLOCATED %}
                 as the <strong>{{ debateteam.get_position_display|lower }}</strong> team
@@ -25,9 +25,11 @@
                 {{ debateteam.opposition.team.short_name }}</a></strong>
               in <strong>{{ debateteam.debate.venue.name }}</strong>.
             </strong></li>
-            <li class="list-group-item">
-              The round begins at {{ current_round.starts_at }}
-            </li>
+            {% if current_round.starts_a %}
+              <li class="list-group-item">
+                The round begins at {{ current_round.starts_at }}
+              </li>
+            {% endif %}
             <li class="list-group-item">
               {% with adjudicators=debateteam.debate.adjudicators %}
                 <strong>Adjudicator{{ adjudicators|length|pluralize }}:</strong>
@@ -38,12 +40,11 @@
               {% endwith %}
             </li>
             <li class="list-group-item">
-              <strong>Motion{{ debateteam.debate.round.motion_set.count|pluralize }}:</strong>
               {% if debateteam.debate.round.motion_set.all|length == 1 %}
-                {{ debateteam.debate.round.motion_set.first.text }}
+                <strong>Motion:</strong> {{ debateteam.debate.round.motion_set.first.text }}
               {% else %}
                 {% for motion in debateteam.debate.round.motion_set.all %}
-                  <br />{{ motion.text }}
+                  <strong>Motion {{ forloop.counter }}:</strong> {{ motion.text }}<br />
                 {% endfor %}
               {% endif %}
             </li>

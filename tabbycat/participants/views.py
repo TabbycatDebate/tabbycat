@@ -94,7 +94,7 @@ class BaseTeamRecordView(BaseRecordView):
         except ObjectDoesNotExist:
             kwargs['debateteam'] = None
 
-        kwargs['page_title'] = self.object.long_name
+        kwargs['page_title'] = 'Record for ' + self.object.long_name
         if self.get_tournament().pref('show_emoji'):
             kwargs['page_emoji'] = self.object.emoji
 
