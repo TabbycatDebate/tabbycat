@@ -287,6 +287,7 @@ $('#auto_allocate').click(function() {
       btn.attr("disabled", false);
     }
   });
+
 });
 
 $('#save_allocation').click(function() {

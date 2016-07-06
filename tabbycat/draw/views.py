@@ -303,6 +303,7 @@ class DrawUnreleaseView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_UNRELEASE
 
     def post(self, request, *args, **kwargs):
+        round = self.get_round()
         if round.draw_status != round.STATUS_RELEASED:
             return HttpResponseBadRequest("Draw status is not RELEASED")
 

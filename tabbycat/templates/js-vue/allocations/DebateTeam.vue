@@ -1,8 +1,6 @@
 <template>
 
   <div class="debate-team flex-cell flex-vertical-center bordered-bottom"
-    v-on:mouseover="setHighlights"
-    v-on:mouseout="unsetHighlights"
     v-bind:class="[diversityHighlights, historiesHighlights,
                    conflictsHighlights]">
 
@@ -11,7 +9,9 @@
       <div class="tooltip-inner">saw {{ adjorteam.historyRoundsAgo }} ago</div>
     </div>
 
-    <div class="flex-1 slideover-parent">
+    <div class="flex-1 slideover-parent"
+      v-on:mouseover="setHighlights"
+      v-on:mouseout="unsetHighlights">
       <p class="debate-team-title no-bottom-margin">
         <strong>{{ adjorteam.name }}</strong>
       </p>

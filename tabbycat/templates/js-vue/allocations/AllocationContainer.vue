@@ -97,47 +97,55 @@ export default {
     toggleConflictsValues: function(conflictValue) {
       var conflicts = this.currentConflictHighlights;
       var _this = this;
-      if (conflicts.personal_adjudicators.length > 0) {
-        conflicts.personal_adjudicators.forEach(function(currentValue) {
-          var adjudicator = _this.adjudicators[currentValue];
-          if (typeof adjudicator !== 'undefined') {
-            adjudicator.hasPersonalConflict = conflictValue
-          }
-        })
-      }
-      if (conflicts.personal_teams.length > 0) {
-        conflicts.personal_teams.forEach(function(currentValue) {
-          var team = _this.teams[currentValue];
-          if (typeof team !== 'undefined') {
-            team.hasPersonalConflict = conflictValue
-          }
-        })
-      }
-      if (conflicts.institutional_conflicts.length > 0) {
-        conflicts.institutional_conflicts.forEach(function(currentValue) {
-          // Loop through all adjudicators
-          for (var adjudicatorID in _this.adjudicators) {
-            if (_this.adjudicators.hasOwnProperty(adjudicatorID)) {
-              var adjToTest = _this.adjudicators[adjudicatorID];
-              if (typeof adjToTest !== 'undefined' && adjToTest.institution.id === currentValue) {
-                adjToTest.hasInstitutionalConflict = conflictValue;
+      if (typeof conflicts !== 'undefined) {
+        if (typeof conflicts.personal_adjudicators !== 'undefined') {
+          if (conflicts.personal_adjudicators.length > 0) {
+            conflicts.personal_adjudicators.forEach(function(currentValue) {
+              var adjudicator = _this.adjudicators[currentValue];
+              if (typeof adjudicator !== 'undefined') {
+                adjudicator.hasPersonalConflict = conflictValue
               }
-            }
+            })
           }
-          // Loop through all teams
-          for (var teamID in _this.teams) {
-            if (_this.teams.hasOwnProperty(teamID)) {
-              var teamToTest = _this.teams[teamID];
-              if (typeof teamToTest !== 'undefined' && teamToTest.institution.id === currentValue) {
-                teamToTest.hasInstitutionalConflict = conflictValue;
+        }
+        if (typeof conflicts.personal_teams !== 'undefined') {
+          if (conflicts.personal_teams.length > 0) {
+            conflicts.personal_teams.forEach(function(currentValue) {
+              var team = _this.teams[currentValue];
+              if (typeof team !== 'undefined') {
+                team.hasPersonalConflict = conflictValue
               }
-            }
+            })
           }
-        });
+        }
+        if (typeof conflicts.institutional_conflicts !== 'undefined') {
+          if (conflicts.institutional_conflicts.length > 0) {
+            conflicts.institutional_conflicts.forEach(function(currentValue) {
+              // Loop through all adjudicators
+              for (var adjudicatorID in _this.adjudicators) {
+                if (_this.adjudicators.hasOwnProperty(adjudicatorID)) {
+                  var adjToTest = _this.adjudicators[adjudicatorID];
+                  if (typeof adjToTest !== 'undefined' && adjToTest.institution.id === currentValue) {
+                    adjToTest.hasInstitutionalConflict = conflictValue;
+                  }
+                }
+              }
+              // Loop through all teams
+              for (var teamID in _this.teams) {
+                if (_this.teams.hasOwnProperty(teamID)) {
+                  var teamToTest = _this.teams[teamID];
+                  if (typeof teamToTest !== 'undefined' && teamToTest.institution.id === currentValue) {
+                    teamToTest.hasInstitutionalConflict = conflictValue;
+                  }
+                }
+              }
+            });
+          }
+        }
+        // Don't highlight current thing being hovered
+        conflicts.currentOrigin.hasPersonalConflict = false;
+        conflicts.currentOrigin.hasInstitutionalConflict = false;
       }
-      // Don't highlight current thing being hovered
-      conflicts.currentOrigin.hasPersonalConflict = false;
-      conflicts.currentOrigin.hasInstitutionalConflict = false;
     },
     toggleHistoriesValues: function(historyValue) {
       // For each entry in the currently-hovered adj/team step through it and
@@ -192,7 +200,6 @@ export default {
     },
     'set-adj-unused': function() {
       var adj = this.currentlyDragging.adj
-      adj.allocated = false
       // Remove adj from any panels they came from
       if (typeof this.currentlyDragging.debateId !== 'undefined') {
         var fromDebateId = this.currentlyDragging.debateId
@@ -203,6 +210,10 @@ export default {
         fromPanel.splice(toRemoveIndex, 1);
       }
       this.currentlyDragging = null;
+      this.toggleConflictsValues(false);
+      this.currentConflictHighlights = null;
+      this.toggleHistoriesValues(false);
+      this.currentConflictHighlights = null;
     },
     'set-adj-panel': function(toDebateId, toPosition) {
       // Construct a lookup object to find the debate by it's ID

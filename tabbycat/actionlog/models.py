@@ -28,6 +28,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_DRAW_CONFIRM            = 'dr.conf'
     ACTION_TYPE_DRAW_REGENERATE         = 'dr.rege'
     ACTION_TYPE_ADJUDICATORS_SAVE       = 'aa.save'
+    ACTION_TYPE_ADJUDICATORS_AUTO       = 'aa.auto'
     ACTION_TYPE_VENUES_SAVE             = 've.save'
     ACTION_TYPE_VENUES_AUTOALLOCATE     = 've.auto'
     ACTION_TYPE_DRAW_RELEASE            = 'dr.rele'
@@ -61,6 +62,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_TEST_SCORE_EDIT         , 'Edited adjudicator test score'),
         (ACTION_TYPE_ADJUDICATOR_NOTE_SET    , 'Set adjudicator note'),
         (ACTION_TYPE_ADJUDICATORS_SAVE       , 'Saved adjudicator allocation'),
+        (ACTION_TYPE_ADJUDICATORS_AUTO       , 'Auto-allocated adjudicators'),
         (ACTION_TYPE_VENUES_SAVE             , 'Saved venues'),
         (ACTION_TYPE_VENUES_AUTOALLOCATE     , 'Auto-allocated venues'),
         (ACTION_TYPE_DRAW_CREATE             , 'Created draw'),
@@ -98,6 +100,7 @@ class ActionLogEntry(models.Model):
         ACTION_TYPE_TEST_SCORE_EDIT         : ('adjudicator_test_score_history', ),
         ACTION_TYPE_ADJUDICATOR_NOTE_SET    : ('adjudicator', ),
         ACTION_TYPE_ADJUDICATORS_SAVE       : ('round', ),
+        ACTION_TYPE_ADJUDICATORS_AUTO       : ('round', ),
         ACTION_TYPE_VENUES_SAVE             : ('round', ),
         ACTION_TYPE_VENUES_AUTOALLOCATE     : ('round', ),
         ACTION_TYPE_DRAW_CREATE             : ('round', ),

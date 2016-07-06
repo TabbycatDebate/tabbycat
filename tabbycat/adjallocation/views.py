@@ -13,7 +13,8 @@ from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from participants.utils import regions_ordered
 from tournaments.mixins import RoundMixin
-from utils.mixins import ExpectPost, JsonDataResponseView, SuperuserRequiredMixin
+from utils.misc import reverse_round
+from utils.mixins import ExpectPost, SuperuserRequiredMixin, PostOnlyRedirectView
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -35,6 +36,7 @@ def create_adj_allocation(request, round):
     if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
 
+    print('made allocation');
     allocate_adjudicators(round, HungarianAllocator)
 
     return _json_adj_allocation(round.get_draw(), round.unused_adjudicators())
@@ -244,11 +246,6 @@ def adj_conflicts(request, round):
     return HttpResponse(json.dumps(data), content_type="text/json")
 
 
-class CreateAdjAllocation(RoundMixin, SuperuserRequiredMixin, JsonDataResponseView, ExpectPost):
-
-    def get_data(self):
-        pass
-
 
 # ==============================================================================
 # New UI
@@ -278,6 +275,25 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, Template
         kwargs['allCategories'] = json.dumps(categories)
 
         return super().get_context_data(**kwargs)
+
+
+class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
+
+    def get_redirect_url(self):
+        return reverse_round('edit_adj_allocation', self.get_round())
+
+    def post(self, request, *args, **kwargs):
+        round = self.get_round()
+
+        if round.draw_status == round.STATUS_RELEASED:
+            return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
+        if round.draw_status != round.STATUS_CONFIRMED:
+            return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
+
+        allocate_adjudicators(round, HungarianAllocator)
+        return super().post(request, *args, **kwargs)
 
 
 class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, ExpectPost, View):
