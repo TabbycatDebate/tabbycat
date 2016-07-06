@@ -10,8 +10,8 @@
         <div class="thead flex-cell text-center" data-toggle="tooltip" title="Debate Bracket">
           <span class="glyphicon glyphicon-stats"></span>
         </div>
-        <div class="thead flex-cell importance-container" data-toggle="tooltip" title="How many teams are live">
-          LIVES
+        <div class="thead flex-cell text-center" data-toggle="tooltip" title="How many teams are live in this room">
+          <span class="glyphicon glyphicon-heart"></span>
         </div>
         <div class="thead flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
           <span>Importance</span>
@@ -20,7 +20,7 @@
         <div class="thead flex-cell debate-team">Neg</div>
         <div class="thead flex-6 flex-horizontal">
           <div class="flex-cell text-center" data-toggle="tooltip" title="Average score of the voting majority (assumes top adjs in majority)">
-            <span class="glyphicon glyphicon-stats"></span>
+            <span class="glyphicon glyphicon-signal"></span>
           </div>
           <div class="flex-1 text-center">Chair</div>
           <div class="flex-2 text-center">Panelists</div>
@@ -39,7 +39,7 @@
     </div>
 
     <unallocated-adjudicators
-      :adjudicators="adjudicators">
+      :adjudicators="unallocatedAdjudicators">
     </unallocated-adjudicators>
 
   </div>
@@ -66,6 +66,25 @@ export default {
     currentHistoriesHighlights: {default: null }
   },
   computed: {
+    unallocatedAdjudicators: function() {
+      // Look through all debate's panels, check for adjudicator's ID
+      var unAllocatedAdjudicators = []
+      var allocatedIDs = []
+      for (var i = 0, dlen = this.debates.length; i < dlen; i++) {
+        for (var j = 0, plen = this.debates[i].panel.length; j < plen; j++) {
+          allocatedIDs.push(this.debates[i].panel[j].id)
+        }
+      }
+      // From this list identify adjs not present in a panel
+      for (var property in this.adjudicators) {
+        if (this.adjudicators.hasOwnProperty(property)) {
+          if (allocatedIDs.indexOf(Number(property)) === -1) {
+            unAllocatedAdjudicators.push(this.adjudicators[property])
+          }
+        }
+      }
+      return unAllocatedAdjudicators
+    },
     debatesByID: function() {
       var lookup = {};
       for (var i = 0, len = this.debates.length; i < len; i++) {
@@ -80,12 +99,18 @@ export default {
       var _this = this;
       if (conflicts.personal_adjudicators.length > 0) {
         conflicts.personal_adjudicators.forEach(function(currentValue) {
-          _this.adjudicators[currentValue].hasPersonalConflict = conflictValue
+          var adjudicator = _this.adjudicators[currentValue];
+          if (typeof adjudicator !== 'undefined') {
+            adjudicator.hasPersonalConflict = conflictValue
+          }
         })
       }
       if (conflicts.personal_teams.length > 0) {
         conflicts.personal_teams.forEach(function(currentValue) {
-          _this.teams[currentValue].hasPersonalConflict = conflictValue
+          var team = _this.teams[currentValue];
+          if (typeof team !== 'undefined') {
+            team.hasPersonalConflict = conflictValue
+          }
         })
       }
       if (conflicts.institutional_conflicts.length > 0) {
@@ -94,7 +119,7 @@ export default {
           for (var adjudicatorID in _this.adjudicators) {
             if (_this.adjudicators.hasOwnProperty(adjudicatorID)) {
               var adjToTest = _this.adjudicators[adjudicatorID];
-              if (adjToTest.institution.id === currentValue) {
+              if (typeof adjToTest !== 'undefined' && adjToTest.institution.id === currentValue) {
                 adjToTest.hasInstitutionalConflict = conflictValue;
               }
             }
@@ -103,7 +128,7 @@ export default {
           for (var teamID in _this.teams) {
             if (_this.teams.hasOwnProperty(teamID)) {
               var teamToTest = _this.teams[teamID];
-              if (teamToTest.institution.id === currentValue) {
+              if (typeof teamToTest !== 'undefined' && teamToTest.institution.id === currentValue) {
                 teamToTest.hasInstitutionalConflict = conflictValue;
               }
             }
@@ -114,26 +139,28 @@ export default {
       conflicts.currentOrigin.hasPersonalConflict = false;
       conflicts.currentOrigin.hasInstitutionalConflict = false;
     },
-    toggleHistoriesValues: function(conflicts_dict, setValue) {
+    toggleHistoriesValues: function(historyValue) {
       // For each entry in the currently-hovered adj/team step through it and
       // set hasHistory/historyRoundsAgo values for each adj/team affected
       var histories = this.currentHistoriesHighlights;
       if (histories.length > 0) {
         var _this = this;
-        histories.forEach(function(conflict) {
-          if (typeof conflict.team !== 'undefined') {
-            _this.teams[conflict.team].hasHistoryConflict = setValue;
-            if (setValue) {
-              _this.teams[conflict.team].historyRoundsAgo = conflict.ago;
-            } else {
-              _this.teams[conflict.team].historyRoundsAgo = 0;
+        histories.forEach(function(history) {
+          if (typeof history.team !== 'undefined') {
+            var team = _this.teams[history.team]
+            if (typeof team !== 'undefined') {
+              team.hasHistoryConflict = historyValue;
+              if (history.ago < team.historyRoundsAgo) {
+                team.historyRoundsAgo = history.ago;
+              }
             }
-          } else if (typeof conflict.adj !== 'undefined') {
-            _this.adjudicators[conflict.adj].hasHistoryConflict = setValue;
-            if (setValue) {
-              _this.adjudicators[conflict.adj].historyRoundsAgo = conflict.ago;
-            } else {
-              _this.adjudicators[conflict.adj].historyRoundsAgo = 0;
+          } else if (typeof history.adjudicator !== 'undefined') {
+            var adjudicator = _this.adjudicators[history.adjudicator]
+            if (typeof adjudicator !== 'undefined') {
+              adjudicator.hasHistoryConflict = historyValue;
+              if (history.ago < adjudicator.historyRoundsAgo) {
+                adjudicator.historyRoundsAgo = history.ago;
+              }
             }
           }
         });

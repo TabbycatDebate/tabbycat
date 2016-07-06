@@ -8,6 +8,15 @@ export default {
   props: {
     debateId: Number,
   },
+  computed: {
+    historiesHighlights: function() {
+      if (this.adjorteam.hasHistoryConflict) {
+        return ' histories-display seen-' + this.adjorteam.historyRoundsAgo + '-ago'
+      } else {
+        return ''
+      }
+    }
+  },
   methods: {
     setHistoriesHighlights: function() {
       this.$dispatch('set-histories', this.adjorteam.histories)
@@ -15,38 +24,6 @@ export default {
     unsetHistoriesHighlights: function() {
       this.$dispatch('unset-histories')
     },
-  },
-  computed: {
-    historiesHighlights: function() {
-      var histories = this.currentHistoriesHighlights;
-      if (!histories || histories === null) {
-        return '';
-      } else {
-        var match = '';
-
-        // Redo the below to be team or adj agnostic
-        // // Search for first matching adj element
-        // if (this.getEntity()[1] === 'adj') {
-        //   for (var i=0, iLen=histories.length; i<iLen; i++) {
-        //     if (histories[i].adj == entity.id) {
-        //       match = 'histories-display seen-' + histories[i].ago + '-ago';
-        //       break;
-        //     }
-        //   }
-        // }
-        // // Search for first matching team element
-        // if (this.getEntity()[1] === 'team') {
-        //   for (var i=0, iLen=histories.length; i<iLen; i++) {
-        //     if (histories[i].team == entity.id) {
-        //       match = 'histories-display seen-' + histories[i].ago + '-ago';
-        //       break;
-        //     }
-        //   }
-        // }
-        // return match;
-
-      }
-    }
   }
 }
 </script>

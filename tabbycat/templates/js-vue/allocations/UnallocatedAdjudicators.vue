@@ -10,7 +10,6 @@
 
     <debate-adjudicator
       v-for="adj in adjudicators | orderBy 'score' -1"
-      v-if="!adj.allocated"
       :adjorteam="adj">
     </debate-adjudicator>
 
@@ -25,10 +24,10 @@ import DroppableMixin from '../mixins/DroppableMixin.vue'
 export default {
   mixins: [DroppableMixin],
   props: {
-    adjudicators: Object
+    adjudicators: Array
   },
   components: {
-  'DebateAdjudicator': DebateAdjudicator
+    'DebateAdjudicator': DebateAdjudicator
   },
   methods: {
     handleDrop: function(ev) {

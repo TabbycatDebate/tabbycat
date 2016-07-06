@@ -2,11 +2,15 @@
   <div class="row flex-horizontal">
 
     <div class="flex-cell flex-vertical-center bordered-bottom">
-      <div class="flex-1">{{ debate.bracket }}</div>
+      <div class="flex-1 text-center" data-toggle="tooltip" title="Debate is in the {{ debate.bracket }} bracket">
+        {{ debate.bracket }}
+      </div>
     </div>
 
-    <div class="flex-cell importance-container flex-vertical-center bordered-bottom">
-      <div class="flex-1">?</div>
+    <div class="flex-cell flex-vertical-center bordered-bottom">
+      <div class="flex-1 text-center" data-toggle="tooltip" title="{{ liveness }} teams are live">
+        {{ liveness }}
+      </div>
     </div>
 
     <div class="flex-cell importance-container flex-vertical-center bordered-bottom">
@@ -27,7 +31,7 @@
       <div class="panel panel-default panel-debate">
         <div class="flex-horizontal positions-parent">
           <div class="flex-cell flex-vertical-center bordered-bottom">
-            <div class="flex-1">
+            <div class="flex-1" data-toggle="tooltip" title="{{ panelScore }} is the average rating of this panel's voting majority">
               {{ panelScore }}
             </div>
           </div>
@@ -96,6 +100,20 @@ export default {
       }
       return debateAdjudicators;
     },
+    liveness: function() {
+      var liveness = 0;
+      if (this.aff.categories.filter(function(obj){
+        return obj.will_break === null;
+      }).length > 1) {
+        liveness = liveness + 1;
+      }
+      if (this.neg.categories.filter(function(obj){
+        return obj.will_break === null;
+      }).length > 1) {
+        liveness = liveness + 1;
+      }
+      return liveness;
+    },
     panelScore: function () {
       var panel = this.debate.panel;
       if (typeof panel === 'undefined' || panel.length === 0) {
@@ -105,7 +123,7 @@ export default {
       var adjs_scores = []
       for (var i = 0; i < panel.length; i++) {
         if (panel[i].position !== "T") {
-          adjs_scores.push(allAdjudicators[panel[i].id].score);
+          adjs_scores.push(Number(allAdjudicators[panel[i].id].score));
         }
       }
       if (adjs_scores.length === 0) {

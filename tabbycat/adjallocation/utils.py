@@ -98,11 +98,11 @@ def populate_histories(adjs, teams, t, r):
     da_histories = DebateAdjudicator.objects.filter(
         debate__round__tournament=t, debate__round__seq__lt=r.seq, adjudicator__in=adjs).select_related(
         'debate__round').values_list(
-        'adjudicator', 'debate', 'debate__round__seq', 'debate__round__name').order_by('-debate__round__seq')
+        'adjudicator', 'debate', 'debate__round__seq', 'debate__round__abbreviation').order_by('-debate__round__seq')
     dt_histories = DebateTeam.objects.filter(
         debate__in=[c[1] for c in da_histories]).select_related(
         'debate__round').values_list(
-        'team', 'debate').order_by('-debate__round__seq')
+        'team', 'debate', 'debate__round__seq', 'debate__round__abbreviation').order_by('-debate__round__seq')
 
     for a in adjs:
         hists = []
@@ -111,9 +111,18 @@ def populate_histories(adjs, teams, t, r):
             # Find the relevant DebateTeams from the matching debates
             hists.extend([{
                 'team': dat[0],
+                'debate': dah[1],
                 'ago': r.seq - dah[2],
-                'name': dah[3]
+                'round': dah[3]
             } for dat in dt_histories if dat[1] is dah[1]])
+            # From these DebateAdjudications find panellists from matching debates
+            hists.extend([{
+                'adjudicator': dah2[0],
+                'debate': dah2[1],
+                'ago': r.seq - dah2[2],
+                'round': dah2[3]
+            } for dah2 in da_histories if dah2[1] is dah[1] and dah2 is not dah])
+
         a.histories = hists
 
     for t in teams:
@@ -122,9 +131,10 @@ def populate_histories(adjs, teams, t, r):
         for dat in [dat for dat in dt_histories if dat[0] is t.id]:
             # Iterate over the DebateAdjudicators to find the matching debates
             hists.extend([{
-                'adj': dah[0],
+                'adjudicator': dah[0],
+                'debate': dah[1],
                 'ago': r.seq - dah[2],
-                'name': dah[3]
+                'round': dah[3]
             } for dah in da_histories if dah[1] is dat[1]])
         t.histories = hists
 
@@ -161,7 +171,6 @@ def adjs_to_json(adjs, regions):
         data[adj.id] = {
             'id': adj.id,
             'name': adj.name,
-            'allocated': True if adj.debate else False,
             'gender': adj.gender,
             'region': [r for r in regions if r['id'] is adj.institution.region.id][0] if adj.institution.region else '',
             'institution': {
@@ -172,6 +181,7 @@ def adjs_to_json(adjs, regions):
             },
             'score': "%.1f" % adj.score,
             'ranking': next(pc[0] for pc in percentile_cutoffs if pc[1] <= adj.score),
+            'histories': adj.histories,
             'conflicts': {
                 'personal_teams': adj.personal_teams,
                 'institutional_conflicts': adj.institutional_institutions,
@@ -179,7 +189,8 @@ def adjs_to_json(adjs, regions):
             },
             'hasPersonalConflict': False,
             'hasInstitutionalConflict': False,
-            'histories': adj.histories,
+            'hasHistoryConflict': False,
+            'historyRoundsAgo': 99,
         }
 
     return json.dumps(data)
@@ -215,6 +226,7 @@ def teams_to_json(teams, regions, categories, t, r):
                 'code' : team.institution.code,
                 'abbreviation' : team.institution.abbreviation
             },
+            'histories': team.histories,
             'conflicts': {
                 'personal_teams': [], # No team-team conflicts
                 'institutional_conflicts': team.institutional_institutions,
@@ -222,7 +234,8 @@ def teams_to_json(teams, regions, categories, t, r):
             },
             'hasPersonalConflict': False,
             'hasInstitutionalConflict': False,
-            'histories': team.histories,
+            'hasHistoryConflict': False,
+            'historyRoundsAgo': 99,
         }
     return json.dumps(data)
 

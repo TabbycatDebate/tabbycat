@@ -1,4 +1,10 @@
 
+.position-display, .conflicts-display, .histories-display {
+  span a, .text-muted {
+    color: #fff;
+  }
+}
+
 // For feedback graph
 .position-display {
   &.chair {

@@ -32,7 +32,24 @@
 }
 
 .importance-container {
-  width: 85px;
+  width: 100px;
+}
+
+// For showing inline time since history conflict
+.history-tooltip {
+  opacity: 1;
+  line-height: 12px;
+  &.left {
+    .tooltip-inner {
+      padding: 5px;
+    }
+    margin-left: -9px;
+    margin-top: -4px;
+  }
+  &.top {
+    margin-top: 0px;
+    margin-left: -4px;
+  }
 }
 
 .panel-incomplete {
@@ -67,10 +84,14 @@
 
 .debate-team {
   width: 120px;
+  &:hover {
+    cursor: help;
+    background-color: darken($btn-default-bg, 10%);
+  }
   // Truncate Long Team Names
   .debate-team-title {
-    width: 110px;
-    @include text-overflow;
+    max-height: 40px;
+    overflow-y: hidden;
   }
 }
 
@@ -80,7 +101,8 @@
 
 .adj-draggable {
   text-align: left;
-  div {
+  height: 40px;
+  .adj-info, .adj-score {
     float: left;
   }
   .h4 {
