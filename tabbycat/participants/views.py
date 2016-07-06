@@ -11,6 +11,7 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForTeam
 from results.models import TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
+from tournaments.models import Round
 from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
 from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 from utils.tables import TabbycatTableBuilder
@@ -77,6 +78,11 @@ class ParticipantsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixi
 
 class BaseRecordView(SingleObjectFromTournamentMixin, VueTableMixin, TemplateView):
 
+    def get_context_data(self, **kwargs):
+        kwargs['show_all'] = self.admin
+        kwargs['draw_released'] = self.get_tournament().current_round.draw_status == Round.STATUS_RELEASED
+        return super().get_context_data(**kwargs)
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
@@ -109,7 +115,10 @@ class BaseTeamRecordView(BaseRecordView):
         table.add_round_column([ts.debate_team.debate.round for ts in teamscores])
         table.add_debate_result_by_team_columns(teamscores)
         table.add_debate_adjudicators_column(debates, show_splits=True)
-        table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+
+        if self.admin or self.get_tournament().pref('public_motions'):
+            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+
         table.add_debate_ballot_link_column(debates)
 
         return table
@@ -130,19 +139,21 @@ class BaseAdjudicatorRecordView(BaseRecordView):
 
 
 class TeamRecordView(SuperuserRequiredMixin, BaseTeamRecordView):
-    pass
+    admin = True
 
 
 class AdjudicatorRecordView(SuperuserRequiredMixin, BaseAdjudicatorRecordView):
-    pass
+    admin = True
 
 
 class PublicTeamRecordView(PublicTournamentPageMixin, BaseTeamRecordView):
     public_page_preference = 'public_record'
+    admin = False
 
 
 class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorRecordView):
     public_page_preference = 'public_record'
+    admin = False
 
 
 # ==============================================================================

@@ -7,104 +7,146 @@
 
   <div class="row">
 
-    <div class="col-md-6">
-      <div class="panel {% if debateteam %}panel-primary{% else %}panel-default{% endif %}">
-        <div class="panel-heading">
-          <h4 class="panel-title">In This Round ({{ current_round.name }})</h4>
-        </div>
-
-        {% if debateteam %}
-          <ul class="list-group">
-            <li class="list-group-item active lead">
-              {{ team.short_name }} is debating
-              {% if debateteam.position != debateteam.POSITION_UNALLOCATED %}
-                as the <strong>{{ debateteam.get_position_display|lower }}</strong> team
+    {% if pref.public_draw or show_all %}
+      <div class="col-md-6">
+        <div class="panel {% if debateteam and draw_released %}panel-primary{% else %}panel-default{% endif %}">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              In This Round
+              ({{ current_round.name }})
+              {% if show_all and not draw_released %}
+                <em>(Not Released to Public)</em>
               {% endif %}
-              against
-              <strong><a href="{% tournament_url participants-team-record debateteam.opposition.team.pk %}" class="list-group-item-text">
-                {{ debateteam.opposition.team.short_name }}</a></strong>
-              in <strong>{{ debateteam.debate.venue.name }}</strong>.
-            </strong></li>
-            {% if current_round.starts_at %}
+            </h4>
+          </div>
+
+          {% if draw_released or show_all %}
+            {% if debateteam %}
+              <ul class="list-group">
+
+                {# Position, opposition and venue #}
+                <li class="list-group-item lead {% if draw_released %}active{% endif %}">
+                  {{ team.short_name }} is debating
+                  {% if debateteam.position != debateteam.POSITION_UNALLOCATED %}
+                    as the <strong>{{ debateteam.get_position_display|lower }}</strong> team
+                  {% endif %}
+                  against
+                  <strong><a href="{% tournament_url participants-team-record debateteam.opposition.team.pk %}" class="list-group-item-text">
+                    {{ debateteam.opposition.team.short_name }}</a></strong>
+                  in <strong>{{ debateteam.debate.venue.name }}</strong>.
+                </strong></li>
+
+                {# Round start time #}
+                {% if current_round.starts_at %}
+                  <li class="list-group-item">
+                    The round begins at {{ current_round.starts_at }}
+                  </li>
+                {% endif %} {# current_round.starts_at #}
+
+                {# Adjudicators #}
+                <li class="list-group-item">
+                  {% with adjudicators=debateteam.debate.adjudicators %}
+                    <strong>Adjudicator{{ adjudicators|length|pluralize }}:</strong>
+                    {% for adj, adjtype in adjudicators.with_positions %}
+                      <a href="{% tournament_url participants-adjudicator-record adj.pk %}">
+                        {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                  {% endwith %}
+                </li>
+
+                {# Motions #}
+                {% if pref.public_motions or show_all %}
+                  <li class="list-group-item">
+                    {% if current_round.motions_released or show_all %}
+                      {% if not current_round.motions_released %}
+                        <em>Motions are not released to public.</em><br />
+                      {% endif %}
+                      {% if debateteam.debate.round.motion_set.all|length == 1 %}
+                        <strong>Motion:</strong> {{ debateteam.debate.round.motion_set.first.text }}
+                      {% else %}
+                        {% for motion in debateteam.debate.round.motion_set.all %}
+                          <strong>Motion {{ motion.seq }}:</strong> {{ motion.text }}<br />
+                        {% endfor %}
+                      {% endif %}
+                    {% else %} {# elif not (current_round.motions_released or show_all) #}
+                      <em>The motion(s) for this round haven't yet been released.</em>
+                    {% endif %} {# current_round.motions_released or show_all #}
+                  </li>
+                {% endif %} {# pref.public_motions or show_all #}
+              </ul>
+
+            {% else %} {# elif not debateteam #}
+              <div class="panel-body">
+                <em>{{ team.short_name }} does not have a debate this round.</em>
+              </div>
+            {% endif %} {# debateteam #}
+
+          {% else %} {# elif not (draw_released or show_all) #}
+            <div class="panel-body">
+              <em>The draw for this round hasn't yet been released.</em>
+            </div>
+          {% endif %} {# draw_released or show_all #}
+        </div>
+      </div>
+    {% endif %} {# pref.public_draw or show_all #}
+
+    {% if pref.public_participants or show_all %}
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">About {{ team.short_name }}</h4>
+          </div>
+
+          <ul class="list-group">
+            {% if team.reference != team.short_reference %}
               <li class="list-group-item">
-                The round begins at {{ current_round.starts_at }}
+                <strong>Full name:</strong>
+                {{ team.long_name }}
               </li>
             {% endif %}
+
             <li class="list-group-item">
-              {% with adjudicators=debateteam.debate.adjudicators %}
-                <strong>Adjudicator{{ adjudicators|length|pluralize }}:</strong>
-                {% for adj, adjtype in adjudicators.with_positions %}
-                  <a href="{% tournament_url participants-adjudicator-record adj.pk %}">
-                    {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-                {% endfor %}
-              {% endwith %}
+              <strong>Speakers:</strong>
+              {% for speaker in team.speakers %}
+                {{ speaker.name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
             </li>
+
+            {% if team.division %}
+              <li class="list-group-item">
+                <strong>Division:</strong>
+                {{ team.division.name }}
+              </li>
+            {% endif %}
+
+            {% if pref.public_break_categories or show_all %}
+              <li class="list-group-item">
+                <strong>Eligible for:</strong>
+                {% for category in team.break_categories.all %}
+                  {{ category.name }} Break{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </li>
+            {% endif %} {# pref.public_break_categories or show_all #}
+
             <li class="list-group-item">
-              {% if debateteam.debate.round.motion_set.all|length == 1 %}
-                <strong>Motion:</strong> {{ debateteam.debate.round.motion_set.first.text }}
-              {% else %}
-                {% for motion in debateteam.debate.round.motion_set.all %}
-                  <strong>Motion {{ motion.seq }}:</strong> {{ motion.text }}<br />
-                {% endfor %}
-              {% endif %}
+              <strong>Institution:</strong>
+              {{ team.institution.name }}
             </li>
+            {% if team.institution.region %}
+              <li class="list-group-item">
+                <strong>Region:</strong>
+                {{ team.institution.region }}
+              </li>
+            {% endif %}
+
           </ul>
-        {% else %}
-          <div class="panel-body">
-            <em>{{ team.short_name }} does not have a debate this round.</em>
-          </div>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">About {{ team.short_name }}</h4>
         </div>
-
-        <ul class="list-group">
-          {% if team.reference != team.short_reference %}
-            <li class="list-group-item">
-              <strong>Full name:</strong>
-              {{ team.long_name }}
-            </li>
-          {% endif %}
-          <li class="list-group-item">
-            <strong>Speakers:</strong>
-            {% for speaker in team.speakers %}
-              {{ speaker.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </li>
-          {% if team.division %}
-            <li class="list-group-item">
-              <strong>Division:</strong>
-              {{ team.division.name }}
-            </li>
-          {% endif %}
-          <li class="list-group-item">
-            <strong>Eligible for:</strong>
-            {% for category in team.break_categories.all %}
-              {{ category.name }} Break{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </li>
-          <li class="list-group-item">
-            <strong>Institution:</strong>
-            {{ team.institution.name }}
-          </li>
-          {% if team.institution.region %}
-            <li class="list-group-item">
-              <strong>Region:</strong>
-              {{ team.institution.region }}
-            </li>
-          {% endif %}
-        </ul>
       </div>
-    </div>
+    {% endif %} {# pref.public_participants or show_all #}
 
   </div>
 
-  {% if pref.feedback_progress %}
+  {% if pref.feedback_progress or show_all %}
     <div class="row">
       <div class="col-md-12">
         <div class="panel panel-default">
@@ -141,8 +183,10 @@
         </div>
       </div>
     </div>
-  {% endif %}
+  {% endif %} {# pref.feedback_progress or show_all #}
 
-  {{ block.super }}
+  {% if pref.public_results or show_all %}
+    {{ block.super }}
+  {% endif %} {# pref.public_results or show_all #}
 
 {% endblock content %}
