@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 
 from adjallocation.models import DebateAdjudicator
+from adjfeedback.progress import FeedbackProgressForTeam
 from results.models import TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
@@ -90,12 +91,14 @@ class BaseTeamRecordView(BaseRecordView):
         try:
             kwargs['debateteam'] = self.object.debateteam_set.get(
                 debate__round=self.get_tournament().current_round)
-            kwargs['page_title'] = self.object.long_name
-            if self.get_tournament().pref('show_emoji'):
-                kwargs['page_emoji'] = self.object.emoji
-
         except ObjectDoesNotExist:
             kwargs['debateteam'] = None
+
+        kwargs['page_title'] = self.object.long_name
+        if self.get_tournament().pref('show_emoji'):
+            kwargs['page_emoji'] = self.object.emoji
+
+        kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object)
 
         return super().get_context_data(**kwargs)
 

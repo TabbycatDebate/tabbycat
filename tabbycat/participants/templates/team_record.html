@@ -103,29 +103,43 @@
 
   </div>
 
-  {% if pref.feedback_progress %}  <div class="row">
-
-    <div class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">Feedback Returns</h4>
+  {% if pref.feedback_progress %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">Feedback Returns</h4>
+          </div>
+          <ul class="list-group">
+            {% for tracker in feedback_progress.trackers %}
+              {% if tracker.fulfilled %}
+                <li class="list-group-item text-success">
+                  <span class="badge">{{ tracker.round.name }}</span>
+                  <span class="glyphicon glyphicon-ok"></span>
+                  Has submitted feedback for
+                  <strong>{{ tracker.submission.adjudicator.name }}</strong> of
+                  {{ tracker.submission.adjudicator.institution.code }}
+                </li>
+              {% elif tracker.expected %}
+                <li class="list-group-item text-danger">
+                  <span class="badge">{{ tracker.round.name }}</span>
+                  <span class="glyphicon glyphicon-remove"></span>
+                  Has not submitted feedback for
+                  {% for target in tracker.acceptable_targets %}
+                    {% if not forloop.first and forloop.last %}or{% endif %}
+                    <strong>{{ target.name }}</strong> of
+                    {{ target.institution.code }}{% if not forloop.last %},{% endif %}
+                  {% endfor %}
+                  {% if tracker.acceptable_targets|length > 1 %}
+                    (whoever gave the oral adjudication)
+                  {% endif %}
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
         </div>
-        <ul class="list-group">
-          <li class="list-group-item text-success">
-            <span class="badge">Round 5</span>
-            <span class="glyphicon glyphicon-ok"></span> Has submitted feedback for
-            <strong>John Smith</strong> of <strong>Monash</strong>
-          </li>
-          <li class="list-group-item text-danger">
-            <span class="badge">Round 3</span>
-            <span class="glyphicon glyphicon-remove"></span> Has not submitted feedback for
-            <strong>Jane Smith</strong> of <strong>Melbourne</strong>
-          </li>
-        </ul>
       </div>
     </div>
-
-  </div>
   {% endif %}
 
   {{ block.super }}

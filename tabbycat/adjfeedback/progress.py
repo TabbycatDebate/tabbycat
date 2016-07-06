@@ -36,11 +36,15 @@ class BaseFeedbackExpectedSubmissionTracker:
         submissions to be relevant, but not acceptable."""
         return self.related_submissions()
 
+    def submission(self):
+        if self.fulfilled:
+            return self.acceptable_submissions().get()
+        else:
+            return None
+
 
 class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTracker):
     """Represents a single piece of expected feedback from a team."""
-
-    expected = True
 
     def acceptable_targets(self):
         """For a team, this must be the adjudicator who delivered the oral
@@ -65,8 +69,6 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
 
 class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
     """Represents a single piece of expected feedback from an adjudicator."""
-
-    expected = True
 
     def __init__(self, source, target):
         self.target = target
@@ -129,13 +131,13 @@ class BaseFeedbackProgress:
         """Returns a list of AdjudicatorFeedback objects that are submitted
         as expected."""
         return [feedback for tracker in self.expected_trackers()
-                for feedback in tracker.submissions()]
+                for feedback in tracker.related_submissions()]
 
     def unexpected_trackers(self):
         """Returns a list of trackers for feedback that was submitted but not
         expected to be there."""
         return [FeedbackUnexpectedSubmissionTracker(feedback) for feedback in
-            self.feedback_submitted() if feedback not in self.expected_feedback()]
+            self.submitted_feedback() if feedback not in self.expected_feedback()]
 
     def fulfilled_trackers(self):
         """Returns a list of trackers that are fulfilled."""
@@ -149,7 +151,7 @@ class BaseFeedbackProgress:
     def num_submitted(self):
         """Returns the number of feedbacks that were submitted, including
         duplicate and unexpected submissions."""
-        return self.feedback_submitted().count()
+        return self.submitted_feedback().count()
 
     def num_expected(self):
         """Returns the number of feedbacks that are expected from this participant."""
@@ -184,9 +186,9 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         """Returns all of the DebateTeam instances for which a team owes
         feedback, which is all the debates for which there is a confirmed
         ballot."""
-        return self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True).unique()
+        return self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True)
 
-    def get_feedback_submitted(self):
+    def get_submitted_feedback(self):
         return AdjudicatorFeedback.objects.filter(source_team__team=self.team)
 
     def get_expected_trackers(self):
