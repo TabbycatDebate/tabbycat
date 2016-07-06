@@ -57,7 +57,7 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
 # Team and adjudicator record pages
 # ==============================================================================
 
-class ParticipantsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixin, TemplateView):
+class ParticipantRecordsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixin, TemplateView):
 
     page_title = 'Team and Adjudicator Record Pages'
     page_emoji = '🌸'
