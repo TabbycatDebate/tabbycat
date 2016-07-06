@@ -25,7 +25,7 @@
                 {{ debateteam.opposition.team.short_name }}</a></strong>
               in <strong>{{ debateteam.debate.venue.name }}</strong>.
             </strong></li>
-            {% if current_round.starts_a %}
+            {% if current_round.starts_at %}
               <li class="list-group-item">
                 The round begins at {{ current_round.starts_at }}
               </li>
@@ -44,7 +44,7 @@
                 <strong>Motion:</strong> {{ debateteam.debate.round.motion_set.first.text }}
               {% else %}
                 {% for motion in debateteam.debate.round.motion_set.all %}
-                  <strong>Motion {{ forloop.counter }}:</strong> {{ motion.text }}<br />
+                  <strong>Motion {{ motion.seq }}:</strong> {{ motion.text }}<br />
                 {% endfor %}
               {% endif %}
             </li>
