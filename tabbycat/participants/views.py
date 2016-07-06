@@ -140,6 +140,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
             kwargs['debateadjudicator'] = None
 
         kwargs['page_title'] = 'Record for ' + self.object.name
+        kwargs['page_emoji'] = '⚖'
         kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object)
 
         return super().get_context_data(**kwargs)
