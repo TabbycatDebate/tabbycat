@@ -4,8 +4,6 @@ by participants of the tournament.
 There are a few possibilities for how to characterise a feedback submission:
 """
 
-from django.utils.functional import cached_property
-
 from .models import AdjudicatorFeedback
 
 
@@ -23,23 +21,20 @@ class BaseFeedbackExpectedSubmissionTracker:
 
     @property
     def count(self):
-        return self.submissions().count()
+        return self.related_submissions().count()
 
     @property
     def fulfilled(self):
-        return self.count == 1
+        return self.acceptable_submissions().count() == 1 and self.count == 1
 
-    def submissions(self):
+    def related_submissions(self):
         """In subclass implementations, this should return a QuerySet."""
         raise NotImplementedError
 
-    def submission(self):
-        """Returns the AdjudicatorFeedback object that is the feedback for this
-        tracker. If the tracker isn't fulfilled, it returns None."""
-        if self.fulfilled:
-            return self.submissions().get()
-        else:
-            return None
+    def acceptable_submissions(self):
+        """Subclasses should override this method of it is possible for some
+        submissions to be relevant, but not acceptable."""
+        return self.related_submissions()
 
 
 class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTracker):
@@ -61,10 +56,11 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         else:
             return majority
 
-    @cached_property
-    def submissions(self):
-        return self.source.adjudicatorfeedback_set.filter(confirmed=True,
-            adjudicator__in=self.acceptable_targets(), source_team=self.source)
+    def related_submissions(self):
+        return self.source.adjudicatorfeedback_set.filter(confirmed=True, source_team=self.source)
+
+    def acceptable_submissions(self):
+        return self.related_submissions().filter(adjudicator__in=self.acceptable_targets())
 
 
 class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
@@ -74,11 +70,14 @@ class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmi
 
     def __init__(self, source, target):
         self.target = target
+        return super().__init__(source)
 
-    @cached_property
-    def submissions(self):
+    def related_submissions(self):
         return self.source.adjudicatorfeedback_set.filter(confirmed=True,
             adjudicator=self.target, source_adjudicator=self.source)
+
+    def acceptable_targets(self):
+        return [self.target]
 
 
 class FeedbackUnexpectedSubmissionTracker:
@@ -98,11 +97,8 @@ class FeedbackUnexpectedSubmissionTracker:
     def count(self):
         return 1
 
-    def submissions(self):
+    def related_submissions(self):
         return [self.feedback]
-
-    def submission(self):
-        return self.feedback
 
 
 class BaseFeedbackProgress:
