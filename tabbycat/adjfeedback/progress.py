@@ -8,6 +8,7 @@ from .models import AdjudicatorFeedback
 
 from adjallocation.models import DebateAdjudicator
 
+
 class BaseFeedbackExpectedSubmissionTracker:
     """Represents a single piece of expected feedback."""
 
