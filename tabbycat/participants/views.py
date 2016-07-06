@@ -79,7 +79,7 @@ class ParticipantsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixi
 class BaseRecordView(SingleObjectFromTournamentMixin, VueTableMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
-        kwargs['show_all'] = self.admin
+        kwargs['admin_page'] = self.admin
         kwargs['draw_released'] = self.get_tournament().current_round.draw_status == Round.STATUS_RELEASED
         return super().get_context_data(**kwargs)
 
@@ -109,6 +109,7 @@ class BaseTeamRecordView(BaseRecordView):
         return super().get_context_data(**kwargs)
 
     def get_table(self):
+        """On team record pages, the table is the results table."""
         teamscores = TeamScore.objects.filter(debate_team__team=self.object)
         debates = [ts.debate_team.debate for ts in teamscores]
         table = TabbycatTableBuilder(view=self, title="Results")

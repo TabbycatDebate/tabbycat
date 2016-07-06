@@ -7,20 +7,20 @@
 
   <div class="row">
 
-    {% if pref.public_draw or show_all %}
-      <div class="col-md-6">
+    {% if pref.public_draw or admin_page %}
+      <div class="col-lg-6">
         <div class="panel {% if debateteam and draw_released %}panel-primary{% else %}panel-default{% endif %}">
           <div class="panel-heading">
             <h4 class="panel-title">
               In This Round
               ({{ current_round.name }})
-              {% if show_all and not draw_released %}
+              {% if admin_page and not draw_released %}
                 <em>(Not Released to Public)</em>
               {% endif %}
             </h4>
           </div>
 
-          {% if draw_released or show_all %}
+          {% if draw_released or admin_page %}
             {% if debateteam %}
               <ul class="list-group">
 
@@ -31,7 +31,7 @@
                     as the <strong>{{ debateteam.get_position_display|lower }}</strong> team
                   {% endif %}
                   against
-                  <strong><a href="{% tournament_url participants-team-record debateteam.opposition.team.pk %}" class="list-group-item-text">
+                  <strong><a href="{% if admin_page %}{% tournament_url participants-team-record debateteam.opposition.team.pk %}{% else %}{% tournament_url participants-public-team-record debateteam.opposition.team.pk %}{% endif %}" class="list-group-item-text">
                     {{ debateteam.opposition.team.short_name }}</a></strong>
                   in <strong>{{ debateteam.debate.venue.name }}</strong>.
                 </strong></li>
@@ -48,16 +48,16 @@
                   {% with adjudicators=debateteam.debate.adjudicators %}
                     <strong>Adjudicator{{ adjudicators|length|pluralize }}:</strong>
                     {% for adj, adjtype in adjudicators.with_positions %}
-                      <a href="{% tournament_url participants-adjudicator-record adj.pk %}">
+                      <a href="{% if admin_page %}{% tournament_url participants-adjudicator-record adj.pk %}{% else %}{% tournament_url participants-public-adjudicator-record adj.pk %}{% endif %}">
                         {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
                     {% endfor %}
                   {% endwith %}
                 </li>
 
                 {# Motions #}
-                {% if pref.public_motions or show_all %}
+                {% if pref.public_motions or admin_page %}
                   <li class="list-group-item">
-                    {% if current_round.motions_released or show_all %}
+                    {% if current_round.motions_released or admin_page %}
                       {% if not current_round.motions_released %}
                         <em>Motions are not released to public.</em><br />
                       {% endif %}
@@ -68,11 +68,11 @@
                           <strong>Motion {{ motion.seq }}:</strong> {{ motion.text }}<br />
                         {% endfor %}
                       {% endif %}
-                    {% else %} {# elif not (current_round.motions_released or show_all) #}
+                    {% else %} {# elif not (current_round.motions_released or admin_page) #}
                       <em>The motion(s) for this round haven't yet been released.</em>
-                    {% endif %} {# current_round.motions_released or show_all #}
+                    {% endif %} {# current_round.motions_released or admin_page #}
                   </li>
-                {% endif %} {# pref.public_motions or show_all #}
+                {% endif %} {# pref.public_motions or admin_page #}
               </ul>
 
             {% else %} {# elif not debateteam #}
@@ -81,17 +81,17 @@
               </div>
             {% endif %} {# debateteam #}
 
-          {% else %} {# elif not (draw_released or show_all) #}
+          {% else %} {# elif not (draw_released or admin_page) #}
             <div class="panel-body">
               <em>The draw for this round hasn't yet been released.</em>
             </div>
-          {% endif %} {# draw_released or show_all #}
+          {% endif %} {# draw_released or admin_page #}
         </div>
       </div>
-    {% endif %} {# pref.public_draw or show_all #}
+    {% endif %} {# pref.public_draw or admin_page #}
 
-    {% if pref.public_participants or show_all %}
-      <div class="col-md-6">
+    {% if pref.public_participants or admin_page %}
+      <div class="col-lg-6">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">About {{ team.short_name }}</h4>
@@ -119,14 +119,14 @@
               </li>
             {% endif %}
 
-            {% if pref.public_break_categories or show_all %}
+            {% if pref.public_break_categories or admin_page %}
               <li class="list-group-item">
                 <strong>Eligible for:</strong>
                 {% for category in team.break_categories.all %}
                   {{ category.name }} Break{% if not forloop.last %}, {% endif %}
                 {% endfor %}
               </li>
-            {% endif %} {# pref.public_break_categories or show_all #}
+            {% endif %} {# pref.public_break_categories or admin_page #}
 
             <li class="list-group-item">
               <strong>Institution:</strong>
@@ -142,11 +142,11 @@
           </ul>
         </div>
       </div>
-    {% endif %} {# pref.public_participants or show_all #}
+    {% endif %} {# pref.public_participants or admin_page #}
 
   </div>
 
-  {% if pref.feedback_progress or show_all %}
+  {% if pref.feedback_progress or admin_page %}
     <div class="row">
       <div class="col-md-12">
         <div class="panel panel-default">
@@ -183,10 +183,10 @@
         </div>
       </div>
     </div>
-  {% endif %} {# pref.feedback_progress or show_all #}
+  {% endif %} {# pref.feedback_progress or admin_page #}
 
-  {% if pref.public_results or show_all %}
+  {% if pref.public_results or admin_page %}
     {{ block.super }}
-  {% endif %} {# pref.public_results or show_all #}
+  {% endif %} {# pref.public_results or admin_page #}
 
 {% endblock content %}
