@@ -134,7 +134,7 @@ class BallotSetForm(forms.Form):
     def __init__(self, ballotsub, *args, **kwargs):
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
-        self.adjudicators = self.debate.adjudicators.list
+        self.adjudicators = list(self.debate.adjudicators.voting())
         self.motions = self.debate.round.motion_set
         self.tournament = self.debate.round.tournament
         self.using_motions = self.tournament.pref('enable_motions')

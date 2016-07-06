@@ -14,7 +14,7 @@ from .misc import redirect_tournament as misc_redirect_tournament
 
 
 def get_ip_address(request):
-    warn("utils.views.get_ip_address is deprecated, import from utils.misc instead")
+    warn("utils.views.get_ip_address is deprecated, import from utils.misc instead", stacklevel=2)
     return misc_get_ip_address(request)
 
 
@@ -31,7 +31,7 @@ def tournament_view(view_fn):
 
 
 def redirect_tournament(to, tournament, **kwargs):
-    warn("utils.views.redirect_tournament is deprecated, import from utils.misc instead")
+    warn("utils.views.redirect_tournament is deprecated, import from utils.misc instead", stacklevel=2)
     return misc_redirect_tournament(to, tournament, **kwargs)
 
 
@@ -61,7 +61,7 @@ def round_view(view_fn):
 
 
 def redirect_round(to, round, **kwargs):
-    warn("utils.views.redirect_round is deprecated, import from utils.misc instead")
+    warn("utils.views.redirect_round is deprecated, import from utils.misc instead", stacklevel=2)
     return redirect(to, tournament_slug=round.tournament.slug,
                     round_seq=round.seq, *kwargs)
 

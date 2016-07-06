@@ -513,6 +513,10 @@ def update_round_cache(sender, instance, created, **kwargs):
     cache.delete(cached_key)
     logger.debug("Updated cache %s for %s" % (cached_key, instance))
 
+    if instance.tournament.current_round_id == instance.id:
+        logger.debug("Updating tournament cache because %s is the current round" % instance)
+        update_tournament_cache(sender, instance.tournament, False, **kwargs)
+
 # Update the cached round object when model is changed)
 signals.post_save.connect(update_round_cache, sender=Round)
 

@@ -101,28 +101,22 @@ class BaseDebateTestCase(TestCase):
     def setUp(self):
         super(BaseDebateTestCase, self).setUp()
         # add test models
-        self.t = Tournament(slug="tournament")
-        self.t.save()
+        self.t = Tournament.objects.create(slug="tournament")
         for i in range(4):
-            ins = Institution(code="INS%s" % i, name="Institution %s" % i)
-            ins.save()
+            ins = Institution.objects.create(code="INS%s" % i, name="Institution %s" % i)
             for j in range(3):
-                t = Team(tournament=self.t, institution=ins,
+                t = Team.objects.create(tournament=self.t, institution=ins,
                          reference="Team%s%s" % (i, j))
-                t.save()
                 for k in range(2):
-                    speaker = Speaker(team=t, name="Speaker%s%s%s" % (i, j, k))
-                    speaker.save()
+                    Speaker.objects.create(team=t, name="Speaker%s%s%s" % (i, j, k))
             for j in range(2):
-                adj = Adjudicator(tournament=self.t, institution=ins,
-                                  name="Adjudicator%s%s" % (i, j), test_score=0)
-                adj.save()
+                Adjudicator.objects.create(tournament=self.t, institution=ins,
+                                           name="Adjudicator%s%s" % (i, j), test_score=0)
 
         for i in range(8):
-            venue = Venue(name="Venue %s" % i)
-            venue.priority = i
-            venue.save()
+            Venue.objects.create(name="Venue %s" % i, priority=i)
+            Venue.objects.create(name="IVenue %s" % i, priority=i)
 
-            venue = Venue(name="IVenue %s" % i)
-            venue.priority = i
-            venue.save()
+    def tearDown(self):
+        self.t.delete()
+        Institution.objects.all().delete()

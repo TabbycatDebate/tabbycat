@@ -17,8 +17,9 @@ from utils.mixins import ExpectPost, JsonDataResponseView, SuperuserRequiredMixi
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
+from .allocation import AdjudicatorAllocation
 from .hungarian import HungarianAllocator
-from .models import AdjudicatorAdjudicatorConflict, AdjudicatorAllocation, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
+from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 from .utils import adjs_to_json, debates_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
 
 

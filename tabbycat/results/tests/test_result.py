@@ -85,6 +85,10 @@ class BaseTestResult(TestCase):
         for adj, adjtype in zip(self.adjs, adjtypes):
             DebateAdjudicator.objects.create(debate=self.debate, adjudicator=adj, type=adjtype)
 
+    def tearDown(self):
+        self.t.delete()
+        Institution.objects.all().delete()
+
     def _get_team(self, team):
         if team in ['aff', 'neg']:
             team = self.debate.get_team(team)

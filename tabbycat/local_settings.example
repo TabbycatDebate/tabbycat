@@ -85,7 +85,6 @@ if ENABLE_DEBUG_TOOLBAR:
     )
 
     DEBUG_TOOLBAR_CONFIG = {
-        'INTERCEPT_REDIRECTS': False,
         'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
     }
 
