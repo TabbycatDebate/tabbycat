@@ -139,13 +139,13 @@ export default {
       return this.adjorteam.name + " of " + this.adjorteam.institution.name
     },
     setHighlights: function() {
-      this.setConflictHighlights()
-      this.setHistoriesHighlights()
+      this.setConflictHighlights('set-hover-conflicts')
+      this.setHistoriesHighlights('set-hover-histories')
       this.showSlideOver = true
     },
     unsetHighlights: function() {
-      this.unsetConflictHighlights()
-      this.unsetHistoriesHighlights()
+      this.unsetConflictHighlights('unset-hover-conflicts')
+      this.unsetHistoriesHighlights('unset-hover-histories')
       this.showSlideOver = false
     },
     handleDragStart: function(event) {

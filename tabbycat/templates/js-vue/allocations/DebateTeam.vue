@@ -86,13 +86,13 @@ export default {
       }
     },
     setHighlights: function() {
-      this.setConflictHighlights()
-      this.setHistoriesHighlights()
+      this.setConflictHighlights('set-hover-conflicts')
+      this.setHistoriesHighlights('set-hover-histories')
       this.showSlideOver = true
     },
     unsetHighlights: function() {
-      this.unsetConflictHighlights()
-      this.unsetHistoriesHighlights()
+      this.unsetConflictHighlights('unset-hover-conflicts')
+      this.unsetHistoriesHighlights('unset-hover-histories')
       this.showSlideOver = false
     }
   },

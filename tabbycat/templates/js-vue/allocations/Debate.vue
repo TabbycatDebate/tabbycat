@@ -63,13 +63,14 @@ import AjaxMixin from '../mixins/AjaxMixin.vue'
 import DebateTeam from './DebateTeam.vue'
 import DebateImportance from './DebateImportance.vue'
 import PositionDroppable from './PositionDroppable.vue'
+import ConflictsCalculatorMixin from '../mixins/ConflictsCalculatorMixin.vue'
 
 export default {
   components: {
     DebateTeam, DebateImportance, PositionDroppable
   },
   mixins: [
-    AjaxMixin
+    AjaxMixin, ConflictsCalculatorMixin
   ],
   props: {
     allAdjudicators: Object,
@@ -140,6 +141,14 @@ export default {
       }
       return (total / adjs_scores.length).toFixed(1);
     }
+  },
+  methods: {
+    checkForDebateConflicts: function() {
+
+    },
+    checkForDebateHistories: function() {
+
+    },
   },
   watch: {
     'debate.panel': function (newVal, oldVal) {

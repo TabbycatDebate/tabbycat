@@ -55,7 +55,9 @@ export default {
   components: {
     AllocationActions, Debate, UnallocatedAdjudicators
   },
-  mixins: [ConflictsCalculatorMixin],
+  mixins: [
+    ConflictsCalculatorMixin
+  ],
   props: {
     debates: Array,
     adjudicators: Object,
@@ -63,9 +65,16 @@ export default {
     regions: Array,
     categories: Array,
     urls: Object,
-    currentlyDragging: Object,
-    currentConflictHighlights: {default: null },
-    currentHistoriesHighlights: {default: null }
+    currentlyDragging: Object
+  },
+  methods: {
+    unsetAllHighlights: function() {
+      this.currentlyDragging = null;
+      this.toggleConflictsValues(false);
+      this.toggleHistoriesValues(false);
+      this.currentConflicts = null;
+      this.currentHistories = null;
+    },
   },
   computed: {
     unallocatedAdjudicators: function() {
@@ -96,12 +105,31 @@ export default {
     }
   },
   events: {
+    // Determine dragged object
     'set-dragged-adj': function(dragInfo) {
       this.currentlyDragging = dragInfo;
     },
     'unset-dragged-adj': function() {
       this.currentlyDragging = null;
     },
+    // Determine hover conflicts
+    'set-hover-conflicts': function (conflicts_dict) {
+      this.currentConflicts = conflicts_dict;
+      this.toggleConflictsValues(true);
+    },
+    'unset-hover-conflicts': function () {
+      this.toggleConflictsValues(false);
+      this.currentConflicts = null;
+    },
+    'set-hover-histories': function (histories_dict) {
+      this.currentHistories = histories_dict;
+      this.toggleHistoriesValues(true);
+    },
+    'unset-hover-histories': function() {
+      this.toggleHistoriesValues(false);
+      this.currentConflicts = null;
+    },
+    // Set or unset dragg adjs to panels
     'set-adj-unused': function() {
       var adj = this.currentlyDragging.adj
       // Remove adj from any panels they came from

@@ -18,11 +18,11 @@ export default {
     }
   },
   methods: {
-    setHistoriesHighlights: function() {
-      this.$dispatch('set-histories', this.adjorteam.histories)
+    setHistoriesHighlights: function(dispatch) {
+      this.$dispatch(dispatch, this.adjorteam.histories)
     },
-    unsetHistoriesHighlights: function() {
-      this.$dispatch('unset-histories')
+    unsetHistoriesHighlights: function(dispatch) {
+      this.$dispatch(dispatch)
     },
   }
 }

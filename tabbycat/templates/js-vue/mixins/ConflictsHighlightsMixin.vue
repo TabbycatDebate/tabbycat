@@ -17,17 +17,17 @@ export default {
     }
   },
   methods: {
-    setConflictHighlights: function() {
+    setConflictHighlights: function(dispatch) {
       var adjorteam = this.adjorteam;
-      this.$dispatch('set-conflicts', {
+      this.$dispatch(dispatch, {
         personal_adjudicators: adjorteam.conflicts.personal_adjudicators,
         personal_teams: adjorteam.conflicts.personal_teams,
         institutional_conflicts: adjorteam.conflicts.institutional_conflicts,
         currentOrigin: adjorteam // To determine if hover target == conflict target
       })
     },
-    unsetConflictHighlights: function() {
-      this.$dispatch('unset-conflicts');
+    unsetConflictHighlights: function(dispatch) {
+      this.$dispatch(dispatch);
     },
   }
 }
