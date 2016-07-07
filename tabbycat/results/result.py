@@ -3,7 +3,7 @@ from statistics import mean
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from adjallocation.models import DebateAdjudicator
+from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import DebateTeam
 
 
@@ -187,7 +187,6 @@ class BallotSet(object):
         """
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
-        self.adjudicators = self.debate.adjudicators.list
         self.dts = self.debate.debateteam_set.all()  # Note, this is a QuerySet
         assert self.dts.count() == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
 
@@ -228,7 +227,7 @@ class BallotSet(object):
     def adjudicator_sheets(self):
         if self._adjudicator_sheets is None:
             self._adjudicator_sheets = {a: Scoresheet(self.ballotsub, a)
-                for a in self.adjudicators}
+                for a in self.debate.adjudicators.voting()}
             self._sheets_created = True
         return self._adjudicator_sheets
 
@@ -401,7 +400,7 @@ class BallotSet(object):
 
         counts = {dt: len(adjs) for dt, adjs in self._adjs_by_dt.items()}
         max_count = max(counts.values()) # check that we have a majority
-        if max_count < len(self.adjudicators) // 2 + 1:
+        if max_count < self.debate.adjudicators.num_voting // 2 + 1:
             raise ResultError("No team had a majority in %s." % self.debate.matchup)
 
         for dt, count in counts.items(): # set self._winner
@@ -446,7 +445,7 @@ class BallotSet(object):
         return mean(self.adjudicator_sheets[adj]._get_total(dt) for adj in self.majority_adj)
 
     def _dissenting_inclusive_score(self, dt):
-        return mean(self.adjudicator_sheets[adj]._get_total(dt) for adj in self.adjudicators)
+        return mean(self.adjudicator_sheets[adj]._get_total(dt) for adj in self.debate.adjudicators.voting())
 
     # Abstracted to not be tied to wins
     def _get_points(self, dt):
@@ -536,26 +535,24 @@ class BallotSet(object):
     # Methods for UI display
     # --------------------------------------------------------------------------
 
-    def _is_trainee(self, adj):
-        da = self.debate.debateadjudicator_set.get(adjudicator=adj)
-        return da.type == DebateAdjudicator.TYPE_TRAINEE
-
     @property
     def adjudicator_results(self):
-        """Iterator. Each iteration is a 3-tuple (adjtype, adj, split), where
-        adjtype is a DebateAdjudicator.TYPE_* constant, adj is an Adjudicator
-        object, and split is True if the adjudicator was in the minority and
-        not a trainee, False if the adjudicator was in the majority or is a
-        trainee. If there is no available result, split is always False."""
+        """Iterator. Each iteration is a 3-tuple (adj, adjtype, split), where
+        adjtype is a AdjudicatorAllocation.POSITION_* constant, adj is an
+        Adjudicator object, and split is True if the adjudicator was in the
+        minority and not a trainee, False if the adjudicator was in the majority
+        or is a trainee. If there is no available result, split is always
+        False."""
+
         try:
             self._calc_decision()
         except (ResultError, AssertionError):
-            for adjtype, adj in self.debate.adjudicators:
-                yield adjtype, adj, False
+            for adj, adjtype in self.debate.adjudicators.with_positions():
+                yield adj, adjtype, False
         else:
-            for adjtype, adj in self.debate.adjudicators:
-                yield adjtype, adj, (adj not in self.majority_adj and
-                        adjtype != DebateAdjudicator.TYPE_TRAINEE)
+            for adj, adjtype in self.debate.adjudicators.with_positions():
+                split = (adj not in self.majority_adj and adjtype != AdjudicatorAllocation.POSITION_TRAINEE)
+                yield adj, adjtype, split
 
     @property
     def sheet_iter(self):
@@ -627,7 +624,7 @@ class BallotSet(object):
             def neg_win(self):
                 return self.sheet.neg_win
 
-        for adj in self.adjudicators:
+        for adj in self.debate.adjudicators.voting():
             yield ScoresheetWrapper(adj)
 
 
@@ -640,7 +637,6 @@ class ForfeitBallotSet(BallotSet):
         """
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
-        self.adjudicators = self.debate.adjudicators.list
         self.forfeiter = forfeiter
         self.motion_veto = None
         self.dts = self.debate.debateteam_set.all() # Note, this is a QuerySet

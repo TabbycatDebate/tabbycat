@@ -39,7 +39,7 @@
     </template>
 
     <div class="popover-raw hide" v-if="cellData['popover']">
-      <li v-for="popContent in cellData['popover']['content']" class="list-group-item">
+      <li v-if="popContent['text']" v-for="popContent in cellData['popover']['content']" class="list-group-item">
         <a v-if="popContent['link']" :href="popContent['link']">
           {{{ popContent['text'] }}}
         </a>

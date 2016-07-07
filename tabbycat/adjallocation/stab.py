@@ -128,7 +128,7 @@ class StabAllocator(Allocator):
                     if j is None:
                         j = self.search_swap(i, list(range(i+1, len(panels))))
 
-        from adjallocation.models import AdjudicatorAllocation
+        from adjallocation.allocation import AdjudicatorAllocation
 
         allocation = []
         for debate, panel in self.pairings:

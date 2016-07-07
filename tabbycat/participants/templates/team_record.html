@@ -1,0 +1,204 @@
+{% extends "base_vue_table.html" %}
+{% load debate_tags %}
+
+{% block page-subnav-sections %}{% endblock %}<!-- No need for searching -->
+
+{% block content %}
+
+  <div class="row">
+
+    {% if pref.public_draw or admin_page %}
+      <div class="col-lg-6">
+        <div class="panel {% if debateteam and draw_released %}panel-primary{% else %}panel-default{% endif %}">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              In This Round
+              ({{ current_round.name }})
+              {% if admin_page and not draw_released %}
+                <em>(Not Released to Public)</em>
+              {% endif %}
+            </h4>
+          </div>
+
+          {% if draw_released or admin_page %}
+            {% if debateteam %}
+              <ul class="list-group">
+
+                {# Position, opposition and venue #}
+                <li class="list-group-item lead {% if draw_released %}active{% endif %}">
+                  {{ team.short_name }} is debating
+                  {% if debateteam.position != debateteam.POSITION_UNALLOCATED %}
+                    as the <strong>{{ debateteam.get_position_display|lower }}</strong> team
+                  {% endif %}
+                  against
+                  <strong><a href="{% if admin_page %}{% tournament_url participants-team-record debateteam.opposition.team.pk %}{% else %}{% tournament_url participants-public-team-record debateteam.opposition.team.pk %}{% endif %}" class="list-group-item-text">
+                    {{ debateteam.opposition.team.short_name }}</a></strong>
+                  in <strong>{{ debateteam.debate.venue.name }}</strong>.
+                </strong></li>
+
+                {# Round start time #}
+                {% if current_round.starts_at %}
+                  <li class="list-group-item">
+                    The round begins at {{ current_round.starts_at }}
+                  </li>
+                {% endif %} {# current_round.starts_at #}
+
+                {# Adjudicators #}
+                <li class="list-group-item">
+                  {% with adjudicators=debateteam.debate.adjudicators %}
+                    <strong>Adjudicator{{ adjudicators|length|pluralize }}:</strong>
+                    {% for adj, adjtype in adjudicators.with_positions %}
+                      <a href="{% if admin_page %}{% tournament_url participants-adjudicator-record adj.pk %}{% else %}{% tournament_url participants-public-adjudicator-record adj.pk %}{% endif %}">
+                        {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                  {% endwith %}
+                </li>
+
+                {# Motions #}
+                {% if pref.public_motions or admin_page %}
+                  <li class="list-group-item">
+                    {% if current_round.motions_released or admin_page %}
+                      {% if not current_round.motions_released %}
+                        <em>Motions are not released to public.</em><br />
+                      {% endif %}
+                      {% if debateteam.debate.round.motion_set.all|length == 1 %}
+                        <strong>Motion:</strong> {{ debateteam.debate.round.motion_set.first.text }}
+                      {% else %}
+                        {% for motion in debateteam.debate.round.motion_set.all %}
+                          <strong>Motion {{ motion.seq }}:</strong> {{ motion.text }}<br />
+                        {% endfor %}
+                      {% endif %}
+                    {% else %} {# elif not (current_round.motions_released or admin_page) #}
+                      <em>The motion(s) for this round haven't yet been released.</em>
+                    {% endif %} {# current_round.motions_released or admin_page #}
+                  </li>
+                {% endif %} {# pref.public_motions or admin_page #}
+              </ul>
+
+            {% else %} {# elif not debateteam #}
+              <div class="panel-body">
+                <em>{{ team.short_name }} does not have a debate this round.</em>
+              </div>
+            {% endif %} {# debateteam #}
+
+          {% else %} {# elif not (draw_released or admin_page) #}
+            <div class="panel-body">
+              <em>The draw for this round hasn't yet been released.</em>
+            </div>
+          {% endif %} {# draw_released or admin_page #}
+        </div>
+      </div>
+    {% endif %} {# pref.public_draw or admin_page #}
+
+    {% if pref.public_participants or admin_page %}
+      <div class="col-lg-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">About {{ team.short_name }}</h4>
+          </div>
+
+          <ul class="list-group">
+            {% if team.reference != team.short_reference %}
+              <li class="list-group-item">
+                <strong>Full name:</strong>
+                {{ team.long_name }}
+              </li>
+            {% endif %}
+
+            <li class="list-group-item">
+              <strong>Speakers:</strong>
+              {% for speaker in team.speakers %}
+                {{ speaker.name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </li>
+
+            {% if team.division %}
+              <li class="list-group-item">
+                <strong>Division:</strong>
+                {{ team.division.name }}
+              </li>
+            {% endif %}
+
+            {% if pref.public_break_categories or admin_page %}
+              <li class="list-group-item">
+                <strong>Eligible for:</strong>
+                {% for category in team.break_categories.all %}
+                  {{ category.name }} Break{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </li>
+            {% endif %} {# pref.public_break_categories or admin_page #}
+
+            <li class="list-group-item">
+              <strong>Institution:</strong>
+              {{ team.institution.name }}
+            </li>
+            {% if team.institution.region %}
+              <li class="list-group-item">
+                <strong>Region:</strong>
+                {{ team.institution.region.name }}
+              </li>
+            {% endif %}
+
+          </ul>
+        </div>
+      </div>
+    {% endif %} {# pref.public_participants or admin_page #}
+
+  </div>
+
+  {% if pref.feedback_progress or admin_page %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">Feedback Returns</h4>
+          </div>
+          <ul class="list-group">
+            {% for tracker in feedback_progress.trackers %}
+              {% if tracker.fulfilled %}
+                <li class="list-group-item text-success">
+                  <span class="badge">{{ tracker.round.name }}</span>
+                  <span class="glyphicon glyphicon-ok"></span>
+                  Has submitted feedback for
+                  <strong>{{ tracker.submission.adjudicator.name }}</strong> of
+                  {{ tracker.submission.adjudicator.institution.code }}
+                </li>
+              {% elif tracker.expected %}
+                <li class="list-group-item text-danger">
+                  <span class="badge">{{ tracker.round.name }}</span>
+                  <span class="glyphicon glyphicon-remove"></span>
+                  Has not submitted feedback for
+                  {% for target in tracker.acceptable_targets %}
+                    {% if not forloop.first and forloop.last %}or{% endif %}
+                    <strong>{{ target.name }}</strong> of
+                    {{ target.institution.code }}{% if not forloop.last %},{% endif %}
+                  {% endfor %}
+                  {% if tracker.acceptable_targets|length > 1 %}
+                    (whoever gave the oral adjudication)
+                  {% endif %}
+                </li>
+              {% else %} {# if not tracker.fulfilled and not tracker.expected #}
+                <li class="list-group-item text-warning">
+                  <span class="badge">{{ tracker.round.name }}</span>
+                  <span class="glyphicon glyphicon-question-sign"></span>
+                  Unexpected submission for
+                  <strong>{{ tracker.submission.adjudicator.name }}</strong> of
+                  {{ tracker.submission.adjudicator.institution.code }}
+                </li>
+              {% endif %}
+            {% empty %}
+              <li class="list-group-item">
+                <em>{{ team.short_name }} doesn't have any feedback to submit.</em>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endif %} {# pref.feedback_progress or admin_page #}
+
+  {% if pref.public_results or admin_page %}
+    {{ block.super }}
+  {% endif %} {# pref.public_results or admin_page #}
+
+{% endblock content %}

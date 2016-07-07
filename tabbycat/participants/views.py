@@ -2,13 +2,18 @@ import json
 
 from django.conf import settings
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 
 from adjallocation.models import DebateAdjudicator
-from tournaments.mixins import PublicTournamentPageMixin
-from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin, VueTableMixin
+from adjfeedback.progress import FeedbackProgressForTeam, FeedbackProgressForAdjudicator
+from results.models import TeamScore
+from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
+from tournaments.models import Round
+from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableMixin
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, Team
@@ -36,7 +41,7 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
     def get_tables(self):
         t = self.get_tournament()
 
-        adjudicators = Adjudicator.objects.filter(tournament=t).select_related('institution')
+        adjudicators = t.adjudicator_set.select_related('institution')
         adjs_table = TabbycatTableBuilder(view=self, title="Adjudicators", sort_key="Name")
         adjs_table.add_adjudicator_columns(adjudicators)
 
@@ -47,6 +52,137 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
 
         return [adjs_table, speakers_table]
 
+
+# ==============================================================================
+# Team and adjudicator record pages
+# ==============================================================================
+
+class ParticipantRecordsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixin, TemplateView):
+
+    page_title = 'Team and Adjudicator Record Pages'
+    page_emoji = '🌸'
+
+    def get_tables(self):
+        t = self.get_tournament()
+
+        adjudicators = t.adjudicator_set.select_related('institution')
+        adjs_table = TabbycatTableBuilder(view=self, title="Adjudicators", sort_key="Name")
+        adjs_table.add_adjudicator_columns(adjudicators)
+
+        teams = t.team_set.select_related('institution')
+        teams_table = TabbycatTableBuilder(view=self, title="Teams", sort_key="Name")
+        teams_table.add_team_columns(teams, key="Name")
+
+        return [adjs_table, teams_table]
+
+
+class BaseRecordView(SingleObjectFromTournamentMixin, VueTableMixin, TemplateView):
+
+    def get_context_data(self, **kwargs):
+        kwargs['admin_page'] = self.admin
+        kwargs['draw_released'] = self.get_tournament().current_round.draw_status == Round.STATUS_RELEASED
+        return super().get_context_data(**kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+
+class BaseTeamRecordView(BaseRecordView):
+
+    model = Team
+    template_name = 'team_record.html'
+
+    def get_context_data(self, **kwargs):
+        try:
+            kwargs['debateteam'] = self.object.debateteam_set.get(
+                debate__round=self.get_tournament().current_round)
+        except ObjectDoesNotExist:
+            kwargs['debateteam'] = None
+
+        kwargs['page_title'] = 'Record for ' + self.object.long_name
+        if self.get_tournament().pref('show_emoji'):
+            kwargs['page_emoji'] = self.object.emoji
+
+        kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object)
+
+        return super().get_context_data(**kwargs)
+
+    def get_table(self):
+        """On team record pages, the table is the results table."""
+        tournament = self.get_tournament()
+        teamscores = TeamScore.objects.filter(debate_team__team=self.object)
+        debates = [ts.debate_team.debate for ts in teamscores]
+        table = TabbycatTableBuilder(view=self, title="Results", sort_key="Round")
+        table.add_round_column([debate.round for debate in debates])
+        table.add_debate_result_by_team_columns(teamscores)
+        table.add_debate_adjudicators_column(debates, show_splits=self.admin
+                or tournament.pref('show_splitting_adjudicators'))
+
+        if self.admin or tournament.pref('public_motions'):
+            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+
+        table.add_debate_ballot_link_column(debates)
+
+        return table
+
+
+class BaseAdjudicatorRecordView(BaseRecordView):
+
+    model = Adjudicator
+    template_name = 'adjudicator_record.html'
+
+    def get_context_data(self, **kwargs):
+        try:
+            kwargs['debateadjudicator'] = self.object.debateadjudicator_set.get(
+                debate__round=self.get_tournament().current_round)
+        except ObjectDoesNotExist:
+            kwargs['debateadjudicator'] = None
+
+        kwargs['page_title'] = 'Record for ' + self.object.name
+        kwargs['page_emoji'] = '⚖'
+        kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object)
+
+        return super().get_context_data(**kwargs)
+
+    def get_table(self):
+        """On adjudicator record pages, the table is the previous debates table."""
+        tournament = self.get_tournament()
+        debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.object)
+        debates = [da.debate for da in debateadjs]
+        table = TabbycatTableBuilder(view=self, title="Previous Rounds", sort_key="Round")
+        table.add_round_column([debate.round for debate in debates])
+        table.add_debate_results_columns(debates)
+        table.add_debate_adjudicators_column(debates, show_splits=self.admin
+                or tournament.pref('show_splitting_adjudicators'))
+
+        if self.admin or tournament.pref('public_motions'):
+            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+
+        table.add_debate_ballot_link_column(debates)
+        return table
+
+class TeamRecordView(SuperuserRequiredMixin, BaseTeamRecordView):
+    admin = True
+
+
+class AdjudicatorRecordView(SuperuserRequiredMixin, BaseAdjudicatorRecordView):
+    admin = True
+
+
+class PublicTeamRecordView(PublicTournamentPageMixin, BaseTeamRecordView):
+    public_page_preference = 'public_record'
+    admin = False
+
+
+class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorRecordView):
+    public_page_preference = 'public_record'
+    admin = False
+
+
+# ==============================================================================
+# Cross-tournament views
+# ==============================================================================
 
 class AllTournamentsAllInstitutionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
     public_page_preference = 'enable_mass_draws'
@@ -66,8 +202,9 @@ class AllTournamentsAllTeamsView(PublicTournamentPageMixin, CacheMixin, Template
         return super().get_context_data(**kwargs)
 
 
-# Scheduling
-
+# ==============================================================================
+# Shift scheduling
+# ==============================================================================
 
 class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, PublicTournamentPageMixin, TemplateView):
     # Django doesn't have a class-based view for form sets, so this implements

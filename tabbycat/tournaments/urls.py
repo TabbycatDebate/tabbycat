@@ -84,6 +84,8 @@ urlpatterns = [
     # Participants App
     url(r'^participants/',
         include('participants.urls_public')),
+    url(r'^admin/participants/',
+        include('participants.urls_admin')),
 
     # Results App
     url(r'^results/',

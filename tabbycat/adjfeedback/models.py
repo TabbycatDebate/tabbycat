@@ -210,6 +210,9 @@ class AdjudicatorFeedback(Submission):
         if not (self.source_adjudicator or self.source_team):
             raise ValidationError(
                 "Either the source adjudicator or source team wasn't specified.")
+        if self.source_adjudicator and self.source_team:
+            raise ValidationError(
+                "There was both a source adjudicator and a source team.")
         if self.adjudicator not in self.debate.adjudicators:
-            raise ValidationError("Adjudicator did not see this debate")
-        super(AdjudicatorFeedback, self).clean()
+            raise ValidationError("Adjudicator did not see this debate.")
+        return super(AdjudicatorFeedback, self).clean()

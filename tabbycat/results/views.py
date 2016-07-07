@@ -65,8 +65,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableMixin, Te
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw)
         table.add_debate_bracket_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw], key="Affirmative", hide_institution=True)
-        table.add_team_columns([d.neg_team for d in draw], key="Negative", hide_institution=True)
+        table.add_debate_results_columns(draw)
         table.add_debate_adjudicators_column(draw, show_splits=False)
         return table
 
@@ -106,21 +105,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
 
         table = TabbycatTableBuilder(view=self, sort_key="Venue")
         table.add_debate_venue_columns(debates)
-
-        results_data = []
-        for debate in debates:
-            affirmative = {'text': debate.aff_team.short_name}
-            negative = {'text': debate.neg_team.short_name}
-            if debate.confirmed_ballot:
-                if debate.confirmed_ballot.ballot_set.aff_win:
-                    affirmative['icon'] = "glyphicon-arrow-up text-success"
-                    negative['icon'] = "glyphicon-arrow-down text-danger"
-                elif debate.confirmed_ballot.ballot_set.neg_win:
-                    negative['icon'] = "glyphicon-arrow-up text-success"
-                    affirmative['icon'] = "glyphicon-arrow-down text-danger"
-            results_data.append([affirmative, negative])
-        table.add_columns(["Affirmative", "Negative"], results_data)
-
+        table.add_debate_results_columns(debates)
         table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates,
             show_splits=tournament.pref('show_splitting_adjudicators'))
@@ -137,28 +122,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
 
         table = TabbycatTableBuilder(view=self, sort_key="Team")
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
-
-        results_data = []
-        for ts in teamscores:
-            opposition = ts.debate_team.opposition.team
-            result = {'text': " vs " + opposition.short_name}
-            if ts.win is True:
-                result['icon'] = "glyphicon-arrow-up text-success"
-                result['sort'] = 1
-                result['tooltip'] = "Won against " + opposition.long_name
-            elif ts.win is False:
-                result['icon'] = "glyphicon-arrow-down text-danger"
-                result['sort'] = 2
-                result['tooltip'] = "Lost to " + opposition.long_name
-            else: # None
-                result['icon'] = ""
-                result['sort'] = 3
-                result['tooltip'] = "No result for debate against " + opposition.long_name
-            results_data.append(result)
-        table.add_column("Result", results_data)
-
-        table.add_column("Side", [ts.debate_team.get_position_display() for ts in teamscores])
-
+        table.add_debate_result_by_team_columns(teamscores)
         table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates,
             show_splits=tournament.pref('show_splitting_adjudicators'))

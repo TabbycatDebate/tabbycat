@@ -11,12 +11,12 @@ from .models import Round, Tournament
 logger = logging.getLogger(__name__)
 
 
-class TabbycatBaseView():
+class TabbycatBaseMixin:
     """Allows all views to set header information in their subclassess obviating
     the need for page template boilerplate and/or page specific templates"""
 
     page_title = ''
-    page_sub_title = ''
+    page_subtitle = ''
     page_emoji = ''
 
     def get_page_title(self):
@@ -25,18 +25,18 @@ class TabbycatBaseView():
     def get_page_emoji(self):
         return self.page_emoji
 
-    def get_page_sub_title(self):
-        return self.page_sub_title
+    def get_page_subtitle(self):
+        return self.page_subtitle
 
     def get_context_data(self, **kwargs):
-        kwargs["page_title"] = self.get_page_title
-        kwargs["page_sub_title"] = self.get_page_sub_title
-        kwargs["page_emoji"] = self.get_page_emoji
+        kwargs["page_title"] = self.get_page_title()
+        kwargs["page_subtitle"] = self.get_page_subtitle()
+        kwargs["page_emoji"] = self.get_page_emoji()
 
         return super().get_context_data(**kwargs)
 
 
-class TournamentMixin(TabbycatBaseView):
+class TournamentMixin(TabbycatBaseMixin):
     """Mixin for views that relate to a tournament, and are specified as
     relating to a tournament in the URL.
 
@@ -81,7 +81,7 @@ class RoundMixin(TournamentMixin):
     round_seq_url_kwarg = "round_seq"
     round_cache_key = "{slug}_{seq}_object"
 
-    def get_page_sub_title(self):
+    def get_page_subtitle(self):
         return 'as of %s' % self.get_round().name
 
     def get_round(self):

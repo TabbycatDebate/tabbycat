@@ -40,7 +40,7 @@ TPA_MAP = {
 
 class DrawTablePage(RoundMixin, VueTableMixin):
 
-    page_sub_title = 'Use ESC to cancel scrolling'
+    page_subtitle = 'Use ESC to cancel scrolling'
     template_name = 'draw_display_by.html'
 
     def get_page_title(self):
@@ -58,7 +58,7 @@ class DrawTablePage(RoundMixin, VueTableMixin):
         else:
             return '😴'
 
-    def get_page_sub_title(self):
+    def get_page_subtitle(self):
         return 'Use ESC to stop scrolling'
 
     def get_context_data(self, **kwargs):

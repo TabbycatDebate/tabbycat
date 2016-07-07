@@ -14,7 +14,7 @@ class SAAllocator(Allocator):
     MAX_TRIES = 3
 
     def allocate(self, initial=None):
-        from .models import AdjudicatorAllocation
+        from .allocation import AdjudicatorAllocation
 
         if initial is None:
             initial = StabAllocator(self.debates, self.adjudicators).allocate()

@@ -150,9 +150,9 @@ def debates_to_json(draw, t, r):
         'aff_team': debate.aff_team.id,
         'neg_team': debate.neg_team.id,
         'panel': [{
-            'id': a[1].id,
-            'position': a[0]
-        } for a in debate.adjudicators],
+            'id': adj.id,
+            'position': position,
+        } for adj, position in debate.adjudicators.with_positions()],
 
     } for debate in draw]
     return json.dumps(data)
