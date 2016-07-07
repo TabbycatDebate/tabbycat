@@ -1,33 +1,50 @@
 <script>
-// Inheritors should trigger showConflictHighlights / hideConflictHighlights
-// from some form of action
-// Their classes should be set by binding conflictsHighlights somewhere
-// Must provide a getEntity() that has an ID property to match with conflicts
+// Provides methods for determining which CSS classes should be active when
+// an adj or team's conflicted state has been set for a particular type
+// Also provides method for dispatching a dictionary of conflicts from an
+// adj or team that can be used as an action upon hoverning/clicking etc
 
 export default {
+  props: {
+    debateId: Number,
+  },
   computed: {
     conflictsHighlights: function () {
-      var class_string = " "
       var adjorteam = this.adjorteam;
-      if (adjorteam.hasPersonalConflict) {
+      if (adjorteam.conflicted.hover.personal || adjorteam.conflicted.panel.personal ) {
         return ' conflicts-display personal-conflict'
-      } else if (adjorteam.hasInstitutionalConflict) {
+      } else if (adjorteam.conflicted.hover.institutional || adjorteam.conflicted.panel.institutional) {
         return ' conflicts-display institutional-conflict'
       }
-    }
+    },
+    historiesHighlights: function() {
+      var adjorteam = this.adjorteam;
+      if (adjorteam.conflicted.hover.history) {
+        return ' histories-display seen-' + adjorteam.conflicted.hover.history_ago + '-ago'
+      } else if (adjorteam.conflicted.panel.history) {
+        return ' histories-display seen-' + adjorteam.conflicted.panel.history_ago + '-ago'
+      } else {
+        return ''
+      }
+    },
+    conflictsDict: function() {
+      return {
+        adjudicators: this.adjorteam.conflicts.adjudicators,
+        teams: this.adjorteam.conflicts.teams,
+        institutions: this.adjorteam.conflicts.institutions,
+        origin: this.adjorteam // To determine if hover target == conflict target
+      }
+    },
+    historiesDict: function() {
+      return this.adjorteam.histories
+    },
   },
   methods: {
     setConflictHighlights: function(dispatch) {
-      var adjorteam = this.adjorteam;
-      this.$dispatch(dispatch, {
-        personal_adjudicators: adjorteam.conflicts.personal_adjudicators,
-        personal_teams: adjorteam.conflicts.personal_teams,
-        institutional_conflicts: adjorteam.conflicts.institutional_conflicts,
-        currentOrigin: adjorteam // To determine if hover target == conflict target
-      })
+      this.$dispatch(dispatch, this.conflictsDict, this.historiesDict)
     },
     unsetConflictHighlights: function(dispatch) {
-      this.$dispatch(dispatch);
+      this.$dispatch(dispatch, this.conflictsDict, this.historiesDict);
     },
   }
 }

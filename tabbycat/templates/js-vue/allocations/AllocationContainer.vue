@@ -67,15 +67,6 @@ export default {
     urls: Object,
     currentlyDragging: Object
   },
-  methods: {
-    unsetAllHighlights: function() {
-      this.currentlyDragging = null;
-      this.toggleConflictsValues(false);
-      this.toggleHistoriesValues(false);
-      this.currentConflicts = null;
-      this.currentHistories = null;
-    },
-  },
   computed: {
     unallocatedAdjudicators: function() {
       // Look through all debate's panels, check for adjudicator's ID
@@ -102,7 +93,13 @@ export default {
         lookup[this.debates[i].id] = this.debates[i];
       }
       return lookup;
-    }
+    },
+    conflictableTeams: function() {
+      return this.teams;
+    },
+    conflictableAdjudicators: function() {
+      return this.adjudicators;
+    },
   },
   events: {
     // Determine dragged object
@@ -113,21 +110,13 @@ export default {
       this.currentlyDragging = null;
     },
     // Determine hover conflicts
-    'set-hover-conflicts': function (conflicts_dict) {
-      this.currentConflicts = conflicts_dict;
-      this.toggleConflictsValues(true);
+    'set-hover-conflicts': function (conflicts_dict, histories_dict) {
+      this.toggleConflicts(true, 'hover', conflicts_dict);
+      this.toggleHistories(true, 'hover', histories_dict);
     },
-    'unset-hover-conflicts': function () {
-      this.toggleConflictsValues(false);
-      this.currentConflicts = null;
-    },
-    'set-hover-histories': function (histories_dict) {
-      this.currentHistories = histories_dict;
-      this.toggleHistoriesValues(true);
-    },
-    'unset-hover-histories': function() {
-      this.toggleHistoriesValues(false);
-      this.currentConflicts = null;
+    'unset-hover-conflicts': function (conflicts_dict, histories_dict) {
+      this.toggleConflicts(false, 'hover', conflicts_dict);
+      this.toggleHistories(false, 'hover', histories_dict);
     },
     // Set or unset dragg adjs to panels
     'set-adj-unused': function() {

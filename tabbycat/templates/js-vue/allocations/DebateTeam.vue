@@ -9,7 +9,8 @@
         <div class="history-tooltip tooltip top" v-if="adjorteam.hasHistoryConflict">
           <div class="tooltip-arrow"></div>
           <div class="tooltip-inner">
-            saw {{ adjorteam.historyRoundsAgo }} round ago
+            saw {{ adjorteam.historyRoundsAgo }}
+            round<span v-if="adjorteam.historyRoundsAgo > 1">s</span> ago
           </div>
         </div>
         <p class="debate-team-title no-bottom-margin">
@@ -69,30 +70,20 @@
 <script>
 import DiversityHighlightsMixin from '../mixins/DiversityHighlightsMixin.vue'
 import ConflictsHighlightsMixin from '../mixins/ConflictsHighlightsMixin.vue'
-import HistoriesHighlightsMixin from '../mixins/HistoriesHighlightsMixin.vue'
 
 export default {
-  mixins: [DiversityHighlightsMixin, ConflictsHighlightsMixin, HistoriesHighlightsMixin],
+  mixins: [DiversityHighlightsMixin, ConflictsHighlightsMixin],
   props: {
     adjorteam: Object,
     showSlideOver: { default: false }
   },
   methods: {
-    getPopOverTitle: function() {
-      if (this.adjorteam.uses_prefix === true) {
-        return this.adjorteam.long_name
-      } else {
-        return this.adjorteam.long_name + " of " + this.adjorteam.institution.name
-      }
-    },
     setHighlights: function() {
       this.setConflictHighlights('set-hover-conflicts')
-      this.setHistoriesHighlights('set-hover-histories')
       this.showSlideOver = true
     },
     unsetHighlights: function() {
       this.unsetConflictHighlights('unset-hover-conflicts')
-      this.unsetHistoriesHighlights('unset-hover-histories')
       this.showSlideOver = false
     }
   },

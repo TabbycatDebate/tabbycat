@@ -93,10 +93,9 @@ import DraggableMixin from '../mixins/DraggableMixin.vue'
 import AjaxMixin from '../mixins/AjaxMixin.vue'
 import DiversityHighlightsMixin from '../mixins/DiversityHighlightsMixin.vue'
 import ConflictsHighlightsMixin from '../mixins/ConflictsHighlightsMixin.vue'
-import HistoriesHighlightsMixin from '../mixins/HistoriesHighlightsMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, AjaxMixin, DiversityHighlightsMixin, HistoriesHighlightsMixin, ConflictsHighlightsMixin],
+  mixins: [DraggableMixin, AjaxMixin, DiversityHighlightsMixin, ConflictsHighlightsMixin],
   props: {
     adjorteam: Object,
     position: String,
@@ -135,17 +134,12 @@ export default {
     }
   },
   methods: {
-    getPopOverTitle: function() {
-      return this.adjorteam.name + " of " + this.adjorteam.institution.name
-    },
     setHighlights: function() {
       this.setConflictHighlights('set-hover-conflicts')
-      this.setHistoriesHighlights('set-hover-histories')
       this.showSlideOver = true
     },
     unsetHighlights: function() {
       this.unsetConflictHighlights('unset-hover-conflicts')
-      this.unsetHistoriesHighlights('unset-hover-histories')
       this.showSlideOver = false
     },
     handleDragStart: function(event) {

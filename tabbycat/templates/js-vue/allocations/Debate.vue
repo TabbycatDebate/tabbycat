@@ -140,15 +140,52 @@ export default {
         total = total + adjs_scores[i];
       }
       return (total / adjs_scores.length).toFixed(1);
-    }
+    },
+    conflictableTeams: function() {
+      return [this.aff, this.neg];
+    },
+    conflictableAdjudicators: function() {
+      var adjudicators = []
+      for(var i = 0; i < this.debateAdjudicators.chair.length; i++) {
+        adjudicators.push(this.debateAdjudicators.chair[i])
+      }
+      for(var i = 0; i < this.debateAdjudicators.panelists.length; i++) {
+        adjudicators.push(this.debateAdjudicators.panelists[i])
+      }
+      for(var i = 0; i < this.debateAdjudicators.trainees.length; i++) {
+        adjudicators.push(this.debateAdjudicators.trainees[i])
+      }
+      return adjudicators
+    },
   },
   methods: {
-    checkForDebateConflicts: function() {
+    checkForInPlaceConflicts: function() {
+      this.toggleConflictsValues(false); // Unset all previous calculations
+      // Build a dictionary of ALL adjudicator'ssconflicts
+      // Probably dont need to check team's conflicts as they're symmetric
+      var all_conflicts = {
+        personal_adjudicators: [],
+        personal_teams: [],
+        institutional_conflicts: []
+      }
+      for(var i = 0; i < this.conflictableAdjudicators.length; i++) {
+        var conflicts = this.conflictableAdjudicators[i].conflicts;
+        if (typeof conflicts !== 'undefined' && conflicts !== null) {
+          if (typeof conflicts.personal_adjudicators !== 'undefined') {
+            all_conflicts.personal_adjudicators.push(conflicts.personal_adjudicators)
+          }
+          if (typeof conflicts.personal_teams !== 'undefined') {
+            all_conflicts.personal_teams.push(conflicts.personal_teams)
+          }
+          if (typeof conflicts.institutional_conflicts !== 'undefined') {
+            all_conflicts.institutional_conflicts.push(conflicts.institutional_conflicts)
+          }
+        }
 
-    },
-    checkForDebateHistories: function() {
-
-    },
+        this.currentConflicts = all_conflicts;
+        this.toggleConflictsValues(true); // Redo all calculations
+      }
+    }
   },
   watch: {
     'debate.panel': function (newVal, oldVal) {
@@ -157,7 +194,8 @@ export default {
         'debate_id': this.debate.id,
         'panel': JSON.stringify(this.debate.panel)
       }
-      this.update(this.urls['updatePanel'], data, resource)
+      this.update(this.urls['updatePanel'], data, resource);
+      this.checkForInPlaceConflicts();
     }
   }
 }

@@ -183,14 +183,14 @@ def adjs_to_json(adjs, regions):
             'ranking': next(pc[0] for pc in percentile_cutoffs if pc[1] <= adj.score),
             'histories': adj.histories,
             'conflicts': {
-                'personal_teams': adj.personal_teams,
-                'institutional_conflicts': adj.institutional_institutions,
-                'personal_adjudicators': adj.personal_adjudicators,
+                'teams': adj.personal_teams,
+                'institutions': adj.institutional_institutions,
+                'adjudicators': adj.personal_adjudicators,
             },
-            'hasPersonalConflict': False,
-            'hasInstitutionalConflict': False,
-            'hasHistoryConflict': False,
-            'historyRoundsAgo': 99,
+            'conflicted': {
+                'hover': { 'personal': False, 'institutional': False, 'history': False, 'history_ago': 99 },
+                'panel': { 'personal': False, 'institutional': False, 'history': False, 'history_ago': 99 }
+            }
         }
 
     return json.dumps(data)
@@ -228,14 +228,14 @@ def teams_to_json(teams, regions, categories, t, r):
             },
             'histories': team.histories,
             'conflicts': {
-                'personal_teams': [], # No team-team conflicts
-                'institutional_conflicts': team.institutional_institutions,
-                'personal_adjudicators': team.personal_adjudicators
+                'teams': [], # No team-team conflicts
+                'institutions': team.institutional_institutions,
+                'adjudicators': team.personal_adjudicators
             },
-            'hasPersonalConflict': False,
-            'hasInstitutionalConflict': False,
-            'hasHistoryConflict': False,
-            'historyRoundsAgo': 99,
+            'conflicted': {
+                'hover': { 'personal': False, 'institutional': False, 'history': False, 'history_ago': 99 },
+                'panel': { 'personal': False, 'institutional': False, 'history': False, 'history_ago': 99 }
+            }
         }
     return json.dumps(data)
 
