@@ -90,11 +90,11 @@ export default {
       // Loop through it and match up the adjudicators by ID
       for (var i = 0; i < panel.length; ++i) {
         var foundAdj = this.allAdjudicators[panel[i].id]
-        if (panel[i].position === "C") {
+        if (panel[i].position === "C" || panel[i].position === "O") {
           debateAdjudicators.chair.push(foundAdj);
         } else if (panel[i].position === "P") {
           debateAdjudicators.panelists.push(foundAdj);
-        } else if (panel[i].position === "T") {
+         } else if (panel[i].position === "T") {
           debateAdjudicators.trainees.push(foundAdj);
         }
       }
@@ -143,7 +143,6 @@ export default {
   },
   watch: {
     'debate.panel': function (newVal, oldVal) {
-      // var test = this.debate.panel;
       var resource = "change to panel on  " + this.aff.name + " vs " + this.neg.name
       var data = {
         'debate_id': this.debate.id,

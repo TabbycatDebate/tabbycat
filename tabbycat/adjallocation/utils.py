@@ -151,7 +151,7 @@ def debates_to_json(draw, t, r):
         'neg_team': debate.neg_team.id,
         'panel': [{
             'id': adj.id,
-            'position': position,
+            'position': position.upper(),
         } for adj, position in debate.adjudicators.with_positions()],
 
     } for debate in draw]
