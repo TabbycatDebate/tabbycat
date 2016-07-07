@@ -142,52 +142,78 @@ export default {
       return (total / adjs_scores.length).toFixed(1);
     },
     conflictableTeams: function() {
-      return [this.aff, this.neg];
+      var teams = {}
+      teams[this.aff.id] = this.aff
+      teams[this.neg.id] = this.neg
+      return teams
     },
     conflictableAdjudicators: function() {
-      var adjudicators = []
+      var adjudicators = {}
       for(var i = 0; i < this.debateAdjudicators.chair.length; i++) {
-        adjudicators.push(this.debateAdjudicators.chair[i])
+        var adjudicator = this.debateAdjudicators.chair[i]
+        adjudicators[adjudicator.id] = adjudicator
       }
       for(var i = 0; i < this.debateAdjudicators.panelists.length; i++) {
-        adjudicators.push(this.debateAdjudicators.panelists[i])
+        var adjudicator = this.debateAdjudicators.panelists[i]
+        adjudicators[adjudicator.id] = adjudicator
       }
       for(var i = 0; i < this.debateAdjudicators.trainees.length; i++) {
-        adjudicators.push(this.debateAdjudicators.trainees[i])
+        var adjudicator = this.debateAdjudicators.trainees[i]
+        adjudicators[adjudicator.id] = adjudicator
       }
       return adjudicators
     },
     allPanellistsConflicts: function() {
-      // Build a dictionary of ALL adjudicator'ssconflicts
-      // Probably dont need to check team's conflicts as they're symmetric
-      var all_conflicts = {
-        adjudicators: [],
-        teams: [],
-        institutions: []
-      }
-      for(var i = 0; i < this.conflictableAdjudicators.length; i++) {
-        var conflicts = this.conflictableAdjudicators[i].conflicts;
-        if (typeof conflicts !== 'undefined' && conflicts !== null) {
-          if (typeof conflicts.adjudicators !== 'undefined') {
-            all_conflicts.adjudicators.push(conflicts.adjudicators)
-          }
-          if (typeof conflicts.teams !== 'undefined') {
-            all_conflicts.teams.push(conflicts.teams)
-          }
-          if (typeof conflicts.institutions !== 'undefined') {
-            all_conflicts.institutions.push(conflicts.institutions)
+      function extractConflicts(conflictables, all_conflicts) {
+        // Iterate over each adj/team and push its conflicts to the master dict
+        for (var property in conflictables) {
+          if (conflictables.hasOwnProperty(property)) {
+            var conflictable = conflictables[property].conflicts
+            if (typeof conflicts !== 'undefined' && conflicts !== null) {
+              all_conflicts.adjudicators.push(conflicts.adjudicators)
+              all_conflicts.teams.push(conflicts.teams)
+              all_conflicts.institutions.push(conflicts.institutions)
+            }
           }
         }
       }
+      // Build a dictionary of ALL adjudicator's conflicts
+      var all_conflicts = { adjudicators: [], teams: [], institutions: [] }
+      // TODO: data not being pushed to all_conflicts
+      extractConflicts(this.conflictableAdjudicators, all_conflicts)
+      extractConflicts(this.conflictableTeams, all_conflicts)
       return all_conflicts
+    },
+    allPanellistsHistories: function() {
+      // Build an array of ALL adjudicator's seen histories
+      var all_histories = []
+      for (var property in this.conflictableAdjudicators) {
+        if (this.conflictableAdjudicators.hasOwnProperty(property)) {
+          var histories = this.conflictableAdjudicators[property].histories
+          if (typeof histories !== 'undefined') {
+            for(var j = 0; j < histories.length; j++) {
+              all_histories.push(histories[j])
+            }
+          }
+        }
+      }
+      for (var property in this.conflictableTeams) {
+        if (this.conflictableTeams.hasOwnProperty(property)) {
+          var histories = this.conflictableTeams[property].histories
+          if (typeof histories !== 'undefined') {
+            for(var j = 0; j < histories.length; j++) {
+              all_histories.push(histories[j])
+            }
+          }
+        }
+      }
+      return all_histories
     }
   },
-  methods: {
-    checkForInPlaceConflicts: function() {
-      // this.toggleConflicts(false, 'panel', conflicts_dict); // Unset all previous calculations
-      // this.toggleConflicts(false, 'panel', histories_dict); // Unset all previous calculations
-      this.toggleConflicts(true, 'panel', this.allPanellistsConflicts); // Redo all calculations
-    }
+  created: function() {
+    // Do initial calculation for conflicts/histories
+    this.toggleConflicts(true, 'panel', this.allPanellistsConflicts);
+    this.toggleHistories(true, 'panel', this.allPanellistsHistories);
   },
   watch: {
     'debate.panel': function (newVal, oldVal) {
@@ -198,8 +224,14 @@ export default {
         'panel': JSON.stringify(this.debate.panel)
       }
       this.update(this.urls['updatePanel'], data, resource);
-      // Check for conflicts in-place
-      // this.checkForInPlaceConflicts();
+    },
+    'allPanellistsHistories': function (newVal, oldVal) {
+      this.toggleHistories(false, 'panel', oldVal);
+      this.toggleHistories(true, 'panel', newVal);
+    },
+    'allPanellistsConflicts': function (newVal, oldVal) {
+      this.toggleConflicts(false, 'panel', oldVal);
+      this.toggleConflicts(true, 'panel', newVal);
     }
   }
 }

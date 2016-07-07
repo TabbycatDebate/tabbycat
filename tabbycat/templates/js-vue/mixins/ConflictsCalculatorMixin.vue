@@ -1,9 +1,7 @@
 <script>
 // Controller for calculating and setting conflicts/history highlights
 // Inheriting classes should set conflictableTeams/conflictableAdjudicators
-// as a computed property
-// to return subsets of teams/adjs to check for
-// Each must handle settingunsetting currentHistories/currentConflicts props
+// as a computed property to return subsets of teams/adjs to check for
 
 export default {
   methods: {
@@ -32,6 +30,9 @@ export default {
       if (typeof conflicts === 'undefined' || conflicts === null) {
         return
       }
+      if (conflictState === 'panel') {
+        console.log('toggleConflicts', conflicts, this.conflictableTeams, this.conflictableAdjudicators);
+      }
       this.findMatchingConflicts(conflicts.adjudicators,
         this.conflictableAdjudicators, conflictState, 'personal', conflictValue, false)
       this.findMatchingConflicts(conflicts.teams,
@@ -41,11 +42,13 @@ export default {
       this.findMatchingConflicts(conflicts.institutions,
         this.conflictableTeams, conflictState, 'institutional', conflictValue, true)
     },
-    findMatchingConflicts: function(conflicts, conflictables, hoverOrPanel,
-      typeOfClash, isConflicted, isInstitutional) {
+    findMatchingConflicts: function(conflicts, conflictables, hoverOrPanel, typeOfClash, isConflicted, isInstitutional) {
       // Loop through all conflicts; dispatch to Individual/Institutional
       if (typeof conflicts === 'undefined' || conflicts === null) {
         return
+      }
+      if (typeOfClash === 'panel') {
+        console.log('    findMatchingConflicts', conflicts, conflictables, hoverOrPanel);
       }
       var _this = this;
       conflicts.forEach(function(conflictedID) {
@@ -61,7 +64,11 @@ export default {
     findIndividualConflict: function(conflictables, conflictedID, hoverOrPanel, typeOfClash, isConflicted) {
       // For each known conflict, check if ID is in the list of conflictables
       var conflictMatch = conflictables[conflictedID];
+      if (typeOfClash === 'panel') {
+        console.log('    findIndividualConflict', conflictables, conflictedID, conflictMatch);
+      }
       if (typeof conflictMatch !== 'undefined') {
+        // console.log('    found match for', conflictMatch)
         conflictMatch['conflicted'][hoverOrPanel][typeOfClash] = isConflicted
       }
     },
