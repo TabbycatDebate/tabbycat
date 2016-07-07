@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 
 .allocation-container {
-  padding-top: 65px; // Need to compensate for the fixed header
+  padding-top: 105px; // Need to compensate for the fixed header
   padding-bottom: 450px; // Need to offset the adjs panel
   background: #fff;
 }
@@ -47,7 +47,7 @@
     margin-top: -4px;
   }
   &.top {
-    margin-top: 0px;
+    margin-top: -28px;
     margin-left: -4px;
   }
 }

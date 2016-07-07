@@ -1,44 +1,47 @@
 <template>
 
-  <div
-    draggable=true
-    v-on:dragstart="handleDragStart"
-    v-on:dragend="handleDragEnd"
-    v-on:mouseover="setHighlights"
-    v-on:mouseout="unsetHighlights"
-    v-bind:class="[isDragging ? 'vue-is-dragging' : '', diversityHighlights,
-                   historiesHighlights, conflictsHighlights]"
-    :id="adjorteam.id"
-    class="vue-draggable adj-draggable btn btn-default popover-parent">
+  <div class="inline-flex">
+    <div
+      draggable=true
+      v-on:dragstart="handleDragStart"
+      v-on:dragend="handleDragEnd"
+      v-on:mouseenter="setHighlights"
+      v-on:mouseleave="unsetHighlights"
+      v-bind:class="[isDragging ? 'vue-is-dragging' : '', diversityHighlights,
+                     historiesHighlights, conflictsHighlights]"
+      :id="adjorteam.id"
+      class="vue-draggable adj-draggable btn btn-default popover-parent">
 
-    <div class="h4 adj-score">
-      {{ letter_ranking }}
-    </div>
+      <div class="h4 adj-score">
+        {{ letter_ranking }}
+      </div>
 
-    <div class="history-tooltip tooltip left" v-if="adjorteam.hasHistoryConflict">
-      <div class="tooltip-arrow"></div>
-      <div class="tooltip-inner">
-        {{ adjorteam.historyRoundsAgo }}<br>ago
+      <div class="history-tooltip tooltip left" v-if="adjorteam.hasHistoryConflict">
+        <div class="tooltip-arrow"></div>
+        <div class="tooltip-inner">
+          {{ adjorteam.historyRoundsAgo }}<br>ago
+        </div>
+      </div>
+
+      <div class="adj-info">
+        <span>
+          {{ short_name }}
+        </span>
+        <span class="small text-muted subtitle">
+          <template v-if="adjorteam.institution.code">
+            {{ adjorteam.institution.code }}
+          </template>
+          <template v-else>
+            {{ adjorteam.institution.name }}
+          </template>
+        </span>
       </div>
     </div>
 
-    <div class="adj-info">
-      <span>
-        {{ short_name }}
-      </span>
-      <span class="small text-muted subtitle">
-        <template v-if="adjorteam.institution.code">
-          {{ adjorteam.institution.code }}
-        </template>
-        <template v-else>
-          {{ adjorteam.institution.name }}
-        </template>
-      </span>
-    </div>
-
-
-
-    <div class="panel slideover-info slideover-top" v-if="showSlideOver" transition="expand">
+    <div class="panel slideover-top"
+        :class="{ 'slideover-info': showSlideOver}"
+        v-if="showSlideOver"
+        transition="expand">
       <div class="list-group">
         <li class="list-group-item">
           <h4 class="no-bottom-margin no-top-margin text-center">
@@ -80,8 +83,8 @@
         </li>
       </div>
     </div>
-
   </div>
+
 
 </template>
 

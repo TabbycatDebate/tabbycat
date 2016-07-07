@@ -1,23 +1,26 @@
 <template>
 
-  <div class="debate-team flex-cell flex-vertical-center bordered-bottom"
-    v-bind:class="[diversityHighlights, historiesHighlights,
-                   conflictsHighlights]">
-
-    <div class="history-tooltip tooltip top" v-if="adjorteam.hasHistoryConflict">
-      <div class="tooltip-arrow"></div>
-      <div class="tooltip-inner">saw {{ adjorteam.historyRoundsAgo }} ago</div>
+  <div class="inline-flex">
+    <div class="debate-team flex-cell flex-vertical-center bordered-bottom"
+      v-bind:class="[diversityHighlights, historiesHighlights, conflictsHighlights]"
+      v-on:mouseenter="setHighlights"
+      v-on:mouseleave="unsetHighlights">
+      <div class="flex-1">
+        <div class="history-tooltip tooltip top" v-if="adjorteam.hasHistoryConflict">
+          <div class="tooltip-arrow"></div>
+          <div class="tooltip-inner">
+            saw {{ adjorteam.historyRoundsAgo }} round ago
+          </div>
+        </div>
+        <p class="debate-team-title no-bottom-margin">
+          <strong>{{ adjorteam.name }}</strong>
+        </p>
+      </div>
     </div>
-
-    <div class="flex-1 slideover-parent"
-      v-on:mouseover="setHighlights"
-      v-on:mouseout="unsetHighlights">
-      <p class="debate-team-title no-bottom-margin">
-        <strong>{{ adjorteam.name }}</strong>
-      </p>
-    </div>
-
-    <div class="panel slideover-info slideover-top" v-if="showSlideOver" transition="expand">
+    <div class="panel slideover-top"
+      :class="{ 'slideover-info': showSlideOver}"
+      v-if="showSlideOver"
+      transition="expand">
       <div class="list-group">
         <li class="list-group-item">
           <h4 class="no-bottom-margin no-top-margin text-center">
@@ -59,7 +62,6 @@
         </li>
       </div>
     </div>
-
   </div>
 
 </template>

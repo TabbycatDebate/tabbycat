@@ -97,7 +97,7 @@ export default {
     toggleConflictsValues: function(conflictValue) {
       var conflicts = this.currentConflictHighlights;
       var _this = this;
-      if (typeof conflicts !== 'undefined) {
+      if (typeof conflicts !== 'undefined') {
         if (typeof conflicts.personal_adjudicators !== 'undefined') {
           if (conflicts.personal_adjudicators.length > 0) {
             conflicts.personal_adjudicators.forEach(function(currentValue) {
