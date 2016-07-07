@@ -20,7 +20,7 @@ class AdjudicatorAllocation:
             self.chair = None
             self.panellists = []
             self.trainees = []
-            for a in self.debate.debateadjudicator_set.all():
+            for a in self.debate.debateadjudicator_set.prefetch_related('adjudicator').all():
                 if a.type is a.TYPE_CHAIR:
                     self.chair = a.adjudicator
                 if a.type is a.TYPE_PANEL:
@@ -115,7 +115,7 @@ class AdjudicatorAllocation:
 
     def save(self):
         self.debate.debateadjudicator_set.all().delete()
-        for t, adj in self:
+        for adj, t in self.with_positions():
             if adj:
                 DebateAdjudicator(debate=self.debate, adjudicator=adj, type=t).save()
 
