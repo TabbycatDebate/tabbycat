@@ -475,19 +475,19 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
 
 class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixin):
 
-    page_title = "Missing Feedback Ballots"
+    page_title = "Feedback Progress"
     page_emoji = "🆘"
 
     def get_tables(self):
         teams_progress, adjs_progress = get_feedback_progress(self.get_tournament())
 
         adjs_table = FeedbackTableBuilder(view=self, title="Adjudicators", sort_key="Coverage")
+        adjs_table.add_adjudicator_columns(adjs_progress, hide_metadata=True)
         adjs_table.add_feedback_progress_columns(adjs_progress)
-        adjs_table.add_adjudicator_columns(adjs_progress)
 
         teams_table = FeedbackTableBuilder(view=self, title="Teams", sort_key="Coverage")
-        teams_table.add_feedback_progress_columns(teams_progress)
         teams_table.add_team_columns(teams_progress)
+        teams_table.add_feedback_progress_columns(teams_progress)
 
         return [adjs_table, teams_table]
 

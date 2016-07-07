@@ -140,6 +140,18 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         } for team_or_adj in progress]
         self.add_column(submitted_header, submitted_data)
 
+        if self._show_record_links:
+            owed_link_header = {
+                'key': 'Submitted',
+                'icon': 'glyphicon-question-sign',
+            }
+            owed_link_data = [{
+                'text': 'View Missing',
+                'link': team_or_adj.view_unsubmitted_link
+            } for team_or_adj in progress]
+            self.add_column(owed_link_header, owed_link_data)
+
+
 
 def get_feedback_overview(t, adjudicators):
 
@@ -276,10 +288,15 @@ def get_feedback_progress(t):
         adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
         adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
         adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
+        adj.view_unsubmitted_link = reverse_tournament(
+            'participants-adjudicator-record', t, kwargs={'pk': adj.pk})
 
     for team in teams:
         team.submitted_ballots = max(feedback.filter(source_team__team=team).count(), 0)
         team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
         team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
+        team.view_unsubmitted_link = reverse_tournament(
+            'participants-team-record', t, kwargs={'pk': team.pk})
+
 
     return teams, adjudicators

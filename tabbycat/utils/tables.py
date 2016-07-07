@@ -256,7 +256,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } for round in rounds]
         self.add_column(key, data)
 
-    def add_adjudicator_columns(self, adjudicators, hide_institution=False, subtext=None):
+    def add_adjudicator_columns(self, adjudicators, hide_institution=False,
+            hide_metadata=False, subtext=None):
 
         adj_data = []
         for adj in adjudicators:
@@ -271,19 +272,20 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('show_institutions') and not hide_institution:
             self.add_column("Institution", [adj.institution.code for adj in adjudicators])
 
-        adjcore_header = {
-            'key': 'adjcore',
-            'tooltip': "Member of the Adjudication Core",
-            'icon': 'glyphicon-sunglasses',
-        }
-        self.add_boolean_column(adjcore_header, [adj.adj_core for adj in adjudicators])
+        if not hide_metadata:
+            adjcore_header = {
+                'key': 'adjcore',
+                'tooltip': "Member of the Adjudication Core",
+                'icon': 'glyphicon-sunglasses',
+            }
+            self.add_boolean_column(adjcore_header, [adj.adj_core for adj in adjudicators])
 
-        independent_header = {
-            'key': 'independent',
-            'tooltip': "Independent Adjudicator",
-            'icon': 'glyphicon-knight',
-        }
-        self.add_boolean_column(independent_header, [adj.independent for adj in adjudicators])
+            independent_header = {
+                'key': 'independent',
+                'tooltip': "Independent Adjudicator",
+                'icon': 'glyphicon-knight',
+            }
+            self.add_boolean_column(independent_header, [adj.independent for adj in adjudicators])
 
         if self.tournament.pref('show_unaccredited'):
             accreddited_header = {
