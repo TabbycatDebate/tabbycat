@@ -7,6 +7,7 @@ There are a few possibilities for how to characterise a feedback submission:
 from .models import AdjudicatorFeedback
 
 from adjallocation.models import DebateAdjudicator
+from tournaments.models import Round
 
 
 class BaseFeedbackExpectedSubmissionTracker:
@@ -23,19 +24,25 @@ class BaseFeedbackExpectedSubmissionTracker:
 
     @property
     def count(self):
-        return self.related_submissions().count()
+        return len(self.related_submissions())
 
     @property
     def fulfilled(self):
-        return self.acceptable_submissions().count() == 1 and self.count == 1
+        return len(self.acceptable_submissions()) == 1 and self.count == 1
 
     def related_submissions(self):
         """In subclass implementations, this should return a QuerySet."""
-        raise NotImplementedError
+        if not hasattr(self, '_related_submissions'):
+            self._related_submissions = self.get_related_submissions()
+        return self._related_submissions
 
     def acceptable_submissions(self):
         """Subclasses should override this method of it is possible for some
         submissions to be relevant, but not acceptable."""
+        if hasattr(self, 'get_acceptable_submissions'):
+            if not hasattr(self, '_acceptable_submissions'):
+                self._acceptable_submissions = self.get_acceptable_submissions()
+            return self._acceptable_submissions
         return self.related_submissions()
 
     def submission(self):
@@ -62,10 +69,10 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         else:
             return majority
 
-    def related_submissions(self):
+    def get_related_submissions(self):
         return self.source.adjudicatorfeedback_set.filter(confirmed=True, source_team=self.source)
 
-    def acceptable_submissions(self):
+    def get_acceptable_submissions(self):
         return self.related_submissions().filter(adjudicator__in=self.acceptable_targets())
 
 
@@ -76,7 +83,7 @@ class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmi
         self.target = target
         return super().__init__(source)
 
-    def related_submissions(self):
+    def get_related_submissions(self):
         return self.source.adjudicatorfeedback_set.filter(confirmed=True,
             adjudicator=self.target, source_adjudicator=self.source)
 
@@ -156,7 +163,7 @@ class BaseFeedbackProgress:
     def num_submitted(self):
         """Returns the number of feedbacks that were submitted, including
         duplicate and unexpected submissions."""
-        return self.submitted_feedback().count()
+        return len(self.submitted_feedback())
 
     def num_expected(self):
         """Returns the number of feedbacks that are expected from this participant."""
@@ -168,9 +175,14 @@ class BaseFeedbackProgress:
         one was expected."""
         return len(self.fulfilled_trackers())
 
+    def num_unsubmitted(self):
+        return self.num_expected() - self.num_fulfilled()
+
     def coverage(self):
         """Returns the number of fulfilled feedbacks divided by the number
         of expected feedbacks."""
+        if self.num_expected() == 0:
+            return 1.0
         return self.num_fulfilled() / self.num_expected()
 
 
@@ -184,9 +196,11 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         return AdjudicatorFeedback.objects.filter(source_team__team=self.team)
 
     def get_expected_trackers(self):
-        # There is one tracker for each debate for which there is a confirmed ballot.
+        # There is one tracker for each debate for which there is a confirmed ballot,
+        # and the round is not silent.
         return [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in
-                self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True)]
+                self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True,
+                debate__round__silent=False, debate__round__stage=Round.STAGE_PRELIMINARY)]
 
 
 class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
@@ -204,7 +218,10 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
           - Panellists owe on chairs if the relevant tournament preference is enabled.
         """
         trackers = []
-        for debateadj in self.adjudicator.debateadjudicator_set.filter(debate__ballotsubmission__confirmed=True):
+        for debateadj in self.adjudicator.debateadjudicator_set.filter(
+                debate__ballotsubmission__confirmed=True,
+                debate__round__stage=Round.STAGE_PRELIMINARY):
+
             if debateadj.type == DebateAdjudicator.TYPE_CHAIR:
                 adjudicators = debateadj.debate.adjudicators
                 for target in adjudicators.all():
