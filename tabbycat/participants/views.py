@@ -155,7 +155,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_results_columns(debates)
         table.add_debate_adjudicators_column(debates, show_splits=self.admin
-                or tournament.pref('show_splitting_adjudicators'))
+                or tournament.pref('show_splitting_adjudicators'), highlight_adj=self.object)
 
         if self.admin or tournament.pref('public_motions'):
             table.add_motion_column([debate.confirmed_ballot.motion

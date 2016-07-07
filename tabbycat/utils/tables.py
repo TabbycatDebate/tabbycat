@@ -121,10 +121,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
     Tabbycat."""
 
     ADJ_SYMBOLS = {
-        AdjudicatorAllocation.POSITION_CHAIR: " Ⓒ",
-        AdjudicatorAllocation.POSITION_PANELLIST: "",
-        AdjudicatorAllocation.POSITION_TRAINEE: " Ⓣ",
-        AdjudicatorAllocation.POSITION_ONLY: "",
+        AdjudicatorAllocation.POSITION_CHAIR: "Ⓒ",
+        AdjudicatorAllocation.POSITION_TRAINEE: "Ⓣ",
     }
 
     ADJ_POSITION_NAMES = {
@@ -295,16 +293,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(accreddited_header, [adj.novice for adj in adjudicators])
 
-    def add_debate_adjudicators_column(self, debates, key="Adjudicators", show_splits=False):
+    def add_debate_adjudicators_column(self, debates, key="Adjudicators", show_splits=False, highlight_adj=None):
         da_data = []
 
         def construct_text(adjs_data):
-            adjs_list = ["%s%s%s" % (
-                a['adj'].name,
-                self.ADJ_SYMBOLS[a['position']],
-                " <span class='text-danger'>💢</span>" if a.get('split', False) else ''
-            ) for a in adjs_data]
-            return ', '.join([str(ad) for ad in adjs_list])
+            adjs_list = []
+            for a in adjs_data:
+                adj_str = a['adj'].name
+                symbol = self.ADJ_SYMBOLS.get(a['position'])
+                if symbol:
+                    adj_str += " " + symbol
+                if a.get('split', False):
+                    adj_str += " <span class='text-danger'>💢</span>"
+                if a['adj'] == highlight_adj:
+                    adj_str = "<strong>" + adj_str + "</strong>"
+                adjs_list.append(adj_str)
+            return ', '.join(adjs_list)
 
         def construct_popover(adjs_data):
             popover_data = []
