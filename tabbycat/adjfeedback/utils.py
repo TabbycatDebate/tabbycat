@@ -6,6 +6,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.misc import reverse_tournament
 
 from .models import AdjudicatorFeedback
+from .progress import FeedbackProgressForTeam, FeedbackProgressForAdjudicator
 
 
 class FeedbackTableBuilder(TabbycatTableBuilder):
@@ -235,6 +236,29 @@ def scoring_stats(adj, scores, debate_adjudications):
     return adj
 
 
+def get_feedback_progress_new(t):
+    """This turns out to be really, really inefficient. Continue using the
+    original function until a better way can be found."""
+
+    adjudicators = Adjudicator.objects.filter(tournament=t)
+    teams = Team.objects.filter(tournament=t)
+
+    for team in teams:
+        progress = FeedbackProgressForTeam(team)
+        team.submitted_ballots = progress.num_fulfilled()
+        team.owed_ballots = progress.num_unsubmitted()
+        team.coverage = progress.coverage()
+        print(team)
+
+    for adj in adjudicators:
+        progress = FeedbackProgressForAdjudicator(adj)
+        adj.submitted_ballots = progress.num_fulfilled()
+        adj.owed_ballots = progress.num_unsubmitted()
+        adj.coverage = progress.coverage()
+        print(adj)
+
+    return teams, adjudicators
+
 def get_feedback_progress(t):
     def calculate_coverage(submitted, total):
         if total == 0 or submitted == 0:
@@ -263,7 +287,7 @@ def get_feedback_progress(t):
             # Finding out the composition of their panel, tallying owed ballots
             if item.type == item.TYPE_CHAIR:
                 adj.total_ballots += len(item.debate.adjudicators.trainees)
-                adj.total_ballots += len(item.debate.adjudicators.panel)
+                adj.total_ballots += len(item.debate.adjudicators.panellists)
 
             if item.type == item.TYPE_PANEL:
                 # Panelists owe on chairs
