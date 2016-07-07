@@ -6,10 +6,6 @@
 // Each must handle settingunsetting currentHistories/currentConflicts props
 
 export default {
-  props: {
-    currentConflicts: {default: null },
-    currentHistories: {default: null }
-  },
   methods: {
     toggleHistories: function(conflictValue, conflictState, histories) {
       if (typeof histories === 'undefined' || histories === null) {
@@ -44,12 +40,6 @@ export default {
         this.conflictableAdjudicators, conflictState, 'institutional', conflictValue, true)
       this.findMatchingConflicts(conflicts.institutions,
         this.conflictableTeams, conflictState, 'institutional', conflictValue, true)
-
-      //Don't highlight current thing being hovered
-      if (typeof conflicts.origin !== 'undefined' && conflictState === 'hover') {
-        conflicts.origin.conflicted['hover']['institutional'] = false;
-        conflicts.origin.conflicted['hover']['personal'] = false;
-      }
     },
     findMatchingConflicts: function(conflicts, conflictables, hoverOrPanel,
       typeOfClash, isConflicted, isInstitutional) {

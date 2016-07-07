@@ -157,45 +157,49 @@ export default {
       }
       return adjudicators
     },
-  },
-  methods: {
-    checkForInPlaceConflicts: function() {
-      this.toggleConflictsValues(false); // Unset all previous calculations
+    allPanellistsConflicts: function() {
       // Build a dictionary of ALL adjudicator'ssconflicts
       // Probably dont need to check team's conflicts as they're symmetric
       var all_conflicts = {
-        personal_adjudicators: [],
-        personal_teams: [],
-        institutional_conflicts: []
+        adjudicators: [],
+        teams: [],
+        institutions: []
       }
       for(var i = 0; i < this.conflictableAdjudicators.length; i++) {
         var conflicts = this.conflictableAdjudicators[i].conflicts;
         if (typeof conflicts !== 'undefined' && conflicts !== null) {
-          if (typeof conflicts.personal_adjudicators !== 'undefined') {
-            all_conflicts.personal_adjudicators.push(conflicts.personal_adjudicators)
+          if (typeof conflicts.adjudicators !== 'undefined') {
+            all_conflicts.adjudicators.push(conflicts.adjudicators)
           }
-          if (typeof conflicts.personal_teams !== 'undefined') {
-            all_conflicts.personal_teams.push(conflicts.personal_teams)
+          if (typeof conflicts.teams !== 'undefined') {
+            all_conflicts.teams.push(conflicts.teams)
           }
-          if (typeof conflicts.institutional_conflicts !== 'undefined') {
-            all_conflicts.institutional_conflicts.push(conflicts.institutional_conflicts)
+          if (typeof conflicts.institutions !== 'undefined') {
+            all_conflicts.institutions.push(conflicts.institutions)
           }
         }
-
-        this.currentConflicts = all_conflicts;
-        this.toggleConflictsValues(true); // Redo all calculations
       }
+      return all_conflicts
+    }
+  },
+  methods: {
+    checkForInPlaceConflicts: function() {
+      // this.toggleConflicts(false, 'panel', conflicts_dict); // Unset all previous calculations
+      // this.toggleConflicts(false, 'panel', histories_dict); // Unset all previous calculations
+      this.toggleConflicts(true, 'panel', this.allPanellistsConflicts); // Redo all calculations
     }
   },
   watch: {
     'debate.panel': function (newVal, oldVal) {
+      // Make AJAX request to save new panel composition
       var resource = "change to panel on  " + this.aff.name + " vs " + this.neg.name
       var data = {
         'debate_id': this.debate.id,
         'panel': JSON.stringify(this.debate.panel)
       }
       this.update(this.urls['updatePanel'], data, resource);
-      this.checkForInPlaceConflicts();
+      // Check for conflicts in-place
+      // this.checkForInPlaceConflicts();
     }
   }
 }

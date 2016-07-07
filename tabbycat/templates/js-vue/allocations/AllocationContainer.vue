@@ -130,7 +130,9 @@ export default {
         });
         fromPanel.splice(toRemoveIndex, 1);
       }
-      this.unsetAllHighlights();
+      // Remove any highlights from hovers
+      this.toggleConflicts(false, 'hover', adj.conflicts);
+      this.toggleHistories(false, 'hover', adj.histories);
     },
     'set-adj-panel': function(toDebateId, toPosition) {
       // Construct a lookup object to find the debate by it's ID
@@ -174,9 +176,12 @@ export default {
         fromPanel.splice(toRemoveIndex, 1);
       }
 
+      // Remove any highlights from hovers
+      this.toggleConflicts(false, 'hover', adj.conflicts);
+      this.toggleHistories(false, 'hover', adj.histories);
+
       // Find the debate object that was dropped into and add the adj to it
       toPanel.push({'id': adj.id, 'position': toPosition})
-      this.unsetAllHighlights();
     }
   }
 

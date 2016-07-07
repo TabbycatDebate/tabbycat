@@ -5,10 +5,8 @@
 // adj or team that can be used as an action upon hoverning/clicking etc
 
 export default {
-  props: {
-    debateId: Number,
-  },
   computed: {
+    // Methods for showing/hiding CSS classes based on conflict states
     conflictsHighlights: function () {
       var adjorteam = this.adjorteam;
       if (adjorteam.conflicted.hover.personal || adjorteam.conflicted.panel.personal ) {
@@ -27,24 +25,13 @@ export default {
         return ''
       }
     },
-    conflictsDict: function() {
-      return {
-        adjudicators: this.adjorteam.conflicts.adjudicators,
-        teams: this.adjorteam.conflicts.teams,
-        institutions: this.adjorteam.conflicts.institutions,
-        origin: this.adjorteam // To determine if hover target == conflict target
-      }
-    },
-    historiesDict: function() {
-      return this.adjorteam.histories
-    },
   },
   methods: {
     setConflictHighlights: function(dispatch) {
-      this.$dispatch(dispatch, this.conflictsDict, this.historiesDict)
+      this.$dispatch(dispatch, this.adjorteam.conflicts, this.adjorteam.histories)
     },
     unsetConflictHighlights: function(dispatch) {
-      this.$dispatch(dispatch, this.conflictsDict, this.historiesDict);
+      this.$dispatch(dispatch, this.adjorteam.conflicts, this.adjorteam.histories);
     },
   }
 }
