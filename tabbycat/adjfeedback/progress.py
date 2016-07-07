@@ -24,26 +24,21 @@ class BaseFeedbackExpectedSubmissionTracker:
 
     @property
     def count(self):
-        return len(self.related_submissions())
+        return len(self.acceptable_submissions())
 
     @property
     def fulfilled(self):
-        return len(self.acceptable_submissions()) == 1 and self.count == 1
-
-    def related_submissions(self):
-        """In subclass implementations, this should return a QuerySet."""
-        if not hasattr(self, '_related_submissions'):
-            self._related_submissions = self.get_related_submissions()
-        return self._related_submissions
+        return self.count == 1
 
     def acceptable_submissions(self):
         """Subclasses should override this method of it is possible for some
         submissions to be relevant, but not acceptable."""
-        if hasattr(self, 'get_acceptable_submissions'):
-            if not hasattr(self, '_acceptable_submissions'):
-                self._acceptable_submissions = self.get_acceptable_submissions()
-            return self._acceptable_submissions
-        return self.related_submissions()
+        if not hasattr(self, '_acceptable_submissions'):
+            self._acceptable_submissions = self.get_acceptable_submissions()
+        return self._acceptable_submissions
+
+    def get_acceptable_submissions(self):
+        raise NotImplementedError
 
     def submission(self):
         if self.fulfilled:
@@ -69,11 +64,9 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         else:
             return majority
 
-    def get_related_submissions(self):
-        return self.source.adjudicatorfeedback_set.filter(confirmed=True, source_team=self.source)
-
     def get_acceptable_submissions(self):
-        return self.related_submissions().filter(adjudicator__in=self.acceptable_targets())
+        return self.source.adjudicatorfeedback_set.filter(confirmed=True, source_team=self.source,
+                adjudicator__in=self.acceptable_targets())
 
 
 class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
@@ -83,7 +76,7 @@ class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmi
         self.target = target
         return super().__init__(source)
 
-    def get_related_submissions(self):
+    def get_acceptable_submissions(self):
         return self.source.adjudicatorfeedback_set.filter(confirmed=True,
             adjudicator=self.target, source_adjudicator=self.source)
 
@@ -107,9 +100,6 @@ class FeedbackUnexpectedSubmissionTracker:
     @property
     def count(self):
         return 1
-
-    def related_submissions(self):
-        return [self.feedback]
 
     def submission(self):
         return self.feedback
@@ -141,9 +131,9 @@ class BaseFeedbackProgress:
 
     def expected_feedback(self):
         """Returns a list of AdjudicatorFeedback objects that are submitted
-        as expected."""
+        as expected (including where more are submitted than expected)."""
         return [feedback for tracker in self.expected_trackers()
-                for feedback in tracker.related_submissions()]
+                for feedback in tracker.acceptable_submissions()]
 
     def unexpected_trackers(self):
         """Returns a list of trackers for feedback that was submitted but not

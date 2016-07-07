@@ -147,58 +147,11 @@
   </div>
 
   {% if pref.feedback_progress or admin_page %}
-    <div class="row">
-      <div class="col-md-12">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">Feedback Returns</h4>
-          </div>
-          <ul class="list-group">
-            {% for tracker in feedback_progress.trackers %}
-              {% if tracker.fulfilled %}
-                <li class="list-group-item text-success">
-                  <span class="badge">{{ tracker.round.name }}</span>
-                  <span class="glyphicon glyphicon-ok"></span>
-                  Has submitted feedback for
-                  <strong>{{ tracker.submission.adjudicator.name }}</strong> of
-                  {{ tracker.submission.adjudicator.institution.code }}
-                </li>
-              {% elif tracker.expected %}
-                <li class="list-group-item text-danger">
-                  <span class="badge">{{ tracker.round.name }}</span>
-                  <span class="glyphicon glyphicon-remove"></span>
-                  Has not submitted feedback for
-                  {% for target in tracker.acceptable_targets %}
-                    {% if not forloop.first and forloop.last %}or{% endif %}
-                    <strong>{{ target.name }}</strong> of
-                    {{ target.institution.code }}{% if not forloop.last %},{% endif %}
-                  {% endfor %}
-                  {% if tracker.acceptable_targets|length > 1 %}
-                    (whoever gave the oral adjudication)
-                  {% endif %}
-                </li>
-              {% else %} {# if not tracker.fulfilled and not tracker.expected #}
-                <li class="list-group-item text-warning">
-                  <span class="badge">{{ tracker.round.name }}</span>
-                  <span class="glyphicon glyphicon-question-sign"></span>
-                  Unexpected submission for
-                  <strong>{{ tracker.submission.adjudicator.name }}</strong> of
-                  {{ tracker.submission.adjudicator.institution.code }}
-                </li>
-              {% endif %}
-            {% empty %}
-              <li class="list-group-item">
-                <em>{{ team.short_name }} doesn't have any feedback to submit.</em>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-    </div>
-  {% endif %} {# pref.feedback_progress or admin_page #}
+    {% include "feedback_progress_panel.html" with participant_name=team.short_name %}
+  {% endif %}
 
   {% if pref.public_results or admin_page %}
-    {{ block.super }}
-  {% endif %} {# pref.public_results or admin_page #}
+    {{ block.super }} {# this is the Vue table, which is populated with previous results #}
+  {% endif %}
 
 {% endblock content %}
