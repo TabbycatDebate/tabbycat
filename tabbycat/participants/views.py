@@ -120,7 +120,8 @@ class BaseTeamRecordView(BaseRecordView):
                 or tournament.pref('show_splitting_adjudicators'))
 
         if self.admin or tournament.pref('public_motions'):
-            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+            table.add_motion_column([debate.confirmed_ballot.motion
+                if debate.confirmed_ballot else None for debate in debates])
 
         table.add_debate_ballot_link_column(debates)
 
@@ -157,7 +158,8 @@ class BaseAdjudicatorRecordView(BaseRecordView):
                 or tournament.pref('show_splitting_adjudicators'))
 
         if self.admin or tournament.pref('public_motions'):
-            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+            table.add_motion_column([debate.confirmed_ballot.motion
+                if debate.confirmed_ballot else None for debate in debates])
 
         table.add_debate_ballot_link_column(debates)
         return table

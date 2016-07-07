@@ -110,7 +110,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table.add_debate_adjudicators_column(debates,
             show_splits=tournament.pref('show_splitting_adjudicators'))
         if tournament.pref('show_motions_in_results'):
-            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+            table.add_motion_column([d.confirmed_ballot.motion
+                if d.confirmed_ballot else None for d in debates])
 
         return table
 
@@ -127,7 +128,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableM
         table.add_debate_adjudicators_column(debates,
             show_splits=tournament.pref('show_splitting_adjudicators'))
         if tournament.pref('show_motions_in_results'):
-            table.add_motion_column([debate.confirmed_ballot.motion for debate in debates])
+            table.add_motion_column([debate.confirmed_ballot.motion
+                if debate.confirmed_ballot else None for debate in debates])
 
         return table
 
