@@ -6,7 +6,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.misc import reverse_tournament
 
 from .models import AdjudicatorFeedback
-from .progress import FeedbackProgressForTeam, FeedbackProgressForAdjudicator
+from .progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 
 
 class FeedbackTableBuilder(TabbycatTableBuilder):
@@ -153,7 +153,6 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             self.add_column(owed_link_header, owed_link_data)
 
 
-
 def get_feedback_overview(t, adjudicators):
 
     all_debate_adjudicators = list(DebateAdjudicator.objects.all().select_related(
@@ -271,6 +270,7 @@ def get_feedback_progress_new(t):
 
     return teams, adjudicators
 
+
 def get_feedback_progress(t):
     def calculate_coverage(submitted, total):
         if total == 0 or submitted == 0:
@@ -321,6 +321,5 @@ def get_feedback_progress(t):
         team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
         team.view_unsubmitted_link = reverse_tournament(
             'participants-team-record', t, kwargs={'pk': team.pk})
-
 
     return teams, adjudicators

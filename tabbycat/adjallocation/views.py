@@ -14,7 +14,7 @@ from participants.models import Adjudicator, Team
 from participants.utils import regions_ordered
 from tournaments.mixins import RoundMixin
 from utils.misc import reverse_round
-from utils.mixins import ExpectPost, SuperuserRequiredMixin, PostOnlyRedirectView
+from utils.mixins import ExpectPost, PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -37,7 +37,6 @@ def create_adj_allocation(request, round):
     if round.draw_status != round.STATUS_CONFIRMED:
         return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
 
-    print('made allocation');
     allocate_adjudicators(round, HungarianAllocator)
 
     return _json_adj_allocation(round.get_draw(), round.unused_adjudicators())
@@ -245,7 +244,6 @@ def adj_conflicts(request, round):
             pass  # For when a Debate/DebateTeam may have been deleted
 
     return HttpResponse(json.dumps(data), content_type="text/json")
-
 
 
 # ==============================================================================
