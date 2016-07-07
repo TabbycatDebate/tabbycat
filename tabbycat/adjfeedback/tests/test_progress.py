@@ -117,7 +117,7 @@ class TestFeedbackProgress(TestCase):
     # From team
     # ==========================================================================
 
-    def assertExpectedFromTeamTracker(self, debate, t, expected, fulfilled, count, submissions, targets):
+    def assertExpectedFromTeamTracker(self, debate, t, expected, fulfilled, count, submissions, targets): # noqa
         tracker = FeedbackExpectedSubmissionFromTeamTracker(self._dt(debate, t))
         self.assertIs(tracker.expected, expected)
         self.assertIs(tracker.fulfilled, fulfilled)
@@ -206,7 +206,7 @@ class TestFeedbackProgress(TestCase):
     # From adjudicator
     # ==========================================================================
 
-    def assertExpectedFromAdjudicatorTracker(self, debate, source, target, expected, fulfilled, count, submissions):
+    def assertExpectedFromAdjudicatorTracker(self, debate, source, target, expected, fulfilled, count, submissions): # noqa
         tracker = FeedbackExpectedSubmissionFromAdjudicatorTracker(self._da(debate, source), self._adj(target))
         self.assertIs(tracker.expected, expected)
         self.assertIs(tracker.fulfilled, fulfilled)
@@ -262,7 +262,7 @@ class TestFeedbackProgress(TestCase):
         if adj3 is not None:
             self._create_feedback(self._dt(debate3, 0), adj3)
 
-    def assertTeamProgress(self, t, submitted, expected, fulfilled, unsubmitted, coverage):
+    def assertTeamProgress(self, t, submitted, expected, fulfilled, unsubmitted, coverage): # noqa
         progress = FeedbackProgressForTeam(self._team(t))
         self.assertEqual(progress.num_submitted(), submitted)
         self.assertEqual(progress.num_expected(), expected)
@@ -317,7 +317,7 @@ class TestFeedbackProgress(TestCase):
         for adj in adjs3:
             self._create_feedback(self._da(debate3, 0), adj)
 
-    def assertAdjudicatorProgress(self, a, submitted, expected, fulfilled, unsubmitted, coverage):
+    def assertAdjudicatorProgress(self, a, submitted, expected, fulfilled, unsubmitted, coverage): # noqa
         progress = FeedbackProgressForAdjudicator(self._adj(a))
         self.assertEqual(progress.num_submitted(), submitted)
         self.assertEqual(progress.num_expected(), expected)
