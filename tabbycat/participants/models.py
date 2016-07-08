@@ -69,9 +69,11 @@ class Institution(models.Model):
 
 
 def update_team_names_from_institution(sender, instance, created, **kwargs):
-    logger.info("Updating all team names from institution %s" % (instance.name,))
-    for team in instance.team_set.all():
-        team.save()
+    teams = instance.team_set.all()
+    if len(teams) > 1:
+        logger.info("Updating names of all %d teams from institution %s" % (len(teams), instance.name,))
+        for team in teams:
+            team.save()
 
 # Update all team names when an institution is saved
 signals.post_save.connect(update_team_names_from_institution, sender=Institution)
