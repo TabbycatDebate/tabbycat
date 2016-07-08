@@ -169,16 +169,16 @@ export default {
         for (var property in conflictables) {
           if (conflictables.hasOwnProperty(property)) {
             var conflicts = conflictables[property].conflicts
-            console.log(conflicts)
+            // console.log(conflicts)
             if (typeof conflicts !== 'undefined' && conflicts !== null) {
               Array.prototype.push.apply(all_conflicts.adjudicators, conflicts.adjudicators)
               Array.prototype.push.apply(all_conflicts.teams, conflicts.teams)
-              // Array.prototype.push.apply(all_conflicts.institutions, conflicts.institutions)
+              Array.prototype.push.apply(all_conflicts.institutions, conflicts.institutions)
             }
           }
         }
-        console.log(all_conflicts)
-        console.log('____')
+        // console.log(all_conflicts)
+        // console.log('____')
       }
       // Build a dictionary of ALL adjudicator's conflicts
       var all_conflicts = { adjudicators: [], teams: [], institutions: [] }
@@ -200,16 +200,17 @@ export default {
           }
         }
       }
-      // for (var property in this.conflictableTeams) {
-      //   if (this.conflictableTeams.hasOwnProperty(property)) {
-      //     var histories = this.conflictableTeams[property].histories
-      //     if (typeof histories !== 'undefined') {
-      //       for(var j = 0; j < histories.length; j++) {
-      //         all_histories.push(histories[j])
-      //       }
-      //     }
-      //   }
-      // }
+      // Ditto for teams
+      for (var property in this.conflictableTeams) {
+        if (this.conflictableTeams.hasOwnProperty(property)) {
+          var histories = this.conflictableTeams[property].histories
+          if (typeof histories !== 'undefined') {
+            for(var j = 0; j < histories.length; j++) {
+              all_histories.push(histories[j])
+            }
+          }
+        }
+      }
       return all_histories
     }
   },

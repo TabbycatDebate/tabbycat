@@ -8,19 +8,13 @@
       v-on:mouseenter="setHighlights"
       v-on:mouseleave="unsetHighlights"
       v-bind:class="[isDragging ? 'vue-is-dragging' : '',
+                     isHovering ? 'vue-is-hovering' : '',
                      conflictsHighlights]"
       :id="adjorteam.id"
       class="vue-draggable adj-draggable btn btn-default popover-parent">
 
       <div class="h4 adj-score">
-        {{ letter_ranking }}
-      </div>
-
-      <div class="history-tooltip tooltip left" v-if="adjorteam.hasHistoryConflict">
-        <div class="tooltip-arrow"></div>
-        <div class="tooltip-inner">
-          {{ adjorteam.historyRoundsAgo }}<br>ago
-        </div>
+        <span>{{ letter_ranking }}</span>
       </div>
 
       <div class="adj-info">
@@ -34,7 +28,13 @@
           <template v-else>
             {{ adjorteam.institution.name }}
           </template>
-        </span>
+         </span>
+      </div>
+
+    </div>
+    <div class="history-tooltip tooltip right" v-if="historyHighlightText">
+      <div class="tooltip-inner conflictable conflict-hover-{{ this.historyHighlightText }}-ago">
+        {{ historyHighlightText }}<br>ago
       </div>
     </div>
 
@@ -137,10 +137,12 @@ export default {
     setHighlights: function() {
       this.setConflictHighlights('set-hover-conflicts')
       this.showSlideOver = true
+      this.isHovering = true;
     },
     unsetHighlights: function() {
       this.unsetConflictHighlights('unset-hover-conflicts')
       this.showSlideOver = false
+      this.isHovering = false;
     },
     handleDragStart: function(event) {
       // Set this adj's id as the data for receiving object

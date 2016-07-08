@@ -1,20 +1,21 @@
 <template>
 
-  <div class="inline-flex">
-    <div class="debate-team flex-cell flex-vertical-center bordered-bottom"
-      v-bind:class="[diversityHighlights, conflictsHighlights]"
+  <div class="inline-flex bordered-bottom">
+    <div class="debate-team flex-cell flex-vertical-center"
+      v-bind:class="[diversityHighlights,
+                     conflictsHighlights,
+                     isHovering ? 'vue-is-hovering' : '']"
       v-on:mouseenter="setHighlights"
       v-on:mouseleave="unsetHighlights">
-      <div class="flex-1">
-        <div class="history-tooltip tooltip top" v-if="adjorteam.hasHistoryConflict">
-          <div class="tooltip-arrow"></div>
-          <div class="tooltip-inner">
-            saw {{ adjorteam.historyRoundsAgo }}
-            round<span v-if="adjorteam.historyRoundsAgo > 1">s</span> ago
-          </div>
+      <div class="history-tooltip tooltip top" v-if="historyHighlightText">
+        <div class="tooltip-inner conflictable conflict-hover-{{ this.historyHighlightText }}-ago">
+          saw {{ historyHighlightText }}
+          round<span v-if="historyHighlightText > 1">s</span> ago
         </div>
+      </div>
+      <div class="flex-1">
         <p class="debate-team-title no-bottom-margin">
-          <strong>{{ adjorteam.name }}</strong>
+          <strong><span>{{ adjorteam.name }}</span></strong>
         </p>
       </div>
     </div>
@@ -81,10 +82,12 @@ export default {
     setHighlights: function() {
       this.setConflictHighlights('set-hover-conflicts')
       this.showSlideOver = true
+      this.isHovering = true;
     },
     unsetHighlights: function() {
       this.unsetConflictHighlights('unset-hover-conflicts')
       this.showSlideOver = false
+      this.isHovering = false;
     }
   },
 }

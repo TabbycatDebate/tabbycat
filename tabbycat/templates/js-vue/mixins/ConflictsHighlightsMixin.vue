@@ -8,17 +8,32 @@ export default {
   computed: {
     // Methods for showing/hiding CSS classes based on conflict states
     conflictsHighlights: function () {
-      var adjorteam = this.adjorteam;
-      if (adjorteam.conflicted.hover.personal || adjorteam.conflicted.panel.personal ) {
-        return ' conflicts-display personal-conflict'
-      } else if (adjorteam.conflicted.hover.institutional || adjorteam.conflicted.panel.institutional) {
-        return ' conflicts-display institutional-conflict'
-      } else if (adjorteam.conflicted.hover.history || adjorteam.conflicted.panel.history) {
-        return ' histories-display seen-' + adjorteam.conflicted.hover.history_ago + '-ago'
-      } else {
-        return ''
+      var conflicts_class = 'conflictable '
+      if (this.adjorteam.conflicted.hover.personal) {
+        conflicts_class += ' conflict-hover-personal-conflict '
+      } else if (this.adjorteam.conflicted.hover.institutional) {
+        conflicts_class += ' conflict-hover-institutional-conflict '
+      } else if (this.adjorteam.conflicted.hover.history) {
+        conflicts_class += ' conflict-hover-' + this.historyHighlightText + '-ago '
       }
+      if (this.adjorteam.conflicted.panel.personal ) {
+        conflicts_class += ' conflict-panel-personal-conflict '
+      } else if (this.adjorteam.conflicted.panel.institutional) {
+        conflicts_class += ' conflict-panel-institutional-conflict '
+      } else if (this.adjorteam.conflicted.panel.history) {
+        conflicts_class += ' conflict-panel-' + this.historyHighlightText + '-ago '
+      }
+      return conflicts_class
     },
+    historyHighlightText: function() {
+      if (this.adjorteam.conflicted.hover.history === true) {
+        return this.adjorteam.conflicted.hover.history_ago
+      } else if (this.adjorteam.conflicted.panel.history === true) {
+        return this.adjorteam.conflicted.panel.history_ago
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     setConflictHighlights: function(dispatch) {

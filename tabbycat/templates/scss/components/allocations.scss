@@ -38,17 +38,21 @@
 // For showing inline time since history conflict
 .history-tooltip {
   opacity: 1;
-  line-height: 12px;
-  &.left {
-    .tooltip-inner {
-      padding: 5px;
-    }
-    margin-left: -9px;
-    margin-top: -4px;
+  line-height: 10px;
+  font-size: 10px;
+
+  .tooltip-inner {
+    padding: 0;
   }
+
+  &.right {
+    margin-left: -33px;
+    margin-top: 7px;
+  }
+
   &.top {
-    margin-top: -28px;
-    margin-left: -4px;
+    margin-top: -9px;
+    margin-left: 0;
   }
 }
 
@@ -101,14 +105,15 @@
 
 .adj-draggable {
   text-align: left;
-  height: 40px;
+  height: 42px;
+  padding-top: 4px; // Center the Score
   .adj-info, .adj-score {
     float: left;
   }
   .h4 {
     min-width: 30px;
     margin: 0;
-    padding: 3px 0 3px 2px; // Center the Score
+    padding-top: 4px; // Center the Score
   }
   span {
     border-bottom: none;

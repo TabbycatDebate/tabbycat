@@ -17,8 +17,10 @@ export default {
         } else if (typeof history.adjudicator !== 'undefined') {
           var entity = _this.conflictableAdjudicators[history.adjudicator]
         }
+        console.log('    checking conflicted history for ', entity)
         // Set history value and rounds_ago to be the lowest possible match
         if (typeof entity !== 'undefined') {
+          console.log('    setting conflicted history for ', entity.name)
           entity.conflicted[conflictState]['history'] = conflictValue;
           if (history.ago < entity.conflicted[conflictState]['history_ago']) {
             entity.conflicted[conflictState]['history_ago'] = history.ago;
@@ -44,9 +46,9 @@ export default {
       if (typeof conflicts === 'undefined' || conflicts === null) {
         return
       }
-      if (typeOfClash === 'panel') {
-        console.log('    findMatchingConflicts', conflicts, conflictables, hoverOrPanel);
-      }
+      // if (typeOfClash === 'panel') {
+      //   console.log('    findMatchingConflicts', conflicts, conflictables, hoverOrPanel);
+      // }
       var _this = this;
       conflicts.forEach(function(conflictedID) {
         if (isInstitutional === false) {
@@ -61,9 +63,9 @@ export default {
     findIndividualConflict: function(conflictables, conflictedID, hoverOrPanel, typeOfClash, isConflicted) {
       // For each known conflict, check if ID is in the list of conflictables
       var conflictMatch = conflictables[conflictedID];
-      if (typeOfClash === 'panel') {
-        console.log('    findIndividualConflict', conflictables, conflictedID, conflictMatch);
-      }
+      // if (typeOfClash === 'panel') {
+      //   console.log('    findIndividualConflict', conflictables, conflictedID, conflictMatch);
+      // }
       if (typeof conflictMatch !== 'undefined') {
         // console.log('    found match for', conflictMatch)
         conflictMatch['conflicted'][hoverOrPanel][typeOfClash] = isConflicted
@@ -71,12 +73,14 @@ export default {
     },
     findMatchingInstitutionalConflict: function(conflictables, institutionID, hoverOrPanel, typeOfClash, isConflicted) {
       // Loop through all possible conflictables and check for institutional ID matches
-      for (var referenceToTest in conflictables) {
-        if (conflictables.hasOwnProperty(referenceToTest)) {
-          var entityToTest = conflictables[referenceToTest]; // get team or adj
-          if (typeof entityToTest !== 'undefined') {
-            if (entityToTest.institution.id === institutionID) {
-              entityToTest['conflicted'][hoverOrPanel][typeOfClash] = isConflicted;
+      if (hoverOrPanel !== 'panel') { // TODO TEMPORARY TO CHECK
+        for (var referenceToTest in conflictables) {
+          if (conflictables.hasOwnProperty(referenceToTest)) {
+            var entityToTest = conflictables[referenceToTest]; // get team or adj
+            if (typeof entityToTest !== 'undefined') {
+              if (entityToTest.institution.id === institutionID) {
+                entityToTest['conflicted'][hoverOrPanel][typeOfClash] = isConflicted;
+              }
             }
           }
         }
