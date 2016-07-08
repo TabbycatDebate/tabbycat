@@ -96,7 +96,6 @@ export default {
   },
   methods: {
     saveDivision: function() {
-      console.log('test');
       var team_id = this.team.id;
       var division_id = this.team.division;
       $.ajax({

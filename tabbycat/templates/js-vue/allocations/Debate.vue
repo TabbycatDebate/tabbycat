@@ -103,15 +103,15 @@ export default {
     },
     liveness: function() {
       var liveness = 0;
-      if (this.aff.categories.filter(function(obj){
-        return obj.will_break === null;
-      }).length > 1) {
-        liveness = liveness + 1;
+      for (var i = 0; i < this.aff.categories.length; ++i) {
+        if (this.aff.categories[i].will_break === null) {
+          liveness += 1;
+        }
       }
-      if (this.neg.categories.filter(function(obj){
-        return obj.will_break === null;
-      }).length > 1) {
-        liveness = liveness + 1;
+      for (var i = 0; i < this.neg.categories.length; ++i) {
+        if (this.neg.categories[i].will_break === null) {
+          liveness += 1;
+        }
       }
       return liveness;
     },
@@ -163,60 +163,28 @@ export default {
       }
       return adjudicators
     },
-    allPanellistsConflicts: function() {
-      function extractConflicts(conflictables, all_conflicts, institutions) {
-        // Iterate over each adj/team and push its conflicts to the master dict
-        for (var property in conflictables) {
-          if (conflictables.hasOwnProperty(property)) {
-            var conflicts = conflictables[property].conflicts
-            if (typeof conflicts !== 'undefined' && conflicts !== null) {
-              Array.prototype.push.apply(all_conflicts.adjudicators, conflicts.adjudicators)
-              Array.prototype.push.apply(all_conflicts.teams, conflicts.teams)
-              if (institutions) {
-                // We don't add adjs's institutional conflicts as clashes
-                Array.prototype.push.apply(all_conflicts.institutions, conflicts.institutions)
-              }
-            }
-          }
+  },
+  methods: {
+    checkPanelConflicts: function(conflictValue, conflictableTeams, conflictableAdjudicators) {
+      for (var teamID in conflictableTeams) {
+        if (conflictableTeams.hasOwnProperty(teamID)) {
+          var team = conflictableTeams[teamID];
+          this.toggleConflicts(conflictValue, 'panel', team, team.conflicts);
+          this.toggleHistories(conflictValue, 'panel', team, team.histories);
         }
       }
-      // Build a dictionary of ALL adjudicator's conflicts
-      var all_conflicts = { adjudicators: [], teams: [], institutions: [] }
-      extractConflicts(this.conflictableAdjudicators, all_conflicts, true)
-      extractConflicts(this.conflictableTeams, all_conflicts, false)
-      return all_conflicts
-    },
-    allPanellistsHistories: function() {
-      // Build an array of ALL adjudicator's seen histories
-      var all_histories = []
-      for (var property in this.conflictableAdjudicators) {
-        if (this.conflictableAdjudicators.hasOwnProperty(property)) {
-          var histories = this.conflictableAdjudicators[property].histories
-          if (typeof histories !== 'undefined') {
-            for(var j = 0; j < histories.length; j++) {
-              all_histories.push(histories[j])
-            }
-          }
+      for (var adjID in conflictableAdjudicators) {
+        if (conflictableAdjudicators.hasOwnProperty(adjID)) {
+          var adj = conflictableAdjudicators[adjID];
+          this.toggleConflicts(conflictValue, 'panel', adj, adj.conflicts);
+          this.toggleHistories(conflictValue, 'panel', team, adj.histories);
         }
       }
-      // Ditto for teams
-      for (var property in this.conflictableTeams) {
-        if (this.conflictableTeams.hasOwnProperty(property)) {
-          var histories = this.conflictableTeams[property].histories
-          if (typeof histories !== 'undefined') {
-            for(var j = 0; j < histories.length; j++) {
-              all_histories.push(histories[j])
-            }
-          }
-        }
-      }
-      return all_histories
     }
   },
   created: function() {
     // Do initial calculation for conflicts/histories
-    // this.toggleConflicts(true, 'panel', this.allPanellistsConflicts);
-    // this.toggleHistories(true, 'panel', this.allPanellistsHistories);
+    this.checkPanelConflicts(true, this.conflictableTeams, this.conflictableAdjudicators)
   },
   watch: {
     'debate.panel': function (newVal, oldVal) {
@@ -228,13 +196,10 @@ export default {
       }
       this.update(this.urls['updatePanel'], data, resource);
     },
-    'allPanellistsHistories': function (newVal, oldVal) {
-      // this.toggleHistories(false, 'panel', oldVal);
-      // this.toggleHistories(true, 'panel', newVal);
-    },
-    'allPanellistsConflicts': function (newVal, oldVal) {
-      // this.toggleConflicts(false, 'panel', oldVal);
-      // this.toggleConflicts(true, 'panel', newVal);
+    'conflictableAdjudicators': function (newVal, oldVal) {
+      this.unsetAll('panel', this.conflictableTeams)
+      this.unsetAll('panel', newVal)
+      this.checkPanelConflicts(true, this.conflictableTeams, newVal)
     }
   }
 }

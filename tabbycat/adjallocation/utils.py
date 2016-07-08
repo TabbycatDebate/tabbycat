@@ -169,6 +169,7 @@ def adjs_to_json(adjs, regions):
     data = {}
     for adj in adjs:
         data[adj.id] = {
+            'type': 'adjudicator',
             'id': adj.id,
             'name': adj.name,
             'gender': adj.gender,
@@ -208,6 +209,7 @@ def teams_to_json(teams, regions, categories, t, r):
         } for bc in categories if bc['id'] in team_categories]
 
         data[team.id] = {
+            'type': 'team',
             'id': team.id,
             'name': team.short_name,
             'long_name': team.long_name,

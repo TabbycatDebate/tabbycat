@@ -82,10 +82,10 @@
   }
 }
 
-
 // Custom hover state to override button default
 .conflictable.vue-is-hovering, .conflictable.vue-is-dragging, .conflictable.vue-is-hovering:active {
   background: #000;
+  border-color: $gray;
   .text-muted {
     opacity: 1;
   }

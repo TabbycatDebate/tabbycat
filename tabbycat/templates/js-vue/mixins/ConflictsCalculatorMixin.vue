@@ -17,10 +17,8 @@ export default {
         } else if (typeof history.adjudicator !== 'undefined') {
           var entity = _this.conflictableAdjudicators[history.adjudicator]
         }
-        // console.log('    checking conflicted history for ', entity)
         // Set history value and rounds_ago to be the lowest possible match
         if (typeof entity !== 'undefined') {
-          // console.log('    setting conflicted history for ', entity.name)
           entity.conflicted[conflictState]['history'] = conflictValue;
           if (history.ago < entity.conflicted[conflictState]['history_ago']) {
             entity.conflicted[conflictState]['history_ago'] = history.ago;
@@ -32,27 +30,33 @@ export default {
       if (typeof conflicts === 'undefined' || conflicts === null) {
         return
       }
-      var searchableAdjudicators = this.conflictableAdjudicators;
-      var searchableTeams = this.conflictableTeams;
-
       this.findMatchingConflicts(conflicts.adjudicators, origin,
-        searchableAdjudicators, conflictState, 'personal', conflictValue, false)
+        this.conflictableAdjudicators, conflictState, 'personal', conflictValue, false)
       this.findMatchingConflicts(conflicts.teams, origin,
-        searchableTeams, conflictState, 'personal', conflictValue, false)
+        this.conflictableTeams, conflictState, 'personal', conflictValue, false)
 
       this.findMatchingConflicts(conflicts.institutions, origin,
-        searchableAdjudicators, conflictState, 'institutional', conflictValue, true)
+        this.conflictableAdjudicators, conflictState, 'institutional', conflictValue, true)
       this.findMatchingConflicts(conflicts.institutions, origin,
-        searchableTeams, conflictState, 'institutional', conflictValue, true)
+        this.conflictableTeams, conflictState, 'institutional', conflictValue, true)
+    },
+    unsetAll: function(conflictState, conflictables) {
+      // Sometimes, such as on panel calcs can't toggle of in a pinpoint manner
+      // So we do so in bulk for all conflictables and properties
+      for (var reference in conflictables) {
+        if (conflictables.hasOwnProperty(reference)) {
+          var entity = conflictables[reference]
+          entity.conflicted[conflictState]['history'] = false;
+          entity.conflicted[conflictState]['institutional'] = false;
+          entity.conflicted[conflictState]['personal'] = false;
+        }
+      }
     },
     findMatchingConflicts: function(conflicts, origin, conflictables, hoverOrPanel, typeOfClash, isConflicted, isInstitutional) {
       // Loop through all conflicts; dispatch to Individual/Institutional
       if (typeof conflicts === 'undefined' || conflicts === null) {
         return
       }
-      // if (typeOfClash === 'panel') {
-      //   console.log('    findMatchingConflicts', conflicts, conflictables, hoverOrPanel);
-      // }
       var _this = this;
       conflicts.forEach(function(conflictedID) {
         if (isInstitutional === false) {
@@ -76,9 +80,13 @@ export default {
       for (var referenceToTest in conflictables) {
         if (conflictables.hasOwnProperty(referenceToTest)) {
           var entityToTest = conflictables[referenceToTest]; // get team or adj
-          if (typeof entityToTest !== 'undefined' && entityToTest !== origin) { // don't highlight originator as institutional clash
-            if (entityToTest.institution.id === institutionID) { // check for institution match
-              entityToTest['conflicted'][hoverOrPanel][typeOfClash] = isConflicted;
+          if (entityToTest.type === 'team' && origin.type === 'team') {
+            // Dont count team-team institution conflicts as such
+          } else {
+            if (typeof entityToTest !== 'undefined' && entityToTest !== origin) { // don't highlight originator as institutional clash
+              if (entityToTest.institution.id === institutionID) { // check for institution match
+                entityToTest['conflicted'][hoverOrPanel][typeOfClash] = isConflicted;
+              }
             }
           }
         }
