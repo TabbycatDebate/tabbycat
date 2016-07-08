@@ -197,25 +197,22 @@ class Team(models.Model):
         return "[{}] {}".format(self.tournament.slug, self.short_name)
 
     def _construct_short_name(self):
-        institution = self.get_cached_institution()
-        if self.short_reference:
-            name = self.short_reference
-        else:
-            name = self.reference
-        if self.use_institution_prefix is True:
-            if self.institution.code:
-                return str(institution.code + " " + name)
+        institution = self.institution
+        name = self.short_reference or self.reference
+        if self.use_institution_prefix:
+            if institution.code:
+                return institution.code + " " + name
             else:
-                return str(institution.abbreviation + " " + name)
+                return institution.abbreviation + " " + name
         else:
-            return str(name)
+            return name
 
     def _construct_long_name(self):
-        institution = self.get_cached_institution()
-        if self.use_institution_prefix is True:
-            return str(institution.name + " " + self.reference)
+        institution = self.institution
+        if self.use_institution_prefix:
+            return institution.name + " " + self.reference
         else:
-            return str(self.reference)
+            return self.reference
 
     @property
     def region(self):
