@@ -1,3 +1,5 @@
+import logging
+
 from django.test import TestCase
 
 from adjallocation.models import DebateAdjudicator
@@ -228,14 +230,16 @@ class TestFeedbackProgress(TestCase):
     def test_adj_on_adj_bad_submission(self):
         debate = self._create_debate((0, 1), (0, 1, 2), "aan")
         for a in (1, 2):
-            self._create_feedback(self._da(debate, 0), 4)
+            self._create_feedback(self._da(debate, 0), a+2)
             self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, False, 0, [])
 
     def test_adj_on_adj_multiple_submission(self):
         debate = self._create_debate((0, 1), (0, 1, 2), "aan")
         for a in (1, 2):
+            logging.disable(logging.WARNING)
             self._create_feedback(self._da(debate, 0), a)
             feedback2 = self._create_feedback(self._da(debate, 0), a)
+            logging.disable(logging.NOTSET)
             self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, True, 1, [feedback2])
 
     def test_adj_on_adj_trainees_not_submitted(self):
