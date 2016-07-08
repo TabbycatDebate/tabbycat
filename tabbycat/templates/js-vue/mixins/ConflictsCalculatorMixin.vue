@@ -17,10 +17,10 @@ export default {
         } else if (typeof history.adjudicator !== 'undefined') {
           var entity = _this.conflictableAdjudicators[history.adjudicator]
         }
-        console.log('    checking conflicted history for ', entity)
+        // console.log('    checking conflicted history for ', entity)
         // Set history value and rounds_ago to be the lowest possible match
         if (typeof entity !== 'undefined') {
-          console.log('    setting conflicted history for ', entity.name)
+          // console.log('    setting conflicted history for ', entity.name)
           entity.conflicted[conflictState]['history'] = conflictValue;
           if (history.ago < entity.conflicted[conflictState]['history_ago']) {
             entity.conflicted[conflictState]['history_ago'] = history.ago;
@@ -73,18 +73,19 @@ export default {
     },
     findMatchingInstitutionalConflict: function(conflictables, institutionID, hoverOrPanel, typeOfClash, isConflicted) {
       // Loop through all possible conflictables and check for institutional ID matches
-      if (hoverOrPanel !== 'panel') { // TODO TEMPORARY TO CHECK
+      // if (hoverOrPanel !== 'panel') { // TODO TEMPORARY TO CHECK
         for (var referenceToTest in conflictables) {
           if (conflictables.hasOwnProperty(referenceToTest)) {
             var entityToTest = conflictables[referenceToTest]; // get team or adj
             if (typeof entityToTest !== 'undefined') {
-              if (entityToTest.institution.id === institutionID) {
+              if (entityToTest.institution.id === institutionID) { // check for institution match
+                console.log(entityToTest.name, 'matches institutions with', institutionID);
                 entityToTest['conflicted'][hoverOrPanel][typeOfClash] = isConflicted;
               }
             }
           }
         }
-      }
+      // }
     }
   }
 }

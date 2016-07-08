@@ -1,10 +1,12 @@
 
 .conflictable {
-  border: 4px solid rgba(255,255,255, 0);
   // Teams we want to have no border to reduce clutter; adjs we want so they
   // appear like draggable buttons/elements
   &.adj-draggable {
-    border-color: $btn-default-border;
+    border: 4px solid $btn-default-border;
+  }
+  &.debate-team {
+    border: 4px solid rgba(255,255,255, 0);
   }
 }
 
@@ -92,6 +94,7 @@
 // Ensure text is treated nicely when a conflict state is active
 .conflict-hover-personal-conflict, .conflict-hover-institutional-conflict,
 .conflict-hover-1-ago, .conflict-hover-2-ago, .conflict-hover-3-ago {
+  color: #fff;
   span, span a, .text-muted {
     color: #fff;
   }

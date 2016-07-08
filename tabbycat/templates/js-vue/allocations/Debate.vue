@@ -164,27 +164,26 @@ export default {
       return adjudicators
     },
     allPanellistsConflicts: function() {
-      function extractConflicts(conflictables, all_conflicts) {
+      function extractConflicts(conflictables, all_conflicts, institutions) {
         // Iterate over each adj/team and push its conflicts to the master dict
         for (var property in conflictables) {
           if (conflictables.hasOwnProperty(property)) {
             var conflicts = conflictables[property].conflicts
-            // console.log(conflicts)
             if (typeof conflicts !== 'undefined' && conflicts !== null) {
               Array.prototype.push.apply(all_conflicts.adjudicators, conflicts.adjudicators)
               Array.prototype.push.apply(all_conflicts.teams, conflicts.teams)
-              Array.prototype.push.apply(all_conflicts.institutions, conflicts.institutions)
+              if (institutions) {
+                // We don't add adjs's institutional conflicts as clashes
+                Array.prototype.push.apply(all_conflicts.institutions, conflicts.institutions)
+              }
             }
           }
         }
-        // console.log(all_conflicts)
-        // console.log('____')
       }
       // Build a dictionary of ALL adjudicator's conflicts
       var all_conflicts = { adjudicators: [], teams: [], institutions: [] }
-      // TODO: data not being pushed to all_conflicts
-      extractConflicts(this.conflictableAdjudicators, all_conflicts)
-      extractConflicts(this.conflictableTeams, all_conflicts)
+      extractConflicts(this.conflictableAdjudicators, all_conflicts, true)
+      extractConflicts(this.conflictableTeams, all_conflicts, false)
       return all_conflicts
     },
     allPanellistsHistories: function() {

@@ -13,39 +13,37 @@
       </div>
 
       <div class="navbar-form pull-right">
-        <div class="btn-group btn-group-sm">
-          <div v-if="!showingGender && !showingCategory && !showingRegion"class="btn-group btn-group-sm">
-            <button disabled class="btn conflictable conflict-hover-2-ago">
-              Seen Before
-            </button>
-            <button disabled class="btn conflictable conflict-hover-institutional-conflict">
-              Institutional Conflicts
-            </button>
-            <button disabled class="btn conflictable conflict-hover-personal-conflict">
-              Personal Conflicts
-            </button>
-            <button disabled class="btn panel-incomplete">
-              No Chair/Odd Panel
-            </button>
-          </div>
-          <div v-if="showingGender" class="btn-group btn-group-sm">
-            <button disabled class="btn gender-display gender-male">Male</button>
-            <button disabled class="btn gender-display gender-f">Female</button>
-            <button disabled class="btn gender-display gender-o">Other</button>
-            <button disabled class="btn btn-default">Unknown</button>
-          </div>
-          <div v-if="showingRegion" class="btn-group btn-group-sm">
-            <button disabled v-for="region in regions"
-              class="btn btn-default region-display region-{{ region.seq }}">
-              {{ region.name }}
-            </button>
-          </div>
-          <div v-if="showingCategory" class="btn-group btn-group-sm">
-            <button disabled v-for="category in categories"
-              class="btn btn-default category-display category-{{ category.seq }}">
-              {{ category.name }} Break
-            </button>
-          </div>
+        <div v-if="!showingGender && !showingCategory && !showingRegion" class="btn-group btn-group-sm">
+          <button class="btn btn-default conflictable conflict-hover-2-ago">
+            Seen Before
+          </button>
+          <button class="btn btn-default conflictable conflict-hover-institutional-conflict">
+            Institutional Conflicts
+          </button>
+          <button class="btn btn-default conflictable conflict-hover-personal-conflict">
+            Personal Conflicts
+          </button>
+          <button class="btn btn-default panel-incomplete">
+            No Chair/Odd Panel
+          </button>
+        </div>
+        <div v-if="showingGender" class="btn-group btn-group-sm">
+          <button disabled class="btn gender-display gender-male">Male</button>
+          <button disabled class="btn gender-display gender-f">Female</button>
+          <button disabled class="btn gender-display gender-o">Other</button>
+          <button disabled class="btn btn-default">Unknown</button>
+        </div>
+        <div v-if="showingRegion" class="btn-group btn-group-sm">
+          <button disabled v-for="region in regions"
+            class="btn btn-default region-display region-{{ region.seq }}">
+            {{ region.name }}
+          </button>
+        </div>
+        <div v-if="showingCategory" class="btn-group btn-group-sm">
+          <button disabled v-for="category in categories"
+            class="btn btn-default category-display category-{{ category.seq }}">
+            {{ category.name }} Break
+          </button>
         </div>
         <div class="btn-group btn-group-sm">
           <button class="btn btn-default nav-link hoverable" v-on:click="showVenues" v-bind:class="showingVenue ? 'active' : 'notactive'">
