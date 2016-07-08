@@ -43,6 +43,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
     page_subtitle = 'Use ESC to cancel scrolling'
     template_name = 'draw_display_by.html'
     sort_key = 'Venue'
+    popovers = True
 
     def get_page_title(self):
         rd = self.get_round()
@@ -126,11 +127,12 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
 
 
 class AdminDrawDisplayForRoundByVenueView(LoginRequiredMixin, BaseDrawTableView):
-    pass
+    popovers = False
 
 
 class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
     sort_key = 'Team'
+    popovers = False
 
     def populate_table(self, draw, table, round, tournament):
         draw = list(draw) + list(draw) # Double up the draw
