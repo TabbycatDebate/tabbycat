@@ -2,7 +2,7 @@
 
   <div class="inline-flex">
     <div class="debate-team flex-cell flex-vertical-center bordered-bottom"
-      v-bind:class="[diversityHighlights, historiesHighlights, conflictsHighlights]"
+      v-bind:class="[diversityHighlights, conflictsHighlights]"
       v-on:mouseenter="setHighlights"
       v-on:mouseleave="unsetHighlights">
       <div class="flex-1">

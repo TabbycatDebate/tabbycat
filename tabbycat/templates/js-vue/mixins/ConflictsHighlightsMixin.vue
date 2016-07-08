@@ -13,14 +13,8 @@ export default {
         return ' conflicts-display personal-conflict'
       } else if (adjorteam.conflicted.hover.institutional || adjorteam.conflicted.panel.institutional) {
         return ' conflicts-display institutional-conflict'
-      }
-    },
-    historiesHighlights: function() {
-      var adjorteam = this.adjorteam;
-      if (adjorteam.conflicted.hover.history) {
+      } else if (adjorteam.conflicted.hover.history || adjorteam.conflicted.panel.history) {
         return ' histories-display seen-' + adjorteam.conflicted.hover.history_ago + '-ago'
-      } else if (adjorteam.conflicted.panel.history) {
-        return ' histories-display seen-' + adjorteam.conflicted.panel.history_ago + '-ago'
       } else {
         return ''
       }

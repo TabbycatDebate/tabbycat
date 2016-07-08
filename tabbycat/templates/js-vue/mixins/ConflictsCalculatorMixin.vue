@@ -30,9 +30,6 @@ export default {
       if (typeof conflicts === 'undefined' || conflicts === null) {
         return
       }
-      if (conflictState === 'panel') {
-        console.log('toggleConflicts', conflicts, this.conflictableTeams, this.conflictableAdjudicators);
-      }
       this.findMatchingConflicts(conflicts.adjudicators,
         this.conflictableAdjudicators, conflictState, 'personal', conflictValue, false)
       this.findMatchingConflicts(conflicts.teams,

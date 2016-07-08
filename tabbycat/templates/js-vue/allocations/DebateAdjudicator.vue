@@ -7,8 +7,8 @@
       v-on:dragend="handleDragEnd"
       v-on:mouseenter="setHighlights"
       v-on:mouseleave="unsetHighlights"
-      v-bind:class="[isDragging ? 'vue-is-dragging' : '', diversityHighlights,
-                     historiesHighlights, conflictsHighlights]"
+      v-bind:class="[isDragging ? 'vue-is-dragging' : '',
+                     conflictsHighlights]"
       :id="adjorteam.id"
       class="vue-draggable adj-draggable btn btn-default popover-parent">
 
