@@ -4,9 +4,8 @@ by participants of the tournament.
 There are a few possibilities for how to characterise a feedback submission:
 """
 
-from .models import AdjudicatorFeedback
-
 from adjallocation.models import DebateAdjudicator
+from adjfeedback.models import AdjudicatorFeedback
 from tournaments.models import Round
 
 

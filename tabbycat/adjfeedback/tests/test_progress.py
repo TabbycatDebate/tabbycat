@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from adjallocation.models import DebateAdjudicator
+from adjfeedback.models import AdjudicatorFeedback
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission
@@ -8,7 +9,6 @@ from results.result import BallotSet
 from tournaments.models import Round, Tournament
 from venues.models import Venue
 
-from ..models import AdjudicatorFeedback
 from ..progress import FeedbackExpectedSubmissionFromAdjudicatorTracker, FeedbackExpectedSubmissionFromTeamTracker
 from ..progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 
