@@ -129,7 +129,7 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     slug_url_kwarg = 'url_key'
 
 
-class VueTableMixin(TemplateView):
+class VueTableTemplateView(TemplateView):
     """Mixing that provides shortcuts for adding data when building arrays that
     will end up as rows within a Vue table. Each cell can be represented
     either as a string value or a dictionary to enable richer inline content

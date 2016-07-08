@@ -13,7 +13,7 @@ from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
-from utils.mixins import SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from venues.models import Venue
 
@@ -93,7 +93,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 # Specific Activation Pages
 # ==============================================================================
 
-class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
+class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     template_name = "base_availability.html"
 
     def get_context_data(self, **kwargs):

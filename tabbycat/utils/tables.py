@@ -8,7 +8,7 @@ from .mixins import SuperuserRequiredMixin
 
 class BaseTableBuilder:
     """Class for building tables that can be easily inserted into Vue tables,
-    Designed to be used with VueTableMixin.
+    Designed to be used with VueTableTemplateView.
 
     In the docstrings for this class:
     - A *header dict* is a dict that contains a value under `"key"` that is a

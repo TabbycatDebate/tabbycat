@@ -21,7 +21,7 @@ from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round
-from utils.mixins import VueTableMixin
+from utils.mixins import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
@@ -46,7 +46,7 @@ def toggle_postponed(request, t, debate_id):
     return redirect_round('results', debate.round)
 
 
-class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableMixin, TemplateView):
+class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateView):
 
     template_name = 'results.html'
     draw = None
@@ -83,7 +83,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableMixin, Te
         return super().get_context_data(**kwargs)
 
 
-class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableMixin):
+class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableTemplateView):
 
     template_name = "public_results_for_round.html"
     public_page_preference = 'public_results'

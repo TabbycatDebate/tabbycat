@@ -13,7 +13,7 @@ from results.models import TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from tournaments.models import Round
 from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
-from utils.mixins import SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, Team
@@ -32,7 +32,7 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, CacheMixin):
+class PublicParticipantsListView(PublicTournamentPageMixin, CacheMixin, VueTableTemplateView):
 
     public_page_preference = 'public_participants'
     page_title = 'Participants'
@@ -57,7 +57,7 @@ class PublicParticipantsListView(PublicTournamentPageMixin, VueTableMixin, Cache
 # Team and adjudicator record pages
 # ==============================================================================
 
-class ParticipantRecordsListView(SuperuserRequiredMixin, TournamentMixin, VueTableMixin, TemplateView):
+class ParticipantRecordsListView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
 
     page_title = 'Team and Adjudicator Record Pages'
     page_emoji = '🌸'
@@ -76,7 +76,7 @@ class ParticipantRecordsListView(SuperuserRequiredMixin, TournamentMixin, VueTab
         return [adjs_table, teams_table]
 
 
-class BaseRecordView(SingleObjectFromTournamentMixin, VueTableMixin, TemplateView):
+class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin

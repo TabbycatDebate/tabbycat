@@ -14,7 +14,7 @@ from participants.models import Adjudicator, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
-from utils.mixins import CacheMixin, ExpectPost, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import CacheMixin, ExpectPost, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
@@ -38,7 +38,7 @@ TPA_MAP = {
 # Viewing Draw (Public)
 # ==============================================================================
 
-class DrawTablePage(RoundMixin, VueTableMixin):
+class DrawTablePage(RoundMixin, VueTableTemplateView):
 
     page_subtitle = 'Use ESC to cancel scrolling'
     template_name = 'draw_display_by.html'
@@ -152,7 +152,7 @@ class AdminDrawDisplayForRoundByTeam(DrawTablePage, LoginRequiredMixin):
 # Draw Creation (Admin)
 # ==============================================================================
 
-class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableMixin):
+class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     detailed = False
 
     def get_table(self):
@@ -388,7 +388,7 @@ class ApplyDebateSchedyleView(DrawStatusEdit):
 # Sides Editing and Viewing
 # ==============================================================================
 
-class BaseSideAllocationsView(TournamentMixin, VueTableMixin):
+class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
     page_title = "Side Pre-Allocations"
 

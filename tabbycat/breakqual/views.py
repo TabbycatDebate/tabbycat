@@ -8,7 +8,7 @@ from participants.models import Adjudicator
 from actionlog.models import ActionLogEntry
 from utils.misc import get_ip_address
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_tournament, tournament_view
-from utils.mixins import CacheMixin, SingleObjectFromTournamentMixin, VueTableMixin
+from utils.mixins import CacheMixin, SingleObjectFromTournamentMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
@@ -23,7 +23,7 @@ def public_break_index(request, t):
     return render(request, "public_break_index.html")
 
 
-class PublicBreakingTeams(SingleObjectFromTournamentMixin, PublicTournamentPageMixin, CacheMixin, VueTableMixin):
+class PublicBreakingTeams(SingleObjectFromTournamentMixin, PublicTournamentPageMixin, CacheMixin, VueTableTemplateView):
 
     public_page_preference = 'public_breaking_teams'
     page_emoji = '👑'
@@ -111,7 +111,7 @@ def update_breaking_teams(request, t, category):
     return redirect_tournament('breaking_teams', t, category=category)
 
 
-class BreakingAdjudicators(TournamentMixin, VueTableMixin):
+class BreakingAdjudicators(TournamentMixin, VueTableTemplateView):
 
     page_title = 'Breaking Adjudicators'
     page_emoji = '🎉'

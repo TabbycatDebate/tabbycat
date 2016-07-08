@@ -188,8 +188,8 @@ def adjs_to_json(adjs, regions):
                 'adjudicators': adj.personal_adjudicators,
             },
             'conflicted': {
-                'hover': { 'personal': False, 'institutional': False, 'history': False, 'history_ago': 99 },
-                'panel': { 'personal': False, 'institutional': False, 'history': False, 'history_ago': 99 }
+                'hover': {'personal': False, 'institutional': False, 'history': False, 'history_ago': 99},
+                'panel': {'personal': False, 'institutional': False, 'history': False, 'history_ago': 99}
             }
         }
 
@@ -233,8 +233,8 @@ def teams_to_json(teams, regions, categories, t, r):
                 'adjudicators': team.personal_adjudicators
             },
             'conflicted': {
-                'hover': { 'personal': False, 'institutional': False, 'history': False, 'history_ago': 99 },
-                'panel': { 'personal': False, 'institutional': False, 'history': False, 'history_ago': 99 }
+                'hover': {'personal': False, 'institutional': False, 'history': False, 'history_ago': 99},
+                'panel': {'personal': False, 'institutional': False, 'history': False, 'history_ago': 99}
             }
         }
     return json.dumps(data)
