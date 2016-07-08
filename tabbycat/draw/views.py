@@ -38,22 +38,22 @@ TPA_MAP = {
 # Viewing Draw (Public)
 # ==============================================================================
 
-class DrawTablePage(RoundMixin, VueTableTemplateView):
+class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
     page_subtitle = 'Use ESC to cancel scrolling'
     template_name = 'draw_display_by.html'
+    sort_key = 'Venue'
 
     def get_page_title(self):
-        r = self.get_round()
-        if r.starts_at:
-            time = r.starts_at.strftime('%I:%M')
-            return 'Draw for %s; debates start at %s' % (r.name, time)
+        rd = self.get_round()
+        if rd.starts_at:
+            time = rd.starts_at.strftime('%I:%M')
+            return 'Draw for %s; debates start at %s' % (rd.name, time)
         else:
-            return 'Draw for %s' % r.name
+            return 'Draw for %s' % rd.name
 
     def get_page_emoji(self):
-        round = self.get_round()
-        if round.draw_status != round.STATUS_RELEASED:
+        if self.get_round().draw_status != Round.STATUS_RELEASED:
             return '👏'
         else:
             return '😴'
@@ -65,16 +65,7 @@ class DrawTablePage(RoundMixin, VueTableTemplateView):
         kwargs['round'] = self.get_round()
         return super().get_context_data(**kwargs)
 
-    def create_rows(self, draw, table, round, tournament, by_team=False):
-        if by_team:
-            draw = list(draw) + list(draw) # Double up the draw
-            draw_slice = int(len(draw) / 2) # Top half gets affs; bottom negs
-            table.add_team_columns(
-                [d.aff_team for d in draw[:draw_slice]] +
-                [d.neg_team for d in draw[draw_slice:]],
-                hide_institution=True,
-                key="Team")
-
+    def populate_table(self, draw, table, round, tournament):
         table.add_debate_venue_columns(draw)
         table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key="Aff")
         table.add_team_columns([d.neg_team for d in draw], hide_institution=True, key="Neg")
@@ -88,20 +79,14 @@ class DrawTablePage(RoundMixin, VueTableTemplateView):
         tournament = self.get_tournament()
         round = self.get_round()
         draw = round.get_draw()
-        sorting = self.sorting
-        table = TabbycatTableBuilder(view=self, sort_key=sorting)
-        if self.sorting is 'Team':  # Add extra rows
-            self.create_rows(draw, table, round, tournament, by_team=True)
-        else:
-            self.create_rows(draw, table, round, tournament)
-
+        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
+        self.populate_table(draw, table, round, tournament)
         return table
 
 
-class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, CacheMixin):
+class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTableView):
 
     public_page_preference = 'public_draw'
-    sorting = 'Venue'
 
     def get_template_names(self):
         round = self.get_round()
@@ -116,12 +101,12 @@ class PublicDrawForRound(DrawTablePage, PublicTournamentPageMixin, CacheMixin):
         round = self.get_round()
         if round.draw_status != round.STATUS_RELEASED:
             kwargs["round"] = self.get_round()
-            return super(DrawTablePage, self).get_context_data(**kwargs) # skip DrawTablePage
+            return super(BaseDrawTableView, self).get_context_data(**kwargs) # skip BaseDrawTableView
         else:
             return super().get_context_data(**kwargs)
 
 
-class PublicDrawForCurrentRound(PublicDrawForRound):
+class PublicDrawForCurrentRoundView(PublicDrawForRoundView):
 
     def get_round(self):
         return self.get_tournament().current_round
@@ -140,12 +125,20 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class AdminDrawDisplayForRoundByVenue(DrawTablePage, LoginRequiredMixin):
-    sorting = 'Venue'
+class AdminDrawDisplayForRoundByVenueView(LoginRequiredMixin, BaseDrawTableView):
+    pass
 
 
-class AdminDrawDisplayForRoundByTeam(DrawTablePage, LoginRequiredMixin):
-    sorting = 'Team'
+class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
+    sort_key = 'Team'
+
+    def populate_table(self, draw, table, round, tournament):
+        draw = list(draw) + list(draw) # Double up the draw
+        draw_slice = len(draw) // 2 # Top half gets affs; bottom negs
+        table.add_team_columns(
+            [d.aff_team for d in draw[:draw_slice]] + [d.neg_team for d in draw[draw_slice:]],
+            hide_institution=True, key="Team")
+        super().populate_table(draw, table, round, tournament)
 
 
 # ==============================================================================

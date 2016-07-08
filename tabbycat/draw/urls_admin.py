@@ -12,10 +12,10 @@ urlpatterns = [
         views.AdminDrawWithDetailsView.as_view(),
         name='draw_with_standings'),
     url(r'^round/(?P<round_seq>\d+)/display_by_venue/$',
-        views.AdminDrawDisplayForRoundByVenue.as_view(),
+        views.AdminDrawDisplayForRoundByVenueView.as_view(),
         name='draw_display_by_venue'),
     url(r'^round/(?P<round_seq>\d+)/display_by_team/$',
-        views.AdminDrawDisplayForRoundByTeam.as_view(),
+        views.AdminDrawDisplayForRoundByTeamView.as_view(),
         name='draw_display_by_team'),
 
     # Creation/Release

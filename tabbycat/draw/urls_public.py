@@ -4,10 +4,10 @@ from . import views
 
 urlpatterns = [
     url(r'^$',
-        views.PublicDrawForCurrentRound.as_view(),
+        views.PublicDrawForCurrentRoundView.as_view(),
         name='public_draw'),
     url(r'^round/(?P<round_seq>\d+)/$',
-        views.PublicDrawForRound.as_view(),
+        views.PublicDrawForRoundView.as_view(),
         name='public_draw_by_round'),
     url(r'^all/$',
         views.PublicAllDrawsAllTournamentsView.as_view(),
