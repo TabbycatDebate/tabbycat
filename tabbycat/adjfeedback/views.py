@@ -16,7 +16,7 @@ from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from utils.misc import reverse_tournament
 from utils.mixins import CacheMixin, JsonDataResponseView, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
-from utils.mixins import PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from utils.urlkeys import populate_url_keys
 
@@ -34,7 +34,7 @@ class GetAdjScores(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
         return data
 
 
-class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin):
+class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
 
     template_name = 'feedback_overview.html'
     page_title = 'Adjudicator Feedback Summary'
@@ -65,7 +65,7 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableMixin):
         return table
 
 
-class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin):
+class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
     template_name = "feedback_base.html"
     page_title = 'Find Feedback on Adjudicator'
     page_emoji = '🔍'
@@ -85,7 +85,7 @@ class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableMixin):
         return table
 
 
-class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableMixin):
+class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
 
     template_name = "feedback_base.html"
     page_title = 'Find Feedback'
@@ -473,7 +473,7 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
         adjudicator.save()
 
 
-class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableMixin):
+class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
     page_title = 'Feedback Progress'
     page_subtitle = ''

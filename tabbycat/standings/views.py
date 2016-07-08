@@ -10,7 +10,7 @@ from participants.models import Speaker, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
-from utils.mixins import SuperuserRequiredMixin, VueTableMixin
+from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .diversity import get_diversity_data_sets
@@ -64,7 +64,7 @@ class PublicTabMixin(PublicTournamentPageMixin):
 # Shared standings
 # ==============================================================================
 
-class StandingsView(RoundMixin, VueTableMixin):
+class StandingsView(RoundMixin, VueTableTemplateView):
     pass
 
 
@@ -300,7 +300,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 # Motion standings
 # ==============================================================================
 
-class BaseMotionStandingsView(RoundMixin, VueTableMixin):
+class BaseMotionStandingsView(RoundMixin, VueTableTemplateView):
 
     page_title = 'Motions Tab'
     page_emoji = '💭'
@@ -332,7 +332,7 @@ class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
 # Current team standings (win-loss records only)
 # ==============================================================================
 
-class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableMixin):
+class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplateView):
 
     public_page_preference = 'public_team_standings'
     page_title = "Current Team Standings"
