@@ -1,5 +1,6 @@
 """Unit tests for result.py"""
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
 
 from tournaments.models import Round, Tournament
@@ -267,5 +268,5 @@ class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
                 post_ballotset_create=lambda ballotset: ballotset.set_sides(*self.teams))
 
     def test_unknown_sides(self):
-        self.assertRaises(DebateTeam.DoesNotExist, self._save_complete_ballotset,
+        self.assertRaises(ObjectDoesNotExist, self._save_complete_ballotset,
                 self.teams_input, list(self.testdata.values())[0])
