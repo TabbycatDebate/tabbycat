@@ -215,8 +215,8 @@ export default {
   },
   created: function() {
     // Do initial calculation for conflicts/histories
-    this.toggleConflicts(true, 'panel', this.allPanellistsConflicts);
-    this.toggleHistories(true, 'panel', this.allPanellistsHistories);
+    // this.toggleConflicts(true, 'panel', this.allPanellistsConflicts);
+    // this.toggleHistories(true, 'panel', this.allPanellistsHistories);
   },
   watch: {
     'debate.panel': function (newVal, oldVal) {
@@ -229,12 +229,12 @@ export default {
       this.update(this.urls['updatePanel'], data, resource);
     },
     'allPanellistsHistories': function (newVal, oldVal) {
-      this.toggleHistories(false, 'panel', oldVal);
-      this.toggleHistories(true, 'panel', newVal);
+      // this.toggleHistories(false, 'panel', oldVal);
+      // this.toggleHistories(true, 'panel', newVal);
     },
     'allPanellistsConflicts': function (newVal, oldVal) {
-      this.toggleConflicts(false, 'panel', oldVal);
-      this.toggleConflicts(true, 'panel', newVal);
+      // this.toggleConflicts(false, 'panel', oldVal);
+      // this.toggleConflicts(true, 'panel', newVal);
     }
   }
 }

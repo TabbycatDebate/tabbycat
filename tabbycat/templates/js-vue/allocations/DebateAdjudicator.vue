@@ -34,7 +34,7 @@
     </div>
     <div class="history-tooltip tooltip right" v-if="historyHighlightText">
       <div class="tooltip-inner conflictable conflict-hover-{{ this.historyHighlightText }}-ago">
-        {{ historyHighlightText }}<br>ago
+        {{ historyHighlightText }} ago
       </div>
     </div>
 

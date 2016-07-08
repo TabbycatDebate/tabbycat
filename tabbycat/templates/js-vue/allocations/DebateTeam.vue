@@ -9,8 +9,7 @@
       v-on:mouseleave="unsetHighlights">
       <div class="history-tooltip tooltip top" v-if="historyHighlightText">
         <div class="tooltip-inner conflictable conflict-hover-{{ this.historyHighlightText }}-ago">
-          saw {{ historyHighlightText }}
-          round<span v-if="historyHighlightText > 1">s</span> ago
+          {{ historyHighlightText }} ago
         </div>
       </div>
       <div class="flex-1">

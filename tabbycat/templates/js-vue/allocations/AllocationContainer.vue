@@ -110,13 +110,13 @@ export default {
       this.currentlyDragging = null;
     },
     // Determine hover conflicts
-    'set-hover-conflicts': function (conflicts_dict, histories_dict) {
-      this.toggleConflicts(true, 'hover', conflicts_dict);
-      this.toggleHistories(true, 'hover', histories_dict);
+    'set-hover-conflicts': function (origin, conflicts_dict, histories_dict) {
+      this.toggleConflicts(true, 'hover', origin, conflicts_dict);
+      this.toggleHistories(true, 'hover', origin, histories_dict);
     },
-    'unset-hover-conflicts': function (conflicts_dict, histories_dict) {
-      this.toggleConflicts(false, 'hover', conflicts_dict);
-      this.toggleHistories(false, 'hover', histories_dict);
+    'unset-hover-conflicts': function (origin, conflicts_dict, histories_dict) {
+      this.toggleConflicts(false, 'hover', origin, conflicts_dict);
+      this.toggleHistories(false, 'hover', origin, histories_dict);
     },
     // Set or unset dragg adjs to panels
     'set-adj-unused': function() {
@@ -131,8 +131,8 @@ export default {
         fromPanel.splice(toRemoveIndex, 1);
       }
       // Remove any highlights from hovers
-      this.toggleConflicts(false, 'hover', adj.conflicts);
-      this.toggleHistories(false, 'hover', adj.histories);
+      this.toggleConflicts(false, 'hover', adj, adj.conflicts);
+      this.toggleHistories(false, 'hover', adj, adj.histories);
     },
     'set-adj-panel': function(toDebateId, toPosition) {
       // Construct a lookup object to find the debate by it's ID

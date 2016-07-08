@@ -37,10 +37,12 @@ export default {
   },
   methods: {
     setConflictHighlights: function(dispatch) {
-      this.$dispatch(dispatch, this.adjorteam.conflicts, this.adjorteam.histories)
+      this.$dispatch(dispatch, this.adjorteam,
+        this.adjorteam.conflicts, this.adjorteam.histories)
     },
     unsetConflictHighlights: function(dispatch) {
-      this.$dispatch(dispatch, this.adjorteam.conflicts, this.adjorteam.histories);
+      this.$dispatch(dispatch, this.adjorteam,
+        this.adjorteam.conflicts, this.adjorteam.histories);
     },
   }
 }

@@ -92,6 +92,7 @@
 }
 
 // Ensure text is treated nicely when a conflict state is active
+.conflictable.vue-is-hovering, .conflictable.vue-is-dragging, .conflictable.vue-is-hovering:active,
 .conflict-hover-personal-conflict, .conflict-hover-institutional-conflict,
 .conflict-hover-1-ago, .conflict-hover-2-ago, .conflict-hover-3-ago {
   color: #fff;
