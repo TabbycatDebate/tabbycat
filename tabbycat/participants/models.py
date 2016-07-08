@@ -258,8 +258,10 @@ class Team(models.Model):
         return self.speaker_set.all().select_related('person_ptr')
 
     def seen(self, other, before_round=None):
-        debates = self.get_debates(before_round)
-        return len([1 for d in debates if other in d])
+        queryset = self.debateteam_set.filter(debate__debateteam__team=other)
+        if before_round:
+            queryset = queryset.filter(debate__round__seq__lt=before_round)
+        return queryset.count()
 
     def same_institution(self, other):
         return self.institution_id == other.institution_id
