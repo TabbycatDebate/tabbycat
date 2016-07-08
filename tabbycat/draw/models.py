@@ -74,13 +74,13 @@ class Debate(models.Model):
 
     @cached_property
     def aff_team(self):
-        aff_dt = self.aff_dt
-        return aff_dt.team
+        return Team.objects.select_related('institution').get(
+            debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
 
     @cached_property
     def neg_team(self):
-        neg_dt = self.neg_dt
-        return neg_dt.team
+        return Team.objects.select_related('institution').get(
+            debateteam__debate=self, debateteam__position=DebateTeam.POSITION_NEGATIVE)
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
@@ -91,19 +91,13 @@ class Debate(models.Model):
 
     @cached_property
     def aff_dt(self):
-        aff_dt = DebateTeam.objects.select_related(
-            'team', 'team__institution').get(
-                debate=self,
+        return self.debateteam_set.select_related('team', 'team__institution').get(
                 position=DebateTeam.POSITION_AFFIRMATIVE)
-        return aff_dt
 
     @cached_property
     def neg_dt(self):
-        neg_dt = DebateTeam.objects.select_related(
-            'team', 'team__institution').get(
-                debate=self,
+        return self.debateteam_set.select_related('team', 'team__institution').get(
                 position=DebateTeam.POSITION_NEGATIVE)
-        return neg_dt
 
     def get_side(self, team):
         if self.aff_team == team:
