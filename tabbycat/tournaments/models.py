@@ -255,20 +255,11 @@ class Round(models.Model):
     def cached_draw(self):
         return self.get_draw()
 
-    def _get_draw(self, *ordering):
+    def get_draw(self, ordering=('venue__name',)):
         related = ('venue',)
         if self.tournament.pref('enable_divisions'):
             related += ('division', 'division__venue_group')
         return self.debate_set.order_by(*ordering).select_related(*related)
-
-    def get_draw(self):
-        return self._get_draw('room_rank')
-
-    def get_draw_by_room(self):
-        return self._get_draw('venue__name')
-
-    def get_draw_by_team(self):
-        return self._get_draw('debateteam__team')
 
     def debate_set_with_team_prefetches(self, ordering=('venue__name',), select_related=('venue',), speakers=True):
         """Returns the debate set, with aff_team and neg_team populated.
