@@ -88,7 +88,7 @@ def populate_conflicts(adjs, teams):
         t.personal_adjudicators = [c[0] for c in teamconflicts if c[1] == t.id]
         # For teams conflicted_institutions is a list of adjs due to the asymetric
         # nature of adjs having multiple instutitonal conflicts
-        t.institutional_institutions = [t.institution.id]
+        t.institutional_institutions = [t.institution_id]
 
     return adjs, teams
 
@@ -170,7 +170,7 @@ def adjs_to_json(adjs, regions):
             'id': adj.id,
             'name': adj.name,
             'gender': adj.gender,
-            'region': [r for r in regions if r['id'] is adj.institution.region.id][0] if adj.institution.region else '',
+            'region': [r for r in regions if r['id'] is adj.institution.region_id][0] if adj.institution.region_id is not None else '',
             'institution': {
                 'id': adj.institution.id,
                 'name': adj.institution.code,
@@ -216,7 +216,7 @@ def teams_to_json(teams, regions, categories, t, r):
                 'gender': s.gender
             } for s in team.speakers],
             'wins': team.wins_count,
-            'region': [r for r in regions if r['id'] is team.institution.region.id][0] if team.institution.region else '',
+            'region': [r for r in regions if r['id'] is team.institution.region_id][0] if team.institution.region_id else '',
             # TODO: Searching for break cats here incurs extra queries; should be done earlier
             'categories': break_categories,
             'institution': {
