@@ -268,7 +268,7 @@ class Team(models.Model):
 
     @cached_property
     def speakers(self):
-        return self.speaker_set.all().select_related('person_ptr')
+        return self.speaker_set.all()
 
     def seen(self, other, before_round=None):
         queryset = self.debateteam_set.filter(debate__debateteam__team=other)
