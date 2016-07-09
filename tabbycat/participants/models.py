@@ -51,7 +51,7 @@ class Institution(models.Model):
 
     @property
     def venue_preferences(self):
-        return self.institutionvenuepreference_set.all().order_by('-priority')
+        return self.institutionvenueconstraint_set.all().order_by('-priority')
 
     class Meta:
         unique_together = [('name', 'code')]
