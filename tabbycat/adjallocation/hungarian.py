@@ -183,11 +183,11 @@ class HungarianAllocator(Allocator):
                 a = AdjudicatorAllocation(d)
                 p[i].sort(key=lambda a: a.score, reverse=True)
                 a.chair = p[i].pop(0)
-                a.panel = p[i]
+                a.panellists = p[i]
                 alloc.append(a)
 
         for a in alloc[len(chairs):]:
-            logger.info("%s %s %s", a.debate, a.chair, a.panel)
+            logger.info("%s %s %s", a.debate, a.chair, a.panellists)
 
         return alloc
 

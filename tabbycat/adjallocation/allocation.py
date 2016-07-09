@@ -102,6 +102,14 @@ class AdjudicatorAllocation:
         for a in self.trainees:
             yield a, self.POSITION_TRAINEE
 
+    def with_debateadj_types(self):
+        if self.chair is not None:
+            yield self.chair, DebateAdjudicator.TYPE_CHAIR
+        for a in self.panellists:
+            yield a, DebateAdjudicator.TYPE_PANEL
+        for a in self.trainees:
+            yield a, DebateAdjudicator.TYPE_TRAINEE
+
     # ==========================================================================
     # Database operations
     # ==========================================================================
@@ -115,7 +123,7 @@ class AdjudicatorAllocation:
 
     def save(self):
         self.debate.debateadjudicator_set.all().delete()
-        for adj, t in self.with_positions():
+        for adj, t in self.with_debateadj_types():
             if adj:
                 DebateAdjudicator(debate=self.debate, adjudicator=adj, type=t).save()
 
@@ -131,7 +139,7 @@ class AdjudicatorAllocation:
         return a
 
     def __iter__(self):
-        warn("AdjudicatorAllocation.__iter__() is deprecated, use AdjudicatorAllocation.with_positions() instead", stacklevel=2)
+        warn("AdjudicatorAllocation.__iter__() is deprecated, use .with_positions() or .with_debateadj_types() instead", stacklevel=2)
         if self.chair is not None:
             yield DebateAdjudicator.TYPE_CHAIR, self.chair
         for a in self.panellists:
