@@ -21,24 +21,17 @@ def make_interpreter(DELETE=[], **kwargs):  # flake8: noqa
     """Convenience function for building an interpreter."""
     def interpreter(line):
         # remove blank and unwanted values
-        model_args = {}
-        for fieldname, value in line.items():
-            if value is None or fieldname in DELETE:
-                continue
-            if isinstance(value, str):
-                if not value or value.isspace():
-                    continue
-                value = value.strip()
-            model_args[fieldname] = value
+        line = {fieldname: value for fieldname, value in line.items()
+                if value != '' and value is not None and fieldname not in DELETE}
 
         # populate interpreted values
         for fieldname, interpret in kwargs.items():
             if not callable(interpret): # if it's a value, always populate
-                model_args[fieldname] = interpret
-            elif fieldname in model_args: # if it's a function, interpret only if already there
-                model_args[fieldname] = interpret(model_args[fieldname])
+                line[fieldname] = interpret
+            elif fieldname in line: # if it's a function, interpret only if already there
+                line[fieldname] = interpret(line[fieldname])
 
-        return model_args
+        return line
     return interpreter
 
 
