@@ -91,7 +91,7 @@ class Debate(models.Model):
     @property
     def aff_dt(self):
         try:
-            return self._aff_dt
+            return self._aff_dt # may be populated by Round.debate_set_with_team_prefetches
         except AttributeError:
             self._aff_dt = self.debateteam_set.select_related('team', 'team__institution').get(
                 position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -100,11 +100,11 @@ class Debate(models.Model):
     @property
     def neg_dt(self):
         try:
-            return self._neg_dt
+            return self._neg_dt # may be populated by Round.debate_set_with_team_prefetches
         except AttributeError:
             self._neg_dt = self.debateteam_set.select_related('team', 'team__institution').get(
                 position=DebateTeam.POSITION_NEGATIVE)
-            return self._neg_dt
+            return self._neg_dt # may be populated by Round.debate_set_with_team_prefetches
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)

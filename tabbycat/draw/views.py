@@ -147,7 +147,7 @@ class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
 # Draw Creation (Admin)
 # ==============================================================================
 
-class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
+class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     detailed = False
 
     def get_table(self):
@@ -217,7 +217,7 @@ class AdminDrawEditView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView
             raise
 
 
-class AdminDrawWithDetailsView(AdminDrawEditView):
+class AdminDrawWithDetailsView(AdminDrawView):
     detailed = True
 
 
