@@ -18,9 +18,10 @@
   margin: 0 4px 4px 0;
   padding: 6px;
 }
+
 .vue-is-dragging {
-  opacity: 0.5 !important;
   cursor: move;
+  opacity: .5 !important;
 }
 
 //------------------------------------------------------------------------------
@@ -29,12 +30,14 @@
 
 .vue-droppable {
   background: $gray-lighter;
-  padding: 4px 0 0 4px;
   min-height: 0;
+  padding: 4px 0 0 4px;
 }
+
 .division-droppable {
   min-height: 66px;
 }
+
 .vue-is-drag-enter {
   background: $state-success-bg;
 }

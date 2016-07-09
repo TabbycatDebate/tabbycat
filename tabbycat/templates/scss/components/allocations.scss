@@ -17,15 +17,16 @@
 .thead {
   border-bottom: 2px solid $table-border-color;
   padding-bottom: $table-cell-padding;
+
   .glyphicon {
     line-height: 15px;
   }
 }
 
 .flex-cell {
+  min-width: 40px;
   padding-left: $table-cell-padding;
   padding-right: $table-cell-padding;
-  min-width: 40px;
 }
 
 .bordered-bottom {
@@ -38,9 +39,9 @@
 
 // For showing inline time since history conflict
 .history-tooltip {
-  opacity: 1;
-  line-height: 10px;
   font-size: 10px;
+  line-height: 10px;
+  opacity: 1;
 
   .tooltip-inner {
     padding: 3px;
@@ -52,8 +53,8 @@
   }
 
   &.top {
-    margin-top: 25px;
     margin-left: 77px;
+    margin-top: 25px;
   }
 }
 
@@ -62,6 +63,7 @@
   border: 1px solid darken($brand-danger-alt, 10%);
   color: #fff;
 }
+
 .panel-incomplete.vue-is-drag-enter {
   background: $state-success-bg;
 }
@@ -75,6 +77,7 @@
   box-shadow: 0;
   margin-bottom: 0;
 }
+
 .positions-parent > div {
   border-left: 2px solid $table-border-color;
   min-height: 50px; // Dont let it collapse when no adjs are present
@@ -89,9 +92,10 @@
 
 .debate-team {
   width: 120px;
+
   &:hover {
-    cursor: help;
     background-color: darken($btn-default-bg, 10%);
+    cursor: help;
   }
   // Truncate Long Team Names
   .debate-team-title {
@@ -105,24 +109,29 @@
 //------------------------------------------------------------------------------
 
 .adj-draggable {
-  text-align: left;
   height: 42px;
   padding-top: 4px; // Center the Score
-  .adj-info, .adj-score {
+  text-align: left;
+
+  .adj-info,
+  .adj-score {
     float: left;
   }
+
   .h4 {
-    min-width: 30px;
     margin: 0;
+    min-width: 30px;
     padding-top: 4px; // Center the Score
   }
+
   span {
-    border-bottom: none;
+    border-bottom: 0;
   }
+
   .small {
-    font-weight: bold;
-    font-size: 70%;
     display: block;
+    font-size: 70%;
+    font-weight: bold;
     line-height: 3px;
   }
 }

@@ -7,13 +7,15 @@
   margin-left: 0;
   // Fix link text in the footer descriptions
   a {
-    text-decoration: underline;
     color: $navbar-default-link-color;
+    text-decoration: underline;
+
     &:hover {
       color: $navbar-default-link-hover-color;
     }
   }
 }
+
 .nav-sidebar-offset {
   .navbar-fixed-bottom {
     border-radius: 4px;
@@ -35,6 +37,7 @@
     min-height: 800px; // Push the footer down
     padding-bottom: 130px; // Leave room for the footer
   }
+
   .nav-sidebar-offset {
     .navbar-fixed-bottom {
       // Don't want the footer stretching into the menu; present it alert style
@@ -49,14 +52,17 @@
   .accommodate-footer {
     padding-bottom: 0; // Increase footer padding when its double height
   }
+
   .navbar-fixed-bottom {
     margin: 0;
     position: relative;
     text-align: center;
     width: 100%;
+
     .navbar-header {
       min-height: 90px;
     }
+
     .navbar-nav.navbar-right {
       margin: 0 0 10px;
       width: 100%;

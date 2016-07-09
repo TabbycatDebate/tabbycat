@@ -24,7 +24,9 @@
 .d3-feedback-trend {
   margin-bottom: -4px; // Correct for wierd height blow out
   // For Feedback Page
-  .tick line, .axis line {
+
+  .tick line,
+  .axis line {
     fill: none;
     stroke: #e6e6e6;
   }
@@ -33,17 +35,19 @@
 .position-display {
   &.chair {
     background-color: #b10095; // Purpleish
-    fill: #b10095;
     color: #fff;
+    fill: #b10095;
   }
+
   &.panellist {
     background-color: $male;
-    fill: $male;
     color: #fff;
+    fill: $male;
   }
+
   &.trainee {
     background-color: $female;
-    fill: $female;
     color: #fff;
+    fill: $female;
   }
 }

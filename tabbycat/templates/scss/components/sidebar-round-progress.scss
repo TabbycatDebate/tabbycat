@@ -2,18 +2,14 @@
 // Custom styling/layout for the sidebar and its round progresss indicators
 //------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// Nav backgrounds and layout
-//------------------------------------------------------------------------------
-
 .nav-accordion {
 
   li.panel,
   li.standalone {
-    margin: 0 0 0 0; // override
     background: none; // override
     border: 0;
     box-shadow: none;
+    margin: 0 0 0 0; // override
     // All Buttons
     a {
       color: $sidebar-muted-text;
@@ -25,7 +21,9 @@
         margin-right: 12px; // Top categories for left hand menu
       }
 
-      &:hover, &.active, &:focus {
+      &:hover,
+      &.active,
+      &:focus {
         background: $sidebar-bg-highlight;
         color: $alt-bg;
         text-decoration: none;
@@ -110,10 +108,11 @@
 
 .nav-stacked .nav-stacked {
   .progress-line {
+    border-color: $gray;
     margin: -3px 0 0 21px;
-    height: 35px;
     z-index: 10;
   }
+
   a {
     z-index: 20;
   }
@@ -126,8 +125,8 @@
   }
 
   .icon-container {
-    color: $alt-bg;
     border-color: $gray;
+    color: $alt-bg;
   }
 }
 

@@ -2,13 +2,15 @@
 // Hover Items
 //------------------------------------------------------------------------------
 
-[data-toggle='tooltip'], [data-toggle="popover"] {
+[data-toggle='tooltip'],
+[data-toggle="popover"] {
   &:hover {
     cursor: help; // for tooltips
     span {
       border-color: $brand-primary;
     }
   }
+
   span {
     border-bottom: 2px dotted #ccc;
   }
@@ -17,57 +19,76 @@
 .popover {
   max-width: 350px;
 }
+
 .popover-content {
   // For popovers we use list-groups which need to remove the original padding
   padding: 0;
+
   .list-group-item:first-child {
     border-top: 0;
   }
+
   .list-group-item {
-    border-right: 0;
-    border-left: 0;
     border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
   }
 }
+
 // Sometimes we need an anchor that covers the entire div so that the popovers
 // target/origin doesn't shift as it gets picked up by sub elements
 .popover-parent {
   position: relative; // Contain the popover's absolute position
 }
+
 .popover-anchor {
-  top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
+  left: 0;
   position: absolute;
+  right: 0;
+  top: 0;
 }
 
+//------------------------------------------------------------------------------
 // For Division Drag and Drops
+//------------------------------------------------------------------------------
+
 .slideover-info {
-  width: auto;
-  position: fixed;
-  height: auto;
   bottom: 0;
-  right: 0;
+  height: auto;
   left: 0;
+  position: fixed;
+  right: 0;
+  width: auto;
   z-index: 1040;
+
   .list-group-item {
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 0;
-    background: rgba(255,255,255,0.95);
   }
+
   .list-group-item:last-child {
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   }
 }
+
 .slideover-top {
   bottom: auto;
   top: 0;
 }
 
-// For motions page; probably feedback also
-.modal-xl {
-  width: 95%;
+//------------------------------------------------------------------------------
+// Modals
+//------------------------------------------------------------------------------
+
+.modal {
+  z-index: 1100; // Need to override the .tooltips on edit adj allocation page
+}
+
+.modal-xl { // For motions page; probably feedback also (want super big modals)
   height: 92%;
+  width: 95%;
+
   .modal-content {
     height: 100%;
     padding: 40px;
@@ -80,23 +101,21 @@
 
 .glyphicon.spinning {
   animation: spin 1s infinite linear;
-  -webkit-animation: spin2 1s infinite linear;
 }
+
 @keyframes spin {
   from { transform: scale(1) rotate(0deg); }
   to { transform: scale(1) rotate(360deg); }
 }
-@-webkit-keyframes spin2 {
-  from { -webkit-transform: rotate(0deg); }
-  to { -webkit-transform: rotate(360deg); }
-}
 
 // Used in the divisions allocations page for the slide-in-bottom element
 .expand-transition {
-  transition: all .3s ease;
   height: default;
+  transition: all .3s ease;
 }
-.expand-enter, .expand-leave {
+
+.expand-enter,
+.expand-leave {
   height: 0;
   opacity: 0;
 }
