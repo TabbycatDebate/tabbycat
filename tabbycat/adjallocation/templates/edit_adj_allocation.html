@@ -15,7 +15,7 @@
     :teams=allTeams
     :regions=allRegions
     :categories=allCategories
-    :urls=urls>
+    :round-info=roundInfo>
   </allocation-container>
 
   <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true">
@@ -57,10 +57,11 @@
     var allRegions = {{ allRegions|safe }};
     var allCategories = {{ allCategories|safe }};
 
-    var urls = {
-      'backToDraw': '{% round_url draw %}',
-      'updateImportance': '{% round_url save_debate_importance %}',
-      'updatePanel': '{% round_url save_debate_panel %}',
+    var roundInfo = {
+      'roundName' : '{{ round.abbreviation }}',
+      'backToDrawURL': '{% round_url draw %}',
+      'updateImportanceURL': '{% round_url save_debate_importance %}',
+      'updatePanelURL': '{% round_url save_debate_panel %}',
     }
   </script>
   {{ block.super }}

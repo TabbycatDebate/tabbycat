@@ -19,7 +19,7 @@
 }
 .popover-content {
   // For popovers we use list-groups which need to remove the original padding
-  padding: 0px;
+  padding: 0;
   .list-group-item:first-child {
     border-top: 0;
   }
@@ -47,21 +47,21 @@
   width: auto;
   position: fixed;
   height: auto;
-  bottom: 0px;
-  right: 0px;
-  left: 0px;
+  bottom: 0;
+  right: 0;
+  left: 0;
   z-index: 1040;
   .list-group-item {
-    border-radius: 0px;
+    border-radius: 0;
     background: rgba(255,255,255,0.95);
   }
   .list-group-item:last-child {
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
   }
 }
 .slideover-top {
   bottom: auto;
-  top: 0px;
+  top: 0;
 }
 
 // For motions page; probably feedback also

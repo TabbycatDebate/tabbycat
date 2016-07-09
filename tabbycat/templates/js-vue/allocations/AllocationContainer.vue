@@ -2,7 +2,7 @@
   <div>
 
     <allocation-actions
-      :regions="regions" :categories="categories" :urls="urls">
+      :regions="regions" :categories="categories" :round-info="roundInfo">
     </allocation-actions>
 
     <div class="col-md-12 allocation-container">
@@ -33,7 +33,7 @@
         :aff="teams[debate.aff_team]"
         :neg="teams[debate.neg_team]"
         :all-adjudicators="adjudicators"
-        :urls="urls">
+        :round-info="roundInfo">
       </debate>
 
     </div>
@@ -64,7 +64,7 @@ export default {
     teams: Object,
     regions: Array,
     categories: Array,
-    urls: Object,
+    roundInfo: Object,
     currentlyDragging: Object
   },
   computed: {
@@ -177,8 +177,8 @@ export default {
       }
 
       // Remove any highlights from hovers
-      this.toggleConflicts(false, 'hover', adj.conflicts);
-      this.toggleHistories(false, 'hover', adj.histories);
+      this.toggleConflicts(false, 'hover', adj, adj.conflicts);
+      this.toggleHistories(false, 'hover', adj, adj.histories);
 
       // Find the debate object that was dropped into and add the adj to it
       toPanel.push({'id': adj.id, 'position': toPosition})

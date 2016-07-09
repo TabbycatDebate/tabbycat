@@ -1,35 +1,46 @@
-// Navigation Elements
+//------------------------------------------------------------------------------
+// Custom styling/layout for the sidebar and its round progresss indicators
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// Nav backgrounds and layout
+//------------------------------------------------------------------------------
 
 .nav-accordion {
-  // Structure and background highlights
-  li.panel, li.standalone {
-    margin: 0px 0 0 0; // override
+
+  li.panel,
+  li.standalone {
+    margin: 0 0 0 0; // override
     background: none; // override
     border: 0;
     box-shadow: none;
     // All Buttons
     a {
       color: $sidebar-muted-text;
-      font-size: $font-size-h6;
-      font-family: $font-family-sans-serif;
-      padding: 6px 16px 6px 19px;
       display: block;
+      font-family: $font-family-sans-serif;
+      font-size: $font-size-h6;
+      padding: 6px 16px 6px 19px;
       .glyphicon {
         margin-right: 12px; // Top categories for left hand menu
       }
+
       &:hover, &.active, &:focus {
-        text-decoration: none;
-        color: #fff;
         background: $sidebar-bg-highlight;
+        color: $alt-bg;
+        text-decoration: none;
       }
     }
   }
+
   li.panel li a .glyphicon {
     margin-right: 15px; // For the options in the Setup sub menu
   }
+
   .panel-collapse {
     background: $sidebar-bg-highlight;
   }
+
   // Just top level buttons
   // EXPANDED
   li.panel div[role="tab"] a[aria-expanded="true"] {
@@ -49,44 +60,54 @@
   }
 }
 
-// Elements
+//------------------------------------------------------------------------------
+// Progress Indicators
+//------------------------------------------------------------------------------
+
 .progress-line {
-  position: absolute;
-  width: 8px;
   height: 100%;
   margin: 20px 0 0 21px;
+  position: absolute;
+  width: 8px;
   z-index: -10;
+
   &.standard-line {
     background: $gray;
   }
 }
+
 .circle-icon {
-  background: #fff;
-  border: 3px solid #444;
-  width: 22px;
-  height: 22px;
+  background: $alt-bg;
+  border: 3px solid $gray;
   border-radius: 21.5px;
   display: inline-block;
   float: left;
-  margin: -1px 10px 0px -5px;
+  height: 22px;
+  margin: -1px 10px 0;
+  width: 22px;
   z-index: 10;
 
   .glyphicon {
     margin-left: 2px;
   }
+
   &.btn-success {
     background: $btn-success-bg;
   }
+
   &.btn-info {
     background: $btn-info-bg;
   }
+
   &.btn-inactive {
     background: darken($gray-lighter, 3);
   }
+
   &.icon-container {
-    background: #444;
+    background: $gray;
   }
 }
+
 .nav-stacked .nav-stacked {
   .progress-line {
     margin: -3px 0 0 21px;
@@ -97,23 +118,28 @@
     z-index: 20;
   }
 }
+
 .nav-accordion li.panel a:hover {
+
   .circle-icon {
     border-color: #888;
   }
+
   .icon-container {
-    color: #fff;
-    border-color: #444;
+    color: $alt-bg;
+    border-color: $gray;
   }
 }
+
 .sub-nav {
   .circle-icon {
-    width: 18px;
     height: 18px;
     margin: -2px 12px -3px -6px;
+    width: 18px;
   }
+
   .progress-line {
-    width: 6px;
     margin-left: 27px;
+    width: 6px;
   }
 }

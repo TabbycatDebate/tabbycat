@@ -1,17 +1,25 @@
-// CHECKINS
+//------------------------------------------------------------------------------
+// Checkins
+//------------------------------------------------------------------------------
+
 .round-progresses .progress {
   margin-bottom: 0; // Progress bars have bottom margins; need to offset
+
   .progress-empty span {
-    // If its showing 0/x make the text visible and not flush
-    color: #000;
+    color: #000; // If its showing 0/x make the text visible and not flush
     margin-left: 10px;
   }
 }
-// DIVISIONS ASSIGNMENT
+
+//------------------------------------------------------------------------------
+// Motions to Division Assignment and Divisions Asssignment
+//------------------------------------------------------------------------------
+
 .divisions-holder {
   // Align them in equal height rows
   display: flex;
   flex-wrap: wrap;
+
   .col-md-3 {
     display: flex;
   }
@@ -19,49 +27,65 @@
   .panel {
     display: flex;
     flex-direction: column;
+
     .panel-body {
       flex: 1;
     }
   }
 }
-// ASSIGNING MOTIONS TO DIVISIONS
+
 .assign-motions-lists .list-group-item-text {
   height: 60px;  // Need to be fixed height so below rows all align
   overflow: hidden;
 }
+
 .division-heading {
   // Shift up the select to be adjavent to the title
   padding: 5px 10px;
+
   h5 {
     display: inline-block;
   }
+
   .form-control {
     display: inline-block;
-    max-width: 75%;
     float: right;
+    max-width: 75%;
   }
 }
-// DRAW
-// Fix for buttons on edit draw page
+
+//------------------------------------------------------------------------------
+// Draw
+//------------------------------------------------------------------------------
+
 .btn-group form {
-  margin-left: 3px;
+  margin-left: 3px; // Fix for buttons on edit draw page
 }
+
 .draw-xs {
   font-size: $font-size-base * 1.25;
 }
+
 .draw-s {
   font-size: $font-size-base * 1.5;
 }
+
 .draw-m {
   font-size: $font-size-base * 1.75;
 }
+
 .draw-l {
-  font-size: $font-size-base * 2.00;
+  font-size: $font-size-base * 2;
 }
+
 .draw-xl {
   font-size: $font-size-base * 2.25;
 }
-// BALLOT ENTRY
+
+//------------------------------------------------------------------------------
+// Ballot Entry
+//------------------------------------------------------------------------------
+
 .speaker-name {
   text-align: left;
 }

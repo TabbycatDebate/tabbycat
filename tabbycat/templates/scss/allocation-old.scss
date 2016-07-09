@@ -1,5 +1,8 @@
-// Our overrides (load before bootstrap)
-@import 'components/variables'; // needed just for state-success bg
+//------------------------------------------------------------------------------
+// CSS only relevenat to the old allocations page
+//------------------------------------------------------------------------------
+
+@import 'components/variables';
 
 $adj-button-width: 180px;
 
@@ -19,10 +22,6 @@ $adj-button-width: 180px;
 .table-edit-allocation {
   // margin
 }
-
-//------------------------------------------------------------------------------
-// Edit Adjs Page
-//------------------------------------------------------------------------------
 
 .edit-adjs-subnav {
   padding: 10px;

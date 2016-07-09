@@ -6,17 +6,17 @@
   margin-bottom: $line-height-computed;
 }
 .no-bottom-padding {
-  padding-bottom: 0px; // Mostly for panel-body elements
+  padding-bottom: 0; // Mostly for panel-body elements
 }
 .no-bottom-margin {
-  margin-bottom: 0px; // Used by infographics
+  margin-bottom: 0; // Used by infographics
 }
 .no-side-padding {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 0;
+  padding-right: 0;
 }
 .no-top-margin {
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 //------------------------------------------------------------------------------
@@ -31,7 +31,7 @@
 }
 // For the admin area
 .white-bg {
-  background: #fff;
+  background: $alt-bg;
 }
 
 //------------------------------------------------------------------------------

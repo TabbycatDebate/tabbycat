@@ -1,6 +1,12 @@
+//------------------------------------------------------------------------------
+// Highlights for Allocation Pages
+//------------------------------------------------------------------------------
 
-.region-display.has-region, .gender-display.has-gender, .category-display.has-category {
-  span a, .text-muted {
+.region-display.has-region,
+.gender-display.has-gender,
+.category-display.has-category {
+  span a,
+  .text-muted {
     color: #fff;
   }
 }
@@ -16,16 +22,24 @@
     @include button-variant(#fff, $break-cat-3, darken($break-cat-3, 10%));
   }
 }
+
 .gender-display {
-  &.gender-male, &.gender-m, &.gender-M  {
+  &.gender-male,
+  &.gender-m,
+  &.gender-M  {
     @include button-variant(#fff, $male, darken($male, 10%));
     fill: $male;
   }
-  &.gender-female, &.gender-f,  &.gender-F, &.gender-nm {
+  &.gender-female,
+  &.gender-f,
+  &.gender-F,
+  &.gender-nm {
     @include button-variant(#fff, $female, darken($female, 10%));
     fill: $female;
   }
-  &.gender-other, &.gender-o, &.gender-O {
+  &.gender-other,
+  &.gender-o,
+  &.gender-O {
     @include button-variant(#fff, $other, darken($other, 10%));
     fill: $other;
   }
@@ -43,6 +57,7 @@
     @include button-variant(#fff, darken($female, 15%), darken($female, 25%));
   }
 }
+
 .gender-text {
   &.gender-male {
     color: $male;
@@ -57,6 +72,7 @@
     color: $unknown;
   }
 }
+
 // For diversity graphs and allocation
 .region-display {
 

@@ -1,11 +1,21 @@
+//------------------------------------------------------------------------------
+// Bootstrap overrides and custom variables
 // Note these take precedences over bootstrap as they are not set as default
+//------------------------------------------------------------------------------
 
-// Custom Typography
+//------------------------------------------------------------------------------
+// Boostrap Type
+//------------------------------------------------------------------------------
+
 $font-family-sans-serif: "LatoLatinWeb", Helvetica, Arial, sans-serif;
 $headings-font-family: Helvetica, Arial, sans-serif;
 $headings-font-weight: bold;
+$icon-font-path: '/static/fonts/';
 
-// Custom Colors
+//------------------------------------------------------------------------------
+// Bootstrap Colors
+//------------------------------------------------------------------------------
+
 $brand-primary:           #3498db;
 
 $brand-success:           #43ca75;
@@ -28,25 +38,30 @@ $brand-danger-alt:        #a700a5;
 
 // Layout Colors
 $body-bg:                 #f3f4f9;
+$alt-bg:                  #fff; // For tables etc
 $table-bg-hover:          #e3e3e3;
 $sidebar-bg:              #30404f;
 $sidebar-bg-highlight:    darken($sidebar-bg, 3);
 $sidebar-muted-text:      #adb6bf;
 
+//------------------------------------------------------------------------------
+// Custom Colors
+//------------------------------------------------------------------------------
+
 // Gender Highlights
 $male:                    #36b6c0;
-$female:                  #FF9451;
+$female:                  #ff9451;
 $other:                   #e7d40e;
-$unknown:                 #CCC;
+$unknown:                 #ccc;
 
-// Break Highlights
+// Break Category Highlights
 $break-cat-1:             #57e2ff;
-$break-cat-2:             #C70062;
-$break-cat-3:             #00C79B;
+$break-cat-2:             #c70062;
+$break-cat-3:             #00c79b;
 
-// Override Path
-$icon-font-path: '/static/fonts/';
+//------------------------------------------------------------------------------
+// Custom Layout
+//------------------------------------------------------------------------------
 
-// Layout
 $sidebar-width: 155px;
 $tooltip-max-width: 330px;

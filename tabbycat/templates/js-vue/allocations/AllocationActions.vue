@@ -4,8 +4,9 @@
     <nav class="navbar navbar-default navbar-fixed-top">
 
       <div class="navbar-form navbar-left btn-group btn-group-sm">
-        <a href="{{ urls.backToDraw }}" class="btn btn-default btn-sm">
-          <span class="glyphicon glyphicon-chevron-left"></span>Back to Draw
+        <a href="{{ roundInfo.backToDrawURL }}" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+          Back to {{ roundInfo.roundName }} Draw
         </a>
         <a class="btn btn-success btn-sm" v-on:click="confirmAutoAllocate">
           Auto Allocate
@@ -74,7 +75,7 @@ export default {
   props: {
     regions: Array,
     categories: Array,
-    urls: Object,
+    roundInfo: Object,
     showingVenue: { default: false },
     showingRegion: { default: false },
     showingGender: { default: false },

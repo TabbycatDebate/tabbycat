@@ -18,7 +18,7 @@
         <debate-importance
           :id="debate.id"
           :importance="debate.importance"
-          :url="this.urls['updateImportance']">
+          :url="this.roundInfo['updateImportanceURL']">
         </debate-importance>
       </div>
     </div>
@@ -77,7 +77,7 @@ export default {
     debate: Object,
     aff: Object,
     neg: Object,
-    urls: Object
+    roundInfo: Object
   },
   computed: {
     debateAdjudicators: function () {
@@ -194,7 +194,7 @@ export default {
         'debate_id': this.debate.id,
         'panel': JSON.stringify(this.debate.panel)
       }
-      this.update(this.urls['updatePanel'], data, resource);
+      this.update(this.roundInfo['updatePanelURL'], data, resource);
     },
     'conflictableAdjudicators': function (newVal, oldVal) {
       this.unsetAll('panel', this.conflictableTeams)

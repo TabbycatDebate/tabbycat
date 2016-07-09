@@ -3,14 +3,15 @@
 //------------------------------------------------------------------------------
 
 .allocation-container {
-  padding-top: 105px; // Need to compensate for the fixed header
+  background: $alt-bg;
   padding-bottom: 450px; // Need to offset the adjs panel
-  background: #fff;
+  padding-top: 105px; // Need to compensate for the fixed header
 }
 
 .unallocated-adjs {
-  min-height: 48px;
   max-height: 450px;
+  min-height: 48px;
+  z-index: 1080; // Need to hover abovve underlying .tooltips
 }
 
 .thead {
@@ -46,12 +47,12 @@
   }
 
   &.right {
-    margin-left: -34px;
-    margin-top: -3px;
+    margin-left: -40px;
+    margin-top: 26px;
   }
 
   &.top {
-    margin-top: -9px;
+    margin-top: 25px;
     margin-left: 77px;
   }
 }
