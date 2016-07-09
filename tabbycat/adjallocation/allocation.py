@@ -1,6 +1,9 @@
+import logging
 from warnings import warn
 
 from .models import DebateAdjudicator
+
+logger = logging.getLogger(__name__)
 
 
 class AdjudicatorAllocation:
@@ -11,7 +14,7 @@ class AdjudicatorAllocation:
     POSITION_PANELLIST = 'p'
     POSITION_TRAINEE = 't'
 
-    def __init__(self, debate, chair=None, panellists=[], trainees=[], from_db=False):
+    def __init__(self, debate, chair=None, panellists=None, trainees=None, from_db=False):
         self.debate = debate
 
         if from_db:
@@ -30,15 +33,31 @@ class AdjudicatorAllocation:
 
         else:
             self.chair = chair
-            self.panellists = panellists
-            self.trainees = trainees
+            self.panellists = panellists or []
+            self.trainees = trainees or []
 
     def __len__(self):
         return (0 if self.chair is None else 1) + len(self.panellists) + len(self.trainees)
 
     def __str__(self):
-        items = [str(getattr(x, "name", x)) for x in self.list]
+        items = [str(getattr(x, "name", x)) for x in self.all()]
         return ", ".join(items)
+
+    def __repr__(self):
+        result = "<AdjudicatorAllocation for "
+        try:
+            result += self.debate.matchup
+        except AttributeError:
+            result += str(self.debate)
+        result += ": "
+        try:
+            result += self.chair.name
+        except AttributeError:
+            result += str(self.chair)
+        result += "; " + ", ".join([p.name for p in self.panellists])
+        result += "; " + ", ".join([t.name for t in self.trainees])
+        result += ">"
+        return result
 
     def __contains__(self, item):
         return item == self.chair or item in self.panellists or item in self.trainees
@@ -122,10 +141,13 @@ class AdjudicatorAllocation:
         self.trainees = []
 
     def save(self):
-        self.debate.debateadjudicator_set.all().delete()
+        self.debate.debateadjudicator_set.exclude(adjudicator__in=self.all()).delete()
         for adj, t in self.with_debateadj_types():
-            if adj:
-                DebateAdjudicator(debate=self.debate, adjudicator=adj, type=t).save()
+            if not adj:
+                continue
+            _, created = DebateAdjudicator.objects.update_or_create(debate=self.debate, adjudicator=adj,
+                    defaults={'type': t})
+            logger.info("updating: %s, %s, %s, created = %s" % (self.debate, adj, t, created))
 
     # ==========================================================================
     # Deprecated

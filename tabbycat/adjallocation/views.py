@@ -128,9 +128,10 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
             if key.startswith("chair_"):
                 if len(adjs) > 1:
                     logger.warning("There was more than one chair for debate {}, only saving the first".format(alloc.debate))
+                    continue
                 alloc.chair = adjs[0]
             elif key.startswith("panel_"):
-                alloc.panel.extend(adjs)
+                alloc.panellists.extend(adjs)
             elif key.startswith("trainees_"):
                 alloc.trainees.extend(adjs)
 
@@ -142,7 +143,6 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
                 changed += 1
                 logger.info("Saving adjudicators for debate {}".format(debate))
                 logger.info("{} --> {}".format(existing, revised))
-                existing.delete()
                 try:
                     revised.save()
                 except IntegrityError:
