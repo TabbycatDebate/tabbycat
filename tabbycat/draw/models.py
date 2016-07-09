@@ -70,15 +70,41 @@ class Debate(models.Model):
     def teams(self):
         return Team.objects.filter(debateteam__debate=self)
 
-    @cached_property
+    @property
     def aff_team(self):
-        return Team.objects.select_related('institution').get(
-            debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
+        try:
+            return self._aff_team # may be populated by Round.debate_set_with_team_prefetches
+        except AttributeError:
+            self._aff_team = Team.objects.select_related('institution').get(
+                debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
+            return self._aff_team
 
-    @cached_property
+    @property
     def neg_team(self):
-        return Team.objects.select_related('institution').get(
-            debateteam__debate=self, debateteam__position=DebateTeam.POSITION_NEGATIVE)
+        try:
+            return self._neg_team
+        except AttributeError:
+            self._neg_team = Team.objects.select_related('institution').get(
+                debateteam__debate=self, debateteam__position=DebateTeam.POSITION_NEGATIVE)
+            return self._neg_team
+
+    @property
+    def aff_dt(self):
+        try:
+            return self._aff_dt
+        except AttributeError:
+            self._aff_dt = self.debateteam_set.select_related('team', 'team__institution').get(
+                position=DebateTeam.POSITION_AFFIRMATIVE)
+            return self._aff_dt
+
+    @property
+    def neg_dt(self):
+        try:
+            return self._neg_dt
+        except AttributeError:
+            self._neg_dt = self.debateteam_set.select_related('team', 'team__institution').get(
+                position=DebateTeam.POSITION_NEGATIVE)
+            return self._neg_dt
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
@@ -86,16 +112,6 @@ class Debate(models.Model):
     def get_dt(self, side):
         """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
-
-    @cached_property
-    def aff_dt(self):
-        return self.debateteam_set.select_related('team', 'team__institution').get(
-                position=DebateTeam.POSITION_AFFIRMATIVE)
-
-    @cached_property
-    def neg_dt(self):
-        return self.debateteam_set.select_related('team', 'team__institution').get(
-                position=DebateTeam.POSITION_NEGATIVE)
 
     def get_side(self, team):
         if self.aff_team == team:

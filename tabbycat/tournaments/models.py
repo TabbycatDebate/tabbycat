@@ -247,6 +247,10 @@ class Round(models.Model):
     def is_break_round(self):
         return self.stage is self.STAGE_ELIMINATION
 
+    # ==========================================================================
+    # Draw retrieval methods
+    # ==========================================================================
+
     @cached_property
     def cached_draw(self):
         return self.get_draw()
@@ -265,6 +269,33 @@ class Round(models.Model):
 
     def get_draw_by_team(self):
         return self._get_draw('debateteam__team')
+
+    def debate_set_with_team_prefetches(self, ordering=('venue__name',), select_related=('venue',), speakers=True):
+        """Returns the debate set, with aff_team and neg_team populated.
+        This is basically a prefetch-like operation, except that it also figures
+        out which team is on which side, and sets attributes accordingly."""
+        from draw.models import DebateTeam
+
+        debates = self.debate_set.all()
+        if ordering:
+            debates = debates.order_by(*ordering)
+        if select_related:
+            debates = debates.select_related(*select_related)
+        debates_by_id = {debate.id: debate for debate in debates} # for lookup
+
+        debateteams = DebateTeam.objects.filter(debate__round=self).select_related('team')
+        if speakers:
+            debateteams = debateteams.prefetch_related('team__speaker_set')
+        for debateteam in debateteams:
+            debate = debates_by_id[debateteam.debate_id]
+            if debateteam.position == DebateTeam.POSITION_AFFIRMATIVE:
+                debate._aff_dt = debateteam
+                debate._aff_team = debateteam.team
+            elif debateteam.position == DebateTeam.POSITION_NEGATIVE:
+                debate._neg_dt = debateteam
+                debate._neg_team = debateteam.team
+
+        return debates
 
     # TODO: all these availability methods should be in the availability app
 

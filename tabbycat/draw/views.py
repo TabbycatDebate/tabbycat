@@ -79,8 +79,8 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
     def get_table(self):
         tournament = self.get_tournament()
         round = self.get_round()
-        draw = round.get_draw()
-        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
+        draw = round.debate_set_with_team_prefetches(ordering=('venue__name',), select_related=('venue',))
+        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key, popovers=self.popovers)
         self.populate_table(draw, table, round, tournament)
         return table
 
