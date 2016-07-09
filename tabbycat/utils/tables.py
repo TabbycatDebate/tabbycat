@@ -597,14 +597,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
         results_data = []
         for debate in debates:
             row = []
-            for pos in (DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE):
+            for pos in ('aff', 'neg'):
                 try:
-                    debateteam = debate.debateteam_set.get(position=pos)
+                    debateteam = debate.get_dt(pos)
+                    team = debate.get_team(pos)
                 except DebateTeam.DoesNotExist:
                     row.append("-")
                     continue
 
-                team = debateteam.team
                 cell = self._team_cell(team, hide_emoji=True)
 
                 if debateteam.win is True:

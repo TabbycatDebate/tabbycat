@@ -6,7 +6,7 @@ urlpatterns = [
 
     # Display
     url(r'^round/(?P<round_seq>\d+)/$',
-        views.AdminDrawEditView.as_view(),
+        views.AdminDrawView.as_view(),
         name='draw'),
     url(r'^round/(?P<round_seq>\d+)/details/$',
         views.AdminDrawWithDetailsView.as_view(),

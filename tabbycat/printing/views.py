@@ -115,7 +115,7 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['questions'] = self.questions_json_dict()
         kwargs['ballots'] = []
 
-        for debate in self.get_round().get_draw_by_room():
+        for debate in self.get_round().get_draw():
             chair = debate.adjudicators.chair
 
             if self.team_on_orallist():
@@ -150,7 +150,7 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['motions'] = Motion.objects.filter(round=self.get_round()).values('text').order_by('seq')
         kwargs['ballots'] = []
 
-        for debate in self.get_round().get_draw_by_room():
+        for debate in self.get_round().get_draw():
             debate_info = {
                 'room': debate.venue.name if debate.venue else 'TBA',
                 'aff': debate.aff_team.short_name,

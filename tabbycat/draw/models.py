@@ -6,7 +6,6 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
 
 from adjallocation.allocation import AdjudicatorAllocation
-from tournaments.models import SRManager
 from participants.models import Team
 from venues.conflicts import venue_conflicts
 
@@ -19,8 +18,7 @@ class DebateManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(DebateManager,
-                     self).get_queryset().select_related('round')
+        return super().get_queryset().select_related('round')
 
 
 class Debate(models.Model):
@@ -72,15 +70,41 @@ class Debate(models.Model):
     def teams(self):
         return Team.objects.filter(debateteam__debate=self)
 
-    @cached_property
+    @property
     def aff_team(self):
-        return Team.objects.select_related('institution').get(
-            debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
+        try:
+            return self._aff_team # may be populated by Round.debate_set_with_team_prefetches
+        except AttributeError:
+            self._aff_team = Team.objects.select_related('institution').get(
+                debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
+            return self._aff_team
 
-    @cached_property
+    @property
     def neg_team(self):
-        return Team.objects.select_related('institution').get(
-            debateteam__debate=self, debateteam__position=DebateTeam.POSITION_NEGATIVE)
+        try:
+            return self._neg_team
+        except AttributeError:
+            self._neg_team = Team.objects.select_related('institution').get(
+                debateteam__debate=self, debateteam__position=DebateTeam.POSITION_NEGATIVE)
+            return self._neg_team
+
+    @property
+    def aff_dt(self):
+        try:
+            return self._aff_dt # may be populated by Round.debate_set_with_team_prefetches
+        except AttributeError:
+            self._aff_dt = self.debateteam_set.select_related('team', 'team__institution').get(
+                position=DebateTeam.POSITION_AFFIRMATIVE)
+            return self._aff_dt
+
+    @property
+    def neg_dt(self):
+        try:
+            return self._neg_dt # may be populated by Round.debate_set_with_team_prefetches
+        except AttributeError:
+            self._neg_dt = self.debateteam_set.select_related('team', 'team__institution').get(
+                position=DebateTeam.POSITION_NEGATIVE)
+            return self._neg_dt # may be populated by Round.debate_set_with_team_prefetches
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
@@ -88,16 +112,6 @@ class Debate(models.Model):
     def get_dt(self, side):
         """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
-
-    @cached_property
-    def aff_dt(self):
-        return self.debateteam_set.select_related('team', 'team__institution').get(
-                position=DebateTeam.POSITION_AFFIRMATIVE)
-
-    @cached_property
-    def neg_dt(self):
-        return self.debateteam_set.select_related('team', 'team__institution').get(
-                position=DebateTeam.POSITION_NEGATIVE)
 
     def get_side(self, team):
         if self.aff_team == team:
@@ -164,7 +178,7 @@ class Debate(models.Model):
             d.append("Teams have met twice")
         elif history > 2:
             d.append("Teams have met %d times" % (history,))
-        if self.aff_team.institution == self.neg_team.institution:
+        if self.aff_team.institution_id == self.neg_team.institution_id:
             d.append("Teams are from the same institution")
 
         return d
@@ -213,6 +227,13 @@ class Debate(models.Model):
         return Motion.objects.filter(round=self.round, divisions=self.division)
 
 
+class DebateTeamManager(models.Manager):
+    use_for_related_fields = True
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('debate')
+
+
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
     POSITION_NEGATIVE = 'N'
@@ -221,7 +242,7 @@ class DebateTeam(models.Model):
                         (POSITION_NEGATIVE, 'Negative'),
                         (POSITION_UNALLOCATED, 'Unallocated'), )
 
-    objects = SRManager()
+    objects = DebateTeamManager()
 
     debate = models.ForeignKey(Debate, db_index=True)
     team = models.ForeignKey('participants.Team')
