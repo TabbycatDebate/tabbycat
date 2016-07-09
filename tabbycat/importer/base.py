@@ -195,6 +195,12 @@ class BaseTournamentDataImporter(object):
         skipped_because_existing = 0
 
         for lineno, line in enumerate(reader, start=2):
+
+            # Strip whitespace first
+            for k in line:
+                if isinstance(line[k], str):
+                    line[k] = line[k].strip()
+
             try:
                 kwargs_list = interpreter(line)
                 if isinstance(kwargs_list, GeneratorType):
