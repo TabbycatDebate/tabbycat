@@ -156,7 +156,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         if r.draw_status == r.STATUS_NONE:
             return table # Return Blank
 
-        draw = r.get_draw()
+        draw = r.debate_set_with_team_prefetches(ordering=('room_rank',))
         if r.is_break_round:
             table.add_room_rank_columns(draw)
         else:
