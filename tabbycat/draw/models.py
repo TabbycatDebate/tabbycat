@@ -178,7 +178,7 @@ class Debate(models.Model):
             d.append("Teams have met twice")
         elif history > 2:
             d.append("Teams have met %d times" % (history,))
-        if self.aff_team.institution == self.neg_team.institution:
+        if self.aff_team.institution_id == self.neg_team.institution_id:
             d.append("Teams are from the same institution")
 
         return d
