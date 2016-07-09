@@ -113,9 +113,6 @@ class Person(models.Model):
     def has_contact(self):
         return bool(self.email or self.phone)
 
-    class Meta:
-        ordering = ['name']
-
 
 class TeamManager(models.Manager):
     def get_queryset(self):

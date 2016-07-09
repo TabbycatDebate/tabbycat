@@ -18,8 +18,7 @@ class DebateManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(DebateManager,
-                     self).get_queryset().select_related('round')
+        return super().get_queryset().select_related('round')
 
 
 class Debate(models.Model):
