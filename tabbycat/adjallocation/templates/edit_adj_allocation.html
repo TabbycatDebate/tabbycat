@@ -50,7 +50,6 @@
 {% endblock content %}
 
 {% block js %}
-
   <script>
     var allDebates = {{ allDebates|safe }};
     var allAdjudicators = {{ allAdjudicators|safe }};
@@ -63,9 +62,6 @@
       'updateImportance': '{% round_url save_debate_importance %}',
       'updatePanel': '{% round_url save_debate_panel %}',
     }
-
-
   </script>
   {{ block.super }}
-
 {% endblock js %}

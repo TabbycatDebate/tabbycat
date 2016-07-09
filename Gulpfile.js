@@ -48,6 +48,7 @@ gulp.task('fonts-compile', function() {
 
 gulp.task('styles-compile', function() {
   gulp.src([
+      'tabbycat/templates/scss/allocation-old.scss',
       'tabbycat/templates/scss/printables.scss',
       'tabbycat/templates/scss/style.scss'])
     .pipe(sass().on('error', sass.logError))

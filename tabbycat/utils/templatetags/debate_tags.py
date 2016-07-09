@@ -33,6 +33,7 @@ def version(path_string, base_url=settings.MEDIA_URL):
         return base_url + path_string
 
 
+# TODO: deprecate when old allocations UI is
 @register.simple_tag
 def team_status_classes(team):
     classes = list()

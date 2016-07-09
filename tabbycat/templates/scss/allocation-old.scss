@@ -1,0 +1,284 @@
+// Our overrides (load before bootstrap)
+@import 'components/variables'; // needed just for state-success bg
+
+$adj-button-width: 180px;
+
+#body-edit-allocation {
+  padding-top: 55px; // compensate for fixed header
+  padding-bottom: 300px; // compensate for fixed footer
+  #table-search { // recreating input-group-sm (wont inherit)
+    height: 30px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .alert {
+    margin-bottom: 8px;
+  }
+}
+.table-edit-allocation {
+  // margin
+}
+
+//------------------------------------------------------------------------------
+// Edit Adjs Page
+//------------------------------------------------------------------------------
+
+.edit-adjs-subnav {
+  padding: 10px;
+}
+#old-edit-allocation > div.row {
+  display: none;
+}
+#main {
+  z-index: 10;
+  position: relative;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-right: $adj-button-width + 25px;
+}
+.extra-line-height > tbody > tr > td {
+  line-height: 26px; // Align text with boxes
+}
+.importance {
+  text-align: left;
+  padding: 5px !important;
+  .form-control {
+    min-width: 42px;
+    padding-left: 4px;
+    padding-right: 4px;
+    height: 32px;
+  }
+}
+// .page-header {
+//   margin: 10px 0 0 -15px;
+//   .h2 {
+//     margin-bottom: 0;
+//   }
+// }
+#helper_holder {
+  z-index: 50; // Higher than main and scratch
+  position: relative;
+}
+#scratch {
+  background-color: #fff;
+  background-color: rgba(240,240,240,0.90);
+  position: fixed;
+  overflow-y: scroll;
+  padding-left: 5px;
+  padding-right: 5px;
+  z-index: 10;
+  width: $adj-button-width + 15px;
+  &.bg-success {
+    background: $state-success-bg;
+  }
+  &.fixed-right {
+    top: 0;
+    right: 0;
+    height: 100%;
+    padding-bottom: 50px; // ensure no footer overlaps
+    padding-top: 73px;
+  }
+  &.fixed-bottom {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 140px;
+    thead {
+      text-align: center;
+    }
+    tbody tr {
+      float: left;
+      width: 210px;
+      padding-right: 5px;
+      td {
+        display: block;
+      }
+    }
+  }
+  .unused {
+    padding-left: 0;
+  }
+  thead {
+    background: none;
+  }
+  .table > tbody > tr > td {
+    padding: 2px 0 0; // Reduce padding in unused area
+  }
+}
+// Draggables
+.ui-droppable {
+  height: 44px;
+}
+.panel-holder,
+.chair-holder,
+.team-holder,
+.venue-holder {
+  padding: 5px; // Reduce padding for droppable areas
+}
+.venue,
+.adj,
+.team {
+  border: 1px solid #ccc;
+  padding: 0;
+  text-align: left;
+  max-width: $adj-button-width;
+  background: #fff;
+  overflow: hidden;
+  height: 32px;
+  position: relative;
+  span {
+    float: left;
+    max-width: auto;
+    padding: 6px 0 0 6px;
+    display: inline-block;
+    overflow: hidden;
+  }
+  span.score {
+    width: 25px;
+  }
+  span.name {
+    max-width: $adj-button-width - 70;
+    text-overflow: ellipsis;
+  }
+  span.institution {
+    text-align: right;
+    position: absolute;
+    right: 6px;
+    color: #ccc;
+  }
+  &.gender-display.male span a,
+  &.gender-display.female span a {
+    color: #fff;
+  }
+  &:active {
+    box-shadow: none;
+    opacity: 0.5; // Dull the 'shadow' left behind while dragging
+  }
+}
+.venue {
+  max-width: 235px;
+}
+.panel-body .table > tbody > tr:hover td {
+  .venue span, .adj span, .team  span{
+    color: #000;
+  }
+  .venue a, .adj a, .team a {
+    color: $brand-primary;
+  }
+}
+.venue:hover,
+.adj:hover,
+.team:hover,
+.venue.dragging,
+.adj.dragging,
+.team.dragging,
+.ui-draggable-dragging {
+  cursor: move;
+  &.is_unaccredited {
+    background: #eee;
+  }
+  &.btn-danger,
+  &.btn-warning {
+    color: #fff;
+  }
+}
+.history-conflict {
+  background-color: $brand-primary !important;
+  color: #fff;
+  a {
+    color: #fff;
+  }
+}
+.institutional-conflict {
+  background-color: $brand-warning !important;
+  color: #fff;
+  a {
+    color: #fff;
+  }
+}
+.personal-conflict {
+  background-color: $brand-danger !important;
+  color: #fff;
+  a {
+    color: #fff;
+  }
+}
+.adjudicator-conflict {
+  background-color: $brand-danger !important;
+  color: #fff;
+  a {
+    color: #fff;
+  }
+}
+.panel-incomplete,
+.chair-incomplete {
+  background-color: #a700a5;
+  &:hover {
+    background-color: darken(#a700a5, 1);
+  }
+}
+.bg-info.panel-incomplete,
+.bg-info.chair-incomplete {
+  background: $state-info-bg; // don't overwrite the drop hover
+}
+.btn-default.panel-incomplete {
+  color: #fff; // Just for the button
+  border: 1px solid #a700a5;
+}
+
+//------------------------------------------------------------------------------
+// All Highlights
+//------------------------------------------------------------------------------
+
+.gender-display.male,
+.gender-display.female {
+  color: #fff;
+  span a {
+    color: #fff;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Gender Highlights
+//------------------------------------------------------------------------------
+
+.gender-display.female {
+  background-color: $female;
+}
+.gender-display.male {
+  background-color: $male;
+}
+.gender-display.other {
+  background-color: $other;
+}
+.gender-display.gender-parity-3 {
+  background-color: lighten(#0000FF, 45%);
+}
+.gender-display.gender-parity-4 {
+  background-color: lighten(#0000FF, 40%);
+}
+.gender-display.gender-parity-5 {
+  background-color: lighten(#0000FF, 30%);
+  color: #fff;
+}
+.gender-display.gender-parity-6 {
+  background-color: lighten(#0000FF, 20%);
+  color: #fff;
+}
+.gender-display.gender-parity-7 {
+  background-color: lighten(#0000FF, 10%);
+  color: #fff;
+}
+.gender-display.gender-parity-8 {
+  background-color: #00f;
+  color: #fff;
+}
+.gender-display.gender-parity-9 {
+  background-color: darken(#0000FF, 25%);
+  color: #fff;
+}
+.gender-display.gender-parity-10 {
+  background-color: darken(#0000FF, 35%);
+  color: #fff;
+}

@@ -6,16 +6,19 @@
 {% block header %}{% endblock %}
 {% block footer %}{% endblock %}
 {% block body-id %}old-edit-allocation{% endblock %}
+{% block page-subnav-sections %}{% endblock page-subnav-sections %}
 
-{% block page-subnav-sections %}
+{% block content %}
+
+<div class="container-fluid">
+<div class="row">
+
   <div class="edit-adjs-subnav">
-
     <div id="statusBar" class="btn-group">
       <div class="btn btn-sm btn-primary" data-loading-text="Allocating..." id="auto_allocate">Auto Allocate</div>
       <div class="btn btn-sm btn-success" data-loading-text="Saving..." id="save_allocation">Save</div>
       <a class="btn btn-sm btn-danger" href="{% round_url draw %}">Quit</a>
     </div>
-
     <div id="statusBar" class="btn-group">
       <div class="btn btn-sm btn-default" href="" id="toggle_venues">
         <span class="glyphicon glyphicon-eye-open"></span> Venues
@@ -33,7 +36,6 @@
         <span class="glyphicon glyphicon-eye-open"></span> Category
       </div>
     </div>
-
     <div class="btn btn-secondary">Key</div>
     <div id="conflict_key" class="btn-group">
       <div class="btn btn-sm btn-default btn-primary">Seen</div>
@@ -44,29 +46,26 @@
       <div class="btn btn-sm btn-default active is_unaccredited">Unaccredited</div>
       {% endif %}
     </div>
-
     <div id="gender_key" class="btn-group" style="display: none;">
       <div class="btn btn-sm btn-default gender-display male">Male</div>
       <div class="btn btn-sm btn-default gender-display female">Female</div>
     </div>
-
     <div id="region_key" class="btn-group" style="display: none;">
       {% for region, _ in regions %}
         <div class="btn btn-sm btn-default region-display region-{{ region.id }}">{{ region.name }}</div>
       {% endfor %}
     </div>
-
     <div id="breakcategory_key" class="btn-group" style="display: none;">
       {% for category, _ in break_categories %}
         <div class="btn btn-sm btn-default breakcategory-display breakcategory-{{ category.slug }}">{{ category.name }}</div>
       {% endfor %}
     </div>
-
   </div>
-{% endblock %}
 
-{% block content %}
+</div>
+</div>
 
+<div class="container-fluid">
 <div class="row">
 
   <div id="main" class="">
@@ -200,22 +199,24 @@
   </div>
   </div>
 </div>
-
-<style style="text/css">
-
-  {% for category, color in break_categories %}
-    .breakcategory-display.breakcategory-{{ category.slug }} {
-      background: {{ color }};
-      color: #fff;
-    }
-    .breakcategory-display.breakcategory-{{ category.slug }} span a {
-      color: #fff;
-    }
-  {% endfor %}
-
-</style>
+</div>
 
 {% endblock content %}
+
+{% block extra-css %}
+  <link rel="stylesheet" type="text/css" href="/static/css/allocation-old.css" />
+  <style style="text/css">
+    {% for category, color in break_categories %}
+      .breakcategory-display.breakcategory-{{ category.slug }} {
+        background: {{ color }};
+        color: #fff;
+      }
+      .breakcategory-display.breakcategory-{{ category.slug }} span a {
+        color: #fff;
+      }
+    {% endfor %}
+  </style>
+{% endblock extra-css %}
 
 {% block js %}
   {{ block.super }}
