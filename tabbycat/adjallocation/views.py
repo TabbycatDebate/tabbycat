@@ -324,16 +324,15 @@ class SaveDebatePanel(SaveDebateInfo):
         debate_id = request.POST.get('debate_id')
         debate_panel = json.loads(request.POST.get('panel'))
 
-        # TODO: more efficient method than just wiping and remarking the data
-        # Build a dict and compare the two sets?
+        to_delete = DebateAdjudicator.objects.filter(debate_id=debate_id).exclude(
+                adjudicator_id__in=[da['id'] for da in debate_panel])
+        for debateadj in to_delete:
+            logger.info("deleted %s" % debateadj)
+        to_delete.delete()
 
-        old_da = DebateAdjudicator.objects.filter(debate=debate_id)
-        old_da.delete()
-
-        [DebateAdjudicator(
-            debate_id=debate_id,
-            adjudicator_id=da['id'],
-            type=da['position']
-        ).save() for da in debate_panel]
+        for da in debate_panel:
+            debateadj, created = DebateAdjudicator.objects.update_or_create(debate_id=debate_id,
+                    adjudicator_id=da['id'], defaults={'type': da['position']})
+            logger.info("%s %s" % ("created" if created else "updated", debateadj))
 
         return HttpResponse()
