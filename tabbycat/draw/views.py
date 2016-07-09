@@ -1,7 +1,7 @@
 import datetime
 import logging
 
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
@@ -14,7 +14,7 @@ from participants.models import Adjudicator, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
-from utils.mixins import CacheMixin, ExpectPost, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
@@ -426,9 +426,9 @@ class DrawMatchupsEditView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, ExpectPost):
+class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, View):
 
-    def dispatch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         existing_debate_ids = [int(a.replace('debate_', ''))
                                for a in list(request.POST.keys())
                                if a.startswith('debate_')]

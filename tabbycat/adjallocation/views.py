@@ -14,7 +14,7 @@ from participants.models import Adjudicator, Team
 from participants.utils import regions_ordered
 from tournaments.mixins import RoundMixin
 from utils.misc import reverse_round
-from utils.mixins import ExpectPost, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -105,7 +105,7 @@ def draw_adjudicators_edit(request, round):
     return render(request, "draw_adjudicators_edit.html", context)
 
 
-class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, ExpectPost, View):
+class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
 
     def post(self, request, *args, **kwargs):
 
@@ -299,14 +299,14 @@ class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, P
         return super().post(request, *args, **kwargs)
 
 
-class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, ExpectPost, View):
+class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
     pass
 
 
 class SaveDebateImportance(SaveDebateInfo):
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
-    def dispatch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         debate_id = request.POST.get('debate_id')
         debate_importance = request.POST.get('importance')
 
@@ -320,7 +320,7 @@ class SaveDebateImportance(SaveDebateInfo):
 class SaveDebatePanel(SaveDebateInfo):
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
-    def dispatch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         debate_id = request.POST.get('debate_id')
         debate_panel = json.loads(request.POST.get('panel'))
 

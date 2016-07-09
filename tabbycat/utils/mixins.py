@@ -16,16 +16,6 @@ from tournaments.mixins import TournamentMixin
 logger = logging.getLogger(__name__)
 
 
-class ExpectPost(View):
-    """Ensures a POST was made and provides super call with POST data """
-
-    def dispatch(self, request, *args, **kwargs):
-        if request.method != "POST":
-            return HttpResponseBadRequest("Expected POST")
-        else:
-            return super().dispatch(request, *args, **kwargs)
-
-
 class PostOnlyRedirectView(View):
     """Base class for views that only accept POST requests.
 
