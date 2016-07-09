@@ -1,6 +1,11 @@
 from django.db import models
 
-from tournaments.models import SRManager
+
+class DebateAdjudicatorManager(models.Manager):
+    use_for_related_fields = True
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('debate')
 
 
 class DebateAdjudicator(models.Model):
@@ -14,7 +19,7 @@ class DebateAdjudicator(models.Model):
         (TYPE_TRAINEE, 'trainee'),
     )
 
-    objects = SRManager()
+    objects = DebateAdjudicatorManager()
 
     debate = models.ForeignKey('draw.Debate')
     adjudicator = models.ForeignKey('participants.Adjudicator')

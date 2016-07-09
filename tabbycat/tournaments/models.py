@@ -519,10 +519,3 @@ def update_round_cache(sender, instance, created, **kwargs):
 
 # Update the cached round object when model is changed)
 signals.post_save.connect(update_round_cache, sender=Round)
-
-
-class SRManager(models.Manager):
-    use_for_related_fields = True
-
-    def get_queryset(self):
-        return super(SRManager, self).get_queryset().select_related('debate')

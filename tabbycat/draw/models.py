@@ -6,7 +6,6 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
 
 from adjallocation.allocation import AdjudicatorAllocation
-from tournaments.models import SRManager
 from participants.models import Team
 from venues.conflicts import venue_conflicts
 
@@ -213,6 +212,13 @@ class Debate(models.Model):
         return Motion.objects.filter(round=self.round, divisions=self.division)
 
 
+class DebateTeamManager(models.Manager):
+    use_for_related_fields = True
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('debate')
+
+
 class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
     POSITION_NEGATIVE = 'N'
@@ -221,7 +227,7 @@ class DebateTeam(models.Model):
                         (POSITION_NEGATIVE, 'Negative'),
                         (POSITION_UNALLOCATED, 'Unallocated'), )
 
-    objects = SRManager()
+    objects = DebateTeamManager()
 
     debate = models.ForeignKey(Debate, db_index=True)
     team = models.ForeignKey('participants.Team')
