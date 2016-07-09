@@ -75,17 +75,17 @@ def populate_conflicts(adjs, teams):
         'adjudicator', 'conflict_adjudicator')
 
     for a in adjs:
-        a.personal_teams = [c[1] for c in teamconflicts if c[0] is a.id]
+        a.personal_teams = [c[1] for c in teamconflicts if c[0] == a.id]
         a.institutional_institutions = [a.institution.id]
         a.institutional_institutions.extend(
-            [c[1] for c in institutionconflicts if c[0] is a.id and c[1] is not a.institution.id])
+            [c[1] for c in institutionconflicts if c[0] == a.id and c[1] != a.institution.id])
 
         # Adj-adj conflicts should be symmetric
-        a.personal_adjudicators = [c[1] for c in adjconflicts if c[0] is a.id]
-        a.personal_adjudicators += [c[0] for c in adjconflicts if c[1] is a.id]
+        a.personal_adjudicators = [c[1] for c in adjconflicts if c[0] == a.id]
+        a.personal_adjudicators += [c[0] for c in adjconflicts if c[1] == a.id]
 
     for t in teams:
-        t.personal_adjudicators = [c[0] for c in teamconflicts if c[1] is t.id]
+        t.personal_adjudicators = [c[0] for c in teamconflicts if c[1] == t.id]
         # For teams conflicted_institutions is a list of adjs due to the asymetric
         # nature of adjs having multiple instutitonal conflicts
         t.institutional_institutions = [t.institution.id]
@@ -96,46 +96,43 @@ def populate_conflicts(adjs, teams):
 def populate_histories(adjs, teams, t, r):
 
     da_histories = DebateAdjudicator.objects.filter(
-        debate__round__tournament=t, debate__round__seq__lt=r.seq, adjudicator__in=adjs).select_related(
+        debate__round__tournament=t, debate__round__seq__lt=r.seq).select_related(
         'debate__round').values_list(
-        'adjudicator', 'debate', 'debate__round__seq', 'debate__round__abbreviation').order_by('-debate__round__seq')
+        'adjudicator', 'debate', 'debate__round__seq').order_by('-debate__round__seq')
     dt_histories = DebateTeam.objects.filter(
-        debate__in=[c[1] for c in da_histories]).select_related(
+        debate__round__tournament=t, debate__round__seq__lt=r.seq).select_related(
         'debate__round').values_list(
-        'team', 'debate', 'debate__round__seq', 'debate__round__abbreviation').order_by('-debate__round__seq')
+        'team', 'debate', 'debate__round__seq').order_by('-debate__round__seq')
 
     for a in adjs:
         hists = []
         # Iterate over all DebateAdjudications from this adj
-        for dah in [dah for dah in da_histories if dah[0] is a.id]:
+        for dah in [dah for dah in da_histories if dah[0] == a.id]:
             # Find the relevant DebateTeams from the matching debates
             hists.extend([{
                 'team': dat[0],
                 'debate': dah[1],
                 'ago': r.seq - dah[2],
-                'round': dah[3]
-            } for dat in dt_histories if dat[1] is dah[1]])
-            # From these DebateAdjudications find panellists from matching debates
+            } for dat in dt_histories if dat[1] == dah[1]])
+            # From these DebateAdjudications find panellists from the same debates
             hists.extend([{
                 'adjudicator': dah2[0],
                 'debate': dah2[1],
                 'ago': r.seq - dah2[2],
-                'round': dah2[3]
-            } for dah2 in da_histories if dah2[1] is dah[1] and dah2 is not dah])
-
+            } for dah2 in da_histories if dah2[1] == dah[1] and dah2 != dah])
         a.histories = hists
 
     for t in teams:
         hists = []
-        # Iterate over the DebateTeams for the matching teams
-        for dat in [dat for dat in dt_histories if dat[0] is t.id]:
-            # Iterate over the DebateAdjudicators to find the matching debates
+        # Iterate over the DebateTeams and match to teams
+        for dat in [dat for dat in dt_histories if dat[0] == t.id]:
+            # Once matched, find all DebateAdjudicators from that debate and
+            # add them as conflicts for this team
             hists.extend([{
                 'adjudicator': dah[0],
                 'debate': dah[1],
                 'ago': r.seq - dah[2],
-                'round': dah[3]
-            } for dah in da_histories if dah[1] is dat[1]])
+            } for dah in da_histories if dah[1] == dat[1]])
         t.histories = hists
 
     return adjs, teams
