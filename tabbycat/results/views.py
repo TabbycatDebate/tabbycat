@@ -55,7 +55,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
         if self.draw:
             return self.draw
         else:
-            self.draw = self.get_round().get_draw()
+            self.draw = self.get_round().debate_set_with_team_prefetches()
             return self.draw
 
     def get_table(self):
@@ -101,7 +101,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     def get_table_by_debate(self):
         round = self.get_round()
         tournament = self.get_tournament()
-        debates = round.get_draw()
+        debates = round.debate_set_with_team_prefetches()
 
         table = TabbycatTableBuilder(view=self, sort_key="Venue")
         table.add_debate_venue_columns(debates)
