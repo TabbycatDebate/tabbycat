@@ -1,3 +1,5 @@
+from warnings import warn
+
 from django.db import models
 from django.db.models import signals
 from django.core.cache import cache
@@ -256,6 +258,7 @@ class Round(models.Model):
         return self.get_draw()
 
     def get_draw(self, ordering=('venue__name',)):
+        warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_team_prefetches() instead.", stacklevel=2)
         related = ('venue',)
         if self.tournament.pref('enable_divisions'):
             related += ('division', 'division__venue_group')
