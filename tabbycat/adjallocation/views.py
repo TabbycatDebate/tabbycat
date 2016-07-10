@@ -14,7 +14,7 @@ from participants.models import Adjudicator, Team
 from participants.utils import regions_ordered
 from tournaments.mixins import RoundMixin
 from utils.misc import reverse_round
-from utils.mixins import ExpectPost, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import ExpectPost, JsonDataResponseView, PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -280,14 +280,11 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, Template
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, JsonDataResponseView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
-    def get_redirect_url(self):
-        return reverse_round('edit_adj_allocation', self.get_round())
-
-    def post(self, request, *args, **kwargs):
+    def get_data(self):
         round = self.get_round()
 
         if round.draw_status == round.STATUS_RELEASED:
@@ -296,7 +293,7 @@ class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, P
             return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
 
         allocate_adjudicators(round, HungarianAllocator)
-        return super().post(request, *args, **kwargs)
+        return debates_to_json(round.get_draw(), self.get_tournament(), round)
 
 
 class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, ExpectPost, View):

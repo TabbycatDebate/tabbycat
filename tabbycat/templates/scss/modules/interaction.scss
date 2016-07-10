@@ -81,10 +81,6 @@
 // Modals
 //------------------------------------------------------------------------------
 
-.modal {
-  z-index: 1100; // Need to override the .tooltips on edit adj allocation page
-}
-
 .modal-xl { // For motions page; probably feedback also (want super big modals)
   height: 92%;
   width: 95%;

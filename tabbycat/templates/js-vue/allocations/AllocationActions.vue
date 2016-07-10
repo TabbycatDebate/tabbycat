@@ -8,7 +8,7 @@
           <span class="glyphicon glyphicon-chevron-left"></span>
           Back to {{ roundInfo.roundName }} Draw
         </a>
-        <a class="btn btn-success btn-sm" v-on:click="confirmAutoAllocate">
+        <a class="btn btn-success btn-sm" v-on:click="confirmAutoAllocation">
           Auto Allocate
         </a>
       </div>
@@ -68,6 +68,26 @@
 
     </nav>
   </div>
+
+  <div class="modal fade" id="confirmAutoAlert" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p class="lead">Using auto-allocate will <strong>remove all existing adjudicator allocations</strong> and
+          create new panels for all debates.</p>
+          <p class="lead">It will form stronger panels for debates that have been assigned higher importances.
+          If importances have not been set, or are equivalent, it will give instead give stronger panels to
+          debates of a higher bracket.</p>
+          <button type="submit" class="btn btn-block btn-success"
+                  v-on:click="createAutoAllocation"
+                  data-loading-text="Loading Auto Allocation...">
+            Create Automatic Allocation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -82,8 +102,24 @@ export default {
     showingCategory: { default: false }
   },
   methods: {
-    confirmAutoAllocate: function() {
-      $('#confirmAutoAlert').modal();
+    confirmAutoAllocation: function() {
+      $('#confirmAutoAlert').modal('show');
+    },
+    createAutoAllocation: function(event) {
+      console.log('Creating auto allocation');
+      $(event.target).button('loading')
+      var xhr = new XMLHttpRequest()
+      var self = this
+      xhr.open('GET', this.roundInfo.createAutoAllocationURL)
+      xhr.onload = function () {
+        console.log('got allocation back');
+        console.log(JSON.parse(xhr.responseText));
+        $('#confirmAutoAlert').modal('hide');
+        $(event.target).button('reset')
+        // TODO: dispatch and event up the chain to replace debates
+        // TODO: how to handle errors and the like (test with unreleased/released)
+      }
+      xhr.send()
     },
     showVenues: function() {
       this.showingVenue = !this.showingVenue;

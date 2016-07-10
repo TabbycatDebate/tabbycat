@@ -18,35 +18,6 @@
     :round-info=roundInfo>
   </allocation-container>
 
-  <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header h4 text-danger"></div>
-        <div class="modal-body"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="confirmAutoAlert" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body">
-          <p class="lead">Using auto-allocate will <strong>remove all currently allocated adjudicators</strong> and
-          re-allocate them.</p>
-          <p class="lead">It will granting stronger panels to debates that have been assigned higher importances.
-          If importances have not been set, or are equivalent, it will give instead give stronger panels to
-          debates of a higher bracket.</p>
-          <form action="{% round_url create_auto_allocation %}" method="POST">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-block btn-success">
-              Create Automatic Allocation
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
 {% endblock content %}
 
 {% block js %}
@@ -59,6 +30,7 @@
 
     var roundInfo = {
       'roundName' : '{{ round.abbreviation }}',
+      'createAutoAllocationURL': '{% round_url create_auto_allocation %}',
       'backToDrawURL': '{% round_url draw %}',
       'updateImportanceURL': '{% round_url save_debate_importance %}',
       'updatePanelURL': '{% round_url save_debate_panel %}',
