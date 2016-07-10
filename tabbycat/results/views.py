@@ -30,7 +30,7 @@ from .result import BallotSet
 from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
 from .mixins import ResultsTableBuilder
-from .prefetch import populate_confirmed_ballots, populate_wins
+from .prefetch import populate_confirmed_ballots
 
 logger = logging.getLogger(__name__)
 
