@@ -43,7 +43,7 @@ def add_team_round_results(standings, rounds, lookup=None, id_attr='instance_id'
         AND opposition.id != draw_debateteam.id""", ()
     ))
     teamscores = list(teamscores)
-    oppositions = Team.objects.in_bulk([ts.opposition_id for ts in teamscores])
+    oppositions = Team.objects.prefetch_related('speaker_set').in_bulk([ts.opposition_id for ts in teamscores])
 
     for info in standings:
         info.round_results = [None] * len(rounds)

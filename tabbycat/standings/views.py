@@ -237,7 +237,7 @@ class BaseTeamStandingsView(StandingsView):
         tournament = self.get_tournament()
         round = self.get_round()
 
-        teams = tournament.team_set.exclude(type=Team.TYPE_BYE).select_related('institution')
+        teams = tournament.team_set.exclude(type=Team.TYPE_BYE).select_related('institution').prefetch_related('speaker_set')
         metrics = tournament.pref('team_standings_precedence')
         extra_metrics = tournament.pref('team_standings_extra_metrics')
         generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
