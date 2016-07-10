@@ -20,7 +20,7 @@ from venues.models import Venue
 
 class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'availability_index.html'
-    page_title = 'Checkins Overview'
+    page_title = 'Check-Ins Overview'
     page_emoji = '📍'
 
     def get_context_data(self, **kwargs):
@@ -107,7 +107,7 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
 
 class AvailabilityTypeTeamView(AvailabilityTypeBase):
     page_emoji = '👂'
-    page_title = 'Team Checkins'
+    page_title = 'Team Check-Ins'
     update_view = 'update_team_availability'
 
     def get_table(self):
@@ -128,7 +128,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
 
 class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
     page_emoji = '👂'
-    page_title = 'Adjudicator Checkins'
+    page_title = 'Adjudicator Check-Ins'
     update_view = 'update_adjudicator_availability'
 
     def get_table(self):
@@ -149,7 +149,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
 
 class AvailabilityTypeVenueView(AvailabilityTypeBase):
     page_emoji = '🎪'
-    page_title = 'Venue Checkins'
+    page_title = 'Venue Check-Ins'
     update_view = 'update_venue_availability'
 
     def get_table(self):
