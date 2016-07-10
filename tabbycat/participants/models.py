@@ -1,4 +1,5 @@
 import logging
+from warnings import warn
 
 from django.core.cache import cache
 from django.db import models
@@ -367,19 +368,21 @@ class Adjudicator(Person):
     def region(self):
         return self.institution.region
 
+    def weighted_score(self, feedback_weight):
+        feedback_score = self._feedback_score()
+        if feedback_score is None:
+            feedback_score = 0
+            feedback_weight = 0
+        return self.test_score * (1 - feedback_weight) + (feedback_weight * feedback_score)
+
     @cached_property
     def score(self):
+        warn("Adjudicator.score is inefficient; consider using Adjudicator.weighted_score() instead.", stacklevel=2)
         if self.tournament:
             weight = self.tournament.current_round.feedback_weight
         else:
             weight = 1  # For shared ajudicators
-
-        feedback_score = self._feedback_score()
-        if feedback_score is None:
-            feedback_score = 0
-            weight = 0
-
-        return self.test_score * (1 - weight) + (weight * feedback_score)
+        return self.weighted_score(weight)
 
     def _feedback_score(self):
         from adjallocation.models import DebateAdjudicator

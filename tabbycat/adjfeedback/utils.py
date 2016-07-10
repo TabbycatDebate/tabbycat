@@ -26,13 +26,17 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         self.add_column(breaking_header, breaking_data)
 
     def add_score_columns(self, adjudicators):
+
+        feedback_weight = self.tournament.current_round.feedback_weight
+        scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
+
         overall_header = {
             'key': 'Overall Score',
             'icon': 'glyphicon-signal',
             'tooltip': 'Current weighted score',
         }
         overall_data = [{
-            'text': '<strong>%0.1f</strong>' % adj.score if adj.score is not None else 'N/A',
+            'text': '<strong>%0.1f</strong>' % scores[adj] if scores[adj] is not None else 'N/A',
             'tooltip': 'Current weighted average of all feedback',
         } for adj in adjudicators]
         self.add_column(overall_header, overall_data)
