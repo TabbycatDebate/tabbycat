@@ -52,7 +52,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
 
     def _get_draw(self):
         if not hasattr(self, '_draw'):
-            self._draw = self.get_round().debate_set_with_prefetches(ordering=('room_rank',))
+            self._draw = self.get_round().debate_set_with_prefetches(ordering=('room_rank',), wins=True)
         return self._draw
 
     def get_table(self):

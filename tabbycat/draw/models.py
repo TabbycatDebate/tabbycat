@@ -267,16 +267,21 @@ class DebateTeam(models.Model):
         else:
             return 'result unknown'
 
-    @cached_property
+    @property
     def win(self):
         """Convenience function. Returns True if this team won, False if this
-        team lost, or None if there isn't a confirmed result."""
-        """Returns 'won' if won, 'lost' if lost, 'result unknown' if no result confirmed."""
+        team lost, or None if there isn't a confirmed result.
+
+        This result is stored for the lifetime of the instance -- it won't
+        update on the same instance if a result is entered."""
         try:
-            ts = self.teamscore_set.get(ballot_submission__confirmed=True)
-        except ObjectDoesNotExist:
-            return None
-        return ts.win
+            return self._win
+        except AttributeError:
+            try:
+                self._win = self.teamscore_set.get(ballot_submission__confirmed=True).win
+            except ObjectDoesNotExist:
+                self._win = None
+            return self._win
 
 
 class TeamPositionAllocation(models.Model):
