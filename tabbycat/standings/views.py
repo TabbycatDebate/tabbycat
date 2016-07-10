@@ -125,7 +125,7 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
 
     def get_speakers(self):
         return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
-            'team', 'team__institution', 'team__tournament')
+            'team', 'team__institution', 'team__tournament').prefetch_related('team__speaker_set')
 
     def get_metrics(self):
         method = self.get_tournament().pref('rank_speakers_by')
@@ -197,7 +197,8 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
         return Speaker.objects.filter(
             team__tournament=tournament,
             speakerscore__position=tournament.REPLY_POSITION).select_related(
-            'team', 'team__institution', 'team__tournament').distinct()
+            'team', 'team__institution', 'team__tournament').prefetch_related(
+            'team__speaker_set').distinct()
 
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
