@@ -13,8 +13,7 @@ from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from participants.utils import regions_ordered
 from tournaments.mixins import RoundMixin
-from utils.misc import reverse_round
-from utils.mixins import JsonDataResponseView, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import JsonDataResponseView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
