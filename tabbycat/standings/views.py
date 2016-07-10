@@ -349,7 +349,8 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
         if round is None or round.silent:
             return TabbycatTableBuilder() # empty (as precaution)
 
-        teams = tournament.team_set.order_by('institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
+        teams = tournament.team_set.prefetch_related('speaker_set').order_by(
+                'institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
         rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
 
         add_team_round_results_public(teams, rounds)
