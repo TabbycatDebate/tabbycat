@@ -1,7 +1,7 @@
 from warnings import warn
 
 from django.db import models
-from django.db.models import signals
+from django.db.models import Count, signals
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.functional import cached_property
@@ -222,17 +222,31 @@ class Round(models.Model):
     def __str__(self):
         return "[%s] %s" % (self.tournament, self.name)
 
-    @property
-    def adjudicators_allocation_validity(self):
-        debates = self.cached_draw
-        if not all(debate.adjudicators.has_chair for debate in debates):
-            return 1
-        if not all(debate.adjudicators.valid for debate in debates):
-            return 2
-        return 0
+    def num_debates_without_chair(self):
+        """Returns the number of debates in the round that lack a chair, or have
+        more than one chair."""
+        from adjallocation.models import DebateAdjudicator
+        debates_in_round = self.debate_set.count()
+        debates_with_one_chair = self.debate_set.filter(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR).annotate(
+                num_chairs=Count('debateadjudicator')).filter(num_chairs=1).count()
+        logger.info("%d debates without chair" % (debates_in_round - debates_with_one_chair))
+        return debates_in_round - debates_with_one_chair
+
+    def num_debates_with_even_panel(self):
+        """Returns the number of debates in the round, in which there are an
+        positive and even number of voting judges."""
+        from adjallocation.models import DebateAdjudicator
+        debates_with_even_panel = self.debate_set.exclude(
+                debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE
+            ).annotate(
+                panellists=Count('debateadjudicator'),
+                odd_panellists=Count('debateadjudicator') % 2
+            ).filter(panellists__gt=0, odd_panellists=0).count()
+        logger.info("%d debates with even panel" % debates_with_even_panel)
+        return debates_with_even_panel
 
     def venue_allocation_valid(self):
-        return all(debate.venue for debate in self.cached_draw)
+        return not self.debate_set.filter(venue__isnull=True).exists()
 
     @cached_property
     def is_break_round(self):
@@ -244,6 +258,8 @@ class Round(models.Model):
 
     @cached_property
     def cached_draw(self):
+        # Deprecated 10/7/2016, remove after 10/8/2016
+        warn("Round.cached_draw is deprecated, use Round.debate_set or Round.debate_set_with_team_prefetches() instead.", stacklevel=3)
         return self.get_draw()
 
     def get_draw(self, ordering=('venue__name',)):

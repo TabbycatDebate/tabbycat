@@ -1,4 +1,5 @@
 {% extends "draw_base.html" %}
+{% load humanize %}
 {% load static %}
 {% load debate_tags %}
 
@@ -30,8 +31,7 @@
     <div class="alert alert-danger" id="">
       One or more debates does not have a venue
       <a href="{% round_url venues-edit round %}" class="alert-link">
-        Edit the venues<
-      /a>.
+        Edit the venues</a>.
     </div>
   {% endif %}
   {% if active_adjs.count < draw.count %}
@@ -42,18 +42,20 @@
       </a>.
     </div>
   {% else %}
-    {% if round.adjudicators_allocation_validity > 0 %}
-      <div class="alert alert-warning">
-        {% if round.adjudicators_allocation_validity == 1 %}
-          One or more debates don't have a chair.
-        {% elif round.adjudicators_allocation_validity == 2 %}
-          One or more debates have panels with an even number of adjudicators.
-        {% endif %}
-        <a href="{% round_url draw_adjudicators_edit %}" class="alert-link">
-          Edit adjudicators
-        </a>.
-      </div>
-    {% endif %}
+    {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel %}
+      {% if no_chair > 0 or even_panel > 0 %}
+        <div class="alert alert-warning">
+          {% if no_chair > 0 %}
+            {{ no_chair|apnumber|capfirst }} debates don't have a chair.
+          {% endif %}
+          {% if even_panel > 0 %}
+            {{ even_panel|apnumber|capfirst }} debates have panels with an even number of adjudicators.
+          {% endif %}
+          <a href="{% round_url draw_adjudicators_edit %}" class="alert-link">
+            Edit adjudicators</a>.
+        </div>
+      {% endif %}
+    {% endwith %}
   {% endif %}
 
   {% if round.draw_status = round.STATUS_RELEASED and not pref.public_draw %}
