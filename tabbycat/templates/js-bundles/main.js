@@ -34,7 +34,7 @@ $(document).ready(function(){
 $.fn.extend({
   showAlert: function(alerttype, message, timeout) {
     $('#messages-container').append('<div id="alertdiv" class="alert alert-' + alerttype + ' fade in"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span>' + message + '</span></div>');
-    if (timeout || timeout === 0) {
+    if (timeout && timeout !== 0) {
       setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
         $("#alertdiv").alert('close');
       }, timeout);

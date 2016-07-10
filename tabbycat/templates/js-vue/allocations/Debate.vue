@@ -164,8 +164,15 @@ export default {
       return adjudicators
     },
   },
+  events: {
+    'recheck-panel-conflicts': function() {
+      this.checkPanelConflicts(true, this.conflictableTeams, this.conflictableAdjudicators)
+    },
+  },
   methods: {
     checkPanelConflicts: function(conflictValue, conflictableTeams, conflictableAdjudicators) {
+      this.unsetAll('panel', conflictableTeams)
+      this.unsetAll('panel', conflictableAdjudicators)
       for (var teamID in conflictableTeams) {
         if (conflictableTeams.hasOwnProperty(teamID)) {
           var team = conflictableTeams[teamID];
@@ -197,8 +204,6 @@ export default {
       this.update(this.roundInfo['updatePanelURL'], data, resource);
     },
     'conflictableAdjudicators': function (newVal, oldVal) {
-      this.unsetAll('panel', this.conflictableTeams)
-      this.unsetAll('panel', newVal)
       this.checkPanelConflicts(true, this.conflictableTeams, newVal)
     }
   }

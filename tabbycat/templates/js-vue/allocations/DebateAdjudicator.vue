@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div class="panel slideover-top"
+    <div class="slideover-top"
         :class="{ 'slideover-info': showSlideOver}"
         v-if="showSlideOver"
         transition="expand">
@@ -154,6 +154,7 @@ export default {
     },
     handleDragEnd: function(event) {
       this.$dispatch('unset-dragged-adj')
+      this.showSlideOver = false;
     },
   },
   watch: {

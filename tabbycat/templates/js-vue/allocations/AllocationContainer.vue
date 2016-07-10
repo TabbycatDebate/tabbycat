@@ -6,6 +6,9 @@
     </allocation-actions>
 
     <div class="col-md-12 allocation-container">
+
+      <div class="vertical-spacing" id="messages-container"></div>
+
       <div class="row flex-horizontal subtitle">
         <div class="thead flex-cell text-center" data-toggle="tooltip" title="Debate Bracket">
           <span class="glyphicon glyphicon-stats"></span>
@@ -28,7 +31,7 @@
         </div>
       </div>
 
-      <debate v-for="debate in debates"
+      <debate v-for="debate in debates | orderBy 'importance' -1"
         :debate="debate"
         :aff="teams[debate.aff_team]"
         :neg="teams[debate.neg_team]"
@@ -175,7 +178,6 @@ export default {
           toPanel.splice(toRemoveIndex, 1);
         }
       }
-
       if (fromDebateId === false) {
         adj.allocated = true; // Triggers remove from unused area
       } else {
@@ -184,13 +186,18 @@ export default {
         });
         fromPanel.splice(toRemoveIndex, 1);
       }
-
       // Remove any highlights from hovers
       this.toggleConflicts(false, 'hover', adj, adj.conflicts);
       this.toggleHistories(false, 'hover', adj, adj.histories);
-
       // Find the debate object that was dropped into and add the adj to it
       toPanel.push({'id': adj.id, 'position': toPosition})
+    },
+    'set-debate-panels': function(newDebatesResponse) {
+      // Dispatched from the AllocationActions. Note that this.debates are props
+      // in this component; not data. Need to call up to the root element to set
+      this.$parent.$set('allDebates', newDebatesResponse)
+      // Trigger child Debate components to recalculate conflicts
+      this.$broadcast('recheck-panel-conflicts')
     }
   }
 

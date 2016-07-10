@@ -105,21 +105,25 @@ export default {
     confirmAutoAllocation: function() {
       $('#confirmAutoAlert').modal('show');
     },
+    resetAutoAllocationModal: function(button) {
+      $(button).button('reset');
+      $('#confirmAutoAlert').modal('hide');
+    },
     createAutoAllocation: function(event) {
-      console.log('Creating auto allocation');
-      $(event.target).button('loading')
-      var xhr = new XMLHttpRequest()
       var self = this
-      xhr.open('GET', this.roundInfo.createAutoAllocationURL)
-      xhr.onload = function () {
-        console.log('got allocation back');
-        console.log(JSON.parse(xhr.responseText));
-        $('#confirmAutoAlert').modal('hide');
-        $(event.target).button('reset')
-        // TODO: dispatch and event up the chain to replace debates
-        // TODO: how to handle errors and the like (test with unreleased/released)
-      }
-      xhr.send()
+      $(event.target).button('loading')
+      $.getJSON({
+        url: this.roundInfo.createAutoAllocationURL,
+        success: function(data, textStatus, jqXHR) {
+          self.resetAutoAllocationModal(event.target)
+          $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
+          self.$dispatch('set-debate-panels', JSON.parse(data))
+        },
+        error: function(data, textStatus, jqXHR) {
+          self.resetAutoAllocationModal(event.target)
+          $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
+        }
+      });
     },
     showVenues: function() {
       this.showingVenue = !this.showingVenue;

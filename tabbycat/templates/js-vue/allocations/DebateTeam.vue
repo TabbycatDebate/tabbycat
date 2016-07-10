@@ -18,7 +18,7 @@
         </p>
       </div>
     </div>
-    <div class="panel slideover-top"
+    <div class="slideover-top"
       :class="{ 'slideover-info': showSlideOver}"
       v-if="showSlideOver"
       transition="expand">
