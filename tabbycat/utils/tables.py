@@ -221,7 +221,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return {'text': '-'}
 
         try:
-            opp = ts.opposition
+            opp = ts.opposition # round_results pre-populates this attribute, so it's more efficient when present
         except AttributeError:
             opp = ts.debate_team.opposition.team
 
