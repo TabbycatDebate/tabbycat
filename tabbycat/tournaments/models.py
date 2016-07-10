@@ -43,6 +43,10 @@ class Tournament(models.Model):
         help_text="This releases all results, including silent rounds; do so only after the tournament is finished!")
     active = models.BooleanField(default=True)
 
+    def __init__(self, *args, **kwargs):
+        self._prefs = {}
+        return super().__init__(*args, **kwargs)
+
     @property
     def LAST_SUBSTANTIVE_POSITION(self):  # flake8: noqa
         """Returns the number of substantive speakers."""
@@ -117,7 +121,11 @@ class Tournament(models.Model):
         self.save()
 
     def pref(self, name):
-        return self.preferences.get_by_name(name)
+        try:
+            return self._prefs[name]
+        except KeyError:
+            self._prefs[name] = self.preferences.get_by_name(name)
+            return self._prefs[name]
 
     @cached_property
     def config(self):
