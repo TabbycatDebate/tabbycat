@@ -23,7 +23,7 @@
             <span class="glyphicon glyphicon-signal"></span>
           </div>
           <div class="flex-1 text-center">Chair</div>
-          <div class="flex-2 text-center">Panelists</div>
+          <div class="flex-2 text-center">Panellists</div>
           <div class="flex-1 text-center">Trainees</div>
         </div>
       </div>
