@@ -1,12 +1,12 @@
 import logging
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from django.db import models
 from django.db.models import signals
 from django.utils.functional import cached_property
 
 from tournaments.models import Round
+from utils.managers import LookupByNameFieldsMixin
 
 from .emoji import EMOJI_LIST
 
@@ -21,17 +21,8 @@ class Region(models.Model):
         return '%s' % (self.name)
 
 
-class InstitutionManager(models.Manager):
-    def lookup(self, name, **kwargs):
-        """Queries for an institution with matching name in any of the three
-        name fields."""
-        for field in ('code', 'name', 'abbreviation'):
-            try:
-                kwargs[field] = name
-                return self.get(**kwargs)
-            except ObjectDoesNotExist:
-                kwargs.pop(field)
-        raise self.model.DoesNotExist("No institution matching '%s'" % name)
+class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
+    name_fields = ['code', 'name', 'abbreviation']
 
 
 class Institution(models.Model):
@@ -51,7 +42,7 @@ class Institution(models.Model):
 
     @property
     def venue_preferences(self):
-        return self.institutionvenuepreference_set.all().order_by('-priority')
+        return self.institutionvenueconstraint_set.all().order_by('-priority')
 
     class Meta:
         unique_together = [('name', 'code')]
@@ -114,22 +105,11 @@ class Person(models.Model):
         return bool(self.email or self.phone)
 
 
-class TeamManager(models.Manager):
-    def get_queryset(self):
-        return super(TeamManager,
-                     self).get_queryset().select_related('institution')
+class TeamManager(LookupByNameFieldsMixin, models.Manager):
+    name_fields = ['short_name', 'long_name']
 
-    def lookup(self, name, **kwargs):
-        """Queries for a team with a matching name."""
-        # TODO could be improved to take in a better range of fields
-        try:
-            institution_name, reference = name.rsplit(None, 1)
-        except:
-            print("Error in", repr(name))
-            raise
-        institution_name = institution_name.strip()
-        institution = Institution.objects.lookup(institution_name)
-        return self.get(institution=institution, reference=reference, **kwargs)
+    def get_queryset(self):
+        return super().get_queryset().select_related('institution')
 
 
 class Team(models.Model):

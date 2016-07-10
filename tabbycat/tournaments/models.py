@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.functional import cached_property
 
 from participants.emoji import EMOJI_LIST
+from utils.managers import LookupByNameFieldsMixin
 
 import logging
 logger = logging.getLogger(__name__)
@@ -148,24 +149,12 @@ def update_tournament_cache(sender, instance, created, **kwargs):
 # Update the cached tournament object when model is changed)
 signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
-class RoundManager(models.Manager):
+class RoundManager(LookupByNameFieldsMixin, models.Manager):
     use_for_related_Fields = True
-
-    def lookup(self, name, **kwargs):
-        """Queries for a round with matching name in any of the two name
-        fields."""
-        for field in ('name', 'abbreviation'):
-            try:
-                kwargs[field] = name
-                return self.get(**kwargs)
-            except ObjectDoesNotExist:
-                kwargs.pop(field)
-        raise self.model.DoesNotExist("No round matching '%s'" % name)
+    name_fields = ['name', 'abbreviation']
 
     def get_queryset(self):
-        return super(
-            RoundManager,
-            self).get_queryset().select_related('tournament').order_by('seq')
+        return super().get_queryset().select_related('tournament').order_by('seq')
 
 
 class Round(models.Model):

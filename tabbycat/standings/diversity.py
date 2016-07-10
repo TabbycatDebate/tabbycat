@@ -181,7 +181,7 @@ def get_diversity_data_sets(t, for_public):
 
     if DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_PANEL).count() > 0:
         data_sets['adjudicators_gender'].append(compile_data(
-            'Panelists', DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_PANEL), 'adjudicator__gender', filters=[
+            'Panellists', DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_PANEL), 'adjudicator__gender', filters=[
                 {'Unknown':  None},
                 {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
                 {'Male':     Person.GENDER_MALE},
@@ -252,7 +252,7 @@ def get_diversity_data_sets(t, for_public):
 
     if AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_PANEL).count() > 0:
         data_sets['detailed_adjudicators_results'].append(compile_data(
-            'Average Rating Given by Panelists', AdjudicatorFeedback.objects.filter(
+            'Average Rating Given by Panellists', AdjudicatorFeedback.objects.filter(
                 adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_PANEL, source_adjudicator__isnull=False),
             'source_adjudicator__adjudicator__gender', filters=[
                 {'Male':     Person.GENDER_MALE},

@@ -27,7 +27,7 @@ class DebateAdjudicator(models.Model):
     timing_confirmed = models.NullBooleanField(verbose_name="Available? ")
 
     def __str__(self):
-        return '{} in {}'.format(self.adjudicator, self.debate)
+        return '{} in {} ({})'.format(self.adjudicator, self.debate, self.get_type_display())
 
     class Meta:
         unique_together = ('debate', 'adjudicator')

@@ -49,18 +49,15 @@ def toggle_postponed(request, t, debate_id):
 class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateView):
 
     template_name = 'results.html'
-    draw = None
 
-    def get_or_set_draw(self):
-        if self.draw:
-            return self.draw
-        else:
-            self.draw = self.get_round().debate_set_with_team_prefetches()
-            return self.draw
+    def _get_draw(self):
+        if not hasattr(self, '_draw'):
+            self._draw = self.get_round().debate_set_with_team_prefetches(ordering=('room_rank',))
+        return self._draw
 
     def get_table(self):
-        draw = self.get_or_set_draw()
-        table = ResultsTableBuilder(view=self, sort_key='Status')
+        draw = self._get_draw()
+        table = ResultsTableBuilder(view=self)
         table.add_ballot_status_columns(draw)
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw)
@@ -70,7 +67,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
         return table
 
     def get_context_data(self, **kwargs):
-        draw = self.get_or_set_draw()
+        draw = self._get_draw()
         kwargs["stats"] = {
             'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
             'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),

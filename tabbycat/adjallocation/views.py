@@ -14,7 +14,7 @@ from participants.models import Adjudicator, Team
 from participants.utils import regions_ordered
 from tournaments.mixins import RoundMixin
 from utils.misc import reverse_round
-from utils.mixins import ExpectPost, JsonDataResponseView, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import JsonDataResponseView, PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -105,7 +105,7 @@ def draw_adjudicators_edit(request, round):
     return render(request, "draw_adjudicators_edit.html", context)
 
 
-class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, ExpectPost, View):
+class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
 
     def post(self, request, *args, **kwargs):
 
@@ -128,9 +128,10 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, ExpectPost, View)
             if key.startswith("chair_"):
                 if len(adjs) > 1:
                     logger.warning("There was more than one chair for debate {}, only saving the first".format(alloc.debate))
+                    continue
                 alloc.chair = adjs[0]
             elif key.startswith("panel_"):
-                alloc.panel.extend(adjs)
+                alloc.panellists.extend(adjs)
             elif key.startswith("trainees_"):
                 alloc.trainees.extend(adjs)
 
@@ -142,7 +143,6 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, ExpectPost, View)
                 changed += 1
                 logger.info("Saving adjudicators for debate {}".format(debate))
                 logger.info("{} --> {}".format(existing, revised))
-                existing.delete()
                 try:
                     revised.save()
                 except IntegrityError:
@@ -296,14 +296,14 @@ class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, J
         return debates_to_json(round.get_draw(), self.get_tournament(), round)
 
 
-class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, ExpectPost, View):
+class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
     pass
 
 
 class SaveDebateImportance(SaveDebateInfo):
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
-    def dispatch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         debate_id = request.POST.get('debate_id')
         debate_importance = request.POST.get('importance')
 
@@ -317,20 +317,19 @@ class SaveDebateImportance(SaveDebateInfo):
 class SaveDebatePanel(SaveDebateInfo):
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
-    def dispatch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         debate_id = request.POST.get('debate_id')
         debate_panel = json.loads(request.POST.get('panel'))
 
-        # TODO: more efficient method than just wiping and remarking the data
-        # Build a dict and compare the two sets?
+        to_delete = DebateAdjudicator.objects.filter(debate_id=debate_id).exclude(
+                adjudicator_id__in=[da['id'] for da in debate_panel])
+        for debateadj in to_delete:
+            logger.info("deleted %s" % debateadj)
+        to_delete.delete()
 
-        old_da = DebateAdjudicator.objects.filter(debate=debate_id)
-        old_da.delete()
-
-        [DebateAdjudicator(
-            debate_id=debate_id,
-            adjudicator_id=da['id'],
-            type=da['position']
-        ).save() for da in debate_panel]
+        for da in debate_panel:
+            debateadj, created = DebateAdjudicator.objects.update_or_create(debate_id=debate_id,
+                    adjudicator_id=da['id'], defaults={'type': da['position']})
+            logger.info("%s %s" % ("created" if created else "updated", debateadj))
 
         return HttpResponse()
