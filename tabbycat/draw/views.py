@@ -79,7 +79,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
     def get_table(self):
         tournament = self.get_tournament()
         round = self.get_round()
-        draw = round.debate_set_with_team_prefetches()
+        draw = round.debate_set_with_prefetches()
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key, popovers=self.popovers)
         self.populate_table(draw, table, round, tournament)
         return table
@@ -121,7 +121,7 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
         all_rounds = list(Round.objects.filter(
             tournament=t, draw_status=Round.STATUS_RELEASED))
         for r in all_rounds:
-            r.draw = r.debate_set_with_team_prefetches()
+            r.draw = r.debate_set_with_prefetches()
         kwargs['all_rounds'] = all_rounds
         return super().get_context_data(**kwargs)
 
@@ -156,7 +156,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         if r.draw_status == r.STATUS_NONE:
             return table # Return Blank
 
-        draw = r.debate_set_with_team_prefetches(ordering=('room_rank',))
+        draw = r.debate_set_with_prefetches(ordering=('room_rank',))
         if r.is_break_round:
             table.add_room_rank_columns(draw)
         else:
@@ -420,7 +420,7 @@ class DrawMatchupsEditView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     def get_context_data(self, **kwargs):
         round = self.get_round()
         kwargs['unused_teams'] = round.unused_teams()
-        kwargs['draw'] = round.debate_set_with_team_prefetches(ordering=('room_rank',))
+        kwargs['draw'] = round.debate_set_with_prefetches(ordering=('room_rank',))
         possible_debates = len(kwargs['unused_teams']) // 2 + 1
         kwargs['possible_debates'] = [None] * possible_debates
         return super().get_context_data(**kwargs)

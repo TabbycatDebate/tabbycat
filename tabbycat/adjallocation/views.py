@@ -259,7 +259,7 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, Template
 
         # TODO: It's not clear, when the other code is refactored, which of these three will be fastest
         # draw = r.get_draw()
-        draw = r.debate_set_with_team_prefetches(ordering=('room_rank',), select_related=(), speakers=False, divisions=False)
+        draw = r.debate_set_with_prefetches(ordering=('room_rank',), select_related=(), speakers=False, divisions=False)
         # draw = r.debate_set.all()
 
         teams = Team.objects.filter(debateteam__debate__round=r).prefetch_related('speaker_set')

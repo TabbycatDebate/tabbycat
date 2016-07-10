@@ -5,7 +5,6 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
 
-from adjallocation.allocation import AdjudicatorAllocation
 from participants.models import Team
 from venues.conflicts import venue_conflicts
 
@@ -73,7 +72,7 @@ class Debate(models.Model):
     @property
     def aff_team(self):
         try:
-            return self._aff_team # may be populated by Round.debate_set_with_team_prefetches
+            return self._aff_team # may be populated by Round.debate_set_with_prefetches
         except AttributeError:
             self._aff_team = Team.objects.select_related('institution').get(
                 debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -91,7 +90,7 @@ class Debate(models.Model):
     @property
     def aff_dt(self):
         try:
-            return self._aff_dt # may be populated by Round.debate_set_with_team_prefetches
+            return self._aff_dt # may be populated by Round.debate_set_with_prefetches
         except AttributeError:
             self._aff_dt = self.debateteam_set.select_related('team', 'team__institution').get(
                 position=DebateTeam.POSITION_AFFIRMATIVE)
@@ -100,11 +99,11 @@ class Debate(models.Model):
     @property
     def neg_dt(self):
         try:
-            return self._neg_dt # may be populated by Round.debate_set_with_team_prefetches
+            return self._neg_dt # may be populated by Round.debate_set_with_prefetches
         except AttributeError:
             self._neg_dt = self.debateteam_set.select_related('team', 'team__institution').get(
                 position=DebateTeam.POSITION_NEGATIVE)
-            return self._neg_dt # may be populated by Round.debate_set_with_team_prefetches
+            return self._neg_dt # may be populated by Round.debate_set_with_prefetches
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
@@ -201,11 +200,16 @@ class Debate(models.Model):
 
         return a
 
-    @cached_property
+    @property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
-        return AdjudicatorAllocation(self, from_db=True)
+        try:
+            return self._adjudicators
+        except AttributeError:
+            from adjallocation.allocation import AdjudicatorAllocation
+            self._adjudicators = AdjudicatorAllocation(self, from_db=True)
+            return self._adjudicators
 
     @property
     def chair(self):

@@ -259,21 +259,23 @@ class Round(models.Model):
     @cached_property
     def cached_draw(self):
         # Deprecated 10/7/2016, remove after 10/8/2016
-        warn("Round.cached_draw is deprecated, use Round.debate_set or Round.debate_set_with_team_prefetches() instead.", stacklevel=3)
+        warn("Round.cached_draw is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=3)
         return self.get_draw()
 
     def get_draw(self, ordering=('venue__name',)):
-        warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_team_prefetches() instead.", stacklevel=2)
+        warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=2)
         related = ('venue',)
         if self.tournament.pref('enable_divisions'):
             related += ('division', 'division__venue_group')
         return self.debate_set.order_by(*ordering).select_related(*related)
 
-    def debate_set_with_team_prefetches(self, ordering=('venue__name',), select_related=('venue',), speakers=True, divisions=True):
+    def debate_set_with_prefetches(self, ordering=('venue__name',), select_related=('venue',),
+            teams=True, adjudicators=True, speakers=True, divisions=True):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
-        from draw.models import DebateTeam
+        from adjallocation.allocation import populate_allocations
+        from draw.prefetch import populate_teams
 
         debates = self.debate_set.all()
         if ordering:
@@ -282,19 +284,12 @@ class Round(models.Model):
             select_related += ('division', 'division__venue_group')
         if select_related:
             debates = debates.select_related(*select_related)
-        debates_by_id = {debate.id: debate for debate in debates} # for lookup
 
-        debateteams = DebateTeam.objects.filter(debate__round=self).select_related('team')
-        if speakers:
-            debateteams = debateteams.prefetch_related('team__speaker_set')
-        for debateteam in debateteams:
-            debate = debates_by_id[debateteam.debate_id]
-            if debateteam.position == DebateTeam.POSITION_AFFIRMATIVE:
-                debate._aff_dt = debateteam
-                debate._aff_team = debateteam.team
-            elif debateteam.position == DebateTeam.POSITION_NEGATIVE:
-                debate._neg_dt = debateteam
-                debate._neg_team = debateteam.team
+        # These functions populate relevant attributes of each debate, operating in-place
+        if teams or speakers:
+            populate_teams(debates, speakers=speakers)  # _aff_team, _aff_dt, _neg_team, _neg_dt
+        if adjudicators:
+            populate_allocations(debates)  # _adjudicators
 
         return debates
 

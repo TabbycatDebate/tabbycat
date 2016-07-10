@@ -1,4 +1,4 @@
-"""Miscellaneous functions to help with calculating draws."""
+"""Miscellaneous utilities for the draw."""
 
 
 def nextpow2(n):
