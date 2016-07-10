@@ -13,8 +13,9 @@ from django.views.generic.base import TemplateView
 from django.views.decorators.cache import cache_page
 
 from actionlog.models import ActionLogEntry
+from adjallocation.allocation import populate_allocations
 from adjallocation.models import DebateAdjudicator
-from draw.models import Debate
+from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator
 from motions.models import Motion
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
@@ -29,6 +30,7 @@ from .result import BallotSet
 from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
 from .mixins import ResultsTableBuilder
+from .prefetch import populate_confirmed_ballots, populate_wins
 
 logger = logging.getLogger(__name__)
 
@@ -115,8 +117,16 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     def get_table_by_team(self):
         round = self.get_round()
         tournament = self.get_tournament()
-        teamscores = TeamScore.objects.filter(debate_team__debate__round=round)
+        teamscores = TeamScore.objects.filter(debate_team__debate__round=round,
+                ballot_submission__confirmed=True).prefetch_related(
+                'debate_team', 'debate_team__team', 'debate_team__team__speaker_set',
+                'debate_team__team__institution')
         debates = [ts.debate_team.debate for ts in teamscores]
+
+        for pos in [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]:
+            debates_for_pos = [ts.debate_team.debate for ts in teamscores if ts.debate_team.position == pos]
+            populate_allocations(debates_for_pos)
+            populate_confirmed_ballots(debates_for_pos, motions=True)
 
         table = TabbycatTableBuilder(view=self, sort_key="Team")
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
