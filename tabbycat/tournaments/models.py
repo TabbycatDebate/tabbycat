@@ -294,7 +294,7 @@ class Round(models.Model):
         if adjudicators:
             populate_allocations(debates)  # _adjudicators
         if ballots:
-            populate_confirmed_ballots(debates)
+            populate_confirmed_ballots(debates, motions=True)
         if wins:
             populate_wins(debates)
 

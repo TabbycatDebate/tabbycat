@@ -28,7 +28,7 @@ def populate_wins(debates):
             debateteam._win = None
 
 
-def populate_confirmed_ballots(debates):
+def populate_confirmed_ballots(debates, motions=False):
     """Sets an attribute `_confirmed_ballot` on each Debate, each being the
     BallotSubmission instance for that debate.
 
@@ -37,6 +37,8 @@ def populate_confirmed_ballots(debates):
     """
     debates_by_id = {debate.id: debate for debate in debates}
     confirmed_ballots = BallotSubmission.objects.filter(debate__in=debates, confirmed=True)
+    if motions:
+        confirmed_ballots = confirmed_ballots.select_related('motion')
 
     for ballotsub in confirmed_ballots:
         debate = debates_by_id[ballotsub.debate_id]
