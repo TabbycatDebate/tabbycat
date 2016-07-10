@@ -129,20 +129,11 @@ class Debate(models.Model):
             return None
 
     @property
-    def ballotsubmission_set_by_version(self):
-        return self.ballotsubmission_set.order_by('version')
-
-    @property
-    def ballotsubmission_set_by_version_except_discarded(self):
-        return self.ballotsubmission_set.filter(
-            discarded=False).order_by('version')
-
-    @property
     def identical_ballotsubs_dict(self):
         """Returns a dict. Keys are BallotSubmissions, values are lists of
         version numbers of BallotSubmissions that are identical to the key's
         BallotSubmission. Excludes discarded ballots (always)."""
-        ballotsubs = self.ballotsubmission_set_by_version_except_discarded
+        ballotsubs = self.ballotsubmission_set.exclude(discarded=True).order_by('version')
         result = {b: list() for b in ballotsubs}
         for ballotsub1 in ballotsubs:
             # Save a bit of time by avoiding comparisons already done.

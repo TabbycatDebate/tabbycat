@@ -170,10 +170,9 @@ def edit_ballotset(request, t, ballotsub_id):
     ballotsub = get_object_or_404(BallotSubmission, id=ballotsub_id)
     debate = ballotsub.debate
 
+    all_ballotsubs = debate.ballotsubmission_set.order_by('version')
     if not request.user.is_superuser:
-        all_ballotsubs = debate.ballotsubmission_set_by_version_except_discarded
-    else:
-        all_ballotsubs = debate.ballotsubmission_set_by_version
+        all_ballotsubs = all_ballotsubs.exclude(discarded=True)
 
     identical_ballotsubs_dict = debate.identical_ballotsubs_dict
     for b in all_ballotsubs:
@@ -301,8 +300,10 @@ def new_ballotset(request, t, debate_id):
         form = BallotSetForm(ballotsub)
 
     template = 'enter_results.html' if request.user.is_superuser else 'assistant_enter_results.html'
-    all_ballotsubs = debate.ballotsubmission_set_by_version if request.user.is_superuser \
-        else debate.ballotsubmission_set_by_version_except_discarded
+    all_ballotsubs = debate.ballotsubmission_set.order_by('version')
+    if not request.user.is_superuser:
+        all_ballotsubs = all_ballotsubs.exclude(discarded=True)
+
     context = {
         'form'             : form,
         'ballotsub'        : ballotsub,

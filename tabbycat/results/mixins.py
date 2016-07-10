@@ -65,7 +65,11 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
     def get_ballot_text(self, debate):
         ballotsets_info = " "
-        for ballotset in debate.ballotsubmission_set_by_version:
+
+        # These are prefetched, so sort using Python rather than generating an SQL query
+        ballotsubmissions = sorted(debate.ballotsubmission_set.all(), key=lambda x: x.version)
+
+        for ballotset in ballotsubmissions:
             link = reverse_tournament('edit_ballotset',
                                       self.tournament,
                                       kwargs={'ballotsub_id': ballotset.id})
@@ -84,7 +88,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             elif ballotset.submitter_type == ballotset.SUBMITTER_PUBLIC:
                 ballotsets_info += " <em>a public submission by " + ballotset.ip_address + "</em></small><br>"
 
-        if not debate.ballotsubmission_set_by_version_except_discarded:
+        if all(x.discarded for x in ballotsubmissions):
             link = reverse_tournament('new_ballotset',
                                       self.tournament,
                                       kwargs={'debate_id': debate.id})

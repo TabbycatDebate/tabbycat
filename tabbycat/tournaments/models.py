@@ -277,7 +277,7 @@ class Round(models.Model):
         from adjallocation.allocation import populate_allocations
         from draw.prefetch import populate_teams
 
-        debates = self.debate_set.all()
+        debates = self.debate_set.prefetch_related('ballotsubmission_set').all()
         if ordering:
             debates = debates.order_by(*ordering)
         if self.tournament.pref('enable_divisions') and divisions:
