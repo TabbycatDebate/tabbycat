@@ -6,11 +6,11 @@ from .models import DebateAdjudicator
 logger = logging.getLogger(__name__)
 
 
-def populate_allocations(debates, attrname="_adjudicators"):
-    """Sets an attribute with name `attrname` (default `_adjudicators`) on each
-    debate in `debates`, each one being an AdjudicatorAllocation for that
-    debate. This can be used for efficiency, since it retrieves all of the
-    information in bulk in a single SQL query. Operates in-place.
+def populate_allocations(debates):
+    """Sets an attribute `_adjudicators` on each debate in `debates`, each one
+    being an AdjudicatorAllocation for that debate. This can be used for
+    efficiency, since it retrieves all of the information in bulk in a single
+    SQL query. Operates in-place.
     """
 
     debates_by_id = {debate.id: debate for debate in debates}
