@@ -46,11 +46,11 @@ class BaseScoreField(forms.FloatField):
         """Takes an additional optional keyword argument: preferences,
         the Preferences register for the Tournament."""
 
-        preferences = kwargs.pop('tournament_preferences')
-        if preferences:
-            min_value  = preferences[self.CONFIG_MIN_VALUE_FIELD]
-            max_value  = preferences[self.CONFIG_MAX_VALUE_FIELD]
-            step_value = preferences[self.CONFIG_STEP_VALUE_FIELD]
+        tournament = kwargs.pop('tournament')
+        if tournament:
+            min_value  = tournament.pref(self.CONFIG_MIN_VALUE_FIELD)
+            max_value  = tournament.pref(self.CONFIG_MAX_VALUE_FIELD)
+            step_value = tournament.pref(self.CONFIG_STEP_VALUE_FIELD)
         else:
             min_value  = self.DEFAULT_MIN_VALUE
             max_value  = self.DEFAULT_MAX_VALUE
@@ -95,18 +95,18 @@ class MotionModelChoiceField(forms.ModelChoiceField):
 
 
 class SubstantiveScoreField(BaseScoreField):
-    CONFIG_MIN_VALUE_FIELD  = 'scoring__score_min'
-    CONFIG_MAX_VALUE_FIELD  = 'scoring__score_max'
-    CONFIG_STEP_VALUE_FIELD = 'scoring__score_step'
+    CONFIG_MIN_VALUE_FIELD  = 'score_min'
+    CONFIG_MAX_VALUE_FIELD  = 'score_max'
+    CONFIG_STEP_VALUE_FIELD = 'score_step'
     DEFAULT_MIN_VALUE = 68
     DEFAULT_MAX_VALUE = 82
     DEFAULT_STEP_VALUE = 1
 
 
 class ReplyScoreField(BaseScoreField):
-    CONFIG_MIN_VALUE_FIELD  = 'scoring__reply_score_min'
-    CONFIG_MAX_VALUE_FIELD  = 'scoring__reply_score_max'
-    CONFIG_STEP_VALUE_FIELD = 'scoring__reply_score_step'
+    CONFIG_MIN_VALUE_FIELD  = 'reply_score_min'
+    CONFIG_MAX_VALUE_FIELD  = 'reply_score_max'
+    CONFIG_STEP_VALUE_FIELD = 'reply_score_step'
     DEFAULT_MIN_VALUE = 34
     DEFAULT_MAX_VALUE = 41
     DEFAULT_STEP_VALUE = 0.5
@@ -240,7 +240,7 @@ class BallotSetForm(forms.Form):
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
                     widget=forms.NumberInput(attrs={'class': 'required number'}),
-                    tournament_preferences=self.tournament.preferences)
+                    tournament=self.tournament)
 
         # 5. If forfeits are enabled, don't require some fields and add the forfeit field
         if self.using_forfeits:
