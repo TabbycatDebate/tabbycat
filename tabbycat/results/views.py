@@ -52,12 +52,12 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
 
     def _get_draw(self):
         if not hasattr(self, '_draw'):
-            self._draw = self.get_round().debate_set_with_prefetches(ordering=('room_rank',), wins=True)
+            self._draw = self.get_round().debate_set_with_prefetches(ordering=('room_rank',), ballots=True, wins=True)
         return self._draw
 
     def get_table(self):
         draw = self._get_draw()
-        table = ResultsTableBuilder(view=self)
+        table = ResultsTableBuilder(view=self, admin=self.request.user.is_superuser)
         table.add_ballot_status_columns(draw)
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw)
@@ -98,7 +98,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     def get_table_by_debate(self):
         round = self.get_round()
         tournament = self.get_tournament()
-        debates = round.debate_set_with_prefetches()
+        debates = round.debate_set_with_prefetches(ballots=True, wins=True)
 
         table = TabbycatTableBuilder(view=self, sort_key="Venue")
         table.add_debate_venue_columns(debates)

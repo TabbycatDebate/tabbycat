@@ -1,6 +1,6 @@
 """Functions that prefetch data for efficiency."""
 
-from .models import TeamScore
+from .models import BallotSubmission, TeamScore
 
 
 def populate_wins(debates):
@@ -26,3 +26,23 @@ def populate_wins(debates):
     for debateteam in debateteams:
         if not hasattr(debateteam, "_win"):
             debateteam._win = None
+
+
+def populate_confirmed_ballots(debates):
+    """Sets an attribute `_confirmed_ballot` on each Debate, each being the
+    BallotSubmission instance for that debate.
+
+    This can be used for efficiency, since it retrieves all of the
+    information in bulk in a single SQL query. Operates in-place.
+    """
+    debates_by_id = {debate.id: debate for debate in debates}
+    confirmed_ballots = BallotSubmission.objects.filter(debate__in=debates, confirmed=True)
+
+    for ballotsub in confirmed_ballots:
+        debate = debates_by_id[ballotsub.debate_id]
+        debate._confirmed_ballot = ballotsub
+
+    # populate the attribute for Debates that don't have a confirmed ballot
+    for debate in debates:
+        if not hasattr(debate, "_confirmed_ballot"):
+            debate._confirmed_ballot = None

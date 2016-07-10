@@ -119,14 +119,18 @@ class Debate(models.Model):
             return 'neg'
         return None
 
-    @cached_property
+    @property
     def confirmed_ballot(self):
         """Returns the confirmed BallotSubmission for this debate, or None if
         there is no such ballot submission."""
         try:
-            return self.ballotsubmission_set.get(confirmed=True)
-        except ObjectDoesNotExist:  # BallotSubmission isn't defined yet, so can't use BallotSubmission.DoesNotExist
-            return None
+            return self._confirmed_ballot
+        except AttributeError:
+            try:
+                self._confirmed_ballot = self.ballotsubmission_set.get(confirmed=True)
+            except ObjectDoesNotExist:
+                self._confirmed_ballot = None
+            return self._confirmed_ballot
 
     @property
     def identical_ballotsubs_dict(self):
