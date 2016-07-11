@@ -17,13 +17,16 @@ def categories_ordered(t):
 
 def determine_liveness(break_category, tournament, round, wins):
 
-    thresholds = calculate_live_thresholds(break_category, tournament, round)
-    if wins >= thresholds[0]:
+    if round.is_break_round:
         return True
-    elif wins <= thresholds[1]:
-        return False
     else:
-        return None
+        thresholds = calculate_live_thresholds(break_category, tournament, round)
+        if wins >= thresholds[0]:
+            return True
+        elif wins <= thresholds[1]:
+            return False
+        else:
+            return None
 
 
 def calculate_live_thresholds(break_category, tournament, round):

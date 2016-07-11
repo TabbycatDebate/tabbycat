@@ -22,7 +22,7 @@ from utils.urlkeys import populate_url_keys
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
-from .utils import FeedbackTableBuilder, get_feedback_overview, get_feedback_progress
+from .utils import FeedbackTableBuilder, get_feedback_overview, get_feedback_progress, parse_feedback
 
 
 class GetAdjScores(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
@@ -31,6 +31,16 @@ class GetAdjScores(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
         data = {}
         for adj in Adjudicator.objects.all().select_related('tournament', 'tournament__current_round'):
             data[adj.id] = adj.score
+        return data
+
+
+class GetAdjFeedbackJSON(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
+
+    def get_data(self):
+        adjudicator = get_object_or_404(Adjudicator, pk=self.kwargs['pk'])
+        feedback = adjudicator.get_feedback().filter(confirmed=True)
+        questions = self.get_tournament().adj_feedback_questions
+        data = [parse_feedback(f, questions) for f in feedback]
         return data
 
 
@@ -264,6 +274,7 @@ class GetAdjFeedback(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
         questions = t.adj_feedback_questions
 
         data = [self.parse_feedback(f, questions) for f in feedback]
+        data = [parse_feedback(f, questions) for f in feedback]
         return {'aaData': data}
 
 

@@ -10,10 +10,12 @@
       <div class="vertical-spacing" id="messages-container"></div>
 
       <div class="row flex-horizontal subtitle">
-        <div class="thead flex-cell text-center" data-toggle="tooltip" title="Debate Bracket">
+        <div class="thead flex-cell text-center" data-toggle="tooltip" title="Debate Bracket"
+             v-if="roundInfo.roundIsPrelim">
           <span class="glyphicon glyphicon-stats"></span>
         </div>
-        <div class="thead flex-cell text-center" data-toggle="tooltip" title="How many teams are live in this room">
+        <div class="thead flex-cell text-center" data-toggle="tooltip" title="How many teams are live in this room"
+             v-if="roundInfo.roundIsPrelim">
           <span class="glyphicon glyphicon-heart"></span>
         </div>
         <div class="thead flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">
@@ -44,15 +46,6 @@
     <unallocated-adjudicators
       :adjudicators="unallocatedAdjudicators">
     </unallocated-adjudicators>
-
-    <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header h4 text-danger"></div>
-          <div class="modal-body"></div>
-        </div>
-      </div>
-    </div>
 
   </div>
 </template>

@@ -1,14 +1,18 @@
 <template>
   <div class="row flex-horizontal">
 
-    <div class="flex-cell flex-vertical-center bordered-bottom">
-      <div class="flex-1 text-center" data-toggle="tooltip" title="Debate is in the {{ debate.bracket }} bracket">
+    <div class="flex-cell flex-vertical-center bordered-bottom"
+         v-if="roundInfo.roundIsPrelim">
+      <div class="flex-1 text-center" data-toggle="tooltip"
+           title="Debate is in the {{ debate.bracket }} bracket">
         {{ debate.bracket }}
       </div>
     </div>
 
-    <div class="flex-cell flex-vertical-center bordered-bottom">
-      <div class="flex-1 text-center" data-toggle="tooltip" title="{{ liveness }} teams are live">
+    <div class="flex-cell flex-vertical-center bordered-bottom"
+         v-if="roundInfo.roundIsPrelim">
+      <div class="flex-1 text-center" data-toggle="tooltip"
+           title="{{ liveness }} teams are live">
         {{ liveness }}
       </div>
     </div>

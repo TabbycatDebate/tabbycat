@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
@@ -332,3 +334,39 @@ def get_feedback_progress(t):
     total_coverage = calculate_coverage(total_submitted, total_owed)
 
     return teams, adjudicators, total_coverage
+
+
+def parse_feedback(feedback, questions):
+
+    if feedback.source_team:
+        source_annotation = " (" + feedback.source_team.result + ")"
+    elif feedback.source_adjudicator:
+        source_annotation = " (" + feedback.source_adjudicator.get_type_display() + ")"
+    else:
+        source_annotation = ""
+
+    data =  {
+        'round': feedback.round.abbreviation,
+        'version': str(feedback.version) + (feedback.confirmed and "*" or ""),
+        'bracket': feedback.debate.bracket,
+        'matchup': feedback.debate.matchup,
+        'source': feedback.source,
+        'source_note': source_annotation,
+        'score': feedback.score,
+        'questions': []
+    }
+
+    for question in questions:
+        q = {
+            'reference': question.reference,
+            'text': question.text,
+            'name': question.name
+        }
+        try:
+            q['answer'] = question.answer_set.get(feedback=feedback).answer
+        except ObjectDoesNotExist:
+            q['answer'] = "-"
+
+        data['questions'].append(q)
+
+    return data

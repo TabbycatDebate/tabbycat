@@ -98,6 +98,30 @@ if (typeof divisionsBaseData !== 'undefined' && divisionsBaseData !== null) {
 }
 
 //------------------------------------------------------------------------------
+// Adj Feedback Modal
+//------------------------------------------------------------------------------
+
+import FeedbackCards from  '../js-vue/FeedbackCards.vue'
+
+// From Template
+vueData['feedbacks'] = null;
+
+vueEvents['load-feedback-modal'] = function(url) {
+  console.log('loading the modal');
+  $('#modalFeedbacks').modal();
+  $.getJSON({
+    url: $(event.target).attr('href'),
+    success: function(data, textStatus, jqXHR) {
+      console.log('sucess');
+      this.$parent.$set('feedbacks', data)
+    },
+    error: function(data, textStatus, jqXHR) {
+      $.fn.showAlert('danger', '<strong>Failed to load feedback</strong> ' + data.responseText, 0)
+    }
+  });
+}
+
+//------------------------------------------------------------------------------
 // Main Vue Instance
 //------------------------------------------------------------------------------
 
