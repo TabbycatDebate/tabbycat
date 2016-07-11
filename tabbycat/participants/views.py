@@ -119,7 +119,7 @@ class BaseTeamRecordView(BaseRecordView):
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_allocations(debates)
-        populate_confirmed_ballots(debates, motions=True)
+        populate_confirmed_ballots(debates, motions=True, ballotsets=True)
 
         table = TabbycatTableBuilder(view=self, title="Results", sort_key="Round")
         table.add_round_column([debate.round for debate in debates])

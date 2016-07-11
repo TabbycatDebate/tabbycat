@@ -229,8 +229,7 @@ class SpeakerScoreManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(SpeakerScoreManager,
-                     self).get_queryset().select_related('speaker')
+        return super().get_queryset().select_related('speaker')
 
 
 class SpeakerScore(models.Model):

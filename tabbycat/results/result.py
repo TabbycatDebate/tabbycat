@@ -196,6 +196,8 @@ class BallotSet(object):
         caller to do so; the instance will crash otherwise, as the relevant
         attributes will not be created. (For example, in prefetch.py,
         populate_confirmed_ballots() uses this to load BallotSets in bulk.)
+        Callers can use BallotSet.assert_load() to check that data was loaded
+        correctly.
         """
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
@@ -205,10 +207,13 @@ class BallotSet(object):
         self._adjudicator_sheets = None
 
         if load:
+            # If updating any of the database loading, be sure also to update
+            # populate_confirmed_ballots() in prefetch.py.
+
             self.POSITIONS = self.debate.round.tournament.POSITIONS
 
             debateteams = self.debate.debateteam_set.all()
-            self._update_dts(debateteams)
+            self.update_debateteams(debateteams)
 
             self.speakers = {dt: {} for dt in debateteams}
             self.motion_veto = dict.fromkeys(debateteams, None)
@@ -217,10 +222,10 @@ class BallotSet(object):
             # self.adjudicator_sheets is called, for efficiency.
             self.teamscore_objects = dict.fromkeys(debateteams, None)
 
-            self._other = {debateteams[0]: debateteams[1], debateteams[1]: debateteams[0]}
-
             for dt in debateteams:
                 self._load_team(dt)
+
+            self.assert_loaded()
 
     def _dt(self, team):
         """Extracts a DebateTeam from a given team argument. The argument can be
@@ -246,6 +251,31 @@ class BallotSet(object):
     def is_complete(self):
         return all(sheet.is_complete for sheet in self.adjudicator_sheets.values())
 
+    def assert_loaded(self):
+        """Verifies that all essential internal variables are correctly set up.
+        Specifically, it checks that keys in internal dicts are present as
+        expected and no more, but it does not check any of their types.
+        Raises an AssertionError if something is wrong.
+        """
+        assert 'aff' in self.dts
+        assert 'neg' in self.dts
+        aff = self.dts['aff']
+        neg = self.dts['neg']
+        assert aff.team in self.dts
+        assert neg.team in self.dts
+        assert len(self.dts) == 4
+        assert aff in self.speakers
+        assert neg in self.speakers
+        assert len(self.speakers) == 2
+        assert aff in self.motion_veto
+        assert neg in self.motion_veto
+        assert len(self.motion_veto) == 2
+        assert aff in self.teamscore_objects
+        assert neg in self.teamscore_objects
+        assert len(self.teamscore_objects) == 2
+        assert all(pos in self.speakers[aff] for pos in self.POSITIONS)
+        assert all(pos in self.speakers[neg] for pos in self.POSITIONS)
+
     def save(self):
         assert self.is_complete, "Tried to save ballot set when it is incomplete"
 
@@ -257,7 +287,7 @@ class BallotSet(object):
             self._save_team(dt)
         self.ballotsub.save()
 
-    def _update_dts(self, debateteams):
+    def update_debateteams(self, debateteams):
         """Updates the self.dts dict."""
         self.dts = {dt.team: dt for dt in debateteams}
         assert len(self.dts) == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
@@ -268,10 +298,12 @@ class BallotSet(object):
             key = self.SIDE_KEYS[dt.position]
             self.dts[key] = dt
 
+        self._other = {debateteams[0]: debateteams[1], debateteams[1]: debateteams[0]}
+
     def _load_team(self, dt):
         """Loads the scores for the given DebateTeam from the database into the
         buffer."""
-        for ss in self.ballotsub.speakerscore_set.filter(debate_team=dt):
+        for ss in self.ballotsub.speakerscore_set.filter(debate_team=dt).select_related('speaker'):
             self.speakers[dt][ss.position] = ss.speaker
             # ignore the speaker score itself, just look at SpeakerScoreByAdjs
 
@@ -320,7 +352,7 @@ class BallotSet(object):
         for position, dt in zip(self.SIDES, dts):
             dt.position = position
             dt.save()
-        self._update_dts(self.debate.debateteam_set.all()) # refresh self.dts
+        self.update_debateteams(self.debate.debateteam_set.all()) # refresh self.dts
 
     def get_speaker(self, team, position):
         """Returns the speaker object for team/position."""
