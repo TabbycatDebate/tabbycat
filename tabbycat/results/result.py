@@ -187,8 +187,9 @@ class BallotSet(object):
         """
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
-        self.dts = self.debate.debateteam_set.all()  # Note, this is a QuerySet
-        assert self.dts.count() == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
+        debateteam_set = self.debate.debateteam_set.all()
+        self.dts = {dt.team_id: dt for dt in debateteam_set}
+        assert len(self.dts) == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
 
         self.SIDES = (DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE)
         self.POSITIONS = self.debate.round.tournament.POSITIONS
@@ -197,16 +198,16 @@ class BallotSet(object):
         self._decision_calculated = False
         self._adjudicator_sheets = None
 
-        self.speakers = {dt: {} for dt in self.dts}
-        self.motion_veto = dict.fromkeys(self.dts, None)
+        self.speakers = {dt: {} for dt in debateteam_set}
+        self.motion_veto = dict.fromkeys(debateteam_set, None)
 
         # Values from the database are returned if requested before
         # self.adjudicator_sheets is called, for efficiency.
-        self.teamscore_objects = dict.fromkeys(self.dts, None)
+        self.teamscore_objects = dict.fromkeys(debateteam_set, None)
 
-        self._other = {self.dts[0]: self.dts[1], self.dts[1]: self.dts[0]}
+        self._other = {debateteam_set[0]: debateteam_set[1], debateteam_set[1]: debateteam_set[0]}
 
-        for dt in self.dts:
+        for dt in debateteam_set:
             self._load_team(dt)
 
     def _dt(self, team):
@@ -215,8 +216,8 @@ class BallotSet(object):
         if team in ['aff', 'neg']:
             return self.debate.get_dt(team)
         try:
-            return self.dts.get(team=team)
-        except ObjectDoesNotExist:
+            return self.dts[team.id]
+        except KeyError:
             raise ValueError("The team %s is not in the debate for this scoresheet." % team)
 
     # --------------------------------------------------------------------------
@@ -242,7 +243,7 @@ class BallotSet(object):
         for sheet in self.adjudicator_sheets.values():
             sheet.save()
         self._calc_decision()
-        for dt in self.dts:
+        for dt in self.dts.values():
             self._save_team(dt)
         self.ballotsub.save()
 
@@ -272,22 +273,18 @@ class BallotSet(object):
         points = self._get_points(dt)
         win = self._get_win(dt)
         margin = self._get_margin(dt)
-        self.ballotsub.teamscore_set.filter(debate_team=dt).delete()
-        self.ballotsub.teamscore_set.create(debate_team=dt, score=total,
-            points=points, win=win, margin=margin)
+        self.ballotsub.teamscore_set.update_or_create(debate_team=dt,
+            defaults=dict(score=total, points=points, win=win, margin=margin))
 
-        self.ballotsub.speakerscore_set.filter(debate_team=dt).delete()
         for pos in self.POSITIONS:
             speaker = self.speakers[dt][pos]
             score = self._get_avg_score(dt, pos)
-            self.ballotsub.speakerscore_set.create(debate_team=dt,
-                speaker=speaker, score=score, position=pos)
+            self.ballotsub.speakerscore_set.update_or_create(debate_team=dt,
+                speaker=speaker, position=pos, defaults=dict(score=score))
 
-        self.ballotsub.debateteammotionpreference_set.filter(debate_team=dt,
-                preference=3).delete()
         if self.motion_veto[dt] is not None:
-            self.ballotsub.debateteammotionpreference_set.create(debate_team=dt,
-                preference=3, motion=self.motion_veto[dt])
+            self.ballotsub.debateteammotionpreference_set.update_or_create(
+                debate_team=dt, preference=3, defaults=dict(motion=self.motion_veto[dt]))
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval (speakers and per-adjudicator scores)
@@ -302,7 +299,7 @@ class BallotSet(object):
         for position, dt in zip(self.SIDES, dts):
             dt.position = position
             dt.save()
-        self.dts = self.debate.debateteam_set.all() # refresh self.dts
+        self.dts = {dt.team_id: dt for dt in self.debate.debateteam_set.all()} # refresh self.dts
 
     def get_speaker(self, team, position):
         """Returns the speaker object for team/position."""
@@ -391,7 +388,7 @@ class BallotSet(object):
         is a draw somewhere among the adjudicators, or overall."""
         assert self.is_complete, "Tried to calculate decision on an incomplete ballot set."
 
-        self._adjs_by_dt = {dt: [] for dt in self.dts} # group adjs by vote
+        self._adjs_by_dt = {dt: [] for dt in self.dts.values()} # group adjs by vote
         for adj, sheet in self.adjudicator_sheets.items():
             winner = sheet._get_winner()
             if winner is None:
