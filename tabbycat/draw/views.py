@@ -150,6 +150,12 @@ class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
 class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     detailed = False
 
+    page_emoji = '👏'
+
+    def get_page_title(self):
+        rd = self.get_round()
+        return 'Draw for %s' % rd.name
+
     def get_table(self):
         r = self.get_round()
         table = TabbycatTableBuilder(view=self)
@@ -219,6 +225,10 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
 class AdminDrawWithDetailsView(AdminDrawView):
     detailed = True
+
+    def get_page_title(self):
+        rd = self.get_round()
+        return 'Draw for %s with Details' % rd.name
 
 
 # ==============================================================================

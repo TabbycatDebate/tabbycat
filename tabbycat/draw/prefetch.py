@@ -39,9 +39,8 @@ def populate_opponents(debateteams, speakers=True):
     If `speakers` is True, it also prefetches Speaker instances.
     """
 
-    debateteams_by_id = {dt.id: dt for dt in debateteams}
-
-    debateteams_annotated = DebateTeam.objects.filter(id__in=debateteams_by_id.keys()).annotate(
+    ids = [dt.id for dt in debateteams]
+    debateteams_annotated = DebateTeam.objects.filter(id__in=ids).annotate(
         opponent_id=RawSQL("""
         SELECT opponent.id
         FROM draw_debateteam AS opponent
