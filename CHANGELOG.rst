@@ -2,13 +2,18 @@
 Change Log
 ==========
 
-?.?.?
+1.0.0
 -----
-- Redesigned and improved adjudicator allocation page
+- Redesigned and redeveloped adjudicator allocation page, featuring:
+    - Changes to importances and panels are now automatically saved
+    - Team's liveness relative to all break categories is calculated and displayed to help in identifying critical rooms. With many thanks to Thevesh Theva for this contribution.
+    - Redesigned interface, featuring more clear displays of conflict information
+    - Panel score calculations performed live to show strength of voting majorities
 - Completed break rounds support and workflow
-- Moved the majority of table view rendering to Vue.js to improve performance
-- Feedback lookups now rendered in a cards based format
-- Added a 'Summary Page' for each Team and Adjudicator
+- Moved the majority of table view rendering to Vue.js to improve performance and design options
+- Many significant performance improvements to pages with large data sets
+- Feedback lookups now rendered in a cards based format and callable from more locations
+- Added 'Summary Pages' for each Team and Adjudicator to track their performance throughout a tournament
 - Added a 'Diversity Tab' to display demographic information about participants
 - Added basic linting to the continuous integration tests
 - Various bug fixes, optimisations, and documentation edits
