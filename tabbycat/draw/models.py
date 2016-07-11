@@ -265,6 +265,7 @@ class DebateTeam(models.Model):
 
     @property
     def opposition(self):
+        # Added 11/7/2016, remove after 11/8/2016
         warn("DebateTeam.opposition is deprecated, use DebateTeam.opponent instead.", stacklevel=2)
         return self.opponent
 

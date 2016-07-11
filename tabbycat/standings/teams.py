@@ -6,6 +6,7 @@ from itertools import groupby
 from django.db.models import Sum
 from django.db.models.expressions import RawSQL
 
+from draw.prefetch import populate_opponents
 from participants.models import Round
 from results.models import TeamScore
 
@@ -176,8 +177,9 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             debateteam_set = team.debateteam_set.all()
             if round is not None:
                 debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
+            populate_opponents(debateteam_set)
             for dt in debateteam_set:
-                points = full_queryset.get(id=dt.opposition.team_id).points
+                points = full_queryset.get(id=dt.opponent.team_id).points
                 if points is not None: # points is None when no debates have happened
                     draw_strength += points
             standings.add_metric(team, self.key, draw_strength)

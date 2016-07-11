@@ -17,10 +17,7 @@ def add_team_round_results(standings, rounds, lookup=None, id_attr='instance_id'
     item.
 
     If, for some team and round, there is no relevant `TeamScore`, then the
-    corresponding element of `info.round_results` will be `None`. Additionally,
-    each `TeamScore` object `ts` in each `s.round_results` will have an
-    attribute `ts.opposition`, which will be a `Team` object representing the
-    team faced by the team relating to `info` in the corresponding round.
+    corresponding element of `info.round_results` will be `None`.
 
     If `lookup` is given, it should be a function that takes two arguments
     `(standings, x)` and returns the element in `standings` relating to the
@@ -51,9 +48,7 @@ def add_team_round_results(standings, rounds, lookup=None, id_attr='instance_id'
 def add_team_round_results_public(teams, rounds):
     """Sets, on each item `t` in `teams`, the following attributes:
       - `t.round_results`, a list of `TeamScore` objects, one for each round in
-        `rounds` (in the same order), relating to the team `t`. The `TeamScore`
-        objects are also annotated with oppositions, and as provided for in
-        `add_team_round_results()`.
+        `rounds` (in the same order), relating to the team `t`.
       - `t.wins`, the number of wins that team has from the rounds in `rounds`
       - `t.points`, the number of points that team has from the rounds in
         `rounds`.

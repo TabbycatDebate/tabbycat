@@ -25,7 +25,7 @@
               {% with debate=debateadjudicator.debate %}
                 <ul class="list-group">
 
-                  {# Position, opposition and venue #}
+                  {# Position, teams and venue #}
                   <li class="list-group-item lead {% if draw_released %}active{% endif %}">
                     {{ adjudicator.name }} is
                     {% if debate.adjudicators|length > 1 %}
