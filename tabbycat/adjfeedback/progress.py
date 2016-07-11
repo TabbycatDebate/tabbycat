@@ -182,7 +182,8 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         self.team = team
 
     def get_submitted_feedback(self):
-        return AdjudicatorFeedback.objects.filter(source_team__team=self.team)
+        return AdjudicatorFeedback.objects.filter(confirmed=True,
+                source_team__team=self.team)
 
     def get_expected_trackers(self):
         # There is one tracker for each debate for which there is a confirmed ballot,
@@ -199,7 +200,8 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         self.adjudicator = adjudicator
 
     def get_submitted_feedback(self):
-        return AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=self.adjudicator)
+        return AdjudicatorFeedback.objects.filter(confirmed=True,
+                source_adjudicator__adjudicator=self.adjudicator)
 
     def get_expected_trackers(self):
         """Trackers are as follows:
