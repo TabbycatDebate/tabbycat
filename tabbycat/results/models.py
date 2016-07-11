@@ -2,7 +2,6 @@ import logging
 from threading import Lock
 
 from django.db import models
-from django.utils.functional import cached_property
 from django.conf import settings
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
 
@@ -121,7 +120,7 @@ class BallotSubmission(Submission):
             time=('<unknown>' if self.timestamp is None else str(
                 self.timestamp.isoformat())))
 
-    @cached_property
+    @property
     def ballot_set(self):
         if not hasattr(self, "_ballot_set"):
             self._ballot_set = BallotSet(self)
