@@ -2,6 +2,7 @@ import logging
 
 from django.db.models.expressions import RawSQL
 
+from draw.prefetch import populate_opponents
 from results.models import TeamScore, SpeakerScore
 from participants.models import Team
 
@@ -36,21 +37,13 @@ def add_team_round_results(standings, rounds, lookup=None, id_attr='instance_id'
         debate_team__debate__round__in=rounds,
         debate_team__team_id__in=teams
     )
-    teamscores = teamscores.annotate(opposition_id=RawSQL("""
-        SELECT opposition.team_id
-        FROM draw_debateteam AS opposition
-        WHERE opposition.debate_id = draw_debateteam.debate_id
-        AND opposition.id != draw_debateteam.id""", ()
-    ))
-    teamscores = list(teamscores)
-    oppositions = Team.objects.prefetch_related('speaker_set').in_bulk([ts.opposition_id for ts in teamscores])
+    populate_opponents([ts.debate_team for ts in teamscores])
 
     for info in standings:
         info.round_results = [None] * len(rounds)
 
     round_lookup = {r: i for i, r in enumerate(rounds)}
     for ts in teamscores:
-        ts.opposition = oppositions[ts.opposition_id]
         info = lookup(standings, ts.debate_team.team)
         info.round_results[round_lookup[ts.debate_team.debate.round]] = ts
 

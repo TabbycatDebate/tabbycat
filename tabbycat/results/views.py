@@ -16,6 +16,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.allocation import populate_allocations
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
+from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
 from motions.models import Motion
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
@@ -115,8 +116,6 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         return table
 
     def get_table_by_team(self):
-        from draw.prefetch import populate_opponents
-
         round = self.get_round()
         tournament = self.get_tournament()
         teamscores = TeamScore.objects.filter(debate_team__debate__round=round,

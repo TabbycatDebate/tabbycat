@@ -220,10 +220,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if not hasattr(ts, 'debate_team'):
             return {'text': '-'}
 
-        try:
-            opp = ts.opposition # round_results pre-populates this attribute, so it's more efficient when present
-        except AttributeError:
-            opp = ts.debate_team.opponent.team
+        opp = ts.debate_team.opponent.team
 
         cell = {
             'text': " vs " + (opp.emoji or "…") if compress else opp.short_name,

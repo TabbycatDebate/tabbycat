@@ -41,7 +41,7 @@ def populate_opponents(debateteams, speakers=True):
 
     debateteams_by_id = {dt.id: dt for dt in debateteams}
 
-    debateteams_annotated = DebateTeam.objects.only('id', 'debate_id').filter(id__in=debateteams_by_id.keys()).annotate(
+    debateteams_annotated = DebateTeam.objects.filter(id__in=debateteams_by_id.keys()).annotate(
         opponent_id=RawSQL("""
         SELECT opponent.id
         FROM draw_debateteam AS opponent
