@@ -14,11 +14,11 @@
   <a href="{% round_url venues-edit round %}" class="btn btn-default submit-disable">
     Edit Venues
   </a>
-  <a href="{% round_url draw_matchups_edit round %}" class="btn btn-default submit-disable">
+  <a href="{% round_url draw-matchups-edit round %}" class="btn btn-default submit-disable">
     Edit Matchups
   </a>
   {% if pref.allocation_confirmations %}
-    <a href="{% round_url confirmations_view %}" class="btn btn-default submit-disable">
+    <a href="{% round_url draw-schedule-confirmations %}" class="btn btn-default submit-disable">
       Shift Confirms
     </a>
   {% endif %}
@@ -27,10 +27,10 @@
       Assign Motions to Divisions
     </a>
   {% endif %}
-  <a class="btn btn-default submit-disable" href="{% round_url draw_with_standings %}">
+  <a class="btn btn-default submit-disable" href="{% round_url draw-details %}">
     Draw Details
   </a>
-  <a class="btn btn-default submit-disable" href="{% round_url draw_confirm_regenerate %}" class="btn btn-default submit-disable">
+  <a class="btn btn-default submit-disable" href="{% round_url draw-confirm-regenerate %}" class="btn btn-default submit-disable">
     Regenerate Draw
   </a>
 {% endblock %}

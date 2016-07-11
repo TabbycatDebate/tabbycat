@@ -185,7 +185,7 @@
 
           $.ajax( {
             type: "POST",
-            url: "{% round_url save_matchups %}",
+            url: "{% round_url draw-matchups-save %}",
             data: data,
             success: function(data, status) {
               btn.attr("disabled", false);

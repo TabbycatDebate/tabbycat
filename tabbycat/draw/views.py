@@ -355,7 +355,7 @@ class ScheduleConfirmationsView(SuperuserRequiredMixin, RoundMixin, TemplateView
         kwargs['adjs'] = adjs
 
 
-class ApplyDebateSchedyleView(DrawStatusEdit):
+class ApplyDebateScheduleView(DrawStatusEdit):
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()

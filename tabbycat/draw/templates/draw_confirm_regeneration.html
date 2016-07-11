@@ -16,7 +16,7 @@
     their ballots and adjudicator allocations — and cannot be undone.
     You probably don't want to do this if any results have been entered!</p>
     <p>
-      <form class="" method="POST" action="{% round_url draw_regenerate %}">
+      <form class="" method="POST" action="{% round_url draw-regenerate %}">
         {% csrf_token %}
         <button class="btn btn-danger submit-disable" type="submit">
           Yes, I want to delete the current draw for {{ round.name }}

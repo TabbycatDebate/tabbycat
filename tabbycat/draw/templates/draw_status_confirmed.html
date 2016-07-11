@@ -85,12 +85,12 @@
   <div class="vertical-spacing">
 
     <div class="btn-group">
-      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_venue round %}">
+      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw-display-by-venue round %}">
         <span class="text-primary">
           Display Draw by Venue <span class="glyphicon glyphicon-share"></span>
         </span>
       </a>
-      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_by_team round %}">
+      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw-display-by-team round %}">
         <span class="text-primary">
           Display Draw by Team <span class="glyphicon glyphicon-share"></span>
         </span>
@@ -133,7 +133,7 @@
             {% endif %}
           </a>
         {% else %}
-          <a href="{% round_url schedule_debates %}" class="btn btn-sm btn-default submit-disable">
+          <a href="{% round_url draw-schedule-debates %}" class="btn btn-sm btn-default submit-disable">
             Schedule Debates
           </a>
         {% endif %}
@@ -154,14 +154,14 @@
         </form>
       {% endif %}
       {% if round.draw_status = round.STATUS_CONFIRMED %}
-        <form class="pull-right" id="releaseForm" method="POST" action="{% round_url release_draw %}">
+        <form class="pull-right" id="releaseForm" method="POST" action="{% round_url draw-release %}">
           {% csrf_token %}
           <button class="btn btn-sm btn-primary submit-disable" type="submit">
             Release Draw
           </button>
         </form>
       {% elif round.draw_status = round.STATUS_RELEASED %}
-        <form class="pull-right" id="unreleaseForm" method="POST" action="{% round_url unrelease_draw %}">
+        <form class="pull-right" id="unreleaseForm" method="POST" action="{% round_url draw-unrelease %}">
           {% csrf_token %}
           <button class="btn btn-sm btn-danger submit-disable" type="submit">
             Unrelease Draw
@@ -179,7 +179,7 @@
           <h3>Change Start Time</h3>
         </div>
         <div class="modal-body">
-          <form id="startTimeForm" method="POST" action="{% round_url set_round_start_time %}" class="form-horizontal">
+          <form id="startTimeForm" method="POST" action="{% round_url draw-start-time-set %}" class="form-horizontal">
             <div class="form-group">
               <label class="col-sm-4 control-label">
                 Start at

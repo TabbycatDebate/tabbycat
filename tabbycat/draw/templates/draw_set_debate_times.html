@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a href="{% round_url apply_schedule %}" class="btn btn-success submit-disable" id="assignTimes">
+  <a href="{% round_url draw-schedule-apply %}" class="btn btn-success submit-disable" id="assignTimes">
     Apply Times to Debates
   </a>
 {% endblock %}
@@ -25,7 +25,7 @@
       <div class="panel-heading">
         <h4 class="panel-title">Assign Dates to Venue Groups</h4>
       </div>
-      <form id="assignForm" method="POST" action="{% round_url apply_schedule %}">
+      <form id="assignForm" method="POST" action="{% round_url draw-schedule-apply %}">
         {% csrf_token %}
         <ul class="list-group">
           {% for vg in venue_groups %}
