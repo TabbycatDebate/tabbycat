@@ -155,9 +155,10 @@ def debates_to_json(draw, t, r):
     return json.dumps(data)
 
 
-def adjs_to_json(adjs, regions):
+def adjs_to_json(adjs, regions, t):
     """Converts to a standard JSON object for Vue components to use"""
 
+    fw = t.current_round.feedback_weight
     absolute_scores = [adj.score for adj in adjs]
     absolute_scores.sort()
     percentile_cutoffs = [(100 - i, percentile(absolute_scores, i/100)) for i in range(0,100,10)]

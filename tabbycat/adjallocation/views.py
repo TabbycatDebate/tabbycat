@@ -274,7 +274,7 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, Template
         kwargs['allCategories'] = json.dumps(categories)
         kwargs['allDebates'] = debates_to_json(draw, t, r)
         kwargs['allTeams'] = teams_to_json(teams, regions, categories, t, r)
-        kwargs['allAdjudicators'] = adjs_to_json(adjs, regions)
+        kwargs['allAdjudicators'] = adjs_to_json(adjs, regions, t)
 
         return super().get_context_data(**kwargs)
 
