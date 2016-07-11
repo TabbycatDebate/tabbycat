@@ -28,9 +28,10 @@ from .utils import FeedbackTableBuilder, get_feedback_overview, get_feedback_pro
 class GetAdjScores(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
 
     def get_data(self):
+        feedback_weight = self.get_tournament().current_round.feedback_weight
         data = {}
-        for adj in Adjudicator.objects.all().select_related('tournament', 'tournament__current_round'):
-            data[adj.id] = adj.score
+        for adj in Adjudicator.objects.all():
+            data[adj.id] = adj.weighted_score(feedback_weight)
         return data
 
 
