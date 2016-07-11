@@ -7,9 +7,12 @@ from django.forms.models import modelformset_factory
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 
+from adjallocation.allocation import populate_allocations
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForTeam, FeedbackProgressForAdjudicator
+from draw.prefetch import populate_teams, populate_opponents
 from results.models import TeamScore
+from results.prefetch import populate_wins, populate_confirmed_ballots
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from tournaments.models import Round
 from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
@@ -111,8 +114,13 @@ class BaseTeamRecordView(BaseRecordView):
     def get_table(self):
         """On team record pages, the table is the results table."""
         tournament = self.get_tournament()
-        teamscores = TeamScore.objects.filter(debate_team__team=self.object)
+        teamscores = TeamScore.objects.filter(debate_team__team=self.object).select_related(
+                'debate_team__debate', 'debate_team__debate__round')
         debates = [ts.debate_team.debate for ts in teamscores]
+        populate_opponents([ts.debate_team for ts in teamscores])
+        populate_allocations(debates)
+        populate_confirmed_ballots(debates, motions=True)
+
         table = TabbycatTableBuilder(view=self, title="Results", sort_key="Round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_columns(teamscores)
@@ -149,8 +157,13 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     def get_table(self):
         """On adjudicator record pages, the table is the previous debates table."""
         tournament = self.get_tournament()
-        debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.object)
+        debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.object).select_related('debate', 'debate__round')
         debates = [da.debate for da in debateadjs]
+        populate_teams( debates)
+        populate_wins(debates)
+        populate_allocations(debates)
+        populate_confirmed_ballots(debates, motions=True)
+
         table = TabbycatTableBuilder(view=self, title="Previous Rounds", sort_key="Round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_results_columns(debates)
