@@ -3,9 +3,10 @@
 import logging
 from itertools import groupby
 
-from django.db.models import Sum
+from django.db.models import Prefetch, Sum
 from django.db.models.expressions import RawSQL
 
+from draw.models import DebateTeam
 from draw.prefetch import populate_opponents
 from participants.models import Round
 from results.models import TeamScore
@@ -169,17 +170,24 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             return
 
         logger.info("Running points query for draw strength:")
-        full_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
+        points_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
             queryset[0].tournament.team_set.all(), "points", "points", "SUM", round)
+
+        if round is not None:
+            prefetch_queryset = DebateTeam.objects.filter(debate__round__seq__lte=round.seq)
+        else:
+            prefetch_queryset = DebateTeam.objects.filter(debate__round__stage=Round.STAGE_PRELIMINARY)
+        points_queryset = points_queryset.prefetch_related(Prefetch('debateteam_set',
+                queryset=prefetch_queryset, to_attr='debateteams'))
+        points_queryset_teams = {team.id: team for team in points_queryset}
+        points_queryset_debateteams = {team.id: list(team.debateteams) for team in points_queryset}
+
+        populate_opponents([dt for dts in points_queryset_debateteams.values() for dt in dts])
 
         for team in queryset:
             draw_strength = 0
-            debateteam_set = team.debateteam_set.all()
-            if round is not None:
-                debateteam_set = debateteam_set.filter(debate__round__seq__lte=round.seq)
-            populate_opponents(debateteam_set)
-            for dt in debateteam_set:
-                points = full_queryset.get(id=dt.opponent.team_id).points
+            for dt in points_queryset_debateteams[team.id]:
+                points = points_queryset_teams[dt.opponent.team_id].points
                 if points is not None: # points is None when no debates have happened
                     draw_strength += points
             standings.add_metric(team, self.key, draw_strength)
