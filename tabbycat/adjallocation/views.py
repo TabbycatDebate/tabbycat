@@ -264,17 +264,17 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, Template
 
         teams = Team.objects.filter(debateteam__debate__round=r).prefetch_related('speaker_set')
         adjs = get_adjs(self.get_round())
-        regions = regions_ordered(t)
 
+        regions = regions_ordered(t)
+        categories = categories_ordered(t)
         adjs, teams = populate_conflicts(adjs, teams)
         adjs, teams = populate_histories(adjs, teams, t, r)
 
-        kwargs['allDebates'] = debates_to_json(draw, t, r)
-        categories = categories_ordered(t)
-        kwargs['allTeams'] = teams_to_json(teams, regions, categories, t, r)
-        kwargs['allAdjudicators'] = adjs_to_json(adjs, regions)
         kwargs['allRegions'] = json.dumps(regions)
         kwargs['allCategories'] = json.dumps(categories)
+        kwargs['allDebates'] = debates_to_json(draw, t, r)
+        kwargs['allTeams'] = teams_to_json(teams, regions, categories, t, r)
+        kwargs['allAdjudicators'] = adjs_to_json(adjs, regions, t)
 
         return super().get_context_data(**kwargs)
 

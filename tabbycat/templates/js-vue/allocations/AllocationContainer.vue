@@ -13,7 +13,7 @@
         <div class="thead flex-cell text-center" data-toggle="tooltip" title="Debate Bracket">
           <span class="glyphicon glyphicon-stats"></span>
         </div>
-        <div class="thead flex-cell text-center" data-toggle="tooltip" title="How many teams are live in this room">
+        <div class="thead flex-cell text-center" data-toggle="tooltip" title="How many break categories are live in this room (across both teams)">
           <span class="glyphicon glyphicon-heart"></span>
         </div>
         <div class="thead flex-cell importance-container" data-toggle="tooltip" title="More important debates receive better panels by the auto allocator">

@@ -8,7 +8,7 @@
     </div>
 
     <div class="flex-cell flex-vertical-center bordered-bottom">
-      <div class="flex-1 text-center" data-toggle="tooltip" title="{{ liveness }} teams are live">
+      <div class="flex-1 text-center" data-toggle="tooltip" title="{{ liveness }} break categories are live">
         {{ liveness }}
       </div>
     </div>

@@ -3,20 +3,40 @@ import math
 from .models import BreakCategory
 
 
+def get_scores(bc):
+    # TODO: rework this to be more efficient using the new prepopulate calls
+    from participants.models import Team
+    from results.models import TeamScore
+    from django.db.models import Sum
+    teams = Team.objects.filter(break_categories=bc)
+    scores = []
+    for team in teams:
+        score = TeamScore.objects.filter(
+            ballot_submission__confirmed=True,
+            debate_team__team=team).aggregate(Sum('points'))
+        scores.append(score['points__sum'])
+
+    scores.sort(reverse=True)
+    return scores
+
+
 def categories_ordered(t):
-    categories = BreakCategory.objects.filter(tournament=t).order_by('-is_general', 'name')
+    categories = BreakCategory.objects.filter(
+        tournament=t).order_by('-is_general', 'name')
     data = [{
         'seq': count + 1,
+        'open': bc.is_general,
         'name': bc.name,
         'id': bc.id,
         'size': bc.break_size,
-        'teams': bc.team_set.count()
+        'teams': bc.team_set.count(),
+        'scores': get_scores(bc) if not bc.is_general else None
     } for count, bc in enumerate(categories)]
+
     return data
 
 
 def determine_liveness(break_category, tournament, round, wins):
-
     thresholds = calculate_live_thresholds(break_category, tournament, round)
     if wins >= thresholds[0]:
         return True
@@ -28,8 +48,8 @@ def determine_liveness(break_category, tournament, round, wins):
 
 def calculate_live_thresholds(break_category, tournament, round):
     """ Create array of binomial coefficients, then create arrays of raw decimal
-     data, upper bounds, and lower bounds. Contributed by Thevesh Theva and
-     his work on the debatebreaker.blogspot.com.au blog and app"""
+    data, upper bounds, and lower bounds. Contributed by Thevesh Theva and
+    his work on the debatebreaker.blogspot.com.au blog and app"""
 
     def factorial(n):
         if n == 0:
@@ -41,50 +61,72 @@ def calculate_live_thresholds(break_category, tournament, round):
     break_spots = break_category['size']
     total_teams = break_category['teams']
     total_rounds = tournament.prelim_rounds(until=round).count()
+    break_cat_scores = break_category['scores']
 
+    # Create array of binomial coefficients, then create arrays of raw
+    # decimal data, upper bounds, and lower bounds
     coefficients = []
-    for i in range(0, total_rounds):
-        coefficients.append((factorial(total_rounds)/(factorial(i)*factorial(total_rounds - i))))
+    for i in range(0, total_rounds + 1):
+        coeff = (factorial(total_rounds) / (factorial(i) * factorial(total_rounds - i)))
+        coefficients.append(coeff)
 
     originals = []
-    for i in range(0, total_rounds):
+    for i in range(0,total_rounds + 1):
         originals.append((total_teams / (2.0**total_rounds) * coefficients[i]))
 
     ceilings = []
     floors = []
-
-    for i in range(0, total_rounds):
+    for i in range(0, total_rounds + 1):
         ceilings.append(math.ceil(originals[i]))
         floors.append(math.floor(originals[i]))
 
-    # Now, we create the arrays of sum totals for each number of wins. This is the data we'll work with.
+    # Now, we create the cumulative totals for each number of wins.
+    # This is the data we'll work with.
     sum_o = []
     sum_u = []
     sum_d = []
-
     sum_o.insert(0, originals[0])
     sum_u.insert(0, ceilings[0])
     sum_d.insert(0, floors[0])
 
-    for i in range(1, total_rounds):
+    for i in range(1, total_rounds + 1):
         sum_o.append(originals[i] + sum_o[i-1])
         sum_u.append(ceilings[i] + sum_u[i-1])
         sum_d.append(floors[i] + sum_d[i-1])
 
-    # We now have complete data sets, and can compute the safe score and dead score.
-    high_bound = 0
-    for i in range(0, total_rounds):
-        if sum_u[i] <= break_spots:
-            high_bound = total_rounds-i
+    # We now have complete data sets, and can compute the safe score and dead
+    # scores for any category we want.
+    if break_category['open']:
+        high_bound = 0
+        for i in range(0, total_rounds + 1):
+            if sum_u[i] <= break_spots:
+                high_bound = total_rounds-i
 
-    low_bound = 0
-    for i in range(0, total_rounds):
-        if sum_d[i] <= break_spots:
-            low_bound = total_rounds-i-1
+        low_bound = 0
+        for i in range(0, total_rounds + 1):
+            if sum_d[i] <= break_spots:
+                low_bound = total_rounds-i-1
 
-    # If a team is on this score, breaking is guaranteed.
-    safe = high_bound
-    # If a team is on this score, breaking is impossible.
-    dead = low_bound - (total_rounds - (current_round - 1)) - 1
+        safe = high_bound
+        dead = low_bound - (total_rounds - (current_round - 1)) - 1
+        return safe,dead
+    else:
+        # The safe score for the ESL/EFL category is trick. First, we get a best
+        # possible apriori safe score using the  earlier binomial distribution.
+        safe = 0
+        for i in range(0, total_rounds + 1):
+            if sum_u[i] <= break_spots:
+                safe = total_rounds-i
 
-    return safe, dead
+        # Now, we improve upon our safe score using the actual data.
+        # Check if teams in breaking range can still be 'caught'by the team just
+        # outside breaking range. This gives us the best possible safe score.
+        for i in range(0, break_spots + 1):
+            if break_cat_scores[i] - break_cat_scores[break_spots] > total_rounds - current_round + 1:
+                safe = break_cat_scores[i]
+
+        # The dead score for the ESL category is easy to calculate.
+        # This function just defines the score such that a team can no longer
+        # 'catch' a team in the last breaking spot.
+        dead = break_cat_scores[break_spots-1] - (total_rounds - current_round + 1) - 1
+        return safe, dead
