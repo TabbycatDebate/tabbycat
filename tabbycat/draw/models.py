@@ -250,14 +250,23 @@ class DebateTeam(models.Model):
     def __str__(self):
         return '{} in {}'.format(self.team.short_name, self.debate)
 
-    @cached_property
-    def opposition(self):
+    @property
+    def opponent(self):
         try:
-            return DebateTeam.objects.exclude(position=self.position).select_related(
-                    'team', 'team__institution').get(debate=self.debate)
-        except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
-            logger.error("Error finding opposition: %s, %s", self.debate, self.position)
-            return None
+            return self._opponent
+        except AttributeError:
+            try:
+                self._opponent = DebateTeam.objects.exclude(position=self.position).select_related(
+                        'team', 'team__institution').get(debate=self.debate)
+            except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
+                logger.warning("No opponent found for %s", str(dt))
+                self._opponent = None
+            return self._opponent
+
+    @property
+    def opposition(self):
+        warn("DebateTeam.opposition is deprecated, use DebateTeam.opponent instead.", stacklevel=2)
+        return self.opponent
 
     @property
     def result(self):

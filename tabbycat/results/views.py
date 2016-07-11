@@ -115,6 +115,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         return table
 
     def get_table_by_team(self):
+        from draw.prefetch import populate_opponents
+
         round = self.get_round()
         tournament = self.get_tournament()
         teamscores = TeamScore.objects.filter(debate_team__debate__round=round,
@@ -122,6 +124,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
                 'debate_team', 'debate_team__team', 'debate_team__team__speaker_set',
                 'debate_team__team__institution')
         debates = [ts.debate_team.debate for ts in teamscores]
+
+        populate_opponents([ts.debate_team for ts in teamscores])
 
         for pos in [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]:
             debates_for_pos = [ts.debate_team.debate for ts in teamscores if ts.debate_team.position == pos]
