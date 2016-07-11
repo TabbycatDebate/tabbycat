@@ -1,5 +1,6 @@
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate, DebateTeam
+from participants.utils import get_side_counts
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from utils.misc import reverse_tournament
 
@@ -531,12 +532,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['class'] = cell.get('class', '') + ' highlight-row'
 
     def add_affs_count(self, teams, round, team_type):
+        aff_counts = get_side_counts(teams, DebateTeam.POSITION_AFFIRMATIVE, round.seq)
         affs_header = {
             'key':  'aaffs' if team_type is 'aff' else 'naffs',
             'tooltip': 'Number of times the current ' + team_type + ' has been in the affirmative position before'
         }
         affs_data = [{
-            'text': t.get_aff_count(round.seq) if round.prev else '',
+            'text': aff_counts[t.id],
         } for t in teams]
         self.add_column(affs_header, affs_data)
 

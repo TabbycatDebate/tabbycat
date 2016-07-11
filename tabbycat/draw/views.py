@@ -182,8 +182,8 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
                 table.add_column("Aff Break Rank", [d.aff_team.break_rank_for_category(r.break_category) for d in draw])
                 table.add_column("Neg Break Rank", [d.neg_team.break_rank_for_category(r.break_category) for d in draw])
             table.add_debate_metric_columns(draw, standings)
-            table.add_affs_count([d.aff_team for d in draw], r, 'aff')
-            table.add_affs_count([d.neg_team for d in draw], r, 'neg')
+            table.add_affs_count([d.aff_team for d in draw], r.prev, 'aff')
+            table.add_affs_count([d.neg_team for d in draw], r.prev, 'neg')
         else:
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
