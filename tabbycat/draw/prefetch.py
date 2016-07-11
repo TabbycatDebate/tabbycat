@@ -45,8 +45,8 @@ def populate_opponents(debateteams, speakers=True):
         SELECT opponent.id
         FROM draw_debateteam AS opponent
         WHERE opponent.debate_id = draw_debateteam.debate_id
-        AND opponent.id != draw_debateteam.id""", ()
-    ))
+        AND opponent.id != draw_debateteam.id""", ())
+    )
     debateteams_annotated_by_id = {dt.id: dt for dt in debateteams_annotated}
     opponent_ids = [dt.opponent_id for dt in debateteams_annotated]
 

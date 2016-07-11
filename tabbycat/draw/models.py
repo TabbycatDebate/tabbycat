@@ -259,7 +259,7 @@ class DebateTeam(models.Model):
                 self._opponent = DebateTeam.objects.exclude(position=self.position).select_related(
                         'team', 'team__institution').get(debate=self.debate)
             except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
-                logger.warning("No opponent found for %s", str(dt))
+                logger.warning("No opponent found for %s", str(self))
                 self._opponent = None
             return self._opponent
 
