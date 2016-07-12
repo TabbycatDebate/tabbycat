@@ -114,7 +114,8 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
         # Create the Scoresheets
         # ----------------------
         scoresheets_by_debateadj_id = {}
-        debateadjs = DebateAdjudicator.objects.filter(debate__in=debates).exclude(
+        debateadjs = DebateAdjudicator.objects.filter(
+                debate__in=ballotsets_by_debate_id.keys()).exclude(
                 type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator')
         for da in debateadjs:
             ballotset = ballotsets_by_debate_id[da.debate_id]
