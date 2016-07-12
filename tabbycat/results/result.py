@@ -59,7 +59,7 @@ class Scoresheet(object):
 
     @property
     def is_complete(self):
-        return all(all(self.data[dt][p] is not None for p in self.POSITIONS) for dt in self.dts)
+        return all(self.data[dt][p] is not None for dt in self.dts for p in self.POSITIONS)
 
     def save(self):
         """Saves the information in this instance to the database."""
@@ -215,7 +215,7 @@ class BallotSet(object):
             debateteams = self.debate.debateteam_set.all()
             self.update_debateteams(debateteams)
 
-            self.speakers = {dt: {} for dt in debateteams}
+            self.speakers = {dt: dict.fromkeys(self.POSITIONS, None) for dt in debateteams}
             self.motion_veto = dict.fromkeys(debateteams, None)
 
             # Values from the database are returned if requested before
@@ -249,7 +249,11 @@ class BallotSet(object):
 
     @property
     def is_complete(self):
-        return all(sheet.is_complete for sheet in self.adjudicator_sheets.values())
+        if not all(sheet.is_complete for sheet in self.adjudicator_sheets.values()):
+            return False
+        if not all(self.speakers[dt][p] is not None for dt in self.dts.values() for p in self.POSITIONS):
+            return False
+        return True
 
     def assert_loaded(self):
         """Verifies that all essential internal variables are correctly set up.
@@ -257,13 +261,20 @@ class BallotSet(object):
         expected and no more, but it does not check any of their types.
         Raises an AssertionError if something is wrong.
         """
-        assert 'aff' in self.dts
-        assert 'neg' in self.dts
-        aff = self.dts['aff']
-        neg = self.dts['neg']
-        assert aff.team in self.dts
-        assert neg.team in self.dts
-        assert len(self.dts) == 4
+
+        assert len(self.dts) == 2 or len(self.dts) == 4
+
+        if len(self.dts) == 2: # unknown sides
+            aff, neg = self.dts.values()
+            assert aff != neg
+        elif len(self.dts) == 4: # known sides
+            assert 'aff' in self.dts
+            assert 'neg' in self.dts
+            aff = self.dts['aff']
+            neg = self.dts['neg']
+            assert aff.team in self.dts
+            assert neg.team in self.dts
+
         assert aff in self.speakers
         assert neg in self.speakers
         assert len(self.speakers) == 2
