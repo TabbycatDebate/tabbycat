@@ -129,8 +129,8 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
             scoresheets_by_debateadj_id[da.id] = scoresheet
 
         ssbas = SpeakerScoreByAdj.objects.filter(debate_team__debate__in=debates,
-                ballot_submission__in=confirmed_ballots, debate_adjudicator__in=debateadjs
-                ).select_related('debate_team')
+                ballot_submission__in=confirmed_ballots,
+                debate_adjudicator__in=debateadjs).select_related('debate_team')
         for ssba in ssbas:
             scoresheet = scoresheets_by_debateadj_id[ssba.debate_adjudicator_id]
             scoresheet._set_score(ssba.debate_team, ssba.position, ssba.score)

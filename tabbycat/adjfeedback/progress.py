@@ -69,8 +69,9 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
 
     def get_acceptable_submissions(self):
         return self.source.adjudicatorfeedback_set.filter(confirmed=True,
-                source_team=self.source, adjudicator__in=self.acceptable_targets()
-                ).select_related('source_team', 'adjudicator', 'adjudicator__institution')
+                source_team=self.source,
+                adjudicator__in=self.acceptable_targets()).select_related(
+                'source_team', 'adjudicator', 'adjudicator__institution')
 
 
 class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
@@ -207,9 +208,11 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         # There is one tracker for each debate for which there is a confirmed ballot,
         # and the round is not silent.
 
-        debateteams = self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True,
-                debate__round__silent=False, debate__round__stage=Round.STAGE_PRELIMINARY
-                ).select_related('debate', 'debate__round')
+        debateteams = self.team.debateteam_set.filter(
+                debate__ballotsubmission__confirmed=True,
+                debate__round__silent=False,
+                debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
+                'debate', 'debate__round')
         debates = [dt.debate for dt in debateteams]
         populate_allocations(debates)
         populate_confirmed_ballots(debates, ballotsets=True)
@@ -217,7 +220,6 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in debateteams]
         self._prefetch_tracker_acceptable_submissions(trackers, "source_team")
         return trackers
-
 
 
 class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
@@ -229,8 +231,8 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
     def get_submitted_feedback(self):
         return AdjudicatorFeedback.objects.filter(confirmed=True,
                 source_adjudicator__adjudicator=self.adjudicator,
-                source_adjudicator__debate__round__stage=Round.STAGE_PRELIMINARY
-                ).select_related('adjudicator', 'source_adjudicator__debate__round')
+                source_adjudicator__debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
+                'adjudicator', 'source_adjudicator__debate__round')
 
     def get_expected_trackers(self):
         """Trackers are as follows:
