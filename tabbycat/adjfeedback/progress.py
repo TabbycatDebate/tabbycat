@@ -4,8 +4,10 @@ by participants of the tournament.
 There are a few possibilities for how to characterise a feedback submission:
 """
 
+from adjallocation.allocation import populate_allocations
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
+from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 
 
@@ -64,8 +66,8 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
             return majority
 
     def get_acceptable_submissions(self):
-        return self.source.adjudicatorfeedback_set.filter(confirmed=True, source_team=self.source,
-                adjudicator__in=self.acceptable_targets())
+        return self.source.adjudicatorfeedback_set.filter(confirmed=True,
+                source_team=self.source, adjudicator__in=self.acceptable_targets())
 
 
 class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
@@ -188,9 +190,13 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
     def get_expected_trackers(self):
         # There is one tracker for each debate for which there is a confirmed ballot,
         # and the round is not silent.
-        return [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in
-                self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True,
-                debate__round__silent=False, debate__round__stage=Round.STAGE_PRELIMINARY)]
+        debateteams = self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True,
+                debate__round__silent=False, debate__round__stage=Round.STAGE_PRELIMINARY
+                ).select_related('debate', 'debate__round')
+        debates = [dt.debate for dt in debateteams]
+        populate_allocations(debates)
+        populate_confirmed_ballots(debates, ballotsets=True)
+        return [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in debateteams]
 
 
 class FeedbackProgressForAdjudicator(BaseFeedbackProgress):

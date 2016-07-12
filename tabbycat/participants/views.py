@@ -114,7 +114,8 @@ class BaseTeamRecordView(BaseRecordView):
     def get_table(self):
         """On team record pages, the table is the results table."""
         tournament = self.get_tournament()
-        teamscores = TeamScore.objects.filter(debate_team__team=self.object).select_related(
+        teamscores = TeamScore.objects.filter(debate_team__team=self.object,
+                ballot_submission__confirmed=True).select_related(
                 'debate_team__debate', 'debate_team__debate__round')
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])

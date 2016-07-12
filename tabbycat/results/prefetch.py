@@ -75,6 +75,7 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
             debateteams_by_debate_id.setdefault(dt.debate_id, []).append(dt)
 
         # Create the BallotSets
+        # ---------------------
         for ballotsub in confirmed_ballots:
             ballotset = BallotSet(ballotsub, load=False)
             ballotset.debate = debates_by_id[ballotsub.debate_id] # this instance is probably prefetched
@@ -110,11 +111,11 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
             ballotset = ballotsets_by_ballotsub_id[dtmp.ballot_submission_id]
             ballotset.motion_veto[dtmp.debate_team] = dtmp.motion
 
-
         # Create the Scoresheets
+        # ----------------------
         scoresheets_by_debateadj_id = {}
-        debateadjs = DebateAdjudicator.objects.filter(debate__in=debates).select_related(
-                'adjudicator')
+        debateadjs = DebateAdjudicator.objects.filter(debate__in=debates).exclude(
+                type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator')
         for da in debateadjs:
             ballotset = ballotsets_by_debate_id[da.debate_id]
             scoresheet = Scoresheet(ballotset.ballotsub, da.adjudicator, load=False)
@@ -126,13 +127,14 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
             ballotset._adjudicator_sheets[da.adjudicator] = scoresheet
             scoresheets_by_debateadj_id[da.id] = scoresheet
 
-        ssbas = SpeakerScoreByAdj.objects.filter(
-                debate_team__debate__in=debates).select_related('debate_team')
+        ssbas = SpeakerScoreByAdj.objects.filter(debate_team__debate__in=debates,
+                ballot_submission__in=confirmed_ballots, debate_adjudicator__in=debateadjs
+                ).select_related('debate_team')
         for ssba in ssbas:
             scoresheet = scoresheets_by_debateadj_id[ssba.debate_adjudicator_id]
             scoresheet._set_score(ssba.debate_team, ssba.position, ssba.score)
 
-
         # Finally, check that everything is in order
+        # ------------------------------------------
         for ballotsub in confirmed_ballots:
             ballotsub.ballot_set.assert_loaded()
