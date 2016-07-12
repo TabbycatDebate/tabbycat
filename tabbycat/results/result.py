@@ -184,7 +184,7 @@ class Scoresheet(ResultBuffer):
                 debate_adjudicator=self.da,
                 debate_team=dt,
                 position=pos,
-                score=self._get_score(dt, pos),
+                defaults=dict(score=self._get_score(dt, pos))
             )
 
     # --------------------------------------------------------------------------
