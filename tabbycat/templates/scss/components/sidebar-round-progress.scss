@@ -81,12 +81,13 @@
   display: inline-block;
   float: left;
   height: 22px;
-  margin: -1px 10px 0;
+  margin: -1px 10px 0 -5px;
   width: 22px;
   z-index: 10;
 
   .glyphicon {
     margin-left: 2px;
+    z-index: 10;
   }
 
   &.btn-success {
