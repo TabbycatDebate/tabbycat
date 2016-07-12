@@ -11,7 +11,82 @@ class ResultError(RuntimeError):
     pass
 
 
-class Scoresheet(object):
+class ResultBuffer:
+    """Provides functionality common to both Scoresheet and BallotSet."""
+
+    SIDES = [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]
+    SIDE_KEYS = {
+        DebateTeam.POSITION_AFFIRMATIVE: 'aff',
+        DebateTeam.POSITION_NEGATIVE: 'neg',
+    }
+
+    def __init__(self, ballotsub, load=True):
+        """Base constructor. Populates `ballotsub`, `debate` and `dts`.
+        It's on subclasses to do the rest. The base constructor does *not* call
+        `assert_loaded()`, since subclasses may have more to do for themselves.
+        Subclasses should call `assert_loaded()` at the end of their
+        constructors.
+
+        If `load` is False, the constructor will not load any data from the
+        database (at all). It is then the responsibility of the caller to do so;
+        the instance will crash otherwise, as the relevant attributes will not
+        be created. (For example, populate_confirmed_ballots() does this in
+        prefetch.py.) External constructors can use `assert_loaded()` to check
+        that data was loaded correctly.
+        """
+        self.ballotsub = ballotsub
+        self.debate = ballotsub.debate
+
+        if load:
+            # If updating any of the database loading, be sure also to update
+            # populate_confirmed_ballots() in prefetch.py.
+
+            self.POSITIONS = self.debate.round.tournament.POSITIONS
+
+            debateteams = self.debate.debateteam_set.all()
+            self.update_debateteams(debateteams)
+
+    def _dt(self, team):
+        """Extracts a DebateTeam from a given team argument. The argument can be
+        either a Team or 'aff'/'neg'."""
+        try:
+            return self._dts_lookup[team]
+        except KeyError:
+            raise ValueError("The team %s is not in the debate for this scoresheet." % team)
+
+    def update_debateteams(self, debateteams):
+        """Updates the self.dts list, and self._other and self._dts_lookup dicts."""
+
+        self.dts = list(debateteams)
+        assert len(self.dts) == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
+
+        self._dts_lookup = {dt.team: dt for dt in debateteams}
+
+        for dt in debateteams:
+            if dt.position == DebateTeam.POSITION_UNALLOCATED:
+                continue
+            key = self.SIDE_KEYS[dt.position]
+            self._dts_lookup[key] = dt
+
+        self._other = {debateteams[0]: debateteams[1], debateteams[1]: debateteams[0]}
+
+    def assert_loaded(self):
+        """Verifies that the self.dts dict is correctly set up. Returns the
+        aff and neg DebateTeams as a convenience for subclasses."""
+
+        assert hasattr(self, 'POSITIONS')
+        assert len(self.dts) == 2
+        assert isinstance(self.dts, list) # order needs to be consistent
+        assert all(dt.team in self._dts_lookup for dt in self.dts)
+        assert all(dt in self._other for dt in self.dts)
+
+        assert len(self._dts_lookup) == 2 or len(self._dts_lookup) == 4
+        if len(self.dts) == 4: # known sides
+            assert 'aff' in self._dts_lookup
+            assert 'neg' in self._dts_lookup
+
+
+class Scoresheet(ResultBuffer):
     """Representation of a single adjudicator's scoresheet in a single ballot
     submission, providing an interface that abstracts away database operations.
     Each instance initializes itself with the appropriate data on construction.
@@ -32,26 +107,34 @@ class Scoresheet(object):
         self.data[debateteam][pos] = score.
     This is known as the "buffer"."""
 
-    def __init__(self, ballotsub, adjudicator):
-        self.ballotsub = ballotsub
-        self.debate = ballotsub.debate
-        self.adjudicator = adjudicator
-        self.da = self.debate.debateadjudicator_set.get(adjudicator=adjudicator)
-        self.dts = self.debate.debateteam_set.all() # note, this is a QuerySet
-        self.POSITIONS = self.debate.round.tournament.POSITIONS
-        self.data = {dt: dict.fromkeys(self.POSITIONS, None) for dt in self.dts}
-        for dt in self.dts:
-            self._load_team(dt)
+    def __init__(self, ballotsub, adjudicator, load=True):
+        """Constructor.
+        `ballotsub` must be a BallotSubmission.
+        `adjudicator` must be an Adjudicator.
 
-    def _dt(self, team):
-        """Extracts a DebateTeam from a given team argument. The argument can be
-        either a Team or 'aff'/'neg'."""
-        if team in ['aff', 'neg']:
-            return self.debate.get_dt(team)
-        try:
-            return self.dts.get(team=team)
-        except ObjectDoesNotExist:
-            raise ValueError("The team %s is not in the debate for this scoresheet." % team)
+        If `load` is False, the constructor will not load any data from the
+        database (at all). It is then the responsibility of the caller to do so;
+        the instance will crash otherwise, as the relevant attributes will not
+        be created. (For example, in prefetch.py, populate_confirmed_ballots()
+        uses this to load Scoresheets in bulk.) Callers can use
+        Scoresheet.assert_load() to check that data was loaded correctly.
+        """
+        super().__init__(ballotsub, load=load)
+
+        self.adjudicator = adjudicator
+
+        if load:
+            # If updating any of the database loading, be sure also to update
+            # populate_confirmed_ballots() in prefetch.py.
+
+            debateteams = self.dts
+            self.da = self.debate.debateadjudicator_set.get(adjudicator=adjudicator)
+            self.data = {dt: dict.fromkeys(self.POSITIONS, None) for dt in debateteams}
+
+            for dt in debateteams:
+                self._load_team(dt)
+
+            self.assert_loaded()
 
     # --------------------------------------------------------------------------
     # Load and save methods
@@ -60,6 +143,17 @@ class Scoresheet(object):
     @property
     def is_complete(self):
         return all(self.data[dt][p] is not None for dt in self.dts for p in self.POSITIONS)
+
+    def assert_loaded(self):
+        """Verifies that all essential internal variables are correctly set up.
+        Specifically, it checks that keys in internal dicts are present as
+        expected and no more, but it does not check any of their types.
+        Raises an AssertionError if something is wrong.
+        """
+        super().assert_loaded()
+        assert hasattr(self, 'da')
+        for dt in self.dts:
+            assert all(p in self.data[dt] for p in self.POSITIONS)
 
     def save(self):
         """Saves the information in this instance to the database."""
@@ -130,12 +224,11 @@ class Scoresheet(object):
         incomplete or if it is a draw."""
         if not self.is_complete:
             return None
-        dts = list(self.dts)  # fix order for loops
-        totals = [self._get_total(dt) for dt in dts]
+        totals = [self._get_total(dt) for dt in self.dts]
         max_total = max(totals)
         if totals.count(max_total) > 1:
             return None
-        for dt, total in zip(dts, totals):
+        for dt, total in zip(self.dts, totals):
             if total == max_total:
                 return dt
         raise RuntimeError("Unexpected error")  # this should never happen
@@ -161,7 +254,7 @@ class Scoresheet(object):
         return self.neg_score > self.aff_score
 
 
-class BallotSet(object):
+class BallotSet(ResultBuffer):
     """Representation of a set of ballots for a debate in a single ballot
     submission, providing an interface that abstracts away database operations.
     In particular, this class makes it easier for views and forms to work with a
@@ -181,26 +274,18 @@ class BallotSet(object):
       - Calculates the majority-average speaker scores.
     """
 
-    SIDES = [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]
-    SIDE_KEYS = {
-        DebateTeam.POSITION_AFFIRMATIVE: 'aff',
-        DebateTeam.POSITION_NEGATIVE: 'neg',
-    }
-
     def __init__(self, ballotsub, load=True):
         """Constructor.
         `ballotsub` must be a BallotSubmission.
 
-        If `load` is False, the constructor will not load data from the
-        BallotSubmission from the database. It is then the responsibility of the
-        caller to do so; the instance will crash otherwise, as the relevant
-        attributes will not be created. (For example, in prefetch.py,
-        populate_confirmed_ballots() uses this to load BallotSets in bulk.)
-        Callers can use BallotSet.assert_load() to check that data was loaded
-        correctly.
+        If `load` is False, the constructor will not load any data from the
+        database (at all). It is then the responsibility of the caller to do so;
+        the instance will crash otherwise, as the relevant attributes will not
+        be created. (For example, in prefetch.py, populate_confirmed_ballots()
+        uses this to load BallotSets in bulk.) Callers can use
+        BallotSet.assert_load() to check that data was loaded correctly.
         """
-        self.ballotsub = ballotsub
-        self.debate = ballotsub.debate
+        super().__init__(ballotsub, load=load)
 
         self._sheets_created = False
         self._decision_calculated = False
@@ -210,10 +295,7 @@ class BallotSet(object):
             # If updating any of the database loading, be sure also to update
             # populate_confirmed_ballots() in prefetch.py.
 
-            self.POSITIONS = self.debate.round.tournament.POSITIONS
-
-            debateteams = self.debate.debateteam_set.all()
-            self.update_debateteams(debateteams)
+            debateteams = self.dts
 
             self.speakers = {dt: dict.fromkeys(self.POSITIONS, None) for dt in debateteams}
             self.motion_veto = dict.fromkeys(debateteams, None)
@@ -226,14 +308,6 @@ class BallotSet(object):
                 self._load_team(dt)
 
             self.assert_loaded()
-
-    def _dt(self, team):
-        """Extracts a DebateTeam from a given team argument. The argument can be
-        either a Team or 'aff'/'neg'."""
-        try:
-            return self.dts[team]
-        except KeyError:
-            raise ValueError("The team %s is not in the debate for this scoresheet." % team)
 
     # --------------------------------------------------------------------------
     # Load and save methods
@@ -251,7 +325,7 @@ class BallotSet(object):
     def is_complete(self):
         if not all(sheet.is_complete for sheet in self.adjudicator_sheets.values()):
             return False
-        if not all(self.speakers[dt][p] is not None for dt in self.dts.values() for p in self.POSITIONS):
+        if not all(self.speakers[dt][p] is not None for dt in self.dts for p in self.POSITIONS):
             return False
         return True
 
@@ -261,31 +335,15 @@ class BallotSet(object):
         expected and no more, but it does not check any of their types.
         Raises an AssertionError if something is wrong.
         """
-
-        assert len(self.dts) == 2 or len(self.dts) == 4
-
-        if len(self.dts) == 2: # unknown sides
-            aff, neg = self.dts.values()
-            assert aff != neg
-        elif len(self.dts) == 4: # known sides
-            assert 'aff' in self.dts
-            assert 'neg' in self.dts
-            aff = self.dts['aff']
-            neg = self.dts['neg']
-            assert aff.team in self.dts
-            assert neg.team in self.dts
-
-        assert aff in self.speakers
-        assert neg in self.speakers
+        super().assert_loaded()
+        for dt in self.dts:
+            assert dt in self.speakers
+            assert dt in self.motion_veto
+            assert dt in self.teamscore_objects
+            assert all(pos in self.speakers[dt] for pos in self.POSITIONS)
         assert len(self.speakers) == 2
-        assert aff in self.motion_veto
-        assert neg in self.motion_veto
         assert len(self.motion_veto) == 2
-        assert aff in self.teamscore_objects
-        assert neg in self.teamscore_objects
         assert len(self.teamscore_objects) == 2
-        assert all(pos in self.speakers[aff] for pos in self.POSITIONS)
-        assert all(pos in self.speakers[neg] for pos in self.POSITIONS)
 
     def save(self):
         assert self.is_complete, "Tried to save ballot set when it is incomplete"
@@ -294,22 +352,9 @@ class BallotSet(object):
         for sheet in self.adjudicator_sheets.values():
             sheet.save()
         self._calc_decision()
-        for dt in self.dts.values():
+        for dt in self.dts:
             self._save_team(dt)
         self.ballotsub.save()
-
-    def update_debateteams(self, debateteams):
-        """Updates the self.dts dict."""
-        self.dts = {dt.team: dt for dt in debateteams}
-        assert len(self.dts) == 2, "There aren't two DebateTeams in this debate: %s." % self.debate
-
-        for dt in debateteams:
-            if dt.position == DebateTeam.POSITION_UNALLOCATED:
-                continue
-            key = self.SIDE_KEYS[dt.position]
-            self.dts[key] = dt
-
-        self._other = {debateteams[0]: debateteams[1], debateteams[1]: debateteams[0]}
 
     def _load_team(self, dt):
         """Loads the scores for the given DebateTeam from the database into the
@@ -452,7 +497,7 @@ class BallotSet(object):
         is a draw somewhere among the adjudicators, or overall."""
         assert self.is_complete, "Tried to calculate decision on an incomplete ballot set."
 
-        self._adjs_by_dt = {dt: [] for dt in self.dts.values()} # group adjs by vote
+        self._adjs_by_dt = {dt: [] for dt in self.dts} # group adjs by vote
         for adj, sheet in self.adjudicator_sheets.items():
             winner = sheet._get_winner()
             if winner is None:
@@ -710,10 +755,10 @@ class ForfeitBallotSet(BallotSet):
             points = 1
             win = True
 
-        # Note: forfeited debates have fake scores/margins, thus the affects_average toggle
-        self.ballotsub.teamscore_set.filter(debate_team=dt).delete()
-        self.ballotsub.teamscore_set.create(debate_team=dt, points=points,
-                win=win, score=0, margin=0, forfeit=True)
+        # The `forfeit` flag indicates that the ballot should not count as part
+        # of averages.
+        self.ballotsub.teamscore_set.update_or_create(debate_team=dt,
+                default=dict(points=points, win=win, score=0, margin=0, forfeit=True))
 
     def save(self):
         self.ballotsub.forfeit = self.forfeiter
