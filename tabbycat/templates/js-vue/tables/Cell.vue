@@ -39,8 +39,10 @@
     </template>
 
     <div class="popover-raw hide" v-if="cellData['popover']">
-      <li v-if="popContent['text']" v-for="popContent in cellData['popover']['content']" class="list-group-item">
-        <a v-if="popContent['link']" :class="popContent['class']" :href="popContent['link']">
+      <li v-if="popContent['text']"
+          v-on:click=""
+          v-for="popContent in cellData['popover']['content']" class="list-group-item">
+        <a v-if="popContent['link']" :href="popContent['link']">
           {{{ popContent['text'] }}}
         </a>
         <span v-else>
@@ -71,6 +73,9 @@ export default {
         this.setupPopover(event);
       }
     },
+    emitSignal: function(signalName, signalData) {
+      this.$dispatch(signalName, signalData)
+    }
   }
 }
 </script>
