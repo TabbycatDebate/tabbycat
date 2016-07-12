@@ -61,7 +61,10 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
         if not hasattr(debate, "_confirmed_ballot"):
             debate._confirmed_ballot = None
 
-    POSITIONS = debates[0].round.tournament.POSITIONS  # noqa
+    try:
+        POSITIONS = debates[0].round.tournament.POSITIONS  # noqa
+    except IndexError:
+        return
 
     if ballotsets:
 

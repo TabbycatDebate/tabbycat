@@ -4,6 +4,8 @@ by participants of the tournament.
 There are a few possibilities for how to characterise a feedback submission:
 """
 
+from operator import attrgetter
+
 from adjallocation.allocation import populate_allocations
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
@@ -181,13 +183,18 @@ class BaseFeedbackProgress:
             return 1.0
         return self.num_fulfilled() / self.num_expected()
 
-    def _prefetch_tracker_acceptable_submissions(self, trackers, source_attr):
-        trackers_by_source = {}
+    def _prefetch_tracker_acceptable_submissions(self, trackers, tracker_identifier, feedback_identifier):
+        trackers_by_identifier = {}
         for tracker in trackers:
             tracker._acceptable_submissions = []
-            trackers_by_source[tracker.source] = tracker
+            identifier = tracker_identifier(tracker)
+            trackers_by_identifier[identifier] = tracker
         for feedback in self.submitted_feedback():
-            tracker = trackers_by_source[getattr(feedback, source_attr)]
+            identifier = feedback_identifier(feedback)
+            try:
+                tracker = trackers_by_identifier[identifier]
+            except KeyError:
+                continue
             if feedback.adjudicator in tracker.acceptable_targets():
                 tracker._acceptable_submissions.append(feedback)
 
@@ -218,7 +225,8 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         populate_confirmed_ballots(debates, ballotsets=True)
 
         trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in debateteams]
-        self._prefetch_tracker_acceptable_submissions(trackers, "source_team")
+        self._prefetch_tracker_acceptable_submissions(trackers,
+                attrgetter('source'), attrgetter('source_team'))
         return trackers
 
 
@@ -243,6 +251,10 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
                 debate__ballotsubmission__confirmed=True,
                 debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
                 'debate', 'debate__round')
+
+        if len(debateadjs) == 0:
+            return []
+
         panellist_feedback_enabled = debateadjs[0].debate.round.tournament.pref('panellist_feedback_enabled')
         populate_allocations([da.debate for da in debateadjs])
 
@@ -257,6 +269,7 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
             elif debateadj.type == DebateAdjudicator.TYPE_PANEL and panellist_feedback_enabled:
                 trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, debateadj.debate.adjudicators.chair))
 
-        self._prefetch_tracker_acceptable_submissions(trackers, "source_adjudicator")
+        self._prefetch_tracker_acceptable_submissions(trackers,
+                attrgetter('source', 'target'), attrgetter('source_adjudicator', 'adjudicator'))
 
         return trackers
