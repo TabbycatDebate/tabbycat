@@ -158,7 +158,6 @@ class Scoresheet(ResultBuffer):
     def save(self):
         """Saves the information in this instance to the database."""
         assert self.is_complete, "Tried to save scoresheet when it is incomplete"
-        self.ballotsub.speakerscorebyadj_set.filter(debate_adjudicator=self.da).delete()
         for dt in self.dts:
             self._save_team(dt)
 
@@ -174,7 +173,7 @@ class Scoresheet(ResultBuffer):
         """Saves the scores in the buffer for the given DebateTeam, to the
         database."""
         for pos in self.POSITIONS:
-            self.ballotsub.speakerscorebyadj_set.create(
+            self.ballotsub.speakerscorebyadj_set.update_or_create(
                 debate_adjudicator=self.da,
                 debate_team=dt,
                 position=pos,
