@@ -5,7 +5,7 @@ import vueBases from './main.js';
 // Redefine so they can be edited
 var vueComponents = vueBases.baseComponents;
 var vueData = vueBases.baseData;
-var vueMethods = null, vueCreated = null, vueFilters = null, vueEvents = null;
+var vueMethods = {}, vueCreated = null, vueFilters = {}, vueEvents = {};
 
 //------------------------------------------------------------------------------
 // Adj Allocation
@@ -41,29 +41,27 @@ if (typeof updateActionsURL !== 'undefined' && updateResultsURL !== 'undefined')
       updateActionsURL: updateActionsURL, // From template
       updateResultsURL: updateResultsURL, // From template
   };
-  vueMethods = {
-    updateActions: function() {
-      this.fetchData(updateActionsURL, 'actions')
-    },
-    updateResults: function() {
-      this.fetchData(updateResultsURL, 'results')
-    },
-    fetchData: function (apiURL, resource) {
-      var xhr = new XMLHttpRequest()
-      var self = this
-      xhr.open('GET', apiURL)
-      xhr.onload = function () {
-        if (resource === 'actions') {
-          self.latestActions = JSON.parse(xhr.responseText)
-          setTimeout(self.updateActions, self.pollFrequency)
-        } else {
-          self.latestResults = JSON.parse(xhr.responseText)
-          setTimeout(self.updateResults, self.pollFrequency)
-        }
-      }
-      xhr.send()
-    }
+  vueMethods['updateActions'] = function() {
+    this.fetchData(updateActionsURL, 'actions');
   };
+  vueMethods['updateResults'] = function() {
+    this.fetchData(updateResultsURL, 'results');
+  };
+  vueMethods['fetchData'] = function (apiURL, resource) {
+    var xhr = new XMLHttpRequest()
+    var self = this
+    xhr.open('GET', apiURL)
+    xhr.onload = function () {
+      if (resource === 'actions') {
+        self.latestActions = JSON.parse(xhr.responseText);
+        setTimeout(self.updateActions, self.pollFrequency);
+      } else {
+        self.latestResults = JSON.parse(xhr.responseText);
+        setTimeout(self.updateResults, self.pollFrequency);
+      }
+    }
+    xhr.send()
+  }
   vueCreated = function () {
     this.updateActions()
     this.updateResults()
@@ -95,6 +93,29 @@ if (typeof divisionsBaseData !== 'undefined' && divisionsBaseData !== null) {
   vueFilters = divisionsFilters; // From Template
   vueComponents['DivisionDroppable'] = DivisionDroppable;
   vueComponents['TeamDraggable'] = TeamDraggable;
+}
+
+//------------------------------------------------------------------------------
+// Adj Feedback Modal
+//------------------------------------------------------------------------------
+
+import FeedbackCards from  '../js-vue/FeedbackCards.vue'
+
+vueData['feedbacks'] = null; // Placeholder, to be set by the signal
+vueComponents['FeedbackCards'] = FeedbackCards;
+
+vueEvents['load-feedback-modal'] = function() {
+  $('#modalFeedbacks').modal();
+  $.getJSON({
+    url: $(event.target).attr('href'),
+    success: function(data, textStatus, jqXHR) {
+      console.log('sucess');
+      this.$parent.$set('feedbacks', data)
+    },
+    error: function(data, textStatus, jqXHR) {
+      $.fn.showAlert('danger', '<strong>Failed to load feedback</strong> ' + data.responseText, 0)
+    }
+  });
 }
 
 //------------------------------------------------------------------------------

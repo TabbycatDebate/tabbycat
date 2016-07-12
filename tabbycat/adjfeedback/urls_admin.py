@@ -14,12 +14,6 @@ urlpatterns = [
         name='feedback_progress'),
 
     # Getting/setting values
-    url(r'^scores/all/$',
-        views.GetAdjScores.as_view(),
-        name='adj_scores'),
-    url(r'^scores/get/$',
-        views.GetAdjFeedback.as_view(),
-        name='get_adj_feedback'),
     url(r'^test/set/$',
         views.SetAdjudicatorTestScoreView.as_view(),
         name='adjfeedback-set-adj-test-score'),
@@ -29,6 +23,13 @@ urlpatterns = [
     url(r'^notes/test/set/$',
         views.SetAdjudicatorNoteView.as_view(),
         name='adjfeedback-set-adj-note'),
+    # Only used in old allocation screen; TODO: deprecate
+    url(r'^scores/all/$',
+        views.GetAdjScores.as_view(),
+        name='adj_scores'),
+    url(r'^feedback/get/$',
+        views.GetAdjFeedback.as_view(),
+        name='get_adj_feedback'),
 
     # Source
     url(r'^latest/$',
@@ -49,6 +50,9 @@ urlpatterns = [
     url(r'^target/adjudicator/(?P<pk>\d+)/$',
         views.FeedbackOnAdjudicatorView.as_view(),
         name='adjfeedback-view-on-adjudicator'),
+    url(r'^target/adjudicator/json/(?P<pk>\d+)/$',
+        views.GetAdjFeedbackJSON.as_view(),
+        name='get_adj_feedback_json'),
 
     # Adding
     url(r'^add/$',

@@ -47,10 +47,6 @@
           </button>
         </div>
         <div class="btn-group btn-group-sm">
-          <button class="btn btn-default nav-link hoverable" v-on:click="showVenues" v-bind:class="showingVenue ? 'active' : 'notactive'">
-            <span class="glyphicon" v-bind:class="showingVenue ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
-            Venues
-          </button>
           <button class="btn btn-default nav-link hoverable" v-on:click="showRegion" v-bind:class="showingRegion ? 'active' : ''">
             <span class="glyphicon" v-bind:class="showingRegion ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
             Region
@@ -124,9 +120,6 @@ export default {
           $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
         }
       });
-    },
-    showVenues: function() {
-      this.showingVenue = !this.showingVenue;
     },
     showRegion: function() {
       this.showingRegion = !this.showingRegion;
