@@ -22,6 +22,9 @@
 
   <div class="panel panel-default">
     <div class="panel-body">
+      {% if pref.feedback_introduction %}
+        <p>{{ pref.feedback_introduction|safe }}</p>
+      {% endif %}
       <form id="feedbackForm" action="" method="POST" class="form-horizontal">
         {% csrf_token %}
         {% for field in form %}
