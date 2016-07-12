@@ -244,20 +244,20 @@ class CommonTests(object):
 
 class TestResultByTeam(BaseTestResult, CommonTests):
     def setUp(self):
-        BaseTestResult.setUp(self)
+        super().setUp()
         self.teams_input = self.teams
 
 
 class TestResultBySide(BaseTestResult, CommonTests):
     def setUp(self):
-        BaseTestResult.setUp(self)
+        super().setUp()
         self.teams_input = ['aff', 'neg']
 
 
 class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
 
     def setUp(self):
-        BaseTestResult.setUp(self)
+        super().setUp()
         for dt in self.debate.debateteam_set.all():
             dt.position = DebateTeam.POSITION_UNALLOCATED
             dt.save()
@@ -270,3 +270,46 @@ class TestResultWithInitiallyUnknownSides(BaseTestResult, CommonTests):
     def test_unknown_sides(self):
         self.assertRaises(ObjectDoesNotExist, self._save_complete_ballotset,
                 self.teams_input, list(self.testdata.values())[0])
+
+
+class TestResultBadLoad(BaseTestResult, TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.save_complete_ballotset(['aff', 'neg'], list(self.testdata.values())[0])
+
+    def test_extraneous_speaker(self):
+        ballotset = self._get_ballotset()
+        ballotset.speakers["test"] = {}
+        self.assertRaises(AssertionError, ballotset.assert_loaded)
+
+    def test_extraneous_motion_veto(self):
+        ballotset = self._get_ballotset()
+        ballotset.motion_veto["test"] = None
+        self.assertRaises(AssertionError, ballotset.assert_loaded)
+
+    def test_extraneous_teamscore(self):
+        ballotset = self._get_ballotset()
+        ballotset.teamscore_objects["test"] = None
+        self.assertRaises(AssertionError, ballotset.assert_loaded)
+
+    def test_extraneous_speaker_position(self):
+        ballotset = self._get_ballotset()
+        list(ballotset.speakers.values())[0][6] = None
+        self.assertRaises(AssertionError, ballotset.assert_loaded)
+
+    def test_extraneous_sheet_score(self):
+        ballotset = self._get_ballotset()
+        sheet = list(ballotset.adjudicator_sheets.values())[0]
+        list(sheet.data.values())[0][8] = None
+        self.assertRaises(AssertionError, ballotset.assert_loaded)
+
+    def test_missing_teamscore(self):
+        ballotset = self._get_ballotset()
+        ballotset.teamscore_objects.popitem()
+        self.assertRaises(AssertionError, ballotset.assert_loaded)
+
+    def test_missing_speaker(self):
+        ballotset = self._get_ballotset()
+        ballotset.speakers.popitem()
+        self.assertRaises(AssertionError, ballotset.assert_loaded)
