@@ -32,18 +32,20 @@ class BaseFeedbackExpectedSubmissionTracker:
         return self.count == 1
 
     def acceptable_submissions(self):
-        """Subclasses should override this method of it is possible for some
-        submissions to be relevant, but not acceptable."""
         if not hasattr(self, '_acceptable_submissions'):
             self._acceptable_submissions = self.get_acceptable_submissions()
         return self._acceptable_submissions
 
     def get_acceptable_submissions(self):
+        """Subclasses should override this method to provide an iterable of
+        acceptable submissions. Users of this class might pre-populate
+        the `_acceptable_submissions` attribute to avoid duplicate database
+        hits."""
         raise NotImplementedError
 
     def submission(self):
         if self.fulfilled:
-            return self.acceptable_submissions().get()
+            return self.acceptable_submissions()[0]
         else:
             return None
 
@@ -67,7 +69,8 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
 
     def get_acceptable_submissions(self):
         return self.source.adjudicatorfeedback_set.filter(confirmed=True,
-                source_team=self.source, adjudicator__in=self.acceptable_targets())
+                source_team=self.source, adjudicator__in=self.acceptable_targets()
+                ).select_related('source_team', 'adjudicator', 'adjudicator__institution')
 
 
 class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
@@ -79,7 +82,8 @@ class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmi
 
     def get_acceptable_submissions(self):
         return self.source.adjudicatorfeedback_set.filter(confirmed=True,
-            adjudicator=self.target, source_adjudicator=self.source)
+            adjudicator=self.target, source_adjudicator=self.source).select_related(
+            'source_adjudicator', 'adjudicator', 'adjudicator__institution')
 
     def acceptable_targets(self):
         return [self.target]
@@ -190,13 +194,29 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
     def get_expected_trackers(self):
         # There is one tracker for each debate for which there is a confirmed ballot,
         # and the round is not silent.
+
         debateteams = self.team.debateteam_set.filter(debate__ballotsubmission__confirmed=True,
                 debate__round__silent=False, debate__round__stage=Round.STAGE_PRELIMINARY
                 ).select_related('debate', 'debate__round')
         debates = [dt.debate for dt in debateteams]
         populate_allocations(debates)
         populate_confirmed_ballots(debates, ballotsets=True)
-        return [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in debateteams]
+
+        trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in debateteams]
+        self._prefetch_tracker_acceptable_submissions(trackers)
+        return trackers
+
+    def _prefetch_tracker_acceptable_submissions(self, trackers):
+        feedbacks = AdjudicatorFeedback.objects.filter(confirmed=True,
+                source_team__team=self.team).select_related('source_team', 'adjudicator', 'adjudicator__institution')
+        trackers_by_dt = {}
+        for tracker in trackers:
+            tracker._acceptable_submissions = []
+            trackers_by_dt[tracker.source] = tracker
+        for feedback in feedbacks:
+            tracker = trackers_by_dt[feedback.source_team]
+            if feedback.adjudicator in tracker.acceptable_targets():
+                tracker._acceptable_submissions.append(feedback)
 
 
 class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
