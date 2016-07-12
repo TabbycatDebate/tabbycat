@@ -90,9 +90,9 @@ class Submission(models.Model):
             super(Submission, self).save(*args, **kwargs)
 
     def clean(self):
+        super().clean()
         if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
-            raise ValidationError(
-                "A tab room ballot must have a user associated.")
+            raise ValidationError("A tab room ballot must have a user associated.")
 
 
 class BallotSubmission(Submission):
@@ -128,15 +128,14 @@ class BallotSubmission(Submission):
 
     def clean(self):
         # The motion must be from the relevant round
-        super(BallotSubmission, self).clean()
+        super().clean()
         if self.motion.round != self.debate.round:
             raise ValidationError(
                 "Debate is in round {:d} but motion ({:s}) is from round {:d}".format(
                     self.debate.round, self.motion.reference,
                     self.motion.round))
         if self.confirmed and self.discarded:
-            raise ValidationError(
-                "A ballot can't be both confirmed and discarded!")
+            raise ValidationError("A ballot can't be both confirmed and discarded!")
 
     def is_identical(self, other):
         """Returns True if all data fields are the same. Returns False in any
@@ -202,6 +201,13 @@ class SpeakerScoreByAdj(models.Model):
     def debate(self):
         return self.debate_team.debate
 
+    def clean(self):
+        super().clean()
+        if (self.debate_team.debate != self.debate_adjudicator.debate or
+                self.debate_team.debate != self.ballot_submission.debate):
+            raise ValidationError("The debate team, debate adjudicator and ballot "
+                    "submission must all relate to the same debate.")
+
 
 class TeamScore(models.Model):
     """Stores information about a team's result in a debate. This is all
@@ -250,3 +256,12 @@ class SpeakerScore(models.Model):
     class Meta:
         unique_together = [('debate_team', 'speaker', 'position',
                             'ballot_submission')]
+
+    def clean(self):
+        super().clean()
+        if self.debate_team.team != self.speaker.team:
+            raise ValidationError("The debate team and speaker must be from the "
+                    "same team.")
+        if self.ballot_submission.debate != self.debate_team.debate:
+            raise ValidationError("The ballot submission and debate team must "
+                    "relate to the same debate.")
