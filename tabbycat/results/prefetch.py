@@ -1,10 +1,11 @@
 """Functions that prefetch data for efficiency."""
 
+from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 from motions.models import DebateTeamMotionPreference
 
-from .models import BallotSubmission, SpeakerScore, TeamScore
-from .result import BallotSet
+from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
+from .result import BallotSet, Scoresheet
 
 
 def populate_wins(debates):
@@ -61,30 +62,27 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
 
     if ballotsets:
 
-        ballotsets_by_ballotsub_id = {}
-        ballotsets_by_debate_id = {}
         debateteams_by_debate_id = {}
-
-        for ballotsub in confirmed_ballots:
-            ballotset = BallotSet(ballotsub, load=False)
-            ballotset.POSITIONS = POSITIONS
-
-            ballotsub._ballot_set = ballotset
-            ballotsets_by_debate_id[ballotsub.debate_id] = ballotset
-            ballotsets_by_ballotsub_id[ballotsub.id] = ballotset
+        ballotsets_by_debate_id = {}
+        ballotsets_by_ballotsub_id = {}
 
         # Populate debateteams
         debateteams = DebateTeam.objects.filter(debate__in=debates).select_related('team')
         for dt in debateteams:
             debateteams_by_debate_id.setdefault(dt.debate_id, []).append(dt)
 
-        for debate_id, debateteams in debateteams_by_debate_id.items():
-            ballotset = ballotsets_by_debate_id[debate_id]
-            ballotset.update_debateteams(debateteams)
+        # Create the BallotSets
+        for ballotsub in confirmed_ballots:
+            ballotset = BallotSet(ballotsub, load=False)
+            ballotset.POSITIONS = POSITIONS
+            ballotset.update_debateteams(debateteams_by_debate_id[ballotsub.debate_id])
+            ballotset.init_blank_buffer()
+            ballotset._adjudicator_sheets = {}
+            ballotset._sheets_created = True
 
-            ballotset.speakers = {dt: {} for dt in debateteams}
-            ballotset.motion_veto = dict.fromkeys(debateteams, None)
-            ballotset.teamscore_objects = dict.fromkeys(debateteams, None)
+            ballotsub._ballot_set = ballotset
+            ballotsets_by_debate_id[ballotsub.debate_id] = ballotset
+            ballotsets_by_ballotsub_id[ballotsub.id] = ballotset
 
         # Populate speaker positions
         speakerscores = SpeakerScore.objects.filter(
@@ -102,10 +100,34 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
 
         # Populate motion vetoes
         dtmps = DebateTeamMotionPreference.objects.filter(
-                ballot_submission__in=confirmed_ballots, preference=3)
+                ballot_submission__in=confirmed_ballots, preference=3).select_related(
+                'debate_team', 'motion')
         for dtmp in dtmps:
             ballotset = ballotsets_by_ballotsub_id[dtmp.ballot_submission_id]
             ballotset.motion_veto[dtmp.debate_team] = dtmp.motion
+
+
+        # Create the Scoresheets
+        scoresheets_by_debateadj_id = {}
+        debateadjs = DebateAdjudicator.objects.filter(debate__in=debates).select_related(
+                'adjudicator')
+        for da in debateadjs:
+            ballotset = ballotsets_by_debate_id[da.debate_id]
+            scoresheet = Scoresheet(ballotset.ballotsub, da.adjudicator, load=False)
+            scoresheet.da = da
+            scoresheet.POSITIONS = POSITIONS
+            scoresheet.update_debateteams(debateteams_by_debate_id[da.debate_id])
+            scoresheet.init_blank_buffer()
+
+            ballotset._adjudicator_sheets[da.adjudicator] = scoresheet
+            scoresheets_by_debateadj_id[da.id] = scoresheet
+
+        ssbas = SpeakerScoreByAdj.objects.filter(
+                debate_team__debate__in=debates).select_related('debate_team')
+        for ssba in ssbas:
+            scoresheet = scoresheets_by_debateadj_id[ssba.debate_adjudicator_id]
+            scoresheet._set_score(ssba.debate_team, ssba.position, ssba.score)
+
 
         # Finally, check that everything is in order
         for ballotsub in confirmed_ballots:

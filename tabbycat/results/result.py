@@ -40,11 +40,8 @@ class ResultBuffer:
         if load:
             # If updating any of the database loading, be sure also to update
             # populate_confirmed_ballots() in prefetch.py.
-
             self.POSITIONS = self.debate.round.tournament.POSITIONS
-
-            debateteams = self.debate.debateteam_set.all()
-            self.update_debateteams(debateteams)
+            self.update_debateteams(self.debate.debateteam_set.all())
 
     def _dt(self, team):
         """Extracts a DebateTeam from a given team argument. The argument can be
@@ -126,23 +123,24 @@ class Scoresheet(ResultBuffer):
         if load:
             # If updating any of the database loading, be sure also to update
             # populate_confirmed_ballots() in prefetch.py.
-
-            debateteams = self.dts
             self.da = self.debate.debateadjudicator_set.get(adjudicator=adjudicator)
-            self.data = {dt: dict.fromkeys(self.POSITIONS, None) for dt in debateteams}
-
-            for dt in debateteams:
+            self.init_blank_buffer()
+            for dt in self.dts:
                 self._load_team(dt)
-
             self.assert_loaded()
 
     # --------------------------------------------------------------------------
-    # Load and save methods
+    # Initialisation methods (external initialisers may find these helpful)
     # --------------------------------------------------------------------------
 
-    @property
-    def is_complete(self):
-        return all(self.data[dt][p] is not None for dt in self.dts for p in self.POSITIONS)
+    def init_blank_buffer(self):
+        try:
+            self.data = {dt: dict.fromkeys(self.POSITIONS, None) for dt in self.dts}
+        except AttributeError:
+            if not hasattr(self, 'dts') or not hasattr(self, 'POSITIONS'):
+                raise AttributeError("Scoresheet must have dts and POSITIONS attributes before init_blank_buffer() is called.")
+            else:
+                raise
 
     def assert_loaded(self):
         """Verifies that all essential internal variables are correctly set up.
@@ -151,9 +149,18 @@ class Scoresheet(ResultBuffer):
         Raises an AssertionError if something is wrong.
         """
         super().assert_loaded()
-        assert hasattr(self, 'da')
+        assert self.da.adjudicator_id == self.adjudicator.id
         for dt in self.dts:
+            assert len(self.data[dt]) == len(self.POSITIONS)
             assert all(p in self.data[dt] for p in self.POSITIONS)
+
+    # --------------------------------------------------------------------------
+    # Load and save methods
+    # --------------------------------------------------------------------------
+
+    @property
+    def is_complete(self):
+        return all(self.data[dt][p] is not None for dt in self.dts for p in self.POSITIONS)
 
     def save(self):
         """Saves the information in this instance to the database."""
@@ -293,20 +300,55 @@ class BallotSet(ResultBuffer):
         if load:
             # If updating any of the database loading, be sure also to update
             # populate_confirmed_ballots() in prefetch.py.
+            self.init_blank_buffer()
+            for dt in self.dts:
+                self._load_team(dt)
+            self.assert_loaded()
 
-            debateteams = self.dts
+    # --------------------------------------------------------------------------
+    # Initialisation methods (external initialisers may find these helpful)
+    # --------------------------------------------------------------------------
 
-            self.speakers = {dt: dict.fromkeys(self.POSITIONS, None) for dt in debateteams}
-            self.motion_veto = dict.fromkeys(debateteams, None)
+    def init_blank_buffer(self):
+        """Initialises the data attributes. External initialisers might find
+        this helpful. The `self.dts` and `self.POSITIONS` attributes must be set
+        prior to calling this function."""
+        try:
+            self.speakers = {dt: dict.fromkeys(self.POSITIONS, None) for dt in self.dts}
+            self.motion_veto = dict.fromkeys(self.dts, None)
 
             # Values from the database are returned if requested before
             # self.adjudicator_sheets is called, for efficiency.
-            self.teamscore_objects = dict.fromkeys(debateteams, None)
+            self.teamscore_objects = dict.fromkeys(self.dts, None)
 
-            for dt in debateteams:
-                self._load_team(dt)
+        except AttributeError:
+            if not hasattr(self, 'dts') or not hasattr(self, 'POSITIONS'):
+                raise AttributeError("The BallotSet instance must have dts and POSITIONS attributes before init_blank_buffer() is called.")
+            else:
+                raise
 
-            self.assert_loaded()
+    def assert_loaded(self):
+        """Verifies that all essential internal variables are correctly set up.
+        Specifically, it checks that keys in internal dicts are present as
+        expected and no more, but it does not check any of their types.
+        Raises an AssertionError if something is wrong.
+        """
+        super().assert_loaded()
+        for dt in self.dts:
+            assert dt in self.speakers
+            assert dt in self.motion_veto
+            assert dt in self.teamscore_objects
+            assert len(self.speakers[dt]) == len(self.POSITIONS)
+            assert all(pos in self.speakers[dt] for pos in self.POSITIONS)
+        assert len(self.speakers) == 2
+        assert len(self.motion_veto) == 2
+        assert len(self.teamscore_objects) == 2
+
+        if self._sheets_created:
+            assert isinstance(self._adjudicator_sheets, dict)
+            for adj, scoresheet in self._adjudicator_sheets.items():
+                assert adj == scoresheet.adjudicator
+                scoresheet.assert_loaded()
 
     # --------------------------------------------------------------------------
     # Load and save methods
@@ -327,22 +369,6 @@ class BallotSet(ResultBuffer):
         if not all(self.speakers[dt][p] is not None for dt in self.dts for p in self.POSITIONS):
             return False
         return True
-
-    def assert_loaded(self):
-        """Verifies that all essential internal variables are correctly set up.
-        Specifically, it checks that keys in internal dicts are present as
-        expected and no more, but it does not check any of their types.
-        Raises an AssertionError if something is wrong.
-        """
-        super().assert_loaded()
-        for dt in self.dts:
-            assert dt in self.speakers
-            assert dt in self.motion_veto
-            assert dt in self.teamscore_objects
-            assert all(pos in self.speakers[dt] for pos in self.POSITIONS)
-        assert len(self.speakers) == 2
-        assert len(self.motion_veto) == 2
-        assert len(self.teamscore_objects) == 2
 
     def save(self):
         assert self.is_complete, "Tried to save ballot set when it is incomplete"
