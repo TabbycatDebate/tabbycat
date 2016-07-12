@@ -244,6 +244,15 @@ feedback = Section('feedback')
 
 
 @tournament_preferences_registry.register
+class FeedbackIntroduction(StringPreference):
+    help_text = "Any explanatory text needed to introduce the feedback form"
+    verbose_name = "Feedback introduction/explanation"
+    section = feedback
+    name = 'feedback_introduction'
+    default = ''
+
+
+@tournament_preferences_registry.register
 class MinimumAdjScore(FloatPreference):
     help_text = "Minimum possible adjudicator score that can be given"
     verbose_name = 'Minimum adjudicator score'
