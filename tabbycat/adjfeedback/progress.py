@@ -240,7 +240,7 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         return AdjudicatorFeedback.objects.filter(confirmed=True,
                 source_adjudicator__adjudicator=self.adjudicator,
                 source_adjudicator__debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
-                'adjudicator', 'source_adjudicator__debate__round')
+                'adjudicator', 'adjudicator__institution', 'source_adjudicator__debate__round')
 
     def get_expected_trackers(self):
         """Trackers are as follows:
