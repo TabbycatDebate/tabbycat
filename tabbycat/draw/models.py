@@ -162,10 +162,18 @@ class Debate(models.Model):
     def all_conflicts(self):
         return self.draw_conflicts + self.adjudicator_conflicts + venue_conflicts(self)
 
+    @property
+    def history(self):
+        try:
+            return self._history
+        except AttributeError:
+            self._history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
+            return self._history
+
     @cached_property
     def draw_conflicts(self):
         d = []
-        history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
+        history = self.history
         if history == 1:
             d.append("Teams have met once")
         elif history == 2:

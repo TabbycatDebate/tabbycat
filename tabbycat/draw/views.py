@@ -19,10 +19,11 @@ from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
 
+from .dbutils import delete_round_draw
 from .generator import DrawError
 from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamPositionAllocation
-from .dbutils import delete_round_draw
+from .prefetch import populate_history
 
 logger = logging.getLogger(__name__)
 
@@ -163,6 +164,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             return table # Return Blank
 
         draw = r.debate_set_with_prefetches(ordering=('room_rank',))
+        populate_history(draw)
         if r.is_break_round:
             table.add_room_rank_columns(draw)
         else:

@@ -4,7 +4,7 @@ import logging
 
 from django.db.models.expressions import RawSQL
 
-from .models import DebateTeam
+from .models import Debate, DebateTeam
 
 logger = logging.getLogger(__name__)
 
@@ -62,3 +62,31 @@ def populate_opponents(debateteams, speakers=True):
         except KeyError:
             logger.warning("No opponent found for %s", str(dt))
             dt._opponent = None
+
+
+def populate_history(debates):
+    """Sets the attribute _history to the number of times the teams in the
+    debate have seen each other before the round of the debate."""
+
+    debates_by_id = {debate.id: debate for debate in debates}
+
+    debates_annotated = Debate.objects.filter(id__in=debates_by_id.keys()).annotate(
+        past_debates=RawSQL("""
+            SELECT DISTINCT COUNT(past_debate.id)
+            FROM draw_debate AS past_debate
+            JOIN draw_debateteam AS this_aff_dt ON this_aff_dt.debate_id = draw_debate.id
+            JOIN draw_debateteam AS this_neg_dt ON this_neg_dt.debate_id = draw_debate.id
+            JOIN tournaments_round AS this_round ON draw_debate.round_id = this_round.id
+            JOIN draw_debateteam AS past_aff_dt ON past_aff_dt.debate_id = past_debate.id
+            JOIN draw_debateteam AS past_neg_dt ON past_neg_dt.debate_id = past_debate.id
+            JOIN tournaments_round AS past_round ON past_debate.round_id = past_round.id
+            WHERE this_aff_dt.position = 'A'
+            AND   this_neg_dt.position = 'N'
+            AND   past_aff_dt.team_id = this_aff_dt.team_id
+            AND   past_neg_dt.team_id = this_neg_dt.team_id
+            AND   past_round.seq < this_round.seq""",
+            ()),
+    )
+
+    for debate in debates_annotated:
+        debates_by_id[debate.id]._history = debate.past_debates
