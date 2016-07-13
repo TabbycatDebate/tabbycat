@@ -76,13 +76,13 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
         return table
 
     def get_context_data(self, **kwargs):
-        draw = self._get_draw()
+        debates = self.get_round().debate_set
         kwargs["stats"] = {
-            'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
-            'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
-            'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
-            'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
-            'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
+            'none': debates.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
+            'ballot_in': debates.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
+            'draft': debates.filter(result_status=Debate.STATUS_DRAFT).count(),
+            'confirmed': debates.filter(result_status=Debate.STATUS_CONFIRMED).count(),
+            'postponed': debates.filter(result_status=Debate.STATUS_POSTPONED).count(),
         }
         num_motions = Motion.objects.filter(round=self.get_round()).count()
         kwargs["has_motions"] = num_motions > 0
