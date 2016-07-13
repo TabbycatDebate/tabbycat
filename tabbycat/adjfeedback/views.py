@@ -11,6 +11,7 @@ from django.views.generic.edit import FormView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from participants.models import Adjudicator, Team
+from participants.prefetch import populate_feedback_scores
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
@@ -64,7 +65,9 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView
 
     def get_table(self):
         t = self.get_tournament()
-        adjudicators = get_feedback_overview(t, self.get_adjudicators())
+        adjudicators = self.get_adjudicators()
+        populate_feedback_scores(adjudicators)
+        adjudicators = get_feedback_overview(t, adjudicators)
         table = FeedbackTableBuilder(view=self, sort_key='Overall Score',
                                      sort_order='desc')
         table.add_adjudicator_columns(adjudicators, hide_institution=True, subtext='institution')
@@ -574,7 +577,5 @@ class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, Po
         return reverse_tournament('randomised-urls-view', self.get_tournament())
 
     def post(self, request, *args, **kwargs):
-        # tournament = self.get_tournament()
-
         messages.success(self.request, "Emails were sent for all teams and adjudicators.")
         return super().post(request, *args, **kwargs)
