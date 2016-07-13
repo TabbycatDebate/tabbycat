@@ -496,7 +496,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_draw_conflicts(self, draw):
         conflicts_header = {'key': "Conflicts/Flags"}
         conflicts_data = [{
-            'text': debate.draw_conflicts + debate.flags_all,
+            'text': "<br />".join(debate.draw_conflicts + debate.flags_all),
             'class': 'text-danger small'
         } for debate in draw]
         self.add_column(conflicts_header, conflicts_data)
