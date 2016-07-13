@@ -526,7 +526,7 @@ class PublicFeedbackProgress(BaseFeedbackProgress, PublicTournamentPageMixin, Ca
 class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
 
     template_name = 'randomised_urls.html'
-    show_emails = False;
+    show_emails = False
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
@@ -567,7 +567,7 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
 
 class EmailRandomisedUrlsView(RandomisedUrlsView):
 
-    show_emails = True;
+    show_emails = True
     template_name = 'randomised_urls_email_list.html'
 
 
@@ -577,7 +577,5 @@ class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, Po
         return reverse_tournament('randomised-urls-view', self.get_tournament())
 
     def post(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
-
         messages.success(self.request, "Emails were sent for all teams and adjudicators.")
         return super().post(request, *args, **kwargs)
