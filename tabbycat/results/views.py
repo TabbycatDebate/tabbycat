@@ -55,9 +55,13 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
 
     def _get_draw(self):
         if not hasattr(self, '_draw'):
+            if self.request.user.is_superuser:
+                filter_kwargs = None
+            else:
+                filter_kwargs = dict(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT])
             self._draw = self.get_round().debate_set_with_prefetches(
                     ordering=('room_rank',), ballotsets=True, wins=True,
-                    filter_kwargs=dict(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]))
+                    filter_kwargs=filter_kwargs)
         return self._draw
 
     def get_table(self):
