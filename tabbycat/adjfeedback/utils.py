@@ -296,7 +296,7 @@ def get_feedback_progress(t):
     rounds_owed = t.round_set.filter(
         silent=False, stage=Round.STAGE_PRELIMINARY, draw_status=t.current_round.STATUS_RELEASED).count()
 
-    total_owed = 0
+    total_possible = 0
     total_submitted = 0
 
     for adj in adjudicators:
@@ -323,7 +323,7 @@ def get_feedback_progress(t):
         adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
         adj.view_unsubmitted_link = reverse_tournament(
             'participants-adjudicator-record', t, kwargs={'pk': adj.pk})
-        total_owed += adj.owed_ballots
+        total_possible += len(adjs_adjudications)
         total_submitted += adj.submitted_ballots
 
     for team in teams:
@@ -332,10 +332,11 @@ def get_feedback_progress(t):
         team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
         team.view_unsubmitted_link = reverse_tournament(
             'participants-team-record', t, kwargs={'pk': team.pk})
-        total_owed += team.owed_ballots
+        total_possible += rounds_owed
         total_submitted += team.submitted_ballots
 
-    total_coverage = calculate_coverage(total_submitted, total_owed)
+    print(total_submitted, total_possible)
+    total_coverage = calculate_coverage(total_submitted, total_possible)
 
     return teams, adjudicators, total_coverage
 
