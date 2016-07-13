@@ -61,12 +61,14 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             if ballotset.discarded:
                 ballotsets_info += "<strike class='text-muted'>" + edit_status + "</strike></a><small> discarded; "
             else:
-                ballotsets_info += edit_status + "</a><small> "
+                ballotsets_info += edit_status + "</a>"
 
             if ballotset.submitter_type == ballotset.SUBMITTER_TABROOM:
-                ballotsets_info += " <em>entered by " + ballotset.submitter.username + "</em></small><br>"
+                ballotsets_info += " <small><em>entered by " + ballotset.submitter.username + "</em></small>"
             elif ballotset.submitter_type == ballotset.SUBMITTER_PUBLIC:
-                ballotsets_info += " <em>a public submission by " + ballotset.ip_address + "</em></small><br>"
+                ballotsets_info += " <small><em>a public submission by " + ballotset.ip_address + "</em></small>"
+
+            ballotsets_info += "<br />"
 
         if all(x.discarded for x in ballotsubmissions):
             link = reverse_tournament('new_ballotset',

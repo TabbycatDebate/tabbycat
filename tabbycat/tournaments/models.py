@@ -291,7 +291,7 @@ class Round(models.Model):
         if filter_kwargs:
             debates = debates.filter(**filter_kwargs)
         if ballotsubs or ballotsets:
-            debates = debates.prefetch_related('ballotsubmission_set')
+            debates = debates.prefetch_related('ballotsubmission_set', 'ballotsubmission_set__submitter')
         if ordering:
             debates = debates.order_by(*ordering)
         if self.tournament.pref('enable_divisions') and divisions:
