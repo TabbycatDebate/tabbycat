@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  {% if round.seq < tournament.round_set.count and current_round == round %}
+  {% if user.is_superuser and round.seq < tournament.round_set.count and current_round == round %}
     <a class="btn btn-success submit-disable" href="{% round_url round_increment_check %}">
       Advance to Next Round <span class="glyphicon glyphicon-chevron-right"></span>
     </a>
