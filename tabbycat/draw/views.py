@@ -74,7 +74,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
             for debate in draw:
                 table.add_motion_column([m.reference for m in debate.division_motions])
         if not tournament.pref('enable_divisions'):
-            table.add_debate_adjudicators_column(draw)
+            table.add_debate_adjudicators_column(draw, show_splits=False)
 
     def get_table(self):
         tournament = self.get_tournament()

@@ -172,9 +172,9 @@ run_command(["git", "push", remote_name, push_spec])
 if args.init_db:
     print_yellow("Now creating a superuser for the Heroku site.")
     print_yellow("You'll need to respond to the prompts:")
-    run_heroku_command(["run", "python", "manage.py", "createsuperuser"])
+    run_heroku_command(["run", "python", "tabbycat/manage.py", "createsuperuser"])
 
-    command = make_heroku_command(["run", "python", "manage.py", "generate_secret_key"])
+    command = make_heroku_command(["run", "python", "tabbycat/manage.py", "generate_secret_key"])
     secret_key = get_output_from_command(command)
     # Turn command output into string of just the key
     secret_key = secret_key.strip().split()[0].strip()
@@ -184,7 +184,7 @@ if args.init_db:
 
     # Import tournament, if provided
     if args.import_tournament:
-        command = ["run", "python", "manage.py", "importtournament", args.import_tournament]
+        command = ["run", "python", "tabbycat/manage.py", "importtournament", args.import_tournament]
         if args.tournament_slug:
             command += ["--slug", args.tournament_slug]
         if args.tournament_name:

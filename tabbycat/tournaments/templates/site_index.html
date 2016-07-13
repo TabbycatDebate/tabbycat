@@ -30,13 +30,15 @@
           </a>
         </li>
       {% endfor %}
-      <li class="list-group-item">
-        <span class="glyphicon glyphicon-edit"></span>&nbsp;
-        <a href="{% url 'admin:index' %}">Edit database area</a>
-      </li>
+      {% if user.is_superuser %}
+        <li class="list-group-item">
+          <span class="glyphicon glyphicon-edit"></span>&nbsp;
+          <a href="{% url 'admin:index' %}">Edit database area</a>
+        </li>
       <li class="list-group-item">
         <span class="emoji">➕</span><a href="{% url 'tournament-create' %}">Create new tournament</a>
       </li>
+      {% endif %}
     {% else %}
       <p>
         It looks like there aren't any tournaments on this site. Would you like

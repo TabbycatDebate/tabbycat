@@ -2,7 +2,6 @@ import logging
 from threading import Lock
 
 from django.db import models
-from django.utils.functional import cached_property
 from django.conf import settings
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
 
@@ -91,9 +90,9 @@ class Submission(models.Model):
             super(Submission, self).save(*args, **kwargs)
 
     def clean(self):
+        super().clean()
         if self.submitter_type == self.SUBMITTER_TABROOM and self.submitter is None:
-            raise ValidationError(
-                "A tab room ballot must have a user associated.")
+            raise ValidationError("A tab room ballot must have a user associated.")
 
 
 class BallotSubmission(Submission):
@@ -121,7 +120,7 @@ class BallotSubmission(Submission):
             time=('<unknown>' if self.timestamp is None else str(
                 self.timestamp.isoformat())))
 
-    @cached_property
+    @property
     def ballot_set(self):
         if not hasattr(self, "_ballot_set"):
             self._ballot_set = BallotSet(self)
@@ -129,15 +128,14 @@ class BallotSubmission(Submission):
 
     def clean(self):
         # The motion must be from the relevant round
-        super(BallotSubmission, self).clean()
+        super().clean()
         if self.motion.round != self.debate.round:
             raise ValidationError(
                 "Debate is in round {:d} but motion ({:s}) is from round {:d}".format(
                     self.debate.round, self.motion.reference,
                     self.motion.round))
         if self.confirmed and self.discarded:
-            raise ValidationError(
-                "A ballot can't be both confirmed and discarded!")
+            raise ValidationError("A ballot can't be both confirmed and discarded!")
 
     def is_identical(self, other):
         """Returns True if all data fields are the same. Returns False in any
@@ -203,6 +201,13 @@ class SpeakerScoreByAdj(models.Model):
     def debate(self):
         return self.debate_team.debate
 
+    def clean(self):
+        super().clean()
+        if (self.debate_team.debate != self.debate_adjudicator.debate or
+                self.debate_team.debate != self.ballot_submission.debate):
+            raise ValidationError("The debate team, debate adjudicator and ballot "
+                    "submission must all relate to the same debate.")
+
 
 class TeamScore(models.Model):
     """Stores information about a team's result in a debate. This is all
@@ -230,8 +235,7 @@ class SpeakerScoreManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(SpeakerScoreManager,
-                     self).get_queryset().select_related('speaker')
+        return super().get_queryset().select_related('speaker')
 
 
 class SpeakerScore(models.Model):
@@ -252,3 +256,12 @@ class SpeakerScore(models.Model):
     class Meta:
         unique_together = [('debate_team', 'speaker', 'position',
                             'ballot_submission')]
+
+    def clean(self):
+        super().clean()
+        if self.debate_team.team != self.speaker.team:
+            raise ValidationError("The debate team and speaker must be from the "
+                    "same team.")
+        if self.ballot_submission.debate != self.debate_team.debate:
+            raise ValidationError("The ballot submission and debate team must "
+                    "relate to the same debate.")

@@ -6,12 +6,12 @@
 {% block sub-title %}for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url ballot_checkin current_round %}">Ballot Check-In</a>
+  <a class="btn btn-default submit-disable" href="{% round_url ballot_checkin round %}">Ballot Check-In</a>
   {% include "tables/table_search.html" %}
 {% endblock %}
 
 {% block page-subnav-actions %}
-  {% if round.seq < tournament.round_set.count and current_round == round %}
+  {% if user.is_superuser and round.seq < tournament.round_set.count and current_round == round %}
     <a class="btn btn-success submit-disable" href="{% round_url round_increment_check %}">
       Advance to Next Round <span class="glyphicon glyphicon-chevron-right"></span>
     </a>

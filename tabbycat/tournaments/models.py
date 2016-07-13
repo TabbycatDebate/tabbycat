@@ -277,8 +277,9 @@ class Round(models.Model):
             related += ('division', 'division__venue_group')
         return self.debate_set.order_by(*ordering).select_related(*related)
 
-    def debate_set_with_prefetches(self, ordering=('venue__name',), select_related=('venue',),
-            teams=True, adjudicators=True, speakers=True, divisions=True, ballots=False, wins=False):
+    def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',), select_related=('venue',),
+            teams=True, adjudicators=True, speakers=True, divisions=True, ballotsubs=False,
+            wins=False, ballotsets=False):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
@@ -287,7 +288,9 @@ class Round(models.Model):
         from results.prefetch import populate_confirmed_ballots, populate_wins
 
         debates = self.debate_set.all()
-        if ballots:
+        if filter_kwargs:
+            debates = debates.filter(**filter_kwargs)
+        if ballotsubs or ballotsets:
             debates = debates.prefetch_related('ballotsubmission_set')
         if ordering:
             debates = debates.order_by(*ordering)
@@ -301,8 +304,8 @@ class Round(models.Model):
             populate_teams(debates, speakers=speakers)  # _aff_team, _aff_dt, _neg_team, _neg_dt
         if adjudicators:
             populate_allocations(debates)  # _adjudicators
-        if ballots:
-            populate_confirmed_ballots(debates, motions=True)
+        if ballotsubs or ballotsets:
+            populate_confirmed_ballots(debates, motions=True, ballotsets=ballotsets)
         if wins:
             populate_wins(debates)
 

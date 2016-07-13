@@ -114,18 +114,18 @@ class BaseTeamRecordView(BaseRecordView):
     def get_table(self):
         """On team record pages, the table is the results table."""
         tournament = self.get_tournament()
-        teamscores = TeamScore.objects.filter(debate_team__team=self.object).select_related(
+        teamscores = TeamScore.objects.filter(debate_team__team=self.object,
+                ballot_submission__confirmed=True).select_related(
                 'debate_team__debate', 'debate_team__debate__round')
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_allocations(debates)
-        populate_confirmed_ballots(debates, motions=True)
+        populate_confirmed_ballots(debates, motions=True, ballotsets=True)
 
         table = TabbycatTableBuilder(view=self, title="Results", sort_key="Round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_columns(teamscores)
-        table.add_debate_adjudicators_column(debates, show_splits=self.admin
-                or tournament.pref('show_splitting_adjudicators'))
+        table.add_debate_adjudicators_column(debates, show_splits=True)
 
         if self.admin or tournament.pref('public_motions'):
             table.add_motion_column([debate.confirmed_ballot.motion
@@ -162,13 +162,12 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         populate_teams( debates)
         populate_wins(debates)
         populate_allocations(debates)
-        populate_confirmed_ballots(debates, motions=True)
+        populate_confirmed_ballots(debates, motions=True, ballotsets=True)
 
         table = TabbycatTableBuilder(view=self, title="Previous Rounds", sort_key="Round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_results_columns(debates)
-        table.add_debate_adjudicators_column(debates, show_splits=self.admin
-                or tournament.pref('show_splitting_adjudicators'), highlight_adj=self.object)
+        table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=self.object)
 
         if self.admin or tournament.pref('public_motions'):
             table.add_motion_column([debate.confirmed_ballot.motion

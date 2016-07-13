@@ -143,6 +143,7 @@ class BallotSetForm(forms.Form):
         self.using_replies = self.tournament.pref('reply_scores_enabled')
         self.choosing_sides = self.tournament.pref('draw_side_allocations') == 'manual-ballot'
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
+        self.max_margin = self.tournament.pref('maximum_margin')
 
         self.forfeit_declared = False
 
@@ -382,6 +383,13 @@ class BallotSetForm(forms.Form):
                         self.add_error(None, forms.ValidationError(
                             _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)"),
                             params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
+                        ))
+
+                    margin = abs(totals[0] - totals[1])
+                    if self.max_margin and margin > self.max_margin:
+                        self.add_error(None, forms.ValidationError(
+                            _("The margin (%(margin).1f) in the ballot of adjudicator %(adj)s (%(adj_ins)s) exceeds the maximum allowable margin (%(max_margin).1f)"),
+                            params={'adj': adj.name, 'adj_ins': adj.institution.code, 'margin': margin, 'max_margin': self.max_margin}, code='max_margin'
                         ))
 
             # Pull team info again, in case it's changed since the form was loaded.

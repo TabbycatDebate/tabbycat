@@ -70,14 +70,21 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         ballotsubmissions = sorted(debate.ballotsubmission_set.all(), key=lambda x: x.version)
 
         for ballotset in ballotsubmissions:
+            if not self.admin and ballotset.discarded:
+                continue
+
             link = reverse_tournament('edit_ballotset',
                                       self.tournament,
                                       kwargs={'ballotsub_id': ballotset.id})
-            ballotsets_info = "<a href=" + link + ">"
+            ballotsets_info += "<a href=" + link + ">"
+
             if ballotset.confirmed:
                 edit_status = "Re-edit v" + str(ballotset.version)
-            else:
+            elif self.admin:
                 edit_status = "Edit v" + str(ballotset.version)
+            else:
+                edit_status = "Review v" + str(ballotset.version)
+
             if ballotset.discarded:
                 ballotsets_info += "<strike class='text-muted'>" + edit_status + "</strike></a><small> discarded; "
             else:

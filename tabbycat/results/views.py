@@ -55,7 +55,13 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
 
     def _get_draw(self):
         if not hasattr(self, '_draw'):
-            self._draw = self.get_round().debate_set_with_prefetches(ordering=('room_rank',), ballots=True, wins=True)
+            if self.request.user.is_superuser:
+                filter_kwargs = None
+            else:
+                filter_kwargs = dict(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT])
+            self._draw = self.get_round().debate_set_with_prefetches(
+                    ordering=('room_rank',), ballotsets=True, wins=True,
+                    filter_kwargs=filter_kwargs)
         return self._draw
 
     def get_table(self):
@@ -66,17 +72,17 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
         table.add_debate_venue_columns(draw)
         table.add_debate_bracket_columns(draw)
         table.add_debate_results_columns(draw)
-        table.add_debate_adjudicators_column(draw, show_splits=False)
+        table.add_debate_adjudicators_column(draw, show_splits=True)
         return table
 
     def get_context_data(self, **kwargs):
-        draw = self._get_draw()
+        debates = self.get_round().debate_set
         kwargs["stats"] = {
-            'none': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
-            'ballot_in': draw.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
-            'draft': draw.filter(result_status=Debate.STATUS_DRAFT).count(),
-            'confirmed': draw.filter(result_status=Debate.STATUS_CONFIRMED).count(),
-            'postponed': draw.filter(result_status=Debate.STATUS_POSTPONED).count(),
+            'none': debates.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
+            'ballot_in': debates.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
+            'draft': debates.filter(result_status=Debate.STATUS_DRAFT).count(),
+            'confirmed': debates.filter(result_status=Debate.STATUS_CONFIRMED).count(),
+            'postponed': debates.filter(result_status=Debate.STATUS_POSTPONED).count(),
         }
         num_motions = Motion.objects.filter(round=self.get_round()).count()
         kwargs["has_motions"] = num_motions > 0
@@ -101,14 +107,13 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     def get_table_by_debate(self):
         round = self.get_round()
         tournament = self.get_tournament()
-        debates = round.debate_set_with_prefetches(ballots=True, wins=True)
+        debates = round.debate_set_with_prefetches(ballotsets=True, wins=True)
 
         table = TabbycatTableBuilder(view=self, sort_key="Venue")
         table.add_debate_venue_columns(debates)
         table.add_debate_results_columns(debates)
         table.add_debate_ballot_link_column(debates)
-        table.add_debate_adjudicators_column(debates,
-            show_splits=tournament.pref('show_splitting_adjudicators'))
+        table.add_debate_adjudicators_column(debates, show_splits=True)
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([d.confirmed_ballot.motion
                 if d.confirmed_ballot else None for d in debates])
@@ -135,8 +140,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
         table.add_debate_result_by_team_columns(teamscores)
         table.add_debate_ballot_link_column(debates)
-        table.add_debate_adjudicators_column(debates,
-            show_splits=tournament.pref('show_splitting_adjudicators'))
+        table.add_debate_adjudicators_column(debates, show_splits=True)
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([debate.confirmed_ballot.motion
                 if debate.confirmed_ballot else None for debate in debates])
