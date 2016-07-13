@@ -1,22 +1,15 @@
 import math
 
+from django.db.models import Sum
+
 from .models import BreakCategory
 
 
 def get_scores(bc):
-    # TODO: rework this to be more efficient using the new prepopulate calls
-    from participants.models import Team
-    from results.models import TeamScore
-    from django.db.models import Sum
-    teams = Team.objects.filter(break_categories=bc)
-    scores = []
-    for team in teams:
-        score = TeamScore.objects.filter(
-            ballot_submission__confirmed=True,
-            debate_team__team=team).aggregate(Sum('points'))
-        scores.append(score['points__sum'])
-
-    scores.sort(reverse=True)
+    teams = bc.team_set.filter(
+        debateteam__teamscore__ballot_submission__confirmed=True
+    ).annotate(score=Sum('debateteam__teamscore__points'))
+    scores = sorted([team.score for team in teams], reverse=True)
     return scores
 
 
@@ -36,11 +29,12 @@ def categories_ordered(t):
     return data
 
 
-def determine_liveness(break_category, tournament, round, wins):
-    thresholds = calculate_live_thresholds(break_category, tournament, round)
-    if wins >= thresholds[0]:
+def determine_liveness(thresholds, wins):
+    """thresholds should be calculated using calculate_live_thresholds."""
+    safe, dead = thresholds
+    if wins >= safe:
         return True
-    elif wins <= thresholds[1]:
+    elif wins <= dead:
         return False
     else:
         return None
@@ -109,7 +103,7 @@ def calculate_live_thresholds(break_category, tournament, round):
 
         safe = high_bound
         dead = low_bound - (total_rounds - (current_round - 1)) - 1
-        return safe,dead
+        return safe, dead
     else:
         # The safe score for the ESL/EFL category is trick. First, we get a best
         # possible apriori safe score using the  earlier binomial distribution.

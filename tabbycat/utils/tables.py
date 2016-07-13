@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate, DebateTeam
 from participants.utils import get_side_counts
@@ -158,7 +160,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             self.tournament = kwargs.get('tournament')
 
-        if 'admin' not in kwargs and isinstance(view, SuperuserRequiredMixin):
+        if 'admin' not in kwargs and isinstance(view, SuperuserRequiredMixin) or \
+                (isinstance(view, LoginRequiredMixin) and view.request.user.is_superuser):
             self.admin = True
         else:
             self.admin = kwargs.get('admin', False)
