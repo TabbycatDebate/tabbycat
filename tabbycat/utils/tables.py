@@ -177,12 +177,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
         return self.tournament.pref('show_speakers_in_draw') or self.admin
 
     def _adjudicator_feedback_link(self, adj):
-        return {
-            'text': "View %s's Feedback" % adj.name.split(" ")[0],
-            'class': 'show-feedback-modal',
-            'link': reverse_tournament('get_adj_feedback_json',
-                self.tournament, kwargs={'pk': adj.pk})
-        }
+        if not self.admin:
+            return {'text': False, 'link': False}
+        else:
+            return {
+                'text': "View %s's Feedback" % adj.name.split(" ")[0],
+                'class': 'show-feedback-modal',
+                'link': reverse_tournament('get_adj_feedback_json',
+                    self.tournament, kwargs={'pk': adj.pk})
+            }
 
     def _adjudicator_record_link(self, adj):
         adj_short_name = adj.name.split(" ")[0]
