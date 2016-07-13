@@ -30,10 +30,12 @@
           </a>
         </li>
       {% endfor %}
-      <li class="list-group-item">
-        <span class="glyphicon glyphicon-edit"></span>&nbsp;
-        <a href="{% url 'admin:index' %}">Edit database area</a>
-      </li>
+      {% if user.is_superuser %}
+        <li class="list-group-item">
+          <span class="glyphicon glyphicon-edit"></span>&nbsp;
+          <a href="{% url 'admin:index' %}">Edit database area</a>
+        </li>
+      {% endif %}
       <li class="list-group-item">
         <span class="emoji">➕</span><a href="{% url 'tournament-create' %}">Create new tournament</a>
       </li>
