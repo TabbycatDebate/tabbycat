@@ -76,8 +76,10 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             ballotsets_info = "<a href=" + link + ">"
             if ballotset.confirmed:
                 edit_status = "Re-edit v" + str(ballotset.version)
-            else:
+            elif self.admin:
                 edit_status = "Edit v" + str(ballotset.version)
+            else:
+                edit_status = "Review v" + str(ballotset.version)
             if ballotset.discarded:
                 ballotsets_info += "<strike class='text-muted'>" + edit_status + "</strike></a><small> discarded; "
             else:
