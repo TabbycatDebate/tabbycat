@@ -26,7 +26,7 @@ from .forms import make_feedback_form_class
 from .utils import FeedbackTableBuilder, get_feedback_overview, get_feedback_progress, parse_feedback
 
 
-class GetAdjScores(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
+class GetAdjScores(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
 
     def get_data(self):
         feedback_weight = self.get_tournament().current_round.feedback_weight
@@ -36,7 +36,7 @@ class GetAdjScores(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
         return data
 
 
-class GetAdjFeedbackJSON(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
+class GetAdjFeedbackJSON(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
 
     def get_data(self):
         adjudicator = get_object_or_404(Adjudicator, pk=self.kwargs['pk'])
@@ -244,7 +244,7 @@ class FeedbackFromAdjudicatorView(FeedbackFromSourceView):
     adjfeedback_filter_field = 'source_adjudicator__adjudicator'
 
 
-class GetAdjFeedback(JsonDataResponseView, LoginRequiredMixin, TournamentMixin):
+class GetAdjFeedback(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
 
     def parse_feedback(self, f, questions):
 
@@ -488,7 +488,7 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
         adjudicator.save()
 
 
-class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableTemplateView):
+class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
 
     page_title = 'Feedback Progress'
     page_subtitle = ''
@@ -515,11 +515,11 @@ class BaseFeedbackProgress(TournamentMixin, SuperuserRequiredMixin, VueTableTemp
         return [adjs_table, teams_table]
 
 
-class FeedbackProgress(BaseFeedbackProgress):
+class FeedbackProgress(SuperuserRequiredMixin, BaseFeedbackProgressView):
     template_name = 'feedback_base.html'
 
 
-class PublicFeedbackProgress(BaseFeedbackProgress, PublicTournamentPageMixin, CacheMixin):
+class PublicFeedbackProgress(PublicTournamentPageMixin, CacheMixin, BaseFeedbackProgressView):
     public_page_preference = 'feedback_progress'
 
 
