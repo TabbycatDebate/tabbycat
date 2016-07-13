@@ -239,13 +239,16 @@ class Team(models.Model):
     def debates(self):
         return self.get_debates(None)
 
-    @cached_property
+    @property
     def wins_count(self):
-        from results.models import TeamScore
-        wins = TeamScore.objects.filter(ballot_submission__confirmed=True,
-                                        debate_team__team=self,
-                                        win=True).count()
-        return wins
+        try:
+            return self._wins_count
+        except AttributeError:
+            from results.models import TeamScore
+            self._wins_count = TeamScore.objects.filter(ballot_submission__confirmed=True,
+                                            debate_team__team=self,
+                                            win=True).count()
+            return self._wins_count
 
     @cached_property
     def speakers(self):
@@ -385,10 +388,14 @@ class Adjudicator(Person):
         return self.weighted_score(weight)
 
     def _feedback_score(self):
-        from adjallocation.models import DebateAdjudicator
-        return self.adjudicatorfeedback_set.filter(confirmed=True).exclude(
-            source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
-                avg=models.Avg('score'))['avg']
+        try:
+            return self._feedback_score_cache
+        except AttributeError:
+            from adjallocation.models import DebateAdjudicator
+            self._feedback_score_cache = self.adjudicatorfeedback_set.filter(confirmed=True).exclude(
+                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
+                    avg=models.Avg('score'))['avg']
+            return self._feedback_score_cache
 
     @property
     def feedback_score(self):

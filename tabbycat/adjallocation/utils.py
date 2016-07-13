@@ -4,9 +4,10 @@ import math
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
 from availability.models import ActiveAdjudicator
-from breakqual.utils import determine_liveness
+from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import DebateTeam
-from participants.models import Adjudicator
+from participants.models import Adjudicator, Team
+from participants.prefetch import populate_feedback_scores, populate_win_counts
 
 
 def percentile(n, percent, key=lambda x:x):
@@ -158,6 +159,7 @@ def debates_to_json(draw, t, r):
 def adjs_to_json(adjs, regions, t):
     """Converts to a standard JSON object for Vue components to use"""
 
+    populate_feedback_scores(adjs)
     fw = t.current_round.feedback_weight
     for adj in adjs:
         adj.abs_score = adj.weighted_score(fw)
@@ -199,14 +201,24 @@ def adjs_to_json(adjs, regions, t):
 
 
 def teams_to_json(teams, regions, categories, t, r):
+    thresholds = {bc['id']: calculate_live_thresholds(bc, t, r) for bc in categories}
+
+    # populate team categories
+    tbcs = Team.break_categories.through.objects.filter(team__in=teams)
+    break_category_ids_by_team = {team.id: [] for team in teams}
+    for tbc in tbcs:
+        break_category_ids_by_team[tbc.team_id].append(tbc.breakcategory_id)
+
+    populate_win_counts(teams)
+
     data = {}
     for team in teams:
-        team_categories = team.break_categories.all().values_list('id', flat=True)
+        team_categories = break_category_ids_by_team[team.id]
         break_categories = [{
             'id': bc['id'],
             'name': bc['name'],
             'seq': bc['seq'],
-            'will_break': determine_liveness(bc, t, r, team.wins_count)
+            'will_break': determine_liveness(thresholds[bc['id']], team.wins_count)
         } for bc in categories if bc['id'] in team_categories]
 
         data[team.id] = {
