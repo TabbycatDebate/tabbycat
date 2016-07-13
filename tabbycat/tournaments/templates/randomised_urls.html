@@ -37,6 +37,9 @@
     <code>python manage.py randomisedurls delete --tournament {{ tournament_slug }}</code></p>
     <p>If you want to print these for distribution, <a target="_blank"
     href="{% tournament_url feedback_urls_sheets %}">use this page</a>.
+    <p>If you have speaker and adjudicator emails entered, you can email these
+     <a target="_blank" href="{% tournament_url randomised-urls-email %}">
+     out using this page</a>.
     {% if not pref.public_ballots_randomised and not pref.public_feedback_randomised and not pref.allocation_confirmations %}
       <div class="alert alert-danger">
         The <strong>public ballots randomised</strong> and <strong>public feedback
@@ -100,25 +103,26 @@
         <tbody>
           {% for adj in adjs %}
             <tr>
-              <td>{{ adj.name }}</td>
-                {% if adj.url_key %}
-                  {% if pref.public_feedback_randomised %}
-                    <td>
-                      {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.url_key %}
-                    </td>
-                  {% endif %}
-                  {% if pref.public_ballots_randomised %}
-                    <td>
-                      {% tournament_absurl public_new_ballotset_key adj.url_key %}
-                    </td>
-                  {% endif %}
-                  {% if pref.allocation_confirmations %}
-                    <td>{% tournament_absurl participants-public-confirm-shift adj.url_key %}</td>
-                  {% endif %}
-                {% else %}
-                  <td>no URL</td><td>no URL</td>
-                {% endif %}
+              <td>
+                {{ adj.name }}
               </td>
+              {% if adj.url_key %}
+                {% if pref.public_feedback_randomised %}
+                  <td>
+                    {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.url_key %}
+                  </td>
+                {% endif %}
+                {% if pref.public_ballots_randomised %}
+                  <td>
+                    {% tournament_absurl public_new_ballotset_key adj.url_key %}
+                  </td>
+                {% endif %}
+                {% if pref.allocation_confirmations %}
+                  <td>{% tournament_absurl participants-public-confirm-shift adj.url_key %}</td>
+                {% endif %}
+              {% else %}
+                <td>no URL</td><td>no URL</td>
+              {% endif %}
             </tr>
           {% empty %}
             <tr>

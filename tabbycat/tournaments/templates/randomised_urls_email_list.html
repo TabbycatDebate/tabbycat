@@ -1,0 +1,34 @@
+{% extends "feedback_base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Randomised URLs{% endblock %}
+{% block page-title %}Randomised URLs{% endblock %}
+
+{% block content %}
+
+  {% for adj in adjs %}
+    {% if adj.url_key %}
+      {{ adj.name }}, {{ adj.email }}, {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.url_key %}<br>
+    {% else %}
+      {{ adj.name }}, No Email
+    {% endif %}
+  {% endfor %}
+
+  {% for team in teams %}
+    {% if team.url_key %}
+      {% for speaker in team.speakers %}
+        {{ speaker.name }}, {{ speaker.email }}, {% tournament_absurl adjfeedback-public-add-from-team-randomised team.url_key %}<br>
+      {% endfor %}
+    {% else %}
+      {{ speaker.name }}, No Email
+    {% endif %}
+  {% endfor %}
+
+  <form action="{% tournament_url randomised-urls-generate %}" method="POST">
+    {% csrf_token %}
+    <button class="btn btn-default" id="generateRandomisedUrls" type="submit">
+      Send emails to all of these people
+    </button>
+  </form>
+
+{% endblock content %}

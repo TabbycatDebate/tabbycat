@@ -107,7 +107,9 @@
           </div>
         </div>
       </div>
-      <feedback-cards :feedbacks="feedbacks"></feedback-cards>
+      {% if 'admin/' in request.path %}
+        <feedback-cards :feedbacks="feedbacks"></feedback-cards>
+      {% endif %}
     {% endblock %}
 
   {% endblock body %}

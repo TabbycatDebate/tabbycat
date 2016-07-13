@@ -523,6 +523,7 @@ class PublicFeedbackProgress(BaseFeedbackProgress, PublicTournamentPageMixin, Ca
 class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
 
     template_name = 'randomised_urls.html'
+    show_emails = False;
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
@@ -534,6 +535,7 @@ class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
             tournament.team_set.filter(url_key__isnull=False).exists()
         kwargs['tournament_slug'] = tournament.slug
+        kwargs['for_emailing'] = self.show_emails
         return super().get_context_data(**kwargs)
 
 
@@ -557,4 +559,22 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
             populate_url_keys(tournament.team_set.all())
             messages.success(self.request, "Randomised URLs were generated for all teams and adjudicators.")
 
+        return super().post(request, *args, **kwargs)
+
+
+class EmailRandomisedUrlsView(RandomisedUrlsView):
+
+    show_emails = True;
+    template_name = 'randomised_urls_email_list.html'
+
+
+class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+
+    def get_redirect_url(self):
+        return reverse_tournament('randomised-urls-view', self.get_tournament())
+
+    def post(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+
+        messages.success(self.request, "Emails were sent for all teams and adjudicators.")
         return super().post(request, *args, **kwargs)
