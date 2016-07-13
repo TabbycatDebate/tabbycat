@@ -277,7 +277,7 @@ class Round(models.Model):
             related += ('division', 'division__venue_group')
         return self.debate_set.order_by(*ordering).select_related(*related)
 
-    def debate_set_with_prefetches(self, ordering=('venue__name',), select_related=('venue',),
+    def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',), select_related=('venue',),
             teams=True, adjudicators=True, speakers=True, divisions=True, ballotsubs=False,
             wins=False, ballotsets=False):
         """Returns the debate set, with aff_team and neg_team populated.
@@ -288,6 +288,8 @@ class Round(models.Model):
         from results.prefetch import populate_confirmed_ballots, populate_wins
 
         debates = self.debate_set.all()
+        if filter_kwargs:
+            debates = debates.filter(**filter_kwargs)
         if ballotsubs or ballotsets:
             debates = debates.prefetch_related('ballotsubmission_set')
         if ordering:
