@@ -35,10 +35,10 @@
           <span class="glyphicon glyphicon-edit"></span>&nbsp;
           <a href="{% url 'admin:index' %}">Edit database area</a>
         </li>
-      {% endif %}
       <li class="list-group-item">
         <span class="emoji">➕</span><a href="{% url 'tournament-create' %}">Create new tournament</a>
       </li>
+      {% endif %}
     {% else %}
       <p>
         It looks like there aren't any tournaments on this site. Would you like
