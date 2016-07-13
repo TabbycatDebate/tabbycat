@@ -154,7 +154,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             }
             owed_link_data = [{
                 'text': 'View Missing',
-                'link': team_or_adj.view_unsubmitted_link
+                'link': team_or_adj.missing_admin_link if self.admin else team_or_adj.missing_public_link
             } for team_or_adj in progress]
             self.add_column(owed_link_header, owed_link_data)
 
@@ -321,8 +321,10 @@ def get_feedback_progress(t):
         adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
         adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
         adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
-        adj.view_unsubmitted_link = reverse_tournament(
+        adj.missing_admin_link = reverse_tournament(
             'participants-adjudicator-record', t, kwargs={'pk': adj.pk})
+        adj.missing_public_link = reverse_tournament(
+            'participants-public-adjudicator-record', t, kwargs={'pk': adj.pk})
         total_possible += len(adjs_adjudications)
         total_submitted += adj.submitted_ballots
 
@@ -330,8 +332,10 @@ def get_feedback_progress(t):
         team.submitted_ballots = max(feedback.filter(source_team__team=team).count(), 0)
         team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
         team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
-        team.view_unsubmitted_link = reverse_tournament(
+        team.missing_admin_link = reverse_tournament(
             'participants-team-record', t, kwargs={'pk': team.pk})
+        team.missing_public_link = reverse_tournament(
+            'participants-public-team-record', t, kwargs={'pk': team.pk})
         total_possible += rounds_owed
         total_submitted += team.submitted_ballots
 
