@@ -23,7 +23,7 @@ admin.site.register(DebateAdjudicator, DebateAdjudicatorAdmin)
 
 class AdjudicatorConflictAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'team')
-    search_fields = ('adjudicator__name', 'team__name')
+    search_fields = ('adjudicator__name', 'team__short_name', 'team__long_name')
 
 admin.site.register(AdjudicatorConflict, AdjudicatorConflictAdmin)
 
