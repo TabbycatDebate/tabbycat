@@ -112,6 +112,9 @@ def calculate_live_thresholds(break_category, tournament, round):
             if sum_u[i] <= break_spots:
                 safe = total_rounds-i
 
+        if len(break_cat_scores) <= break_spots:
+            return 0, 0
+
         # Now, we improve upon our safe score using the actual data.
         # Check if teams in breaking range can still be 'caught'by the team just
         # outside breaking range. This gives us the best possible safe score.
