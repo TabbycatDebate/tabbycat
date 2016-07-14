@@ -373,7 +373,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         adj_venue_constraints_interpreter = make_interpreter(
             adjudicator=lambda x: pm.Adjudicator.objects.get(name=x),
-            group=lambda x: vm.VenueGroup.objects.get(name=x),
+            venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
         )
 
         return self._import(f, vm.AdjudicatorVenueConstraint, adj_venue_constraints_interpreter)
@@ -385,7 +385,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         team_venue_constraints_interpreter = make_interpreter(
             team=pm.Team.objects.lookup,
-            group=lambda x: vm.VenueGroup.objects.get(name=x),
+            venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
         )
 
         return self._import(f, vm.TeamVenueConstraint, team_venue_constraints_interpreter)
