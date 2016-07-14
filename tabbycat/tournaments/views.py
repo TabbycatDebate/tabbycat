@@ -14,7 +14,6 @@ from django.views.generic.edit import CreateView, FormView
 
 from draw.models import Debate, DebateTeam
 from participants.models import Institution
-from results.utils import get_result_status_stats
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view

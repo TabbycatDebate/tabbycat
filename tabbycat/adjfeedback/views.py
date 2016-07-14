@@ -591,6 +591,9 @@ class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, Po
             url_key__isnull=False, email__isnull=False)
 
         for speaker in speakers:
+            if speaker.email is None:
+                continue
+
             team_path = reverse_tournament(
                 'adjfeedback-public-add-from-team-randomised',
                 tournament, kwargs={'url_key': speaker.team.url_key})
@@ -606,12 +609,18 @@ class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, Po
                 '\n'
                 '%s' % (speaker.name, tournament.short_name, speaker.team.short_name, team_link))
 
-            send_mail("Your Feedback URL for %s" % tournament.short_name,
-                message, settings.DEFAULT_FROM_EMAIL, [speaker.email],
-                fail_silently=False)
-            logger.info("Sent email with key to %s (%s)" % (speaker.email, speaker.name))
+            try:
+                send_mail("Your Feedback URL for %s" % tournament.short_name,
+                    message, settings.DEFAULT_FROM_EMAIL, [speaker.email],
+                    fail_silently=False)
+                logger.info("Sent email with key to %s (%s)" % (speaker.email, speaker.name))
+            except:
+                logger.info("Failed to send email to %s speaker.email")
 
         for adjudicator in adjudicators:
+            if adjudicators.email is None:
+                continue
+
             adj_path = reverse_tournament(
                 'adjfeedback-public-add-from-adjudicator-randomised',
                 tournament, kwargs={'url_key': adjudicator.url_key})
@@ -627,9 +636,12 @@ class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, Po
                 '\n'
                 '%s' % (adjudicator.name, tournament.short_name, adj_link))
 
-            send_mail("Your Feedback URL for %s" % tournament.short_name,
-                message, settings.DEFAULT_FROM_EMAIL, [adjudicator.email],
-                fail_silently=False)
-            logger.info("Sent email with key to %s (%s)" % (adjudicator.email, adjudicator.name))
+            try:
+                send_mail("Your Feedback URL for %s" % tournament.short_name,
+                    message, settings.DEFAULT_FROM_EMAIL, [adjudicator.email],
+                    fail_silently=False)
+                logger.info("Sent email with key to %s (%s)" % (adjudicator.email, adjudicator.name))
+            except:
+                logger.info("Failed to send email %s" % adjudicator.email)
 
         return super().post(request, *args, **kwargs)
