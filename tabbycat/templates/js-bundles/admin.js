@@ -104,20 +104,6 @@ import FeedbackCards from  '../js-vue/FeedbackCards.vue'
 vueData['feedbacks'] = null; // Placeholder, to be set by the signal
 vueComponents['FeedbackCards'] = FeedbackCards;
 
-vueEvents['load-feedback-modal'] = function() {
-  $('#modalFeedbacks').modal();
-  $.getJSON({
-    url: $(event.target).attr('href'),
-    success: function(data, textStatus, jqXHR) {
-      console.log('sucess');
-      this.$parent.$set('feedbacks', data)
-    },
-    error: function(data, textStatus, jqXHR) {
-      $.fn.showAlert('danger', '<strong>Failed to load feedback</strong> ' + data.responseText, 0)
-    }
-  });
-}
-
 //------------------------------------------------------------------------------
 // Main Vue Instance
 //------------------------------------------------------------------------------

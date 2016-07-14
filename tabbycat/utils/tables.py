@@ -176,17 +176,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def _show_speakers_in_draw(self):
         return self.tournament.pref('show_speakers_in_draw') or self.admin
 
-    def _adjudicator_feedback_link(self, adj):
-        if not self.admin:
-            return {'text': False, 'link': False}
-        else:
-            return {
-                'text': "View %s's Feedback" % adj.name.split(" ")[0],
-                'class': 'show-feedback-modal',
-                'link': reverse_tournament('get_adj_feedback_json',
-                    self.tournament, kwargs={'pk': adj.pk})
-            }
-
     def _adjudicator_record_link(self, adj):
         adj_short_name = adj.name.split(" ")[0]
         if self.admin:
@@ -289,9 +278,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for adj in adjudicators:
             cell = {'text': adj.name}
             if self._show_record_links:
-                cell['popover'] = {'content': [
-                    self._adjudicator_record_link(adj),
-                    self._adjudicator_feedback_link(adj)]}
+                cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
             if subtext is 'institution':
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
