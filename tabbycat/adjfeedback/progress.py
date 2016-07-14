@@ -155,7 +155,8 @@ class BaseFeedbackProgress:
 
     def trackers(self):
         """Returns a list of all trackers, sorted by round."""
-        return sorted(self.expected_trackers() + self.unexpected_trackers(),
+        # return sorted(self.expected_trackers() + self.unexpected_trackers(),
+        return sorted(self.expected_trackers(), # don't include unexpected trackers
                 key=lambda x: x.round.seq)
 
     def num_submitted(self):
