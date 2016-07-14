@@ -60,21 +60,6 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         kwargs["round"] = round
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
         kwargs["blank"] = not (tournament.team_set.exists() or tournament.adjudicator_set.exists() or tournament.venue_set.exists())
-
-        kwargs["total_ballots"] = round.debate_set.count()
-
-        result_status_stats = get_result_status_stats(round)
-        result_statuses = [Debate.STATUS_CONFIRMED, Debate.STATUS_DRAFT, Debate.STATUS_NONE]
-        result_status_graph = [[0, 0], [0, 0], [0, 0]]
-        for status, number in result_status_stats.items():
-            try:
-                index = result_statuses.index(status)
-            except ValueError:
-                continue
-            result_status_graph[index][1] = number
-        # result_status_graph will look like [[0, nconfirmed], [0, ndraft], [0, nnone]]
-        kwargs["stats"] = result_status_graph
-
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
