@@ -618,7 +618,7 @@ class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, Po
                 logger.info("Failed to send email to %s speaker.email")
 
         for adjudicator in adjudicators:
-            if adjudicators.email is None:
+            if adjudicator.email is None:
                 continue
 
             adj_path = reverse_tournament(
