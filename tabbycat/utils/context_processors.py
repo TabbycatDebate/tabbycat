@@ -28,7 +28,9 @@ def debate_context(request):
 
 
 def get_menu_highlight(request):
-    if "sides" in request.path:
+    if "overview" in request.path:
+        return {"overview_nav": True}
+    elif "sides" in request.path:
         return {'sides_nav': True}
     elif "availability" in request.path:
         return {'availability_nav': True}

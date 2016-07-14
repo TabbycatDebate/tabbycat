@@ -44,6 +44,12 @@
     role="tablist"
     aria-multiselectable="true">
 
+  <li class="standalone">
+     <a href="{% tournament_url tournament-admin-home %}"
+        class="{% if overview_nav %}active{% endif %}">
+        <span class="glyphicon glyphicon-th"></span> Overview
+      </a>
+  </li>
   {% if pref.side_allocations_enabled == 'preallocated' %}
     <li class="standalone">
       <a href="{% tournament_url draw-side-allocations %}"
