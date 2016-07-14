@@ -14,6 +14,7 @@ from django.views.generic.edit import CreateView, FormView
 
 from draw.models import Debate, DebateTeam
 from participants.models import Institution
+from results.utils import get_result_status_stats
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view
@@ -60,12 +61,19 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
         kwargs["blank"] = not (tournament.team_set.exists() or tournament.adjudicator_set.exists() or tournament.venue_set.exists())
 
-        draw = round.get_draw()
-        kwargs["total_ballots"] = draw.count()
-        stats_none = draw.filter(result_status=Debate.STATUS_NONE).count()
-        stats_draft = draw.filter(result_status=Debate.STATUS_DRAFT).count()
-        stats_confirmed = draw.filter(result_status=Debate.STATUS_CONFIRMED).count()
-        kwargs["stats"] = [[0, stats_confirmed], [0, stats_draft], [0, stats_none]]
+        kwargs["total_ballots"] = round.debate_set.count()
+
+        result_status_stats = get_result_status_stats(round)
+        result_statuses = [Debate.STATUS_CONFIRMED, Debate.STATUS_DRAFT, Debate.STATUS_NONE]
+        result_status_graph = [[0, 0], [0, 0], [0, 0]]
+        for status, number in result_status_stats.items():
+            try:
+                index = result_statuses.index(status)
+            except ValueError:
+                continue
+            result_status_graph[index][1] = number
+        # result_status_graph will look like [[0, nconfirmed], [0, ndraft], [0, nnone]]
+        kwargs["stats"] = result_status_graph
 
         return super().get_context_data(**kwargs)
 

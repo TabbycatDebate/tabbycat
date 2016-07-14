@@ -32,6 +32,7 @@ from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
+from .utils import get_result_status_stats
 
 logger = logging.getLogger(__name__)
 
@@ -76,16 +77,18 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
         return table
 
     def get_context_data(self, **kwargs):
-        debates = self.get_round().debate_set
+        round = self.get_round()
+        result_status_stats = get_result_status_stats(round)
+
         kwargs["stats"] = {
-            'none': debates.filter(result_status=Debate.STATUS_NONE, ballot_in=False).count(),
-            'ballot_in': debates.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count(),
-            'draft': debates.filter(result_status=Debate.STATUS_DRAFT).count(),
-            'confirmed': debates.filter(result_status=Debate.STATUS_CONFIRMED).count(),
-            'postponed': debates.filter(result_status=Debate.STATUS_POSTPONED).count(),
+            'none': result_status_stats[Debate.STATUS_NONE],
+            'ballot_in': result_status_stats['B'],
+            'draft': result_status_stats[Debate.STATUS_DRAFT],
+            'confirmed': result_status_stats[Debate.STATUS_CONFIRMED],
+            'postponed': result_status_stats[Debate.STATUS_POSTPONED],
         }
-        num_motions = Motion.objects.filter(round=self.get_round()).count()
-        kwargs["has_motions"] = num_motions > 0
+
+        kwargs["has_motions"] = round.motion_set.count() > 0
         return super().get_context_data(**kwargs)
 
 
