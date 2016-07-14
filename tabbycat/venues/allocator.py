@@ -66,6 +66,8 @@ class VenueAllocator:
                 debate_constraints.append((debate, constraints))
                 logger.info("Constraints on {}: {}".format(debate, constraints))
 
+        debate_constraints.sort(key=lambda x: x[1][0].priority, reverse=True)
+
         return debate_constraints
 
     def allocate_constrained_venues(self, debate_constraints):
