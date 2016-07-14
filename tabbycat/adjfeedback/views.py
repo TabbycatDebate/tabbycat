@@ -1,6 +1,10 @@
+import logging
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
+from django.conf import settings
 from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -10,7 +14,7 @@ from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from participants.models import Adjudicator, Team
+from participants.models import Adjudicator, Speaker, Team
 from participants.prefetch import populate_feedback_scores
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
@@ -24,6 +28,8 @@ from utils.urlkeys import populate_url_keys
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
 from .utils import FeedbackTableBuilder, get_feedback_overview, get_feedback_progress, parse_feedback
+
+logger = logging.getLogger(__name__)
 
 
 class GetAdjScores(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
@@ -538,7 +544,6 @@ class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
             tournament.team_set.filter(url_key__isnull=False).exists()
         kwargs['tournament_slug'] = tournament.slug
-        kwargs['for_emailing'] = self.show_emails
         return super().get_context_data(**kwargs)
 
 
@@ -578,4 +583,53 @@ class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, Po
 
     def post(self, request, *args, **kwargs):
         messages.success(self.request, "Emails were sent for all teams and adjudicators.")
+
+        tournament = self.get_tournament()
+        speakers = Speaker.objects.filter(team__tournament=tournament,
+            team__url_key__isnull=False, email__isnull=False)
+        adjudicators = tournament.adjudicator_set.filter(
+            url_key__isnull=False, email__isnull=False)
+
+        for speaker in speakers:
+            team_path = reverse_tournament(
+                'adjfeedback-public-add-from-team-randomised',
+                tournament, kwargs={'url_key': speaker.team.url_key})
+            team_link = self.request.build_absolute_uri(team_path)
+            message = (''
+                'Hi %s, \n'
+                '\n'
+                'At %s we are using an online feedback system. Feedback for \n'
+                'your team (%s) can be submitted at the following URL. This URL \n'
+                'is unique to your team — do not share it as anyone with this \n'
+                'link can submit feedback on your behalf. It will not \n'
+                'change so we suggest bookmarking it. The URL is: \n'
+                '\n'
+                '%s' % (speaker.name, tournament.short_name, speaker.team.short_name, team_link))
+
+            send_mail("Your Feedback URL for %s" % tournament.short_name,
+                message, settings.DEFAULT_FROM_EMAIL, [speaker.email],
+                fail_silently=False)
+            logger.info("Sent email with key to %s (%s)" % (speaker.email, speaker.name))
+
+        for adjudicator in adjudicators:
+            adj_path = reverse_tournament(
+                'adjfeedback-public-add-from-adjudicator-randomised',
+                tournament, kwargs={'url_key': adjudicator.url_key})
+            adj_link = self.request.build_absolute_uri(adj_path)
+            message = (''
+                'Hi %s, \n'
+                '\n'
+                'At %s we are using an online feedback system. Your feedback \n'
+                'can be submitted at the following URL. This URL \n'
+                'is unique to you — do not share it as anyone with this \n'
+                'link can submit feedback on your behalf. It will not \n'
+                'change so we suggest bookmarking it. The URL is: \n'
+                '\n'
+                '%s' % (adjudicator.name, tournament.short_name, adj_link))
+
+            send_mail("Your Feedback URL for %s" % tournament.short_name,
+                message, settings.DEFAULT_FROM_EMAIL, [adjudicator.email],
+                fail_silently=False)
+            logger.info("Sent email with key to %s (%s)" % (adjudicator.email, adjudicator.name))
+
         return super().post(request, *args, **kwargs)

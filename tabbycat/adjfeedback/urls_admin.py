@@ -72,7 +72,10 @@ urlpatterns = [
     url(r'^randomised_urls/generate/$',
         views.GenerateRandomisedUrlsView.as_view(),
         name='randomised-urls-generate'),
-    url(r'^randomised_urls/email/$',
+    url(r'^randomised_urls/emails/list/$',
         views.EmailRandomisedUrlsView.as_view(),
         name='randomised-urls-email'),
+    url(r'^randomised_urls/emails/confirm/$',
+        views.ConfirmEmailRandomisedUrlsView.as_view(),
+        name='confirm-feedback-urls-send'),
 ]
