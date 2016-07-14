@@ -366,6 +366,30 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
 
+    def import_adj_venue_constraints(self, f):
+        """Imports venue constraints from a file.
+        Each line has:
+            adjudicator, group, priority
+        """
+        adj_venue_constraints_interpreter = make_interpreter(
+            adjudicator=lambda x: pm.Adjudicator.objects.get(name=x),
+            group=lambda x: vm.VenueGroup.objects.get(name=x),
+        )
+
+        return self._import(f, vm.AdjudicatorVenueConstraint, adj_venue_constraints_interpreter)
+
+    def import_team_venue_constraints(self, f):
+        """Imports venue constraints from a file.
+        Each line has:
+            team, group, priority
+        """
+        team_venue_constraints_interpreter = make_interpreter(
+            team=pm.Team.objects.lookup,
+            group=lambda x: vm.VenueGroup.objects.get(name=x),
+        )
+
+        return self._import(f, vm.TeamVenueConstraint, team_venue_constraints_interpreter)
+
     def auto_make_rounds(self, num_rounds):
         """Makes the number of rounds specified. The first one is random and the
         rest are all power-paired. The last one is silent. This is intended as a
