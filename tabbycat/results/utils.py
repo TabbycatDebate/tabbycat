@@ -1,8 +1,7 @@
-from warnings import warn
-
 from django.db.models import Count
 
 from draw.models import Debate
+
 
 def get_result_status_stats(round):
     """Returns a dict where keys are result statuses of debates; values are the
