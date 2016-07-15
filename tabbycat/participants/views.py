@@ -158,7 +158,9 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     def get_table(self):
         """On adjudicator record pages, the table is the previous debates table."""
         tournament = self.get_tournament()
-        debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.object).select_related('debate', 'debate__round')
+        debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.object,
+                debate__round__seq__lt=tournament.current_round.seq).select_related(
+                'debate', 'debate__round')
         debates = [da.debate for da in debateadjs]
         populate_teams( debates)
         populate_wins(debates)
