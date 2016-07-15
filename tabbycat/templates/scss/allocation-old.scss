@@ -139,6 +139,7 @@ $adj-button-width: 180px;
   span.name {
     max-width: $adj-button-width - 70;
     text-overflow: ellipsis;
+    color: #000;
   }
   span.institution {
     text-align: right;

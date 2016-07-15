@@ -66,7 +66,8 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
 
     def get_table(self):
         draw = self._get_draw()
-        table = ResultsTableBuilder(view=self, admin=self.request.user.is_superuser)
+        table = ResultsTableBuilder(view=self,
+            admin=self.request.user.is_superuser, sort_key="Status")
         table.add_ballot_status_columns(draw)
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw)
