@@ -14,9 +14,15 @@ admin.site.register(VenueGroup, VenueGroupAdmin)
 
 
 class VenueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'priority', 'tournament')
+    list_display = ('name', 'group_name', 'priority', 'tournament')
     list_filter = ('group', 'priority', 'tournament')
     search_fields = ('name',)
+
+    def group_name(self, obj):
+        if obj.group is None:
+            return None
+        return obj.group.name
+    group_name.short_description = 'Venue Group'
 
     def get_queryset(self, request):
         return super(VenueAdmin,
@@ -34,9 +40,15 @@ class BaseVenueConstraintAdmin(admin.ModelAdmin):
     associate_field = None
     associate_search_fields = ()
 
-    common_list_display = ('venue_group', 'priority')
+    common_list_display = ('group_name', 'priority')
     common_search_fields = ('venue_group__name', 'venue_group__short_name', 'priority')
     common_list_filter = ('venue_group', 'priority')
+
+    def group_name(self, obj):
+        if obj.venue_group is None:
+            return None
+        return obj.venue_group.name
+    group_name.short_description = 'Venue Group'
 
     def get_list_display(self, request):
         return (self.associate_field,) + self.common_list_display
