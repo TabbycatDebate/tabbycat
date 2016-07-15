@@ -261,14 +261,20 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
 
         trackers = []
         for debateadj in debateadjs:
+            # TODO this is hard-coded for Australs 2016, need to make general
+            adjudicators = debateadj.debate.adjudicators
             if debateadj.type == DebateAdjudicator.TYPE_CHAIR:
-                adjudicators = debateadj.debate.adjudicators
-                for target in adjudicators.all():
+                for target in adjudicators.all(): # including trainees
                     if target == self.adjudicator:
                         continue
                     trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
-            elif debateadj.type == DebateAdjudicator.TYPE_PANEL and panellist_feedback_enabled:
-                trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, debateadj.debate.adjudicators.chair))
+            elif debateadj.type == DebateAdjudicator.TYPE_PANEL:
+                for target in adjudicators.voting(): # excluding trainees
+                    if target == self.adjudicator:
+                        continue
+                    trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
+            elif debateadj.type == DebateAdjudicator.TYPE_TRAINEE:
+                trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, adjudicators.chair))
 
         self._prefetch_tracker_acceptable_submissions(trackers,
                 attrgetter('source', 'target'), attrgetter('source_adjudicator', 'adjudicator'))
