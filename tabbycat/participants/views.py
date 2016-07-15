@@ -116,7 +116,8 @@ class BaseTeamRecordView(BaseRecordView):
         """On team record pages, the table is the results table."""
         tournament = self.get_tournament()
         teamscores = TeamScore.objects.filter(debate_team__team=self.object,
-                ballot_submission__confirmed=True).select_related(
+                ballot_submission__confirmed=True,
+                debate_team__debate__round__draw_status=Round.STATUS_RELEASED).select_related(
                 'debate_team__debate', 'debate_team__debate__round')
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])
@@ -159,7 +160,8 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         """On adjudicator record pages, the table is the previous debates table."""
         tournament = self.get_tournament()
         debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.object,
-                debate__round__seq__lt=tournament.current_round.seq).select_related(
+                debate__round__seq__lt=tournament.current_round.seq,
+                debate__round__draw_status=Round.STATUS_RELEASED).select_related(
                 'debate', 'debate__round')
         debates = [da.debate for da in debateadjs]
         populate_teams( debates)
