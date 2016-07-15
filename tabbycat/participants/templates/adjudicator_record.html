@@ -40,7 +40,11 @@
                     <a href="{% if admin_page %}{% tournament_url participants-team-record debate.aff_team.pk %}{% else %}{% tournament_url participants-public-team-record debate.aff_team.pk %}{% endif %}" class="list-group-item-text">{{ debate.aff_team.short_name }}</a>
                     vs
                     <a href="{% if admin_page %}{% tournament_url participants-team-record debate.neg_team.pk %}{% else %}{% tournament_url participants-public-team-record debate.neg_team.pk %}{% endif %}" class="list-group-item-text">{{ debate.neg_team.short_name }}</a>
-                    in <strong>{{ debate.venue.name }}</strong>.
+                    in
+                    {% if debate.venue.group %}
+                      <strong>{{ debate.venue.group.short_name }}</strong> —
+                    {% endif %}
+                    <strong>{{ debate.venue.name }}</strong>.
                   </strong></li>
 
                   {# Round start time #}
