@@ -256,7 +256,8 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         if len(debateadjs) == 0:
             return []
 
-        panellist_feedback_enabled = debateadjs[0].debate.round.tournament.pref('panellist_feedback_enabled')
+        # TODO re-incorporate this in
+        # panellist_feedback_enabled = debateadjs[0].debate.round.tournament.pref('panellist_feedback_enabled')
         populate_allocations([da.debate for da in debateadjs])
 
         trackers = []
