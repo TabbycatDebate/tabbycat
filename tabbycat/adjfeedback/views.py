@@ -116,7 +116,7 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
 
         teams = tournament.team_set.all()
         team_table = TabbycatTableBuilder(
-            view=self, title='From Teams', sort_key='Feedbacks')
+            view=self, title='From Teams', sort_key='Name')
         team_table.add_team_columns(teams)
         team_feedback_data = []
         for team in teams:
