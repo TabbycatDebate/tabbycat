@@ -355,7 +355,10 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         add_team_round_results_public(teams, rounds)
 
-        table = TabbycatTableBuilder(view=self, sort_key='Wins', sort_order='desc')
+        # pre-sort, as Vue tables can't do two sort keys
+        teams = sorted(teams, key=lambda t: (-t.wins, t.short_name))
+
+        table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
         table.add_column("Wins", [team.wins for team in teams])
         table.add_team_results_columns(teams, rounds)
