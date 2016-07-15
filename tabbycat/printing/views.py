@@ -105,7 +105,7 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     def construct_info(self, venue, source, source_p, target, target_p):
         source_n = source.name if hasattr(source, 'name') else source.short_name
         return {
-            'room': venue.name,
+            'room': venue.group.short_name + venue.name,
             'authorInstitution': source.institution.code,
             'author': source_n, 'authorPosition': source_p,
             'target': target.name, 'targetPosition': target_p
@@ -152,7 +152,7 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
         for debate in self.get_round().get_draw():
             debate_info = {
-                'room': debate.venue.name if debate.venue else 'TBA',
+                'room': debate.venue.group.short_name + debate.venue.name if debate.venue else 'TBA',
                 'aff': debate.aff_team.short_name,
                 'affEmoji': debate.aff_team.emoji,
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],
