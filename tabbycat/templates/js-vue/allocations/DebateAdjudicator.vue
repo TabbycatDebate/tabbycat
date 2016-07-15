@@ -9,7 +9,8 @@
       v-on:mouseleave="unsetHighlights"
       v-bind:class="[isDragging ? 'vue-is-dragging' : '',
                      isHovering ? 'vue-is-hovering' : '',
-                     conflictsHighlights]"
+                     conflictsHighlights,
+                     diversityHighlights]"
       :id="adjorteam.id"
       class="vue-draggable adj-draggable btn btn-default popover-parent">
 
