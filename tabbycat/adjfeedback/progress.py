@@ -61,13 +61,16 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         adjudicators; if the chair was in the majority, then it must be the
         chair."""
 
-        majority = self.source.debate.confirmed_ballot.ballot_set.majority_adj
-        chair = self.source.debate.adjudicators.chair
+        # Just list all adjudicators
+        return list(self.source.debate.adjudicators.voting())
 
-        if chair in majority:
-            return [chair]
-        else:
-            return majority
+        # majority = self.source.debate.confirmed_ballot.ballot_set.majority_adj
+        # chair = self.source.debate.adjudicators.chair
+
+        # if chair in majority:
+        #     return [chair]
+        # else:
+        #     return majority
 
     def get_acceptable_submissions(self):
         return self.source.adjudicatorfeedback_set.filter(confirmed=True,
