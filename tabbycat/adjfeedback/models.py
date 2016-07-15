@@ -104,9 +104,9 @@ class AdjudicatorFeedbackQuestion(models.Model):
     reference = models.SlugField(
         help_text="Code-compatible reference, e.g., \"agree_with_decision\"")
 
-    chair_on_panellist = models.BooleanField()
-    panellist_on_chair = models.BooleanField()  # for future use
-    panellist_on_panellist = models.BooleanField()  # for future use
+    chair_on_panellist = models.BooleanField(help_text="Despite the name, applies to all adjudicator-on-adjudicator feedback")
+    panellist_on_chair = models.BooleanField(help_text="Not currently used, reserved for future use")  # for future use
+    panellist_on_panellist = models.BooleanField(help_text="Not currently used, reserved for future use")  # for future use
     team_on_orallist = models.BooleanField()
 
     answer_type = models.CharField(max_length=2, choices=ANSWER_TYPE_CHOICES)
