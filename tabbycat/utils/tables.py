@@ -461,7 +461,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('enable_venue_groups'):
             venue_data = [
                 debate.division.venue_group.short_name if debate.division
-                else (debate.venue.group.short_name + ' ' + debate.venue.name) if debate.venue
+                else (debate.venue.group.short_name + ' ' + debate.venue.name) if debate.venue and debate.venue.group
+                else debate.venue.name if debate.venue
                 else ''
                 for debate in debates
             ]
