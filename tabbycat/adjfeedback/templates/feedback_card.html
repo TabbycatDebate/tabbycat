@@ -8,18 +8,18 @@
     {% endif %}">
       <span class="badge">{{ feedback.score }}</span>
       <span class="h5">
-        {{ feedback.adjudicator.name }}
+        On {{ feedback.adjudicator.name }}
         ({{ feedback.adjudicator.institution.code }}{% if feedback.debate_adjudicator %}, {{ feedback.debate_adjudicator.get_type_display }}{% endif %})
       </span>
   </li>
   {% for item in feedback.items %}
     <li class="list-group-item">
       {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
-        <span class="glyphicon glyphicon-{{ item.answer|yesno:"ok text-success,remove text-danger,minus" }}"></span>
         <small><strong title="{{ item.question.text }}" data-toggle="tooltip">{{ item.question.reference }}</strong></small>
+        <span class="glyphicon glyphicon-{{ item.answer|yesno:"ok text-success,remove text-danger,minus" }}"></span>
       {% elif item.question.answer_type == 'f' %}
-        {{ item.answer|floatformat:"2" }}
         <small><strong>{{ item.question.text }}</strong></small>
+        {{ item.answer|floatformat:"2" }}
       {% elif item.question.answer_type == 'tl' %}
         {{ item.answer }}
       {% else %}
