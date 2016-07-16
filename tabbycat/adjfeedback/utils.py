@@ -123,19 +123,10 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Percentage of feedback returned',
         }
         coverage_data = [{
-            'text': str(team_or_adj.coverage) + "%"
+            'text': str(team_or_adj.coverage) + "%" if isinstance(team_or_adj.coverage, int) else '—',
+            'sort': team_or_adj.coverage if isinstance(team_or_adj.coverage, int) else 999
         } for team_or_adj in progress]
         self.add_column(coverage_header, coverage_data)
-
-        owed_header = {
-            'key': 'Owed',
-            'icon': 'glyphicon-remove',
-            'tooltip': 'Unsubmitted feedback ballots',
-        }
-        owed_data = [{
-            'text': str(team_or_adj.owed_ballots)
-        } for team_or_adj in progress]
-        self.add_column(owed_header, owed_data)
 
         submitted_header = {
             'key': 'Submitted',
@@ -143,9 +134,21 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Submitted feedback ballots',
         }
         submitted_data = [{
-            'text': str(team_or_adj.submitted_ballots)
+            'text': str(team_or_adj.submitted_ballots),
+            'class': 'text-success strong'
         } for team_or_adj in progress]
         self.add_column(submitted_header, submitted_data)
+
+        owed_header = {
+            'key': 'Owed',
+            'icon': 'glyphicon-remove',
+            'tooltip': 'Unsubmitted feedback ballots',
+        }
+        owed_data = [{
+            'text': str(team_or_adj.owed_ballots),
+            'class': 'text-danger strong'
+        } for team_or_adj in progress]
+        self.add_column(owed_header, owed_data)
 
         if self._show_record_links:
             owed_link_header = {
@@ -281,10 +284,12 @@ def get_feedback_progress_new(t):
 
 def get_feedback_progress(t):
     def calculate_coverage(submitted, total):
-        if total == 0 or submitted == 0:
+        if total == 0:
+            return "—"
+        if submitted == 0:
             return 0  # Avoid divide-by-zero error
         else:
-            return int(submitted / total * 100)
+            return min(int(submitted / total * 100), 100)
 
     feedback = AdjudicatorFeedback.objects.select_related(
         'source_adjudicator__adjudicator', 'source_team__team').all()
@@ -318,7 +323,7 @@ def get_feedback_progress(t):
 
         adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
         adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
-        adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
+        adj.coverage = calculate_coverage(adj.submitted_ballots, adj.total_ballots)
         adj.missing_admin_link = reverse_tournament(
             'participants-adjudicator-record', t, kwargs={'pk': adj.pk})
         adj.missing_public_link = reverse_tournament(
@@ -329,7 +334,7 @@ def get_feedback_progress(t):
     for team in teams:
         team.submitted_ballots = max(feedback.filter(source_team__team=team).count(), 0)
         team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
-        team.coverage = min(calculate_coverage(team.submitted_ballots, rounds_owed), 100)
+        team.coverage = calculate_coverage(team.submitted_ballots, rounds_owed)
         team.missing_admin_link = reverse_tournament(
             'participants-team-record', t, kwargs={'pk': team.pk})
         team.missing_public_link = reverse_tournament(
