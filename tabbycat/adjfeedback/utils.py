@@ -316,10 +316,6 @@ def get_feedback_progress(t):
                 # Panelists owe on chairs
                 adj.total_ballots += 1
 
-            if item.type == item.TYPE_TRAINEE:
-                # Trainees owe on chairs
-                adj.total_ballots += 1
-
         adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
         adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
         adj.coverage = min(calculate_coverage(adj.submitted_ballots, adj.total_ballots), 100)
