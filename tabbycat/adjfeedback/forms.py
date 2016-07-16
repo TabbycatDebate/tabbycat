@@ -221,6 +221,9 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
     if not source.tournament.pref('panellist_feedback_enabled'):
         # Include only debates for which this adj was the chair
         debate_filter['debateadjudicator__type'] = DebateAdjudicator.TYPE_CHAIR
+    else: # TODO for Australs 2016, generalize later
+        debate_filter['debateadjudicator__type__in'] = [DebateAdjudicator.TYPE_CHAIR, DebateAdjudicator.TYPE_PANEL]
+
     if include_unreleased_draws:
         debate_filter['round__draw_status__in'] = [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]
     else:

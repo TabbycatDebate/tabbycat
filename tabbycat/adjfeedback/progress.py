@@ -277,8 +277,8 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
                     if target == self.adjudicator:
                         continue
                     trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
-            elif debateadj.type == DebateAdjudicator.TYPE_TRAINEE:
-                trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, adjudicators.chair))
+            # elif debateadj.type == DebateAdjudicator.TYPE_TRAINEE:
+            #     trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, adjudicators.chair))
 
         self._prefetch_tracker_acceptable_submissions(trackers,
                 attrgetter('source', 'target'), attrgetter('source_adjudicator', 'adjudicator'))
