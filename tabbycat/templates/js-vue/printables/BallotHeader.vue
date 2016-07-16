@@ -5,7 +5,8 @@
     <div class="db-align-vertical-end db-flex-item-3">
       <h2>
         {{ data.tournamentName }} {{ data.kind }} from {{ ballot.author }}
-        <span v-if="ballot.authorPosition === 'C'">(Chair)</span>
+        <span v-if="soloChair">(Solo Chair)</span>
+        <span v-if="panelChair">(Chair of Panel)</span>
         <span v-if="ballot.authorPosition === 'P'">(Panellist)</span>
         <span v-if="ballot.authorPosition === 'T'">(Trainee)</span>
         <span v-if="ballot.target">on {{ ballot.target }}
@@ -26,5 +27,27 @@
 <script>
 export default {
   props: ['data', 'ballot'],
+  computed: {
+    soloChair: function() {
+      if (this.ballot.authorPosition === 'C') {
+        var voting_adjs = 0;
+        this.ballot.panel.forEach(function(entry) {
+          if (entry.position !== "T") { voting_adjs++; };
+        }, this);
+        if (voting_adjs === 1) { return true }
+      }
+      return false
+    },
+    panelChair: function() {
+      if (this.ballot.authorPosition === 'C') {
+        var voting_adjs = 0;
+        this.ballot.panel.forEach(function(entry) {
+          if (entry.position !== "T") { voting_adjs++; };
+        }, this);
+        if (voting_adjs > 1) { return true }
+      }
+      return false
+    }
+  }
 }
 </script>
