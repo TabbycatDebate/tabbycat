@@ -18,6 +18,7 @@ from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixi
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
+from venues.models import AdjudicatorVenueConstraint
 
 from .dbutils import delete_round_draw
 from .generator import DrawError
@@ -261,7 +262,9 @@ class CreateDrawView(DrawStatusEdit):
             messages.error(request, "There was a problem creating the draw: " + str(e) + " If this issue persists, please contact the developers.")
             return HttpResponseRedirect(reverse_round('availability_index', round))
 
-        allocate_venues(round)
+        # TODO provide a more intelligent check in sites where there are multiple tournaments
+        if not AdjudicatorVenueConstraint.objects.all().exists():
+            allocate_venues(round)
 
         self.log_action()
         return super().post(request, *args, **kwargs)
