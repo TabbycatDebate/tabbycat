@@ -15,6 +15,10 @@
   </div>
 {% endblock %}
 
+{% block extra-css %}
+  <link rel="stylesheet" type="text/css" href="/static/css/allocation-old.css" />
+{% endblock extra-css %}
+
 {% block content %}
 <div class="container-fluid">
   <div class="row">
@@ -196,12 +200,8 @@
               $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable" id=""><button type="button" class="close" data-dismiss="alert">&times;</button>Saved failed!</div>');
             }
           });
-
           return false;
-
       });
-
     });
-
   </script>
 {% endblock js %}
