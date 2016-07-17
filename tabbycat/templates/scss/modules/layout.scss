@@ -5,6 +5,9 @@
 .vertical-spacing {
   margin-bottom: $line-height-computed;
 }
+.half-vertical-spacing {
+  margin-bottom: $line-height-computed * 0.5;
+}
 .no-bottom-padding {
   padding-bottom: 0; // Mostly for panel-body elements
 }
@@ -44,17 +47,6 @@
   }
   .navbar-right {
     padding-right: 15px; // compensate for the pull-rights negative margin
-  }
-  .btn-group-input {
-    // For the quick search; needs to fit within the row
-    display: inline-block;
-    max-width: 148px;
-    float: right; // Needed to fix spacing
-    margin-left: 3px; // Isn't receiving the left margin
-    .form-control {
-      height: 41px;
-      border-width: 1px;
-    }
   }
   .dropdown, form {
     display: inline-block; // Need this to bring their alignment up

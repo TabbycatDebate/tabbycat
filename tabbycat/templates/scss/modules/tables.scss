@@ -12,6 +12,12 @@
   }
 }
 
+// For the quick search; needs to fit within the row
+.table-search {
+  height: 41px;
+  border-width: 1px;
+}
+
 //------------------------------------------------------------------------------
 // HEADER STYLES
 //------------------------------------------------------------------------------
@@ -51,5 +57,24 @@ thead, .thead {
   }
   &.checkbox-target:hover, &.checkbox-target input:hover {
     cursor: pointer;
+  }
+}
+
+//------------------------------------------------------------------------------
+// MOBILE TWEAKS
+//------------------------------------------------------------------------------
+
+// For Phones
+@media (max-width: $screen-sm-min) {
+  .table-continer {
+    margin-right: -15px;
+    margin-left: -15px;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    .panel-body {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
   }
 }

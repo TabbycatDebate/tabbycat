@@ -4,11 +4,6 @@
 
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
-{% block page-subnav-sections %}
-  {% if pref.enable_divisions and pref.enable_division_motions %}
-    {% include "tables/table_search.html" %}
-  {% endif %}
-{% endblock %}
 
 {% block page-alerts %}
   {% if rounds.all.count == 0 %}
