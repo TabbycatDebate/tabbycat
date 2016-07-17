@@ -271,15 +271,18 @@ def get_feedback_progress(t):
     feedback = AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
         'source_adjudicator__adjudicator', 'source_team__team').all()
     adjudicators = Adjudicator.objects.filter(tournament=t)
-    adjudications = list(
-        DebateAdjudicator.objects.select_related('adjudicator', 'debate').filter(
-            debate__round__stage=Round.STAGE_PRELIMINARY,
-            debate__round__draw_status=Round.STATUS_RELEASED))
     teams = Team.objects.filter(tournament=t)
 
-    # Teams only owe feedback on non silent rounds
+    # Feedback is only owed on completed prelim rounds
+    adjudications = list(
+        DebateAdjudicator.objects.select_related('adjudicator', 'debate').filter(
+            debate__round__seq__lt=t.current_round.seq,
+            debate__round__stage=Round.STAGE_PRELIMINARY,
+            debate__round__draw_status=Round.STATUS_RELEASED))
     rounds_owed = t.round_set.filter(
-        silent=False, stage=Round.STAGE_PRELIMINARY, draw_status=t.current_round.STATUS_RELEASED).count()
+        silent=False, stage=Round.STAGE_PRELIMINARY,
+        seq__lt=t.current_round.seq,
+        draw_status=t.current_round.STATUS_RELEASED).count()
 
     total_missing = 0
     for adj in adjudicators:
