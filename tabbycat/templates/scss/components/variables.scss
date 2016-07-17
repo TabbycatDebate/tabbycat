@@ -1,0 +1,67 @@
+//------------------------------------------------------------------------------
+// Bootstrap overrides and custom variables
+// Note these take precedences over bootstrap as they are not set as default
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// Boostrap Type
+//------------------------------------------------------------------------------
+
+$font-family-sans-serif: "LatoLatinWeb", Helvetica, Arial, sans-serif;
+$headings-font-family: Helvetica, Arial, sans-serif;
+$headings-font-weight: bold;
+$icon-font-path: '/static/fonts/';
+
+//------------------------------------------------------------------------------
+// Bootstrap Colors
+//------------------------------------------------------------------------------
+
+$brand-primary:           #3498db;
+
+$brand-success:           #43ca75;
+$state-success-text:      #3c763d;
+$state-success-bg:        #dff0d8;
+
+$brand-info:              #3b9ad8;
+$state-info-text:         #31708f;
+$state-info-bg:           #d9edf7;
+
+$brand-warning:           #f0c230;
+$state-warning-text:      #8a6d3b;
+$state-warning-bg:        #fcf8e3;
+
+$brand-danger:            #e34e42;
+$state-danger-text:       #a94442;
+$state-danger-bg:         #f2dede;
+
+$brand-danger-alt:        #a700a5;
+
+// Layout Colors
+$body-bg:                 #f3f4f9;
+$alt-bg:                  #fff; // For tables etc
+$table-bg-hover:          #e3e3e3;
+$sidebar-bg:              #30404f;
+$sidebar-bg-highlight:    darken($sidebar-bg, 3);
+$sidebar-muted-text:      #adb6bf;
+
+//------------------------------------------------------------------------------
+// Custom Colors
+//------------------------------------------------------------------------------
+
+// Gender Highlights
+$male:                    #36b6c0;
+$female:                  #ff9451;
+$other:                   #e7d40e;
+$unknown:                 #ccc;
+
+// Break Category Highlights
+$break-cat-1:             #57e2ff;
+$break-cat-2:             #c70062;
+$break-cat-3:             #00c79b;
+
+//------------------------------------------------------------------------------
+// Custom Layout
+//------------------------------------------------------------------------------
+
+$sidebar-width: 155px;
+$tooltip-max-width: 330px;

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load add_field_css %}
+{% load debate_tags %}
+
+{% block head-title %}Edit Motions for {{ round.name }}{% endblock %}
+{% block page-title %}Edit Motions for {{ round.name }}{% endblock %}
+
+{% block content %}
+
+  <form method="POST" action="" class="form-horizontal">
+    {% csrf_token %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Motion Options</h4>
+      </div>
+      <ul class="list-group">
+        {{ formset.management_form }}
+        {% for form in formset %}
+        <li class="list-group-item">
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              <p>{{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <div class="form-group">
+            <label for="{{ form.text.id_for_label }}" class="col-sm-1 control-label" {% if form.text.help_text %}data-toggle="tooltip" title="{{ form.text.help_text }}"{% endif %}>
+              {{ form.text.label }} {{ form.text.errors }}
+            </label>
+            <div class="col-sm-6">
+              {{form.text|addcss:"form-control help-anchor required"}}
+            </div>
+            <div class="col-sm-5 help-block">
+              {{form.text.help_text}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="{{ form.reference.id_for_label }}" class="col-sm-1 control-label" {% if form.reference.help_text %}data-toggle="tooltip" title="{{ form.reference.help_text }}"{% endif %}>
+              {{ form.reference.label }}  {{ form.reference.errors }}
+            </label>
+            <div class="col-sm-6">
+              {{form.reference|addcss:"form-control required"}}
+            </div>
+            <div class="col-sm-5 help-block">
+              {{form.reference.help_text}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="{{ form.seq.id_for_label }}" class="col-sm-1 control-label" {% if form.seq.help_text %}data-toggle="tooltip" title="{{ form.seq.help_text }}"{% endif %}>
+              Sequence {{ form.seq.errors }}
+            </label>
+            <div class="col-sm-6">
+              {{form.seq|addcss:"form-control required"}}{{ form.id }}
+            </div>
+            <div class="col-sm-5 help-block">
+              {{form.seq.help_text}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}" class="col-sm-1 control-label">
+              {{ form.DELETE.label }}
+            </label>
+            <div class="col-sm-2">
+              {{form.DELETE|addcss:"form-control"}}{{ form.id }}
+            </div>
+          </div>
+
+          {% if pref.enable_flagged_motions %}
+          <div class="form-group">
+            <label for="{{ form.flagged.id_for_label }}" class="col-sm-1 control-label" {% if form.flagged.help_text %}data-toggle="tooltip" title="{{ form.flagged.help_text }}"{% endif %}>
+              {{ form.flagged.label }} {{ form.flagged.errors }}
+            </label>
+            <div class="col-sm-6">
+              {{form.flagged|addcss:"form-control help-anchor"}}
+            </div>
+          </div>
+          {% endif %}
+
+
+        </li>
+        {% endfor %}
+        <li class="list-group-item col-sm-offset-1">
+          <input class="btn btn-success submit-disable" type="submit" name="submit" value="Save All" data-loading-text="Saving..." />
+          <input class="btn btn-success submit-disable" type="submit" name="submit_add_more" value="Save & Add More" data-loading-text="Saving..." />
+          <a class="btn btn-danger" href="{% round_url draw %}">Cancel</a>
+        </li>
+      </ul>
+    </div>
+  </form>
+
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+
+    $(document).ready( function() {
+      $(window).keydown( function(e){
+        if(e.keyCode == 13) {
+          e.preventDefault();
+          return false;
+        }
+      } );
+    } );
+
+  </script>
+{% endblock js %}

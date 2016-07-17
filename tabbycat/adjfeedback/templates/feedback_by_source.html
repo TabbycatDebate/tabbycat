@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
+{% block page-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
+{% block page-subnav-sections %}{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+  {% for feedback in feedbacks %}
+
+    <div class="col-md-4">
+      {% include 'feedback_card.html' %}
+    </div>
+
+    {% if forloop.counter|divisibleby:3 %}
+      </div><div class="row">
+    {% endif %}
+
+  {% empty %}
+    <div class="alert alert-info">{{ source_name }} hasn't submitted any feedback yet.</div>
+
+  {% endfor %}
+  </div>
+
+{% endblock content %}

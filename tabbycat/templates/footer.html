@@ -1,0 +1,38 @@
+{% load debate_tags %}
+
+<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+  <div class="container-fluid">
+
+    <ul class="nav navbar-nav navbar-right small">
+      <li><a href="/">
+        <span class="emoji">🏠</span>Home
+      </a></li>
+      <li><a href="http://tabbycat.readthedocs.io/" target="_blank">
+        <span class="emoji">❓</span>Help
+      </a></li>
+      {% if user.is_authenticated %}
+        <li><a class="" href="/accounts/logout/">
+          <span class="emoji">🔒</span>Logout of {{ user }}
+        </a></li>
+      {% else %}
+        <li><a class="" href="/accounts/login/">
+          <span class="emoji">🔓</span>Login
+        </a></li>
+      {% endif %}
+    </ul>
+
+    <p class="navbar-text small">
+      {% if tournament %}{{ tournament }} runs on {% else %}Running on {% endif %}
+      <a href="https://github.com/czlee/tabbycat/" target="_new">
+        <span class="emoji">😸</span>Tabbycat{% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}</a>
+       created by Qi-Shan,
+      <a href="https://twitter.com/czlee11" target="_new">Chuan-Zheng</a>, and
+      <a href="http://philipbelesky.com" target="_new">Philip</a>.
+      Want to <a href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way" target="_new">set up your own copy?</a>
+      <br>
+      Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_new">Debatekeeper</a> for time-keeping on Android
+      devices and <a href="http://debatingballot.com/" target="_new">debatingballot.com</a> for ballot templates.
+    </p>
+
+  </div>
+</nav>

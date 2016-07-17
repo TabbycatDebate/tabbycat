@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}Allocate Divisions{% endblock %}
+{% block page-title %}Allocate Divisions{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-success submit-disable" href="{% tournament_url create_division_allocation %}" >Auto Allocate Divisions</a>
+  <a class="btn btn-success submit-disable" href="{% tournament_url create_division %}" >Add New Division</a>
+  <a class="btn btn-success submit-disable" href="{% tournament_url create_byes %}" >Auto Add Bye Teams</a>
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <div class="btn btn-inactive">Preference Allocated:</div>
+  <div class="btn-group">
+    <div class="btn btn-success" disabled="disabled">1/2</div>
+    <div class="btn btn-primary" disabled="disabled">3/4</div>
+    <div class="btn btn-warning" disabled="disabled">5+</div>
+    <div class="btn btn-danger" disabled="disabled">None</div>
+  </div>
+{% endblock %}
+
+{% block content %}
+
+  <div class="row divisions-holder">
+    <template v-for="division in divisions | orderBy 'parseInt(name)'" track-by="id">
+      <div class="col-md-3">
+        <div class="panel panel-default" v-bind:class="{ 'panel-danger': hasEvenNumbers }">
+          <div class="panel-heading division-heading">
+            <h5 class="panel-title">D{{ division.name }} ({{ teams.length }})</h5>
+            <select name="select" class="form-control" v-model="division.venue_group">
+              <option value=""></option>
+              <option v-for="vg in vgs" value="{{ vg.id }}" v-bind:value="vg.id">
+                {{ vg.short_name }}
+              </option>
+            </select>
+          </div>
+          <division-droppable
+            save-vg-at="{% tournament_url set_division_venue_group %}"
+            save-division-at="{% tournament_url set_team_division %}"
+            :division="division"
+            :teams="teams | exactFilterBy division.id in 'division'"
+            :vgs="venueGroups">
+          </division-droppable>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12" class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">Teams without Divisions</h4>
+        </div>
+        <div class="panel-body"
+          v-on:dragover.prevent
+          v-on:drop="drop"
+          data-id=null>
+          <template v-for="team in teams | exactFilterBy null in 'division' | orderBy 'institution__code'" track-by="id">
+            <team-draggable
+              :team="team"
+              save-division-at="{% tournament_url set_team_division %}">
+            </team-draggable>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+  var divisionsBaseData = {
+    draggedComponent: null,
+    teams: {{ teams | safe }},
+    divisions: {{ divisions | safe }},
+    venueGroups: {{ venue_groups | safe }}
+  }
+  // Todo: create a DivisionsContainer; move these methods there
+  var divisionsMethods = {
+    handleDrop: function(ev) {
+      this.draggedComponent.team.division = null;
+      this.draggedComponent.saveDivision();
+    }
+  }
+  var divisionsEvents = {
+    // Set a global record of what is being dragged
+    'started-dragging-team': function (component) {
+      this.draggedComponent = component;
+    },
+    'stopped-dragging-team': function () {
+      this.draggedComponent = null;
+    },
+    'assign-team-to-division': function (droppedDivision) {
+      this.draggedComponent.team.division = droppedDivision.id;
+      this.draggedComponent.saveDivision();
+    }
+  }
+  var divisionsFilters = {
+    exactFilterBy: function(array, needle, inKeyword, key) {
+      return array.filter(function(item) {
+          return item[key] == needle;
+      });
+    }
+  }
+  </script>
+  {{ block.super }}
+
+{% endblock js %}

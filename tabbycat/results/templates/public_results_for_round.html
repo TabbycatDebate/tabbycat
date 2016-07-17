@@ -1,0 +1,12 @@
+{% extends "base_vue_table.html" %}
+{% load debate_tags %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default {% if view_type == 'team' %}active{% endif %}" href="?view=team">
+    View by Team
+  </a>
+  <a class="btn btn-default {% if view_type == 'debate' %}active{% endif %}" href="?view=debate">
+    View by Debate
+  </a>
+  {{ block.super }}
+{% endblock %}

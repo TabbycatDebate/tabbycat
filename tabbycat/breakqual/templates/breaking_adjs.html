@@ -1,0 +1,17 @@
+{% extends "base_vue_table.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default" href="{% tournament_url breaking_index %}">
+    Overview
+  </a>
+  {% for category in tournament.breakcategory_set.all %}
+    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">
+      View {{ category.name }} Break
+    </a>
+  {% endfor %}
+  <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">
+    View Adjudicators Break
+  </a>
+{% endblock %}

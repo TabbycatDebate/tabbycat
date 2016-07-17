@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% load add_field_css %}
+
+{% block page-title %}🔧 Edit Configuration{% endblock %}
+{% block head-title %}<span class="emoji">🔧</span>Edit Configuration{% endblock %}
+
+{% block page-subnav-sections %}
+  {% if form.errors %}
+    <div class="alert alert-danger alert-dismissable" id="savedVenues">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      Please correct the errors below {{ form.errors }}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <form action="" enctype="multipart/form-data" method="post" class="panel-body form-horizontal">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">
+            {{ field.label }} {{ field.section.name }}
+          </label>
+          <div class="col-sm-2">
+            {{field|addcss:"form-control"}}
+          </div>
+          <div class="col-sm-7">
+            <span class="help-block">
+              {{ field.help_text }}
+            </span>
+            {% if field.errors %}
+              {{ field.errors }}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-success btn-block submit-disable" data-loading-text="Saving...">
+        Save Configuration
+      </button>
+    </form>
+  </div>
+</div>
+
+
+{% endblock content %}

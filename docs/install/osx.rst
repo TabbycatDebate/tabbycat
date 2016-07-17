@@ -45,6 +45,11 @@ The executable will probably be called ``python3``, rather than ``python``. Chec
 
 Download `postgres.app <http://postgresapp.com/>`_, move it to your Applications folder, and open it. This should place an icon in your menu bar, showing that the postgres database is running. Whenever you are running Tabbycat you'll need to have this app running.
 
+1(c). Node.js/NPM
+--------------------------------------------------------------------------------
+
+Download and run the `node.js Mac OS X Installer (.pkg) <https://nodejs.org/en/download//>`_
+
 2. Get the source code
 ================================================================================
 
@@ -86,7 +91,7 @@ Almost there!
 
 1. Navigate to your Tabbycat directory::
 
-    $ cd path/to/my/tabbycat
+    $ cd path/to/my/tabbycat/directory
 
 2. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
 
@@ -115,11 +120,13 @@ Almost there!
 
     $ pip install --upgrade pip
     $ pip install -r requirements_common.txt
+    $ npm install
 
-6. Initialize the database and create a user account for yourself::
+6. Navigate to the **tabbycat** sub folder, initialize the database, compile the assets, and create a user account for yourself::
 
+    $ cd tabbycat
     $ dj migrate
-    $ dj compress
+    $ dj collectstatic
     $ dj createsuperuser
 
 7. Start Tabbycat!
@@ -143,6 +150,7 @@ Starting up an existing Tabbycat instance
 ================================================================================
 To start your Tabbycat instance up again next time you use your computer::
 
-    $ cd path/to/my/tabbycat
+    $ cd path/to/my/tabbycat/directory
     $ source venv/bin/activate
+    $ cd tabbycat
     $ waitress-serve wsgi:application

@@ -20,7 +20,8 @@ Short version
 =============
 .. parsed-literal::
 
-  sudo apt-get install python3-dev python3-venv postgresql-9.4 postgresql-server-dev-9.4
+  curl -sL https\:\/\/deb.nodesource.com/setup_5.x | sudo -E bash -    # add Node.js source repository
+  sudo apt-get install python3-dev python3-venv postgresql-9.4 postgresql-server-dev-9.4 nodejs
 
   # either
   wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
@@ -39,8 +40,10 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   source venv/bin/activate
   pip install --upgrade pip
   pip install -r requirements_common.txt
+  npm install
+  cd tabbycat
   dj migrate
-  dj compress
+  dj collectstatic
   dj createsuperuser
   waitress-serve wsgi:application
 
@@ -51,13 +54,13 @@ First, you need to install all of the software on which Tabbycat depends, if you
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions are for Ubuntu. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+  These instructions are for Ubuntu 14.10 and higher. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
 1(a). Python
 ------------
 As of version 0.8, Tabbycat requires Python 3.4 or later.  You probably already have Python 3.4, but you'll also need the development package in order to install Psycopg2 later.  The ``pyvenv`` command will come in handy too.  Install::
 
-    $ sudo apt-get install python3-dev python3-venv
+    $ sudo apt-get install python3-dev
 
 Check the version::
 
@@ -80,6 +83,20 @@ You'll need the *server-dev* package in order to install Psycopg2 later. As per 
 
     $ sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4
 
+If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.4" in the above commands.
+
+1(c). Node.js/NPM
+-----------------
+  *Node.js is a JavaScript runtime.*
+
+Tabbycat requires Node and its package manager to compile front-end dependencies. Install using:
+
+.. parsed-literal::
+
+  $ sudo apt-get install curl
+  $ curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+  $ sudo apt-get install -y nodejs
+  $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 2. Get the source code
 ======================
@@ -125,11 +142,27 @@ Almost there!
 
 1. Navigate to your Tabbycat directory::
 
-    $ cd path/to/my/tabbycat
+    $ cd path/to/my/tabbycat/directory
 
 .. _local-settings-linux:
 
-2. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+2. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:
+
+  .. code:: bash
+
+    $ python3 -m venv venv
+
+3. Run the ``activate`` script. This puts you "into" the virtual environment::
+
+    $ source venv/bin/activate
+
+4. Install Tabbycat's requirements into your virtual environment::
+
+    $ pip install --upgrade pip
+    $ pip install -r requirements_common.txt
+    $ npm install
+
+5. Navigate to the **tabbycat** sub folder and copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
 
   .. code:: python
 
@@ -144,25 +177,11 @@ Almost there!
          }
      }
 
-3. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:
+6. Navigate to the **tabbycat** sub folder in the terminal, initialize the database, compile the assets, and create a user account for yourself::
 
-  .. code:: bash
-
-    $ pyvenv venv
-
-4. Run the ``activate`` script. This puts you "into" the virtual environment::
-
-    $ source venv/bin/activate
-
-5. Install Tabbycat's requirements into your virtual environment::
-
-    $ pip install --upgrade pip
-    $ pip install -r requirements_common.txt
-
-6. Initialize the database and create a user account for yourself::
-
+    $ cd tabbycat
     $ dj migrate
-    $ dj compress
+    $ dj collectstatic
     $ dj createsuperuser
 
 7. Start Tabbycat!
@@ -186,6 +205,7 @@ Starting up an existing Tabbycat instance
 =========================================
 To start your Tabbycat instance up again next time you use your computer::
 
-    $ cd path/to/my/tabbycat
+    $ cd path/to/my/tabbycat/directory
     $ source venv/bin/activate
+    $ cd tabbycat
     $ waitress-serve wsgi:application

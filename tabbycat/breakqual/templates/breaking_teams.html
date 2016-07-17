@@ -1,0 +1,166 @@
+{% extends "breaking_index.html" %}
+{% load static %}
+{% load debate_tags %}
+{% load add_field_css %}
+{% load standingsformat %}
+
+{% block head-title %}<span class="emoji">👑</span>{{ category.name }} Break{% endblock %}
+{% block sub-title %}{{ pref.public_breaking_teams|yesno:",not "}}publicly visible{% endblock %}
+{% block page-title %}👑{{ category.name }} Break{% endblock %}
+
+{% block page-subnav-actions %}
+  {% if generated %}
+    <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline" method="POST">
+      {% csrf_token %}
+      <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
+        Delete & Regenerate All Breaks
+      </button>
+    </form>
+    <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline" method="POST">
+      {% csrf_token %}
+      <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
+        Update All Breaks
+      </button>
+    </form>
+    <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline" method="POST">
+      {% csrf_token %}
+      <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
+        Update The {{ category.name }} Break
+      </button>
+    </form>
+  {% else %}
+    <div class="forms-block-inline">
+      <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+          Generate the break for all categories
+        </button>
+      </form>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block page-alerts %}
+  {% if generated %}
+    <div class="alert alert-warning">
+        Please double-check this before announcing the break or releasing it to the
+        public. The code that generates the break has not been robustly tested for
+        corner cases. If there are errors, please take a snapshot of the database
+        and a screenshot and send it to the developers.
+    </div>
+    <div class="alert alert-info">
+      <p>
+        <strong>How to edit the break:</strong> You can edit the remarks in the
+        right-hand column. Any team with a remark is considered ineligible for this
+        break. (The algorithm will sometimes insert its own remarks where appropriate,
+        based on the break size, institution cap and break category priorities.) After you do this, you must <strong>save the remarks</strong>
+        before proceeding (otherwise your changes will be not be saved). Then,
+        click the appropriate update button below.
+      </p>
+      <p>
+        The procedure isn't perfect; if you have complicated break category rules
+        (for example, if some teams are allowed to choose their preferred category)
+        then you may have to iterate through remark editing and saving a few times
+        for the algorithm to get what you want. As a last resort, you can edit the
+        breaking teams list directly in the database through the
+        Edit Database section (under Setup in the menu).
+      </p>
+    </div>
+  {% else %}
+    {% if pref.public_breaking_teams %}
+      <div class="alert alert-danger">
+        The <strong>public breaking teams</strong> configuration setting is
+        enabled. As soon as you click the button, the breaking teams list will
+        be visible on the public site, before you have a chance to
+        double-check it! It is strongly recommended that you disable this
+        setting on the <a href="{% tournament_url options-tournament-index %}">
+        tournament configuration page</a> before generating the team
+        breaks.
+      </div>
+    {% else %}
+      <div class="alert alert-info">
+        <p>
+          The break hasn't yet been generated. Would you like to generate
+          the break for all categories?
+        </p>
+        <p>
+          (It's safe to generate the break before all preliminary rounds are
+          complete, if you're curious. You can regenerate it later.)
+        </p>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if generated %}
+    <form action="." method="POST">
+      {% csrf_token %}
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+          <table class="table" cellspacing="0" cellpadding="0">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Break</th>
+                {% if pref.show_emoji %}
+                  <th class="team-emoji"></th>
+                {% endif %}
+                <th>Team</th>
+                {% if pref.show_institutions %}
+                  <th>Inst<span class="hidden-xs">itution</span></th>
+                {% endif %}
+                {% for info in form.metrics_info %}
+                  <th>
+                    {% if info.glyphicon %}
+                      <span data-toggle="tooltip" title="{{ info.name|capfirst }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+                    {% else %}
+                      <span class="hidden-xs">{{ info.name|capfirst }}</span>
+                      <span class="visible-xs">{{ info.abbr }}</span>
+                    {% endif %}
+                  </th>
+                {% endfor %}
+                <th>Edit remark</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for standing, edit_remark in form.team_iter %}
+              <tr>
+                <td>{{ standing.rank }}</td>
+                <td>{{ standing.break_rank|default_if_none:"&ndash;" }}</td>
+                {% if pref.show_emoji %}
+                  <td class="team-emoji">{{ standing.team.emoji }}</td>
+                {% endif %}
+                <td>
+                  {% include "tables/team.html" with team=standing.team %}
+                  {{ standing.team.categories_for_display }}
+                </td>
+                {% if pref.show_institutions %}
+                  <td><span class="hidden-xs">{{ standing.team.institution }}</span><span class="visible-xs">{{ standing.team.institution.code }}</span></td>
+                {% endif %}
+                {% for metric in standing.itermetrics %}
+                  <td>{{ metric|metricformat }}</td>
+                {% endfor %}
+                <td>
+                  {{ edit_remark|addcss:"form-control" }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          <div class="row">
+            <div class="form-inline col-md-12">
+              <button class="btn btn-default btn-block btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
+                  Save remarks
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+  {% endif %}
+{% endblock content %}

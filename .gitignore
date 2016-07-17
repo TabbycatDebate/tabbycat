@@ -1,10 +1,17 @@
 # Django Related
-local_settings.py
-staticfiles/
+tabbycat/local_settings.py
 .gitmodules/
-.sass-cache/
 __pycache__/
-static/css/style.css
+
+# Compilation
+tabbycat/staticfiles/
+tabbycat/static/css/
+tabbycat/static/js/
+tabbycat/static/fonts/
+
+# Dependencies
+node_modules
+bower_components
 
 # Data to ignore
 data/*
@@ -15,9 +22,10 @@ data/*
 !data/sandbox/
 !data/test/
 !data/presets/
+!data/fixtures/
 
 # Docs
-site/
+docs/site/
 
 # Tags
 tags

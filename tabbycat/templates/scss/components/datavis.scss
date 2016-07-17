@@ -1,0 +1,53 @@
+.d3-graph {
+  .axis {
+    font-size: 11px;
+  }
+  // General Styles
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #ccc;
+	  shape-rendering: crispEdges;
+  }
+}
+
+.d3-hoverable:hover {
+  cursor: pointer;
+}
+
+.d3-hover-black:hover {
+  fill: black;
+}
+
+// For feedback graph
+
+.d3-feedback-trend {
+  margin-bottom: -4px; // Correct for wierd height blow out
+  // For Feedback Page
+
+  .tick line,
+  .axis line {
+    fill: none;
+    stroke: #e6e6e6;
+  }
+}
+
+.position-display {
+  &.chair {
+    background-color: #b10095; // Purpleish
+    color: #fff;
+    fill: #b10095;
+  }
+
+  &.panellist {
+    background-color: $male;
+    color: #fff;
+    fill: $male;
+  }
+
+  &.trainee {
+    background-color: $female;
+    color: #fff;
+    fill: $female;
+  }
+}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load add_field_css %}
+
+{% block head-title %}<span class="emoji">👋</span>Hello!{% endblock %}
+{% block page-title %}Tabbycat{% endblock %}
+
+{% block nav %}<div class="col-md-12">{% endblock %}
+
+{% block content %}
+
+  <p>
+    Welcome to your new Tabbycat installation!
+  </p>
+  <p>
+    To get started, you'll need to create the first user account. This account
+    is a "superuser" account: it will be able to edit anything on the site.
+    Therefore, you should use a strong password.
+  </p>
+  <p>
+    You can only create this account once, but if you like, you can change the
+    username and password after it's created, or add new superusers afterwards.
+  </p>
+
+  <form action="." method="POST" class="form-horizontal">
+
+    {% csrf_token %}
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        Whoops! There was an error with one or more fields.
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
+      <div class="col-md-6">
+        {{ field|addcss:"form-control" }}
+      </div>
+      {% if field.errors %}
+        {{ field.errors }}
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-2 col-sm-4">
+        <button type="submit" class="btn btn-success form-control submit-disable" data-loading-text="Creating account…">
+          Create account
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+{% endblock %}

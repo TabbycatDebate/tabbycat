@@ -1,4 +1,5 @@
 # production
-web: newrelic-admin run-program waitress-serve --port=$PORT wsgi:application
+web: sh -c 'cd ./tabbycat/ && waitress-serve --port=$PORT wsgi:application'
+
 # debug
-#web: newrelic-admin run-program waitress-serve --port=$PORT --expose-tracebacks wsgi:application
+web: sh -c 'cd tabbycat && waitress-serve --port=$PORT --expose-tracebacks wsgi:application'

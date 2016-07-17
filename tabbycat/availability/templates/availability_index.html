@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block page-subnav-sections %}
+  {% if round.is_break_round %}
+    <a class="btn btn-default disabled">
+      Check In Teams
+    </a>
+  {% else %}
+    <a class="btn btn-default submit-disable"
+       href="{% round_url team_availability round %}">
+      Check In Teams
+    </a>
+  {% endif %}
+  <a class="btn btn-default submit-disable"
+     href="{% round_url venue_availability round %}">
+    Check In Venues
+  </a>
+  <a class="btn btn-default submit-disable"
+     href="{% round_url adjudicator_availability round %}">
+    Check In Adjs
+  </a>
+  {% if round.is_break_round %}
+    <a class="btn btn-primary submit-disable"
+       href="{% round_url update_availability_breaking_adjs  %}">
+      Check In All Breaking Adjs
+    </a>
+  {% else %}
+    <a class="btn btn-primary submit-disable"
+       href="{% round_url update_availability_all round %}">
+      Check In Everything
+    </a>
+    {% if round.prev %}
+      <a class="btn btn-primary submit-disable"
+         href="{% round_url update_availability_previous round %}">
+        Check In Everything Active in {{ round.prev.abbreviation }}
+      </a>
+    {% endif %}
+  {% endif %}
+
+{% endblock %}
+
+{% block page-subnav-actions %}
+
+  {% if round.draw_status == round.STATUS_CONFIRMED or round.draw_status == round.STATUS_RELEASED %}
+    <a class="btn btn-success submit-disable" href="{% round_url draw round %}">
+      View Draw <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+  {% else %}
+    {% if previous_unconfirmed and not round.is_break_round %}
+      <button class="btn btn-warning" id="createDraw"
+        data-toggle="tooltip" title="{{ previous_unconfirmed }} debates from
+        {{ round.prev.name }} do not have a completed ballot —
+        this may lead to a draw that fails or is incorrect">
+        Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    {% elif checkin_types.0.in_now == 0 %}
+      <button class="btn btn-danger submit-disable disabled"
+        data-toggle="tooltip" title="The draw cannot be generated until some
+        teams have been checked in">
+        Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    {% elif checkin_types.1.in_now == 0 %}
+      <button class="btn btn-danger submit-disable disabled"
+        data-toggle="tooltip" title="The draw cannot be generated until some
+        adjudicators have been checked in">
+        Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    {% elif checkin_types.2.in_now == 0 %}
+      <button class="btn btn-danger submit-disable disabled"
+        data-toggle="tooltip" title="The draw cannot be generated until some
+        venues have been checked in">
+        Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    {% elif min_venues > checkin_types.2.in_now %}
+      <button class="btn btn-warning" id="createDraw"
+        data-toggle="tooltip" title="There are too few checked in venues available
+         for the amount of debates — the draw may not generate properly.">
+         Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+       </button>
+    {% elif min_adjudicators > checkin_types.1.in_now %}
+      <button class="btn btn-warning" id="createDraw"
+        data-toggle="tooltip" title="There are too few checked in adjudicators
+        available for the amount of debates — the draw may not generate properly">
+        Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    {% elif not checkin_types.0.in_now|divisibleby:2  %}
+      <button class="btn btn-warning" id="createDraw"
+        data-toggle="tooltip" title="There is an uneven number of teams checked in
+         for this round — the draw may not generate properly">
+        Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    {% else %}
+      <button class="btn btn-success submit-disable" id="createDraw">
+        Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    {% endif %}
+  {% endif %}
+
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% if previous_unconfirmed > 0 and not round.is_break_round %}
+    <div class="alert alert-danger">
+      Note: {{ previous_unconfirmed }} debates from <strong>{{ round.prev.name }}
+       do not have a completed ballot</strong> — this may lead to a draw that
+       fails or is incorrect <em>depending</em> on your draw rules.
+    </div>
+  {% endif %}
+
+  {% if not checkin_types.0.in_now|divisibleby:2  %}
+    <div class="alert alert-danger">
+      There is an uneven number of teams checked in for this round.
+    </div>
+  {% endif %}
+
+  {% if min_adjudicators > checkin_types.1.in_now %}
+    <div class="alert alert-warning">
+      There need to be at least {{ min_adjudicators }} checked in adjudicators
+      given the number of debates.
+    </div>
+  {% endif %}
+
+  {% if min_venues > checkin_types.2.in_now %}
+    <div class="alert alert-warning">
+      There need to be at least {{ min_venues }} checked in venues given the
+      number of debates.
+    </div>
+  {% endif %}
+
+  {% if round.seq > current_round.seq and not round.is_break_round %}
+    <div class="alert alert-warning">
+      This is a page for <strong>{{ round.name }}</strong>, however the current
+      round is still set to <strong>{{ current_round.name }}</strong>. Did you
+      forget to <a href="{% round_url round_increment_check current_round %}"
+                   class="alert-link">
+      advance to the next round?</a>
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-12">
+      {% for ct in checkin_types %}
+        {% include 'checkin_progress.html' %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <form id="createForm" action="{% round_url draw-create %}" method="POST">
+    {% csrf_token %}
+  </form>
+
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+    $(document).ready( function() {
+      $("#createDraw").click( function() {
+        $("#createForm").submit();
+        return false;
+      } );
+    } );
+  </script>
+{% endblock js %}

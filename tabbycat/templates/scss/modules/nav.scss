@@ -1,0 +1,79 @@
+//------------------------------------------------------------------------------
+// Public Header
+//------------------------------------------------------------------------------
+
+.navbar-toggle {
+  margin-right: 0; // Too much padding
+}
+.navbar-brand {
+  height: auto;
+}
+#nav_brand.navbar-nav {
+  margin-bottom: 0px; // Mobile spacing fix
+}
+
+//------------------------------------------------------------------------------
+// Admin Sidebar
+//------------------------------------------------------------------------------
+
+// Offset the sidebar; should be nav-sidebar + 15
+.nav-sidebar-offset {
+  padding-left: $sidebar-width + 15px;
+}
+
+.nav-sidebar {
+  background: $sidebar-bg;
+  width: $sidebar-width;
+  position: fixed;
+  height: 100%;
+  z-index: 100;
+  padding-left: 0;
+  padding-top: 0; // So the pill hover isn't flush
+
+  .overflow-scroll-wrapper {
+    overflow-y: auto;
+    height: 100%;
+    padding-bottom: 10px;
+  }
+
+  // Title Element
+  #tournament_select {
+    padding: 16px 16px 16px 16px;
+    margin-left: 0;
+    border-radius: 0;
+    text-transform: uppercase;
+    color: $sidebar-muted-text;
+    .caret {
+      margin-top: 5px;
+    }
+    .emoji {
+      margin-right: 7px; // Align the the other icons
+    }
+    &:hover, &.active {
+      background: none;
+      color: #fff;
+    }
+  }
+  .dropdown-menu {
+    width: 100%;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Tournament Drop Down Menu
+//------------------------------------------------------------------------------
+
+// Tournament Nav
+#tournament_select_menu {
+  width: $sidebar-width - 7px;
+  margin-left: 3px;
+  margin-top: 3px;
+  min-width: auto;
+  > li > a {
+    padding: 3px 5px 3px 8px;
+    .badge {
+      font-size: 10px;
+    }
+  }
+}
+

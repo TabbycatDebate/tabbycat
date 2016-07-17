@@ -1,0 +1,55 @@
+//------------------------------------------------------------------------------
+// General Utilities
+//------------------------------------------------------------------------------
+
+.vertical-spacing {
+  margin-bottom: $line-height-computed;
+}
+.half-vertical-spacing {
+  margin-bottom: $line-height-computed * 0.5;
+}
+.no-bottom-padding {
+  padding-bottom: 0; // Mostly for panel-body elements
+}
+.no-bottom-margin {
+  margin-bottom: 0; // Used by infographics
+}
+.no-side-padding {
+  padding-left: 0;
+  padding-right: 0;
+}
+.no-top-margin {
+  margin-top: 0;
+}
+
+//------------------------------------------------------------------------------
+// Headers
+//------------------------------------------------------------------------------
+
+.head-title {
+  padding: 0 0 16px 5px;
+  small {
+    line-height: $font-size-h3 * $headings-line-height * 1.2;
+  }
+}
+// For the admin area
+.white-bg {
+  background: $alt-bg;
+}
+
+//------------------------------------------------------------------------------
+// Page Sub Navs
+//------------------------------------------------------------------------------
+
+.page-sub-nav {
+  .btn, .input-group {
+    margin-bottom: $line-height-computed;
+  }
+  .navbar-right {
+    padding-right: 15px; // compensate for the pull-rights negative margin
+  }
+  .dropdown, form {
+    display: inline-block; // Need this to bring their alignment up
+  }
+}
+

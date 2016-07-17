@@ -1,0 +1,82 @@
+{% extends "feedback_base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}Who is the feedback from?{% endblock %}
+{% block page-title %}Enter Feedback{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">From a Team</h4>
+      </div>
+      <div class="panel-body">
+        <table id="dataTableA" class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            {% if pref.show_institutions %}
+            <th>Institution</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for team in teams %}
+          <tr id="team_{{ team.id }}">
+            <td>
+              {% block enter-feedback-team-link %}
+                <a href="{% tournament_url adjfeedback-add-from-team team.id %}">
+                {{ team.short_name }}</a>
+              {% endblock %}
+            </td>
+            {% if pref.show_institutions %}
+              <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">From an Adjudicator</h4>
+      </div>
+      <div class="panel-body">
+        <table id="dataTableB" class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            {% if pref.show_institutions %}
+            <th>Institution</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for adj in adjudicators %}
+          <tr id="adj_{{ adj.id }}">
+            <td>
+              {% block enter-feedback-adj-link %}
+                <a href="{% tournament_url adjfeedback-add-from-adjudicator adj.id %}">
+                {{ adj.name }}</a>
+              {% endblock %}
+            </td>
+            {% if pref.show_institutions %}
+            <td>
+              {{ adj.institution.name }}
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

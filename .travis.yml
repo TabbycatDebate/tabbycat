@@ -10,4 +10,4 @@ services:
 install:
   - pip install -r requirements_common.txt
 script:
-  - dj test -v 2
+  - cd tabbycat && flake8 . && dj test -v 2

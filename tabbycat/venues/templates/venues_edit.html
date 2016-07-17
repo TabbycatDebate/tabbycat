@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block nav %}<div class="col-md-12">{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block head-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
+{% block page-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
+{% block page-subnav-sections %}
+  <a class="btn btn-success" id="save">Save Venues</a>
+  <form id="autoallocateForm" method="POST" action="{% round_url venues-auto-allocate %}">
+    {% csrf_token %}
+    <button class="btn btn-primary submit-disable" type="submit">
+      Auto Allocate
+    </button>
+  </form>
+  <a class="btn btn-danger" href="{% round_url draw %}">Quit</a>
+{% endblock %}
+
+{% block extra-css %}
+  <link rel="stylesheet" type="text/css" href="/static/css/allocation-old.css" />
+{% endblock extra-css %}
+
+{% block content %}
+<div class="row">
+
+  <div id="scratch" class="col-md-3 fixed-right" style="width: 25%">
+    <table id="unusedTable" class="table">
+      <thead>
+        <tr>
+          <th>Unused Venues <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    {% for venue in round.unused_venues %}
+      <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
+        <span>{{ venue }}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div id="" class="col-md-9">
+
+    <div id="alerts-holder" class=""></div>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table id="venues" class="table">
+          <thead>
+            <tr>
+              <th><span class="glyphicon glyphicon-tasks" data-toggle="tooltip" title="Bracket"></span></th>
+              {% if pref.enable_debate_scheduling %}
+                <th>Time</th>
+              {% endif %}
+              <th>Aff</th>
+              <th>Neg</th>
+              <th>Adjs</th>
+              <th>Venue</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for debate in draw %}
+            <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+              <td>{{ debate.bracket }}</td>
+              {% if pref.enable_debate_scheduling %}
+                <td>
+                  {% if debate.time %}
+                    <span class="hidden">{{ debate.time|date:"o m d" }}</span>
+                    {{ debate.time|time:'h:i A' }}<br>{{ debate.time|date:"D jS F" }}
+                  {% endif %}
+                </td>
+              {% endif %}
+              <td>
+                {% include "tables/team.html" with team=debate.aff_team %}
+              </td>
+              <td>
+                {% include "tables/team.html" with team=debate.neg_team %}
+              </td>
+              {% include "tables/debate_adjudicators_compact.html" %}
+              <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
+                {% if debate.venue %}
+                <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
+                  <span class="">{{ debate.venue }}</span>
+                </div>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery-ui.min.js' %}"></script>
+  <script>
+    $(document).ready( function() {
+
+      var debates = {};
+      // add ID of the debate to parent TD of venue holder
+      $("#venues .venue-holder").each( function() {
+        debates[$(this).attr("id")] = $("div.venue", this).attr("id");
+      } );
+
+      // Triggers when a draggable element is placed
+      function venueMoved(venue, oldDebate, newDebate) {
+        var oldId = oldDebate.attr("id");
+        if (oldId != undefined && oldId != "scratch") {
+          debates[oldId] = 'none';
+        }
+        var newId = newDebate.attr("id");
+        if (newId != undefined && newId != "scratch") {
+          debates[newId] = venue.attr("id");
+        }
+      }
+
+      $(".venue").draggable( {
+        revert: 'invalid', // revert to initial position if not dropped on a droppable element
+        zIndex: 1000,
+        appendTo: "body",
+        helper: 'clone',
+      });
+
+      $("#scratch").droppable( {
+        accept: '.venue',
+        hoverClass: 'bg-success',
+        drop: function(event, ui) {
+          var venue = ui.draggable; // the object being dragged
+          var oldHolder = venue.parent("td");
+          venue.appendTo($(this))
+          venue.css({left:'0px', top:'0px'}) // reset position so it sits nicely
+          venueMoved(venue, oldHolder, $(this));
+        }
+      });
+
+      // Droppable elements are targets for draggable elements
+      $(".venue-holder").droppable( {
+        accept: '.venue',
+        hoverClass: 'bg-success',
+        drop: function(event, ui) {
+          var venue = ui.draggable;
+          var oldHolder = venue.parent("td");
+
+          var replacing = $(".venue", this); // if dragged onto a prexisting spot
+          var newHomeOff;
+          var curOff = venue.offset();
+          if (replacing.length == 0) {
+          //   // dropping onto a blank venue holder, construct a hidden node
+          //   // to do position calculation
+            replacing = $(document.createElement("div"));
+            replacing.addClass("venue");
+            replacing[0].style.visibility = "hidden";
+            $(this).append(replacing);
+            newHomeOff = replacing.offset();
+            replacing.remove();
+          } else {
+            newHomeOff = replacing.offset();
+            venueMoved(replacing, $(this), $("#scratch"));
+            $("#scratch").append(replacing);
+          }
+
+          $(this).append(venue);
+          venueMoved(venue, oldHolder, $(this));
+
+          venue.css('top', curOff.top - newHomeOff.top);
+          venue.css('left', curOff.left - newHomeOff.left);
+          venue.animate({'top': '0', 'left': '0'}, 300);
+
+        }
+
+      });
+
+      $('#save').click( function() {
+        var btn = $(this)
+        btn.attr("disabled", true);
+        $.ajax( {
+          type: "POST",
+          url: "{% round_url venues-save %}",
+          data: debates,
+          success: function(data, status) {
+            btn.attr("disabled", false);
+            $("#alerts-holder").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Saved successfully!</div>');
+          },
+          error: function(xhr, error, ex) {
+            btn.attr("disabled", false);
+            $("#alerts-holder").html('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert">&times;</button>Save failed!</div>');
+          }
+        } );
+        return false;
+      });
+
+      // remove the table cells without venues
+      $("#venues div.empty").each( function() {
+        var holder = $(this).parent("venue-holder");
+        $(this).remove();
+        //addPlaceholder(holder); NOTE: there's no function for this...?
+      } );
+
+    });
+
+  </script>
+{% endblock js %}

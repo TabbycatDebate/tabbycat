@@ -22,8 +22,17 @@ Getting started
 
 - Insert general setup instructions
 - Insert instructions on how to make a feature/bug branch
-- Maybe insert instructions on how to run tests / flake8
+- Maybe insert instructions on how to run tests
 - Insert pull request checklist/guidelines
+
+Style guide
+===========
+
+We use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a Travis CI build to fail. The entire codebase can be checked by using::
+
+    $ flake8 .
+
+While in the base directory
 
 Semantic versioning convention
 ==============================
@@ -51,12 +60,12 @@ Documentation is created using `Sphinx <http://sphinx-doc.org/>`_ and hosted at 
 Previewing Locally
 ------------------
 
-Install the docs-specific requirements (from the base folder):
+Install the docs-specific requirements (from the base folder)::
 
-  $ pip install -r 'docs/requirements.txt'
+    $ pip install -r 'docs/requirements.txt'
 
-Start the server:
+Start the server::
 
-  $ sphinx-autobuild docs docs/_build/html --port 7999
+    $ sphinx-autobuild docs docs/_build/html --port 7999
 
 You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1:7999>`

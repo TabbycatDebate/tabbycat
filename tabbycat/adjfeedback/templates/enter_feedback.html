@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load add_field_css %}
+
+{% block page-title %}🙅Enter Feedback{% endblock %}
+{% block head-title %}
+  <span class="emoji">🙅</span>Add Feedback {% if source_name %}from {{ source_name }}{% endif %}
+{% endblock %}
+
+{% block content %}
+
+  {% if form.errors %}
+  <div class="alert alert-danger">
+    <p>There are some problems with this feedback submission. Please review and correct them.</p>
+
+    {% if form.non_field_errors %}
+      <p>General errors:</p>
+      <div class="ballot-errors">{{ form.non_field_errors }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      {% if pref.feedback_introduction %}
+        <p>{{ pref.feedback_introduction|safe }}</p>
+      {% endif %}
+      <form id="feedbackForm" action="" method="POST" class="form-horizontal">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}" class="col-md-3 col-sm-11 control-label">
+            {{ field.label }}
+          </label>
+          <div class="col-sm-11 col-md-7">
+            {{field|addcss:"form-control"}}
+          </div>
+          <div class="col-md-2 col-xs-10">
+            {% if field.errors %}
+              <label for="{{ field.id_for_label }}" class="control-label">{{ field.errors }}</label>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+        <div class="form-group">
+          <div class="col-md-offset-3 col-md-7">
+            <button type="submit" value="Save" class="btn btn-success btn-block submit-disable" data-loading-text="Saving...">
+              {% block submit-button-text %}Save Feedback{% endblock %}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock content %}

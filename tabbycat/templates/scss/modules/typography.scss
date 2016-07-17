@@ -1,0 +1,60 @@
+//------------------------------------------------------------------------------
+// Web Fonts
+//------------------------------------------------------------------------------
+
+@font-face {
+  font-family: 'LatoLatinWeb';
+  src: url('/static/fonts/lato-normal.eot');
+  src:  url('/static/fonts/lato-normal.eot?#iefix') format('embedded-opentype'),
+        url('/static/fonts/lato-normal.woff') format('woff'),
+        url('/static/fonts/lato-normal.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+}
+
+//------------------------------------------------------------------------------
+// Text Utilities
+//------------------------------------------------------------------------------
+
+.text-muted {
+  opacity: 0.8; // We use opacity so we can change the color
+}
+
+// Override option for headings
+.text-body {
+  font-family: $font-family-sans-serif;
+}
+
+// Mostly for hiding it in extra lines on table cells
+.hide-underline {
+  border-bottom: 2px solid #fff;
+}
+
+.subtitle {
+  text-transform: uppercase;
+  font-size: $font-size-h6;
+  font-weight: normal;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+// Otherwise alert links are too dull
+.alert-link {
+  text-decoration: underline;
+}
+
+//------------------------------------------------------------------------------
+// Buttons
+//------------------------------------------------------------------------------
+
+// Actionable elements (buttons, navs) should be distinct
+.nav {
+  font-family: $headings-font-family;
+}
+
+.nav-pills a.btn-default {
+  color: $brand-primary;
+}

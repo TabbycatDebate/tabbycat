@@ -1,1 +1,0 @@
-waitress-serve --threads=12 --host=127.0.0.1 --port=8000 wsgi:application

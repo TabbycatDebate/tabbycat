@@ -1,0 +1,129 @@
+{% extends "feedback_base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block sub-title %}<span id="breaking_count">{{ breaking_count }}</span> marked as breaking{% endblock %}
+{% block body-id %}feedbackOverview{% endblock %}
+
+{% block content %}
+
+  <div class="modal fade" id="edit-test-score" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h3>Change Test Score</h3>
+        </div>
+        <div class="modal-body">
+          <form id="testScoreForm" method="POST" action="{% tournament_url adjfeedback-set-adj-test-score  %}" class="form-horizontal">
+            {% csrf_token %}
+            <input id="id_adj_id" name="adj_id" type="hidden" value="" />
+            <div class="form-group">
+              <label class="col-sm-3 control-label">
+                Test score
+              </label>
+              <div class="col-sm-6">
+                <input id="id_test_score" name="test_score" placeholder="3.5" type="number" step="any" class="form-control"></input>
+              </div>
+              <div class="col-sm-2">
+                <span class="help-block"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label"></label>
+              <div class="col-sm-6">
+                <button type="submit" value="Save" class="btn btn-success btn-block submit-disable" data-loading-text="Saving...">
+                  Save Test Score
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if pref.enable_adj_notes > 0 %}
+    <div class="modal fade" id="edit-note" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header  text-center">
+            <h3>Edit Note</h3>
+          </div>
+          <div class="modal-body">
+            <form id="adjNoteForm" method="POST" action="{% tournament_url adjfeedback-set-adj-note  %}" class="form-horizontal">
+              {% csrf_token %}
+              <input id="id_adj_id_note" name="adj_id" type="hidden" value="" />
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <textarea id="id_note" name="note" placeholder="" rows="20" class="form-control"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <button type="submit" value="Save" class="btn btn-block btn-success submit-disable" data-loading-text="Saving...">
+                    Save
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {{ block.super }}
+
+{% endblock %}
+
+{% block js %}
+
+  {{ block.super }}
+  <script>
+    var setBreakingURL = '{% tournament_url adjfeedback-set-adj-breaking-status %}';
+  </script>
+  <script>
+    // Actions for the table elements
+    $(document).ready(function(){
+      $(".edit-test-score a").each( function() {
+        $(this).click( function() {
+          var adj_id = parseInt($(this).attr("data-target"));
+          var adj_score = $(this, "span").text();
+          $("#id_adj_id").val(adj_id); // Updating form ID reference
+          $("#id_test_score").prop('placeholder', adj_score); // updating the form's table
+          $('#edit-test-score').modal();
+        });
+      });
+      $(".edit-note a").each( function() {
+        $(this).click( function() {
+          var adj_id = parseInt($(this).attr("data-target").split("===")[0]);
+          var adj_note = $(this).attr("data-target").split("===")[1];
+          $("#id_note").val(adj_note);
+          $("#id_adj_id_note").val(adj_id);
+          $('#edit-note').modal();
+        });
+      });
+      $(".toggle_breaking_status").change(function() {
+        var adj_id = parseInt($(this).attr("adj_id"));
+        var breaking_status = null;
+        if (this.checked) {
+          breaking_status = true;
+          $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)+1);
+        } else {
+          breaking_status = false;
+          $("#breaking_count").html(parseInt($('#breaking_count').html(), 10)-1);
+        }
+        $.ajax({
+          type: "POST",
+          url: setBreakingURL,
+          data: {adj_id: adj_id, adj_breaking_status: breaking_status},
+          error: function(xhr, error, ex) {
+            alert("error setting adj status");
+          }
+        });
+        return false;
+      });
+    });
+  </script>
+
+{% endblock js %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}All Draws{% endblock %}
+{% block page-title %}All Draws{% endblock %}
+
+{% block content %}
+<div class="panel panel-default">
+  <div class="panel-body">
+  {% if all_rounds %}
+    <table id="draw" class="h4 table">
+      <thead>
+        <tr>
+          <th><span data-toggle="tooltip" title="Round">R</span></th>
+          {% if pref.enable_divisions %}
+            <th><span class="glyphicon glyphicon-th-list" data-toggle="tooltip" title="" data-original-title="Division"></span></th>
+          {% endif %}
+          <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
+          {% if pref.enable_debate_scheduling %}
+            <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
+            <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
+          {% endif %}
+          <th>Aff<span class="hidden-xs">irmative</span></th>
+          <th>Neg<span class="hidden-xs">ative</span></th>
+          {% if pref.enable_division_motions %}
+            <th>Motion</th>
+          {% endif %}
+          {% if not pref.enable_divisions %}
+            <th>Adj<span class="hidden-xs">udicator</span>s</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for round in all_rounds %}
+          {% for debate in round.draw %}
+            <tr class="{% debate_draw_status_class debate %}">
+              <td>
+                <span title="{{ debate.round.name }}" data-toggle="tooltip">{{ debate.round.abbreviation }}</span>
+              </td>
+              {% if pref.enable_divisions %}
+                <td>{{ debate.division.name }}</td>
+              {% endif %}
+              {% if debate.division %}
+                <td>{{ debate.division.venue_group.short_name }}</td>
+              {% else %}
+                <td>{{ debate.venue.group.short_name }}</td>
+              {% endif %}
+              {% if pref.enable_debate_scheduling %}
+                {% include "tables/debate_status.html" %}
+              {% endif %}
+              <td >
+                {{ debate.aff_team.short_name }}
+              </td>
+              <td >
+                {{ debate.neg_team.short_name }}
+              </td>
+              {% if pref.enable_division_motions %}
+                <td>
+                  {% for motion in debate.division_motion %}
+                    <span>{{ motion.reference }}</span>
+                    <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
+                  {% endfor %}
+                </td>
+              {% endif %}
+              {% if not pref.enable_divisions %}
+                {% include "tables/debate_adjudicators.html" %}
+              {% endif %}
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <h4>No rounds have released draws yet.</h4>
+  {% endif %}
+  <div>
+</div>
+{% endblock content %}

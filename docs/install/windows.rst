@@ -29,16 +29,19 @@ First, you need to install all of the software on which Tabbycat depends, if you
 ------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
 
-Download and install Python 3.4 from the `Python website <https://www.python.org/downloads/release/python-344/>`_. Take note of the following:
+Download and install Python 3.5 (or later) from the `Python website <https://www.python.org/>`_.
+In the installer, check the box to add Python to your PATH (see box below).
 
-- Which link should I click?
-    - If you have 32-bit Windows, choose the "Windows x86 MSI installer".
-    - If you have 64-bit Windows (and not an Itanium processor), it's better to choose the "Windows x86-64 MSI installer".
+.. hint:: Which file should I download?
+
+    - If you have 32-bit Windows, choose the "Windows x86 executable installer".
+    - If you have 64-bit Windows (and not an Itanium processor), it's better to choose the "Windows x86-64 executable installer".
     - If you're not sure whether you have 32-bit or 64-bit Windows, consult "About your PC" or "System Properties" in your Start Menu.
-- The default install directory is ``C:\Python34``; we recommend that you keep it there.
-- **Important!** When you get to the Customize screen, **change "Add python.exe to Path" to "Will be installed on local hard drive"**:
 
-.. image:: images/python-windows-path.png
+.. attention:: **Please take note:** Just after you open the installer,
+  **check the "Add Python 3.5 to PATH" box**:
+
+  .. image:: images/python-windows-path.png
 
 To check that Python is installed correctly, open Windows PowerShell, type ``python`` and press Enter. It should look something like this. If you installed the 32-bit version, it will say ``32 bit`` instead of ``64 bit``.
 
@@ -48,12 +51,9 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 
 .. note:: **If you already have Python**, great! Some things to double-check:
 
-  - You must have Python 3.4, not any other version.
-  - Your installation directory must not have any spaces in it.
-  - If it isn't showing as version 3.4, try restarting your computer.
-  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python34;C:\Python34\Scripts`` (or as appropriate for your installation directory). Following `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
-
-.. note:: The reason we can't use Python 3.5 is because it isn't (as of January 2016) supported by `psycopg2 <http://www.stickpeople.com/projects/python/win-psycopg/>`_, which is a dependency of Tabbycat.
+  - You must have at least Python 3.4, though we recommend Python 3.5.
+  - Your installation path must not have any spaces in it.
+  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
 1(b). PostgreSQL
 ----------------
@@ -62,6 +62,30 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 Go to the `PostgreSQL downloads page <http://www.postgresql.org/download/windows/>`_, then follow the link through to EnterpriseDB to download and install the latest version of PostgreSQL.
 
 .. tip:: Once PostgreSQL is installed, the PostgreSQL service will run on your computer whenever you are using it. You might prefer to configure it so that it only runs when you want to run Tabbycat. To do this, open "Services" in your Control Panel on Windows, find the PostgreSQL service, and change its startup type to "Manual". This will tell it not to start whenever you log in. Then, if you want to run the server (so you can use Tabbycat), you can do so from "Services" by selecting the PostgreSQL service and clicking "Start the service".
+
+1(c). Git
+---------
+  *Git is a version control system.*
+
+We won't use Git directly, but Node.js (which we install in the next step)
+requires Git to work. So, install the latest version for Windows from the
+`Git website <https://git-scm.com/downloads>`_.
+
+.. admonition:: Advanced users
+  :class: tip
+
+  If you already have `GitHub Desktop <https://desktop.github.com/>`_ installed,
+  you might think that this would be good enough. Unfortunately, it's
+  not---GitHub Desktop installs a portable version of Git. Node.js, on the other
+  hand, requires the ``git`` to be in the ``PATH``, so it can call it directly.
+  The easiest (but not only) way to do this is just to install Git from the link
+  above.
+
+1(d). Node.js/NPM
+-----------------
+  *Node.js is a JavaScript runtime.*
+
+Download and run the `node.js Windows Installer (.msi) <https://nodejs.org/en/download/>`_
 
 2. Get the source code
 ======================
@@ -149,25 +173,30 @@ Almost there!
   If you installed **32-bit Python**::
 
     > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.4-pg9.4.4-release.exe
-    > pip install rcssmin==1.0.6 rjsmin==1.0.12 --install-option="--without-c-extensions"
+    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.5.exe
     > pip install -r requirements_common.txt
+    > npm install
 
   If you installed **64-bit Python**::
 
     > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.4-pg9.4.4-release.exe
-    > pip install rcssmin==1.0.6 rjsmin==1.0.12 --install-option="--without-c-extensions"
+    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.5.exe
     > pip install -r requirements_common.txt
+    > npm install
 
-  .. attention:: In the above lines are a couple of extra steps we need to do for Windows. The first is to use the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_. The second is to install ``rcssmin`` and ``rjsmin`` without the C extensions, because these require Visual C++ 10.0 to compile. If you have Visual C++ 10.0, you can skip the ``rcssmin``/``rjsmin`` line; the ``requirements_common.txt`` line will install them with C extensions.
+  If you're using a version of **Python other than 3.5**, replace the URL in the
+  second line with the appropriate link from the
+  `win-psycopg page <http://www.stickpeople.com/projects/python/win-psycopg/>`_.
+
+  .. note:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r requirements_common.txt`` so that the latter doesn't try to install the Unix version.
 
   .. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
 
 6. Initialize the database and create a user account for yourself::
 
+    > cd tabbycat
     > dj migrate
-    > dj compress
+    > dj collectstatic
     > dj createsuperuser
 
 7. Start Tabbycat!
@@ -195,4 +224,5 @@ To start your Tabbycat instance up again next time you use your computer, open a
 
     > Set-Location C:\Users\myusername\Documents\GitHub\tabbycat # or wherever your installation is
     > .\venv\Scripts\activate
+    > cd tabbycat
     > waitress-serve wsgi:application

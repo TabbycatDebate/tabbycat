@@ -1,0 +1,60 @@
+{% extends "base_vue_table.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block nav %}
+  {# For admins the draw opens without menu (for displaying publicly)#}
+  {% if 'admin/' in request.path and user.is_superuser %}
+    <div class="col-md-12">
+  {% else %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block page-subnav-sections %}
+  <span class="btn btn-secondary">Scroll Speed:</span>
+  <div class="btn-group hidden-xs scroll-speeds">
+    <a class="btn btn-default" data-target="0.07" id="scroll_draw1">Fast</a>
+    <a class="btn btn-default" data-target="0.055" id="scroll_draw2"><span class="hidden-xs">Medium</span></a>
+    <a class="btn btn-default" data-target="0.04" id="scroll_draw3">Slow</a>
+    <a class="btn btn-default" data-target="0.025" id="scroll_draw4">Extra Slow</a>
+  </div>
+  <span class="btn btn-secondary">Text Size:</span>
+  <div class="btn-group text-size">
+    <a class="btn btn-default" data-target="draw-xs" id="tiny_text">Tiny</a>
+    <a class="btn btn-default" data-target="draw-s" id="small_text">Small</a>
+    <a class="btn btn-default" data-target="draw-m" id="medium_text">Medium</a>
+    <a class="btn btn-default" data-target="draw-l" id="large_text">Large</a>
+    <a class="btn btn-default" data-target="draw-xl" id="huge_text">Huge</a>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+    $(document).ready( function() {
+      $(".scroll-speeds .btn").click(function(event){
+        var speed = $(document).height() / $(this).attr('data-target');
+        console.log(speed);
+        $('html, body').animate({
+          scrollTop: $(document).height() - $(window).height()
+        }, speed, "linear");
+        return false;
+      });
+      $(".text-size .btn").click(function(event){
+        var sizeClass = $(this).attr('data-target');
+        $(this).addClass("active").siblings().removeClass("active");
+        $(".table").removeClass("draw-xs draw-s draw-m draw-l draw-xl").addClass( sizeClass);
+        return false;
+      });
+    });
+    $(document).keydown(function(e) {
+      e.stopPropagation();
+      if (e.keyCode === 27 || e.keyCode === 38) {
+        $('html, body').stop()
+      }
+    });
+  </script>
+{% endblock js %}

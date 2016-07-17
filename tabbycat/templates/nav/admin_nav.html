@@ -1,0 +1,146 @@
+{% load debate_tags %}
+
+
+<ul class="nav nav-stacked" role="tablist">
+  <li role="presentation" class="dropdown">
+    <a id="tournament_select"
+       href="#"
+       class="dropdown-toggle {% if overview_nav %}active{% endif %}"
+       data-toggle="dropdown"
+       role="button"
+       aria-haspopup="true"
+       aria-expanded="false">
+      <h5>
+        {{ tournament }}<span class="caret pull-right"></span>
+      </h5>
+    </a>
+    <ul id="tournament_select_menu"
+        class="dropdown-menu"
+        aria-labelledby="tournament_select">
+      {% for t in all_tournaments %}
+        <li>
+          <a class="small" href="{{ t.get_absolute_url  }}">
+            <strong>{{ t }}</strong> (Admin)
+          </a>
+        </li>
+        <li>
+          <a class="small" href="{{ t.get_public_url  }}">
+            <strong>{{ t }}</strong> (Public)
+          </a>
+        </li>
+        <li role="separator" class="divider"></li>
+      {% endfor %}
+      <li>
+        <a class="small" href="{% url 'tournament-create' %}">
+          New Tournament
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<ul class="nav nav-stacked nav-accordion"
+    id="accordion"
+    role="tablist"
+    aria-multiselectable="true">
+
+  <li class="standalone">
+     <a href="{% tournament_url tournament-admin-home %}"
+        class="{% if overview_nav %}active{% endif %}">
+        <span class="glyphicon glyphicon-th"></span> Overview
+      </a>
+  </li>
+  {% if pref.side_allocations_enabled == 'preallocated' %}
+    <li class="standalone">
+      <a href="{% tournament_url draw-side-allocations %}"
+         class="{% if sides_nav %}active{% endif %}">
+        <span class="glyphicon glyphicon-resize-horizontal"></span> Sides
+      </a>
+    </li>
+  {% endif %}
+  {% if pref.enable_divisions %}
+    <li class="standalone">
+      <a href="{% tournament_url division_allocations %}"
+         class="{% if divisions_nav %}active {% endif %}">
+        <span class="glyphicon glyphicon-th-list"></span> Divisions
+      </a>
+    </li>
+  {% endif %}
+  <li class="standalone">
+    <a href="{% tournament_url adjfeedback-overview %}"
+       class="{% if feedback_nav %} active {% endif %}">
+      <span class="glyphicon glyphicon-comment"></span> Feedback
+    </a>
+  </li>
+  <li class="standalone">
+    <a href="{% round_url standings-index current_round %}"
+       class="{% if standings_nav %} active {% endif %}">
+      <span class="glyphicon glyphicon-stats"></span> Standings
+    </a>
+  </li>
+  <li class="panel">
+    <div class="progress-line standard-line"></div>
+    <div class="" role="tab" id="headingOne">
+      <a class="{% if options_nav or import_nav %}active
+                {% else %}collapsed{% endif %}"
+         role="button"
+         data-toggle="collapse"
+         data-parent="#accordion"
+         href="#collapseOne"
+         aria-expanded="{% if options_nav or import_nav %}true{% else %}false{% endif %}"
+         aria-controls="collapseOne">
+        <span class="circle-icon icon-container">
+          <span class="glyphicon glyphicon-briefcase"></span>
+        </span>
+        Setup<span class="caret pull-right"></span>
+      </a>
+    </div>
+    <div id="collapseOne"
+         class="panel-collapse collapse {% if options_nav or import_nav %}in{% endif %}"
+         role="tabpanel"
+         aria-labelledby="headingOne">
+      <ul class="nav nav-pills nav-stacked">
+        <li>
+          <a class="{% if options_nav %}active{% endif %}"
+             href="{% tournament_url options-tournament-index %}">
+            <span class="glyphicon glyphicon-cog"></span>Configuration
+          </a>
+        </li>
+        <li>
+          <a class="{% if import_nav %}active{% endif %}"
+             href="{% tournament_url data_index %}">
+            <span class="glyphicon glyphicon-download"></span>Import Data
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'admin:index' %}" target="_blank">
+            <span class="glyphicon glyphicon-edit"></span>Edit Database
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+
+  {% for r in tournament.prelim_rounds.all %}
+    {% include 'nav/round_panel.html' %}
+  {% endfor %}
+
+  <li class="panel">
+    <div class="progress-line standard-line"></div>
+    <div class="">
+       <a class="{% if break_nav %}active{% endif %}"
+          href="{% tournament_url breaking_index %}">
+        <span class="circle-icon icon-container">
+          <span class="glyphicon glyphicon-gift"></span>
+        </span>
+        BREAKS
+      </a>
+    </div>
+  </li>
+
+  {% for r in tournament.break_rounds.all %}
+    {% include 'nav/round_panel.html' %}
+  {% endfor %}
+
+</ul>
+

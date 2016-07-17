@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load add_field_css %}
+
+{% block head-title %}<span class="emoji">🏆</span>Create New Tournament{% endblock %}
+{% block page-title %}Tabbycat{% endblock %}
+
+{% block nav %}<div class="col-md-12">{% endblock %}
+
+{% block content %}
+
+<div class="panel panel-default"><div class="panel-body">
+
+  <form action="." method="POST" class="">
+
+    {% csrf_token %}
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        Whoops! There was an error with one or more fields.
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    {% for field in form %}
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+          {{ field|addcss:"form-control" }}
+        </div>
+        <div class="col-sm-6">
+          <label></label>
+          <span class="help-block">
+            {{ field.help_text }}
+          </span>
+          {% if field.errors %}
+            {{ field.errors }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-block btn-success form-control submit-disable" data-loading-text="Creating tournament…">
+        Create tournament
+      </button>
+    </div>
+
+  </form>
+
+</div></div>
+
+{% endblock %}
