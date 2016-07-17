@@ -122,22 +122,6 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'icon': 'glyphicon-eye-open',
             'tooltip': 'Percentage of feedback returned',
         }
-        coverage_data = [{
-            'text': str(team_or_adj.coverage) + "%" if isinstance(team_or_adj.coverage, int) else '—',
-            'sort': team_or_adj.coverage if isinstance(team_or_adj.coverage, int) else 999
-        } for team_or_adj in progress]
-        self.add_column(coverage_header, coverage_data)
-
-        submitted_header = {
-            'key': 'Submitted',
-            'icon': 'glyphicon-ok',
-            'tooltip': 'Submitted feedback ballots',
-        }
-        submitted_data = [{
-            'text': str(team_or_adj.submitted_ballots),
-            'class': 'text-success strong'
-        } for team_or_adj in progress]
-        self.add_column(submitted_header, submitted_data)
 
         owed_header = {
             'key': 'Owed',
@@ -156,7 +140,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
                 'icon': 'glyphicon-question-sign',
             }
             owed_link_data = [{
-                'text': 'View Missing',
+                'text': 'View Missing Feedback',
                 'link': team_or_adj.missing_admin_link if self.admin else team_or_adj.missing_public_link
             } for team_or_adj in progress]
             self.add_column(owed_link_header, owed_link_data)
@@ -283,34 +267,26 @@ def get_feedback_progress_new(t):
 
 
 def get_feedback_progress(t):
-    def calculate_coverage(submitted, total):
-        if total == 0:
-            return "—"
-        if submitted == 0:
-            return 0  # Avoid divide-by-zero error
-        else:
-            return min(int(submitted / total * 100), 100)
 
-    feedback = AdjudicatorFeedback.objects.select_related(
+    feedback = AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
         'source_adjudicator__adjudicator', 'source_team__team').all()
     adjudicators = Adjudicator.objects.filter(tournament=t)
     adjudications = list(
         DebateAdjudicator.objects.select_related('adjudicator', 'debate').filter(
-            debate__round__stage=Round.STAGE_PRELIMINARY))
+            debate__round__stage=Round.STAGE_PRELIMINARY,
+            debate__round__draw_status=Round.STATUS_RELEASED))
     teams = Team.objects.filter(tournament=t)
 
     # Teams only owe feedback on non silent rounds
     rounds_owed = t.round_set.filter(
         silent=False, stage=Round.STAGE_PRELIMINARY, draw_status=t.current_round.STATUS_RELEASED).count()
 
-    total_possible = 0
-    total_submitted = 0
-
+    total_missing = 0
     for adj in adjudicators:
-        adj.total_ballots = 0
         adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator=adj)
         adjs_adjudications = [a for a in adjudications if a.adjudicator == adj]
 
+        adj.total_ballots = 0
         for item in adjs_adjudications:
             # Finding out the composition of their panel, tallying owed ballots
             if item.type == item.TYPE_CHAIR:
@@ -323,29 +299,22 @@ def get_feedback_progress(t):
 
         adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
         adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
-        adj.coverage = calculate_coverage(adj.submitted_ballots, adj.total_ballots)
         adj.missing_admin_link = reverse_tournament(
             'participants-adjudicator-record', t, kwargs={'pk': adj.pk})
         adj.missing_public_link = reverse_tournament(
             'participants-public-adjudicator-record', t, kwargs={'pk': adj.pk})
-        total_possible += len(adjs_adjudications)
-        total_submitted += adj.submitted_ballots
+        total_missing += adj.owed_ballots
 
     for team in teams:
         team.submitted_ballots = max(feedback.filter(source_team__team=team).count(), 0)
         team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
-        team.coverage = calculate_coverage(team.submitted_ballots, rounds_owed)
         team.missing_admin_link = reverse_tournament(
             'participants-team-record', t, kwargs={'pk': team.pk})
         team.missing_public_link = reverse_tournament(
             'participants-public-team-record', t, kwargs={'pk': team.pk})
-        total_possible += rounds_owed
-        total_submitted += team.submitted_ballots
+        total_missing += team.owed_ballots
 
-    print(total_submitted, total_possible)
-    total_coverage = calculate_coverage(total_submitted, total_possible)
-
-    return teams, adjudicators, total_coverage
+    return teams, adjudicators, total_missing
 
 
 def parse_feedback(feedback, questions):
