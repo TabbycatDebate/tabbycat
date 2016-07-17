@@ -47,7 +47,7 @@ class BaseRankAnnotator:
 
         `standings` is a `TeamStandings` object.
         """
-        raise NotImplementedError("BaseRankAnnotator subclasses must implement annotate_teams()")
+        raise NotImplementedError("BaseRankAnnotator subclasses must implement annotate()")
 
 
 class BasicRankAnnotator(BaseRankAnnotator):
@@ -72,7 +72,7 @@ class BasicRankAnnotator(BaseRankAnnotator):
 class BaseRankWithinGroupAnnotator(BaseRankAnnotator):
     """Base class for ranking annotators that rank within groups."""
 
-    def annotate_teams(self, standings):
+    def annotate(self, standings):
         by_group = sorted(standings, key=self.group_key)
         for key, group in groupby(by_group, key=self.group_key):
             rank_in_group = 1
@@ -93,6 +93,7 @@ class SubrankAnnotator(BaseRankWithinGroupAnnotator):
         self.group_key = metricgetter(metrics[0])
         self.rank_key = metricgetter(*metrics[1:])
 
+
 class DivisionRankAnnotator(BaseRankWithinGroupAnnotator):
 
     key = "division_rank"
@@ -100,7 +101,7 @@ class DivisionRankAnnotator(BaseRankWithinGroupAnnotator):
     abbr = "DivR"
 
     def __init__(self, metrics):
-        self.group_key = lambda x: x.team.division.id
+        self.group_key = lambda x: x.team.division_id
         self.rank_key = metricgetter(*metrics)
 
 
@@ -111,14 +112,5 @@ class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
     abbr = "InstR"
 
     def __init__(self, metrics):
-        self.group_key = lambda x: x.team.institution.id
+        self.group_key = lambda x: x.team.institution_id
         self.rank_key = metricgetter(*metrics)
-
-
-registry = {
-    "rank"       : BasicRankAnnotator,
-    "subrank"    : SubrankAnnotator,
-    "division"   : DivisionRankAnnotator,
-    "institution": RankFromInstitutionAnnotator,
-}
-

@@ -13,7 +13,7 @@ from results.models import TeamScore
 
 from .base import BaseStandingsGenerator
 from .metrics import BaseMetricAnnotator, RepeatedMetricAnnotator, QuerySetMetricAnnotator, metricgetter
-from .ranking import BaseRankAnnotator, BasicRankAnnotator, SubrankAnnotator
+from .ranking import BaseRankAnnotator, BasicRankAnnotator, SubrankAnnotator, DivisionRankAnnotator, RankFromInstitutionAnnotator
 
 logger = logging.getLogger(__name__)
 
@@ -338,7 +338,8 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
     }
 
     ranking_annotator_classes = {
-        "rank"     : BasicRankAnnotator,
-        "subrank"  : SubrankAnnotator,
-        "division" : DivisionRankAnnotator,
+        "rank"        : BasicRankAnnotator,
+        "subrank"     : SubrankAnnotator,
+        "division"    : DivisionRankAnnotator,
+        "institution" : RankFromInstitutionAnnotator,
     }
