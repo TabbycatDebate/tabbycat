@@ -393,7 +393,8 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
 
     def form_valid(self, form):
         result = super().form_valid(form)
-        messages.success(self.request, "Thanks, your feedback on has been recorded.")
+        messages.success(self.request, "Thanks, {}! Your feedback on {} has been recorded.".format(
+            self.source_name, self.adj_feedback.adjudicator.name))
         return result
 
     def get_success_url(self):
