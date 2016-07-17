@@ -79,9 +79,9 @@ class StandingInfo:
         if not self._instance:
             self._instance = self.model.objects.get(id=self.instance_id)
         return self._instance
+
     def __repr__(self):
         return "<TeamStandingInfo for {}>".format(self._team.short_name if self._team else self.team_id)
-
 
     def add_metric(self, name, value):
         if name in self.metrics:

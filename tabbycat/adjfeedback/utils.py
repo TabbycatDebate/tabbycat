@@ -117,11 +117,11 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
     def add_feedback_progress_columns(self, progress, key="P"):
 
-        coverage_header = {
-            'key': 'Coverage',
-            'icon': 'glyphicon-eye-open',
-            'tooltip': 'Percentage of feedback returned',
-        }
+        # coverage_header = {
+        #     'key': 'Coverage',
+        #     'icon': 'glyphicon-eye-open',
+        #     'tooltip': 'Percentage of feedback returned',
+        # }
 
         owed_header = {
             'key': 'Owed',

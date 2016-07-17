@@ -1,12 +1,13 @@
 """Module to compute the teams breaking in a BreakCategory."""
 from collections import Counter
 from itertools import groupby
-import logging
-logger = logging.getLogger(__name__)
 
 from standings.teams import TeamStandingsGenerator
 
 from .models import BreakingTeam
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_breaking_teams(category, include_all=False, include_categories=False):
@@ -114,11 +115,13 @@ def update_breaking_teams(category):
     relevant_teams = _relevant_team_set(category)
     _generate_breaking_teams(category, relevant_teams, higher_teams)
 
+
 def _relevant_team_set(category):
     if category.is_general:
         return category.tournament.team_set.all()  # All in tournament
     else:
         return category.team_set.all()
+
 
 def _generate_breaking_teams(category, relevant_teams, teams_broken_higher_priority=set()):
     if category.rule == category.BREAK_QUALIFICATION_RULE_AIDA_2016:
@@ -126,13 +129,13 @@ def _generate_breaking_teams(category, relevant_teams, teams_broken_higher_prior
     else:
         return _generate_breaking_teams_pre_2015(category, relevant_teams, teams_broken_higher_priority)
 
+
 def _generate_breaking_teams_2016(category, teams, teams_broken_higher_priority=set()):
     """Generates a list of breaking teams for the given category and returns
     a list of teams in the (actual) break, i.e. excluding teams that are
     ineligible, capped, broke in a different break, and so on."""
 
     break_size = category.break_size
-    institution_cap = category.institution_cap
     assert category.rule == category.BREAK_QUALIFICATION_RULE_AIDA_2016
 
     # Steps as laid out in proposed AIDA constitutional amendment
@@ -269,7 +272,7 @@ def _generate_breaking_teams_pre_2015(category, teams, teams_broken_higher_prior
 
     break_size = category.break_size
     institution_cap = category.institution_cap if category.rule == category.BREAK_QUALIFICATION_RULE_AIDA_PRE_2015 \
-            else None
+        else None
     assert category.rule != category.BREAK_QUALIFICATION_RULE_AIDA_2016
 
     prev_rank_value = tuple([None] * len(standings.metric_keys))
