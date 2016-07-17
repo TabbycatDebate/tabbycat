@@ -3,6 +3,7 @@ import json
 from django.db.models import Count
 from django.views.generic.base import TemplateView
 from django.conf import settings
+from django.contrib import messages
 
 import motions.statistics as motion_statistics
 from motions.models import Motion
@@ -336,7 +337,8 @@ class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
 class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplateView):
 
     public_page_preference = 'public_team_standings'
-    page_title = "Current Team Standings"
+    page_title = 'Current Team Standings'
+    page_emoji = '🌟'
 
     def get_table(self):
         tournament = self.get_tournament()
@@ -362,6 +364,10 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
         table.add_team_columns(teams)
         table.add_column("Wins", [team.wins for team in teams])
         table.add_team_results_columns(teams, rounds)
+
+        messages.info(self.request, "This list is sorted by wins, and then by "
+            "team name within each group — it does not indicate each team's "
+            "ranking withing each group.")
 
         return table
 
