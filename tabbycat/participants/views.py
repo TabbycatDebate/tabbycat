@@ -117,6 +117,7 @@ class BaseTeamRecordView(BaseRecordView):
         tournament = self.get_tournament()
         teamscores = TeamScore.objects.filter(debate_team__team=self.object,
                 ballot_submission__confirmed=True,
+                debate_team__debate__round__seq__lt=tournament.current_round.seq,
                 debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
                 debate_team__debate__round__silent=False).select_related(
                 'debate_team__debate', 'debate_team__debate__round')
