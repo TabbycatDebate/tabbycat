@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 
 .panel-body .table {
+  background: $alt-bg; // For when tables blow out on mobile
   margin-bottom: 0; // Panel body has its own bottom padding
   > tbody > tr:hover td {
     background-color: $table-bg-hover;
@@ -16,6 +17,10 @@
 .table-search {
   height: 41px;
   border-width: 1px;
+}
+
+.table-container {
+  overflow-y: scroll; // Don't blow out page width when overflows occur
 }
 
 //------------------------------------------------------------------------------
@@ -73,8 +78,16 @@ thead, .thead {
     border-right: 0;
     border-radius: 0;
     .panel-body {
-      padding-left: 5px;
-      padding-right: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
     }
+  }
+  .team-name .emoji {
+    display: block; // Fix ugly wrapping and make names easier to identify
+  }
+  .table > tbody > tr > th,
+  .table > tbody > tr > td {
+    padding-left: 4px;
+    padding-right: 4px;
   }
 }
