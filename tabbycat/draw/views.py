@@ -50,7 +50,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
     def get_page_title(self):
         rd = self.get_round()
         if rd.starts_at:
-            time = rd.starts_at.strftime('%I:%M')
+            time = rd.starts_at.strftime('%H:%M')
             return 'Draw for %s; debates start at %s' % (rd.name, time)
         else:
             return 'Draw for %s' % rd.name
