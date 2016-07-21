@@ -390,12 +390,12 @@ class BaseDiversityStandingsView(TournamentMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class DiversityStandingsView(BaseDiversityStandingsView, SuperuserRequiredMixin):
+class DiversityStandingsView(SuperuserRequiredMixin, BaseDiversityStandingsView):
 
     for_public = False
 
 
-class PublicDiversityStandingsView(BaseDiversityStandingsView, PublicTabMixin):
+class PublicDiversityStandingsView(PublicTabMixin, BaseDiversityStandingsView):
 
     public_page_preference = 'public_diversity'
     for_public = True
