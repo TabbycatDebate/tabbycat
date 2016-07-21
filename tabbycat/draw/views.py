@@ -265,6 +265,9 @@ class CreateDrawView(DrawStatusEdit):
         # TODO provide a more intelligent check in sites where there are multiple tournaments
         if not AdjudicatorVenueConstraint.objects.all().exists():
             allocate_venues(round)
+        else:
+            messages.warning(request, "Venues were not auto-allocated because there are one or more adjudicator venue constraints. "
+                "You should run venue allocations after allocating adjudicators.")
 
         self.log_action()
         return super().post(request, *args, **kwargs)
