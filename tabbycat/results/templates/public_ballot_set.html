@@ -58,7 +58,7 @@
           {% endfor %}
           <div class="row">
             <label class="col-md-2 col-xs-3 control-label total" >Total</label>
-            <div class="col-md-offset-4 col-xs-1 col-xs-offset-6 total score {{ sheet.aff_win|yesno:"win,loss" }}">
+            <div class="col-md-offset-4 col-xs-1 col-xs-offset-6 total score {{ sheet.aff_win|yesno:"btn-success,btn-danger" }}">
               {{ sheet.aff_score }}
             </div>
           </div>
@@ -81,7 +81,7 @@
           {% endfor %}
           <div class="row">
             <label class="col-md-2 col-xs-3 control-label total" >Total</label>
-            <div class="col-md-offset-4 col-xs-1 col-xs-offset-6 total score {{ sheet.neg_win|yesno:"win,loss" }}">
+            <div class="col-md-offset-4 col-xs-1 col-xs-offset-6 total score {{ sheet.neg_win|yesno:"btn-success,btn-danger" }}">
               {{ sheet.neg_score }}
             </div>
           </div>
