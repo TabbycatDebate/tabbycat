@@ -117,6 +117,7 @@ class PublicDrawForCurrentRoundView(PublicDrawForRoundView):
 
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
     template_name = "public_draw_display_all.html"
+    public_page_preference = 'enable_mass_draws'
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()

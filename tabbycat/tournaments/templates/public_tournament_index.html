@@ -135,9 +135,11 @@
               </li>
             {% endif %}
           {% endfor %}
-          <li class="list-group-item">
-            <a href="{% tournament_url public_all_draws %}">View All Draws</a>
-          </li>
+          {% if pref.enable_mass_draws > 0 %}
+            <li class="list-group-item">
+              <a href="{% tournament_url public_all_draws %}">View All Draws</a>
+            </li>
+          {% endif %}
         {% endif %}
       </ul>
     </div>
