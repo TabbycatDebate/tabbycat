@@ -128,12 +128,12 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
 
 
 class AdminDrawDisplayForRoundByVenueView(LoginRequiredMixin, BaseDrawTableView):
-    popovers = False
+    popovers = True
 
 
 class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
     sort_key = 'Team'
-    popovers = False
+    popovers = True
 
     def populate_table(self, draw, table, round, tournament):
         draw = list(draw) + list(draw) # Double up the draw
