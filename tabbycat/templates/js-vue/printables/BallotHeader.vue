@@ -31,6 +31,7 @@ export default {
     soloChair: function() {
       if (this.ballot.authorPosition === 'C') {
         var voting_adjs = 0;
+        if (typeof this.ballot.panel === 'undefined') { return true }
         this.ballot.panel.forEach(function(entry) {
           if (entry.position !== "T") { voting_adjs++; };
         }, this);
@@ -41,6 +42,7 @@ export default {
     panelChair: function() {
       if (this.ballot.authorPosition === 'C') {
         var voting_adjs = 0;
+        if (typeof this.ballot.panel === 'undefined') { return false }
         this.ballot.panel.forEach(function(entry) {
           if (entry.position !== "T") { voting_adjs++; };
         }, this);
