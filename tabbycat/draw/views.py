@@ -56,7 +56,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
             return 'Draw for %s' % rd.name
 
     def get_page_emoji(self):
-        if self.get_round().draw_status != Round.STATUS_RELEASED:
+        if self.get_round().draw_status == Round.STATUS_RELEASED:
             return '👏'
         else:
             return '😴'
@@ -95,7 +95,7 @@ class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTabl
         round = self.get_round()
         if round.draw_status != round.STATUS_RELEASED:
             messages.info(self.request, 'The draw for ' + round.name +
-                ' has yet to be released 😴')
+                ' has yet to be released')
             return ["base.html"]
         else:
             return super().get_template_names()
