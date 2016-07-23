@@ -66,7 +66,8 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView
             return Adjudicator.objects.filter(tournament=t)
 
     def get_context_data(self, **kwargs):
-        kwargs['breaking_count'] = self.get_adjudicators().count()
+        kwargs['breaking_count'] = self.get_adjudicators().filter(
+            breaking=True).count()
         return super().get_context_data(**kwargs)
 
     def get_table(self):

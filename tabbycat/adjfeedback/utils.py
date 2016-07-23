@@ -68,7 +68,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'component': 'feedback-trend',
             'minScore': self.tournament.pref('adj_min_score'),
             'maxScore': self.tournament.pref('adj_max_score'),
-            'roundSeq': self.tournament.current_round.seq,
+            'roundSeq': len(self.tournament.prelim_rounds()),
         } for adj in adjudicators]
         self.add_column(feedback_head, feedback_data)
 
