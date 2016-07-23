@@ -93,74 +93,73 @@
 {% endblock %}
 
 {% block content %}
-  {% if generated %}
-    <form action="." method="POST">
-      {% csrf_token %}
-      <div class="panel panel-default">
-        <div class="panel-body">
+{% if generated %}
+  <form action="." method="POST">
+    {% csrf_token %}
+    <div class="panel panel-default">
+      <div class="panel-body">
 
-          <table class="table" cellspacing="0" cellpadding="0">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Break</th>
-                {% if pref.show_emoji %}
-                  <th class="team-emoji"></th>
-                {% endif %}
-                <th>Team</th>
-                {% if pref.show_institutions %}
-                  <th>Inst<span class="hidden-xs">itution</span></th>
-                {% endif %}
-                {% for info in form.metrics_info %}
-                  <th>
-                    {% if info.glyphicon %}
-                      <span data-toggle="tooltip" title="{{ info.name|capfirst }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
-                    {% else %}
-                      <span class="hidden-xs">{{ info.name|capfirst }}</span>
-                      <span class="visible-xs">{{ info.abbr }}</span>
-                    {% endif %}
-                  </th>
-                {% endfor %}
-                <th>Edit remark</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for standing, edit_remark in form.team_iter %}
-              <tr>
-                <td>{{ standing.rank }}</td>
-                <td>{{ standing.break_rank|default_if_none:"&ndash;" }}</td>
-                {% if pref.show_emoji %}
-                  <td class="team-emoji">{{ standing.team.emoji }}</td>
-                {% endif %}
-                <td>
-                  {% include "tables/team.html" with team=standing.team %}
-                  {{ standing.team.categories_for_display }}
-                </td>
-                {% if pref.show_institutions %}
-                  <td><span class="hidden-xs">{{ standing.team.institution }}</span><span class="visible-xs">{{ standing.team.institution.code }}</span></td>
-                {% endif %}
-                {% for metric in standing.itermetrics %}
-                  <td>{{ metric|metricformat }}</td>
-                {% endfor %}
-                <td>
-                  {{ edit_remark|addcss:"form-control" }}
-                </td>
-              </tr>
+        <table class="table" cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Break</th>
+              {% if pref.show_emoji %}
+                <th class="team-emoji"></th>
+              {% endif %}
+              <th>Team</th>
+              {% if pref.show_institutions %}
+                <th>Inst<span class="hidden-xs">itution</span></th>
+              {% endif %}
+              {% for info in form.metrics_info %}
+                <th>
+                  {% if info.glyphicon %}
+                    <span data-toggle="tooltip" title="{{ info.name|capfirst }}" class="glyphicon glyphicon-{{ info.glyphicon }}"></span>
+                  {% else %}
+                    <span class="hidden-xs">{{ info.name|capfirst }}</span>
+                    <span class="visible-xs">{{ info.abbr }}</span>
+                  {% endif %}
+                </th>
               {% endfor %}
-            </tbody>
-          </table>
+              <th>Edit remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for standing, edit_remark in form.team_iter %}
+            <tr>
+              <td>{{ standing.rank }}</td>
+              <td>{{ standing.break_rank|default_if_none:"&ndash;" }}</td>
+              {% if pref.show_emoji %}
+                <td class="team-emoji">{{ standing.team.emoji }}</td>
+              {% endif %}
+              <td>
+                {% include "tables/team.html" with team=standing.team %}
+                {{ standing.team.categories_for_display }}
+              </td>
+              {% if pref.show_institutions %}
+                <td><span class="hidden-xs">{{ standing.team.institution }}</span><span class="visible-xs">{{ standing.team.institution.code }}</span></td>
+              {% endif %}
+              {% for metric in standing.itermetrics %}
+                <td>{{ metric|metricformat }}</td>
+              {% endfor %}
+              <td>
+                {{ edit_remark|addcss:"form-control" }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
 
-          <div class="row">
-            <div class="form-inline col-md-12">
-              <button class="btn btn-default btn-block btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="submit" type="submit" value="submit">
-                  Save remarks
-              </button>
-            </div>
+        <div class="row">
+          <div class="form-inline col-md-12">
+            <button class="btn btn-default btn-block btn-success" type="submit">
+                Save Remarks
+            </button>
           </div>
-
         </div>
-      </div>
 
-    </form>
-  {% endif %}
+      </div>
+    </div>
+  </form>
+{% endif %}
 {% endblock content %}
