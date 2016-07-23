@@ -2,10 +2,10 @@ from django.contrib import admin, messages
 
 from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
+
 # ==============================================================================
 # Adjudicator Feedback Questions
 # ==============================================================================
-
 
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type',
@@ -16,10 +16,10 @@ class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
 
 admin.site.register(AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmin)
 
+
 # ==============================================================================
 # Adjudicator Feedback Answers
 # ==============================================================================
-
 
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
     model = None  # Must be set by subclasses
@@ -40,29 +40,25 @@ class RoundListFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         from tournaments.models import Round
-        return [(str(r.id), "[{}] {}".format(r.tournament.name, r.name)) for r in Round.objects.all()]
+        return [(str(r.id), "[{}] {}".format(r.tournament.short_name, r.name)) for r in Round.objects.all()]
 
     def queryset(self, request, queryset):
         return queryset.filter(source_team__debate__round_id=self.value()) | queryset.filter(source_adjudicator__debate__round_id=self.value())
+
 
 # ==============================================================================
 # Adjudicator Feedbacks
 # ==============================================================================
 
-
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
-    list_display  = ('adjudicator', 'source_adjudicator', 'source_team',
-                     'confirmed', 'score', 'version')
-    search_fields = ('source_adjudicator__adjudicator__name',
-                     'source_team__team__institution__code',
-                     'source_team__team__reference', 'adjudicator__name',
-                     'adjudicator__institution__code',)
+    list_display  = ('adjudicator', 'confirmed', 'score', 'version',
+                     'source_adjudicator', 'source_team')
+    search_fields = ('adjudicator', 'score', 'source_adjudicator', 'source_team')
     raw_id_fields = ('source_team',)
-    list_filter   = (RoundListFilter, 'adjudicator', 'source_adjudicator',
-                     'source_team')
+    list_filter   = (RoundListFilter, 'adjudicator')
     actions       = ('mark_as_confirmed', 'mark_as_unconfirmed')
 
-    # dynamically generate inline tables for different answer types
+    # Dynamically generate inline tables for different answer types
     inlines = []
     for _answer_type_class in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES_REVERSE:
         _inline_class = type(
