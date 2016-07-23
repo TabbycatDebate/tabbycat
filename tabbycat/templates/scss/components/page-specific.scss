@@ -62,6 +62,13 @@
   margin-left: 3px; // Fix for buttons on edit draw page
 }
 
+#stop_scrolling {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+}
+
 .draw-xs {
   font-size: $font-size-base * 1.25;
 }
