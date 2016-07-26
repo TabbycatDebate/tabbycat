@@ -35,7 +35,7 @@
             </thead>
             <tbody>
             {% for round in rounds %}
-              {% for motion in round.motions %}
+              {% for motion in round.motion_set.all %}
                 <tr>
                   <td>{{ motion.round.seq }}</td>
                   <td>{{ motion.round.abbreviation }}</td>
@@ -72,12 +72,14 @@
           <h4 class="panel-title">{{ round.name }}</h4>
         </div>
         <ul class="list-group">
-          {% if round.motions %}
-            {% for motion in round.motions %}
+          {% if round.motions_released %}
+            {% for motion in round.motion_set.all %}
               <li class="list-group-item">{{ motion.text }}</li>
+            {% empty %}
+              <li class="list-group-item"><em>There are no motions available for this round.</em></li>
             {% endfor %}
           {% else %}
-            <li class="list-group-item">No motions have been released yet</li>
+            <li class="list-group-item"><em>The motions for this round have not been released.</em></li>
           {% endif %}
         </ul>
       </div>

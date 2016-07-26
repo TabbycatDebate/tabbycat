@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.conf import settings
+from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory
 from django.forms.widgets import CheckboxSelectMultiple
@@ -9,7 +10,7 @@ from django.views.generic.base import TemplateView
 
 from actionlog.models import ActionLogEntry
 from divisions.models import Division
-from tournaments.mixins import RoundMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
 from utils.mixins import SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view
@@ -17,15 +18,20 @@ from utils.views import admin_required, expect_post, public_optional_tournament_
 from .models import Motion
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_motions')
-def public_motions(request, t):
-    order_by = 'seq' if t.pref('public_motions_order') == 'forward' else '-seq'
-    rounds = Round.objects.filter(motions_released=True, tournament=t).order_by(order_by)
-    for round in rounds:
-        round.motions = round.motion_set.all()
+class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
+    public_page_preference = 'public_motions_order'
+    template_name = 'public_motions.html'
 
-    return render(request, 'public_motions.html', dict(rounds=rounds))
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        order_by = 'seq' if tournament.pref('public_motions_order') == 'forward' else '-seq'
+        # Include rounds whether *either* motions are released *or* it's this
+        # round or a previous round. The template checks motion_released again
+        # and displays a "not released" message if motions are not released.
+        kwargs['rounds'] = tournament.round_set.filter(
+            Q(motions_released=True) | Q(seq__lte=tournament.current_round.seq)
+            ).order_by(order_by).prefetch_related('motion_set')
+        return super().get_context_data(**kwargs)
 
 
 @admin_required

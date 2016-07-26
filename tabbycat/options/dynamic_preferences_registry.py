@@ -713,7 +713,7 @@ class ShowAllDraws(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class PublicMotionsDescending(ChoicePreference):
+class PublicMotionsOrder(ChoicePreference):
     help_text = "Order in which are listed by round in the public view"
     verbose_name = "Order to display motions"
     section = ui_options
