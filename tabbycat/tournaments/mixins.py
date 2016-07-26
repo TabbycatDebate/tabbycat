@@ -1,6 +1,7 @@
 import logging
 
 from django.core.cache import cache
+from django.core.exceptions import ImproperlyConfigured
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
@@ -129,6 +130,8 @@ class PublicTournamentPageMixin(TournamentMixin):
 
     def dispatch(self, request, *args, **kwargs):
         tournament = self.get_tournament()
+        if self.public_page_preference is None:
+            raise ImproperlyConfigured("public_page_preference isn't set on this view.")
         if tournament.pref(self.public_page_preference):
             return super().dispatch(request, *args, **kwargs)
         else:
