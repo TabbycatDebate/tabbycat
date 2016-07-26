@@ -52,7 +52,7 @@ If you want to :ref:`import tournament data <importing-initial-data>` from CSV f
 
   git commit -am "Add data for <yourtournamentname>"
   git push heroku master
-  heroku run dj importtournament <yourdatadirectoryname> --slug <slug> --name <Your Awesome Tournament> --short-name <Awesome>
+  heroku run tabbycat/manage.py importtournament <yourdatadirectoryname> --slug <slug> --name <Your Awesome Tournament> --short-name <Awesome>
 
 1. Install dependencies
 -----------------------
@@ -123,7 +123,7 @@ In order to use the ``importtournament`` command directly on the server, your da
 
 3. Run this command, replacing ``<fields>`` with your own names::
 
-    heroku run dj importtournament <yourdatadirectoryname> --slug <slug> --name <Your Awesome Tournament> --short-name <Awesome>
+    heroku run tabbycat/manage.py importtournament <yourdatadirectoryname> --slug <slug> --name <Your Awesome Tournament> --short-name <Awesome>
 
 Addons
 ======
