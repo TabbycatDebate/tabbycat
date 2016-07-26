@@ -36,7 +36,7 @@
 {% if pref.public_draw and pref.team_tab_released == 0  %}
   {% if pref.show_all_draws == 0 %}
   <li class="{% if draw_nav %}active{% endif %}">
-    <a href="{% tournament_url public_draw %}">
+    <a href="{% tournament_url draw-public-current-round %}">
       Draw for {{ current_round.name }}
     </a>
   </li>
@@ -46,11 +46,11 @@
       <ul class="dropdown-menu">
         {% for r in tournament.round_set.all %}
           {% if r.draw_status == r.STATUS_RELEASED %}
-            <li><a href="{% round_url public_draw_by_round r %}">{{ r.name }}</a></li>
+            <li><a href="{% round_url draw-public-for-round r %}">{{ r.name }}</a></li>
           {% endif %}
         {% endfor %}
         <li>
-          <a class="public-draw-nav" href="{% tournament_url public_all_draws %}">
+          <a class="public-draw-nav" href="{% tournament_url draw-public-all-draws %}">
             View All
           </a>
         </li>

@@ -59,7 +59,7 @@
           </li>
         {% endif %}
         {% if pref.public_draw > 0  and pref.team_tab_released == 0 and pref.show_all_draws == 0 %}
-          <li class="list-group-item"><a class="public-draw-nav" href="{% tournament_url public_draw %}">
+          <li class="list-group-item"><a class="public-draw-nav" href="{% tournament_url draw-public-current-round %}">
             Draw for {{ current_round.name }}
           </a></li>
         {% endif %}
@@ -131,12 +131,12 @@
           {% for r in tournament.round_set.all %}
             {% if r.draw_status == r.STATUS_RELEASED %}
               <li class="list-group-item">
-                <a href="{% round_url public_draw_by_round r %}">Draw for {{ r.name }}</a>
+                <a href="{% round_url draw-public-for-round r %}">Draw for {{ r.name }}</a>
               </li>
             {% endif %}
           {% endfor %}
           <li class="list-group-item">
-            <a href="{% tournament_url public_all_draws %}">View All Draws</a>
+            <a href="{% tournament_url draw-public-all-draws %}">View All Draws</a>
           </li>
         {% endif %}
       </ul>
