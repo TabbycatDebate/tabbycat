@@ -10,8 +10,8 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from divisions.models import Division
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
-from utils.misc import redirect_round
-from utils.mixins import ModelFormSetView, SuperuserRequiredMixin
+from utils.misc import redirect_round, reverse_round
+from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .models import Motion
@@ -90,30 +90,29 @@ def motions_assign(request, round):
     return render(request, "assign.html", dict(formset=formset))
 
 
-@admin_required
-@expect_post
-@round_view
-def release_motions(request, round):
-    round.motions_released = True
-    round.save()
-    ActionLogEntry.objects.log(
-        type=ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE,
-        user=request.user, round=round, tournament=round.tournament)
+class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
-    return redirect_round('draw', round)
+    def get_redirect_url(self):
+        return reverse_round('draw', self.get_round())
+
+    def post(self, request, *args, **kwargs):
+        round = self.get_round()
+        round.motions_released = self.motions_released
+        round.save()
+        self.log_action()
+        return super().post(request, *args, **kwargs)
 
 
-@admin_required
-@expect_post
-@round_view
-def unrelease_motions(request, round):
-    round.motions_released = False
-    round.save()
-    ActionLogEntry.objects.log(
-        type=ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE,
-        user=request.user, round=round, tournament=round.tournament)
+class ReleaseMotionsView(BaseReleaseMotionsView):
 
-    return redirect_round('draw', round)
+    action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
+    motions_released = True
+
+
+class UnreleaseMotionsView(BaseReleaseMotionsView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE
+    motions_released = False
 
 
 class DisplayMotionsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
