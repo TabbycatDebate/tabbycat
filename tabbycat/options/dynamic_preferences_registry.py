@@ -456,6 +456,15 @@ class BallotsReleased(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class AllResultsReleased(BooleanPreference):
+    help_text = "This releases all the results for all rounds (including silent and break rounds). Do so only after the tournament is finished!"
+    verbose_name = "Release all round results to public"
+    section = tab_release
+    name = "all_results_released"
+    default = False
+
+
 # ==============================================================================
 data_entry = Section('data_entry')
 # ==============================================================================

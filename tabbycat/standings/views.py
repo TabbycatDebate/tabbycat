@@ -344,7 +344,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
         tournament = self.get_tournament()
 
         # Find the most recent non-silent preliminary round
-        round = tournament.current_round if tournament.release_all else tournament.current_round.prev
+        round = tournament.current_round if tournament.pref('all_results_released') else tournament.current_round.prev
         while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
             round = round.prev
 

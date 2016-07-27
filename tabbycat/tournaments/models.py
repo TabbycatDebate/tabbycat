@@ -39,8 +39,6 @@ class Tournament(models.Model):
         help_text="Must be set for the tournament to start! (Set after rounds are inputted)")
     welcome_msg = models.TextField(blank=True, null=True, default="",
         help_text="Text/html entered here shows on the homepage for this tournament")
-    release_all = models.BooleanField(default=False,
-        help_text="This releases all results, including silent rounds; do so only after the tournament is finished!")
     active = models.BooleanField(default=True)
 
     def __init__(self, *args, **kwargs):

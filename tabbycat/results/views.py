@@ -152,10 +152,10 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     def get(self, request, *args, **kwargs):
         tournament = self.get_tournament()
         round = self.get_round()
-        if round.silent:
+        if round.silent and not tournament.pref('all_results_released'):
             logger.info("Refused results for %s: silent", round.name)
             return render(request, 'public_results_silent.html')
-        if round.seq >= tournament.current_round.seq and not tournament.release_all:
+        if round.seq >= tournament.current_round.seq and not tournament.pref('all_results_released'):
             logger.info("Refused results for %s: not yet available", round.name)
             return render(request, 'public_results_not_available.html')
 
@@ -500,8 +500,9 @@ def public_ballots_view(request, t, debate_id):
 
     round = debate.round
     # Can't see results for current round or later
-    if (round.seq > round.tournament.current_round.seq and not round.tournament.release_all) or round.silent:
-        raise Http404()
+    if round.seq > round.tournament.current_round.seq or round.silent:
+        if not round.tournament.pref('all_results_released'):
+            raise Http404()
 
     ballot_submission = debate.confirmed_ballot
     if ballot_submission is None:

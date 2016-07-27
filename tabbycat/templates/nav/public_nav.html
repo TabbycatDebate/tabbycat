@@ -65,8 +65,8 @@
     <a href="#" data-toggle="dropdown">Results<b class="caret"></b></a>
     <ul class="dropdown-menu">
       {% for r in tournament.round_set.all %}
-        {% if not r.silent %}
-          {% if r.seq < current_round.seq or tournament.release_all %}
+        {% if not r.silent or pref.all_results_released %}
+          {% if r.seq < current_round.seq or pref.all_results_released %}
             <li><a href="{% round_url public_results r %}">{{ r.name }}</a></li>
           {% endif %}
         {% endif %}
