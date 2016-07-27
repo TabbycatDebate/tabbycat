@@ -107,6 +107,12 @@
               {% if pref.show_emoji %}
                 <th class="team-emoji"></th>
               {% endif %}
+              {% if pref.enable_divisions %}
+                <th>
+                  <span class="glyphicon glyphicon-th-list"
+                        data-toggle="tooltip" title="Division"></span>
+                </th>
+              {% endif %}
               <th>Team</th>
               {% if pref.show_institutions %}
                 <th>Inst<span class="hidden-xs">itution</span></th>
@@ -131,6 +137,9 @@
               <td>{{ standing.break_rank|default_if_none:"&ndash;" }}</td>
               {% if pref.show_emoji %}
                 <td class="team-emoji">{{ standing.team.emoji }}</td>
+              {% endif %}
+              {% if pref.enable_divisions %}
+                <td class="">{{ standing.team.division.name }}</td>
               {% endif %}
               <td>
                 {% include "tables/team.html" with team=standing.team %}
