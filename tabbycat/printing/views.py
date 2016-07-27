@@ -17,6 +17,7 @@ class MasterSheetsListView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['standings'] = VenueGroup.objects.all()
+        kwargs['venue_groups'] = VenueGroup.objects.all()
         return super().get_context_data(**kwargs)
 
 
@@ -115,7 +116,10 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['questions'] = self.questions_json_dict()
         kwargs['ballots'] = []
 
-        for debate in self.get_round().get_draw():
+        draw = self.get_round().debate_set_with_prefetches(ordering=(
+            'venue__group__name', 'venue__name',))
+
+        for debate in draw:
             chair = debate.adjudicators.chair
 
             if self.team_on_orallist():
@@ -150,7 +154,10 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['motions'] = Motion.objects.filter(round=self.get_round()).values('text').order_by('seq')
         kwargs['ballots'] = []
 
-        for debate in self.get_round().get_draw():
+        draw = self.get_round().debate_set_with_prefetches(ordering=(
+            'venue__group__name', 'venue__name',))
+
+        for debate in draw:
             debate_info = {
                 'room': "%s %s" % (debate.venue.name, "(" + debate.venue.group.short_name + ")" if debate.venue.group else '', ),
                 'aff': debate.aff_team.short_name,

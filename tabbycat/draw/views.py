@@ -18,7 +18,7 @@ from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixi
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
-from venues.models import AdjudicatorVenueConstraint
+from venues.models import AdjudicatorVenueConstraint, VenueGroup
 
 from .dbutils import delete_round_draw
 from .generator import DrawError
@@ -42,27 +42,25 @@ TPA_MAP = {
 
 class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
-    page_subtitle = 'Use ESC to cancel scrolling'
     template_name = 'draw_display_by.html'
     sort_key = 'Venue'
     popovers = True
 
     def get_page_title(self):
-        rd = self.get_round()
-        if rd.starts_at:
-            time = rd.starts_at.strftime('%H:%M')
-            return 'Draw for %s; debates start at %s' % (rd.name, time)
-        else:
-            return 'Draw for %s' % rd.name
+        return 'Draw for %s' % self.get_round().name
 
     def get_page_emoji(self):
-        if self.get_round().draw_status != Round.STATUS_RELEASED:
+        if self.get_round().draw_status == Round.STATUS_RELEASED:
             return '👏'
         else:
             return '😴'
 
     def get_page_subtitle(self):
-        return 'Use ESC to stop scrolling'
+        round =self.get_round()
+        if round.starts_at:
+            return 'debates start at %s' % round.starts_at.strftime('%H:%M')
+        else:
+            return ''
 
     def get_context_data(self, **kwargs):
         kwargs['round'] = self.get_round()
@@ -73,8 +71,8 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key="Aff")
         table.add_team_columns([d.neg_team for d in draw], hide_institution=True, key="Neg")
         if tournament.pref('enable_division_motions'):
-            for debate in draw:
-                table.add_motion_column([m.reference for m in debate.division_motions])
+            table.add_motion_column(d.get_division_motions for d in draw)
+
         if not tournament.pref('enable_divisions'):
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
@@ -95,7 +93,7 @@ class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTabl
         round = self.get_round()
         if round.draw_status != round.STATUS_RELEASED:
             messages.info(self.request, 'The draw for ' + round.name +
-                ' has yet to be released 😴')
+                ' has yet to be released')
             return ["base.html"]
         else:
             return super().get_template_names()
@@ -117,6 +115,7 @@ class PublicDrawForCurrentRoundView(PublicDrawForRoundView):
 
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
     template_name = "public_draw_display_all.html"
+    public_page_preference = 'enable_mass_draws'
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
@@ -129,12 +128,12 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
 
 
 class AdminDrawDisplayForRoundByVenueView(LoginRequiredMixin, BaseDrawTableView):
-    popovers = False
+    popovers = True
 
 
 class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
     sort_key = 'Team'
-    popovers = False
+    popovers = True
 
     def populate_table(self, draw, table, round, tournament):
         draw = list(draw) + list(draw) # Double up the draw
@@ -356,7 +355,7 @@ class ScheduleDebatesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
-        kwargs['venue_groups'] = Team.objects.filter(tournament=round.tournament).count()
+        kwargs['venue_groups'] = VenueGroup.objects.all()
         kwargs['divisions'] = Division.objects.filter(tournament=round.tournament).order_by('id')
         return super().get_context_data(**kwargs)
 
@@ -371,6 +370,7 @@ class ScheduleConfirmationsView(SuperuserRequiredMixin, RoundMixin, TemplateView
             if len(shifts) > 0:
                 adj.shifts = shifts
         kwargs['adjs'] = adjs
+        return super().get_context_data(**kwargs)
 
 
 class ApplyDebateScheduleView(DrawStatusEdit):

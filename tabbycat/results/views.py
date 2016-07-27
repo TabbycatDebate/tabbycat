@@ -71,7 +71,6 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
         table.add_ballot_status_columns(draw)
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw)
-        table.add_debate_bracket_columns(draw)
         table.add_debate_results_columns(draw)
         table.add_debate_adjudicators_column(draw, show_splits=True)
         return table

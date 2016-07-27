@@ -68,7 +68,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'component': 'feedback-trend',
             'minScore': self.tournament.pref('adj_min_score'),
             'maxScore': self.tournament.pref('adj_max_score'),
-            'roundSeq': self.tournament.current_round.seq,
+            'roundSeq': len(self.tournament.prelim_rounds()),
         } for adj in adjudicators]
         self.add_column(feedback_head, feedback_data)
 
@@ -111,17 +111,12 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Average Margin (top) and Average Score (bottom)'
         }
         avgs_cell = [{
-            'text': "%0.1f<br>%0.1f" % (adj.avg_margin if adj.avg_margin else 0, adj.avg_score if adj.avg_margin else 0)
+            'text': "%0.1f<br>%0.1f" % (adj.avg_margin if adj.avg_margin else 0, adj.avg_score if adj.avg_margin else 0),
+            'tooltip': 'Average Margin (top) and Average Score (bottom)'
         } for adj in adjudicators]
         self.add_column(avgs_head, avgs_cell)
 
     def add_feedback_progress_columns(self, progress, key="P"):
-
-        # coverage_header = {
-        #     'key': 'Coverage',
-        #     'icon': 'glyphicon-eye-open',
-        #     'tooltip': 'Percentage of feedback returned',
-        # }
 
         owed_header = {
             'key': 'Owed',
@@ -154,7 +149,8 @@ def get_feedback_overview(t, adjudicators):
         'adjudicator', 'source_adjudicator', 'source_team',
         'source_adjudicator__debate__round', 'source_team__debate__round').exclude(
             source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE))
-    all_adj_scores = list(SpeakerScoreByAdj.objects.filter(ballot_submission__confirmed=True).select_related(
+    all_adj_scores = list(SpeakerScoreByAdj.objects.filter(
+        ballot_submission__confirmed=True).exclude(position=t.REPLY_POSITION).select_related(
         'debate_adjudicator__adjudicator__id', 'ballot_submission'))
     rounds = t.prelim_rounds(until=t.current_round)
 
@@ -230,13 +226,15 @@ def scoring_stats(adj, scores, debate_adjudications):
                 t_a_scores = adj_scores[:team_split]
                 t_b_scores = adj_scores[team_split:]
                 t_a_total, t_b_total = sum(t_a_scores), sum(t_b_scores)
+                largest_difference = max(t_a_total, t_b_total)
+                smallest_difference = min(t_a_total, t_b_total)
                 ballot_margins.append(
-                    max(t_a_total, t_b_total) - min(t_a_total, t_b_total))
+                    largest_difference - smallest_difference)
             except TypeError:
                 print(team_split)
 
-        # adj.average_score = adj.feedback_data['y']
         if ballot_margins:
+            print('has %s margins %s' % (len(ballot_margins), ballot_margins))
             adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
 
     return adj

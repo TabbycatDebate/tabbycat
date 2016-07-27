@@ -14,6 +14,12 @@
   <button id="select_none" class="btn btn-primary">
     Select None
   </button>
+  {% if round.is_break_round and page_title == 'Adjudicator Check-Ins' %}
+    <a class="btn btn-primary submit-disable"
+       href="{% round_url update_availability_breaking_adjs  %}">
+      Check In All Breaking
+    </a>
+  {% endif %}
   {{ block.super }}
 {% endblock %}
 

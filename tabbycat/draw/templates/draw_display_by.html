@@ -14,6 +14,7 @@
 {% block footer %}{% endblock %}
 
 {% block page-subnav-sections %}
+<div class="hidden-sm hidden-xs">
   <span class="btn btn-secondary">Scroll Speed:</span>
   <div class="btn-group hidden-xs scroll-speeds">
     <a class="btn btn-default" data-target="0.07" id="scroll_draw1">Fast</a>
@@ -29,15 +30,18 @@
     <a class="btn btn-default" data-target="draw-l" id="large_text">Large</a>
     <a class="btn btn-default" data-target="draw-xl" id="huge_text">Huge</a>
   </div>
+  <a class="btn btn-default " data-target="draw-xs" id="stop_scrolling">Stop Scrolling</a>
+</div>
 {% endblock %}
 
 {% block js %}
   {{ block.super }}
   <script>
     $(document).ready( function() {
+      $('#stop_scrolling').hide();
       $(".scroll-speeds .btn").click(function(event){
         var speed = $(document).height() / $(this).attr('data-target');
-        console.log(speed);
+        $('#stop_scrolling').show();
         $('html, body').animate({
           scrollTop: $(document).height() - $(window).height()
         }, speed, "linear");
@@ -54,7 +58,12 @@
       e.stopPropagation();
       if (e.keyCode === 27 || e.keyCode === 38) {
         $('html, body').stop()
+        $('#stop_scrolling').hide();
       }
+    });
+    $('#stop_scrolling').click(function(event){
+      $('html, body').stop()
+      $('#stop_scrolling').hide();
     });
   </script>
 {% endblock js %}

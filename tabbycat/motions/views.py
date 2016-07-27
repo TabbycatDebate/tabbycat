@@ -84,7 +84,7 @@ def motions_assign(request, round):
         formset = motion_form_set(request.POST)
         formset.save()  # Should be checking for validity but on a deadline and was buggy
         if 'submit' in request.POST:
-            return redirect_round('motions', round)
+            return redirect_round('draw', round)
 
     formset = motion_form_set(queryset=Motion.objects.filter(round=round))
     return render(request, "assign.html", dict(formset=formset))

@@ -1,6 +1,6 @@
 # Tabbycat
 
-[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)  [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/) [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat) [![Dependency Status](https://www.versioneye.com/user/projects/574bd0dace8d0e00473733b5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/574bd0dace8d0e00473733b5)
+[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)  [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/) [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat) [![Dependency Status](https://gemnasium.com/badges/github.com/czlee/tabbycat.svg)](https://gemnasium.com/github.com/czlee/tabbycat)
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 

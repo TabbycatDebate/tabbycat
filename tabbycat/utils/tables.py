@@ -39,7 +39,8 @@ class BaseTableBuilder:
     @staticmethod
     def _convert_cell(cell):
         if isinstance(cell, int) or isinstance(cell, float):
-            return {'text': str(cell)}
+            return {'text': str(cell),
+                    'sort': cell}
         if isinstance(cell, str):
             return {'text': cell}
         return cell
@@ -286,7 +287,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column("Name", adj_data)
 
         if self.tournament.pref('show_institutions') and not hide_institution:
-            self.add_column("Institution", [adj.institution.code for adj in adjudicators])
+            self.add_column({
+                'key': "Institution",
+                'icon': 'glyphicon-home',
+                'tooltip': "Institution",
+            }, [adj.institution.code for adj in adjudicators])
 
         if not hide_metadata:
             adjcore_header = {
@@ -376,7 +381,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             } for motion in motions])
 
         motion_data = [{
-            'text': motion.reference,
+            'text': motion.reference if motion.reference else '?',
             'popover': {'content' : [{'text': motion.text}]}
         } if motion else "—" for motion in motions]
         self.add_column(key, motion_data)
@@ -391,7 +396,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column("Categories", [", ".join(bc.name for bc in team.break_categories) for team in teams])
 
         if self.tournament.pref('show_institutions') and not hide_institution:
-            self.add_column("Institution", [team.institution.code for team in teams])
+            self.add_column({
+                'key': "Institution",
+                'icon': 'glyphicon-home',
+                'tooltip': "Institution",
+            }, [team.institution.code for team in teams])
 
     def add_team_pullup_columns(self, debates, standings):
         pullups_header = {
@@ -446,7 +455,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
     def add_debate_venue_columns(self, debates, with_times=False):
-        if self.tournament.pref('enable_divisions'):
+        if self.tournament.pref('enable_divisions') and debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
             divisions_header = {
                 'key': 'Division',
                 'icon': 'glyphicon-th-list',
