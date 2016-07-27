@@ -381,7 +381,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             } for motion in motions])
 
         motion_data = [{
-            'text': motion.reference,
+            'text': motion.reference if motion.reference else '?',
             'popover': {'content' : [{'text': motion.text}]}
         } if motion else "—" for motion in motions]
         self.add_column(key, motion_data)
@@ -455,7 +455,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
     def add_debate_venue_columns(self, debates, with_times=False):
-        if self.tournament.pref('enable_divisions'):
+        if self.tournament.pref('enable_divisions') and debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
             divisions_header = {
                 'key': 'Division',
                 'icon': 'glyphicon-th-list',

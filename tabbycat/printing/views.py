@@ -17,6 +17,7 @@ class MasterSheetsListView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['standings'] = VenueGroup.objects.all()
+        kwargs['venue_groups'] = VenueGroup.objects.all()
         return super().get_context_data(**kwargs)
 
 

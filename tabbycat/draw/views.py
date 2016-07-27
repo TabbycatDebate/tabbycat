@@ -18,7 +18,7 @@ from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixi
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
-from venues.models import AdjudicatorVenueConstraint
+from venues.models import AdjudicatorVenueConstraint, VenueGroup
 
 from .dbutils import delete_round_draw
 from .generator import DrawError
@@ -71,8 +71,8 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key="Aff")
         table.add_team_columns([d.neg_team for d in draw], hide_institution=True, key="Neg")
         if tournament.pref('enable_division_motions'):
-            for debate in draw:
-                table.add_motion_column([m.reference for m in debate.division_motions])
+            table.add_motion_column(d.get_division_motions for d in draw)
+
         if not tournament.pref('enable_divisions'):
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
@@ -355,7 +355,7 @@ class ScheduleDebatesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
-        kwargs['venue_groups'] = Team.objects.filter(tournament=round.tournament).count()
+        kwargs['venue_groups'] = VenueGroup.objects.all()
         kwargs['divisions'] = Division.objects.filter(tournament=round.tournament).order_by('id')
         return super().get_context_data(**kwargs)
 
@@ -370,6 +370,7 @@ class ScheduleConfirmationsView(SuperuserRequiredMixin, RoundMixin, TemplateView
             if len(shifts) > 0:
                 adj.shifts = shifts
         kwargs['adjs'] = adjs
+        return super().get_context_data(**kwargs)
 
 
 class ApplyDebateScheduleView(DrawStatusEdit):

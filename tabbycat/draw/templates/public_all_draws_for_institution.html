@@ -49,7 +49,7 @@
               {% endif %}
             </td>
             <td>
-              {% for motion in debate.division_motion %}
+              {% for motion in debate.get_division_motions %}
                 <span>{{ motion.reference }}</span>
                 <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
               {% endfor %}

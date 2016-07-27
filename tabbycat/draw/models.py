@@ -229,9 +229,16 @@ class Debate(models.Model):
                              self.neg_team.short_name)
 
     @property
-    def division_motion(self):
+    def get_division_motions(self):
         from motions.models import Motion
-        return Motion.objects.filter(round=self.round, divisions=self.division)
+        motions = Motion.objects.filter(round=self.round, divisions=self.division)
+        if motions.count() > 0:
+            return motions[0] # Pretty sure this should never be > 1
+        else:
+            # Its easiest to assume a division motion is always present, so
+            # return a fake one if it is not
+            from motions.models import Motion
+            return Motion(text='-', reference='-')
 
 
 class DebateTeamManager(models.Manager):
