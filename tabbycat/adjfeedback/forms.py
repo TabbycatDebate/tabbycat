@@ -243,7 +243,7 @@ def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submi
         _use_tournament_password = True  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
-        question_filter = dict(chair_on_panellist=True)
+        question_filter = dict(from_adj=True)
 
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
 
@@ -299,7 +299,7 @@ def make_feedback_form_class_for_team(source, submission_fields, confirm_on_subm
         _use_tournament_password = True  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
-        question_filter = dict(team_on_orallist=True)
+        question_filter = dict(from_team=True)
 
         debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
 

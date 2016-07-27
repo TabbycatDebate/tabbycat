@@ -9,8 +9,7 @@ from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type',
-                    'required', 'chair_on_panellist', 'panellist_on_chair',
-                    'panellist_on_panellist', 'team_on_orallist')
+                    'required', 'from_adj', 'from_team')
     list_filter  = ('tournament',)
     ordering     = ('tournament', 'seq')
 

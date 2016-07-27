@@ -356,8 +356,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_adj_feedback_questions(self, f):
         """Imports adjudicator feedback questions from a file.
         Each line has:
-            seq, reference, name, text, answer_type, required, team_on_orallist,
-                chair_on_panel, panel_on_chair, panel_on_panel, min_value, max_value
+            seq, reference, name, text, answer_type, required, from_adj, from_team,
+                min_value, max_value
         """
         question_interpreter = make_interpreter(
             tournament=self.tournament,

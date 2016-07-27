@@ -1,3 +1,4 @@
+import itertools
 import json
 
 from django.views.generic.base import TemplateView
@@ -68,21 +69,13 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = 'feedback_list.html'
 
-    def team_on_orallist(self):
+    def from_team(self):
         return AdjudicatorFeedbackQuestion.objects.filter(
-            tournament=self.get_round().tournament, chair_on_panellist=True).exists()
+            tournament=self.get_round().tournament, from_team=True).exists()
 
-    def chair_on_panellist(self):
+    def from_adj(self):
         return AdjudicatorFeedbackQuestion.objects.filter(
-            tournament=self.get_round().tournament, panellist_on_chair=True).exists()
-
-    def panellist_on_panellist(self):
-        return AdjudicatorFeedbackQuestion.objects.filter(
-            tournament=self.get_round().tournament, panellist_on_panellist=True).exists()
-
-    def panellist_on_chair(self):
-        return AdjudicatorFeedbackQuestion.objects.filter(
-            tournament=self.get_round().tournament, team_on_orallist=True).exists()
+            tournament=self.get_round().tournament, from_adj=True).exists()
 
     def questions_json_dict(self):
         questions = []
@@ -90,13 +83,11 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             q_set = {
                 'text': q.text, 'seq': q.seq, 'type': q.answer_type,
                 'required': json.dumps(q.answer_type),
-                'chair_on_panellist': json.dumps(q.chair_on_panellist),
-                'panellist_on_chair': json.dumps(q.panellist_on_chair),
-                'panellist_on_panellist': json.dumps(q.panellist_on_panellist),
-                'team_on_orallist': json.dumps(q.team_on_orallist),
+                'from_team': json.dumps(q.from_team),
+                'from_adj': json.dumps(q.from_adj),
             }
             if q.choices:
-                q_set['choice_options'] = q.choices.split("//")
+                q_set['choice_options'] = q.choices.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
             elif q.min_value is not None and q.max_value is not None:
                 q_set['choice_options'] = q.choices_for_number_scale
 
@@ -106,7 +97,7 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     def construct_info(self, venue, source, source_p, target, target_p):
         source_n = source.name if hasattr(source, 'name') else source.short_name
         return {
-            'room': "%s %s" % (venue.name, "(" + venue.group.short_name + ")" if venue.group else '', ),
+            'room': "%s %s" % (venue.name if venue else "", "(" + venue.group.short_name + ")" if venue and venue.group else '', ),
             'authorInstitution': source.institution.code,
             'author': source_n, 'authorPosition': source_p,
             'target': target.name, 'targetPosition': target_p
@@ -121,27 +112,25 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
         for debate in draw:
             chair = debate.adjudicators.chair
+            if not chair:
+                continue
 
-            if self.team_on_orallist():
+            if self.from_team():
                 for team in debate.teams:
                     kwargs['ballots'].append(self.construct_info(
-                        debate.venue, team, "Team", chair, "C"))
+                        debate.venue, team, "Team", chair, ""))
 
-            if self.chair_on_panellist():
-                for adj in debate.adjudicators.panel:
-                    kwargs['ballots'].append(self.construct_info(
-                        debate.venue, chair, "C", adj, "P"))
-                for adj in debate.adjudicators.trainees:
-                    kwargs['ballots'].append(self.construct_info(
-                        debate.venue, chair, "C", adj, "T"))
-
-            if self.panellist_on_chair():
-                for adj in debate.adjudicators.panel:
-                    kwargs['ballots'].append(self.construct_info(
-                        debate.venue, adj, "P", chair, "C"))
-                for adj in debate.adjudicators.trainees:
-                    kwargs['ballots'].append(self.construct_info(
-                        debate.venue, adj, "T", chair, "C"))
+            if self.from_adj():
+                if self.get_tournament().pref('panellist_feedback_enabled'):
+                    for (adj1, pos1), (adj2, pos2) in itertools.permutations(debate.adjudicators.with_positions(), 2):
+                        kwargs['ballots'].append(self.construct_info(
+                            debate.venue, adj1, pos1, adj2, pos2))
+                else:
+                    chair_pos = 'c' if debate.adjudicators.is_panel else 'o'
+                    for adj, pos in debate.adjudicators.with_positions():
+                        if adj != chair:
+                            kwargs['ballots'].append(self.construct_info(
+                                debate.venue, chair, chair_pos, adj, pos))
 
         return super().get_context_data(**kwargs)
 
@@ -168,7 +157,7 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 'negSpeakers': [s.name for s in debate.neg_team.speakers],
                 'panel': []
             }
-            for position, adj in debate.adjudicators:
+            for adj, position in debate.adjudicators.with_positions():
                 debate_info['panel'].append({
                     'name': adj.name,
                     'institution': adj.institution.code,
@@ -184,7 +173,7 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 ballot_data.update(debate_info)  # Extend with debateInfo keys
                 kwargs['ballots'].append(ballot_data)
             else:
-                for adj in (a for a in debate_info['panel'] if a['position'] != "T"):
+                for adj in (a for a in debate_info['panel'] if a['position'] != "t"):
                     ballot_data = {
                         'author': adj['name'],
                         'authorInstitution': adj['institution'],

@@ -7,9 +7,10 @@
         Your panellists are
         <span v-for="(i, adj) in ballotsExcludingSelf">
           <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ adj.name }}</strong>
-          <span v-if="adj.position === 'C'">(Chair, {{ adj.institution }})</span>
-          <span v-if="adj.position === 'P'">(Panellist, {{ adj.institution }})</span>
-          <span v-if="adj.position === 'T'">(Trainee, {{ adj.institution }})</span>
+          <span v-if="adj.position === 'c'">(Chair, {{ adj.institution }})</span>
+          <span v-if="adj.position === 'o'">(Solo Chair, {{ adj.institution }})</span>
+          <span v-if="adj.position === 'p'">(Panellist, {{ adj.institution }})</span>
+          <span v-if="adj.position === 't'">(Trainee, {{ adj.institution }})</span>
         </span>
       </div>
     </div>

@@ -1,7 +1,7 @@
 <!-- Base Scoresheet Template -->
 <template>
 
-  <template v-if="ballot.position === 'Team'">
+  <template v-if="ballot.authorPosition === 'Team'">
     <section class="db-margins-m db-bordered db-flex-row db-flex-item-1">
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
         <div class="db-align-vertical-center db-padding-horizontal db-flex-static db-vertical-center-text">
@@ -21,20 +21,12 @@
     </section>
   </template>
 
-  <template v-if="ballot.authorPosition === 'C'">
-    <feedback-question v-for="question in data.questions | filterBy 'true' in 'chair_on_panellist' | orderBy 'seq'" :question="question" ></feedback-question>
-  </template>
-
-  <template v-if="(ballot.authorPosition === 'P' && ballot.targetPosition === 'C') || ballot.authorPosition === 'T'">
-    <feedback-question v-for="question in data.questions | filterBy 'true' in 'panellist_on_chair' | orderBy 'seq'" :question="question" ></feedback-question>
-  </template>
-
-  <template v-if="ballot.authorPosition === 'P' && ballot.targetPosition === 'P'">
-    <feedback-question v-for="question in data.questions | filterBy 'true' in 'panellist_on_panellist' | orderBy 'seq'" :question="question" ></feedback-question>
+  <template v-if="ballot.authorPosition !== 'Team'">
+    <feedback-question v-for="question in data.questions | filterBy 'true' in 'from_adj' | orderBy 'seq'" :question="question" ></feedback-question>
   </template>
 
   <template v-if="ballot.authorPosition === 'Team'">
-    <feedback-question v-for="question in data.questions | filterBy 'true' in 'team_on_orallist' | orderBy 'seq'" :question="question" ></feedback-question>
+    <feedback-question v-for="question in data.questions | filterBy 'true' in 'from_team' | orderBy 'seq'" :question="question" ></feedback-question>
   </template>
 
 </template>

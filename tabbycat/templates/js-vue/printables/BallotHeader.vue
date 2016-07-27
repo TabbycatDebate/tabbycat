@@ -5,14 +5,14 @@
     <div class="db-align-vertical-end db-flex-item-3">
       <h2>
         {{ data.tournamentName }} {{ data.kind }} from {{ ballot.author }}
-        <span v-if="soloChair">(Solo Chair)</span>
-        <span v-if="panelChair">(Chair of Panel)</span>
-        <span v-if="ballot.authorPosition === 'P'">(Panellist)</span>
-        <span v-if="ballot.authorPosition === 'T'">(Trainee)</span>
+        <span v-if="ballot.authorPosition === 'o'">(Solo Chair)</span>
+        <span v-if="ballot.authorPosition === 'c'">(Chair of Panel)</span>
+        <span v-if="ballot.authorPosition === 'p'">(Panellist)</span>
+        <span v-if="ballot.authorPosition === 't'">(Trainee)</span>
         <span v-if="ballot.target">on {{ ballot.target }}
-          <span v-if="ballot.targetPosition === 'C'">(Chair)</span>
-          <span v-if="ballot.targetPosition === 'P'">(Panellist)</span>
-          <span v-if="ballot.targetPosition === 'T'">(Trainee)</span>
+          <span v-if="ballot.targetPosition === 'c' || ballot.targetPosition === 'o'">(Chair)</span>
+          <span v-if="ballot.targetPosition === 'p'">(Panellist)</span>
+          <span v-if="ballot.targetPosition === 't'">(Trainee)</span>
         </span>
       </h2>
     </div>
@@ -27,29 +27,5 @@
 <script>
 export default {
   props: ['data', 'ballot'],
-  computed: {
-    soloChair: function() {
-      if (this.ballot.authorPosition === 'C') {
-        var voting_adjs = 0;
-        if (typeof this.ballot.panel === 'undefined') { return true }
-        this.ballot.panel.forEach(function(entry) {
-          if (entry.position !== "T") { voting_adjs++; };
-        }, this);
-        if (voting_adjs === 1) { return true }
-      }
-      return false
-    },
-    panelChair: function() {
-      if (this.ballot.authorPosition === 'C') {
-        var voting_adjs = 0;
-        if (typeof this.ballot.panel === 'undefined') { return false }
-        this.ballot.panel.forEach(function(entry) {
-          if (entry.position !== "T") { voting_adjs++; };
-        }, this);
-        if (voting_adjs > 1) { return true }
-      }
-      return false
-    }
-  }
 }
 </script>
