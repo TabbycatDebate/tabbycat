@@ -20,7 +20,7 @@ from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from tournaments.models import Round
-from utils.views import admin_required, public_optional_tournament_view, round_view, tournament_view
+from utils.views import public_optional_tournament_view, round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round
 from utils.mixins import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
@@ -399,7 +399,7 @@ def latest_results(request, t):
     return HttpResponse(json.dumps(results_objects), content_type="text/json")
 
 
-@admin_required
+@login_required
 @round_view
 def ballot_checkin(request, round):
     ballots_left = ballot_checkin_number_left(round)
@@ -436,7 +436,7 @@ def ballot_checkin_number_left(round):
     return count
 
 
-@admin_required
+@login_required
 @round_view
 def ballot_checkin_get_details(request, round):
     # Should be a JsonDataResponseView
@@ -463,7 +463,7 @@ def ballot_checkin_get_details(request, round):
     return HttpResponse(json.dumps(obj))
 
 
-@admin_required
+@login_required
 @round_view
 def post_ballot_checkin(request, round):
     # Should be a JsonDataResponseView
