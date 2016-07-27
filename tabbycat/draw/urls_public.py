@@ -8,7 +8,7 @@ urlpatterns = [
         name='draw-public-current-round'),
     url(r'^round/(?P<round_seq>\d+)/$',
         views.PublicDrawForRoundView.as_view(),
-        name='draw-public-draw-round'),
+        name='draw-public-for-round'),
     url(r'^all/$',
         views.PublicAllDrawsAllTournamentsView.as_view(),
         name='draw-public-all-draws'),
