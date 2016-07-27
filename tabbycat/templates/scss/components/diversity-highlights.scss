@@ -43,6 +43,12 @@
     @include button-variant(#fff, $other, darken($other, 10%));
     fill: $other;
   }
+  &.gender-unknown,
+  &.gender-u,
+  &.gender-U {
+    @include button-variant(#fff, $unknown, darken($unknown, 10%));
+    fill: $unknown;
+  }
   // For Teams
   &.gender-men-2 {
     @include button-variant(#fff, lighten($male, 5%), $male);
