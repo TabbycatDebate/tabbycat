@@ -1,19 +1,18 @@
 from django.shortcuts import render
-from django.conf import settings
 from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory
 from django.forms.widgets import CheckboxSelectMultiple
 from django.forms.models import ModelMultipleChoiceField
-from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 
+from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from divisions.models import Division
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
-from tournaments.models import Round
-from utils.mixins import SuperuserRequiredMixin
-from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view
+from utils.misc import redirect_round
+from utils.mixins import ModelFormSetView, SuperuserRequiredMixin
+from utils.views import admin_required, expect_post, round_view
 
 from .models import Motion
 
@@ -30,34 +29,33 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
         # and displays a "not released" message if motions are not released.
         kwargs['rounds'] = tournament.round_set.filter(
             Q(motions_released=True) | Q(seq__lte=tournament.current_round.seq)
-            ).order_by(order_by).prefetch_related('motion_set')
+        ).order_by(order_by).prefetch_related('motion_set')
         return super().get_context_data(**kwargs)
 
 
-@admin_required
-@round_view
-def motions_edit(request, round):
-    motion_form_set = modelformset_factory(
-        Motion, can_delete=True, extra=3, exclude=['round'])
+class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelFormSetView):
+    # Django doesn't have a class-based view for formsets, so this implements
+    # the form processing analogously to FormView, with less decomposition.
+    # See also: participants.views.PublicConfirmShiftView.
 
-    if request.method == 'POST':
-        formset = motion_form_set(request.POST, request.FILES)
-        if formset.is_valid():
-            motions = formset.save(commit=False)
-            for motion in motions:
-                motion.round = round
-                motion.save()
-                ActionLogEntry.objects.log(
-                    type=ActionLogEntry.ACTION_TYPE_MOTION_EDIT,
-                    user=request.user, motion=motion, tournament=round.tournament)
-            for motions in formset.deleted_objects:
-                motions.delete()
-            if 'submit' in request.POST:
-                return redirect_round('draw', round)
-    else:
-        formset = motion_form_set(queryset=Motion.objects.filter(round=round))
+    template_name = 'edit.html'
+    action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
+    formset_factory_kwargs = dict(can_delete=True, extra=3, exclude=['round'])
+    formset_model = Motion
 
-    return render(request, "edit.html", dict(formset=formset))
+    def get_formset_queryset(self):
+        return self.get_round().motion_set.all()
+
+    def formset_valid(self, formset):
+        motions = formset.save(commit=False)
+        round = self.get_round()
+        for motion in motions:
+            motion.round = round
+            motion.save()
+            self.log_action(motion=motion)
+        for motion in formset.deleted_objects:
+            motion.delete()
+        return redirect_round('draw', self.get_round())
 
 
 @admin_required

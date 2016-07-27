@@ -1,22 +1,20 @@
-import json
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.forms.models import modelformset_factory
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 
 from adjallocation.allocation import populate_allocations
 from adjallocation.models import DebateAdjudicator
-from adjfeedback.progress import FeedbackProgressForTeam, FeedbackProgressForAdjudicator
-from draw.prefetch import populate_teams, populate_opponents
+from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
+from draw.prefetch import populate_opponents, populate_teams
 from results.models import TeamScore
-from results.prefetch import populate_wins, populate_confirmed_ballots
+from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from tournaments.models import Round
+from utils.misc import reverse_tournament
 from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
-from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, Team
@@ -167,7 +165,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
                 debate__round__silent=False).select_related(
                 'debate', 'debate__round')
         debates = [da.debate for da in debateadjs]
-        populate_teams( debates)
+        populate_teams(debates)
         populate_wins(debates)
         populate_allocations(debates)
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)
@@ -183,6 +181,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
 
         table.add_debate_ballot_link_column(debates)
         return table
+
 
 class TeamRecordView(SuperuserRequiredMixin, BaseTeamRecordView):
     admin = True
@@ -228,28 +227,35 @@ class AllTournamentsAllTeamsView(PublicTournamentPageMixin, CacheMixin, Template
 # Shift scheduling
 # ==============================================================================
 
-class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, PublicTournamentPageMixin, TemplateView):
-    # Django doesn't have a class-based view for form sets, so this implements
+class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, PublicTournamentPageMixin, ModelFormSetView):
+    # Django doesn't have a class-based view for formsets, so this implements
     # the form processing analogously to FormView, with less decomposition.
+    # See also: motions.views.EditMotionsView.
 
     public_page_preference = 'allocation_confirmations'
     template_name = 'confirm_shifts.html'
+    formset_factory_kwargs = dict(can_delete=False, extra=0, fields=['timing_confirmed'])
     model = Adjudicator
+    formset_model = DebateAdjudicator
 
-    def get_formset(self):
-        ShiftFormSet = modelformset_factory(DebateAdjudicator, can_delete=False, # flake8: noqa
-                extra=0, fields=['timing_confirmed'])
+    def get_success_url(self):
+        return reverse_tournament('participants-public-confirm-shift',
+                self.get_tournament(), kwargs={'url_key': self.object.url_key})
 
-        if self.request.method in ('POST', 'PUT'):
-            return ShiftFormSet(data=self.request.POST, files=self.request.FILES)
-        elif self.request.method == 'GET':
-            debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.get_object())
-            return ShiftFormSet(queryset=debateadjs)
+    def get_formset_queryset(self):
+        return self.object.debateadjudicator_set.all()
 
     def get_context_data(self, **kwargs):
         kwargs['adjudicator'] = self.get_object()
-        kwargs['formset'] = self.get_formset()
         return super().get_context_data(**kwargs)
+
+    def formset_valid(self, formset):
+        messages.success(self.request, "Your shift check-ins have been saved")
+        return super().formset_valid(formset)
+
+    def formset_invalid(self, formset):
+        messages.error(self.request, "Whoops! There was a problem with the form.")
+        return super().formset_invalid(formset)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -257,11 +263,7 @@ class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, PublicTournamentP
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        formset = self.get_formset()
-        if formset.is_valid():
-            formset.save()
-            messages.success(request, "Your shift check-ins have been saved")
-        return super().get(request, *args, **kwargs) # then render form as usual (don't call super().post())
+        return super().post(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

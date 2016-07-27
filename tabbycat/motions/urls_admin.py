@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r'^edit/$',
-        views.motions_edit,
+        views.EditMotionsView.as_view(),
         name='motions_edit'),
     url(r'^assign/$',
         views.motions_assign,
