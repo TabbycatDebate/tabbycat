@@ -141,11 +141,12 @@ def set_team_division(request, t):
     team = Team.objects.get(pk=int(request.POST['team']))
     if request.POST['division'] == '':
         team.division = None
+        print("set division to none for", team.short_name)
     else:
         team.division = Division.objects.get(pk=int(request.POST['division']))
-        team.save()
         print("saved divison for ", team.short_name)
 
+    team.save()
     return HttpResponse("ok")
 
 

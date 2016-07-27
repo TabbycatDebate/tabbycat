@@ -455,14 +455,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
     def add_debate_venue_columns(self, debates, with_times=False):
-        if self.tournament.pref('enable_divisions') and debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
-            divisions_header = {
-                'key': 'Division',
-                'icon': 'glyphicon-th-list',
-                'tooltip': 'Division'
-            }
-            divisions_data = ['D' + d.division.name if d.division else '' for d in debates]
-            self.add_column(divisions_header, divisions_data)
+        if self.tournament.pref('enable_divisions') and len(debates) > 0:
+            if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
+                divisions_header = {
+                    'key': 'Division',
+                    'icon': 'glyphicon-th-list',
+                    'tooltip': 'Division'
+                }
+                divisions_data = ['D' + d.division.name if d.division else '' for d in debates]
+                self.add_column(divisions_header, divisions_data)
 
         venue_header = {
             'key': "Venue",

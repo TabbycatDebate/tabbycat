@@ -1,15 +1,35 @@
 <template>
 
-  <div class="panel-body vue-droppable division-droppable"
-    v-on:dragover.prevent
-    v-on:drop="drop"
-    v-on:dragenter="dragEnter"
-    v-on:dragleave="dragLeave"
-    v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
-    :data-id="division.id">
-    <template v-for="team in teams" track-by="id">
-      <team-draggable :team="team" :vg="division.venue_group" :save-division-at="saveDivisionAt"></team-draggable>
-    </template>
+  <div class="panel panel-default" v-bind:class="{ 'panel-danger': hasEvenNumbers }">
+
+    <div class="panel-heading division-heading">
+      <h5 class="panel-title">D{{ division.name }} ({{ teams.length }})</h5>
+      <select name="select" class="form-control" v-model="division.venue_group">
+        <option value=""></option>
+        <option v-for="vg in vgs" value="{{ vg.id }}" v-bind:value="vg.id">
+          {{ vg.short_name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="panel-body vue-droppable division-droppable"
+      v-on:dragover.prevent
+      v-on:drop="drop"
+      v-on:dragenter="dragEnter"
+      v-on:dragleave="dragLeave"
+      v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
+      :data-id="division.id">
+
+      <template v-for="team in teams" track-by="id">
+        <team-draggable
+          :team="team"
+          :vg="division.venue_group"
+          :save-division-at="saveDivisionAt">
+        </team-draggable>
+      </template>
+
+    </div>
+
   </div>
 
 </template>

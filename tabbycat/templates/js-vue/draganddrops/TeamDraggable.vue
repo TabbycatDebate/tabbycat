@@ -64,7 +64,7 @@ export default {
     },
     preference_allocated: function() {
       if (this.vg === null) {
-        return '';
+        return 'btn-default';
       } else if (typeof this.team.team_preferences !== 'undefined' && this.team.team_preferences.length > 0) {
         if (typeof this.team.team_preferences[0] !== 'undefined' && this.team.team_preferences[0].venue_group__id == this.vg) {
           return 'btn-success';

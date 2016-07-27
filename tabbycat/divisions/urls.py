@@ -16,10 +16,10 @@ urlpatterns = [
     url(r'^admin/divisions/set_venue_group/$',
         views.set_division_venue_group,
         name='set_division_venue_group'),
-    url(r'^admin/divisions/set_team/$',
+    url(r'^admin/divisions/set_team_division/$',
         views.set_team_division,
         name='set_team_division'),
-    url(r'^admin/divisions/set_time/$',
+    url(r'^admin/divisions/set_division_time/$',
         views.set_division_time,
         name='set_division_time'),
 

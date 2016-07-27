@@ -84,15 +84,16 @@ if (typeof printableBaseData !== 'undefined' && printableBaseData !== null) {
 //------------------------------------------------------------------------------
 
 import DivisionDroppable from  '../js-vue/draganddrops/DivisionDroppable.vue'
+import UnallocatedDivisionTeams from  '../js-vue/allocations/UnallocatedDivisionTeams.vue'
 import TeamDraggable from  '../js-vue/draganddrops/TeamDraggable.vue'
 
 if (typeof divisionsBaseData !== 'undefined' && divisionsBaseData !== null) {
   vueData = divisionsBaseData; // From Template
   vueMethods = divisionsMethods; // From Template
   vueEvents = divisionsEvents; // From Template
-  vueFilters = divisionsFilters; // From Template
   vueComponents['DivisionDroppable'] = DivisionDroppable;
   vueComponents['TeamDraggable'] = TeamDraggable;
+  vueComponents['UnallocatedDivisionTeams'] = UnallocatedDivisionTeams;
 }
 
 //------------------------------------------------------------------------------
