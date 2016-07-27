@@ -557,7 +557,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         sides_header = {
             'key':  side_key,
             'tooltip': 'Number of times the current ' + team_type +
-                       ' has been in the ' + side_label +' position before'
+                       ' has been in the ' + side_label + ' position before'
         }
         sides_data = [{
             'text': str(sides_counts[t.id]),
