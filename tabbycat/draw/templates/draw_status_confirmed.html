@@ -22,7 +22,7 @@
   {% if round.motion_set.all.count == 0 %}
   <div class="alert alert-danger">
     There are currently no motions entered, which means results cannot be entered.
-    <a href="{% round_url motions_edit round %}" class="alert-link">
+    <a href="{% round_url motions-edit round %}" class="alert-link">
       Edit the motions.
     </a>
   </div>
@@ -95,7 +95,7 @@
           Display by Team <span class="glyphicon glyphicon-share"></span>
         </span>
       </a>
-      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_display_motions round %}">
+      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url motions-display round %}">
         <span class="text-primary">
           Display Motions <span class="glyphicon glyphicon-share"></span>
         </span>
@@ -139,14 +139,14 @@
         {% endif %}
       </div>
       {% if round.motions_released %}
-        <form class="btn-group-input pull-right" id="unreleaseForm" method="POST" action="{% round_url unrelease_motions %}">
+        <form class="btn-group-input pull-right" id="unreleaseForm" method="POST" action="{% round_url motions-unrelease %}">
           {% csrf_token %}
           <button class="btn btn-sm btn-danger submit-disable" type="submit">
             Unrelease Motions
           </button>
         </form>
       {% else %}
-        <form class="btn-group-input pull-right" id="releaseForm" method="POST" action="{% round_url release_motions %}">
+        <form class="btn-group-input pull-right" id="releaseForm" method="POST" action="{% round_url motions-release %}">
           {% csrf_token %}
           <button class="btn btn-sm btn-primary submit-disable" type="submit">
             Release Motions

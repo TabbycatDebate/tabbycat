@@ -100,7 +100,7 @@
 {% endif %}
 {% if pref.public_motions and pref.motion_tab_released == False %}
   <li class="{% if motions_nav %}active{% endif %}">
-    <a href="{% tournament_url public_motions %}">Motions</a>
+    <a href="{% tournament_url motions-public %}">Motions</a>
   </li>
 {% endif %}
 {% if pref.public_side_allocations %}

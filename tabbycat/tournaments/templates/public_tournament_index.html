@@ -75,7 +75,7 @@
         {% endif %}
         {% if pref.public_motions %}
           <li class="list-group-item">
-            <a href="{% tournament_url public_motions %}">Motions</a>
+            <a href="{% tournament_url motions-public %}">Motions</a>
           </li>
         {% endif %}
         {% if pref.public_motions and pref.motion_tab_released == 0 and pref.draw_side_allocations == 'manual-ballot' %}
