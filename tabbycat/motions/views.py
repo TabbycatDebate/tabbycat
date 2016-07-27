@@ -12,7 +12,7 @@ from divisions.models import Division
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from utils.misc import redirect_round, reverse_round
 from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
-from utils.views import admin_required, expect_post, round_view
+from utils.views import admin_required, round_view
 
 from .models import Motion
 

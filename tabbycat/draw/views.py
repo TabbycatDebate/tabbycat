@@ -56,7 +56,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
             return '😴'
 
     def get_page_subtitle(self):
-        round =self.get_round()
+        round = self.get_round()
         if round.starts_at:
             return 'debates start at %s' % round.starts_at.strftime('%H:%M')
         else:
