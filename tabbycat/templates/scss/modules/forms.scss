@@ -28,6 +28,11 @@ input[type=number] {
   text-align: center;
 }
 
+input[type="radio"].form-control,
+input[type="checkbox"].form-control {
+  width: 20px; // Mostly for integer scale questions; need to align with labels
+}
+
 // Labels in list groups need to vertically center with inputs
 .list-group-item label {
   padding-top: 10px;

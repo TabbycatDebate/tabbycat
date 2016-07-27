@@ -23,8 +23,8 @@ logger = logging.getLogger(__name__)
 
 class IntegerRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
     """Used by IntegerRadioSelect."""
-    outer_html = '<table{id_attr} class="feedback-integer-scale-table"><tr>{content}</tr></table>'
-    inner_html = '<td>{choice_value}{sub_widgets}</td>'
+    outer_html = '<div{id_attr} class="flex-horizontal">{content}</div>'
+    inner_html = '<div class="flex-1 text-center">{choice_value}{sub_widgets}</div>'
 
 
 class IntegerRadioSelect(forms.RadioSelect):
