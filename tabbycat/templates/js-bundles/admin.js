@@ -96,15 +96,6 @@ if (typeof divisionsBaseData !== 'undefined' && divisionsBaseData !== null) {
 }
 
 //------------------------------------------------------------------------------
-// Adj Feedback Modal
-//------------------------------------------------------------------------------
-
-import FeedbackCards from  '../js-vue/FeedbackCards.vue'
-
-vueData['feedbacks'] = null; // Placeholder, to be set by the signal
-vueComponents['FeedbackCards'] = FeedbackCards;
-
-//------------------------------------------------------------------------------
 // Main Vue Instance
 //------------------------------------------------------------------------------
 

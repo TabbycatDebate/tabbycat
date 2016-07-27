@@ -151,11 +151,23 @@ class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
 class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     detailed = False
 
-    page_emoji = '👏'
-
     def get_page_title(self):
-        rd = self.get_round()
-        return 'Draw for %s' % rd.name
+        round = self.get_round()
+        self.page_emoji = '👀'
+        if self.detailed:
+            return 'Draw with Details for %s' % round.name
+        if round.draw_status == round.STATUS_NONE:
+            return 'No draw for %s' % round.name
+        elif round.draw_status == round.STATUS_DRAFT:
+            return 'Draft draw for %s' % round.name
+        elif round.draw_status == round.STATUS_CONFIRMED:
+            self.page_emoji = '👏'
+            return 'Confirmed Draw for %s' % round.name
+        elif round.draw_status == round.STATUS_RELEASED:
+            self.page_emoji = '👏'
+            return 'Released draw for %s' % round.name
+        else:
+            raise
 
     def get_table(self):
         r = self.get_round()
@@ -203,23 +215,17 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
     def get_template_names(self):
         round = self.get_round()
-        self.page_emoji = '👀'
         if self.detailed:
-            self.page_title = 'Draw with Details for %s' % round.name
             return ["draw_base.html"]
         if round.draw_status == round.STATUS_NONE:
-            self.page_title = 'No draw for %s' % round.name
             messages.warning(self.request, 'No draw exists yet — go to the ' +
                 'check-ins section for this round to generate a draw.')
             return ["base.html"]
         elif round.draw_status == round.STATUS_DRAFT:
-            self.page_title = 'Draft draw for %s' % round.name
             return ["draw_status_draft.html"]
         elif round.draw_status == round.STATUS_CONFIRMED:
-            self.page_title = 'Draw for %s' % round.name
             return ["draw_status_confirmed.html"]
         elif round.draw_status == round.STATUS_RELEASED:
-            self.page_title = 'Released draw for %s' % round.name
             return ["draw_status_confirmed.html"]
         else:
             raise
