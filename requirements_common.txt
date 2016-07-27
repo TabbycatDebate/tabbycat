@@ -8,13 +8,13 @@ django-debug-toolbar==1.5.0 # Debug Toolbar
 django-extensions==1.6.7 # For the generate secret command
 django-gulp==2.4.1 # Run gulp tasks with runserver/collectstatic
 django-ipware==1.1.5 # IP Address logging
-django-jet==0.1.4 # Admin Backend
+django-jet==0.1.5 # Admin Backend
 psycopg2==2.6.2 # For Django to talk to postgres
 six==1.10.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.2.0
 whitenoise==3.2.0 # Static file serving
 waitress==0.9.0 # For web serving
-flake8==2.6.2 # For testing/linting (not strictly required)
+flake8==3.0.1 # For testing/linting (not strictly required)
 pep8-naming==0.4.1 # Flake plugin for naming conventions
-flake8-import-order==0.8 # Flake plugin for import order
-flake8-quotes==0.7.0 # Flake plugin for quotes
+flake8-import-order==0.9 # Flake plugin for import order
+flake8-quotes==0.8.1 # Flake plugin for quotes
