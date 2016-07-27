@@ -3,8 +3,10 @@ import json
 from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Count
 
 import motions.statistics as motion_statistics
+from motions.models import Motion
 from participants.models import Speaker, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
