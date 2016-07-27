@@ -46,9 +46,10 @@ export default {
   },
   ready: function() {
     var self = this;
-    $('#table-search').keyup(function() {
-      self.filterKey = $(this).val();
-    });
+    var tableSearchBox = document.getElementById('table-search');
+    tableSearchBox.oninput = function() {
+      self.filterKey = tableSearchBox.value;
+    };
   }
 }
 
