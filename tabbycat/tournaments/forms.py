@@ -29,7 +29,7 @@ class TournamentForm(ModelForm):
         tournament = super(TournamentForm, self).save()
         auto_make_rounds(tournament, self.cleaned_data["num_prelim_rounds"])
 
-        if self.cleaned_data["break_size"]:
+        if self.cleaned_data["break_size"] > 0:
             num_break_rounds = math.ceil(math.log2(
                 self.cleaned_data["break_size"]))
 
@@ -41,7 +41,8 @@ class TournamentForm(ModelForm):
                 break_size=self.cleaned_data["break_size"],
                 is_general=True,
                 priority=100
-            ).save()
+            )
+            open_break.save()
         else:
             open_break = None
 
