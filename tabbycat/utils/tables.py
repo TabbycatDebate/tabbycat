@@ -546,29 +546,23 @@ class TabbycatTableBuilder(BaseTableBuilder):
             for cell in self.data[i]:
                 cell['class'] = cell.get('class', '') + ' highlight-row'
 
-    def add_affs_count(self, teams, round, team_type):
-        aff_counts = get_side_counts(teams, DebateTeam.POSITION_AFFIRMATIVE, round.seq)
-        affs_header = {
-            'key':  'aaffs' if team_type is 'aff' else 'naffs',
-            'tooltip': 'Number of times the current ' + team_type + ' has been in the affirmative position before'
+    def add_sides_count(self, teams, round, team_type):
+        sides_counts = get_side_counts(teams, DebateTeam.POSITION_AFFIRMATIVE, round.seq)
+        if team_type is 'aff':
+            side_label = "affirmative"
+            side_key = "aaffs"
+        else:
+            side_label = "negative"
+            side_key = "naffs"
+        sides_header = {
+            'key':  side_key,
+            'tooltip': 'Number of times the current ' + team_type +
+                       ' has been in the ' + side_label +' position before'
         }
-        affs_data = [{
-            'text': aff_counts[t.id],
+        sides_data = [{
+            'text': str(sides_counts[t.id]),
         } for t in teams]
-        self.add_column(affs_header, affs_data)
-
-    # def add_draw_metric_columns(self, teams, round, standings):
-    #     aff_standings = [standings.get_standing(t) for t in teams]
-
-    #     if round.is_break_round:
-    #         self.add_breakrank_columns(teams, round)
-    #     else:
-    #         if "points" in standings.metric_keys:
-    #             aff_is_pullup = abs(aff_standing.metrics["points"] - debate.bracket) >= 1
-
-    #         aff_subrank = aff_standing.rankings["subrank"]
-
-    #     # debate.metrics = [(a, n) for a, n in zip(aff_standing.itermetrics(), neg_standing.itermetrics())]
+        self.add_column(sides_header, sides_data)
 
     def add_checkbox_columns(self, states, references, key):
         state_header = {'key': key}

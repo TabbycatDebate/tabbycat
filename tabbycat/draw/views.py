@@ -199,13 +199,15 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
                     table.add_team_pullup_columns(draw, standings)
                 table.add_debate_ranking_columns(draw, standings)
             else:
-                table.add_column({'tooltip': "Aff Team's Break Rank", 'text': "ABR"},
-                    [d.aff_team.break_rank_for_category(r.break_category) for d in draw])
-                table.add_column({'tooltip': "Negative Team's Break Rank", 'text': "NBR"},
-                    [d.neg_team.break_rank_for_category(r.break_category) for d in draw])
+                table.add_column(
+                    {'tooltip': "Aff Team's Break Rank", 'text': "ABR"},
+                    ["%s" % d.aff_team.break_rank_for_category(r.break_category) for d in draw])
+                table.add_column(
+                    {'tooltip': "Negative Team's Break Rank", 'text': "NBR"},
+                    ["%s" % d.neg_team.break_rank_for_category(r.break_category) for d in draw])
             table.add_debate_metric_columns(draw, standings)
-            table.add_affs_count([d.aff_team for d in draw], r.prev, 'aff')
-            table.add_affs_count([d.neg_team for d in draw], r.prev, 'neg')
+            table.add_sides_count([d.aff_team for d in draw], r.prev, 'aff')
+            table.add_sides_count([d.neg_team for d in draw], r.prev, 'neg')
         else:
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
