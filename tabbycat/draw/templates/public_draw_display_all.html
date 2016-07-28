@@ -57,10 +57,8 @@
               </td>
               {% if pref.enable_division_motions %}
                 <td>
-                  {% for motion in debate.get_division_motions %}
-                    <span>{{ motion.reference }}</span>
-                    <small title="{{ motion.text }}" data-toggle="tooltip">(view)</small>
-                  {% endfor %}
+                  <span>{{ debate.get_division_motions.reference }}</span>
+                  <small title="{{ debate.get_division_motions.text }}" data-toggle="tooltip">(view)</small>
                 </td>
               {% endif %}
               {% if not pref.enable_divisions %}

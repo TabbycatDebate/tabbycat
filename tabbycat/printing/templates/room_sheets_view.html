@@ -28,11 +28,9 @@
             </h3>
           </div>
           <ul class="list-group h4 text-center">
-            {% for motion in debate.get_division_motions %}
-              <li class="list-group-item">
-                <em>{{ motion.text }}</em>
-              </li>
-            {% endfor %}
+            <li class="list-group-item">
+              <em>{{ debate.get_division_motions.text }}</em>
+            </li>
             <li class="list-group-item">
               {% if debate.confirmed_ballot.forfeit %}
                 <del>{{ debate.time|time:"H:i" }}</del>
