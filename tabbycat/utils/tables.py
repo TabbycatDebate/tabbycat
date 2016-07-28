@@ -388,7 +388,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } if motion else "—" for motion in motions]
         self.add_column(key, motion_data)
 
-    def add_team_columns(self, teams, break_categories=False, hide_institution=False, hide_emoji=False, key="Team"):
+    def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
+        show_divisions=True, hide_institution=False, key="Team"):
+
+        if self.tournament.pref('enable_divisions') and show_divisions:
+            divisions_header = {
+                'key': 'Division',
+                'icon': 'glyphicon-th-list',
+                'tooltip': 'Division'
+            }
+            divisions = ['D' + t.division.name if t.division else '' for t in teams]
+            self.add_column(divisions_header, divisions)
 
         team_data = [self._team_cell(team, hide_emoji=hide_emoji)
             for team in teams]
@@ -510,8 +520,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_ranking_columns(self, standings, subset=None, prefix=' '):
         standings_list = standings.get_standings(subset) if subset is not None else standings
         headers = [{
-            'key': prefix[0] + info['abbr'],
-            'tooltip': prefix + info['name'].title(),
+            'key': "%s" % (prefix[0] + info['abbr']).strip(),
+            'tooltip': "%s" % (prefix + info['name']).title().strip(),
             'glyphicon': info['glyphicon'],
         } for info in standings.rankings_info()]
         data = []

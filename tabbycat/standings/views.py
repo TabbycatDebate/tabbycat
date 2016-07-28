@@ -256,7 +256,8 @@ class BaseTeamStandingsView(StandingsView):
 
         table = TabbycatTableBuilder(view=self, sort_key="Rk")
         table.add_ranking_columns(standings)
-        table.add_team_columns([info.team for info in standings])
+        table.add_team_columns([info.team for info in standings],
+            show_divisions=self.get_tournament().pref('enable_divisions'))
 
         table.add_standings_results_columns(standings, rounds, self.show_ballots())
         table.add_metric_columns(standings)
