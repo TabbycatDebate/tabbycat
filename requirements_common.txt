@@ -17,4 +17,4 @@ waitress==0.9.0 # For web serving
 flake8==3.0.2 # For testing/linting (not strictly required)
 pep8-naming==0.4.1 # Flake plugin for naming conventions
 flake8-import-order==0.9 # Flake plugin for import order
-# flake8-quotes==0.8.1 # Flake plugin for quotes
+flake8-quotes==0.8.1 # Flake plugin for quotes
