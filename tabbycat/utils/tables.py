@@ -389,7 +389,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(key, motion_data)
 
     def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
-        show_divisions=True, hide_institution=False, key="Team"):
+                         show_divisions=True, hide_institution=False, key="Team"):
 
         if self.tournament.pref('enable_divisions') and show_divisions:
             divisions_header = {
