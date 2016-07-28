@@ -1,7 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import formats
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate, DebateTeam
+from participants.models import Team
 from participants.utils import get_side_counts
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from utils.misc import reverse_tournament
@@ -454,7 +456,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
-    def add_debate_venue_columns(self, debates, with_times=False):
+    def add_debate_venue_columns(self, debates, with_times=True):
         if self.tournament.pref('enable_divisions') and len(debates) > 0:
             if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
                 divisions_header = {
@@ -485,14 +487,16 @@ class TabbycatTableBuilder(BaseTableBuilder):
             times_headers = ["Date", "Time"]
             times_data = []
             for debate in debates:
-                if debate.aff_team.type == Debate.TYPE_BYE or debate.neg_team.type == Debate.TYPE_BYE:
+                if debate.aff_team.type == Team.TYPE_BYE or debate.neg_team.type == Team.TYPE_BYE:
                     times_data.append(["", "Bye"])
                 elif debate.result_status == Debate.STATUS_POSTPONED:
                     times_data.append(["", "Postponed"])
                 elif debate.confirmed_ballot.forfeit:
                     times_data.append(["", "Forfeit"])
                 else:
-                    times_data.append([debate.time.strftime("D jS F"), debate.time.strftime("h:i A")])
+                    times_data.append([
+                        formats.date_format(debate.time, "D jS F"),
+                        formats.date_format(debate.time, "h:i A")])
             self.add_columns(times_headers, times_data)
 
     def add_draw_conflicts(self, draw):
