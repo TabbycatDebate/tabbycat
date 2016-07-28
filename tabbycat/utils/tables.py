@@ -491,7 +491,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     times_data.append(["", "Bye"])
                 elif debate.result_status == Debate.STATUS_POSTPONED:
                     times_data.append(["", "Postponed"])
-                elif debate.confirmed_ballot.forfeit:
+                elif debate.confirmed_ballot and debate.confirmed_ballot.forfeit:
                     times_data.append(["", "Forfeit"])
                 else:
                     times_data.append([
