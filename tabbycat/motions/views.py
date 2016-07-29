@@ -18,18 +18,31 @@ from .models import Motion
 
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
-    public_page_preference = 'public_motions_order'
-    template_name = 'public_motions.html'
+    public_page_preference = 'public_motions'
+
+    def using_division_motions(self):
+        tournament = self.get_tournament()
+        return tournament.pref('enable_divisions') and tournament.pref('enable_division_motions')
+
+    def get_template_names(self):
+        if self.using_division_motions():
+            return ['public_division_motions.html']
+        else:
+            return ['public_motions.html']
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
         order_by = 'seq' if tournament.pref('public_motions_order') == 'forward' else '-seq'
+
         # Include rounds whether *either* motions are released *or* it's this
         # round or a previous round. The template checks motion_released again
         # and displays a "not released" message if motions are not released.
-        kwargs['rounds'] = tournament.round_set.filter(
-            Q(motions_released=True) | Q(seq__lte=tournament.current_round.seq)
-        ).order_by(order_by).prefetch_related('motion_set')
+        filter_q = Q(motions_released=True)
+        if not self.using_division_motions():
+            filter_q |= Q(seq__lte=tournament.current_round.seq)
+
+        kwargs['rounds'] = tournament.round_set.filter(filter_q).order_by(
+                order_by).prefetch_related('motion_set')
         return super().get_context_data(**kwargs)
 
 

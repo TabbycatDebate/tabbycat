@@ -5,86 +5,28 @@
 {% block head-title %}Motions{% endblock %}
 {% block page-title %}Motions{% endblock %}
 
-{% block page-alerts %}
-  {% if rounds.all.count == 0 %}
-    <div class="alert alert-info" role="alert">
-      No motions have been released yet.
-    </div>
-  {% endif %}
-{% endblock %}
-
 {% block content %}
 
-  {% if pref.enable_divisions and pref.enable_division_motions %}
-    {% if rounds.all.count > 0 %}
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>RSeq</th>
-                <th>Round</th>
-                <th>Reference</th>
-                <th>Venue(s)</th>
-                <th>Divisions</th>
-                <th>Text</th>
-                {% if pref.enable_flagged_motions %}
-                  <th>Contentious</th>
-                {% endif %}
-              </tr>
-            </thead>
-            <tbody>
-            {% for round in rounds %}
-              {% for motion in round.motion_set.all %}
-                <tr>
-                  <td>{{ motion.round.seq }}</td>
-                  <td>{{ motion.round.abbreviation }}</td>
-                  <td>{{ motion.reference }}</td>
-                  <td>
-                    {% regroup motion.divisions.all by venue_group as unique_venues %}
-                    {% for venue_group in unique_venues %}
-                      {{ venue_group.grouper.short_name }},
-                    {% endfor %}
-                  </td>
-                  <td>
-                  {% for division in motion.divisions.all %}
-                    <span data-toggle="tooltip" title="{% for team in division.teams.all %}{{ team.long_name }}<br> {% endfor %}">
-                      {{ division.name }},
-                    </span>
-                  {% endfor %}
-                  </td>
-                  <td>{{ motion.text }}</td>
-                  {% if pref.enable_flagged_motions %}
-                    <td>{% if motion.flagged %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-                  {% endif %}
-                </tr>
-              {% endfor %}
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
+  {# The context `rounds` contains all rounds before or at the current round, #}
+  {# so `rounds` is guaranteed to be non-empty. #}
+  {% for round in rounds %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">{{ round.name }}</h4>
       </div>
-    {% endif %}
-  {% else %}
-    {% for round in rounds %}
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">{{ round.name }}</h4>
-        </div>
-        <ul class="list-group">
-          {% if round.motions_released %}
-            {% for motion in round.motion_set.all %}
-              <li class="list-group-item">{{ motion.text }}</li>
-            {% empty %}
-              <li class="list-group-item"><em>There are no motions available for this round.</em></li>
-            {% endfor %}
-          {% else %}
-            <li class="list-group-item"><em>The motions for this round have not been released.</em></li>
-          {% endif %}
-        </ul>
-      </div>
-    {% endfor %}
-  {% endif %}
+      <ul class="list-group">
+        {% if round.motions_released %}
+          {% for motion in round.motion_set.all %}
+            <li class="list-group-item">{{ motion.text }}</li>
+          {% empty %}
+            <li class="list-group-item"><em>There are no motions available for this round.</em></li>
+          {% endfor %}
+        {% else %}
+          <li class="list-group-item"><em>The motions for this round have not been released.</em></li>
+        {% endif %}
+      </ul>
+    </div>
+  {% endfor %}
 
   </div>
 {% endblock content %}
