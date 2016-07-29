@@ -13,7 +13,7 @@ from django.views.generic.base import TemplateView
 from django.views.decorators.cache import cache_page
 
 from actionlog.models import ActionLogEntry
-from adjallocation.allocation import populate_allocations
+from adjallocation.prefetch import populate_allocations
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.prefetch import populate_opponents

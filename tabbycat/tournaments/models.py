@@ -281,7 +281,7 @@ class Round(models.Model):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
-        from adjallocation.allocation import populate_allocations
+        from adjallocation.prefetch import populate_allocations
         from draw.prefetch import populate_teams
         from results.prefetch import populate_confirmed_ballots, populate_wins
 
