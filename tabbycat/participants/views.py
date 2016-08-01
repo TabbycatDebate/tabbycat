@@ -96,17 +96,19 @@ class BaseTeamRecordView(BaseRecordView):
     template_name = 'team_record.html'
 
     def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+
         try:
             kwargs['debateteam'] = self.object.debateteam_set.get(
-                debate__round=self.get_tournament().current_round)
+                debate__round=tournament.current_round)
         except ObjectDoesNotExist:
             kwargs['debateteam'] = None
 
         kwargs['page_title'] = 'Record for ' + self.object.long_name
-        if self.get_tournament().pref('show_emoji'):
+        if tournament.pref('show_emoji'):
             kwargs['page_emoji'] = self.object.emoji
 
-        kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object)
+        kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object, tournament)
 
         return super().get_context_data(**kwargs)
 
@@ -144,15 +146,17 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     template_name = 'adjudicator_record.html'
 
     def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+
         try:
             kwargs['debateadjudicator'] = self.object.debateadjudicator_set.get(
-                debate__round=self.get_tournament().current_round)
+                debate__round=tournament.current_round)
         except ObjectDoesNotExist:
             kwargs['debateadjudicator'] = None
 
         kwargs['page_title'] = 'Record for ' + self.object.name
         kwargs['page_emoji'] = '⚖'
-        kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object)
+        kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, tournament)
 
         return super().get_context_data(**kwargs)
 
