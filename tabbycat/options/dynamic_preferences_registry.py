@@ -251,6 +251,11 @@ class FeedbackIntroduction(StringPreference):
     name = 'feedback_introduction'
     default = ''
 
+    def get_field_kwargs(self):
+        kwargs = super().get_field_kwargs()
+        kwargs['required'] = False
+        return kwargs
+
 
 @tournament_preferences_registry.register
 class MinimumAdjScore(FloatPreference):
