@@ -27,7 +27,8 @@ from utils.urlkeys import populate_url_keys
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
-from .utils import FeedbackTableBuilder, get_feedback_overview, get_feedback_progress, parse_feedback
+from .tables import FeedbackTableBuilder
+from .utils import get_feedback_overview, get_feedback_progress, parse_feedback
 
 logger = logging.getLogger(__name__)
 
