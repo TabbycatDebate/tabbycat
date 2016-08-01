@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import ProgrammingError
 from django.http import Http404, HttpResponse
 from django.template import Context, Template
 from django.shortcuts import get_object_or_404, render
@@ -162,6 +163,15 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         # If there's a query string, store the session setting
         if request.GET.get('view') in ['team', 'debate']:
             request.session['results_view'] = request.GET['view']
+
+            # Test saving it explicitly, if it doesn't work then prevent middlware
+            # from saving it. This can happen if write permissions to the database
+            # are revoked because the database has reached its row limit.
+            try:
+                request.session.save()
+            except ProgrammingError as e:
+                logger.error("Could not save session: " + str(e))
+                request.session.modified = False
 
         return super().get(request, *args, **kwargs)
 
