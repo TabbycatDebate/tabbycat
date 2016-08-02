@@ -1,3 +1,4 @@
+from participants.models import Adjudicator, Team
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
 
@@ -116,9 +117,19 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         }
         owed_data = [{
             'text': str(team_or_adj.owed_ballots),
+            'sort': team_or_adj.owed_ballots,
             'class': 'text-danger strong'
         } for team_or_adj in progress]
         self.add_column(owed_header, owed_data)
+
+        def _record_link(team_or_adj):
+            if isinstance(team_or_adj, Team):
+                url_name = 'participants-team-record' if self.admin else 'participants-public-team-record'
+            elif isinstance(team_or_adj, Adjudicator):
+                url_name = 'participants-adjudicator-record' if self.admin else 'participants-public-adjudicator-record'
+            else:
+                return ''
+            return reverse_tournament(url_name, self.tournament, kwargs={'pk': team_or_adj.pk})
 
         if self._show_record_links:
             owed_link_header = {
@@ -127,6 +138,6 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             }
             owed_link_data = [{
                 'text': 'View Missing Feedback',
-                'link': team_or_adj.missing_admin_link if self.admin else team_or_adj.missing_public_link
+                'link': _record_link(team_or_adj)
             } for team_or_adj in progress]
             self.add_column(owed_link_header, owed_link_data)

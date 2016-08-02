@@ -5,12 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
-from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
-from tournaments.models import Round
-from utils.misc import reverse_tournament
-
-# from .progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 
 logger = logging.getLogger(__name__)
 
@@ -153,84 +148,6 @@ def scoring_stats(adj, scores, debate_adjudications):
             adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
 
     return adj
-
-
-# def get_feedback_progress_new(t):
-#     """This turns out to be really, really inefficient. Continue using the
-#     original function until a better way can be found."""
-
-#     adjudicators = Adjudicator.objects.filter(tournament=t)
-#     teams = Team.objects.filter(tournament=t)
-
-#     for team in teams:
-#         progress = FeedbackProgressForTeam(team)
-#         team.submitted_ballots = progress.num_fulfilled()
-#         team.owed_ballots = progress.num_unsubmitted()
-#         team.coverage = progress.coverage()
-#         print(team)
-
-#     for adj in adjudicators:
-#         progress = FeedbackProgressForAdjudicator(adj)
-#         adj.submitted_ballots = progress.num_fulfilled()
-#         adj.owed_ballots = progress.num_unsubmitted()
-#         adj.coverage = progress.coverage()
-#         print(adj)
-
-#     return teams, adjudicators
-
-
-def get_feedback_progress(t):
-
-    feedback = AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
-        'source_adjudicator__adjudicator', 'source_team__team').all()
-    adjudicators = Adjudicator.objects.filter(tournament=t)
-    teams = Team.objects.filter(tournament=t)
-
-    # Feedback is only owed on completed prelim rounds
-    adjudications = list(
-        DebateAdjudicator.objects.select_related('adjudicator', 'debate').filter(
-            debate__round__seq__lt=t.current_round.seq,
-            debate__round__stage=Round.STAGE_PRELIMINARY,
-            debate__round__draw_status=Round.STATUS_RELEASED))
-    rounds_owed = t.round_set.filter(
-        silent=False, stage=Round.STAGE_PRELIMINARY,
-        seq__lt=t.current_round.seq,
-        draw_status=t.current_round.STATUS_RELEASED).count()
-
-    total_missing = 0
-    for adj in adjudicators:
-        adj.submitted_feedbacks = feedback.filter(source_adjudicator__adjudicator=adj)
-        adjs_adjudications = [a for a in adjudications if a.adjudicator == adj]
-
-        adj.total_ballots = 0
-        for item in adjs_adjudications:
-            # Finding out the composition of their panel, tallying owed ballots
-            if item.type == item.TYPE_CHAIR:
-                adj.total_ballots += len(item.debate.adjudicators.trainees)
-                adj.total_ballots += len(item.debate.adjudicators.panellists)
-
-            if item.type == item.TYPE_PANEL:
-                # Panelists owe on chairs
-                adj.total_ballots += 1
-
-        adj.submitted_ballots = max(adj.submitted_feedbacks.count(), 0)
-        adj.owed_ballots = max((adj.total_ballots - adj.submitted_ballots), 0)
-        adj.missing_admin_link = reverse_tournament(
-            'participants-adjudicator-record', t, kwargs={'pk': adj.pk})
-        adj.missing_public_link = reverse_tournament(
-            'participants-public-adjudicator-record', t, kwargs={'pk': adj.pk})
-        total_missing += adj.owed_ballots
-
-    for team in teams:
-        team.submitted_ballots = max(feedback.filter(source_team__team=team).count(), 0)
-        team.owed_ballots = max((rounds_owed - team.submitted_ballots), 0)
-        team.missing_admin_link = reverse_tournament(
-            'participants-team-record', t, kwargs={'pk': team.pk})
-        team.missing_public_link = reverse_tournament(
-            'participants-public-team-record', t, kwargs={'pk': team.pk})
-        total_missing += team.owed_ballots
-
-    return teams, adjudicators, total_missing
 
 
 def parse_feedback(feedback, questions):

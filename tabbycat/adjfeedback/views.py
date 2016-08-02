@@ -28,7 +28,8 @@ from utils.urlkeys import populate_url_keys
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
 from .tables import FeedbackTableBuilder
-from .utils import get_feedback_overview, get_feedback_progress, parse_feedback
+from .utils import get_feedback_overview, parse_feedback
+from .progress import get_feedback_progress
 
 logger = logging.getLogger(__name__)
 
@@ -504,14 +505,16 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
     page_emoji = '🆘'
 
     def get_feedback_progress(self):
-        return get_feedback_progress(self.get_tournament())
+        if not hasattr(self, "_feedback_progress_result"):
+            self._feedback_progress_result = get_feedback_progress(self.get_tournament())
+        return self._feedback_progress_result
 
     def get_page_subtitle(self):
-        teams_progress, adjs_progress, total_missing = self.get_feedback_progress()
+        _, _, total_missing = self.get_feedback_progress()
         return str(total_missing) + " missing feedbacks"
 
     def get_tables(self):
-        teams_progress, adjs_progress, total_missing = self.get_feedback_progress()
+        teams_progress, adjs_progress, _ = self.get_feedback_progress()
 
         adjs_table = FeedbackTableBuilder(view=self, title="From Adjudicators",
             sort_key="Owed", sort_order="desc")

@@ -7,7 +7,9 @@ There are a few possibilities for how to characterise a feedback submission:
 import logging
 from operator import attrgetter
 
+from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
+from draw.models import DebateTeam
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 
@@ -224,25 +226,39 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         self.enforce_orallist = tournament.pref("show_splitting_adjudicators")
         super().__init__(tournament)
 
+    @staticmethod
+    def _submitted_feedback_queryset_operations(queryset):
+        # this is also used by get_feedback_progress
+        return queryset.filter(confirmed=True,
+            source_team__debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
+            'adjudicator', 'adjudicator__institution', 'source_team__debate__round')
+
     def get_submitted_feedback(self):
-        return AdjudicatorFeedback.objects.filter(confirmed=True,
-                source_team__team=self.team,
-                source_team__debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
-                'adjudicator', 'adjudicator__institution', 'source_team__debate__round')
+        queryset = AdjudicatorFeedback.objects.filter(source_team__team=self.team)
+        return self._submitted_feedback_queryset_operations(queryset)
+
+    @staticmethod
+    def _debateteam_queryset_operations(queryset):
+        # this is also used by get_feedback_progress
+        debateteams = queryset.filter(
+            debate__ballotsubmission__confirmed=True,
+            debate__round__silent=False,
+            debate__round__stage=Round.STAGE_PRELIMINARY
+        ).select_related('debate', 'debate__round').prefetch_related(
+            'debate__debateadjudicator_set__adjudicator')
+        populate_confirmed_ballots([dt.debate for dt in debateteams], ballotsets=True)
+        return debateteams
+
+    def _get_debateteams(self):
+        if not hasattr(self, '_debateteams'):
+            self._debateteams = self._debateteam_queryset_operations(self.team.debateteam_set)
+        return self._debateteams
 
     def get_expected_trackers(self):
         # There is one tracker for each debate for which there is a confirmed ballot,
         # and the round is not silent.
 
-        debateteams = self.team.debateteam_set.filter(
-                debate__ballotsubmission__confirmed=True,
-                debate__round__silent=False,
-                debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
-                'debate', 'debate__round').prefetch_related(
-                'debate__debateadjudicator_set__adjudicator')
-        debates = [dt.debate for dt in debateteams]
-        populate_confirmed_ballots(debates, ballotsets=True)
-
+        debateteams = self._get_debateteams()
         trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist) for dt in debateteams]
         self._prefetch_tracker_acceptable_submissions(trackers,
                 attrgetter('source'), attrgetter('source_team'))
@@ -262,22 +278,37 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
             self.feedback_paths = tournament.pref('feedback_paths')
         super().__init__(tournament)
 
+    @staticmethod
+    def _submitted_feedback_queryset_operations(queryset):
+        # this is also used by get_feedback_progress
+        return queryset.filter(confirmed=True,
+            source_adjudicator__debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
+            'adjudicator', 'adjudicator__institution', 'source_adjudicator__debate__round')
+
     def get_submitted_feedback(self):
-        return AdjudicatorFeedback.objects.filter(confirmed=True,
-                source_adjudicator__adjudicator=self.adjudicator,
-                source_adjudicator__debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
-                'adjudicator', 'adjudicator__institution', 'source_adjudicator__debate__round')
+        queryset = AdjudicatorFeedback.objects.filter(source_adjudicator__adjudicator=self.adjudicator)
+        return self._submitted_feedback_queryset_operations(queryset)
+
+    @staticmethod
+    def _debateadjudicator_queryset_operations(queryset):
+        # this is also used by get_feedback_progress
+        return queryset.filter(
+            debate__ballotsubmission__confirmed=True,
+            debate__round__stage=Round.STAGE_PRELIMINARY
+        ).select_related('debate', 'debate__round').prefetch_related(
+            'debate__debateadjudicator_set__adjudicator')
+
+    def _get_debateadjudicators(self):
+        if not hasattr(self, '_debateadjudicators'):
+            self._debateadjudicators = self._debateadjudicator_queryset_operations(self.adjudicator.debateadjudicator_set)
+        return self._debateadjudicators
 
     def get_expected_trackers(self):
         """Trackers are as follows:
           - Chairs owe on everyone in their panel.
           - Panellists owe on chairs if the relevant tournament preference is enabled.
         """
-        debateadjs = self.adjudicator.debateadjudicator_set.filter(
-                debate__ballotsubmission__confirmed=True,
-                debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
-                'debate', 'debate__round').prefetch_related(
-                'debate__debateadjudicator_set__adjudicator')
+        debateadjs = self._get_debateadjudicators()
 
         trackers = []
         for debateadj in debateadjs:
@@ -288,3 +319,57 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
                 attrgetter('source', 'target'), attrgetter('source_adjudicator', 'adjudicator'))
 
         return trackers
+
+
+def get_feedback_progress(t):
+    total_missing = 0
+
+    teams = t.team_set.prefetch_related('speaker_set').all()
+
+    submitted_feedback_by_team_id = {team.id: [] for team in teams}
+    submitted_feedback_teams = AdjudicatorFeedback.objects.filter(
+            source_team__team__in=teams).select_related('source_team')
+    submitted_feedback_teams = FeedbackProgressForTeam._submitted_feedback_queryset_operations(submitted_feedback_teams)
+    for feedback in submitted_feedback_teams:
+        submitted_feedback_by_team_id[feedback.source_team.team_id].append(feedback)
+
+    debateteams_by_team_id = {team.id: [] for team in teams}
+    debateteams = DebateTeam.objects.filter(team__in=teams)
+    debateteams = FeedbackProgressForTeam._debateteam_queryset_operations(debateteams)
+    for debateteam in debateteams:
+        debateteams_by_team_id[debateteam.team_id].append(debateteam)
+
+    for team in teams:
+        progress = FeedbackProgressForTeam(team)
+        progress._submitted_feedback = submitted_feedback_by_team_id[team.id]
+        progress._debateteams = debateteams_by_team_id[team.id]
+        team.submitted_ballots = progress.num_fulfilled()
+        team.owed_ballots = progress.num_unsubmitted()
+        team.coverage = progress.coverage()
+        total_missing += team.owed_ballots
+
+    adjudicators = t.adjudicator_set.all()
+
+    submitted_feedback_by_adj_id = {adj.id: [] for adj in adjudicators}
+    submitted_feedback_adjs = AdjudicatorFeedback.objects.filter(
+            source_adjudicator__adjudicator__in=adjudicators).select_related('source_adjudicator')
+    submitted_feedback_adjs = FeedbackProgressForAdjudicator._submitted_feedback_queryset_operations(submitted_feedback_adjs)
+    for feedback in submitted_feedback_adjs:
+        submitted_feedback_by_adj_id[feedback.source_adjudicator.adjudicator_id].append(feedback)
+
+    debateadjs_by_adj_id = {adj.id: [] for adj in adjudicators}
+    debateadjs = DebateAdjudicator.objects.filter(adjudicator__in=adjudicators)
+    debateadjs = FeedbackProgressForAdjudicator._debateadjudicator_queryset_operations(debateadjs)
+    for debateadj in debateadjs:
+        debateadjs_by_adj_id[debateadj.adjudicator_id].append(debateadj)
+
+    for adj in adjudicators:
+        progress = FeedbackProgressForAdjudicator(adj)
+        progress._submitted_feedback = submitted_feedback_by_adj_id[adj.id]
+        progress._debateadjudicators = debateadjs_by_adj_id[adj.id]
+        adj.submitted_ballots = progress.num_fulfilled()
+        adj.owed_ballots = progress.num_unsubmitted()
+        adj.coverage = progress.coverage()
+        total_missing += adj.owed_ballots
+
+    return teams, adjudicators, total_missing
