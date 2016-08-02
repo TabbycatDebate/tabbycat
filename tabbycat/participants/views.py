@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
+from django.views.generic.detail import SingleObjectMixin
 
 from adjallocation.prefetch import populate_allocations
 from adjallocation.models import DebateAdjudicator
@@ -78,7 +79,7 @@ class ParticipantRecordsListView(SuperuserRequiredMixin, TournamentMixin, VueTab
         return [adjs_table, teams_table]
 
 
-class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
+class BaseRecordView(SingleObjectMixin, TournamentMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin
