@@ -5,6 +5,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 from django.utils.translation import ugettext as _
 
+from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
@@ -13,8 +14,16 @@ from tournaments.models import Round
 from utils.forms import OptionalChoiceField
 
 from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
+from .utils import expected_feedback_targets
 
 logger = logging.getLogger(__name__)
+
+ADJUDICATOR_POSITION_NAMES = {
+    'c': 'chair',
+    'o': 'solo',
+    'p': 'panellist',
+    't': 'trainee'
+}
 
 
 # ==============================================================================
@@ -104,7 +113,7 @@ class BaseFeedbackForm(forms.Form):
     question fields."""
 
     # parameters set at "compile time" by subclasses
-    tournament = None  # must be set by subclasses
+    _tournament = None  # must be set by subclasses
     _use_tournament_password = False
     _confirm_on_submit = False
     _enforce_required = True
@@ -113,6 +122,13 @@ class BaseFeedbackForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
         self._create_fields()
+
+    @staticmethod
+    def coerce_target(value):
+        debate_id, adj_id = value.split('-')
+        debate = Debate.objects.get(id=int(debate_id))
+        adjudicator = Adjudicator.objects.get(id=int(adj_id))
+        return debate, adjudicator
 
     def _make_question_field(self, question):
         if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
@@ -150,17 +166,17 @@ class BaseFeedbackForm(forms.Form):
     def _create_fields(self):
         """Creates dynamic fields in the form."""
         # Feedback questions defined for the tournament
-        adj_min_score = self.tournament.pref('adj_min_score')
-        adj_max_score = self.tournament.pref('adj_max_score')
+        adj_min_score = self._tournament.pref('adj_min_score')
+        adj_max_score = self._tournament.pref('adj_max_score')
         score_label = mark_safe("Overall score<br />(%s=lowest, %s=highest)" % (adj_min_score, adj_max_score))
         self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
 
-        for question in self.tournament.adj_feedback_questions.filter(**self.question_filter):
+        for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
             self.fields[question.reference] = self._make_question_field(question)
 
         # Tournament password field, if applicable
-        if self._use_tournament_password and self.tournament.pref('public_use_password'):
-            self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
+        if self._use_tournament_password and self._tournament.pref('public_use_password'):
+            self.fields['password'] = TournamentPasswordField(tournament=self._tournament)
 
     def save_adjudicatorfeedback(self, **kwargs):
         """Saves the question fields and returns the AdjudicatorFeedback.
@@ -176,7 +192,7 @@ class BaseFeedbackForm(forms.Form):
         af.score = self.cleaned_data['score']
         af.save()
 
-        for question in self.tournament.adj_feedback_questions.filter(**self.question_filter):
+        for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
             if self.cleaned_data[question.reference] is not None:
                 answer = question.answer_type_class(
                     feedback=af, question=question, answer=self.cleaned_data[question.reference])
@@ -190,7 +206,7 @@ class BaseFeedbackForm(forms.Form):
             fb.save()
 
 
-def make_feedback_form_class(source, *args, **kwargs):
+def make_feedback_form_class(source, tournament, *args, **kwargs):
     """Constructs a FeedbackForm class specific to the given source.
     'source' is the Adjudicator or Team who is giving feedback.
     'submission_fields' is a dict of fields that is passed directly as keyword
@@ -198,116 +214,103 @@ def make_feedback_form_class(source, *args, **kwargs):
     'confirm_on_submit' is a bool, and indicates that this feedback should be
         as confirmed and all others discarded."""
     if isinstance(source, Adjudicator):
-        return make_feedback_form_class_for_adj(source, *args, **kwargs)
+        return make_feedback_form_class_for_adj(source, tournament, *args, **kwargs)
     elif isinstance(source, Team):
-        return make_feedback_form_class_for_team(source, *args, **kwargs)
+        return make_feedback_form_class_for_team(source, tournament, *args, **kwargs)
     else:
         raise TypeError('source must be Adjudicator or Team: %r' % source)
 
 
-def make_feedback_form_class_for_adj(source, submission_fields, confirm_on_submit=False,
+def make_feedback_form_class_for_adj(source, tournament, submission_fields, confirm_on_submit=False,
                                      enforce_required=True, include_unreleased_draws=False):
     """Constructs a FeedbackForm class specific to the given source adjudicator.
     Parameters are as for make_feedback_form_class."""
 
-    def adj_choice(da):
-        return (da.id, '%s (%s, %s)' % (da.adjudicator.name,
-                da.debate.round.name, da.get_type_display()))
+    def adj_choice(adj, debate, pos):
+        value = '%d-%d' % (debate.id, adj.id)
+        display = '%s (%s, %s)' % (adj.name, debate.round.name, ADJUDICATOR_POSITION_NAMES[pos])
+        return (value, display)
 
-    def coerce_da(value):
-        return DebateAdjudicator.objects.get(id=int(value))
-
-    debate_filter = {'debateadjudicator__adjudicator': source}
-    if not source.tournament.pref('panellist_feedback_enabled'):
-        # Include only debates for which this adj was the chair
-        debate_filter['debateadjudicator__type'] = DebateAdjudicator.TYPE_CHAIR
-    else: # TODO for Australs 2016, generalize later
-        debate_filter['debateadjudicator__type__in'] = [DebateAdjudicator.TYPE_CHAIR, DebateAdjudicator.TYPE_PANEL]
+    debateadjs = DebateAdjudicator.objects.filter(
+        debate__round__tournament=tournament, adjudicator=source
+    ).order_by('-debate__round__seq').prefetch_related(
+        'debate__debateadjudicator_set__adjudicator'
+    )
 
     if include_unreleased_draws:
-        debate_filter['round__draw_status__in'] = [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]
+        debateadjs = debateadjs.filter(debate__round__draw_status__in=[Round.STATUS_CONFIRMED, Round.STATUS_RELEASED])
     else:
-        debate_filter['round__draw_status'] = Round.STATUS_RELEASED
-    debates = Debate.objects.filter(**debate_filter)
+        debateadjs = debateadjs.filter(debate__round__draw_status=Round.STATUS_RELEASED)
 
     choices = [(None, '-- Adjudicators --')]
-    # for an adjudicator, find every adjudicator on their panel except them
-    choices.extend(adj_choice(da) for da in DebateAdjudicator.objects.filter(
-        debate__in=debates).exclude(
-        adjudicator=source).select_related(
-        'debate').order_by(
-        '-debate__round__seq'))
+    for debateadj in debateadjs:
+        targets = expected_feedback_targets(debateadj, tournament.pref('feedback_paths'))
+        for target, pos in targets:
+            choices.append(adj_choice(target, debateadj.debate, pos))
 
     class FeedbackForm(BaseFeedbackForm):
-        tournament = source.tournament  # BaseFeedbackForm setting
+        _tournament = tournament  # BaseFeedbackForm setting
         _use_tournament_password = True  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
         question_filter = dict(from_adj=True)
 
-        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
+        target = RequiredTypedChoiceField(choices=choices, coerce=BaseFeedbackForm.coerce_target, label='Adjudicator this feedback is about')
 
         def save(self):
             """Saves the form and returns the AdjudicatorFeedback object."""
-            da = self.cleaned_data['debate_adjudicator']
-            sa = DebateAdjudicator.objects.get(adjudicator=source, debate=da.debate)
-            kwargs = dict(adjudicator=da.adjudicator, source_adjudicator=sa, source_team=None)
+            debate, target = self.cleaned_data['target']
+            sa = DebateAdjudicator.objects.get(adjudicator=source, debate=debate)
+            kwargs = dict(adjudicator=target, source_adjudicator=sa, source_team=None)
             kwargs.update(submission_fields)
             return self.save_adjudicatorfeedback(**kwargs)
 
     return FeedbackForm
 
 
-def make_feedback_form_class_for_team(source, submission_fields, confirm_on_submit=False,
+def make_feedback_form_class_for_team(source, tournament, submission_fields, confirm_on_submit=False,
                                       enforce_required=True, include_unreleased_draws=False):
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
 
+    def adj_choice(adj, debate, pos):
+        value = '%d-%d' % (debate.id, adj.id)
+        if pos == AdjudicatorAllocation.POSITION_CHAIR:
+            pos_text = '—chair gave oral'
+        elif pos == AdjudicatorAllocation.POSITION_PANELLIST:
+            pos_text = '—chair rolled, this panellist gave oral'
+        elif pos == AdjudicatorAllocation.POSITION_ONLY:
+            pos_text = ''
+        display = '{name} ({r}{pos})'.format(name=adj.name, r=debate.round.name, pos=pos_text)
+        return (value, display)
+
     # Only include non-silent rounds for teams.
-    debate_filter = {
-        'debateteam__team': source,
-        'round__silent': False,
-    }
+    debates = Debate.objects.filter(debateteam__team=source, round__silent=False).order_by(
+            '-round__seq').prefetch_related('debateadjudicator_set__adjudicator')
     if include_unreleased_draws:
-        debate_filter['round__draw_status__in'] = [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]
+        debates = debates.filter(round__draw_status__in=[Round.STATUS_CONFIRMED, Round.STATUS_RELEASED])
     else:
-        debate_filter['round__draw_status'] = Round.STATUS_RELEASED
-    debates = Debate.objects.filter(**debate_filter).order_by('-round__seq')
+        debates = debates.filter(round__draw_status=Round.STATUS_RELEASED)
 
     choices = [(None, '-- Adjudicators --')]
     for debate in debates:
-        try:
-            chair = DebateAdjudicator.objects.get(debate=debate, type=DebateAdjudicator.TYPE_CHAIR)
-        except DebateAdjudicator.DoesNotExist:
-            continue
-        panel = DebateAdjudicator.objects.filter(debate=debate, type=DebateAdjudicator.TYPE_PANEL)
-        if panel.exists():
-            choices.append((chair.id, '{name} ({r} - chair gave oral)'.format(
-                name=chair.adjudicator.name, r=debate.round.name)))
-            for da in panel:
-                choices.append((da.id, '{name} ({r} - chair rolled, this panellist gave oral)'.format(
-                    name=da.adjudicator.name, r=debate.round.name)))
-        else:
-            choices.append((chair.id, '{name} ({r})'.format(
-                name=chair.adjudicator.name, r=debate.round.name)))
-
-    def coerce_da(value):
-        return DebateAdjudicator.objects.get(id=int(value))
+        for adj, pos in debate.adjudicators.voting_with_positions():
+            choices.append(adj_choice(adj, debate, pos))
 
     class FeedbackForm(BaseFeedbackForm):
-        tournament = source.tournament  # BaseFeedbackForm setting
+        _tournament = tournament  # BaseFeedbackForm setting
         _use_tournament_password = True  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
         question_filter = dict(from_team=True)
 
-        debate_adjudicator = RequiredTypedChoiceField(choices=choices, coerce=coerce_da)
+        target = RequiredTypedChoiceField(choices=choices, coerce=BaseFeedbackForm.coerce_target)
 
         def save(self):
             # Saves the form and returns the m.AdjudicatorFeedback object
-            da = self.cleaned_data['debate_adjudicator']
-            st = DebateTeam.objects.get(team=source, debate=da.debate)
-            kwargs = dict(adjudicator=da.adjudicator, source_adjudicator=None, source_team=st)
+            debate, target = self.cleaned_data['target']
+            st = DebateTeam.objects.get(team=source, debate=debate)
+            kwargs = dict(adjudicator=target, source_adjudicator=None, source_team=st)
             kwargs.update(submission_fields)
             return self.save_adjudicatorfeedback(**kwargs)
 

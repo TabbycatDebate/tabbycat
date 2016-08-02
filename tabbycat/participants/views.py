@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import SingleObjectMixin
 
-from adjallocation.prefetch import populate_allocations
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents, populate_teams
@@ -97,17 +96,19 @@ class BaseTeamRecordView(BaseRecordView):
     template_name = 'team_record.html'
 
     def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+
         try:
             kwargs['debateteam'] = self.object.debateteam_set.get(
-                debate__round=self.get_tournament().current_round)
+                debate__round=tournament.current_round)
         except ObjectDoesNotExist:
             kwargs['debateteam'] = None
 
         kwargs['page_title'] = 'Record for ' + self.object.long_name
-        if self.get_tournament().pref('show_emoji'):
+        if tournament.pref('show_emoji'):
             kwargs['page_emoji'] = self.object.emoji
 
-        kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object)
+        kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object, tournament)
 
         return super().get_context_data(**kwargs)
 
@@ -119,10 +120,10 @@ class BaseTeamRecordView(BaseRecordView):
                 debate_team__debate__round__seq__lt=tournament.current_round.seq,
                 debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
                 debate_team__debate__round__silent=False).select_related(
-                'debate_team__debate', 'debate_team__debate__round')
+                'debate_team__debate', 'debate_team__debate__round').prefetch_related(
+                'debate_team__debate__debateadjudicator_set__adjudicator')
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])
-        populate_allocations(debates)
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)
 
         table = TabbycatTableBuilder(view=self, title="Results", sort_key="Round")
@@ -145,15 +146,17 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     template_name = 'adjudicator_record.html'
 
     def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+
         try:
             kwargs['debateadjudicator'] = self.object.debateadjudicator_set.get(
-                debate__round=self.get_tournament().current_round)
+                debate__round=tournament.current_round)
         except ObjectDoesNotExist:
             kwargs['debateadjudicator'] = None
 
         kwargs['page_title'] = 'Record for ' + self.object.name
         kwargs['page_emoji'] = '⚖'
-        kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object)
+        kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, tournament)
 
         return super().get_context_data(**kwargs)
 
@@ -164,11 +167,11 @@ class BaseAdjudicatorRecordView(BaseRecordView):
                 debate__round__seq__lt=tournament.current_round.seq,
                 debate__round__draw_status=Round.STATUS_RELEASED,
                 debate__round__silent=False).select_related(
-                'debate', 'debate__round')
+                'debate', 'debate__round').prefetch_related(
+                'debate__debateadjudicator_set', 'debate__debateadjudicator_set__adjudicator')
         debates = [da.debate for da in debateadjs]
         populate_teams(debates)
         populate_wins(debates)
-        populate_allocations(debates)
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)
 
         table = TabbycatTableBuilder(view=self, title="Previous Rounds", sort_key="Round")

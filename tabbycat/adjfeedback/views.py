@@ -27,7 +27,8 @@ from utils.urlkeys import populate_url_keys
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
-from .utils import FeedbackTableBuilder, get_feedback_overview, get_feedback_progress, parse_feedback
+from .tables import FeedbackTableBuilder
+from .utils import get_feedback_overview, get_feedback_progress, parse_feedback
 
 logger = logging.getLogger(__name__)
 
@@ -324,8 +325,8 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
     pk_url_kwarg = 'source_id'
 
     def get_form_class(self):
-        return make_feedback_form_class(
-            self.object, self.get_submitter_fields(), **self.feedback_form_class_kwargs)
+        return make_feedback_form_class(self.object, self.get_tournament(),
+                self.get_submitter_fields(), **self.feedback_form_class_kwargs)
 
     def get_action_log_fields(self, **kwargs):
         kwargs['adjudicator_feedback'] = self.adj_feedback

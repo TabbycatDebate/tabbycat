@@ -23,7 +23,22 @@ class AdjudicatorAllocation:
             self.chair = None
             self.panellists = []
             self.trainees = []
-            for a in self.debate.debateadjudicator_set.prefetch_related('adjudicator').all():
+
+            debateadjs = self.debate.debateadjudicator_set.all()
+
+            # The purpose of the line below is to avoid redundant database hits.
+            # It uses an internal (undocumented) flag of Django's QuerySet model
+            # to detect if there's already a prefetch on it, and avoids causing
+            # a clone of the query set (prefetch_related makes a clone), so that
+            # it will use the adjudicators that are already prefetched. An
+            # important assumption there is that if there's already a prefetch
+            # on this debateadjudicator_set, we assume it includes
+            # 'adjudicator'. If there isn't a prefetch done, we add a prefetch
+            # here to avoid duplicate adjudicator SQLqueries.
+            if not debateadjs._prefetch_done:
+                debateadjs = debateadjs.prefetch_related('adjudicator')
+
+            for a in debateadjs:
                 if a.type == DebateAdjudicator.TYPE_CHAIR:
                     self.chair = a.adjudicator
                 elif a.type == DebateAdjudicator.TYPE_PANEL:
@@ -88,6 +103,22 @@ class AdjudicatorAllocation:
     def num_voting(self):
         return (0 if self.chair is None else 1) + len(self.panellists)
 
+    def get_position(self, adj):
+        """Returns an AdjudicatorAllocation.POSITION_* constant corresponding
+        to the given adjudicator. Returns None if the adjudicator is not on
+        this panel."""
+        if adj == self.chair:
+            if self.is_panel:
+                return self.POSITION_CHAIR
+            else:
+                return self.POSITION_ONLY
+        elif adj in self.panellists:
+            return self.POSITION_PANELLIST
+        elif adj in self.trainees:
+            return self.POSITION_TRAINEE
+        else:
+            return None
+
     # ==========================================================================
     # Iterators
     # ==========================================================================
@@ -106,6 +137,14 @@ class AdjudicatorAllocation:
         for a in self.trainees:
             yield a
 
+    def voting_with_positions(self):
+        """Like with_positions(), but only iterates through voting members of
+        the panel."""
+        if self.chair is not None:
+            yield self.chair, self.POSITION_CHAIR if self.is_panel else self.POSITION_ONLY
+        for a in self.panellists:
+            yield a, self.POSITION_PANELLIST
+
     def with_positions(self):
         """Iterates through 2-tuples `(adj, type)`, where `type` is one of the
         `AdjudicatorAllocation.POSITION_*` constants (`CHAIR`, `ONLY`,
@@ -113,11 +152,8 @@ class AdjudicatorAllocation:
 
         Note that the `AdjudicatorAllocation.POSITION_*` constants are not
         necessarily the same as the `DebateAdjudicator.TYPE_*` constants."""
-
-        if self.chair is not None:
-            yield self.chair, self.POSITION_CHAIR if self.is_panel else self.POSITION_ONLY
-        for a in self.panellists:
-            yield a, self.POSITION_PANELLIST
+        for a, p in self.voting_with_positions():
+            yield a, p
         for a in self.trainees:
             yield a, self.POSITION_TRAINEE
 

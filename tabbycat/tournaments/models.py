@@ -156,7 +156,7 @@ def update_tournament_cache(sender, instance, created, **kwargs):
 signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
-    use_for_related_Fields = True
+    use_for_related_fields = True
     name_fields = ['name', 'abbreviation']
 
     def get_queryset(self):
@@ -281,7 +281,6 @@ class Round(models.Model):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
-        from adjallocation.prefetch import populate_allocations
         from draw.prefetch import populate_teams
         from results.prefetch import populate_confirmed_ballots, populate_wins
 
@@ -290,6 +289,8 @@ class Round(models.Model):
             debates = debates.filter(**filter_kwargs)
         if ballotsubs or ballotsets:
             debates = debates.prefetch_related('ballotsubmission_set', 'ballotsubmission_set__submitter')
+        if adjudicators:
+            debates = debates.prefetch_related('debateadjudicator_set__adjudicator')
         if ordering:
             debates = debates.order_by(*ordering)
         if self.tournament.pref('enable_divisions') and divisions:
@@ -300,8 +301,6 @@ class Round(models.Model):
         # These functions populate relevant attributes of each debate, operating in-place
         if teams or speakers or wins:
             populate_teams(debates, speakers=speakers)  # _aff_team, _aff_dt, _neg_team, _neg_dt
-        if adjudicators:
-            populate_allocations(debates)  # _adjudicators
         if ballotsubs or ballotsets:
             populate_confirmed_ballots(debates, motions=True, ballotsets=ballotsets)
         if wins:

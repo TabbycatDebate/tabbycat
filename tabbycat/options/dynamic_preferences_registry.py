@@ -304,10 +304,33 @@ class FeedbackReturnLocation(StringPreference):
 
 @tournament_preferences_registry.register
 class PanellistFeedbackEnabled(BooleanPreference):
-    help_text = "Allow feedback to be submitted by panellists"
-    verbose_name = "Panellist feedback enabled"
+    help_text = "Allow and expect feedback to be submitted by panellists"
+    verbose_name = "Expect panellist feedback"
     section = feedback
     name = 'panellist_feedback_enabled'
+    default = True
+
+
+@tournament_preferences_registry.register
+class FeedbackPaths(ChoicePreference):
+    help_text = "Used to inform available choices in the feedback forms (both online and printed) and feedback progress"
+    verbose_name = "Allow and expect feedback to be submitted by"
+    section = feedback
+    name = 'feedback_paths'
+    choices = (
+        ('minimal', 'Chairs on panellists and trainees, teams on orallists'),
+        ('with-p-on-c', 'Panellists on chairs, chairs on panellists and trainees, teams on orallists'),
+        ('all-adjs', 'All adjudicators (including trainees) on each other, teams on orallists'),
+    )
+    default = 'minimal'
+
+
+@tournament_preferences_registry.register
+class ShowUnexpectedFeedback(BooleanPreference):
+    verbose_name = "Show unexpected feedback submissions in participants pages"
+    help_text = "Displays unexpected feedback with a question mark symbol; only relevant if public participants and feedback progress are both enabled"
+    section = feedback
+    name = 'show_unexpected_feedback'
     default = True
 
 

@@ -1,9 +1,9 @@
-import itertools
 import json
 
 from django.views.generic.base import TemplateView
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
+from adjfeedback.utils import expected_feedback_targets
 from draw.models import Debate
 from motions.models import Motion
 from participants.models import Adjudicator
@@ -107,8 +107,9 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['questions'] = self.questions_json_dict()
         kwargs['ballots'] = []
 
+        feedback_paths_option = self.get_tournament().pref('feedback_paths')
         draw = self.get_round().debate_set_with_prefetches(ordering=(
-            'venue__group__name', 'venue__name',))
+            'venue__group__name', 'venue__name'))
 
         for debate in draw:
             chair = debate.adjudicators.chair
@@ -121,16 +122,15 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                         debate.venue, team, "Team", chair, ""))
 
             if self.from_adj():
-                if self.get_tournament().pref('panellist_feedback_enabled'):
-                    for (adj1, pos1), (adj2, pos2) in itertools.permutations(debate.adjudicators.with_positions(), 2):
+                debateadjs = debate.debateadjudicator_set.all()
+                for debateadj in debateadjs:
+                    sadj = debateadj.adjudicator
+                    spos = debate.adjudicators.get_position(sadj)
+                    targets = expected_feedback_targets(debateadj, feedback_paths=feedback_paths_option,
+                            debate=debate)
+                    for tadj, tpos in targets:
                         kwargs['ballots'].append(self.construct_info(
-                            debate.venue, adj1, pos1, adj2, pos2))
-                else:
-                    chair_pos = 'c' if debate.adjudicators.is_panel else 'o'
-                    for adj, pos in debate.adjudicators.with_positions():
-                        if adj != chair:
-                            kwargs['ballots'].append(self.construct_info(
-                                debate.venue, chair, chair_pos, adj, pos))
+                            debate.venue, sadj, spos, tadj, tpos))
 
         return super().get_context_data(**kwargs)
 

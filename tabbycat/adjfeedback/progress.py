@@ -4,13 +4,16 @@ by participants of the tournament.
 There are a few possibilities for how to characterise a feedback submission:
 """
 
+import logging
 from operator import attrgetter
 
-from adjallocation.prefetch import populate_allocations
-from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
+
+from .utils import expected_feedback_targets
+
+logger = logging.getLogger(__name__)
 
 
 class BaseFeedbackExpectedSubmissionTracker:
@@ -55,22 +58,25 @@ class BaseFeedbackExpectedSubmissionTracker:
 class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTracker):
     """Represents a single piece of expected feedback from a team."""
 
+    def __init__(self, source, enforce_orallist=True):
+        self.enforce_orallist = enforce_orallist
+        super().__init__(source)
+
     def acceptable_targets(self):
         """For a team, this must be the adjudicator who delivered the oral
         adjudication. If the chair was rolled, then it is one of the majority
         adjudicators; if the chair was in the majority, then it must be the
         chair."""
 
-        # Just list all adjudicators
-        return list(self.source.debate.adjudicators.voting())
-
-        # majority = self.source.debate.confirmed_ballot.ballot_set.majority_adj
-        # chair = self.source.debate.adjudicators.chair
-
-        # if chair in majority:
-        #     return [chair]
-        # else:
-        #     return majority
+        if self.enforce_orallist:
+            majority = self.source.debate.confirmed_ballot.ballot_set.majority_adj
+            chair = self.source.debate.adjudicators.chair
+            if chair in majority:
+                return [chair]
+            else:
+                return majority
+        else:
+            return list(self.source.debate.adjudicators.voting())
 
     def get_acceptable_submissions(self):
         return self.source.adjudicatorfeedback_set.filter(confirmed=True,
@@ -124,6 +130,9 @@ class BaseFeedbackProgress:
     ensures that feedbacks that were actually submitted match those that were
     expected."""
 
+    def __init__(self, tournament):
+        self.show_unexpected = tournament.pref('show_unexpected_feedback')
+
     def get_expected_trackers(self):
         raise NotImplementedError
 
@@ -149,8 +158,11 @@ class BaseFeedbackProgress:
     def unexpected_trackers(self):
         """Returns a list of trackers for feedback that was submitted but not
         expected to be there."""
-        return [FeedbackUnexpectedSubmissionTracker(feedback) for feedback in
-            self.submitted_feedback() if feedback not in self.expected_feedback()]
+        if self.show_unexpected:
+            return [FeedbackUnexpectedSubmissionTracker(feedback) for feedback in
+                self.submitted_feedback() if feedback not in self.expected_feedback()]
+        else:
+            return []
 
     def fulfilled_trackers(self):
         """Returns a list of trackers that are fulfilled."""
@@ -158,8 +170,7 @@ class BaseFeedbackProgress:
 
     def trackers(self):
         """Returns a list of all trackers, sorted by round."""
-        # return sorted(self.expected_trackers() + self.unexpected_trackers(),
-        return sorted(self.expected_trackers(), # don't include unexpected trackers
+        return sorted(self.expected_trackers() + self.unexpected_trackers(),
                 key=lambda x: x.round.seq)
 
     def num_submitted(self):
@@ -206,8 +217,12 @@ class BaseFeedbackProgress:
 class FeedbackProgressForTeam(BaseFeedbackProgress):
     """Class to compute feedback submitted or owed by a team."""
 
-    def __init__(self, team):
+    def __init__(self, team, tournament=None):
         self.team = team
+        if tournament is None:
+            tournament = team.tournament
+        self.enforce_orallist = tournament.pref("show_splitting_adjudicators")
+        super().__init__(tournament)
 
     def get_submitted_feedback(self):
         return AdjudicatorFeedback.objects.filter(confirmed=True,
@@ -223,12 +238,12 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
                 debate__ballotsubmission__confirmed=True,
                 debate__round__silent=False,
                 debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
-                'debate', 'debate__round')
+                'debate', 'debate__round').prefetch_related(
+                'debate__debateadjudicator_set__adjudicator')
         debates = [dt.debate for dt in debateteams]
-        populate_allocations(debates)
         populate_confirmed_ballots(debates, ballotsets=True)
 
-        trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt) for dt in debateteams]
+        trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist) for dt in debateteams]
         self._prefetch_tracker_acceptable_submissions(trackers,
                 attrgetter('source'), attrgetter('source_team'))
         return trackers
@@ -237,8 +252,15 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
 class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
     """Class to compute feedback submitted or owed by an adjudicator."""
 
-    def __init__(self, adjudicator):
+    def __init__(self, adjudicator, tournament=None):
         self.adjudicator = adjudicator
+        if tournament is None:
+            tournament = adjudicator.tournament
+        if tournament is None:
+            logger.warning("No tournament specified and adjudicator {} has no tournament".format(adjudicator))
+        else:
+            self.feedback_paths = tournament.pref('feedback_paths')
+        super().__init__(tournament)
 
     def get_submitted_feedback(self):
         return AdjudicatorFeedback.objects.filter(confirmed=True,
@@ -254,31 +276,13 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         debateadjs = self.adjudicator.debateadjudicator_set.filter(
                 debate__ballotsubmission__confirmed=True,
                 debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
-                'debate', 'debate__round')
-
-        if len(debateadjs) == 0:
-            return []
-
-        # TODO re-incorporate this in
-        # panellist_feedback_enabled = debateadjs[0].debate.round.tournament.pref('panellist_feedback_enabled')
-        populate_allocations([da.debate for da in debateadjs])
+                'debate', 'debate__round').prefetch_related(
+                'debate__debateadjudicator_set__adjudicator')
 
         trackers = []
         for debateadj in debateadjs:
-            # TODO this is hard-coded for Australs 2016, need to make general
-            adjudicators = debateadj.debate.adjudicators
-            if debateadj.type == DebateAdjudicator.TYPE_CHAIR:
-                for target in adjudicators.all(): # including trainees
-                    if target == self.adjudicator:
-                        continue
-                    trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
-            elif debateadj.type == DebateAdjudicator.TYPE_PANEL:
-                for target in adjudicators.voting(): # excluding trainees
-                    if target == self.adjudicator:
-                        continue
-                    trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
-            # elif debateadj.type == DebateAdjudicator.TYPE_TRAINEE:
-            #     trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, adjudicators.chair))
+            for target, _ in expected_feedback_targets(debateadj, self.feedback_paths):
+                trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
 
         self._prefetch_tracker_acceptable_submissions(trackers,
                 attrgetter('source', 'target'), attrgetter('source_adjudicator', 'adjudicator'))

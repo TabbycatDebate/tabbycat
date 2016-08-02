@@ -14,7 +14,6 @@ from django.views.generic.base import TemplateView
 from django.views.decorators.cache import cache_page
 
 from actionlog.models import ActionLogEntry
-from adjallocation.prefetch import populate_allocations
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.prefetch import populate_opponents
@@ -128,15 +127,14 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         tournament = self.get_tournament()
         teamscores = TeamScore.objects.filter(debate_team__debate__round=round,
                 ballot_submission__confirmed=True).prefetch_related(
-                'debate_team', 'debate_team__team', 'debate_team__team__speaker_set',
-                'debate_team__team__institution')
+                'debate_team__team__speaker_set', 'debate_team__team__institution',
+                'debate_team__debate__debateadjudicator_set__adjudicator')
         debates = [ts.debate_team.debate for ts in teamscores]
 
         populate_opponents([ts.debate_team for ts in teamscores])
 
         for pos in [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]:
             debates_for_pos = [ts.debate_team.debate for ts in teamscores if ts.debate_team.position == pos]
-            populate_allocations(debates_for_pos)
             populate_confirmed_ballots(debates_for_pos, motions=True)
 
         table = TabbycatTableBuilder(view=self, sort_key="Team")
