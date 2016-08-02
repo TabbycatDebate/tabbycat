@@ -7,7 +7,7 @@ Creating Break Categories
 
 Each tournament may have a single or multiple break categories that group a particular series of out-rounds such as an "Open" or "ESL" break.
 
-At the moment new break rounds must be added through the **Edit Database** interface (available in the **Setup** section once in a tournament). Once there go to **Break Qualification** > **break categories** and click **Add break category**. The fields required for each category should be relatively self-explanatory.
+If you set the 'Number of teams in the open break' field when creating a tournament using the 'Create New Tournament' section of the website, an Open break category and the required number of break rounds will be generated automatically. If you create the tournament in the **Edit Database**, or via an importer you may need to manually add Break Categories and assign them to the relevant break rounds. At the moment new break rounds must be added through the **Edit Database** interface (available in the **Setup** section once in a tournament). Once there go to **Break Qualification** > **break categories** and click **Add break category**. The fields required for each category should be relatively self-explanatory.
 
 Setting Break Eligibility
 =========================
@@ -30,4 +30,6 @@ From this page you can update the breaking teams list for this break category (o
 Creating Draws for Break Rounds
 ===============================
 
-TODO
+Creating a draw for a break round proceeds as normal, except that the team checkin process is skipped. Instead, when you visit the checkins page for that round it will have automatically determined which teams should be debating based upon the determined break for that category. Once a draw has been generated it will then use the relevant break ranks to create the matchups (ie 1st-breaking vs 16th-breaking, 2nd vs 15th, etc). Subsequent break rounds will then also automatically determine matchups based on the previous round's results and the initial break ranks of each team.
+
+If the 'break size' of a particular break category is not a power of 2, it will treat the first break round as a partial-elimination draw and only create a draw for the teams not skipping the partial-elimination round. Subsequent break rounds will then process as described above.

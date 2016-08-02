@@ -2,16 +2,12 @@
 Contributing
 ============
 
-.. important:: We are using the `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_, so please submit any pull requests against the **develop branch** (and not master).
-
-Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. `Join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_.
+Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. `Join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ if you have any questions about how to get started contributing.
 
 Bug reports
 ===========
 
-Please report bugs by opening a new issue in our `GitHub repository <https://github.com/czlee/tabbycat/issues>`_.
-
-It is most helpful if you can include:
+Please report bugs by opening a new issue in our `GitHub repository <https://github.com/czlee/tabbycat/issues>`_. It is most helpful if you can include:
 
 - How Tabbycat was installed (on Heroku, locally on OS X, `etc.`)
 - Any details about your tournament and setup that might be helpful in troubleshooting
@@ -20,10 +16,11 @@ It is most helpful if you can include:
 Getting started
 ===============
 
-- Insert general setup instructions
-- Insert instructions on how to make a feature/bug branch
-- Maybe insert instructions on how to run tests
-- Insert pull request checklist/guidelines
+.. important:: We are using the `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_, so please submit any pull requests against the **develop branch** (and not master).
+
+- Generally we prefer that features and bug fixes are submitted as pull requests on their own branch (as described in the git-flow process)
+- We use Django's testing tools — it would be great if new features came with unit tests
+- TODO: more detail on tests and pull request checklist/guidelines
 
 Style guide
 ===========
@@ -57,14 +54,11 @@ Documentation
 
 Documentation is created using `Sphinx <http://sphinx-doc.org/>`_ and hosted at `Read The Docs <https://readthedocs.org>`_. Pushes to ``develop`` will update the *latest* documentation set, while pushes to ``master`` will update the *stable* documentation set.
 
-Previewing Locally
-------------------
-
-Install the docs-specific requirements (from the base folder)::
+To preview the documentation locally, install the docs-specific requirements (from the base folder)::
 
     $ pip install -r 'docs/requirements.txt'
 
-Start the server::
+Then start the server::
 
     $ sphinx-autobuild docs docs/_build/html --port 7999
 
