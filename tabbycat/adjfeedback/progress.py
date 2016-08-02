@@ -172,8 +172,7 @@ class BaseFeedbackProgress:
 
     def trackers(self):
         """Returns a list of all trackers, sorted by round."""
-        # return sorted(self.expected_trackers() + self.unexpected_trackers(),
-        return sorted(self.expected_trackers(), # don't include unexpected trackers
+        return sorted(self.expected_trackers() + self.unexpected_trackers(),
                 key=lambda x: x.round.seq)
 
     def num_submitted(self):
@@ -285,7 +284,7 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
 
         trackers = []
         for debateadj in debateadjs:
-            for target in expected_feedback_targets(debateadj, self.feedback_paths):
+            for target, _ in expected_feedback_targets(debateadj, self.feedback_paths):
                 trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
 
         self._prefetch_tracker_acceptable_submissions(trackers,

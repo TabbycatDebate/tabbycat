@@ -106,6 +106,14 @@ class AdjudicatorAllocation:
         for a in self.trainees:
             yield a
 
+    def voting_with_positions(self):
+        """Like with_positions(), but only iterates through voting members of
+        the panel."""
+        if self.chair is not None:
+            yield self.chair, self.POSITION_CHAIR if self.is_panel else self.POSITION_ONLY
+        for a in self.panellists:
+            yield a, self.POSITION_PANELLIST
+
     def with_positions(self):
         """Iterates through 2-tuples `(adj, type)`, where `type` is one of the
         `AdjudicatorAllocation.POSITION_*` constants (`CHAIR`, `ONLY`,
@@ -113,11 +121,8 @@ class AdjudicatorAllocation:
 
         Note that the `AdjudicatorAllocation.POSITION_*` constants are not
         necessarily the same as the `DebateAdjudicator.TYPE_*` constants."""
-
-        if self.chair is not None:
-            yield self.chair, self.POSITION_CHAIR if self.is_panel else self.POSITION_ONLY
-        for a in self.panellists:
-            yield a, self.POSITION_PANELLIST
+        for a, p in self.voting_with_positions():
+            yield a, p
         for a in self.trainees:
             yield a, self.POSITION_TRAINEE
 

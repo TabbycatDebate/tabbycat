@@ -1,3 +1,5 @@
+from warnings import warn
+
 from .allocation import AdjudicatorAllocation
 from .models import DebateAdjudicator
 
@@ -8,6 +10,9 @@ def populate_allocations(debates):
     efficiency, since it retrieves all of the information in bulk in a single
     SQL query. Operates in-place.
     """
+
+    if len(set(debates)) != len(debates):
+        warn("debates passed to populate_allocations are not unique", stacklevel=2)
 
     debates_by_id = {debate.id: debate for debate in debates}
     for debate in debates:

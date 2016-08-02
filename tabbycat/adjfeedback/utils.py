@@ -2,6 +2,7 @@ import logging
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
@@ -15,20 +16,22 @@ logger = logging.getLogger(__name__)
 
 
 def expected_feedback_targets(debateadj, feedback_paths=None):
-    """Returns a list of adjudicators, each being someone that the given
-    DebateAdjudicator object is expected to give feedback on. If the debate
-    adjudicator's position and the tournament preferences dictate that the
-    source adjudicator should not submit feedback on anyone for this debate,
-    then it returns an empty list.
+    """Returns a list of adjudicators and positions (adj, pos), each being
+    someone that the given DebateAdjudicator object is expected to give feedback
+    on. If the debate adjudicator's position and the tournament preferences
+    dictate that the source adjudicator should not submit feedback on anyone for
+    this debate, then it returns an empty list.
+
+    Each element of the returned list is a 2-tuple `(adj, pos)`, where `adj` is
+    an Adjudicator instance and `pos` is an AdjudicatorAllocation.POSITION_*
+    constant. DebateAdjudicator instances are not returned by this function; in
+    fact, the use of DebateAdjudicator instances for feedback targets is in
+    general discouraged, since feedback targets are Adjudicator instances, not
+    DebateAdjudicator instances.
 
     `feedback_paths` can be used to avoid unnecessary tournament lookups,
     and should be one of the available options in
     options.dynamic_preferences_registry.FeedbackPaths.choices.
-
-    If doing this for a lot of debate adjudicators, to help avoid duplicate SQL
-    queries, it can be advisable for the caller to call
-        adjallocation.prefetch.populate_allocations([da.debate for da in debateadjs])
-    before calling this function repeatedly.
     """
 
     if feedback_paths is None:
@@ -37,9 +40,9 @@ def expected_feedback_targets(debateadj, feedback_paths=None):
     adjudicators = debateadj.debate.adjudicators
 
     if feedback_paths == 'all-adjs' or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
-        targets = [adj for adj in adjudicators.all() if adj.id != debateadj.adjudicator_id]
+        targets = [(adj, pos) for adj, pos in adjudicators.with_positions() if adj.id != debateadj.adjudicator_id]
     elif feedback_paths == 'with-p-on-c' and debateadj.type == DebateAdjudicator.TYPE_PANEL:
-        targets = [adjudicators.chair]
+        targets = [(adjudicators.chair, AdjudicatorAllocation.POSITION_CHAIR)]
     else:
         targets = []
 
