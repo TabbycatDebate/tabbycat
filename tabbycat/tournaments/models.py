@@ -156,7 +156,7 @@ def update_tournament_cache(sender, instance, created, **kwargs):
 signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
-    use_for_related_Fields = True
+    use_for_related_fields = True
     name_fields = ['name', 'abbreviation']
 
     def get_queryset(self):

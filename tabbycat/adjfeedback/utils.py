@@ -37,17 +37,15 @@ def expected_feedback_targets(debateadj, feedback_paths=None):
     adjudicators = debateadj.debate.adjudicators
 
     if feedback_paths == 'all-adjs' or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
-        targets = list(adjudicators.all())
+        targets = [adj for adj in adjudicators.all() if adj.id != debateadj.adjudicator_id]
     elif feedback_paths == 'with-p-on-c' and debateadj.type == DebateAdjudicator.TYPE_PANEL:
         targets = [adjudicators.chair]
     else:
         targets = []
 
     if feedback_paths not in ['all-adjs', 'with-p-on-c', 'minimal']:
-        logger.error("Unrecognised preference: {!r}".format(self.feedback_paths))
+        logger.error("Unrecognised preference: {!r}".format(feedback_paths))
 
-    if debateadj.adjudicator in targets:
-        targets.remove(debateadj.adjudicator)
 
     return targets
 
