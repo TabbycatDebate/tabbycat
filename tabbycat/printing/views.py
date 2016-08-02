@@ -1,9 +1,7 @@
-import itertools
 import json
 
 from django.views.generic.base import TemplateView
 
-from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
 from draw.models import Debate

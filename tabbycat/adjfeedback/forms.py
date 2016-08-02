@@ -19,17 +19,17 @@ from .utils import expected_feedback_targets
 
 logger = logging.getLogger(__name__)
 
-
-# ==============================================================================
-# General, but only used here
-# ==============================================================================
-
 ADJUDICATOR_POSITION_NAMES = {
     'c': 'chair',
     'o': 'solo',
     'p': 'panellist',
     't': 'trainee'
 }
+
+
+# ==============================================================================
+# General, but only used here
+# ==============================================================================
 
 class IntegerRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
     """Used by IntegerRadioSelect."""

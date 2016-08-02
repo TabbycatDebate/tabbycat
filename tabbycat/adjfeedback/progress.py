@@ -8,7 +8,6 @@ import logging
 from operator import attrgetter
 
 from adjallocation.prefetch import populate_allocations
-from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
