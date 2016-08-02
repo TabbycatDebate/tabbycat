@@ -109,7 +109,7 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
         feedback_paths_option = self.get_tournament().pref('feedback_paths')
         draw = self.get_round().debate_set_with_prefetches(ordering=(
-            'venue__group__name', 'venue__name',))
+            'venue__group__name', 'venue__name'))
 
         for debate in draw:
             chair = debate.adjudicators.chair
@@ -124,10 +124,10 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             if self.from_adj():
                 debateadjs = debate.debateadjudicator_set.all()
                 for debateadj in debateadjs:
-                    targets = expected_feedback_targets(debateadj, feedback_paths=feedback_paths_option,
-                            debate=debate)
                     sadj = debateadj.adjudicator
                     spos = debate.adjudicators.get_position(sadj)
+                    targets = expected_feedback_targets(debateadj, feedback_paths=feedback_paths_option,
+                            debate=debate)
                     for tadj, tpos in targets:
                         kwargs['ballots'].append(self.construct_info(
                             debate.venue, sadj, spos, tadj, tpos))
