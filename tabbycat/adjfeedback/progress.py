@@ -58,7 +58,7 @@ class BaseFeedbackExpectedSubmissionTracker:
 class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTracker):
     """Represents a single piece of expected feedback from a team."""
 
-    def __init__(self, source, enforce_orallist):
+    def __init__(self, source, enforce_orallist=True):
         self.enforce_orallist = enforce_orallist
         super().__init__(source)
 
@@ -130,6 +130,9 @@ class BaseFeedbackProgress:
     ensures that feedbacks that were actually submitted match those that were
     expected."""
 
+    def __init__(self, tournament):
+        self.show_unexpected = tournament.pref('show_unexpected_feedback')
+
     def get_expected_trackers(self):
         raise NotImplementedError
 
@@ -155,8 +158,11 @@ class BaseFeedbackProgress:
     def unexpected_trackers(self):
         """Returns a list of trackers for feedback that was submitted but not
         expected to be there."""
-        return [FeedbackUnexpectedSubmissionTracker(feedback) for feedback in
-            self.submitted_feedback() if feedback not in self.expected_feedback()]
+        if self.show_unexpected:
+            return [FeedbackUnexpectedSubmissionTracker(feedback) for feedback in
+                self.submitted_feedback() if feedback not in self.expected_feedback()]
+        else:
+            return []
 
     def fulfilled_trackers(self):
         """Returns a list of trackers that are fulfilled."""
@@ -217,6 +223,7 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         if tournament is None:
             tournament = team.tournament
         self.enforce_orallist = tournament.pref("show_splitting_adjudicators")
+        super().__init__(tournament)
 
     def get_submitted_feedback(self):
         return AdjudicatorFeedback.objects.filter(confirmed=True,
@@ -254,6 +261,7 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
             logger.warning("No tournament specified and adjudicator {} has no tournament".format(adjudicator))
         else:
             self.feedback_paths = tournament.pref('feedback_paths')
+        super().__init__(tournament)
 
     def get_submitted_feedback(self):
         return AdjudicatorFeedback.objects.filter(confirmed=True,

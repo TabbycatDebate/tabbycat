@@ -325,6 +325,15 @@ class FeedbackPaths(ChoicePreference):
     default = 'minimal'
 
 
+@tournament_preferences_registry.register
+class ShowUnexpectedFeedback(BooleanPreference):
+    verbose_name = "Show unexpected feedback submissions in participants pages"
+    help_text = "Displays unexpected feedback with a question mark symbol; only relevant if public participants and feedback progress are both enabled"
+    section = feedback
+    name = 'show_unexpected_feedback'
+    default = True
+
+
 # ==============================================================================
 debate_rules = Section('debate_rules')
 # ==============================================================================
