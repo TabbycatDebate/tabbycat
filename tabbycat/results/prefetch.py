@@ -42,8 +42,8 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
     This can be used for efficiency, since it retrieves all of the
     information in bulk in a single SQL query. Operates in-place.
 
-    It may by advisable to call populate_allocations(debates) (in
-    adjallocation.allocation) on `debates` before calling this function.
+    For best performance, the debates should already have
+    debateadjudicator_set__adjudicator prefetched.
     """
     debates_by_id = {debate.id: debate for debate in debates}
     confirmed_ballots = BallotSubmission.objects.filter(debate__in=debates, confirmed=True)
