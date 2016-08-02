@@ -7,7 +7,6 @@ There are a few possibilities for how to characterise a feedback submission:
 import logging
 from operator import attrgetter
 
-from adjallocation.prefetch import populate_allocations
 from adjfeedback.models import AdjudicatorFeedback
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
@@ -239,9 +238,9 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
                 debate__ballotsubmission__confirmed=True,
                 debate__round__silent=False,
                 debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
-                'debate', 'debate__round')
+                'debate', 'debate__round').prefetch_related(
+                'debate__debateadjudicator_set__adjudicator')
         debates = [dt.debate for dt in debateteams]
-        populate_allocations(debates)
         populate_confirmed_ballots(debates, ballotsets=True)
 
         trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist) for dt in debateteams]
@@ -277,9 +276,8 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         debateadjs = self.adjudicator.debateadjudicator_set.filter(
                 debate__ballotsubmission__confirmed=True,
                 debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
-                'debate', 'debate__round')
-
-        populate_allocations([da.debate for da in debateadjs])
+                'debate', 'debate__round').prefetch_related(
+                'debate__debateadjudicator_set__adjudicator')
 
         trackers = []
         for debateadj in debateadjs:

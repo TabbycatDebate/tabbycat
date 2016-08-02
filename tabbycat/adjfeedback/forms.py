@@ -7,7 +7,6 @@ from django.utils.translation import ugettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
-from adjallocation.prefetch import populate_allocations
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from results.forms import TournamentPasswordField
@@ -231,12 +230,16 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
         display = '%s (%s, %s)' % (adj.name, debate.round.name, ADJUDICATOR_POSITION_NAMES[pos])
         return (value, display)
 
-    debateadjs = DebateAdjudicator.objects.filter(debate__round__tournament=tournament, adjudicator=source).order_by('-debate__round__seq')
+    debateadjs = DebateAdjudicator.objects.filter(
+        debate__round__tournament=tournament, adjudicator=source
+    ).order_by('-debate__round__seq').prefetch_related(
+        'debate__debateadjudicator_set__adjudicator'
+    )
+
     if include_unreleased_draws:
         debateadjs = debateadjs.filter(debate__round__draw_status__in=[Round.STATUS_CONFIRMED, Round.STATUS_RELEASED])
     else:
         debateadjs = debateadjs.filter(debate__round__draw_status=Round.STATUS_RELEASED)
-    populate_allocations([da.debate for da in debateadjs])
 
     choices = [(None, '-- Adjudicators --')]
     for debateadj in debateadjs:
@@ -281,12 +284,12 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
         return (value, display)
 
     # Only include non-silent rounds for teams.
-    debates = Debate.objects.filter(debateteam__team=source, round__silent=False).order_by('-round__seq')
+    debates = Debate.objects.filter(debateteam__team=source, round__silent=False).order_by(
+            '-round__seq').prefetch_related('debateadjudicator_set__adjudicator')
     if include_unreleased_draws:
         debates = debates.filter(round__draw_status__in=[Round.STATUS_CONFIRMED, Round.STATUS_RELEASED])
     else:
         debates = debates.filter(round__draw_status=Round.STATUS_RELEASED)
-    populate_allocations(debates)
 
     choices = [(None, '-- Adjudicators --')]
     for debate in debates:

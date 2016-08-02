@@ -23,7 +23,22 @@ class AdjudicatorAllocation:
             self.chair = None
             self.panellists = []
             self.trainees = []
-            for a in self.debate.debateadjudicator_set.prefetch_related('adjudicator').all():
+
+            debateadjs = self.debate.debateadjudicator_set.all()
+
+            # The purpose of the line below is to avoid redundant database hits.
+            # It uses an internal (undocumented) flag of Django's QuerySet model
+            # to detect if there's already a prefetch on it, and avoids causing
+            # a clone of the query set (prefetch_related makes a clone), so that
+            # it will use the adjudicators that are already prefetched. An
+            # important assumption there is that if there's already a prefetch
+            # on this debateadjudicator_set, we assume it includes
+            # 'adjudicator'. If there isn't a prefetch done, we add a prefetch
+            # here to avoid duplicate adjudicator SQLqueries.
+            if not debateadjs._prefetch_done:
+                debateadjs = debateadjs.prefetch_related('adjudicator')
+
+            for a in debateadjs:
                 if a.type == DebateAdjudicator.TYPE_CHAIR:
                     self.chair = a.adjudicator
                 elif a.type == DebateAdjudicator.TYPE_PANEL:

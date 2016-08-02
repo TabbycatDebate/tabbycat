@@ -4,7 +4,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 
-from adjallocation.prefetch import populate_allocations
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents, populate_teams
@@ -120,10 +119,10 @@ class BaseTeamRecordView(BaseRecordView):
                 debate_team__debate__round__seq__lt=tournament.current_round.seq,
                 debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
                 debate_team__debate__round__silent=False).select_related(
-                'debate_team__debate', 'debate_team__debate__round')
+                'debate_team__debate', 'debate_team__debate__round').prefetch_related(
+                'debate_team__debate__debateadjudicator_set__adjudicator')
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])
-        populate_allocations(debates)
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)
 
         table = TabbycatTableBuilder(view=self, title="Results", sort_key="Round")
@@ -167,11 +166,11 @@ class BaseAdjudicatorRecordView(BaseRecordView):
                 debate__round__seq__lt=tournament.current_round.seq,
                 debate__round__draw_status=Round.STATUS_RELEASED,
                 debate__round__silent=False).select_related(
-                'debate', 'debate__round')
+                'debate', 'debate__round').prefetch_related(
+                'debate__debateadjudicator_set', 'debate__debateadjudicator_set__adjudicator')
         debates = [da.debate for da in debateadjs]
         populate_teams(debates)
         populate_wins(debates)
-        populate_allocations(debates)
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)
 
         table = TabbycatTableBuilder(view=self, title="Previous Rounds", sort_key="Round")
