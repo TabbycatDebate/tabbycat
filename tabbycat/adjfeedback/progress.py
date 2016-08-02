@@ -13,6 +13,8 @@ from adjfeedback.models import AdjudicatorFeedback
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 
+from .utils import expected_feedback_targets
+
 logger = logging.getLogger(__name__)
 
 
@@ -279,34 +281,12 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
                 debate__round__stage=Round.STAGE_PRELIMINARY).select_related(
                 'debate', 'debate__round')
 
-        if len(debateadjs) == 0:
-            return []
-
         populate_allocations([da.debate for da in debateadjs])
 
         trackers = []
         for debateadj in debateadjs:
-            adjudicators = debateadj.debate.adjudicators
-
-            if self.feedback_paths == 'all-adjs':
-                for target in adjudicators.all():
-                    if target == self.adjudicator:
-                        continue
-                    trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
-
-            elif self.feedback_paths in ['minimal', 'with-p-on-c']:
-
-                if debateadj.type == DebateAdjudicator.TYPE_CHAIR:
-                    for target in adjudicators.all(): # including trainees
-                        if target == self.adjudicator:
-                            continue
-                        trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
-
-                elif self.feedback_paths == 'with-p-on-c' and debateadj.type == DebateAdjudicator.TYPE_PANEL:
-                    trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, adjudicators.chair))
-
-            else:
-                logger.error("Unrecognised preference: {!r}".format(self.feedback_paths))
+            for target in expected_feedback_targets(debateadj, self.feedback_paths):
+                trackers.append(FeedbackExpectedSubmissionFromAdjudicatorTracker(debateadj, target))
 
         self._prefetch_tracker_acceptable_submissions(trackers,
                 attrgetter('source', 'target'), attrgetter('source_adjudicator', 'adjudicator'))

@@ -313,7 +313,7 @@ class PanellistFeedbackEnabled(BooleanPreference):
 
 @tournament_preferences_registry.register
 class FeedbackPaths(ChoicePreference):
-    help_text = "Sets options in the feedback form"
+    help_text = "Used to inform available choices in the feedback forms (both online and printed) and feedback progress"
     verbose_name = "Allow and expect feedback to be submitted by"
     section = feedback
     name = 'feedback_paths'

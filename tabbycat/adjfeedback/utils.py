@@ -1,3 +1,5 @@
+import logging
+
 from django.core.exceptions import ObjectDoesNotExist
 
 from adjallocation.models import DebateAdjudicator
@@ -7,7 +9,47 @@ from tournaments.models import Round
 from utils.misc import reverse_tournament
 
 from .models import AdjudicatorFeedback
-from .progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
+# from .progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
+
+logger = logging.getLogger(__name__)
+
+
+def expected_feedback_targets(debateadj, feedback_paths=None):
+    """Returns a list of adjudicators, each being someone that the given
+    DebateAdjudicator object is expected to give feedback on. If the debate
+    adjudicator's position and the tournament preferences dictate that the
+    source adjudicator should not submit feedback on anyone for this debate,
+    then it returns an empty list.
+
+    `feedback_paths` can be used to avoid unnecessary tournament lookups,
+    and should be one of the available options in
+    options.dynamic_preferences_registry.FeedbackPaths.choices.
+
+    If doing this for a lot of debate adjudicators, to help avoid duplicate SQL
+    queries, it can be advisable for the caller to call
+        adjallocation.prefetch.populate_allocations([da.debate for da in debateadjs])
+    before calling this function repeatedly.
+    """
+
+    if feedback_paths is None:
+        feedback_paths = debateadj.debate.round.tournament.pref('feedback_paths')
+
+    adjudicators = debateadj.debate.adjudicators
+
+    if feedback_paths == 'all-adjs' or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
+        targets = list(adjudicators.all())
+    elif feedback_paths == 'with-p-on-c' and debateadj.type == DebateAdjudicator.TYPE_PANEL:
+        targets = [adjudicators.chair]
+    else:
+        targets = []
+
+    if feedback_paths not in ['all-adjs', 'with-p-on-c', 'minimal']:
+        logger.error("Unrecognised preference: {!r}".format(self.feedback_paths))
+
+    if debateadj.adjudicator in targets:
+        targets.remove(debateadj.adjudicator)
+
+    return targets
 
 
 def get_feedback_overview(t, adjudicators):
@@ -109,28 +151,28 @@ def scoring_stats(adj, scores, debate_adjudications):
     return adj
 
 
-def get_feedback_progress_new(t):
-    """This turns out to be really, really inefficient. Continue using the
-    original function until a better way can be found."""
+# def get_feedback_progress_new(t):
+#     """This turns out to be really, really inefficient. Continue using the
+#     original function until a better way can be found."""
 
-    adjudicators = Adjudicator.objects.filter(tournament=t)
-    teams = Team.objects.filter(tournament=t)
+#     adjudicators = Adjudicator.objects.filter(tournament=t)
+#     teams = Team.objects.filter(tournament=t)
 
-    for team in teams:
-        progress = FeedbackProgressForTeam(team)
-        team.submitted_ballots = progress.num_fulfilled()
-        team.owed_ballots = progress.num_unsubmitted()
-        team.coverage = progress.coverage()
-        print(team)
+#     for team in teams:
+#         progress = FeedbackProgressForTeam(team)
+#         team.submitted_ballots = progress.num_fulfilled()
+#         team.owed_ballots = progress.num_unsubmitted()
+#         team.coverage = progress.coverage()
+#         print(team)
 
-    for adj in adjudicators:
-        progress = FeedbackProgressForAdjudicator(adj)
-        adj.submitted_ballots = progress.num_fulfilled()
-        adj.owed_ballots = progress.num_unsubmitted()
-        adj.coverage = progress.coverage()
-        print(adj)
+#     for adj in adjudicators:
+#         progress = FeedbackProgressForAdjudicator(adj)
+#         adj.submitted_ballots = progress.num_fulfilled()
+#         adj.owed_ballots = progress.num_unsubmitted()
+#         adj.coverage = progress.coverage()
+#         print(adj)
 
-    return teams, adjudicators
+#     return teams, adjudicators
 
 
 def get_feedback_progress(t):
