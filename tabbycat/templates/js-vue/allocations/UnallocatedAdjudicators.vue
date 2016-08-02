@@ -8,8 +8,12 @@
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
     class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-adjs">
 
-    <debate-adjudicator
+    <debate-adjudicator v-if="roundInfo.roundIsPrelim"
       v-for="adj in adjudicators | orderBy 'score' -1"
+      :adjorteam="adj">
+    </debate-adjudicator>
+    <debate-adjudicator v-if="!roundInfo.roundIsPrelim"
+      v-for="adj in adjudicators | orderBy 'name'"
       :adjorteam="adj">
     </debate-adjudicator>
 
@@ -24,7 +28,8 @@ import DroppableMixin from '../mixins/DroppableMixin.vue'
 export default {
   mixins: [DroppableMixin],
   props: {
-    adjudicators: Array
+    adjudicators: Array,
+    roundInfo: Object
   },
   components: {
     'DebateAdjudicator': DebateAdjudicator

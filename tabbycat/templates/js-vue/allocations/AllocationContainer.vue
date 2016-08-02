@@ -42,7 +42,8 @@
     </div>
 
     <unallocated-adjudicators
-      :adjudicators="unallocatedAdjudicators">
+      :adjudicators="unallocatedAdjudicators"
+      :round-info="roundInfo">
     </unallocated-adjudicators>
 
     <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true">

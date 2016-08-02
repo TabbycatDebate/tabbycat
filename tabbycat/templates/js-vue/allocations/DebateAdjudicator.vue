@@ -15,7 +15,7 @@
       class="vue-draggable adj-draggable btn btn-default popover-parent">
 
       <div class="h4 adj-score">
-        <span>{{ letter_ranking }}</span>
+        <span>{{ adjorteam.score }}</span>
       </div>
 
       <div class="adj-info">
