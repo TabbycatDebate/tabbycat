@@ -232,7 +232,9 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
         return (value, display)
 
     debateadjs = DebateAdjudicator.objects.filter(
-        debate__round__tournament=tournament, adjudicator=source
+        debate__round__tournament=tournament, adjudicator=source,
+        debate__round__seq__lte=tournament.current_round.seq,
+        debate__round__stage=Round.STAGE_PRELIMINARY
     ).order_by('-debate__round__seq').prefetch_related(
         'debate__debateadjudicator_set__adjudicator'
     )
@@ -285,8 +287,11 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
         return (value, display)
 
     # Only include non-silent rounds for teams.
-    debates = Debate.objects.filter(debateteam__team=source, round__silent=False).order_by(
-            '-round__seq').prefetch_related('debateadjudicator_set__adjudicator')
+    debates = Debate.objects.filter(
+        debateteam__team=source, round__silent=False,
+        round__seq__lte=tournament.current_round.seq,
+        round__stage=Round.STAGE_PRELIMINARY
+    ).order_by('-round__seq').prefetch_related('debateadjudicator_set__adjudicator')
     if include_unreleased_draws:
         debates = debates.filter(round__draw_status__in=[Round.STATUS_CONFIRMED, Round.STATUS_RELEASED])
     else:
