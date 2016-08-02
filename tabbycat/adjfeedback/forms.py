@@ -123,6 +123,7 @@ class BaseFeedbackForm(forms.Form):
         super(BaseFeedbackForm, self).__init__(*args, **kwargs)
         self._create_fields()
 
+    @staticmethod
     def coerce_target(value):
         debate_id, adj_id = value.split('-')
         debate = Debate.objects.get(id=int(debate_id))
