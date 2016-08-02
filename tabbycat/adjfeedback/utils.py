@@ -15,7 +15,7 @@ from .models import AdjudicatorFeedback
 logger = logging.getLogger(__name__)
 
 
-def expected_feedback_targets(debateadj, feedback_paths=None):
+def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
     """Returns a list of adjudicators and positions (adj, pos), each being
     someone that the given DebateAdjudicator object is expected to give feedback
     on. If the debate adjudicator's position and the tournament preferences
@@ -32,12 +32,16 @@ def expected_feedback_targets(debateadj, feedback_paths=None):
     `feedback_paths` can be used to avoid unnecessary tournament lookups,
     and should be one of the available options in
     options.dynamic_preferences_registry.FeedbackPaths.choices.
+
+    `debate` can be used to avoid unnecessary database hits populating
+    AdjudicatorAllocation, and should be equal to debateadj.debate.
     """
 
     if feedback_paths is None:
         feedback_paths = debateadj.debate.round.tournament.pref('feedback_paths')
-
-    adjudicators = debateadj.debate.adjudicators
+    if debate is None:
+        debate = debateadj.debate
+    adjudicators = debate.adjudicators
 
     if feedback_paths == 'all-adjs' or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
         targets = [(adj, pos) for adj, pos in adjudicators.with_positions() if adj.id != debateadj.adjudicator_id]

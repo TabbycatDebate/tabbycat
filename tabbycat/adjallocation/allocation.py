@@ -88,6 +88,22 @@ class AdjudicatorAllocation:
     def num_voting(self):
         return (0 if self.chair is None else 1) + len(self.panellists)
 
+    def get_position(self, adj):
+        """Returns an AdjudicatorAllocation.POSITION_* constant corresponding
+        to the given adjudicator. Returns None if the adjudicator is not on
+        this panel."""
+        if adj == self.chair:
+            if self.is_panel:
+                return self.POSITION_CHAIR
+            else:
+                return self.POSITION_ONLY
+        elif adj in self.panellists:
+            return self.POSITION_PANELLIST
+        elif adj in self.trainees:
+            return self.POSITION_TRAINEE
+        else:
+            return None
+
     # ==========================================================================
     # Iterators
     # ==========================================================================
