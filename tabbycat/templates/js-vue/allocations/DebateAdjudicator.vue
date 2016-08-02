@@ -3,8 +3,8 @@
   <div class="inline-flex">
     <div
       draggable=true
-      v-on:dragstart="handleDragStart"
-      v-on:dragend="handleDragEnd"
+      v-on:dragstart="dragStart"
+      v-on:dragend="dragEnd"
       v-on:mouseenter="setHighlights"
       v-on:mouseleave="unsetHighlights"
       v-bind:class="[isDragging ? 'vue-is-dragging' : '',

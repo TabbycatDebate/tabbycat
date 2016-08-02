@@ -1,8 +1,8 @@
 <script>
 // Subclass should set on root:
 // draggable=true
-// v-on:dragstart="handleDragStart"
-// v-on:dragend="handleDragEnd"
+// v-on:dragstart="dragStart"
+// v-on:dragend="dragEnd"
 // class="vue-draggable"
 // v-bind:class="[isDragging ? vue-is-dragging : '']"
 // Subclass can provide handleDragStart() and handleDragEnd()
@@ -21,8 +21,10 @@ export default {
       this.isDragging = true;
       this.isHovering = true;
       this.$dispatch('dragging-team', this);
-      if (typeof this.handledragEnd === 'function') {
-        this.handledragEnd(event);
+      // For dragging to work in FF we need to do some kind of setData
+      event.dataTransfer.setData('ID', this.id);
+      if (typeof this.handleDragStart === 'function') {
+        this.handleDragStart(event);
       }
     },
     dragEnd: function(event) {
