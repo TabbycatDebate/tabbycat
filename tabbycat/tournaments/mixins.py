@@ -12,6 +12,7 @@ from .models import Round, Tournament
 logger = logging.getLogger(__name__)
 
 
+# TODO move this class to utils/mixins.py (requires resolution of circular import)
 class TabbycatBaseMixin:
     """Allows all views to set header information in their subclassess obviating
     the need for page template boilerplate and/or page specific templates"""
@@ -30,9 +31,15 @@ class TabbycatBaseMixin:
         return self.page_subtitle
 
     def get_context_data(self, **kwargs):
-        kwargs["page_title"] = self.get_page_title()
-        kwargs["page_subtitle"] = self.get_page_subtitle()
-        kwargs["page_emoji"] = self.get_page_emoji()
+        if "page_title" not in kwargs:
+            kwargs["page_title"] = self.get_page_title()
+        if "page_subtitle" not in kwargs:
+            kwargs["page_subtitle"] = self.get_page_subtitle()
+
+        if "page_emoji" not in kwargs:
+            emoji = self.get_page_emoji()
+            if emoji:
+                kwargs["page_emoji"] = emoji
 
         return super().get_context_data(**kwargs)
 
