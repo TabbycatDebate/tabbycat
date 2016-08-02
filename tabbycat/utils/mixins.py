@@ -108,7 +108,7 @@ class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
         return super().get_queryset().filter(tournament=self.get_tournament())
 
 
-class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
+class SingleObjectByRandomisedUrlMixin(SingleObjectMixin):
     """Mixin for views that use URLs referencing objects by a randomised key.
     This is just a `SingleObjectMixin` with some options set.
 
