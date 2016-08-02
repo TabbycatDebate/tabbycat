@@ -303,15 +303,6 @@ class FeedbackReturnLocation(StringPreference):
 
 
 @tournament_preferences_registry.register
-class PanellistFeedbackEnabled(BooleanPreference):
-    help_text = "Allow and expect feedback to be submitted by panellists"
-    verbose_name = "Expect panellist feedback"
-    section = feedback
-    name = 'panellist_feedback_enabled'
-    default = True
-
-
-@tournament_preferences_registry.register
 class FeedbackPaths(ChoicePreference):
     help_text = "Used to inform available choices in the feedback forms (both online and printed) and feedback progress"
     verbose_name = "Allow and expect feedback to be submitted by"
