@@ -143,3 +143,5 @@ tournament (when feedback is scant) and to increase the feedback weight as the
 tournament progresses.
 
 .. note:: A participant's test score can, in conjunction with feedback weight, also be used as a manual override for an adjudicator's overall ranking. At several tournaments, adjudication cores have set every round's feedback weight to 0, and manually adjusted an adjudicator's test score in response to feedback they have received and reviewed. In this way complete control over every adjudicator's overall score can be exerted.
+
+.. note:: If feedback from trainee adjudicators is enabled, any scores that they submit in their feedback are not counted towards that adjudicator's overall score.
