@@ -4,12 +4,12 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
+from adjfeedback.models import AdjudicatorFeedback
 from participants.models import Adjudicator, Team
 from results.models import SpeakerScoreByAdj
 from tournaments.models import Round
 from utils.misc import reverse_tournament
 
-from .models import AdjudicatorFeedback
 # from .progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 
 logger = logging.getLogger(__name__)
