@@ -53,10 +53,14 @@ As a guide, a type is "easy enough to add" if you can imagine easily how to impl
 Different questionnaires
 ========================
 
-Tabbycat allows you to specify two questionnaires: team-on-orallist, and adjudicator-on-adjudicator. You must specify in each question whether to include the question in each questionnaire.
+Tabbycat allows you to specify two questionnaires: one for feedback submitted by
+teams, and one for feedback submitted by adjudicators. You must specify in each
+question whether to include the question in each questionnaire.
 
-- **from_team**, if checked, includes the question on all team-on-orallist forms.
-- **from_adj**, if checked, includes the question on *all* adjudicator-on-adjudicator forms.
+- **from_team**, if checked, includes the question in feedback submitted by
+  teams
+- **from_adj**, if checked, includes the question in feedback submitted by
+  adjudicators
 
 Who gives feedback on whom?
 ===========================
@@ -64,17 +68,24 @@ Tabbycat allows for three difference choices for which adjudicators give
 feedback on which other adjudicators:
 
 - Chairs give feedback on panellists and trainees
-- Chairs give feedback on panellists and trainees, and panellists give feedback on chairs
-- All adjudicators, including trainees, give feedback on all other adjudicators they have adjudicated with
+- Chairs give feedback on panellists and trainees, and panellists give feedback
+  on chairs
+- All adjudicators, including trainees, give feedback on all other adjudicators
+  they have adjudicated with
 
 You can set this in the **feedback paths** option under *Configuration* >
-*Feedback*.
+*Feedback*. Your choice affects each of the following:
+
+- The options presented to adjudicators in the online feedback form
+- The printable feedback forms
+- The submissions expected when calculating feedback progress and highlighting
+  missing feedback
 
 The feedback paths option only affects feedback from adjudicators. Teams are
 always assumed to give feedback on the orallist, and they are encouraged to do
-so through hints on the feedback submission form, but there is nothing
-technically preventing them from submitting feedback from any adjudicator on
-their panel.
+so through hints on the online and printable feedback forms, but there is
+nothing technically preventing them from submitting feedback from any
+adjudicator on their panel.
 
 .. admonition:: Advanced users
   :class: tip
@@ -83,11 +94,11 @@ their panel.
   Specifically, you should edit the function ``expected_feedback_targets`` in
   tabbycat/adjfeedback/utils.py.
 
-  Unless we can be convinced that they are extremely common, we don't intend to
-  add any further choices to the feedback paths option. If your needs are
-  specific enough that you need to differ from the available settings, your
-  intentions are probably also beyond what is sensible for an integrated
-  feedback system, and we recommend using a third-party feedback system instead.
+  Unless we can be convinced that they are very common, we don't intend to add
+  any further choices to the feedback paths option. If your needs are specific
+  enough that you need to differ from the available settings, they are probably
+  also beyond what is sensible for an integrated feedback system, and we
+  recommend using a third-party feedback system instead.
 
 How is an adjudicator's score determined?
 =========================================
