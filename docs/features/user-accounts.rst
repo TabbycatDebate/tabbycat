@@ -15,7 +15,7 @@ For obvious reasons, user logins are required to data entry and administrative f
 +-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 | Superuser | Adjudication core  | The Tabbycat admin interface.                  | Generating draws, editing ballots, feedback and adjudicator scores, checking in ballots and people. |
 +-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-| Staff     | Tab director       | The Tabbycat and edit database interfaces.         | Editing the database directly.                                                                      |
+| Staff     | Tab director       | The Tabbycat and edit database interfaces.     | Editing the database directly.                                                                      |
 +-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 
 Account roles

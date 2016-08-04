@@ -55,10 +55,39 @@ Different questionnaires
 
 Tabbycat allows you to specify two questionnaires: team-on-orallist, and adjudicator-on-adjudicator. You must specify in each question whether to include the question in each questionnaire.
 
-- **team on orallist**, if checked, includes the question on all team-on-orallist forms.
-- **chair on panellist**, if checked, includes the question on *all* adjudicator-on-adjudicator forms.
+- **from_team**, if checked, includes the question on all team-on-orallist forms.
+- **from_adj**, if checked, includes the question on *all* adjudicator-on-adjudicator forms.
 
-.. note:: The **panellist on panellist** and **panellist on chair** don't currently do anything, and **chair on panellist** is a misnomer, it actually means **adjudicator on adjudicator**. These are all there for future support.
+Who gives feedback on whom?
+===========================
+Tabbycat allows for three difference choices for which adjudicators give
+feedback on which other adjudicators:
+
+- Chairs give feedback on panellists and trainees
+- Chairs give feedback on panellists and trainees, and panellists give feedback on chairs
+- All adjudicators, including trainees, give feedback on all other adjudicators they have adjudicated with
+
+You can set this in the **feedback paths** option under *Configuration* >
+*Feedback*.
+
+The feedback paths option only affects feedback from adjudicators. Teams are
+always assumed to give feedback on the orallist, and they are encouraged to do
+so through hints on the feedback submission form, but there is nothing
+technically preventing them from submitting feedback from any adjudicator on
+their panel.
+
+.. admonition:: Advanced users
+  :class: tip
+
+  If you need a different setting, you need to edit the source code.
+  Specifically, you should edit the function ``expected_feedback_targets`` in
+  tabbycat/adjfeedback/utils.py.
+
+  Unless we can be convinced that they are extremely common, we don't intend to
+  add any further choices to the feedback paths option. If your needs are
+  specific enough that you need to differ from the available settings, your
+  intentions are probably also beyond what is sensible for an integrated
+  feedback system, and we recommend using a third-party feedback system instead.
 
 How is an adjudicator's score determined?
 =========================================
