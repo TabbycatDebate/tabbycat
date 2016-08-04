@@ -6,9 +6,15 @@ Adjudicator Feedback
 
 You can set the questions that are used on adjudicator feedback forms. The only field that is permanently there is the ``score`` field, which is an overall score assessing the adjudicator. All other questions (including a generic comments section) must be defined if you want them to be on the form.
 
-The only current method of setting questions is through the :ref:`edit database interface <user-accounts>`. Go to the **Edit Database**, then click **Change** next to *Adjudicator feedback questions*. You can add questions here.
+Currently, there are two methods of setting questions:
 
-Most of what you need to know is explained in help text on that page. Some more details are here.
+- through the :ref:`edit database area <user-accounts>`. Go to **Setup** >
+  **Edit Database**, then click **Change** next to *Adjudicator feedback
+  questions*. You can add questions here.
+- using the :ref:`importtournament command <importtournament-command>`.
+
+Most of what you need to know is explained in help text in the edit database area. (Even if you're using ``importtournament``, you might find the field
+descriptions in the edit database area helpful.) Some more details are here.
 
 Answer types and options
 ========================
@@ -46,9 +52,18 @@ Options:
 Want another answer type?
 =========================
 
-If the above answer types don't cover your needs, please contact us using the contact details in the :ref:`authors` section. If it's easy enough to add your requested type and if you give us enough notice, we'll gladly add it for you. We should warn you though: we don't intend to develop Tabbycat feedback into a fully-fledged `SurveyMonkey <http://www.surveymonkey.com/>`_ or `Google Forms <https://www.google.com/forms/about/>`_-style system. If your request amounts to this, we suggest using a third-party system.
+We don't really intend to add any further complexity to the built-in feedback
+system. If the above answer types don't cover your needs, we suggest using a
+third-party feedback system. You might be able to adapt `SurveyMonkey <http://www.surveymonkey.com/>`_, `Google Forms <https://www.google.com/forms/about/>`_
+or `Qualtrics <http://qualtrics.com>`_ to your needs.
 
-As a guide, a type is "easy enough to add" if you can imagine easily how to implement it using standard web page elements, and it requires only basic structure encompassing only a single question.
+We may be persuaded to make an exception if the new question type you have in
+mind is easy to add: that is, if it is straightforward to implement using
+standard web page elements and fits into the existing questionnaire framework
+(see :ref:`feedback-questionnaires` below). If you think there is such a case,
+please contact us using the contact details in the :ref:`authors` section.
+
+.. _feedback-questionnaires:
 
 Different questionnaires
 ========================
@@ -73,8 +88,8 @@ feedback on which other adjudicators:
 - All adjudicators, including trainees, give feedback on all other adjudicators
   they have adjudicated with
 
-You can set this in the **feedback paths** option under *Configuration* >
-*Feedback*. Your choice affects each of the following:
+You can set this in the **feedback paths** option under *Setup* >
+*Configuration* > *Feedback*. Your choice affects each of the following:
 
 - The options presented to adjudicators in the online feedback form
 - The printable feedback forms
@@ -97,8 +112,8 @@ adjudicator on their panel.
   Unless we can be convinced that they are very common, we don't intend to add
   any further choices to the feedback paths option. If your needs are specific
   enough that you need to differ from the available settings, they are probably
-  also beyond what is sensible for an integrated feedback system, and we
-  recommend using a third-party feedback system instead.
+  also beyond what is sensible for a built-in feedback system, and we recommend
+  using a third-party feedback system instead.
 
 How is an adjudicator's score determined?
 =========================================
