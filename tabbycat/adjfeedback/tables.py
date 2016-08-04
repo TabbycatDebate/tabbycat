@@ -1,6 +1,11 @@
-from participants.models import Adjudicator, Team
+import logging
+
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
+
+from .progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
+
+logger = logging.getLogger(__name__)
 
 
 class FeedbackTableBuilder(TabbycatTableBuilder):
@@ -108,36 +113,45 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         } for adj in adjudicators]
         self.add_column(avgs_head, avgs_cell)
 
-    def add_feedback_progress_columns(self, progress, key="P"):
+    def add_feedback_progress_columns(self, progress_list, key="P"):
+
+        def _owed_cell(progress):
+            owed = progress.num_unsubmitted()
+            cell = {
+                'text': owed,
+                'sort': owed,
+                'class': 'text-danger strong' if owed > 0 else 'text-success'
+            }
+            return cell
 
         owed_header = {
             'key': 'Owed',
             'icon': 'glyphicon-remove',
             'tooltip': 'Unsubmitted feedback ballots',
         }
-        owed_data = [{
-            'text': str(team_or_adj.owed_ballots),
-            'sort': team_or_adj.owed_ballots,
-            'class': 'text-danger strong'
-        } for team_or_adj in progress]
+        owed_data = [_owed_cell(progress) for progress in progress_list]
         self.add_column(owed_header, owed_data)
 
-        def _record_link(team_or_adj):
-            if isinstance(team_or_adj, Team):
-                url_name = 'participants-team-record' if self.admin else 'participants-public-team-record'
-            elif isinstance(team_or_adj, Adjudicator):
-                url_name = 'participants-adjudicator-record' if self.admin else 'participants-public-adjudicator-record'
-            else:
-                return ''
-            return reverse_tournament(url_name, self.tournament, kwargs={'pk': team_or_adj.pk})
-
         if self._show_record_links:
+
+            def _record_link(progress):
+                if isinstance(progress, FeedbackProgressForTeam):
+                    url_name = 'participants-team-record' if self.admin else 'participants-public-team-record'
+                    pk = progress.team.pk
+                elif isinstance(progress, FeedbackProgressForAdjudicator):
+                    url_name = 'participants-adjudicator-record' if self.admin else 'participants-public-adjudicator-record'
+                    pk = progress.adjudicator.pk
+                else:
+                    logger.error("Unrecognised progress type: {}".format(progress.__class__.__name__))
+                    return ''
+                return reverse_tournament(url_name, self.tournament, kwargs={'pk': pk})
+
             owed_link_header = {
                 'key': 'Submitted',
                 'icon': 'glyphicon-question-sign',
             }
             owed_link_data = [{
                 'text': 'View Missing Feedback',
-                'link': _record_link(team_or_adj)
-            } for team_or_adj in progress]
+                'link': _record_link(progress)
+            } for progress in progress_list]
             self.add_column(owed_link_header, owed_link_data)

@@ -322,7 +322,16 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
 
 
 def get_feedback_progress(t):
-    total_missing = 0
+    """Returns a list of FeedbackProgressForTeam objects and a list of
+    FeedbackProgressForAdjudicator objects.
+
+    This function pre-populates the FeedbackProgress objects to avoid needing
+    duplicate SQL queries for every team and adjudicator, so it should be used
+    for performance when the feedback progress of all teams and adjudicators is
+    needed."""
+
+    teams_progress = []
+    adjs_progress = []
 
     teams = t.team_set.prefetch_related('speaker_set').all()
 
@@ -343,10 +352,7 @@ def get_feedback_progress(t):
         progress = FeedbackProgressForTeam(team)
         progress._submitted_feedback = submitted_feedback_by_team_id[team.id]
         progress._debateteams = debateteams_by_team_id[team.id]
-        team.submitted_ballots = progress.num_fulfilled()
-        team.owed_ballots = progress.num_unsubmitted()
-        team.coverage = progress.coverage()
-        total_missing += team.owed_ballots
+        teams_progress.append(progress)
 
     adjudicators = t.adjudicator_set.all()
 
@@ -367,9 +373,6 @@ def get_feedback_progress(t):
         progress = FeedbackProgressForAdjudicator(adj)
         progress._submitted_feedback = submitted_feedback_by_adj_id[adj.id]
         progress._debateadjudicators = debateadjs_by_adj_id[adj.id]
-        adj.submitted_ballots = progress.num_fulfilled()
-        adj.owed_ballots = progress.num_unsubmitted()
-        adj.coverage = progress.coverage()
-        total_missing += adj.owed_ballots
+        adjs_progress.append(progress)
 
-    return teams, adjudicators, total_missing
+    return teams_progress, adjs_progress

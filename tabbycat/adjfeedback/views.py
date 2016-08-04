@@ -510,20 +510,23 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         return self._feedback_progress_result
 
     def get_page_subtitle(self):
-        _, _, total_missing = self.get_feedback_progress()
-        return str(total_missing) + " missing feedbacks"
+        teams_progress, adjs_progress = self.get_feedback_progress()
+        total_missing = sum([progress.num_unsubmitted() for progress in teams_progress + adjs_progress])
+        return "{:d} missing feedback submissions".format(total_missing)
 
     def get_tables(self):
-        teams_progress, adjs_progress, _ = self.get_feedback_progress()
+        teams_progress, adjs_progress = self.get_feedback_progress()
 
         adjs_table = FeedbackTableBuilder(view=self, title="From Adjudicators",
             sort_key="Owed", sort_order="desc")
-        adjs_table.add_adjudicator_columns(adjs_progress, hide_metadata=True)
+        adjudicators = [progress.adjudicator for progress in adjs_progress]
+        adjs_table.add_adjudicator_columns(adjudicators, hide_metadata=True)
         adjs_table.add_feedback_progress_columns(adjs_progress)
 
         teams_table = FeedbackTableBuilder(view=self, title="From Teams",
             sort_key="Owed", sort_order="desc")
-        teams_table.add_team_columns(teams_progress)
+        teams = [progress.team for progress in teams_progress]
+        teams_table.add_team_columns(teams)
         teams_table.add_feedback_progress_columns(teams_progress)
 
         return [adjs_table, teams_table]
