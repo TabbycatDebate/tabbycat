@@ -79,8 +79,8 @@ question whether to include the question in each questionnaire.
 
 Who gives feedback on whom?
 ===========================
-Tabbycat allows for three difference choices for which adjudicators give
-feedback on which other adjudicators:
+Tabbycat allows for three choices for which adjudicators give feedback on which
+other adjudicators:
 
 - Chairs give feedback on panellists and trainees
 - Chairs give feedback on panellists and trainees, and panellists give feedback
