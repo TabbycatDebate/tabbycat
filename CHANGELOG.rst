@@ -14,9 +14,8 @@ Change Log
 - Many significant performance improvements were made, particularly for pages that pulled in large data sets
 - Added team record and adjudicator record pages
 - Added a diversity tab to display demographic information about participants and scoring
-- Renamed feedback question options to "from team" and "from adj", and removed the never-used
-  "panellist-on-chair" and "panellist-on-panellist" options
-- Change feedback paths to a choice between three options, with explicit non-support for other
+- Renamed feedback question options to "from team" and "from adj" (previously "team-on-orallist" and "chair-on-panellist"), and removed the never-used "panellist-on-chair" and "panellist-on-panellist" options
+- Changed feedback paths (previously "panellist feedback enabled") to a choice between three options, with explicit non-support for other
   possibilities
 - Added basic code linting to the continuous integration tests
 - Many other small bug fixes, refactors, optimisations, and documentation updates

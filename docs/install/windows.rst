@@ -114,7 +114,7 @@ Download and run the `node.js Windows Installer (.msi) <https://nodejs.org/en/do
 
 3. Fill in the New Login Role box as follows (everything not listed below can be left as-is):
 
-   - In the **Properties** tab, in **Role Name**, choose a user account name.<br />(If you really don't know what to pick, use "tabbycat".)
+   - In the **Properties** tab, in **Role Name**, choose a user account name. (If you don't know what to pick, we suggest "tabbycat".)
    - In the **Definition** tab, choose a **Password** and type it in **Password (again)**.
 
    Then click OK. (Remember this user name and password, you'll need it later.)
