@@ -46,10 +46,10 @@
       {% if no_chair > 0 or even_panel > 0 %}
         <div class="alert alert-warning">
           {% if no_chair > 0 %}
-            {{ no_chair|apnumber|capfirst }} debates don't have a chair.
+            {{ no_chair|apnumber|capfirst }} debate{{ no_chair|pluralize:" doesn't,s don't" }} have a chair.
           {% endif %}
           {% if even_panel > 0 %}
-            {{ even_panel|apnumber|capfirst }} debates have panels with an even number of adjudicators.
+            {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of adjudicators.
           {% endif %}
           <a href="{% round_url draw_adjudicators_edit %}" class="alert-link">
             Edit adjudicators</a>.
