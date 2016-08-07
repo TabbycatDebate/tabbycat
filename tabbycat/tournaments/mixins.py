@@ -170,3 +170,13 @@ class PublicTournamentPageMixin(TournamentMixin):
             logger.error("Tried to access a disabled public page")
             messages.error(self.request, self.get_disabled_message())
             return redirect_tournament('tournament-public-index', tournament)
+
+
+class CrossTournamentPageMixin(PublicTournamentPageMixin):
+    """Mixin for views that show pages with data drawn from multiple tournaments
+    but are optionally viewed. They check the first available tournament object
+    and check its preferences"""
+
+    def get_tournament(self):
+        tournament = Tournament.objects.order_by('id').first()
+        return tournament

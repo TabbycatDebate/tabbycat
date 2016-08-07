@@ -8,9 +8,9 @@
 {% block content %}
   <ul class="list-group">
     {% for institution in institutions %}
-      <a class="list-group-item" href="{% tournament_url all_draws_for_institution institution.id %}">
-        <span>{{ institution.name }}</span>
-        <span class="badge">VIEW ALL DRAWS</span>
+      <a class="list-group-item" href="{% url 'all-draws-for-institution' institution.id %}">
+        <span>Draws for {{ institution.name }}</span>
+        <span class="badge">VIEW ALL</span>
       </a>
     {% endfor %}
   </ul>

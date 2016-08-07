@@ -7,49 +7,49 @@ from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect, render
-from django.views.decorators.cache import cache_page
+from django.shortcuts import redirect
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.edit import CreateView, FormView
 
-from draw.models import Debate, DebateTeam
-from participants.models import Institution
+from draw.models import Debate
 from utils.forms import SuperuserCreationForm
-from utils.mixins import SuperuserRequiredMixin
-from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view
-from utils.misc import redirect_tournament
-from venues.models import VenueGroup
+from utils.misc import redirect_round, redirect_tournament
+from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
 
 from .forms import TournamentForm
-from .mixins import TournamentMixin
+from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-@cache_page(10)  # Set slower to show new indexes so it will show new pages
-@tournament_view
-def public_index(request, t):
-    return render(request, 'public_tournament_index.html')
+class PublicSiteIndexView(CacheMixin, TemplateView):
+    template_name = 'site_index.html'
+    cache_timeout = 10 # Set slower to show new indexes so it will show new pages
+
+    def get(self, request, *args, **kwargs):
+        tournaments = Tournament.objects.all()
+        if tournaments.count() == 1 and not request.user.is_authenticated():
+            logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
+            return redirect_tournament('tournament-public-index', tournaments.first())
+        elif not tournaments.exists() and not User.objects.exists():
+            logger.debug('No users and no tournaments, redirecting to blank-site-start')
+            return redirect('blank-site-start')
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        kwargs['tournaments'] = Tournament.objects.all()
+        return super().get_context_data(**kwargs)
 
 
-def index(request):
-    tournaments = Tournament.objects.all()
-    if tournaments.count() == 1 and not request.user.is_authenticated():
-        logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
-        return redirect_tournament('tournament-public-index', tournaments.first())
-
-    elif not tournaments.exists() and not User.objects.exists():
-        logger.debug('No users and no tournaments, redirecting to blank-site-start')
-        return redirect('blank-site-start')
-
-    else:
-        return render(request, 'site_index.html', dict(tournaments=tournaments))
+class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
+    template_name = 'public_tournament_index.html'
+    cache_timeout = 10 # Set slower to show new indexes so it will show new pages
 
 
 class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView):
-
     template_name = "tournament_index.html"
 
     def get_context_data(self, **kwargs):
@@ -81,56 +81,32 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         return super().get(self, request, *args, **kwargs)
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('enable_mass_draws')
-def all_tournaments_all_venues(request, t):
-    venues = VenueGroup.objects.all()
-    return render(request, 'public_all_tournament_venues.html', dict(venues=venues))
+class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+    template_name = 'round_increment_check.html'
+
+    def get(self, request, *args, **kwargs):
+        round = self.get_round()
+        current_round = self.get_tournament().current_round
+        if round != current_round:
+            messages.warning(self.request, 'You are trying to advance to ' +
+                round.name + ' but the current round is ' + current_round.name +
+                ' — advance to ' + round.prev.name + ' first!')
+            return redirect_round('results', self.get_tournament().current_round)
+        else:
+            return super().get(self, request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        kwargs['num_unconfirmed'] = self.get_round().get_draw().filter(
+            result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
+        kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
+        return super().get_context_data(**kwargs)
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('enable_mass_draws')
-def all_draws_for_venue(request, t, venue_id):
-    venue_group = VenueGroup.objects.get(pk=venue_id)
-    debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
-        'round', 'round__tournament', 'division')
-    return render(request, 'public_all_draws_for_venue.html', dict(
-        venue_group=venue_group, debates=debates))
+class RoundIncrementView(SuperuserRequiredMixin, PostOnlyRedirectView, RoundMixin):
 
-
-@tournament_view
-@public_optional_tournament_view('enable_mass_draws')
-def all_draws_for_institution(request, t, institution_id):
-    # TODO: move to draws app
-    institution = Institution.objects.get(pk=institution_id)
-    debate_teams = DebateTeam.objects.filter(team__institution=institution).select_related(
-        'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
-    debates = [dt.debate for dt in debate_teams]
-
-    return render(request, 'public_all_draws_for_institution.html', dict(
-        institution=institution, debates=debates))
-
-
-@admin_required
-@round_view
-def round_increment_check(request, round):
-    if round != request.tournament.current_round:  # Doesn't make sense if not current round
-        raise Http404()
-    num_unconfirmed = round.get_draw().filter(
-        result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
-    increment_ok = num_unconfirmed == 0
-    return render(request, "round_increment_check.html", dict(
-        num_unconfirmed=num_unconfirmed, increment_ok=increment_ok))
-
-
-@admin_required
-@expect_post
-@round_view
-def round_increment(request, round):
-    if round != request.tournament.current_round:  # Doesn't make sense if not current round
-        raise Http404()
-    request.tournament.advance_round()
-    return redirect_round('availability_index', request.tournament.current_round)
+    def post(self, request, *args, **kwargs):
+        self.get_tournament().advance_round()
+        return redirect_round('availability_index', self.get_tournament().current_round)
 
 
 class BlankSiteStartView(FormView):
@@ -156,7 +132,7 @@ class BlankSiteStartView(FormView):
             if User.objects.exists():
                 logger.error("Tried to post the blank-site-start view when a user account already exists.")
                 messages.error(request, "Whoops! It looks like someone's already created the first user account. Please log in.")
-                return redirect('auth-login')
+                return redirect('login')
 
             return super().post(request)
 

@@ -1,7 +1,7 @@
-from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin, messages
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.views.generic.base import RedirectView
@@ -18,7 +18,7 @@ urlpatterns = [
 
     # Indices
     url(r'^$',
-        tournaments.views.index,
+        tournaments.views.PublicSiteIndexView.as_view(),
         name='tabbycat-index'),
     url(r'^start/',
         tournaments.views.BlankSiteStartView.as_view(),
@@ -38,10 +38,11 @@ urlpatterns = [
     # Accounts
     url(r'^accounts/login/$',
         auth_views.login,
-        name='auth-login'),
+        name='login'),
     url(r'^accounts/logout/$',
         auth_views.logout,
-        {'next_page': '/'}),
+        {'next_page': '/'},
+        name='logout'),
 
     # Favicon for old browsers that ignore the head link
     url(r'^favicon\.ico$',
@@ -54,7 +55,15 @@ urlpatterns = [
 
     # Tournament URLs
     url(r'^(?P<tournament_slug>[-\w_]+)/',
-        include('tournaments.urls'))
+        include('tournaments.urls')),
+
+    # Participants Cross Tournament
+    url(r'^participants/',
+        include('participants.urls_crosst')),
+
+    # Draws Cross Tournament
+    url(r'^draw/',
+        include('draw.urls_crosst'))
 ]
 
 if settings.DEBUG:

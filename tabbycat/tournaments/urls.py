@@ -3,31 +3,20 @@ from django.conf.urls import include, url
 from . import views
 
 urlpatterns = [
+
     url(r'^$',
-        views.public_index,
+        views.TournamentPublicHomeView.as_view(),
         name='tournament-public-index'),
     url(r'^admin/overview/$',
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
 
-    # TODO: 'core' app functionality?
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment_check/$',
-        views.round_increment_check,
+        views.RoundIncrementConfirmView.as_view(),
         name='round_increment_check'),
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment/$',
-        views.round_increment,
+        views.RoundIncrementView.as_view(),
         name='round_increment'),
-
-    # TODO WADL-specific; unclear if draws or participants
-    url(r'^all_tournaments_all_venues/$',
-        views.all_tournaments_all_venues,
-        name='all_tournaments_all_venues'),
-    url(r'^all_tournaments_all_venues/all_draws/(?P<venue_id>\d+)$',
-        views.all_draws_for_venue,
-        name='all_draws_for_venue'),
-    url(r'^all_tournaments_all_institutions/all_draws/(?P<institution_id>\d+)$',
-        views.all_draws_for_institution,
-        name='all_draws_for_institution'),
 
     # Action Logs App
     url(r'^admin/action_log/',

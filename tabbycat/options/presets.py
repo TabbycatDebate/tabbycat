@@ -191,6 +191,7 @@ class WADLPreferences(PreferencesPreset):
         self.league_options__enable_forfeits            = True
         self.league_options__enable_division_motions    = True
         self.league_options__allocation_confirmations   = True
+        self.league_options__enable_mass_draws          = True
 
 
 class PublicInformation(PreferencesPreset):

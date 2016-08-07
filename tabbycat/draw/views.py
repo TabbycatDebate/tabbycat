@@ -10,9 +10,9 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
-from participants.models import Adjudicator, Team
+from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
@@ -509,3 +509,61 @@ class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, View):
                 new_neg_dt.save()
 
         return HttpResponse("ok")
+
+
+# ==============================================================================
+# Cross-Tournament Draw Views
+# ==============================================================================
+
+class AllTournamentsAllInstitutionsView(CrossTournamentPageMixin, CacheMixin, TemplateView):
+    public_page_preference = 'enable_mass_draws'
+    template_name = 'public_all_tournament_institutions.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['institutions'] = Institution.objects.all()
+        return super().get_context_data(**kwargs)
+
+
+class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, TemplateView):
+    public_page_preference = 'enable_mass_draws'
+    template_name = 'public_all_tournament_venues.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['venues'] = VenueGroup.objects.all()
+        return super().get_context_data(**kwargs)
+
+
+class AllDrawsForAllTeamsView(CrossTournamentPageMixin, CacheMixin, TemplateView):
+    public_page_preference = 'enable_mass_draws'
+    template_name = 'public_all_tournament_teams.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['teams'] = Team.objects.filter(tournament__active=True).select_related('tournament').prefetch_related('division')
+        return super().get_context_data(**kwargs)
+
+
+class AllDrawsForInstitutionView(CrossTournamentPageMixin, CacheMixin, TemplateView):
+    public_page_preference = 'enable_mass_draws'
+    template_name = 'public_all_draws_for_institution.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['institution'] = Institution.objects.get(
+            pk=self.kwargs['institution_id'])
+        kwargs['debate_teams'] = DebateTeam.objects.filter(
+            team__institution=kwargs['institution']).select_related(
+            'debate', 'debate__division', 'debate__division__venue_group',
+            'debate__round')
+        kwargs['debates'] = [dt.debate for dt in kwargs['debate_teams']]
+        return super().get_context_data(**kwargs)
+
+
+class AllDrawsForVenueView(CrossTournamentPageMixin, CacheMixin, TemplateView):
+    public_page_preference = 'enable_mass_draws'
+    template_name = 'public_all_draws_for_venue.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['venue_group'] = VenueGroup.objects.get(pk=self.kwargs['venue_id'])
+        kwargs['debates'] = Debate.objects.filter(
+            division__venue_group=kwargs['venue_group']).select_related(
+            'round', 'round__tournament', 'division')
+        return super().get_context_data(**kwargs)

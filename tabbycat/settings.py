@@ -130,7 +130,7 @@ CACHES = {
 }
 
 # Use the cache for sessions rather than the db
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # ==============================================================================
 # Static Files and Compilation

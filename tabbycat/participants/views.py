@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin
 
 from adjallocation.models import DebateAdjudicator
@@ -10,14 +10,14 @@ from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgres
 from draw.prefetch import populate_opponents, populate_teams
 from results.models import TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
-from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
+from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
 from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
 from utils.mixins import ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import Adjudicator, Institution, Speaker, Team
+from .models import Adjudicator, Speaker, Team
 
 
 class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
@@ -211,32 +211,10 @@ class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorReco
 
 
 # ==============================================================================
-# Cross-tournament views
-# ==============================================================================
-
-class AllTournamentsAllInstitutionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
-    public_page_preference = 'enable_mass_draws'
-    template_name = 'public_all_tournament_institutions.html'
-
-    def get_context_data(self, **kwargs):
-        kwargs['institutions'] = Institution.objects.all()
-        return super().get_context_data(**kwargs)
-
-
-class AllTournamentsAllTeamsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
-    public_page_preference = 'enable_mass_draws'
-    template_name = 'public_all_tournament_teams.html'
-
-    def get_context_data(self, **kwargs):
-        kwargs['teams'] = Team.objects.filter(tournament__active=True).select_related('tournament').prefetch_related('division')
-        return super().get_context_data(**kwargs)
-
-
-# ==============================================================================
 # Shift scheduling
 # ==============================================================================
 
-class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, PublicTournamentPageMixin, ModelFormSetView):
+class PublicConfirmShiftView(CrossTournamentPageMixin, SingleObjectByRandomisedUrlMixin, ModelFormSetView):
     # Django doesn't have a class-based view for formsets, so this implements
     # the form processing analogously to FormView, with less decomposition.
     # See also: motions.views.EditMotionsView.
