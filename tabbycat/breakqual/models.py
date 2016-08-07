@@ -1,53 +1,30 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 
 
 class BreakCategory(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament')
-    name = models.CharField(max_length=50,
-                            help_text="Name to be displayed, e.g., \"ESL\"")
+    name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")
     slug = models.SlugField(help_text="Slug for URLs, e.g., \"esl\"")
-    seq = models.IntegerField(
-        help_text="The order in which the categories are displayed")
-    break_size = models.IntegerField(
-        help_text="Number of breaking teams in this category")
+    seq = models.IntegerField(help_text="The order in which the categories are displayed")
+    break_size = models.IntegerField(help_text="Number of breaking teams in this category")
     is_general = models.BooleanField(
         help_text="True if most teams eligible for this category, e.g. Open, False otherwise")
-    institution_cap = models.IntegerField(
-        blank=True,
-        null=True,
-        help_text="Maximum number of teams from a single institution in this "
-        "category; leave blank if not applicable")
     priority = models.IntegerField(
-        help_text="If a team breaks in multiple categories, lower priority "
+        help_text="If a team breaks in multiple categories, higher priority "
         "numbers take precedence; teams can break into multiple categories if "
         "and only if they all have the same priority")
 
-    BREAK_QUALIFICATION_RULE_STANDARD      = 's'
-    BREAK_QUALIFICATION_RULE_AIDA_PRE_2015 = 'a'
-    BREAK_QUALIFICATION_RULE_AIDA_2016     = 'b'
-    BREAK_QUALIFICATION_RULE_CHOICES = (
-        (BREAK_QUALIFICATION_RULE_STANDARD, 'Standard'),
-        (BREAK_QUALIFICATION_RULE_AIDA_PRE_2015, 'AIDA pre-2015'),
-        (BREAK_QUALIFICATION_RULE_AIDA_2016, 'AIDA 2016'),
-    )
-    rule = models.CharField(max_length=1, choices=BREAK_QUALIFICATION_RULE_CHOICES, default=BREAK_QUALIFICATION_RULE_STANDARD)
+    BREAK_QUALIFICATION_CHOICES = [
+        ('standard', "Standard"),
+        ('aida-pre2015', "AIDA Pre-2015"),
+        ('aida-2016-easters', "AIDA 2016 (Easters)"),
+        ('aida-2016-australs', "AIDA 2016 (Australs)"),
+    ]
 
-    # Does nothing now, reintroduce later
-    # STATUS_NONE      = 'N'
-    # STATUS_DRAFT     = 'D'
-    # STATUS_CONFIRMED = 'C'
-    # STATUS_RELEASED  = 'R'
-    # STATUS_CHOICES = (
-    #     (STATUS_NONE,      'None'),
-    #     (STATUS_DRAFT,     'Draft'),
-    #     (STATUS_CONFIRMED, 'Confirmed'),
-    #     (STATUS_RELEASED,  'Released'),
-    # )
-    # status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
+    rule = models.CharField(max_length=25, choices=BREAK_QUALIFICATION_CHOICES, default='standard',
+        help_text="Rule for how the break is calculated (most tournaments should use \"Standard\")")
 
-    breaking_teams = models.ManyToManyField('participants.Team',
-                                            through='BreakingTeam')
+    breaking_teams = models.ManyToManyField('participants.Team', through='BreakingTeam')
 
     def __str__(self):
         return "[{}] {}".format(self.tournament.slug, self.name)
@@ -57,11 +34,6 @@ class BreakCategory(models.Model):
         ordering = ['tournament', 'seq']
         index_together = ['tournament', 'seq']
         verbose_name_plural = "break categories"
-
-    def clean(self):
-        if self.rule in [self.BREAK_QUALIFICATION_RULE_AIDA_2016, self.BREAK_QUALIFICATION_RULE_AIDA_PRE_2015] \
-                and not self.institution_cap:
-            raise ValidationError({"institution_cap": "There must be a nonzero institution cap if an AIDA break qualification rule is used"})
 
 
 class BreakingTeam(models.Model):

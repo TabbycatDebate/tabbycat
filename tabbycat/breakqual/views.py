@@ -5,14 +5,16 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import cache_page
 
 from participants.models import Adjudicator
+from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from utils.misc import get_ip_address
-from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_tournament, tournament_view
-from utils.mixins import CacheMixin, SingleObjectFromTournamentMixin, VueTableTemplateView
+from utils.misc import get_ip_address, reverse_tournament
+from utils.views import admin_required, public_optional_tournament_view, redirect_tournament, tournament_view
+from utils.mixins import CacheMixin, PostOnlyRedirectView, SingleObjectFromTournamentMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from .models import BreakCategory, BreakingTeam
+from .generator import BreakGenerator
 from . import forms
 from . import breaking
 
@@ -75,40 +77,48 @@ def breaking_teams(request, t, category):
     return render(request, 'breaking_teams.html', dict(form=form, category=bc, generated=generated))
 
 
-@expect_post
-@tournament_view
-def generate_all_breaking_teams(request, t, category):
-    """Generates for all break categories; 'category' is used only for the redirect"""
-    breaking.generate_all_breaking_teams(t)
-    ActionLogEntry.objects.log(
-        type=ActionLogEntry.ACTION_TYPE_BREAK_GENERATE_ALL,
-        user=request.user, tournament=t, ip_address=get_ip_address(request))
-    messages.success(request, "Teams break generated for all break categories.")
-    return redirect_tournament('breaking_teams', t, category=category)
+class UpdateAllBreaksView(LogActionMixin, TournamentMixin, PostOnlyRedirectView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ALL
+    success_message = "Teams break updated for all break categories."
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse_tournament('breakqual-teams', self.get_tournament(), kwargs=kwargs)
+
+    def post(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        for category in tournament.breakcategory_set.order_by('-priority'):
+            BreakGenerator(category).generate()
+        messages.success(request, self.success_message)
+        self.log_action()
+        return super().post(request, *args, **kwargs)
 
 
-@expect_post
-@tournament_view
-def update_all_breaking_teams(request, t, category):
-    """Generates for all break categories; 'category' is used only for the redirect"""
-    breaking.update_all_breaking_teams(t)
-    ActionLogEntry.objects.log(
-        type=ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ALL,
-        user=request.user, tournament=t, ip_address=get_ip_address(request))
-    messages.success(request, "Teams break updated for all break categories.")
-    return redirect_tournament('breaking_teams', t, category=category)
+class GenerateAllBreaksView(UpdateAllBreaksView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_GENERATE_ALL
+    success_message = "Teams break generated for all break categories."
+
+    def post(self, request, *args, **kwargs):
+        BreakingTeam.objects.filter(break_category__tournament=self.get_tournament()).delete()
+        return super().post(request, *args, **kwargs)
 
 
-@expect_post
-@tournament_view
-def update_breaking_teams(request, t, category):
-    bc = get_object_or_404(BreakCategory, slug=category, tournament=t)
-    breaking.update_breaking_teams(bc)
-    ActionLogEntry.objects.log(
-        type=ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ONE, user=request.user,
-        tournament=t, ip_address=get_ip_address(request), break_category=bc)
-    messages.success(request, "Teams break updated for break category %s." % bc.name)
-    return redirect_tournament('breaking_teams', t, category=category)
+class UpdateBreakView(LogActionMixin, SingleObjectFromTournamentMixin, PostOnlyRedirectView):
+
+    model = BreakCategory
+    slug_url_kwarg = 'category'
+    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ONE
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse_tournament('breakqual-teams', self.get_tournament(), kwargs=kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        BreakGenerator(self.object).generate()
+        messages.success(request, "Teams break updated for break category %s." % self.object.name)
+        self.log_action(break_category=self.object)
+        return super().post(request, *args, **kwargs)
 
 
 class BreakingAdjudicators(TournamentMixin, VueTableTemplateView):

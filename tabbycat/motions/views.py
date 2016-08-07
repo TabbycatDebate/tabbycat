@@ -105,7 +105,7 @@ def motions_assign(request, round):
 
 class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
-    def get_redirect_url(self):
+    def get_redirect_url(self, *args, **kwargs):
         return reverse_round('draw', self.get_round())
 
     def post(self, request, *args, **kwargs):

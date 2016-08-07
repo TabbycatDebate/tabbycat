@@ -10,27 +10,27 @@
 
 {% block page-subnav-actions %}
   {% if generated %}
-    <form action="{% tournament_url generate_breaking_teams category.slug %}" class="form-inline" method="POST">
+    <form action="{% tournament_url breakqual-generate-all category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
         Delete & Regenerate All Breaks
       </button>
     </form>
-    <form action="{% tournament_url update_all_breaking_teams category.slug %}" class="form-inline" method="POST">
+    <form action="{% tournament_url breakqual-update-all category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
         Update All Breaks
       </button>
     </form>
-    <form action="{% tournament_url update_breaking_teams category.slug %}" class="form-inline" method="POST">
+    <form action="{% tournament_url breakqual-update-one category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
-        Update The {{ category.name }} Break
+        Update the {{ category.name }} Break
       </button>
     </form>
   {% else %}
     <div class="forms-block-inline">
-      <form action="{% tournament_url generate_breaking_teams category.slug %}" method="POST">
+      <form action="{% tournament_url breakqual-generate-all category.slug %}" method="POST">
         {% csrf_token %}
         <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
           Generate the break for all categories

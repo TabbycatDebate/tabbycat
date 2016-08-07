@@ -424,7 +424,7 @@ class BaseAdjudicatorActionView(LogActionMixin, SuperuserRequiredMixin, Tourname
         kwargs['adjudicator'] = self.adjudicator
         return super().get_action_log_fields(**kwargs)
 
-    def get_redirect_url(self):
+    def get_redirect_url(self, *args, **kwargs):
         return reverse_tournament('adjfeedback-overview', self.get_tournament())
 
     def get_adjudicator(self, request):
@@ -560,7 +560,7 @@ class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
 
 class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
 
-    def get_redirect_url(self):
+    def get_redirect_url(self, *args, **kwargs):
         return reverse_tournament('randomised-urls-view', self.get_tournament())
 
     def post(self, request, *args, **kwargs):
@@ -589,7 +589,7 @@ class EmailRandomisedUrlsView(RandomisedUrlsView):
 
 class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
 
-    def get_redirect_url(self):
+    def get_redirect_url(self, *args, **kwargs):
         return reverse_tournament('randomised-urls-view', self.get_tournament())
 
     def post(self, request, *args, **kwargs):

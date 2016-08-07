@@ -12,7 +12,7 @@
   </a>
   {% for category in tournament.breakcategory_set.all %}
     <a class="btn btn-default"
-       href="{% tournament_url breaking_teams category.slug %}">
+       href="{% tournament_url breakqual-teams category.slug %}">
       View {{ category.name }} Break
     </a>
   {% endfor %}
@@ -25,7 +25,7 @@
 {% block page-subnav-actions %}
   <a class="btn btn-success"
      href="{% tournament_url edit_eligibility %}">
-    Edit Team's Eligibility
+    Edit Teams' Eligibility
   </a>
 {% endblock %}
 
