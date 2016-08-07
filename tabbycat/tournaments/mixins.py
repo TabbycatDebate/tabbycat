@@ -4,8 +4,9 @@ from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.urls import NoReverseMatch
 
-from utils.misc import redirect_tournament, reverse_tournament, reverse_round
+from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 
 from .models import Round, Tournament
 

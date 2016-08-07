@@ -7,7 +7,7 @@ from django.views.decorators.cache import cache_page
 from participants.models import Adjudicator
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from utils.misc import get_ip_address, reverse_tournament
+from utils.misc import get_ip_address
 from utils.views import admin_required, public_optional_tournament_view, redirect_tournament, tournament_view
 from utils.mixins import (CacheMixin, PostOnlyRedirectView, SingleObjectFromTournamentMixin,
                           SuperuserRequiredMixin, VueTableTemplateView)

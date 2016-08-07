@@ -10,7 +10,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from divisions.models import Division
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
-from utils.misc import redirect_round, reverse_round
+from utils.misc import redirect_round
 from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, round_view
 
