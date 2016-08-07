@@ -82,11 +82,11 @@
     <ul class="dropdown-menu">
       {% if pref.public_breaking_teams %}
         {% for category in tournament.breakcategory_set.all %}
-          <li><a href="{% tournament_url public_breaking_teams category.slug %}">{{ category.name }}</a></li>
+          <li><a href="{% tournament_url breakqual-public-teams category.slug %}">{{ category.name }}</a></li>
         {% endfor %}
       {% endif %}
       {% if pref.public_breaking_adjs %}
-        <li><a href="{% tournament_url public_breaking_adjs %}">Adjudicators</a></li>
+        <li><a href="{% tournament_url breakqual-public-adjs %}">Adjudicators</a></li>
       {% endif %}
     </ul>
   </li>

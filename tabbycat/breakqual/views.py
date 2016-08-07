@@ -1,14 +1,11 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, render
-from django.views.decorators.cache import cache_page
+from django.views.generic import FormView, TemplateView
 
 from participants.models import Adjudicator
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from utils.misc import get_ip_address
-from utils.views import admin_required, public_optional_tournament_view, redirect_tournament, tournament_view
+from utils.misc import reverse_tournament
 from utils.mixins import (CacheMixin, PostOnlyRedirectView, SingleObjectFromTournamentMixin,
                           SuperuserRequiredMixin, VueTableTemplateView)
 from utils.tables import TabbycatTableBuilder
@@ -20,10 +17,9 @@ from . import forms
 from . import breaking
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_results')
-def public_break_index(request, t):
-    return render(request, "public_break_index.html")
+class PublicBreakIndexView(PublicTournamentPageMixin, CacheMixin, TemplateView):
+    public_page_preference = 'public_results'
+    template_name = 'public_break_index.html'
 
 
 class PublicBreakingTeamsView(SingleObjectFromTournamentMixin, PublicTournamentPageMixin, CacheMixin, VueTableTemplateView):
@@ -35,11 +31,10 @@ class PublicBreakingTeamsView(SingleObjectFromTournamentMixin, PublicTournamentP
 
     def get_table(self):
         t = self.get_tournament()
-        bc = self.get_object()
 
-        standings = breaking.get_breaking_teams(bc, include_all=True, include_categories=t.pref('public_break_categories'))
+        standings = breaking.get_breaking_teams(self.object, include_all=True, include_categories=t.pref('public_break_categories'))
 
-        table = TabbycatTableBuilder(view=self, title=bc.name)
+        table = TabbycatTableBuilder(view=self, title=self.object.name)
         table.add_ranking_columns(standings)
         table.add_column("Break", [standing.break_rank for standing in standings])
         table.add_team_columns([info.team for info in standings])
@@ -51,31 +46,40 @@ class PublicBreakingTeamsView(SingleObjectFromTournamentMixin, PublicTournamentP
         return super().get(request, *args, **kwargs)
 
 
-@admin_required
-@tournament_view
-def breaking_index(request, t):
-    return render(request, 'breaking_index.html')
+class AdminBreakIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+    template_name = 'breaking_index.html'
 
 
-@admin_required
-@tournament_view
-def breaking_teams(request, t, category):
-    bc = get_object_or_404(BreakCategory, slug=category, tournament=t)
+class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, SingleObjectFromTournamentMixin, FormView):
+    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_EDIT_REMARKS
+    model = BreakCategory
+    slug_url_kwarg = 'category'
+    form_class = forms.BreakingTeamsForm
+    template_name = 'breaking_teams.html'
 
-    if request.method == "POST":
-        form = forms.BreakingTeamsForm(bc, request.POST)
-        if form.is_valid():
-            form.save()
-        ActionLogEntry.objects.log(
-            type=ActionLogEntry.ACTION_TYPE_BREAK_EDIT_REMARKS,
-            user=request.user, tournament=t, ip_address=get_ip_address(request))
-        messages.success(request, "Changes to breaking team remarks saved.")
+    def get_context_data(self, **kwargs):
+        kwargs['generated'] = BreakingTeam.objects.filter(
+                break_category__tournament=self.get_tournament()).exists()
+        kwargs['category'] = self.object
+        return super().get_context_data(**kwargs)
 
-    else:
-        form = forms.BreakingTeamsForm(bc)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['category'] = self.object
+        return kwargs
 
-    generated = BreakingTeam.objects.filter(break_category__tournament=t).exists()
-    return render(request, 'breaking_teams.html', dict(form=form, category=bc, generated=generated))
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Changes to breaking team remarks saved.")
+        return self.render_to_response(self.get_context_data())
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
 
 
 class UpdateAllBreaksView(LogActionMixin, TournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
@@ -144,21 +148,20 @@ class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, CacheMixin, Base
     public_page_preference = 'public_breaking_adjs'
 
 
-@admin_required
-@tournament_view
-def edit_eligibility(request, t):
-    context = dict()
-    if request.method == "POST":
-        form = forms.BreakEligibilityForm(t, request.POST)
-        if form.is_valid():
-            form.save()
-            ActionLogEntry.objects.log(
-                type=ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT,
-                user=request.user, tournament=t, ip_address=get_ip_address(request))
-            messages.success(request, "Break eligibility saved.")
-            return redirect_tournament('breaking_index', t)
-    else:
-        form = forms.BreakEligibilityForm(t)
+class EditEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, FormView):
+    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT
+    form_class = forms.BreakEligibilityForm
+    template_name = 'edit_eligibility.html'
 
-    context['form'] = form
-    return render(request, 'edit_eligibility.html', context)
+    def get_success_url(self):
+        return reverse_tournament('breakqual-index', self.get_tournament())
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.get_tournament()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Break eligibility saved.")
+        return super().form_valid(form)

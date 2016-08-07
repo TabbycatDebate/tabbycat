@@ -3,15 +3,15 @@
 {% load debate_tags %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default" href="{% tournament_url breaking_index %}">
+  <a class="btn btn-default" href="{% tournament_url breakqual-index %}">
     Overview
   </a>
   {% for category in tournament.breakcategory_set.all %}
-    <a class="btn btn-default" href="{% tournament_url breaking_teams category.slug %}">
+    <a class="btn btn-default" href="{% tournament_url breakqual-teams category.slug %}">
       View {{ category.name }} Break
     </a>
   {% endfor %}
-  <a class="btn btn-default" href="{% tournament_url breaking_adjs %}">
+  <a class="btn btn-default" href="{% tournament_url breakqual-adjudicators %}">
     View Adjudicators Break
   </a>
 {% endblock %}
