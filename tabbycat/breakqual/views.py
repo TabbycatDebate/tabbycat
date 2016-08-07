@@ -51,11 +51,25 @@ class AdminBreakIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView)
 
 
 class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, SingleObjectFromTournamentMixin, FormView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_EDIT_REMARKS
     model = BreakCategory
     slug_url_kwarg = 'category'
     form_class = forms.BreakingTeamsForm
     template_name = 'breaking_teams.html'
+
+    def get_action_log_type(self):
+        if 'save_update_all' in self.request.POST:
+            return ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ALL
+        elif 'save_update_one' in self.request.POST:
+            return ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ONE
+        else:
+            return ActionLogEntry.ACTION_TYPE_BREAK_EDIT_REMARKS
+
+    def get_action_log_fields(self, **kwargs):
+        kwargs['break_category'] = self.object
+        return super().get_action_log_fields(**kwargs)
+
+    def get_success_url(self):
+        return reverse_tournament('breakqual-teams', self.get_tournament(), kwargs={'category': self.object.slug})
 
     def get_context_data(self, **kwargs):
         kwargs['generated'] = BreakingTeam.objects.filter(
@@ -70,8 +84,21 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, SingleObject
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Changes to breaking team remarks saved.")
-        return self.render_to_response(self.get_context_data())
+
+        if 'save_update_all' in self.request.POST:
+            for category in self.get_tournament().breakcategory_set.order_by('-priority'):
+                BreakGenerator(category).generate()
+            messages.success(self.request, "Changes to breaking team remarks saved "
+                    "and teams break updated for all break categories.")
+        elif 'save_update_one' in self.request.POST:
+            BreakGenerator(self.object).generate()
+            messages.success(self.request, "Changes to breaking team remarks saved "
+                    "and teams break updated for break category %s." % self.object.name)
+        else:
+            messages.success(self.request, "Changes to breaking team remarks saved.")
+
+        self.log_action()
+        return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -82,43 +109,18 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, SingleObject
         return super().post(request, *args, **kwargs)
 
 
-class UpdateAllBreaksView(LogActionMixin, TournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
-
-    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ALL
-    success_message = "Teams break updated for all break categories."
-    tournament_redirect_pattern_name = 'breakqual-teams'
-
-    def post(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
-        for category in tournament.breakcategory_set.order_by('-priority'):
-            BreakGenerator(category).generate()
-        messages.success(request, self.success_message)
-        self.log_action()
-        return super().post(request, *args, **kwargs)
-
-
-class GenerateAllBreaksView(UpdateAllBreaksView):
+class GenerateAllBreaksView(LogActionMixin, TournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_GENERATE_ALL
-    success_message = "Teams break generated for all break categories."
+    tournament_redirect_pattern_name = 'breakqual-teams'
 
     def post(self, request, *args, **kwargs):
         BreakingTeam.objects.filter(break_category__tournament=self.get_tournament()).delete()
-        return super().post(request, *args, **kwargs)
-
-
-class UpdateBreakView(LogActionMixin, SingleObjectFromTournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
-
-    model = BreakCategory
-    slug_url_kwarg = 'category'
-    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ONE
-    tournament_redirect_pattern_name = 'breakqual-teams'
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        BreakGenerator(self.object).generate()
-        messages.success(request, "Teams break updated for break category %s." % self.object.name)
-        self.log_action(break_category=self.object)
+        tournament = self.get_tournament()
+        for category in tournament.breakcategory_set.order_by('-priority'):
+            BreakGenerator(category).generate()
+        messages.success(request, "Teams break generated for all break categories.")
+        self.log_action()
         return super().post(request, *args, **kwargs)
 
 

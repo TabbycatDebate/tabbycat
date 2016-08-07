@@ -13,19 +13,7 @@
     <form action="{% tournament_url breakqual-generate-all category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
-        Delete & Regenerate All Breaks
-      </button>
-    </form>
-    <form action="{% tournament_url breakqual-update-all category.slug %}" class="form-inline" method="POST">
-      {% csrf_token %}
-      <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
-        Update All Breaks
-      </button>
-    </form>
-    <form action="{% tournament_url breakqual-update-one category.slug %}" class="form-inline" method="POST">
-      {% csrf_token %}
-      <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}" id="generateBreakingTeams" type="submit">
-        Update the {{ category.name }} Break
+        Delete and Regenerate All Breaks
       </button>
     </form>
   {% else %}
@@ -33,7 +21,7 @@
       <form action="{% tournament_url breakqual-generate-all category.slug %}" method="POST">
         {% csrf_token %}
         <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
-          Generate the break for all categories
+          Generate the Break for All Categories
         </button>
       </form>
     </div>
@@ -50,20 +38,17 @@
     </div>
     <div class="alert alert-info">
       <p>
-        <strong>How to edit the break:</strong> You can edit the remarks in the
-        right-hand column. Any team with a remark is considered ineligible for this
-        break. (The algorithm will sometimes insert its own remarks where appropriate,
-        based on the break size, institution cap and break category priorities.) After you do this, you must <strong>save the remarks</strong>
-        before proceeding (otherwise your changes will be not be saved). Then,
-        click the appropriate update button below.
+        <strong>How to edit the break:</strong> Edit the remarks in the
+        right-hand column. Any team with a remark will be excluded from this
+        break. (The break generator will sometimes insert its own remarks.)
+        Then, click the appropriate save and update button below.
       </p>
       <p>
-        The procedure isn't perfect; if you have complicated break category rules
-        (for example, if some teams are allowed to choose their preferred category)
-        then you may have to iterate through remark editing and saving a few times
-        for the algorithm to get what you want. As a last resort, you can edit the
-        breaking teams list directly in the database through the
-        Edit Database section (under Setup in the menu).
+        If you have complicated break rules (for example, if some teams are
+        allowed to choose their preferred category) then you may have to update
+        remarks a few times to get the correct break. As a last resort, you can
+        <a href="{% url 'admin:breakqual_breakingteam_changelist' %}">
+        edit the breaking teams list directly in the Edit Database area</a>.
       </p>
     </div>
   {% else %}
@@ -159,10 +144,23 @@
           </tbody>
         </table>
 
+        {% if pref.public_breaking_teams %}
+          <div class="alert alert-danger">
+            <strong>Caution!</strong> The "public breaking teams" option is turned on, so the break
+            is publicly visible. If you update the break(s), the changes will become visible
+            <strong>immediately</strong>, <strong>without a chance for you to review them</strong>.
+          </div>
+        {% endif %}
+
         <div class="row">
-          <div class="form-inline col-md-12">
-            <button class="btn btn-default btn-block btn-success" type="submit">
-                Save Remarks
+          <div class="form-inline col-md-6">
+            <button class="btn btn-default btn-block btn-success" type="submit" name="save_update_all">
+                Save Remarks and Update All Breaks
+            </button>
+          </div>
+          <div class="form-inline col-md-6">
+            <button class="btn btn-default btn-block btn-success }}" type="submit" name="save_update_one">
+                Save Remarks and Update the {{ category.name }} Break
             </button>
           </div>
         </div>
