@@ -236,12 +236,11 @@ class AllTournamentsAllTeamsView(PublicTournamentPageMixin, CacheMixin, Template
 # Shift scheduling
 # ==============================================================================
 
-class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, PublicTournamentPageMixin, ModelFormSetView):
+class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, ModelFormSetView):
     # Django doesn't have a class-based view for formsets, so this implements
     # the form processing analogously to FormView, with less decomposition.
     # See also: motions.views.EditMotionsView.
 
-    public_page_preference = 'allocation_confirmations'
     template_name = 'confirm_shifts.html'
     formset_factory_kwargs = dict(can_delete=False, extra=0, fields=['timing_confirmed'])
     model = Adjudicator

@@ -11,11 +11,11 @@
         <span class="emoji">❓</span>Help
       </a></li>
       {% if user.is_authenticated %}
-        <li><a class="" href="/accounts/logout/">
+        <li><a class="" href="{% url 'logout' %}">
           <span class="emoji">🔒</span>Logout of {{ user }}
         </a></li>
       {% else %}
-        <li><a class="" href="/accounts/login/">
+        <li><a class="" href="{% url 'login' %}">
           <span class="emoji">🔓</span>Login
         </a></li>
       {% endif %}

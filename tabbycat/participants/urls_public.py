@@ -24,7 +24,4 @@ urlpatterns = [
         views.AllTournamentsAllInstitutionsView.as_view(),
         name='participants-all-tournaments-all-institutions'),
 
-    url(r'^shifts/(?P<url_key>\w+)/$',
-        views.PublicConfirmShiftView.as_view(),
-        name='participants-public-confirm-shift'),
 ]

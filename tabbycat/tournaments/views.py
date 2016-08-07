@@ -156,7 +156,7 @@ class BlankSiteStartView(FormView):
             if User.objects.exists():
                 logger.error("Tried to post the blank-site-start view when a user account already exists.")
                 messages.error(request, "Whoops! It looks like someone's already created the first user account. Please log in.")
-                return redirect('auth-login')
+                return redirect('login')
 
             return super().post(request)
 
