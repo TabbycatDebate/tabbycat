@@ -11,7 +11,7 @@ urlpatterns = [
         views.breaking_teams,
         name='breakqual-teams'),
     url(r'^adjudicators/$',
-        views.AdminBreakingAdjudicators.as_view(),
+        views.AdminBreakingAdjudicatorsView.as_view(),
         name='breaking_adjs'),
     # Create/Update
     url(r'^generate_all/(?P<category>\w+)/$',

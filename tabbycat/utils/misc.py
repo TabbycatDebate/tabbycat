@@ -10,23 +10,23 @@ def get_ip_address(request):
     return ip
 
 
-def redirect_tournament(to, tournament, **kwargs):
-    return redirect(to, tournament_slug=tournament.slug, **kwargs)
+def redirect_tournament(to, tournament, *args, **kwargs):
+    return redirect(to, tournament_slug=tournament.slug, *args, **kwargs)
 
 
-def reverse_tournament(to, tournament, **kwargs):
+def reverse_tournament(to, tournament, *args, **kwargs):
     kwargs.setdefault('kwargs', {})
     kwargs['kwargs']['tournament_slug'] = tournament.slug
-    return reverse(to, **kwargs)
+    return reverse(to, *args, **kwargs)
 
 
-def redirect_round(to, round, **kwargs):
+def redirect_round(to, round, *args, **kwargs):
     return redirect(to, tournament_slug=round.tournament.slug,
-                    round_seq=round.seq, **kwargs)
+                    round_seq=round.seq, *args, **kwargs)
 
 
-def reverse_round(to, round, **kwargs):
+def reverse_round(to, round, *args, **kwargs):
     kwargs.setdefault('kwargs', {})
     kwargs['kwargs']['tournament_slug'] = round.tournament.slug
     kwargs['kwargs']['round_seq'] = round.seq
-    return reverse(to, **kwargs)
+    return reverse(to, *args, **kwargs)

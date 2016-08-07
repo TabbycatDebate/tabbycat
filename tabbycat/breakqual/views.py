@@ -9,7 +9,8 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from utils.misc import get_ip_address, reverse_tournament
 from utils.views import admin_required, public_optional_tournament_view, redirect_tournament, tournament_view
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SingleObjectFromTournamentMixin, VueTableTemplateView
+from utils.mixins import (CacheMixin, PostOnlyRedirectView, SingleObjectFromTournamentMixin,
+                          SuperuserRequiredMixin, VueTableTemplateView)
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
@@ -25,7 +26,7 @@ def public_break_index(request, t):
     return render(request, "public_break_index.html")
 
 
-class PublicBreakingTeams(SingleObjectFromTournamentMixin, PublicTournamentPageMixin, CacheMixin, VueTableTemplateView):
+class PublicBreakingTeamsView(SingleObjectFromTournamentMixin, PublicTournamentPageMixin, CacheMixin, VueTableTemplateView):
 
     public_page_preference = 'public_breaking_teams'
     page_emoji = '👑'
@@ -77,13 +78,11 @@ def breaking_teams(request, t, category):
     return render(request, 'breaking_teams.html', dict(form=form, category=bc, generated=generated))
 
 
-class UpdateAllBreaksView(LogActionMixin, TournamentMixin, PostOnlyRedirectView):
+class UpdateAllBreaksView(LogActionMixin, TournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ALL
     success_message = "Teams break updated for all break categories."
-
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse_tournament('breakqual-teams', self.get_tournament(), kwargs=kwargs)
+    tournament_redirect_pattern_name = 'breakqual-teams'
 
     def post(self, request, *args, **kwargs):
         tournament = self.get_tournament()
@@ -104,14 +103,12 @@ class GenerateAllBreaksView(UpdateAllBreaksView):
         return super().post(request, *args, **kwargs)
 
 
-class UpdateBreakView(LogActionMixin, SingleObjectFromTournamentMixin, PostOnlyRedirectView):
+class UpdateBreakView(LogActionMixin, SingleObjectFromTournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
 
     model = BreakCategory
     slug_url_kwarg = 'category'
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ONE
-
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse_tournament('breakqual-teams', self.get_tournament(), kwargs=kwargs)
+    tournament_redirect_pattern_name = 'breakqual-teams'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -121,7 +118,7 @@ class UpdateBreakView(LogActionMixin, SingleObjectFromTournamentMixin, PostOnlyR
         return super().post(request, *args, **kwargs)
 
 
-class BreakingAdjudicators(TournamentMixin, VueTableTemplateView):
+class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
 
     page_title = 'Breaking Adjudicators'
     page_emoji = '🎉'
@@ -133,7 +130,7 @@ class BreakingAdjudicators(TournamentMixin, VueTableTemplateView):
         return table
 
 
-class AdminBreakingAdjudicators(LoginRequiredMixin, BreakingAdjudicators):
+class AdminBreakingAdjudicatorsView(LoginRequiredMixin, BaseBreakingAdjudicatorsView):
 
     template_name = 'breaking_adjs.html'
 
@@ -142,7 +139,7 @@ class AdminBreakingAdjudicators(LoginRequiredMixin, BreakingAdjudicators):
         return super().get(self, request, *args, **kwargs)
 
 
-class PublicBreakingAdjudicators(PublicTournamentPageMixin, CacheMixin, BreakingAdjudicators):
+class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, CacheMixin, BaseBreakingAdjudicatorsView):
 
     public_page_preference = 'public_breaking_adjs'
 
