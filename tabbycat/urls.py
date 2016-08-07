@@ -18,7 +18,7 @@ urlpatterns = [
 
     # Indices
     url(r'^$',
-        tournaments.views.index,
+        tournaments.views.PublicSiteIndexView.as_view(),
         name='tabbycat-index'),
     url(r'^start/',
         tournaments.views.BlankSiteStartView.as_view(),
