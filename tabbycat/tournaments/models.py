@@ -275,9 +275,9 @@ class Round(models.Model):
             related += ('division', 'division__venue_group')
         return self.debate_set.order_by(*ordering).select_related(*related)
 
-    def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',), select_related=('venue',),
+    def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',), select_related=(),
             teams=True, adjudicators=True, speakers=True, divisions=True, ballotsubs=False,
-            wins=False, ballotsets=False):
+            wins=False, ballotsets=False, venues=True):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
@@ -295,6 +295,8 @@ class Round(models.Model):
             debates = debates.order_by(*ordering)
         if self.tournament.pref('enable_divisions') and divisions:
             select_related += ('division', 'division__venue_group')
+        if venues:
+            select_related += ('venue', 'venue__group')
         if select_related:
             debates = debates.select_related(*select_related)
 

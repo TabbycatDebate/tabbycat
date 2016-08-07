@@ -24,7 +24,7 @@ class VenueAllocator:
 
     def allocate(self, round, debates=None):
         if debates is None:
-            debates = round.get_draw()
+            debates = round.debate_set_with_prefetches(speakers=False)
         self._all_venues = list(round.active_venues.order_by('-priority'))
         self._preferred_venues = self._all_venues[:len(debates)]
 
@@ -52,7 +52,7 @@ class VenueAllocator:
 
         for debate in debates:
             teams = list(debate.teams)
-            adjudicators = [da[1] for da in debate.adjudicators]
+            adjudicators = [da for da in debate.adjudicators.all()]
 
             constraints = []
             constraints.extend(TeamVenueConstraint.objects.filter(team__in=teams))

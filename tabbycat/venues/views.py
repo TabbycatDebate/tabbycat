@@ -17,7 +17,7 @@ class EditVenuesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     template_name = "venues_edit.html"
 
     def get_context_data(self, **kwargs):
-        kwargs['draw'] = self.get_round().get_draw()
+        kwargs['draw'] = self.get_round().debate_set_with_prefetches(speakers=False)
         return super().get_context_data(**kwargs)
 
 
