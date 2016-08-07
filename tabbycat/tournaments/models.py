@@ -13,8 +13,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-PROHIBITED_TOURNAMENT_SLUGS = ['start', 'create', 'jet', 'database', 'admin', 'accounts',
-    'favicon.ico', 't', '__debug__', 'static']
+PROHIBITED_TOURNAMENT_SLUGS = [
+    'jet', 'database', 'admin', 'accounts',   # System
+    'start', 'create',  # Setup Wizards
+    'draw', 'participants', 'favicon.ico',  # Cross-Tournament app's view roots
+    't', '__debug__', 'static']  # Misc
 
 def validate_tournament_slug(value):
     if value in PROHIBITED_TOURNAMENT_SLUGS:
@@ -75,18 +78,6 @@ class Tournament(models.Model):
     @models.permalink
     def get_public_url(self):
         return ('tournament-public-index', [self.slug])
-
-    @models.permalink
-    def get_all_tournaments_all_venues(self):
-        return ('all_tournaments_all_venues', [self.slug])
-
-    @models.permalink
-    def get_all_tournaments_all_institutions(self):
-        return ('participants-all-tournaments-all-institutions', [self.slug])
-
-    @models.permalink
-    def get_all_tournaments_all_teams(self):
-        return ('participants-all-tournaments-all-teams', [self.slug])
 
     @cached_property
     def teams(self):

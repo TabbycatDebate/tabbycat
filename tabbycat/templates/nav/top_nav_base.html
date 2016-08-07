@@ -39,9 +39,15 @@
         </li>
       </ul>
     {% else %}
-      <a class="navbar-brand" href="{{ tournament.get_public_url  }}">
-        {{ tournament }}
-      </a>
+      {% if tournament %}
+        <a class="navbar-brand" href="{{ tournament.get_public_url  }}">
+          {{ tournament }}
+        </a>
+      {% else %}
+        <a class="navbar-brand" href="/">
+          < Return Home
+        </a>
+      {% endif %}
     {% endif %}
 
     <div class="collapse navbar-collapse" id="collapsed-main-nav">

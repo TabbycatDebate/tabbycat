@@ -62,17 +62,17 @@
 
   {% if tournaments.0.preferences.league_options__enable_mass_draws %}
     <li class="list-group-item">
-      <a href="{{ tournaments.0.get_all_tournaments_all_venues }}">
+      <a href="{% url 'all_tournaments-all-venues' %}">
         <span class="emoji">🎪</span>All Draws by Venue
       </a>
     </li>
     <li class="list-group-item">
-      <a href="{{ tournaments.0.get_all_tournaments_all_institutions }}">
+      <a href="{% url 'all-tournaments-all-institutions' %}">
         <span class="emoji">🏢</span>All Draws by School
       </a>
     </li>
     <li class="list-group-item">
-      <a href="{{ tournaments.0.get_all_tournaments_all_teams }}">
+      <a href="{% url 'all-tournaments-all-teams' %}">
         <span class="emoji">👯</span>All Teams and Divisions
       </a>
     </li>
