@@ -11,10 +11,10 @@ from utils.mixins import (CacheMixin, PostOnlyRedirectView, SingleObjectFromTour
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
-from .models import BreakCategory, BreakingTeam
+from .breaking import get_breaking_teams
 from .generator import BreakGenerator
+from .models import BreakCategory, BreakingTeam
 from . import forms
-from . import breaking
 
 
 class PublicBreakIndexView(PublicTournamentPageMixin, CacheMixin, TemplateView):
@@ -32,7 +32,7 @@ class PublicBreakingTeamsView(SingleObjectFromTournamentMixin, PublicTournamentP
     def get_table(self):
         t = self.get_tournament()
 
-        standings = breaking.get_breaking_teams(self.object, include_all=True, include_categories=t.pref('public_break_categories'))
+        standings = get_breaking_teams(self.object, include_categories=t.pref('public_break_categories'))
 
         table = TabbycatTableBuilder(view=self, title=self.object.name)
         table.add_ranking_columns(standings)

@@ -143,7 +143,7 @@
               {% endif %}
               <td>
                 {% include "tables/team.html" with team=standing.team %}
-                {{ standing.team.categories_for_display }}
+                {{ standing.categories_for_display }}
               </td>
               {% if pref.show_institutions %}
                 <td><span class="hidden-xs">{{ standing.team.institution }}</span><span class="visible-xs">{{ standing.team.institution.code }}</span></td>

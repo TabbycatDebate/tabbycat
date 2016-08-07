@@ -75,7 +75,7 @@ class BreakingTeamsForm(forms.Form):
                 self.initial[self._fieldname_remark(team)] = None
 
     def _generate_standings(self):
-        self._standings = get_breaking_teams(self.category, include_all=True, include_categories=True)
+        self._standings = get_breaking_teams(self.category, include_categories=True)
 
     def save(self):
         for team in self.category.breaking_teams.all():

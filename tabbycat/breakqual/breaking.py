@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def get_breaking_teams(category, include_all=False, include_categories=False):
+def get_breaking_teams(category, include_categories=False):
     """Returns a list of Teams, with additional attributes. For each Team t in
     the returned list:
         t.rank is the rank of the team, including ineligible teams.
@@ -29,30 +29,30 @@ def get_breaking_teams(category, include_all=False, include_categories=False):
     delimited list of category names that are not this category, and lower
     or equal priority to this category.
     """
-    teams = category.breaking_teams.all()
-    if not include_all:
-        teams = teams.filter(break_rank__isnull=False)
-
+    teams = category.breaking_teams.all().prefetch_related('break_categories')
     metrics = category.tournament.pref('team_standings_precedence')
     generator = TeamStandingsGenerator(metrics, ('rank',))
     standings = generator.generate(teams)
 
-    for standing in standings:
+    breakingteams_by_team_id = {bt.team_id: bt for bt in category.breakingteam_set.all()}
 
-        bt = standing.team.breakingteam_set.get(break_category=category)
-        standing.rank = bt.rank
+    for tsi in standings:
+
+        bt = breakingteams_by_team_id[tsi.team.id]
+        tsi.rank = bt.rank
         if bt.break_rank is None:
             if bt.remark:
-                standing.break_rank = "(" + bt.get_remark_display().lower() + ")"
+                tsi.break_rank = "(" + bt.get_remark_display().lower() + ")"
             else:
-                standing.break_rank = "<error>"
+                tsi.break_rank = "<no rank, no remark>"
         else:
-            standing.break_rank = bt.break_rank
+            tsi.break_rank = bt.break_rank
 
         if include_categories:
-            categories = standing.team.break_categories_nongeneral.exclude(id=category.id).exclude(priority__lt=category.priority)
-            standing.categories_for_display = "(" + ", ".join(c.name for c in categories) + ")" if categories else ""
-        else:
-            standing.categories_for_display = ""
+            categories = ", ".join(bc.name for bc in tsi.team.break_categories.all()
+                if not bc.is_general and not bc == category and bc.priority <= category.priority)
+            if categories:
+                categories = "(" + categories + ")"
+            tsi.categories_for_display = categories
 
     return standings
