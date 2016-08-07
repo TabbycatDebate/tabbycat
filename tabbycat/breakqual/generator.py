@@ -10,7 +10,7 @@ from breakqual.models import BreakCategory
 logger = logging.getLogger(__name__)
 
 
-def BreakGenerator(category, **kwargs):
+def BreakGenerator(category, **kwargs):  # noqa: N802
     klass = base.registry[category.rule]
     return klass(category, **kwargs)
 
