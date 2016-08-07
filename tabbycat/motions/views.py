@@ -10,7 +10,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from divisions.models import Division
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
-from utils.misc import redirect_round, reverse_round
+from utils.misc import redirect_round
 from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, round_view
 
@@ -105,8 +105,7 @@ def motions_assign(request, round):
 
 class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
-    def get_redirect_url(self):
-        return reverse_round('draw', self.get_round())
+    round_redirect_pattern_name = 'draw'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()

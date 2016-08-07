@@ -176,11 +176,13 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 
 class AvailabilityActivateBase(RoundMixin, SuperuserRequiredMixin, RedirectView):
 
+    round_redirect_pattern_name = 'availability_index'
+
     def get_redirect_url(self, *args, **kwargs):
         self.activate_function()
         messages.add_message(self.request, messages.SUCCESS,
             self.activation_msg)
-        return reverse_round('availability_index', self.get_round())
+        return super().get_redirect_url(*args, **kwargs)
 
 
 class AvailabilityActivateAll(AvailabilityActivateBase):

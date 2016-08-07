@@ -9,7 +9,7 @@ from .models import BreakCategory, BreakingTeam
 
 class BreakCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'seq', 'tournament', 'break_size',
-                    'priority', 'is_general', 'institution_cap')
+                    'priority', 'is_general', 'rule')
     list_filter = ('tournament', )
     ordering = ('tournament', 'seq')
 

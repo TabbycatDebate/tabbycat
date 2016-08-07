@@ -51,6 +51,7 @@ class BreakingTeamsForm(forms.Form):
     def __init__(self, category, *args, **kwargs):
         super(BreakingTeamsForm, self).__init__(*args, **kwargs)
         self.category = category
+        self._prefetch_breakingteams()
         self._create_and_initialise_fields()
         self._generate_standings()
 
@@ -59,7 +60,10 @@ class BreakingTeamsForm(forms.Form):
         return 'remark_%(team)d' % {'team': team.id}
 
     def _bt(self, team):
-        return team.breakingteam_set.get(break_category=self.category)
+        return self._bts_by_team_id[team.id]
+
+    def _prefetch_breakingteams(self):
+        self._bts_by_team_id = {bt.team_id: bt for bt in self.category.breakingteam_set.all()}
 
     def _create_and_initialise_fields(self):
         """Dynamically generate fields, one Select for each BreakingTeam."""
@@ -67,17 +71,17 @@ class BreakingTeamsForm(forms.Form):
             self.fields[self._fieldname_remark(team)] = OptionalChoiceField(choices=BreakingTeam.REMARK_CHOICES, required=False)
             try:
                 self.initial[self._fieldname_remark(team)] = self._bt(team).remark
-            except BreakingTeam.DoesNotExist:
+            except KeyError:
                 self.initial[self._fieldname_remark(team)] = None
 
     def _generate_standings(self):
-        self._standings = get_breaking_teams(self.category, include_all=True, include_categories=True)
+        self._standings = get_breaking_teams(self.category, include_categories=True)
 
     def save(self):
         for team in self.category.breaking_teams.all():
             try:
                 bt = self._bt(team)
-            except BreakingTeam.DoesNotExist:
+            except KeyError:
                 continue
             bt.remark = self.cleaned_data[self._fieldname_remark(team)]
             bt.save()

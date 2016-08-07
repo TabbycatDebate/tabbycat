@@ -248,9 +248,7 @@ class AdminDrawWithDetailsView(AdminDrawView):
 # ==============================================================================
 
 class DrawStatusEdit(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
-
-    def get_redirect_url(self):
-        return reverse_round('draw', self.get_round())
+    round_redirect_pattern_name = 'draw'
 
 
 class CreateDrawView(DrawStatusEdit):

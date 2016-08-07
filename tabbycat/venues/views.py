@@ -6,7 +6,6 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from tournaments.mixins import RoundMixin
 from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
-from utils.misc import reverse_round
 
 from .allocator import allocate_venues
 from .models import Venue
@@ -17,16 +16,14 @@ class EditVenuesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     template_name = "venues_edit.html"
 
     def get_context_data(self, **kwargs):
-        kwargs['draw'] = self.get_round().get_draw()
+        kwargs['draw'] = self.get_round().debate_set_with_prefetches(speakers=False)
         return super().get_context_data(**kwargs)
 
 
 class AutoAllocateVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE
-
-    def get_redirect_url(self):
-        return reverse_round('venues-edit', self.get_round())
+    round_redirect_pattern_name = 'venues-edit'
 
     def post(self, request, *args, **kwargs):
         allocate_venues(self.get_round())

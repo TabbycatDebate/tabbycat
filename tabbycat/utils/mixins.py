@@ -42,16 +42,16 @@ class PostOnlyRedirectView(View):
     redirect_url = reverse_lazy('tabbycat-index')
     not_post_message = "Whoops! You're not meant to type that URL into your browser."
 
-    def get_redirect_url(self):
-        return self.redirect_url
+    def get_redirect_url(self, *args, **kwargs):
+        return self.redirect_url % kwargs
 
     def get(self, request, *args, **kwargs):
         logger.error("Tried to access a POST-only view with a GET request")
         messages.error(self.request, self.not_post_message)
-        return HttpResponseRedirect(self.get_redirect_url())
+        return HttpResponseRedirect(self.get_redirect_url(*args, **kwargs))
 
     def post(self, request, *args, **kwargs):
-        return HttpResponseRedirect(self.get_redirect_url())
+        return HttpResponseRedirect(self.get_redirect_url(*args, **kwargs))
 
 
 class JsonDataResponseView(View):

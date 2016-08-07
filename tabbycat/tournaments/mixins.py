@@ -2,10 +2,11 @@ import logging
 
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
+from django.core.urlresolvers import NoReverseMatch
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
-from utils.misc import redirect_tournament
+from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 
 from .models import Round, Tournament
 
@@ -54,6 +55,7 @@ class TournamentMixin(TabbycatBaseMixin):
     """
     tournament_slug_url_kwarg = "tournament_slug"
     tournament_cache_key = "{slug}_object"
+    tournament_redirect_pattern_name = None
 
     def get_tournament(self):
         # First look in self,
@@ -74,6 +76,17 @@ class TournamentMixin(TabbycatBaseMixin):
         self._tournament_from_url = tournament
         return tournament
 
+    def get_redirect_url(self, *args, **kwargs):
+        # Override if self.tournament_redirect_pattern_name is specified,
+        # otherwise just pass down the chain
+        if self.tournament_redirect_pattern_name:
+            try:
+                return reverse_tournament(self.tournament_redirect_pattern_name,
+                        self.get_tournament(), args=args, kwargs=kwargs)
+            except NoReverseMatch:
+                pass
+        return super().get_redirect_url(*args, **kwargs)
+
 
 class RoundMixin(TournamentMixin):
     """Mixin for views that relate to a round, and are specified as relating
@@ -88,6 +101,7 @@ class RoundMixin(TournamentMixin):
     """
     round_seq_url_kwarg = "round_seq"
     round_cache_key = "{slug}_{seq}_object"
+    round_redirect_pattern_name = None
 
     def get_page_subtitle(self):
         return 'as of %s' % self.get_round().name
@@ -111,6 +125,17 @@ class RoundMixin(TournamentMixin):
         cache.set(key, round, None)
         self._round_from_url = round
         return round
+
+    def get_redirect_url(self, *args, **kwargs):
+        # Override if self.round_redirect_pattern_name is specified,
+        # otherwise just pass down the chain
+        if self.round_redirect_pattern_name:
+            try:
+                return reverse_round(self.round_redirect_pattern_name,
+                        self.get_round(), args=args, kwargs=kwargs)
+            except NoReverseMatch:
+                pass
+        return super().get_redirect_url(*args, **kwargs)
 
 
 class PublicTournamentPageMixin(TournamentMixin):

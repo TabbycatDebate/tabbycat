@@ -7,25 +7,25 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-default"
-     href="{% tournament_url breaking_index %}">
+     href="{% tournament_url breakqual-index %}">
     Overview
   </a>
   {% for category in tournament.breakcategory_set.all %}
     <a class="btn btn-default"
-       href="{% tournament_url breaking_teams category.slug %}">
+       href="{% tournament_url breakqual-teams category.slug %}">
       View {{ category.name }} Break
     </a>
   {% endfor %}
   <a class="btn btn-default"
-     href="{% tournament_url breaking_adjs %}">
+     href="{% tournament_url breakqual-adjudicators %}">
     View Adjudicators Break
   </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
   <a class="btn btn-success"
-     href="{% tournament_url edit_eligibility %}">
-    Edit Team's Eligibility
+     href="{% tournament_url breakqual-edit-eligibility %}">
+    Edit Teams' Eligibility
   </a>
 {% endblock %}
 

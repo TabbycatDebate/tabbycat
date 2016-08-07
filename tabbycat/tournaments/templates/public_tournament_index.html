@@ -91,7 +91,7 @@
         {% if pref.public_breaking_teams %}
           {% for category in tournament.breakcategory_set.all %}
             <li class="list-group-item">
-              <a href="{% tournament_url public_breaking_teams category.slug %}">
+              <a href="{% tournament_url breakqual-public-teams category.slug %}">
                 {{ category.name }} Break
               </a>
             </li>
@@ -99,7 +99,7 @@
         {% endif %}
         {% if pref.public_breaking_adjs %}
           <li class="list-group-item">
-            <a href="{% tournament_url public_breaking_adjs %}">Breaking Adjudicators</a>
+            <a href="{% tournament_url breakqual-public-adjs %}">Breaking Adjudicators</a>
           </li>
         {% endif %}
         {% if pref.public_diversity %}

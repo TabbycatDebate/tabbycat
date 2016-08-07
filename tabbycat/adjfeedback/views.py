@@ -420,12 +420,11 @@ class AdjudicatorActionError(RuntimeError):
 
 class BaseAdjudicatorActionView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
 
+    tournament_redirect_pattern_name = 'adjfeedback-overview'
+
     def get_action_log_fields(self, **kwargs):
         kwargs['adjudicator'] = self.adjudicator
         return super().get_action_log_fields(**kwargs)
-
-    def get_redirect_url(self):
-        return reverse_tournament('adjfeedback-overview', self.get_tournament())
 
     def get_adjudicator(self, request):
         try:
@@ -560,8 +559,7 @@ class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
 
 class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
 
-    def get_redirect_url(self):
-        return reverse_tournament('randomised-urls-view', self.get_tournament())
+    tournament_redirect_pattern_name = 'randomised-urls-view'
 
     def post(self, request, *args, **kwargs):
         tournament = self.get_tournament()
@@ -589,8 +587,7 @@ class EmailRandomisedUrlsView(RandomisedUrlsView):
 
 class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
 
-    def get_redirect_url(self):
-        return reverse_tournament('randomised-urls-view', self.get_tournament())
+    tournament_redirect_pattern_name = 'randomised-urls-view'
 
     def post(self, request, *args, **kwargs):
         messages.success(self.request, "Emails were sent for all teams and adjudicators.")
