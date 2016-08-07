@@ -12,13 +12,11 @@ from django.views.decorators.cache import cache_page
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.edit import CreateView, FormView
 
-from draw.models import Debate, DebateTeam
-from participants.models import Institution
+from draw.models import Debate
 from utils.forms import SuperuserCreationForm
 from utils.mixins import SuperuserRequiredMixin
-from utils.views import admin_required, expect_post, public_optional_tournament_view, redirect_round, round_view, tournament_view
+from utils.views import admin_required, expect_post, redirect_round, round_view, tournament_view
 from utils.misc import redirect_tournament
-from venues.models import VenueGroup
 
 from .forms import TournamentForm
 from .mixins import TournamentMixin
@@ -79,36 +77,6 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
             else:
                 raise Http404()
         return super().get(self, request, *args, **kwargs)
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('enable_mass_draws')
-def all_tournaments_all_venues(request, t):
-    venues = VenueGroup.objects.all()
-    return render(request, 'public_all_tournament_venues.html', dict(venues=venues))
-
-
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('enable_mass_draws')
-def all_draws_for_venue(request, t, venue_id):
-    venue_group = VenueGroup.objects.get(pk=venue_id)
-    debates = Debate.objects.filter(division__venue_group=venue_group).select_related(
-        'round', 'round__tournament', 'division')
-    return render(request, 'public_all_draws_for_venue.html', dict(
-        venue_group=venue_group, debates=debates))
-
-
-@tournament_view
-@public_optional_tournament_view('enable_mass_draws')
-def all_draws_for_institution(request, t, institution_id):
-    # TODO: move to draws app
-    institution = Institution.objects.get(pk=institution_id)
-    debate_teams = DebateTeam.objects.filter(team__institution=institution).select_related(
-        'debate', 'debate__division', 'debate__division__venue_group', 'debate__round')
-    debates = [dt.debate for dt in debate_teams]
-
-    return render(request, 'public_all_draws_for_institution.html', dict(
-        institution=institution, debates=debates))
 
 
 @admin_required

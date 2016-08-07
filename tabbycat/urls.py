@@ -59,7 +59,11 @@ urlpatterns = [
 
     # Participants Cross Tournament
     url(r'^participants/',
-        include('participants.urls_crosst'))
+        include('participants.urls_crosst')),
+
+    # Draws Cross Tournament
+    url(r'^draw/',
+        include('draw.urls_crosst'))
 ]
 
 if settings.DEBUG:
