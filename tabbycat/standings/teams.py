@@ -1,7 +1,6 @@
 """Standings generator for teams."""
 
 import logging
-from itertools import groupby
 
 from django.db.models import Prefetch, Sum
 from django.db.models.expressions import RawSQL
@@ -12,8 +11,8 @@ from participants.models import Round
 from results.models import TeamScore
 
 from .base import BaseStandingsGenerator
-from .metrics import BaseMetricAnnotator, RepeatedMetricAnnotator, QuerySetMetricAnnotator, metricgetter
-from .ranking import BaseRankAnnotator, BasicRankAnnotator, SubrankAnnotator, DivisionRankAnnotator, RankFromInstitutionAnnotator
+from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator
+from .ranking import BasicRankAnnotator, DivisionRankAnnotator, RankFromInstitutionAnnotator, SubrankAnnotator
 
 logger = logging.getLogger(__name__)
 
@@ -277,31 +276,6 @@ class DivisionsWhoBeatWhomMetricAnnotator(WhoBeatWhomMetricAnnotator):
         for tsi in standings.infoview():
             wbwd = who_beat_whom_divisions(tsi)
             tsi.add_metric(self.key, wbwd)
-
-
-# ==============================================================================
-# Ranking annotators
-# ==============================================================================
-
-class DivisionRankAnnotator(BaseRankAnnotator):
-
-    key = "division_rank"
-    name = "division rank"
-    abbr = "DivR"
-
-    def __init__(self, metrics):
-        self.rank_key = metricgetter(*metrics)
-
-    def annotate(self, standings):
-        division_key = lambda x: x.team.division.name  # flake8: noqa
-        by_division = sorted(standings, key=division_key)
-        for division, division_teams in groupby(by_division, key=division_key):
-            rank = 1
-            for key, group in groupby(division_teams, self.rank_key):
-                group = list(group)
-                for tsi in group:
-                    tsi.add_ranking("division_rank", (rank, len(group) > 1))
-                rank += len(group)
 
 
 # ==============================================================================
