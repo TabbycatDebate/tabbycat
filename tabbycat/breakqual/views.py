@@ -90,6 +90,10 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreaking
         table = super().get_table()  # as for public view, but add some more columns
         table.add_column("Eligible for", [", ".join(bc.name for bc in tsi.team.break_categories.all()) for tsi in self.standings])
         table.add_column("Edit Remark", [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings])
+
+        if self.object.rule != "standard":
+            table.title += " (generated according to rule: %s)" % self.object.get_rule_display()
+
         return table
 
     def get_form_kwargs(self):
