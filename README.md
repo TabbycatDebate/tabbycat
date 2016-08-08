@@ -4,9 +4,9 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Auckland Australs 2010, [Victoria Australs 2012](https://www.facebook.com/Australs2012), [Otago Australs 2014](http://australs2014.herokuapp.com), [Daejeon Australs 2015](http://australs2015.herokuapp.com) and [many other tournaments of all sizes](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html).
+Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Australs in Auckland 2010, [Wellington 2012](https://www.facebook.com/Australs2012), [Dunedin 2014](http://australs2014.herokuapp.com), [Daejeon 2015](http://australs2015.herokuapp.com) and [Perth 2016](http://australs2016.herokuapp.com), as well as [many other tournaments of all sizes](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html).
 
-Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.herokuapp.com/). It's normally up, but its form will vary from time to time as we set up new feature demos for people. If it's down and you'd like to see it, or if you want to play with it as if you were running a tournament, [contact us](#authors-and-contacts). To see a post-tournament website, have a look at the [Daejeon Australs 2015 tab website](http://australs2015.herokuapp.com).
+Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.herokuapp.com/). It's normally up, but its form will vary from time to time as we set up new feature demos for people. If it's down and you'd like to see it, or if you want to play with it as if you were running a tournament, [contact us](#authors-and-contacts). To see a post-tournament website, have a look at the [WAustrals 2016 tab website](http://australs2016.herokuapp.com).
 
 ## Features
 
