@@ -7,7 +7,7 @@ Change Log
 Redesigned and redeveloped adjudicator allocation page
   - Redesigned interface, featuring clearer displays of conflict and diversity information
   - Changes to importances and panels are now automatically saved
-  - Added debate "liveness" to help identify critical rooms---many thanks to Thevesh Theva
+  - Added debate "liveness" to help identify critical rooms—many thanks to Thevesh Theva
   - Panel score calculations performed live to show strength of voting majorities
 New features
   - Added record pages for teams and adjudicators
@@ -21,7 +21,7 @@ Break round management
   - Reworked break generation code to be class-based, to improve future extensibility
   - Added support for break qualification rules: AIDA Australs, AIDA Easters, WADL
 Feedback
-  - Change Boolean fields in AdjudicatorFeedbackQuestion to reflect what they actually do
+  - Changed Boolean fields in AdjudicatorFeedbackQuestion to reflect what they actually do
   - Changed "panellist feedback enabled" option to "feedback paths", a choice of three options
 - Added basic code linting to the continuous integration tests
 - Many other small bug fixes, refactors, optimisations, and documentation updates
