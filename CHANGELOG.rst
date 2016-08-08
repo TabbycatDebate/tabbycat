@@ -4,19 +4,25 @@ Change Log
 
 1.0.0
 -----
-- Redesigned and redeveloped adjudicator allocation page, featuring:
-    - Changes to importances and panels are now automatically saved
-    - Each team's 'liveness' is now calculated and displayed (for all relevant break categories) to help identify critical rooms. Many thanks to Thevesh Theva for helping with this new feature.
-    - Redesigned interface, featuring more clear displays of conflict and diversity information
-    - Panel score calculations performed live to show strength of voting majorities
-- Break round draws are now fully supported
-- The majority of table view rendering has been shifted to Vue.js to improve their performance and design
-- Many significant performance improvements were made, particularly for pages that pulled in large data sets
-- Added team record and adjudicator record pages
-- Added a diversity tab to display demographic information about participants and scoring
-- Renamed feedback question options to "from team" and "from adj" (previously "team-on-orallist" and "chair-on-panellist"), and removed the never-used "panellist-on-chair" and "panellist-on-panellist" options
-- Changed feedback paths (previously "panellist feedback enabled") to a choice between three options, with explicit non-support for other
-  possibilities
+Redesigned and redeveloped adjudicator allocation page
+  - Redesigned interface, featuring clearer displays of conflict and diversity information
+  - Changes to importances and panels are now automatically saved
+  - Added debate "liveness" to help identify critical rooms---many thanks to Thevesh Theva
+  - Panel score calculations performed live to show strength of voting majorities
+New features
+  - Added record pages for teams and adjudicators
+  - Added a diversity tab to display demographic information about participants and scoring
+Significant general improvements
+  - Shifted most table rendering to Vue.js to improve performance and design
+  - Drastically reduced number of SQL queries in large tables, *e.g.* draw, results, tab
+Break round management
+  - Completed support for break round draws
+  - Simplified procedure for adding remarks to teams and updating break
+  - Reworked break generation code to be class-based, to improve future extensibility
+  - Added support for break qualification rules: AIDA Australs, AIDA Easters, WADL
+Feedback
+  - Change Boolean fields in AdjudicatorFeedbackQuestion to reflect what they actually do
+  - Changed "panellist feedback enabled" option to "feedback paths", a choice of three options
 - Added basic code linting to the continuous integration tests
 - Many other small bug fixes, refactors, optimisations, and documentation updates
 
