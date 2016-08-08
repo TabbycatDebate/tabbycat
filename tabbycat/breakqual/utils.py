@@ -1,8 +1,41 @@
 import math
+import logging
 
 from django.db.models import Sum
 
+from standings.teams import TeamStandingsGenerator
+
 from .models import BreakCategory
+
+logger = logging.getLogger(__name__)
+
+
+def get_breaking_teams(category, prefetch=()):
+    """Returns a list of StandingInfo objects, one for each team, with one
+    additional attribute populated: for each StandingInfo `tsi`,
+    `tsi.break_rank` is the rank of the team out of those that are in the break.
+
+    `prefetch` is passed to `prefetch_related()` in the Team query.
+    """
+    teams = category.breaking_teams.all().prefetch_related(*prefetch)
+    metrics = category.tournament.pref('team_standings_precedence')
+    generator = TeamStandingsGenerator(metrics, ('rank',))
+    standings = generator.generate(teams)
+
+    breakingteams_by_team_id = {bt.team_id: bt for bt in category.breakingteam_set.all()}
+
+    for tsi in standings:
+
+        bt = breakingteams_by_team_id[tsi.team.id]
+        if bt.break_rank is None:
+            if bt.remark:
+                tsi.break_rank = "(" + bt.get_remark_display().lower() + ")"
+            else:
+                tsi.break_rank = "<no rank, no remark>"
+        else:
+            tsi.break_rank = bt.break_rank
+
+    return standings
 
 
 def get_scores(bc):

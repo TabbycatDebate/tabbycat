@@ -1,9 +1,13 @@
-{% extends "breaking_index.html" %}
+{% extends "base.html" %}
 {% load debate_tags %}
 {% load static %}
 
 {% block head-title %}Break Eligibility{% endblock %}
 {% block page-title %}Break Eligibility{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "breakqual_subnav.html" %}
+{% endblock %}
 
 {% block page-subnav-actions %}
   <button class="btn btn-success submit-disable" id="submit-nav" data-loading-text="Saving...">

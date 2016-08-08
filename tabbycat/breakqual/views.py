@@ -11,7 +11,7 @@ from utils.mixins import (CacheMixin, PostOnlyRedirectView, SingleObjectFromTour
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
-from .breaking import get_breaking_teams
+from .utils import get_breaking_teams
 from .generator import BreakGenerator
 from .models import BreakCategory, BreakingTeam
 from . import forms
@@ -22,39 +22,44 @@ class PublicBreakIndexView(PublicTournamentPageMixin, CacheMixin, TemplateView):
     template_name = 'public_break_index.html'
 
 
-class PublicBreakingTeamsView(SingleObjectFromTournamentMixin, PublicTournamentPageMixin, CacheMixin, VueTableTemplateView):
+class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
-    public_page_preference = 'public_breaking_teams'
-    page_emoji = '👑'
     model = BreakCategory
     slug_url_kwarg = 'category'
+    page_emoji = '👑'
+    teams_prefetch = ('speaker_set',)
 
     def get_table(self):
-        t = self.get_tournament()
-
-        standings = get_breaking_teams(self.object, include_categories=t.pref('public_break_categories'))
-
+        self.standings = get_breaking_teams(self.object, prefetch=self.teams_prefetch)
         table = TabbycatTableBuilder(view=self, title=self.object.name)
-        table.add_ranking_columns(standings)
-        table.add_column("Break", [standing.break_rank for standing in standings])
-        table.add_team_columns([info.team for info in standings])
-        table.add_metric_columns(standings)
+        table.add_ranking_columns(self.standings)
+        table.add_column("Break", [tsi.break_rank for tsi in self.standings])
+        table.add_team_columns([tsi.team for tsi in self.standings])
+        table.add_metric_columns(self.standings)
         return table
+
+    def get_page_title(self):
+        return self.object.name + " Break"
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
 
 
+class PublicBreakingTeamsView(PublicTournamentPageMixin, CacheMixin, BaseBreakingTeamsView):
+    public_page_preference = 'public_breaking_teams'
+
+
 class AdminBreakIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
     template_name = 'breaking_index.html'
 
 
-class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, SingleObjectFromTournamentMixin, FormView):
-    model = BreakCategory
-    slug_url_kwarg = 'category'
+class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreakingTeamsView, FormView):
+    # inherit from two views, not best practice but works in this scenario
+
     form_class = forms.BreakingTeamsForm
     template_name = 'breaking_teams.html'
+    teams_prefetch = ('speaker_set', 'break_categories')
 
     def get_action_log_type(self):
         if 'save_update_all' in self.request.POST:
@@ -75,7 +80,18 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, SingleObject
         kwargs['generated'] = BreakingTeam.objects.filter(
                 break_category__tournament=self.get_tournament()).exists()
         kwargs['category'] = self.object
+
+        # Populate the form here, so we can save it in self.form
+        self.form = self.get_form()
+        kwargs['form'] = self.form
+
         return super().get_context_data(**kwargs)
+
+    def get_table(self):
+        table = super().get_table()  # as for public view, but add some more columns
+        table.add_column("Eligible for", [", ".join(bc.name for bc in tsi.team.break_categories.all()) for tsi in self.standings])
+        table.add_column("Edit Remark", [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings])
+        return table
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

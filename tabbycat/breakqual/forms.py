@@ -3,7 +3,6 @@ from django import forms
 from utils.forms import OptionalChoiceField
 
 from .models import BreakingTeam
-from .breaking import get_breaking_teams
 
 # ==============================================================================
 # Break eligbility form
@@ -53,11 +52,13 @@ class BreakingTeamsForm(forms.Form):
         self.category = category
         self._prefetch_breakingteams()
         self._create_and_initialise_fields()
-        self._generate_standings()
 
     @staticmethod
     def _fieldname_remark(team):  # Team not BreakingTeam
         return 'remark_%(team)d' % {'team': team.id}
+
+    def get_remark_field(self, team):  # Team not BreakingTeam
+        return self[self._fieldname_remark(team)].as_widget(attrs={'class': 'form-control'})
 
     def _bt(self, team):
         return self._bts_by_team_id[team.id]
@@ -74,9 +75,6 @@ class BreakingTeamsForm(forms.Form):
             except KeyError:
                 self.initial[self._fieldname_remark(team)] = None
 
-    def _generate_standings(self):
-        self._standings = get_breaking_teams(self.category, include_categories=True)
-
     def save(self):
         for team in self.category.breaking_teams.all():
             try:
@@ -85,10 +83,3 @@ class BreakingTeamsForm(forms.Form):
                 continue
             bt.remark = self.cleaned_data[self._fieldname_remark(team)]
             bt.save()
-
-    def metrics_info(self):
-        return self._standings.metrics_info()
-
-    def team_iter(self):
-        for standing in self._standings:
-            yield standing, self[self._fieldname_remark(standing.team)]
