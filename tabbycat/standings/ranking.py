@@ -102,8 +102,11 @@ class DivisionRankAnnotator(BaseRankWithinGroupAnnotator):
     abbr = "DivR"
 
     def __init__(self, metrics):
-        self.group_key = lambda x: x.team.division_id
         self.rank_key = metricgetter(*metrics)
+
+    @staticmethod
+    def group_key(tsi):
+        return tsi.team.division_id
 
 
 class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
@@ -113,5 +116,8 @@ class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
     abbr = "InstR"
 
     def __init__(self, metrics):
-        self.group_key = lambda x: x.team.institution_id
         self.rank_key = metricgetter(*metrics)
+
+    @staticmethod
+    def group_key(tsi):
+        return tsi.team.institution_id
