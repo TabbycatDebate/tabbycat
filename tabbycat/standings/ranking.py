@@ -70,7 +70,9 @@ class BasicRankAnnotator(BaseRankAnnotator):
 
 
 class BaseRankWithinGroupAnnotator(BaseRankAnnotator):
-    """Base class for ranking annotators that rank within groups."""
+    """Base class for ranking annotators that rank within groups.
+
+    Subclasses must define `self.group_key` and `self.rank_key`."""
 
     def annotate(self, standings):
         filtered = [tsi for tsi in standings if self.group_key(tsi) is not None]
