@@ -5,6 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.views.generic.base import ContextMixin
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 # TODO move this class to utils/mixins.py (requires resolution of circular import)
-class TabbycatBaseMixin:
+class TabbycatBaseMixin(ContextMixin):
     """Allows all views to set header information in their subclassess obviating
     the need for page template boilerplate and/or page specific templates"""
 
