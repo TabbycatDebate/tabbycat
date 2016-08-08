@@ -73,7 +73,8 @@ class BaseRankWithinGroupAnnotator(BaseRankAnnotator):
     """Base class for ranking annotators that rank within groups."""
 
     def annotate(self, standings):
-        by_group = sorted(standings, key=self.group_key)
+        filtered = [tsi for tsi in standings if self.group_key(tsi) is not None]
+        by_group = sorted(filtered, key=self.group_key)
         for key, group in groupby(by_group, key=self.group_key):
             rank_in_group = 1
             for _, subgroup in groupby(group, self.rank_key):

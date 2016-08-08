@@ -106,8 +106,12 @@ class StandingInfo:
                 yield (None, False)
 
     def get_ranking(self, key):
-        """Returns the numeric rank (without equality information)."""
-        return self.rankings[key][0]
+        """Returns the numeric rank (without equality information), or None
+        if there is no ranking associated with this key."""
+        try:
+            return self.rankings[key][0]
+        except KeyError:
+            return None
 
 
 class Standings:

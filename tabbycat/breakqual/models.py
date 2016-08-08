@@ -19,6 +19,8 @@ class BreakCategory(models.Model):
         ('aida-pre2015', "AIDA Pre-2015"),
         ('aida-2016-easters', "AIDA 2016 (Easters)"),
         ('aida-2016-australs', "AIDA 2016 (Australs)"),
+        ('wadl-div-first', "WADL division winners first"),
+        ('wadl-div-guaranteed', "WADL division winners guaranteed"),
     ]
 
     rule = models.CharField(max_length=25, choices=BREAK_QUALIFICATION_CHOICES, default='standard',

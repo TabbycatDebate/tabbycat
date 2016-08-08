@@ -3,7 +3,7 @@ from . import base
 
 # These imports add the break generators in those files to the registry.
 from . import aida  # noqa: F401
-# from . import wadl  # noqa: F401
+from . import wadl  # noqa: F401
 
 from breakqual.models import BreakCategory
 

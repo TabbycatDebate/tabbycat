@@ -10,7 +10,7 @@ from .models import BreakCategory
 logger = logging.getLogger(__name__)
 
 
-def get_breaking_teams(category, prefetch=()):
+def get_breaking_teams(category, prefetch=(), rankings=('rank',)):
     """Returns a list of StandingInfo objects, one for each team, with one
     additional attribute populated: for each StandingInfo `tsi`,
     `tsi.break_rank` is the rank of the team out of those that are in the break.
@@ -19,7 +19,7 @@ def get_breaking_teams(category, prefetch=()):
     """
     teams = category.breaking_teams.all().prefetch_related(*prefetch)
     metrics = category.tournament.pref('team_standings_precedence')
-    generator = TeamStandingsGenerator(metrics, ('rank',))
+    generator = TeamStandingsGenerator(metrics, rankings)
     standings = generator.generate(teams)
 
     breakingteams_by_team_id = {bt.team_id: bt for bt in category.breakingteam_set.all()}

@@ -32,8 +32,12 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
     page_emoji = '👑'
     teams_prefetch = ('speaker_set',)
 
+    def get_rankings(self):
+        return ('rank',)
+
     def get_table(self):
-        self.standings = get_breaking_teams(self.object, prefetch=self.teams_prefetch)
+        self.standings = get_breaking_teams(self.object, prefetch=self.teams_prefetch,
+                rankings=self.get_rankings())
         table = TabbycatTableBuilder(view=self, title=self.object.name)
         table.add_ranking_columns(self.standings)
         table.add_column("Break", [tsi.break_rank for tsi in self.standings])
@@ -86,14 +90,13 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreaking
 
         return super().get_context_data(**kwargs)
 
+    def get_rankings(self):
+        return BreakGenerator(self.object).rankings
+
     def get_table(self):
         table = super().get_table()  # as for public view, but add some more columns
         table.add_column("Eligible for", [", ".join(bc.name for bc in tsi.team.break_categories.all()) for tsi in self.standings])
         table.add_column("Edit Remark", [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings])
-
-        if self.object.rule != "standard":
-            table.title += " (generated according to rule: %s)" % self.object.get_rule_display()
-
         return table
 
     def get_form_kwargs(self):
