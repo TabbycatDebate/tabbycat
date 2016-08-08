@@ -43,8 +43,8 @@ Participants > Adjudicators
 Participants > Teams
   - Note the distinction here between full name and short name. The latter is used on pages where space is tight, such as the draw displays or the adjudicator allocation interface.
   - Note that "Uses institutional prefix" option. With this option on, a team from the 'MUDS' insttution named '1' or 'Gold' would be displayed as 'MUDS 1' or 'MUDS Gold'.
-  - At present, setting a team's type to Bye, Swing, or Composite only affects very particular circumstances, and should be considered uncessary.
-  - If you do have composite teams, and wish to have them be conflicted by ajudicators from each respective instutution, you'll need to add a new team conflict to each adjudicator from each institution.
+  - At present, setting a team's type to Bye, Swing, or Composite only affects very particular circumstances, and should be considered unnecessary.
+  - If you do have composite teams, and wish to have them be conflicted by adjudicators from each respective instutution, you'll need to add a new team conflict to each adjudicator from each institution.
   - If you do have swing teams, or teams that are otherwise ineligible for breaking, this is typically handled through the breaks interface in the main site
 
 Participants > Speakers
