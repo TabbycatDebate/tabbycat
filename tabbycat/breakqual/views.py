@@ -32,7 +32,7 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
     page_emoji = '👑'
 
     def get_standings(self):
-        return get_breaking_teams(self.object, prefetch=('speaker_set'))
+        return get_breaking_teams(self.object, prefetch=('speaker_set',))
 
     def get_table(self):
         self.standings = self.get_standings()
