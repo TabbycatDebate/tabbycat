@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView, TemplateView
 
-from participants.models import Adjudicator
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from utils.misc import reverse_tournament
@@ -20,6 +19,10 @@ from . import forms
 class PublicBreakIndexView(PublicTournamentPageMixin, CacheMixin, TemplateView):
     public_page_preference = 'public_results'
     template_name = 'public_break_index.html'
+
+
+class AdminBreakIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+    template_name = 'breaking_index.html'
 
 
 class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateView):
@@ -48,10 +51,6 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
 
 class PublicBreakingTeamsView(PublicTournamentPageMixin, CacheMixin, BaseBreakingTeamsView):
     public_page_preference = 'public_breaking_teams'
-
-
-class AdminBreakIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
-    template_name = 'breaking_index.html'
 
 
 class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreakingTeamsView, FormView):
@@ -147,26 +146,20 @@ class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
 
     def get_table(self):
         table = TabbycatTableBuilder(view=self)
-        table.add_adjudicator_columns(Adjudicator.objects.filter(
-            breaking=True, tournament=self.get_tournament()))
+        table.add_adjudicator_columns(self.get_tournament().adjudicator_set.filter(breaking=True))
         return table
 
 
 class AdminBreakingAdjudicatorsView(LoginRequiredMixin, BaseBreakingAdjudicatorsView):
-
     template_name = 'breaking_adjs.html'
-
-    def get(self, request, *args, **kwargs):
-        messages.info(self.request, "Adjudicators can be marked as breaking in the Feedback section.")
-        return super().get(self, request, *args, **kwargs)
 
 
 class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, CacheMixin, BaseBreakingAdjudicatorsView):
-
     public_page_preference = 'public_breaking_adjs'
 
 
 class EditEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, FormView):
+
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT
     form_class = forms.BreakEligibilityForm
     template_name = 'edit_eligibility.html'
