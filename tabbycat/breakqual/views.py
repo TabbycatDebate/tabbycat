@@ -30,14 +30,12 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
     model = BreakCategory
     slug_url_kwarg = 'category'
     page_emoji = '👑'
-    teams_prefetch = ('speaker_set',)
 
-    def get_rankings(self):
-        return ('rank',)
+    def get_standings(self):
+        return get_breaking_teams(self.object, prefetch=('speaker_set'))
 
     def get_table(self):
-        self.standings = get_breaking_teams(self.object, prefetch=self.teams_prefetch,
-                rankings=self.get_rankings())
+        self.standings = self.get_standings()
         table = TabbycatTableBuilder(view=self, title=self.object.name)
         table.add_ranking_columns(self.standings)
         table.add_column("Break", [tsi.break_rank for tsi in self.standings])
@@ -62,7 +60,6 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreaking
 
     form_class = forms.BreakingTeamsForm
     template_name = 'breaking_teams.html'
-    teams_prefetch = ('speaker_set', 'break_categories')
 
     def get_action_log_type(self):
         if 'save_update_all' in self.request.POST:
@@ -90,8 +87,9 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreaking
 
         return super().get_context_data(**kwargs)
 
-    def get_rankings(self):
-        return BreakGenerator(self.object).rankings
+    def get_standings(self):
+        return get_breaking_teams(self.object, prefetch=('speaker_set', 'break_categories'),
+                rankings=BreakGenerator(self.object).rankings)
 
     def get_table(self):
         table = super().get_table()  # as for public view, but add some more columns

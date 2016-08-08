@@ -16,6 +16,7 @@ def get_breaking_teams(category, prefetch=(), rankings=('rank',)):
     `tsi.break_rank` is the rank of the team out of those that are in the break.
 
     `prefetch` is passed to `prefetch_related()` in the Team query.
+    `rankings` is passed to `rankings` in the TeamStandingsGenerator.
     """
     teams = category.breaking_teams.all().prefetch_related(*prefetch)
     metrics = category.tournament.pref('team_standings_precedence')
