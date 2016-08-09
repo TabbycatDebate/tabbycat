@@ -36,7 +36,7 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
 
     def get_table(self):
         self.standings = self.get_standings()
-        table = TabbycatTableBuilder(view=self, title=self.object.name)
+        table = TabbycatTableBuilder(view=self, title=self.object.name, sort_key='Rk')
         table.add_ranking_columns(self.standings)
         table.add_column("Break", [tsi.break_rank for tsi in self.standings])
         table.add_team_columns([tsi.team for tsi in self.standings])

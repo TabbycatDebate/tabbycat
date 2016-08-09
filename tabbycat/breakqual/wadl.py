@@ -16,7 +16,7 @@ class WadlDivisionWinnersFirstBreakGenerator(BaseBreakGenerator):
 
         # First, grab division winners
         self.breaking_teams = [tsi for tsi in self.eligible_teams
-                if tsi.get_ranking("division") == 1]
+                if tsi.get_ranking("division_rank") == 1]
 
         num_vacant_slots = self.break_size - len(self.breaking_teams)
 
@@ -25,7 +25,7 @@ class WadlDivisionWinnersFirstBreakGenerator(BaseBreakGenerator):
 
         # Then, if there are still spots to fill, add the top division non-winners
         division_losers = [tsi for tsi in self.eligible_teams
-                if tsi.get_ranking("division") != 1]
+                if tsi.get_ranking("division_rank") != 1]
         top_division_losers = division_losers[:num_vacant_slots]
 
         if top_division_losers:
