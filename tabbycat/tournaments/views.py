@@ -24,9 +24,8 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class PublicSiteIndexView(CacheMixin, TemplateView):
+class PublicSiteIndexView(TemplateView):
     template_name = 'site_index.html'
-    cache_timeout = 10 # Set slower to show new indexes so it will show new pages
 
     def get(self, request, *args, **kwargs):
         tournaments = Tournament.objects.all()
