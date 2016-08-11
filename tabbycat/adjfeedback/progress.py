@@ -70,7 +70,7 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         adjudicators; if the chair was in the majority, then it must be the
         chair."""
 
-        if self.enforce_orallist:
+        if self.enforce_orallist and self.source.debate.confirmed_ballot:
             majority = self.source.debate.confirmed_ballot.ballot_set.majority_adj
             chair = self.source.debate.adjudicators.chair
             if chair in majority:
