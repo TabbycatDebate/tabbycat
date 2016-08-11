@@ -9,7 +9,6 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView
-from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
@@ -200,10 +199,8 @@ class LatestFeedbackView(FeedbackCardsView):
             'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
 
 
-class FeedbackFromSourceView(SingleObjectMixin, FeedbackCardsView):
+class FeedbackFromSourceView(SingleObjectFromTournamentMixin, FeedbackCardsView):
     """Base class for views displaying feedback from a given team or adjudicator."""
-    # SingleObjectFromTournamentMixin doesn't work great here, it induces an MRO
-    # conflict between TournamentMixin and ContextMixin.
 
     template_name = "feedback_by_source.html"
     source_name_attr = None
@@ -219,10 +216,6 @@ class FeedbackFromSourceView(SingleObjectMixin, FeedbackCardsView):
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
 
-    def get_queryset(self):
-        # from SingleObjectFromTournamentMixin
-        return super().get_queryset().filter(tournament=self.get_tournament())
-
     def get_feedback_queryset(self):
         kwargs = {self.adjfeedback_filter_field: self.object}
         return AdjudicatorFeedback.objects.filter(**kwargs).order_by('-timestamp')
@@ -230,13 +223,12 @@ class FeedbackFromSourceView(SingleObjectMixin, FeedbackCardsView):
 
 class FeedbackOnAdjudicatorView(FeedbackFromSourceView):
     """Base class for views displaying feedback from a given team or adjudicator."""
-    # SingleObjectFromTournamentMixin doesn't work great here, it induces an MRO
-    # conflict between TournamentMixin and ContextMixin.
 
     model = Adjudicator
     source_name_attr = 'name'
     source_type = "on"
     adjfeedback_filter_field = 'adjudicator'
+    allow_null_tournament = True
 
 
 class FeedbackFromTeamView(FeedbackFromSourceView):
@@ -244,6 +236,7 @@ class FeedbackFromTeamView(FeedbackFromSourceView):
     model = Team
     source_name_attr = 'short_name'
     adjfeedback_filter_field = 'source_team__team'
+    allow_null_tournament = False
 
 
 class FeedbackFromAdjudicatorView(FeedbackFromSourceView):
@@ -251,6 +244,7 @@ class FeedbackFromAdjudicatorView(FeedbackFromSourceView):
     model = Adjudicator
     source_name_attr = 'name'
     adjfeedback_filter_field = 'source_adjudicator__adjudicator'
+    allow_null_tournament = True
 
 
 class GetAdjFeedback(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
@@ -319,11 +313,11 @@ class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddF
 
 
 class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormView):
-    """Base class for views that allow users to add feedback.
-    Subclasses must also subclass SingleObjectMixin, directly or indirectly."""
+    """Base class for views that allow users to add feedback."""
 
     template_name = "enter_feedback.html"
     pk_url_kwarg = 'source_id'
+    allow_null_tournament = True
 
     def get_form_class(self):
         return make_feedback_form_class(self.object, self.get_tournament(),

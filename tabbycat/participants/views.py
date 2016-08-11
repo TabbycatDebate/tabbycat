@@ -3,7 +3,6 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.views.generic.base import View
-from django.views.generic.detail import SingleObjectMixin
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
@@ -78,7 +77,9 @@ class ParticipantRecordsListView(SuperuserRequiredMixin, TournamentMixin, VueTab
         return [adjs_table, teams_table]
 
 
-class BaseRecordView(SingleObjectMixin, TournamentMixin, VueTableTemplateView):
+class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
+
+    allow_null_tournament = True
 
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin
@@ -223,6 +224,7 @@ class PublicConfirmShiftView(CrossTournamentPageMixin, SingleObjectByRandomisedU
     template_name = 'confirm_shifts.html'
     formset_factory_kwargs = dict(can_delete=False, extra=0, fields=['timing_confirmed'])
     model = Adjudicator
+    allow_null_tournament = True
     formset_model = DebateAdjudicator
 
     def get_success_url(self):

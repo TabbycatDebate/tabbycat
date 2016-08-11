@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse_lazy
+from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.decorators import method_decorator
@@ -104,13 +105,20 @@ class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
     tournament. Like SingleObjectMixin, but restricts searches to the relevant
     tournament."""
 
+    allow_null_tournament = False
+
     def get_queryset(self):
-        return super().get_queryset().filter(tournament=self.get_tournament())
+        if self.allow_null_tournament:
+            return super().get_queryset().filter(
+                Q(tournament=self.get_tournament()) | Q(tournament__isnull=True)
+            )
+        else:
+            return super().get_queryset().filter(tournament=self.get_tournament())
 
 
-class SingleObjectByRandomisedUrlMixin(SingleObjectMixin):
+class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     """Mixin for views that use URLs referencing objects by a randomised key.
-    This is just a `SingleObjectMixin` with some options set.
+    This is just a `SingleObjectFromTournamentMixin` with some options set.
 
     Views using this mixin should have both a `url_key` group in their URL's
     regular expression, and a primary key group (by default `pk`, inherited from
