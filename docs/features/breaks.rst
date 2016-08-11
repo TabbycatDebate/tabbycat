@@ -109,6 +109,10 @@ values are described in :ref:`breakqual-rules` above. If using
 `importtournament`, be sure to use the correct string (in brackets in the
 table). The rule defaults to "Standard" (``standard``).
 
+.. note:: The "institution cap" field was removed in Tabbycat 1.0. All Australs
+  break qualification rules are now hard-coded to a cap of three teams per
+  institution.
+
 2. Creating break rounds
 ------------------------
 
