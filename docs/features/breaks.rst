@@ -55,10 +55,9 @@ which is the default.
 |                             | make *n* teams.                                         |
 +-----------------------------+---------------------------------------------------------+
 | **AIDA 2016 (Easters)**     | As for AIDA 2016 (Australs), except that if fewer than  |
-|                             | *n* teams fulfil either criterion, then only the best   |
+| (``aida-2016-easters``)     | *n* teams fulfil either criterion, then only the best   |
 |                             | teams who are in the top three teams from their         |
 |                             | institution are added to make *n* teams.                |
-| (``aida-2016-easters``)     |                                                         |
 +-----------------------------+---------------------------------------------------------+
 | **WADL division winners     | The division winners are taken first, then the best     |
 | first**                     | teams who did not win their division are added to make  |
