@@ -273,7 +273,7 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         if tournament is None:
             tournament = adjudicator.tournament
         if tournament is None:
-            logger.warning("No tournament specified and adjudicator {} has no tournament".format(adjudicator))
+            logger.warning("No tournament specified and adjudicator %s has no tournament", adjudicator)
         else:
             self.feedback_paths = tournament.pref('feedback_paths')
         super().__init__(tournament)

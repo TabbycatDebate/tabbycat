@@ -46,7 +46,7 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
         targets = []
 
     if feedback_paths not in ['all-adjs', 'with-p-on-c', 'minimal']:
-        logger.error("Unrecognised preference: {!r}".format(feedback_paths))
+        logger.error("Unrecognised preference: %s", feedback_paths)
 
     return targets
 

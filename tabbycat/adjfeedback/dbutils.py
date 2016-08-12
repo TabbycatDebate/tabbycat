@@ -82,7 +82,7 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
     for source, adj in sources_and_subjects:
 
         if random.random() > probability:
-            logger.info(" - Skipping {} on {}".format(source, adj))
+            logger.info(" - Skipping %s on %s", source, adj)
             continue
 
         fb = fm.AdjudicatorFeedback(submitter_type=submitter_type)
@@ -132,7 +132,7 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
             question.answer_type_class(question=question, feedback=fb, answer=answer).save()
 
         name = source.name if isinstance(source, Adjudicator) else source.short_name
-        logger.info("[{}] {} on {}: {}".format(debate.round.tournament.slug, name, adj, score))
+        logger.info("[%s] %s on %s: %s", debate.round.tournament.slug, name, adj, score)
 
         fbs.append(fb)
 

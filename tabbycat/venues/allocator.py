@@ -68,7 +68,7 @@ class VenueAllocator:
             if len(constraints) > 0:
                 constraints.sort(key=lambda x: x.priority, reverse=True)
                 debate_constraints.append((debate, constraints))
-                logger.info("Constraints on {}: {}".format(debate, constraints))
+                logger.info("Constraints on %s: %s", debate, constraints)
 
         debate_constraints.sort(key=lambda x: x[1][0].priority, reverse=True)
 
@@ -99,9 +99,9 @@ class VenueAllocator:
 
             # If we can't fulfil the highest constraint, bump it down the list.
             if len(eligible_venues) == 0:
-                logger.debug("Unfilfilled (highest): {}".format(highest_constraint))
+                logger.debug("Unfilfilled (highest): %s", highest_constraint)
                 if len(constraints) == 0:
-                    logger.debug("{} is now unconstrained".format(debate))
+                    logger.debug("%s is now unconstrained", debate)
                     continue  # Failed all constraints, debate is now unconstrained
                 new_priority = constraints[0].priority
                 for i, dc in enumerate(debate_constraints):
@@ -121,7 +121,7 @@ class VenueAllocator:
                     continue  # Skip if we've already done a constraint for this team/adj/inst/div
                 constraint_venues = set(constraint.venue_group.venues)
                 if eligible_venues.isdisjoint(constraint_venues):
-                    logger.debug("Unfilfilled: {}".format(constraint))
+                    logger.debug("Unfilfilled: %s", constraint)
                 else:
                     eligible_venues &= constraint_venues
                     satisified_constraints.append(constraint)
@@ -129,7 +129,7 @@ class VenueAllocator:
             # If no eligible venues are preferred venues, drop the last preferred venue.
             preferred_venues = set(self._preferred_venues)
             if eligible_venues.isdisjoint(preferred_venues):
-                logger.debug("No preferred venues available: {}".format(debate))
+                logger.debug("No preferred venues available: %s", debate)
                 self._preferred_venues = self._preferred_venues[:-1]
             else:
                 eligible_venues &= preferred_venues
@@ -140,7 +140,7 @@ class VenueAllocator:
             self._all_venues.remove(venue)
             if venue in self._preferred_venues:
                 self._preferred_venues.remove(venue)
-            logger.debug("Assigning {} to {}".format(venue, debate))
+            logger.debug("Assigning %s to %s", venue, debate)
 
         return debate_venues
 
@@ -158,6 +158,6 @@ class VenueAllocator:
 
     def save_venues(self, debate_venues):
         for debate, venue in debate_venues.items():
-            logger.debug("Saving {} for {}".format(venue, debate))
+            logger.debug("Saving %s for %s", venue, debate)
             debate.venue = venue
             debate.save()

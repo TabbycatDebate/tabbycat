@@ -142,7 +142,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
                     url_name = 'participants-adjudicator-record' if self.admin else 'participants-public-adjudicator-record'
                     pk = progress.adjudicator.pk
                 else:
-                    logger.error("Unrecognised progress type: {}".format(progress.__class__.__name__))
+                    logger.error("Unrecognised progress type: %s", progress.__class__.__name__)
                     return ''
                 return reverse_tournament(url_name, self.tournament, kwargs={'pk': pk})
 

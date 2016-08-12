@@ -92,7 +92,7 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
         arguments from the third onwards, and all keyword arguments, are passed
         to get_annotation_metric_query_str()."""
         query = cls.get_annotation_metric_query_str(*args, **kwargs)
-        logger.info("Running query in {}: {}".format(cls.__name__, query))
+        logger.info("Running query in %s: %s", cls.__name__, query)
         sql = RawSQL(query, ())
         return queryset.annotate(**{column_name: sql}).distinct()
 
@@ -100,8 +100,7 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
         """Annotates items with the given QuerySet, using the "metric" field."""
         for item in queryset:
             if item.metric is None:
-                logger.warning("Metric {metric!r} for {item} was None, setting to 0".format(
-                    metric=self.key, item=item))
+                logger.warning("Metric %r for %s was None, setting to 0", self.key, item)
                 item.metric = 0
             standings.add_metric(item, self.key, item.metric)
 

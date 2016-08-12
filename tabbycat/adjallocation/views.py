@@ -126,7 +126,7 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
             adjs = [Adjudicator.objects.get(id=int(x)) for x in values]
             if key.startswith("chair_"):
                 if len(adjs) > 1:
-                    logger.warning("There was more than one chair for debate {}, only saving the first".format(alloc.debate))
+                    logger.warning("There was more than one chair for debate %s, only saving the first", alloc.debate)
                     continue
                 alloc.chair = adjs[0]
             elif key.startswith("panel_"):
@@ -140,17 +140,16 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
             revised = allocations[d_id]
             if existing != revised:
                 changed += 1
-                logger.info("Saving adjudicators for debate {}".format(debate))
-                logger.info("{} --> {}".format(existing, revised))
+                logger.info("Saving adjudicators for debate %s", debate)
+                logger.info("%s --> %s", existing, revised)
                 try:
                     revised.save()
                 except IntegrityError:
-                    return HttpResponseBadRequest("""An adjudicator
-                        was allocated to the same debate multiple times. Please
-                        remove them and re-save.""")
+                    return HttpResponseBadRequest("An adjudicator was allocated to the same "
+                        "to the same debate multiple times. Please remove them and re-save.")
 
         if not changed:
-            logger.warning("Didn't save any adjudicator allocations, nothing changed.")
+            logger.info("Didn't save any adjudicator allocations, nothing changed.")
             return HttpResponse("There aren't any changes to save.")
 
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,

@@ -232,9 +232,9 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
             ts = ts.filter(debate_team__debate__round__seq__lte=round.seq)
 
         ts = ts.aggregate(Sum('points'))
-        logger.info("who beat whom, {0} {3} vs {1} {4}: {2}".format(
-            tsi.team.short_name, other.team.short_name,
-            ts["points__sum"], key(tsi), key(other)))
+        logger.info("who beat whom, %s %s vs %s %s: %s",
+            tsi.team.short_name, key(tsi), other.team.short_name, key(other),
+            ts["points__sum"])
         return ts
 
     def annotate(self, queryset, standings, round=None):
