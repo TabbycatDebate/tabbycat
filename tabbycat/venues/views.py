@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.views.generic.base import TemplateView
+from django.views.generic import TemplateView, View
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -31,7 +31,7 @@ class AutoAllocateVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin,
         return super().post(request, *args, **kwargs)
 
 
-class SaveVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
+class SaveVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, View):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
