@@ -35,6 +35,10 @@ class VenueAllocator:
         unconstrained_venues = self.allocate_unconstrained_venues(unconstrained_debates)
         debate_venues.update(unconstrained_venues)
 
+        # this set is only non-empty if there were too few venues overall
+        debates_without_venues = [d for d in debates if d not in debate_venues]
+        debate_venues.update({debate: None for debate in debates_without_venues})
+
         self.save_venues(debate_venues)
 
     def collect_constraints(self, debates):
