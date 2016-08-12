@@ -44,6 +44,16 @@
 
   <div id="" class="col-md-9">
 
+    {% with ndebates=round.debate_set.count nvenues=round.active_venues.count %}
+      {% if ndebates > nvenues %}
+        <div class="alert alert-warning">
+          There are {{ ndebates }} debates in this round but only {{ nvenues }} venues.
+          <a href="{% round_url venue_availability round %}" class="alert-link">
+            Check in more venues</a>.
+        </div>
+      {% endif %}
+    {% endwith %}
+
     <div id="alerts-holder" class=""></div>
 
     <div class="panel panel-default">
