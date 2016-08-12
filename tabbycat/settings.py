@@ -95,12 +95,9 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
-                # For Jet
-                'django.template.context_processors.request',
-                # For tournament config vars
-                'utils.context_processors.debate_context',
-                # For nav highlights
-                'utils.context_processors.get_menu_highlight',
+                'django.template.context_processors.request',  # for Jet
+                'utils.context_processors.debate_context',  # for tournament config vars
+                'utils.context_processors.get_menu_highlight',  # for navigation highlights
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
@@ -116,10 +113,8 @@ TEMPLATES = [
 # Caching
 # ==============================================================================
 
-PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT',
-                                60 * 1))
-TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT',
-                                60 * 120))
+PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 1))
+TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
 
 # Default non-heroku cache is to use local memory
 CACHES = {
@@ -174,8 +169,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'filters': {
         'require_debug_false': {
-            # Only send emails to admins when debug is false
-            '()': 'django.utils.log.RequireDebugFalse',
+            '()': 'django.utils.log.RequireDebugFalse',  # disables e-mails to admins when DEBUG on
         }
     },
     'handlers': {
@@ -183,12 +177,16 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
         },
-        'mail_admins': {
-            # Any log item marked ERROR or higher will be sent to admins
+        'email_on_error': {  # errors and above are e-mailed to admins
             'level': 'ERROR',
             'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+        'email_on_critical': {
+            'level': 'CRITICAL',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
     },
     'loggers': {
         'django': {
@@ -196,25 +194,23 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'django.request': {
-            # Pass all ERRORS to mail_admins handler
-            'handlers': ['mail_admins'],
+            'handlers': ['email_on_error'],
             'level': 'ERROR',
-            'propagate': True,
         },
     },
     'formatters': {
         'standard': {
             'format': '[%(asctime)s] %(levelname)s %(name)s: %(message)s',
-            'datefmt': '%d/%b/%Y %H:%M:%S'
         },
     },
 }
 
 for app in TABBYCAT_APPS:
     LOGGING['loggers'][app] = {
-        'handlers': ['console'],
-        'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO'),
+        'handlers': ['console', 'email_on_critical'],
+        'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
+
 
 # ==============================================================================
 # Messages

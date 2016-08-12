@@ -144,8 +144,10 @@ class VenueAllocator:
         """Allocates unconstrained venues by randomly shuffling the remaining
         preferred venues."""
 
-        assert len(self._preferred_venues) == len(debates), "{:d} preferred venues " \
-            "but {:d} debates".format(len(self._preferred_venues), len(debates))
+        if len(self._preferred_venues) != len(debates):
+            logger.critical("preferred venues to unconstrained debates mismatch: "
+                "%s preferred venues, %d debates", len(self._preferred_venues), len(debates))
+            # we'll still keep going, since zip() stops at the end of the shorter list
 
         random.shuffle(debates)
         return {debate: venue for debate, venue in zip(debates, self._preferred_venues)}
