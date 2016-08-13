@@ -45,6 +45,9 @@
             class="btn btn-default category-display category-{{ category.seq }}">
             {{ category.name }} Break
           </button>
+          <button disabled class="btn btn-default">
+            No Category Assigned
+          </button>
         </div>
         <div class="btn-group btn-group-sm">
           <button class="btn btn-default nav-link hoverable" v-on:click="showRegion" v-bind:class="showingRegion ? 'active' : ''">
@@ -123,24 +126,21 @@ export default {
     },
     showRegion: function() {
       this.showingRegion = !this.showingRegion;
-      $(".diversity-highlightable").toggleClass("region-display");
       this.showingGender = false;
       this.showingCategory = false;
-      $(".diversity-highlightable").removeClass("gender-display category-display");
+      this.$dispatch('set_diversity_highlights', this.showingRegion, 'region_show')
     },
     showGender: function() {
       this.showingGender = !this.showingGender;
-      $(".diversity-highlightable").toggleClass("gender-display");
       this.showingRegion = false;
       this.showingCategory = false;
-      $(".diversity-highlightable").removeClass("region-display category-display");
+      this.$dispatch('set_diversity_highlights', this.showingGender, 'gender_show')
     },
     showCategory: function() {
-      $(".diversity-highlightable").toggleClass("category-display");
       this.showingCategory = !this.showingCategory;
       this.showingGender = false;
       this.showingRegion = false;
-      $(".diversity-highlightable").removeClass("region-display gender-display");
+      this.$dispatch('set_diversity_highlights', this.showingCategory, 'category_show')
     }
   }
 }

@@ -5,10 +5,24 @@
 
 export default {
   computed: {
+    diversityState: function () {
+      var adjorteam = this.adjorteam;
+      var class_string = ""
+      if (adjorteam.region_show === true) {
+        class_string += " region-display";
+      }
+      if (adjorteam.gender_show === true) {
+        class_string += " gender-display";
+      }
+      if (adjorteam.category_show === true) {
+        class_string += " category-display";
+      }
+      return class_string
+    },
     diversityHighlights: function () {
-      var class_string = " diversity-highlightable"
       var adjorteam = this.adjorteam;
 
+      var class_string = ""
       if (typeof adjorteam.gender !== 'undefined') {
         if (adjorteam.gender === "M") {
           class_string += " has-gender gender-male"

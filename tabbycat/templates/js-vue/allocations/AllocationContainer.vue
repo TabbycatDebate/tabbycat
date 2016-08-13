@@ -131,6 +131,21 @@ export default {
       this.toggleConflicts(false, 'hover', origin, conflicts_dict);
       this.toggleHistories(false, 'hover', origin, histories_dict);
     },
+    'set_diversity_highlights': function(set_state, set_type) {
+      // Sets diveristy state on the original object
+      // so that it will persist through drag/drops when the element is removed
+      for (var adjID in this.adjudicators) {
+        this.adjudicators[adjID].region_show = false
+        this.adjudicators[adjID].gender_show = false
+        this.adjudicators[adjID][set_type] = set_state
+      }
+      for (var teamID in this.teams) {
+        this.teams[teamID].region_show = false
+        this.teams[teamID].category_show = false
+        this.teams[teamID].gender_show = false
+        this.teams[teamID][set_type] = set_state
+      }
+    },
     // Set or unset dragg adjs to panels
     'set-adj-unused': function() {
       var adj = this.currentlyDragging.adj

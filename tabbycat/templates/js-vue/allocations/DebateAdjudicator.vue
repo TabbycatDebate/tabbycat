@@ -1,6 +1,6 @@
 <template>
 
-  <div class="inline-flex">
+  <div class="inline-flex tooltip-holder">
     <div
       draggable=true
       v-on:dragstart="dragStart"
@@ -10,7 +10,7 @@
       v-bind:class="[isDragging ? 'vue-is-dragging' : '',
                      isHovering ? 'vue-is-hovering' : '',
                      conflictsHighlights,
-                     diversityHighlights]"
+                     diversityHighlights, diversityState]"
       :id="adjorteam.id"
       class="vue-draggable adj-draggable btn btn-default popover-parent">
 
@@ -33,7 +33,7 @@
       </div>
 
     </div>
-    <div class="history-tooltip tooltip right" v-if="historyHighlightText">
+    <div class="history-tooltip tooltip" v-if="historyHighlightText">
       <div class="tooltip-inner conflictable conflict-hover-{{ this.historyHighlightText }}-ago">
         {{ historyHighlightText }} ago
       </div>

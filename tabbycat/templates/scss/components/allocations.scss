@@ -47,20 +47,17 @@
   line-height: 10px;
   opacity: 1;
   z-index: 100; // Knock back from default so it doesnt clash with modals etc
+  position: absolute;
+  bottom: 0;
+  right: 0;
 
   .tooltip-inner {
     padding: 3px;
   }
-
-  &.right {
-    margin-left: -40px;
-    margin-top: 26px;
-  }
-
-  &.top {
-    margin-left: 77px;
-    margin-top: 25px;
-  }
+}
+// Parent element to keep the tooltips abs positioning in line
+.tooltip-holder {
+  position: relative;
 }
 
 .panel-incomplete {

@@ -176,7 +176,9 @@ def adjs_to_json(adjs, regions, t):
             'id': adj.id,
             'name': adj.name,
             'gender': adj.gender,
+            'gender_show': False,
             'region': [r for r in regions if r['id'] is adj.institution.region_id][0] if adj.institution.region_id is not None else '',
+            'region_show': False,
             'institution': {
                 'id': adj.institution.id,
                 'name': adj.institution.code,
@@ -231,10 +233,13 @@ def teams_to_json(teams, regions, categories, t, r):
                 'name': s.name,
                 'gender': s.gender
             } for s in team.speakers],
+            'gender_show': False,
             'wins': team.wins_count,
             'region': [r for r in regions if r['id'] is team.institution.region_id][0] if team.institution.region_id else '',
+            'region_show': False,
             # TODO: Searching for break cats here incurs extra queries; should be done earlier
             'categories': break_categories,
+            'category_show': False,
             'institution': {
                 'id': team.institution.id,
                 'name': team.institution.code,

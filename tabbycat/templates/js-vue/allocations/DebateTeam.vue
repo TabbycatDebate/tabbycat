@@ -1,13 +1,13 @@
 <template>
 
-  <div class="inline-flex bordered-bottom">
+  <div class="inline-flex bordered-bottom tooltip-holder">
     <div class="debate-team flex-cell flex-vertical-center"
-      v-bind:class="[diversityHighlights,
+      v-bind:class="[diversityHighlights, diversityState,
                      conflictsHighlights,
                      isHovering ? 'vue-is-hovering' : '']"
       v-on:mouseenter="setHighlights"
       v-on:mouseleave="unsetHighlights">
-      <div class="history-tooltip tooltip top" v-if="historyHighlightText">
+      <div class="history-tooltip tooltip" v-if="historyHighlightText">
         <div class="tooltip-inner conflictable conflict-hover-{{ this.historyHighlightText }}-ago">
           {{ historyHighlightText }} ago
         </div>
