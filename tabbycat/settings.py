@@ -286,6 +286,9 @@ if os.environ.get('TRAVIS', '') == 'true':
 # ==============================================================================
 
 try:
-    exec(open('local_settings.py').read())
-except IOError:
-    pass
+    LOCAL_SETTINGS
+except NameError:
+    try:
+        from local_settings import *   # flake8: noqa
+    except ImportError:
+        pass
