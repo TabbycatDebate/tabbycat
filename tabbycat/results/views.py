@@ -411,7 +411,13 @@ def latest_results(request, t):
 @round_view
 def ballot_checkin(request, round):
     ballots_left = ballot_checkin_number_left(round)
-    return render(request, 'ballot_checkin.html', dict(ballots_left=ballots_left))
+    if round.tournament.pref('enable_venue_groups'):
+        debates = Debate.objects.filter(round=round, ballot_in=False).order_by('venue__group__short_name')
+    else:
+        debates = Debate.objects.filter(round=round, ballot_in=False).order_by('venue__name')
+    venue_options = [d.venue for d in debates]
+    return render(request, 'ballot_checkin.html', dict(
+        ballots_left=ballots_left, venue_options=venue_options))
 
 
 class DebateBallotCheckinError(Exception):
@@ -424,9 +430,9 @@ def get_debate_from_ballot_checkin_request(request, round):
     v = request.POST.get('venue')
 
     try:
-        venue = Venue.objects.get(name__iexact=v)
+        venue = Venue.objects.get(id=v)
     except Venue.DoesNotExist:
-        raise DebateBallotCheckinError('There aren\'t any venues with the name "' + v + '".')
+        raise DebateBallotCheckinError('There aren\'t any venues with that name (id of "' + v + '").')
 
     try:
         debate = Debate.objects.get(round=round, venue=venue)
@@ -458,6 +464,7 @@ def ballot_checkin_get_details(request, round):
 
     obj['exists'] = True
     obj['venue'] = debate.venue.name
+    obj['venue_id'] = debate.venue.id
     obj['aff_team'] = debate.aff_team.short_name
     obj['neg_team'] = debate.neg_team.short_name
 

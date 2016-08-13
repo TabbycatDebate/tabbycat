@@ -53,7 +53,7 @@
           {% if even_panel > 0 %}
             {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of adjudicators.
           {% endif %}
-          <a href="{% round_url draw_adjudicators_edit %}" class="alert-link">
+          <a href="{% round_url edit_adj_allocation %}" class="alert-link">
             Edit adjudicators</a>.
         </div>
       {% endif %}
