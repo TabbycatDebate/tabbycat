@@ -34,9 +34,12 @@
 {% block page-alerts %}
   {% if generated %}
     <div class="alert alert-warning">
-      <p>This break uses the '<strong>{{ category.rule }}</strong>' rules
-       — if you need an AIDA or WADL rule set you should edit the rule for this
-       <em>BreakCategory</em> in the <a href="/database">Database Area</a>.</p>
+      <p>This break uses the <strong>{{ category.get_rule_display }}</strong> rule
+       — if you intended to use a different rule, you should
+       <a href="{% url 'admin:breakqual_breakcategory_change' category.id %}">
+        edit the rule for this break category in the Edit Database area</a>,
+        then delete and regenerate all breaks.
+      </p>
       <p>Please double-check this before announcing the break or releasing it to
        the public. The code that generates the break is not robustly tested for
       corner cases.</p>
