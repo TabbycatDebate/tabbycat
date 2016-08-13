@@ -57,17 +57,9 @@ class StandingInfo:
 
     def __init__(self, standings, instance):
         self.standings = standings
-
-        if isinstance(instance, int):
-            self.instance_id = instance
-            self._instance = None
-        elif hasattr(instance, 'id'):
-            self.instance_id = instance.id
-            self._instance = instance
-        else:
-            raise TypeError("'instance' should be a instance with 'id' attribute or an integer")
-
-        self.model_verbose_name = self._instance.__class__._meta.verbose_name.lower()
+        self.instance_id = instance.id
+        self.instance = instance
+        self.model_verbose_name = self.instance.__class__._meta.verbose_name.lower()
 
         # set more naturally-named attribute for instance, e.g., `self.team` if it is a Team
         setattr(self, self.instance.__class__.__name__.lower(), self.instance)
@@ -75,14 +67,8 @@ class StandingInfo:
         self.metrics = dict()
         self.rankings = dict()
 
-    @property
-    def instance(self):
-        if not self._instance:
-            self._instance = self.model.objects.get(id=self.instance_id)
-        return self._instance
-
     def __repr__(self):
-        return "<StandingInfo for {}>".format(str(self._instance) if self._instance else self.instance_id)
+        return "<StandingInfo for {}>".format(str(self.instance))
 
     def add_metric(self, name, value):
         if name in self.metrics:
