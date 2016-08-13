@@ -11,7 +11,7 @@ MEDIA_ROOT = (os.path.join(BASE_DIR, 'media'), )
 
 ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS = ADMINS
-DEBUG = False
+DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 DEBUG_ASSETS = DEBUG
 
 # ==============================================================================
@@ -161,9 +161,6 @@ if os.environ.get('SENDGRID_USERNAME', ''):
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
 
-if os.environ.get('DEBUG', ''):
-    DEBUG = bool(int(os.environ['DEBUG']))
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -266,10 +263,6 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
             }
         }
-
-if os.environ.get('DEBUG', ''):
-    DEBUG = bool(int(os.environ['DEBUG']))
-    TEMPLATES[0]['OPTIONS']['debug'] = True
 
 # ==============================================================================
 # Travis CI
