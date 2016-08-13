@@ -1,4 +1,21 @@
 # ==============================================================================
+# Database Settings
+# ==============================================================================
+
+SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
+DATABASES           = {
+    'default': {
+        'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+        'NAME'    : '',
+        'USER'    : '',
+        'PASSWORD': '',
+        'HOST':     'localhost',
+        'PORT':     '5432',
+        'CONN_MAX_AGE': 600,
+    }
+}
+
+# ==============================================================================
 # Overwrites main settings
 # ==============================================================================
 
@@ -87,20 +104,3 @@ if ENABLE_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG = {
         'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
     }
-
-# ==============================================================================
-# Database Settings
-# ==============================================================================
-
-SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
-DATABASES           = {
-    'default': {
-        'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-        'NAME'    : '',
-        'USER'    : '',
-        'PASSWORD': '',
-        'HOST':     'localhost',
-        'PORT':     '5432',
-        'CONN_MAX_AGE': 600,
-    }
-}
