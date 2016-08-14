@@ -139,6 +139,16 @@
     </div>
   {% endif %}
 
+  {% if not round.prev and round.draw_type = round.DRAW_POWERPAIRED %}
+    <div class="alert alert-warning">
+      This is the first round, but its draw type is
+      <strong>{{ round.get_draw_type_display }}</strong>. Did you intend for it
+      to be <strong>Random</strong> instead? You can
+      <a href="{% url 'admin:tournaments_round_change' round.id %}">
+        edit this round's draw type in the Edit Database area.</a>
+    </div>
+  {% endif %}
+
 {% endblock %}
 
 {% block content %}
