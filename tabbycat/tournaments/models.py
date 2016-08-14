@@ -534,8 +534,7 @@ class Round(models.Model):
     @cached_property
     def prev(self):
         try:
-            return Round.objects.get(seq=self.seq - 1,
-                                     tournament=self.tournament)
+            return self.tournament.round_set.filter(seq__lt=self.seq).order_by('-seq').first()
         except Round.DoesNotExist:
             return None
 
