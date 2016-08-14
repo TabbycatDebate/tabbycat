@@ -181,19 +181,22 @@ class Team(models.Model):
 
     def _construct_short_name(self):
         institution = self.institution
-        name = self.short_reference or self.reference
+        reference = self.short_reference or self.reference
         if self.use_institution_prefix:
-            if institution.code:
-                return institution.code + " " + name
-            else:
-                return institution.abbreviation + " " + name
+            short_name = institution.code or institution.abbreviation
+            if reference:
+                short_name += " " + reference
+            return short_name
         else:
-            return name
+            return reference
 
     def _construct_long_name(self):
         institution = self.institution
         if self.use_institution_prefix:
-            return institution.name + " " + self.reference
+            long_name = institution.name
+            if self.reference:
+                long_name += " " + self.reference
+            return long_name
         else:
             return self.reference
 
