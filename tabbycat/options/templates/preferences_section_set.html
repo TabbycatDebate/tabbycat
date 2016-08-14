@@ -7,9 +7,10 @@
 
 {% block page-subnav-sections %}
   {% if form.errors %}
-    <div class="alert alert-danger alert-dismissable" id="savedVenues">
+    <div class="alert alert-danger alert-dismissable">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
-      Please correct the errors below {{ form.errors }}
+      Please correct the errors below.
+      {{ form.non_field_errors }}
     </div>
   {% endif %}
 {% endblock %}
@@ -33,7 +34,7 @@
               {{ field.help_text }}
             </span>
             {% if field.errors %}
-              {{ field.errors }}
+              <div class="text-danger">{{ field.errors }}</div>
             {% endif %}
           </div>
         </div>
