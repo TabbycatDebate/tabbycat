@@ -61,10 +61,9 @@ class DebateAdmin(admin.ModelAdmin):
                 modeladmin.message_user(
                     request, message_bit + " status set to " + verbose_name)
 
-            _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower(
-            )  # so that they look different to DebateAdmin
-            _set_result_status.short_description = "Set result status to %s" % verbose_name.lower(
-            )
+            # so that they look different to DebateAdmin
+            _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower()
+            _set_result_status.short_description = "Set result status to %s" % verbose_name.lower()
             return _set_result_status
 
         actions.append(_make_set_result_status(value, verbose_name))

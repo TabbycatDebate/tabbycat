@@ -66,8 +66,8 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         inlines.append(_inline_class)
 
     def _construct_message_for_user(self, request, count, action, **kwargs):
-        message_bit = "1 feedback submission was" if count == 1 else "{:d} feedback submissions were".format(count)
-        self.message_user(request, message_bit + " " + action, **kwargs)
+        message_bit = "1 feedback submission was " if count == 1 else "{:d} feedback submissions were ".format(count)
+        self.message_user(request, message_bit + action, **kwargs)
 
     def mark_as_confirmed(self, request, queryset):
         original_count = queryset.count()
@@ -81,7 +81,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         difference = original_count - final_count
         if difference > 0:
             self._construct_message_for_user(
-                request, difference, "did not end up as confirmed, probably " +
+                request, difference, "not marked as confirmed, probably " +
                 "because other feedback that conflicts with it was also " +
                 "marked as confirmed.", level=messages.WARNING)
 
