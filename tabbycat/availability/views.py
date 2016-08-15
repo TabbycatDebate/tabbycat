@@ -186,7 +186,7 @@ class AvailabilityActivateBase(RoundMixin, SuperuserRequiredMixin, RedirectView)
 
 
 class AvailabilityActivateAll(AvailabilityActivateBase):
-    activation_msg = 'Checked in all teams, adjs and venues'
+    activation_msg = 'Checked in all teams, adjudicators and venues'
 
     def activate_function(self):
         self.get_round().activate_all()
@@ -200,7 +200,7 @@ class AvailabilityActivateBreakingAdjs(AvailabilityActivateBase):
 
 
 class AvailabilityActivateFromPrevious(AvailabilityActivateBase):
-    activation_msg = 'Checked in all teams, adjs and venues from previous round'
+    activation_msg = 'Checked in all teams, adjudicators and venues from previous round'
 
     def activate_function(self):
         self.get_round().activate_previous()
