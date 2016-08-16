@@ -26,7 +26,7 @@ def adjudicator_conflicts_display(debates):
     for conflict in AdjudicatorAdjudicatorConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
         adjadjconflicts.setdefault(conflict.adjudicator_id, []).append(conflict.conflict_adjudicator_id)
 
-    conflict_messages = {debate: []  for debate in debates}
+    conflict_messages = {debate: [] for debate in debates}
     for debate in debates:
         for adjudicator in debate.adjudicators.all():
             for team in debate.teams:

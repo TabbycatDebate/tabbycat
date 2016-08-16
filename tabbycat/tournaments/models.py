@@ -255,12 +255,6 @@ class Round(models.Model):
     # Draw retrieval methods
     # ==========================================================================
 
-    @cached_property
-    def cached_draw(self):
-        # Deprecated 10/7/2016, remove after 10/8/2016
-        warn("Round.cached_draw is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=3)
-        return self.get_draw()
-
     def get_draw(self, ordering=('venue__name',)):
         warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=2)
         related = ('venue',)

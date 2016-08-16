@@ -204,15 +204,6 @@ class Debate(models.Model):
             return self._adjudicators
 
     @property
-    def chair(self):
-        # Deprecated 4/7/2016, remove completely after 4/8/2016
-        raise RuntimeError("Debate.chair is deprecated, use Debate.adjudicators.chair instead")
-        # from adjallocation.models import DebateAdjudicator
-        # da_adj = list(DebateAdjudicator.objects.filter(debate=self, type="C"))
-        # a_adj = da_adj[0].adjudicator
-        # return a_adj
-
-    @property
     def matchup(self):
         return '%s vs %s' % (self.aff_team.short_name,
                              self.neg_team.short_name)
