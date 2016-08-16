@@ -1,0 +1,32 @@
+@media print {
+
+  // Used by WADL
+  .printable-page-break {
+    page-break-after: always;
+  }
+
+  // Used by WADL
+  .printable-mastersheet {
+    page-break-inside: avoid;
+  }
+
+  .page-header {
+    .col-md-12 {
+      padding-left: 0;
+    }
+  }
+
+  // Don't split a table across multiple pages
+  table {
+    page-break-inside: avoid;
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+  }
+
+  #djDebug {
+    display: none !important;
+  }
+
+}

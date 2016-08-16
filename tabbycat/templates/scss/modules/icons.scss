@@ -1,0 +1,43 @@
+//------------------------------------------------------------------------------
+// Emoji
+//------------------------------------------------------------------------------
+
+.emoji {
+  display: inline-block;
+  font-family: sans-serif; // Need to be a system font or they wont show
+  font-style: normal;
+  font-weight: normal;
+  margin-right: 1px;
+  min-width: 20px;
+}
+
+.small .emoji {
+  min-width: 13px;
+}
+
+//------------------------------------------------------------------------------
+// Glyphicons
+//------------------------------------------------------------------------------
+
+// Icons should have brighter colors (using text-success is too dull)
+.glyphicon {
+  &.text-success {
+    color: $brand-success;
+  }
+
+  &.text-danger {
+    color: $brand-danger;
+  }
+
+  &.text-warning {
+    color: $brand-warning;
+  }
+
+  &.text-info {
+    color: $brand-info;
+  }
+
+  &.text-primary {
+    color: $brand-primary;
+  }
+}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">💥</span>Results{% endblock %}
+{% block page-title %}💥Results{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      {% for r in tournament.round_set.all %}
+        {% if not r.silent or pref.all_results_released %}
+          {% if r.seq < current_round.seq or pref.all_results_released %}
+          <li class="list-group-item"><a class="public-results-nav" href="{% round_url public_results r %}">
+            Results for {{ r.name }}
+          </a></li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock content %}

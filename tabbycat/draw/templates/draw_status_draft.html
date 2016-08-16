@@ -1,0 +1,11 @@
+{% extends "base_vue_table.html" %}
+{% load debate_tags %}
+
+{% block page-subnav-actions %}
+  <form id="confirmForm" method="POST" action="{% round_url draw-confirm %}">
+    {% csrf_token %}
+    <button id="confirmDraw" class="btn btn-success" type="submit">
+      Confirm Draw  <span class="glyphicon glyphicon-chevron-right"></span>
+    </button>
+  </form>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base_vue_table.html" %}
+{% load static %}
+{% load debate_tags %}
+{% load add_field_css %}
+
+{% block head-title %}<span class="emoji">👑</span>{{ category.name }} Break{% endblock %}
+{% block sub-title %}{{ pref.public_breaking_teams|yesno:",not "}}publicly visible{% endblock %}
+{% block page-title %}👑{{ category.name }} Break{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "breakqual_subnav.html" %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+  {% if generated %}
+    <form action="{% tournament_url breakqual-generate-all category.slug %}" class="form-inline" method="POST">
+      {% csrf_token %}
+      <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
+        Delete and Regenerate All Breaks
+      </button>
+    </form>
+  {% else %}
+    <div class="forms-block-inline">
+      <form action="{% tournament_url breakqual-generate-all category.slug %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+          Generate the Break for All Categories
+        </button>
+      </form>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block page-alerts %}
+  {% if generated %}
+    <div class="alert alert-warning">
+      <p>This break uses the <strong>{{ category.get_rule_display }}</strong> rule
+       — if you intended to use a different rule, you should
+       <a href="{% url 'admin:breakqual_breakcategory_change' category.id %}">
+        edit the rule for this break category in the Edit Database area</a>,
+        then delete and regenerate all breaks.
+      </p>
+      <p>Please double-check this before announcing the break or releasing it to
+       the public. The code that generates the break is not robustly tested for
+      corner cases.</p>
+    </div>
+    <div class="alert alert-info">
+      <p>
+        <strong>How to edit the break:</strong> Edit the remarks in the
+        right-hand column. Any team with a remark will be excluded from this
+        break. (The break generator will sometimes insert its own remarks.)
+        Then, click the appropriate <em>Save Remarks and Update</em> button
+        below.
+      </p>
+      <p>
+        If you have complicated break rules (for example, if some teams are
+        allowed to choose their preferred category) then you may have to update
+        remarks a few times to get the correct break. As a last resort, you can
+        <a href="{% url 'admin:breakqual_breakingteam_changelist' %}">
+        edit the breaking teams list directly in the Edit Database area</a>.
+      </p>
+    </div>
+  {% else %}
+    {% if pref.public_breaking_teams %}
+      <div class="alert alert-danger">
+        The <strong>public breaking teams</strong> configuration setting is
+        enabled. As soon as you click the button, the breaking teams list will
+        be visible on the public site, before you have a chance to
+        double-check it! It is strongly recommended that you disable this
+        setting on the <a href="{% tournament_url options-tournament-index %}">
+        tournament configuration page</a> before generating the team
+        breaks.
+      </div>
+    {% else %}
+      <div class="alert alert-info">
+        <p>
+          The break hasn't yet been generated. Would you like to generate
+          the break for all categories?
+        </p>
+        <p>
+          (It's safe to generate the break before all preliminary rounds are
+          complete, if you're curious. You can regenerate it later.)
+        </p>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if generated %}
+  <form action="." method="POST">
+    {% csrf_token %}
+    <div class="panel panel-default">
+      <div class="panel-body">
+
+        {{ block.super }}
+
+        {% if pref.public_breaking_teams %}
+          <div class="alert alert-danger">
+            <strong>Caution!</strong> The "public breaking teams" option is turned on, so the break
+            is publicly visible. If you update the break(s), the changes will become visible
+            <strong>immediately</strong>, <strong>without a chance for you to review them</strong>.
+          </div>
+        {% endif %}
+
+        <div class="row">
+          <div class="form-inline col-md-6">
+            <button class="btn btn-default btn-block btn-success" type="submit" name="save_update_all">
+                Save Remarks and Update All Breaks
+            </button>
+          </div>
+          <div class="form-inline col-md-6">
+            <button class="btn btn-default btn-block btn-success }}" type="submit" name="save_update_one">
+                Save Remarks and Update the {{ category.name }} Break
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+{% endif %}
+{% endblock content %}

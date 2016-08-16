@@ -3,46 +3,69 @@
 This script is compatible with both Python 2.7 and Python 3.4 (and later)."""
 
 import argparse
-import subprocess
-import re
-import sys
 import platform
+import re
+import subprocess
+import sys
 
 # Arguments
 parser = argparse.ArgumentParser(description="Deploy Tabbycat to a new Heroku app.")
-parser.add_argument("urlname", type=str,
+
+parser.add_argument(
+    "urlname", type=str,
     help="Name of the Heroku app. The app will be at urlname.herokuapp.com. Use '-' to use a Heroku-generated default.")
-parser.add_argument("--no-open", action="store_false", default=True, dest="open",
+
+parser.add_argument(
+    "--no-open", action="store_false", default=True, dest="open",
     help="Don't open the Heroku website in your browser at the end")
-parser.add_argument("--no-init-db", action="store_false", default=True, dest="init_db",
+
+parser.add_argument(
+    "--no-init-db", action="store_false", default=True, dest="init_db",
     help="Don't run initial migrations on the database")
-parser.add_argument("--git-remote", type=str, default=None,
+
+parser.add_argument(
+    "--git-remote", type=str, default=None,
     help="Name of Git remote to use. Use '-' to use the urlname. If omitted, reverts to default Heroku behaviour.")
-parser.add_argument("--git-branch", type=str, default=None,
+
+parser.add_argument(
+    "--git-branch", type=str, default=None,
     help="Git branch to push (defaults to current branch)")
-parser.add_argument("--pg-plan", "--postgresql-plan", type=str, default="hobby-dev",
+
+parser.add_argument(
+    "--pg-plan", "--postgresql-plan", type=str, default="hobby-dev",
     help="Heroku Postgres plan (default hobby-dev)")
-parser.add_argument("--import-tournament", type=str, metavar="IMPORT_DIR",
+
+parser.add_argument(
+    "--import-tournament", type=str, metavar="IMPORT_DIR",
     help="Also run the importtournament command, importing from IMPORT_DIR")
-parser.add_argument("--dry-run", action="store_true", default=False,
+
+parser.add_argument(
+    "--dry-run", action="store_true", default=False,
     help="Print commands, don't run them.")
 
 config_group = parser.add_argument_group("heroku configuration settings")
 config_group.add_argument("--public-cache-timeout", type=int, default=None, metavar="TIMEOUT",
-    help="Set the public page cache timeout to TIMEOUT")
+                          help="Set the public page cache timeout to TIMEOUT")
 config_group.add_argument("--tab-cache-timeout", type=int, default=None, metavar="TIMEOUT",
-    help="Set the tab page cache timeout to TIMEOUT")
+                          help="Set the tab page cache timeout to TIMEOUT")
 config_group.add_argument("--enable-debug", action="store_true", default=False,
-    help="Enable Django debug pages")
+                          help="Enable Django debug pages")
 
 # Import tournament arguments are copied from importtournament.py, and should be
 # updated when these options in importtournament.py change.
-import_tournament_group = parser.add_argument_group("import tournament options", "Passed to the importtournament command. Ignored unless --import-tournament is used. Provided for convenience; to use other importtournament options, run the importtournament command separately instead.")
-import_tournament_group.add_argument('-s', '--slug', type=str, action='store', default=None, dest="tournament_slug",
+import_tournament_group = parser.add_argument_group(
+    "import tournament options",
+    "Passed to the importtournament command. Ignored unless " +
+    "--import-tournament is used. Provided for convenience; to use other " +
+    "importtournament options, run the importtournament command separately instead.")
+import_tournament_group.add_argument(
+    '-s', '--slug', type=str, action='store', default=None, dest="tournament_slug",
     help='Override tournament slug. (Default: use name of directory.)'),
-import_tournament_group.add_argument('--name', type=str, action='store', default=None, dest="tournament_name",
+import_tournament_group.add_argument(
+    '--name', type=str, action='store', default=None, dest="tournament_name",
     help='Override tournament name. (Default: use name of directory.)'),
-import_tournament_group.add_argument('--short-name', type=str, action='store', default=None, dest="tournament_short_name",
+import_tournament_group.add_argument(
+    '--short-name', type=str, action='store', default=None, dest="tournament_short_name",
     help='Override tournament short name. (Default: use name of directory.)'),
 
 args = parser.parse_args()
@@ -56,23 +79,28 @@ else:
 
 # Helper functions
 
+
 def print_command(command):
     message = "$ " + " ".join(command)
     if use_color:
         message = "\033[1;36m" + message + "\033[0m"
     print(message)
 
+
 def run_command(command):
     print_command(command)
     if not args.dry_run:
         subprocess.check_call(command, **subprocess_kwargs)
 
+
 def make_heroku_command(command):
     return ["heroku"] + command + ["--app", urlname]
+
 
 def run_heroku_command(command):
     command = make_heroku_command(command)
     run_command(command)
+
 
 def get_output_from_command(command):
     print_command(command)
@@ -82,10 +110,12 @@ def get_output_from_command(command):
     sys.stdout.flush()
     return output
 
+
 def print_yellow(message):
     if use_color:
         message = "\033[1;33m" + message + "\033[0m"
     print(message)
+
 
 def get_git_push_spec():
     if args.git_branch:
@@ -142,18 +172,19 @@ run_command(["git", "push", remote_name, push_spec])
 if args.init_db:
     print_yellow("Now creating a superuser for the Heroku site.")
     print_yellow("You'll need to respond to the prompts:")
-    run_heroku_command(["run", "python", "manage.py", "createsuperuser"])
+    run_heroku_command(["run", "python", "tabbycat/manage.py", "createsuperuser"])
 
-    command = make_heroku_command(["run", "python", "manage.py", "generate_secret_key"])
+    command = make_heroku_command(["run", "python", "tabbycat/manage.py", "generate_secret_key"])
     secret_key = get_output_from_command(command)
-    secret_key = secret_key.strip().split()[0].strip() # turn command output into string of just the key
+    # Turn command output into string of just the key
+    secret_key = secret_key.strip().split()[0].strip()
     print_yellow("Made secret key: \"%s\"" % secret_key)
     command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
     run_heroku_command(command)
 
     # Import tournament, if provided
     if args.import_tournament:
-        command = ["run", "python", "manage.py", "importtournament", args.import_tournament]
+        command = ["run", "python", "tabbycat/manage.py", "importtournament", args.import_tournament]
         if args.tournament_slug:
             command += ["--slug", args.tournament_slug]
         if args.tournament_name:

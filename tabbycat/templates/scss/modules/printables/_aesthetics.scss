@@ -1,0 +1,30 @@
+// AESTHETICS
+$fill-in-line-height: 3px;
+$fill-in-line-spacing: 45px;
+.db-fill-in {
+  border-bottom: $fill-in-line-height solid #ccc;
+}
+.db-bordered {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.db-bottom-border {
+  border-bottom: 1px solid #ccc;
+}
+.db-page {
+  box-shadow: 0 0 50px rgba(0,0,0,0.5);
+  background: #FFF;
+  transition: height 0.5s, width 0.5s;
+}
+.db-ruled-bg {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0),
+    rgba(0,0,0,0) $fill-in-line-spacing,
+    #ccc $fill-in-line-spacing,
+    #ccc $fill-in-line-spacing + $fill-in-line-height
+  );
+  &.db-padding-horizontal {
+    margin-right: 20px;
+  }
+}

@@ -1,0 +1,93 @@
+//------------------------------------------------------------------------------
+// Overall Layout
+//------------------------------------------------------------------------------
+
+.panel-body .table {
+  background: $alt-bg; // For when tables blow out on mobile
+  margin-bottom: 0; // Panel body has its own bottom padding
+  > tbody > tr:hover td {
+    background-color: $table-bg-hover;
+    .hide-underline {
+      border-bottom-color: $table-bg-hover;
+    }
+  }
+}
+
+// For the quick search; needs to fit within the row
+.table-search {
+  height: 41px;
+  border-width: 1px;
+}
+
+.table-container {
+  overflow-y: scroll; // Don't blow out page width when overflows occur
+}
+
+//------------------------------------------------------------------------------
+// HEADER STYLES
+//------------------------------------------------------------------------------
+
+thead, .thead {
+  @extend .subtitle;
+  background: $alt-bg; // Fixed header needs a background while scrolling
+  line-height: 18px; // Otherwise the border is too clone to the text
+  .glyphicon {
+    line-height: 18px; // Otherwise the border is too clone to the text
+  }
+}
+
+.vue-sortable {
+  &:hover, &:hover .glyphicon {
+    color: $brand-success;
+    cursor: pointer;
+  }
+}
+
+//------------------------------------------------------------------------------
+// CELL STYLES
+//------------------------------------------------------------------------------
+
+.table > tbody > tr > th,
+.table > tbody > tr > td {
+  vertical-align: middle;
+  &.empty-cell {
+    border: none;
+  }
+  &.unpadded-cell {
+    padding: 0;
+  }
+  // For highlighting bracket boundaries
+  &.highlight-row {
+    border-top: 3px solid $brand-info;
+  }
+  &.checkbox-target:hover, &.checkbox-target input:hover {
+    cursor: pointer;
+  }
+}
+
+//------------------------------------------------------------------------------
+// MOBILE TWEAKS
+//------------------------------------------------------------------------------
+
+// For Phones
+@media (max-width: $screen-sm-min) {
+  .table-continer {
+    margin-right: -15px;
+    margin-left: -15px;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    .panel-body {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+  }
+  .team-name .emoji {
+    display: block; // Fix ugly wrapping and make names easier to identify
+  }
+  .table > tbody > tr > th,
+  .table > tbody > tr > td {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}

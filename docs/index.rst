@@ -39,9 +39,9 @@ tournaments.
    features/breaks
    features/data-entry
    features/draw-generation
-   features/data-importers
    features/printing
    features/team-standings-rules
+   features/data-importers
    features/user-accounts
    features/venue-constraints
 

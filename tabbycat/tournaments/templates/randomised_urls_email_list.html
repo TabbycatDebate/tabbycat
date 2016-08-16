@@ -1,0 +1,80 @@
+{% extends "feedback_base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Randomised URLs{% endblock %}
+{% block page-title %}Randomised URLs{% endblock %}
+
+{% block content %}
+
+  <form action="{% tournament_url confirm-feedback-urls-send %}" method="POST" class="vertical-spacing">
+    {% csrf_token %}
+    <button class="btn btn-success btn-block" type="submit">
+      Send Emails to Teams and Adjudicators
+    </button>
+  </form>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Adjudicators With Email Addresses</div>
+        <div class="panel-body">
+          {% for adj in adjs %}
+            {% if adj.url_key and adj.email %}
+              {{ adj.name }}, {{ adj.email }}, {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.url_key %}<br>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Teams With Email Addresses</div>
+        <div class="panel-body">
+          {% for team in teams %}
+            {% if team.url_key %}
+              {% for speaker in team.speakers %}
+                {% if speaker.email %}
+                  {{ team.short_name }}, {{ speaker.name }}, {{ speaker.email }}, {% tournament_absurl adjfeedback-public-add-from-team-randomised team.url_key %}<br>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Adjudicators Without Email Addresses</div>
+        <div class="panel-body">
+          {% for adj in adjs %}
+            {% if adj.url_key %}
+              {% if not adj.email %}
+                {{ adj.name }}, No Email, {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.url_key %}<br>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Teams Without Email Addresses</div>
+        <div class="panel-body">
+          {% for team in teams %}
+            {% if team.url_key %}
+              {% for speaker in team.speakers %}
+                {% if not speaker.email %}
+                  {{ team.short_name }}, {{ speaker.name }}, No Email<br>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

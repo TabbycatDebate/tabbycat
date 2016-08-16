@@ -1,0 +1,11 @@
+{% extends "base_vue_table.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block page-alerts %}
+  <div class="alert alert-info">Adjudicators can be marked as breaking in the Feedback section.</div>
+{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "breakqual_subnav.html" %}
+{% endblock %}

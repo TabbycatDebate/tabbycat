@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block nav %}{% endblock %}
+{% block header %}{% endblock %}
+{% block subheader %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block page-subnav-sections %}{% endblock page-subnav-sections %}
+
+{% block content %}
+
+  <allocation-container
+    :debates=allDebates
+    :adjudicators=allAdjudicators
+    :teams=allTeams
+    :regions=allRegions
+    :categories=allCategories
+    :round-info=roundInfo>
+  </allocation-container>
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    var allDebates = {{ allDebates|safe }};
+    var allAdjudicators = {{ allAdjudicators|safe }};
+    var allTeams = {{ allTeams|safe }};
+    var allRegions = {{ allRegions|safe }};
+    var allCategories = {{ allCategories|safe }};
+
+    var roundInfo = {
+      'roundName' : '{{ round.abbreviation }}',
+      'roundIsPrelim' : {% if round.is_break_round %}false{% else %}true{% endif %},
+      'createAutoAllocationURL': '{% round_url create_auto_allocation %}',
+      'backToDrawURL': '{% round_url draw %}',
+      'updateImportanceURL': '{% round_url save_debate_importance %}',
+      'updatePanelURL': '{% round_url save_debate_panel %}',
+    }
+  </script>
+  {{ block.super }}
+{% endblock js %}

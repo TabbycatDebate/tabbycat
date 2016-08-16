@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head-title %}No Result to Enter{% endblock %}
+{% block page-title %}No Result to Enter{% endblock %}
+
+{% block content %}
+  <div class="alert alert-info">This page is specific to you, {{ adjudicator.name }}.
+    The URL doesn't change, so if you bookmark it, you can easily return here after each debate.
+  </div>
+  <div class="lead">
+    {{ message }}
+  </div>
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <!-- TODO: bundle -->
+  <script src="{% static 'js/vendor/jquery.validate.js' %}"></script>
+  <script>
+    $(document).ready( function() {
+      {% include "js/enter_results.js" %}
+    });
+  </script>
+{% endblock %}

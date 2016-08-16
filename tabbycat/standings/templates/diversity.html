@@ -1,0 +1,151 @@
+{% extends "standings_base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block page-title %}🗃Diversity Overview{% endblock %}
+{% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
+{% block diversity_active %}active{% endblock %}
+{% if for_public %}{% block page-subnav-sections %}{% endblock %}{% endif %}
+
+{% block page-alerts %}
+
+  <div class="alert alert-info">
+    The speaker and adjudicator results data displayed here is presented
+    without tests for statistical significance. Correlations should not be
+    automatically considered reliable; particularly at small tournaments.
+  </div>
+
+  <div class="nav nav-pills navbar-left btn-group vertical-spacing">
+    <button disabled class="btn btn-default gender-display gender-male h6">
+      Male identifying
+    </button>
+    <button disabled class="btn btn-default gender-display gender-nm h6">
+      Female identifying or non-binary
+    </button>
+    <button disabled class="btn btn-default gender-display gender-unknown h6">
+      Unknown
+    </button>
+  </div>
+
+  <div class="nav nav-pills pull-right btn-group vertical-spacing">
+    {% for r in regions %}
+      <button disabled class="btn btn-default region-display region-{{ r.seq }} h6">
+        {{ r.name }}
+      </button>
+    {% endfor %}
+  </div>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">
+        <h4 class="panel-title">Speaker Demographics</h4>
+      </div>
+      <div class="panel-body text-center no-side-padding">
+        <template v-for="set in graphsData['speakers_gender']">
+          <donut-chart
+            :graph-data="set['data']"
+            :title="set['title']">
+          </donut-chart>
+        </template>
+        <template v-if="graphsData['speakers_gender'].length === 0">
+          <p>No Gender Information</p>
+        </template>
+        <hr>
+        <template v-for="set in graphsData['speakers_region']">
+          <donut-chart
+            :graph-data="set['data']"
+            :title="set['title']"
+            :regions="graphsData['regions']">
+          </donut-chart>
+        </template>
+        <template v-if="graphsData['speakers_region'].length === 0">
+          <p>No Regions Information</p>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">
+        <h4 class="panel-title">Adjudicator Demographics</h4>
+      </div>
+      <div class="panel-body text-center no-side-padding">
+        <template v-for="set in graphsData['adjudicators_gender']">
+          <donut-chart :graph-data="set['data']" :title="set['title']"></donut-chart>
+        </template>
+        <template v-if="graphsData['adjudicators_gender'].length === 0">
+          <p>No Gender Information</p>
+        </template>
+        <hr>
+        <template v-for="set in graphsData['adjudicators_region']">
+          <donut-chart :graph-data="set['data']" :title="set['title']" :regions="graphsData['regions']"></donut-chart>
+        </template>
+        <template v-if="graphsData['adjudicators_region'].length === 0">
+          <p>No Region Information</p>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">
+        <h4 class="panel-title">Speaker Results</h4>
+      </div>
+      <div class="panel-body text-center">
+        <template v-for="set in graphsData['speakers_results']">
+          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+        </template>
+        <template v-if="graphsData['speakers_results'].length === 0">
+          <p>No Gender Information</p>
+        </template>
+        <hr>
+        <template v-for="set in graphsData['detailed_speakers_results']">
+          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+        </template>
+        <template v-if="graphsData['detailed_speakers_results'].length === 0">
+          <p>No Region Information</p>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">
+        <h4 class="panel-title">Adudicator Results</h4>
+      </div>
+      <div class="panel-body text-center">
+        <template v-for="set in graphsData['adjudicators_results']">
+          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+        </template>
+        <template v-if="graphsData['adjudicators_results'].length === 0">
+          <p>No Adjudicator Ratings Yet</p>
+        </template>
+        <hr>
+        <template v-for="set in graphsData['detailed_adjudicators_results']">
+          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+        </template>
+        <template v-if="graphsData['detailed_adjudicators_results'].length === 0">
+          <p>No Adjudicator-Adjudicator Feedback</p>
+        </template>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}
+
+{% block js %}
+  <script>
+    var graphsData = {{ data_sets|safe }};
+  </script>
+  {{ block.super }}
+{% endblock js %}

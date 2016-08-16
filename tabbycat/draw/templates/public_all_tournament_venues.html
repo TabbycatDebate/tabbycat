@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}All Venues{% endblock %}
+{% block page-title %}All Venues{% endblock %}
+
+{% block content %}
+  <ul class="list-group">
+    {% for venue in venues %}
+      <a href="{% url 'all-draws-for-venue' venue.id %}"class="list-group-item">
+        <span>Draws for {{ venue.name }}</span>
+        <span class="badge">VIEW ALL</span>
+      </a>
+    {% endfor %}
+  </ul>
+{% endblock content %}

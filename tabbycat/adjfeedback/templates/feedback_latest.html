@@ -1,0 +1,24 @@
+{% extends "feedback_base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Latest Feedback{% endblock %}
+{% block page-title %}Latest Feedback{% endblock %}
+
+{% block content %}
+  <div class="row">
+    {% for feedback in feedbacks %}
+
+      <div class="col-md-4">
+        {% include 'feedback_card.html' %}
+      </div>
+
+      {% if forloop.counter|divisibleby:3 %}
+        </div><div class="row">
+      {% endif %}
+
+    {% empty %}
+    <div class="alert alert-info">No feedback has been submitted yet.</div>
+
+  {% endfor %}
+  </div>
+{% endblock content %}

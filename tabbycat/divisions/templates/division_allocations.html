@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}Allocate Divisions{% endblock %}
+{% block page-title %}Allocate Divisions{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-success submit-disable" href="{% tournament_url create_division_allocation %}" >Auto Allocate Divisions</a>
+  <a class="btn btn-success submit-disable" href="{% tournament_url create_division %}" >Add New Division</a>
+  <a class="btn btn-success submit-disable" href="{% tournament_url create_byes %}" >Auto Add Bye Teams</a>
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <div class="btn btn-inactive">Preference Allocated:</div>
+  <div class="btn-group">
+    <div class="btn btn-success" disabled="disabled">1/2</div>
+    <div class="btn btn-primary" disabled="disabled">3/4</div>
+    <div class="btn btn-warning" disabled="disabled">5+</div>
+    <div class="btn btn-danger" disabled="disabled">None</div>
+  </div>
+{% endblock %}
+
+{% block content %}
+
+  <div class="row divisions-holder">
+    <template v-for="division in divisions | orderBy 'parseInt(name)'" track-by="id">
+
+      <div class="col-md-3">
+        <division-droppable
+          save-vg-at="{% tournament_url set_division_venue_group %}"
+          save-division-at="{% tournament_url set_team_division %}"
+          :division="division"
+          :teams="teams | filterBy division.id in 'division'"
+          :vgs="venueGroups">
+        </division-droppable>
+      </div>
+
+    </template>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12" class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">Teams without Divisions</h4>
+        </div>
+        <unallocated-division-teams
+          :teams="teams"
+          save-division-at="{% tournament_url set_team_division %}">
+        </unallocated-division-teams>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+  var divisionsBaseData = {
+    draggedComponent: null,
+    teams: {{ teams | safe }},
+    divisions: {{ divisions | safe }},
+    venueGroups: {{ venue_groups | safe }}
+  }
+  // Todo: create a DivisionsContainer; move these methods there
+  var divisionsMethods = {
+    handleDrop: function(ev) {
+      this.draggedComponent.team.division = null;
+      this.draggedComponent.saveDivision();
+    }
+  }
+  var divisionsEvents = {
+    // Set a global record of what is being dragged
+    'started-dragging-team': function (component) {
+      this.draggedComponent = component;
+    },
+    'stopped-dragging-team': function () {
+      this.draggedComponent = null;
+    },
+    'assign-team-to-division': function (droppedDivision) {
+      this.draggedComponent.team.division = droppedDivision.id;
+      this.draggedComponent.saveDivision();
+    },
+    'unassign-team-division': function () {
+      this.draggedComponent.team.division = null;
+      this.draggedComponent.saveDivision();
+    }
+  }
+  </script>
+  {{ block.super }}
+{% endblock js %}

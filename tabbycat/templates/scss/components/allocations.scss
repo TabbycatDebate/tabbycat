@@ -1,0 +1,139 @@
+//------------------------------------------------------------------------------
+// General Layout
+//------------------------------------------------------------------------------
+
+.allocation-container {
+  background: $alt-bg;
+  padding-bottom: 500px; // Need to offset the adjs panel max height
+  padding-top: 85px; // Need to compensate for the fixed header
+}
+
+.unallocated-adjs {
+  max-height: 450px;
+  min-height: 54px;
+  z-index: 1080; // Need to hover abovve underlying .tooltips
+}
+
+.thead {
+  border-bottom: 2px solid $table-border-color;
+  padding-bottom: $table-cell-padding;
+
+  .glyphicon {
+    line-height: 15px;
+  }
+}
+
+.flex-cell {
+  min-width: 40px;
+  padding-left: $table-cell-padding;
+  padding-right: $table-cell-padding;
+}
+
+.bordered-bottom {
+  border-bottom: 1px solid $table-border-color;
+}
+
+.importance-container {
+  width: 100px;
+}
+
+//------------------------------------------------------------------------------
+// History tooltip elements
+//------------------------------------------------------------------------------
+
+// For showing inline time since history conflict
+.history-tooltip {
+  font-size: 10px;
+  line-height: 10px;
+  opacity: 1;
+  z-index: 100; // Knock back from default so it doesnt clash with modals etc
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  .tooltip-inner {
+    padding: 3px;
+  }
+}
+// Parent element to keep the tooltips abs positioning in line
+.tooltip-holder {
+  position: relative;
+}
+
+.panel-incomplete {
+  background: $brand-danger-alt;
+  border: 1px solid darken($brand-danger-alt, 10%);
+  color: #fff;
+}
+
+.panel-incomplete.vue-is-drag-enter {
+  background: $state-success-bg;
+}
+
+//------------------------------------------------------------------------------
+// Debate Layout
+//------------------------------------------------------------------------------
+
+.panel-debate {
+  // Overwrite .panel defaults
+  box-shadow: 0;
+  margin-bottom: 0;
+}
+
+.positions-parent > div {
+  border-left: 2px solid $table-border-color;
+  min-height: 50px; // Dont let it collapse when no adjs are present
+  &:first-child {
+    border-left: 0;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Debate Teams
+//------------------------------------------------------------------------------
+
+.debate-team {
+  width: 120px;
+
+  &:hover {
+    background-color: darken($btn-default-bg, 10%);
+    cursor: help;
+  }
+  // Truncate Long Team Names
+  .debate-team-title {
+    max-height: 40px;
+    overflow-y: hidden;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Adjudicators
+//------------------------------------------------------------------------------
+
+.adj-draggable {
+  height: 42px;
+  padding-top: 4px; // Center the Score
+  text-align: left;
+
+  .adj-info,
+  .adj-score {
+    float: left;
+  }
+
+  .h4 {
+    margin: 0;
+    min-width: 30px;
+    padding-top: 4px; // Center the Score
+  }
+
+  span {
+    border-bottom: 0;
+  }
+
+  .small {
+    display: block;
+    font-size: 70%;
+    font-weight: bold;
+    line-height: 3px;
+  }
+}

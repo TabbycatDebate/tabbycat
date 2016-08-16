@@ -1,0 +1,135 @@
+{% load static %}{% load debate_tags %}<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
+  <link rel="icon" type="image/png" href="/static/favicon.ico" />
+  <!--[if IE]><link rel="shortcut icon" href="{% static 'favicon.ico' %}"/><![endif]-->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+  {% block extra-css %}{% endblock %}
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+<body id="{% block body-id %}{% endblock %}" class="">
+
+  {% block body %}
+
+    {% block nav %}
+      {% if 'admin/' in request.path and user.is_superuser %}
+      <div class="nav-sidebar">
+        <div class="overflow-scroll-wrapper">
+          {% include "nav/admin_nav.html" %}
+        </div>
+      </div><!-- /.main-col -->
+    <div class="col-md-12 accommodate-footer nav-sidebar-offset">
+      {% else %}
+        {% include "nav/top_nav_base.html" %}
+    <div class="col-md-12 accommodate-footer">
+      {% endif %}
+    {% endblock %}
+
+    {% block header %}
+      <div class="row head-title {% if 'admin/' in request.path and user.is_superuser %}white-bg vertical-spacing{% endif %}">
+        <div class="col-md-12">
+          <h3>
+            {% if page_title %}
+              {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
+            {% else %}
+              {% block head-title %}{% endblock %}
+            {% endif %}
+            <small class="pull-right">
+              {% if page_subtitle %}
+                {{ page_subtitle }}
+              {% else %}
+                {% block sub-title %}{% endblock %}
+              {% endif %}
+            </small>
+          </h3>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block subheader %}
+      <div class="row ">
+        <div class="col-md-12 page-sub-nav">
+          <ul class="nav nav-pills navbar-left">
+            {% block page-subnav-sections %}{% endblock %}
+          </ul>
+          <div class="nav btn-group navbar-right">
+            {% block page-subnav-actions %}{% endblock %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-inline messages" id="messages-container">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+            {% block page-alerts %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block content %}{% endblock content %}
+
+    {% if 'admin/' not in request.path %}
+      </div><!-- /.main-col -->
+    {% endif %}
+
+    {% block footer %}{% include "footer.html" %}{% endblock footer %}
+
+    {% if 'admin/' in request.path %}
+      </div><!-- /.main-col -->
+    {% endif %}
+
+    {% block modals %}
+      <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header h4 text-center"></div>
+            <div class="modal-body"></div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+  {% endblock body %}
+
+  {% block js %}
+    {% if user.is_authenticated %}
+      <script src="{% static 'js/admin.bundle.js' %}"></script>
+    {% else %}
+      <script src="{% static 'js/public.bundle.js' %}"></script>
+    {% endif %}
+  {% endblock js %}
+
+  <!-- Analytics -->
+  {% if not debug %}
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-314178-25', 'auto');
+      ga('send', 'pageview');
+    </script>
+  {% endif %}
+
+</body>
+</html>

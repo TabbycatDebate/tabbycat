@@ -1,0 +1,48 @@
+//------------------------------------------------------------------------------
+// Buttons
+//------------------------------------------------------------------------------
+
+// Actionable elements (buttons, navs) should be distinct
+.btn {
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+  padding: 10px 12px;
+}
+
+//------------------------------------------------------------------------------
+// Inputs
+//------------------------------------------------------------------------------
+
+// Give buttons more padding
+.form-control,
+.form-control-parent input {
+  @extend .form-control;
+  border-radius: 6px;
+  border-width: 2px;
+  height: 39px;
+  max-width: 100%;
+}
+
+// Center number inputs
+input[type=number] {
+  text-align: center;
+}
+
+input[type="radio"].form-control,
+input[type="checkbox"].form-control {
+  width: 20px; // Mostly for integer scale questions; need to align with labels
+}
+
+// Labels in list groups need to vertically center with inputs
+.list-group-item label {
+  padding-top: 10px;
+}
+
+// Don't pad form panels as the elements already have padding
+.panel-body.form-panel {
+  padding-bottom: 0;
+}
+
+.text-area-limited {
+  max-height: 75px;
+}

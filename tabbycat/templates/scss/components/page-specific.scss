@@ -1,0 +1,98 @@
+//------------------------------------------------------------------------------
+// Checkins
+//------------------------------------------------------------------------------
+
+.round-progresses .progress {
+  margin-bottom: 0; // Progress bars have bottom margins; need to offset
+
+  .progress-empty span {
+    color: #000; // If its showing 0/x make the text visible and not flush
+    margin-left: 10px;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Motions to Division Assignment and Divisions Asssignment
+//------------------------------------------------------------------------------
+
+.divisions-holder {
+  // Align them in equal height rows
+  display: flex;
+  flex-wrap: wrap;
+
+  .col-md-3 {
+    display: flex;
+  }
+  // Set the panel body to fill all the available height
+  .panel {
+    display: flex;
+    flex-direction: column;
+
+    .panel-body {
+      flex: 1;
+    }
+  }
+}
+
+.assign-motions-lists .list-group-item-text {
+  height: 60px;  // Need to be fixed height so below rows all align
+  overflow: hidden;
+}
+
+.division-heading {
+  // Shift up the select to be adjavent to the title
+  padding: 5px 10px;
+
+  h5 {
+    display: inline-block;
+  }
+
+  .form-control {
+    display: inline-block;
+    float: right;
+    max-width: 75%;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Draw
+//------------------------------------------------------------------------------
+
+.btn-group form {
+  margin-left: 3px; // Fix for buttons on edit draw page
+}
+
+#stop_scrolling {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+}
+
+.draw-xs {
+  font-size: $font-size-base * 1.25;
+}
+
+.draw-s {
+  font-size: $font-size-base * 1.5;
+}
+
+.draw-m {
+  font-size: $font-size-base * 1.75;
+}
+
+.draw-l {
+  font-size: $font-size-base * 2;
+}
+
+.draw-xl {
+  font-size: $font-size-base * 2.25;
+}
+
+//------------------------------------------------------------------------------
+// Ballot Entry
+//------------------------------------------------------------------------------
+
+.speaker-name {
+  text-align: left;
+}

@@ -1,0 +1,28 @@
+
+.db-score-sheet {
+  font-size: 12px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+  color: #000 !important; // Black prints faster: h5bp.com/s
+  h1, h2, h3, h4, h5, h6, strong {
+    margin: 0;
+    font-weight: 900;
+    font-style: normal;
+    line-height: 1;
+    color: #000 !important; // Black prints faster: h5bp.com/s
+  }
+  h2 {
+    font-size: 18px;
+  }
+}
+.db-page-double {
+  font-size: 9px;
+}
+.db-right-text {
+  text-align: right;
+  justify-content: flex-end;
+}
+.db-center-text {
+  text-align: center;
+}

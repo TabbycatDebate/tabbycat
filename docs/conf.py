@@ -31,6 +31,7 @@ import os
 # ones.
 extensions = [
     'sphinx.ext.todo',
+    'sphinx.ext.imgmath',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -57,9 +58,9 @@ author = 'Philip Belesky, Chuan-Zheng Lee'
 # built documents.
 #
 # The short X.Y version.
-version = '0.9'
+version = '1.0'
 # The full version, including alpha/beta/rc tags.
-release = '0.9.0'
+release = '1.0.0'
 
 rst_epilog = """
 .. |vrelease| replace:: v{release}

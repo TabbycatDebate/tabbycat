@@ -1,0 +1,18 @@
+{% extends "add_feedback.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Who are you?{% endblock %}
+{% block sub-title %}click your name or your team on this list{% endblock %}
+
+{% block page-subnav-sections %}{% endblock %}
+{% block page-subnav-actions %}{% endblock %}
+{% block page-alerts %}{% endblock %}
+
+{% block enter-feedback-adj-link %}
+  <a href="{% tournament_url adjfeedback-public-add-from-adjudicator-pk adj.id %}">
+  Add feedback from {{ adj.name }}</a>
+{% endblock %}
+{% block enter-feedback-team-link %}
+  <a href="{% tournament_url adjfeedback-public-add-from-team-pk team.id %}">
+  Add feedback from {{ team.long_name }}</a>
+{% endblock %}

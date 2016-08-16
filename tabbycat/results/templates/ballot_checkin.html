@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% load debate_tags %}
+
+{% block head-title %} Ballot Check-In for {{ round.name }}{% endblock %}
+{% block page-title %} Ballot Check-In for {{ round.name }}{% endblock %}
+{% block sub-title %}
+  <span id="ballots_left" class="detail">{{ ballots_left }}</span> Ballots Left
+{% endblock %}
+
+{% block content %}
+  <!-- Surround with a form so that we can press 'Enter' on the venue field to submit. -->
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class=" form-horizontal">
+        <div class="form-group">
+          <label for="venue" class="col-sm-1 control-label">Venue</label>
+          <div class="col-sm-6">
+            <input id="venue" class="form-control" type="text" name="venue" list="venues_list" />
+            <datalist id="venues_list">
+              {% for venue in venue_options %}
+                {% if pref.enable_venue_groups %}
+                  <option data-value="{{ venue.id }}" value="{{ venue.group.short_name}} {{ venue.name }}">
+                {% else %}
+                  <option data-value="{{ venue.id }}" value="{{ venue.name }}">
+                {% endif %}
+              {% endfor %}
+            </datalist>
+          </div>
+          <div class="col-sm-4 help-block">
+            Type or select the Ballot's venue, then hit enter
+          </div>
+        </div>
+        <div class="debate-details" id="debate_details">
+          <div class="form-group">
+            <label class="col-sm-1 control-label"></label>
+            <div class="col-sm-10">
+              <p id="message" class="alert alert-warning form-control-static h4">
+                Please check all these details before you check the ballot in.
+              </p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-1 control-label">Venue</label>
+            <div class="col-sm-6">
+              <p id="venue_confirm" class="form-control-static detail"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-1 control-label">Affirmative</label>
+            <div class="col-sm-6">
+              <p id="aff_team" class="form-control-static detail"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-1 control-label">Negative</label>
+            <div class="col-sm-6">
+              <p id="neg_team" class="form-control-static detail"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-1 control-label"></label>
+            <div class="col-sm-6">
+              <p class="form-control-static">There should be <span id="num_ballots"></span>, <span id="ballot_from"></span></p>
+              <ul class="" id="adjudicators"></ul>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-10">
+              <button id="checkin_btn" class="btn btn-block btn-success">Check this ballot in</button>
+            </div>
+          </div>
+        </div>
+        <p id="success" class="alert alert-success fade in alert-dismissable col-sm-offset-1 col-sm-6" data-dismiss="alert"></p>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+    $(document).ready(function() {
+      $('#venue').focus();
+      $('#debate_details').hide();
+
+      $('#venue').keyup(function(e) {
+        if (e.keyCode != 13) return;
+        $('#success').removeClass('alert-success alert-danger').html("Retrieving info...");
+        var val = $('#venue').val(); // The selected text
+        var venueID = $('#venues_list').children('option[value="'+val+'"]').attr('data-value');
+        if (venueID == '') {
+          $('#debate_details').hide();
+          $('#success').html("").show();
+          return;
+        }
+        $.ajax( {
+          type: "POST",
+          url: "{% round_url ballot_checkin_get_details %}",
+          data: {venue: venueID},
+          success: function(raw_data, status) {
+            var data = $.parseJSON(raw_data);
+            // If the debate exists, show its details.
+            if (data.exists) {
+              $('#venue_confirm').text(data.venue);
+              $('#venue_confirm').attr('data-value', data.venue_id);
+              $('#aff_team').text(data.aff_team);
+              $('#neg_team').text(data.neg_team);
+              var num_ballots_text, from_text;
+              if (data.num_adjs == 1) {
+                $('#num_ballots').text("1 ballot");
+                $('#ballot_from').text("from");
+                $('#checkin_btn').text("Check this ballot in");
+              } else {
+                $('#num_ballots').text(data.num_adjs + " ballots");
+                $('#ballot_from').text("one from each of");
+                $('#checkin_btn').text("Check these ballots in");
+              }
+              $('#adjudicators').empty();
+              $.each(data.adjudicators, function(index, value) {
+                $('#adjudicators').append("<li>" + value + "</li>");
+              });
+              $('#debate_details').show();
+              $('#success').hide();
+            // If not, show the error message.
+            } else {
+              $('#debate_details').hide();
+              $('#success').html(data.message).addClass('alert-danger').show();
+            }
+            $('#ballots_left').text(data.ballots_left);
+          },
+          error: function(xhr, error, ex) {
+            // Show an error message.
+            $('#debate_details').hide();
+            $('#success').html("There was an error retrieving information about that debate.")
+              .addClass('alert-danger').show();
+          }
+        });
+        return false;
+      });
+
+      $('#checkin_btn').click(function() {
+        $('#success').removeClass('alert-success alert-danger').html("Checking in...");
+        $('#debate_details').hide();
+        var val = $('#venue_confirm').attr('data-value');
+        $.ajax( {
+          type: "POST",
+          url: "{% round_url post_ballot_checkin %}",
+          data: {venue: val},
+          success: function(raw_data, status) {
+            var data = $.parseJSON(raw_data);
+            if (data.success) {
+              $('#success').html("Thanks! Checked in the ballot for "
+                + data.debate_description + " (" + data.venue + ").")
+                .addClass('alert-success').show();
+              $('#venues_list').children('option[data-value="'+val+'"]').remove()
+              $('#venue').val('').focus();
+
+            } else {
+              $('#success').html("There was an error checking that ballot in.")
+                .addClass('alert-danger').show();
+            }
+            $('#ballots_left').text(data.ballots_left);
+          },
+          error: function(xhr, error, ex) {
+            // Show an error message.
+            $('#success').html("There was an error checking that ballot in.")
+              .addClass('alert-danger').show();
+          }
+        });
+        return false;
+      });
+    });
+  </script>
+{% endblock js %}

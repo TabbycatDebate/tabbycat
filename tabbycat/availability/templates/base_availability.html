@@ -1,0 +1,95 @@
+{% extends "base_vue_table.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block page-subnav-sections %}
+  {% if round.seq > 1 %}
+    <button id="select_previous" class="btn btn-primary" type="button">
+      Copy from Previous
+    </button>
+  {% endif %}
+  <button id="select_all" class="btn btn-primary">
+    Select All
+  </button>
+  <button id="select_none" class="btn btn-primary">
+    Select None
+  </button>
+  {% if round.is_break_round and page_title == 'Adjudicator Check-Ins' %}
+    <a class="btn btn-primary submit-disable"
+       href="{% round_url update_availability_breaking_adjs  %}">
+      Check In All Breaking
+    </a>
+  {% endif %}
+  {{ block.super }}
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <button id="save_availability" class="btn btn-success submit-disable" >
+    Save Selected
+  </button>
+{% endblock %}
+
+{% block js %}
+
+  {{ block.super }}
+  <script>
+
+    var updateURL = '{{ update_url }}';
+    var overviewURL = '{% round_url availability_index round %}';
+
+    $('#select_all').click(function() {
+      $(":checkbox.vue-table-checkbox").each(function(){
+        $(this).prop('checked', true);
+      });
+      return false;
+    });
+
+    $('#select_none').click(function() {
+      $(":checkbox.vue-table-checkbox").each(function(){
+        $(this).prop('checked', false);
+      });
+      return false;
+    });
+
+    $('#select_previous').click(function() {
+      $(":checkbox.vue-table-checkbox").each(function(){
+        var prev_round = $(this).parents("td").siblings("td").first();
+        var prev_active = prev_round.children(".hidden").text().trim();
+        if (prev_active === 'true') {
+          $(this).prop('checked', true);
+        } else {
+          $(this).prop('checked', false);
+        }
+      });
+      return false;
+    });
+
+    $('#save_availability').click(function() {
+      var references = [], btn = $(this);
+      $(":checkbox.vue-table-checkbox").each(function(){
+        if ($(this).prop('checked')) {
+          console.log(this);
+          references.push(parseInt($(this).attr('data-target')));
+        }
+      });
+      $.ajax({
+        type: "POST",
+        url: updateURL,
+        data: {
+          references: references,
+        },
+        success: function(data, status) {
+          $.fn.showAlert('success', 'Saved availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the checkins overview page?</a>', 2000);
+          btn.button('reset');
+        },
+        error: function(xhr, error, ex) {
+          $.fn.showAlert('danger', 'Error saving availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the checkins overview page?</a>', 5000);
+          btn.button('reset');
+        }
+      });
+      return false;
+    });
+
+  </script>
+
+{% endblock %}

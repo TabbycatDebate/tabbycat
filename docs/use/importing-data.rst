@@ -13,7 +13,7 @@ Once you've got Tabbycat installed, the next step is to import data for the tour
 Manual setup
 ============
 
-For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface (under Setup > Edit Data).
+For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface (under Setup > Edit Database).
 
 .. caution:: The Django administrative interface is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. When you're setting up a tournament for the first time, this is highly unlikely to happen, but it's worth keeping in mind.
 
@@ -34,10 +34,12 @@ For medium sized tournaments there are a number of tools that allow you to impor
 
 .. note:: If copy-pasting from a spreadsheet, it is often easiest to make values be separated by commas by saving the spreadsheet as a \*.csv file, then opening said file in a plain text editor (such as Notepad or TextEdit) and copy/pasting from there.
 
-The ``import_tournament`` command
+.. _importtournament-command:
+
+The ``importtournament`` command
 =================================
 
-We've written a management command called ``import_tournament`` to help automate the tournament set-up. The script, however, is neither foolproof nor comprehensive, so you might find you need to modify things slightly if your tournament structure is different from ours. Be prepared to try this a few times to get it to work. Nonetheless, this is probably the fastest way to set up a tournament.
+We've written a management command called ``importtournament`` to help automate the tournament set-up. The script, however, is neither foolproof nor comprehensive, so you might find you need to modify things slightly if your tournament structure is different from ours. Be prepared to try this a few times to get it to work. Nonetheless, this is probably the fastest way to set up a tournament.
 
 1. Copy and rename the ``data/demo`` folder
 2. See the CSV files in the new folder, and add/replace the data as per your tournament. Note that the institutions (*i.e.* first column) in the ``speakers.csv`` and ``adjudicators.csv`` files must match the institutions in the second column of the ``institutions.csv`` file. And that all CSV files must end with a blank line.
@@ -45,18 +47,18 @@ We've written a management command called ``import_tournament`` to help automate
 
 ::
 
-  $ ./manage.py import_tournament YOUR_DATA_DIR [--slug SLUG] [--short-name SHORT_NAME] [--name FULL_NAME]
+  $ ./manage.py importtournament YOUR_DATA_DIR [--slug SLUG] [--short-name SHORT_NAME] [--name FULL_NAME]
 
 This script has a number of options. They're worth taking a look at before you run the script. For details, see::
 
-  $ ./manage.py import_tournament --help
+  $ ./manage.py importtournament --help
 
 4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-manual-setup`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
 
-``import_tournament`` on Heroku installs
+``importtournament`` on Heroku installs
 ========================================
 
-The ``import_tournament`` script can be run on Heroku directly; you just need to commit and push your new data directory to your server first. See :ref:`install-heroku` for details. If you have a local installation ready, you might like to iron out all the errors in your data until you can import locally without error, before pushing your data files to your server to be imported there.
+The ``importtournament`` script can be run on Heroku directly; you just need to commit and push your new data directory to your server first. See :ref:`install-heroku` for details. If you have a local installation ready, you might like to iron out all the errors in your data until you can import locally without error, before pushing your data files to your server to be imported there.
 
 If you want to import locally and push the database to the server, you can use the ``heroku pg:push`` command. We assume that, if you want to use this method, you know what you're doing or are comfortable reading the Heroku documentation to find out. We're happy to help if you have questions about this, but for most tournaments, committing the data to the server and running the script on the server directly will be easier.
 

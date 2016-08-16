@@ -1,13 +1,13 @@
 # Django Related
-local_settings.py
+tabbycat/local_settings.py
 .gitmodules/
 __pycache__/
 
 # Compilation
-staticfiles/
-static/css/
-static/js/
-static/fonts/
+tabbycat/staticfiles/
+tabbycat/static/css/
+tabbycat/static/js/
+tabbycat/static/fonts/
 
 # Dependencies
 node_modules
@@ -22,10 +22,10 @@ data/*
 !data/sandbox/
 !data/test/
 !data/presets/
-!data/fixtues/
+!data/fixtures/
 
 # Docs
-site/
+docs/site/
 
 # Tags
 tags

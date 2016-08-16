@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block head-title %}Motions{% endblock %}
+{% block page-title %}Motions{% endblock %}
+
+{% block content %}
+
+  {# The context `rounds` contains all rounds before or at the current round, #}
+  {# so `rounds` is guaranteed to be non-empty. #}
+  {% for round in rounds %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">{{ round.name }}</h4>
+      </div>
+      <ul class="list-group">
+        {% if round.motions_released %}
+          {% for motion in round.motion_set.all %}
+            <li class="list-group-item">{{ motion.text }}</li>
+          {% empty %}
+            <li class="list-group-item"><em>There are no motions available for this round.</em></li>
+          {% endfor %}
+        {% else %}
+          <li class="list-group-item"><em>The motions for this round have not been released.</em></li>
+        {% endif %}
+      </ul>
+    </div>
+  {% endfor %}
+
+  </div>
+{% endblock content %}
