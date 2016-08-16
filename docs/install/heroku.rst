@@ -17,7 +17,7 @@ If you don't already have a Heroku account, it'll prompt you to create one. Once
 
 This is the easiest way to deploy an instance of Tabbycat online. It requires no technical background. You can import data using the data importer in the user interface.
 
-.. note:: Heroku may ask you to attach a credit/debit card to your account. From what we understand this is to provide proof of identity — Tabbycat installations will not charge your card unless you specifically opt-in to a paid upgrade.
+.. note:: Heroku may ask you to attach a credit/debit card to your account. From what we understand this is to provide proof of identity — Tabbycat installations will not charge your card unless you specifically opt in to a paid upgrade.
 
 If you have a background in programming, you might prefer the below longer, more traditional method.
 
