@@ -34,7 +34,6 @@ export default {
         this.conflictableAdjudicators, conflictState, 'personal', conflictValue, false)
       this.findMatchingConflicts(conflicts.teams, origin,
         this.conflictableTeams, conflictState, 'personal', conflictValue, false)
-
       this.findMatchingConflicts(conflicts.institutions, origin,
         this.conflictableAdjudicators, conflictState, 'institutional', conflictValue, true)
       this.findMatchingConflicts(conflicts.institutions, origin,
@@ -75,16 +74,24 @@ export default {
         conflictMatch['conflicted'][hoverOrPanel][typeOfClash] = isConflicted
       }
     },
-    findMatchingInstitutionalConflict: function(conflictables, origin, institutionID, hoverOrPanel, typeOfClash, isConflicted) {
+    findMatchingInstitutionalConflict: function(conflictables, origin, conflictedInstitutionID, hoverOrPanel, typeOfClash, isConflicted) {
       // Loop through all possible conflictables and check for institutional ID matches
-      for (var referenceToTest in conflictables) {
-        if (conflictables.hasOwnProperty(referenceToTest)) {
-          var entityToTest = conflictables[referenceToTest]; // get team or adj
+      for (var key in conflictables) {
+        if (conflictables.hasOwnProperty(key)) {
+          var entityToTest = conflictables[key];
           if (entityToTest.type === 'team' && origin.type === 'team') {
             // Dont count team-team institution conflicts as such
+          } else if (entityToTest === origin) {
+            // Dont check self
+          } else if (typeof entityToTest === 'undefined') {
+            // Catchall
           } else {
-            if (typeof entityToTest !== 'undefined' && entityToTest !== origin) { // don't highlight originator as institutional clash
-              if (entityToTest.institution.id === institutionID) { // check for institution match
+            // Rather than checking the entity's institution we loop through all
+            // of their institutional conflicts (a super set) to ensure symmetry
+            var targetsInstitutionalConflicts = entityToTest.conflicts.institutions
+            for (var i = 0; i < targetsInstitutionalConflicts.length; i++) {
+              // Check for institution ID match with each originating conflict
+              if (targetsInstitutionalConflicts[i] === conflictedInstitutionID) {
                 entityToTest['conflicted'][hoverOrPanel][typeOfClash] = isConflicted;
               }
             }
