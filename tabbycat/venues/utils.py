@@ -30,12 +30,12 @@ def venue_conflicts_display(debates):
         venue = debate.venue
         for team in debate.teams:
             if not _constraints_satisfied(teamconstraints, team.id, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of team {}".format(team.short_name))
+                conflict_messages[debate].append("Venue does not meet constraints of {}".format(team.short_name))
             if not _constraints_satisfied(instconstraints, team.institution_id, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of institution {} (team {})".format(team.institution.code, team.short_name))
+                conflict_messages[debate].append("Venue does not meet constraints of institution {} ({})".format(team.institution.code, team.short_name))
 
         for adjudicator in debate.adjudicators.all():
             if not _constraints_satisfied(adjconstraints, adjudicator.id, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of adjudicator {}".format(adjudicator.name))
+                conflict_messages[debate].append("Venue does not meet constraints of {}".format(adjudicator.name))
 
     return conflict_messages

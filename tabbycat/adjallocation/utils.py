@@ -32,25 +32,25 @@ def adjudicator_conflicts_display(debates):
             for team in debate.teams:
                 if team.id in adjteamconflicts.get(adjudicator.id, []):
                     conflict_messages[debate].append(
-                        "Adjudicator <strong>{adj}</strong> conflicts with team <strong>{team}</strong>".format(
+                        "Conflict between <strong>{adj}</strong> & <strong>{team}</strong>".format(
                             adj=adjudicator.name, team=team.short_name)
                     )
                 if team.institution_id in adjinstconflicts.get(adjudicator.id, []):
                     conflict_messages[debate].append(
-                        "Adjudicator <strong>{adj}</strong> conflicts with institution <strong>{inst}</strong> (team {team})".format(
+                        "Conflict between <strong>{adj}</strong> & institution <strong>{inst}</strong> ({team})".format(
                             adj=adjudicator.name, team=team.short_name, inst=team.institution.code)
                     )
 
         for adj1, adj2 in permutations(debate.adjudicators.all(), 2):
             if adj2.id in adjadjconflicts.get(adj1.id, []):
                 conflict_messages[debate].append(
-                    "Adjudicator <strong>{adj}</strong> conflicts with adjudicator <strong>{other}</strong>".format(
+                    "Conflict between <strong>{adj}</strong> & <strong>{other}</strong>".format(
                         adj=adj1.name, other=adj2.name)
                 )
 
             if adj2.institution_id in adjinstconflicts.get(adj1.id, []):
                 conflict_messages[debate].append(
-                    "Adjudicator <strong>{adj}</strong> conflicts with institution <strong>{inst}</strong> (adjudicator {other})".format(
+                    "Conflict between <strong>{adj}</strong> & <strong>{inst}</strong> ({other})".format(
                         adj=adj1.name, other=adj2.name, inst=adj2.institution.code)
                 )
 
