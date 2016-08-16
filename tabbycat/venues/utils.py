@@ -2,12 +2,15 @@ from venues.models import AdjudicatorVenueConstraint, InstitutionVenueConstraint
 
 
 def _constraints_satisfied(constraints_dict, key, venue):
-    constraints = constraints_dict.get(key, [])
+    if key not in constraints_dict:
+        return True
+    constraints = constraints_dict[key]
     return any(constraint.venue_group_id == venue.group_id for constraint in constraints)
+
 
 def venue_conflicts_display(debates):
     """Returns a dict mapping elements (debates) in `debates` to a list of
-    strings of explaning unfulfilled venue constraints for participants that
+    strings of explaining unfulfilled venue constraints for participants that
     debate. A venue constraint (or more precisely, a set of venue constraints
     relating to a single participant) is "unfulfilled" if the relevant
     participant had constraints and *none* of their constraints were met."""
@@ -29,7 +32,7 @@ def venue_conflicts_display(debates):
             if not _constraints_satisfied(teamconstraints, team.id, venue):
                 conflict_messages[debate].append("Venue does not meet constraints of team {}".format(team.short_name))
             if not _constraints_satisfied(instconstraints, team.institution_id, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of institution {} ({})".format(team.institution.code, team.short_name))
+                conflict_messages[debate].append("Venue does not meet constraints of institution {} (team {})".format(team.institution.code, team.short_name))
 
         for adjudicator in debate.adjudicators.all():
             if not _constraints_satisfied(adjconstraints, adjudicator.id, venue):

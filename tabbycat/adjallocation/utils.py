@@ -1,5 +1,6 @@
 import json
 import math
+from itertools import permutations
 
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
@@ -8,6 +9,52 @@ from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import DebateTeam
 from participants.models import Adjudicator, Team
 from participants.prefetch import populate_feedback_scores, populate_win_counts
+
+
+def adjudicator_conflicts_display(debates):
+    """Returns a dict mapping elements (debates) in `debates` to a list of
+    strings of explaining conflicts between adjudicators and teams, and
+    conflicts between adjudicators and each other."""
+
+    adjteamconflicts = {}
+    for conflict in AdjudicatorConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
+        adjteamconflicts.setdefault(conflict.adjudicator_id, []).append(conflict.team_id)
+    adjinstconflicts = {}
+    for conflict in AdjudicatorInstitutionConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
+        adjinstconflicts.setdefault(conflict.adjudicator_id, []).append(conflict.institution_id)
+    adjadjconflicts = {}
+    for conflict in AdjudicatorAdjudicatorConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
+        adjadjconflicts.setdefault(conflict.adjudicator_id, []).append(conflict.conflict_adjudicator_id)
+
+    conflict_messages = {debate: []  for debate in debates}
+    for debate in debates:
+        for adjudicator in debate.adjudicators.all():
+            for team in debate.teams:
+                if team.id in adjteamconflicts.get(adjudicator.id, []):
+                    conflict_messages[debate].append(
+                        "Adjudicator <strong>{adj}</strong> conflicts with team <strong>{team}</strong>".format(
+                            adj=adjudicator.name, team=team.short_name)
+                    )
+                if team.institution_id in adjinstconflicts.get(adjudicator.id, []):
+                    conflict_messages[debate].append(
+                        "Adjudicator <strong>{adj}</strong> conflicts with institution <strong>{inst}</strong> (team {team})".format(
+                            adj=adjudicator.name, team=team.short_name, inst=team.institution.code)
+                    )
+
+        for adj1, adj2 in permutations(debate.adjudicators.all(), 2):
+            if adj2.id in adjadjconflicts.get(adj1.id, []):
+                conflict_messages[debate].append(
+                    "Adjudicator <strong>{adj}</strong> conflicts with adjudicator <strong>{other}</strong>".format(
+                        adj=adj1.name, other=adj2.name)
+                )
+
+            if adj2.institution_id in adjinstconflicts.get(adj1.id, []):
+                conflict_messages[debate].append(
+                    "Adjudicator <strong>{adj}</strong> conflicts with institution <strong>{inst}</strong> (adjudicator {other})".format(
+                        adj=adj1.name, other=adj2.name, inst=adj2.institution.code)
+                )
+
+    return conflict_messages
 
 
 def percentile(n, percent, key=lambda x:x):
