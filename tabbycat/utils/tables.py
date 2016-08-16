@@ -7,7 +7,7 @@ from participants.models import Team
 from participants.utils import get_side_counts
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from utils.misc import reverse_tournament
-from venues.conflicts import venue_conflicts_display
+from venues.utils import venue_conflicts_display
 
 from .mixins import SuperuserRequiredMixin
 
