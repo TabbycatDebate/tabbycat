@@ -183,15 +183,6 @@ class Debate(models.Model):
 
         return d
 
-    @cached_property
-    def adjudicator_conflicts(self):
-        a = []
-        for t, adj in self.adjudicators:
-            for team in (self.aff_team, self.neg_team):
-                if adj.conflict_with(team):
-                    a.append("Adjudicator %s conflicts with %s" % (adj.name, team.short_name))
-        return a
-
     @property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
