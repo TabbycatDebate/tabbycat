@@ -7,6 +7,7 @@ from participants.models import Team
 from participants.utils import get_side_counts
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from utils.misc import reverse_tournament
+from venues.conflicts import venue_conflicts_display
 
 from .mixins import SuperuserRequiredMixin
 
@@ -509,10 +510,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                         formats.date_format(debate.time, "h:i A")])
             self.add_columns(times_headers, times_data)
 
-    def add_draw_conflicts(self, draw):
+    def add_draw_conflicts_columns(self, draw):
+        venue_conflicts_by_debate = venue_conflicts_display(draw)
         conflicts_header = {'key': "Conflicts/Flags"}
         conflicts_data = [{
-            'text': "<br />".join(debate.draw_conflicts + debate.flags_all),
+            'text': "<br />".join(debate.draw_conflicts + debate.adjudicator_conflicts + venue_conflicts_by_debate[debate]),
             'class': 'text-danger small'
         } for debate in draw]
         self.add_column(conflicts_header, conflicts_data)

@@ -6,7 +6,6 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
 
 from participants.models import Team
-from venues.conflicts import venue_conflicts
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
@@ -67,7 +66,10 @@ class Debate(models.Model):
 
     @property
     def teams(self):
-        return Team.objects.filter(debateteam__debate=self)
+        try:
+            return [self._aff_team, self._neg_team]
+        except AttributeError:
+            return Team.objects.filter(debateteam__debate=self)
 
     @property
     def aff_team(self):
@@ -159,10 +161,6 @@ class Debate(models.Model):
             return [DRAW_FLAG_DESCRIPTIONS[f] for f in self.flags.split(",")]
 
     @property
-    def all_conflicts(self):
-        return self.draw_conflicts + self.adjudicator_conflicts + venue_conflicts(self)
-
-    @property
     def history(self):
         try:
             return self._history
@@ -187,20 +185,11 @@ class Debate(models.Model):
 
     @cached_property
     def adjudicator_conflicts(self):
-        class Conflict(object):
-            def __init__(self, adj, team):
-                self.adj = adj
-                self.team = team
-
-            def __str__(self):
-                return 'Adjudicator %s conflicts with %s' % (self.adj, self.team)
-
         a = []
         for t, adj in self.adjudicators:
             for team in (self.aff_team, self.neg_team):
                 if adj.conflict_with(team):
-                    a.append(Conflict(adj, team))
-
+                    a.append("Adjudicator %s conflicts with %s" % (adj.name, team.short_name))
         return a
 
     @property
