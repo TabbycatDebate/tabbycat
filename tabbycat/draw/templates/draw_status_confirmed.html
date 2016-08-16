@@ -32,7 +32,8 @@
       <div class="alert alert-danger" id="">
         {{ no_venue|apnumber|capfirst }} debate{{ no_venue|pluralize:" does,s do" }} not have a venue.
         <a href="{% round_url venues-edit round %}" class="alert-link">
-          Edit the venues</a>.
+          Edit the venues.
+        </a>
       </div>
     {% endif %}
   {% endwith %}
@@ -40,8 +41,8 @@
     <div class="alert alert-danger" id="">
       There are currently fewer checked-in adjudicators than there are rooms.
       <a href="{% round_url adjudicator_availability round %}" class="alert-link">
-        Check in some more adjudicators
-      </a>.
+        Check in some more adjudicators.
+      </a>
     </div>
   {% else %}
     {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel %}
@@ -54,7 +55,8 @@
             {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of adjudicators.
           {% endif %}
           <a href="{% round_url edit_adj_allocation %}" class="alert-link">
-            Edit adjudicators</a>.
+            Edit adjudicators.
+          </a>
         </div>
       {% endif %}
     {% endwith %}
@@ -65,8 +67,7 @@
       You have released the draw, but it will not show to the public unless
       'public view of draw' setting is enabled in
       <a class="alert-link" href="{% tournament_url options-tournament-index %}">
-         this tournament's configuration
-      </a>.
+         this tournament's configuration</a>.
     </div>
   {% endif %}
 
@@ -75,8 +76,7 @@
       You have released the motions, but they will not show to the public unless
       the 'public view of motions' setting is enabled in
       <a class="alert-link" href="{% tournament_url options-tournament-index %}">
-        this tournament's configuration
-      </a>.
+        this tournament's configuration</a>.
     </div>
   {% endif %}
 
