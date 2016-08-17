@@ -255,12 +255,6 @@ class Round(models.Model):
     # Draw retrieval methods
     # ==========================================================================
 
-    @cached_property
-    def cached_draw(self):
-        # Deprecated 10/7/2016, remove after 10/8/2016
-        warn("Round.cached_draw is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=3)
-        return self.get_draw()
-
     def get_draw(self, ordering=('venue__name',)):
         warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=2)
         related = ('venue',)
@@ -270,7 +264,7 @@ class Round(models.Model):
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',), select_related=(),
             teams=True, adjudicators=True, speakers=True, divisions=True, ballotsubs=False,
-            wins=False, ballotsets=False, venues=True):
+            wins=False, ballotsets=False, venues=True, institutions=False):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
@@ -294,8 +288,8 @@ class Round(models.Model):
             debates = debates.select_related(*select_related)
 
         # These functions populate relevant attributes of each debate, operating in-place
-        if teams or speakers or wins:
-            populate_teams(debates, speakers=speakers)  # _aff_team, _aff_dt, _neg_team, _neg_dt
+        if teams or speakers or wins or institutions:
+            populate_teams(debates, speakers=speakers, institutions=institutions)  # _aff_team, _aff_dt, _neg_team, _neg_dt
         if ballotsubs or ballotsets:
             populate_confirmed_ballots(debates, motions=True, ballotsets=ballotsets)
         if wins:

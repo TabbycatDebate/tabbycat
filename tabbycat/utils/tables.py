@@ -2,11 +2,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import formats
 
 from adjallocation.allocation import AdjudicatorAllocation
+from adjallocation.utils import adjudicator_conflicts_display
 from draw.models import Debate, DebateTeam
 from participants.models import Team
 from participants.utils import get_side_counts
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from utils.misc import reverse_tournament
+from venues.utils import venue_conflicts_display
 
 from .mixins import SuperuserRequiredMixin
 
@@ -509,12 +511,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
                         formats.date_format(debate.time, "h:i A")])
             self.add_columns(times_headers, times_data)
 
-    def add_draw_conflicts(self, draw):
+    def add_draw_conflicts_columns(self, debates):
+        venue_conflicts_by_debate = venue_conflicts_display(debates)
+        adjudicator_conflicts_by_debate = adjudicator_conflicts_display(debates)
+        conflicts_by_debate = [debate.draw_conflicts + adjudicator_conflicts_by_debate[debate] + venue_conflicts_by_debate[debate]
+            for debate in debates]
+
         conflicts_header = {'key': "Conflicts/Flags"}
         conflicts_data = [{
-            'text': "<br />".join(debate.draw_conflicts + debate.flags_all),
+            'text': "<br />".join(conflicts),
             'class': 'text-danger small'
-        } for debate in draw]
+        } for conflicts in conflicts_by_debate]
         self.add_column(conflicts_header, conflicts_data)
 
     def add_ranking_columns(self, standings, subset=None, prefix=' '):

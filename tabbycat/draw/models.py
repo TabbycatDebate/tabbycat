@@ -6,7 +6,6 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
 
 from participants.models import Team
-from venues.conflicts import venue_conflicts
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
@@ -67,7 +66,10 @@ class Debate(models.Model):
 
     @property
     def teams(self):
-        return Team.objects.filter(debateteam__debate=self)
+        try:
+            return [self._aff_team, self._neg_team]
+        except AttributeError:
+            return Team.objects.filter(debateteam__debate=self)
 
     @property
     def aff_team(self):
@@ -159,10 +161,6 @@ class Debate(models.Model):
             return [DRAW_FLAG_DESCRIPTIONS[f] for f in self.flags.split(",")]
 
     @property
-    def all_conflicts(self):
-        return self.draw_conflicts + self.adjudicator_conflicts + venue_conflicts(self)
-
-    @property
     def history(self):
         try:
             return self._history
@@ -185,24 +183,6 @@ class Debate(models.Model):
 
         return d
 
-    @cached_property
-    def adjudicator_conflicts(self):
-        class Conflict(object):
-            def __init__(self, adj, team):
-                self.adj = adj
-                self.team = team
-
-            def __str__(self):
-                return 'Adjudicator %s conflicts with %s' % (self.adj, self.team)
-
-        a = []
-        for t, adj in self.adjudicators:
-            for team in (self.aff_team, self.neg_team):
-                if adj.conflict_with(team):
-                    a.append(Conflict(adj, team))
-
-        return a
-
     @property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
@@ -213,15 +193,6 @@ class Debate(models.Model):
             from adjallocation.allocation import AdjudicatorAllocation
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
-
-    @property
-    def chair(self):
-        # Deprecated 4/7/2016, remove completely after 4/8/2016
-        raise RuntimeError("Debate.chair is deprecated, use Debate.adjudicators.chair instead")
-        # from adjallocation.models import DebateAdjudicator
-        # da_adj = list(DebateAdjudicator.objects.filter(debate=self, type="C"))
-        # a_adj = da_adj[0].adjudicator
-        # return a_adj
 
     @property
     def matchup(self):

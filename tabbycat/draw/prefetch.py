@@ -9,7 +9,7 @@ from .models import Debate, DebateTeam
 logger = logging.getLogger(__name__)
 
 
-def populate_teams(debates, speakers=True):
+def populate_teams(debates, speakers=True, institutions=False):
     """Sets attributes `_aff_dt`, `_aff_team`, `_neg_dt`, `_neg_team` on each
     debate in `debates`, each being the appropriate Team or DebateTeam.
     This can be used for efficiency, since it retrieves all of the
@@ -19,7 +19,7 @@ def populate_teams(debates, speakers=True):
     """
     debates_by_id = {debate.id: debate for debate in debates}
 
-    debateteams = DebateTeam.objects.filter(debate__in=debates).select_related('team')
+    debateteams = DebateTeam.objects.filter(debate__in=debates).select_related('team', 'team__institution')
     if speakers:
         debateteams = debateteams.prefetch_related('team__speaker_set')
     for debateteam in debateteams:

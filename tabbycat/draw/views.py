@@ -175,7 +175,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         if r.draw_status == r.STATUS_NONE:
             return table # Return Blank
 
-        draw = r.debate_set_with_prefetches(ordering=('room_rank',))
+        draw = r.debate_set_with_prefetches(ordering=('room_rank',), institutions=True)
         populate_history(draw)
         if r.is_break_round:
             table.add_room_rank_columns(draw)
@@ -211,7 +211,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         else:
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
-        table.add_draw_conflicts(draw)
+        table.add_draw_conflicts_columns(draw)
         if not r.is_break_round:
             table.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
 
