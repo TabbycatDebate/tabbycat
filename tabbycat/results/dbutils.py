@@ -76,7 +76,7 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
         return r
 
     rr = dict()
-    for adj in debate.adjudicators.list:
+    for adj in debate.adjudicators.voting():
         rr[adj] = gen_results()
 
     # Create relevant scores
@@ -90,7 +90,7 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
         reply_speaker = random.randint(0, last_substantive_position-1) if reply_random else 0
         bset.set_speaker(team=side, position=reply_position, speaker=speakers[reply_speaker])
 
-        for adj in debate.adjudicators.list:
+        for adj in debate.adjudicators.voting():
             for pos in debate.round.tournament.POSITIONS:
                 bset.set_score(adj, side, pos, rr[adj][side][pos-1])
 
