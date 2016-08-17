@@ -12,6 +12,7 @@ from breakqual.utils import categories_ordered
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Team
 from participants.utils import regions_ordered
+from tournaments.models import Round
 from tournaments.mixins import RoundMixin
 from utils.mixins import JsonDataResponseView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, round_view
@@ -281,13 +282,16 @@ class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, J
 
     def get_data(self):
         round = self.get_round()
-        if round.draw_status == round.STATUS_RELEASED:
-            return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
-        if round.draw_status != round.STATUS_CONFIRMED:
-            return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
-
         allocate_adjudicators(round, HungarianAllocator)
-        return debates_to_json(round.get_draw(), self.get_tournament(), round)
+        return debates_to_json(round.debate_set_with_prefetches(), self.get_tournament(), round)
+
+    def get(self, request, *args, **kwargs):
+        round = self.get_round()
+        if round.draw_status == Round.STATUS_RELEASED:
+            return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
+        if round.draw_status != Round.STATUS_CONFIRMED:
+            return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
+        return super().get(request, *args, **kwargs)
 
 
 class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
