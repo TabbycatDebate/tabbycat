@@ -16,4 +16,5 @@ div[class^='highlight'] pre.literal-block, .literal-block {
 }
 .rst-content table.docutils p {
   font-size: 100% !important;
+  margin-bottom: 12px;
 }
