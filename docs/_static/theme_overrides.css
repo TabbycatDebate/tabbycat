@@ -18,9 +18,9 @@ pre.literal-block, .rst-content .literal-block, .rst-content pre.literal-block {
   font-size: 100%;
   margin-bottom: 12px;
 }
-.rst-content .section ul {
+.rst-content table.docutils ul {
   margin-bottom: 12px;
 }
-.rst-content .section ul:last-child {
+.rst-content table.docutils ul:last-child {
   margin-bottom: 0px;
 }
