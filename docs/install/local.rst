@@ -13,18 +13,40 @@ Then, when you open your browser, you can use Tabbycat like any other web site. 
 
 In effect, you are getting your computer to behave like a web server. For this reason, the process is more complicated than what you're probably used to with most installations. Basically, there are more pieces to put together to get everything working.
 
+.. _install-decision:
+
 Should I use a local installation, or one on the internet?
 ==========================================================
 
-You should use a local installation if:
+In most cases, you should use one on the internet by :ref:`setting up an
+instance on Heroku <install-heroku>`. It's advantageous in a number of ways:
 
-- you won't have access to the internet at your tournament, or internet access will be flaky
-- your tournament is small, doesn't require a public interface and you have a good technical background
-- you're involved in or interested in developing Tabbycat
+- The Heroku installation process is much, much, *much* easier.
+- Participants can access the draw, motions, results and more online.
+- The Heroku data centres are less likely to fail than your computer.
+- A Heroku site can be managed from any computer with Heroku Toolbelt installed.
 
-In most cases, you'll want to run Tabbycat on an internet-accessible site. Have a look at :ref:`install-heroku` to see how.
+In some cases, you might have a good reason to use a local installation. We can
+think of one: If you won't have access to the internet at your tournament, or if
+internet access will be flaky, then you should use a local installation.
 
-If you're trying out Tabbycat for the first time and just want to see it in action, it's probably easier overall to create a Heroku account and install it on Heroku. But if you're happy to install all the dependencies or want to get more visibility into what's going on, a local installation is also a great way to try it out.
+.. attention:: You'll need internet access to download dependencies during the
+  local installation process. So if you're not expecting to have reliable
+  internet access at your tournament, be sure to have Tabbycat installed
+  *before* you get there!
+
+.. admonition:: Advanced users
+  :class: tip
+
+  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so if you
+  have your own preferred method of running Django projects, you can also do
+  that. Just be aware that we haven't tried it.
+
+.. admonition:: Developers
+  :class: tip
+
+  If you're involved in or interested in developing Tabbycat, you'll want to set
+  up a local installation, because it's much faster to test your code that way.
 
 Okay, so how do I do it?
 ========================
@@ -34,8 +56,6 @@ Instructions are here:
 - :ref:`install-linux`
 - :ref:`install-osx`
 - :ref:`install-windows`
-
-.. attention:: If you're expecting not to have reliable internet access, be sure to have fully installed Tabbycat **before** you get to your tournament.
 
 Advanced uses
 =============
