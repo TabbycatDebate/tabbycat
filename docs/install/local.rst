@@ -19,16 +19,18 @@ Should I use a local installation, or one on the internet?
 ==========================================================
 
 In most cases, you should use one on the internet by :ref:`setting up an
-instance on Heroku <install-heroku>`. It's advantageous in a number of ways:
+instance on Heroku <install-heroku>`. This has a number of major advantages:
 
 - The Heroku installation process is much, much, *much* easier.
+- You can enter ballots and manage your tournament from multiple computers.
 - Participants can access the draw, motions, results and more online.
-- The Heroku data centres are less likely to fail than your computer.
-- A Heroku site can be managed from any computer with Heroku Toolbelt installed.
+- Amazon's data centres (where Heroku is hosted) are less likely to fail than
+  your computer is.
 
 In some cases, you might have a good reason to use a local installation. We can
-think of one: If you won't have access to the internet at your tournament, or if
-internet access will be flaky, then you should use a local installation.
+think of just one such reason: If you won't have access to the internet at your
+tournament, or if internet access will be flaky, then you should use a local
+installation.
 
 .. attention:: You'll need internet access to download dependencies during the
   local installation process. So if you're not expecting to have reliable
@@ -63,12 +65,13 @@ Advanced uses
 Can others access my local install?
 -----------------------------------
 
-Running a local installation doesn't mean you have to miss out on the benefits of multi-computer data entry! Your computer is running a web server, and it can serve other computers too. You can do this even if you don't have internet access: all you need is a router that you can use to connect a few computers together. We did this at Victoria Australs 2012.
+Local installations can also take advantage of multiple-computer site access, including data entry---it's just takes more work than a Heroku installation to set up.
+
+Since a local installation is just having your computer run a web server, it can serve other computers too. You can make this work even if you don't have internet access: all you need is a router that you can use to connect a few computers together. Then other computers on your local network can access the Tabbycat site hosted on your computer. We did this at Victoria Australs 2012.
 
 We don't provide detailed instructions for this; we leave it for advanced users to set up themselves. As a rough guide:
 
 - You need to pass in your computer's IP address and port to the `runserver` command, for example, if your computer (the one acting as a server) is 196.168.0.2 and you want to run it on port 8000: ``dj runserver 192.168.0.2:8000``
-
 - You need to configure your firewall settings to allow incoming connections on the IP address and port you specified in that command.
 - Be aware that local installs use the Django development server, whose **security is not tested**. Therefore, it's a good idea to make sure your firewall **only lets in computers on your local network** (or, if you're really paranoid, isolate the network from the internet completely).
 
