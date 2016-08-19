@@ -5,7 +5,8 @@ Change Log
 1.0.1
 -----
 
-- Fixed a minor bug with the visual importer affecting similarly named Institutions
+- Fixed a minor bug with the visual importer affecting similarly named institutions
+- Fixed error message when user tries to auto-allocate adjudicators on unconfirmed or released draw
 - Minor docs edits
 
 
