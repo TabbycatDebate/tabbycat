@@ -196,6 +196,7 @@ Almost there!
 
     > cd tabbycat
     > dj migrate
+    > npm run gulp build
     > dj collectstatic
     > dj createsuperuser
 
