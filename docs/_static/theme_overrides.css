@@ -1,7 +1,7 @@
 
-div[class^='highlight'] pre.literal-block, .literal-block {
-  /* Adding back in at the pre level */
-  padding: 12px 12px !important;
+pre.literal-block, .rst-content .literal-block, .rst-content pre.literal-block {
+  /* The theme rule-set applies with this specificity */
+  padding: 12px 12px;
 }
 .literal-block {
   /* Non-!important overrides */
@@ -12,8 +12,15 @@ div[class^='highlight'] pre.literal-block, .literal-block {
   font-family: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
 }
 .wy-table-responsive table td, .wy-table-responsive table th {
-  white-space: normal !important;
+  white-space: normal;
 }
 .rst-content table.docutils p {
-  font-size: 100% !important;
+  font-size: 100%;
+  margin-bottom: 12px;
+}
+.rst-content table.docutils ul {
+  margin-bottom: 12px;
+}
+.rst-content table.docutils ul:last-child {
+  margin-bottom: 0px;
 }

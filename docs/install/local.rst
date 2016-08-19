@@ -13,18 +13,42 @@ Then, when you open your browser, you can use Tabbycat like any other web site. 
 
 In effect, you are getting your computer to behave like a web server. For this reason, the process is more complicated than what you're probably used to with most installations. Basically, there are more pieces to put together to get everything working.
 
+.. _install-decision:
+
 Should I use a local installation, or one on the internet?
 ==========================================================
 
-You should use a local installation if:
+In most cases, you should use one on the internet by :ref:`setting up an
+instance on Heroku <install-heroku>`. This has a number of major advantages:
 
-- you won't have access to the internet at your tournament, or internet access will be flaky
-- your tournament is small, doesn't require a public interface and you have a good technical background
-- you're involved in or interested in developing Tabbycat
+- The Heroku installation process is much, much, *much* easier.
+- You can enter ballots and manage your tournament from multiple computers.
+- Participants can access the draw, motions, results and more online.
+- Amazon's data centres (where Heroku is hosted) are less likely to fail than
+  your computer is.
 
-In most cases, you'll want to run Tabbycat on an internet-accessible site. Have a look at :ref:`install-heroku` to see how.
+In some cases, you might have a good reason to use a local installation. We can
+think of just one such reason: If you won't have access to the internet at your
+tournament, or if internet access will be flaky, then you should use a local
+installation.
 
-If you're trying out Tabbycat for the first time and just want to see it in action, it's probably easier overall to create a Heroku account and install it on Heroku. But if you're happy to install all the dependencies or want to get more visibility into what's going on, a local installation is also a great way to try it out.
+.. attention:: You'll need internet access to download dependencies during the
+  local installation process. So if you're not expecting to have reliable
+  internet access at your tournament, be sure to have Tabbycat installed
+  *before* you get there!
+
+.. admonition:: Advanced users
+  :class: tip
+
+  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so if you
+  have your own preferred method of running Django projects, you can also do
+  that. Just be aware that we haven't tried it.
+
+.. admonition:: Developers
+  :class: tip
+
+  If you're involved in or interested in developing Tabbycat, you'll want to set
+  up a local installation, because it's much faster to test your code that way.
 
 Okay, so how do I do it?
 ========================
@@ -35,20 +59,19 @@ Instructions are here:
 - :ref:`install-osx`
 - :ref:`install-windows`
 
-.. attention:: If you're expecting not to have reliable internet access, be sure to have fully installed Tabbycat **before** you get to your tournament.
-
 Advanced uses
 =============
 
 Can others access my local install?
 -----------------------------------
 
-Running a local installation doesn't mean you have to miss out on the benefits of multi-computer data entry! Your computer is running a web server, and it can serve other computers too. You can do this even if you don't have internet access: all you need is a router that you can use to connect a few computers together. We did this at Victoria Australs 2012.
+Local installations can also take advantage of multiple-computer site access, including data entry---it's just takes more work than a Heroku installation to set up.
+
+Since a local installation is just having your computer run a web server, it can serve other computers too. You can make this work even if you don't have internet access: all you need is a router that you can use to connect a few computers together. Then other computers on your local network can access the Tabbycat site hosted on your computer. We did this at Victoria Australs 2012.
 
 We don't provide detailed instructions for this; we leave it for advanced users to set up themselves. As a rough guide:
 
 - You need to pass in your computer's IP address and port to the `runserver` command, for example, if your computer (the one acting as a server) is 196.168.0.2 and you want to run it on port 8000: ``dj runserver 192.168.0.2:8000``
-
 - You need to configure your firewall settings to allow incoming connections on the IP address and port you specified in that command.
 - Be aware that local installs use the Django development server, whose **security is not tested**. Therefore, it's a good idea to make sure your firewall **only lets in computers on your local network** (or, if you're really paranoid, isolate the network from the internet completely).
 

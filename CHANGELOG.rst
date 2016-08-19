@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+1.0.1
+-----
+
+- Fixed a minor bug with the visual importer affecting similarly named Institutions
+- Minor docs edits
+
+
 1.0.0
 -----
 Redesigned and redeveloped adjudicator allocation page
@@ -23,6 +30,7 @@ Break round management
 Feedback
   - Changed Boolean fields in AdjudicatorFeedbackQuestion to reflect what they actually do
   - Changed "panellist feedback enabled" option to "feedback paths", a choice of three options
+
 - Dropped "/t/" from tournament URLs and moved "/admin/" to "/database/", with 301 redirects
 - Added basic code linting to the continuous integration tests
 - Many other small bug fixes, refactors, optimisations, and documentation updates

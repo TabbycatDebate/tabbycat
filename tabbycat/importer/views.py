@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render
 
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -57,8 +58,8 @@ def confirm_institutions(request, t):
         except:
             pass
 
-    confirmed = {"kind": "Institutions", "quantity": len(institution_names)}
-    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    messages.success(request, "%s Institutions have been added" % len(institution_names))
+    return render(request, 'data_index.html')
 
 
 # ==============================================================================
@@ -126,8 +127,8 @@ def confirm_venues(request, t):
                       group=venue_group, tournament=venue_tournament)
         venue.save()
 
-    confirmed = {"kind": "Venues", "quantity": len(venue_names)}
-    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    messages.success(request, "%s Venues have been added" % len(venue_names))
+    return render(request, 'data_index.html')
 
 
 # ==============================================================================
@@ -190,8 +191,8 @@ def confirm_venue_preferences(request, t):
             venue_preference.save()
             created_preferences += 1
 
-    confirmed = {"kind": "Venue Preferences", "quantity": created_preferences}
-    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    messages.success(request, "%s Venue Preferences have been added" % created_preferences)
+    return render(request, 'data_index.html')
 
 
 # ==============================================================================
@@ -218,25 +219,21 @@ def edit_teams(request, t):
             default_speakers += ","
         default_speakers += "Speaker %s" % i
 
-    for name, quantity in request.POST.items():
+    for pk, quantity in request.POST.items():
         if quantity:
-            desired_teams_count = int(quantity) + 1  # +1 as we dont want teams named 0
-            institution = Institution.objects.get(name=name)
+            desired_teams_count = int(quantity) + 1  # +1 to 1-index team names
+            institution = Institution.objects.get(id=pk)
             team_names = Team.objects.filter(
-                institution=institution,
-                tournament=t).values_list('reference',
-                                          flat=True).order_by('reference')
+                institution=institution, tournament=t).values_list(
+                'reference', flat=True).order_by('reference')
             available_team_numbers = []
 
             name_to_check = 1
             while name_to_check < desired_teams_count:
-                # print('i is ', name_to_check)
                 # Check if the team name/number already exists
                 if str(name_to_check) in team_names:
-                    # print('     team exists:', name_to_check)
                     desired_teams_count += 1
                 else:
-                    # print('     team doesnt exist:', name_to_check)
                     available_team_numbers.append(name_to_check)
 
                 name_to_check += 1
@@ -258,9 +255,10 @@ def edit_teams(request, t):
 @tournament_view
 def confirm_teams(request, t):
     sorted_post = sorted(request.POST.items())
+    print(sorted_post)
 
-    for i in range(0, len(sorted_post) - 1,
-                   4):  # Sort through the items advancing 4 at a time
+    for i in range(0, len(sorted_post) - 1, 4):
+        # Sort through the items advancing 4 at a time
         instititution_id = sorted_post[i][1]
         team_name = sorted_post[i + 1][1]
         use_prefix = False
@@ -280,8 +278,8 @@ def confirm_teams(request, t):
                 newspeaker = Speaker(name=speaker, team=newteam)
                 newspeaker.save()
 
-    confirmed = {"kind": "Teams", "quantity": int((len(sorted_post) - 1) / 4)}
-    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
+    return render(request, 'data_index.html')
 
 
 # ==============================================================================
@@ -300,10 +298,10 @@ def add_adjudicators(request, t):
 @tournament_view
 def edit_adjudicators(request, t):
     institutions = {}
-    for name, quantity in request.POST.items():
+    for pk, quantity in request.POST.items():
         if quantity:
             # Create a placeholder for loop
-            institutions[name] = list(range(1, int(quantity) + 1))
+            institutions[pk] = list(range(1, int(quantity) + 1))
 
     context = {
         'institutions': institutions,
@@ -321,7 +319,7 @@ def confirm_adjudicators(request, t):
 
     for i in range(0, len(sorted_post), 4):
         # Sort through the items advancing 4 at a time
-        adj_institution = Institution.objects.get(name=sorted_post[i][1])
+        adj_institution = Institution.objects.get(id=sorted_post[i][1])
         adj_name = sorted_post[i + 1][1]
         adj_rating = sorted_post[i + 2][1]
         adj_shared = sorted_post[i + 3][1]
@@ -337,6 +335,5 @@ def confirm_adjudicators(request, t):
                                  test_score=adj_rating)
             newadj.save()
 
-    confirmed = {"kind": "Adjudicators",
-                 "quantity": int((len(sorted_post) - 1) / 3)}
-    return render(request, 'confirmed_data.html', dict(confirmed=confirmed))
+    messages.success(request, "%s Adjudicators have been added" % int((len(sorted_post) - 1) / 3))
+    return render(request, 'data_index.html')
