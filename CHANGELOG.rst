@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+1.0.1
+-----
+
+- Fixed a minor bug with the visual importer affecting similarly named Institutions
+- Minor docs edits
+
+
 1.0.0
 -----
 Redesigned and redeveloped adjudicator allocation page
