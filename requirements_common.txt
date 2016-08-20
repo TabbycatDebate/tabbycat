@@ -8,7 +8,7 @@ django-debug-toolbar==1.5.0 # Debug Toolbar
 django-extensions==1.7.1 # For the generate secret command
 django-gulp==2.4.1 # Run gulp tasks with runserver/collectstatic
 django-ipware==1.1.5 # IP Address logging
-django-jet==0.9.0 # Admin Backend
+django-jet==0.9.1 # Admin Backend
 psycopg2==2.6.2 # For Django to talk to postgres
 six==1.10.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.2.1
