@@ -156,25 +156,30 @@ class BallotSubmission(Submission):
             except (MultipleObjectsReturned, ObjectDoesNotExist):
                 return False
             return this.score == other_obj.score
+
         # Check all of the SpeakerScoreByAdjs.
         # For each one, we must be able to find one by the same adjudicator, team and
         # position, and they must have the same score.
         for this in self.speakerscorebyadj_set.all():
             if not check(this, other.speakerscorebyadj_set,
-                         ["debate_adjudicator", "debate_team", "position"]):
+                         ["debate_adjudicator_id", "debate_team_id", "position"]):
                 return False
+
         # Check all of the SpeakerScores.
         # In theory, we should only need to check speaker positions, since that is
         # the only information not inferrable from SpeakerScoreByAdj. But check
         # everything, to be safe.
+
         for this in self.speakerscore_set.all():
             if not check(this, other.speakerscore_set,
-                         ["debate_team", "speaker", "position"]):
+                         ["debate_team_id", "speaker_id", "position"]):
                 return False
+
         # Check TeamScores, to be safe
         for this in self.teamscore_set.all():
-            if not check(this, other.teamscore_set, ["debate_team", "points"]):
+            if not check(this, other.teamscore_set, ["debate_team_id", "points"]):
                 return False
+
         return True
 
     # For further discussion
