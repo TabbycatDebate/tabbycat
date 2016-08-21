@@ -137,51 +137,6 @@ class BallotSubmission(Submission):
         if self.confirmed and self.discarded:
             raise ValidationError("A ballot can't be both confirmed and discarded!")
 
-    def is_identical(self, other):
-        """Returns True if all data fields are the same. Returns False in any
-        other case. Does not raise exceptions if things look weird. Possibly
-        over-conservative: it checks fields that are theoretically redundant."""
-        if self.debate != other.debate:
-            return False
-        if self.motion != other.motion:
-            return False
-
-        def check(this, other_set, fields):
-            """Returns True if it could find an object with the same data.
-            Using filter() doesn't seem to work on non-integer float fields,
-            so we compare score by retrieving it."""
-            try:
-                other_obj = other_set.get(**dict((f, getattr(this, f))
-                                                 for f in fields))
-            except (MultipleObjectsReturned, ObjectDoesNotExist):
-                return False
-            return this.score == other_obj.score
-
-        # Check all of the SpeakerScoreByAdjs.
-        # For each one, we must be able to find one by the same adjudicator, team and
-        # position, and they must have the same score.
-        for this in self.speakerscorebyadj_set.all():
-            if not check(this, other.speakerscorebyadj_set,
-                         ["debate_adjudicator_id", "debate_team_id", "position"]):
-                return False
-
-        # Check all of the SpeakerScores.
-        # In theory, we should only need to check speaker positions, since that is
-        # the only information not inferrable from SpeakerScoreByAdj. But check
-        # everything, to be safe.
-
-        for this in self.speakerscore_set.all():
-            if not check(this, other.speakerscore_set,
-                         ["debate_team_id", "speaker_id", "position"]):
-                return False
-
-        # Check TeamScores, to be safe
-        for this in self.teamscore_set.all():
-            if not check(this, other.teamscore_set, ["debate_team_id", "points"]):
-                return False
-
-        return True
-
     # For further discussion
     # submitter_name = models.CharField(max_length=40, null=True)                # only relevant for public submissions
     # submitter_email = models.EmailField(max_length=254, blank=True, null=True) # only relevant for public submissions

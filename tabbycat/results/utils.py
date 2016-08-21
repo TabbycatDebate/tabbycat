@@ -32,7 +32,7 @@ def get_result_status_stats(round):
     return stats
 
 
-def identify_identical_ballotsubs(ballotsubs):
+def populate_identical_ballotsub_lists(ballotsubs):
     """Sets an attribute `identical_ballotsub_versions` on each BallotSubmission
     in `ballotsubs` to a list of version numbers of the other BallotSubmissions
     that are identical to it.

@@ -135,24 +135,6 @@ class Debate(models.Model):
             return self._confirmed_ballot
 
     @property
-    def identical_ballotsubs_dict(self):
-        """Returns a dict. Keys are BallotSubmissions, values are lists of
-        version numbers of BallotSubmissions that are identical to the key's
-        BallotSubmission. Excludes discarded ballots (always)."""
-        ballotsubs = self.ballotsubmission_set.exclude(discarded=True).order_by('version').prefetch_related('speakerscorebyadj_set', 'speakerscore_set', 'teamscore_set')
-        result = {b: list() for b in ballotsubs}
-        for ballotsub1 in ballotsubs:
-            # Save a bit of time by avoiding comparisons already done.
-            # This relies on ballots being ordered by version.
-            for ballotsub2 in ballotsubs:
-                if ballotsub1.version < ballotsub2.version and ballotsub1.is_identical(ballotsub2):
-                    result[ballotsub1].append(ballotsub2.version)
-                    result[ballotsub2].append(ballotsub1.version)
-        for l in result.values():
-            l.sort()
-        return result
-
-    @property
     def flags_all(self):
         if not self.flags:
             return []

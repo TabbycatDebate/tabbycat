@@ -31,7 +31,7 @@ from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
-from .utils import get_result_status_stats, identify_identical_ballotsubs
+from .utils import get_result_status_stats, populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
 
@@ -201,12 +201,7 @@ def edit_ballotset(request, t, ballotsub_id):
     if not request.user.is_superuser:
         all_ballotsubs = all_ballotsubs.exclude(discarded=True)
 
-    # identical_ballotsubs_dict = debate.identical_ballotsubs_dict
-    # for b in all_ballotsubs:
-    #     if b in identical_ballotsubs_dict:
-    #         b.identical_ballotsub_versions = identical_ballotsubs_dict[b]
-
-    identify_identical_ballotsubs(all_ballotsubs)
+    populate_identical_ballotsub_lists(all_ballotsubs)
 
     if request.method == 'POST':
         form = BallotSetForm(ballotsub, request.POST)
