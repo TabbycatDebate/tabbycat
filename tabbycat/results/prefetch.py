@@ -67,9 +67,20 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
 
 
 def populate_ballotsets(ballotsubs, prefetched_debates=[]):
+    """Populates the `_ballot_set` attribute of each BallotSubmission in
+    `ballotsubs` with a populated BallotSet instance.
+
+    If `prefetched_debates` is provided, debates in that list will be used
+    as `ballotset.debate` where appropriate, rather than `ballotsub.debate`.
+
+    If `prefetched_debates` is not provided, then for best performance,
+    the ballot submissions should already have their debates prefetched
+    (using select_related).
+    """
 
     if not ballotsubs:
         return
+
     POSITIONS = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0]).POSITIONS  # noqa: N806
 
     prefetched_debates_by_id = {debate.id: debate for debate in prefetched_debates}
@@ -94,7 +105,7 @@ def populate_ballotsets(ballotsubs, prefetched_debates=[]):
         ballotset._sheets_created = True
 
         ballotsub._ballot_set = ballotset
-        ballotsets_by_debate_id[ballotsub.debate_id] = ballotset
+        ballotsets_by_debate_id.setdefault(ballotsub.debate_id, []).append(ballotset)
         ballotsets_by_ballotsub_id[ballotsub.id] = ballotset
 
     # Populate speaker positions
@@ -121,23 +132,24 @@ def populate_ballotsets(ballotsubs, prefetched_debates=[]):
 
     # Create the Scoresheets
     # ----------------------
-    scoresheets_by_debateadj_id = {}
+    scoresheets_by_ballotsub_and_debateadj_id = {}
     debateadjs = DebateAdjudicator.objects.filter(debate__ballotsubmission__in=ballotsubs).exclude(
             type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator').distinct()
     for da in debateadjs:
-        ballotset = ballotsets_by_debate_id[da.debate_id]
-        scoresheet = Scoresheet(ballotset.ballotsub, da.adjudicator, load=False)
-        scoresheet.da = da
-        scoresheet.POSITIONS = POSITIONS
-        scoresheet.update_debateteams(debateteams_by_debate_id[da.debate_id])
-        scoresheet.init_blank_buffer()
+        ballotsets = ballotsets_by_debate_id[da.debate_id]
+        for ballotset in ballotsets:
+            scoresheet = Scoresheet(ballotset.ballotsub, da.adjudicator, load=False)
+            scoresheet.da = da
+            scoresheet.POSITIONS = POSITIONS
+            scoresheet.update_debateteams(debateteams_by_debate_id[da.debate_id])
+            scoresheet.init_blank_buffer()
 
-        ballotset._adjudicator_sheets[da.adjudicator] = scoresheet
-        scoresheets_by_debateadj_id[da.id] = scoresheet
+            ballotset._adjudicator_sheets[da.adjudicator] = scoresheet
+            scoresheets_by_ballotsub_and_debateadj_id[(ballotset.ballotsub.id, da.id)] = scoresheet
 
     ssbas = SpeakerScoreByAdj.objects.filter(ballot_submission__in=ballotsubs).select_related('debate_team')
     for ssba in ssbas:
-        scoresheet = scoresheets_by_debateadj_id[ssba.debate_adjudicator_id]
+        scoresheet = scoresheets_by_ballotsub_and_debateadj_id[(ssba.ballot_submission_id, ssba.debate_adjudicator_id)]
         scoresheet._set_score(ssba.debate_team, ssba.position, ssba.score)
 
     # Finally, check that everything is in order

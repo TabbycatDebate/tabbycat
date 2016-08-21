@@ -259,6 +259,15 @@ class Scoresheet(ResultBuffer):
     def neg_win(self):
         return self.neg_score > self.aff_score
 
+    # --------------------------------------------------------------------------
+    # Other methods
+    # --------------------------------------------------------------------------
+
+    def identical(self, other):
+        """Returns True if this scoresheet and the other scoresheet relate
+        to the same BallotSubmission and have the same data."""
+        return self.debate == other.debate and self.data == other.data
+
 
 class BallotSet(ResultBuffer):
     """Representation of a set of ballots for a debate in a single ballot
@@ -661,6 +670,29 @@ class BallotSet(ResultBuffer):
     @neg_motion_veto.setter
     def neg_motion_veto(self, new):
         self.motion_veto[self.debate.neg_dt] = new
+
+    # --------------------------------------------------------------------------
+    # Other methods
+    # --------------------------------------------------------------------------
+
+    def identical(self, other):
+        """Returns True if this scoresheet and the other scoresheet have the
+        same data."""
+        if self.speakers != other.speakers:
+            return False
+        if self.motion_veto != other.motion_veto:
+            return False
+        if self.motion != other.motion:
+            return False
+        if self.aff_score != other.aff_score:
+            return False
+        if self.neg_score != other.neg_score:
+            return False
+        for adj, other_sheet in other.adjudicator_sheets.items():
+            this_sheet = self._adjudicator_sheets[adj]
+            if not this_sheet.identical(other_sheet):
+                return False
+        return True
 
     # --------------------------------------------------------------------------
     # Methods for UI display

@@ -1,6 +1,10 @@
+from itertools import combinations
+
 from django.db.models import Count
 
 from draw.models import Debate
+
+from .prefetch import populate_ballotsets
 
 
 def get_result_status_stats(round):
@@ -26,3 +30,25 @@ def get_result_status_stats(round):
     stats[Debate.STATUS_NONE] -= ballot_in
 
     return stats
+
+
+def identify_identical_ballotsubs(ballotsubs):
+    """Sets an attribute `identical_ballotsub_versions` on each BallotSubmission
+    in `ballotsubs` to a list of version numbers of the other BallotSubmissions
+    that are identical to it.
+
+    Two ballot submissions are identical if they share the same debate, motion,
+    speakers and all speaker scores."""
+
+    populate_ballotsets(ballotsubs)
+
+    for ballotsub in ballotsubs:
+        ballotsub.identical_ballotsub_versions = []
+
+    for ballotsub1, ballotsub2 in combinations(ballotsubs, 2):
+        if ballotsub1.ballot_set.identical(ballotsub2.ballot_set):
+            ballotsub1.identical_ballotsub_versions.append(ballotsub2.version)
+            ballotsub2.identical_ballotsub_versions.append(ballotsub1.version)
+
+    for ballotsub in ballotsubs:
+        ballotsub.identical_ballotsub_versions.sort()
