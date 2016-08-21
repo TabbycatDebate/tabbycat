@@ -49,8 +49,8 @@
           {% if other_ballotsub.discarded %}
             (discarded)
           {% endif %}
-          {% if other_ballotsub.identical_ballot_versions %}
-            <em>(identical to version{{other_ballotsub.identical_ballot_versions.pluralize}} {{ other_ballotsub.identical_ballot_versions|join:", " }})</em>
+          {% if other_ballotsub.identical_ballotsub_versions %}
+            <em>(identical to version{{other_ballotsub.identical_ballotsub_versions|pluralize}} {{ other_ballotsub.identical_ballotsub_versions|join:", " }})</em>
           {% endif %}
         {% if other_ballotsub != ballotsub %}
           </a>
