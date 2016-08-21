@@ -3,7 +3,7 @@ from threading import Lock
 
 from django.db import models
 from django.conf import settings
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 
 from .result import BallotSet
 
