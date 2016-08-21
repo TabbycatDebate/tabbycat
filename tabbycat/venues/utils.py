@@ -28,6 +28,9 @@ def venue_conflicts_display(debates):
     conflict_messages = {debate: [] for debate in debates}
     for debate in debates:
         venue = debate.venue
+        if venue is None:
+            continue
+
         for team in debate.teams:
             if not _constraints_satisfied(teamconstraints, team.id, venue):
                 conflict_messages[debate].append("Venue does not meet constraints of {}".format(team.short_name))
