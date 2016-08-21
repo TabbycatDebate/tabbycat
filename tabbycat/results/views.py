@@ -197,7 +197,7 @@ def edit_ballotset(request, t, ballotsub_id):
     ballotsub = get_object_or_404(BallotSubmission, id=ballotsub_id)
     debate = ballotsub.debate
 
-    all_ballotsubs = debate.ballotsubmission_set.order_by('version').select_related('submitter', 'confirmer')
+    all_ballotsubs = debate.ballotsubmission_set.order_by('version').select_related('submitter', 'confirmer', 'motion')
     if not request.user.is_superuser:
         all_ballotsubs = all_ballotsubs.exclude(discarded=True)
 

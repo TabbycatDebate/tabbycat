@@ -30,7 +30,7 @@ class ResultBuffer:
         If `load` is False, the constructor will not load any data from the
         database (at all). It is then the responsibility of the caller to do so;
         the instance will crash otherwise, as the relevant attributes will not
-        be created. (For example, populate_confirmed_ballots() does this in
+        be created. (For example, populate_ballotsets() does this in
         prefetch.py.) External constructors can use `assert_loaded()` to check
         that data was loaded correctly.
         """
@@ -39,9 +39,9 @@ class ResultBuffer:
 
         if load:
             # If updating any of the database loading, be sure also to update
-            # populate_confirmed_ballots() in prefetch.py.
+            # populate_ballotsets() in prefetch.py.
             self.POSITIONS = self.debate.round.tournament.POSITIONS
-            self.update_debateteams(self.debate.debateteam_set.all())
+            self.update_debateteams(self.debate.debateteam_set.all().select_related('team'))
 
     def _dt(self, team):
         """Extracts a DebateTeam from a given team argument. The argument can be
@@ -112,8 +112,8 @@ class Scoresheet(ResultBuffer):
         If `load` is False, the constructor will not load any data from the
         database (at all). It is then the responsibility of the caller to do so;
         the instance will crash otherwise, as the relevant attributes will not
-        be created. (For example, in prefetch.py, populate_confirmed_ballots()
-        uses this to load Scoresheets in bulk.) Callers can use
+        be created. (For example, in prefetch.py, populate_ballotsets() uses
+        this to load Scoresheets in bulk.) Callers can use
         Scoresheet.assert_load() to check that data was loaded correctly.
         """
         super().__init__(ballotsub, load=load)
@@ -122,7 +122,7 @@ class Scoresheet(ResultBuffer):
 
         if load:
             # If updating any of the database loading, be sure also to update
-            # populate_confirmed_ballots() in prefetch.py.
+            # populate_ballotsets() in prefetch.py.
             self.da = self.debate.debateadjudicator_set.get(adjudicator=adjudicator)
             self.init_blank_buffer()
             for dt in self.dts:
@@ -296,8 +296,8 @@ class BallotSet(ResultBuffer):
         If `load` is False, the constructor will not load any data from the
         database (at all). It is then the responsibility of the caller to do so;
         the instance will crash otherwise, as the relevant attributes will not
-        be created. (For example, in prefetch.py, populate_confirmed_ballots()
-        uses this to load BallotSets in bulk.) Callers can use
+        be created. (For example, in prefetch.py, populate_ballotsets() uses
+        this to load BallotSets in bulk.) Callers can use
         BallotSet.assert_load() to check that data was loaded correctly.
         """
         super().__init__(ballotsub, load=load)
@@ -308,7 +308,7 @@ class BallotSet(ResultBuffer):
 
         if load:
             # If updating any of the database loading, be sure also to update
-            # populate_confirmed_ballots() in prefetch.py.
+            # populate_ballotsets() in prefetch.py.
             self.init_blank_buffer()
             for dt in self.dts:
                 self._load_team(dt)
