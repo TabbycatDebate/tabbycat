@@ -31,8 +31,8 @@ urlpatterns = [
         name='post_ballot_checkin'),
 
     # Ballots
-    url(r'^ballots/(?P<ballotsub_id>\d+)/edit/$',
-        views.edit_ballotset,
+    url(r'^ballots/(?P<pk>\d+)/edit/$',
+        views.EditBallotSetView.as_view(),
         name='edit_ballotset'),
     url(r'^debate/(?P<debate_id>\d+)/new/$',
         views.new_ballotset,

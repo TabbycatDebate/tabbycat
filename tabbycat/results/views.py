@@ -10,19 +10,20 @@ from django.db import ProgrammingError
 from django.http import Http404, HttpResponse
 from django.template import Context, Template
 from django.shortcuts import get_object_or_404, render
-from django.views.generic.base import TemplateView
+from django.views.generic import TemplateView, FormView
 from django.views.decorators.cache import cache_page
 
+from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin
 from tournaments.models import Round
 from utils.views import public_optional_tournament_view, round_view, tournament_view
-from utils.misc import get_ip_address, redirect_round
-from utils.mixins import VueTableTemplateView
+from utils.misc import get_ip_address, redirect_round, reverse_round
+from utils.mixins import SuperuserOrTabroomAssistantTemplateResponseMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
@@ -191,6 +192,87 @@ class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
+class BaseBallotSetView(LogActionMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, FormView):
+
+    superuser_template_name = 'enter_results.html'
+    assistant_template_name = 'assistant_enter_results.html'
+
+    form_class = BallotSetForm
+
+    def get_context_data(self, **kwargs):
+        kwargs['ballotsub'] = self.ballotsub
+        kwargs['debate'] = self.debate
+        kwargs['all_ballotsubs'] = self.get_all_ballotsubs()
+        kwargs['not_singleton'] = not self.is_not_singleton()
+        kwargs['new'] = self.relates_to_new_ballotsub
+        return super().get_context_data(**kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['ballotsub'] = self.ballotsub
+        return kwargs
+
+    def form_valid(self, form):
+        self.ballotsub = form.save()
+        if self.ballotsub.confirmed:
+            self.ballotsub.confirmer = self.request.user
+            self.ballotsub.confirm_timestamp = datetime.datetime.now()
+            self.ballotsub.save()
+        self.add_message()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_round('results', self.ballotsub.debate.round)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.ballotsub = self.get_ballotsub()
+        self.debate = self.ballotsub.debate
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.ballotsub = self.get_ballotsub()
+        self.debate = self.ballotsub.debate
+        return super().post(request, *args, **kwargs)
+
+
+class EditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
+
+    model = BallotSubmission
+    get_ballotsub = SingleObjectFromTournamentMixin.get_object
+    tournament_field_name = 'debate__round__tournament'
+    relates_to_new_ballotsub = False
+
+    def get_action_log_type(self):
+        if self.ballotsub.discarded:
+            return ActionLogEntry.ACTION_TYPE_BALLOT_DISCARD
+        elif self.ballotsub.confirmed:
+            return ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM
+        else:
+            return ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
+
+    def get_action_log_fields(self, **kwargs):
+        kwargs['ballot_submission'] = self.ballotsub
+        return super().get_action_log_fields(**kwargs)
+
+    def add_message(self):
+        if self.ballotsub.discarded:
+            messages.success(self.request, "Ballot set for %s discarded." % self.debate.matchup)
+        elif self.ballotsub.confirmed:
+            messages.success(self.request, "Ballot set for %s confirmed." % self.debate.matchup)
+        else:
+            messages.success(self.request, "Edits to ballot set for %s saved." % self.debate.matchup)
+
+    def get_all_ballotsubs(self):
+        all_ballotsubs = self.debate.ballotsubmission_set.order_by('version').select_related('submitter', 'confirmer', 'motion')
+        if not self.request.user.is_superuser:
+            all_ballotsubs = all_ballotsubs.exclude(discarded=True)
+        populate_identical_ballotsub_lists(all_ballotsubs)
+        return all_ballotsubs
+
+    def is_not_singleton(self):
+        return self.debate.ballotsubmission_set.exclude(id=self.ballotsub.id).exists()
+
+
 @login_required
 @tournament_view
 def edit_ballotset(request, t, ballotsub_id):
@@ -234,7 +316,6 @@ def edit_ballotset(request, t, ballotsub_id):
         'ballotsub'        : ballotsub,
         'debate'           : debate,
         'all_ballotsubs'   : all_ballotsubs,
-        'disable_confirm'  : request.user == ballotsub.submitter and not t.pref('disable_ballot_confirms') and not request.user.is_superuser,
         'round'            : debate.round,
         'not_singleton'    : all_ballotsubs.exclude(id=ballotsub_id).exists(),
         'new'              : False,

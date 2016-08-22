@@ -600,7 +600,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.admin:
             ballot_links_data = [{
                 'text': "View/Edit Ballot",
-                'link': reverse_tournament('edit_ballotset', self.tournament, kwargs={'ballotsub_id': debate.confirmed_ballot.id})
+                'link': reverse_tournament('edit_ballotset', self.tournament, kwargs={'pk': debate.confirmed_ballot.id})
             } if debate.confirmed_ballot else "" for debate in debates]
             self.add_column(ballot_links_header, ballot_links_data)
 

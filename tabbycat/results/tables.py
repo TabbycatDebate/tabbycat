@@ -48,7 +48,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
             link = reverse_tournament('edit_ballotset',
                                       self.tournament,
-                                      kwargs={'ballotsub_id': ballotset.id})
+                                      kwargs={'pk': ballotset.id})
             ballotsets_info += "<a href=" + link + ">"
 
             if ballotset.confirmed:
