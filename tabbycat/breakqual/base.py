@@ -137,7 +137,10 @@ class BaseBreakGenerator:
             breakingteam__break_category=self.category,
             breakingteam__remark__isnull=False,
         ).exclude(breakingteam__remark__exact='')
-        different_break_teams = self.team_queryset.filter(
+        different_break_teams = self.team_queryset.exclude(
+            breakingteam__remark=BreakingTeam.REMARK_INELIGIBLE,
+            breakingteam__break_category__priority__gt=self.category.priority
+        ).filter(
             breakingteam__break_category__priority__gt=self.category.priority
         )
         ineligible_teams = self.team_queryset.exclude(break_categories=self.category)
