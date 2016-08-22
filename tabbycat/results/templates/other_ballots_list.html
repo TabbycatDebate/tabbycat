@@ -29,7 +29,7 @@
           <a href="{% tournament_url edit_ballotset other_ballotsub.id %}">
         {% endif %}
           {% if other_ballotsub == ballotsub %}
-            <span class="badge">CURRENTLY EDITING</span>
+            <span class="badge">CURRENTLY VIEWING</span>
           {% endif %}
           {% if other_ballotsub.submitter_type == ballotsub.SUBMITTER_TABROOM %}
             Version {{ other_ballotsub.version }},
