@@ -65,6 +65,9 @@ class BaseBreakGenerator:
         self.set_team_queryset()
         self.retrieve_standings()
         self.filter_eligible_teams()
+        if len(self.eligible_teams) is 0:
+            # Don't attempt to make rankings for categories without any teams
+            return
         self.compute_break()
         self.populate_database()
 
