@@ -10,7 +10,7 @@ from django.db import ProgrammingError
 from django.http import Http404, HttpResponse
 from django.template import Context, Template
 from django.shortcuts import get_object_or_404, render
-from django.views.generic import TemplateView, FormView
+from django.views.generic import FormView, TemplateView
 from django.views.decorators.cache import cache_page
 
 from actionlog.mixins import LogActionMixin
@@ -19,10 +19,10 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
 from tournaments.models import Round
 from utils.views import public_optional_tournament_view, round_view, tournament_view
-from utils.misc import get_ip_address, redirect_round, reverse_round
+from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
 from utils.mixins import SuperuserOrTabroomAssistantTemplateResponseMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
@@ -192,25 +192,36 @@ class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class BaseBallotSetView(LogActionMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, FormView):
-
-    superuser_template_name = 'enter_results.html'
-    assistant_template_name = 'assistant_enter_results.html'
+class BaseBallotSetView(LogActionMixin, FormView):
 
     form_class = BallotSetForm
+
+    def get_action_log_fields(self, **kwargs):
+        kwargs['ballot_submission'] = self.ballotsub
+        return super().get_action_log_fields(**kwargs)
 
     def get_context_data(self, **kwargs):
         kwargs['ballotsub'] = self.ballotsub
         kwargs['debate'] = self.debate
         kwargs['all_ballotsubs'] = self.get_all_ballotsubs()
-        kwargs['not_singleton'] = not self.is_not_singleton()
         kwargs['new'] = self.relates_to_new_ballotsub
         return super().get_context_data(**kwargs)
+
+    def get_all_ballotsubs(self):
+        all_ballotsubs = self.debate.ballotsubmission_set.order_by('version').select_related('submitter', 'confirmer', 'motion')
+        if not self.request.user.is_superuser:
+            all_ballotsubs = all_ballotsubs.exclude(discarded=True)
+        populate_identical_ballotsub_lists(all_ballotsubs)
+        return all_ballotsubs
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['ballotsub'] = self.ballotsub
         return kwargs
+
+    def add_success_message(self):
+        # Default implementation does nothing.
+        pass
 
     def form_valid(self, form):
         self.ballotsub = form.save()
@@ -218,27 +229,63 @@ class BaseBallotSetView(LogActionMixin, SuperuserOrTabroomAssistantTemplateRespo
             self.ballotsub.confirmer = self.request.user
             self.ballotsub.confirm_timestamp = datetime.datetime.now()
             self.ballotsub.save()
-        self.add_message()
+        self.add_success_message()
         return super().form_valid(form)
+
+    def populate_objects(self):
+        """Subclasses must implement this method to set `self.ballotsub` and
+        `self.debate`. If it returns something other than None, its return
+        value will be used as the response, bypassing ordinary template
+        rendering."""
+        raise NotImplementedError
+
+    def get(self, request, *args, **kwargs):
+        error_response = self.populate_objects()
+        if error_response:
+            return error_response
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        error_response = self.populate_objects()
+        if error_response:
+            return error_response
+        return super().post(request, *args, **kwargs)
+
+
+class BaseAdminBallotSetView(SuperuserOrTabroomAssistantTemplateResponseMixin, BaseBallotSetView):
+    superuser_template_name = 'enter_results.html'
+    assistant_template_name = 'assistant_enter_results.html'
 
     def get_success_url(self):
         return reverse_round('results', self.ballotsub.debate.round)
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.ballotsub = self.get_ballotsub()
-        self.debate = self.ballotsub.debate
-        return super().get(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.ballotsub = self.get_ballotsub()
-        self.debate = self.ballotsub.debate
-        return super().post(request, *args, **kwargs)
+class NewBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView):
+
+    model = Debate
+    tournament_field_name = 'round__tournament'
+    relates_to_new_ballotsub = True
+    action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_CREATE
+    pk_url_kwarg = 'debate_id'
+
+    def add_success_message(self):
+        messages.success(self.request, "Ballot set for %s added." % self.debate.matchup)
+
+    def populate_objects(self):
+        self.debate = self.object = self.get_object()
+        self.ballotsub = BallotSubmission(debate=self.debate, submitter=self.request.user,
+            submitter_type=BallotSubmission.SUBMITTER_TABROOM,
+            ip_address=get_ip_address(self.request))
+
+        if not self.debate.adjudicators.has_chair:
+            messages.error(self.request, "Whoops! The debate %s doesn't have a chair, "
+                "so you can't enter results for it." % self.debate.matchup)
+            return redirect_round('results', self.ballotsub.debate.round)
 
 
-class EditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
+class EditBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView):
 
     model = BallotSubmission
-    get_ballotsub = SingleObjectFromTournamentMixin.get_object
     tournament_field_name = 'debate__round__tournament'
     relates_to_new_ballotsub = False
 
@@ -250,11 +297,7 @@ class EditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
         else:
             return ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
 
-    def get_action_log_fields(self, **kwargs):
-        kwargs['ballot_submission'] = self.ballotsub
-        return super().get_action_log_fields(**kwargs)
-
-    def add_message(self):
+    def add_success_message(self):
         if self.ballotsub.discarded:
             messages.success(self.request, "Ballot set for %s discarded." % self.debate.matchup)
         elif self.ballotsub.confirmed:
@@ -262,163 +305,66 @@ class EditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
         else:
             messages.success(self.request, "Edits to ballot set for %s saved." % self.debate.matchup)
 
-    def get_all_ballotsubs(self):
-        all_ballotsubs = self.debate.ballotsubmission_set.order_by('version').select_related('submitter', 'confirmer', 'motion')
-        if not self.request.user.is_superuser:
-            all_ballotsubs = all_ballotsubs.exclude(discarded=True)
-        populate_identical_ballotsub_lists(all_ballotsubs)
-        return all_ballotsubs
-
-    def is_not_singleton(self):
-        return self.debate.ballotsubmission_set.exclude(id=self.ballotsub.id).exists()
+    def populate_objects(self):
+        self.ballotsub = self.object = self.get_object()
+        self.debate = self.ballotsub.debate
 
 
-@login_required
-@tournament_view
-def edit_ballotset(request, t, ballotsub_id):
-    ballotsub = get_object_or_404(BallotSubmission, id=ballotsub_id)
-    debate = ballotsub.debate
+class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
 
-    all_ballotsubs = debate.ballotsubmission_set.order_by('version').select_related('submitter', 'confirmer', 'motion')
-    if not request.user.is_superuser:
-        all_ballotsubs = all_ballotsubs.exclude(discarded=True)
+    template_name = 'public_enter_results.html'
+    public_page_preference = 'public_ballots'
+    relates_to_new_ballotsub = True
+    action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT
 
-    populate_identical_ballotsub_lists(all_ballotsubs)
+    def get_success_url(self):
+        return reverse_tournament('tournament-public-index', self.get_tournament())
 
-    if request.method == 'POST':
-        form = BallotSetForm(ballotsub, request.POST)
+    def add_success_message(self):
+        messages.success(self.request, "Thanks, %s! Your ballot for %s has been recorded." % (
+                self.object.name, self.debate.matchup))
 
-        if form.is_valid():
-            form.save()
+    def populate_objects(self):
+        round = self.get_tournament().current_round
+        if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
+            return self.error_page("The draw and/or motions for the round haven't been released yet.")
 
-            if ballotsub.discarded:
-                action_type = ActionLogEntry.ACTION_TYPE_BALLOT_DISCARD
-                messages.success(request, "Ballot set for %s discarded." % debate.matchup)
-            elif ballotsub.confirmed:
-                ballotsub.confirmer = request.user
-                ballotsub.confirm_timestamp = datetime.datetime.now()
-                ballotsub.save()
-                action_type = ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM
-                messages.success(request, "Ballot set for %s confirmed." % debate.matchup)
-            else:
-                action_type = ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
-                messages.success(request, "Edits to ballot set for %s saved." % debate.matchup)
-            ActionLogEntry.objects.log(type=action_type, user=request.user, ballot_submission=ballotsub,
-                                       ip_address=get_ip_address(request), tournament=t)
+        self.object = self.get_object()
+        try:
+            self.debateadj = DebateAdjudicator.objects.get(adjudicator=self.object, debate__round=round)
+        except DebateAdjudicator.DoesNotExist:
+            return self.error_page("It looks like you don't have a debate this round.")
 
-            return redirect_round('results', debate.round)
-    else:
-        form = BallotSetForm(ballotsub)
+        self.debate = self.debateadj.debate
+        self.ballotsub = BallotSubmission(debate=self.debate, ip_address=get_ip_address(self.request),
+            submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
 
-    template = 'enter_results.html' if request.user.is_superuser else 'assistant_enter_results.html'
-    context = {
-        'form'             : form,
-        'ballotsub'        : ballotsub,
-        'debate'           : debate,
-        'all_ballotsubs'   : all_ballotsubs,
-        'round'            : debate.round,
-        'not_singleton'    : all_ballotsubs.exclude(id=ballotsub_id).exists(),
-        'new'              : False,
-    }
-    return render(request, template, context)
+        if not self.debate.adjudicators.has_chair:
+            return self.error_page("Your debate doesn't have a chair, so you can't enter results for it. "
+                    "Please contact a tab room official.")
+
+    def error_page(self, message):
+        # This bypasses the normal TemplateResponseMixin and ContextMixin
+        # machinery, to avoid loading the error page with potentially
+        # confidentiality-compromising context.
+        context = {'adjudicator': self.object, 'message': message}
+        return self.response_class(
+            request=self.request,
+            template='public_enter_results_error.html',
+            context=context,
+            using=self.template_engine
+        )
 
 
-# Don't cache
-@public_optional_tournament_view('public_ballots_randomised')
-def public_new_ballotset_key(request, t, url_key):
-    adjudicator = get_object_or_404(Adjudicator, tournament=t, url_key=url_key)
-    return public_new_ballotset(request, t, adjudicator)
+class PublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePublicNewBallotSetView):
+    model = Adjudicator
+    pk_url_kwarg = 'adj_id'
+    allow_null_tournament = True
 
 
-# Don't cache
-@public_optional_tournament_view('public_ballots')
-def public_new_ballotset_id(request, t, adj_id):
-    adjudicator = get_object_or_404(Adjudicator, tournament=t, id=adj_id)
-    return public_new_ballotset(request, t, adjudicator)
-
-
-def public_new_ballotset(request, t, adjudicator):
-    round = t.current_round
-
-    if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
-        return render(request, 'public_enter_results_error.html', dict(
-            adjudicator=adjudicator, message='The draw and/or motions for the '
-            'round haven\'t been released yet.'))
-
-    try:
-        da = DebateAdjudicator.objects.get(adjudicator=adjudicator, debate__round=round)
-    except DebateAdjudicator.DoesNotExist:
-        return render(request, 'public_enter_results_error.html', dict(
-            adjudicator=adjudicator,
-            message='It looks like you don\'t have a debate this round.'))
-
-    ip_address = get_ip_address(request)
-    ballotsub = BallotSubmission(
-        debate=da.debate, ip_address=ip_address,
-        submitter_type=BallotSubmission.SUBMITTER_PUBLIC)
-
-    if request.method == 'POST':
-        form = BallotSetForm(ballotsub, request.POST, password=True)
-        if form.is_valid():
-            form.save()
-            ActionLogEntry.objects.log(
-                type=ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT,
-                ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
-            return render(request, 'public_success.html', dict(success_kind="ballot"))
-    else:
-        form = BallotSetForm(ballotsub, password=True)
-
-    context = {
-        'form'                : form,
-        'debate'              : da.debate,
-        'round'               : round,
-        'ballotsub'           : ballotsub,
-        'adjudicator'         : adjudicator,
-        'existing_ballotsubs' : da.debate.ballotsubmission_set.exclude(discarded=True).count(),
-    }
-    return render(request, 'public_enter_results.html', context)
-
-
-@login_required
-@tournament_view
-def new_ballotset(request, t, debate_id):
-    debate = get_object_or_404(Debate, id=debate_id)
-    ip_address = get_ip_address(request)
-    ballotsub = BallotSubmission(debate=debate, submitter=request.user,
-                                 submitter_type=BallotSubmission.SUBMITTER_TABROOM,
-                                 ip_address=ip_address)
-
-    if not debate.adjudicators.has_chair:
-        messages.error(request, "Whoops! The debate %s doesn't have a chair, "
-                       "so you can't enter results for it." % debate.matchup)
-        return redirect_round('results', debate.round)
-
-    if request.method == 'POST':
-        form = BallotSetForm(ballotsub, request.POST)
-        if form.is_valid():
-            form.save()
-            ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_CREATE, user=request.user,
-                                       ballot_submission=ballotsub, ip_address=ip_address, tournament=t)
-            messages.success(request, "Ballot set for %s added." % debate.matchup)
-            return redirect_round('results', debate.round)
-    else:
-        form = BallotSetForm(ballotsub)
-
-    template = 'enter_results.html' if request.user.is_superuser else 'assistant_enter_results.html'
-    all_ballotsubs = debate.ballotsubmission_set.order_by('version')
-    if not request.user.is_superuser:
-        all_ballotsubs = all_ballotsubs.exclude(discarded=True)
-
-    context = {
-        'form'             : form,
-        'ballotsub'        : ballotsub,
-        'debate'           : debate,
-        'round'            : debate.round,
-        'all_ballotsubs'   : all_ballotsubs,
-        'not_singleton'    : all_ballotsubs.exists(),
-        'new'              : True,
-    }
-    return render(request, template, context)
+class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, BasePublicNewBallotSetView):
+    model = Adjudicator
+    allow_null_tournament = True
 
 
 @login_required

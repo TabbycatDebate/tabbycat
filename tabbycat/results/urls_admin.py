@@ -35,6 +35,6 @@ urlpatterns = [
         views.EditBallotSetView.as_view(),
         name='edit_ballotset'),
     url(r'^debate/(?P<debate_id>\d+)/new/$',
-        views.new_ballotset,
+        views.NewBallotSetView.as_view(),
         name='new_ballotset'),
 ]

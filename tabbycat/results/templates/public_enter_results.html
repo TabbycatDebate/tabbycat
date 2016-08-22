@@ -10,7 +10,7 @@
   <small>
     {{ debate.round.name }} @
     {% if debate.division.venue_group %}
-      {{ debate.division.venue_group}}
+      {{ debate.division.venue_group }}
     {% endif %}
     {{ debate.venue.name }}
   </small>
@@ -26,37 +26,47 @@
   </div>
   {% endif %}
 
-  {% if existing_ballotset %}
-  <div class="alert alert-danger">
-  This form has already been submitted <strong>{{ existing_ballotset|apnumber }}</strong> time{{ existing_ballotset|pluralize }}. Please contact a tab official after submitting your form.
-  </div>
-  {% endif %}
+  {% with nballotsubs=all_ballotsubs.count %}
+    {% if nballotsubs > 0 %}
+      <div class="alert alert-danger">
+      This form has already been submitted <strong>{{ nballotsubs|apnumber }}</strong> time{{ nballotsubs|pluralize }}. Please contact a tab official after submitting your form.
+      </div>
+    {% endif %}
+  {% endwith %}
 
   <form id="resultsForm" action="." method="POST" class="form-horizontal">
     {% csrf_token %}
     {% include "enter_results_ballot_set.html" %}
 
     <div class="row">
-      <p class="col-xs-12 lead h4 page-header">Confirm</p>
-      {% comment %} Password isn't always used.{% endcomment %}
-      {% if form.password %}
-      <div class="form-group">
-        <label for="{{ form.password.id_for_label }}" class="col-sm-2 control-label">{{ form.password.label }}</label>
-        <div class="col-sm-9 col-md-6">
-          {{form.password|addcss:"form-control"}}
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              Submit
+            </h4>
+          </div>
+          <div class="panel-body">
+            {# Password isn't always used. #}
+            {% if form.password %}
+            <div class="form-group">
+              <label for="{{ form.password.id_for_label }}" class="col-sm-2 control-label">{{ form.password.label }}</label>
+              <div class="col-sm-9 col-md-6">
+                {{form.password|addcss:"form-control"}}
+              </div>
+              <div class="col-md-2 col-xs-10 ">
+                {% if form.password.errors %}
+                  <label for="{{ form.password.id_for_label }}" class="control-label">{{ form.password.errors }}</label>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+            <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
+            <input id="id_discarded" type="hidden" name="discarded" />
+            <input id="id_confirmed" type="hidden" name="confirmed" />
+            <input class="save btn btn-success btn-block submit-disable" type="submit" value="Submit ballots" tabindex="100" data-loading-text="Submitting..."/>
+          </div>
         </div>
-        <div class="col-md-2 col-xs-10 ">
-          {% if form.password.errors %}
-            <label for="{{ form.password.id_for_label }}" class="control-label">{{ form.password.errors }}</label>
-          {% endif %}
-        </div>
-      </div>
-      {% endif %}
-      <div class="col-sm-2">
-        <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
-        <input id="id_discarded" type="hidden" name="discarded" />
-        <input id="id_confirmed" type="hidden" name="confirmed" />
-        <input class="save btn-success submit-disable" type="submit" value="Submit ballots" tabindex="100" data-loading-text="Submitting..."/>
       </div>
     </div>
   </form>
@@ -69,7 +79,7 @@
   <script src="{% static 'js/vendor/jquery.validate.js' %}"></script>
   <script>
     $(document).ready( function() {
-      {% include "js/enter_results.js" %}
+      {% include "js-standalones/enter_results.js" %}
     });
   </script>
 {% endblock %}

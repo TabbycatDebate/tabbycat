@@ -227,8 +227,8 @@ $('.js-team-speakers select').change(update_speakers).each(update_speaker);
       $('#ballot_set input').removeAttr('readonly');
       $('#ballot_set select').removeAttr('disabled');
   }
-  $('#ballot_set input[type="number"]').attr('readonly', 'true');
-  $('#ballot_set select').attr('disabled', 'true');
+  // $('#ballot_set input[type="number"]').attr('readonly', 'true');
+  // $('#ballot_set select').attr('disabled', 'true');
   $('#submit').click(function() {
       preSubmit();
   });

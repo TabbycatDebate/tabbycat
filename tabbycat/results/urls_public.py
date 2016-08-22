@@ -19,9 +19,9 @@ urlpatterns = [
         views.public_ballot_submit,
         name='public_ballot_submit'),
     url(r'^add/adjudicator/(?P<adj_id>\d+)/$',
-        views.public_new_ballotset_id,
+        views.PublicNewBallotSetByIdUrlView.as_view(),
         name='public_new_ballotset'),
     url(r'^add/a(?P<url_key>\w+)/$',
-        views.public_new_ballotset_key,
+        views.PublicNewBallotSetByRandomisedUrlView.as_view(),
         name='public_new_ballotset_key'),
 ]
