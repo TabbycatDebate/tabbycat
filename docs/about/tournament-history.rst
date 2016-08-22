@@ -15,7 +15,7 @@ A list of tournaments (that we know of) which have used Tabbycat.
 - `New Zealand Easters <http://nzeasters2016.herokuapp.com>`_
 - `Perth Australs <http://australs2016.herokuapp.com>`_
 - Pre SSIDC
-- Thailand United Asian Debating Championships `<http://uadc2016.herokuapp.com>`_
+- `Thailand United Asian Debating Championships <http://uadc2016.herokuapp.com>`_
 - The National Law School Debate
 - The Khazak National Schools Debating Championship
 - `The Western Australian Debating League <http://draw.wadl.org>`_
