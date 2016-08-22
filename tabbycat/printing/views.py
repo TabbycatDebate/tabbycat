@@ -140,7 +140,8 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'scoresheet_list.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['motions'] = Motion.objects.filter(round=self.get_round()).values('text').order_by('seq')
+        kwargs['motions'] = list(Motion.objects.filter(
+            round=self.get_round()).values_list('text', flat=True).order_by('seq'))
         kwargs['ballots'] = []
 
         draw = self.get_round().debate_set_with_prefetches(ordering=(
