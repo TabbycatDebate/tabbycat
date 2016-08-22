@@ -65,9 +65,6 @@ class BaseBreakGenerator:
         self.set_team_queryset()
         self.retrieve_standings()
         self.filter_eligible_teams()
-        if len(self.eligible_teams) is 0:
-            # Don't attempt to make rankings for categories without any teams
-            return
         self.compute_break()
         self.populate_database()
 
@@ -202,6 +199,7 @@ class BaseBreakGenerator:
 
         # first, breaking teams
         break_rank = 1
+        rank = 0 # rank is referenced after the loop, so initialize first
         for rank, group in groupby(self.breaking_teams, key=lambda tsi: tsi.get_ranking("rank")):
             group = list(group)
             for tsi in group:
@@ -246,8 +244,9 @@ class StandardBreakGenerator(BaseBreakGenerator):
         self.breaking_teams = self.eligible_teams[:self.break_size]
 
         # If the last spot is tied, add all tied teams
-        last_rank = self.eligible_teams[self.break_size-1].get_ranking("rank")
-        for tsi in self.eligible_teams[self.break_size:]:
-            if tsi.get_ranking("rank") != last_rank:
-                break
-            self.breaking_teams.append(tsi)
+        if len(self.eligible_teams) >= self.break_size:
+            last_rank = self.eligible_teams[self.break_size-1].get_ranking("rank")
+            for tsi in self.eligible_teams[self.break_size:]:
+                if tsi.get_ranking("rank") != last_rank:
+                    break
+                self.breaking_teams.append(tsi)
