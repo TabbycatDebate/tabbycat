@@ -8,9 +8,9 @@
   <span class="emoji"> 👀</span>Draw for {{ round.name }}
 {% endblock %}
 {% block sub-title %}
-  {% if round.draw_status = round.STATUS_CONFIRMED %}
+  {% if round.draw_status == round.STATUS_CONFIRMED %}
     draw is confirmed but not released;
-  {% elif round.draw_status = round.STATUS_RELEASED %}
+  {% elif round.draw_status == round.STATUS_RELEASED %}
     draw is confirmed and released;
   {% else %}
     DRAW STATUS ERROR,
@@ -62,7 +62,7 @@
     {% endwith %}
   {% endif %}
 
-  {% if round.draw_status = round.STATUS_RELEASED and not pref.public_draw %}
+  {% if round.draw_status == round.STATUS_RELEASED and not pref.public_draw %}
     <div class="alert alert-warning">
       You have released the draw, but it will not show to the public unless
       'public view of draw' setting is enabled in
@@ -155,14 +155,14 @@
           </button>
         </form>
       {% endif %}
-      {% if round.draw_status = round.STATUS_CONFIRMED %}
+      {% if round.draw_status == round.STATUS_CONFIRMED %}
         <form class="pull-right" id="releaseForm" method="POST" action="{% round_url draw-release %}">
           {% csrf_token %}
           <button class="btn btn-sm btn-primary submit-disable" type="submit">
             Release Draw
           </button>
         </form>
-      {% elif round.draw_status = round.STATUS_RELEASED %}
+      {% elif round.draw_status == round.STATUS_RELEASED %}
         <form class="pull-right" id="unreleaseForm" method="POST" action="{% round_url draw-unrelease %}">
           {% csrf_token %}
           <button class="btn btn-sm btn-danger submit-disable" type="submit">

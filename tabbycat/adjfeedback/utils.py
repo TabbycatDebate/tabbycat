@@ -61,7 +61,7 @@ def get_feedback_overview(t, adjudicators):
             source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE))
     all_adj_scores = list(SpeakerScoreByAdj.objects.filter(
         ballot_submission__confirmed=True).exclude(position=t.REPLY_POSITION).select_related(
-        'debate_adjudicator__adjudicator__id', 'ballot_submission'))
+        'debate_adjudicator__adjudicator', 'ballot_submission'))
     rounds = t.prelim_rounds(until=t.current_round)
 
     for adj in adjudicators:

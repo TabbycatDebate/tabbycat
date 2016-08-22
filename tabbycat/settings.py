@@ -32,7 +32,7 @@ READTHEDOCS_VERSION = 'v1.0.2-dev'
 # Django-specific Module
 # ==============================================================================
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -41,7 +41,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'utils.middleware.DebateMiddleware')
+    'utils.middleware.DebateMiddleware'
+]
 
 TABBYCAT_APPS = ('actionlog',
                  'adjallocation',

@@ -15,7 +15,7 @@ def statistics(round):
         ballot_submission__confirmed=True,
         ballot_submission__debate__round__tournament=round.tournament,
         ballot_submission__debate__round__seq__lte=round.seq).select_related(
-        'debate_team__position', 'ballot_submission__motion')
+        'debate_team', 'ballot_submission__motion')
 
     wins = dict()
     for pos, _ in DebateTeam.POSITION_CHOICES:
@@ -47,7 +47,7 @@ def statistics(round):
             ballot_submission__confirmed=True,
             ballot_submission__debate__round__tournament=round.tournament,
             ballot_submission__debate__round__seq__lte=round.seq).select_related(
-            'debate_team__position', 'ballot_submission__motion')
+            'debate_team', 'ballot_submission__motion')
         vetoes = dict()
         for pos, _ in DebateTeam.POSITION_CHOICES:
             vetoes[pos] = dict.fromkeys(motions, 0)
