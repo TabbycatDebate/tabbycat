@@ -29,7 +29,7 @@ class PublicSiteIndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         tournaments = Tournament.objects.all()
-        if tournaments.count() == 1 and not request.user.is_authenticated():
+        if tournaments.count() == 1 and not request.user.is_authenticated:
             logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
             return redirect_tournament('tournament-public-index', tournaments.first())
         elif not tournaments.exists() and not User.objects.exists():

@@ -5,6 +5,14 @@ from tournaments.models import Round, Tournament
 
 
 class DebateMiddleware(object):
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
+
     def process_view(self, request, view_func, view_args, view_kwargs):
         if 'tournament_slug' in view_kwargs:
             cached_key = "%s_%s" % (view_kwargs['tournament_slug'], 'object')

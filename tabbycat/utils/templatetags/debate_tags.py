@@ -65,9 +65,7 @@ class RoundURLNode(template.Node):
             round = self.round.resolve(context)
         else:
             round = context['round']
-        return reverse(self.view_name,
-                       args=[round.tournament.slug, round.seq],
-                       current_app=context.current_app)
+        return reverse(self.view_name, args=[round.tournament.slug, round.seq])
 
 
 class TournamentURLNode(template.Node):
@@ -79,9 +77,7 @@ class TournamentURLNode(template.Node):
         args = [context['tournament'].slug]
         args.extend(a.resolve(context) for a in self.args)
         args = tuple(args)
-        return reverse(self.view_name,
-                       args=args,
-                       current_app=context.current_app)
+        return reverse(self.view_name, args=args)
 
 
 class TournamentAbsoluteURLNode(TournamentURLNode):

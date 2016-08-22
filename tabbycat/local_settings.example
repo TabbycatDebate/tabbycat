@@ -79,9 +79,9 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 ENABLE_DEBUG_TOOLBAR = True
 
 if ENABLE_DEBUG_TOOLBAR:
-    MIDDLEWARE_CLASSES += (
+    MIDDLEWARE_CLASSES += [
         'debug_toolbar.middleware.DebugToolbarMiddleware',
-    )
+    ]
 
     INSTALLED_APPS += (
         'debug_toolbar',
