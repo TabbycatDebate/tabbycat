@@ -162,15 +162,12 @@ class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
     tournament_field_name = 'tournament'
 
     def get_queryset(self):
+        # Filter for this tournament; if self.allow_null_tournament is True,
+        # then also allow objects with no tournament.
+        q = Q(**{self.tournament_field_name: self.get_tournament()})
         if self.allow_null_tournament:
-            return super().get_queryset().filter(
-                Q(**{self.tournament_field_name: self.get_tournament()}) |
-                Q(**{self.tournament_field_name + "__isnull": True})
-            )
-        else:
-            return super().get_queryset().filter(
-                **{self.tournament_field_name: self.get_tournament()}
-            )
+            q |= Q(**{self.tournament_field_name + "__isnull": True})
+        return super().get_queryset().filter(q)
 
 
 class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
