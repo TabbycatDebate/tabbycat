@@ -9,11 +9,12 @@ from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgres
 from draw.prefetch import populate_opponents, populate_teams
 from results.models import TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
-from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, TournamentMixin
+from tournaments.mixins import (CrossTournamentPageMixin, PublicTournamentPageMixin,
+                                SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
+                                TournamentMixin)
 from tournaments.models import Round
 from utils.misc import reverse_tournament
-from utils.mixins import CacheMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
-from utils.mixins import ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import CacheMixin, ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Speaker, Team

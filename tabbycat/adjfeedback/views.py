@@ -16,11 +16,13 @@ from actionlog.models import ActionLogEntry
 from participants.models import Adjudicator, Speaker, Team
 from participants.prefetch import populate_feedback_scores
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
-from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
+from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
+                                SingleObjectFromTournamentMixin, TournamentMixin)
 
 from utils.misc import reverse_tournament
-from utils.mixins import CacheMixin, JsonDataResponseView, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
-from utils.mixins import PostOnlyRedirectView, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import (CacheMixin, JsonDataResponseView, PostOnlyRedirectView,
+                          SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin,
+                          VueTableTemplateView)
 from utils.tables import TabbycatTableBuilder
 from utils.urlkeys import populate_url_keys
 

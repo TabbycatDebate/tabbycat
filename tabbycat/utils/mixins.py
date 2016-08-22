@@ -13,11 +13,39 @@ from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, TemplateView, View
-from django.views.generic.detail import SingleObjectMixin
-
-from tournaments.mixins import TournamentMixin
 
 logger = logging.getLogger(__name__)
+
+
+class TabbycatPageTitlesMixin(ContextMixin):
+    """Allows all views to set header information in their subclassess obviating
+    the need for page template boilerplate and/or page specific templates"""
+
+    page_title = ''
+    page_subtitle = ''
+    page_emoji = ''
+
+    def get_page_title(self):
+        return self.page_title
+
+    def get_page_emoji(self):
+        return self.page_emoji
+
+    def get_page_subtitle(self):
+        return self.page_subtitle
+
+    def get_context_data(self, **kwargs):
+        if "page_title" not in kwargs:
+            kwargs["page_title"] = self.get_page_title()
+        if "page_subtitle" not in kwargs:
+            kwargs["page_subtitle"] = self.get_page_subtitle()
+
+        if "page_emoji" not in kwargs:
+            emoji = self.get_page_emoji()
+            if emoji:
+                kwargs["page_emoji"] = emoji
+
+        return super().get_context_data(**kwargs)
 
 
 class PostOnlyRedirectView(View):
@@ -98,36 +126,6 @@ class CacheMixin:
     @method_decorator(cache_page(cache_timeout))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
-
-
-class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
-    """Mixin for views that relate to a single object that is part of a
-    tournament. Like SingleObjectMixin, but restricts searches to the relevant
-    tournament."""
-
-    allow_null_tournament = False
-
-    def get_queryset(self):
-        if self.allow_null_tournament:
-            return super().get_queryset().filter(
-                Q(tournament=self.get_tournament()) | Q(tournament__isnull=True)
-            )
-        else:
-            return super().get_queryset().filter(tournament=self.get_tournament())
-
-
-class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
-    """Mixin for views that use URLs referencing objects by a randomised key.
-    This is just a `SingleObjectFromTournamentMixin` with some options set.
-
-    Views using this mixin should have both a `url_key` group in their URL's
-    regular expression, and a primary key group (by default `pk`, inherited from
-    `SingleObjectMixin`, but this can be overridden). They should set the
-    `model` field of the class as they would for `SingleObjectMixin`. This model
-    should have a slug field called `url_key`.
-    """
-    slug_field = 'url_key'
-    slug_url_kwarg = 'url_key'
 
 
 class VueTableTemplateView(TemplateView):
