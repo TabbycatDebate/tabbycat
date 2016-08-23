@@ -5,7 +5,7 @@ class PreferencesPreset:
 
 
 class AustralsPreferences(PreferencesPreset):
-    """ 3 vs 3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
+    """ 3 vs 3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules. """
     def __init__(self):
         self.name                                       = "Australs Rules"
         self.show_in_list                               = True
@@ -36,7 +36,7 @@ class AustralsPreferences(PreferencesPreset):
 
 
 class AustralianEastersPreferences(AustralsPreferences):
-    """ 3 vs 3 without replies, with set motions, novices, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
+    """ 3 vs 3 without replies, with set motions, novices, intermediary bubbles and 1up/1down. Compliant to AIDA rules. """
     def __init__(self):
         self.name                                       = "Australian Easters Rules"
         self.show_in_list                               = True
@@ -80,7 +80,7 @@ class NZEastersPreferences(AustralsPreferences):
 
 
 class JoyntPreferences(AustralsPreferences):
-    """ 3 vs 3 with replies, set sides, publicly displayed sides and motions, and novice statuses"""
+    """ 3 vs 3 with replies, set sides, publicly displayed sides and motions, and novice statuses."""
     def __init__(self):
         self.name                                       = "Joynt Scroll Rules"
         self.show_in_list                               = True
@@ -110,7 +110,7 @@ class JoyntPreferences(AustralsPreferences):
 
 
 class UADCPreferences(AustralsPreferences):
-    """ Note: the full set of rules for UADC are not implemented (such as for single ballots)."""
+    """ 3 vs 3 with replies, chosen motions, and all adjudicators can receive feedback from teams."""
     def __init__(self):
         self.name                                       = "UADC Rules"
         self.show_in_list                               = True
@@ -122,7 +122,7 @@ class UADCPreferences(AustralsPreferences):
         self.scoring__reply_score_min                   = 34.5  # Not specified; assuming half of substantive
         self.scoring__reply_score_max                   = 42.0  # Not specified; assuming  half of substantive
         self.scoring__reply_score_step                  = 0.5
-        self.scoring__maximum_margin                    = 0.0  # TODO= check this
+        self.scoring__maximum_margin                    = 0.0   # TODO= check this
         self.scoring__margin_includes_dissenters        = True  # From Rules:10.9.5
         # # Draws
         self.draw_rules__avoid_same_institution         = False
@@ -146,7 +146,7 @@ class UADCPreferences(AustralsPreferences):
 
 
 class WADLPreferences(PreferencesPreset):
-    """ Example high school league setup """
+    """ Example high school league setup. Many features not supported in conjunction with other settings."""
     def __init__(self):
         self.name                                       = "WADL Options"
         self.show_in_list                               = True
@@ -196,7 +196,7 @@ class WADLPreferences(PreferencesPreset):
 
 
 class PublicInformation(PreferencesPreset):
-    """ For tournaments hosted online: this sets it up so that people can access the draw and other information via the tab site """
+    """ For tournaments hosted online: this sets it up so that people can access the draw and other information via the tab site."""
     def __init__(self):
         self.name                                       = "Public Information Options"
         self.show_in_list                               = True

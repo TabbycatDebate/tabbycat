@@ -325,6 +325,15 @@ class ShowUnexpectedFeedback(BooleanPreference):
     default = True
 
 
+@tournament_preferences_registry.register
+class AllowTeamFeedbackOnAnyAllAdjs(BooleanPreference):
+    verbose_name = "Allow feedback from teams on the entire panel"
+    help_text = "Enables teams to submit feedback on any of the chairs, panellists, and trainees in their room. Used by styles such as UADC where all adjudicators deliver an adjudication"
+    section = feedback
+    name = 'all_adjs_give_oral'
+    default = False
+
+
 # ==============================================================================
 debate_rules = Section('debate_rules')
 # ==============================================================================
