@@ -258,7 +258,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if show_ballots:
             cell['popover']['content'].append(
                 {'text': 'View Debate Ballot', 'link': reverse_tournament('public_ballots_view',
-                    self.tournament, kwargs={'debate_id': ts.debate_team.debate.id})})
+                    self.tournament, kwargs={'pk': ts.debate_team.debate.id})})
 
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({'text': "Speakers in " + opp.short_name + ": " + ", ".join([s.name for s in opp.speakers])})
@@ -608,7 +608,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
             ballot_links_data = [{
                 'text': "View Ballot",
-                'link': reverse_tournament('public_ballots_view', self.tournament, kwargs={'debate_id': debate.id})
+                'link': reverse_tournament('public_ballots_view', self.tournament, kwargs={'pk': debate.id})
             } if debate else "" for debate in debates]
             self.add_column(ballot_links_header, ballot_links_data)
 

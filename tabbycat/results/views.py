@@ -23,7 +23,8 @@ from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObje
 from tournaments.models import Round
 from utils.views import public_optional_tournament_view, round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
-from utils.mixins import SuperuserOrTabroomAssistantTemplateResponseMixin, VueTableTemplateView
+from utils.mixins import (CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin,
+                          SuperuserRequiredMixin, VueTableTemplateView)
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
@@ -153,10 +154,10 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         tournament = self.get_tournament()
         round = self.get_round()
         if round.silent and not tournament.pref('all_results_released'):
-            logger.info("Refused results for %s: silent", round.name)
+            logger.warning("Refused results for %s: silent", round.name)
             return render(request, 'public_results_silent.html')
         if round.seq >= tournament.current_round.seq and not tournament.pref('all_results_released'):
-            logger.info("Refused results for %s: not yet available", round.name)
+            logger.warning("Refused results for %s: not yet available", round.name)
             return render(request, 'public_results_not_available.html')
 
         # If there's a query string, store the session setting
@@ -530,35 +531,58 @@ def post_ballot_checkin(request, round):
     return HttpResponse(json.dumps(obj))
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('ballots_released')
-def public_ballots_view(request, t, debate_id):
-    debate = get_object_or_404(Debate, id=debate_id)
-    if debate.result_status != Debate.STATUS_CONFIRMED:
-        raise Http404()
+class PublicBallotScoresheetsView(CacheMixin, PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TemplateView):
 
-    round = debate.round
-    # Can't see results for current round or later
-    if round.seq > round.tournament.current_round.seq or round.silent:
-        if not round.tournament.pref('all_results_released'):
-            raise Http404()
+    model = Debate
+    public_page_preference = 'ballots_released'
+    tournament_field_name = 'round__tournament'
+    template_name = 'public_ballot_set.html'
 
-    ballot_submission = debate.confirmed_ballot
-    if ballot_submission is None:
-        raise Http404()
+    def get_object(self):
+        debate = super().get_object()
 
-    ballot_set = BallotSet(ballot_submission)
-    return render(request, 'public_ballot_set.html', dict(debate=debate, ballot_set=ballot_set))
+        round = debate.round
+        if round.silent and not round.tournament.pref('all_results_released'):
+            logger.warning("Refused public view of ballots for %s: %s is silent", debate, round.name)
+            raise Http404("This debate is in %s, which is a silent round." % round.name)
+        if round.seq >= round.tournament.current_round.seq and not round.tournament.pref('all_results_released'):
+            logger.warning("Refused public view of ballots for %s: %s results not yet available", debate, round.name)
+            raise Http404("This debate is in %s, the results for which aren't available yet." % round.name)
+
+        if debate.result_status != Debate.STATUS_CONFIRMED:
+            logger.warning("Refused public view of ballots for %s: not confirmed", debate)
+            raise Http404("The result for debate %s is not confirmed." % debate.matchup)
+        if debate.confirmed_ballot is None:
+            logger.warning("Refused public view of ballots for %s: no confirmed ballot", debate)
+            raise Http404("The debate %s does not have a confirmed ballot." % debate.matchup)
+
+        return debate
+
+    def get_context_data(self, **kwargs):
+        kwargs['ballot_set'] = self.object.confirmed_ballot.ballot_set
+        return super().get_context_data(**kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(self, request, *args, **kwargs)
 
 
-@cache_page(settings.PUBLIC_PAGE_CACHE_TIMEOUT)
-@public_optional_tournament_view('public_ballots')
-def public_ballot_submit(request, t):
-    r = t.current_round
+class PublicBallotSubmissionIndexView(CacheMixin, PublicTournamentPageMixin, TemplateView):
 
-    das = DebateAdjudicator.objects.filter(debate__round=r).select_related('adjudicator', 'debate')
+    public_page_preference = 'public_ballots'
 
-    if r.draw_status == r.STATUS_RELEASED and r.motions_good_for_public:
-        return render(request, 'public_add_ballot.html', dict(das=das))
-    else:
-        return render(request, 'public_add_ballot_unreleased.html', dict(das=None, round=r))
+    def is_draw_released(self):
+        round = self.get_tournament().current_round
+        return round.draw_status == Round.STATUS_RELEASED and round.motions_good_for_public
+
+    def get_template_names(self):
+        if self.is_draw_released():
+            return ['public_add_ballot.html']
+        else:
+            return ['public_add_ballot_unreleased.html']
+
+    def get_context_data(self, **kwargs):
+        if self.is_draw_released():
+            kwargs['das'] = DebateAdjudicator.objects.filter(
+                debate__round=self.get_tournament().current_round).select_related('adjudicator', 'debate')
+        return super().get_context_data(**kwargs)
