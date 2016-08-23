@@ -144,7 +144,7 @@ STATICFILES_FINDERS = (
 )
 
 # Whitenoise Gzipping and unique names
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
 
 # When running server side always use build not watch
 GULP_PRODUCTION_COMMAND = "npm run gulp build -- --production"
