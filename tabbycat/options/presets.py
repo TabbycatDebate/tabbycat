@@ -176,6 +176,7 @@ class WADLPreferences(PreferencesPreset):
         self.public_features__public_draw               = True
         self.public_features__public_results            = True
         self.public_features__public_motions            = True
+        self.public_features__public_record             = False
         # League Options
         self.league_options__enable_flagged_motions     = True
         self.league_options__enable_adj_notes           = True

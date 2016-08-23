@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 
 class BreakCategory(models.Model):
@@ -6,7 +7,7 @@ class BreakCategory(models.Model):
     name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")
     slug = models.SlugField(help_text="Slug for URLs, e.g., \"esl\"")
     seq = models.IntegerField(help_text="The order in which the categories are displayed")
-    break_size = models.IntegerField(help_text="Number of breaking teams in this category")
+    break_size = models.IntegerField(help_text="Number of breaking teams in this category", validators=[MinValueValidator(2)])
     is_general = models.BooleanField(
         help_text="True if most teams eligible for this category, e.g. Open, False otherwise")
     priority = models.IntegerField(
