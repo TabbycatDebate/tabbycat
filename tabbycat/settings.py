@@ -69,8 +69,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django_gulp',  # Asset compilation; must be before staticfiles
-    'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
+    'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
