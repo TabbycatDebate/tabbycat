@@ -32,6 +32,14 @@
 {% endblock %}
 
 {% block page-alerts %}
+
+  {% if category.team_set.count == 0 %}
+    <div class="alert alert-warning">
+      There are <strong>0 teams marked as eligible</strong> for this category — you will need to
+       <a href="{% tournament_url breakqual-edit-eligibility %}" class="alert-link">
+      add some eligible teams</a> for this break to generate correctly.
+    </div>
+  {% endif %}
   {% if generated %}
     <div class="alert alert-warning">
       <p>This break uses the <strong>{{ category.get_rule_display }}</strong> rule
