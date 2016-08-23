@@ -157,10 +157,10 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         tournament = self.get_tournament()
 
         try:
-            kwargs['debateadjudicator'] = self.object.debateadjudicator_set.get(
+            kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
                 debate__round=tournament.current_round)
         except ObjectDoesNotExist:
-            kwargs['debateadjudicator'] = None
+            kwargs['debateadjudications'] = None
 
         kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, tournament)
 
