@@ -124,23 +124,24 @@ class UADCPreferences(AustralsPreferences):
         self.scoring__reply_score_step                  = 0.5
         self.scoring__maximum_margin                    = 0.0   # TODO= check this
         self.scoring__margin_includes_dissenters        = True  # From Rules:10.9.5
-        # # Draws
+        # Draws
         self.draw_rules__avoid_same_institution         = False
         self.draw_rules__avoid_team_history             = True
         self.draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 10.3.1
         self.draw_rules__draw_side_allocations          = 'balance'  # From Rules 10.6
         self.draw_rules__draw_pairing_method            = 'slide'  # From rules 10.5
         self.draw_rules__draw_avoid_conflicts           = 'one_up_one_down'  # From rules 10.6.4
-        # # Debate Rules
+        # Debate Rules
         self.debate_rules__substantive_speakers         = 3
         self.debate_rules__reply_scores_enabled         = True
         self.debate_rules__motion_vetoes_enabled        = True
-        # # Standings Rules
+        # Standings Rules
         # self.standings__team_standings_precedence     = 'australs' # TODO: need a new standings rule
-        self.standings__team_standings_precedence       = ['wins', 'speaks_sum']
+        self.standings__team_standings_precedence       = ['wins', 'speaks_sum', 'margin_avg']
         # Feedback
         self.feedback__adj_min_score                    = 1.0  # Explicit in the rules
-        self.feedback__adj_max_score                    = 5.0  # Explicit in the rules
+        self.feedback__adj_max_score                    = 10.0  # Explicit in the rules
+        self.feedback__all_adjs_give_oral               = True # Kinda a big deal
         # UI Options
         self.public_features__feedback_progress         = True  # Feedback is compulsory
 
