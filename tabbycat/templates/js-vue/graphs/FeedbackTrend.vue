@@ -15,7 +15,7 @@ export default {
     padding: { type: Number, default: 6 },
   },
   ready: function() {
-    if (this.componentData.graphData !== undefined) {
+    if (typeof this.componentData.graphData !== 'undefined' && this.componentData.graphData.length > 0) {
       InitChart(this); // Only init if we have some info
     }
   },
@@ -45,6 +45,7 @@ function leastSquares(xSeries, ySeries) {
 }
 
 function InitChart(vueContext){
+
   // Range is the pixel coordinates; domain is the axes range
   var xScale = d3.scale.linear()
     .range([0, vueContext.width])
