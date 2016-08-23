@@ -60,8 +60,9 @@ class BaseFeedbackExpectedSubmissionTracker:
 class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTracker):
     """Represents a single piece of expected feedback from a team."""
 
-    def __init__(self, source, enforce_orallist=True):
+    def __init__(self, source, tournament, enforce_orallist=True, everyone_orals=False):
         self.enforce_orallist = enforce_orallist
+        self.everyone_orals = everyone_orals
         super().__init__(source)
 
     def acceptable_targets(self):
@@ -70,7 +71,9 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         adjudicators; if the chair was in the majority, then it must be the
         chair."""
 
-        if self.enforce_orallist and self.source.debate.confirmed_ballot:
+        if self.everyone_orals:
+            return list(self.source.debate.adjudicators.all())
+        elif self.enforce_orallist and self.source.debate.confirmed_ballot:
             majority = self.source.debate.confirmed_ballot.ballot_set.majority_adj
             chair = self.source.debate.adjudicators.chair
             if chair in majority:
@@ -224,6 +227,7 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         if tournament is None:
             tournament = team.tournament
         self.enforce_orallist = tournament.pref("show_splitting_adjudicators")
+        self.everyone_orals = tournament.pref("all_adjs_give_oral")
         super().__init__(tournament)
 
     @staticmethod
@@ -256,10 +260,19 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
 
     def get_expected_trackers(self):
         # There is one tracker for each debate for which there is a confirmed ballot,
-        # and the round is not silent.
+        # and the round is not silent, unless using the UADC preference when there is one
+        # tracker per person on the panel (including trainees)
 
         debateteams = self._get_debateteams()
-        trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist) for dt in debateteams]
+        if self.everyone_orals:
+            trackers = []
+            for dt in debateteams:
+                for i in range(0, len(dt.debate.adjudicators)):
+                    trackers.append(FeedbackExpectedSubmissionFromTeamTracker(
+                        dt, self.enforce_orallist, self.everyone_orals))
+        else:
+            trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist) for dt in debateteams]
+
         self._prefetch_tracker_acceptable_submissions(trackers,
                 attrgetter('source'), attrgetter('source_team'))
         return trackers
