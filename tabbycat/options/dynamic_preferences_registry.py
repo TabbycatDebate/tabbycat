@@ -304,16 +304,29 @@ class FeedbackReturnLocation(StringPreference):
 
 @tournament_preferences_registry.register
 class FeedbackPaths(ChoicePreference):
-    help_text = "Used to inform available choices in the feedback forms (both online and printed) and feedback progress"
+    help_text = "Used to inform available choices in the feedback forms for adjudicators (both online and printed) and feedback progress"
     verbose_name = "Allow and expect feedback to be submitted by"
     section = feedback
     name = 'feedback_paths'
     choices = (
-        ('minimal', 'Chairs on panellists and trainees, teams on orallists'),
-        ('with-p-on-c', 'Panellists on chairs, chairs on panellists and trainees, teams on orallists'),
-        ('all-adjs', 'All adjudicators (including trainees) on each other, teams on orallists'),
+        ('minimal', 'Chairs on panellists and trainees'),
+        ('with-p-on-c', 'Panellists on chairs, chairs on panellists and trainees'),
+        ('all-adjs', 'All adjudicators (including trainees) on each other'),
     )
     default = 'minimal'
+
+
+@tournament_preferences_registry.register
+class FeedbackFromTeams(ChoicePreference):
+    verbose_name = "Expect feedback to be submitted by teams on"
+    help_text = "Used to inform available choices in the feedback forms for teams (both online and printed) and feedback progress; this option is used by, e.g., UADC"
+    section = feedback
+    name = 'feedback_from_teams'
+    choices = (
+        ('orallist', 'Orallist only (voting panellists permitted, with prompts to select orallist)'),
+        ('all-adjs', 'All adjudicators in their panels (including trainees)'),
+    )
+    default = 'orallist'
 
 
 @tournament_preferences_registry.register
@@ -323,15 +336,6 @@ class ShowUnexpectedFeedback(BooleanPreference):
     section = feedback
     name = 'show_unexpected_feedback'
     default = True
-
-
-@tournament_preferences_registry.register
-class AllowTeamFeedbackOnAnyAllAdjs(BooleanPreference):
-    verbose_name = "Allow feedback from teams on the entire panel"
-    help_text = "Enables teams to submit feedback on any of the chairs, panellists, and trainees in their room. Used by styles such as UADC where all adjudicators deliver an adjudication"
-    section = feedback
-    name = 'all_adjs_give_oral'
-    default = False
 
 
 # ==============================================================================

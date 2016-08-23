@@ -19,10 +19,10 @@ from .utils import expected_feedback_targets
 logger = logging.getLogger(__name__)
 
 ADJUDICATOR_POSITION_NAMES = {
-    'c': 'chair',
-    'o': 'solo',
-    'p': 'panellist',
-    't': 'trainee'
+    AdjudicatorAllocation.POSITION_CHAIR: 'chair',
+    AdjudicatorAllocation.POSITION_ONLY: 'solo',
+    AdjudicatorAllocation.POSITION_PANELLIST: 'panellist',
+    AdjudicatorAllocation.POSITION_TRAINEE: 'trainee'
 }
 
 
@@ -275,19 +275,13 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
 
-    def adj_choice(adj, debate, pos, tournament):
+    def adj_choice(adj, debate, pos):
         value = '%d-%d' % (debate.id, adj.id)
-        if tournament.pref('all_adjs_give_oral') is True:
-            # For UADC just add position suffix
-            pos_text = ''
-            if pos == AdjudicatorAllocation.POSITION_CHAIR:
-                pos_text = ' chair'
-            elif pos == AdjudicatorAllocation.POSITION_PANELLIST:
-                pos_text = ' panellist'
-            elif pos == AdjudicatorAllocation.POSITION_TRAINEE:
-                pos_text = ' trainee'
-            elif pos == AdjudicatorAllocation.POSITION_ONLY:
+        if tournament.pref('feedback_from_teams') == 'all-adjs':
+            if pos == AdjudicatorAllocation.POSITION_ONLY:
                 pos_text = ''
+            else:
+                pos_text = ' ' + ADJUDICATOR_POSITION_NAMES[pos]
         else:
             if pos == AdjudicatorAllocation.POSITION_CHAIR:
                 pos_text = '—chair gave oral'
@@ -312,13 +306,13 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
 
     choices = [(None, '-- Adjudicators --')]
     for debate in debates:
-        if tournament.pref('all_adjs_give_oral'):
+        if tournament.pref('feedback_from_teams') == 'all-adjs':
             das = debate.adjudicators.with_positions()
         else:
             das = debate.adjudicators.voting_with_positions()
 
         for adj, pos in das:
-            choices.append(adj_choice(adj, debate, pos, tournament))
+            choices.append(adj_choice(adj, debate, pos))
 
     class FeedbackForm(BaseFeedbackForm):
         _tournament = tournament  # BaseFeedbackForm setting

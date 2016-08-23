@@ -141,7 +141,7 @@ class UADCPreferences(AustralsPreferences):
         # Feedback
         self.feedback__adj_min_score                    = 1.0  # Explicit in the rules
         self.feedback__adj_max_score                    = 10.0  # Explicit in the rules
-        self.feedback__all_adjs_give_oral               = True # Kinda a big deal
+        self.feedback__feedback_from_teams              = 'all-adjs' # Kinda a big deal
         # UI Options
         self.public_features__feedback_progress         = True  # Feedback is compulsory
 
