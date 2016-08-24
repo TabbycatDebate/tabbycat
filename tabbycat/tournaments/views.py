@@ -95,7 +95,7 @@ class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView
             return super().get(self, request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['num_unconfirmed'] = self.get_round().get_draw().filter(
+        kwargs['num_unconfirmed'] = self.get_round().debate_set.filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
         return super().get_context_data(**kwargs)
