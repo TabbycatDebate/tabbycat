@@ -5,7 +5,7 @@ class PreferencesPreset:
 
 
 class AustralsPreferences(PreferencesPreset):
-    """ 3 vs 3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
+    """ 3 vs 3 with replies, chosen motions, intermediary bubbles and 1up/1down. Compliant to AIDA rules. """
     def __init__(self):
         self.name                                       = "Australs Rules"
         self.show_in_list                               = True
@@ -36,7 +36,7 @@ class AustralsPreferences(PreferencesPreset):
 
 
 class AustralianEastersPreferences(AustralsPreferences):
-    """ 3 vs 3 without replies, with set motions, novices, intermediary bubbles and 1up/1down. Compliant to AIDA rules """
+    """ 3 vs 3 without replies, with set motions, novices, intermediary bubbles and 1up/1down. Compliant to AIDA rules. """
     def __init__(self):
         self.name                                       = "Australian Easters Rules"
         self.show_in_list                               = True
@@ -80,7 +80,7 @@ class NZEastersPreferences(AustralsPreferences):
 
 
 class JoyntPreferences(AustralsPreferences):
-    """ 3 vs 3 with replies, set sides, publicly displayed sides and motions, and novice statuses"""
+    """ 3 vs 3 with replies, set sides, publicly displayed sides and motions, and novice statuses."""
     def __init__(self):
         self.name                                       = "Joynt Scroll Rules"
         self.show_in_list                               = True
@@ -110,7 +110,7 @@ class JoyntPreferences(AustralsPreferences):
 
 
 class UADCPreferences(AustralsPreferences):
-    """ Note: the full set of rules for UADC are not implemented (such as for single ballots)."""
+    """ 3 vs 3 with replies, chosen motions, and all adjudicators can receive feedback from teams."""
     def __init__(self):
         self.name                                       = "UADC Rules"
         self.show_in_list                               = True
@@ -122,31 +122,32 @@ class UADCPreferences(AustralsPreferences):
         self.scoring__reply_score_min                   = 34.5  # Not specified; assuming half of substantive
         self.scoring__reply_score_max                   = 42.0  # Not specified; assuming  half of substantive
         self.scoring__reply_score_step                  = 0.5
-        self.scoring__maximum_margin                    = 0.0  # TODO= check this
+        self.scoring__maximum_margin                    = 0.0   # TODO= check this
         self.scoring__margin_includes_dissenters        = True  # From Rules:10.9.5
-        # # Draws
+        # Draws
         self.draw_rules__avoid_same_institution         = False
         self.draw_rules__avoid_team_history             = True
         self.draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 10.3.1
         self.draw_rules__draw_side_allocations          = 'balance'  # From Rules 10.6
         self.draw_rules__draw_pairing_method            = 'slide'  # From rules 10.5
         self.draw_rules__draw_avoid_conflicts           = 'one_up_one_down'  # From rules 10.6.4
-        # # Debate Rules
+        # Debate Rules
         self.debate_rules__substantive_speakers         = 3
         self.debate_rules__reply_scores_enabled         = True
         self.debate_rules__motion_vetoes_enabled        = True
-        # # Standings Rules
+        # Standings Rules
         # self.standings__team_standings_precedence     = 'australs' # TODO: need a new standings rule
-        self.standings__team_standings_precedence       = ['wins', 'speaks_sum']
+        self.standings__team_standings_precedence       = ['wins', 'speaks_sum', 'margin_avg']
         # Feedback
         self.feedback__adj_min_score                    = 1.0  # Explicit in the rules
-        self.feedback__adj_max_score                    = 5.0  # Explicit in the rules
+        self.feedback__adj_max_score                    = 10.0  # Explicit in the rules
+        self.feedback__feedback_from_teams              = 'all-adjs' # Kinda a big deal
         # UI Options
         self.public_features__feedback_progress         = True  # Feedback is compulsory
 
 
 class WADLPreferences(PreferencesPreset):
-    """ Example high school league setup """
+    """ Example high school league setup. Many features not supported in conjunction with other settings."""
     def __init__(self):
         self.name                                       = "WADL Options"
         self.show_in_list                               = True
@@ -196,7 +197,7 @@ class WADLPreferences(PreferencesPreset):
 
 
 class PublicInformation(PreferencesPreset):
-    """ For tournaments hosted online: this sets it up so that people can access the draw and other information via the tab site """
+    """ For tournaments hosted online: this sets it up so that people can access the draw and other information via the tab site."""
     def __init__(self):
         self.name                                       = "Public Information Options"
         self.show_in_list                               = True
