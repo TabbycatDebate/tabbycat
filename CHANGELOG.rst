@@ -4,11 +4,11 @@ Change Log
 
 
 1.1.0 (Egyptian Mau)
------
+--------------------
 
 - Added support for the United Asian Debating Championships style
-- Added support for the World Schools Debating Championships syle
-- Minor bugfixes and dependency updates
+- Added support for the World Schools Debating Championships style
+- Minor bug fixes and dependency updates
 
 
 1.0.1
@@ -20,7 +20,7 @@ Change Log
 
 
 1.0.0 (Devon Rex)
------
+-----------------
 Redesigned and redeveloped adjudicator allocation page
   - Redesigned interface, featuring clearer displays of conflict and diversity information
   - Changes to importances and panels are now automatically saved
@@ -47,7 +47,7 @@ Feedback
 
 
 0.9.0 (Chartreux)
------
+-----------------
 - Added a beta implementation of the break rounds workflow
 - Added venue constraints, to allow participants or divisions to preferentially be given venues from predefined groups
 - Added a button to regenerate draws
@@ -85,7 +85,7 @@ Feedback
 
 
 0.8.0 (Bengal)
------
+--------------
 
 - Upgraded to Python 3.4, dropped support for Python 2
 - Restructured directories and, as a consequence, changed database schema
@@ -101,7 +101,7 @@ Feedback
 
 
 0.7.0 (Abyssinian)
------
+------------------
 
 - Support for multiple tournaments
 - Improved and extensible tournament data importer
