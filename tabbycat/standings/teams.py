@@ -231,6 +231,29 @@ class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
             tsi.add_metric(self.key, votes_normalised)
 
 
+class NumberOfAdjudicatorsMetricAnnotator2(TeamScoreQuerySetMetricAnnotator):
+    key = "num_adjs2"
+    name = "number of adjudicators 2"
+    abbr = "Ballots2"
+    choice_name = "Ballots2"
+
+    def __init__(self, adjs_per_debate=3):
+        self.adjs_per_debate = 3
+
+    function = "SUM"
+
+    @property
+    def field(self):
+        return "CAST(votes_given AS float) / NULLIF(votes_possible, 0) * {:d}".format(self.adjs_per_debate)
+
+    def annotate(self, queryset, standings, round=None):
+        super().annotate(queryset, standings, round)
+
+        if all(tsi.metrics[self.key] == int(tsi.metrics[self.key]) for tsi in standings.infoview()):
+            for tsi in standings.infoview():
+                tsi.metrics[self.key] = int(tsi.metrics[self.key])
+
+
 class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     """Metric annotator for who-beat-whom. Use once for every who-beat-whom in
     the precedence."""
@@ -332,6 +355,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "margin_sum"    : SumMarginMetricAnnotator,
         "margin_avg"    : AverageMarginMetricAnnotator,
         "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
+        "num_adjs2"     : NumberOfAdjudicatorsMetricAnnotator2,
         "wbw"           : WhoBeatWhomMetricAnnotator,
         "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
     }
