@@ -224,8 +224,9 @@ class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
 
             votes_normalised = 0
             for score in ts:
-                votes_ratio = score.votes_given / score.votes_possible
-                votes_normalised += votes_ratio * self.adjs_per_debate
+                if score.votes_possible > 0: # Ensure no ZeroDivisionError
+                    votes_ratio = score.votes_given / score.votes_possible
+                    votes_normalised += votes_ratio * self.adjs_per_debate
 
             tsi.add_metric(self.key, votes_normalised)
 
