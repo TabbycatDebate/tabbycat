@@ -5,7 +5,7 @@ dj-cmd==0.5 # Provides the dj command alias
 django-appconf==1.0.2 # Adds helper class for handling app configs
 django-dynamic-preferences==0.8.1
 django-debug-toolbar==1.5.0 # Debug Toolbar
-django-extensions==1.7.1 # For the generate secret command
+django-extensions==1.7.2 # For the generate secret command
 django-gulp==2.4.1 # Run gulp tasks with runserver/collectstatic
 django-ipware==1.1.5 # IP Address logging
 django-jet==0.9.1 # Admin Backend

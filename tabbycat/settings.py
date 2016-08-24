@@ -69,6 +69,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django_gulp',  # Asset compilation; must be before staticfiles
+    'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
@@ -143,7 +144,7 @@ STATICFILES_FINDERS = (
 )
 
 # Whitenoise Gzipping and unique names
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
 
 # When running server side always use build not watch
 GULP_PRODUCTION_COMMAND = "npm run gulp build -- --production"

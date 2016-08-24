@@ -58,11 +58,12 @@ class BaseFeedbackExpectedSubmissionTracker:
 
 
 class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTracker):
-    """Represents a single piece of expected feedback from a team."""
+    """Represents a single piece of expected feedback from a team on any valid
+    adjudicator in a panel."""
 
     def __init__(self, source, enforce_orallist=True):
         self.enforce_orallist = enforce_orallist
-        super().__init__(source)
+        return super().__init__(source)
 
     def acceptable_targets(self):
         """For a team, this must be the adjudicator who delivered the oral
@@ -77,6 +78,7 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
                 return [chair]
             else:
                 return majority
+
         else:
             return list(self.source.debate.adjudicators.voting())
 
@@ -87,6 +89,23 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
                 'source_team', 'adjudicator', 'adjudicator__institution')
 
 
+class FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
+    """Represents a single piece of expected feedback from a team on a single
+    adjudicator."""
+
+    def __init__(self, source, target=None):
+        self.target = target
+        return super().__init__(source)
+
+    def acceptable_targets(self):
+        return [self.target]
+
+    def get_acceptable_submissions(self):
+        return self.source.adjudicatorfeedback_set.filter(confirmed=True,
+                source_team=self.source, adjudicator=self.target).select_related(
+                'source_team', 'adjudicator', 'adjudicator__institution')
+
+
 class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmissionTracker):
     """Represents a single piece of expected feedback from an adjudicator."""
 
@@ -94,13 +113,13 @@ class FeedbackExpectedSubmissionFromAdjudicatorTracker(BaseFeedbackExpectedSubmi
         self.target = target
         return super().__init__(source)
 
-    def get_acceptable_submissions(self):
-        return self.source.adjudicatorfeedback_set.filter(confirmed=True,
-            adjudicator=self.target, source_adjudicator=self.source).select_related(
-            'source_adjudicator', 'adjudicator', 'adjudicator__institution')
-
     def acceptable_targets(self):
         return [self.target]
+
+    def get_acceptable_submissions(self):
+        return self.source.adjudicatorfeedback_set.filter(confirmed=True,
+                source_adjudicator=self.source, adjudicator=self.target).select_related(
+                'source_adjudicator', 'adjudicator', 'adjudicator__institution')
 
 
 class FeedbackUnexpectedSubmissionTracker:
@@ -224,6 +243,7 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         if tournament is None:
             tournament = team.tournament
         self.enforce_orallist = tournament.pref("show_splitting_adjudicators")
+        self.expect_all_adjs = tournament.pref("feedback_from_teams") == 'all-adjs'
         super().__init__(tournament)
 
     @staticmethod
@@ -255,11 +275,22 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         return self._debateteams
 
     def get_expected_trackers(self):
-        # There is one tracker for each debate for which there is a confirmed ballot,
-        # and the round is not silent.
-
         debateteams = self._get_debateteams()
-        trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist) for dt in debateteams]
+        if self.expect_all_adjs:
+            # If teams submit on all adjudicators, there is one tracker for each
+            # adjudicator in each debate for which there is a confirmed ballot
+            # and the round is not silent.
+            trackers = [FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(dt, adj)
+                        for dt in debateteams
+                        for adj in dt.debate.adjudicators.all()]
+
+        else:
+            # If teams submit only on orallists, there is one tracker for each
+            # debate for which there is a confirmed ballot, and the round is not
+            # silent.
+            trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist)
+                        for dt in debateteams]
+
         self._prefetch_tracker_acceptable_submissions(trackers,
                 attrgetter('source'), attrgetter('source_team'))
         return trackers

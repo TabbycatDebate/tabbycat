@@ -259,6 +259,9 @@ class BaseTournamentDataImporter(object):
                 except ValueError as e:
                     errors.add(lineno, model, str(e))
                     continue
+                except ValidationError as e:
+                    errors.update_with_validation_error(lineno, model, e)
+                    continue
                 else:
                     skipped_because_existing += 1
                     if expect_unique:
