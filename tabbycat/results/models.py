@@ -177,6 +177,8 @@ class TeamScore(models.Model):
     margin = ScoreField()
     win = models.NullBooleanField()
     score = ScoreField()
+    votes_given = models.PositiveSmallIntegerField()
+    votes_possible = models.PositiveSmallIntegerField()
 
     forfeit = models.BooleanField(
         default=False, blank=False, null=False,

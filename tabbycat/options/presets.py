@@ -146,6 +146,31 @@ class UADCPreferences(AustralsPreferences):
         self.public_features__feedback_progress         = True  # Feedback is compulsory
 
 
+class WSDCPreferences(AustralsPreferences):
+    """ 3 vs 3 with replies, chosen motions, and all adjudicators can receive feedback from teams."""
+    def __init__(self):
+        self.name                                       = "WSDC Rules"
+        self.show_in_list                               = True
+        # Rules source = http://mkf2v40tlr04cjqkt2dtlqbr.wpengine.netdna-cdn.com/wp-content/uploads/2014/05/WSDC-Debate-Rules-U-2015.pdf
+        # Score (strictly specified in the rules)
+        self.scoring__score_min                         = 60.0
+        self.scoring__score_max                         = 80.0
+        self.scoring__score_step                        = 1.0
+        self.scoring__reply_score_min                   = 30.0
+        self.scoring__reply_score_max                   = 40.0
+        self.scoring__reply_score_step                  = 0.5
+        # Data
+        self.data_entry__enable_motions                 = False # Single motions per round
+        # Debates
+        self.debate_rules__motion_vetoes_enabled        = False # Single motions per round
+        # Draws (exact mechanism is up to the host)
+        self.draw_rules__avoid_same_institution         = False
+        # Standings
+        self.standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg']
+        # UI Options
+        self.ui_options__show_institutions              = False
+
+
 class WADLPreferences(PreferencesPreset):
     """ Example high school league setup. Many features not supported in conjunction with other settings."""
     def __init__(self):

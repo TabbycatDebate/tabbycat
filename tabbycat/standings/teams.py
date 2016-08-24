@@ -192,18 +192,33 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             standings.add_metric(team, self.key, draw_strength)
 
 
-class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
-    """Metric annotator for number of adjudicators."""
+class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for number of votes given by a panel."""
 
     key = "num_adjs"
-    name = "number of adjudicators"
-    abbr = "Adjs"
+    name = "number of adjudicators who voted for this team"
+    abbr = "Ballots"
+
+    choice_name = "Ballots/Votes"
 
     def __init__(self, adjs_per_debate=3):
-        self.adjs_per_debate = 3
+        self.adjs_per_debate = 3 # Assumed panel size
 
     def annotate(self, queryset, standings, round=None):
         raise NotImplementedError("number of adjudicators doesn't work yet")
+
+
+class TestNumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for number of votes given by a panel."""
+
+    key = "num_adjs_test"
+    name = "aanumber of adjudicators who voted for this team"
+    abbr = "BAAallots"
+
+    choice_name = "BaAAllots/Votes"
+
+    function = "SUM"
+    field = "votes_given"
 
 
 class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
@@ -306,7 +321,8 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "draw_strength" : DrawStrengthMetricAnnotator,
         "margin_sum"    : SumMarginMetricAnnotator,
         "margin_avg"    : AverageMarginMetricAnnotator,
-        # "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
+        "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
+        "num_adjs_test"      : TestNumberOfAdjudicatorsMetricAnnotator,
         "wbw"           : WhoBeatWhomMetricAnnotator,
         "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
     }

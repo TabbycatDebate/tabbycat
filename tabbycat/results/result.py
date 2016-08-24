@@ -416,8 +416,11 @@ class BallotSet(ResultBuffer):
         points = self._get_points(dt)
         win = self._get_win(dt)
         margin = self._get_margin(dt)
+        votes_given = self._get_votes_given(dt)
+        votes_possible = self._get_votes_possible(dt)
         self.ballotsub.teamscore_set.update_or_create(debate_team=dt,
-            defaults=dict(score=total, points=points, win=win, margin=margin))
+            defaults=dict(score=total, points=points, win=win, margin=margin,
+                          votes_given=votes_given, votes_possible=votes_possible))
 
         for pos in self.POSITIONS:
             speaker = self.speakers[dt][pos]
@@ -626,6 +629,12 @@ class BallotSet(ResultBuffer):
             return this_total - other_total
 
         return None
+
+    def _get_votes_given(self, dt):
+        return len(self._adjs_by_dt[dt])
+
+    def _get_votes_possible(self, dt):
+        return len(self.adjudicator_sheets.items())
 
     # --------------------------------------------------------------------------
     # Side-specific methods
