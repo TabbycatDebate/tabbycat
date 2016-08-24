@@ -3,15 +3,13 @@ import datetime
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import ProgrammingError
 from django.http import Http404, HttpResponse
 from django.template import Context, Template
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.views.generic import FormView, TemplateView
-from django.views.decorators.cache import cache_page
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -21,14 +19,13 @@ from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
 from tournaments.models import Round
-from utils.views import public_optional_tournament_view, round_view, tournament_view
+from utils.views import round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
 from utils.mixins import (CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin,
-                          SuperuserRequiredMixin, VueTableTemplateView)
+                          VueTableTemplateView)
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
-from .result import BallotSet
 from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
