@@ -53,13 +53,14 @@ same rank.
 +--------------------+---------------------------------------------------------+
 | **Votes/ballots    | The number of adjudicators that gave this team a win    |
 | carried**          | across all of their debates. Also known as the number   |
-|                    | of 'ballots' or 'judges' a team has on.                 |
+|                    | of *ballots* or *judges* a team has.                    |
 |                    |                                                         |
-|                    | In cases where the panel is smaller or larger than 3    |
+|                    | In cases where the panel is smaller or larger than 3,   |
 |                    | this number is normalised to be out of 3. For example,  |
-|                    | if in a panel of 5, if 3 adjudicators give a team the   |
-|                    | win then that team will receive 1.8 ballots             |
-|                    | and the loser 1.2.                                      |
+|                    | if a panel of five splits 3--2, then the winning team   |
+|                    | is recorded as gaining 1.8 votes, and the losing team   |
+|                    | is recorded as gaining 1.2. This also means that solo   |
+|                    | adjudicators are always worth three votes.              |
 +--------------------+---------------------------------------------------------+
 | **Who-beat-whom**  | If there are exactly two teams tied on all metrics      |
 |                    | earlier in the precedence than this one, then check if  |
