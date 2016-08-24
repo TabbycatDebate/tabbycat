@@ -192,33 +192,42 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             standings.add_metric(team, self.key, draw_strength)
 
 
-class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
     """Metric annotator for number of votes given by a panel."""
 
     key = "num_adjs"
     name = "number of adjudicators who voted for this team"
     abbr = "Ballots"
 
-    choice_name = "Ballots/Votes"
+    choice_name = "Votes/Ballots Carried"
 
     def __init__(self, adjs_per_debate=3):
         self.adjs_per_debate = 3 # Assumed panel size
 
     def annotate(self, queryset, standings, round=None):
-        raise NotImplementedError("number of adjudicators doesn't work yet")
+        """ We express votes as a fraction of the typical panel size. IE if
+        panels are normally 3, but a team has a panel of 5, then a result of
+        4/5 votes get normalised into 2.4 votes"""
 
+        for tsi in standings.infoview():
+            # Get all team scores; need to figure out ratio on a per-round basis
+            if round is not None:
+                round_seq_limit = round.seq
+            else:
+                round_seq_limit = 99
 
-class TestNumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
-    """Metric annotator for number of votes given by a panel."""
+            ts = TeamScore.objects.filter(
+                ballot_submission__confirmed=True,
+                debate_team__team=tsi.team,
+                debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
+                debate_team__debate__round__seq__lte=round_seq_limit)
 
-    key = "num_adjs_test"
-    name = "aanumber of adjudicators who voted for this team"
-    abbr = "BAAallots"
+            votes_normalised = 0
+            for score in ts:
+                votes_ratio = score.votes_given / score.votes_possible
+                votes_normalised += votes_ratio * self.adjs_per_debate
 
-    choice_name = "BaAAllots/Votes"
-
-    function = "SUM"
-    field = "votes_given"
+            tsi.add_metric(self.key, votes_normalised)
 
 
 class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
@@ -322,7 +331,6 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "margin_sum"    : SumMarginMetricAnnotator,
         "margin_avg"    : AverageMarginMetricAnnotator,
         "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
-        "num_adjs_test"      : TestNumberOfAdjudicatorsMetricAnnotator,
         "wbw"           : WhoBeatWhomMetricAnnotator,
         "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
     }
