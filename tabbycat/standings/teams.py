@@ -192,55 +192,22 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             standings.add_metric(team, self.key, draw_strength)
 
 
-class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
-    """Metric annotator for number of votes given by a panel."""
+class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for number of votes given by a panel.
+
+    The metric normalizes each debate to an assumed typical panel size. For
+    example, if `self.adjs_per_debate == 3`, but a particular debate has a panel
+    of five, then for that debate, a team winning on a 4-1 split will earn
+    "2.4 votes" for that debate."""
 
     key = "num_adjs"
     name = "number of adjudicators who voted for this team"
     abbr = "Ballots"
-
-    choice_name = "Votes/Ballots Carried"
-
-    def __init__(self, adjs_per_debate=3):
-        self.adjs_per_debate = 3 # Assumed panel size
-
-    def annotate(self, queryset, standings, round=None):
-        """ We express votes as a fraction of the typical panel size. IE if
-        panels are normally 3, but a team has a panel of 5, then a result of
-        4/5 votes get normalised into 2.4 votes"""
-
-        for tsi in standings.infoview():
-            # Get all team scores; need to figure out ratio on a per-round basis
-            if round is not None:
-                round_seq_limit = round.seq
-            else:
-                round_seq_limit = 99
-
-            ts = TeamScore.objects.filter(
-                ballot_submission__confirmed=True,
-                debate_team__team=tsi.team,
-                debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
-                debate_team__debate__round__seq__lte=round_seq_limit)
-
-            votes_normalised = 0
-            for score in ts:
-                if score.votes_possible > 0: # Ensure no ZeroDivisionError
-                    votes_ratio = score.votes_given / score.votes_possible
-                    votes_normalised += votes_ratio * self.adjs_per_debate
-
-            tsi.add_metric(self.key, votes_normalised)
-
-
-class NumberOfAdjudicatorsMetricAnnotator2(TeamScoreQuerySetMetricAnnotator):
-    key = "num_adjs2"
-    name = "number of adjudicators 2"
-    abbr = "Ballots2"
-    choice_name = "Ballots2"
+    choice_name = "votes/ballots carried"
+    function = "SUM"
 
     def __init__(self, adjs_per_debate=3):
         self.adjs_per_debate = 3
-
-    function = "SUM"
 
     @property
     def field(self):
@@ -249,6 +216,10 @@ class NumberOfAdjudicatorsMetricAnnotator2(TeamScoreQuerySetMetricAnnotator):
     def annotate(self, queryset, standings, round=None):
         super().annotate(queryset, standings, round)
 
+        # If the number of ballots carried by every team is an integer, then
+        # it's probably (though not certainly) the case that there are no
+        # "weird" cases causing any fractional numbers of votes due to
+        # normalization. In that case, convert all metrics to integers.
         if all(tsi.metrics[self.key] == int(tsi.metrics[self.key]) for tsi in standings.infoview()):
             for tsi in standings.infoview():
                 tsi.metrics[self.key] = int(tsi.metrics[self.key])
@@ -355,7 +326,6 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "margin_sum"    : SumMarginMetricAnnotator,
         "margin_avg"    : AverageMarginMetricAnnotator,
         "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
-        "num_adjs2"     : NumberOfAdjudicatorsMetricAnnotator2,
         "wbw"           : WhoBeatWhomMetricAnnotator,
         "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
     }
