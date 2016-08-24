@@ -2,7 +2,7 @@ import json
 import logging
 
 from django.core.urlresolvers import reverse
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
 
 from tournaments.models import Tournament
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -22,13 +22,22 @@ class BaseTableViewTest():
         self.t = Tournament.objects.first()
         self.client = Client()
 
+    @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
     def get_response(self):
-        if self.round_seq is not None:
-            return self.client.get(reverse(self.view_name, kwargs={
-                'tournament_slug': self.t.slug, 'round_seq': self.round_seq}))
-        else:
-            return self.client.get(reverse(self.view_name, kwargs={
-                'tournament_slug': self.t.slug}))
+        with self.modify_settings(
+            # Remove whitenoise middleware as it wont resolve on travis
+            MIDDLEWARE = {
+                'remove': [
+                    'whitenoise.middleware.WhiteNoiseMiddleware',
+                ],
+            }
+        ):
+            if self.round_seq is not None:
+                return self.client.get(reverse(self.view_name,
+                    kwargs={'tournament_slug': self.t.slug, 'round_seq': self.round_seq}))
+            else:
+                return self.client.get(reverse(self.view_name,
+                    kwargs={'tournament_slug': self.t.slug}))
 
     def validate_table_data(self, r):
 
