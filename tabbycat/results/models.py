@@ -211,8 +211,7 @@ class SpeakerScore(models.Model):
     objects = SpeakerScoreManager()
 
     class Meta:
-        unique_together = [('debate_team', 'speaker', 'position',
-                            'ballot_submission')]
+        unique_together = [('debate_team', 'position', 'ballot_submission')]
 
     def clean(self):
         super().clean()

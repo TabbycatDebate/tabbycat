@@ -68,7 +68,8 @@ class SpeakerScoreByAdjAdmin(admin.ModelAdmin, BaseModelAdmin):
     raw_id_fields = ('debate_team', 'ballot_submission')
 
     def get_speaker_name_filter(self, obj):
-        return SpeakerScore.objects.filter(debate_team=obj.debate_team, position=obj.position)[0].speaker.name
+        return SpeakerScore.objects.get(debate_team=obj.debate_team, position=obj.position,
+                ballot_submission=obj.ballot_submission).speaker.name
     get_speaker_name_filter.short_description = 'Speaker'
 
 admin.site.register(SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)

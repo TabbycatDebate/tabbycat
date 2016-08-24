@@ -426,7 +426,7 @@ class BallotSet(ResultBuffer):
             speaker = self.speakers[dt][pos]
             score = self._get_avg_score(dt, pos)
             self.ballotsub.speakerscore_set.update_or_create(debate_team=dt,
-                speaker=speaker, position=pos, defaults=dict(score=score))
+                position=pos, defaults=dict(speaker=speaker, score=score))
 
         if self.motion_veto[dt] is not None:
             self.ballotsub.debateteammotionpreference_set.update_or_create(
