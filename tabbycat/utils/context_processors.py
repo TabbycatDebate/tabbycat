@@ -30,6 +30,8 @@ def debate_context(request):
 def get_menu_highlight(request):
     if "overview" in request.path:
         return {"overview_nav": True}
+    elif "option" in request.path:
+        return {'options_nav': True} # Must be above feedback given fb options
     elif "sides" in request.path:
         return {'sides_nav': True}
     elif "availability" in request.path:
@@ -54,8 +56,6 @@ def get_menu_highlight(request):
         return {'import_nav': True}
     elif "motions" in request.path:
         return {'motions_nav': True}
-    elif "option" in request.path:
-        return {'options_nav': True}
     elif "overview" in request.path:
         return {'overview_nav': True}
     elif "participants" in request.path:
