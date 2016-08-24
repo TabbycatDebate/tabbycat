@@ -265,7 +265,9 @@ class BaseStandingsGenerator:
         standings = Standings(queryset, rank_filter=self.options["rank_filter"])
 
         for annotator in self.metric_annotators:
+            logger.debug("Running metric annotator: %s", annotator.name)
             annotator.run(queryset, standings, round)
+        logger.debug("Metric annotators done.")
 
         if self.options["include_filter"]:
             standings.filter(self.options["include_filter"])
@@ -273,7 +275,9 @@ class BaseStandingsGenerator:
         standings.sort(self.precedence, self._tiebreak_func)
 
         for annotator in self.ranking_annotators:
+            logger.debug("Running ranking annotator: %s", annotator.name)
             annotator.run(standings)
+        logger.debug("Ranking annotators done.")
 
         return standings
 
