@@ -2,7 +2,7 @@ import json
 import logging
 
 from django.core.urlresolvers import reverse
-from django.test import Client, TestCase, override_settings
+from django.test import Client, override_settings, TestCase
 
 from tournaments.models import Tournament
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -26,7 +26,7 @@ class BaseTableViewTest():
     def get_response(self):
         with self.modify_settings(
             # Remove whitenoise middleware as it wont resolve on travis
-            MIDDLEWARE = {
+            MIDDLEWARE={
                 'remove': [
                     'whitenoise.middleware.WhiteNoiseMiddleware',
                 ],
