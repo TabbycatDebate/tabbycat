@@ -3,7 +3,8 @@
 ======================
 
 Tabbycat is a draw tabulation system for two-team parliamentary debate
-tournaments.
+tournaments. Explicit support is provided for tabbing the Australs, NZ Easters,
+Australian Easters, Joynt Scroll, UADC, and WSDC formats.
 
 .. _installation-docs:
 

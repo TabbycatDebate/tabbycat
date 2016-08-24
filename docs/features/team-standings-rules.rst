@@ -4,8 +4,6 @@
 Team Standings Rules
 ====================
 
-.. attention:: These changed in version 0.8.
-
 In Tabbycat, you can choose how teams are ranked in the team standings. For
 example, at Australs, teams are ranked first on the number of wins, and second
 on their total speaker score. The setting that specifies how teams are ranked is
@@ -52,6 +50,16 @@ same rank.
 |                    |                                                         |
 |                    | This is also known in some circuits as *win points*,    |
 |                    | *opp wins* or *opp strength*.                           |
++--------------------+---------------------------------------------------------+
+| **Votes/ballots    | The number of adjudicators that gave this team a win    |
+| carried**          | across all of their debates. Also known as the number   |
+|                    | of 'ballots' or 'judges' a team has on.                 |
+|                    |                                                         |
+|                    | In cases where the panel is smaller or larger than 3    |
+|                    | this number is normalised to be out of 3. For example,  |
+|                    | if in a panel of 5, if 3 adjudicators give a team the   |
+|                    | win then that team will receive 1.8 ballots             |
+|                    | and the loser 1.2.                                      |
 +--------------------+---------------------------------------------------------+
 | **Who-beat-whom**  | If there are exactly two teams tied on all metrics      |
 |                    | earlier in the precedence than this one, then check if  |
