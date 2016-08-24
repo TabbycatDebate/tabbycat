@@ -824,7 +824,8 @@ class ForfeitBallotSet(BallotSet):
         # The `forfeit` flag indicates that the ballot should not count as part
         # of averages.
         self.ballotsub.teamscore_set.update_or_create(debate_team=dt,
-                default=dict(points=points, win=win, score=0, margin=0, forfeit=True))
+                default=dict(points=points, win=win, score=0, margin=0, forfeit=True,
+                    votes_given=0, votes_possible=0))
 
     def save(self):
         self.ballotsub.forfeit = self.forfeiter
