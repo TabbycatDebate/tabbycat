@@ -5,7 +5,7 @@
 # ==============================================================================
 
 
-class BaseModelAdmin():
+class TabbycatModelAdminFieldsMixin:
 
     def get_round(self, obj):
         if hasattr(obj, 'debate'):
@@ -24,7 +24,7 @@ class BaseModelAdmin():
 
     def get_adj_name(self, obj):
         return obj.debate_adjudicator.adjudicator.name
-    get_speaker_name.short_description = 'Adjudicator'
+    get_adj_name.short_description = 'Adjudicator'
 
     def get_tournament(self, obj):
         if hasattr(obj, 'round'):

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from adjallocation.models import DebateAdjudicator
-from utils.admin import BaseModelAdmin
+from utils.admin import TabbycatModelAdminFieldsMixin
 
 from .models import Debate, DebateTeam
 
@@ -10,7 +10,7 @@ from .models import Debate, DebateTeam
 # DebateTeam
 # ==============================================================================
 
-class DebateTeamAdmin(admin.ModelAdmin, BaseModelAdmin):
+class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('team', 'get_tournament', 'get_round', 'position')
     search_fields = ('team', )
     raw_id_fields = ('debate', 'team', )
