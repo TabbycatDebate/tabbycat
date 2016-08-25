@@ -458,12 +458,19 @@ class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, View):
         existing_debate_ids = [int(a.replace('debate_', ''))
                                for a in list(request.POST.keys())
                                if a.startswith('debate_')]
+
         for debate_id in existing_debate_ids:
-            debate = Debate.objects.get(id=debate_id)
-            new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_',
-                                                                        '')
-            new_neg_id = request.POST.get('neg_%s' % debate_id).replace('team_',
-                                                                        '')
+            try:
+                debate = Debate.objects.get(id=debate_id)
+            except Debate.DoesNotExist:
+                # When trying to save a blank debate (ie with no aff/neg)
+                # multiple times there is no corresponding object
+                continue
+
+            new_aff_id = request.POST.get(
+                'aff_%s' % debate_id).replace('team_', '')
+            new_neg_id = request.POST.get(
+                'neg_%s' % debate_id).replace('team_', '')
 
             if new_aff_id and new_neg_id:
                 DebateTeam.objects.filter(debate=debate).delete()
@@ -487,6 +494,7 @@ class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, View):
         new_debate_ids = [int(a.replace('new_debate_', ''))
                           for a in list(request.POST.keys())
                           if a.startswith('new_debate_')]
+
         for debate_id in new_debate_ids:
             new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_',
                                                                         '')
@@ -494,7 +502,7 @@ class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, View):
                                                                         '')
 
             if new_aff_id and new_neg_id:
-                debate = Debate(round=round, venue=None)
+                debate = Debate(round=self.get_round(), venue=None)
                 debate.save()
 
                 aff_team = Team.objects.get(id=int(new_aff_id))
