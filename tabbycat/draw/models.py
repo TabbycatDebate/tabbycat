@@ -66,6 +66,8 @@ class Debate(models.Model):
 
     @property
     def teams(self):
+        """Returns an iterable object containing the teams in the debate in
+        arbitrary order. The iterable may be a list or a QuerySet."""
         try:
             return [self._aff_team, self._neg_team]
         except AttributeError:
@@ -115,6 +117,8 @@ class Debate(models.Model):
         return getattr(self, '%s_dt' % side)
 
     def get_side(self, team):
+        # Deprecated 25/7/2016, does not appear to be used anywhere, remove after 25/8/2016.
+        warn("Debate.get_side() is deprecated", stacklevel=2)
         if self.aff_team == team:
             return 'aff'
         if self.neg_team == team:
@@ -177,8 +181,10 @@ class Debate(models.Model):
 
     @property
     def matchup(self):
-        return '%s vs %s' % (self.aff_team.short_name,
-                             self.neg_team.short_name)
+        try:
+            return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
+        except Team.DoesNotExist:
+            return ", ".join([x.short_name for x in self.teams])
 
     @property
     def get_division_motions(self):
