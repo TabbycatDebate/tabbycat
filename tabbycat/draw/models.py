@@ -55,14 +55,16 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __str__(self):
+        prefix = "[{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation)
+        return prefix + self.matchup
+
+    @property
+    def matchup(self):
+        # This method is used by __str__, so it's not allowed to crash (ever)
         try:
-            return "[{}/{}] {} vs {}".format(
-                self.round.tournament.slug, self.round.abbreviation,
-                self.aff_team.short_name, self.neg_team.short_name)
+            return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
         except Team.DoesNotExist:
-            return "[{}/{}] {}".format(
-                self.round.tournament.slug, self.round.abbreviation,
-                ", ".join([x.short_name for x in self.teams]))
+            return ", ".join([x.short_name for x in self.teams])
 
     @property
     def teams(self):
@@ -178,13 +180,6 @@ class Debate(models.Model):
             from adjallocation.allocation import AdjudicatorAllocation
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
-
-    @property
-    def matchup(self):
-        try:
-            return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
-        except Team.DoesNotExist:
-            return ", ".join([x.short_name for x in self.teams])
 
     @property
     def get_division_motions(self):
