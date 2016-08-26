@@ -41,7 +41,7 @@ class ResultBuffer:
             # If updating any of the database loading, be sure also to update
             # populate_ballotsets() in prefetch.py.
             self.POSITIONS = self.debate.round.tournament.POSITIONS
-            self.update_debateteams(self.debate.debateteam_set.all().select_related('team'))
+            self.update_debateteams(self.debate.debateteam_set.select_related('team'))
 
     def _dt(self, team):
         """Extracts a DebateTeam from a given team argument. The argument can be
@@ -445,7 +445,7 @@ class BallotSet(ResultBuffer):
         for position, dt in zip(self.SIDES, dts):
             dt.position = position
             dt.save()
-        self.update_debateteams(self.debate.debateteam_set.all()) # refresh self.dts
+        self.update_debateteams(self.debate.debateteam_set.select_related('team')) # refresh self.dts
 
     def get_speaker(self, team, position):
         """Returns the speaker object for team/position."""
