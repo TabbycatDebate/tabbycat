@@ -149,7 +149,7 @@ class VenueAllocator:
         preferred venues."""
 
         if len(self._preferred_venues) != len(debates):
-            logger.critical("preferred venues to unconstrained debates mismatch: "
+            logger.warning("preferred venues to unconstrained debates mismatch: "
                 "%s preferred venues, %d debates", len(self._preferred_venues), len(debates))
             # we'll still keep going, since zip() stops at the end of the shorter list
 
