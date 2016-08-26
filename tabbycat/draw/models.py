@@ -59,7 +59,7 @@ class Debate(models.Model):
             return "[{}/{}] {} vs {}".format(
                 self.round.tournament.slug, self.round.abbreviation,
                 self.aff_team.short_name, self.neg_team.short_name)
-        except DebateTeam.DoesNotExist:
+        except Team.DoesNotExist:
             return "[{}/{}] {}".format(
                 self.round.tournament.slug, self.round.abbreviation,
                 ", ".join([x.short_name for x in self.teams]))

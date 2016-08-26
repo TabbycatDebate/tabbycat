@@ -28,6 +28,9 @@ class VenueAllocator:
         self._all_venues = list(round.active_venues.order_by('-priority'))
         self._preferred_venues = self._all_venues[:len(debates)]
 
+        # take note of how many venues we expect to be short by (for error checking)
+        self._venue_shortage = max(0, len(debates) - len(self._all_venues))
+
         debate_constraints = self.collect_constraints(debates)
         debate_venues = self.allocate_constrained_venues(debate_constraints)
 
@@ -37,6 +40,9 @@ class VenueAllocator:
 
         # this set is only non-empty if there were too few venues overall
         debates_without_venues = [d for d in debates if d not in debate_venues]
+        if len(debates_without_venues) != self._venue_shortage:
+            logger.critical("Expected venue shortage %d, but %d debates without venues",
+                self._venue_shortage, len(debates_without_venues))
         debate_venues.update({debate: None for debate in debates_without_venues})
 
         self.save_venues(debate_venues)
@@ -148,10 +154,13 @@ class VenueAllocator:
         """Allocates unconstrained venues by randomly shuffling the remaining
         preferred venues."""
 
-        if len(self._preferred_venues) != len(debates):
-            logger.warning("preferred venues to unconstrained debates mismatch: "
+        if len(debates) - len(self._preferred_venues) != self._venue_shortage:
+            logger.critical("preferred venues to unconstrained debates mismatch: "
                 "%s preferred venues, %d debates", len(self._preferred_venues), len(debates))
             # we'll still keep going, since zip() stops at the end of the shorter list
+        elif len(debates) != len(self._preferred_venues):
+            logger.warning("%s preferred venues, %d debates, matches expected venue shortage %s",
+                len(self._preferred_venues), len(debates), self._venue_shortage)
 
         random.shuffle(debates)
         return {debate: venue for debate, venue in zip(debates, self._preferred_venues)}

@@ -9,9 +9,9 @@ class TabbycatModelAdminFieldsMixin:
 
     def get_round(self, obj):
         if hasattr(obj, 'debate'):
-            return obj.debate.round.seq
+            return obj.debate.round.name
         else:
-            return obj.debate_team.debate.round.abbreviation
+            return obj.debate_team.debate.round.name
     get_round.short_description = 'Round'
 
     def get_team(self, obj):
