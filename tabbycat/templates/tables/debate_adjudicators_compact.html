@@ -1,8 +1,8 @@
 <td>
-  {% for type, adj in debate.adjudicators %}
+  {% for type, adj in debate.adjudicators.with_positions %}
     {{ adj.name }}
-    {% if type == 'C' and debate.adjudicators.is_panel %} Ⓒ
-    {% elif type == 'T' %} Ⓣ{% endif %}
+    {% if type == 'c' %} Ⓒ
+    {% elif type == 't' %} Ⓣ{% endif %}
     {% if not forloop.last %},{% endif %}
   {% endfor %}
 </td>
