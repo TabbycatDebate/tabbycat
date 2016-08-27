@@ -64,7 +64,7 @@ class HungarianAllocator(Allocator):
 
         # Remove trainees
         self.adjudicators = [a for a in self.adjudicators if a.score >= self.MIN_VOTING_SCORE]
-        logger.info("Have %s non-trainee adjudidcators", len(self.adjudicators))
+        logger.info("There are %s non-trainee adjudidcators", len(self.adjudicators))
 
         # Sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
@@ -75,7 +75,9 @@ class HungarianAllocator(Allocator):
 
         n_adjudicators = len(self.adjudicators)
         n_debates = len(self.debates)
-        logger.info("Have %s debates", n_debates)
+        logger.info("There are %s debates", n_debates)
+        if n_adjudicators < n_debates:
+            logger.critical("There are %d debates but only %d adjudicators", n_debates, n_adjudicators)
 
         # If not setting panellists allocate all debates a solo chair
         if self.NO_PANELLISTS is True:
@@ -85,19 +87,20 @@ class HungarianAllocator(Allocator):
 
         # get adjudicators that can adjudicate solo
         chairs = self.adjudicators_sorted[:n_solos]
-        logger.info("Have %s chairs", len(chairs))
+        logger.info("There are %s chairs", len(chairs))
 
         # get debates that will be judged by solo adjudicators
         chair_debates = self.debates_sorted[:len(chairs)]
 
         panel_debates = self.debates_sorted[len(chairs):]
         panellists = [a for a in self.adjudicators_sorted if a not in chairs]
-        logger.info("Have %s panellists", len(panellists))
+        logger.info("There are %s panellists", len(panellists))
 
         # For tournaments with duplicate allocations there are typically not
         # enough adjudicators to form full panels, so don't crash in that case
-        if self.DUPLICATE_ALLOCATIONS is False:
-            assert len(panel_debates) * 3 <= len(panellists)
+        if not self.DUPLICATE_ALLOCATIONS and len(panellists) < len(panel_debates) * 3:
+            logger.critical("There are %d panel debates but only %d available panellists (less than %d)",
+                    len(panel_debates), len(panellists), len(panel_debates) * 3)
 
         m = Munkres()
         # TODO I think "chairs" actually means "solos", rename variables if correct
