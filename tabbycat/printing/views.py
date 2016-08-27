@@ -148,8 +148,15 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             'venue__group__name', 'venue__name',))
 
         for debate in draw:
+            if debate.venue:
+                room = debate.venue.name
+                if debate.venue.group:
+                    room += " (" + debate.venue.group.short_name + ")"
+            else:
+                room = ''
+
             debate_info = {
-                'room': "%s %s" % (debate.venue.name, "(" + debate.venue.group.short_name + ")" if debate.venue.group else '', ),
+                'room': room,
                 'aff': debate.aff_team.short_name,
                 'affEmoji': debate.aff_team.emoji,
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],
