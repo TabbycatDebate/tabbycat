@@ -1,5 +1,7 @@
 import itertools
 
+from django.db.models import Max
+
 from .models import Round
 
 BREAK_ROUND_NAMES = [
@@ -30,11 +32,12 @@ def auto_make_rounds(tournament, num_rounds):
         ).save()
 
 
-def auto_make_break_rounds(tournament, num_prelim, num_break, break_category):
+def auto_make_break_rounds(tournament, num_break, break_category):
     """Makes the number of break rounds specified. This is intended as a
     convenience function. For anything more complicated, a more advanced import
     method should be used."""
 
+    num_prelim = tournament.prelim_rounds().aggregate(Max('seq'))['seq__max']
     break_rounds = itertools.chain(BREAK_ROUND_NAMES, itertools.repeat(('Unknown break round', 'UBR')))
 
     for i, (name, abbr) in zip(range(num_break), break_rounds):

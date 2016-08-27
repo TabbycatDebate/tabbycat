@@ -44,8 +44,7 @@ class TournamentForm(ModelForm):
             open_break.save()
 
             num_break_rounds = math.ceil(math.log2(break_size))
-            auto_make_break_rounds(tournament, self.cleaned_data["num_prelim_rounds"],
-                    num_break_rounds, open_break)
+            auto_make_break_rounds(tournament, num_break_rounds, open_break)
 
         tournament.current_round = tournament.round_set.first()
         tournament.save()
