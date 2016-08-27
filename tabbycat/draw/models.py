@@ -55,17 +55,21 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __str__(self):
+        prefix = "[{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation)
+        return prefix + self.matchup
+
+    @property
+    def matchup(self):
+        # This method is used by __str__, so it's not allowed to crash (ever)
         try:
-            return "[{}/{}] {} vs {}".format(
-                self.round.tournament.slug, self.round.abbreviation,
-                self.aff_team.short_name, self.neg_team.short_name)
+            return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
         except Team.DoesNotExist:
-            return "[{}/{}] {}".format(
-                self.round.tournament.slug, self.round.abbreviation,
-                ", ".join([x.short_name for x in self.teams]))
+            return ", ".join([x.short_name for x in self.teams])
 
     @property
     def teams(self):
+        """Returns an iterable object containing the teams in the debate in
+        arbitrary order. The iterable may be a list or a QuerySet."""
         try:
             return [self._aff_team, self._neg_team]
         except AttributeError:
@@ -115,6 +119,8 @@ class Debate(models.Model):
         return getattr(self, '%s_dt' % side)
 
     def get_side(self, team):
+        # Deprecated 25/7/2016, does not appear to be used anywhere, remove after 25/8/2016.
+        warn("Debate.get_side() is deprecated", stacklevel=2)
         if self.aff_team == team:
             return 'aff'
         if self.neg_team == team:
@@ -174,11 +180,6 @@ class Debate(models.Model):
             from adjallocation.allocation import AdjudicatorAllocation
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
-
-    @property
-    def matchup(self):
-        return '%s vs %s' % (self.aff_team.short_name,
-                             self.neg_team.short_name)
 
     @property
     def get_division_motions(self):
