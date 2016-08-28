@@ -146,6 +146,7 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
         draw = self.get_round().debate_set_with_prefetches(ordering=(
             'venue__group__name', 'venue__name',))
+        show_emoji = self.get_tournament().pref('show_emoji')
 
         for debate in draw:
             if debate.venue:
@@ -158,10 +159,10 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             debate_info = {
                 'room': room,
                 'aff': debate.aff_team.short_name,
-                'affEmoji': debate.aff_team.emoji,
+                'affEmoji': debate.aff_team.emoji if debate.aff_team.emoji and show_emoji else '',
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],
                 'neg': debate.neg_team.short_name,
-                'negEmoji': debate.neg_team.emoji,
+                'negEmoji': debate.neg_team.emoji if debate.aff_team.emoji and show_emoji else '',
                 'negSpeakers': [s.name for s in debate.neg_team.speakers],
                 'panel': []
             }
