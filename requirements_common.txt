@@ -3,12 +3,12 @@
 Django==1.10.0
 dj-cmd==0.5 # Provides the dj command alias
 django-appconf==1.0.2 # Adds helper class for handling app configs
-django-dynamic-preferences==0.8.1
+django-dynamic-preferences==0.8.2
 django-debug-toolbar==1.5.0 # Debug Toolbar
-django-extensions==1.7.2 # For the generate secret command
-django-gulp==2.4.1 # Run gulp tasks with runserver/collectstatic
+django-extensions==1.7.3 # For the generate secret command
+django-gulp==2.5.0 # Run gulp tasks with runserver/collectstatic
 django-ipware==1.1.5 # IP Address logging
-django-jet==0.9.1 # Admin Backend
+django-jet==1.0.0 # Admin Backend
 psycopg2==2.6.2 # For Django to talk to postgres
 six==1.10.0 # Six is a Python 2 and 3 compatibility library.
 sqlparse==0.2.1
