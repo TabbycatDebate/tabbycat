@@ -99,7 +99,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     default_view = 'team'
 
     def get_table(self):
-        view_type = self.request.session.get('results_view', 'team')
+        view_type = self.request.session.get('results_view', self.default_view)
         if view_type == 'debate':
             return self.get_table_by_debate()
         else:
@@ -191,6 +191,7 @@ class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
 
 
 class BaseBallotSetView(LogActionMixin, FormView):
+    """Base class for views displaying ballot set entry forms."""
 
     form_class = BallotSetForm
 
