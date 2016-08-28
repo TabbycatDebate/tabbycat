@@ -6,10 +6,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import ProgrammingError
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.template import Context, Template
 from django.shortcuts import render
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView, TemplateView, View
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -17,12 +17,13 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin
+from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin,
+                                SingleObjectFromTournamentMixin)
 from tournaments.models import Round
 from utils.views import round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
 from utils.mixins import (CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin,
-                          VueTableTemplateView)
+                          SuperuserRequiredMixin, VueTableTemplateView)
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
@@ -35,17 +36,25 @@ from .utils import get_result_status_stats, populate_identical_ballotsub_lists
 logger = logging.getLogger(__name__)
 
 
-@login_required
-@tournament_view
-def toggle_postponed(request, t, debate_id):
-    debate = Debate.objects.get(pk=debate_id)
-    if debate.result_status == debate.STATUS_POSTPONED:
-        debate.result_status = debate.STATUS_NONE
-    else:
-        debate.result_status = debate.STATUS_POSTPONED
+class BaseUpdateDebateStatusView(SuperuserRequiredMixin, RoundMixin, View):
 
-    debate.save()
-    return redirect_round('results', debate.round)
+    def post(self, request, *args, **kwargs):
+        debate_id = request.POST['debate_id']
+        try:
+            debate = Debate.objects.get(round=self.get_round(), id=debate_id)
+        except Debate.DoesNotExist:
+            return HttpResponseBadRequest("Error: There isn't a debate in {} with id {}.".format(self.get_round().name, debate_id))
+        debate.result_status = self.new_status
+        debate.save()
+        return redirect_round('results', debate.round)
+
+
+class PostponeDebateView(BaseUpdateDebateStatusView):
+    new_status = Debate.STATUS_POSTPONED
+
+
+class UnpostponeDebateView(BaseUpdateDebateStatusView):
+    new_status = Debate.STATUS_NONE
 
 
 class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateView):

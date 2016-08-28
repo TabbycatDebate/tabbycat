@@ -1,3 +1,4 @@
+from draw.models import Debate
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
 
@@ -9,15 +10,15 @@ class ResultsTableBuilder(TabbycatTableBuilder):
     def get_status_meta(self, debate):
         if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
             return "glyphicon-fast-forward", 5, "Bye Debate"
-        elif debate.result_status == debate.STATUS_NONE and not debate.ballot_in:
+        elif debate.result_status == Debate.STATUS_NONE and not debate.ballot_in:
             return "glyphicon-remove text-danger", 0, "No Ballot"
-        elif debate.result_status == debate.STATUS_NONE and debate.ballot_in:
+        elif debate.result_status == Debate.STATUS_NONE and debate.ballot_in:
             return "glyphicon-inbox text-warning", 1, "Ballot is In"
-        elif debate.result_status == debate.STATUS_DRAFT:
+        elif debate.result_status == Debate.STATUS_DRAFT:
             return "glyphicon-adjust text-info", 2, "Ballot is Unconfirmed"
-        elif debate.result_status == debate.STATUS_CONFIRMED:
+        elif debate.result_status == Debate.STATUS_CONFIRMED:
             return "glyphicon-ok text-success", 3, "Ballot is Confirmed"
-        elif debate.result_status == debate.STATUS_POSTPONED:
+        elif debate.result_status == Debate.STATUS_POSTPONED:
             return "glyphicon-pause", 4, "Debate was Postponed"
         else:
             raise ValueError('Debate has no discernable status')
@@ -86,8 +87,11 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
         if self.tournament.pref('enable_postponements'):
             postpones_header = {'key': 'Postpone'}
-            postpones_cells = [{
-                'text': 'Un-Postpone' if d.result_status == d.STATUS_POSTPONED else 'Postpone',
-                'link': reverse_tournament('toggle_postponed', self.tournament, kwargs={'debate_id': d.id})
-            } for d in debates]
+            postpones_cells = []
+            for debate in debates:
+                if debate.result_status == Debate.STATUS_POSTPONED:
+                    text = '<a href="#" class="unpostpone-link" debate-id="{:d}">Unpostpone</a>'
+                else:
+                    text = '<a href="#" class="postpone-link" debate-id="{:d}">Postpone</a>'
+                postpones_cells.append(text.format(debate.id))
             self.add_column(postpones_header, postpones_cells)

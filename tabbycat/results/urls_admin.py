@@ -17,9 +17,12 @@ urlpatterns = [
         name='latest_results'),
 
     # Inline Actions
-    url(r'^toggle_postponed/(?P<debate_id>\d+)$',
-        views.toggle_postponed,
-        name='toggle_postponed'),
+    url(r'^round/(?P<round_seq>\d+)/postpone/$',
+        views.PostponeDebateView.as_view(),
+        name='postpone_debate'),
+    url(r'^round/(?P<round_seq>\d+)/unpostpone/$',
+        views.UnpostponeDebateView.as_view(),
+        name='unpostpone_debate'),
     url(r'^round/(?P<round_seq>\d+)/checkin/$',
         views.ballot_checkin,
         name='ballot_checkin'),
