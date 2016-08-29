@@ -257,7 +257,7 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, Template
         t = self.get_tournament()
         r = self.get_round()
 
-        draw = r.debate_set_with_prefetches(ordering=('room_rank',), select_related=(), speakers=False, divisions=False)
+        draw = r.debate_set_with_prefetches(ordering=('room_rank',), speakers=False, divisions=False)
 
         teams = Team.objects.filter(debateteam__debate__round=r).prefetch_related('speaker_set')
         adjs = get_adjs(self.get_round())
