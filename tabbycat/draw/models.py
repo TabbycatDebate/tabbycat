@@ -63,8 +63,13 @@ class Debate(models.Model):
         # This method is used by __str__, so it's not allowed to crash (ever)
         try:
             return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
-        except Team.DoesNotExist:
-            return ", ".join([x.short_name for x in self.teams])
+        except (Team.DoesNotExist, Team.MultipleObjectsReturned):
+            dts = self.debateteam_set.all()
+            if all(dt.position == DebateTeam.POSITION_UNALLOCATED for dt in dts):
+                return ", ".join([dt.team.short_name for dt in dts])
+            else:
+                return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display().lower())
+                    for dt in dts])
 
     @property
     def teams(self):
