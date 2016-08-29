@@ -5,7 +5,6 @@ from participants.models import Team
 from utils.admin import TabbycatModelAdminFieldsMixin
 
 from .models import Debate, DebateTeam
-from .prefetch import populate_teams
 
 
 # ==============================================================================
