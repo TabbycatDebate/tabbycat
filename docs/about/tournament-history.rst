@@ -9,7 +9,9 @@ A list of tournaments (that we know of) which have used Tabbycat.
 
 - ACT Debating Union Grades
 - `Australian Easters <http://easters2016.herokuapp.com>`_
+- Canton IV 2016
 - IIT KGP PD
+- `Joynt Scroll <https://joyntscroll2016.herokuapp.com>`_
 - `Malaysia Debate Open 2016 <http://tabs.altairtechlab.com/malaysiadebateopen2016/192.168.1.134_8080/t/mdo2016/index.html>`_
 - `Mad Mini <http://tabs.monashdebaters.com/t/madmini/>`_
 - `New Zealand Easters <http://nzeasters2016.herokuapp.com>`_
@@ -33,6 +35,7 @@ A list of tournaments (that we know of) which have used Tabbycat.
 - `Bali United Asian Debating Championships <http://tabs.altairtechlab.com/baliuadc2015/t/baliuadc/index.html>`_
 - `Daejeon Australs <http://tab.australasians2015.org>`_
 - `Derozio Memorial Debate <http://dmd2015.herokuapp.com>`_
+- `Joynt Scroll <http://joyntscroll2015.herokuapp.com/t/joynt/>`_
 - `Malaysia Debate Open <http://tabs.altairtechlab.com/malaysiadebateopen2015/>`_
 - `Mad Mini <http://tabs.monashdebaters.com/t/mad-mini-2015/>`_
 - `President's Cup <http://tabs.monashdebaters.com/t/presidents-cup-2015/>`_
@@ -53,7 +56,7 @@ A list of tournaments (that we know of) which have used Tabbycat.
 2012
 ----
 
-- `Wellington Australs <http://australs2012tab.herokuapp.com>`_
+- Wellington Australs
 
 2010
 ----
