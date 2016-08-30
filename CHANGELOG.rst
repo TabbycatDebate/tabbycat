@@ -8,6 +8,7 @@ Change Log
 
 - Added support for the United Asian Debating Championships style
 - Added support for the World Schools Debating Championships style
+- Made Windows 8+ Emoji more colorful
 - Minor bug fixes and dependency updates
 
 
