@@ -9,6 +9,7 @@ Change Log
 - Added support for the United Asian Debating Championships style
 - Added support for the World Schools Debating Championships style
 - Made Windows 8+ Emoji more colorful
+- Fixed an incompatability between Vue and IE 10-11 which caused tables to not render
 - Minor bug fixes and dependency updates
 
 
