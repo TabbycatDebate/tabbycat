@@ -10,9 +10,9 @@
       <span v-if="headerData['icon']" class="glyphicon" :class="headerData['icon']"></span>
       <span v-if="headerData['text']" v-html="headerData['text']"></span>
 
-      <template v-if="!headerData.hasOwnProperty('icon') && !headerData.hasOwnProperty('text')">
+      <span v-if="!headerData.hasOwnProperty('icon') && !headerData.hasOwnProperty('text')">
         <span>{{ headerData['key'] }}</span>
-      </template>
+      </span>
 
     </span>
 

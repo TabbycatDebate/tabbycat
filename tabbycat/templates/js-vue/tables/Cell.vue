@@ -20,23 +20,23 @@
       v-on:mouseover="checkForPopover">
 
       <!-- Links and modals -->
-      <template v-if="cellData['link'] || cellData['modal']">
+      <span v-if="cellData['link'] || cellData['modal']">
         <a v-if="cellData['link']" :href="cellData['link']" >
           <span v-html="cellData['text']"></span>
         </a>
         <a v-if="cellData['modal']" :data-target="cellData['modal']" >
           <span v-html="cellData['text']"></span>
         </a>
-      </template>
-      <template v-else>
+      </span>
+      <span v-else>
         <span v-html="cellData['text']"></span>
-      </template>
+      </span>
 
     </span>
 
-    <template v-if="cellData['subtext']">
+    <span v-if="cellData['subtext']">
       <br><span class="small" v-html="cellData['subtext']"></span>
-    </template>
+    </span>
 
     <div class="popover-raw hide" v-if="cellData['popover']">
       <li v-if="popContent['text']"
