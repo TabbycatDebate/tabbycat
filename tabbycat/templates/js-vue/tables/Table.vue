@@ -3,13 +3,12 @@
   <table class="table" :class="tableClass">
     <thead>
       <tr>
-        <template v-for="(headerIndex, headerData) in headers">
-          <smart-header
-            :header-index="headerIndex"
+        <th v-for="(headerIndex, headerData) in headers" :header-index="headerIndex"
             :header-data="headerData"
             :sort-index="sortIndex"
-            :sort-order="sortOrder"></smart-header>
-        </template>
+            :sort-order="sortOrder"
+            is="smartHeader">
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -17,16 +16,14 @@
         <td class="empty-cell text-center text-muted">No Data Available</td>
       </tr>
       <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder">
-        <template v-for="(cellIndex, cellData) in row">
-          <smart-cell
-            v-if="!cellData['component']"
-            :cell-data="cellData">
-          </smart-cell>
-          <component v-else
-            :is="cellData['component']"
-            :component-data="cellData">
-          </component>
-        </template>
+        <td v-for="(cellIndex, cellData) in row" v-if="!cellData['component']"
+          is="smartCell"
+          :cell-data="cellData">
+        </td>
+        <td v-for="(cellIndex, cellData) in row" v-else
+          is="cellData['component']"
+          :component-data="cellData">
+        </td>
       </tr>
     </tbody>
   </table>
