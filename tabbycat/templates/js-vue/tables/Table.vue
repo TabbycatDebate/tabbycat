@@ -16,13 +16,9 @@
         <td class="empty-cell text-center text-muted">No Data Available</td>
       </tr>
       <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder">
-        <td v-for="(cellIndex, cellData) in row" v-if="!cellData['component']"
-          is="smartCell"
+        <td v-for="(cellIndex, cellData) in row"
+          :is="cellData['component'] ? cellData['component'] : 'SmartCell'"
           :cell-data="cellData">
-        </td>
-        <td v-for="(cellIndex, cellData) in row" v-else
-          is="cellData['component']"
-          :component-data="cellData">
         </td>
       </tr>
     </tbody>
