@@ -11,7 +11,6 @@ if (aff_speakers.indexOf("Speaker 1") != -1 && neg_speakers.indexOf("Speaker 1")
   $("div.neg.s2").find("select :nth-child(3)").prop('selected', true);
   $("div.neg.s3").find("select :nth-child(4)").prop('selected', true);
   $("div.neg.s4").find("select :nth-child(5)").prop('selected', true);
-  $("select.required.error").removeClass("error");
 }
 
 function refresh_totals(scoresheet) {

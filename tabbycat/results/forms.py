@@ -213,7 +213,8 @@ class BallotSetForm(forms.Form):
                 (str(teams[1].id) + "," + str(teams[0].id), "%s affirmed, %s negated" % (teams[1].short_name, teams[0].short_name))
             ]
             self.fields['choose_sides'] = forms.TypedChoiceField(
-                choices=side_choices, coerce=lambda x: tuple(Team.objects.get(id=int(v)) for v in x.split(","))
+                choices=side_choices,
+                coerce=lambda x: tuple(Team.objects.get(id=int(v)) for v in x.split(","))
             )
             for team in self.debate.teams:
                 self.fields['team_%d' % team.id] = forms.ModelChoiceField(queryset=team.speakers, required=False)
@@ -240,7 +241,7 @@ class BallotSetForm(forms.Form):
             scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
-                    widget=forms.NumberInput(attrs={'class': 'number'}),
+                    widget=forms.NumberInput(attrs={'class': 'required number'}),
                     tournament=self.tournament)
 
         # 5. If forfeits are enabled, don't require some fields and add the forfeit field
