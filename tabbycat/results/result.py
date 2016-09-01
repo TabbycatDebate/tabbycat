@@ -68,8 +68,8 @@ class ResultBuffer:
         self._other = {debateteams[0]: debateteams[1], debateteams[1]: debateteams[0]}
 
     def assert_loaded(self):
-        """Verifies that the self.dts dict is correctly set up. Returns the
-        aff and neg DebateTeams as a convenience for subclasses."""
+        """Verifies that the self.dts list and self._dts_lookup dict are
+        correctly set up."""
 
         assert hasattr(self, 'POSITIONS')
         assert len(self.dts) == 2
@@ -78,7 +78,7 @@ class ResultBuffer:
         assert all(dt in self._other for dt in self.dts)
 
         assert len(self._dts_lookup) == 2 or len(self._dts_lookup) == 4
-        if len(self.dts) == 4: # known sides
+        if len(self._dts_lookup) == 4: # known sides
             assert 'aff' in self._dts_lookup
             assert 'neg' in self._dts_lookup
 
