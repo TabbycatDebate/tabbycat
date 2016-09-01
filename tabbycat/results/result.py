@@ -803,15 +803,14 @@ class BallotSet(ResultBuffer):
 class ForfeitBallotSet(BallotSet):
     # This is WADL-specific for now
 
-    def __init__(self, ballotsub, forfeiter):
+    def __init__(self, ballotsub, forfeiter, load=True):
         """Constructor.
         'ballotsub' must be a BallotSubmission.
         """
-        self.ballotsub = ballotsub
-        self.debate = ballotsub.debate
+        super().__init__(ballotsub, load)
+
         self.forfeiter = forfeiter
         self.motion_veto = None
-        self.dts = self.debate.debateteam_set.all() # Note, this is a QuerySet
 
     def _save_team(self, dt):
         if self.forfeiter == dt:
