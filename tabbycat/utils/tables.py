@@ -227,33 +227,33 @@ class TabbycatTableBuilder(BaseTableBuilder):
         return cell
 
     def _result_cell(self, ts, compress=False, show_score=False, show_ballots=False):
-        if not hasattr(ts, 'debate_team'):
+        if not hasattr(ts, 'debate_team') or not hasattr(ts.debate_team.opponent, 'team'):
             return {'text': '-'}
 
         opp = ts.debate_team.opponent.team
 
         cell = {
-            'text': " vs " + (opp.emoji or "…") if compress else opp.short_name,
-            'popover': {'content': [{'text': ''}]}
+            'text': " vs " + ('<i class="emoji">' + opp.emoji + '</i>' or "…") if compress else opp.short_name,
+            'popover': {'content': [{'text': ''}], 'title': ''}
         }
         result_popover = cell['popover']['content'][0]
         if ts.win is True:
             cell['icon'] = "glyphicon-arrow-up text-success"
             cell['sort'] = 1
-            result_popover['text'] = "Won against " + opp.long_name
+            cell['popover']['title'] = "Won against " + opp.long_name
         elif ts.win is False:
             cell['icon'] = "glyphicon-arrow-down text-danger"
             cell['sort'] = 2
-            result_popover['text'] = "Lost to " + opp.long_name
+            cell['popover']['title'] = "Lost to " + opp.long_name
         else: # None
             cell['icon'] = ""
             cell['sort'] = 3
-            result_popover['text'] = "No result for debate against " + opp.long_name
+            cell['popover']['title'] = "No result for debate against " + opp.long_name
 
         if show_score:
             cell['subtext'] = metricformat(ts.score)
             cell['popover']['content'].append(
-                {'text': 'Received %s team points' % metricformat(ts.score)})
+                {'text': 'Received <strong>%s</strong> team points' % metricformat(ts.score)})
 
         if show_ballots:
             cell['popover']['content'].append(
@@ -261,7 +261,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     self.tournament, kwargs={'debate_id': ts.debate_team.debate.id})})
 
         if self._show_speakers_in_draw:
-            cell['popover']['content'].append({'text': "Speakers in " + opp.short_name + ": " + ", ".join([s.name for s in opp.speakers])})
+            cell['popover']['content'].append({'text': "Speakers in <strong>" + opp.short_name + "</strong>: " + ", ".join([s.name for s in opp.speakers])})
 
         if self._show_record_links:
             cell['popover']['content'].append(
