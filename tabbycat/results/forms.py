@@ -240,14 +240,15 @@ class BallotSetForm(forms.Form):
             scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
-                    widget=forms.NumberInput(attrs={'class': 'required number'}),
+                    widget=forms.NumberInput(attrs={'class': 'number'}),
                     tournament=self.tournament)
 
         # 5. If forfeits are enabled, don't require some fields and add the forfeit field
         if self.using_forfeits:
             for side, pos in self.SIDES_AND_POSITIONS:
-                self.fields[self._fieldname_score(adj, side, pos)].required = False
-                self.fields[self._fieldname_speaker(side, pos)].required = False
+                for adj in self.adjudicators:
+                    self.fields[self._fieldname_score(adj, side, pos)].required = False
+                    self.fields[self._fieldname_speaker(side, pos)].required = False
             if self.using_motions:
                 self.fields['motion'].required = False
             if self.ballotsub.forfeit is not None:
