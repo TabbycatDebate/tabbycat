@@ -247,9 +247,9 @@ class BallotSetForm(forms.Form):
         # 5. If forfeits are enabled, don't require some fields and add the forfeit field
         if self.using_forfeits:
             for side, pos in self.SIDES_AND_POSITIONS:
+                self.fields[self._fieldname_speaker(side, pos)].required = False
                 for adj in self.adjudicators:
                     self.fields[self._fieldname_score(adj, side, pos)].required = False
-                    self.fields[self._fieldname_speaker(side, pos)].required = False
             if self.using_motions:
                 self.fields['motion'].required = False
             if self.ballotsub.forfeit is not None:
