@@ -236,7 +236,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'text': " vs " + ('<i class="emoji">' + opp.emoji + '</i>' or "…") if compress else opp.short_name,
             'popover': {'content': [{'text': ''}], 'title': ''}
         }
-        result_popover = cell['popover']['content'][0]
+
         if ts.win is True:
             cell['icon'] = "glyphicon-arrow-up text-success"
             cell['sort'] = 1
