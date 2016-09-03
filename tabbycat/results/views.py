@@ -36,26 +36,22 @@ from .utils import get_result_status_stats, populate_identical_ballotsub_lists
 logger = logging.getLogger(__name__)
 
 
-class BaseUpdateDebateStatusView(SuperuserRequiredMixin, RoundMixin, View):
+class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
 
-    def post(self, request, *args, **kwargs):
-        debate_id = request.POST['debate_id']
-        try:
-            debate = Debate.objects.get(round=self.get_round(), id=debate_id)
-        except Debate.DoesNotExist:
-            return HttpResponseBadRequest("Error: There isn't a debate in {} with id {}.".format(self.get_round().name, debate_id))
-        debate.result_status = self.new_status
-        debate.save()
-        return redirect_round('results', debate.round)
+    template_name = 'public_results_index.html'
+    public_page_preference = 'public_results'
 
-
-class PostponeDebateView(BaseUpdateDebateStatusView):
-    new_status = Debate.STATUS_POSTPONED
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs["rounds"] = tournament.round_set.filter(
+            seq__lt=tournament.current_round.seq,
+            silent=False).order_by('seq')
+        return super().get_context_data(**kwargs)
 
 
-class UnpostponeDebateView(BaseUpdateDebateStatusView):
-    new_status = Debate.STATUS_NONE
-
+# ==============================================================================
+# Views that show the results for all rounds in a debate
+# ==============================================================================
 
 class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateView):
 
@@ -186,18 +182,34 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         return super().get_context_data(**kwargs)
 
 
-class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
+# ==============================================================================
+# Views that update the debate status (only)
+# ==============================================================================
 
-    template_name = 'public_results_index.html'
-    public_page_preference = 'public_results'
+class BaseUpdateDebateStatusView(SuperuserRequiredMixin, RoundMixin, View):
 
-    def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        kwargs["rounds"] = tournament.round_set.filter(
-            seq__lt=tournament.current_round.seq,
-            silent=False).order_by('seq')
-        return super().get_context_data(**kwargs)
+    def post(self, request, *args, **kwargs):
+        debate_id = request.POST['debate_id']
+        try:
+            debate = Debate.objects.get(round=self.get_round(), id=debate_id)
+        except Debate.DoesNotExist:
+            return HttpResponseBadRequest("Error: There isn't a debate in {} with id {}.".format(self.get_round().name, debate_id))
+        debate.result_status = self.new_status
+        debate.save()
+        return redirect_round('results', debate.round)
 
+
+class PostponeDebateView(BaseUpdateDebateStatusView):
+    new_status = Debate.STATUS_POSTPONED
+
+
+class UnpostponeDebateView(BaseUpdateDebateStatusView):
+    new_status = Debate.STATUS_NONE
+
+
+# ==============================================================================
+# Ballot entry form views
+# ==============================================================================
 
 class BaseBallotSetView(LogActionMixin, FormView):
     """Base class for views displaying ballot set entry forms."""
@@ -375,6 +387,10 @@ class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Ba
     allow_null_tournament = True
 
 
+# ==============================================================================
+# JSON views for tournament overview page
+# ==============================================================================
+
 @login_required
 @tournament_view
 def ballots_status(request, t):
@@ -438,6 +454,10 @@ def latest_results(request, t):
 
     return HttpResponse(json.dumps(results_objects), content_type="text/json")
 
+
+# ==============================================================================
+# Ballot check-in views
+# ==============================================================================
 
 @login_required
 @round_view
@@ -540,7 +560,12 @@ def post_ballot_checkin(request, round):
     return HttpResponse(json.dumps(obj))
 
 
+# ==============================================================================
+# Other public views
+# ==============================================================================
+
 class PublicBallotScoresheetsView(CacheMixin, PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TemplateView):
+    """Public view showing the confirmed ballots for a debate as scoresheets."""
 
     model = Debate
     public_page_preference = 'ballots_released'
@@ -577,6 +602,8 @@ class PublicBallotScoresheetsView(CacheMixin, PublicTournamentPageMixin, SingleO
 
 
 class PublicBallotSubmissionIndexView(CacheMixin, PublicTournamentPageMixin, TemplateView):
+    """Public view listing all debate-adjudicators for the current round, as
+    links for them to enter their ballots."""
 
     public_page_preference = 'public_ballots'
 
