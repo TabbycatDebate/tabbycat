@@ -119,8 +119,8 @@ class TestOneUpOneDown(unittest.TestCase):
         return self.draw(data)
 
     def test_prefer_fewer_swaps(self):
-        """It should swap the middle two debates, as opposed to the
-        top two and last two."""
+        # It should swap the middle two debates, as opposed to the top two and
+        # last two.
         data = (((1, 'C'), (5, 'B')),
                 ((2, 'A'), (6, 'A')),
                 ((3, 'C'), (7, 'C')),
