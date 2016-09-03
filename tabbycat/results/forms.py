@@ -495,6 +495,8 @@ class BallotSetForm(forms.Form):
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
 
+        return self.ballotsub
+
     # --------------------------------------------------------------------------
     # Template access methods
     # --------------------------------------------------------------------------

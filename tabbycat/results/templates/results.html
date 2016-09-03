@@ -59,5 +59,43 @@
 
   {{ block.super }}
 
+  <form id="postponeForm" action="{% round_url postpone_debate %}" method="POST">
+    <input type="hidden" id="postpone_debate_id" name="debate_id" />
+  </form>
+
+  <form id="unpostponeForm" action="{% round_url unpostpone_debate %}" method="POST">
+    <input type="hidden" id="unpostpone_debate_id" name="debate_id" />
+  </form>
+
 {% endblock content %}
 
+{% block js %}
+
+  {{ block.super }}
+
+  <script>
+    $(document).ready( function() {
+
+      $(".postpone-link").each(function () {
+        $(this).click( function() {
+          var debate_id = $(this).attr("debate-id");
+          $("#postpone_debate_id").val(debate_id);
+          $("#postponeForm").submit();
+          $(this).html("<i>Postponing…</i>");
+          return false;
+        });
+      });
+
+      $(".unpostpone-link").each( function() {
+        $(this).click( function() {
+          var debate_id = $(this).attr("debate-id");
+          $("#unpostpone_debate_id").val(debate_id);
+          $("#unpostponeForm").submit();
+          $(this).html("<i>Unpostponing…</i>");
+          return false;
+        });
+      });
+
+    });
+  </script>
+{% endblock %}

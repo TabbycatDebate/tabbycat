@@ -85,8 +85,8 @@ class PostOnlyRedirectView(View):
 class JsonDataResponseView(View):
     """Mixings for views that dump back a json response"""
 
-    def get_data():
-        pass
+    def get_data(self):
+        raise NotImplementedError
 
     def get(self, request, *args, **kwargs):
         self.request = request

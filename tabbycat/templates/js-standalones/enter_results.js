@@ -220,15 +220,3 @@ $('.js-team-speakers select').change(update_speakers).each(update_speaker);
   });
 
 {% endif %}
-
-{% if ballotsub.submitter_type == ballotsub.SUBMITTER_PUBLIC %}
-  function preSubmit() {
-      $('#ballot_set input').removeAttr('readonly');
-      $('#ballot_set select').removeAttr('disabled');
-  }
-  $('#ballot_set input[type="number"]').attr('readonly', 'true');
-  $('#ballot_set select').attr('disabled', 'true');
-  $('#submit').click(function() {
-      preSubmit();
-  });
-{% endif %}

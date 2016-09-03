@@ -77,7 +77,7 @@
                   <input id="submit" class="save btn btn-success btn-block submit-disable" type="submit" value="Save Ballot" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
                 </div>
                 <div class="col-sm-4">
-                  <a class="btn btn-default btn-block btn-danger" href="{% round_url results %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel Entry</a>
+                  <a class="btn btn-default btn-block btn-danger" href="{% round_url results debate.round %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel Entry</a>
                 </div>
               </div>
             </div>
