@@ -23,6 +23,8 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/unpostpone/$',
         views.UnpostponeDebateView.as_view(),
         name='results-unpostpone-debate'),
+
+    # Ballot check-in
     url(r'^round/(?P<round_seq>\d+)/checkin/$',
         views.BallotCheckinView.as_view(),
         name='results-ballot-checkin'),
