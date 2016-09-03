@@ -17,9 +17,12 @@ urlpatterns = [
         name='latest_results'),
 
     # Inline Actions
-    url(r'^toggle_postponed/(?P<debate_id>\d+)$',
-        views.toggle_postponed,
-        name='toggle_postponed'),
+    url(r'^round/(?P<round_seq>\d+)/postpone/$',
+        views.PostponeDebateView.as_view(),
+        name='postpone_debate'),
+    url(r'^round/(?P<round_seq>\d+)/unpostpone/$',
+        views.UnpostponeDebateView.as_view(),
+        name='unpostpone_debate'),
     url(r'^round/(?P<round_seq>\d+)/checkin/$',
         views.ballot_checkin,
         name='ballot_checkin'),
@@ -31,10 +34,10 @@ urlpatterns = [
         name='post_ballot_checkin'),
 
     # Ballots
-    url(r'^ballots/(?P<ballotsub_id>\d+)/edit/$',
-        views.edit_ballotset,
+    url(r'^ballots/(?P<pk>\d+)/edit/$',
+        views.EditBallotSetView.as_view(),
         name='edit_ballotset'),
     url(r'^debate/(?P<debate_id>\d+)/new/$',
-        views.new_ballotset,
+        views.NewBallotSetView.as_view(),
         name='new_ballotset'),
 ]
