@@ -2,15 +2,27 @@
 Change Log
 ==========
 
+
+1.1.0 (Egyptian Mau)
+--------------------
+
+- Added support for the United Asian Debating Championships style
+- Added support for the World Schools Debating Championships style
+- Made Windows 8+ Emoji more colorful
+- Fixed an incompatability between Vue and IE 10-11 which caused tables to not render
+- Minor bug fixes and dependency updates
+
+
 1.0.1
 -----
 
-- Fixed a minor bug with the visual importer affecting similarly named Institutions
+- Fixed a minor bug with the visual importer affecting similarly named institutions
+- Fixed error message when user tries to auto-allocate adjudicators on unconfirmed or released draw
 - Minor docs edits
 
 
-1.0.0
------
+1.0.0 (Devon Rex)
+-----------------
 Redesigned and redeveloped adjudicator allocation page
   - Redesigned interface, featuring clearer displays of conflict and diversity information
   - Changes to importances and panels are now automatically saved
@@ -36,8 +48,8 @@ Feedback
 - Many other small bug fixes, refactors, optimisations, and documentation updates
 
 
-0.9.0
------
+0.9.0 (Chartreux)
+-----------------
 - Added a beta implementation of the break rounds workflow
 - Added venue constraints, to allow participants or divisions to preferentially be given venues from predefined groups
 - Added a button to regenerate draws
@@ -74,8 +86,8 @@ Feedback
 - Venues Importer wont show VenueGroup import info unless that option is enabled
 
 
-0.8.0
------
+0.8.0 (Bengal)
+--------------
 
 - Upgraded to Python 3.4, dropped support for Python 2
 - Restructured directories and, as a consequence, changed database schema
@@ -88,3 +100,19 @@ Feedback
 - Moved data utility scripts to Django management commands
 - Changed emoji to Unicode characters
 - Various other fixes and refinements
+
+
+0.7.0 (Abyssinian)
+------------------
+
+- Support for multiple tournaments
+- Improved and extensible tournament data importer
+- Display gender, region, and break category in adjudicator allocation
+- New views for online adjudicator feedback
+- Customisable adjudicator feedback forms
+- Randomised URLs for public submission
+- Customisable break categories
+- Computerised break generation (break round draws not supported)
+- Lots of fixes, interface touch-ups and performance enhancements
+- Now requires Django 1.8 (and other package upgrades)
+

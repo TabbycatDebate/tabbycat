@@ -31,7 +31,7 @@ from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
-from .utils import get_result_status_stats
+from .utils import get_result_status_stats, populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
 
@@ -197,14 +197,11 @@ def edit_ballotset(request, t, ballotsub_id):
     ballotsub = get_object_or_404(BallotSubmission, id=ballotsub_id)
     debate = ballotsub.debate
 
-    all_ballotsubs = debate.ballotsubmission_set.order_by('version')
+    all_ballotsubs = debate.ballotsubmission_set.order_by('version').select_related('submitter', 'confirmer', 'motion')
     if not request.user.is_superuser:
         all_ballotsubs = all_ballotsubs.exclude(discarded=True)
 
-    identical_ballotsubs_dict = debate.identical_ballotsubs_dict
-    for b in all_ballotsubs:
-        if b in identical_ballotsubs_dict:
-            b.identical_ballotsub_versions = identical_ballotsubs_dict[b]
+    populate_identical_ballotsub_lists(all_ballotsubs)
 
     if request.method == 'POST':
         form = BallotSetForm(ballotsub, request.POST)
@@ -427,12 +424,14 @@ class DebateBallotCheckinError(Exception):
 def get_debate_from_ballot_checkin_request(request, round):
     # Called by the submit button on the ballot checkin form.
     # Returns the message that should go in the "success" field.
-    v = request.POST.get('venue')
+
+    if request.POST.get('venue') is None:
+        raise DebateBallotCheckinError('There aren\'t any venues with that name')
 
     try:
-        venue = Venue.objects.get(id=v)
+        venue = Venue.objects.get(id=request.POST.get('venue'))
     except Venue.DoesNotExist:
-        raise DebateBallotCheckinError('There aren\'t any venues with that name (id of "' + v + '").')
+        raise DebateBallotCheckinError('There aren\'t any venues with that name')
 
     try:
         debate = Debate.objects.get(round=round, venue=venue)

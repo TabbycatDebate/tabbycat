@@ -45,18 +45,18 @@ class TestBasicStandings(TestCase):
                              'points': 2,
                              'speaks_sum': 787.5}},
          'teams': ['A', 'B', 'C', 'D'],
-         'teamscores': [{'AB': {'A': {'margin': 22.5, 'points': 1, 'score': 265.0, 'win': True},
-                                'B': {'margin': -22.5, 'points': 0, 'score': 242.5, 'win': False}},
-                         'CD': {'C': {'margin': 20.0, 'points': 1, 'score': 273.0, 'win': True},
-                                'D': {'margin': -20.0, 'points': 0, 'score': 253.0, 'win': False}}},
-                        {'AC': {'A': {'margin': -1.5, 'points': 0, 'score': 263.5, 'win': False},
-                                'C': {'margin': 1.5, 'points': 1, 'score': 265.0, 'win': True}},
-                         'BD': {'B': {'margin': -14.5, 'points': 0, 'score': 260.0, 'win': False},
-                                'D': {'margin': 14.5, 'points': 1, 'score': 274.5, 'win': True}}},
-                        {'AB': {'A': {'margin': 25.0, 'points': 1, 'score': 276.0, 'win': True},
-                                'B': {'margin': -25.0, 'points': 0, 'score': 251.0, 'win': False}},
-                         'CD': {'C': {'margin': -13.5, 'points': 0, 'score': 246.5, 'win': False},
-                                'D': {'margin': 13.5, 'points': 1, 'score': 260.0, 'win': True}}}]}
+         'teamscores': [{'AB': {'A': {'margin': 22.5,  'points': 1, 'score': 265.0, 'win': True,  'votes_given': 1, 'votes_possible': 1},
+                                'B': {'margin': -22.5, 'points': 0, 'score': 242.5, 'win': False, 'votes_given': 0, 'votes_possible': 1}},
+                         'CD': {'C': {'margin': 20.0,  'points': 1, 'score': 273.0, 'win': True,  'votes_given': 1, 'votes_possible': 1},
+                                'D': {'margin': -20.0, 'points': 0, 'score': 253.0, 'win': False, 'votes_given': 0, 'votes_possible': 1}}},
+                        {'AC': {'A': {'margin': -1.5,  'points': 0, 'score': 263.5, 'win': False, 'votes_given': 0, 'votes_possible': 1},
+                                'C': {'margin': 1.5,   'points': 1, 'score': 265.0, 'win': True,  'votes_given': 1, 'votes_possible': 1}},
+                         'BD': {'B': {'margin': -14.5, 'points': 0, 'score': 260.0, 'win': False, 'votes_given': 0, 'votes_possible': 1},
+                                'D': {'margin': 14.5,  'points': 1, 'score': 274.5, 'win': True,  'votes_given': 1, 'votes_possible': 1}}},
+                        {'AB': {'A': {'margin': 25.0,  'points': 1, 'score': 276.0, 'win': True,  'votes_given': 1, 'votes_possible': 1},
+                                'B': {'margin': -25.0, 'points': 0, 'score': 251.0, 'win': False, 'votes_given': 0, 'votes_possible': 1}},
+                         'CD': {'C': {'margin': -13.5, 'points': 0, 'score': 246.5, 'win': False, 'votes_given': 0, 'votes_possible': 1},
+                                'D': {'margin': 13.5,  'points': 1, 'score': 260.0, 'win': True,  'votes_given': 1, 'votes_possible': 1}}}]}
 
     rankings = ('rank',)
 

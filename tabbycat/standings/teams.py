@@ -192,18 +192,37 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             standings.add_metric(team, self.key, draw_strength)
 
 
-class NumberOfAdjudicatorsMetricAnnotator(BaseMetricAnnotator):
-    """Metric annotator for number of adjudicators."""
+class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for number of votes given by a panel.
+
+    The metric normalizes each debate to an assumed typical panel size. For
+    example, if `self.adjs_per_debate == 3`, but a particular debate has a panel
+    of five, then for that debate, a team winning on a 4-1 split will earn
+    "2.4 votes" for that debate."""
 
     key = "num_adjs"
-    name = "number of adjudicators"
-    abbr = "Adjs"
+    name = "number of adjudicators who voted for this team"
+    abbr = "Ballots"
+    choice_name = "votes/ballots carried"
+    function = "SUM"
 
     def __init__(self, adjs_per_debate=3):
         self.adjs_per_debate = 3
 
+    @property
+    def field(self):
+        return "CAST(votes_given AS float) / NULLIF(votes_possible, 0) * {:d}".format(self.adjs_per_debate)
+
     def annotate(self, queryset, standings, round=None):
-        raise NotImplementedError("number of adjudicators doesn't work yet")
+        super().annotate(queryset, standings, round)
+
+        # If the number of ballots carried by every team is an integer, then
+        # it's probably (though not certainly) the case that there are no
+        # "weird" cases causing any fractional numbers of votes due to
+        # normalization. In that case, convert all metrics to integers.
+        if all(tsi.metrics[self.key] == int(tsi.metrics[self.key]) for tsi in standings.infoview()):
+            for tsi in standings.infoview():
+                tsi.metrics[self.key] = int(tsi.metrics[self.key])
 
 
 class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
@@ -306,7 +325,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "draw_strength" : DrawStrengthMetricAnnotator,
         "margin_sum"    : SumMarginMetricAnnotator,
         "margin_avg"    : AverageMarginMetricAnnotator,
-        # "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
+        "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
         "wbw"           : WhoBeatWhomMetricAnnotator,
         "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
     }

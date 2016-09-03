@@ -5,10 +5,9 @@ from django.views.generic import FormView, TemplateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from utils.misc import reverse_tournament
-from utils.mixins import (CacheMixin, PostOnlyRedirectView, SingleObjectFromTournamentMixin,
-                          SuperuserRequiredMixin, VueTableTemplateView)
+from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
-from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
+from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
 
 from .utils import get_breaking_teams
 from .generator import BreakGenerator

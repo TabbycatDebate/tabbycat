@@ -265,7 +265,9 @@ class BaseStandingsGenerator:
         standings = Standings(queryset, rank_filter=self.options["rank_filter"])
 
         for annotator in self.metric_annotators:
+            logger.debug("Running metric annotator: %s", annotator.name)
             annotator.run(queryset, standings, round)
+        logger.debug("Metric annotators done.")
 
         if self.options["include_filter"]:
             standings.filter(self.options["include_filter"])
@@ -273,7 +275,9 @@ class BaseStandingsGenerator:
         standings.sort(self.precedence, self._tiebreak_func)
 
         for annotator in self.ranking_annotators:
+            logger.debug("Running ranking annotator: %s", annotator.name)
             annotator.run(standings)
+        logger.debug("Ranking annotators done.")
 
         return standings
 
@@ -288,7 +292,7 @@ class BaseStandingsGenerator:
             raise StandingsError("The same {} would be added twice:\n{!r}".format(type_str, names))
 
     def _interpret_metrics(self, metrics, extra_metrics):
-        """Given a list of metrics, sets:
+        """Given a list of metric keys, sets:
             - `self.precedence` to a copy of `metrics` with repeated metric annotators numbered
             - `self.metric_annotators` to the appropriate metric annotators
         For example:
@@ -298,6 +302,10 @@ class BaseStandingsGenerator:
             self.precedence = ['points', 'wbw1', 'speaks', 'wbw2', 'margins']
             self.metric_annotators = [PointsMetricAnnotator(), WhoBeatWhomMetricAnnotator(1, ('points',)) ...]
         ```
+
+        The metrics in `extra_metrics` also have their annotators added to
+        `self.metric_annotators`, but their keys are not added to
+        `self.precedence`.
         """
         self.precedence = list()
         self.metric_annotators = list()

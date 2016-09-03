@@ -31,7 +31,7 @@ class MasterSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         active_tournaments = Tournament.objects.filter(active=True)
         for tournament in list(active_tournaments):
             tournament.debates = Debate.objects.select_related(
-                'division', 'division__venue_group__short_name', 'round',
+                'division', 'division__venue_group', 'round',
                 'round__tournament').filter(
                     # All Debates, with a matching round, at the same venue group name
                     round__seq=round.seq,
@@ -58,7 +58,7 @@ class RoomSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
                 # All Debates, with a matching round, at the same venue group name
                 round__seq=round.seq,
                 venue=venue
-            ).select_related('round__tournament__short_name').order_by('round__tournament__seq')
+            ).select_related('round__tournament').order_by('round__tournament__seq')
 
         kwargs['base_venue_group'] = base_venue_group
         kwargs['venues'] = venues
@@ -140,20 +140,29 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'scoresheet_list.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['motions'] = Motion.objects.filter(round=self.get_round()).values('text').order_by('seq')
+        kwargs['motions'] = list(Motion.objects.filter(
+            round=self.get_round()).values_list('text', flat=True).order_by('seq'))
         kwargs['ballots'] = []
 
         draw = self.get_round().debate_set_with_prefetches(ordering=(
             'venue__group__name', 'venue__name',))
+        show_emoji = self.get_tournament().pref('show_emoji')
 
         for debate in draw:
+            if debate.venue:
+                room = debate.venue.name
+                if debate.venue.group:
+                    room += " (" + debate.venue.group.short_name + ")"
+            else:
+                room = ''
+
             debate_info = {
-                'room': "%s %s" % (debate.venue.name, "(" + debate.venue.group.short_name + ")" if debate.venue.group else '', ),
+                'room': room,
                 'aff': debate.aff_team.short_name,
-                'affEmoji': debate.aff_team.emoji,
+                'affEmoji': debate.aff_team.emoji if debate.aff_team.emoji and show_emoji else '',
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],
                 'neg': debate.neg_team.short_name,
-                'negEmoji': debate.neg_team.emoji,
+                'negEmoji': debate.neg_team.emoji if debate.aff_team.emoji and show_emoji else '',
                 'negSpeakers': [s.name for s in debate.neg_team.speakers],
                 'panel': []
             }

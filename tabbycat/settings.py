@@ -24,15 +24,15 @@ LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-TABBYCAT_VERSION = '1.0.1'
-TABBYCAT_CODENAME = 'Devon Rex'
-READTHEDOCS_VERSION = 'v1.0.1'
+TABBYCAT_VERSION = '1.1.0'
+TABBYCAT_CODENAME = 'Egyptian Mau'
+READTHEDOCS_VERSION = 'v1.1.0'
 
 # ==============================================================================
 # Django-specific Module
 # ==============================================================================
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -41,7 +41,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'utils.middleware.DebateMiddleware')
+    'utils.middleware.DebateMiddleware'
+]
 
 TABBYCAT_APPS = ('actionlog',
                  'adjallocation',
@@ -68,6 +69,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django_gulp',  # Asset compilation; must be before staticfiles
+    'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
@@ -142,7 +144,7 @@ STATICFILES_FINDERS = (
 )
 
 # Whitenoise Gzipping and unique names
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
 
 # When running server side always use build not watch
 GULP_PRODUCTION_COMMAND = "npm run gulp build -- --production"

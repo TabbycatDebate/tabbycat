@@ -2,21 +2,21 @@ from django.contrib import admin
 
 from .models import DebateTeamMotionPreference, Motion
 
-from utils.admin import BaseModelAdmin
+from utils.admin import TabbycatModelAdminFieldsMixin
 
 
 # ==============================================================================
 # Motions
 # ==============================================================================
 
-class MotionAdmin(admin.ModelAdmin, BaseModelAdmin):
+class MotionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('reference', 'round', 'seq', 'get_tournament')
     list_filter = ('round', 'divisions')
 
 admin.site.register(Motion, MotionAdmin)
 
 
-class DebateTeamMotionPreferenceAdmin(admin.ModelAdmin, BaseModelAdmin):
+class DebateTeamMotionPreferenceAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('ballot_submission', 'get_confirmed', 'get_team',
                     'get_team_position', 'preference', 'get_motion_ref')
 

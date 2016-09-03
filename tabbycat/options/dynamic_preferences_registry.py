@@ -304,16 +304,29 @@ class FeedbackReturnLocation(StringPreference):
 
 @tournament_preferences_registry.register
 class FeedbackPaths(ChoicePreference):
-    help_text = "Used to inform available choices in the feedback forms (both online and printed) and feedback progress"
+    help_text = "Used to inform available choices in the feedback forms for adjudicators (both online and printed) and feedback progress"
     verbose_name = "Allow and expect feedback to be submitted by"
     section = feedback
     name = 'feedback_paths'
     choices = (
-        ('minimal', 'Chairs on panellists and trainees, teams on orallists'),
-        ('with-p-on-c', 'Panellists on chairs, chairs on panellists and trainees, teams on orallists'),
-        ('all-adjs', 'All adjudicators (including trainees) on each other, teams on orallists'),
+        ('minimal', 'Chairs on panellists and trainees'),
+        ('with-p-on-c', 'Panellists on chairs, chairs on panellists and trainees'),
+        ('all-adjs', 'All adjudicators (including trainees) on each other'),
     )
     default = 'minimal'
+
+
+@tournament_preferences_registry.register
+class FeedbackFromTeams(ChoicePreference):
+    verbose_name = "Expect feedback to be submitted by teams on"
+    help_text = "Used to inform available choices in the feedback forms for teams (both online and printed) and feedback progress; this option is used by, e.g., UADC"
+    section = feedback
+    name = 'feedback_from_teams'
+    choices = (
+        ('orallist', 'Orallist only (voting panellists permitted, with prompts to select orallist)'),
+        ('all-adjs', 'All adjudicators in their panels (including trainees)'),
+    )
+    default = 'orallist'
 
 
 @tournament_preferences_registry.register

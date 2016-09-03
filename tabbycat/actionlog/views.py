@@ -1,6 +1,7 @@
 from django.template import Context, Template
 
-from utils.mixins import JsonDataResponseView, LoginRequiredMixin, TournamentMixin
+from utils.mixins import JsonDataResponseView, LoginRequiredMixin
+from tournaments.mixins import TournamentMixin
 
 from .models import ActionLogEntry
 

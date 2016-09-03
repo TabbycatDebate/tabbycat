@@ -1,4 +1,8 @@
+import logging
+
 from django.forms import ChoiceField, MultiValueField, MultiWidget, Select
+
+logger = logging.getLogger(__name__)
 
 EMPTY_CHOICE = '__no_choice__'
 
@@ -37,5 +41,5 @@ class MultiValueChoiceField(MultiValueField):
     def compress(self, data_list):
         """Removes empty items from the list."""
         result = [x for x in data_list if x != EMPTY_CHOICE]
-        print("compress", data_list, result)
+        logger.debug("compressing: %s to %s", data_list, result)
         return result

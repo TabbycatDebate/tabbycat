@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from adjallocation.models import DebateAdjudicator
-from utils.admin import BaseModelAdmin
+from participants.models import Team
+from utils.admin import TabbycatModelAdminFieldsMixin
 
 from .models import Debate, DebateTeam
 
@@ -10,7 +11,7 @@ from .models import Debate, DebateTeam
 # DebateTeam
 # ==============================================================================
 
-class DebateTeamAdmin(admin.ModelAdmin, BaseModelAdmin):
+class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('team', 'get_tournament', 'get_round', 'position')
     search_fields = ('team', )
     raw_id_fields = ('debate', 'team', )
@@ -40,7 +41,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'round', 'bracket', 'aff_team', 'neg_team',
+    list_display = ('id', 'round', 'bracket', 'get_aff_team', 'get_neg_team',
                     'result_status')
     list_filter = ('round__tournament', 'round', 'division')
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
@@ -49,6 +50,20 @@ class DebateAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super(DebateAdmin, self).get_queryset(request).select_related(
             'round__tournament', 'division__tournament', 'venue__group')
+
+    def get_aff_team(self, obj):
+        try:
+            return obj.aff_team
+        except Team.MultipleObjectsReturned:
+            return "<multiple affirmative teams>"
+    get_aff_team.short_description = "Affirmative team"
+
+    def get_neg_team(self, obj):
+        try:
+            return obj.neg_team
+        except Team.MultipleObjectsReturned:
+            return "<multiple negative teams>"
+    get_neg_team.short_description = "Negative team"
 
     actions = list()
     for value, verbose_name in Debate.STATUS_CHOICES:

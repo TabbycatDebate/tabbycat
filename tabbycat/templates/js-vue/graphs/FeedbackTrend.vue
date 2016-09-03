@@ -9,13 +9,13 @@ var d3 = require("d3");
 
 export default {
   props: {
-    componentData: Object,
+    cellData: Object,
     width: { type: Number, default: 320 },
     height: { type: Number, default: 55 },
     padding: { type: Number, default: 6 },
   },
   ready: function() {
-    if (this.componentData.graphData !== undefined) {
+    if (typeof this.cellData.graphData !== 'undefined' && this.cellData.graphData.length > 0) {
       InitChart(this); // Only init if we have some info
     }
   },
@@ -45,14 +45,15 @@ function leastSquares(xSeries, ySeries) {
 }
 
 function InitChart(vueContext){
+
   // Range is the pixel coordinates; domain is the axes range
   var xScale = d3.scale.linear()
     .range([0, vueContext.width])
-    .domain([0, vueContext.componentData.roundSeq])
+    .domain([0, vueContext.cellData.roundSeq])
 
   var yScale = d3.scale.linear()
     .range([vueContext.height, 0])
-    .domain([vueContext.componentData.minScore, vueContext.componentData.maxScore])
+    .domain([vueContext.cellData.minScore, vueContext.cellData.maxScore])
 
   // Scale axis to fit the range specified
   var xAxis = d3.svg.axis()
@@ -61,7 +62,7 @@ function InitChart(vueContext){
     .innerTickSize(-vueContext.height)
     .outerTickSize(0)
     .tickFormat(function (d) { return ''; }) // Hide ticks
-    .tickValues(d3.range(0, vueContext.componentData.roundSeq + 0.5, 1)) // Set tick increments
+    .tickValues(d3.range(0, vueContext.cellData.roundSeq + 0.5, 1)) // Set tick increments
 
   var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -70,7 +71,7 @@ function InitChart(vueContext){
     .outerTickSize(0)
     .tickPadding(10)
     .tickFormat(function (d) { return ''; }) // Hide ticks
-    .tickValues(d3.range(vueContext.componentData.minScore, vueContext.componentData.maxScore + 0.5, 1))  // Set tick increments
+    .tickValues(d3.range(vueContext.cellData.minScore, vueContext.cellData.maxScore + 0.5, 1))  // Set tick increments
 
   // Define the div for the tooltip
   var div = d3.select("body").append("div")
@@ -94,9 +95,9 @@ function InitChart(vueContext){
       .call(yAxis)
 
   // Create series for regression
-  var xLabels = vueContext.componentData.graphData.map(function (d) { return d['x']; })
+  var xLabels = vueContext.cellData.graphData.map(function (d) { return d['x']; })
   var xSeries = d3.range(1, xLabels.length + 1);
-	var ySeries = vueContext.componentData.graphData.map(function(d) { return parseFloat(d['y']); });
+	var ySeries = vueContext.cellData.graphData.map(function(d) { return parseFloat(d['y']); });
 	var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
   if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
@@ -122,7 +123,7 @@ function InitChart(vueContext){
   }
 
 
-  var circles = svg.selectAll("circle").data(vueContext.componentData.graphData)
+  var circles = svg.selectAll("circle").data(vueContext.cellData.graphData)
   circles
     .enter().append('circle')
     .attr("cx", function (d) { return xScale (d.x); })

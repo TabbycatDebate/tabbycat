@@ -2,14 +2,14 @@ from django.contrib import admin
 
 from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
 
-from utils.admin import BaseModelAdmin
+from utils.admin import TabbycatModelAdminFieldsMixin
 
 
 # ==============================================================================
 # BallotSubmission
 # ==============================================================================
 
-class BallotSubmissionAdmin(admin.ModelAdmin, BaseModelAdmin):
+class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'debate', 'get_round', 'timestamp', 'submitter_type', 'submitter', 'confirmer')
     search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__code')
     raw_id_fields = ('debate', 'motion')
@@ -24,7 +24,7 @@ admin.site.register(BallotSubmission, BallotSubmissionAdmin)
 # TeamScore
 # ==============================================================================
 
-class TeamScoreAdmin(admin.ModelAdmin, BaseModelAdmin):
+class TeamScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'score')
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__reference', 'debate_team__team__institution__code')
@@ -37,7 +37,7 @@ admin.site.register(TeamScore, TeamScoreAdmin)
 # SpeakerScore
 # ==============================================================================
 
-class SpeakerScoreAdmin(admin.ModelAdmin, BaseModelAdmin):
+class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'position', 'get_speaker_name', 'score')
     search_fields = ('debate_team__debate__round__abbreviation',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
@@ -58,7 +58,7 @@ admin.site.register(SpeakerScore, SpeakerScoreAdmin)
 # SpeakerScoreByAdj
 # ==============================================================================
 
-class SpeakerScoreByAdjAdmin(admin.ModelAdmin, BaseModelAdmin):
+class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team', 'get_speaker_name_filter', 'position', 'score')
     search_fields = ('debate_team__debate__round__seq',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
@@ -68,7 +68,8 @@ class SpeakerScoreByAdjAdmin(admin.ModelAdmin, BaseModelAdmin):
     raw_id_fields = ('debate_team', 'ballot_submission')
 
     def get_speaker_name_filter(self, obj):
-        return SpeakerScore.objects.filter(debate_team=obj.debate_team, position=obj.position)[0].speaker.name
+        return SpeakerScore.objects.get(debate_team=obj.debate_team, position=obj.position,
+                ballot_submission=obj.ballot_submission).speaker.name
     get_speaker_name_filter.short_description = 'Speaker'
 
 admin.site.register(SpeakerScoreByAdj, SpeakerScoreByAdjAdmin)

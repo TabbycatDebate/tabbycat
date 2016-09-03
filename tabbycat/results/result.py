@@ -30,7 +30,7 @@ class ResultBuffer:
         If `load` is False, the constructor will not load any data from the
         database (at all). It is then the responsibility of the caller to do so;
         the instance will crash otherwise, as the relevant attributes will not
-        be created. (For example, populate_confirmed_ballots() does this in
+        be created. (For example, populate_ballotsets() does this in
         prefetch.py.) External constructors can use `assert_loaded()` to check
         that data was loaded correctly.
         """
@@ -39,9 +39,9 @@ class ResultBuffer:
 
         if load:
             # If updating any of the database loading, be sure also to update
-            # populate_confirmed_ballots() in prefetch.py.
+            # populate_ballotsets() in prefetch.py.
             self.POSITIONS = self.debate.round.tournament.POSITIONS
-            self.update_debateteams(self.debate.debateteam_set.all())
+            self.update_debateteams(self.debate.debateteam_set.select_related('team'))
 
     def _dt(self, team):
         """Extracts a DebateTeam from a given team argument. The argument can be
@@ -112,8 +112,8 @@ class Scoresheet(ResultBuffer):
         If `load` is False, the constructor will not load any data from the
         database (at all). It is then the responsibility of the caller to do so;
         the instance will crash otherwise, as the relevant attributes will not
-        be created. (For example, in prefetch.py, populate_confirmed_ballots()
-        uses this to load Scoresheets in bulk.) Callers can use
+        be created. (For example, in prefetch.py, populate_ballotsets() uses
+        this to load Scoresheets in bulk.) Callers can use
         Scoresheet.assert_load() to check that data was loaded correctly.
         """
         super().__init__(ballotsub, load=load)
@@ -122,7 +122,7 @@ class Scoresheet(ResultBuffer):
 
         if load:
             # If updating any of the database loading, be sure also to update
-            # populate_confirmed_ballots() in prefetch.py.
+            # populate_ballotsets() in prefetch.py.
             self.da = self.debate.debateadjudicator_set.get(adjudicator=adjudicator)
             self.init_blank_buffer()
             for dt in self.dts:
@@ -259,6 +259,15 @@ class Scoresheet(ResultBuffer):
     def neg_win(self):
         return self.neg_score > self.aff_score
 
+    # --------------------------------------------------------------------------
+    # Other methods
+    # --------------------------------------------------------------------------
+
+    def identical(self, other):
+        """Returns True if this scoresheet and the other scoresheet relate
+        to the same BallotSubmission and have the same data."""
+        return self.debate == other.debate and self.data == other.data
+
 
 class BallotSet(ResultBuffer):
     """Representation of a set of ballots for a debate in a single ballot
@@ -287,8 +296,8 @@ class BallotSet(ResultBuffer):
         If `load` is False, the constructor will not load any data from the
         database (at all). It is then the responsibility of the caller to do so;
         the instance will crash otherwise, as the relevant attributes will not
-        be created. (For example, in prefetch.py, populate_confirmed_ballots()
-        uses this to load BallotSets in bulk.) Callers can use
+        be created. (For example, in prefetch.py, populate_ballotsets() uses
+        this to load BallotSets in bulk.) Callers can use
         BallotSet.assert_load() to check that data was loaded correctly.
         """
         super().__init__(ballotsub, load=load)
@@ -299,7 +308,7 @@ class BallotSet(ResultBuffer):
 
         if load:
             # If updating any of the database loading, be sure also to update
-            # populate_confirmed_ballots() in prefetch.py.
+            # populate_ballotsets() in prefetch.py.
             self.init_blank_buffer()
             for dt in self.dts:
                 self._load_team(dt)
@@ -407,14 +416,17 @@ class BallotSet(ResultBuffer):
         points = self._get_points(dt)
         win = self._get_win(dt)
         margin = self._get_margin(dt)
+        votes_given = self._get_votes_given(dt)
+        votes_possible = self._get_votes_possible(dt)
         self.ballotsub.teamscore_set.update_or_create(debate_team=dt,
-            defaults=dict(score=total, points=points, win=win, margin=margin))
+            defaults=dict(score=total, points=points, win=win, margin=margin,
+                          votes_given=votes_given, votes_possible=votes_possible))
 
         for pos in self.POSITIONS:
             speaker = self.speakers[dt][pos]
             score = self._get_avg_score(dt, pos)
             self.ballotsub.speakerscore_set.update_or_create(debate_team=dt,
-                speaker=speaker, position=pos, defaults=dict(score=score))
+                position=pos, defaults=dict(speaker=speaker, score=score))
 
         if self.motion_veto[dt] is not None:
             self.ballotsub.debateteammotionpreference_set.update_or_create(
@@ -433,7 +445,7 @@ class BallotSet(ResultBuffer):
         for position, dt in zip(self.SIDES, dts):
             dt.position = position
             dt.save()
-        self.update_debateteams(self.debate.debateteam_set.all()) # refresh self.dts
+        self.update_debateteams(self.debate.debateteam_set.select_related('team')) # refresh self.dts
 
     def get_speaker(self, team, position):
         """Returns the speaker object for team/position."""
@@ -618,6 +630,12 @@ class BallotSet(ResultBuffer):
 
         return None
 
+    def _get_votes_given(self, dt):
+        return len(self._adjs_by_dt[dt])
+
+    def _get_votes_possible(self, dt):
+        return len(self.adjudicator_sheets.items())
+
     # --------------------------------------------------------------------------
     # Side-specific methods
     # --------------------------------------------------------------------------
@@ -661,6 +679,29 @@ class BallotSet(ResultBuffer):
     @neg_motion_veto.setter
     def neg_motion_veto(self, new):
         self.motion_veto[self.debate.neg_dt] = new
+
+    # --------------------------------------------------------------------------
+    # Other methods
+    # --------------------------------------------------------------------------
+
+    def identical(self, other):
+        """Returns True if this scoresheet and the other scoresheet have the
+        same data."""
+        if self.speakers != other.speakers:
+            return False
+        if self.motion_veto != other.motion_veto:
+            return False
+        if self.motion != other.motion:
+            return False
+        if self.aff_score != other.aff_score:
+            return False
+        if self.neg_score != other.neg_score:
+            return False
+        for adj, other_sheet in other.adjudicator_sheets.items():
+            this_sheet = self._adjudicator_sheets[adj]
+            if not this_sheet.identical(other_sheet):
+                return False
+        return True
 
     # --------------------------------------------------------------------------
     # Methods for UI display
@@ -783,7 +824,8 @@ class ForfeitBallotSet(BallotSet):
         # The `forfeit` flag indicates that the ballot should not count as part
         # of averages.
         self.ballotsub.teamscore_set.update_or_create(debate_team=dt,
-                default=dict(points=points, win=win, score=0, margin=0, forfeit=True))
+                default=dict(points=points, win=win, score=0, margin=0, forfeit=True,
+                    votes_given=0, votes_possible=0))
 
     def save(self):
         self.ballotsub.forfeit = self.forfeiter

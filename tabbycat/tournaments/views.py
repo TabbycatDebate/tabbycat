@@ -29,7 +29,7 @@ class PublicSiteIndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         tournaments = Tournament.objects.all()
-        if tournaments.count() == 1 and not request.user.is_authenticated():
+        if tournaments.count() == 1 and not request.user.is_authenticated:
             logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
             return redirect_tournament('tournament-public-index', tournaments.first())
         elif not tournaments.exists() and not User.objects.exists():
@@ -95,7 +95,7 @@ class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView
             return super().get(self, request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['num_unconfirmed'] = self.get_round().get_draw().filter(
+        kwargs['num_unconfirmed'] = self.get_round().debate_set.filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
         return super().get_context_data(**kwargs)

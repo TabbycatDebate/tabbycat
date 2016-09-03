@@ -1,16 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
-{% block body-id %}old-edit-allocation{% endblock %}
 
 {% block head-title %}Edit Matchups{% endblock %}
 {% block page-title %}Edit Matchups{% endblock %}
 
 {% block page-subnav-sections %}
-  <div class="container-fluid">
-    <a class="btn btn-success" id="save">Save Matchups</a>
-    <a class="btn btn-danger" href="{% round_url draw %}">Quit</a>
-  </div>
+  <a class="btn btn-success" id="save">Save Matchups</a>
+  <a class="btn btn-danger" href="{% round_url draw %}">Return to Draw</a>
 {% endblock %}
 
 {% block extra-css %}
@@ -20,9 +17,13 @@
 {% block content %}
 <div class="container-fluid">
   <div class="row">
-
     <div id="main" class="">
-      <div id="alerts-holder" class=""></div>
+      <div id="alerts-holder" class="">
+        <div class="alert alert-info">
+          All debate must have two teams. Debates without both an
+          aff and a neg will be removed when the matchups are <strong>Saved</strong>.
+        </div>
+      </div>
       <div class="panel panel-default">
         <div class="panel-body">
 

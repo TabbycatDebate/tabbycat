@@ -137,7 +137,10 @@ class BaseBreakGenerator:
             breakingteam__break_category=self.category,
             breakingteam__remark__isnull=False,
         ).exclude(breakingteam__remark__exact='')
-        different_break_teams = self.team_queryset.filter(
+        different_break_teams = self.team_queryset.exclude(
+            breakingteam__remark=BreakingTeam.REMARK_INELIGIBLE,
+            breakingteam__break_category__priority__gt=self.category.priority
+        ).filter(
             breakingteam__break_category__priority__gt=self.category.priority
         )
         ineligible_teams = self.team_queryset.exclude(break_categories=self.category)
@@ -199,6 +202,7 @@ class BaseBreakGenerator:
 
         # first, breaking teams
         break_rank = 1
+        rank = 0 # rank is referenced after the loop, so initialize first
         for rank, group in groupby(self.breaking_teams, key=lambda tsi: tsi.get_ranking("rank")):
             group = list(group)
             for tsi in group:
@@ -243,8 +247,9 @@ class StandardBreakGenerator(BaseBreakGenerator):
         self.breaking_teams = self.eligible_teams[:self.break_size]
 
         # If the last spot is tied, add all tied teams
-        last_rank = self.eligible_teams[self.break_size-1].get_ranking("rank")
-        for tsi in self.eligible_teams[self.break_size:]:
-            if tsi.get_ranking("rank") != last_rank:
-                break
-            self.breaking_teams.append(tsi)
+        if len(self.eligible_teams) >= self.break_size:
+            last_rank = self.eligible_teams[self.break_size-1].get_ranking("rank")
+            for tsi in self.eligible_teams[self.break_size:]:
+                if tsi.get_ranking("rank") != last_rank:
+                    break
+                self.breaking_teams.append(tsi)

@@ -262,7 +262,7 @@ class Round(models.Model):
             related += ('division', 'division__venue_group')
         return self.debate_set.order_by(*ordering).select_related(*related)
 
-    def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',), select_related=(),
+    def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, divisions=True, ballotsubs=False,
             wins=False, ballotsets=False, venues=True, institutions=False):
         """Returns the debate set, with aff_team and neg_team populated.
@@ -278,14 +278,13 @@ class Round(models.Model):
             debates = debates.prefetch_related('ballotsubmission_set', 'ballotsubmission_set__submitter')
         if adjudicators:
             debates = debates.prefetch_related('debateadjudicator_set__adjudicator')
+        if divisions and self.tournament.pref('enable_divisions'):
+            debates = debates.select_related('division', 'division__venue_group')
+        if venues:
+            debates = debates.select_related('venue', 'venue__group')
+
         if ordering:
             debates = debates.order_by(*ordering)
-        if self.tournament.pref('enable_divisions') and divisions:
-            select_related += ('division', 'division__venue_group')
-        if venues:
-            select_related += ('venue', 'venue__group')
-        if select_related:
-            debates = debates.select_related(*select_related)
 
         # These functions populate relevant attributes of each debate, operating in-place
         if teams or speakers or wins or institutions:
@@ -528,8 +527,7 @@ class Round(models.Model):
     @cached_property
     def prev(self):
         try:
-            return Round.objects.get(seq=self.seq - 1,
-                                     tournament=self.tournament)
+            return self.tournament.round_set.filter(seq__lt=self.seq).order_by('-seq').first()
         except Round.DoesNotExist:
             return None
 

@@ -30,7 +30,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         total_venues = r.tournament.venue_set.count()
 
         if r.prev:
-            kwargs['previous_unconfirmed'] = r.prev.get_draw().filter(
+            kwargs['previous_unconfirmed'] = r.prev.debate_set.filter(
                 result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         if t.pref('share_adjs'):
             total_adjs += Adjudicator.objects.filter(tournament=None).count()

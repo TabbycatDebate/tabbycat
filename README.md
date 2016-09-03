@@ -15,6 +15,7 @@ Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.her
 - Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts
 - A drag and drop interface for adjudicator allocation that automatically displays conflicts alongside gender and regional balance
 - A fully responsive design that automatically adapts to suit large screens, laptops, tablets, and phones
+- Support for Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets.
 - Configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/team-standings-rules.html)
 - Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html)
 - Optional online submission of feedback and scoresheets

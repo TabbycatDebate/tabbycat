@@ -55,17 +55,26 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __str__(self):
+        prefix = "[{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation)
+        return prefix + self.matchup
+
+    @property
+    def matchup(self):
+        # This method is used by __str__, so it's not allowed to crash (ever)
         try:
-            return "[{}/{}] {} vs {}".format(
-                self.round.tournament.slug, self.round.abbreviation,
-                self.aff_team.short_name, self.neg_team.short_name)
-        except DebateTeam.DoesNotExist:
-            return "[{}/{}] {}".format(
-                self.round.tournament.slug, self.round.abbreviation,
-                ", ".join([x.short_name for x in self.teams]))
+            return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
+        except (Team.DoesNotExist, Team.MultipleObjectsReturned):
+            dts = self.debateteam_set.all()
+            if all(dt.position == DebateTeam.POSITION_UNALLOCATED for dt in dts):
+                return ", ".join([dt.team.short_name for dt in dts])
+            else:
+                return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display().lower())
+                    for dt in dts])
 
     @property
     def teams(self):
+        """Returns an iterable object containing the teams in the debate in
+        arbitrary order. The iterable may be a list or a QuerySet."""
         try:
             return [self._aff_team, self._neg_team]
         except AttributeError:
@@ -115,6 +124,8 @@ class Debate(models.Model):
         return getattr(self, '%s_dt' % side)
 
     def get_side(self, team):
+        # Deprecated 25/7/2016, does not appear to be used anywhere, remove after 25/8/2016.
+        warn("Debate.get_side() is deprecated", stacklevel=2)
         if self.aff_team == team:
             return 'aff'
         if self.neg_team == team:
@@ -133,25 +144,6 @@ class Debate(models.Model):
             except ObjectDoesNotExist:
                 self._confirmed_ballot = None
             return self._confirmed_ballot
-
-    @property
-    def identical_ballotsubs_dict(self):
-        """Returns a dict. Keys are BallotSubmissions, values are lists of
-        version numbers of BallotSubmissions that are identical to the key's
-        BallotSubmission. Excludes discarded ballots (always)."""
-        ballotsubs = self.ballotsubmission_set.exclude(discarded=True).order_by('version')
-        result = {b: list() for b in ballotsubs}
-        for ballotsub1 in ballotsubs:
-            # Save a bit of time by avoiding comparisons already done.
-            # This relies on ballots being ordered by version.
-            for ballotsub2 in ballotsubs.filter(
-                    version__gt=ballotsub1.version):
-                if ballotsub1.is_identical(ballotsub2):
-                    result[ballotsub1].append(ballotsub2.version)
-                    result[ballotsub2].append(ballotsub1.version)
-        for l in result.values():
-            l.sort()
-        return result
 
     @property
     def flags_all(self):
@@ -193,11 +185,6 @@ class Debate(models.Model):
             from adjallocation.allocation import AdjudicatorAllocation
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
-
-    @property
-    def matchup(self):
-        return '%s vs %s' % (self.aff_team.short_name,
-                             self.neg_team.short_name)
 
     @property
     def get_division_motions(self):

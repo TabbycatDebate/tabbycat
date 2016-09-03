@@ -45,10 +45,10 @@ INTERNAL_IPS = (
 GULP_PRODUCTION_COMMAND = "npm run gulp build -- --development"
 GULP_DEVELOP_COMMAND = "npm run gulp watch -- --development"
 
-# Dont use whitenoise with debug enabled
-# When local dont compress assets (not --production) and use watchify if debug
+# When debug is enabled don't compress things
 if DEBUG:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    WHITENOISE_AUTOREFRESH = True
+    WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ('css', 'js')
 
 # ==============================================================================
 # Caching
@@ -76,12 +76,12 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # Debug Toolbar
 # ==============================================================================
 
-ENABLE_DEBUG_TOOLBAR = True
+ENABLE_DEBUG_TOOLBAR = False
 
 if ENABLE_DEBUG_TOOLBAR:
-    MIDDLEWARE_CLASSES += (
+    MIDDLEWARE += [
         'debug_toolbar.middleware.DebugToolbarMiddleware',
-    )
+    ]
 
     INSTALLED_APPS += (
         'debug_toolbar',

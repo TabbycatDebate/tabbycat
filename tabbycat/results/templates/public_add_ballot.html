@@ -6,31 +6,36 @@
 {% block sub-title %}(click your name on this list){% endblock %}
 
 {% block content %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Adj<span class="hidden-xs">udicator</span></th>
-        <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
-        <th>Aff<span class="hidden-xs">irmative</span></th>
-        <th>Neg<span class="hidden-xs">ative</span></th>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Adj<span class="hidden-xs">udicator</span></th>
+          <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+          <th>Aff<span class="hidden-xs">irmative</span></th>
+          <th>Neg<span class="hidden-xs">ative</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for da in das %}
+        <tr>
+        <td>
+          <a href="{% tournament_url public_new_ballotset da.adjudicator.id %}">
+          <span class="hidden-xs">Add result from </span>{{ da.adjudicator.name }}
+          </a>
+        </td>
+        <td>{% if da.debate.venue.group %}{{ venue.group.name }} {% endif %}{{ da.debate.venue.name }}</td>
+        <td>
+          {% include "tables/team.html" with team=da.debate.aff_team %}
+        </td>
+        <td>
+          {% include "tables/team.html" with team=da.debate.neg_team %}
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      {% for da in das %}
-      <tr>
-      <td>
-        <a href="{% tournament_url public_new_ballotset da.adjudicator.id %}">
-        <span class="hidden-xs">Add result from </span>{{ da.adjudicator.name }}
-        </a>
-      </td>
-      <td>{% if da.debate.venue.group %}{{ venue.group.name }} {% endif %}{{ da.debate.venue.name }}</td>
-      <td>
-        {% include "tables/team.html" with team=da.debate.aff_team %}
-      </td>
-      <td>
-        {% include "tables/team.html" with team=da.debate.neg_team %}
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

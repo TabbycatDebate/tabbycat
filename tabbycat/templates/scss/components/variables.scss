@@ -41,7 +41,7 @@ $body-bg:                 #f3f4f9;
 $alt-bg:                  #fff; // For tables etc
 $table-bg-hover:          #e3e3e3;
 $sidebar-bg:              #30404f;
-$sidebar-bg-highlight:    darken($sidebar-bg, 3);
+$sidebar-bg-highlight:    rgba(0,0,0,0.3);
 $sidebar-muted-text:      #adb6bf;
 
 //------------------------------------------------------------------------------

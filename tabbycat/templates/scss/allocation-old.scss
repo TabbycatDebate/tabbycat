@@ -32,8 +32,6 @@ $adj-button-width: 180px;
 #main {
   z-index: 10;
   position: relative;
-  padding-right: 5px;
-  padding-left: 5px;
   padding-right: $adj-button-width + 25px;
 }
 .extra-line-height > tbody > tr > td {

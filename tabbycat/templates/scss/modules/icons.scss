@@ -3,10 +3,14 @@
 //------------------------------------------------------------------------------
 
 .emoji {
-  display: inline-block;
-  font-family: sans-serif; // Need to be a system font or they wont show
+   // Special font for colorfull windows emoji; system for others
+  font-family: "Segoe UI Emoji", sans-serif;
   font-style: normal;
   font-weight: normal;
+}
+span.emoji {
+  // Allows us to use <i> and other elements where layout requirements are loose
+  display: inline-block;
   margin-right: 1px;
   min-width: 20px;
 }

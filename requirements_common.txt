@@ -1,20 +1,31 @@
-# This file contains the necessary dependencies for local and heroku installs
+# The necessary dependencies common to both local and heroku installs
 
-Django==1.9.9
-dj-cmd==0.5 # Provides the dj command alias
-django-appconf==1.0.2 # Adds helper class for handling app configs
-django-dynamic-preferences==0.8.1
-django-debug-toolbar==1.5.0 # Debug Toolbar
-django-extensions==1.7.1 # For the generate secret command
-django-gulp==2.4.1 # Run gulp tasks with runserver/collectstatic
-django-ipware==1.1.5 # IP Address logging
-django-jet==0.9.0 # Admin Backend
-psycopg2==2.6.2 # For Django to talk to postgres
-six==1.10.0 # Six is a Python 2 and 3 compatibility library.
-sqlparse==0.2.1
-whitenoise==3.2.1 # Static file serving
-waitress==0.9.0 # For web serving
-flake8==3.0.4 # For testing/linting (not strictly required)
-pep8-naming==0.4.1 # Flake plugin for naming conventions
-flake8-import-order==0.9.2 # Flake plugin for import order
-flake8-quotes==0.8.1 # Flake plugin for quotes
+# Core
+
+Django>=1.10,<1.11
+django-appconf>=1.0,<1.1 # Adds helper class for handling app configs
+django-dynamic-preferences>=0.8,<0.9 # Settings management
+django-extensions>=1.7,<1.9 # For the generate secret command
+django-ipware>=1.1,<1.2 # IP Address logging
+django-jet>=1.0,<1.1 # Admin Backend
+
+# Database
+
+psycopg2>=2.6,<2.7 # For Django to talk to postgres
+sqlparse>=0.2,<0.3 # Parsing SQL statements
+
+# Pipeline
+
+django-gulp>=2.5,<2.6 # Run gulp tasks with runserver/collectstatic
+whitenoise>=3.2,<3.3 # Static file serving
+waitress>=1.0,<1.1 # For web serving
+
+# Development Aids
+
+dj-cmd>=0.5 # Provides the dj command alias
+django-debug-toolbar>=1.5,<1.6 # Debug Toolbar
+flake8>=3.0,<3.1 # For testing/linting (not strictly required)
+flake8-import-order>=0.9 # Flake plugin for import order
+flake8-quotes>=0.8 # Flake plugin for quotes
+pep8-naming>=0.4 # Flake plugin for naming conventions
+six>=1.10 # Six is a Python 2 and 3 compatibility library.
