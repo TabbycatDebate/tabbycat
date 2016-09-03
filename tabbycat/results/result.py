@@ -811,9 +811,7 @@ class ForfeitBallotSet(BallotSet):
         'ballotsub' must be a BallotSubmission.
         """
         super().__init__(ballotsub, load)
-
         self.forfeiter = forfeiter
-        self.motion_veto = None
 
     def _save_team(self, dt):
         if self.forfeiter == dt:
