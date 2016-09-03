@@ -4,6 +4,6 @@ from . import views
 
 urlpatterns = [
     url(r'^latest_actions/$',
-        views.GetLatestActions.as_view(),
+        views.LatestActionsView.as_view(),
         name='latest_actions'),
 ]
