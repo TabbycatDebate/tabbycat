@@ -10,10 +10,10 @@ urlpatterns = [
 
     # JSON updates
     url(r'^ballots_status/$',
-        views.ballots_status,
+        views.BallotsStatusJsonView.as_view(),
         name='ballots_status'),
     url(r'^latest_results/$',
-        views.latest_results,
+        views.LatestResultsJsonView.as_view(),
         name='latest_results'),
 
     # Inline Actions

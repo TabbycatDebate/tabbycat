@@ -5,6 +5,7 @@ import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db import ProgrammingError
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.template import Context, Template
@@ -18,11 +19,12 @@ from draw.models import Debate, DebateTeam
 from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
 from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin,
-                                SingleObjectFromTournamentMixin)
+                                SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
-from utils.views import round_view, tournament_view
+from utils.views import tournament_view
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
-from utils.mixins import (CacheMixin, JsonDataResponsePostView, SuperuserOrTabroomAssistantTemplateResponseMixin,
+from utils.mixins import (CacheMixin, JsonDataResponsePostView, JsonDataResponseView,
+                          SuperuserOrTabroomAssistantTemplateResponseMixin,
                           SuperuserRequiredMixin, VueTableTemplateView)
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
@@ -31,7 +33,7 @@ from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
-from .utils import get_result_status_stats, populate_identical_ballotsub_lists, ballot_checkin_number_left
+from .utils import ballot_checkin_number_left, get_result_status_stats, populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
 
@@ -391,68 +393,64 @@ class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Ba
 # JSON views for tournament overview page
 # ==============================================================================
 
-@login_required
-@tournament_view
-def ballots_status(request, t):
-    # Draw Status for Tournament Homepage
-    # Should be a JsonDataResponseView
-    intervals = 20
+class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
 
-    def minutes_ago(time):
-        time_difference = datetime.datetime.now() - time
-        minutes_ago = time_difference.days * 1440 + time_difference.seconds / 60
-        return minutes_ago
+    def get_data(self):
 
-    ballots = list(BallotSubmission.objects.filter(debate__round=t.current_round).order_by('timestamp'))
-    debates = Debate.objects.filter(round=t.current_round).count()
-    if len(ballots) is 0:
-        return HttpResponse(json.dumps([]), content_type="text/json")
+        intervals = 20
 
-    start_entry = minutes_ago(ballots[0].timestamp)
-    end_entry = minutes_ago(ballots[-1].timestamp)
-    chunks = (end_entry - start_entry) / intervals
+        def minutes_ago(time):
+            time_difference = datetime.datetime.now() - time
+            minutes_ago = time_difference.days * 1440 + time_difference.seconds / 60
+            return minutes_ago
 
-    stats = []
-    for i in range(intervals + 1):
-        time_period = (i * chunks) + start_entry
-        stat = [int(time_period), debates, 0, 0]
+        rd = self.get_tournament().current_round
+        ballots = list(BallotSubmission.objects.filter(debate__round=rd).order_by('timestamp'))
+        debates = Debate.objects.filter(round=rd).count()
+        if len(ballots) == 0:
+            return []
+
+        start_entry = minutes_ago(ballots[0].timestamp)
+        end_entry = minutes_ago(ballots[-1].timestamp)
+        chunks = (end_entry - start_entry) / intervals
+
+        stats = []
+        for i in range(intervals + 1):
+            time_period = (i * chunks) + start_entry
+            stat = [int(time_period), debates, 0, 0]
+            for b in ballots:
+                if minutes_ago(b.timestamp) >= time_period:
+                    if b.debate.result_status == Debate.STATUS_DRAFT:
+                        stat[2] += 1
+                        stat[1] -= 1
+                    elif b.debate.result_status == Debate.STATUS_CONFIRMED:
+                        stat[3] += 1
+                        stat[1] -= 1
+            stats.append(stat)
+
+        return stats
+
+
+class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
+
+    def get_data(self):
+        results_objects = []
+        ballots = BallotSubmission.objects.filter(debate__round__tournament=self.get_tournament(),
+                confirmed=True).select_related('debate').order_by('-timestamp')[:15]
         for b in ballots:
-            if minutes_ago(b.timestamp) >= time_period:
-                if b.debate.result_status == Debate.STATUS_DRAFT:
-                    stat[2] += 1
-                    stat[1] -= 1
-                elif b.debate.result_status == Debate.STATUS_CONFIRMED:
-                    stat[3] += 1
-                    stat[1] -= 1
-        stats.append(stat)
+            if b.ballot_set.winner == b.ballot_set.debate.aff_team:
+                winner = b.ballot_set.debate.aff_team.short_name + " (Aff)"
+                looser = b.ballot_set.debate.neg_team.short_name + " (Neg)"
+            else:
+                winner = b.ballot_set.debate.neg_team.short_name + " (Neg)"
+                looser = b.ballot_set.debate.aff_team.short_name + " (Aff)"
 
-    return HttpResponse(json.dumps(stats), content_type="text/json")
+            results_objects.append({
+                'user': winner + " beat " + looser,
+                'timestamp': naturaltime(b.timestamp),
+            })
 
-
-@login_required
-@tournament_view
-def latest_results(request, t):
-    # Latest Results for Tournament Homepage
-    # Should be a JsonDataResponseView
-    results_objects = []
-    ballots = BallotSubmission.objects.filter(
-        debate__round__tournament=t, confirmed=True).order_by(
-        '-timestamp')[:15].select_related('debate')
-    timestamp_template = Template("{% load humanize %}{{ t|naturaltime }}")
-    for b in ballots:
-        if b.ballot_set.winner == b.ballot_set.debate.aff_team:
-            winner = b.ballot_set.debate.aff_team.short_name + " (Aff)"
-            looser = b.ballot_set.debate.neg_team.short_name + " (Neg)"
-        else:
-            winner = b.ballot_set.debate.neg_team.short_name + " (Neg)"
-            looser = b.ballot_set.debate.aff_team.short_name + " (Aff)"
-
-        results_objects.append({
-            'user': winner + " beat " + looser,
-            'timestamp': timestamp_template.render(Context({'t': b.timestamp})),
-        })
-
-    return HttpResponse(json.dumps(results_objects), content_type="text/json")
+        return results_objects
 
 
 # ==============================================================================
