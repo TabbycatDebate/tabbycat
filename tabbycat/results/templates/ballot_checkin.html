@@ -20,7 +20,7 @@
             <datalist id="venues_list">
               {% for venue in venue_options %}
                 {% if pref.enable_venue_groups %}
-                  <option data-value="{{ venue.id }}" value="{{ venue.group.short_name}} {{ venue.name }}">
+                  <option data-value="{{ venue.id }}" value="{{ venue.group.short_name }} {{ venue.name }}">
                 {% else %}
                   <option data-value="{{ venue.id }}" value="{{ venue.name }}">
                 {% endif %}
@@ -28,7 +28,7 @@
             </datalist>
           </div>
           <div class="col-sm-4 help-block">
-            Type or select the Ballot's venue, then hit enter
+            Type or select the ballot's <strong>venue</strong>, then hit Enter.
           </div>
         </div>
         <div class="debate-details" id="debate_details">
@@ -83,24 +83,23 @@
     $(document).ready(function() {
       $('#venue').focus();
       $('#debate_details').hide();
+      $('#success').hide();
 
       $('#venue').keyup(function(e) {
         if (e.keyCode != 13) return;
         $('#success').removeClass('alert-success alert-danger').html("Retrieving info...");
         var val = $('#venue').val(); // The selected text
         var venueID = $('#venues_list').children('option[value="'+val+'"]').attr('data-value');
-        if (venueID == '') {
+        if (venueID == null) {
           $('#debate_details').hide();
-          $('#success').html("").show();
+          $('#success').html("There aren't any venues with the name \"" + val + "\". It might not have a debate in it, or its ballot might have already been checked in.").addClass('alert-danger').show();
           return;
         }
         $.ajax( {
           type: "POST",
           url: "{% round_url ballot_checkin_get_details %}",
           data: {venue: venueID},
-          success: function(raw_data, status) {
-            var data = $.parseJSON(raw_data);
-            // If the debate exists, show its details.
+          success: function(data, status) {
             if (data.exists) {
               $('#venue_confirm').text(data.venue);
               $('#venue_confirm').attr('data-value', data.venue_id);
@@ -147,11 +146,10 @@
           type: "POST",
           url: "{% round_url post_ballot_checkin %}",
           data: {venue: val},
-          success: function(raw_data, status) {
-            var data = $.parseJSON(raw_data);
+          success: function(data, status) {
             if (data.success) {
               $('#success').html("Thanks! Checked in the ballot for "
-                + data.debate_description + " (" + data.venue + ").")
+                + data.matchup + " (" + data.venue + ").")
                 .addClass('alert-success').show();
               $('#venues_list').children('option[data-value="'+val+'"]').remove()
               $('#venue').val('').focus();

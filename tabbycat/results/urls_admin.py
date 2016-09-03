@@ -24,13 +24,13 @@ urlpatterns = [
         views.UnpostponeDebateView.as_view(),
         name='unpostpone_debate'),
     url(r'^round/(?P<round_seq>\d+)/checkin/$',
-        views.ballot_checkin,
+        views.BallotCheckinView.as_view(),
         name='ballot_checkin'),
     url(r'^round/(?P<round_seq>\d+)/checkin/detail/$',
-        views.ballot_checkin_get_details,
+        views.BallotCheckinGetDetailsView.as_view(),
         name='ballot_checkin_get_details'),
     url(r'^round/(?P<round_seq>\d+)/checkin/post/$',
-        views.post_ballot_checkin,
+        views.PostBallotCheckinView.as_view(),
         name='post_ballot_checkin'),
 
     # Ballots

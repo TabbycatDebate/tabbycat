@@ -52,3 +52,7 @@ def populate_identical_ballotsub_lists(ballotsubs):
 
     for ballotsub in ballotsubs:
         ballotsub.identical_ballotsub_versions.sort()
+
+
+def ballot_checkin_number_left(round):
+    return Debate.objects.filter(round=round, ballot_in=False).count()

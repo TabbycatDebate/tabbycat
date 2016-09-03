@@ -22,7 +22,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObj
 from tournaments.models import Round
 from utils.views import round_view, tournament_view
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
-from utils.mixins import (CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin,
+from utils.mixins import (CacheMixin, JsonDataResponsePostView, SuperuserOrTabroomAssistantTemplateResponseMixin,
                           SuperuserRequiredMixin, VueTableTemplateView)
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
@@ -31,7 +31,7 @@ from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
-from .utils import get_result_status_stats, populate_identical_ballotsub_lists
+from .utils import get_result_status_stats, populate_identical_ballotsub_lists, ballot_checkin_number_left
 
 logger = logging.getLogger(__name__)
 
@@ -459,105 +459,96 @@ def latest_results(request, t):
 # Ballot check-in views
 # ==============================================================================
 
-@login_required
-@round_view
-def ballot_checkin(request, round):
-    ballots_left = ballot_checkin_number_left(round)
-    if round.tournament.pref('enable_venue_groups'):
-        debates = Debate.objects.filter(round=round, ballot_in=False).order_by('venue__group__short_name')
-    else:
-        debates = Debate.objects.filter(round=round, ballot_in=False).order_by('venue__name')
-    venue_options = [d.venue for d in debates]
-    return render(request, 'ballot_checkin.html', dict(
-        ballots_left=ballots_left, venue_options=venue_options))
-
-
 class DebateBallotCheckinError(Exception):
     pass
 
 
-def get_debate_from_ballot_checkin_request(request, round):
-    # Called by the submit button on the ballot checkin form.
-    # Returns the message that should go in the "success" field.
+class BallotCheckinView(LoginRequiredMixin, RoundMixin, TemplateView):
+    template_name = 'ballot_checkin.html'
 
-    if request.POST.get('venue') is None:
-        raise DebateBallotCheckinError('There aren\'t any venues with that name')
+    def get_page_subtitle(self):
+        """Override RoundMixin to allow template subtitle to take precedence."""
+        return ""
 
-    try:
-        venue = Venue.objects.get(id=request.POST.get('venue'))
-    except Venue.DoesNotExist:
-        raise DebateBallotCheckinError('There aren\'t any venues with that name')
+    def get_context_data(self, **kwargs):
+        kwargs['ballots_left'] = ballot_checkin_number_left(self.get_round())
 
-    try:
-        debate = Debate.objects.get(round=round, venue=venue)
-    except Debate.DoesNotExist:
-        raise DebateBallotCheckinError('There wasn\'t a debate in venue ' + venue.name + ' this round.')
+        if self.get_tournament().pref('enable_venue_groups'):
+            ordering = ('group__short_name', 'name')
+        else:
+            ordering = ('name',)
+        kwargs['venue_options'] = Venue.objects.filter(debate__round=self.get_round(),
+                debate__ballot_in=False).order_by(*ordering)
 
-    if debate.ballot_in:
-        raise DebateBallotCheckinError('The ballot for venue ' + venue.name + ' has already been checked in.')
-
-    return debate
+        return super().get_context_data(**kwargs)
 
 
-def ballot_checkin_number_left(round):
-    count = Debate.objects.filter(round=round, ballot_in=False).count()
-    return count
+class BaseBallotCheckinJsonResponseView(LoginRequiredMixin, RoundMixin, JsonDataResponsePostView):
+
+    def get_debate(self):
+
+        venue_id = self.request.POST.get('venue')
+
+        if venue_id is None:
+            raise DebateBallotCheckinError('There aren\'t any venues with that name.')
+
+        try:
+            venue = Venue.objects.get(id=venue_id)
+        except Venue.DoesNotExist:
+            raise DebateBallotCheckinError('There aren\'t any venues with that name.')
+
+        try:
+            debate = Debate.objects.get(round=self.get_round(), venue=venue)
+        except Debate.DoesNotExist:
+            raise DebateBallotCheckinError('There wasn\'t a debate in venue ' + venue.name + ' this round.')
+
+        if debate.ballot_in:
+            raise DebateBallotCheckinError('The ballot for venue ' + venue.name + ' has already been checked in.')
+
+        return debate
 
 
-@login_required
-@round_view
-def ballot_checkin_get_details(request, round):
-    # Should be a JsonDataResponseView
-    try:
-        debate = get_debate_from_ballot_checkin_request(request, round)
-    except DebateBallotCheckinError as e:
-        data = {'exists': False, 'message': str(e)}
-        return HttpResponse(json.dumps(data))
+class BallotCheckinGetDetailsView(BaseBallotCheckinJsonResponseView):
 
-    obj = dict()
+    def post_data(self):
+        try:
+            debate = self.get_debate()
+        except DebateBallotCheckinError as e:
+            return {'exists': False, 'message': str(e)}
 
-    obj['exists'] = True
-    obj['venue'] = debate.venue.name
-    obj['venue_id'] = debate.venue.id
-    obj['aff_team'] = debate.aff_team.short_name
-    obj['neg_team'] = debate.neg_team.short_name
-
-    adjs = debate.adjudicators
-    adj_names = [adj.name for type, adj in adjs if type != DebateAdjudicator.TYPE_TRAINEE]
-    obj['num_adjs'] = len(adj_names)
-    obj['adjudicators'] = adj_names
-
-    obj['ballots_left'] = ballot_checkin_number_left(round)
-
-    return HttpResponse(json.dumps(obj))
+        return {
+            'exists': True,
+            'venue': debate.venue.name,
+            'venue_id': debate.venue.id,
+            'aff_team': debate.aff_team.short_name,
+            'neg_team': debate.neg_team.short_name,
+            'num_adjs': len(debate.adjudicators),
+            'adjudicators': [adj.name for adj in debate.adjudicators.voting()],
+            'ballots_left': ballot_checkin_number_left(self.get_round()),
+        }
 
 
-@login_required
-@round_view
-def post_ballot_checkin(request, round):
-    # Should be a JsonDataResponseView
-    try:
-        debate = get_debate_from_ballot_checkin_request(request, round)
-    except DebateBallotCheckinError as e:
-        data = {'exists': False, 'message': str(e)}
-        return HttpResponse(json.dumps(data))
+class PostBallotCheckinView(LogActionMixin, BaseBallotCheckinJsonResponseView):
 
-    debate.ballot_in = True
-    debate.save()
+    action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN
 
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN,
-                               user=request.user, debate=debate,
-                               tournament=round.tournament)
+    def post_data(self):
+        try:
+            debate = self.get_debate()
+        except DebateBallotCheckinError as e:
+            return {'success': False, 'message': str(e)}
 
-    obj = dict()
+        debate.ballot_in = True
+        debate.save()
 
-    obj['success'] = True
-    obj['venue'] = debate.venue.name
-    obj['debate_description'] = debate.aff_team.short_name + " vs " + debate.neg_team.short_name
+        self.log_action(debate=debate)
 
-    obj['ballots_left'] = ballot_checkin_number_left(round)
-
-    return HttpResponse(json.dumps(obj))
+        return {
+            'success': True,
+            'venue': debate.venue.name,
+            'matchup': debate.matchup,
+            'ballots_left': ballot_checkin_number_left(self.get_round()),
+        }
 
 
 # ==============================================================================

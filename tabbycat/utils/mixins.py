@@ -93,6 +93,17 @@ class JsonDataResponseView(View):
         return JsonResponse(self.get_data(), safe=False)
 
 
+class JsonDataResponsePostView(View):
+    """Like JsonDataResponseView, but expects a POST rather than a GET."""
+
+    def post_data(self):
+        raise NotImplementedError
+
+    def post(self, request, *args, **kwargs):
+        self.request = request
+        return JsonResponse(self.post_data(), safe=False)
+
+
 class SuperuserRequiredMixin(UserPassesTestMixin):
     """Class-based view mixin. Requires user to be a superuser."""
 
