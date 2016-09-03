@@ -1,5 +1,5 @@
 from functools import wraps
-from statistics import mean
+from statistics import mean, StatisticsError
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -693,9 +693,12 @@ class BallotSet(ResultBuffer):
             return False
         if self.motion != other.motion:
             return False
-        if self.aff_score != other.aff_score:
-            return False
-        if self.neg_score != other.neg_score:
+        try:
+            if self.aff_score != other.aff_score:
+                return False
+            if self.neg_score != other.neg_score:
+                return False
+        except StatisticsError:
             return False
         for adj, other_sheet in other.adjudicator_sheets.items():
             this_sheet = self._adjudicator_sheets[adj]
