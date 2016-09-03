@@ -1,14 +1,11 @@
-import json
 import datetime
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db import ProgrammingError
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
-from django.template import Context, Template
+from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.generic import FormView, TemplateView, View
 
@@ -21,7 +18,6 @@ from participants.models import Adjudicator
 from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
-from utils.views import tournament_view
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
 from utils.mixins import (CacheMixin, JsonDataResponsePostView, JsonDataResponseView,
                           SuperuserOrTabroomAssistantTemplateResponseMixin,
@@ -434,20 +430,28 @@ class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
 class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
 
     def get_data(self):
+
+        ballotsubs = BallotSubmission.objects.filter(
+            debate__round__tournament=self.get_tournament(), confirmed=True
+        ).prefetch_related(
+            'teamscore_set__debate_team', 'teamscore_set__debate_team__team'
+        ).order_by('-timestamp')[:15]
+
         results_objects = []
-        ballots = BallotSubmission.objects.filter(debate__round__tournament=self.get_tournament(),
-                confirmed=True).select_related('debate').order_by('-timestamp')[:15]
-        for b in ballots:
-            if b.ballot_set.winner == b.ballot_set.debate.aff_team:
-                winner = b.ballot_set.debate.aff_team.short_name + " (Aff)"
-                looser = b.ballot_set.debate.neg_team.short_name + " (Neg)"
-            else:
-                winner = b.ballot_set.debate.neg_team.short_name + " (Neg)"
-                looser = b.ballot_set.debate.aff_team.short_name + " (Aff)"
+        for ballotsub in ballotsubs:
+            winner = None
+            loser = None
+            for teamscore in ballotsub.teamscore_set.all():
+                team_str = "{:s} ({:s})".format(teamscore.debate_team.team.short_name,
+                        teamscore.debate_team.get_position_display())
+                if teamscore.win:
+                    winner = team_str
+                else:
+                    loser = team_str
 
             results_objects.append({
-                'user': winner + " beat " + looser,
-                'timestamp': naturaltime(b.timestamp),
+                'user': winner + " beat " + loser,
+                'timestamp': naturaltime(ballotsub.timestamp),
             })
 
         return results_objects
