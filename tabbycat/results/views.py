@@ -424,12 +424,14 @@ class DebateBallotCheckinError(Exception):
 def get_debate_from_ballot_checkin_request(request, round):
     # Called by the submit button on the ballot checkin form.
     # Returns the message that should go in the "success" field.
-    v = request.POST.get('venue')
+
+    if request.POST.get('venue') is None:
+        raise DebateBallotCheckinError('There aren\'t any venues with that name')
 
     try:
-        venue = Venue.objects.get(id=v)
+        venue = Venue.objects.get(id=request.POST.get('venue'))
     except Venue.DoesNotExist:
-        raise DebateBallotCheckinError('There aren\'t any venues with that name (id of "' + v + '").')
+        raise DebateBallotCheckinError('There aren\'t any venues with that name')
 
     try:
         debate = Debate.objects.get(round=round, venue=venue)
