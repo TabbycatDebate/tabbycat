@@ -3,8 +3,6 @@ from django.contrib.humanize.templatetags.humanize import naturaltime
 from utils.mixins import JsonDataResponseView, LoginRequiredMixin
 from tournaments.mixins import TournamentMixin
 
-from .models import ActionLogEntry
-
 
 class LatestActionsView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
 
