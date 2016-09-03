@@ -257,7 +257,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if show_ballots:
             cell['popover']['content'].append(
-                {'text': 'View Debate Ballot', 'link': reverse_tournament('public_ballots_view',
+                {'text': 'View Debate Ballot', 'link': reverse_tournament('results-public-scoresheet-view',
                     self.tournament, kwargs={'pk': ts.debate_team.debate.id})})
 
         if self._show_speakers_in_draw:
@@ -600,7 +600,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.admin:
             ballot_links_data = [{
                 'text': "View/Edit Ballot",
-                'link': reverse_tournament('edit_ballotset', self.tournament, kwargs={'pk': debate.confirmed_ballot.id})
+                'link': reverse_tournament('results-ballotset-edit', self.tournament, kwargs={'pk': debate.confirmed_ballot.id})
             } if debate.confirmed_ballot else "" for debate in debates]
             self.add_column(ballot_links_header, ballot_links_data)
 
@@ -608,7 +608,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
             ballot_links_data = [{
                 'text': "View Ballot",
-                'link': reverse_tournament('public_ballots_view', self.tournament, kwargs={'pk': debate.id})
+                'link': reverse_tournament('results-public-scoresheet-view', self.tournament, kwargs={'pk': debate.id})
             } if debate else "" for debate in debates]
             self.add_column(ballot_links_header, ballot_links_data)
 

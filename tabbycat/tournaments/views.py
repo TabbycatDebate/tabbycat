@@ -90,7 +90,7 @@ class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView
             messages.warning(self.request, 'You are trying to advance to ' +
                 round.name + ' but the current round is ' + current_round.name +
                 ' — advance to ' + round.prev.name + ' first!')
-            return redirect_round('results', self.get_tournament().current_round)
+            return redirect_round('results-round-list', self.get_tournament().current_round)
         else:
             return super().get(self, request, *args, **kwargs)
 

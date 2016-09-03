@@ -47,7 +47,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             if not self.admin and ballotset.discarded:
                 continue
 
-            link = reverse_tournament('edit_ballotset',
+            link = reverse_tournament('results-ballotset-edit',
                                       self.tournament,
                                       kwargs={'pk': ballotset.id})
             ballotsets_info += "<a href=" + link + ">"
@@ -72,7 +72,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             ballotsets_info += "</small><br />"
 
         if all(x.discarded for x in ballotsubmissions):
-            link = reverse_tournament('new_ballotset',
+            link = reverse_tournament('results-ballotset-new',
                                       self.tournament,
                                       kwargs={'debate_id': debate.id})
             ballotsets_info += "<a href=" + link + ">Enter Ballot</a>"

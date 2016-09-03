@@ -194,7 +194,7 @@ class BaseUpdateDebateStatusView(SuperuserRequiredMixin, RoundMixin, View):
             return HttpResponseBadRequest("Error: There isn't a debate in {} with id {}.".format(self.get_round().name, debate_id))
         debate.result_status = self.new_status
         debate.save()
-        return redirect_round('results', debate.round)
+        return redirect_round('results-round-list', debate.round)
 
 
 class PostponeDebateView(BaseUpdateDebateStatusView):
@@ -275,7 +275,7 @@ class BaseAdminBallotSetView(SuperuserOrTabroomAssistantTemplateResponseMixin, B
     assistant_template_name = 'assistant_enter_results.html'
 
     def get_success_url(self):
-        return reverse_round('results', self.ballotsub.debate.round)
+        return reverse_round('results-round-list', self.ballotsub.debate.round)
 
 
 class NewBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView):
@@ -298,7 +298,7 @@ class NewBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView):
         if not self.debate.adjudicators.has_chair:
             messages.error(self.request, "Whoops! The debate %s doesn't have a chair, "
                 "so you can't enter results for it." % self.debate.matchup)
-            return redirect_round('results', self.ballotsub.debate.round)
+            return redirect_round('results-round-list', self.ballotsub.debate.round)
 
 
 class EditBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView):

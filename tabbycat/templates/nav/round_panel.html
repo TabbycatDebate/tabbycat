@@ -61,7 +61,7 @@
       </li>
       <li>
         <div class="progress-line standard-line"></div>
-        <a href="{% round_url results r %}"
+        <a href="{% round_url results-round-list r %}"
            class="{% if ballots_nav and round == r %}active{% endif %}">
           <span class="circle-icon small-circle
             {% if r.seq < current_round.seq %} btn-success

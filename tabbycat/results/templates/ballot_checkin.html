@@ -97,7 +97,7 @@
         }
         $.ajax( {
           type: "POST",
-          url: "{% round_url ballot_checkin_get_details %}",
+          url: "{% round_url results-ballot-checkin-details %}",
           data: {venue: venueID},
           success: function(data, status) {
             if (data.exists) {
@@ -144,7 +144,7 @@
         var val = $('#venue_confirm').attr('data-value');
         $.ajax( {
           type: "POST",
-          url: "{% round_url post_ballot_checkin %}",
+          url: "{% round_url results-ballot-checkin-post %}",
           data: {venue: val},
           success: function(data, status) {
             if (data.success) {

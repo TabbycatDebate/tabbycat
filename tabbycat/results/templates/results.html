@@ -6,7 +6,7 @@
 {% block sub-title %}for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url ballot_checkin round %}">Ballot Check-In</a>
+  <a class="btn btn-default submit-disable" href="{% round_url results-ballot-checkin round %}">Ballot Check-In</a>
 {% endblock %}
 
 {% block page-subnav-actions %}
@@ -59,11 +59,11 @@
 
   {{ block.super }}
 
-  <form id="postponeForm" action="{% round_url postpone_debate %}" method="POST">
+  <form id="postponeForm" action="{% round_url results-postpone-debate %}" method="POST">
     <input type="hidden" id="postpone_debate_id" name="debate_id" />
   </form>
 
-  <form id="unpostponeForm" action="{% round_url unpostpone_debate %}" method="POST">
+  <form id="unpostponeForm" action="{% round_url results-unpostpone-debate %}" method="POST">
     <input type="hidden" id="unpostpone_debate_id" name="debate_id" />
   </form>
 

@@ -37,7 +37,7 @@
       </h4>
       <div class="panel panel-default">
         <div class="panel-body">
-          <ballots-graph poll-url="{% tournament_url ballots_status %}"></ballots-graph>
+          <ballots-graph poll-url="{% tournament_url results-ballots-graph-data %}"></ballots-graph>
         </div>
       </div>
     </div>
@@ -79,7 +79,7 @@
 {% block js %}
   <script>
     var updateActionsURL = '{% tournament_url latest_actions %}';
-    var updateResultsURL = '{% tournament_url latest_results %}';
+    var updateResultsURL = '{% tournament_url results-latest-json %}';
   </script>
   {{ block.super }}
 {% endblock %}

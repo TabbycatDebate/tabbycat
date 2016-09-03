@@ -67,7 +67,7 @@
       {% for r in tournament.round_set.all %}
         {% if not r.silent or pref.all_results_released %}
           {% if r.seq < current_round.seq or pref.all_results_released %}
-            <li><a href="{% round_url public_results r %}">{{ r.name }}</a></li>
+            <li><a href="{% round_url results-public-round r %}">{{ r.name }}</a></li>
           {% endif %}
         {% endif %}
       {% endfor %}
@@ -130,7 +130,7 @@
 {% endif %}
 {% if pref.public_ballots %}
   <li class="{% if enter_ballots_nav %}active{% endif %}">
-    <a href="{% tournament_url public_ballot_submit %}">Enter Ballot</a>
+    <a href="{% tournament_url results-public-ballot-submission-index %}">Enter Ballot</a>
   </li>
 {% endif %}
 {% if pref.public_feedback %}

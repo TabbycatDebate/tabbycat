@@ -65,7 +65,7 @@
         {% endif %}
         {% if pref.public_results and current_round.prev %}
           <li class="list-group-item">
-            <a href="{% tournament_url public_results_index %}">Results</a>
+            <a href="{% tournament_url results-public-index %}">Results</a>
           </li>
         {% endif %}
         {% if pref.public_divisions > 0 %}
@@ -119,7 +119,7 @@
         {% endif %}
         {% if pref.public_ballots %}
           <li class="list-group-item">
-            <a href="{% tournament_url public_ballot_submit %}">Enter Ballot</a>
+            <a href="{% tournament_url results-public-ballot-submission-index %}">Enter Ballot</a>
           </li>
         {% endif %}
         {% if pref.public_feedback %}

@@ -1,7 +1,7 @@
 {% load debate_tags %}
 
 <li {% if ballots_nav %}class="active"{% endif %}>
-  <a href="{% round_url results current_round %}">Enter Results</a>
+  <a href="{% round_url results-round-list current_round %}">Enter Results</a>
 </li>
 <li {% if feedback_nav %}class="active"{% endif %}>
   <a href="{% tournament_url adjfeedback-add-index %}">Enter Feedback</a>

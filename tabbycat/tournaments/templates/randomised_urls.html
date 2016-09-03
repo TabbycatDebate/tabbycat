@@ -55,7 +55,7 @@
       <div class="alert alert-danger">
         The <strong>public ballots</strong> (non-randomised) configuration setting
         is enabled, which means that the
-        <a href="{% tournament_url public_ballot_submit %}">page in the public
+        <a href="{% tournament_url results-public-ballot-submission-index %}">page in the public
         interface from which anyone can enter any ballot</a>, without knowing any
         special URLs, is enabled. This defeats the purpose of the <strong>public
         ballots randomised</strong> setting. You may wish to consider disabling
@@ -114,7 +114,7 @@
                 {% endif %}
                 {% if pref.public_ballots_randomised %}
                   <td>
-                    {% tournament_absurl public_new_ballotset_key adj.url_key %}
+                    {% tournament_absurl results-public-ballotset-new-randomised adj.url_key %}
                   </td>
                 {% endif %}
                 {% if pref.allocation_confirmations %}
