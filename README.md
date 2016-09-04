@@ -13,15 +13,15 @@ Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.her
 - Enter data from multiple computers simultaneously
 - Easily deployable to [Heroku](https://www.heroku.com/) for a fast and free setup
 - Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts
-- A drag and drop interface for adjudicator allocation that automatically displays conflicts alongside gender and regional balance
-- A fully responsive design that automatically adapts to suit large screens, laptops, tablets, and phones
-- Support for Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets.
+- A drag and drop interface for adjudicator allocation that displays conflicts alongside gender and regional balance
+- A fully responsive design that adapts to suit large screens, laptops, tablets, and phones
+- Support for Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets
 - Configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/team-standings-rules.html)
 - Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html)
 - Optional online submission of feedback and scoresheets
 - Optional online post-tournament tab display
 
-Tabbycat started as Australs tab software and has since evolved to support most two-team parliamentary formats. It is a goal of Tabbycat to be flexible, to meet the needes of different tournaments. There are many configurable features, and they're best explored by launching your own copy using the "Deploy to Heroku" button above.
+Tabbycat started as Australs tab software and has since evolved to support most two-team parliamentary formats. It is a goal of Tabbycat to be flexible and meet the needs of different tournaments. There are many configurable features, and they're best explored by launching your own copy using the "Deploy to Heroku" button above.
 
 If your tournament has requirements that we don't currently support, please [get in touch with us](#authors-and-contacts). In many cases, we might have already put the idea on our [to-do list](https://github.com/czlee/tabbycat/issues). But we have many more ideas than we are able to implement. We prioritise our work by the features that will be used at upcoming tournaments, so if you need some changes, even if they're already on our list, please do contact us early rather than waiting for us to implement your requirement.
 
@@ -46,4 +46,4 @@ Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current act
 - Philip Belesky ([e-mail](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=))
 - Chuan-Zheng Lee ([e-mail](mailto:czlee@stanford.edu))
 
-Please don't hesitate to contact us with any questions, suggestions, expressions of interest or generally anything relating to Tabbycat.
+Please don't hesitate to contact us with any questions, suggestions, or generally anything relating to Tabbycat.
