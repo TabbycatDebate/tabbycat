@@ -1,4 +1,5 @@
 {% extends "base_vue_table.html" %}
+{% load humanize %}
 {% load debate_tags %}
 
 {% block page-title %}Enter Results for {{ round.name }}{% endblock %}
@@ -24,6 +25,13 @@
       cannot be entered. <a href="{% round_url motions-edit current_round %}" class="alert-link">Add Motions.</a>
     </div>
   {% endif %}
+  {% with even_panel=round.num_debates_with_even_panel %}
+    {% if even_panel > 0 %}
+      <div class="alert alert-warning">
+        {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
+      </div>
+    {% endif %}
+  {% endwith %}
 {% endblock %}
 
 {% block content %}

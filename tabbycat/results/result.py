@@ -1,3 +1,4 @@
+import logging
 from functools import wraps
 from statistics import mean, StatisticsError
 
@@ -5,6 +6,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import DebateTeam
+
+logger = logging.getLogger(__name__)
 
 
 class ResultError(RuntimeError):
@@ -529,9 +532,13 @@ class BallotSet(ResultBuffer):
 
     def _calc_decision(self):
         """Calculates the majority decision and puts the adjudicators for each
-        team in self._adjs_by_dt and the winning DebateTeam in self._winner.
-        Raises AssertionError if scores are incomplete. Raises ResultError there
-        is a draw somewhere among the adjudicators, or overall."""
+        team in self._adjs_by_dt and the winning DebateTeam in self._winner. If
+        the panel is evenly split, it awards the debate to the team for which
+        the chair voted.
+
+        Raises AssertionError if scores are incomplete.
+        Raises ResultError there is a draw somewhere among the adjudicators.
+        """
         assert self.is_complete, "Tried to calculate decision on an incomplete ballot set."
 
         self._adjs_by_dt = {dt: [] for dt in self.dts} # group adjs by vote
@@ -541,15 +548,20 @@ class BallotSet(ResultBuffer):
                 raise ResultError("The scoresheet for %s does not have a winner." % adj.name)
             self._adjs_by_dt[winner].append(adj)
 
-        counts = {dt: len(adjs) for dt, adjs in self._adjs_by_dt.items()}
-        max_count = max(counts.values()) # check that we have a majority
-        if max_count < self.debate.adjudicators.num_voting // 2 + 1:
-            raise ResultError("No team had a majority in %s." % self.debate.matchup)
+        if len(self.dts) != 2:
+            logger.critical("There weren't exactly two teams in this debate (there were %d).", len(self.dts))
 
-        for dt, count in counts.items(): # set self._winner
-            if count == max_count:
-                self._winner = dt
-                break
+        dt0, dt1 = self.dts
+        count0 = len(self._adjs_by_dt[dt0])
+        count1 = len(self._adjs_by_dt[dt1])
+
+        if count0 > count1:
+            self._winner = dt0
+        elif count1 > count0:
+            self._winner = dt1
+        else:
+            logger.warning("Adjudicators split %d-%d in debate %s, awarding by chair casting vote.", count0, count1, self.debate)
+            self._winner = self.adjudicator_sheets[self.debate.adjudicators.chair]._get_winner()
 
         self._decision_calculated = True
 
