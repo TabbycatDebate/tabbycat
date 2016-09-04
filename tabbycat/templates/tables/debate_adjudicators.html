@@ -1,5 +1,5 @@
 <td class="adj-names">
-  {% for type, adj in debate.adjudicators.with_positions %}
+  {% for adj, type in debate.adjudicators.with_positions %}
     {% if type == 'c' %}
       <span class="adj-chair">{{ adj.name }}</span> Ⓒ
     {% elif type == 't' %}
