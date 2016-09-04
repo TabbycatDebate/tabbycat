@@ -88,6 +88,10 @@ class AdjudicatorAllocation:
     # ==========================================================================
 
     @property
+    def num_voting(self):
+        return (0 if self.chair is None else 1) + len(self.panellists)
+
+    @property
     def has_chair(self):
         return self.chair is not None
 
@@ -96,12 +100,12 @@ class AdjudicatorAllocation:
         return len(self.panellists) > 0
 
     @property
-    def valid(self):
-        return self.has_chair and len(self.panellists) % 2 == 0
+    def is_even(self):
+        return self.num_voting % 2 == 0
 
     @property
-    def num_voting(self):
-        return (0 if self.chair is None else 1) + len(self.panellists)
+    def valid(self):
+        return self.has_chair and not self.is_even
 
     def get_position(self, adj):
         """Returns an AdjudicatorAllocation.POSITION_* constant corresponding

@@ -18,6 +18,14 @@
 {% endblock %}
 
 {% block page-alerts %}
+  {% if debate.adjudicators.is_even %}
+    <div class="alert alert-warning">
+      This debate has a panel with an even number of voting adjudicators.
+      If the adjudicators split evenly, the debate will be awarded to the team
+      for which the chair voted.
+    </div>
+  {% endif %}
+
   {% include "other_ballots_list.html" %}
 {% endblock %}
 
