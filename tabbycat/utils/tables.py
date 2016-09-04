@@ -416,26 +416,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': "Institution",
             }, [team.institution.code for team in teams])
 
-    def add_team_pullup_columns(self, debates, standings):
-        pullups_header = {
-            'key': "Pullups",
-            'text': 'Pull',
-            'tooltip': "Whether or not a team was a pull-up",
-        }
-        pullups_data = []
-        for debate in debates:
-            a_team_standing = standings.get_standing(debate.aff_team)
-            a_is_pullup = abs(a_team_standing.metrics["points"] - debate.bracket) >= 1
-            n_team_standing = standings.get_standing(debate.neg_team)
-            n_is_pullup = abs(n_team_standing.metrics["points"] - debate.bracket) >= 1
-            text = 'Aff' if a_is_pullup else ''
-            text += 'Neg' if n_is_pullup else ''
-            pullups_data.append({
-                'sort': 1 if a_is_pullup or n_is_pullup else 0,
-                'text': text
-            })
-        self.add_column(pullups_header, pullups_data)
-
     def add_speaker_columns(self, speakers, key="Name"):
         self.add_column(key, [speaker.name for speaker in speakers])
         if self.tournament.pref('show_novices'):

@@ -195,12 +195,10 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
             standings = generator.generate(teams, round=r.prev)
             if not r.is_break_round:
-                if "points" in standings.metric_keys:
-                    table.add_team_pullup_columns(draw, standings)
                 table.add_debate_ranking_columns(draw, standings)
             else:
                 table.add_column(
-                    {'tooltip': "Aff Team's Break Rank", 'text': "ABR"},
+                    {'tooltip': "Affirmative Team's Break Rank", 'text': "ABR"},
                     ["%s" % d.aff_team.break_rank_for_category(r.break_category) for d in draw])
                 table.add_column(
                     {'tooltip': "Negative Team's Break Rank", 'text': "NBR"},
