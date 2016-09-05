@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('draw', '0008_delete_teamvenuepreference_institutionvenuepreference'),
+        ('divisions', '0001_initial'),
     ]
 
     operations = [

@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('participants', '0013_auto_20160507_1521'),
+        ('divisions', '0001_initial'),
     ]
 
     operations = [

@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('motions', '0005_auto_20160507_1521'),
+        ('divisions', '0001_initial'),
     ]
 
     operations = [
