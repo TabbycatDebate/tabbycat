@@ -494,6 +494,14 @@ class BaseBallotCheckinJsonResponseView(LoginRequiredMixin, RoundMixin, JsonData
         if venue_id is None:
             raise DebateBallotCheckinError('There aren\'t any venues with that name.')
 
+        # TODO: The below errors are all hangovers from when searches were by
+        # name only. They can still in theory happen, if an administrator
+        # changes things (e.g. deletes or reassigns a venue) and the client
+        # doesn't reload the page, so that the client is working on outdated
+        # information. Nonetheless, this workflow needs to be reworked for the
+        # new paradigm of selecting venues from a predefined list, while keeping
+        # the UI textbox-centric.
+
         try:
             venue = Venue.objects.get(id=venue_id)
         except Venue.DoesNotExist:
