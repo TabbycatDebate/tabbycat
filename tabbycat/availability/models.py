@@ -1,4 +1,17 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+
+
+class RoundAvailability(models.Model):
+    round = models.ForeignKey('tournaments.Round', models.CASCADE)
+
+    content_type = models.ForeignKey(ContentType, models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        unique_together = [('round', 'content_type', 'object_id')]
 
 
 class Checkin(models.Model):
