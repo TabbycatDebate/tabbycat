@@ -643,9 +643,13 @@ class BallotSet(ResultBuffer):
         return None
 
     def _get_votes_given(self, dt):
+        if not self._sheets_created:
+            return self.teamscore_objects[dt].votes_given
         return len(self._adjs_by_dt[dt])
 
     def _get_votes_possible(self, dt):
+        if not self._sheets_created:
+            return self.teamscore_objects[dt].votes_possible
         return len(self.adjudicator_sheets.items())
 
     # --------------------------------------------------------------------------
