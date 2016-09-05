@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('venues', '0007_adjudicatorvenueconstraint_divisionvenueconstraint_institutionvenueconstraint_teamvenueconstraint'),
+        ('divisions', '0001_initial'),
     ]
 
     operations = [
