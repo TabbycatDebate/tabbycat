@@ -3,6 +3,12 @@ Change Log
 ==========
 
 
+1.1.1
+-----
+
+- Fixed a bug where the team standings and team tab would crash when some emoji were not set
+
+
 1.1.0 (Egyptian Mau)
 --------------------
 
