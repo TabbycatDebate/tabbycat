@@ -30,6 +30,6 @@ class PublicEFLBreakingTeamsViewTest(BreakingTeamsViewTest, TestCase):
     break_slug = 'efl'
 
 
-class PublicBreakingAdjuidcatorsViewTest(ConditionalTableViewTest, TestCase):
+class PublicBreakingAdjudicatorsViewTest(ConditionalTableViewTest, TestCase):
     view_name = 'breakqual-public-adjs'
     view_toggle = 'public_features__public_breaking_adjs'
