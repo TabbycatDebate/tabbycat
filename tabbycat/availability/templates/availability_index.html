@@ -8,34 +8,34 @@
     </a>
   {% else %}
     <a class="btn btn-default submit-disable"
-       href="{% round_url team_availability round %}">
+       href="{% round_url availability-teams round %}">
       Check In Teams
     </a>
   {% endif %}
   <a class="btn btn-default submit-disable"
-     href="{% round_url adjudicator_availability round %}">
+     href="{% round_url availability-adjudicators round %}">
     Check In Adjudicators
   </a>
   <a class="btn btn-default submit-disable"
-     href="{% round_url venue_availability round %}">
+     href="{% round_url availability-venues round %}">
     Check In Venues
   </a>
   {% if round.is_break_round %}
-    <form method="POST" action="{% round_url update_availability_breaking_adjs %}">
+    <form method="POST" action="{% round_url availability-checkin-breaking-adjudicators %}">
       {% csrf_token %}
       <button class="btn btn-primary submit-disable" type="submit">
         Check In All Breaking Adjudicators
       </button>
     </form>
   {% else %}
-    <form method="POST" action="{% round_url update_availability_all %}">
+    <form method="POST" action="{% round_url availability-checkin-all %}">
       {% csrf_token %}
       <button class="btn btn-primary submit-disable" type="submit">
         Check In Everything
       </button>
     </form>
     {% if round.prev %}
-      <form method="POST" action="{% round_url update_availability_previous %}">
+      <form method="POST" action="{% round_url availability-checkin-previous %}">
         {% csrf_token %}
         <button class="btn btn-primary submit-disable" type="submit">
           Check In Everything Active in {{ round.prev.name }}

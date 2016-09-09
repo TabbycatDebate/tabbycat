@@ -127,7 +127,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
     page_emoji = '👂'
     model = Team
     sort_key = 'team'
-    update_view = 'update_team_availability'
+    update_view = 'availability-update-teams'
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('speaker_set')
@@ -141,7 +141,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
     page_emoji = '👂'
     model = Adjudicator
     sort_key = 'name'
-    update_view = 'update_adjudicator_availability'
+    update_view = 'availability-update-adjudicators'
 
     @staticmethod
     def add_description_columns(table, adjudicators):
@@ -152,7 +152,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
     page_emoji = '🎪'
     model = Venue
     sort_key = 'venue'
-    update_view = 'update_venue_availability'
+    update_view = 'availability-update-venues'
 
     def get_queryset(self):
         return super().get_queryset().select_related('group')
@@ -168,9 +168,9 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 # Bulk Activations
 # ==============================================================================
 
-class AvailabilityActivateBase(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+class BaseBulkActivationView(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
 
-    round_redirect_pattern_name = 'availability_index'
+    round_redirect_pattern_name = 'availability-index'
 
     def post(self, request, *args, **kwargs):
         self.activate_function()
@@ -178,14 +178,14 @@ class AvailabilityActivateBase(RoundMixin, SuperuserRequiredMixin, PostOnlyRedir
         return super().post(request, *args, **kwargs)
 
 
-class AvailabilityActivateAll(AvailabilityActivateBase):
+class CheckInAllInRoundView(BaseBulkActivationView):
     activation_msg = 'Checked in all teams, adjudicators and venues.'
 
     def activate_function(self):
         utils.activate_all(self.get_round())
 
 
-class AvailabilityActivateBreakingAdjs(AvailabilityActivateBase):
+class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
     activation_msg = 'Checked in all breaking adjudicators.'
 
     def activate_function(self):
@@ -193,7 +193,7 @@ class AvailabilityActivateBreakingAdjs(AvailabilityActivateBase):
                 self.get_round())
 
 
-class AvailabilityActivateFromPrevious(AvailabilityActivateBase):
+class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
     activation_msg = 'Checked in all teams, adjudicators and venues from previous round.'
 
     def activate_function(self):
@@ -217,7 +217,7 @@ class AvailabilityActivateFromPrevious(AvailabilityActivateBase):
 # Specific Activation Actions
 # ==============================================================================
 
-class AvailabilityUpdateBase(RoundMixin, SuperuserRequiredMixin, View, LogActionMixin):
+class BaseAvailabilityUpdateView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, View):
 
     def post(self, request, *args, **kwargs):
         try:
@@ -230,16 +230,16 @@ class AvailabilityUpdateBase(RoundMixin, SuperuserRequiredMixin, View, LogAction
             return HttpResponseBadRequest()
 
 
-class AvailabilityUpdateAdjudicators(AvailabilityUpdateBase):
+class UpdateAdjudicatorsAvailabilityView(BaseAvailabilityUpdateView):
     action_log_type = ActionLogEntry.ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE
     model = Adjudicator
 
 
-class AvailabilityUpdateTeams(AvailabilityUpdateBase):
+class UpdateTeamsAvailabilityView(BaseAvailabilityUpdateView):
     action_log_type = ActionLogEntry.ACTION_TYPE_AVAIL_TEAMS_SAVE
     model = Team
 
 
-class AvailabilityUpdateVenues(AvailabilityUpdateBase):
+class UpdateVenuesAvailabilityView(BaseAvailabilityUpdateView):
     action_log_type = ActionLogEntry.ACTION_TYPE_AVAIL_VENUES_SAVE
     model = Venue
