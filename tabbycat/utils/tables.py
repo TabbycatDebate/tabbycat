@@ -231,9 +231,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return {'text': '-'}
 
         opp = ts.debate_team.opponent.team
+        opp_vshort = '<i class="emoji">' + opp.emoji + '</i>' if opp.emoji else "…"
 
         cell = {
-            'text': " vs " + ('<i class="emoji">' + opp.emoji + '</i>' or "…") if compress else opp.short_name,
+            'text': " vs " + (opp_vshort if compress else opp.short_name),
             'popover': {'content': [{'text': ''}], 'title': ''}
         }
 
