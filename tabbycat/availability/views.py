@@ -110,30 +110,9 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
     def get_queryset(self):
         return self.model.objects.filter(tournament=self.get_tournament())
 
-    def _sql(self, round):
-        # We don't really want to write raw SQL here, but as far as I can tell
-        # the only alternative is to add a GenericRelation to each relevant
-        # model, run a prefetch_related, using Prefetch('round_availabilities',
-        # queryset=RoundAvailability.objects.filter(round=round)),
-        # to_attr='availability') then check the length of the resulting list.
-        # And do this again for the previous round, if applicable. Which is
-        # probably worse. Much to my chagrin, Django doesn't provide an easy way
-        # to annotate with an EXISTS statement.
-        self.contenttype = ContentType.objects.get_for_model(self.model)
-        sql = """
-            EXISTS (SELECT * FROM availability_roundavailability
-            WHERE availability_roundavailability.content_type_id = %s
-            AND availability_roundavailability.object_id = {model:s}.id
-            AND availability_roundavailability.round_id = %s)""".format(model=self.model._meta.db_table)
-        params = (self.contenttype.id, round.id)
-        return RawSQL(sql, params)
-
     def get_table(self):
         round = self.get_round()
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
-        # instances = self.get_queryset().annotate(availability=self._sql(round))
-        # if round.prev:
-            # instances = instances.annotate(prev_availability=self._sql(round.prev))
 
         instances = self.get_queryset().prefetch_related(Prefetch('round_availabilities',
                 queryset=RoundAvailability.objects.filter(round=round), to_attr='availability'))
