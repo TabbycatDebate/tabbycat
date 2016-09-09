@@ -1,9 +1,9 @@
 import logging
 
+from availability.models import RoundAvailability
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Prefetch
 
-from .models import RoundAvailability
 
 logger = logging.getLogger(__name__)
 

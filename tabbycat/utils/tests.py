@@ -105,7 +105,7 @@ class ConditionalTableViewTest(BaseTableViewTest):
 
 class BaseDebateTestCase(TestCase):
     """Currently used in availability and participants tests as a pseudo fixture
-    to create teh basic data to simulate simple tournament functions"""
+    to create the basic data to simulate simple tournament functions"""
 
     def setUp(self):
         super(BaseDebateTestCase, self).setUp()
