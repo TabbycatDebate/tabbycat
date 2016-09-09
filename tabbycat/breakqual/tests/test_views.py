@@ -5,7 +5,7 @@ from breakqual.models import BreakingTeam
 
 
 class BreakingTeamsViewTest(ConditionalTableViewTest):
-    view_name = 'public_breaking_teams'
+    view_name = 'breakqual-public-teams'
     view_toggle = 'public_features__public_breaking_teams'
 
     def get_response(self):
@@ -31,5 +31,5 @@ class PublicEFLBreakingTeamsViewTest(BreakingTeamsViewTest, TestCase):
 
 
 class PublicBreakingAdjuidcatorsViewTest(ConditionalTableViewTest, TestCase):
-    view_name = 'public_breaking_adjs'
+    view_name = 'breakqual-public-adjs'
     view_toggle = 'public_features__public_breaking_adjs'
