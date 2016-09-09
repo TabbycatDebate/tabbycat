@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.base import RedirectView, TemplateView, View
 
@@ -29,68 +30,62 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         r = self.get_round()
-        t = self.get_tournament()
-        total_adjs = r.tournament.adjudicator_set.count()
-        total_venues = r.tournament.venue_set.count()
+        tournament = self.get_tournament()
 
         if r.prev:
             kwargs['previous_unconfirmed'] = r.prev.debate_set.filter(
                 result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
-        if t.pref('share_adjs'):
-            total_adjs += Adjudicator.objects.filter(tournament=None).count()
-        if t.pref('share_venues'):
-            total_venues += Venue.objects.filter(tournament=None).count()
 
-        checks = []
+        if r.is_break_round:
+            teams = self._get_breaking_teams_dict()
+        else:
+            teams = self._get_dict(tournament.team_set)
+
+        adjs = self._get_dict(tournament.relevant_adjudicators)
+        venues = self._get_dict(tournament.relevant_venues)
+
+        # Basic check before enable the button to advance
+        kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0 and venues['in_now'] > 0
+        kwargs['checkin_types'] = [teams, adjs, venues]
+        kwargs['min_adjudicators'] = teams['in_now'] // 2
+        kwargs['min_venues'] = teams['in_now'] // 2
+        return super().get_context_data(**kwargs)
+
+    def _get_breaking_teams_dict(self):
+        r = self.get_round()
         if r.draw_type is r.DRAW_FIRSTBREAK:
             break_size = r.break_category.break_size
             break_details = partial_break_round_split(break_size)
-            checks.append({
+            return {
                 'type'      : 'Team',
                 'total'     : break_size,
                 'in_now'    : break_details[0] * 2,
                 'message'   : '%s breaking teams are debating this round; %s teams are bypassing' % (break_details[0] * 2, break_details[1])
-            })
+            }
         elif r.draw_type is r.DRAW_BREAK:
             last_round = r.break_category.round_set.filter(seq__lt=r.seq).order_by('-seq').first()
             advancing_teams = last_round.debate_set.count()
-            checks.append({
+            return {
                 'type'      : 'Team',
                 'total'     : advancing_teams,
                 'in_now'    : advancing_teams,
                 'message'   : '%s advancing teams are debating this round' % advancing_teams
-            })
+            }
+
+    def _get_dict(self, queryset_all):
+        contenttype = ContentType.objects.get_for_model(queryset_all.model)
+        availability_queryset = RoundAvailability.objects.filter(content_type=contenttype)
+        round = self.get_round()
+        result = {
+            'type': queryset_all.model._meta.verbose_name.title(),
+            'total': queryset_all.count(),
+            'in_now': availability_queryset.filter(round=round).count(),
+        }
+        if round.prev:
+            result['in_before'] = availability_queryset.filter(round=round.prev).count()
         else:
-            checks.append({
-                'type'      : 'Team',
-                'total'     : t.teams.count(),
-                'in_now'    : ActiveTeam.objects.filter(round=r).count(),
-                'in_before' : ActiveTeam.objects.filter(round=r.prev).count() if r.prev else None,
-            })
-
-        checks.append({
-            'type'      : 'Adjudicator',
-            'total'     : total_adjs,
-            'in_now'    : ActiveAdjudicator.objects.filter(round=r).count(),
-            'in_before' : ActiveAdjudicator.objects.filter(round=r.prev).count() if r.prev else None,
-        })
-        checks.append({
-            'type'      : 'Venue',
-            'total'     : total_venues,
-            'in_now'    : ActiveVenue.objects.filter(round=r).count(),
-            'in_before' : ActiveVenue.objects.filter(round=r.prev).count() if r.prev else None,
-        })
-
-        # Basic check before enable the button to advance
-        if all([checks[0]['in_now'] > 1, checks[1]['in_now'] > 0, checks[2]['in_now'] > 0]):
-            kwargs['can_advance'] = True
-        else:
-            kwargs['can_advance'] = False
-
-        kwargs['checkin_types'] = checks
-        kwargs['min_adjudicators'] = int(checks[0]['in_now'] / 2)
-        kwargs['min_venues'] = int(checks[0]['in_now'] / 2)
-        return super().get_context_data(**kwargs)
+            result['in_before'] = None
+        return result
 
 
 # ==============================================================================
