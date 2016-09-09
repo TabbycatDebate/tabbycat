@@ -44,9 +44,29 @@ class Tournament(models.Model):
         help_text="Text/html entered here shows on the homepage for this tournament")
     active = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ['seq', ]
+
     def __init__(self, *args, **kwargs):
         self._prefs = {}
         return super().__init__(*args, **kwargs)
+
+    def __str__(self):
+        if self.short_name:
+            return str(self.short_name)
+        else:
+            return str(self.name)
+
+    # --------------------------------------------------------------------------
+    # Properties related to preferences
+    # --------------------------------------------------------------------------
+
+    def pref(self, name):
+        try:
+            return self._prefs[name]
+        except KeyError:
+            self._prefs[name] = self.preferences.get_by_name(name)
+            return self._prefs[name]
 
     @property
     def LAST_SUBSTANTIVE_POSITION(self):  # flake8: noqa
@@ -71,6 +91,10 @@ class Tournament(models.Model):
             speaker_positions = speaker_positions + 1
         return list(range(1, speaker_positions))
 
+    # --------------------------------------------------------------------------
+    # Permalinks
+    # --------------------------------------------------------------------------
+
     @models.permalink
     def get_absolute_url(self):
         return ('tournament-admin-home', [self.slug])
@@ -79,9 +103,53 @@ class Tournament(models.Model):
     def get_public_url(self):
         return ('tournament-public-index', [self.slug])
 
+    # --------------------------------------------------------------------------
+    # Convenience querysets
+    # --------------------------------------------------------------------------
+
     @cached_property
     def teams(self):
+        warn('Tournament.teams is deprecated, use Tournament.team_set instead.', stacklevel=2)
         return self.team_set
+
+    @property
+    def relevant_adjudicators(self):
+        """Convenience property for retrieving adjudicators relevant to the tournament.
+        Returns a QuerySet."""
+        if self.pref('share_adjs'):
+            return Adjudicator.objects.filter(Q(tournament=self) | Q(tournament__isnull=True))
+        else:
+            return self.adjudicator_set.all()
+
+    @property
+    def relevant_venues(self):
+        """Convenience property for retrieving venues relevant to the tournament.
+        Returns a QuerySet."""
+        if self.pref('share_adjs'):
+            return Venue.objects.filter(Q(tournament=self) | Q(tournament__isnull=True))
+        else:
+            return self.venue_set.all()
+
+    def prelim_rounds(self, before=None, until=None):
+        """Convenience function for retrieving preliminary rounds. Returns a QuerySet."""
+        qs = self.round_set.filter(stage=Round.STAGE_PRELIMINARY)
+        if until:
+            qs = qs.filter(seq__lte=until.seq)
+        if before:
+            qs = qs.filter(seq__lt=before.seq)
+        return qs
+
+    def break_rounds(self):
+        """Convenience function for retrieving break rounds. Returns a QuerySet."""
+        return self.round_set.filter(stage=Round.STAGE_ELIMINATION)
+
+    @cached_property
+    def adj_feedback_questions(self):
+        return self.adjudicatorfeedbackquestion_set.order_by("seq")
+
+    # --------------------------------------------------------------------------
+    # Cached
+    # --------------------------------------------------------------------------
 
     @cached_property
     def get_current_round_cached(self):
@@ -92,49 +160,15 @@ class Tournament(models.Model):
         else:
             return None
 
-    def prelim_rounds(self, before=None, until=None):
-        qs = self.round_set.filter(stage=Round.STAGE_PRELIMINARY)
-        if until:
-            qs = qs.filter(seq__lte=until.seq)
-        if before:
-            qs = qs.filter(seq__lt=before.seq)
-        return qs
-
-    def break_rounds(self):
-        return self.round_set.filter(stage=Round.STAGE_ELIMINATION)
+    # --------------------------------------------------------------------------
+    # Operations that modify the instance
+    # --------------------------------------------------------------------------
 
     def advance_round(self):
         next_round_seq = self.current_round.seq + 1
         next_round = Round.objects.get(seq=next_round_seq, tournament=self)
         self.current_round = next_round
         self.save()
-
-    def pref(self, name):
-        try:
-            return self._prefs[name]
-        except KeyError:
-            self._prefs[name] = self.preferences.get_by_name(name)
-            return self._prefs[name]
-
-    @cached_property
-    def config(self):
-        if not hasattr(self, '_config'):
-            from options.options import Config  # TODO: improve the semantics here
-            self._config = Config(self)
-        return self._config
-
-    @cached_property
-    def adj_feedback_questions(self):
-        return self.adjudicatorfeedbackquestion_set.order_by("seq")
-
-    class Meta:
-        ordering = ['seq', ]
-
-    def __str__(self):
-        if self.short_name:
-            return str(self.short_name)
-        else:
-            return str(self.name)
 
 
 def update_tournament_cache(sender, instance, created, **kwargs):
@@ -145,6 +179,7 @@ def update_tournament_cache(sender, instance, created, **kwargs):
 
 # Update the cached tournament object when model is changed)
 signals.post_save.connect(update_tournament_cache, sender=Tournament)
+
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
     use_for_related_fields = True
@@ -172,6 +207,11 @@ class Round(models.Model):
     STAGE_ELIMINATION = 'E'
     STAGE_CHOICES = ((STAGE_PRELIMINARY, 'Preliminary'),
                      (STAGE_ELIMINATION, 'Elimination'), )
+
+    VALID_DRAW_TYPES_BY_STAGE = {
+        STAGE_PRELIMINARY: [DRAW_RANDOM, DRAW_MANUAL, DRAW_ROUNDROBIN, DRAW_POWERPAIRED],
+        STAGE_ELIMINATION: [DRAW_FIRSTBREAK, DRAW_BREAK],
+    }
 
     STATUS_NONE = 'N'
     STATUS_DRAFT = 'D'
@@ -219,6 +259,17 @@ class Round(models.Model):
     def __str__(self):
         return "[%s] %s" % (self.tournament, self.name)
 
+    def clean(self):
+        super().clean()
+        valid_draw_types = self.VALID_DRAW_TYPES_BY_STAGE[self.stage]
+        if self.draw_type not in valid_draw_types:
+            display_names = [name for value, name in self.DRAW_CHOICES if value in valid_draw_types]
+            raise ValidationError({'draw_type': "A round in the {stage} stage must have a "
+                "draw type that is one of: {valid}".format(
+                    stage=self.get_stage_display().lower(),
+                    valid=", ".join(display_names)
+                )})
+
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
         more than one chair."""
@@ -249,7 +300,7 @@ class Round(models.Model):
 
     @cached_property
     def is_break_round(self):
-        return self.stage is self.STAGE_ELIMINATION
+        return self.stage == self.STAGE_ELIMINATION
 
     # ==========================================================================
     # Draw retrieval methods
