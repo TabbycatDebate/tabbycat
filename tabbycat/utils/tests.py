@@ -25,19 +25,20 @@ class BaseTableViewTest():
     @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
     def get_response(self):
         with self.modify_settings(
-            # Remove whitenoise middleware as it wont resolve on travis
+            # Remove whitenoise middleware as it won't resolve on Travis
             MIDDLEWARE={
                 'remove': [
                     'whitenoise.middleware.WhiteNoiseMiddleware',
                 ],
             }
         ):
-            if self.round_seq is not None:
-                return self.client.get(reverse(self.view_name,
-                    kwargs={'tournament_slug': self.t.slug, 'round_seq': self.round_seq}))
-            else:
-                return self.client.get(reverse(self.view_name,
-                    kwargs={'tournament_slug': self.t.slug}))
+            return self.client.get(reverse(self.view_name, kwargs=self.get_url_kwargs()))
+
+    def get_url_kwargs(self):
+        kwargs = {'tournament_slug': self.t.slug}
+        if self.round_seq is not None:
+            kwargs['round_seq'] = self.round_seq
+        return kwargs
 
     def validate_table_data(self, r):
 
