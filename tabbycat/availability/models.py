@@ -5,8 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 
 class RoundAvailability(models.Model):
 
-    CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='person') | \
-        models.Q(app_label='participants', model='team') | \
+    CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='team') | \
         models.Q(app_label='participants', model='adjudicator') | \
         models.Q(app_label='venues', model='venue')
 
