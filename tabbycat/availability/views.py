@@ -1,12 +1,10 @@
-import traceback
+import logging
 
 from django.contrib import messages
-from django.contrib.contenttypes.models import ContentType
-from django.db.models import Prefetch
-from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.base import RedirectView, TemplateView, View
 
+from . import utils
 from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
 
 from availability.models import RoundAvailability
@@ -20,6 +18,8 @@ from utils.tables import TabbycatTableBuilder
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from venues.models import Venue
+
+logger = logging.getLogger(__name__)
 
 
 class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
@@ -114,22 +114,18 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
         round = self.get_round()
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
 
-        instances = self.get_queryset().prefetch_related(Prefetch('round_availabilities',
-                queryset=RoundAvailability.objects.filter(round=round), to_attr='availability'))
-        if round.prev:
-            instances = instances.prefetch_related(Prefetch('round_availabilities',
-                    queryset=RoundAvailability.objects.filter(round=round.prev), to_attr='prev_availability'))
+        queryset = utils.annotate_availability(self.get_queryset(), round)
 
-        table.add_checkbox_columns([len(inst.availability) > 0 for inst in instances],
-            [inst.id for inst in instances], "Active Now")
+        table.add_checkbox_columns([inst.available for inst in queryset],
+            [inst.id for inst in queryset], "Active Now")
 
         if round.prev:
             table.add_column("Active in %s" % round.prev.abbreviation, [{
-                'sort': len(inst.prev_availability) > 0,
-                'icon': 'glyphicon-ok' if len(inst.prev_availability) > 0 else ''
-            } for inst in instances])
+                'sort': inst.prev_available,
+                'icon': 'glyphicon-ok' if inst.prev_available else ''
+            } for inst in queryset])
 
-        self.add_description_columns(table, instances)
+        self.add_description_columns(table, queryset)
         return table
 
 
@@ -219,29 +215,24 @@ class AvailabilityUpdateBase(RoundMixin, SuperuserRequiredMixin, View, LogAction
     def post(self, request, *args, **kwargs):
         try:
             references = request.POST.getlist('references[]')
-            self.set_availabilities(self.get_round(), references)
+            utils.set_availability_by_id(self.model, references, self.get_round())
             return HttpResponse('ok')
+
         except:
-            traceback.print_exc()
+            logger.critical("Error handling availability updates", exc_info=True)
             return HttpResponseBadRequest()
 
 
 class AvailabilityUpdateAdjudicators(AvailabilityUpdateBase):
     action_log_type = ActionLogEntry.ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE
-
-    def set_availabilities(self, round, ids):
-        round.set_available_adjudicators(ids)
+    model = Adjudicator
 
 
 class AvailabilityUpdateTeams(AvailabilityUpdateBase):
     action_log_type = ActionLogEntry.ACTION_TYPE_AVAIL_TEAMS_SAVE
-
-    def set_availabilities(self, round, ids):
-        round.set_available_teams(ids)
+    model = Team
 
 
 class AvailabilityUpdateVenues(AvailabilityUpdateBase):
     action_log_type = ActionLogEntry.ACTION_TYPE_AVAIL_VENUES_SAVE
-
-    def set_availabilities(self, round, ids):
-        round.set_available_venues(ids)
+    model = Venue
