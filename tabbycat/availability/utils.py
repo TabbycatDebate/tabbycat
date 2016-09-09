@@ -61,3 +61,9 @@ def set_availability_by_id(model, ids, round):
     RoundAvailability.objects.bulk_create(
         [RoundAvailability(content_type=contenttype, round=round, object_id=id) for id in new]
     )
+
+
+def activate_all(round):
+    set_availability(round.tournament.team_set, round)
+    set_availability(round.tournament.relevant_adjudicators, round)
+    set_availability(round.tournament.relevant_venues, round)

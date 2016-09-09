@@ -1,5 +1,6 @@
 from warnings import warn
 
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Count, signals
 from django.core.cache import cache
@@ -239,9 +240,6 @@ class Round(models.Model):
        help_text="The status of this round's draw")
 
     checkins = models.ManyToManyField('participants.Person', through='availability.Checkin', related_name='checkedin_rounds')
-    active_venues = models.ManyToManyField('venues.Venue', through='availability.ActiveVenue')
-    active_adjudicators = models.ManyToManyField('participants.Adjudicator', through='availability.ActiveAdjudicator')
-    active_teams = models.ManyToManyField('participants.Team', through='availability.ActiveTeam')
 
     feedback_weight = models.FloatField(default=0,
         help_text="The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback.")
@@ -302,9 +300,9 @@ class Round(models.Model):
     def is_break_round(self):
         return self.stage == self.STAGE_ELIMINATION
 
-    # ==========================================================================
+    # --------------------------------------------------------------------------
     # Draw retrieval methods
-    # ==========================================================================
+    # --------------------------------------------------------------------------
 
     def get_draw(self, ordering=('venue__name',)):
         warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=2)
@@ -347,233 +345,34 @@ class Round(models.Model):
 
         return debates
 
-    # TODO: all these availability methods should be in the availability app
+    # --------------------------------------------------------------------------
+    # Convenience querysets
+    # --------------------------------------------------------------------------
 
-    def base_availability(self,
-                          model,
-                          active_table,
-                          active_column,
-                          model_table,
-                          id_field='id'):
-        d = {
-            'active_table': active_table,
-            'active_column': active_column,
-            'model_table': model_table,
-            'id_field': id_field,
-            'id': self.id,
-        }
-        return model.objects.all().extra(
-            select={'is_active': """EXISTS (Select 1
-                                                 from %(active_table)s
-                                                 drav where
-                                                 drav.%(active_column)s =
-                                                 %(model_table)s.%(id_field)s and
-                                                 drav.round_id=%(id)d)""" % d})
+    @property
+    def active_teams(self):
+        return self.tournament.team_set.filter(round_availabilities__round=self)
 
-    def person_availability(self):
-        from participants.models import Person
-        return self.base_availability(Person, 'availability_checkin',
-                                      'person_id', 'participants_person')
+    @property
+    def active_adjudicators(self):
+        return self.tournament.relevant_adjudicators.filter(round_availabilities__round=self)
 
-    def venue_availability(self):
-        from venues.models import Venue
-        all_venues = self.base_availability(Venue, 'availability_activevenue',
-                                            'venue_id', 'venues_venue')
-
-        if self.tournament.pref('share_venues'):
-            return [v for v in all_venues if v.tournament == self.tournament or v.tournament is None]
-        else:
-            return [v for v in all_venues if v.tournament == self.tournament]
+    @property
+    def active_venues(self):
+        return self.tournament.relevant_venues.filter(round_availabilities__round=self)
 
     def unused_venues(self):
-        from venues.models import Venue
-        # Had to replicate venue_availability via base_availability so extra()
-        # could still function on the query set
-        result = self.base_availability(
-            Venue, 'availability_activevenue', 'venue_id',
-            'venues_venue').extra(select={'is_used': """EXISTS (SELECT 1
-                                      FROM draw_debate da
-                                      WHERE da.round_id=%d AND
-                                      da.venue_id = venues_venue.id)""" %
-                                          self.id}, )
-
-        if self.tournament.pref('share_venues'):
-            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament or v.tournament is None]
-        else:
-            return [v for v in result if v.is_active and not v.is_used and v.tournament == self.tournament]
-
-    def adjudicator_availability(self):
-        from participants.models import Adjudicator
-        all_adjs = self.base_availability(Adjudicator,
-                                          'availability_activeadjudicator',
-                                          'adjudicator_id',
-                                          'participants_adjudicator',
-                                          id_field='person_ptr_id')
-
-        if self.tournament.pref('share_adjs'):
-            return [a for a in all_adjs if a.tournament == self.tournament or a.tournament is None]
-        else:
-            return [a for a in all_adjs if a.tournament == self.tournament]
+        return self.active_venues.exclude(debate__round=self)
 
     def unused_adjudicators(self):
-        from participants.models import Adjudicator
-        result = self.base_availability(
-            Adjudicator,
-            'availability_activeadjudicator',
-            'adjudicator_id',
-            'participants_adjudicator',
-            id_field='person_ptr_id').extra(
-                select={'is_used': """EXISTS (SELECT 1
-                                                  FROM adjallocation_debateadjudicator da
-                                                  LEFT JOIN draw_debate d ON da.debate_id = d.id
-                                                  WHERE d.round_id = %d AND
-                                                  da.adjudicator_id = participants_adjudicator.person_ptr_id)"""
-                        % self.id}, )
-        if not self.tournament.pref('draw_skip_adj_checkins'):
-            return [a for a in result if a.is_active and not a.is_used]
-        else:
-            return [a for a in result if not a.is_used]
-
-    def team_availability(self):
-        from participants.models import Team
-        all_teams = self.base_availability(Team, 'availability_activeteam',
-                                           'team_id', 'participants_team')
-        relevant_teams = [t for t in all_teams
-                          if t.tournament == self.tournament]
-        return relevant_teams
+        return self.active_adjudicators.exclude(debateadjudicator__debate__round=self)
 
     def unused_teams(self):
-        from draw.models import DebateTeam
-        all_teams = self.active_teams.all()
-        all_teams = [t for t in all_teams if t.tournament == self.tournament]
+        return self.active_teams.exclude(debateteam__debate__round=self)
 
-        debating_teams = [
-            t.team
-            for t in DebateTeam.objects.filter(
-                debate__round=self).select_related('team', 'debate')
-        ]
-        unused_teams = [t for t in all_teams if t not in debating_teams]
-
-        return unused_teams
-
-    def set_available_base(self,
-                           ids,
-                           model,
-                           active_model,
-                           get_active,
-                           id_column,
-                           active_id_column,
-                           remove=True):
-        ids = set(ids)
-        all_ids = set(a['id'] for a in model.objects.values('id'))
-        exclude_ids = all_ids.difference(ids)
-        existing_ids = set(a['id'] for a in get_active.values('id'))
-
-        remove_ids = existing_ids.intersection(exclude_ids)
-        add_ids = ids.difference(existing_ids)
-
-        if remove:
-            active_model.objects.filter(**{
-                '%s__in' % active_id_column: remove_ids,
-                'round': self,
-            }).delete()
-
-        for id in add_ids:
-            m = active_model(round=self)
-            setattr(m, id_column, id)
-            m.save()
-
-
-    def set_available_venues(self, ids):
-        from availability.models import ActiveVenue
-        from venues.models import Venue
-        return self.set_available_base(ids, Venue, ActiveVenue,
-                                       self.active_venues, 'venue_id',
-                                       'venue__id')
-
-    def set_available_adjudicators(self, ids):
-        from availability.models import ActiveAdjudicator
-        from participants.models import Adjudicator
-        return self.set_available_base(ids, Adjudicator, ActiveAdjudicator,
-                                       self.active_adjudicators,
-                                       'adjudicator_id', 'adjudicator__id')
-
-    def set_available_teams(self, ids):
-        from availability.models import ActiveTeam
-        from participants.models import Team
-        return self.set_available_base(
-            ids, Team, ActiveTeam, self.active_teams, 'team_id', 'team__id')
-
-    def activate_adjudicator(self, adj, state=True):
-        from availability.models import ActiveAdjudicator
-        if state:
-            ActiveAdjudicator.objects.get_or_create(round=self,
-                                                    adjudicator=adj)
-        else:
-            self.activeadjudicator_set.filter(adjudicator=adj).delete()
-
-    def activate_venue(self, venue, state=True):
-        from availability.models import ActiveVenue
-        if state:
-            ActiveVenue.objects.get_or_create(round=self, venue=venue)
-        else:
-            self.activevenue_set.filter(venue=venue).delete()
-
-    def activate_team(self, team, state=True):
-        from availability.models import ActiveTeam
-        if state:
-            ActiveTeam.objects.get_or_create(round=self, team=team)
-        else:
-            self.activeteam_set.filter(team=team).delete()
-
-    def activate_all_breaking_adjs(self):
-        from participants.models import Adjudicator
-        self.set_available_adjudicators(
-            [a.id for a in Adjudicator.objects.filter(breaking=True)])
-
-    def activate_all_breaking_teams(self):
-        from breakqual.models import BreakingTeam
-        breaking_teams = BreakingTeam.objects.filter(
-            break_category=self.break_category, remark=None,
-            team__tournament=self.tournament)
-        self.set_available_teams([bt.team.id for bt in breaking_teams])
-
-    def activate_all_advancing_teams(self):
-        from results.models import TeamScore
-        prior_break_round = Round.objects.filter(
-            break_category=self.break_category, seq__lte=self.seq).exclude(
-            id=self.id).order_by('-seq').first()
-        prior_results = TeamScore.objects.filter(
-            win=True, ballot_submission__confirmed=True,
-            ballot_submission__debate__round=prior_break_round)
-        self.set_available_teams([r.debate_team.team.id for r in prior_results])
-
-    def activate_all(self):
-        from venues.models import Venue
-        from participants.models import Adjudicator, Team
-        all_teams = Team.objects.filter(tournament=self.tournament)
-        all_venues = Venue.objects.filter(tournament=self.tournament)
-        all_adjs = Adjudicator.objects.filter(tournament=self.tournament)
-
-        if self.tournament.pref('share_adjs'):
-            all_adjs = all_adjs | Adjudicator.objects.filter(tournament=None)
-        if self.tournament.pref('share_venues'):
-            all_venues = all_venues | Venue.objects.filter(tournament=None)
-
-        self.set_available_teams([t.id for t in all_teams])
-        self.set_available_venues([v.id for v in all_venues])
-        self.set_available_adjudicators([a.id for a in all_adjs])
-
-    def activate_previous(self):
-        from availability.models import ActiveTeam, ActiveAdjudicator, ActiveVenue
-
-        self.set_available_venues(
-            [v.venue.id for v in ActiveVenue.objects.filter(round=self.prev)])
-        self.set_available_adjudicators(
-            [a.adjudicator.id
-             for a in ActiveAdjudicator.objects.filter(round=self.prev)])
-        self.set_available_teams(
-            [t.team.id for t in ActiveTeam.objects.filter(round=self.prev)])
+    # --------------------------------------------------------------------------
+    # Other convenience properties
+    # --------------------------------------------------------------------------
 
     @cached_property
     def prev(self):

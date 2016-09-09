@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 
 from adjallocation.allocator import allocate_adjudicators
 from adjallocation.hungarian import HungarianAllocator
+from availability.utils import activate_all
 from draw.models import Debate
 from draw.manager import DrawManager
 from results.dbutils import add_ballotsets_to_round
@@ -25,7 +26,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         round.save()
 
         self.stdout.write("Checking in all teams, adjudicators and venues for round '{}'...".format(round.name))
-        round.activate_all()
+        activate_all(round)
 
         self.stdout.write("Generating a draw for round '{}'...".format(round.name))
         DrawManager(round).create()

@@ -6,7 +6,6 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.base import TemplateView, View
 
 from . import utils
-from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
 
 from availability.models import RoundAvailability
 from actionlog.mixins import LogActionMixin
@@ -183,10 +182,7 @@ class AvailabilityActivateAll(AvailabilityActivateBase):
     activation_msg = 'Checked in all teams, adjudicators and venues.'
 
     def activate_function(self):
-        tournament = self.get_tournament()
-        utils.set_availability(tournament.team_set, self.get_round())
-        utils.set_availability(tournament.relevant_adjudicators, self.get_round())
-        utils.set_availability(tournament.relevant_venues, self.get_round())
+        utils.activate_all(self.get_round())
 
 
 class AvailabilityActivateBreakingAdjs(AvailabilityActivateBase):
@@ -195,6 +191,7 @@ class AvailabilityActivateBreakingAdjs(AvailabilityActivateBase):
     def activate_function(self):
         utils.set_availability(self.get_tournament().relevant_adjudicators.filter(breaking=True),
                 self.get_round())
+
 
 class AvailabilityActivateFromPrevious(AvailabilityActivateBase):
     activation_msg = 'Checked in all teams, adjudicators and venues from previous round.'
