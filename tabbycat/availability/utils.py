@@ -1,9 +1,11 @@
 import logging
 
-from availability.models import RoundAvailability
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Prefetch
 
+from availability.models import RoundAvailability
+from participants.models import Adjudicator, Team
+from venues.models import Venue
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +41,10 @@ def set_availability(queryset, round):
 def set_availability_by_id(model, ids, round):
     """Sets the availabilities for the given round to those IDs in the given list `ids`,
     those being ids of the model (e.g. Adjudicator)."""
+
+    if model not in [Adjudicator, Team, Venue]:
+        logger.critical("Bad model in set_availability_by_id: %s", model.__class__.__name__, stack_info=True)
+        return  # do nothing
 
     contenttype = ContentType.objects.get_for_model(model)
 
