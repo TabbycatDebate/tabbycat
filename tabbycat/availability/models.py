@@ -13,6 +13,9 @@ class RoundAvailability(models.Model):
     class Meta:
         unique_together = [('round', 'content_type', 'object_id')]
 
+    def __repr__(self):
+        return "<RoundAvailability: %s in %s>" % (self.content_object, self.round.name)
+
 
 class Checkin(models.Model):
     person = models.ForeignKey('participants.Person')

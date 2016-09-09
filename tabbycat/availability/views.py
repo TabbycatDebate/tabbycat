@@ -1,15 +1,19 @@
 import traceback
 
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Prefetch
+from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.base import RedirectView, TemplateView, View
 
 from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
 
+from availability.models import RoundAvailability
 from actionlog.mixins import LogActionMixin
 from draw.models import Debate
 from draw.utils import partial_break_round_split
-from participants.models import Adjudicator
+from participants.models import Adjudicator, Team
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
@@ -96,78 +100,99 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     template_name = "base_availability.html"
 
+    def get_page_title(self):
+        return self.model._meta.verbose_name.title() + " Check-Ins"
+
     def get_context_data(self, **kwargs):
         kwargs['update_url'] = reverse_round(self.update_view, self.get_round())
         return super().get_context_data(**kwargs)
 
+    def get_queryset(self):
+        return self.model.objects.filter(tournament=self.get_tournament())
+
+    def _sql(self, round):
+        # We don't really want to write raw SQL here, but as far as I can tell
+        # the only alternative is to add a GenericRelation to each relevant
+        # model, run a prefetch_related, using Prefetch('round_availabilities',
+        # queryset=RoundAvailability.objects.filter(round=round)),
+        # to_attr='availability') then check the length of the resulting list.
+        # And do this again for the previous round, if applicable. Which is
+        # probably worse. Much to my chagrin, Django doesn't provide an easy way
+        # to annotate with an EXISTS statement.
+        self.contenttype = ContentType.objects.get_for_model(self.model)
+        sql = """
+            EXISTS (SELECT * FROM availability_roundavailability
+            WHERE availability_roundavailability.content_type_id = %s
+            AND availability_roundavailability.object_id = {model:s}.id
+            AND availability_roundavailability.round_id = %s)""".format(model=self.model._meta.db_table)
+        params = (self.contenttype.id, round.id)
+        return RawSQL(sql, params)
+
     def get_table(self):
-        # Do the row highlighting here?
-        return super()
+        round = self.get_round()
+        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
+        # instances = self.get_queryset().annotate(availability=self._sql(round))
+        # if round.prev:
+            # instances = instances.annotate(prev_availability=self._sql(round.prev))
+
+        instances = self.get_queryset().prefetch_related(Prefetch('round_availabilities',
+                queryset=RoundAvailability.objects.filter(round=round), to_attr='availability'))
+        if round.prev:
+            instances = instances.prefetch_related(Prefetch('round_availabilities',
+                    queryset=RoundAvailability.objects.filter(round=round.prev), to_attr='prev_availability'))
+
+        table.add_checkbox_columns([len(inst.availability) > 0 for inst in instances],
+            [inst.id for inst in instances], "Active Now")
+
+        if round.prev:
+            table.add_column("Active in %s" % round.prev.abbreviation, [{
+                'sort': len(inst.prev_availability) > 0,
+                'icon': 'glyphicon-ok' if len(inst.prev_availability) > 0 else ''
+            } for inst in instances])
+
+        self.add_description_columns(table, instances)
+        return table
 
 
 class AvailabilityTypeTeamView(AvailabilityTypeBase):
     page_emoji = '👂'
-    page_title = 'Team Check-Ins'
+    model = Team
+    sort_key = 'team'
     update_view = 'update_team_availability'
 
-    def get_table(self):
-        round = self.get_round()
-        table = TabbycatTableBuilder(view=self, sort_key='team')
-        teams = round.team_availability()
-        table.add_checkbox_columns([t.is_active for t in teams],
-            [t.id for t in teams], 'Active Now')
-        if round.prev:
-            pteams = round.prev.team_availability()
-            table.add_column('Active in %s' % round.prev.abbreviation, [{
-                'sort': t.is_active,
-                'icon': 'glyphicon-ok' if t.is_active else ''
-            } for t in pteams])
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('speaker_set')
+
+    @staticmethod
+    def add_description_columns(table, teams):
         table.add_team_columns(teams)
-        return table
 
 
 class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
     page_emoji = '👂'
-    page_title = 'Adjudicator Check-Ins'
+    model = Adjudicator
+    sort_key = 'name'
     update_view = 'update_adjudicator_availability'
 
-    def get_table(self):
-        round = self.get_round()
-        table = TabbycatTableBuilder(view=self, sort_key='name')
-        adjudicators = round.adjudicator_availability()
-        table.add_checkbox_columns([a.is_active for a in adjudicators],
-            [a.id for a in adjudicators], 'Active Now')
-        if round.prev:
-            padjudicators = round.prev.adjudicator_availability()
-            table.add_column('Active in %s' % round.prev.abbreviation, [{
-                'sort': a.is_active,
-                'icon': 'glyphicon-ok' if a.is_active else ''
-            } for a in padjudicators])
+    @staticmethod
+    def add_description_columns(table, adjudicators):
         table.add_adjudicator_columns(adjudicators)
-        return table
 
 
 class AvailabilityTypeVenueView(AvailabilityTypeBase):
     page_emoji = '🎪'
-    page_title = 'Venue Check-Ins'
+    model = Venue
+    sort_key = 'venue'
     update_view = 'update_venue_availability'
 
-    def get_table(self):
-        round = self.get_round()
-        table = TabbycatTableBuilder(view=self, sort_key='venue')
-        venues = round.venue_availability()
-        table.add_checkbox_columns([v.is_active for v in venues],
-            [v.id for v in venues], 'Active Now')
-        if round.prev:
-            pvenues = round.prev.venue_availability()
-            table.add_column('Active in %s' % round.prev.abbreviation, [{
-                'sort': v.is_active,
-                'icon': 'glyphicon-ok' if v.is_active else ''
-            } for v in pvenues])
+    def get_queryset(self):
+        return super().get_queryset().select_related('group')
+
+    @staticmethod
+    def add_description_columns(table, venues):
         table.add_column("Venue", [v.name for v in venues])
         table.add_column("Group", [v.group.name if v.group else '' for v in venues])
         table.add_column("Priority", [v.priority for v in venues])
-        return table
 
 
 # ==============================================================================

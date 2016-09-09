@@ -1,6 +1,7 @@
 import logging
 from warnings import warn
 
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -151,6 +152,8 @@ class Team(models.Model):
                                max_length=24)
     break_categories = models.ManyToManyField('breakqual.BreakCategory',
                                               blank=True)
+
+    round_availabilities = GenericRelation('availability.RoundAvailability')
 
     @property
     def venue_preferences(self):
@@ -357,6 +360,8 @@ class Adjudicator(Person):
     breaking = models.BooleanField(default=False)
     independent = models.BooleanField(default=False, blank=True)
     adj_core = models.BooleanField(default=False, blank=True)
+
+    round_availabilities = GenericRelation('availability.RoundAvailability')
 
     objects = AdjudicatorManager()
 
