@@ -6,32 +6,32 @@ urlpatterns = [
     # Overview
     url(r'^$',
         views.AvailabilityIndexView.as_view(),
-        name='availability_index'),
+        name='availability-index'),
 
     # # Bulk Updates
-    url(r'all/update/$', views.AvailabilityActivateAll.as_view(),
-        name='update_availability_all'),
-    url(r'previous/update/$', views.AvailabilityActivateFromPrevious.as_view(),
-        name='update_availability_previous'),
+    url(r'all/update/$', views.CheckInAllInRoundView.as_view(),
+        name='availability-checkin-all'),
+    url(r'previous/update/$', views.CheckInAllFromPreviousRoundView.as_view(),
+        name='availability-checkin-previous'),
 
     # Adjs
     url(r'adjudicators/$', views.AvailabilityTypeAdjudicatorView.as_view(),
-        name='adjudicator_availability'),
-    url(r'adjudicators/update/$', views.AvailabilityUpdateAdjudicators.as_view(),
-        name='update_adjudicator_availability'),
-    url(r'adjudicators/update/breaking/$', views.AvailabilityActivateBreakingAdjs.as_view(),
-        name='update_availability_breaking_adjs'),
+        name='availability-adjudicators'),
+    url(r'adjudicators/update/$', views.UpdateAdjudicatorsAvailabilityView.as_view(),
+        name='availability-update-adjudicators'),
+    url(r'adjudicators/update/breaking/$', views.CheckInAllBreakingAdjudicatorsView.as_view(),
+        name='availability-checkin-breaking-adjudicators'),
 
     # Teams
     url(r'teams/$', views.AvailabilityTypeTeamView.as_view(),
-        name='team_availability'),
-    url(r'teams/update/$', views.AvailabilityUpdateTeams.as_view(),
-        name='update_team_availability'),
+        name='availability-teams'),
+    url(r'teams/update/$', views.UpdateTeamsAvailabilityView.as_view(),
+        name='availability-update-teams'),
 
     # Venues
     url(r'venues/$', views.AvailabilityTypeVenueView.as_view(),
-        name='venue_availability'),
-    url(r'venues/update/$', views.AvailabilityUpdateVenues.as_view(),
-        name='update_venue_availability'),
+        name='availability-venues'),
+    url(r'venues/update/$', views.UpdateVenuesAvailabilityView.as_view(),
+        name='availability-update-venues'),
 
 ]

@@ -101,11 +101,13 @@ class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView
         return super().get_context_data(**kwargs)
 
 
-class RoundIncrementView(SuperuserRequiredMixin, PostOnlyRedirectView, RoundMixin):
+class RoundIncrementView(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+
+    round_redirect_pattern_name = 'availability-index'
 
     def post(self, request, *args, **kwargs):
         self.get_tournament().advance_round()
-        return redirect_round('availability_index', self.get_tournament().current_round)
+        return super().post(request, *args, **kwargs)
 
 
 class BlankSiteStartView(FormView):

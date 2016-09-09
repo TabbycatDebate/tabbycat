@@ -230,7 +230,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         elif round.draw_status == round.STATUS_RELEASED:
             return ["draw_status_confirmed.html"]
         else:
-            raise
+            raise ValueError(round.draw_status)
 
 
 class AdminDrawWithDetailsView(AdminDrawView):

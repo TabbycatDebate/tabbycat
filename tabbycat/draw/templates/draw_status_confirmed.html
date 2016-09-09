@@ -40,7 +40,7 @@
   {% if active_adjs.count < draw.count %}
     <div class="alert alert-danger" id="">
       There are currently fewer checked-in adjudicators than there are rooms.
-      <a href="{% round_url adjudicator_availability round %}" class="alert-link">
+      <a href="{% round_url availability-adjudicators round %}" class="alert-link">
         Check in some more adjudicators.
       </a>
     </div>

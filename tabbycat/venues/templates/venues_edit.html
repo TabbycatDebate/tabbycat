@@ -48,7 +48,7 @@
       {% if ndebates > nvenues %}
         <div class="alert alert-warning">
           There are {{ ndebates }} debates in this round but only {{ nvenues }} venues.
-          <a href="{% round_url venue_availability round %}" class="alert-link">
+          <a href="{% round_url availability-venues round %}" class="alert-link">
             Check in more venues</a>.
         </div>
       {% endif %}

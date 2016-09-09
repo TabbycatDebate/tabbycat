@@ -4,7 +4,7 @@ def allocate_adjudicators(round, alloc_class):
         raise RuntimeError("Tried to allocate adjudicators on unconfirmed draw")
 
     debates = round.get_draw()
-    adjs = list(round.active_adjudicators.accredited())
+    adjs = list(round.active_adjudicators.filter(novice=False))
     allocator = alloc_class(debates, adjs)
 
     for alloc in allocator.allocate():
