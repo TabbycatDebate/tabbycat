@@ -239,8 +239,6 @@ class Round(models.Model):
     draw_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
        help_text="The status of this round's draw")
 
-    checkins = models.ManyToManyField('participants.Person', through='availability.Checkin', related_name='checkedin_rounds')
-
     feedback_weight = models.FloatField(default=0,
         help_text="The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback.")
     silent = models.BooleanField(default=False,

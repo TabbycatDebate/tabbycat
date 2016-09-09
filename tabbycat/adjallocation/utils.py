@@ -4,7 +4,6 @@ from itertools import permutations
 
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
-from availability.models import ActiveAdjudicator
 from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import DebateTeam
 from participants.models import Adjudicator, Team
@@ -81,10 +80,7 @@ def percentile(n, percent, key=lambda x:x):
 
 def get_adjs(r):
 
-    active = ActiveAdjudicator.objects.filter(
-        round=r).values_list(
-        'adjudicator')
-    active = [(a[0], None) for a in active]
+    active = [(a, None) for a in r.active_adjudicators]
 
     allocated_adjs = DebateAdjudicator.objects.select_related(
         'debate__round', 'adjudicator').filter(

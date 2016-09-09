@@ -328,12 +328,8 @@ class Speaker(Person):
 class AdjudicatorManager(models.Manager):
     use_for_related_fields = True
 
-    def accredited(self):
-        return self.filter(novice=False)
-
     def get_queryset(self):
-        return super(AdjudicatorManager,
-                     self).get_queryset().select_related('institution')
+        return super(AdjudicatorManager, self).get_queryset().select_related('institution')
 
 
 class Adjudicator(Person):
