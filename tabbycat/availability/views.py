@@ -3,7 +3,7 @@ import logging
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.views.generic.base import RedirectView, TemplateView, View
+from django.views.generic.base import TemplateView, View
 
 from . import utils
 from .models import ActiveAdjudicator, ActiveTeam, ActiveVenue
@@ -16,7 +16,7 @@ from participants.models import Adjudicator, Team
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
-from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from venues.models import Venue
 
@@ -169,36 +169,51 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 # Bulk Activations
 # ==============================================================================
 
-class AvailabilityActivateBase(RoundMixin, SuperuserRequiredMixin, RedirectView):
+class AvailabilityActivateBase(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
 
     round_redirect_pattern_name = 'availability_index'
 
-    def get_redirect_url(self, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         self.activate_function()
-        messages.add_message(self.request, messages.SUCCESS,
-            self.activation_msg)
-        return super().get_redirect_url(*args, **kwargs)
+        messages.add_message(self.request, messages.SUCCESS, self.activation_msg)
+        return super().post(request, *args, **kwargs)
 
 
 class AvailabilityActivateAll(AvailabilityActivateBase):
-    activation_msg = 'Checked in all teams, adjudicators and venues'
+    activation_msg = 'Checked in all teams, adjudicators and venues.'
 
     def activate_function(self):
-        self.get_round().activate_all()
+        tournament = self.get_tournament()
+        utils.set_availability(tournament.team_set, self.get_round())
+        utils.set_availability(tournament.relevant_adjudicators, self.get_round())
+        utils.set_availability(tournament.relevant_venues, self.get_round())
 
 
 class AvailabilityActivateBreakingAdjs(AvailabilityActivateBase):
-    activation_msg = 'Checked in all breaking adjudicators'
+    activation_msg = 'Checked in all breaking adjudicators.'
 
     def activate_function(self):
-        self.get_round().activate_all_breaking_adjs()
-
+        utils.set_availability(self.get_tournament().relevant_adjudicators.filter(breaking=True),
+                self.get_round())
 
 class AvailabilityActivateFromPrevious(AvailabilityActivateBase):
-    activation_msg = 'Checked in all teams, adjudicators and venues from previous round'
+    activation_msg = 'Checked in all teams, adjudicators and venues from previous round.'
 
     def activate_function(self):
-        self.get_round().activate_previous()
+        t = self.get_tournament()
+        round = self.get_round()
+        items = [(Team, t.team_set), (Adjudicator, t.relevant_adjudicators), (Venue, t.relevant_venues)]
+
+        for model, relevant_instances in items:
+            contenttype = ContentType.objects.get_for_model(model)
+            previous_ids = set(a['object_id'] for a in
+                RoundAvailability.objects.filter(content_type=contenttype, round=round.prev).values('object_id'))
+            logger.debug("Previous IDs for %s: %s", model._meta.verbose_name_plural, previous_ids)
+            relevant_ids = set(x['id'] for x in relevant_instances.values('id'))
+            logger.debug("Relevant IDs for %s: %s", model._meta.verbose_name_plural, relevant_ids)
+            previous_relevant_ids = previous_ids & relevant_ids
+            logger.debug("Checking in %s: %s", model._meta.verbose_name_plural, previous_relevant_ids)
+            utils.set_availability_by_id(model, previous_relevant_ids, round)
 
 
 # ==============================================================================

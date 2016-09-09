@@ -21,20 +21,26 @@
     Check In Adjs
   </a>
   {% if round.is_break_round %}
-    <a class="btn btn-primary submit-disable"
-       href="{% round_url update_availability_breaking_adjs  %}">
-      Check In All Breaking Adjs
-    </a>
+    <form method="POST" action="{% round_url update_availability_breaking_adjs %}">
+      {% csrf_token %}
+      <button class="btn btn-primary submit-disable" type="submit">
+        Check In All Breaking Adjudicators
+      </button>
+    </form>
   {% else %}
-    <a class="btn btn-primary submit-disable"
-       href="{% round_url update_availability_all round %}">
-      Check In Everything
-    </a>
+    <form method="POST" action="{% round_url update_availability_all %}">
+      {% csrf_token %}
+      <button class="btn btn-primary submit-disable" type="submit">
+        Check In Everything
+      </button>
+    </form>
     {% if round.prev %}
-      <a class="btn btn-primary submit-disable"
-         href="{% round_url update_availability_previous round %}">
-        Check In Everything Active in {{ round.prev.abbreviation }}
-      </a>
+      <form method="POST" action="{% round_url update_availability_previous %}">
+        {% csrf_token %}
+        <button class="btn btn-primary submit-disable" type="submit">
+          Check In Everything Active in {{ round.prev.name }}
+        </button>
+      </form>
     {% endif %}
   {% endif %}
 

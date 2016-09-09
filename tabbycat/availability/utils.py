@@ -45,19 +45,19 @@ def set_availability_by_id(model, ids, round):
     ids = set(map(int, ids))
     existing = set(a['object_id'] for a in
         RoundAvailability.objects.filter(content_type=contenttype, round=round).values('object_id'))
-    logger.debug("IDs to set: %s", ids)
-    logger.debug("Existing IDs: %s", existing)
+    logger.debug("%s IDs to set: %s", model._meta.verbose_name.title(), ids)
+    logger.debug("Existing %s IDs: %s", model._meta.verbose_name, existing)
 
     # Delete existing availabilities that should no longer be set
     delete = existing.difference(ids)
-    logger.debug("IDs to delete: %s", delete)
+    logger.debug("%s IDs to delete: %s", model._meta.verbose_name.title(), delete)
     RoundAvailability.objects.filter(
         content_type=contenttype, round=round, object_id__in=delete
     ).delete()
 
     # Add new availabilities
     new = ids.difference(existing)
-    logger.debug("IDs to create: %s", new)
+    logger.debug("%s IDs to create: %s", model._meta.verbose_name.title(), new)
     RoundAvailability.objects.bulk_create(
         [RoundAvailability(content_type=contenttype, round=round, object_id=id) for id in new]
     )
