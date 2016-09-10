@@ -15,7 +15,7 @@ class LatestActionsView(LoginRequiredMixin, TournamentMixin, JsonDataResponseVie
             action_objects.append({
                 'user': a.user.username if a.user else a.ip_address or "anonymous",
                 'type': a.get_type_display(),
-                'param': a.get_parameters_display(),
+                'param': a.get_content_object_display(),
                 'timestamp': naturaltime(a.timestamp),
             })
         return action_objects

@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -126,7 +128,7 @@ class ActionLogEntry(models.Model):
     }
 
     ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission',
-                           'adjudicator_feedback', 'round', 'motion',
+                           'adjudicator_feedback', 'round', 'motion', 'adjudicator_test_score_history',
                            'break_category', 'adjudicator')
 
     type = models.CharField(max_length=10, choices=ACTION_TYPE_CHOICES)
@@ -134,6 +136,10 @@ class ActionLogEntry(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     tournament = models.ForeignKey('tournaments.Tournament', blank=True, null=True)
+
+    content_type = models.ForeignKey(ContentType, models.CASCADE, blank=True, null=True)
+    object_id = models.PositiveIntegerField(blank=True, null=True)
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     debate = models.ForeignKey('draw.Debate', blank=True, null=True)
     adjudicator = models.ForeignKey('participants.Adjudicator', blank=True, null=True)
@@ -180,36 +186,26 @@ class ActionLogEntry(models.Model):
         if errors:
             raise ValidationError(errors)
 
-    def get_parameters_display(self):
+    def get_content_object_display(self):
+        obj = self.content_object
+        if obj is None:
+            return None
+
+        model_name = self.content_type.model
         try:
-            required_fields = self.REQUIRED_FIELDS_BY_ACTION_TYPE[self.type]
-        except KeyError:
-            return ""
-        strings = list()
-        for field_name in required_fields:
-            try:
-                value = getattr(self, field_name)
-                if field_name == 'ballot_submission':
-                    strings.append('%s vs %s' %
-                                   (value.debate.aff_team.short_name,
-                                    value.debate.neg_team.short_name))
-                elif field_name == 'debate':
-                    strings.append('%s vs %s' % (value.aff_team.short_name,
-                                                 value.neg_team.short_name))
-                elif field_name == 'round':
-                    strings.append(value.name)
-                elif field_name == 'motion':
-                    strings.append(value.reference)
-                elif field_name == 'adjudicator':
-                    strings.append(value.name)
-                elif field_name == 'adjudicator_test_score_history':
-                    strings.append(value.adjudicator.name + " (" + str(value.score) + ")")
-                elif field_name == 'adjudicator_feedback':
-                    strings.append(value.adjudicator.name)
-                elif field_name == 'break_category':
-                    strings.append(value.name)
-                else:
-                    strings.append(str(value))
-            except AttributeError:
-                strings.append("Unknown " + field_name)
-        return ", ".join(strings)
+            if model_name == 'ballotsubmission':
+                return obj.debate.matchup
+            elif model_name == 'debate':
+                return obj.matchup
+            elif model_name == 'motion':
+                return obj.reference
+            elif model_name == 'adjudicatortestscorehistory':
+                return obj.adjudicator.name + " (" + str(obj.score) + ")"
+            elif model_name == 'adjudicatorfeedback':
+                return obj.adjudicator.name
+            elif model_name in ['round', 'adjudicator', 'breakcategory']:
+                return obj.name
+            else:
+                return str(obj)
+        except:
+            return "<error displaying %s>" % model_name

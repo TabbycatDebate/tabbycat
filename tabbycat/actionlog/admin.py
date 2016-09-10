@@ -8,7 +8,7 @@ from .models import ActionLogEntry
 
 
 class ActionLogEntryAdmin(admin.ModelAdmin):
-    list_display = ('type', 'user', 'timestamp', 'get_parameters_display',
+    list_display = ('type', 'user', 'ip_address', 'timestamp', 'content_object',
                     'tournament')
     list_filter = ('tournament', 'user', 'type')
     search_fields = ('type', 'tournament__name', 'user__username')
