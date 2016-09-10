@@ -66,12 +66,9 @@ urlpatterns = [
         include('draw.urls_crosst'))
 ]
 
-if settings.DEBUG:
+if settings.DEBUG:  # Only serve debug toolbar when on DEBUG
     import debug_toolbar
-    urlpatterns.insert(-1, # insert before the tournament URLs catch-all
-        # Only serve debug toolbar when on DEBUG
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    )
+    urlpatterns.append(url(r'^__debug__/', include(debug_toolbar.urls)))
 
 
 # ==============================================================================
