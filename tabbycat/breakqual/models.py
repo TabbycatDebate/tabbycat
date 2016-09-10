@@ -3,7 +3,7 @@ from django.core.validators import MinValueValidator
 
 
 class BreakCategory(models.Model):
-    tournament = models.ForeignKey('tournaments.Tournament')
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE)
     name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")
     slug = models.SlugField(help_text="Slug for URLs, e.g., \"esl\"")
     seq = models.IntegerField(help_text="The order in which the categories are displayed")
@@ -40,8 +40,8 @@ class BreakCategory(models.Model):
 
 
 class BreakingTeam(models.Model):
-    break_category = models.ForeignKey(BreakCategory)
-    team = models.ForeignKey('participants.Team')
+    break_category = models.ForeignKey(BreakCategory, models.CASCADE)
+    team = models.ForeignKey('participants.Team', models.CASCADE)
     rank = models.IntegerField()
     break_rank = models.IntegerField(blank=True, null=True)
 
