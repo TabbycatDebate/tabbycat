@@ -38,8 +38,8 @@ which is the default.
 | **Standard**                | The top *n* teams break. This is the default, and       |
 | (``standard``)              | most tournaments use this rule.                         |
 +-----------------------------+---------------------------------------------------------+
-| **AIDA Pre-2015**           | The top *n* teams that are also in the top three teams  |
-| (``aida-pre2015``)          | from their institution break.                           |
+| **AIDA 1996**               | The top *n* teams that are also in the top three teams  |
+| (``aida-1996``)             | from their institution break.                           |
 +-----------------------------+---------------------------------------------------------+
 | **AIDA 2016 (Australs)**    | The top *n* teams that fulfil either of these criteria  |
 | (``aida-2016-australs``)    | break:                                                  |
