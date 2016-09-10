@@ -246,8 +246,6 @@ class Round(models.Model):
         return "[%s] %s" % (self.tournament, self.name)
 
     def clean(self):
-        super().clean()
-
         errors = {}
 
         # Draw type must be consistent with stage
