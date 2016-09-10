@@ -215,7 +215,7 @@ class Round(models.Model):
 
     objects = RoundManager()
 
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, models.CASCADE)
     seq = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
     name = models.CharField(max_length=40, help_text="e.g. \"Round 1\"")
     abbreviation = models.CharField(max_length=10, help_text="e.g. \"R1\"")
@@ -223,7 +223,7 @@ class Round(models.Model):
         help_text="Which draw technique to use")
     stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY,
         help_text="Preliminary = inrounds, elimination = outrounds")
-    break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True,
+    break_category = models.ForeignKey('breakqual.BreakCategory', models.CASCADE, blank=True, null=True,
         help_text="If elimination round, which break category")
 
     draw_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
