@@ -40,9 +40,9 @@ Our convention is to increment the minor version whenever we add new functionali
  - there is a major change to how the tournament workflow goes, or
  - we make some other change that is, in our opinion, significant enough to warrant a milestone.
 
-Most of the time, we write data migrations to allow existing systems to be upgraded easily. However, we don't in general support backward database migrations. Our expectation is that long-lived installations keep up with our latest version.
+Most of the time, we write `data migrations <https://docs.djangoproject.com/en/1.10/topics/migrations/#data-migrations>`_ to allow existing systems to be upgraded easily. However, we don't always support backward database migrations. Our expectation is that long-lived installations keep up with our latest version.
 
-One day, we hope to have a public API in place to facilitate the integration with other debating tournament software, like registration or adjudicator feedback systems. When that happens, we'll probably revise this convention to be more in line with `Semantic Versioning <http://semver.org/>`_.
+One day, we hope to have a public API in place to facilitate the integration with other debating tournament software, like registration or adjudicator feedback systems. If and when that happens, we'll probably revise this convention to be more in line with `Semantic Versioning <http://semver.org/>`_.
 
 Starting from version 0.7.0, we use code names for versions, being breeds of cats in alphabetical order.
 
