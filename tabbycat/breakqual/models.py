@@ -17,7 +17,7 @@ class BreakCategory(models.Model):
 
     BREAK_QUALIFICATION_CHOICES = [
         ('standard', "Standard"),
-        ('aida-pre2015', "AIDA Pre-2015"),
+        ('aida-1996', "AIDA 1996"),
         ('aida-2016-easters', "AIDA 2016 (Easters)"),
         ('aida-2016-australs', "AIDA 2016 (Australs)"),
         ('wadl-div-first', "WADL division winners first"),

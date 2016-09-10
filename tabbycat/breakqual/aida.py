@@ -26,8 +26,8 @@ class BaseAidaBreakGenerator(StandardBreakGenerator):
 
 
 @register
-class AidaPre2015BreakGenerator(BaseAidaBreakGenerator):
-    key = "aida-pre2015"
+class Aida1996BreakGenerator(BaseAidaBreakGenerator):
+    key = "aida-1996"
 
     def compute_break(self):
         self.exclude_capped_teams()
