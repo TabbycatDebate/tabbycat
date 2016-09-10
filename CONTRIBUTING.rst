@@ -31,21 +31,18 @@ We use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series
 
 While in the base directory
 
-Semantic versioning convention
-==============================
+Versioning convention
+=====================
 
-We follow `Semantic Versioning <http://semver.org/>`_. That said, since this is end-user software, there aren't any downstream dependencies so the concept of a "public API" isn't quite as obvious for Tabbycat as it is for projects more reliant on semantic versioning to manage dependencies. In complying with Semantic Versioning, we consider the following to be our "public API", along with the following criteria for backwards incompatibility:
+Our convention is to increment the minor version whenever we add new functionality, and to increment the major version whenever
 
- - **Database schema**
-    - if it cannot be migrated forwards or backwards using the standard migration function without user-input defaults
-    - if migration forwards would entail losing data or require reformatting data
- - **Management commands**
-    - if a command that used to work no longer works
- - **GUI**
-    - if there is a major change to the workflow of any user
- - **Tournament data importer, including tournament configuration**
-    - if files that used to work would no longer work.
-    - however, with tournament configuration, Tabbycat could in most cases detect deprecated settings and interpret them in any new framework with a warning message.
+ - the database can't be migrated forwards using `python manage.py migrate --no-input`, or
+ - there is a major change to how the tournament workflow goes, or
+ - we make some other change that is, in our opinion, significant enough to warrant a milestone.
+
+Most of the time, we write data migrations to allow existing systems to be upgraded easily. However, we don't in general support backward database migrations. Our expectation is that long-lived installations keep up with our latest version.
+
+One day, we hope to have a public API in place to facilitate the integration with other debating tournament software, like registration or adjudicator feedback systems. When that happens, we'll probably revise this convention to be more in line with `Semantic Versioning <http://semver.org/>`_.
 
 Starting from version 0.7.0, we use code names for versions, being breeds of cats in alphabetical order.
 
