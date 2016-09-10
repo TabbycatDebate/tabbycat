@@ -5,7 +5,6 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import signals
 from django.utils.functional import cached_property
 
 from tournaments.models import Round
@@ -60,17 +59,6 @@ class Institution(models.Model):
             return self.abbreviation
         else:
             return self.code[:5]
-
-
-def update_team_names_from_institution(sender, instance, created, **kwargs):
-    teams = instance.team_set.all()
-    if len(teams) > 0:
-        logger.info("Updating names of all %d teams from institution %s" % (len(teams), instance.name,))
-        for team in teams:
-            team.save()
-
-# Update all team names when an institution is saved
-signals.post_save.connect(update_team_names_from_institution, sender=Institution)
 
 
 class Person(models.Model):
@@ -306,16 +294,6 @@ class Team(models.Model):
         self.short_name = self._construct_short_name()
         self.long_name = self._construct_long_name()
         super().save(*args, **kwargs)
-
-
-def update_team_cache(sender, instance, created, **kwargs):
-    cached_key = "%s_%s_%s" % ('teamid', instance.id, '_institution__object')
-    cache.delete(cached_key)
-    cached_key = "%s_%s_%s" % ('teamid', instance.id, '_speaker__objects')
-    cache.delete(cached_key)
-
-# Update the cached tournament object when model is changed)
-signals.post_save.connect(update_team_cache, sender=Team)
 
 
 class Speaker(Person):

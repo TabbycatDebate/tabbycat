@@ -2,7 +2,7 @@ from warnings import warn
 
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models import Count, signals
+from django.db.models import Count
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.functional import cached_property
@@ -170,16 +170,6 @@ class Tournament(models.Model):
         next_round = Round.objects.get(seq=next_round_seq, tournament=self)
         self.current_round = next_round
         self.save()
-
-
-def update_tournament_cache(sender, instance, created, **kwargs):
-    cached_key = "%s_%s" % (instance.slug, 'object')
-    cache.delete(cached_key)
-    cached_key = "%s_%s" % (instance.slug, 'current_round_object')
-    cache.delete(cached_key)
-
-# Update the cached tournament object when model is changed)
-signals.post_save.connect(update_tournament_cache, sender=Tournament)
 
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
@@ -382,17 +372,3 @@ class Round(models.Model):
     @property
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
-
-
-def update_round_cache(sender, instance, created, **kwargs):
-    cached_key = "%s_%s_%s" % (instance.tournament.slug, instance.seq,
-                               'object')
-    cache.delete(cached_key)
-    logger.debug("Updated cache %s for %s" % (cached_key, instance))
-
-    if instance.tournament.current_round_id == instance.id:
-        logger.debug("Updating tournament cache because %s is the current round" % instance)
-        update_tournament_cache(sender, instance.tournament, False, **kwargs)
-
-# Update the cached round object when model is changed)
-signals.post_save.connect(update_round_cache, sender=Round)
