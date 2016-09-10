@@ -36,9 +36,9 @@ Versioning convention
 
 Our convention is to increment the minor version whenever we add new functionality, and to increment the major version whenever
 
- - the database can't be migrated forwards using `python manage.py migrate --no-input`, or
- - there is a major change to how the tournament workflow goes, or
- - we make some other change that is, in our opinion, significant enough to warrant a milestone.
+- the database can't be migrated forwards using ``python manage.py migrate --no-input``, or
+- there is a major change to how the tournament workflow goes, or
+- we make some other change that is, in our opinion, significant enough to warrant a milestone.
 
 Most of the time, we write `data migrations <https://docs.djangoproject.com/en/1.10/topics/migrations/#data-migrations>`_ to allow existing systems to be upgraded easily. However, we don't always support backward database migrations. Our expectation is that long-lived installations keep up with our latest version.
 
