@@ -216,13 +216,13 @@ class Round(models.Model):
     objects = RoundManager()
 
     tournament = models.ForeignKey(Tournament, models.CASCADE)
-    seq = models.IntegerField(help_text="A number that determines the order of the round, IE 1 for the initial round")
+    seq = models.IntegerField(help_text="A number that determines the order of the round, should count consecutively from 1 for the first round")
     name = models.CharField(max_length=40, help_text="e.g. \"Round 1\"")
     abbreviation = models.CharField(max_length=10, help_text="e.g. \"R1\"")
-    draw_type = models.CharField(max_length=1, choices=DRAW_CHOICES,
-        help_text="Which draw technique to use")
     stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY,
         help_text="Preliminary = inrounds, elimination = outrounds")
+    draw_type = models.CharField(max_length=1, choices=DRAW_CHOICES,
+        help_text="Which draw method to use")
     break_category = models.ForeignKey('breakqual.BreakCategory', models.CASCADE, blank=True, null=True,
         help_text="If elimination round, which break category")
 
@@ -247,14 +247,25 @@ class Round(models.Model):
 
     def clean(self):
         super().clean()
-        valid_draw_types = self.VALID_DRAW_TYPES_BY_STAGE[self.stage]
+
+        errors = {}
+
+        # Draw type must be consistent with stage
+        valid_draw_types = Round.VALID_DRAW_TYPES_BY_STAGE[self.stage]
         if self.draw_type not in valid_draw_types:
-            display_names = [name for value, name in self.DRAW_CHOICES if value in valid_draw_types]
-            raise ValidationError({'draw_type': "A round in the {stage} stage must have a "
+            display_names = [name for value, name in Round.DRAW_CHOICES if value in valid_draw_types]
+            errors['draw_type'] = ValidationError("A round in the {stage} stage must have a "
                 "draw type that is one of: {valid}".format(
                     stage=self.get_stage_display().lower(),
                     valid=", ".join(display_names)
-                )})
+                ))
+
+        # Break rounds must have a break category
+        if self.stage == Round.STAGE_ELIMINATION and self.break_category is None:
+            errors['break_category'] = ValidationError("Elimination rounds must have a break category.")
+
+        if errors:
+            raise ValidationError(errors)
 
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
