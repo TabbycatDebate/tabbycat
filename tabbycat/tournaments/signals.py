@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from tournaments.models import Round, Tournament
@@ -16,13 +16,17 @@ def update_tournament_cache(sender, instance, **kwargs):
     cache.delete(cached_key)
 
 
+@receiver(post_delete, sender=Round)
 @receiver(post_save, sender=Round)
 def update_round_cache(sender, instance, **kwargs):
-    cached_key = "%s_%s_%s" % (instance.tournament.slug, instance.seq,
-                               'object')
+    cached_key = "%s_%s_%s" % (instance.tournament.slug, instance.seq, 'object')
     cache.delete(cached_key)
-    logger.debug("Updated cache %s for %s" % (cached_key, instance))
+    logger.debug("Cleared cache %s for %s" % (cached_key, instance))
 
-    if instance.tournament.current_round_id == instance.id:
-        logger.debug("Updating tournament cache because %s is the current round" % instance)
+    # Update the tournament cache as well if either this is the current round,
+    # or the current round is None (this might mean the current round was deleted).
+    current_round_id = instance.tournament.current_round_id
+    if current_round_id == instance.id or current_round_id is None:
+        logger.debug("Cleared %s tournament cache because the current round is %s" %
+                (instance.tournament.slug, instance if current_round_id == instance.id else current_round_id))
         update_tournament_cache(sender, instance.tournament, **kwargs)
