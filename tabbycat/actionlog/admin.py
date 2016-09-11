@@ -14,9 +14,8 @@ class ActionLogEntryAdmin(admin.ModelAdmin):
     search_fields = ('type', 'user__username')
 
     def get_queryset(self, request):
-        return super(ActionLogEntryAdmin,
-                     self).get_queryset(request).select_related('tournament',
-                                                                'user')
+        return super(ActionLogEntryAdmin, self).get_queryset(request).select_related(
+            'tournament', 'round', 'round__tournament', 'user').prefetch_related('content_object')
 
 
 admin.site.register(ActionLogEntry, ActionLogEntryAdmin)
