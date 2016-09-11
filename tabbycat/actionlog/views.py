@@ -7,8 +7,8 @@ from tournaments.mixins import TournamentMixin
 class LatestActionsView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
 
     def get_data(self):
-        actions = self.get_tournament().actionlogentry_set.select_related(
-                'user', 'debate', 'ballot_submission').order_by('-timestamp')[:15]
+        actions = self.get_tournament().actionlogentry_set.prefetch_related(
+                'content_object').order_by('-timestamp')[:15]
 
         action_objects = []
         for a in actions:

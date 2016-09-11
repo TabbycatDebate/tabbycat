@@ -103,16 +103,6 @@ class ActionLogEntry(models.Model):
     object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    debate = models.ForeignKey('draw.Debate', blank=True, null=True)
-    adjudicator = models.ForeignKey('participants.Adjudicator', blank=True, null=True)
-    ballot_submission = models.ForeignKey('results.BallotSubmission', blank=True, null=True)
-    adjudicator_test_score_history = models.ForeignKey('adjfeedback.AdjudicatorTestScoreHistory',
-                                                       blank=True, null=True)
-    adjudicator_feedback = models.ForeignKey('adjfeedback.AdjudicatorFeedback',
-                                             blank=True, null=True)
-    motion = models.ForeignKey('motions.Motion', blank=True, null=True)
-    break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True)
-
     objects = ActionLogManager()
 
     class Meta:
