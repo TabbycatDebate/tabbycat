@@ -90,47 +90,6 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_OPTIONS_EDIT            , 'Edited tournament options'),
     )
 
-    REQUIRED_FIELDS_BY_ACTION_TYPE = {
-        ACTION_TYPE_BALLOT_DISCARD          : ('ballot_submission', ),
-        ACTION_TYPE_BALLOT_CHECKIN          : ('debate', ),  # not ballot_submission
-        ACTION_TYPE_BALLOT_CREATE           : ('ballot_submission', ),
-        ACTION_TYPE_BALLOT_EDIT             : ('ballot_submission', ),
-        ACTION_TYPE_BALLOT_CONFIRM          : ('ballot_submission', ),
-        ACTION_TYPE_BALLOT_SUBMIT           : ('ballot_submission', ),
-        ACTION_TYPE_FEEDBACK_SUBMIT         : ('adjudicator_feedback', ),
-        ACTION_TYPE_FEEDBACK_SAVE           : ('adjudicator_feedback', ),
-        ACTION_TYPE_TEST_SCORE_EDIT         : ('adjudicator_test_score_history', ),
-        ACTION_TYPE_ADJUDICATOR_NOTE_SET    : ('adjudicator', ),
-        ACTION_TYPE_ADJUDICATORS_SAVE       : ('round', ),
-        ACTION_TYPE_ADJUDICATORS_AUTO       : ('round', ),
-        ACTION_TYPE_VENUES_SAVE             : ('round', ),
-        ACTION_TYPE_VENUES_AUTOALLOCATE     : ('round', ),
-        ACTION_TYPE_DRAW_CREATE             : ('round', ),
-        ACTION_TYPE_DRAW_CONFIRM            : ('round', ),
-        ACTION_TYPE_DRAW_REGENERATE         : ('round', ),
-        ACTION_TYPE_DRAW_RELEASE            : ('round', ),
-        ACTION_TYPE_DRAW_UNRELEASE          : ('round', ),
-        ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  : ('debate', ),
-        ACTION_TYPE_ADJUDICATOR_BREAK_SET   : ('adjudicator', ),
-        ACTION_TYPE_BREAK_ELIGIBILITY_EDIT  : (),
-        ACTION_TYPE_BREAK_GENERATE_ALL      : (),
-        ACTION_TYPE_BREAK_UPDATE_ALL        : ('break_category', ),
-        ACTION_TYPE_BREAK_UPDATE_ONE        : ('break_category', ),
-        ACTION_TYPE_BREAK_EDIT_REMARKS      : ('break_category', ),
-        ACTION_TYPE_ROUND_START_TIME_SET    : ('round', ),
-        ACTION_TYPE_MOTION_EDIT             : ('motion', ),
-        ACTION_TYPE_MOTIONS_RELEASE         : ('round', ),
-        ACTION_TYPE_MOTIONS_UNRELEASE       : ('round', ),
-        ACTION_TYPE_OPTIONS_EDIT            : (),
-        ACTION_TYPE_AVAIL_TEAMS_SAVE        : ('round', ),
-        ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE : ('round', ),
-        ACTION_TYPE_AVAIL_VENUES_SAVE       : ('round', ),
-    }
-
-    ALL_OPTIONAL_FIELDS = ('debate', 'ballot_submission',
-                           'adjudicator_feedback', 'round', 'motion', 'adjudicator_test_score_history',
-                           'break_category', 'adjudicator')
-
     type = models.CharField(max_length=10, choices=ACTION_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
@@ -162,29 +121,8 @@ class ActionLogEntry(models.Model):
             self.id, self.user, self.timestamp, self.get_type_display())
 
     def clean(self):
-        try:
-            required_fields = self.REQUIRED_FIELDS_BY_ACTION_TYPE[self.type]
-        except KeyError:
-            raise ValidationError("Unknown action type: %d" % self.type)
-
-        errors = list()
-        for field_name in self.ALL_OPTIONAL_FIELDS:
-            if field_name in required_fields:
-                if getattr(self, field_name) is None:
-                    errors.append(ValidationError(
-                        'A log entry of type "%s" requires the field "%s".' % (
-                            self.get_type_display(), field_name)))
-            else:
-                if getattr(self, field_name) is not None:
-                    errors.append(ValidationError(
-                        'A log entry of type "%s" must not have the field "%s".'
-                        % (self.get_type_display(), field_name)))
         if self.user is None and self.ip_address is None:
-            errors.append(ValidationError(
-                'All log entries require at least one of a user and an IP address.'))
-
-        if errors:
-            raise ValidationError(errors)
+            raise ValidationError("All log entries require at least one of a user and an IP address.")
 
     def get_content_object_display(self):
         obj = self.content_object
