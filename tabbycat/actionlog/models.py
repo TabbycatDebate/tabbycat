@@ -92,12 +92,12 @@ class ActionLogEntry(models.Model):
 
     type = models.CharField(max_length=10, choices=ACTION_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     # These fields are stored for convenience, and should be used only for filtering.
-    tournament = models.ForeignKey('tournaments.Tournament', blank=True, null=True)
-    round = models.ForeignKey('tournaments.Round', blank=True, null=True)
+    tournament = models.ForeignKey('tournaments.Tournament', models.SET_NULL, blank=True, null=True)
+    round = models.ForeignKey('tournaments.Round', models.SET_NULL, blank=True, null=True)
 
     content_type = models.ForeignKey(ContentType, models.CASCADE, blank=True, null=True)
     object_id = models.PositiveIntegerField(blank=True, null=True)
