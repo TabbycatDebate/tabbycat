@@ -213,10 +213,7 @@ class BaseBallotSetView(LogActionMixin, FormView):
     """Base class for views displaying ballot set entry forms."""
 
     form_class = BallotSetForm
-
-    def get_action_log_fields(self, **kwargs):
-        kwargs['ballot_submission'] = self.ballotsub
-        return super().get_action_log_fields(**kwargs)
+    action_log_content_object_attr = 'ballotsub'
 
     def get_context_data(self, **kwargs):
         kwargs['ballotsub'] = self.ballotsub
@@ -248,6 +245,7 @@ class BaseBallotSetView(LogActionMixin, FormView):
             self.ballotsub.confirm_timestamp = datetime.datetime.now()
             self.ballotsub.save()
         self.add_success_message()
+        self.round = self.ballotsub.debate.round  # for LogActionMixin
         return super().form_valid(form)
 
     def populate_objects(self):
@@ -541,22 +539,23 @@ class BallotCheckinGetDetailsView(BaseBallotCheckinJsonResponseView):
 class PostBallotCheckinView(LogActionMixin, BaseBallotCheckinJsonResponseView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN
+    action_log_content_object_attr = 'debate'
 
     def post_data(self):
         try:
-            debate = self.get_debate()
+            self.debate = self.get_debate()
         except DebateBallotCheckinError as e:
             return {'success': False, 'message': str(e)}
 
-        debate.ballot_in = True
-        debate.save()
+        self.debate.ballot_in = True
+        self.debate.save()
 
-        self.log_action(debate=debate)
+        self.log_action()
 
         return {
             'success': True,
-            'venue': debate.venue.name,
-            'matchup': debate.matchup,
+            'venue': self.debate.venue.name,
+            'matchup': self.debate.matchup,
             'ballots_left': ballot_checkin_number_left(self.get_round()),
         }
 

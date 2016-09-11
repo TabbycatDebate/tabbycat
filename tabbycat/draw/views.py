@@ -288,6 +288,7 @@ class ConfirmDrawCreationView(DrawStatusEdit):
 
         round.draw_status = round.STATUS_CONFIRMED
         round.save()
+        self.log_action()
         return super().post(request, *args, **kwargs)
 
 
@@ -297,6 +298,7 @@ class DrawRegenerateView(DrawStatusEdit):
     def post(self, request, *args, **kwargs):
         round = self.get_round()
         delete_round_draw(round)
+        self.log_action()
         return super().post(request, *args, **kwargs)
 
 
@@ -314,6 +316,7 @@ class DrawReleaseView(DrawStatusEdit):
 
         round.draw_status = round.STATUS_RELEASED
         round.save()
+        self.log_action()
         return super().post(request, *args, **kwargs)
 
 
@@ -327,6 +330,7 @@ class DrawUnreleaseView(DrawStatusEdit):
 
         round.draw_status = round.STATUS_CONFIRMED
         round.save()
+        self.log_action()
         return super().post(request, *args, **kwargs)
 
 
@@ -346,7 +350,7 @@ class SetRoundStartTimeView(DrawStatusEdit):
         round = self.get_round()
         round.starts_at = time
         round.save()
-        # Need to call explicitly, since this isn't a form view
+
         self.log_action()
 
         return super().post(request, *args, **kwargs)

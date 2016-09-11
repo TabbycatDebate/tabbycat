@@ -114,7 +114,8 @@ def tournament_preference_apply(request, t, preset_name):
             })
             t.preferences[key] = value
 
-    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT, user=request.user, tournament=t)
+    ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT,
+            user=request.user, tournament=t, content_object=t)
     messages.success(request, "Tournament option saved.")
 
     context = {}

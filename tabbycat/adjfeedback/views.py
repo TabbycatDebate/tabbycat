@@ -320,17 +320,15 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
     template_name = "enter_feedback.html"
     pk_url_kwarg = 'source_id'
     allow_null_tournament = True
+    action_log_content_object_attr = 'adj_feedback'
 
     def get_form_class(self):
         return make_feedback_form_class(self.object, self.get_tournament(),
                 self.get_submitter_fields(), **self.feedback_form_class_kwargs)
 
-    def get_action_log_fields(self, **kwargs):
-        kwargs['adjudicator_feedback'] = self.adj_feedback
-        return super().get_action_log_fields(**kwargs)
-
     def form_valid(self, form):
         self.adj_feedback = form.save()
+        self.round = self.adj_feedback.debate.round  # for LogActionMixin
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -417,10 +415,7 @@ class AdjudicatorActionError(RuntimeError):
 class BaseAdjudicatorActionView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
 
     tournament_redirect_pattern_name = 'adjfeedback-overview'
-
-    def get_action_log_fields(self, **kwargs):
-        kwargs['adjudicator'] = self.adjudicator
-        return super().get_action_log_fields(**kwargs)
+    action_log_content_object_attr = 'adjudicator'
 
     def get_adjudicator(self, request):
         try:
@@ -444,11 +439,7 @@ class BaseAdjudicatorActionView(LogActionMixin, SuperuserRequiredMixin, Tourname
 class SetAdjudicatorTestScoreView(BaseAdjudicatorActionView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT
-
-    def get_action_log_fields(self, **kwargs):
-        kwargs['adjudicator_test_score_history'] = self.atsh
-        # Skip BaseAdjudicatorActionView
-        return super(BaseAdjudicatorActionView, self).get_action_log_fields(**kwargs)
+    action_log_content_object_attr = 'atsh'
 
     def modify_adjudicator(self, request, adjudicator):
         try:

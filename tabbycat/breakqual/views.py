@@ -59,6 +59,7 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreaking
 
     form_class = forms.BreakingTeamsForm
     template_name = 'breaking_teams.html'
+    action_log_content_object_attr = 'object'
 
     def get_action_log_type(self):
         if 'save_update_all' in self.request.POST:
@@ -67,10 +68,6 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreaking
             return ActionLogEntry.ACTION_TYPE_BREAK_UPDATE_ONE
         else:
             return ActionLogEntry.ACTION_TYPE_BREAK_EDIT_REMARKS
-
-    def get_action_log_fields(self, **kwargs):
-        kwargs['break_category'] = self.object
-        return super().get_action_log_fields(**kwargs)
 
     def get_success_url(self):
         return reverse_tournament('breakqual-teams', self.get_tournament(), kwargs={'category': self.object.slug})

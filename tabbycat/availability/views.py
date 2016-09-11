@@ -223,6 +223,7 @@ class BaseAvailabilityUpdateView(RoundMixin, SuperuserRequiredMixin, LogActionMi
         try:
             references = request.POST.getlist('references[]')
             utils.set_availability_by_id(self.model, references, self.get_round())
+            self.log_action()
             return HttpResponse('ok')
 
         except:

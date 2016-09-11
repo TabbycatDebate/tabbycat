@@ -72,7 +72,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_DRAW_REGENERATE         , 'Regenerated draw'),
         (ACTION_TYPE_DRAW_RELEASE            , 'Released draw'),
         (ACTION_TYPE_DRAW_UNRELEASE          , 'Unreleased draw'),
-        (ACTION_TYPE_DRAW_UNRELEASE          , 'Saved divisions'),
+        (ACTION_TYPE_DIVISIONS_SAVE          , 'Saved divisions'),
         (ACTION_TYPE_MOTION_EDIT             , 'Added/edited motion'),
         (ACTION_TYPE_MOTIONS_RELEASE         , 'Released motions'),
         (ACTION_TYPE_MOTIONS_UNRELEASE       , 'Unreleased motions'),
@@ -94,7 +94,10 @@ class ActionLogEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
+
+    # These fields are stored for convenience, and should be used only for filtering.
     tournament = models.ForeignKey('tournaments.Tournament', blank=True, null=True)
+    round = models.ForeignKey('tournaments.Round', blank=True, null=True)
 
     content_type = models.ForeignKey(ContentType, models.CASCADE, blank=True, null=True)
     object_id = models.PositiveIntegerField(blank=True, null=True)
@@ -107,7 +110,6 @@ class ActionLogEntry(models.Model):
                                                        blank=True, null=True)
     adjudicator_feedback = models.ForeignKey('adjfeedback.AdjudicatorFeedback',
                                              blank=True, null=True)
-    round = models.ForeignKey('tournaments.Round', blank=True, null=True)
     motion = models.ForeignKey('motions.Motion', blank=True, null=True)
     break_category = models.ForeignKey('breakqual.BreakCategory', blank=True, null=True)
 
@@ -126,8 +128,14 @@ class ActionLogEntry(models.Model):
 
     def get_content_object_display(self):
         obj = self.content_object
+
         if obj is None:
-            return None
+            if self.round is not None:
+                return self.round.name
+            elif self.tournament is not None:
+                return self.tournament.name
+            else:
+                return None
 
         model_name = self.content_type.model
         try:
@@ -141,7 +149,7 @@ class ActionLogEntry(models.Model):
                 return obj.adjudicator.name + " (" + str(obj.score) + ")"
             elif model_name == 'adjudicatorfeedback':
                 return obj.adjudicator.name
-            elif model_name in ['round', 'adjudicator', 'breakcategory']:
+            elif model_name in ['round', 'tournament', 'adjudicator', 'breakcategory']:
                 return obj.name
             else:
                 return str(obj)

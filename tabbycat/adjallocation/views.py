@@ -52,7 +52,7 @@ def update_debate_importance(request, round):
     debate.importance = im
     debate.save()
     ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
-                               user=request.user, debate=debate, tournament=round.tournament)
+                               user=request.user, content_object=debate, tournament=round.tournament)
     return HttpResponse(im)
 
 
@@ -155,7 +155,8 @@ class SaveAdjudicatorsView(SuperuserRequiredMixin, RoundMixin, View):
 
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE,
                                    user=request.user, round=self.get_round(),
-                                   tournament=self.get_tournament())
+                                   tournament=self.get_tournament(),
+                                   content_object=self.get_round())
 
         return HttpResponse("Saved changes for {} debates!".format(changed))
 
@@ -291,6 +292,7 @@ class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, J
             return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
         if round.draw_status != Round.STATUS_CONFIRMED:
             return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
+        self.log_action()
         return super().get(request, *args, **kwargs)
 
 
