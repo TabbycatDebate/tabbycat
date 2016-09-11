@@ -78,7 +78,7 @@
 
 {% block js %}
   <script>
-    var updateActionsURL = '{% tournament_url latest_actions %}';
+    var updateActionsURL = '{% tournament_url actionlog-latest-json %}';
     var updateResultsURL = '{% tournament_url results-latest-json %}';
   </script>
   {{ block.super }}

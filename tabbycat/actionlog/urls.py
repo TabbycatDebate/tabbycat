@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
     url(r'^latest_actions/$',
         views.LatestActionsView.as_view(),
-        name='latest_actions'),
+        name='actionlog-latest-json'),
 ]
