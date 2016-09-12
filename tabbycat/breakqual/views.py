@@ -113,7 +113,6 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreaking
         else:
             messages.success(self.request, "Changes to breaking team remarks saved.")
 
-        self.log_action()
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
