@@ -15,6 +15,9 @@ class AdjudicatorTestScoreHistory(models.Model):
     class Meta:
         verbose_name_plural = "adjudicator test score histories"
 
+    def __str__(self):
+        return "{.name:s} ({:.1f}) in {!s}".format(self.adjudicator, self.score, self.round)
+
 
 class AdjudicatorFeedbackAnswer(models.Model):
     question = models.ForeignKey('AdjudicatorFeedbackQuestion')

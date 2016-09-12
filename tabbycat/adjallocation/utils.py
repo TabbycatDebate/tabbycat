@@ -49,7 +49,7 @@ def adjudicator_conflicts_display(debates):
 
             if adj2.institution_id in adjinstconflicts.get(adj1.id, []):
                 conflict_messages[debate].append(
-                    "Conflict between <strong>{adj}</strong> & <strong>{inst}</strong> ({other})".format(
+                    "Conflict between <strong>{adj}</strong> & institution <strong>{inst}</strong> ({other})".format(
                         adj=adj1.name, other=adj2.name, inst=adj2.institution.code)
                 )
 
