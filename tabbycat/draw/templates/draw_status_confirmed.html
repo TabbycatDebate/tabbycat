@@ -29,7 +29,7 @@
   {% endif %}
   {% with no_venue=round.num_debates_without_venue %}
     {% if no_venue > 0 %}
-      <div class="alert alert-danger" id="">
+      <div class="alert alert-warning" id="">
         {{ no_venue|apnumber|capfirst }} debate{{ no_venue|pluralize:" does,s do" }} not have a venue.
         <a href="{% round_url venues-edit round %}" class="alert-link">
           Edit the venues.
