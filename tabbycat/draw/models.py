@@ -243,15 +243,17 @@ class DebateTeam(models.Model):
 
     @property
     def opposition(self):
-        # Added 11/7/2016, remove after 11/8/2016
+        # Added 11/7/2016, convert to RuntimeError after 1.1.2 release, then remove a month after that
         warn("DebateTeam.opposition is deprecated, use DebateTeam.opponent instead.", stacklevel=2)
         return self.opponent
 
     @property
     def result(self):
-        # Added 4/7/2016, remove after 4/8/2016
+        # Added 12/9/2016, convert to RuntimeError after 1.1.2 release, then remove a month after that
         warn("DebateTeam.result is deprecated, use DebateTeam.get_result_display() instead.", stacklevel=2)
+        return self.get_result_display()
 
+    def get_result_display(self):
         if self.win is True:
             return 'won'
         elif self.win is False:

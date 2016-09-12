@@ -35,7 +35,7 @@
       {{ feedback.source_adjudicator.get_type_display }}),
     {% elif feedback.source_team %}
       submitted by <strong>{{ feedback.source_team.team.long_name }}</strong>
-      ({{ feedback.source_team.result }}),
+      ({{ feedback.source_team.get_result_display }}),
     {% else %}
       submitter unknown
     {% endif %}

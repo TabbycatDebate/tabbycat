@@ -1218,7 +1218,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                     assigned_teams.append(neg)
                 else:
                     # Need to deal with Byes and the like here
-                    print("couldn't find an opposition")
+                    print("couldn't find an opponent")
 
             pairings[points] = assigned_pairings
 
