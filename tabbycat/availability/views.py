@@ -61,7 +61,8 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             else:
                 debates, bypassing = partial_break_round_split(break_size)
                 teams_dict['in_now'] = 2 * debates
-                teams_dict['message'] = "%s breaking teams are debating this round; %s teams are bypassing" % (2 * debates, bypassing)
+                teams_dict['message'] = "%s breaking teams are debating this round; %s team%s bypassing" % (
+                    2 * debates, bypassing, " is" if bypassing == 1 else "s are")
             return teams_dict
 
         elif r.draw_type is r.DRAW_BREAK:
