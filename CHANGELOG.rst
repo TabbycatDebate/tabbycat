@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+1.1.2
+-----
+- Allow panels with even number of adjudicators (with warnings), by giving chair the casting vote
+- Removed defunct person check-in, which hasn't been used since 2010
+- Collapsed availability database models into a single model with Django content types
+- Collapsed optional fields in action log entries into a single generic field using Django content types
+- Added better warnings when attempting to create an elimination round draw with fewer than two teams
+- Added warnings in Edit Databse view when editing debate teams
+- Renamed "AIDA pre-2015" break rule to "AIDA 1996"
+
 
 1.1.1
 -----
