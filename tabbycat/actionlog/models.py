@@ -41,6 +41,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_MOTIONS_UNRELEASE       = 'mo.unre'
     ACTION_TYPE_DEBATE_IMPORTANCE_EDIT  = 'db.im.edit'
     ACTION_TYPE_ROUND_START_TIME_SET    = 'rd.st.set'
+    ACTION_TYPE_ROUND_ADVANCE           = 'rd.adva'
     ACTION_TYPE_ADJUDICATOR_BREAK_SET   = 'br.aj.set'
     ACTION_TYPE_BREAK_ELIGIBILITY_EDIT  = 'br.el.edit'
     ACTION_TYPE_BREAK_GENERATE_ALL      = 'br.gene'
@@ -84,6 +85,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_BREAK_UPDATE_ONE        , 'Edited breaking team remarks and updated this team break'),
         (ACTION_TYPE_BREAK_EDIT_REMARKS      , 'Edited breaking team remarks'),
         (ACTION_TYPE_ROUND_START_TIME_SET    , 'Set start time'),
+        (ACTION_TYPE_ROUND_ADVANCE           , 'Advanced the current round to'),
         (ACTION_TYPE_AVAIL_TEAMS_SAVE        , 'Edited teams availability'),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE , 'Edited adjudicators availability'),
         (ACTION_TYPE_AVAIL_VENUES_SAVE       , 'Edited venue availability'),

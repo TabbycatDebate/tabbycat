@@ -11,6 +11,8 @@ from django.shortcuts import redirect
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.edit import CreateView, FormView
 
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament
@@ -87,9 +89,9 @@ class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView
         round = self.get_round()
         current_round = self.get_tournament().current_round
         if round != current_round:
-            messages.warning(self.request, 'You are trying to advance to ' +
-                round.name + ' but the current round is ' + current_round.name +
-                ' — advance to ' + round.prev.name + ' first!')
+            messages.error(self.request, "You are trying to advance from {this_round} but "
+                "the current round is {current_round} — advance to {this_round} first!".format(
+                this_round=round.name, current_round=current_round.name))
             return redirect_round('results-round-list', self.get_tournament().current_round)
         else:
             return super().get(self, request, *args, **kwargs)
@@ -101,13 +103,30 @@ class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView
         return super().get_context_data(**kwargs)
 
 
-class RoundIncrementView(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+class RoundIncrementView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, PostOnlyRedirectView):
 
-    round_redirect_pattern_name = 'availability-index'
+    action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_ADVANCE
+    round_redirect_pattern_name = 'results-round-list' # standard redirect is only on error
 
     def post(self, request, *args, **kwargs):
-        self.get_tournament().advance_round()
-        return super().post(request, *args, **kwargs)
+        tournament = self.get_tournament()
+
+        # Advance relative to the round of the view, not the current round, so
+        # that in times of confusion, going back then clicking again won't advance
+        # twice.
+        next_round = self.get_round().next
+        if next_round:
+            tournament.current_round = next_round
+            tournament.save()
+            messages.success(request, "Advanced the current round. The current round is now %s. "
+                "Woohoo! Keep it up!" % next_round.name)
+            self.log_action(round=next_round, content_object=next_round)
+            return redirect_round('availability-index', next_round)
+
+        else:
+            messages.error(request, "Whoops! Could not advance round, because there's no round "
+                "after this round!")
+            return super().post(request, *args, **kwargs)
 
 
 class BlankSiteStartView(FormView):

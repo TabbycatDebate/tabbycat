@@ -161,16 +161,6 @@ class Tournament(models.Model):
         else:
             return None
 
-    # --------------------------------------------------------------------------
-    # Operations that modify the instance
-    # --------------------------------------------------------------------------
-
-    def advance_round(self):
-        next_round_seq = self.current_round.seq + 1
-        next_round = Round.objects.get(seq=next_round_seq, tournament=self)
-        self.current_round = next_round
-        self.save()
-
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
     use_for_related_fields = True
@@ -375,6 +365,13 @@ class Round(models.Model):
     def prev(self):
         try:
             return self.tournament.round_set.filter(seq__lt=self.seq).order_by('-seq').first()
+        except Round.DoesNotExist:
+            return None
+
+    @cached_property
+    def next(self):
+        try:
+            return self.tournament.round_set.filter(seq__gt=self.seq).order_by('seq').first()
         except Round.DoesNotExist:
             return None
 
