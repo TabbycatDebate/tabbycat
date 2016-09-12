@@ -55,8 +55,13 @@ class Debate(models.Model):
         return team in (self.aff_team, self.neg_team)
 
     def __str__(self):
-        prefix = "[{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation)
-        return prefix + self.matchup
+        description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
+        try:
+            description += self.matchup
+        except:
+            logger.critical("Error rendering Debate.matchup in Debate.__str__", exc_info=True)
+            description += "<error showing teams>"
+        return description
 
     @property
     def matchup(self):
