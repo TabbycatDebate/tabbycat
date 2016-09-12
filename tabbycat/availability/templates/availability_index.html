@@ -166,7 +166,7 @@
 
   {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_types.0.total == 1 %}
     <div class="alert alert-warning">
-      There's only one team breaking in the {{ round.break_category.name }} break.
+      There's only one team breaking in the {{ round.break_category.name }} Break.
       You can't generate an elimination round draw with only one team — you might
       like to
       <a href="{% tournament_url breakqual-teams round.break_category.slug %}" class="alert-link">
