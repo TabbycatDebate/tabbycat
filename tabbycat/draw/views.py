@@ -266,9 +266,10 @@ class CreateDrawView(DrawStatusEdit):
         except DrawError as e:
             messages.error(request, "There was a problem creating the draw: " + str(e) + " If this issue persists, please contact the developers.")
             return HttpResponseRedirect(reverse_round('availability_index', round))
-
-        # TODO provide a more intelligent check in sites where there are multiple tournaments
-        if not AdjudicatorVenueConstraint.objects.all().exists():
+        relevant_adj_venue_constraints = AdjudicatorVenueConstraint.objects.filter(
+            Q(adjudicator__tournament=self.get_tournament()) | Q(adjudicator__tournament__isnull=True)
+        )
+        if not relevant_adj_venue_constraints.exists():
             allocate_venues(round)
         else:
             messages.warning(request, "Venues were not auto-allocated because there are one or more adjudicator venue constraints. "

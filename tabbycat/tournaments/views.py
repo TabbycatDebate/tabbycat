@@ -91,7 +91,7 @@ class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView
         if round != current_round:
             messages.error(self.request, "You are trying to advance from {this_round} but "
                 "the current round is {current_round} — advance to {this_round} first!".format(
-                this_round=round.name, current_round=current_round.name))
+                    this_round=round.name, current_round=current_round.name))
             return redirect_round('results-round-list', self.get_tournament().current_round)
         else:
             return super().get(self, request, *args, **kwargs)
