@@ -35,8 +35,13 @@ To add an account:
 1. Go to *BASE_URL/admin/auth/user/* and click "Add user" in the top right.
 
 2. Ask the user to enter a username and password.
-   * Only they should know what the password is.
-   * If you're hosting on the internet, all passwords should be at least moderately strong!
-   * Passwords are stored as hashes, not as raw passwords, so it's (in theory, practically) impossible for you to figure out what their password is.
 
-3. If they're being assigned assistant privileges, click "Save" or "Save and add another". (Any account not marked staff or superuser is an assistant account.) If they're being assigned superuser and/or staff privileges, then click "Save and continue editing", and check the appropriate boxes before clicking "Save". If you also wanted their names to be associated with their accounts, click "Save and continue editing" and fill out the relevant fields. But their names *etc.* aren't used for anything by Tabbycat.
+   - Only they should know what the password is.
+   - If you're hosting on the internet, all passwords should be at least moderately strong!
+   - Passwords are stored as hashes, not as raw passwords, so it's (in theory, practically) impossible for you to figure out what their password is.
+
+3. What you do next depends on what sort of account you're creating:
+
+   - If this is an assistant account, click "Save" or "Save and add another". (Any account not marked staff or superuser is an assistant account.)
+   - If they're being assigned superuser and/or staff privileges, then click "Save and continue editing", and check the appropriate boxes before clicking "Save". 
+   - If you also wanted their names to be associated with their accounts, click "Save and continue editing" and fill out the relevant fields. But their names *etc.* aren't used for anything by Tabbycat.
