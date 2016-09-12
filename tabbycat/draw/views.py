@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+from django.db.models import Q
 from django.views.generic.base import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -264,8 +265,11 @@ class CreateDrawView(DrawStatusEdit):
         try:
             manager.create()
         except DrawError as e:
-            messages.error(request, "There was a problem creating the draw: " + str(e) + " If this issue persists, please contact the developers.")
-            return HttpResponseRedirect(reverse_round('availability_index', round))
+            messages.error(request, "There was a problem creating the draw: " + str(e) + " If this "
+                " issue persists and you're not sure how to resolve it, please contact the developers.")
+            logger.critical(str(e), exc_info=True)
+            return HttpResponseRedirect(reverse_round('availability-index', round))
+
         relevant_adj_venue_constraints = AdjudicatorVenueConstraint.objects.filter(
             Q(adjudicator__tournament=self.get_tournament()) | Q(adjudicator__tournament__isnull=True)
         )

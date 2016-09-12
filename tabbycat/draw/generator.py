@@ -1069,7 +1069,15 @@ class FirstEliminationDrawGenerator(BaseEliminationDrawGenerator):
     requires_prev_results = False
 
     def make_pairings(self):
-        debates, bypassing = partial_break_round_split(len(self.teams))
+        if len(self.teams) < 2:
+            raise DrawError("There are only %d teams breaking in this category; "
+                    "there need to be at least two to generate an elimination round draw." % len(self.teams))
+
+        try:
+            debates, bypassing = partial_break_round_split(len(self.teams))
+        except AssertionError as e:
+            raise DrawError(e)
+
         logger.info("There will be %d debates in this round and %d teams bypassing it.", debates, bypassing)
         teams = self.teams[bypassing:]
         return self._make_pairings(teams, bypassing)
