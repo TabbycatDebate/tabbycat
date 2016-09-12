@@ -53,14 +53,17 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     def _get_breaking_teams_dict(self):
         r = self.get_round()
         if r.draw_type is r.DRAW_FIRSTBREAK:
-            break_size = r.break_category.break_size
-            break_details = partial_break_round_split(break_size)
-            return {
-                'type'      : 'Team',
-                'total'     : break_size,
-                'in_now'    : break_details[0] * 2,
-                'message'   : '%s breaking teams are debating this round; %s teams are bypassing' % (break_details[0] * 2, break_details[1])
-            }
+            break_size = r.break_category.breakingteam_set_competing.count()
+            teams_dict = {'type': 'Team', 'total': break_size}
+            if break_size < 2:
+                teams_dict['in_now'] = 0
+                teams_dict['message'] = "%d breaking team%s — no debates can happen" % (break_size, "" if break_size == 1 else "s")
+            else:
+                debates, bypassing = partial_break_round_split(break_size)
+                teams_dict['in_now'] = 2 * debates
+                teams_dict['message'] = "%s breaking teams are debating this round; %s teams are bypassing" % (2 * debates, bypassing)
+            return teams_dict
+
         elif r.draw_type is r.DRAW_BREAK:
             last_round = r.break_category.round_set.filter(seq__lt=r.seq).order_by('-seq').first()
             advancing_teams = last_round.debate_set.count()

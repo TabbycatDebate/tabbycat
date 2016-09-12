@@ -38,6 +38,12 @@ class BreakCategory(models.Model):
         index_together = ['tournament', 'seq']
         verbose_name_plural = "break categories"
 
+    @property
+    def breakingteam_set_competing(self):
+        """Returns a QuerySet of BreakingTeam instances representing teams who
+        will actually compete in the elimination round series."""
+        return self.breakingteam_set.filter(break_rank__isnull=False)
+
 
 class BreakingTeam(models.Model):
     break_category = models.ForeignKey(BreakCategory, models.CASCADE)

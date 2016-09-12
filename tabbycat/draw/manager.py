@@ -138,8 +138,8 @@ class RoundRobinDrawManager(BaseDrawManager):
 
 class BaseEliminationDrawManager(BaseDrawManager):
     def get_teams(self):
-        breaking_teams = self.round.break_category.breakingteam_set.filter(
-                break_rank__isnull=False).order_by('break_rank').select_related('team')
+        breaking_teams = self.round.break_category.breakingteam_set_competing.order_by(
+                'break_rank').select_related('team')
         return [bt.team for bt in breaking_teams]
 
 

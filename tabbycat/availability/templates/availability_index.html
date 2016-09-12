@@ -150,8 +150,27 @@
       This is the first round, but its draw type is
       <strong>{{ round.get_draw_type_display }}</strong>. Did you intend for it
       to be <strong>Random</strong> instead? You can
-      <a href="{% url 'admin:tournaments_round_change' round.id %}">
+      <a href="{% url 'admin:tournaments_round_change' round.id %}" class="alert-link">
         edit this round's draw type in the Edit Database area.</a>
+    </div>
+  {% endif %}
+
+  {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_types.0.total == 0 %}
+    <div class="alert alert-warning">
+      There don't appear to be any teams breaking in the {{ round.break_category.name }}
+      Break. Have you
+      <a href="{% tournament_url breakqual-teams round.break_category.slug %}" class="alert-link">
+        generated the break for the {{ round.break_category.name }} Break</a> yet?
+    </div>
+  {% endif %}
+
+  {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_types.0.total == 1 %}
+    <div class="alert alert-warning">
+      There's only one team breaking in the {{ round.break_category.name }} break.
+      You can't generate an elimination round draw with only one team — you might
+      like to
+      <a href="{% tournament_url breakqual-teams round.break_category.slug %}" class="alert-link">
+        review the break for the {{ round.break_category.name }} Break</a>.
     </div>
   {% endif %}
 
