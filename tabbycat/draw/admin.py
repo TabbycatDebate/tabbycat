@@ -1,10 +1,9 @@
 from django.contrib import admin
 
+
 from adjallocation.models import DebateAdjudicator
 from participants.models import Team
 from utils.admin import TabbycatModelAdminFieldsMixin
-
-from django.contrib import messages
 
 from .models import Debate, DebateTeam
 
@@ -14,7 +13,7 @@ from .models import Debate, DebateTeam
 # ==============================================================================
 
 class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
-    list_display = ('team', 'get_tournament', 'get_round', 'position')
+    list_display = ('team', 'debate', 'get_tournament', 'get_round', 'position')
     search_fields = ('team', )
     raw_id_fields = ('debate', 'team', )
 
@@ -23,23 +22,6 @@ class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
                      self).get_queryset(request).select_related(
                          'debate__round', 'debate__round__tournament')
 
-    def get_actions(self, request):
-        # Remove the ability to delete checked objects on the list page
-        actions = super(DebateTeamAdmin, self).get_actions(request)
-        del actions['delete_selected']
-        return actions
-
-    def delete_view(self, request, object_id, extra_context=None):
-        # If this isn't the confirmation stage add a super scary warning
-        if not request.POST:
-            messages.add_message(request, messages.WARNING,
-                """DANGER: you really shouldn't delete debate teams without also
-                 deleting the debate to which they are attached OR immediately
-                adding a new debate team to that debate. Otherwise many tab
-                pages *will* crash. If this happens go check all of the Debates
-                (under the Draw section) and ensure they have both
-                an affirmative and a negative team set""")
-        return super(DebateTeamAdmin, self).delete_view(request, object_id, extra_context)
 
 admin.site.register(DebateTeam, DebateTeamAdmin)
 
