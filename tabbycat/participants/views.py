@@ -6,7 +6,7 @@ from django.views.generic.base import View
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
-from draw.prefetch import populate_opponents, populate_teams
+from draw.prefetch import populate_opponents
 from results.models import TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (CrossTournamentPageMixin, PublicTournamentPageMixin,
@@ -175,9 +175,9 @@ class BaseAdjudicatorRecordView(BaseRecordView):
                 debate__round__draw_status=Round.STATUS_RELEASED,
                 debate__round__silent=False).select_related(
                 'debate', 'debate__round').prefetch_related(
-                'debate__debateadjudicator_set', 'debate__debateadjudicator_set__adjudicator')
+                'debate__debateadjudicator_set', 'debate__debateadjudicator_set__adjudicator',
+                'debate__debateteam_set__team__speaker_set')
         debates = [da.debate for da in debateadjs]
-        populate_teams(debates)
         populate_wins(debates)
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)
 

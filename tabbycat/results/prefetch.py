@@ -13,7 +13,7 @@ def populate_wins(debates):
     """Sets an attribute `_win` on each DebateTeam in each Debate, representing
     whether they won the debate. For best results, the caller should already
     have run populate_teams(debates) in draw/prefetch.py before calling this
-    function.
+    function, or the queryset should have had 'debateteam_set__team' prefetched.
 
     This can be used for efficiency, since it retrieves all of the
     information in bulk in a single SQL query. Operates in-place.

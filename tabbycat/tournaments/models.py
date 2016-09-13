@@ -304,7 +304,6 @@ class Round(models.Model):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
-        from draw.prefetch import populate_teams
         from results.prefetch import populate_confirmed_ballots, populate_wins
 
         debates = self.debate_set.all()
@@ -318,13 +317,17 @@ class Round(models.Model):
             debates = debates.select_related('division', 'division__venue_group')
         if venues:
             debates = debates.select_related('venue', 'venue__group')
+        if teams or wins:
+            debates = debates.prefetch_related('debateteam_set__team')
+        if speakers:
+            debates = debates.prefetch_related('debateteam_set__team__speaker_set')
+        if institutions:
+            debates = debates.prefetch_related('debateteam_set__team__institution')
 
         if ordering:
             debates = debates.order_by(*ordering)
 
         # These functions populate relevant attributes of each debate, operating in-place
-        if teams or speakers or wins or institutions:
-            populate_teams(debates, speakers=speakers, institutions=institutions)  # _aff_team, _aff_dt, _neg_team, _neg_dt
         if ballotsubs or ballotsets:
             populate_confirmed_ballots(debates, motions=True, ballotsets=ballotsets)
         if wins:
