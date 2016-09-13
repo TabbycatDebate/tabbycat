@@ -91,7 +91,7 @@ class Debate(models.Model):
                 self._neg_team = dt.team
                 self._neg_dt = dt
 
-    def _team_property(attr):
+    def _team_property(attr):  # noqa: N805
         @property
         def _property(self):
             try:
