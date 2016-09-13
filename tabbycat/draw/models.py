@@ -156,6 +156,10 @@ class Debate(models.Model):
         # Deprecated 12/9/2016, remove after 12/10/2016
         raise RuntimeError("Debate.get_side() is deprecated.")
 
+    # --------------------------------------------------------------------------
+    # Other properties
+    # --------------------------------------------------------------------------
+
     @property
     def confirmed_ballot(self):
         """Returns the confirmed BallotSubmission for this debate, or None if
@@ -211,15 +215,14 @@ class Debate(models.Model):
             return self._adjudicators
 
     @property
-    def get_division_motions(self):
+    def division_motion(self):
         from motions.models import Motion
-        motions = Motion.objects.filter(round=self.round, divisions=self.division)
-        if motions.count() > 0:
-            return motions[0] # Pretty sure this should never be > 1
-        else:
-            # Its easiest to assume a division motion is always present, so
+        try:
+            # Pretty sure there should never be > 1
+            Motion.objects.filter(round=self.round, divisions=self.division).first()
+        except ObjectDoesNotExist:
+            # It's easiest to assume a division motion is always present, so
             # return a fake one if it is not
-            from motions.models import Motion
             return Motion(text='-', reference='-')
 
 

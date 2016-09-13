@@ -72,7 +72,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key="Aff")
         table.add_team_columns([d.neg_team for d in draw], hide_institution=True, key="Neg")
         if tournament.pref('enable_division_motions'):
-            table.add_motion_column(d.get_division_motions for d in draw)
+            table.add_motion_column(d.division_motion for d in draw)
 
         if not tournament.pref('enable_divisions'):
             table.add_debate_adjudicators_column(draw, show_splits=False)
