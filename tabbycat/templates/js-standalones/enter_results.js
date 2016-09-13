@@ -151,7 +151,7 @@ $('.js-team-speakers select').change(update_speakers).each(update_speaker);
 
 {% endif %}
 
-{% if side_allocations_unknown %}
+{% if form.choosing_sides %}
 
   var team_names = {};
   {% for team in form.debate.teams %}team_names['{{team.id}}'] = '{{team.short_name}}';
@@ -200,7 +200,7 @@ $('.js-team-speakers select').change(update_speakers).each(update_speaker);
   if ($("#id_choose_sides").val() == "") {
     $(".scoresheet").hide();
   } else {
-    $(".adj-ballot .text-warning").hide();
+    $(".sides-before-scores-warning").hide();
     var selected_option = $("#id_choose_sides").val()
     swap_sides(selected_option)
   }
@@ -210,11 +210,11 @@ $('.js-team-speakers select').change(update_speakers).each(update_speaker);
     var selected_option = $("#id_choose_sides").val()
     if (selected_option != "") {
       $(".scoresheet").show();
-      $(".adj-ballot .text-warning").hide();
+      $(".sides-before-scores-warning").hide();
       swap_sides(selected_option)
     } else {
       $(".scoresheet").hide();
-      $(".adj-ballot .text-warning").show();
+      $(".sides-before-scores-warning").show();
     }
     update_speakers();
   });
