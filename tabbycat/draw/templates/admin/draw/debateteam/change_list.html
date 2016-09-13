@@ -1,33 +1,16 @@
 {% extends "admin/change_list.html" %}
 
 {% block extrastyle %}
-    {{ block.super }}
-    <style>
-        .stop-message {
-            color: #c14747;
-            font-weight: bold;
-        }
-
-        .debate-team-warning {
-            background-color: #f0dada;
-            border-radius: 4px;
-            border-radius: 0.28571rem;
-            padding: 20px;
-            padding: 1.42857rem;
-            margin-bottom: 10px;
-        }
-
-        .debate-team-warning p:last-child {
-            margin-bottom: 0;
-        }
-    </style>
+  {{ block.super }}
+  <style>
+    #debate-team-warning {
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
-    <div class="debate-team-warning">
-        <p class="stop-message">WARNING!!! If you are editing debate teams, read this first!</p>
-        <p>Tabbycat requires that there be exactly one affirmative and one negative debate team, and no other debate teams, in each debate. If you edit debate teams, you must ensure that this is the case. If you don't do this correctly, many pages <strong>will</strong> crash.</p>
-        <p>This is a common source of errors. If it happens to you, check the debates (under the Draw section in this Edit Database area) and ensure that all of them have exactly one affirmative and one negative team.</p>
-    </div>
-    {{ block.super }}
+  {% include "admin/draw/debateteam/edit_warning.html" %}
+  {{ block.super }}
 {% endblock %}

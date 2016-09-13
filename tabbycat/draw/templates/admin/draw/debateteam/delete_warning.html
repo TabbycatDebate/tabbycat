@@ -1,0 +1,29 @@
+<div id="debate-team-warning" style="background-color: #f0dada; padding: 15px 15px 5px; margin-bottom: 20px; border-radius: 4px;">
+  <p style="font-weight: bold; color: #c14747;">STOP!!! Read this first! Deleting the selected debate teams may crash Tabbycat!</p>
+  <p>Tabbycat requires that all debates have exactly one affirmative and exactly one negative debate team, and no other debate teams, at all times. If you delete these debate teams, you must then either replace each one with a new debate team in the same debate, or delete the associated debate objects. If you don't do this correctly, many pages <strong>will</strong> crash.</p>
+  <p>This is a common source of errors. If it happens to you, check the debates (under the Draw section in this Edit Database area) and ensure that all of them have exactly one affirmative and one negative team.</p>
+</div>
+
+<style>
+
+  /* The base CSS uses #content>h1+p+h2+ul to detect the "Summary" list.
+  Our adding three <p> elements breaks this, so we add a copy of the
+  CSS specification that's targeted at the same elements. */
+
+  .delete-confirmation #content>ul:nth-of-type(1) {
+    background: #f0dada;
+    color: #d49d9d;
+    border-radius: 4px;
+    border-radius: 0.28571rem;
+    padding: 20px;
+    padding: 1.42857rem;
+    list-style-type: none;
+    margin: 0;
+  }
+
+  .delete-confirmation #content>ul:nth-of-type(1) li {
+    list-style: none;
+    line-height: 1.8;
+  }
+
+</style>

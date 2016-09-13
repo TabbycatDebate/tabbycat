@@ -1,55 +1,26 @@
 {% extends "admin/change_form.html" %}
 
 {% block extrahead %}
-    {{ block.super }}
-    <script type="text/javascript">
-        // This is a little hack to get the debate-team-warning to display only
-        // when the appropriate tab is selected. It's all hard-coded, so it's
-        // a little fragile.
+  {{ block.super }}
+  <script type="text/javascript">
+    // This is a little hack to get the debate-team-warning to display only
+    // when the appropriate tab is selected. It's all hard-coded, so it's
+    // a little fragile.
 
-        var $ = window.jQuery;
+    function locationHashChanged() {
+      var warning = document.getElementById("debate-team-warning");
+      if (location.hash === '#/tab/inline_0/') {
+        warning.style.display = 'block';
+      } else {
+        warning.style.display = 'none';
+      }
+    }
+    window.onhashchange = locationHashChanged;
 
-        function showDebateTeamWarning() {
-            console.log(location.hash);
-            if (location.hash == '#/tab/inline_0/') {
-                $('#debate-team-warning').show();
-            } else {
-                $('#debate-team-warning').hide();
-            }
-        }
-
-        $(document).ready( function() {
-            showDebateTeamWarning();
-            $(window).on('hashchange', showDebateTeamWarning);
-        });
-    </script>
-{% endblock %}
-
-{% block extrastyle %}
-    {{ block.super }}
-    <style>
-        .stop-message {
-            color: #c14747;
-            font-weight: bold;
-        }
-
-        #debate-team-warning {
-            display: none;
-            background-color: #f0dada;
-            padding: 15px 30px;
-        }
-
-        #debate-team-warning p:last-child {
-            margin-bottom: 0;
-        }
-    </style>
+  </script>
 {% endblock %}
 
 {% block after_field_sets %}
-    <div id="debate-team-warning" style="display: none;">
-        <p class="stop-message">WARNING!!! If you are editing debate teams, read this first!</p>
-        <p>Tabbycat requires that there be exactly one affirmative and one negative debate team, and no other debate teams, in each debate. If you save this debate with more or less than one of each, and don't correct the situation, many pages <strong>will</strong> crash.</p>
-        <p>This is a common source of errors. If it happens to you, check the debates (under the Draw section in this Edit Database area) and ensure that all of them have exactly one affirmative and one negative team.</p>
-    </div>
-    {{ block.super }}
+  {% include "admin/draw/debateteam/edit_warning.html" %}
+  {{ block.super }}
 {% endblock %}
