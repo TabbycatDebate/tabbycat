@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.utils import formats
 
 from adjallocation.allocation import AdjudicatorAllocation
@@ -615,8 +616,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 try:
                     debateteam = debate.get_dt(pos)
                     team = debate.get_team(pos)
-                except DebateTeam.DoesNotExist:
+                except ObjectDoesNotExist:
                     row.append("-")
+                    continue
+                except MultipleObjectsReturned:
+                    row.append("<error>")
                     continue
 
                 cell = self._team_cell(team, hide_emoji=True)
