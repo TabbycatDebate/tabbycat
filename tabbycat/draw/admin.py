@@ -3,7 +3,6 @@ from django.core.exceptions import MultipleObjectsReturned
 
 
 from adjallocation.models import DebateAdjudicator
-from participants.models import Team
 from utils.admin import TabbycatModelAdminFieldsMixin
 
 from .models import Debate, DebateTeam

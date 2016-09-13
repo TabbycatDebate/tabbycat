@@ -2,7 +2,7 @@ import logging
 
 from django.db import models
 from django.utils.functional import cached_property
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
@@ -94,7 +94,6 @@ class Debate(models.Model):
                     self._multiple_found.extend(['_neg_team', '_neg_dt'])
                 self._neg_team = dt.team
                 self._neg_dt = dt
-                neg_found = True
 
     def _team_property(attr):  # noqa: N805
         """Used for properties that rely on self._populate_teams(). Such
