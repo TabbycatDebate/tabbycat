@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.core.exceptions import MultipleObjectsReturned
 
 
 from adjallocation.models import DebateAdjudicator
@@ -56,14 +57,14 @@ class DebateAdmin(admin.ModelAdmin):
     def get_aff_team(self, obj):
         try:
             return obj.aff_team
-        except Team.MultipleObjectsReturned:
+        except MultipleObjectsReturned:
             return "<multiple affirmative teams>"
     get_aff_team.short_description = "Affirmative team"
 
     def get_neg_team(self, obj):
         try:
             return obj.neg_team
-        except Team.MultipleObjectsReturned:
+        except MultipleObjectsReturned:
             return "<multiple negative teams>"
     get_neg_team.short_description = "Negative team"
 

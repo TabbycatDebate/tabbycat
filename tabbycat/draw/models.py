@@ -2,7 +2,7 @@ import logging
 
 from django.db import models
 from django.utils.functional import cached_property
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
@@ -65,7 +65,7 @@ class Debate(models.Model):
         # This method is used by __str__, so it's not allowed to crash (ever)
         try:
             return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
-        except ObjectDoesNotExist:
+        except (ObjectDoesNotExist, MultipleObjectsReturned):
             dts = self.debateteam_set.all()
             if all(dt.position == DebateTeam.POSITION_UNALLOCATED for dt in dts):
                 return ", ".join([dt.team.short_name for dt in dts])
@@ -81,14 +81,20 @@ class Debate(models.Model):
         if not dts._prefetch_done:  # uses internal undocumented flag of Django's QuerySet model
             dts = dts.select_related('team')
         self._teams = []
+        self._multiple_found = []
         for dt in dts:
             self._teams.append(dt.team)
             if dt.position == DebateTeam.POSITION_AFFIRMATIVE:
+                if hasattr(self, '_aff_team'):
+                    self._multiple_found.extend(['_aff_team', '_aff_dt'])
                 self._aff_team = dt.team
                 self._aff_dt = dt
             elif dt.position == DebateTeam.POSITION_NEGATIVE:
+                if hasattr(self, '_neg_team'):
+                    self._multiple_found.extend(['_neg_team', '_neg_dt'])
                 self._neg_team = dt.team
                 self._neg_dt = dt
+                neg_found = True
 
     def _team_property(attr):  # noqa: N805
         """Used for properties that rely on self._populate_teams(). Such
@@ -101,13 +107,21 @@ class Debate(models.Model):
         def _property(self):
             if not hasattr(self, '_teams'):
                 self._populate_teams()
+            if attr in self._multiple_found:
+                raise MultipleObjectsReturned("Multiple objects found for attribute '%s' in debate ID %d" % (attr, self.id))
             try:
                 return getattr(self, attr)
             except AttributeError:
-                raise ObjectDoesNotExist
+                raise ObjectDoesNotExist("No object found for attribute '%s' in debate ID %d" % (attr, self.id))
         return _property
 
-    teams = _team_property('_teams')
+    @property
+    def teams(self):
+        # No need for _team_property overhead, this list is guaranteed to exist
+        if not hasattr(self, '_teams'):
+            self._populate_teams()
+        return self._teams
+
     aff_team = _team_property('_aff_team')
     neg_team = _team_property('_neg_team')
     aff_dt = _team_property('_aff_dt')
