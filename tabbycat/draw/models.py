@@ -91,47 +91,24 @@ class Debate(models.Model):
                 self._neg_team = dt.team
                 self._neg_dt = dt
 
-    @property
-    def teams(self):
-        """Returns an iterable object containing the teams in the debate in
-        arbitrary order. The iterable may be a list or a QuerySet."""
-        try:
-            return self._teams
-        except AttributeError:
-            self._populate_teams()
-            return self._teams
+    def _team_property(attr):
+        @property
+        def _property(self):
+            try:
+                return getattr(self, attr)
+            except AttributeError:
+                self._populate_teams()
+            try:
+                return getattr(self, attr)
+            except AttributeError:
+                raise ObjectDoesNotExist
+        return _property
 
-    @property
-    def aff_team(self):
-        try:
-            return self._aff_team # may be populated by Round.debate_set_with_prefetches
-        except AttributeError:
-            self._populate_teams()
-            return self._aff_team
-
-    @property
-    def neg_team(self):
-        try:
-            return self._neg_team
-        except AttributeError:
-            self._populate_teams()
-            return self._neg_team
-
-    @property
-    def aff_dt(self):
-        try:
-            return self._aff_dt # may be populated by Round.debate_set_with_prefetches
-        except AttributeError:
-            self._populate_teams()
-            return self._aff_dt
-
-    @property
-    def neg_dt(self):
-        try:
-            return self._neg_dt # may be populated by Round.debate_set_with_prefetches
-        except AttributeError:
-            self._populate_teams()
-            return self._neg_dt
+    teams = _team_property('_teams')
+    aff_team = _team_property('_aff_team')
+    neg_team = _team_property('_neg_team')
+    aff_dt = _team_property('_aff_dt')
+    neg_dt = _team_property('_neg_dt')
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
