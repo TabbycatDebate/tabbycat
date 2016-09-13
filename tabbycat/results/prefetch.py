@@ -12,8 +12,7 @@ from .result import BallotSet, Scoresheet
 def populate_wins(debates):
     """Sets an attribute `_win` on each DebateTeam in each Debate, representing
     whether they won the debate. For best results, the caller should already
-    have run populate_teams(debates) in draw/prefetch.py before calling this
-    function, or the queryset should have had 'debateteam_set__team' prefetched.
+    have had 'debateteam_set__team' prefetched on the query set.
 
     This can be used for efficiency, since it retrieves all of the
     information in bulk in a single SQL query. Operates in-place.

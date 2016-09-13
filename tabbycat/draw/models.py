@@ -5,8 +5,6 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
 
-from participants.models import Team
-
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
 logger = logging.getLogger(__name__)
@@ -68,7 +66,7 @@ class Debate(models.Model):
         # This method is used by __str__, so it's not allowed to crash (ever)
         try:
             return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
-        except (Team.DoesNotExist, Team.MultipleObjectsReturned, AttributeError):
+        except AttributeError:
             dts = self.debateteam_set.all()
             if all(dt.position == DebateTeam.POSITION_UNALLOCATED for dt in dts):
                 return ", ".join([dt.team.short_name for dt in dts])
@@ -98,19 +96,10 @@ class Debate(models.Model):
         """Returns an iterable object containing the teams in the debate in
         arbitrary order. The iterable may be a list or a QuerySet."""
         try:
-            return [self._aff_team, self._neg_team]
-        except AttributeError:
-            pass
-        try:
             return self._teams
         except AttributeError:
             self._populate_teams()
-        try:
             return self._teams
-        except AttributeError:
-            # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._teams")
-            return Team.objects.filter(debateteam__debate=self)
 
     @property
     def aff_team(self):
@@ -118,13 +107,6 @@ class Debate(models.Model):
             return self._aff_team # may be populated by Round.debate_set_with_prefetches
         except AttributeError:
             self._populate_teams()
-        try:
-            return self._aff_team
-        except AttributeError:
-            # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._aff_team")
-            self._aff_team = Team.objects.select_related('institution').get(
-                debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
             return self._aff_team
 
     @property
@@ -133,13 +115,6 @@ class Debate(models.Model):
             return self._neg_team
         except AttributeError:
             self._populate_teams()
-        try:
-            return self._neg_team
-        except AttributeError:
-            # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._neg_team")
-            self._neg_team = Team.objects.select_related('institution').get(
-                debateteam__debate=self, debateteam__position=DebateTeam.POSITION_NEGATIVE)
             return self._neg_team
 
     @property
@@ -148,13 +123,6 @@ class Debate(models.Model):
             return self._aff_dt # may be populated by Round.debate_set_with_prefetches
         except AttributeError:
             self._populate_teams()
-        try:
-            return self._aff_dt
-        except AttributeError:
-            # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._aff_dt")
-            self._aff_dt = self.debateteam_set.select_related('team').get(
-                position=DebateTeam.POSITION_AFFIRMATIVE)
             return self._aff_dt
 
     @property
@@ -163,13 +131,6 @@ class Debate(models.Model):
             return self._neg_dt # may be populated by Round.debate_set_with_prefetches
         except AttributeError:
             self._populate_teams()
-        try:
-            return self._neg_dt
-        except AttributeError:
-            # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._neg_dt")
-            self._neg_dt = self.debateteam_set.select_related('team').get(
-                position=DebateTeam.POSITION_NEGATIVE)
             return self._neg_dt
 
     def get_team(self, side):
