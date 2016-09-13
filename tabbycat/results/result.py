@@ -248,11 +248,11 @@ class Scoresheet(ResultBuffer):
 
     @property
     def aff_score(self):
-        return self._get_total(self.debate.aff_dt)
+        return self._get_total(self._dt('aff'))
 
     @property
     def neg_score(self):
-        return self._get_total(self.debate.neg_dt)
+        return self._get_total(self._dt('neg'))
 
     @property
     def aff_win(self):
@@ -658,19 +658,19 @@ class BallotSet(ResultBuffer):
 
     @property
     def aff_score(self):
-        return self._get_avg_total(self.debate.aff_dt)
+        return self._get_avg_total(self._dt('aff'))
 
     @property
     def neg_score(self):
-        return self._get_avg_total(self.debate.neg_dt)
+        return self._get_avg_total(self._dt('neg'))
 
     @property
     def aff_points(self):
-        return self._get_points(self.debate.aff_dt)
+        return self._get_points(self._dt('aff'))
 
     @property
     def neg_points(self):
-        return self._get_points(self.debate.neg_dt)
+        return self._get_points(self._dt('neg'))
 
     @property
     def aff_win(self):
@@ -682,19 +682,19 @@ class BallotSet(ResultBuffer):
 
     @property
     def aff_motion_veto(self):
-        return self.motion_veto[self.debate.aff_dt]
+        return self.motion_veto[self._dt('aff')]
 
     @aff_motion_veto.setter
     def aff_motion_veto(self, new):
-        self.motion_veto[self.debate.aff_dt] = new
+        self.motion_veto[self._dt('aff')] = new
 
     @property
     def neg_motion_veto(self):
-        return self.motion_veto[self.debate.neg_dt]
+        return self.motion_veto[self._dt('neg')]
 
     @neg_motion_veto.setter
     def neg_motion_veto(self, new):
-        self.motion_veto[self.debate.neg_dt] = new
+        self.motion_veto[self._dt('neg')] = new
 
     # --------------------------------------------------------------------------
     # Other methods
