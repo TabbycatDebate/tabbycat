@@ -13,7 +13,7 @@ from .models import Debate, DebateTeam
 # ==============================================================================
 
 class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
-    list_display = ('team', 'debate', 'get_tournament', 'get_round', 'position')
+    list_display = ('team', 'position', 'debate', 'get_tournament', 'get_round')
     search_fields = ('team', )
     raw_id_fields = ('debate', 'team', )
 
