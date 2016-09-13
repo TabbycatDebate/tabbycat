@@ -109,7 +109,7 @@ class Debate(models.Model):
             return self._teams
         except AttributeError:
             # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._teams", exc_info=True)
+            logger.critical("Debate._populate_teams() didn't populate self._teams")
             return Team.objects.filter(debateteam__debate=self)
 
     @property
@@ -122,7 +122,7 @@ class Debate(models.Model):
             return self._aff_team
         except AttributeError:
             # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._aff_team", exc_info=True)
+            logger.critical("Debate._populate_teams() didn't populate self._aff_team")
             self._aff_team = Team.objects.select_related('institution').get(
                 debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
             return self._aff_team
@@ -137,7 +137,7 @@ class Debate(models.Model):
             return self._neg_team
         except AttributeError:
             # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._neg_team", exc_info=True)
+            logger.critical("Debate._populate_teams() didn't populate self._neg_team")
             self._neg_team = Team.objects.select_related('institution').get(
                 debateteam__debate=self, debateteam__position=DebateTeam.POSITION_NEGATIVE)
             return self._neg_team
@@ -152,7 +152,7 @@ class Debate(models.Model):
             return self._aff_dt
         except AttributeError:
             # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._aff_dt", exc_info=True)
+            logger.critical("Debate._populate_teams() didn't populate self._aff_dt")
             self._aff_dt = self.debateteam_set.select_related('team').get(
                 position=DebateTeam.POSITION_AFFIRMATIVE)
             return self._aff_dt
@@ -167,7 +167,7 @@ class Debate(models.Model):
             return self._neg_dt
         except AttributeError:
             # This isn't meant to happen any more, should be deprecated eventually.
-            logger.critical("Debate._populate_teams() didn't populate self._neg_dt", exc_info=True)
+            logger.critical("Debate._populate_teams() didn't populate self._neg_dt")
             self._neg_dt = self.debateteam_set.select_related('team').get(
                 position=DebateTeam.POSITION_NEGATIVE)
             return self._neg_dt
