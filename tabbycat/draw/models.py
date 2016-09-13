@@ -1,5 +1,4 @@
 import logging
-from warnings import warn
 
 from django.db import models
 from django.utils.functional import cached_property
