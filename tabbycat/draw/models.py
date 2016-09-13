@@ -68,13 +68,30 @@ class Debate(models.Model):
         # This method is used by __str__, so it's not allowed to crash (ever)
         try:
             return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
-        except (Team.DoesNotExist, Team.MultipleObjectsReturned):
+        except (Team.DoesNotExist, Team.MultipleObjectsReturned, AttributeError):
             dts = self.debateteam_set.all()
             if all(dt.position == DebateTeam.POSITION_UNALLOCATED for dt in dts):
                 return ", ".join([dt.team.short_name for dt in dts])
             else:
                 return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display().lower())
                     for dt in dts])
+
+    def _populate_teams(self):
+        """Populates the team attributes from self.debateteam_set.
+        Callers wishing for this to be done in bulk should prefetch the original
+        query with 'debateteam_set__team'."""
+        dts = self.debateteam_set.all()
+        if not dts._prefetch_done:  # uses internal undocumented flag of Django's QuerySet model
+            dts = dts.select_related('team')
+        self._teams = []
+        for dt in dts:
+            self._teams.append(dt.team)
+            if dt.position == DebateTeam.POSITION_AFFIRMATIVE:
+                self._aff_team = dt.team
+                self._aff_dt = dt
+            elif dt.position == DebateTeam.POSITION_NEGATIVE:
+                self._neg_team = dt.team
+                self._neg_dt = dt
 
     @property
     def teams(self):
@@ -83,6 +100,16 @@ class Debate(models.Model):
         try:
             return [self._aff_team, self._neg_team]
         except AttributeError:
+            pass
+        try:
+            return self._teams
+        except AttributeError:
+            self._populate_teams()
+        try:
+            return self._teams
+        except AttributeError:
+            # This isn't meant to happen any more, should be deprecated eventually.
+            logger.critical("Debate._populate_teams() didn't populate self._teams", exc_info=True)
             return Team.objects.filter(debateteam__debate=self)
 
     @property
@@ -90,6 +117,12 @@ class Debate(models.Model):
         try:
             return self._aff_team # may be populated by Round.debate_set_with_prefetches
         except AttributeError:
+            self._populate_teams()
+        try:
+            return self._aff_team
+        except AttributeError:
+            # This isn't meant to happen any more, should be deprecated eventually.
+            logger.critical("Debate._populate_teams() didn't populate self._aff_team", exc_info=True)
             self._aff_team = Team.objects.select_related('institution').get(
                 debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
             return self._aff_team
@@ -99,6 +132,12 @@ class Debate(models.Model):
         try:
             return self._neg_team
         except AttributeError:
+            self._populate_teams()
+        try:
+            return self._neg_team
+        except AttributeError:
+            # This isn't meant to happen any more, should be deprecated eventually.
+            logger.critical("Debate._populate_teams() didn't populate self._neg_team", exc_info=True)
             self._neg_team = Team.objects.select_related('institution').get(
                 debateteam__debate=self, debateteam__position=DebateTeam.POSITION_NEGATIVE)
             return self._neg_team
@@ -108,7 +147,13 @@ class Debate(models.Model):
         try:
             return self._aff_dt # may be populated by Round.debate_set_with_prefetches
         except AttributeError:
-            self._aff_dt = self.debateteam_set.select_related('team', 'team__institution').get(
+            self._populate_teams()
+        try:
+            return self._aff_dt
+        except AttributeError:
+            # This isn't meant to happen any more, should be deprecated eventually.
+            logger.critical("Debate._populate_teams() didn't populate self._aff_dt", exc_info=True)
+            self._aff_dt = self.debateteam_set.select_related('team').get(
                 position=DebateTeam.POSITION_AFFIRMATIVE)
             return self._aff_dt
 
@@ -117,9 +162,15 @@ class Debate(models.Model):
         try:
             return self._neg_dt # may be populated by Round.debate_set_with_prefetches
         except AttributeError:
-            self._neg_dt = self.debateteam_set.select_related('team', 'team__institution').get(
+            self._populate_teams()
+        try:
+            return self._neg_dt
+        except AttributeError:
+            # This isn't meant to happen any more, should be deprecated eventually.
+            logger.critical("Debate._populate_teams() didn't populate self._neg_dt", exc_info=True)
+            self._neg_dt = self.debateteam_set.select_related('team').get(
                 position=DebateTeam.POSITION_NEGATIVE)
-            return self._neg_dt # may be populated by Round.debate_set_with_prefetches
+            return self._neg_dt
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)

@@ -19,7 +19,8 @@ class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super(DebateTeamAdmin, self).get_queryset(request).select_related(
-                'debate__round', 'debate__round__tournament', 'team__tournament')
+                'debate__round', 'debate__round__tournament', 'team__tournament').prefetch_related(
+                'debate__debateteam_set__team')
 
 
 admin.site.register(DebateTeam, DebateTeamAdmin)
@@ -49,7 +50,8 @@ class DebateAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super(DebateAdmin, self).get_queryset(request).select_related(
-            'round__tournament', 'division__tournament', 'venue__group')
+            'round__tournament', 'division__tournament', 'venue__group').prefetch_related(
+            'debateteam_set__team__tournament')
 
     def get_aff_team(self, obj):
         try:
