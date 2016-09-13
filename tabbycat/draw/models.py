@@ -28,24 +28,21 @@ class Debate(models.Model):
 
     objects = DebateManager()
 
-    round = models.ForeignKey('tournaments.Round', db_index=True)
-    venue = models.ForeignKey('venues.Venue', blank=True, null=True)
-    division = models.ForeignKey('divisions.Division', blank=True, null=True)
+    round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True)
+    venue = models.ForeignKey('venues.Venue', models.CASCADE, blank=True, null=True)
+    division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True)
 
     bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)
 
-    time = models.DateTimeField(
-        blank=True, null=True,
+    time = models.DateTimeField(blank=True, null=True,
         help_text="The time/date of a debate if it is specifically scheduled")
 
     # comma-separated list of strings
     flags = models.CharField(max_length=100, blank=True, null=True)
 
     importance = models.IntegerField(default=0)
-    result_status = models.CharField(max_length=1,
-                                     choices=STATUS_CHOICES,
-                                     default=STATUS_NONE)
+    result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
     ballot_in = models.BooleanField(default=False)
 
     def __contains__(self, team):
@@ -242,8 +239,8 @@ class DebateTeam(models.Model):
 
     objects = DebateTeamManager()
 
-    debate = models.ForeignKey(Debate, db_index=True)
-    team = models.ForeignKey('participants.Team')
+    debate = models.ForeignKey(Debate, models.CASCADE, db_index=True)
+    team = models.ForeignKey('participants.Team', models.CASCADE)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __str__(self):
@@ -308,8 +305,8 @@ class TeamPositionAllocation(models.Model):
     POSITION_UNALLOCATED = DebateTeam.POSITION_UNALLOCATED
     POSITION_CHOICES = DebateTeam.POSITION_CHOICES
 
-    round = models.ForeignKey('tournaments.Round')
-    team = models.ForeignKey('participants.Team')
+    round = models.ForeignKey('tournaments.Round', models.CASCADE)
+    team = models.ForeignKey('participants.Team', models.CASCADE)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     class Meta:
