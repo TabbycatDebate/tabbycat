@@ -14,11 +14,22 @@
   {% endif %}
 
   {% if form.choose_sides %}
-    <div class="form-group">
-      <label class="col-sm-2 col-md-1 col-xs-6 control-label" >Sides</label>
-      <div class="col-sm-10">
-        {{ form.choose_sides|addcss:"form-control choose-sides required" }}
-        {{ form.choose_sides.errors }}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">Sides</h4>
+          </div>
+          <div class="panel-body form-panel">
+            <div class="form-group">
+              <label class="col-sm-2 col-md-2 col-xs-6 control-label" >Sides</label>
+              <div class="col-sm-10">
+                {{ form.choose_sides|addcss:"form-control choose-sides required" }}
+                {{ form.choose_sides.errors }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="hidden">
@@ -74,12 +85,12 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">Ballot from {{ adj.adj }}
-              {% if pref.side_allocations_unknown == 'manual-ballot' %}
-                <p class="text-warning col-xs-12">Assign sides before entering scores</p>
-              {% endif %}
             </h4>
           </div>
           <div class="panel-body form-panel">
+            {% if form.choosing_sides %}
+              <p class="sides-before-scores-warning text-warning col-xs-12">Assign sides before entering scores</p>
+            {% endif %}
             <div class="clearfix scoresheet row">
               <div class="col-md-6 position position-aff pull-left" {% if forloop.first %}id="team-{{ debate.aff_team.id }}{% endif %}">
                 <div class="form-group">
