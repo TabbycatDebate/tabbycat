@@ -118,13 +118,8 @@ class Debate(models.Model):
         return getattr(self, '%s_dt' % side)
 
     def get_side(self, team):
-        # Deprecated 25/7/2016, does not appear to be used anywhere, remove after 25/8/2016.
-        warn("Debate.get_side() is deprecated", stacklevel=2)
-        if self.aff_team == team:
-            return 'aff'
-        if self.neg_team == team:
-            return 'neg'
-        return None
+        # Deprecated 12/9/2016, remove after 12/10/2016
+        raise RuntimeError("Debate.get_side() is deprecated.")
 
     @property
     def confirmed_ballot(self):
