@@ -92,11 +92,15 @@ class Debate(models.Model):
                 self._neg_dt = dt
 
     def _team_property(attr):  # noqa: N805
+        """Used for properties that rely on self._populate_teams(). Such
+        properties call self._populate_teams() if it hasn't already been called,
+        then try to return the correct attribute. If the attribute doesn't work,
+        it raises ObjectDoesNotExist, since this is typically a more
+        convenient exception to work with than AttributeError.
+        """
         @property
         def _property(self):
-            try:
-                return getattr(self, attr)
-            except AttributeError:
+            if not hasattr(self, '_teams'):
                 self._populate_teams()
             try:
                 return getattr(self, attr)
