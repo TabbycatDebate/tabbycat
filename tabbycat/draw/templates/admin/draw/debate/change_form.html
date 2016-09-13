@@ -1,5 +1,14 @@
 {% extends "admin/change_form.html" %}
 
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    #debate-team-warning {
+      display: none;
+    }
+  </style>
+{% endblock %}
+
 {% block extrahead %}
   {{ block.super }}
   <script type="text/javascript">
@@ -15,8 +24,9 @@
         warning.style.display = 'none';
       }
     }
-    window.onhashchange = locationHashChanged;
 
+    window.onhashchange = locationHashChanged;
+    window.onload = locationHashChanged;
   </script>
 {% endblock %}
 
