@@ -70,61 +70,82 @@ class Debate(models.Model):
             if all(dt.position == DebateTeam.POSITION_UNALLOCATED for dt in dts):
                 return ", ".join([dt.team.short_name for dt in dts])
             else:
-                return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display().lower())
-                    for dt in dts])
+                return self._teams_and_positions_display()
+
+    def _teams_and_positions_display(self):
+        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display().lower())
+                for dt in self.debateteam_set.all()])
+
+    # --------------------------------------------------------------------------
+    # Team properties
+    # --------------------------------------------------------------------------
+    # Team properties are stored in the dict `self._team_properties`, except for
+    # the list of all teams, which is in `self._teams`. These are lazily
+    # evaluated: on the first call of any team property,
+    # `self._populate_teams()` is run to populate all team properties in a
+    # single database query, then the appropriate value is returned.
+    #
+    # If the team in question doesn't exist or there is more than one, the
+    # property in question will raise an ObjectDoesNotExist or
+    # MultipleObjectsReturned exception, so that it behaves like a database
+    # query. This exception raising is lazy: it does so only when the errant
+    # property is called, rather than raising straight away in
+    # `self._populate_teams()`.
+    #
+    # Callers that wish to retrieve the teams of many debates should add
+    # prefetch_related('debateteam_set__team') to their query set.
 
     def _populate_teams(self):
-        """Populates the team attributes from self.debateteam_set.
-        Callers wishing for this to be done in bulk should prefetch the original
-        query with 'debateteam_set__team'."""
+        """Populates the team attributes from self.debateteam_set."""
         dts = self.debateteam_set.all()
         if not dts._prefetch_done:  # uses internal undocumented flag of Django's QuerySet model
             dts = dts.select_related('team')
+
         self._teams = []
         self._multiple_found = []
+        self._team_properties = {}
+
         for dt in dts:
             self._teams.append(dt.team)
             if dt.position == DebateTeam.POSITION_AFFIRMATIVE:
-                if hasattr(self, '_aff_team'):
-                    self._multiple_found.extend(['_aff_team', '_aff_dt'])
-                self._aff_team = dt.team
-                self._aff_dt = dt
+                if 'aff_team' in self._team_properties:
+                    self._multiple_found.extend(['aff_team', 'aff_dt'])
+                self._team_properties['aff_team'] = dt.team
+                self._team_properties['aff_dt'] = dt
             elif dt.position == DebateTeam.POSITION_NEGATIVE:
-                if hasattr(self, '_neg_team'):
-                    self._multiple_found.extend(['_neg_team', '_neg_dt'])
-                self._neg_team = dt.team
-                self._neg_dt = dt
+                if 'neg_team' in self._team_properties:
+                    self._multiple_found.extend(['neg_team', 'neg_dt'])
+                self._team_properties['neg_team'] = dt.team
+                self._team_properties['neg_dt'] = dt
 
     def _team_property(attr):  # noqa: N805
-        """Used for properties that rely on self._populate_teams(). Such
-        properties call self._populate_teams() if it hasn't already been called,
-        then try to return the correct attribute. If the attribute doesn't work,
-        it raises ObjectDoesNotExist, since this is typically a more
-        convenient exception to work with than AttributeError.
-        """
+        """Used to construct properties that rely on self._populate_teams()."""
         @property
         def _property(self):
-            if not hasattr(self, '_teams'):
+            if not hasattr(self, '_team_properties'):
                 self._populate_teams()
             if attr in self._multiple_found:
-                raise MultipleObjectsReturned("Multiple objects found for attribute '%s' in debate ID %d" % (attr, self.id))
+                raise MultipleObjectsReturned("Multiple objects found for attribute '%s' in debate ID %d. "
+                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_positions_display()))
             try:
-                return getattr(self, attr)
-            except AttributeError:
-                raise ObjectDoesNotExist("No object found for attribute '%s' in debate ID %d" % (attr, self.id))
+                return self._team_properties[attr]
+            except KeyError:
+                raise ObjectDoesNotExist("No object found for attribute '%s' in debate ID %d. "
+                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_positions_display()))
         return _property
 
     @property
     def teams(self):
         # No need for _team_property overhead, this list is guaranteed to exist
+        # (it just might be empty).
         if not hasattr(self, '_teams'):
             self._populate_teams()
         return self._teams
 
-    aff_team = _team_property('_aff_team')
-    neg_team = _team_property('_neg_team')
-    aff_dt = _team_property('_aff_dt')
-    neg_dt = _team_property('_neg_dt')
+    aff_team = _team_property('aff_team')
+    neg_team = _team_property('neg_team')
+    aff_dt = _team_property('aff_dt')
+    neg_dt = _team_property('neg_dt')
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
