@@ -46,7 +46,8 @@ class Debate(models.Model):
     ballot_in = models.BooleanField(default=False)
 
     def __contains__(self, team):
-        return team in (self.aff_team, self.neg_team)
+        # Deprecated 13/9/2016, remove after 13/10/2016
+        raise RuntimeError("'team in debate' syntax is deprecated, use 'team in debate.teams' instead")
 
     def __str__(self):
         description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
