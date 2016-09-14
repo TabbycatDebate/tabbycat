@@ -124,7 +124,7 @@ class BaseDebateTestCase(TestCase):
                                            name="Adjudicator%s%s" % (i, j), test_score=0)
 
         for i in range(8):
-            Venue.objects.create(name="Venue %s" % i, priority=i)
+            Venue.objects.create(name="Venue %s" % i, priority=i, tournament=self.t)
             Venue.objects.create(name="IVenue %s" % i, priority=i)
 
     def tearDown(self):

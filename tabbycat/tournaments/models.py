@@ -2,7 +2,7 @@ from warnings import warn
 
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.functional import cached_property
@@ -118,6 +118,7 @@ class Tournament(models.Model):
         """Convenience property for retrieving adjudicators relevant to the tournament.
         Returns a QuerySet."""
         if self.pref('share_adjs'):
+            from participants.models import Adjudicator
             return Adjudicator.objects.filter(Q(tournament=self) | Q(tournament__isnull=True))
         else:
             return self.adjudicator_set.all()
@@ -126,7 +127,8 @@ class Tournament(models.Model):
     def relevant_venues(self):
         """Convenience property for retrieving venues relevant to the tournament.
         Returns a QuerySet."""
-        if self.pref('share_adjs'):
+        if self.pref('share_venues'):
+            from venues.models import Venue
             return Venue.objects.filter(Q(tournament=self) | Q(tournament__isnull=True))
         else:
             return self.venue_set.all()
