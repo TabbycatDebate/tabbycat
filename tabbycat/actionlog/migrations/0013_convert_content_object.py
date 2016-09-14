@@ -30,18 +30,13 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('actionlog', '0012_add_content_object'),
-
-        # We require all models to be up to date with fields, since their
-        # objects are retrieved in the getattr(action, field) call. (It's
-        # possible to write the migration without this, but we'd have specify
-        # the model of every field specifically.)
-        ('draw', '0009_auto_20160621_1129'),  # Debate
-        ('results', '0001_initial'),  # BallotSubmission
-        ('adjfeedback', '0003_auto_20160103_1927'),  # AdjudicatorFeedback, AdjudicatorTestScoreHistory
-        ('tournaments', '0014_delete_old_availability_models'),  # Round, Tournament (select_related by Round)
-        ('motions', '0006_auto_20160621_1129'),  # Motion
+        ('draw', '0010_auto_20160630_1016'),  # Debate
+        ('results', '0006_auto_20160824_1208'),  # BallotSubmission
+        ('adjfeedback', '0008_auto_20160726_2007'),  # AdjudicatorFeedback, AdjudicatorTestScoreHistory
+        ('tournaments', '0016_auto_20160910_1057'),  # Round, Tournament (select_related by Round)
+        ('motions', '0007_auto_20160723_1720'),  # Motion
         ('breakqual', '0012_convert_aida_pre2015_to_1996'),  # BreakCategory
-        ('participants', '0005_auto_20160112_1448'),  # Adjudicator, Institution (select_related by Adjudicator)
+        ('participants', '0019_allow_blank_team_reference'),  # Adjudicator, Institution (select_related by Adjudicator)
     ]
 
     operations = [

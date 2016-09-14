@@ -47,12 +47,8 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('availability', '0004_auto_20160905_0034'),
-
-        # We require models referenced by ID to exist. We don't really care
-        # about their fields: they're only referenced by ID in this migration,
-        # the objects themselves are never fetched.
-        ('participants', '0001_initial'),  # Person, Team, Adjudicator
-        ('venues', '0001_initial'),  # Venue
+        ('participants', '0019_allow_blank_team_reference'),  # Person, Team, Adjudicator, Institution (select_related by Adjudicator)
+        ('venues', '0008_auto_20160621_1129'),  # Venue
         ('tournaments', '0013_remove_tournament_release_all'),  # Round
     ]
 
