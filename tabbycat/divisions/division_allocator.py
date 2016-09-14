@@ -27,14 +27,12 @@ class DivisionAllocator():
 
         # Get all the relevant team preferences
         for team in all_teams:
-            if team.venue_preferences:
-                all_preferences.extend(team.venue_preferences)
+            all_preferences.extend(team.venue_constraints.order_by('-priority'))
 
         # Get all the relevant institution preferences
         all_institutions = self.institutions
         for institution in all_institutions:
-            if institution.venue_preferences:
-                all_preferences.extend(institution.venue_preferences)
+            all_preferences.extend(institution.venue_constraints.order_by('-priority'))
 
         # First sweep of allocations using team preferences
         division_dict, allocated_teams = self.allocate_teams(division_dict, allocated_teams, all_teams, all_preferences)

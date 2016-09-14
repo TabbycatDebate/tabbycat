@@ -41,10 +41,6 @@ class Institution(models.Model):
 
     objects = InstitutionManager()
 
-    @property
-    def venue_preferences(self):
-        return self.institutionvenueconstraint_set.all().order_by('-priority')
-
     class Meta:
         unique_together = [('name', 'code')]
         ordering = ['name']
@@ -117,10 +113,6 @@ class Team(models.Model):
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='team',
             content_type_field='subject_content_type', object_id_field='subject_id')
-
-    @property
-    def venue_preferences(self):
-        return self.teamvenuepreference_set.all().order_by('-priority')
 
     TYPE_NONE = 'N'
     TYPE_SWING = 'S'
