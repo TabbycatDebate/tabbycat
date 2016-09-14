@@ -28,11 +28,11 @@ class VenueGroup(models.Model):
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
-    group = models.ForeignKey(VenueGroup, blank=True, null=True)
+    group = models.ForeignKey(VenueGroup, models.SET_NULL, blank=True, null=True)
     priority = models.IntegerField(
         help_text="Venues with a higher priority number will be preferred in the draw")
-    tournament = models.ForeignKey(
-        'tournaments.Tournament', blank=True, null=True, db_index=True,
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        blank=True, null=True, db_index=True,
         help_text="Venues not assigned to any tournament can be shared between tournaments")
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
