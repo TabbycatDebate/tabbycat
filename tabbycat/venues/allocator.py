@@ -1,7 +1,8 @@
+import itertools
 import logging
 import random
 
-from .models import AdjudicatorVenueConstraint, InstitutionVenueConstraint, TeamVenueConstraint
+from .models import VenueConstraint
 
 logger = logging.getLogger(__name__)
 
@@ -58,18 +59,20 @@ class VenueAllocator:
         relating to the teams, adjudicators, institutions and division of the
         debate."""
 
+        all_constraints = {}
+        for vc in VenueConstraint.objects.filter_for_debates(debates).prefetch_related('subject'):
+            all_constraints.setdefault(vc.subject, []).append(vc)
+
         debate_constraints = []
 
         for debate in debates:
-            teams = list(debate.teams)
-            adjudicators = [da for da in debate.adjudicators.all()]
-
-            constraints = []
-            constraints.extend(TeamVenueConstraint.objects.filter(team__in=teams))
-            constraints.extend(AdjudicatorVenueConstraint.objects.filter(adjudicator__in=adjudicators))
-            constraints.extend(InstitutionVenueConstraint.objects.filter(institution__team__in=teams))
-            if debate.division is not None:
-                constraints.extend(debate.division.divisionvenueconstraint_set.all())
+            subjects = itertools.chain(
+                debate.teams,
+                debate.adjudicators.all(),
+                [team.institution for team in debate.teams],
+                [] if debate.division is None else [debate.division]
+            )
+            constraints = [vc for subject in subjects for vc in all_constraints.get(subject, [])]
 
             if len(constraints) > 0:
                 constraints.sort(key=lambda x: x.priority, reverse=True)
@@ -105,7 +108,7 @@ class VenueAllocator:
 
             # If we can't fulfil the highest constraint, bump it down the list.
             if len(eligible_venues) == 0:
-                logger.debug("Unfilfilled (highest): %s", highest_constraint)
+                logger.debug("Unfulfilled (highest): %s", highest_constraint)
                 if len(constraints) == 0:
                     logger.debug("%s is now unconstrained", debate)
                     continue  # Failed all constraints, debate is now unconstrained
@@ -124,7 +127,7 @@ class VenueAllocator:
             satisified_constraints = []
             for constraint in constraints:
                 if any(sc.subject == constraint.subject for sc in satisified_constraints):
-                    continue  # Skip if we've already done a constraint for this team/adj/inst/div
+                    continue  # Skip if we've already done a constraint for this subject
                 constraint_venues = set(constraint.venue_group.venues)
                 if eligible_venues.isdisjoint(constraint_venues):
                     logger.debug("Unfilfilled: %s", constraint)

@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.functional import cached_property
 
@@ -9,6 +10,9 @@ class Division(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament')
     time_slot = models.TimeField(blank=True, null=True)
     venue_group = models.ForeignKey('venues.VenueGroup', blank=True, null=True)
+
+    venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='division',
+            content_type_field='subject_content_type', object_id_field='subject_id')
 
     @property
     def teams_count(self):

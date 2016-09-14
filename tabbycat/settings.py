@@ -75,7 +75,8 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'django_extensions')  # For Secret Generation Command
+    'django_extensions',  # For Secret Generation Command
+    'gfklookupwidget')
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'

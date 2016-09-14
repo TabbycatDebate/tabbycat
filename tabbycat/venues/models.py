@@ -1,4 +1,5 @@
-from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
@@ -48,6 +49,40 @@ class Venue(models.Model):
 
     def __repr__(self):
         return "<Venue: %s (%s) [%s]>" % (str(self), self.priority, self.id)
+
+
+class VenueConstraintManager(models.Manager):
+
+    def filter_for_debates(self, debates):
+        """Convenience function. Filters for all constraints relevant to the
+        given iterable of debates."""
+        return VenueConstraint.objects.filter(
+            models.Q(team__debateteam__debate__in=debates) |
+            models.Q(institution__team__debateteam__debate__in=debates) |
+            models.Q(adjudicator__debateadjudicator__debate__in=debates) |
+            models.Q(division__debate__in=debates)
+        ).distinct()
+
+
+class VenueConstraint(models.Model):
+
+    SUBJECT_CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='team') | \
+        models.Q(app_label='participants', model='adjudicator') | \
+        models.Q(app_label='participants', model='institution') | \
+        models.Q(app_label='divisions', model='division')
+
+    venue_group = models.ForeignKey(VenueGroup, models.CASCADE)
+    priority = models.IntegerField()
+
+    subject_content_type = models.ForeignKey(ContentType, models.CASCADE,
+            limit_choices_to=SUBJECT_CONTENT_TYPE_CHOICES)
+    subject_id = models.PositiveIntegerField()
+    subject = GenericForeignKey('subject_content_type', 'subject_id')
+
+    objects = VenueConstraintManager()
+
+    def __str__(self):
+        return "%s for %s [%s]" % (self.subject, self.venue_group, self.priority)
 
 
 class BaseVenueConstraint(models.Model):

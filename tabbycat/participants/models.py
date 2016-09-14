@@ -36,6 +36,9 @@ class Institution(models.Model):
         help_text="For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\"")
     region = models.ForeignKey(Region, models.CASCADE, blank=True, null=True)
 
+    venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='institution',
+            content_type_field='subject_content_type', object_id_field='subject_id')
+
     objects = InstitutionManager()
 
     @property
@@ -112,6 +115,8 @@ class Team(models.Model):
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True)
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
+    venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='team',
+            content_type_field='subject_content_type', object_id_field='subject_id')
 
     @property
     def venue_preferences(self):
@@ -299,6 +304,8 @@ class Adjudicator(Person):
     adj_core = models.BooleanField(default=False, blank=True)
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
+    venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='adjudicator',
+            content_type_field='subject_content_type', object_id_field='subject_id')
 
     objects = AdjudicatorManager()
 
