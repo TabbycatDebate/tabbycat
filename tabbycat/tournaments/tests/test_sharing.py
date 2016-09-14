@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
 
 from participants.models import Adjudicator, Institution
