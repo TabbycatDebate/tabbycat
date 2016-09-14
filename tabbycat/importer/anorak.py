@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.models import ContentType
+
 import adjallocation.models as am
 import adjfeedback.models as fm
 import breakqual.models as bm
@@ -371,24 +373,36 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         Each line has:
             adjudicator, group, priority
         """
-        adj_venue_constraints_interpreter = make_interpreter(
+        adj_venue_constraints_interpreter_part = make_interpreter(
             adjudicator=lambda x: pm.Adjudicator.objects.get(name=x),
             venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
         )
+        def adj_venue_constraints_interpreter(line):
+            line = adj_venue_constraints_interpreter_part(line)
+            line['subject_id'] = line['adjudicator'].id
+            line['subject_content_type'] = ContentType.objects.get_for_model(pm.Adjudicator)
+            del line['adjudicator']
+            return line
 
-        return self._import(f, vm.AdjudicatorVenueConstraint, adj_venue_constraints_interpreter)
+        return self._import(f, vm.VenueConstraint, adj_venue_constraints_interpreter)
 
     def import_team_venue_constraints(self, f):
         """Imports venue constraints from a file.
         Each line has:
             team, group, priority
         """
-        team_venue_constraints_interpreter = make_interpreter(
+        team_venue_constraints_interpreter_part = make_interpreter(
             team=pm.Team.objects.lookup,
             venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
         )
+        def team_venue_constraints_interpreter(line):
+            line = team_venue_constraints_interpreter_part(line)
+            line['subject_id'] = line['team'].id
+            line['subject_content_type'] = ContentType.objects.get_for_model(pm.Team)
+            del line['team']
+            return line
 
-        return self._import(f, vm.TeamVenueConstraint, team_venue_constraints_interpreter)
+        return self._import(f, vm.VenueConstraint, team_venue_constraints_interpreter)
 
     def auto_make_rounds(self, num_rounds):
         """Makes the number of rounds specified. The first one is random and the

@@ -10,7 +10,7 @@ from django.views.decorators.cache import cache_page
 from participants.models import Institution, Team
 from utils.views import admin_required, expect_post, public_optional_tournament_view, tournament_view
 from utils.misc import redirect_tournament
-from venues.models import InstitutionVenueConstraint, TeamVenueConstraint, VenueGroup
+from venues.models import VenueConstraint, VenueGroup
 
 from .division_allocator import DivisionAllocator
 from .models import Division
@@ -40,11 +40,11 @@ def division_allocations(request, t):
 
     for team in teams:
         team['institutional_preferences'] = list(
-            InstitutionVenueConstraint.objects.filter(
+            VenueConstraint.objects.filter(
                 institution=team['institution__id']).values(
                     'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
         team['team_preferences'] = list(
-            TeamVenueConstraint.objects.filter(
+            VenueConstraint.objects.filter(
                 team=team['id']).values(
                     'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
 

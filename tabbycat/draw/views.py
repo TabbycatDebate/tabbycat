@@ -1,7 +1,6 @@
 import datetime
 import logging
 
-from django.db.models import Q
 from django.views.generic.base import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -19,7 +18,7 @@ from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixi
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
-from venues.models import AdjudicatorVenueConstraint, VenueGroup
+from venues.models import VenueConstraint, VenueGroup
 
 from .dbutils import delete_round_draw
 from .generator import DrawError
@@ -270,9 +269,8 @@ class CreateDrawView(DrawStatusEdit):
             logger.critical(str(e), exc_info=True)
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
-        relevant_adj_venue_constraints = AdjudicatorVenueConstraint.objects.filter(
-            Q(adjudicator__tournament=self.get_tournament()) | Q(adjudicator__tournament__isnull=True)
-        )
+        relevant_adj_venue_constraints = VenueConstraint.objects.filter(
+                adjudicator__in=self.get_tournament().relevant_adjudicators)
         if not relevant_adj_venue_constraints.exists():
             allocate_venues(round)
         else:

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericTabularInline
 from django import forms
 from gfklookupwidget.widgets import GfkLookupWidget
 
@@ -117,3 +118,10 @@ class InstitutionVenueConstraintAdmin(BaseVenueConstraintAdmin):
 class DivisionVenueConstraintAdmin(BaseVenueConstraintAdmin):
     associate_field = 'division'
     associate_search_fields = ('division__name',)
+
+
+class VenueConstraintInline(GenericTabularInline):
+    model = VenueConstraint
+    ct_field = 'subject_content_type'
+    ct_fk_field = 'subject_id'
+    extra = 6

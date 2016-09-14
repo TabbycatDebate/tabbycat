@@ -1,6 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
 
-from participants.models import Adjudicator, Institution, Team
 from venues.models import VenueConstraint
 
 

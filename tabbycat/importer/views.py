@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from utils.views import admin_required, expect_post, tournament_view
-from venues.models import InstitutionVenueConstraint, Venue, VenueGroup
+from venues.models import Venue, VenueConstraint, VenueGroup
 
 
 @admin_required
@@ -168,8 +168,7 @@ def confirm_venue_preferences(request, t):
 
     for institution_id in request.POST.getlist('institutionIDs'):
         institution = Institution.objects.get(pk=institution_id)
-        InstitutionVenueConstraint.objects.filter(
-            institution=institution).delete()
+        VenueConstraint.objects.filter(institution=institution).delete()
 
     venue_priorities = request.POST.dict()
     del venue_priorities["institutionIDs"]
@@ -184,8 +183,8 @@ def confirm_venue_preferences(request, t):
             # print('making a pref')
             institution = Institution.objects.get(pk=int(institution_id))
             venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
-            venue_preference = InstitutionVenueConstraint(
-                institution=institution,
+            venue_preference = VenueConstraint(
+                subject=institution,
                 priority=priority,
                 venue_group=venue_group)
             venue_preference.save()
