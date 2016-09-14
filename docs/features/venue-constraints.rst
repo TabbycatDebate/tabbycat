@@ -63,15 +63,19 @@ For each constraint, you need to specify four things:
 Applying venue constraints
 ==========================
 
-Venue constraints are applied automatically when the draw is generated. However,
-at this point, only team, institution and division constraints can be accounted
-for. Generating the draw doesn't generate an adjudicator allocation, so if there
-are any adjudicator venue constraints, they won't be taken into account.
+If you don't have any venue constraints for adjudicators, venue constraints are
+applied automatically when the draw is generated.
 
-If after you allocate adjudicators, or at any other point (say, after adding a
-new venue constraint), you would like to re-run the venue allocation algorithm,
-you can do so under **Edit Venues** (while looking at the draw), then in the
-screen where you can edit venues, click the **Auto Allocate** button.
+However, if you have one or more venue constraints for adjudicators, it's not
+possible to take adjudicator venue constraints into account during draw
+generation, because the adjudicator allocation isn't known then. You'll need to
+run the venue allocation yourself after you've allocated adjudicators.
+
+To run venue allocation, go to **Edit Venues** (while looking at the draw), then
+in the screen where you can edit venues, click the **Auto Allocate** button. You
+can also do this at any other point (say, after adding a new venue constraint)
+if, for whatever reason, you would like to re-run the venue allocation
+algorithm.
 
 If a venue constraint couldn't be met, a message will show in the
 "conflicts/flags" column of the draw. A constraint might not be met for a
