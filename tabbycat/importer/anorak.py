@@ -377,6 +377,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             adjudicator=lambda x: pm.Adjudicator.objects.get(name=x),
             venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
         )
+
         def adj_venue_constraints_interpreter(line):
             line = adj_venue_constraints_interpreter_part(line)
             line['subject_id'] = line['adjudicator'].id
@@ -395,6 +396,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             team=pm.Team.objects.lookup,
             venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
         )
+
         def team_venue_constraints_interpreter(line):
             line = team_venue_constraints_interpreter_part(line)
             line['subject_id'] = line['team'].id
