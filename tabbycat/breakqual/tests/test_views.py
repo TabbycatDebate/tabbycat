@@ -1,6 +1,7 @@
-from utils.tests import ConditionalTableViewTest, TestCase
+import logging
 
 from breakqual.models import BreakingTeam
+from utils.tests import ConditionalTableViewTest, TestCase
 
 
 class BreakingTeamsViewTest(ConditionalTableViewTest):
@@ -16,6 +17,12 @@ class BreakingTeamsViewTest(ConditionalTableViewTest):
         # Check number of rows in table matches number of breaking teams
         return BreakingTeam.objects.filter(
             break_category__slug=self.break_slug).count()
+
+    def test_set_preference(self):
+        # Suppress standings queryset info logging
+        logging.disable(logging.INFO)
+        super().test_set_preference()
+        logging.disable(logging.NOTSET)
 
 
 class PublicOpenBreakingTeamsViewTest(BreakingTeamsViewTest, TestCase):
