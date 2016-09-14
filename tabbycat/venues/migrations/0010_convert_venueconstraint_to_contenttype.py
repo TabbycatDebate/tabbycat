@@ -46,6 +46,8 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('venues', '0009_venueconstraint'),
+        ('participants', '0019_allow_blank_team_reference'),  # Team, Adjudicator, Institution
+        ('divisions', '0001_initial'),  # Division
     ]
 
     operations = [
