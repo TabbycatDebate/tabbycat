@@ -27,25 +27,38 @@ save human effort (and time) in specially allocating rooms.
 
 Adding venue constraints
 ========================
-To add a venue constraint, go to the **Edit Database** section (under Setup), scroll
-down to "Venues", and you will see four times of venue constraints:
 
-- Adjudicator venue constraints
-- Division venue constraints
-- Institution venue constraints (apply to teams, not adjudicators)
-- Team venue constraints
+To add a venue constraint, go to the **Edit Database** section (under Setup),
+scroll down to "Venues", and click "Venue Constraints". Then click the **+ Add
+venue constraint** button in the top-right of the page. You'll see a page with
+this on it:
 
-Click the type of constraint you're like to add, then click the **+ Add [type]
-venue constraint** button in the top-right of the page.
+.. image:: images/add-venue-constraint.png
 
-For each constraint, you need to specify three things:
+For each constraint, you need to specify four things:
 
-- The adjudicator, division, institution or team demanding the constraint
-- A venue group
-- A priority
-
-The priority is only used to resolve conflicts between constraints. If none of
-your constraints will ever conflict, then the priority is arbitrary.
++---------------------+---------------------------------------------------------+
+|   **Venue group**   |                The name of a venue group.               |
++---------------------+---------------------------------------------------------+
+| **Priority**        | This is a number used to resolve conflicts between      |
+|                     | constraints. Constraints with higher priority           |
+|                     | (greater number) take precedence over those with        |
+|                     | lower priority. If none of your constraints will        |
+|                     | ever conflict, then the priority is arbitrary (but      |
+|                     | it must still be specified).                            |
++---------------------+---------------------------------------------------------+
+| **Subject content** | The type of subject to which this constraint relates:   |
+| **type**            | adjudicator, team, institution or division.             |
++---------------------+---------------------------------------------------------+
+| **Subject ID**      | Which adjudicator, team, institution or division the    |
+|                     | constraint relates to. The textbox takes a number       |
+|                     | (the ID of the object in the database), but you can     |
+|                     | search for the subject by clicking on the search        |
+|                     | icon next to it. This will bring up a table of objects  |
+|                     | of the type specified in "subject content type" for you |
+|                     | to choose from. (You need to select the subject content |
+|                     | type first.)                                            |
++---------------------+---------------------------------------------------------+
 
 Applying venue constraints
 ==========================
