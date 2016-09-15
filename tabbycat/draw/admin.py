@@ -12,6 +12,7 @@ from .models import Debate, DebateTeam
 # DebateTeam
 # ==============================================================================
 
+@admin.register(DebateTeam)
 class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('team', 'position', 'debate', 'get_tournament', 'get_round')
     search_fields = ('team', )
@@ -24,9 +25,6 @@ class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
         ).prefetch_related(
             Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
         )
-
-
-admin.site.register(DebateTeam, DebateTeamAdmin)
 
 
 # ==============================================================================
@@ -44,6 +42,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
     extra = 1
 
 
+@admin.register(Debate)
 class DebateAdmin(admin.ModelAdmin):
     list_display = ('id', 'round', 'bracket', 'get_aff_team', 'get_neg_team',
                     'result_status')
@@ -92,6 +91,3 @@ class DebateAdmin(admin.ModelAdmin):
 
         actions.append(_make_set_result_status(value, verbose_name))
     del value, verbose_name  # for fail-fast
-
-
-admin.site.register(Debate, DebateAdmin)

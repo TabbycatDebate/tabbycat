@@ -6,14 +6,13 @@ from gfklookupwidget.widgets import GfkLookupWidget
 from .models import Venue, VenueConstraint, VenueGroup
 
 
+@admin.register(VenueGroup)
 class VenueGroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'short_name', 'team_capacity')
     search_fields = ('name', )
 
 
-admin.site.register(VenueGroup, VenueGroupAdmin)
-
-
+@admin.register(Venue)
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'group_name', 'priority', 'tournament')
     list_filter = ('group', 'priority', 'tournament')
@@ -26,11 +25,7 @@ class VenueAdmin(admin.ModelAdmin):
     group_name.short_description = 'Venue Group'
 
     def get_queryset(self, request):
-        return super(VenueAdmin,
-                     self).get_queryset(request).select_related('group')
-
-
-admin.site.register(Venue, VenueAdmin)
+        return super().get_queryset(request).select_related('group')
 
 
 # ==============================================================================
@@ -58,6 +53,10 @@ class VenueConstraintAdmin(admin.ModelAdmin):
             'institution__name', 'institution__code', 'division__name',
             'venue_group__name', 'venue_group__short_name', 'priority')
     list_filter = ('subject_content_type', 'venue_group', 'priority')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+                'venue_group').prefetch_related('subject')
 
     def group_name(self, obj):
         if obj.venue_group is None:

@@ -3,7 +3,7 @@ import os
 from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MEDIA_ROOT = (os.path.join(BASE_DIR, 'media'), )
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # ==============================================================================
 # Overwritten in Local
