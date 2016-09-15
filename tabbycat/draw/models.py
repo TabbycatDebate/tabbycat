@@ -188,20 +188,10 @@ class Debate(models.Model):
             self._history = self.aff_team.seen(self.neg_team, before_round=self.round.seq)
             return self._history
 
-    @cached_property
+    @property
     def draw_conflicts(self):
-        d = []
-        history = self.history
-        if history == 1:
-            d.append("Teams have met once")
-        elif history == 2:
-            d.append("Teams have met twice")
-        elif history > 2:
-            d.append("Teams have met %d times" % (history,))
-        if self.aff_team.institution_id == self.neg_team.institution_id:
-            d.append("Teams are from the same institution")
-
-        return d
+        # Deprecated 14/9/2016, remove after 14/10/2016
+        raise RuntimeError("Debate.draw_conflicts is deprecated.")
 
     @property
     def adjudicators(self):
