@@ -493,10 +493,21 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_columns(times_headers, times_data)
 
     def add_draw_conflicts_columns(self, debates):
-        venue_conflicts_by_debate = venue_conflicts_display(debates)
-        adjudicator_conflicts_by_debate = adjudicator_conflicts_display(debates)
-        conflicts_by_debate = [debate.draw_conflicts + adjudicator_conflicts_by_debate[debate] + venue_conflicts_by_debate[debate]
-            for debate in debates]
+        venue_conflicts_by_debate = venue_conflicts_display(debates) # dict of {debate: [conflicts]}
+        adjudicator_conflicts_by_debate = adjudicator_conflicts_display(debates) # dict of {debate: [conflicts]}
+
+        conflicts_by_debate = []
+        for debate in debates:
+            conflicts = []
+            history = debate.history
+            if history > 0:
+                conflicts.append("Teams have met " +
+                    ("once" if history == 1 else "twice" if history == 2 else "%d times" % history))
+            if debate.aff_team.institution_id == debate.neg_team.institution_id:
+                conflicts.append("Teams are from the same institution")
+            conflicts.extend(adjudicator_conflicts_by_debate[debate])
+            conflicts.extend(venue_conflicts_by_debate[debate])
+            conflicts_by_debate.append(conflicts)
 
         conflicts_header = {'key': "Conflicts/Flags"}
         conflicts_data = [{
