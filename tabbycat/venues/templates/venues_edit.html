@@ -65,15 +65,15 @@
               {% if pref.enable_debate_scheduling %}
                 <th>Time</th>
               {% endif %}
-              <th>Aff</th>
-              <th>Neg</th>
-              <th>Adjs</th>
+              <th>Affirmative</th>
+              <th>Negative</th>
+              <th>Adjudicators</th>
               <th>Venue</th>
             </tr>
           </thead>
           <tbody>
           {% for debate in draw %}
-            <tr class="{{ debate.draw_conflicts|yesno:'conflict,' }}">
+            <tr>
               <td>{{ debate.bracket }}</td>
               {% if pref.enable_debate_scheduling %}
                 <td>
