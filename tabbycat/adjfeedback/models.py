@@ -44,7 +44,7 @@ class AdjudicatorFeedbackFloatAnswer(AdjudicatorFeedbackAnswer):
 
 
 class AdjudicatorFeedbackStringAnswer(AdjudicatorFeedbackAnswer):
-    answer = models.CharField(max_length=3500)
+    answer = models.TextField()
 
 
 class AdjudicatorFeedbackQuestion(models.Model):
