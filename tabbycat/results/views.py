@@ -437,8 +437,8 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
 
         results_objects = []
         for ballotsub in ballotsubs:
-            winner = None
-            loser = None
+            winner = '?'
+            loser = '?'
             for teamscore in ballotsub.teamscore_set.all():
                 team_str = "{:s} ({:s})".format(teamscore.debate_team.team.short_name,
                         teamscore.debate_team.get_position_display())
@@ -448,7 +448,7 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
                     loser = team_str
 
             results_objects.append({
-                'user': winner + " beat " + loser,
+                'user': winner + ' beat ' + loser,
                 'timestamp': naturaltime(ballotsub.timestamp),
             })
 
