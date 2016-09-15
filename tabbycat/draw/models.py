@@ -172,12 +172,12 @@ class Debate(models.Model):
                 self._confirmed_ballot = None
             return self._confirmed_ballot
 
-    @property
-    def flags_all(self):
+    def get_flags_display(self):
         if not self.flags:
-            return []
+            return []  # don't return [""]
         else:
-            return [DRAW_FLAG_DESCRIPTIONS[f] for f in self.flags.split(",")]
+            # If the verbose description can't be found, just show the raw flag
+            return [DRAW_FLAG_DESCRIPTIONS.get(f, f) for f in self.flags.split(",")]
 
     @property
     def history(self):
