@@ -493,12 +493,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_columns(times_headers, times_data)
 
     def add_draw_conflicts_columns(self, debates):
-        venue_conflicts_by_debate = venue_conflicts_display(debates) # dict of {debate: [conflicts]}
-        adjudicator_conflicts_by_debate = adjudicator_conflicts_display(debates) # dict of {debate: [conflicts]}
+        venue_conflicts_by_debate = venue_conflicts_display(debates)  # dict of {debate: [conflicts]}
+        adjudicator_conflicts_by_debate = adjudicator_conflicts_display(debates)  # dict of {debate: [conflicts]}
 
         conflicts_by_debate = []
         for debate in debates:
-            conflicts = []
+            conflicts = debate.get_flags_display()  # list of strings
             history = debate.history
             if history > 0:
                 conflicts.append("Teams have met " +
