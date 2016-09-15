@@ -7,6 +7,8 @@ Change Log
 
 - Fixed bug affecting some migrations from earlier versions
 - Made latest results show question mark rather than crash if a team is missing
+- Fixed bug affecting the ability to save motions
+- Fixed bug preventing draw flags from being displayed
 
 
 1.1.2
