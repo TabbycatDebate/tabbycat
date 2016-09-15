@@ -65,7 +65,7 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
         for motion in motions:
             motion.round = round
             motion.save()
-            self.log_action(motion=motion)
+            self.log_action(content_object=motion)
         for motion in formset.deleted_objects:
             motion.delete()
         return redirect_round('draw', self.get_round())
