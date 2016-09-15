@@ -2,8 +2,16 @@
 Change Log
 ==========
 
+1.1.3
+-----
+
+- Fixed bug affecting some migrations from earlier versions
+- Made latest results show question mark rather than crash if a team is missing
+
+
 1.1.2
 -----
+
 - Allow panels with even number of adjudicators (with warnings), by giving chair the casting vote
 - Removed defunct person check-in, which hasn't been used since 2010
 - Collapsed availability database models into a single model with Django content types
