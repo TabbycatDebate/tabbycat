@@ -38,7 +38,7 @@ class Debate(models.Model):
         help_text="The time/date of a debate if it is specifically scheduled")
 
     # comma-separated list of strings
-    flags = models.CharField(max_length=100, blank=True, null=True)
+    flags = models.CharField(max_length=100, blank=True)
 
     importance = models.IntegerField(default=0)
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)

@@ -7,8 +7,8 @@ from results.models import Submission
 
 
 class AdjudicatorTestScoreHistory(models.Model):
-    adjudicator = models.ForeignKey('participants.Adjudicator')
-    round = models.ForeignKey('tournaments.Round', blank=True, null=True)
+    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE)
+    round = models.ForeignKey('tournaments.Round', models.CASCADE, blank=True, null=True)
     score = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -20,8 +20,8 @@ class AdjudicatorTestScoreHistory(models.Model):
 
 
 class AdjudicatorFeedbackAnswer(models.Model):
-    question = models.ForeignKey('AdjudicatorFeedbackQuestion')
-    feedback = models.ForeignKey('AdjudicatorFeedback')
+    question = models.ForeignKey('AdjudicatorFeedbackQuestion', models.CASCADE)
+    feedback = models.ForeignKey('AdjudicatorFeedback', models.CASCADE)
 
     class Meta:
         abstract = True
@@ -95,14 +95,11 @@ class AdjudicatorFeedbackQuestion(models.Model):
     }
     CHOICE_SEPARATOR = "//"
 
-    tournament = models.ForeignKey('tournaments.Tournament')
-    seq = models.IntegerField(
-        help_text="The order in which questions are displayed")
-    text = models.CharField(
-        max_length=255,
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE)
+    seq = models.IntegerField(help_text="The order in which questions are displayed")
+    text = models.CharField(max_length=255,
         help_text="The question displayed to participants, e.g., \"Did you agree with the decision?\"")
-    name = models.CharField(
-        max_length=30,
+    name = models.CharField(max_length=30,
         help_text="A short name for the question, e.g., \"Agree with decision\"")
     reference = models.SlugField(
         help_text="Code-compatible reference, e.g., \"agree_with_decision\"")
@@ -111,23 +108,14 @@ class AdjudicatorFeedbackQuestion(models.Model):
     from_team = models.BooleanField(help_text="Teams should be asked this question")
 
     answer_type = models.CharField(max_length=2, choices=ANSWER_TYPE_CHOICES)
-    required = models.BooleanField(
-        default=True,
+    required = models.BooleanField(default=True,
         help_text="Whether participants are required to fill out this field")
-    min_value = models.FloatField(
-        blank=True,
-        null=True,
+    min_value = models.FloatField(blank=True, null=True,
         help_text="Minimum allowed value for numeric fields (ignored for text or boolean fields)")
-    max_value = models.FloatField(
-        blank=True,
-        null=True,
+    max_value = models.FloatField(blank=True, null=True,
         help_text="Maximum allowed value for numeric fields (ignored for text or boolean fields)")
-    choices = models.CharField(
-        max_length=500,
-        blank=True,
-        null=True,
-        help_text="Permissible choices for select one/multiple fields, separated by %r (ignored for other fields)"
-        % CHOICE_SEPARATOR)
+    choices = models.CharField(max_length=500, blank=True,
+        help_text="Permissible choices for select one/multiple fields, separated by %r (ignored for other fields)" % CHOICE_SEPARATOR)
 
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
@@ -155,13 +143,11 @@ class AdjudicatorFeedbackQuestion(models.Model):
 
 
 class AdjudicatorFeedback(Submission):
-    adjudicator = models.ForeignKey('participants.Adjudicator', db_index=True)
+    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, db_index=True)
     score = models.FloatField()
 
-    source_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator',
-                                           blank=True,
-                                           null=True)
-    source_team = models.ForeignKey('draw.DebateTeam', blank=True, null=True)
+    source_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator', models.CASCADE, blank=True, null=True)
+    source_team = models.ForeignKey('draw.DebateTeam', models.CASCADE, blank=True, null=True)
 
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team',

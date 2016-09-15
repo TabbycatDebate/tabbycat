@@ -32,9 +32,9 @@ def validate_tournament_slug(value):
 class Tournament(models.Model):
     name = models.CharField(max_length=100,
         help_text="The full name used on the homepage, e.g. \"Australasian Intervarsity Debating Championships 2016\"")
-    short_name = models.CharField(max_length=25, blank=True, null=True, default="",
+    short_name = models.CharField(max_length=25, blank=True, default="",
         help_text="The name used in the menu, e.g. \"Australs 2016\"")
-    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST)
+    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST) # uses null=True to allow multiple tournaments to have no emoji
     seq = models.IntegerField(blank=True, null=True,
         help_text="A number that determines the relative order in which tournaments are displayed on the homepage.")
     slug = models.SlugField(unique=True, validators=[validate_tournament_slug],
