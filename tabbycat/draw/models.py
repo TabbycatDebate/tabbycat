@@ -90,7 +90,8 @@ class Debate(models.Model):
     # `self._populate_teams()`.
     #
     # Callers that wish to retrieve the teams of many debates should add
-    # prefetch_related('debateteam_set__team') to their query set.
+    #   prefetch_related(Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team'))
+    # to their query set.
 
     def _populate_teams(self):
         """Populates the team attributes from self.debateteam_set."""

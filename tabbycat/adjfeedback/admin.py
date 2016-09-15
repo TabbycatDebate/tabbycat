@@ -1,4 +1,7 @@
 from django.contrib import admin, messages
+from django.db.models import Prefetch
+
+from draw.models import DebateTeam
 
 from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
@@ -64,8 +67,8 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
             'source_adjudicator__adjudicator__institution',
             'adjudicator__institution',
         ).prefetch_related(
-            'source_team__debate__debateteam_set__team',
-            'source_adjudicator__debate__debateteam_set__team'
+            Prefetch('source_team__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
+            Prefetch('source_adjudicator__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
         )
 
     def get_source(self, obj):

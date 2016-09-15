@@ -2,7 +2,7 @@ from warnings import warn
 
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models import Count, Q
+from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.functional import cached_property
@@ -306,6 +306,8 @@ class Round(models.Model):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
+        from adjallocation.models import DebateAdjudicator
+        from draw.models import DebateTeam
         from results.prefetch import populate_confirmed_ballots, populate_wins
 
         debates = self.debate_set.all()
@@ -314,17 +316,23 @@ class Round(models.Model):
         if ballotsubs or ballotsets:
             debates = debates.prefetch_related('ballotsubmission_set', 'ballotsubmission_set__submitter')
         if adjudicators:
-            debates = debates.prefetch_related('debateadjudicator_set__adjudicator')
+            debates = debates.prefetch_related(
+                Prefetch('debateadjudicator_set',
+                    queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
+            )
         if divisions and self.tournament.pref('enable_divisions'):
             debates = debates.select_related('division', 'division__venue_group')
         if venues:
             debates = debates.select_related('venue', 'venue__group')
-        if teams or wins:
-            debates = debates.prefetch_related('debateteam_set__team')
+        if teams or wins or institutions or speakers:
+            debates = debates.prefetch_related(
+                Prefetch('debateteam_set',
+                    queryset=DebateTeam.objects.select_related(
+                        'team__institution' if institutions else 'team')
+                )
+            )
         if speakers:
             debates = debates.prefetch_related('debateteam_set__team__speaker_set')
-        if institutions:
-            debates = debates.prefetch_related('debateteam_set__team__institution')
 
         if ordering:
             debates = debates.order_by(*ordering)

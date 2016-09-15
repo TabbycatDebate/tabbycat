@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.core.exceptions import MultipleObjectsReturned
-
+from django.db.models import Prefetch
 
 from adjallocation.models import DebateAdjudicator
 from utils.admin import TabbycatModelAdminFieldsMixin
@@ -18,9 +18,12 @@ class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     raw_id_fields = ('debate', 'team', )
 
     def get_queryset(self, request):
-        return super(DebateTeamAdmin, self).get_queryset(request).select_related(
-                'debate__round', 'debate__round__tournament', 'team__tournament').prefetch_related(
-                'debate__debateteam_set__team')
+        return super().get_queryset(request).select_related(
+            'debate__round__tournament',
+            'team__tournament',
+        ).prefetch_related(
+            Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
+        )
 
 
 admin.site.register(DebateTeam, DebateTeamAdmin)
@@ -49,9 +52,13 @@ class DebateAdmin(admin.ModelAdmin):
     raw_id_fields = ('venue', 'division')
 
     def get_queryset(self, request):
-        return super(DebateAdmin, self).get_queryset(request).select_related(
-            'round__tournament', 'division__tournament', 'venue__group').prefetch_related(
-            'debateteam_set__team__tournament')
+        return super().get_queryset(request).select_related(
+            'round__tournament',
+            'division__tournament',
+            'venue__group',
+        ).prefetch_related(
+            Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team__tournament')),
+        )
 
     def get_aff_team(self, obj):
         try:
