@@ -2,7 +2,6 @@ import logging
 from warnings import warn
 
 from django.db import models
-from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
 
 from participants.models import Team
