@@ -14,6 +14,7 @@ from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
+from tournaments.utils import aff_name, neg_name
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
@@ -183,9 +184,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             table.add_debate_bracket_columns(draw)
 
         table.add_debate_venue_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw], key="Aff",
+        table.add_team_columns([d.aff_team for d in draw], key=aff_name(self.get_tournament()),
             hide_institution=True)
-        table.add_team_columns([d.neg_team for d in draw], key="Neg",
+        table.add_team_columns([d.neg_team for d in draw], key=neg_name(self.get_tournament()),
             hide_institution=True)
 
         # For draw details and draw draft pages
