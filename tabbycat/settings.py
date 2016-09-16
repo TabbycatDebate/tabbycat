@@ -28,6 +28,10 @@ TABBYCAT_VERSION = '1.1.3'
 TABBYCAT_CODENAME = 'Egyptian Mau'
 READTHEDOCS_VERSION = 'v1.1.3'
 
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
 # ==============================================================================
 # Django-specific Module
 # ==============================================================================

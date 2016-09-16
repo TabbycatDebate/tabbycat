@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% load add_field_css %}
+{% load add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">👋</span>Hello!{% endblock %}
+{% block head-title %}<span class="emoji">👋</span>{% trans "Hello!" %}{% endblock %}
 {% block page-title %}Tabbycat{% endblock %}
 
 {% block nav %}<div class="col-md-12">{% endblock %}
@@ -9,16 +9,22 @@
 {% block content %}
 
   <p>
+  {% blocktrans trimmed %}
     Welcome to your new Tabbycat installation!
+  {% endblocktrans %}
   </p>
   <p>
+  {% blocktrans trimmed %}
     To get started, you'll need to create the first user account. This account
     is a "superuser" account: it will be able to edit anything on the site.
     Therefore, you should use a strong password.
+  {% endblocktrans %}
   </p>
   <p>
+  {% blocktrans trimmed %}
     You can only create this account once, but if you like, you can change the
     username and password after it's created, or add new superusers afterwards.
+  {% endblocktrans %}
   </p>
 
   <form action="." method="POST" class="form-horizontal">
@@ -27,7 +33,9 @@
 
     {% if form.errors %}
       <div class="alert alert-danger">
+        {% blocktrans trimmed %}
         Whoops! There was an error with one or more fields.
+        {% endblocktrans %}
         {{ form.non_field_errors }}
       </div>
     {% endif %}
@@ -47,7 +55,7 @@
     <div class="form-group">
       <div class="col-md-offset-2 col-md-2 col-sm-4">
         <button type="submit" class="btn btn-success form-control">
-          Create account
+          {% trans "Create account" %}
         </button>
       </div>
     </div>

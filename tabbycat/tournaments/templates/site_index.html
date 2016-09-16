@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block head-title %}<span class="emoji">👋</span>Welcome! <small>Which tournament are you after?</small>{% endblock %}
-{% block page-title %}Home{% endblock %}
+{% block head-title %}<span class="emoji">👋</span>{% trans "Welcome!" %} <small>{% trans "Which tournament are you after?" %}</small>{% endblock %}
+{% block page-title %}{% trans "Home" %}{% endblock %}
 
 {% block nav %}<div class="col-md-12 accommodate-footer">{% endblock %}
 
@@ -15,7 +16,7 @@
       {% for tournament in tournaments %}
         <li class="list-group-item">
           <a href="{{ tournament.get_absolute_url }}">
-            <span class="emoji">🔧</span>Admin area for <strong>{{ tournament.name }}</strong>
+            <span class="emoji">🔧</span>{% blocktrans with tournament_name=tournament.name %}Admin area for <strong>{{ tournament_name }}</strong>{% endblocktrans %}
           </a>
         </li>
         <li class="list-group-item">
@@ -26,23 +27,26 @@
               {% else %}
                 🏆
               {% endif %}
-            </span>Public area for <strong>{{ tournament.name }}</strong>
+            </span>{% blocktrans with tournament_name=tournament.name %}Public area for <strong>{{ tournament_name }}</strong>{% endblocktrans %}
           </a>
         </li>
       {% endfor %}
       {% if user.is_superuser %}
         <li class="list-group-item">
           <span class="glyphicon glyphicon-edit"></span>&nbsp;
-          <a href="{% url 'admin:index' %}">Edit database area</a>
+          <a href="{% url 'admin:index' %}">{% trans "Edit database area" %}</a>
         </li>
       <li class="list-group-item">
-        <span class="emoji">➕</span><a href="{% url 'tournament-create' %}">Create new tournament</a>
+        <span class="emoji">➕</span><a href="{% url 'tournament-create' %}">{% trans "Create new tournament" %}</a>
       </li>
       {% endif %}
     {% else %}
       <p>
+        {% url 'tournament-create' as create_url %}
+        {% blocktrans trimmed %}
         It looks like there aren't any tournaments on this site. Would you like
-        to <a href="{% url 'tournament-create' %}">create one</a>?
+        to <a href="{{ create_url }}">create one</a>?
+        {% endblocktrans %}
       </p>
     {% endif %}
 
@@ -55,7 +59,9 @@
       </li>
       {% empty %}
         <p>
+          {% blocktrans trimmed %}
           There are currently no tournaments set up on this site.
+          {% endblocktrans %}
         </p>
     {% endfor %}
   {% endif %}
@@ -63,17 +69,17 @@
   {% if tournaments.0.preferences.league_options__enable_mass_draws %}
     <li class="list-group-item">
       <a href="{% url 'all_tournaments-all-venues' %}">
-        <span class="emoji">🎪</span>All Draws by Venue
+        <span class="emoji">🎪</span>{% trans "All Draws by Venue" %}
       </a>
     </li>
     <li class="list-group-item">
       <a href="{% url 'all-tournaments-all-institutions' %}">
-        <span class="emoji">🏢</span>All Draws by School
+        <span class="emoji">🏢</span>{% trans "All Draws by School" %}
       </a>
     </li>
     <li class="list-group-item">
       <a href="{% url 'all-tournaments-all-teams' %}">
-        <span class="emoji">👯</span>All Teams and Divisions
+        <span class="emoji">👯</span>{% trans "All Teams and Divisions" %}
       </a>
     </li>
   {% endif %}

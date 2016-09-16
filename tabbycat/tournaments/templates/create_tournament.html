@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% load add_field_css %}
+{% load add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🏆</span>Create New Tournament{% endblock %}
+{% block head-title %}<span class="emoji">🏆</span>{% trans "Create New Tournament "%}{% endblock %}
 {% block page-title %}Tabbycat{% endblock %}
 
 {% block nav %}<div class="col-md-12">{% endblock %}
@@ -16,7 +16,7 @@
 
     {% if form.errors %}
       <div class="alert alert-danger">
-        Whoops! There was an error with one or more fields.
+        {% trans "Whoops! There was an error with one or more fields." %}
         {{ form.non_field_errors }}
       </div>
     {% endif %}
@@ -43,7 +43,7 @@
 
     <div class="form-group">
       <button type="submit" class="btn btn-block btn-success form-control">
-        Create Tournament
+        {% trans "Create Tournament" %}
       </button>
     </div>
 

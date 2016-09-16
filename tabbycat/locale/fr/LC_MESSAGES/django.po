@@ -1,0 +1,58 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-15 21:43-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/footer.html:8
+msgid "Home"
+msgstr "Accueil"
+
+#. Translators: This is a link that goes to our documentation in English; translations should include "(in English)" after the word "Help".
+#: templates/footer.html:12
+msgid "Help"
+msgstr "Aide"
+
+#: templates/footer.html:16
+#, python-format
+msgid "Logout of %(user)s"
+msgstr "Se déconnecter de %(user)s"
+
+#: templates/footer.html:20
+msgid "Login"
+msgstr "Se connecter"
+
+#: templates/footer.html:32
+msgid ""
+"Want to <a href=\"http://tabbycat.readthedocs.io/en/latest/install/heroku."
+"html#installation-the-short-way\" target=\"_blank\">set up your own copy?</a>"
+msgstr ""
+"Voulez-vous <a href=\"http://tabbycat.readthedocs.io/en/latest/install/"
+"heroku.html#installation-the-short-way\" target=\"_blank\">mettre en place "
+"votre propre copie ?</a>"
+
+#: templates/footer.html:36
+msgid ""
+"Check out <a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper\" target=\"_blank\">Debatekeeper</a> for time-keeping on "
+"Android devices and <a href=\"http://debatingballot.com/\" target=\"_blank"
+"\">debatingballot.com</a> for ballot templates."
+msgstr ""
+"Découvrez <a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper\" target=\"_blank\">Debatekeeper</a> pour la chronométrage sur "
+"les appareils Android et <a href=\"http://debatingballot.com/\" target="
+"\"_blank\">debatingballot.com</a> pour les garabits de bulletins."
