@@ -43,7 +43,7 @@ msgid ""
 msgstr ""
 "Voulez-vous <a href=\"http://tabbycat.readthedocs.io/en/latest/install/"
 "heroku.html#installation-the-short-way\" target=\"_blank\">mettre en place "
-"votre propre copie ?</a>"
+"votre propre copie ?</a>"
 
 #: templates/footer.html:36
 msgid ""

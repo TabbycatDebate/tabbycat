@@ -105,7 +105,7 @@ msgstr "tour actuel"
 msgid ""
 "Must be set for the tournament to start! (Set after rounds are inputted)"
 msgstr ""
-"Il faut définir ce champ pour que le tournoi puisse commencer ! (Définez-lui "
+"Il faut définir ce champ pour que le tournoi puisse commencer ! (Définez-lui "
 "après avoir créé les tours.)"
 
 #: models.py:52
@@ -299,11 +299,11 @@ msgstr ""
 
 #: templates/blank_site_start.html:4
 msgid "Hello!"
-msgstr "Bonjour !"
+msgstr "Bonjour !"
 
 #: templates/blank_site_start.html:12
 msgid "Welcome to your new Tabbycat installation!"
-msgstr "Bienvenue à votre nouvelle installation de Tabbycat !"
+msgstr "Bienvenue à votre nouvelle installation de Tabbycat !"
 
 #: templates/blank_site_start.html:17
 msgid ""
@@ -312,7 +312,7 @@ msgid ""
 "Therefore, you should use a strong password."
 msgstr ""
 "Pour commencer, vous devrez créer le premier compte d'utilisateur. Ce compte "
-"est un compte « superuser » : il pourra modifier tout sur le site. Donc, "
+"est un compte « superuser » : il pourra modifier tout sur le site. Donc, "
 "vous devrez utiliser un mot de passe robuste."
 
 #: templates/blank_site_start.html:24
@@ -322,11 +322,11 @@ msgid ""
 msgstr ""
 "Vous ne pourriez créer ce compte qu'une fois, mais si vous voulez, vous "
 "pourrez changer le nom d'utilisateur et le mot de passe après avoir le "
-"créer, et vous pourrez aussi ajouter des nouveaux comptes « superuser »."
+"créer, et vous pourrez aussi ajouter des nouveaux comptes « superuser »."
 
 #: templates/blank_site_start.html:36 templates/create_tournament.html:19
 msgid "Whoops! There was an error with one or more fields."
-msgstr "Oups !  Il y avait une erreur dans un ou plusieurs champs."
+msgstr "Oups !  Il y avait une erreur dans un ou plusieurs champs."
 
 #: templates/blank_site_start.html:58
 msgid "Create account"
@@ -342,11 +342,11 @@ msgstr "Créer tournoi"
 
 #: templates/site_index.html:4
 msgid "Welcome!"
-msgstr "Bienvenue !"
+msgstr "Bienvenue !"
 
 #: templates/site_index.html:4
 msgid "Which tournament are you after?"
-msgstr "Quel tournoi cherchez-vous ?"
+msgstr "Quel tournoi cherchez-vous ?"
 
 #: templates/site_index.html:5
 msgid "Home"
@@ -377,7 +377,7 @@ msgid ""
 "<a href=\"%(create_url)s\">create one</a>?"
 msgstr ""
 "Il semble qu'il n'y ait aucun tournoi sur ce site. Voulez-vous <a href="
-"\"%(create_url)s\">en créer</a> ?"
+"\"%(create_url)s\">en créer</a> ?"
 
 #: templates/site_index.html:62
 msgid "There are currently no tournaments set up on this site."
