@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-15 21:43-0700\n"
+"POT-Creation-Date: 2016-09-16 11:01-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-#: adjfeedback/forms.py:56
-msgid "--------"
-msgstr "--------"
 
-#: adjfeedback/forms.py:57
-msgid "Yes"
-msgstr "Oui"
-
+#. Translators: Please leave this blank, it should be left for the base Django translations.
 #: adjfeedback/forms.py:58
-msgid "No"
-msgstr "Non"
+msgid "Yes"
+msgstr ""
 
-#: adjfeedback/forms.py:71 adjfeedback/forms.py:79
+#. Translators: Please leave this blank, it should be left for the base Django translations.
+#: adjfeedback/forms.py:60
+msgid "No"
+msgstr ""
+
+#. Translators: Please leave this blank, it should be left for the base Django translations.
+#: adjfeedback/forms.py:74 adjfeedback/forms.py:83
 msgid "This field is required."
-msgstr "Ce champ est obligatoire."
+msgstr ""
