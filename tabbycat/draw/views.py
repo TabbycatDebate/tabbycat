@@ -208,18 +208,14 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
     def _add_break_rank_columns(self, table, draw, category):
         tournament = self.get_tournament()
-        aff_tooltip = _("%(aff_possessive)s break rank") % {'aff_possessive': aff_possessive(tournament)}
-        aff_tooltip = aff_tooltip.capitalize()
-        aff_key = _("%(aff_abbr)sBR") % {'aff_abbr': aff_initial(tournament)}
-        neg_tooltip = _("%(neg_possessive)s break rank") % {'neg_possessive': neg_possessive(tournament)}
-        neg_tooltip = neg_tooltip.capitalize()
-        neg_key = _("%(neg_abbr)sBR") % {'neg_abbr': neg_initial(tournament)}
-        table.add_column(
-            {'tooltip': aff_tooltip, 'key': aff_key},
-            ["%s" % d.aff_team.break_rank_for_category(category) for d in draw])
-        table.add_column(
-            {'tooltip': neg_tooltip, 'key': neg_key},
-            ["%s" % d.neg_team.break_rank_for_category(category) for d in draw])
+        for side in ('aff', 'neg'):
+            tooltip = _("%(possessive)s break rank" % {'possessive': get_position_name(tournament, side, 'possessive')})
+            tooltip = tooltip.capitalize()
+            key = _("%(initial)sBR") % {'initial': get_position_name(tournament, side, 'initial')}
+            table.add_column(
+                {'tooltip': tooltip, 'key': key},
+                [d.get_team(side).break_rank_for_category(category) for d in draw]
+            )
 
     def get_template_names(self):
         round = self.get_round()
