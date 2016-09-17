@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-16 11:01-0700\n"
+"POT-Creation-Date: 2016-09-16 21:28-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -451,3 +451,115 @@ msgstr "Résultats récents"
 #: tournaments/templates/tournament_index.html:73
 msgid "No Results In"
 msgstr "Aucun résultat"
+
+#: tournaments/utils.py:21
+msgid "affirmative"
+msgstr "affirmatif"
+
+#: tournaments/utils.py:22
+msgid "negative"
+msgstr "négatif"
+
+#. Translators: This is combined with other strings, e.g. in French it would be "de l'affirmatif"
+#: tournaments/utils.py:24
+msgid "affirmative's"
+msgstr "de l'affirmatif"
+
+#. Translators: This is combined with other strings, e.g. in French it would be "du négatif"
+#: tournaments/utils.py:26
+msgid "negative's"
+msgstr "du négatif"
+
+#: tournaments/utils.py:27
+msgid "affirmative team"
+msgstr "équipe affirmatif"
+
+#: tournaments/utils.py:28
+msgid "negative team"
+msgstr "équipe négatif"
+
+#: tournaments/utils.py:29
+msgid "Aff"
+msgstr "Aff"
+
+#: tournaments/utils.py:30
+msgid "Neg"
+msgstr "Nég"
+
+#. Translators: Capitalised first letter of "Affirmative", used in abbreviations
+#: tournaments/utils.py:32
+msgctxt "team name"
+msgid "A"
+msgstr "A"
+
+#. Translators: Capitalised first letter of "Negative", used in abbreviations
+#: tournaments/utils.py:34
+msgctxt "team name"
+msgid "N"
+msgstr "N"
+
+#: tournaments/utils.py:37
+msgid "government"
+msgstr "gouvernement"
+
+#: tournaments/utils.py:38 tournaments/utils.py:52
+msgid "opposition"
+msgstr "opposition"
+
+#: tournaments/utils.py:39
+msgid "government's"
+msgstr "du gouvernement"
+
+#: tournaments/utils.py:40 tournaments/utils.py:54
+msgid "opposition's"
+msgstr "de l'opposition"
+
+#: tournaments/utils.py:41
+msgid "government team"
+msgstr "équipe du gouvernement"
+
+#: tournaments/utils.py:42 tournaments/utils.py:56
+msgid "opposition team"
+msgstr "équipe de l'opposition"
+
+#: tournaments/utils.py:43
+msgid "Gov"
+msgstr "Gouv"
+
+#: tournaments/utils.py:44 tournaments/utils.py:58
+msgid "Opp"
+msgstr "Opp"
+
+#. Translators: Capitalised first letter of "Government", used in abbreviations
+#: tournaments/utils.py:46
+msgctxt "team name"
+msgid "G"
+msgstr "G"
+
+#. Translators: Capitalised first letter of "Opposition", used in abbreviations
+#: tournaments/utils.py:48 tournaments/utils.py:62
+msgctxt "team name"
+msgid "O"
+msgstr "O"
+
+#: tournaments/utils.py:51
+msgid "proposition"
+msgstr "proposition"
+
+#: tournaments/utils.py:53
+msgid "proposition's"
+msgstr "de la proposition"
+
+#: tournaments/utils.py:55
+msgid "proposition team"
+msgstr "équipe de la proposition"
+
+#: tournaments/utils.py:57
+msgid "Prop"
+msgstr "Prop"
+
+#. Translators: Capitalised first letter of "Proposition", used in abbreviations
+#: tournaments/utils.py:60
+msgctxt "team name"
+msgid "P"
+msgstr "P"

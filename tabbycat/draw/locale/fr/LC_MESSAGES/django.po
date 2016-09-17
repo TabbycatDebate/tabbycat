@@ -17,18 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:58
-msgid "Yes"
+#: draw/views.py:211
+#, python-format
+msgid "%(aff_possessive)s break rank"
 msgstr ""
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:60
-msgid "No"
+#: draw/views.py:213
+#, python-format
+msgid "%(aff_abbr)sBR"
 msgstr ""
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:74 adjfeedback/forms.py:83
-msgid "This field is required."
+#: draw/views.py:214
+#, python-format
+msgid "%(neg_possessive)s break rank"
+msgstr ""
+
+#: draw/views.py:216
+#, python-format
+msgid "%(neg_abbr)sBR"
 msgstr ""

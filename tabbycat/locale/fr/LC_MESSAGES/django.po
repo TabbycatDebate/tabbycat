@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-16 11:01-0700\n"
+"POT-Creation-Date: 2016-09-16 21:28-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,3 +56,33 @@ msgstr ""
 "debatekeeper\" target=\"_blank\">Debatekeeper</a> pour la chronométrage sur "
 "les appareils Android et <a href=\"http://debatingballot.com/\" target="
 "\"_blank\">debatingballot.com</a> pour les garabits de bulletins."
+
+#. Translators: Put these in the right order,
+#. e.g. side_abbr = "A", metric_abbr = "TSS" -> "ATSS" for "Affirmative's Total Speaker Score"
+#: utils/tables.py:538
+#, python-format
+msgid "%(side_abbr)s%(metric_abbr)s"
+msgstr "%(metric_abbr)s%(side_abbr)s"
+
+#. Translators: Put these in the right order,
+#. e.g. side_possessive = "affirmative's", metric_name = "total speaker score" -> "affirmative's total speaker score"
+#: utils/tables.py:545
+#, python-format
+msgid "%(side_possessive)s %(metric_name)s"
+msgstr "%(metric_name)s %(side_possessive)s"
+
+#. Translators: e.g. team would be "negative team" or "affirmative team",
+#. affirmative would be "affirmative team".
+#: utils/tables.py:598
+#, python-format
+msgid "Number of times this %(team)s has been the %(affirmative)s before"
+msgstr "Nombre de fois que cette %(team)s a déjà été l'%(affirmative)s"
+
+#. Translators: Abbreviation for "affirmative number of affirmatives".
+#. side_abbr is e.g. "A"/"N"/"G"/"O" for affirmative/negative/government/opposition,
+#. aff_abbr is "Aff"/"Gov" for affirmative/government, so "NAff" is the number of times
+#. the negative team has affirmed, or equivalently "OGov".
+#: utils/tables.py:608
+#, python-format
+msgid "%(side_abbr)s%(aff_abbr)ss"
+msgstr "%(side_abbr)s%(aff_abbr)ss"
