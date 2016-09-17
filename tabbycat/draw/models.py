@@ -72,7 +72,7 @@ class Debate(models.Model):
                 return self._teams_and_positions_display()
 
     def _teams_and_positions_display(self):
-        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display().lower())
+        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display())
                 for dt in self.debateteam_set.all()])
 
     # --------------------------------------------------------------------------
@@ -229,9 +229,9 @@ class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
     POSITION_NEGATIVE = 'N'
     POSITION_UNALLOCATED = 'u'
-    POSITION_CHOICES = ((POSITION_AFFIRMATIVE, 'Affirmative'),
-                        (POSITION_NEGATIVE, 'Negative'),
-                        (POSITION_UNALLOCATED, 'Unallocated'), )
+    POSITION_CHOICES = ((POSITION_AFFIRMATIVE, 'affirmative'),
+                        (POSITION_NEGATIVE, 'negative'),
+                        (POSITION_UNALLOCATED, 'unallocated'), )
 
     objects = DebateTeamManager()
 

@@ -2,7 +2,7 @@ import itertools
 
 from django.db.models import Max
 from django.utils.encoding import force_text
-from django.utils.translation import pgettext_lazy, string_concat, ugettext_lazy
+from django.utils.translation import pgettext_lazy, ugettext_lazy
 
 from .models import Round
 
@@ -18,33 +18,33 @@ BREAK_ROUND_NAMES = [
 
 POSITION_NAMES = {
     'aff-neg': {
-        "aff_full": ugettext_lazy("Affirmative"),
-        "neg_full": ugettext_lazy("Negative"),
+        "aff_full": ugettext_lazy("affirmative"),
+        "neg_full": ugettext_lazy("negative"),
         "aff_abbr": ugettext_lazy("Aff"),
         "neg_abbr": ugettext_lazy("Neg"),
-        # Translators: This should be the first letter of "Affirmative", or something that can be used in abbreviations
+        # Translators: Capitalised first letter of "Affirmative", or used in abbreviations
         "aff_init": pgettext_lazy("team name", "A"),
-        # Translators: This should be the first letter of "Negative", or something that can be used in abbreviations
+        # Translators: Capitalised first letter of "Negative", or used in abbreviations
         "neg_init": pgettext_lazy("team name", "N"),
     },
     'gov-opp': {
-        "aff_full": ugettext_lazy("Government"),
-        "neg_full": ugettext_lazy("Opposition"),
+        "aff_full": ugettext_lazy("government"),
+        "neg_full": ugettext_lazy("opposition"),
         "aff_abbr": ugettext_lazy("Gov"),
         "neg_abbr": ugettext_lazy("Opp"),
-        # Translators: This should be the first letter of "Government", or something that can be used in abbreviations
+        # Translators: Capitalised first letter of "Government", or used in abbreviations
         "aff_init": pgettext_lazy("team name", "G"),
-        # Translators: This should be the first letter of "Opposition", or something that can be used in abbreviations
+        # Translators: Capitalised first letter of "Opposition", or used in abbreviations
         "neg_init": pgettext_lazy("team name", "O"),
     },
     'prop-opp': {
-        "aff_full": ugettext_lazy("Proposition"),
-        "neg_full": ugettext_lazy("Opposition"),
+        "aff_full": ugettext_lazy("proposition"),
+        "neg_full": ugettext_lazy("opposition"),
         "aff_abbr": ugettext_lazy("Prop"),
         "neg_abbr": ugettext_lazy("Opp"),
-        # Translators: This should be the first letter of "Proposition", or something that can be used in abbreviations
+        # Translators: Capitalised first letter of "Proposition", or used in abbreviations
         "aff_init": pgettext_lazy("team name", "P"),
-        # Translators: This should be the first letter of "Opposition", or something that can be used in abbreviations
+        # Translators: Capitalised first letter of "Opposition", or used in abbreviations
         "neg_init": pgettext_lazy("team name", "O"),
     },
 }
@@ -94,7 +94,7 @@ def get_position_name_choices():
     """Returns a list of choices for position names suitable for presentation in
     a form."""
     return [
-        (code, string_concat(names["aff_full"], ", ", names["neg_full"]))
+        (code, force_text(names["aff_full"]).capitalize() + ", " + force_text(names["neg_full"]).capitalize())
         for code, names in POSITION_NAMES.items()
     ]
 

@@ -184,9 +184,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             table.add_debate_bracket_columns(draw)
 
         table.add_debate_venue_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw], key=aff_name(self.get_tournament()),
+        table.add_team_columns([d.aff_team for d in draw], key=aff_name(self.get_tournament()).capitalize(),
             hide_institution=True)
-        table.add_team_columns([d.neg_team for d in draw], key=neg_name(self.get_tournament()),
+        table.add_team_columns([d.neg_team for d in draw], key=neg_name(self.get_tournament()).capitalize(),
             hide_institution=True)
 
         # For draw details and draw draft pages
