@@ -3,6 +3,8 @@ import logging
 from django.db import models
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
+from tournaments.utils import get_position_name
+
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
 logger = logging.getLogger(__name__)
@@ -286,6 +288,16 @@ class DebateTeam(models.Model):
             except ObjectDoesNotExist:
                 self._win = None
             return self._win
+
+    def get_position_name(self, tournament=None):
+        """Should be used instead of get_position_display() on views.
+        `tournament` can be passed in if known, for performance."""
+        if self.position == DebateTeam.POSITION_AFFIRMATIVE:
+            return get_position_name(tournament or self.debate.round.tournament, 'aff', 'full')
+        elif self.position == DebateTeam.POSITION_NEGATIVE:
+            return get_position_name(tournament or self.debate.round.tournament, 'neg', 'full')
+        else:
+            return self.get_position_display()
 
 
 class TeamPositionAllocation(models.Model):

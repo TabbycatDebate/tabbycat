@@ -1,7 +1,8 @@
 import itertools
 
 from django.db.models import Max
-from django.utils.translation import ugettext_lazy, pgettext_lazy, string_concat
+from django.utils.encoding import force_text
+from django.utils.translation import pgettext_lazy, string_concat, ugettext_lazy
 
 from .models import Round
 
@@ -101,7 +102,7 @@ def get_position_name_choices():
 def _get_position_name(name_type):
     def _wrapped(tournament):
         names = POSITION_NAMES.get(tournament.pref('position_names'), POSITION_NAMES['aff-neg'])
-        return str(names[name_type])
+        return force_text(names[name_type])
     return _wrapped
 
 
@@ -109,5 +110,10 @@ aff_name = _get_position_name('aff_full')
 neg_name = _get_position_name('neg_full')
 aff_abbr = _get_position_name('aff_abbr')
 neg_abbr = _get_position_name('neg_abbr')
-aff_init = _get_position_name('aff_init')
-neg_init = _get_position_name('neg_init')
+aff_initial = _get_position_name('aff_init')
+neg_initial = _get_position_name('neg_init')
+
+
+def get_position_name(tournament, side, name_type):
+    names = POSITION_NAMES.get(tournament.pref('position_names'), POSITION_NAMES['aff-neg'])
+    return force_text(names["%s_%s" % (side, name_type)])

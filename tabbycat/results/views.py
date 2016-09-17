@@ -441,7 +441,7 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
             loser = '?'
             for teamscore in ballotsub.teamscore_set.all():
                 team_str = "{:s} ({:s})".format(teamscore.debate_team.team.short_name,
-                        teamscore.debate_team.get_position_display())
+                        teamscore.debate_team.get_position_name(self.get_tournament()))
                 if teamscore.win:
                     winner = team_str
                 else:
