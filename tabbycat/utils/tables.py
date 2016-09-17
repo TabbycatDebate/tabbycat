@@ -50,7 +50,8 @@ class BaseTableBuilder:
     @staticmethod
     def _convert_cell(cell):
         if isinstance(cell, dict):
-            cell['text'] = force_text(cell['text'])
+            if 'text' in cell:
+                cell['text'] = force_text(cell['text'])
             return cell
         else:
             cell_dict = {}
