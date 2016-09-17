@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-16 21:28-0700\n"
+"POT-Creation-Date: 2016-09-16 21:55-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-#: draw/views.py:211
-#, python-format
-msgid "%(aff_possessive)s break rank"
-msgstr ""
 
-#: draw/views.py:213
+#: draw/views.py:212
 #, python-format
-msgid "%(aff_abbr)sBR"
+msgid "%(possessive)s break rank"
 msgstr ""
 
 #: draw/views.py:214
 #, python-format
-msgid "%(neg_possessive)s break rank"
-msgstr ""
-
-#: draw/views.py:216
-#, python-format
-msgid "%(neg_abbr)sBR"
+msgid "%(initial)sBR"
 msgstr ""

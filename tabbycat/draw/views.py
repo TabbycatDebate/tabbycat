@@ -209,7 +209,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     def _add_break_rank_columns(self, table, draw, category):
         tournament = self.get_tournament()
         for side in ('aff', 'neg'):
+            # Translators: e.g. possessive might be "affirmative's" to get "affirmative's break rank"
             tooltip = _("%(possessive)s break rank" % {'possessive': get_position_name(tournament, side, 'possessive')})
+            # Translators: e.g. initial might be "A" for affirmative to get "ABR"
             tooltip = tooltip.capitalize()
             key = _("%(initial)sBR") % {'initial': get_position_name(tournament, side, 'initial')}
             table.add_column(
