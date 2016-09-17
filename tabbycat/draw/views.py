@@ -15,7 +15,7 @@ from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
-from tournaments.utils import aff_initial, aff_name, aff_possessive, get_position_name, neg_initial, neg_name, neg_possessive
+from tournaments.utils import aff_name, get_position_name, neg_name
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
