@@ -22,7 +22,6 @@ MEDIA_URL = '/media/'
 TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 TABBYCAT_VERSION = '1.1.3'
 TABBYCAT_CODENAME = 'Egyptian Mau'

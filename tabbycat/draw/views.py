@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.utils.translation import ugettext as _
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -14,6 +15,7 @@ from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
+from tournaments.utils import aff_initial, aff_name, aff_possessive, get_position_name, neg_initial, neg_name, neg_possessive
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
@@ -27,13 +29,6 @@ from .models import Debate, DebateTeam, TeamPositionAllocation
 from .prefetch import populate_history
 
 logger = logging.getLogger(__name__)
-
-
-TPA_MAP = {
-    TeamPositionAllocation.POSITION_AFFIRMATIVE: "Aff",
-    TeamPositionAllocation.POSITION_NEGATIVE: "Neg",
-    None: "—"
-}
 
 
 # ==============================================================================
@@ -68,8 +63,8 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
     def populate_table(self, draw, table, round, tournament):
         table.add_debate_venue_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key="Aff")
-        table.add_team_columns([d.neg_team for d in draw], hide_institution=True, key="Neg")
+        table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key=aff_name(tournament))
+        table.add_team_columns([d.neg_team for d in draw], hide_institution=True, key=neg_name(tournament))
         if tournament.pref('enable_division_motions'):
             table.add_motion_column(d.division_motion for d in draw)
 
@@ -171,6 +166,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
     def get_table(self):
         r = self.get_round()
+        tournament = self.get_tournament()
         table = TabbycatTableBuilder(view=self)
         if r.draw_status == r.STATUS_NONE:
             return table # Return Blank
@@ -183,9 +179,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             table.add_debate_bracket_columns(draw)
 
         table.add_debate_venue_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw], key="Aff",
+        table.add_team_columns([d.aff_team for d in draw], key=aff_name(tournament).capitalize(),
             hide_institution=True)
-        table.add_team_columns([d.neg_team for d in draw], key="Neg",
+        table.add_team_columns([d.neg_team for d in draw], key=neg_name(tournament).capitalize(),
             hide_institution=True)
 
         # For draw details and draw draft pages
@@ -197,12 +193,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             if not r.is_break_round:
                 table.add_debate_ranking_columns(draw, standings)
             else:
-                table.add_column(
-                    {'tooltip': "Affirmative Team's Break Rank", 'text': "ABR"},
-                    ["%s" % d.aff_team.break_rank_for_category(r.break_category) for d in draw])
-                table.add_column(
-                    {'tooltip': "Negative Team's Break Rank", 'text': "NBR"},
-                    ["%s" % d.neg_team.break_rank_for_category(r.break_category) for d in draw])
+                self._add_break_rank_columns(table, draw, r.break_category)
             table.add_debate_metric_columns(draw, standings)
             table.add_sides_count([d.aff_team for d in draw], r.prev, 'aff')
             table.add_sides_count([d.neg_team for d in draw], r.prev, 'neg')
@@ -214,6 +205,21 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             table.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
 
         return table
+
+    def _add_break_rank_columns(self, table, draw, category):
+        tournament = self.get_tournament()
+        aff_tooltip = _("%(aff_possessive)s break rank") % {'aff_possessive': aff_possessive(tournament)}
+        aff_tooltip = aff_tooltip.capitalize()
+        aff_key = _("%(aff_abbr)sBR") % {'aff_abbr': aff_initial(tournament)}
+        neg_tooltip = _("%(neg_possessive)s break rank") % {'neg_possessive': neg_possessive(tournament)}
+        neg_tooltip = neg_tooltip.capitalize()
+        neg_key = _("%(neg_abbr)sBR") % {'neg_abbr': neg_initial(tournament)}
+        table.add_column(
+            {'tooltip': aff_tooltip, 'key': aff_key},
+            ["%s" % d.aff_team.break_rank_for_category(category) for d in draw])
+        table.add_column(
+            {'tooltip': neg_tooltip, 'key': neg_key},
+            ["%s" % d.neg_team.break_rank_for_category(category) for d in draw])
 
     def get_template_names(self):
         round = self.get_round()
@@ -417,6 +423,7 @@ class ApplyDebateScheduleView(DrawStatusEdit):
 class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
     page_title = "Side Pre-Allocations"
+    TPA_MAP = {DebateTeam.POSITION_AFFIRMATIVE: 'aff', DebateTeam.POSITION_NEGATIVE: 'neg'}
 
     def get_table(self):
         tournament = self.get_tournament()
@@ -425,7 +432,10 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
         tpas = dict()
         for tpa in TeamPositionAllocation.objects.filter(round__in=rounds):
-            tpas[(tpa.team.id, tpa.round.seq)] = TPA_MAP[tpa.position]
+            try:
+                tpas[(tpa.team.id, tpa.round.seq)] = get_position_name(tournament, self.TPA_MAP[tpa.position], 'abbr')
+            except ValueError:
+                pass
 
         table = TabbycatTableBuilder(view=self)
         table.add_team_columns(teams)

@@ -1,6 +1,7 @@
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, Section, StringPreference
 
 from standings.teams import TeamStandingsGenerator
+from tournaments.utils import get_position_name_choices
 
 from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
@@ -368,6 +369,16 @@ class MotionVetoes(BooleanPreference):
     section = debate_rules
     name = 'motion_vetoes_enabled'
     default = True
+
+
+@tournament_preferences_registry.register
+class PositionNames(ChoicePreference):
+    help_text = "What to call the teams"
+    verbose_name = "Position names"
+    section = debate_rules
+    name = 'position_names'
+    choices = get_position_name_choices()
+    default = 'aff-neg'
 
 
 # ==============================================================================
