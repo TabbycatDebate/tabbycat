@@ -99,6 +99,17 @@ def get_position_name_choices():
     ]
 
 
+def get_position_name(tournament, side, name_type):
+    """Like aff_name, neg_name, etc., but can be used when the side is not known
+    at compile time. Example:
+        get_position_name(tournament, "aff", "full")
+    will return something like "Affirmative" or "Proposition" or "Gobierno",
+    depending on the position name option and language setting.
+    """
+    names = POSITION_NAMES.get(tournament.pref('position_names'), POSITION_NAMES['aff-neg'])
+    return force_text(names["%s_%s" % (side, name_type)])
+
+
 def _get_position_name(name_type):
     def _wrapped(tournament):
         names = POSITION_NAMES.get(tournament.pref('position_names'), POSITION_NAMES['aff-neg'])
@@ -106,14 +117,21 @@ def _get_position_name(name_type):
     return _wrapped
 
 
+# These functions are used to grab the chosen and translated position names,
+# appropriate for the tournament option for position names, and the language
+# setting.
+#
+# For example:              aff-neg, en      prop-opp, en     gov-opp, es
+#   aff_name(tournament) -> "Affirmative" or "Proposition" or "Gobierno"
+#   neg_abbr(tournament) -> "Neg"         or "Opp"         or "Opo"
+#
+# They force evaluation, which should be okay, because they can only be used
+# when the tournament is known, which is only ever true at runtime.
+# Example usage: "The %s team faces the %s team." % (aff_name(tournament), neg_name(tournament))
+
 aff_name = _get_position_name('aff_full')
 neg_name = _get_position_name('neg_full')
 aff_abbr = _get_position_name('aff_abbr')
 neg_abbr = _get_position_name('neg_abbr')
 aff_initial = _get_position_name('aff_init')
 neg_initial = _get_position_name('neg_init')
-
-
-def get_position_name(tournament, side, name_type):
-    names = POSITION_NAMES.get(tournament.pref('position_names'), POSITION_NAMES['aff-neg'])
-    return force_text(names["%s_%s" % (side, name_type)])
