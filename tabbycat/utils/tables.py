@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.utils import formats
+from django.utils.encoding import force_text
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.utils import adjudicator_conflicts_display
@@ -40,16 +41,23 @@ class BaseTableBuilder:
 
     @staticmethod
     def _convert_header(header):
-        return {'key': header} if isinstance(header, str) else header
+        if isinstance(header, dict):
+            header['key'] = force_text(header['key'])
+            return header
+        else:
+            return {'key': force_text(header)}
 
     @staticmethod
     def _convert_cell(cell):
-        if isinstance(cell, int) or isinstance(cell, float):
-            return {'text': str(cell),
-                    'sort': cell}
-        if isinstance(cell, str):
-            return {'text': cell}
-        return cell
+        if isinstance(cell, dict):
+            cell['text'] = force_text(cell['text'])
+            return cell
+        else:
+            cell_dict = {}
+            if isinstance(cell, int) or isinstance(cell, float):
+                cell_dict['sort'] = cell
+            cell_dict['text'] = force_text(cell)
+            return cell_dict
 
     def add_column(self, header, data):
         """Adds a column to the table.
