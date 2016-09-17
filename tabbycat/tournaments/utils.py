@@ -20,32 +20,46 @@ POSITION_NAMES = {
     'aff-neg': {
         "aff_full": ugettext_lazy("affirmative"),
         "neg_full": ugettext_lazy("negative"),
+        # Translators: This is combined with other strings, e.g. in French it would be "de l'affirmatif"
+        "aff_possessive": ugettext_lazy("affirmative's"),
+        # Translators: This is combined with other strings, e.g. in French it would be "du négatif"
+        "neg_possessive": ugettext_lazy("negative's"),
+        "aff_team": ugettext_lazy("affirmative team"),
+        "neg_team": ugettext_lazy("negative team"),
         "aff_abbr": ugettext_lazy("Aff"),
         "neg_abbr": ugettext_lazy("Neg"),
         # Translators: Capitalised first letter of "Affirmative", or used in abbreviations
-        "aff_init": pgettext_lazy("team name", "A"),
+        "aff_initial": pgettext_lazy("team name", "A"),
         # Translators: Capitalised first letter of "Negative", or used in abbreviations
-        "neg_init": pgettext_lazy("team name", "N"),
+        "neg_initial": pgettext_lazy("team name", "N"),
     },
     'gov-opp': {
         "aff_full": ugettext_lazy("government"),
         "neg_full": ugettext_lazy("opposition"),
+        "aff_possessive": ugettext_lazy("government's"),
+        "neg_possessive": ugettext_lazy("opposition's"),
+        "aff_team": ugettext_lazy("government team"),
+        "neg_team": ugettext_lazy("opposition team"),
         "aff_abbr": ugettext_lazy("Gov"),
         "neg_abbr": ugettext_lazy("Opp"),
         # Translators: Capitalised first letter of "Government", or used in abbreviations
-        "aff_init": pgettext_lazy("team name", "G"),
+        "aff_initial": pgettext_lazy("team name", "G"),
         # Translators: Capitalised first letter of "Opposition", or used in abbreviations
-        "neg_init": pgettext_lazy("team name", "O"),
+        "neg_initial": pgettext_lazy("team name", "O"),
     },
     'prop-opp': {
         "aff_full": ugettext_lazy("proposition"),
         "neg_full": ugettext_lazy("opposition"),
+        "aff_possessive": ugettext_lazy("proposition's"),
+        "neg_possessive": ugettext_lazy("opposition's"),
+        "aff_team": ugettext_lazy("proposition team"),
+        "neg_team": ugettext_lazy("opposition team"),
         "aff_abbr": ugettext_lazy("Prop"),
         "neg_abbr": ugettext_lazy("Opp"),
         # Translators: Capitalised first letter of "Proposition", or used in abbreviations
-        "aff_init": pgettext_lazy("team name", "P"),
+        "aff_initial": pgettext_lazy("team name", "P"),
         # Translators: Capitalised first letter of "Opposition", or used in abbreviations
-        "neg_init": pgettext_lazy("team name", "O"),
+        "neg_initial": pgettext_lazy("team name", "O"),
     },
 }
 
@@ -133,5 +147,5 @@ aff_name = _get_position_name('aff_full')
 neg_name = _get_position_name('neg_full')
 aff_abbr = _get_position_name('aff_abbr')
 neg_abbr = _get_position_name('neg_abbr')
-aff_initial = _get_position_name('aff_init')
-neg_initial = _get_position_name('neg_init')
+aff_team = _get_position_name('aff_team')
+neg_team = _get_position_name('neg_team')
