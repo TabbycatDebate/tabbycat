@@ -207,7 +207,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     self.tournament, kwargs={'pk': adj.pk})
             }
         else:
-            return {'text': False, 'link': False}
+            return {'text': '', 'link': False}
 
     def _team_record_link(self, team):
         if self.admin:
@@ -221,7 +221,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'link': reverse_tournament('participants-public-team-record', self.tournament, kwargs={'pk': team.pk})
             }
         else:
-            return {'text': False, 'link': False}
+            return {'text': '', 'link': False}
 
     def _team_cell(self, team, hide_emoji=True):
         cell = {
