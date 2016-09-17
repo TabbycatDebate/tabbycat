@@ -620,7 +620,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         results_data = [self._result_cell(ts) for ts in teamscores]
         self.add_column("Result", results_data)
-        self.add_column("Side", [ts.debate_team.get_position_display().capitalize() for ts in teamscores])
+        self.add_column("Side", [ts.debate_team.get_position_name().capitalize() for ts in teamscores])
 
     def add_team_results_columns(self, teams, rounds):
         """ Takes an iterable of Teams, assumes their round_results match rounds"""
