@@ -28,9 +28,9 @@ POSITION_NAMES = {
         "neg_team": ugettext_lazy("negative team"),
         "aff_abbr": ugettext_lazy("Aff"),
         "neg_abbr": ugettext_lazy("Neg"),
-        # Translators: Capitalised first letter of "Affirmative", or used in abbreviations
+        # Translators: Capitalised first letter of "Affirmative", used in abbreviations
         "aff_initial": pgettext_lazy("team name", "A"),
-        # Translators: Capitalised first letter of "Negative", or used in abbreviations
+        # Translators: Capitalised first letter of "Negative", used in abbreviations
         "neg_initial": pgettext_lazy("team name", "N"),
     },
     'gov-opp': {
@@ -42,9 +42,9 @@ POSITION_NAMES = {
         "neg_team": ugettext_lazy("opposition team"),
         "aff_abbr": ugettext_lazy("Gov"),
         "neg_abbr": ugettext_lazy("Opp"),
-        # Translators: Capitalised first letter of "Government", or used in abbreviations
+        # Translators: Capitalised first letter of "Government", used in abbreviations
         "aff_initial": pgettext_lazy("team name", "G"),
-        # Translators: Capitalised first letter of "Opposition", or used in abbreviations
+        # Translators: Capitalised first letter of "Opposition", used in abbreviations
         "neg_initial": pgettext_lazy("team name", "O"),
     },
     'prop-opp': {
@@ -56,9 +56,9 @@ POSITION_NAMES = {
         "neg_team": ugettext_lazy("opposition team"),
         "aff_abbr": ugettext_lazy("Prop"),
         "neg_abbr": ugettext_lazy("Opp"),
-        # Translators: Capitalised first letter of "Proposition", or used in abbreviations
+        # Translators: Capitalised first letter of "Proposition", used in abbreviations
         "aff_initial": pgettext_lazy("team name", "P"),
-        # Translators: Capitalised first letter of "Opposition", or used in abbreviations
+        # Translators: Capitalised first letter of "Opposition", used in abbreviations
         "neg_initial": pgettext_lazy("team name", "O"),
     },
 }
@@ -121,6 +121,8 @@ def get_position_name(tournament, side, name_type):
     depending on the position name option and language setting.
     """
     names = POSITION_NAMES.get(tournament.pref('position_names'), POSITION_NAMES['aff-neg'])
+    if side not in ('aff', 'neg'):
+        raise ValueError("get_position_name() side must be 'aff' or 'neg', not: %r" % side)
     return force_text(names["%s_%s" % (side, name_type)])
 
 
@@ -149,3 +151,7 @@ aff_abbr = _get_position_name('aff_abbr')
 neg_abbr = _get_position_name('neg_abbr')
 aff_team = _get_position_name('aff_team')
 neg_team = _get_position_name('neg_team')
+aff_possessive = _get_position_name('aff_possessive')
+neg_possessive = _get_position_name('neg_possessive')
+aff_initial = _get_position_name('aff_initial')
+neg_initial = _get_position_name('neg_initial')
