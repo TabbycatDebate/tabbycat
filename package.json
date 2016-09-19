@@ -1,6 +1,9 @@
 {
   "name": "tabby-cat",
   "description": "Debating tabulation software for two-team parliamentary formats",
+  "engines": {
+    "node": "6.5.0"
+  },
   "main": "index.js",
   "dependencies": {
     "babel-core": "^6.14.0",

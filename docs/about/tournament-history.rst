@@ -9,7 +9,7 @@ A list of tournaments (that we know of) which have used Tabbycat.
 
 - ACT Debating Union Grades
 - `Australian Easters <http://easters2016.herokuapp.com>`_
-- Canton IV 2016
+- `Canton IV <http://cantoniv2016.herokuapp.com/civ2016/>`_
 - IIT KGP PD
 - `Joynt Scroll <https://joyntscroll2016.herokuapp.com>`_
 - `Malaysia Debate Open 2016 <http://tabs.altairtechlab.com/malaysiadebateopen2016/192.168.1.134_8080/t/mdo2016/index.html>`_
