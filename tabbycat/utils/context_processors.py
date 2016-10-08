@@ -5,26 +5,22 @@ from tournaments.models import Tournament
 
 def debate_context(request):
 
+    context = {
+        'tabbycat_version': settings.TABBYCAT_VERSION or "",
+        'tabbycat_codename': settings.TABBYCAT_CODENAME or "no codename",
+        'all_tournaments': Tournament.objects.filter(active=True),
+    }
+
     if hasattr(request, 'tournament'):
-        d = {
+        context.update({
             'tournament': request.tournament,
             'pref': request.tournament.preferences.by_name(),
             'current_round': request.tournament.get_current_round_cached,
-            'tabbycat_version': settings.TABBYCAT_VERSION,
-            'tabbycat_codename': settings.TABBYCAT_CODENAME,
-        }
+        })
         if hasattr(request, 'round'):
-            d['round'] = request.round
-            if request.round.prev:
-                d['previous_round'] = request.round.prev
-            else:
-                d['previous_round'] = False
+            context['round'] = request.round
 
-        d['all_tournaments'] = Tournament.objects.filter(active=True)
-
-        return d
-
-    return {}
+    return context
 
 
 def get_menu_highlight(request):

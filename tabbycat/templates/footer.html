@@ -23,12 +23,24 @@
     </ul>
 
     <p class="navbar-text small">
-      {% if tournament %}{{ tournament }} runs on {% else %}Running on {% endif %}
-      <a href="https://github.com/czlee/tabbycat/" target="_blank">
-        <span class="emoji">😸</span>Tabbycat{% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}</a>
-       created by Qi-Shan,
-      <a href="https://twitter.com/czlee11" target="_blank">Chuan-Zheng</a>, and
-      <a href="http://philipbelesky.com" target="_blank">Philip</a>.
+      {% if tournament %}
+        {% blocktrans trimmed %}
+          {{ tournament }} runs on
+          <a href="https://github.com/czlee/tabbycat/" target="_blank">
+          <span class="emoji">😸</span>Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }})</a>,
+          created by Qi-Shan,
+          <a href="https://twitter.com/czlee11" target="_blank">Chuan-Zheng</a>, and
+          <a href="http://philipbelesky.com" target="_blank">Philip</a>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed %}
+          Running on
+          <span class="emoji">😸</span>Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }})</a>,
+          created by Qi-Shan,
+          <a href="https://twitter.com/czlee11" target="_blank">Chuan-Zheng</a>, and
+          <a href="http://philipbelesky.com" target="_blank">Philip</a>.
+        {% endblocktrans %}
+      {% endif %}
       {% blocktrans trimmed %}
       Tabbycat is easy to set up, you should <a href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way" target="_blank">try it out</a>!
       {% endblocktrans %}
