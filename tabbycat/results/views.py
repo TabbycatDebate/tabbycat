@@ -341,11 +341,12 @@ class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
                 self.object.name, self.debate.matchup))
 
     def populate_objects(self):
+        self.object = self.get_object() # must be populated before self.error_page() called
+
         round = self.get_tournament().current_round
         if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
             return self.error_page("The draw and/or motions for the round haven't been released yet.")
 
-        self.object = self.get_object()
         try:
             self.debateadj = DebateAdjudicator.objects.get(adjudicator=self.object, debate__round=round)
         except DebateAdjudicator.DoesNotExist:

@@ -19,7 +19,7 @@ Change Log
 - Collapsed availability database models into a single model with Django content types
 - Collapsed optional fields in action log entries into a single generic field using Django content types
 - Added better warnings when attempting to create an elimination round draw with fewer than two teams
-- Added warnings in Edit Databse view when editing debate teams
+- Added warnings in Edit Database view when editing debate teams
 - Renamed "AIDA pre-2015" break rule to "AIDA 1996"
 
 
@@ -34,7 +34,7 @@ Change Log
 
 - Added support for the United Asian Debating Championships style
 - Added support for the World Schools Debating Championships style
-- Made Windows 8+ Emoji more colorful
+- Made Windows 8+ Emoji more colourful
 - Fixed an incompatability between Vue and IE 10-11 which caused tables to not render
 - Minor bug fixes and dependency updates
 
