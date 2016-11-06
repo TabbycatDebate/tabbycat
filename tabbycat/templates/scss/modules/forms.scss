@@ -8,6 +8,9 @@
   font-weight: $headings-font-weight;
   padding: 10px 12px;
 }
+.btn[data-toggle='tooltip'] span {
+  border-bottom: none; // Need to prevent dashed lines in glyphicons in btns
+}
 
 //------------------------------------------------------------------------------
 // Inputs

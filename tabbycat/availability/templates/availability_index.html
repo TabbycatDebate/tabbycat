@@ -38,7 +38,7 @@
       <form method="POST" action="{% round_url availability-checkin-previous %}">
         {% csrf_token %}
         <button class="btn btn-primary submit-disable" type="submit">
-          Check In Everything Active in {{ round.prev.name }}
+          Check In Active in {{ round.prev.abbreviation }}
         </button>
       </form>
     {% endif %}
