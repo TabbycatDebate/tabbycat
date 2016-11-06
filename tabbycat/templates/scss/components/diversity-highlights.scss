@@ -11,6 +11,10 @@
   }
 }
 
+.conflicts-toolbar:hover {
+  color: #fff; // Needed to keep consistent with other bars
+}
+
 .category-display {
   &.category-1 {
     @include button-variant(#fff, $break-cat-1, darken($break-cat-1, 10%));

@@ -115,9 +115,12 @@
   padding-top: 4px; // Center the Score
   text-align: left;
 
+  // Allow the rating and title to set the box size dynamically
+  display: flex;
+  flex-direction: row;
   .adj-info,
   .adj-score {
-    float: left;
+    display: inline-flex;
   }
 
   .h4 {
