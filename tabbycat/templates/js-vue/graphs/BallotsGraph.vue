@@ -41,7 +41,7 @@ function initChart(vueContext){
   // Responsive width
   vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10)
 
-  var x = d3.scale.ordinal().rangeRoundBands([0, vueContext.width])
+  var x = d3.scale.linear().range([0, vueContext.width])
   var y = d3.scale.linear().range([0, vueContext.height])
   var z = d3.scale.ordinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
 
@@ -58,42 +58,46 @@ function initChart(vueContext){
   var matrix = vueContext.graphData; // 4 columns: time_ID,none,draft,confirmed
   var remapped =["c1","c2","c3"].map(function(dat,i){
       return matrix.map(function(d,ii){
-          return {x: d[0], y: d[i+1] };
+          return {x: d[0], w: d[1], y: d[i+2]};
       })
   });
   var stacked = d3.layout.stack()(remapped)
 
-  x.domain(stacked[0].map(function(d) { return d.x; }));
+  x.domain([stacked[0][0].x - stacked[0][0].w, stacked[0][stacked[0].length - 1].x]);
   y.domain([0, d3.max(stacked[stacked.length - 1], function(d) { return d.y0 + d.y; })]);
+
+  // var area = d3.area()
+  //   .x(function(d) {return x(d.x); })
+  //   .y0(function(d) {return -y(d.y0); })
+  //   .y1(function(d) {return -y(d.y0); });
 
   // Add a group for each column.
   var valgroup = svg.selectAll("g.valgroup")
     .data(stacked)
     .enter().append("svg:g")
     .attr("class", "valgroup")
-    .style("fill", function(d, i) { return z(i); })
-    .style("stroke", "rgba(255,255,255,0.25)"); // Vertical Grid lines
+    .style("fill", function(d, i) { return z(i); });
 
   // Add a rect for each date.
   var rect = valgroup.selectAll("rect")
     .data(function(d){return d;})
     .enter().append("svg:rect")
-    .attr("x", function(d) { return x(d.x); })
+    .attr("x", function(d) { return x(d.x - d.w); })
     .attr("y", function(d) { return -y(d.y0) - y(d.y); })
     .attr("height", function(d) { return y(d.y); })
-    .attr("width", x.rangeBand());
+    .attr("width", function (d) { return x(d.x - d.w) - x(d.x); });
 
   function formatTimeAgo(time) {
-    if (time < 120) {
-      // Less than two hours
-      return "-" + time + "m";
-    } else if (time < 2880) {
-      // Less than 48 hours
-      return "-" + Math.floor(time / 60) + "h";
-    } else {
-      // Greater than 48 hours
-      return "-" + Math.floor(time / 24 / 60) + "d";
-    }
+    var formatted = "-";
+    if (time > 86400)
+      formatted += Math.floor(time / 86400) + "d";
+    if (time > 3600)
+      formatted += Math.floor((time % 86400) / 3600) + "h";
+    if (time > 60)
+      formatted += Math.floor((time % 3600) / 60) + "m";
+    formatted += (time % 60) + "s";
+    console.log(time + " " + formatted);
+    return formatted;
   }
 
   // Add Scales
