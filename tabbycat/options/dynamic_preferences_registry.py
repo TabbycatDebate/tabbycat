@@ -729,11 +729,20 @@ class ShowEmoji(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class ShowInstitutions(BooleanPreference):
-    help_text = "Shows the institutions column where appropriate"
-    verbose_name = 'Show institutions'
+class ShowTeamInstitutions(BooleanPreference):
+    help_text = "In tables listing teams, adds a column showing their institutions"
+    verbose_name = 'Show team institutions'
     section = ui_options
-    name = 'show_institutions'
+    name = 'show_team_institutions'
+    default = True
+
+
+@tournament_preferences_registry.register
+class ShowAdjudicatorInstitutions(BooleanPreference):
+    help_text = "In tables listing adjudicators, adds a column showing their institutions"
+    verbose_name = 'Show adjudicator institutions'
+    section = ui_options
+    name = 'show_adjudicator_institutions'
     default = True
 
 

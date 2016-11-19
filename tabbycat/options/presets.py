@@ -33,6 +33,9 @@ class AustralsPreferences(PreferencesPreset):
         self.standings__standings_missed_debates        = 2  # TODO= check this
         self.standings__team_standings_precedence       = ['wins', 'speaks_sum']
         self.standings__rank_speakers_by                = 'total'
+        # UI Options
+        self.ui_options__show_team_institutions         = False
+        self.ui_options__show_adjudicator_institutions  = True
 
 
 class AustralianEastersPreferences(AustralsPreferences):
@@ -168,7 +171,8 @@ class WSDCPreferences(AustralsPreferences):
         # Standings
         self.standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg']
         # UI Options
-        self.ui_options__show_institutions              = False
+        self.ui_options__show_team_institutions         = False
+        self.ui_options__show_adjudicator_institutions  = False
 
 
 class WADLPreferences(PreferencesPreset):
@@ -195,7 +199,8 @@ class WADLPreferences(PreferencesPreset):
         # UI Options
         self.ui_options__show_novices                   = True
         self.ui_options__show_emoji                     = False
-        self.ui_options__show_institutions              = False
+        self.ui_options__show_team_institutions         = False
+        self.ui_options__show_adjudicator_institutions  = False
         self.ui_options__show_speakers_in_draw          = False
         self.ui_options__public_motions_order           = 'reverse'
         self.ui_options__show_all_draws                 = True

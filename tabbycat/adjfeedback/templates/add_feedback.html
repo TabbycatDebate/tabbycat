@@ -17,7 +17,7 @@
         <thead>
           <tr>
             <th>Name</th>
-            {% if pref.show_institutions %}
+            {% if pref.show_team_institutions %}
             <th>Institution</th>
             {% endif %}
           </tr>
@@ -31,7 +31,7 @@
                 {{ team.short_name }}</a>
               {% endblock %}
             </td>
-            {% if pref.show_institutions %}
+            {% if pref.show_team_institutions %}
               <td><span class="hidden-xs">{{ team.institution }}</span><span class="visible-xs">{{ team.institution.code }}</span></td>
             {% endif %}
           </tr>
@@ -52,7 +52,7 @@
         <thead>
           <tr>
             <th>Name</th>
-            {% if pref.show_institutions %}
+            {% if pref.show_adjudicator_institutions %}
             <th>Institution</th>
             {% endif %}
           </tr>
@@ -66,7 +66,7 @@
                 {{ adj.name }}</a>
               {% endblock %}
             </td>
-            {% if pref.show_institutions %}
+            {% if pref.show_adjudicator_institutions %}
             <td>
               {{ adj.institution.name }}
             </td>
