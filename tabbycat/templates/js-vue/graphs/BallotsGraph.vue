@@ -42,7 +42,7 @@ function initChart(vueContext){
   vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10)
 
   var x = d3.scale.linear().range([0, vueContext.width])
-  var y = d3.scale.linear().range([0, vueContext.height])
+  var y = d3.scale.linear().range([vueContext.height, 0])
   var z = d3.scale.ordinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
 
   d3.selectAll("svg > *").remove(); // Remove prior graph
@@ -52,40 +52,30 @@ function initChart(vueContext){
     .attr("width", vueContext.width)
     .attr("height", vueContext.height + vueContext.padding + vueContext.padding)
     .append("g")
-    .attr("transform", "translate(0," + (vueContext.height + vueContext.padding) + ")");
+    .attr("transform", "translate(0," + vueContext.padding + ")");
 
   // Data Transforms and Domains
   var matrix = vueContext.graphData; // 4 columns: time_ID,none,draft,confirmed
   var remapped =["c1","c2","c3"].map(function(dat,i){
       return matrix.map(function(d,ii){
-          return {x: d[0], w: d[1], y: d[i+2]};
+          return {x: d[0], y: d[i+1]};
       })
   });
   var stacked = d3.layout.stack()(remapped)
 
-  x.domain([stacked[0][0].x - stacked[0][0].w, stacked[0][stacked[0].length - 1].x]);
+  x.domain([stacked[0][0].x, stacked[0][stacked[0].length - 1].x]);
   y.domain([0, d3.max(stacked[stacked.length - 1], function(d) { return d.y0 + d.y; })]);
 
-  // var area = d3.area()
-  //   .x(function(d) {return x(d.x); })
-  //   .y0(function(d) {return -y(d.y0); })
-  //   .y1(function(d) {return -y(d.y0); });
+  var area = d3.svg.area()
+    .x(function(d) { return x(d.x); })
+    .y0(function(d) { return y(d.y0); })
+    .y1(function(d) { return y(d.y0 + d.y); });
 
-  // Add a group for each column.
-  var valgroup = svg.selectAll("g.valgroup")
+  svg.selectAll("path")
     .data(stacked)
-    .enter().append("svg:g")
-    .attr("class", "valgroup")
+    .enter().append("path")
+    .attr("d", area)
     .style("fill", function(d, i) { return z(i); });
-
-  // Add a rect for each date.
-  var rect = valgroup.selectAll("rect")
-    .data(function(d){return d;})
-    .enter().append("svg:rect")
-    .attr("x", function(d) { return x(d.x - d.w); })
-    .attr("y", function(d) { return -y(d.y0) - y(d.y); })
-    .attr("height", function(d) { return y(d.y); })
-    .attr("width", function (d) { return x(d.x - d.w) - x(d.x); });
 
   function formatTimeAgo(time) {
     var formatted = "-";
@@ -96,7 +86,6 @@ function initChart(vueContext){
     if (time > 60)
       formatted += Math.floor((time % 3600) / 60) + "m";
     formatted += (time % 60) + "s";
-    console.log(time + " " + formatted);
     return formatted;
   }
 
@@ -104,10 +93,11 @@ function initChart(vueContext){
   var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
-    .tickFormat(function(d) { return formatTimeAgo(d) }) // Format result
+    .tickFormat(function(d) { return formatTimeAgo(d) }); // Format result
 
   svg.append("g").attr("class", "x axis")
     .call(xAxis)
+    .attr("transform", "translate(0," + vueContext.height + ")");
 
 };
 
