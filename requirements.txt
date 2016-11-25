@@ -14,4 +14,4 @@ django-pylibmc>=0.6,<0.7
 newrelic
 
 # Emailing
-sendgrid>=3.4,<3.5
+sendgrid
