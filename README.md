@@ -27,6 +27,10 @@ If your tournament has requirements that we don't currently support, please [get
 
 ## Installation and User Guide
 
+The fastest way to launch a Tabbycat site is to click this button:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 Our user guide is at http://tabbycat.readthedocs.io/.
 
 If you'd like to run a tournament with Tabbycat but are not able to set it up, get in touch with [Philip](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=) and he can setup a private online copy of the software for your use.
