@@ -404,7 +404,8 @@ class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
             did = ballot.debate_id
             if ballot.timestamp and (did not in first_drafts or first_drafts[did] > ballot.timestamp):
                 first_drafts[did] = ballot.timestamp
-            if ballot.confirm_timestamp and (did not in confirmations or confirmations[did] < ballot.confirm_timestamp):
+            if ballot.confirmed and ballot.confirm_timestamp and (did not in confirmations or
+                    confirmations[did] < ballot.confirm_timestamp):
                 confirmations[did] = ballot.confirm_timestamp
 
         # Collate timestamps into a single list. Tuples are (time, none_change, draft_change, confirmed_change)
