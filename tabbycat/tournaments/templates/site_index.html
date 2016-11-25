@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block head-title %}<span class="emoji">👋</span>Welcome! <small>Which tournament are you after?</small>{% endblock %}
+{% block head-title %}<span class="emoji">👋</span>Welcome! <small>{% endblock %}
 {% block page-title %}Home{% endblock %}
 
 {% block nav %}<div class="col-md-12 accommodate-footer">{% endblock %}
@@ -8,59 +8,32 @@
 {% block content %}
 
 <ul class="list-group">
-
-  {% if user.is_authenticated %}
-
-    {% if tournaments.all.exists %}
-      {% for tournament in tournaments %}
+  {% if tournaments.all.exists %}
+    {% for tournament in tournaments %}
+      {% if user.is_authenticated %}
         <li class="list-group-item">
           <a href="{{ tournament.get_absolute_url }}">
             <span class="emoji">🔧</span>Admin area for <strong>{{ tournament.name }}</strong>
           </a>
         </li>
-        <li class="list-group-item">
-          <a href="{{ tournament.get_public_url }}">
-            <span class="emoji">
-              {% if tournament.emoji %}
-                {{tournament.emoji }}
-              {% else %}
-                🏆
-              {% endif %}
-            </span>Public area for <strong>{{ tournament.name }}</strong>
-          </a>
-        </li>
-      {% endfor %}
-      {% if user.is_superuser %}
-        <li class="list-group-item">
-          <span class="glyphicon glyphicon-edit"></span>&nbsp;
-          <a href="{% url 'admin:index' %}">Edit database area</a>
-        </li>
-      <li class="list-group-item">
-        <span class="emoji">➕</span><a href="{% url 'tournament-create' %}">Create new tournament</a>
-      </li>
       {% endif %}
-    {% else %}
-      <p>
-        It looks like there aren't any tournaments on this site. Would you like
-        to <a href="{% url 'tournament-create' %}">create one</a>?
-      </p>
-    {% endif %}
-
-  {% else %}
-    {% for tournament in tournaments %}
       <li class="list-group-item">
         <a href="{{ tournament.get_public_url }}">
           <span class="emoji">{% if tournament.emoji %}{{tournament.emoji }}{% else %}🏆{% endif %}</span>{{ tournament.name }}
         </a>
       </li>
-      {% empty %}
-        <p>
-          There are currently no tournaments set up on this site.
-        </p>
     {% endfor %}
+  {% else %}
+    {% if user.is_authenticated %}
+      <p>It looks like there aren't any tournaments on this site. Would you like to <a href="{% url 'tournament-create' %}">create one</a>?</p>
+    {% else %}
+      <p>There are currently no tournaments set up on this site.</p>
+    {% endif %}
   {% endif %}
+</ul>
 
-  {% if tournaments.0.preferences.league_options__enable_mass_draws %}
+{% if tournaments.0.preferences.league_options__enable_mass_draws %}
+  <ul class="list-group">
     <li class="list-group-item">
       <a href="{% url 'all_tournaments-all-venues' %}">
         <span class="emoji">🎪</span>All Draws by Venue
@@ -76,8 +49,31 @@
         <span class="emoji">👯</span>All Teams and Divisions
       </a>
     </li>
-  {% endif %}
+  </ul>
+{% endif %}
 
+<ul class="list-group">
+  {% if user.is_superuser %}
+    <li class="list-group-item">
+      <span class="glyphicon glyphicon-pencil"></span>&nbsp;
+      <a href="{% url 'tournament-create' %}">New Tournament</a>
+    </li>
+    <li class="list-group-item">
+      <span class="glyphicon glyphicon-edit"></span>&nbsp;
+      <a href="{% url 'admin:index' %}">Edit Database Area</a>
+    </li>
+  {% endif %}
+  {% if user.is_authenticated %}
+    <li class="list-group-item">
+      <span class="glyphicon glyphicon-lock"></span>&nbsp;
+      <a class="" href="{% url 'logout' %}">Log Out ({{ user }})</a>
+    </li>
+  {% else %}
+    <li class="list-group-item">
+      <span class="glyphicon glyphicon-lock"></span>&nbsp;
+      <a class="" href="{% url 'login' %}">Login as Admin</a>
+    </li>
+  {% endif %}
 </ul>
 
 {% endblock content %}

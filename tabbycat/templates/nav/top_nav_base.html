@@ -59,8 +59,22 @@
           {% include "nav/public_nav.html" %}
         {% endif %}
       </ul>
+      <ul id="" class="nav navbar-nav navbar-right">
+        <li class="">
+          {% if user.is_authenticated %}
+            <a class="" href="{% url 'logout' %}">
+              Log Out ({{ user }})
+            </a>
+          {% else %}
+            <a class="" href="{% url 'login' %}">
+              Login
+            </a>
+          {% endif %}
+        </li>
+      </ul>
 
     </div><!-- /.navbar-collapse -->
+
 
   </div><!-- /.container-fluid -->
 </nav><!-- /.navbar -->
