@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+1.1.4
+-----
+- Redesigned the footer area to better describe Tabbycat and to promote donations and related projects
+- Slight tweaks to the site homepage and main menus to better accomodate the login/log out links
+- A few minor bug fixes and improvements to error reporting
+
+
 1.1.3
 -----
 

@@ -2,11 +2,11 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block nav %}<div class="col-md-12">{% endblock %}
 {% block footer %}{% endblock %}
 
 {% block head-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
 {% block page-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
+
 {% block page-subnav-sections %}
   <a class="btn btn-success" id="save">Save Venues</a>
   <form id="autoallocateForm" method="POST" action="{% round_url venues-auto-allocate %}">

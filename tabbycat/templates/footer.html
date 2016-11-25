@@ -1,55 +1,64 @@
-{% load debate_tags i18n %}
+{% load debate_tags %}
+{% load i18n %}
 
-<nav class="navbar navbar-default navbar-fixed-bottom">
-  <div class="container-fluid">
+<div class="tabbycat-footer row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
 
-    <ul class="nav navbar-nav navbar-right small">
-      <li><a href="/">
-        <span class="emoji">🏠</span>{% trans "Home" %}
-      </a></li>
-      <li><a href="http://tabbycat.readthedocs.io/" target="_blank">
-        {# Translators: This is a link that goes to our documentation in English; translations should include "(in English)" after the word "Help". #}
-        <span class="emoji">❓</span>{% trans "Help" %}
-      </a></li>
-      {% if user.is_authenticated %}
-        <li><a class="" href="{% url 'logout' %}">
-          <span class="emoji">🔒</span>{% blocktrans %}Logout of {{ user }}{% endblocktrans %}
-        </a></li>
-      {% else %}
-        <li><a class="" href="{% url 'login' %}">
-          <span class="emoji">🔓</span>{% trans "Login" %}
-        </a></li>
-      {% endif %}
-    </ul>
+  <div class="navbar navbar-default container-fluid small text-muted">
 
-    <p class="navbar-text small">
-      {% if tournament %}
-        {% blocktrans trimmed %}
-          {{ tournament }} runs on
-          <a href="https://github.com/czlee/tabbycat/" target="_blank">
-          <span class="emoji">😸</span>Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }})</a>,
-          created by Qi-Shan,
-          <a href="https://twitter.com/czlee11" target="_blank">Chuan-Zheng</a>, and
-          <a href="http://philipbelesky.com" target="_blank">Philip</a>.
-        {% endblocktrans %}
-      {% else %}
-        {% blocktrans trimmed %}
-          Running on
-          <span class="emoji">😸</span>Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }})</a>,
-          created by Qi-Shan,
-          <a href="https://twitter.com/czlee11" target="_blank">Chuan-Zheng</a>, and
-          <a href="http://philipbelesky.com" target="_blank">Philip</a>.
-        {% endblocktrans %}
-      {% endif %}
-      {% blocktrans trimmed %}
-      Tabbycat is easy to set up for your tournament, you should <a href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way" target="_blank">try it out</a>!
-      {% endblocktrans %}
-      <br>
-      {% blocktrans trimmed %}
-      Want help with timing speeches? Check out <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper" target="_blank">Debatekeeper</a> (Android)
-      and <a href="http://timekept.com">Timekept</a> (iOS). Like nicely-designed ballots? Head to <a href="http://debatingballot.com/" target="_blank">debatingballot.com</a>.
-      {% endblocktrans %}
-    </p>
+    <div class="row">
+      <div class="col-md-6">
+        <h6>
+          {% if tournament %}
+            {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed %}This site runs on {% endblocktrans %}
+          {% endif %}
+          <span class="emoji">😸</span> Tabbycat
+          {% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}
+        </h6>
+        <p>
+          Tabbycat is an open-source project for tabbing debating tournaments using two-team formats. It was created by Qi-Shan Lim, Chuan-Zheng Lee</a>, and Philip Belesky.</a>
+          Personal or institutional <a href="http://PayPal.Me/tabbycatproject/0aud">donations to the project's developers</a> are much appreciated.
+        </p>
+      </div>
+      <div class="col-md-4">
+        <h6>{% blocktrans trimmed %}Still timing debates with the stopwatch app?{% endblocktrans %}</h6>
+        <p>
+          {% blocktrans trimmed %}
+            Using a real debating app makes speaking and adjudicating easier!
+            Check out <a href="https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%20Installs&mt=8">Timekept (for iPhones/iPads)</a>
+            or <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper">Debatekeeper (for Android)</a>.
+          {% endblocktrans %}
+        </p>
+      </div>
+      <div class="col-md-2">
+        <h6>{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
+        <p>
+          {% blocktrans trimmed %}
+            <a href="http://debatingballot.com" target="_blank">DebatingBallot.com</a> lets you design and print great ballots online.
+          {% endblocktrans %}
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="nav navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link " href="#"><span class="glyphicon glyphicon-console"></span> Github</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/"><span class="glyphicon glyphicon-info-sign"></span> Documentation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="#"><span class="glyphicon glyphicon-user"></span> Facebook</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way"><span class="glyphicon glyphicon-open"></span> Set Up A Copy</a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
   </div>
-</nav>
+</div>

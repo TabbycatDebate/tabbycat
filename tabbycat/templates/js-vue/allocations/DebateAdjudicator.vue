@@ -20,16 +20,16 @@
 
       <div class="adj-info">
         <span>
-          {{ short_name }}
+          {{ short_name }}<br>
+          <span class="small text-muted subtitle">
+            <template v-if="adjorteam.institution.code">
+              {{ adjorteam.institution.code }}
+            </template>
+            <template v-else>
+              {{ adjorteam.institution.name }}
+            </template>
+          </span>
         </span>
-        <span class="small text-muted subtitle">
-          <template v-if="adjorteam.institution.code">
-            {{ adjorteam.institution.code }}
-          </template>
-          <template v-else>
-            {{ adjorteam.institution.name }}
-          </template>
-         </span>
       </div>
 
     </div>

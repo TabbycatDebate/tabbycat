@@ -15,17 +15,17 @@
 
       <div class="navbar-form pull-right">
         <div v-if="!showingGender && !showingCategory && !showingRegion" class="btn-group btn-group-sm">
-          <button class="btn btn-default conflictable conflict-hover-2-ago">
+          <button disabled class="btn conflictable conflicts-toolbar conflict-hover-2-ago">
             Seen Before
           </button>
-          <button class="btn btn-default conflictable conflict-hover-institutional-conflict">
-            Institutional Conflicts
+          <button disabled class="btn conflictable conflicts-toolbar conflict-hover-institutional-conflict">
+            Institutional Conflict
           </button>
-          <button class="btn btn-default conflictable conflict-hover-personal-conflict">
-            Personal Conflicts
+          <button disabled class="btn conflictable conflicts-toolbar conflict-hover-personal-conflict">
+            Personal Conflict
           </button>
-          <button class="btn btn-default panel-incomplete">
-            No Chair/Odd Panel
+          <button disabled class="btn panel-incomplete">
+            Unviable Panel
           </button>
         </div>
         <div v-if="showingGender" class="btn-group btn-group-sm">

@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'fr'
 USE_I18N = True
 
-TABBYCAT_VERSION = '1.1.3'
+TABBYCAT_VERSION = '1.1.4'
 TABBYCAT_CODENAME = 'Egyptian Mau'
-READTHEDOCS_VERSION = 'v1.1.3'
+READTHEDOCS_VERSION = 'v1.1.4'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
@@ -184,11 +184,13 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
         },
         'email_on_critical': {
             'level': 'CRITICAL',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
         },
     },
     'loggers': {

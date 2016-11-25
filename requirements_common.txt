@@ -25,8 +25,9 @@ waitress>=1.0,<1.1 # For web serving
 
 dj-cmd>=1.0 # Provides the dj command alias
 django-debug-toolbar>=1.6,<1.7 # Debug Toolbar
-flake8>=3.0,<3.1 # For testing/linting (not strictly required)
+six>=1.10 # Six is a Python 2 and 3 compatibility library.
+
+flake8>=3.2,<3.3 # For testing/linting (not strictly required)
 flake8-import-order>=0.9 # Flake plugin for import order
 flake8-quotes>=0.8 # Flake plugin for quotes
 pep8-naming>=0.4 # Flake plugin for naming conventions
-six>=1.10 # Six is a Python 2 and 3 compatibility library.

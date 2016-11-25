@@ -30,8 +30,21 @@
         <li role="separator" class="divider"></li>
       {% endfor %}
       <li>
+        <a class="small" href="/">
+          <span class="glyphicon glyphicon-home"></span>&nbsp;
+          Site Home
+        </a>
+      </li>
+      <li>
         <a class="small" href="{% url 'tournament-create' %}">
+          <span class="glyphicon glyphicon-pencil"></span>&nbsp;
           New Tournament
+        </a>
+      </li>
+      <li>
+        <a class="small" href="{% url 'admin:index' %}">
+          <span class="glyphicon glyphicon-edit"></span>&nbsp;
+          Edit Database
         </a>
       </li>
     </ul>
@@ -140,5 +153,11 @@
   {% for r in tournament.break_rounds.all %}
     {% include 'nav/round_panel.html' %}
   {% endfor %}
+
+  <li class="standalone">
+    <a class="" href="{% url 'logout' %}">
+      <span class="glyphicon glyphicon-lock"></span> Log Out ({{ user }})
+    </a>
+  </li>
 
 </ul>
