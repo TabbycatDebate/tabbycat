@@ -2,70 +2,90 @@
 // Footer Layout Changes
 //------------------------------------------------------------------------------
 
-.navbar-text {
-  // Doubles up with container-fluid
-  margin-left: 0;
-  // Fix link text in the footer descriptions
-  a {
-    color: $navbar-default-link-color;
-    text-decoration: underline;
+.navbar-fixed-bottom {
+  padding-top: 10px;
+
+  a, a.nav-link {
+    color: $text-primary;
+    opacity: 1;
+    border-bottom: 1px solid #CCC;
+    padding: 0; // Override bootstrap defaults for spacing
 
     &:hover {
       color: $navbar-default-link-hover-color;
+      text-decoration: none;
     }
+  }
+  a.nav-link {
+    line-height: 16px;
+    margin: 5px 20px 20px 0;
   }
 }
 
-.nav-sidebar-offset {
-  .navbar-fixed-bottom {
-    border-radius: 4px;
-    border-width: 1px;
-    .navbar-nav > li > a {
-      // Tighten link spacing so the footer isn't x2 height
-      padding: 15px 10px 15px 0;
-    }
-  }
-}
+// .navbar-text {
+//   // Doubles up with container-fluid
+//   margin-left: 0;
+//   // Fix link text in the footer descriptions
+//   a {
+//     color: $navbar-default-link-color;
+//     text-decoration: underline;
 
-//------------------------------------------------------------------------------
-// Responsive Considerations
-//------------------------------------------------------------------------------
+//     &:hover {
+//       color: $navbar-default-link-hover-color;
+//     }
+//   }
+// }
 
-// For Big Screens
-@media (min-width: $screen-sm-min) {
-  .accommodate-footer {
-    min-height: 800px; // Push the footer down
-    padding-bottom: 130px; // Leave room for the footer
-  }
+// .nav-sidebar-offset {
+//   .navbar-fixed-bottom {
+//     border-radius: 4px;
+//     border-width: 1px;
+//     .navbar-nav > li > a {
+//       // Tighten link spacing so the footer isn't x2 height
+//       padding: 15px 10px 15px 0;
+//     }
+//   }
+// }
 
-  .nav-sidebar-offset {
-    .navbar-fixed-bottom {
-      // Don't want the footer stretching into the menu; present it alert style
-      margin: 0 15px 20px $sidebar-width + 15px;
-      position: absolute;
-    }
-  }
-}
+// //------------------------------------------------------------------------------
+// // Responsive Considerations
+// //------------------------------------------------------------------------------
 
-// For Phones
-@media (max-width: $screen-sm-min) {
-  .accommodate-footer {
-    padding-bottom: 0; // Increase footer padding when its double height
-  }
+// // For Big Screens
+// @media (min-width: $screen-sm-min) {
+//   .accommodate-footer {
+//     min-height: 800px; // Push the footer down
+//     padding-bottom: 130px; // Leave room for the footer
+//   }
 
-  .navbar-fixed-bottom {
-    margin: 0;
-    position: relative;
-    text-align: center;
-    width: 100%;
+//   .nav-sidebar-offset {
+//     .navbar-fixed-bottom {
+//       // Don't want the footer stretching into the menu; present it alert style
+//       margin: 0 15px 20px $sidebar-width + 15px;
+//       position: absolute;
+//     }
+//   }
+// }
 
-    .navbar-header {
-      min-height: 90px;
-    }
+// // For Phones
+// @media (max-width: $screen-sm-min) {
+//   .accommodate-footer {
+//     padding-bottom: 0; // Increase footer padding when its double height
+//   }
 
-    .navbar-nav.navbar-right {
-      margin: 0 0 10px;
-      width: 100%;
-    }
-  }
-}
+//   .navbar-fixed-bottom {
+//     margin: 0;
+//     position: relative;
+//     text-align: center;
+//     width: 100%;
+
+//     .navbar-header {
+//       min-height: 90px;
+//     }
+
+//     .navbar-nav.navbar-right {
+//       margin: 0 0 10px;
+//       width: 100%;
+//     }
+//   }
+// }
