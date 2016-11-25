@@ -303,7 +303,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             adj_data.append(cell)
         self.add_column("Name", adj_data)
 
-        if self.tournament.pref('show_institutions') and not hide_institution:
+        if self.tournament.pref('show_adjudicator_institutions') and not hide_institution:
             self.add_column({
                 'key': "Institution",
                 'icon': 'glyphicon-home',
@@ -422,7 +422,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if break_categories:
             self.add_column("Categories", [", ".join(bc.name for bc in team.break_categories) for team in teams])
 
-        if self.tournament.pref('show_institutions') and not hide_institution:
+        if self.tournament.pref('show_team_institutions') and not hide_institution:
             self.add_column({
                 'key': "Institution",
                 'icon': 'glyphicon-home',

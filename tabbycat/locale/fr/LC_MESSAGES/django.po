@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-08 11:10-0700\n"
+"POT-Creation-Date: 2016-11-19 00:34-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,6 +88,28 @@ msgstr ""
 "\"_blank\">Debatekeeper</a> (Android) et <a href=\"http://timekept.com"
 "\">Timekept</a> (iOS). Aimez-vous les bulletins bien dessinés ? Allez à <a "
 "href=\"http://debatingballot.com/\" target=\"_blank\">debatingballot.com</a>."
+
+#: templates/registration/login.html:4 templates/registration/login.html:5
+msgctxt "page title"
+msgid "Login"
+msgstr "Connexion"
+
+#: templates/registration/login.html:35
+msgid ""
+"Your account doesn't have access to this page. To proceed, please log in "
+"with an account that has access."
+msgstr ""
+"Votre compte ne vous permet pas d'accéder cette page. Pour continuer, "
+"veuillez vous connecter."
+
+#: templates/registration/login.html:37
+msgid "Please log in to see this page."
+msgstr "Veuillez vous connecter pour voir ce page."
+
+#: templates/registration/login.html:59
+msgctxt "button"
+msgid "Login"
+msgstr "Connexion"
 
 #. Translators: Put these in the right order,
 #. e.g. side_abbr = "A", metric_abbr = "TSS" -> "ATSS" for "Affirmative's Total Speaker Score"

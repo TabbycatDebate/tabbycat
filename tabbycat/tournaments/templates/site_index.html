@@ -87,9 +87,7 @@
     </li>
   {% else %}
     <li class="list-group-item">
-      <span class="emoji">🔓</span><a class="" href="{% url 'login' %}">
-        {% blocktrans trimmed %}Login as Admin{% endblocktrans %}
-      </a>
+      <span class="emoji">🔓</span><a class="" href="{% url 'login' %}">{% blocktrans trimmed %}Login as Admin{% endblocktrans %}</a>
     </li>
   {% endif %}
 </ul>

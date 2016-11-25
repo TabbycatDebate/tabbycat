@@ -33,13 +33,10 @@
 
       {% if next %}
         {% if user.is_authenticated %}
-        <div class="alert alert-warning">Your account doesn't have access to this page. To proceed,
-        please log in with an account that has access.</div>
-        <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
-        {% else %}
-        <div class="alert alert-warning">Please log in to see this page.</div>
-        <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>
-        {% endif %}
+          <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
+          {% else %}
+          <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>
+          {% endif %}
       {% endif %}
     </div>
   </div>

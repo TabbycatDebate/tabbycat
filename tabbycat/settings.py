@@ -20,7 +20,7 @@ DEBUG_ASSETS = DEBUG
 
 MEDIA_URL = '/media/'
 TIME_ZONE = 'Australia/Melbourne'
-LANGUAGE_CODE = 'fr'
+LANGUAGE_CODE = 'en'
 USE_I18N = True
 
 TABBYCAT_VERSION = '1.1.4'
