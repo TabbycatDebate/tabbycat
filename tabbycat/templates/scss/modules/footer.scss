@@ -21,7 +21,7 @@
   }
   a.nav-link {
     line-height: 16px;
-    margin: 5px 20px 20px 0;
+    margin: 5px 20px 15px 0;
   }
 }
 
@@ -41,7 +41,7 @@
   }
   .accommodate-footer {
     min-height: 100vh; // Push the footer down
-    padding-bottom: 160px; // Leave room for the footer
+    padding-bottom: 220px; // Leave room for the footer
   }
 }
 
@@ -50,5 +50,11 @@
   .tabbycat-footer {
     position: relative;
     margin-top: 20px;
+  }
+  .nav-item {
+    margin-left: 15px; // Override bootstrap defaults for spacing
+    a.nav-link {
+      padding-left: 0px;
+    }
   }
 }

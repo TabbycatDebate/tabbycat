@@ -2,10 +2,12 @@
 {% load debate_tags %}
 {% load static %}
 
+{% block body-class %}override-sidebar-offset{% endblock %}
+
 {% block nav %}
   {# For admins the draw opens without menu (for displaying publicly)#}
   {% if 'admin/' in request.path and user.is_superuser %}
-    <div class="col-md-12">
+
   {% else %}
     {{ block.super }}
   {% endif %}

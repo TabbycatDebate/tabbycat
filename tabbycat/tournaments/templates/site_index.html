@@ -25,9 +25,13 @@
     {% endfor %}
   {% else %}
     {% if user.is_authenticated %}
-      <p>It looks like there aren't any tournaments on this site. Would you like to <a href="{% url 'tournament-create' %}">create one</a>?</p>
+      <li class="list-group-item">
+        It looks like there aren't any tournaments on this site. Would you like to <a href="{% url 'tournament-create' %}">create one</a>?
+      </li>
     {% else %}
-      <p>There are currently no tournaments set up on this site.</p>
+      <li class="list-group-item">
+        There are currently no tournaments set up on this site.
+      </li>
     {% endif %}
   {% endif %}
 </ul>
@@ -70,8 +74,7 @@
     </li>
   {% else %}
     <li class="list-group-item">
-      <span class="glyphicon glyphicon-lock"></span>&nbsp;
-      <a class="" href="{% url 'login' %}">Login as Admin</a>
+      <span class="emoji">🔓</span><a class="" href="{% url 'login' %}">Login as Admin</a>
     </li>
   {% endif %}
 </ul>
