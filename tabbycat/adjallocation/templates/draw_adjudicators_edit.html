@@ -2,14 +2,9 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block nav %}{% endblock %}
-{% block header %}{% endblock %}
-{% block footer %}{% endblock %}
-{% block page-subnav-sections %}{% endblock page-subnav-sections %}
-{% block body-class %}override-sidebar-offset{% endblock %}
+{% block body %}
 
-{% block content %}
-
+<div class="container-fluid">
 <div class="row">
 
   <div class="edit-adjs-subnav">
@@ -62,7 +57,9 @@
   </div>
 
 </div>
+</div>
 
+<div class="container-fluid">
 <div class="row">
 
   <div id="main" class="">
@@ -198,7 +195,7 @@
 </div>
 </div>
 
-{% endblock content %}
+{% endblock body %}
 
 {% block extra-css %}
   <link rel="stylesheet" type="text/css" href="/static/css/allocation-old.css" />
