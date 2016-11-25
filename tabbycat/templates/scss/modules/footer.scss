@@ -2,14 +2,17 @@
 // Footer Layout Changes
 //------------------------------------------------------------------------------
 
-.navbar-fixed-bottom {
-  padding-top: 10px;
+.tabbycat-footer {
+
+  .navbar {
+    padding-top: 10px;
+    margin-bottom: 0;
+  }
 
   a, a.nav-link {
     color: $text-primary;
     opacity: 1;
     border-bottom: 1px solid #CCC;
-    padding: 0; // Override bootstrap defaults for spacing
 
     &:hover {
       color: $navbar-default-link-hover-color;
@@ -22,70 +25,30 @@
   }
 }
 
-// .navbar-text {
-//   // Doubles up with container-fluid
-//   margin-left: 0;
-//   // Fix link text in the footer descriptions
-//   a {
-//     color: $navbar-default-link-color;
-//     text-decoration: underline;
+//------------------------------------------------------------------------------
+// Responsive Considerations
+//------------------------------------------------------------------------------
 
-//     &:hover {
-//       color: $navbar-default-link-hover-color;
-//     }
-//   }
-// }
+// For Desktops
+@media (min-width: $screen-sm-min) {
+  .tabbycat-footer {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    a.nav-link {
+      padding: 0; // Override bootstrap defaults for spacing
+    }
+  }
+  .accommodate-footer {
+    min-height: 100vh; // Push the footer down
+    padding-bottom: 160px; // Leave room for the footer
+  }
+}
 
-// .nav-sidebar-offset {
-//   .navbar-fixed-bottom {
-//     border-radius: 4px;
-//     border-width: 1px;
-//     .navbar-nav > li > a {
-//       // Tighten link spacing so the footer isn't x2 height
-//       padding: 15px 10px 15px 0;
-//     }
-//   }
-// }
-
-// //------------------------------------------------------------------------------
-// // Responsive Considerations
-// //------------------------------------------------------------------------------
-
-// // For Big Screens
-// @media (min-width: $screen-sm-min) {
-//   .accommodate-footer {
-//     min-height: 800px; // Push the footer down
-//     padding-bottom: 130px; // Leave room for the footer
-//   }
-
-//   .nav-sidebar-offset {
-//     .navbar-fixed-bottom {
-//       // Don't want the footer stretching into the menu; present it alert style
-//       margin: 0 15px 20px $sidebar-width + 15px;
-//       position: absolute;
-//     }
-//   }
-// }
-
-// // For Phones
-// @media (max-width: $screen-sm-min) {
-//   .accommodate-footer {
-//     padding-bottom: 0; // Increase footer padding when its double height
-//   }
-
-//   .navbar-fixed-bottom {
-//     margin: 0;
-//     position: relative;
-//     text-align: center;
-//     width: 100%;
-
-//     .navbar-header {
-//       min-height: 90px;
-//     }
-
-//     .navbar-nav.navbar-right {
-//       margin: 0 0 10px;
-//       width: 100%;
-//     }
-//   }
-// }
+// For Phones
+@media (max-width: $screen-sm-min) {
+  .tabbycat-footer {
+    position: relative;
+    margin-top: 20px;
+  }
+}

@@ -18,85 +18,79 @@
 
 </head>
 
-<body>
+<body class="{% block body-class %}{% endblock %}">
 
-  {% block body %}
+<div class="col-md-12 accommodate-footer ">
 
-    {% block nav %}
+  {% block nav %}
+    <div class="row ">
       {% if 'admin/' in request.path and user.is_superuser %}
-      <div class="nav-sidebar">
-        <div class="overflow-scroll-wrapper">
-          {% include "nav/admin_nav.html" %}
-        </div>
-      </div><!-- /.main-col -->
-    <div class="col-md-12 accommodate-footer nav-sidebar-offset">
+        <div class="nav-sidebar">
+          <div class="overflow-scroll-wrapper">
+            {% include "nav/admin_nav.html" %}
+          </div>
+        </div><!-- /.main-col -->
       {% else %}
         {% include "nav/top_nav_base.html" %}
-    <div class="col-md-12 accommodate-footer">
       {% endif %}
-    {% endblock %}
+    </div>
+  {% endblock nav %}
 
-    {% block header %}
-      <div class="row head-title {% if 'admin/' in request.path and user.is_superuser %}white-bg vertical-spacing{% endif %}">
-        <div class="col-md-12">
-          <h3>
-            {% if page_title %}
-              {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
-            {% else %}
-              {% block head-title %}{% endblock %}
-            {% endif %}
-            <small class="pull-right">
-              {% if page_subtitle %}
-                {{ page_subtitle }}
-              {% else %}
-                {% block sub-title %}{% endblock %}
-              {% endif %}
-            </small>
-          </h3>
+  {% block header %}
+    <div class="row head-title {% if 'admin/' in request.path and user.is_superuser %}white-bg vertical-spacing nav-sidebar-offset{% endif %}">
+      <div class="col-md-12">
+        <h3>
+          {% if page_title %}
+            {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
+          {% else %}
+            {% block head-title %}{% endblock %}
+          {% endif %}
+          {% if page_subtitle %}
+            <small class="pull-right">{{ page_subtitle }}</small>
+          {% else %}
+            <small class="pull-right">{% block sub-title %}{% endblock %}</small>
+          {% endif %}
+        </h3>
+      </div>
+    </div>
+  {% endblock header %}
+
+  {% block subheader %}
+    <div class="row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
+      <div class="col-md-12 page-sub-nav">
+        <ul class="nav nav-pills navbar-left">
+          {% block page-subnav-sections %}{% endblock %}
+        </ul>
+        <div class="nav btn-group navbar-right">
+          {% block page-subnav-actions %}{% endblock %}
         </div>
       </div>
-    {% endblock %}
+    </div>
 
-    {% block subheader %}
-      <div class="row ">
-        <div class="col-md-12 page-sub-nav">
-          <ul class="nav nav-pills navbar-left">
-            {% block page-subnav-sections %}{% endblock %}
-          </ul>
-          <div class="nav btn-group navbar-right">
-            {% block page-subnav-actions %}{% endblock %}
-          </div>
+    <div class="row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
+      <div class="col-md-12">
+        <div class="form-inline messages" id="messages-container">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% block page-alerts %}{% endblock %}
         </div>
       </div>
+    </div>
+  {% endblock subheader %}
 
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-inline messages" id="messages-container">
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
-                  <button type="button" class="close" data-dismiss="alert">&times;</button>
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-            {% block page-alerts %}{% endblock %}
-          </div>
-        </div>
-      </div>
-    {% endblock %}
-
+  <div class="{% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
     {% block content %}{% endblock content %}
+  </div>
 
-    {% if 'admin/' not in request.path %}
-      </div><!-- /.main-col -->
-    {% endif %}
+  {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
-    {% block footer %}{% include "footer.html" %}{% endblock footer %}
-
-    {% if 'admin/' in request.path %}
-      </div><!-- /.main-col -->
-    {% endif %}
+</div><!-- /.main-col col-md-12 accommodate-footer -->
 
     {% block modals %}
       <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true">
@@ -108,8 +102,6 @@
         </div>
       </div>
     {% endblock %}
-
-  {% endblock body %}
 
   {% block js %}
     {% if user.is_authenticated %}
