@@ -15,12 +15,12 @@
 
       {% csrf_token %}
 
-    {% if form.errors %}
-      <div class="alert alert-danger">
-        {% trans "Whoops! There was an error with one or more fields." %}
-        {{ form.non_field_errors }}
-      </div>
-    {% endif %}
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          {% trans "Whoops! There was an error with one or more fields." %}
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
 
       {% for field in form %}
         <div class="form-group">
