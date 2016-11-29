@@ -115,7 +115,7 @@ class Team(models.Model):
 
     @property
     def venue_preferences(self):
-        return self.teamvenuepreference_set.all().order_by('-priority')
+        return self.teamvenueconstraint_set.all().order_by('-priority')
 
     TYPE_NONE = 'N'
     TYPE_SWING = 'S'
