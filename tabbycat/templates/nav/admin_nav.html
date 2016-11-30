@@ -59,14 +59,20 @@
   <li class="standalone">
      <a href="{% tournament_url tournament-admin-home %}"
         class="{% if overview_nav %}active{% endif %}">
-        <span class="glyphicon glyphicon-th"></span> Overview
+        <span class="circle-icon icon-container">
+          <span class="glyphicon glyphicon-th"></span>
+        </span>
+         Overview
       </a>
   </li>
   {% if pref.side_allocations_enabled == 'preallocated' %}
     <li class="standalone">
       <a href="{% tournament_url draw-side-allocations %}"
          class="{% if sides_nav %}active{% endif %}">
-        <span class="glyphicon glyphicon-resize-horizontal"></span> Sides
+        <span class="circle-icon icon-container">
+          <span class="glyphicon glyphicon-resize-horizontal"></span>
+        </span>
+         Sides
       </a>
     </li>
   {% endif %}
@@ -74,20 +80,29 @@
     <li class="standalone">
       <a href="{% tournament_url division_allocations %}"
          class="{% if divisions_nav %}active {% endif %}">
-        <span class="glyphicon glyphicon-th-list"></span> Divisions
+        <span class="circle-icon icon-container">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </span>
+         Divisions
       </a>
     </li>
   {% endif %}
   <li class="standalone">
     <a href="{% tournament_url adjfeedback-overview %}"
        class="{% if feedback_nav %} active {% endif %}">
-      <span class="glyphicon glyphicon-comment"></span> Feedback
+      <span class="circle-icon icon-container">
+        <span class="glyphicon glyphicon-comment"></span>
+      </span>
+       Feedback
     </a>
   </li>
   <li class="standalone">
     <a href="{% round_url standings-index current_round %}"
        class="{% if standings_nav %} active {% endif %}">
-      <span class="glyphicon glyphicon-stats"></span> Standings
+      <span class="circle-icon icon-container">
+        <span class="glyphicon glyphicon-stats"></span>
+      </span>
+       Standings
     </a>
   </li>
   <li class="panel">
@@ -115,18 +130,27 @@
         <li>
           <a class="{% if options_nav %}active{% endif %}"
              href="{% tournament_url options-tournament-index %}">
-            <span class="glyphicon glyphicon-cog"></span>Configuration
+            <span class="circle-icon icon-container">
+              <span class="glyphicon glyphicon-cog"></span>
+            </span>
+            Configuration
           </a>
         </li>
         <li>
           <a class="{% if import_nav %}active{% endif %}"
              href="{% tournament_url data_index %}">
-            <span class="glyphicon glyphicon-download"></span>Import Data
+            <span class="circle-icon icon-container">
+              <span class="glyphicon glyphicon-download"></span>
+            </span>
+            Import Data
           </a>
         </li>
         <li>
           <a href="{% url 'admin:index' %}" target="_blank">
-            <span class="glyphicon glyphicon-edit"></span>Edit Database
+            <span class="circle-icon icon-container">
+              <span class="glyphicon glyphicon-edit"></span>
+            </span>
+            Edit Database
           </a>
         </li>
       </ul>
@@ -156,7 +180,10 @@
 
   <li class="standalone">
     <a class="" href="{% url 'logout' %}">
-      <span class="glyphicon glyphicon-lock"></span> Log Out ({{ user }})
+      <span class="circle-icon icon-container">
+        <span class="glyphicon glyphicon-lock"></span>
+      </span>
+      Log Out ({{ user }})
     </a>
   </li>
 
