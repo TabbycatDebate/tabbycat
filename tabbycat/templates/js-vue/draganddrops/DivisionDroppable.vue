@@ -3,8 +3,8 @@
   <div class="panel panel-default" v-bind:class="{ 'panel-danger': hasEvenNumbers }">
 
     <div class="panel-heading division-heading">
-      <h5 class="panel-title">D{{ division.name }} ({{ teams.length }})</h5>
-      <select name="select" class="form-control" v-model="division.venue_group">
+      <h5 class="panel-title">{{ division.name }} ({{ teams.length }})</h5>
+      <select name="select" class="form-control" v-model="division.venue_group"  v-if="vgs.length > 0">
         <option value=""></option>
         <option v-for="vg in vgs" value="{{ vg.id }}" v-bind:value="vg.id">
           {{ vg.short_name }}
