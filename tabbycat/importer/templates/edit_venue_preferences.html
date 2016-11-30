@@ -7,65 +7,66 @@
 
 {% block content %}
 
-<div class="alert alert-info alert-dismissable" id="">
-  <p>
-    For each institution set a number that represents the priority for each venue (higher = more preferred). Leave as blank if you don't wish to add a priority.
+<div class="alert alert-info" id="">
+  <p>For each institution set a number that represents the priority for each venue group (higher is more preferred).
+    Leave as blank if you don't wish to add a priority.</p>
+  <p>Submitting this form will delete all previous preferences for each instutution, and then add these preferences
+  to all institutions. Note that these preferences apply across all tournaments!</p>
 </div>
 
-<div class="alert alert-danger alert-dismissable" id="">
-  <p>
-    Submitting this form will delete all previous preferences for each instutution, and then add these preferences to all institutions. Note that these preferences apply across all tournaments!
-  </p>
-</div>
+{% if venue_groups.count == 0 %}
 
-<form action="{% tournament_url confirm_venue_preferences %}" method="POST">
-  {% csrf_token %}
-  {% for institution in institutions %}
+  <div class="alert alert-warning" role="alert">
+     You have no venue groups setup; thus there are no preferences to allocate
+  </div>
 
-    <div class="row">
-      <div class="col-md-12">
+{% else %}
 
-        <div class="panel">
+  <form action="{% tournament_url confirm_venue_preferences %}" method="POST">
 
-          <div class="panel-heading">
-            <h4 class="panel-title">{{ institution.name }}</h4>
-          </div>
+    {% for institution in institutions %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel">
 
-          <ul class="list-group">
-            <input class="hidden" type="number" name="institutionIDs" value={{ institution.id }} />
+            <div class="panel-heading">
+              <h4 class="panel-title">{{ institution.name }}</h4>
+            </div>
 
-            {% for venue_group in venue_groups %}
-              <li class="list-group-item">
-                <div class="row">
+            <ul class="list-group">
+              <input class="hidden" type="number" name="institutionIDs" value={{ institution.id }} />
 
-                  <label class="col-sm-6 control-label">Priority for {{ venue_group.name }}</label>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="number" name="{{ institution.id }}_{{ venue_group.id }}" value="" />
+              {% for venue_group in venue_groups %}
+                <li class="list-group-item">
+                  <div class="row">
+
+                    <label class="col-sm-6 control-label">Priority for {{ venue_group.name }}</label>
+                    <div class="col-sm-2">
+                      <input class="form-control" type="number" name="{{ institution.id }}_{{ venue_group.id }}" value="" />
+                    </div>
+
                   </div>
+                </li>
+              {% endfor %}
 
-                </div>
-              </li>
-            {% endfor %}
+            </ul>
 
-          </ul>
-
+          </div>
         </div>
+      </div>
+      <div class="row"></div>
+    {% endfor %}
+
+    <div class="form-group row">
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-success btn-block">
+          Save All Venue Preferences
+        </button>
       </div>
     </div>
 
-    <div class="row">
-    </div>
+  </form>
 
-  {% endfor %}
-
-  <div class="form-group row">
-    <div class="col-md-12">
-      <button type="submit" class="btn btn-success btn-block">
-        Save All Venue Preferences
-      </button>
-    </div>
-  </div>
-
-</form>
+{% endif %}
 
 {% endblock content %}

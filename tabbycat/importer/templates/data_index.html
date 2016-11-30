@@ -6,8 +6,7 @@
 
 {% block content %}
 
-
-<div class="alert alert-info alert-dismissable" id="">
+<div class="alert alert-info">
   <p>There are <a href="https://tabbycat.readthedocs.io/en/latest/use/importing-data/" target="_blank">a few ways of
   getting data into Tabbycat</a> with different levels of convenience depending on the size of the tournament and your
    technical background. The below tools are the easiest to use and work well for small & medium sized tournament.</p>
@@ -17,29 +16,34 @@
   <div class="col-md-12">
     <ul class="list-group">
       <li class="list-group-item">
+        <span class="emoji">🏫</span>
         <a href="{% tournament_url add_institutions %}">
-          <span class="emoji">🏫</span> Add Institutions
+          Add Institutions
         </a>
       </li>
       <li class="list-group-item">
+        <span class="emoji">👯</span>
         <a href="{% tournament_url add_teams %}">
-          <span class="emoji">👯</span> Add Teams
+          Add Teams
         </a>
       </li>
       <li class="list-group-item">
+        <span class="emoji">👂</span>
         <a href="{% tournament_url add_adjudicators %}">
-          <span class="emoji">👂</span> Add Adjudicators
+          Add Adjudicators
         </a>
       </li>
       <li class="list-group-item">
+        <span class="emoji">🎪</span>
         <a href="{% tournament_url add_venues %}">
-          <span class="emoji">🎪</span> Add Venues
+          Add Venues
         </a>
       </li>
       {% if pref.enable_venue_groups %}
         <li class="list-group-item">
+          <span class="emoji">🏩</span>
           <a href="{% tournament_url add_venue_preferences %}">
-            <span class="emoji">🏩</span> Add Venue Preferences
+            Add Venue Preferences
           </a>
         </li>
       {% endif %}

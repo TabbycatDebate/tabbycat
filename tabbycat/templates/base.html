@@ -73,7 +73,7 @@
             <div class="form-inline messages" id="messages-container">
               {% if messages %}
                 {% for message in messages %}
-                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated alert-dismissable">
+                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     {{ message }}
                   </div>
