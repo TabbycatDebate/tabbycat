@@ -13,8 +13,7 @@
       {% if user.is_authenticated %}
         <li class="list-group-item">
           <a href="{{ tournament.get_absolute_url }}">
-            <span class="emoji">🔧</span>
-            {% blocktrans trimmed %}Admin area for {% endblocktrans %}
+            <span class="emoji">🔧</span>{% blocktrans trimmed %}Admin area for {% endblocktrans %}
             <strong>{{ tournament.name }}</strong>
           </a>
         </li>
