@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
+  {% if venue_groups.length > 0 %}
   <div class="btn btn-inactive">Preference:</div>
   <div class="btn-group">
     <div class="btn btn-success" disabled="disabled">1/2</div>
@@ -19,6 +20,7 @@
     <div class="btn btn-warning" disabled="disabled">5+</div>
     <div class="btn btn-danger" disabled="disabled">NA</div>
   </div>
+  {% endif %}
 {% endblock %}
 
 {% block content %}

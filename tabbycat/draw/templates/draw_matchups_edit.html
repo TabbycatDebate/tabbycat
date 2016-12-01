@@ -6,8 +6,12 @@
 {% block page-title %}Edit Matchups{% endblock %}
 
 {% block page-subnav-sections %}
+  <a class="btn btn-danger" href="{% round_url draw %}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Draw Overview
+  </a>
+{% endblock %}
+{% block page-subnav-actions %}
   <a class="btn btn-success" id="save">Save Matchups</a>
-  <a class="btn btn-danger" href="{% round_url draw %}">Return to Draw</a>
 {% endblock %}
 
 {% block extra-css %}
