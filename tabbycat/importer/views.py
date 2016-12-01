@@ -34,8 +34,9 @@ def edit_institutions(request, t):
             short_name = line.split(',')[1].strip()
             institution = Institution(name=full_name, code=short_name)
             institutions.append(institution)
-        except:
-            pass  # TODO
+        except Exception as e: # TODO proper handling
+            print("Problem with importing institutions: " + e)
+            pass
 
     return render(request,
                   'edit_institutions.html',
@@ -55,7 +56,8 @@ def confirm_institutions(request, t):
             short_name = institution_codes[i]
             institution = Institution(name=full_name, code=short_name)
             institution.save()
-        except:
+        except Exception as e: # TODO proper handling
+            print("Problem with confirming institutions: " + e)
             pass
 
     messages.success(request, "%s Institutions have been added" % len(institution_names))
@@ -79,19 +81,23 @@ def edit_venues(request, t):
     venues = []
     venue_lines = request.POST['venues_raw'].split('\n')
     for line in venue_lines:
+        name = line.split(',')[0].strip()
+
         try:
-            name = line.split(',')[0].strip()
             priority = line.split(',')[1].strip()
-            if len(line.split(',')) > 2:
-                venues.append({
-                    'name': name,
-                    'priority': priority,
-                    'group': line.split(',')[2].strip()
-                })
-            else:
-                venues.append({'name': name, 'priority': priority, })
-        except:
-            pass  # TODO
+        except IndexError:
+            priority = 50
+        except Exception as e:
+            print("Problem with importing venue priority: " + e)
+
+        try:
+            group = line.split(',')[2].strip()
+        except IndexError:
+            group = None
+        except Exception as e:
+            print("Problem with importing venue group: " + e)
+
+        venues.append({'name': name, 'priority': priority, 'group': group})
 
     return render(request, 'edit_venues.html', dict(venues=venues))
 
@@ -100,7 +106,6 @@ def edit_venues(request, t):
 @expect_post
 @tournament_view
 def confirm_venues(request, t):
-    print(request.POST)
     venue_names = request.POST.getlist('venue_names')
     venue_priorities = request.POST.getlist('venue_priorities')
     venue_groups = request.POST.getlist('venue_groups')
