@@ -35,7 +35,7 @@ def edit_institutions(request, t):
             institution = Institution(name=full_name, code=short_name)
             institutions.append(institution)
         except Exception as e: # TODO proper handling
-            print("Problem with importing institutions: " + e)
+            print("Problem with importing institutions: " + str(e))
             pass
 
     return render(request,
@@ -57,10 +57,10 @@ def confirm_institutions(request, t):
             institution = Institution(name=full_name, code=short_name)
             institution.save()
         except Exception as e: # TODO proper handling
-            print("Problem with confirming institutions: " + e)
+            print("Problem with confirming institutions: " + str(e))
             pass
 
-    messages.success(request, "%s Institutions have been added" % len(institution_names))
+    messages.success(request, "%s institutions have been added" % len(institution_names))
     return render(request, 'data_index.html')
 
 
@@ -88,14 +88,14 @@ def edit_venues(request, t):
         except IndexError:
             priority = 50
         except Exception as e:
-            print("Problem with importing venue priority: " + e)
+            print("Problem with importing venue priority: " + str(e))
 
         try:
             group = line.split(',')[2].strip()
         except IndexError:
             group = None
         except Exception as e:
-            print("Problem with importing venue group: " + e)
+            print("Problem with importing venue group: " + str(e))
 
         venues.append({'name': name, 'priority': priority, 'group': group})
 
