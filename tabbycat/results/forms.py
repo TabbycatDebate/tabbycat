@@ -78,15 +78,14 @@ class BaseScoreField(forms.FloatField):
         self.check_value(value)
 
     def check_value(self, value):
-        if value:
-            if value % self.step_value != 0:
-                if self.step_value == 1:
-                    msg = 'Please enter a whole number.'
-                else:
-                    msg = 'Please enter a multiple of %s.' % self.step_value
-                raise forms.ValidationError(
-                    _(msg), code='decimal'
-                )
+        if value and self.step_value and value % self.step_value != 0:
+            if self.step_value == 1:
+                msg = 'Please enter a whole number.'
+            else:
+                msg = 'Please enter a multiple of %s.' % self.step_value
+            raise forms.ValidationError(
+                _(msg), code='decimal'
+            )
 
 
 class MotionModelChoiceField(forms.ModelChoiceField):

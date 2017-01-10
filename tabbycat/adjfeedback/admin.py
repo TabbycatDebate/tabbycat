@@ -54,7 +54,9 @@ class RoundListFilter(admin.SimpleListFilter):
 
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display  = ('adjudicator', 'confirmed', 'score', 'version', 'get_source')
-    search_fields = ('adjudicator', 'score', 'source_adjudicator', 'source_team')
+    search_fields = ('adjudicator__name', 'adjudicator__institution__code',
+            'score', 'source_adjudicator__adjudicator__name',
+            'source_team__team__short_name', 'source_team__team__long_name')
     raw_id_fields = ('source_team',)
     list_filter   = (RoundListFilter, 'adjudicator')
     actions       = ('mark_as_confirmed', 'mark_as_unconfirmed')
