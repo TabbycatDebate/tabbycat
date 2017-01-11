@@ -8,15 +8,13 @@ Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.her
 
 ## Features
 
-- Enter data from multiple computers simultaneously and (optionally) display results and draws online
-- Easily deployable to [Heroku](https://www.heroku.com/) for a fast and free setup
-- Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts
+- Enter data from multiple computers simultaneously and (optionally) display results, draws, and other information online
+- Deployable to [Heroku](https://www.heroku.com/) for an easy, fast, and free setup
+- Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts/clashes
 - A drag and drop interface for adjudicator allocation that displays conflicts alongside gender and regional balance
 - A fully responsive interface that adapts to suit large screens, laptops, tablets, and phones
 - Support for Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/team-standings-rules.html)
 - Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html) with (optional) online submission
-
-If your tournament has requirements that we don't currently support, please [get in touch with us](#authors-and-contacts). In many cases, we might have already put the idea on our [to-do list](https://github.com/czlee/tabbycat/issues). But we have many more ideas than we are able to implement. We prioritise our work by the features that will be used at upcoming tournaments, so if you need some changes, even if they're already on our list, please do contact us early rather than waiting for us to implement your requirement.
 
 ## Installation and User Guide
 
@@ -30,16 +28,13 @@ If you'd like to run a tournament with Tabbycat but are not able to set it up, g
 
 We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. We provide no warranty and disclaim all legal liability.
 
-## Feedback, Support, and Development
+## Support and Development
 
-There are a number of ways to submit feedback, request support, or help develop Tabbycat:
+There are a number of ways to submit feedback, request support, or help develop Tabbycat These [are outlined on our documentation](http://tabbycat.readthedocs.io/en/latest/about/support.html).
 
-- Specific feature requests and bug reports are best communicated by creating an [issue in this repository](https://github.com/czlee/tabbycat/issues) (but will be accepted elsewhere)
-- [Our Facebook group](https://www.facebook.com/groups/tabbycat.debate/) is a good place to ask for help or for more general discussions of features and ideas.
-- Pull requests to this repository are highly encouraged!
-- Feel free to [shoot us an email](#authors-and-contacts) if you are not able to access Facebook or Github.
+Contributions are welcome, and are greatly appreciated! Details about how to contribute [are also outlined on our documentation](http://tabbycat.readthedocs.io/en/latest/about/contributing.html).
 
-## Authors and Contacts
+## Authors
 
 Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current active developers are:
 
