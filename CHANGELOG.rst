@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+1.1.5
+-----
+- A number of minor bug fixes and improvements to documentation
+
 1.1.4
 -----
 - Redesigned the footer area to better describe Tabbycat and to promote donations and related projects
