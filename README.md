@@ -4,7 +4,9 @@
 
 Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Australs in Auckland 2010, [Wellington 2012](https://www.facebook.com/Australs2012), [Dunedin 2014](http://australs2014.herokuapp.com), [Daejeon 2015](http://australs2015.herokuapp.com) and [Perth 2016](http://australs2016.herokuapp.com), as well as [many other tournaments of all sizes](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html).
 
-Our **demo site** is at [tabbycatdebate.herokuapp.com](http://tabbycatdebate.herokuapp.com/). It's normally up, but its form will vary from time to time as we set up new feature demos for people. To see a post-tournament website, have a look at the [WAustrals 2016 tab website](http://australs2016.herokuapp.com).
+**Want to try it out?** The best way is trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
+
+To see an example of a post-tournament website, have a look at the [WAustrals 2016 tab website](http://australs2016.herokuapp.com).
 
 ## Features
 
@@ -24,15 +26,15 @@ Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/).
 
 If you'd like to run a tournament with Tabbycat but are not able to set it up, get in touch with [Philip](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=) and he can setup a private online copy of the software for your use.
 
-## License
+## Licence
 
 We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. We provide no warranty and disclaim all legal liability.
 
 ## Support and Development
 
-There are a number of ways to submit feedback, request support, or help develop Tabbycat These [are outlined on our documentation](http://tabbycat.readthedocs.io/en/latest/about/support.html).
+If you have any feedback or would like to request support, we'd love to hear from you! There are a number of ways to get in touch, all [outlined in our documentation](http://tabbycat.readthedocs.io/en/latest/about/support.html).
 
-Contributions are welcome, and are greatly appreciated! Details about how to contribute [are also outlined on our documentation](http://tabbycat.readthedocs.io/en/latest/about/contributing.html).
+Contributions are welcome, and are greatly appreciated! Details about how to contribute [are also outlined in our documentation](http://tabbycat.readthedocs.io/en/latest/about/contributing.html).
 
 ## Authors
 
