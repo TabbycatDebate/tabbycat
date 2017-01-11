@@ -13,7 +13,7 @@ Click this button:
 .. image:: https://www.herokucdn.com/deploy/button.svg
   :target: https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/master
 
-If you don't already have a Heroku account, it'll prompt you to create one. Once you're logged in to Heroku, choose a name for your installation, then scroll down and click **Deploy for Free**. Once it's finished, click **View** and follow the prompts.
+If you don't already have a Heroku account, it'll prompt you to create one. Once you're logged in to Heroku, choose a name for your installation, then scroll down and click **Deploy**. Once it's finished, click **View** and follow the prompts.
 
 This is the easiest way to deploy an instance of Tabbycat online. It requires no technical background. You can import data using the data importer in the user interface.
 
