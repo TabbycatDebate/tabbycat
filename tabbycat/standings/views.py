@@ -95,7 +95,6 @@ class BaseSpeakerStandingsView(BaseStandingsView):
     rankings = ('rank',)
 
     def get_standings(self):
-        tournament = self.get_tournament()
         round = self.get_round()
 
         speakers = self.get_speakers()
