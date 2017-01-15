@@ -2,16 +2,19 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">🏩</span>Edit Venue Preferences{% endblock %}
-{% block page-title %}🏩Edit Venue Preferences{% endblock %}
+{% block head-title %}<span class="emoji">🏩</span>Edit Venue Constraints{% endblock %}
+{% block page-title %}🏩Edit Venue Constraints{% endblock %}
 
 {% block content %}
 
 <div class="alert alert-info" id="">
-  <p>For each institution set a number that represents the priority for each venue group (higher is more preferred).
-    Leave as blank if you don't wish to add a priority.</p>
-  <p>Submitting this form will delete all previous preferences for each instutution, and then add these preferences
-  to all institutions. Note that these preferences apply across all tournaments!</p>
+  <p>For each institution set a number that represents the priority for each
+  venue group (higher is more preferred). Leave as blank if you don't wish to
+  add a priority.</p>
+  <p>Submitting this form will <strong>delete all previous constraints for all
+  instututions</strong>, even if they are not specified on this page, and then
+  add these constraints. Note that these constraints apply across all
+  tournaments!</p>
 </div>
 
 {% if venue_groups.count == 0 %}
@@ -30,7 +33,9 @@
           <div class="panel">
 
             <div class="panel-heading">
-              <h4 class="panel-title">{{ institution.name }}</h4>
+              <h4 class="panel-title">
+                {{ institution.name }} ({{ institution.code }})
+              </h4>
             </div>
 
             <ul class="list-group">
@@ -60,7 +65,7 @@
     <div class="form-group row">
       <div class="col-md-12">
         <button type="submit" class="btn btn-success btn-block">
-          Save All Venue Preferences
+          Save Venue Constraints
         </button>
       </div>
     </div>
