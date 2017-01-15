@@ -6,21 +6,21 @@
 {% block page-title %}Allocate Divisions{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-success submit-disable" href="{% tournament_url create_division_allocation %}" >Auto Allocate Divisions</a>
-  <a class="btn btn-success submit-disable" href="{% tournament_url create_byes %}" >Auto Add Bye Teams</a>
-  <a class="btn btn-success submit-disable" href="{% tournament_url create_division %}" >Add New Division</a>
-{% endblock %}
-
-{% block page-subnav-actions %}
-  {% if venue_groups.length > 0 %}
-  <div class="btn btn-inactive">Preference:</div>
-  <div class="btn-group">
+  <a class="btn btn-primary submit-disable" href="{% tournament_url create_division_allocation %}" >Auto-Allocate Teams to Divisions</a>
+  <a class="btn btn-primary submit-disable" href="{% tournament_url create_byes %}" >Auto-Allocate Bye Teams to Divisions</a>
+  <div class="btn btn-inactive text-muted">Preference Given:</div>
+  <div class="btn-group btn-group-sm">
     <div class="btn btn-success" disabled="disabled">1/2</div>
     <div class="btn btn-primary" disabled="disabled">3/4</div>
     <div class="btn btn-warning" disabled="disabled">5+</div>
     <div class="btn btn-danger" disabled="disabled">NA</div>
   </div>
-  {% endif %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <a class="btn btn-success submit-disable" href="{% tournament_url create_division %}" >
+     <span class="glyphicon glyphicon-plus"></span> Add New Division
+  </a>
 {% endblock %}
 
 {% block content %}
