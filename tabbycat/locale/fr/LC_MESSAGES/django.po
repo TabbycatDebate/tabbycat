@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-19 00:34-0800\n"
+"POT-Creation-Date: 2017-01-14 16:00-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,83 +18,88 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: templates/footer.html:8
-msgid "Home"
-msgstr "Accueil"
-
-#. Translators: This is a link that goes to our documentation in English; translations should include "(in English)" after the word "Help".
 #: templates/footer.html:12
-msgid "Help"
-msgstr "Aide"
-
-#: templates/footer.html:16
 #, python-format
-msgid "Logout of %(user)s"
-msgstr "Se déconnecter de %(user)s"
+msgid "%(tournament)s runs on"
+msgstr "%(tournament)s fonctionne sur"
+
+#: templates/footer.html:14
+msgid "This site runs on"
+msgstr "Ce site fonctionne sur"
 
 #: templates/footer.html:20
-msgid "Login"
-msgstr "Se connecter"
+msgid ""
+"Tabbycat is an open-source project for tabbing debating tournaments that use "
+"two-team formats. It was created by Qi-Shan Lim, Chuan-Zheng Lee, and Philip "
+"Belesky. Personal or institutional <a href=\"http://PayPal.Me/"
+"tabbycatproject/0aud\">donations to the project's developers</a> are much "
+"appreciated."
+msgstr ""
+"Tabbycat est un projet open-source pour tabuler les tournois de débat qui "
+"utilise les formats à deux équipes. C'était créé par Qi-Sham Lim, Chuan-"
+"Zheng Lee, et Philip Belesky. Les <a href=\"http://PayPal.Me/"
+"tabbycatproject/0aud\">dons aux développeurs du projet</a>, soit personnels "
+"soit institutionnels, sont bien appréciés."
 
 #: templates/footer.html:27
+msgid "Still timing debates with the stopwatch app?"
+msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
+
+#: templates/footer.html:29
 #, python-format
 msgid ""
-"%(tournament)s runs on <a href=\"https://github.com/czlee/tabbycat/\" target="
-"\"_blank\"> <span class=\"emoji\">😸</span>Tabbycat %(tabbycat_version)s "
-"(%(tabbycat_codename)s)</a>, created by Qi-Shan, <a href=\"https://twitter."
-"com/czlee11\" target=\"_blank\">Chuan-Zheng</a>, and <a href=\"http://"
-"philipbelesky.com\" target=\"_blank\">Philip</a>."
+"Using a real debating app makes speaking and adjudicating easier! Check out "
+"<a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
+"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (for iPhones/iPads)</a> or "
+"<a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
+"\">Debatekeeper (for Android)</a>."
 msgstr ""
-"%(tournament)s functionne sur <a href=\"https://github.com/czlee/tabbycat/\" "
-"target=\"_blank\"> <span class=\"emoji\">😸</span>Tabbycat "
-"%(tabbycat_version)s (%(tabbycat_codename)s)</a>, créé par Qi-Shan, <a href="
-"\"https://twitter.com/czlee11\" target=\"_blank\">Chuan-Zheng</a>, et <a "
-"href=\"http://philipbelesky.com\" target=\"_blank\">Philip</a>."
+"Une application réelle de débat rend plus facile parler et juger&nbsp;! "
+"Découvrez <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
+"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (pour les iPhones/iPads)</"
+"a> ou <a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
+"\">Debatekeeper (pour Android)</a>."
 
-#: templates/footer.html:36
-#, python-format
-msgid ""
-"Running on <span class=\"emoji\">😸</span>Tabbycat %(tabbycat_version)s "
-"(%(tabbycat_codename)s)</a>, created by Qi-Shan, <a href=\"https://twitter."
-"com/czlee11\" target=\"_blank\">Chuan-Zheng</a>, and <a href=\"http://"
-"philipbelesky.com\" target=\"_blank\">Philip</a>."
-msgstr ""
-"Ce site functionne sur <a href=\"https://github.com/czlee/tabbycat/\" target="
-"\"_blank\"> <span class=\"emoji\">😸</span>Tabbycat %(tabbycat_version)s "
-"(%(tabbycat_codename)s)</a>, créé par Qi-Shan, <a href=\"https://twitter.com/"
-"czlee11\" target=\"_blank\">Chuan-Zheng</a>, et <a href=\"http://"
-"philipbelesky.com\" target=\"_blank\">Philip</a>."
+#: templates/footer.html:37
+msgid "Need ballots?"
+msgstr "Avez-vous besoin des bulletins&nbsp;?"
 
-#: templates/footer.html:44
+#: templates/footer.html:39
 msgid ""
-"Tabbycat is easy to set up for your tournament, you should <a href=\"http://"
-"tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-"
-"way\" target=\"_blank\">try it out</a>!"
+"<a href=\"http://debatingballot.com\" target=\"_blank\">DebatingBallot.com</"
+"a> lets you design and print great ballots online."
 msgstr ""
-"Tabbycat est facile à installer pour votre tournoi, <a href=\"http://"
-"tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-"
-"way\" target=\"_blank\">essayez-le</a> !"
+"<a href=\"http://debatingballot.com\" target=\"_blank\">DebatingBallot.com</"
+"a> vous permet de dessiner et d'imprimer des bulletins beaux en ligne."
 
-#: templates/footer.html:48
-msgid ""
-"Want help with timing speeches? Check out <a href=\"https://play.google.com/"
-"store/apps/details?id=net.czlee.debatekeeper\" target=\"_blank"
-"\">Debatekeeper</a> (Android) and <a href=\"http://timekept.com\">Timekept</"
-"a> (iOS). Like nicely-designed ballots? Head to <a href=\"http://"
-"debatingballot.com/\" target=\"_blank\">debatingballot.com</a>."
-msgstr ""
-"Voulez-vous d'aide à chronométrer les discours ? Découvrez <a href=\"https://"
-"play.google.com/store/apps/details?id=net.czlee.debatekeeper\" target="
-"\"_blank\">Debatekeeper</a> (Android) et <a href=\"http://timekept.com"
-"\">Timekept</a> (iOS). Aimez-vous les bulletins bien dessinés ? Allez à <a "
-"href=\"http://debatingballot.com/\" target=\"_blank\">debatingballot.com</a>."
+#: templates/footer.html:50
+msgid "GitHub"
+msgstr "GitHub"
+
+#: templates/footer.html:53
+msgid "Documentation"
+msgstr "Documentation"
+
+#: templates/footer.html:56
+msgid "Support"
+msgstr "Aide"
+
+#: templates/footer.html:59
+msgid "Facebook Group"
+msgstr "Groupe sur Facebook"
+
+#: templates/footer.html:62
+msgid "Set Up A Copy"
+msgstr "Installer une copie"
 
 #: templates/registration/login.html:4 templates/registration/login.html:5
 msgctxt "page title"
 msgid "Login"
 msgstr "Connexion"
 
-#: templates/registration/login.html:35
+#: templates/registration/login.html:36
 msgid ""
 "Your account doesn't have access to this page. To proceed, please log in "
 "with an account that has access."
@@ -102,11 +107,11 @@ msgstr ""
 "Votre compte ne vous permet pas d'accéder cette page. Pour continuer, "
 "veuillez vous connecter."
 
-#: templates/registration/login.html:37
+#: templates/registration/login.html:38
 msgid "Please log in to see this page."
-msgstr "Veuillez vous connecter pour voir ce page."
+msgstr "Veuillez vous connecter afin de voir ce page."
 
-#: templates/registration/login.html:59
+#: templates/registration/login.html:60
 msgctxt "button"
 msgid "Login"
 msgstr "Connexion"
