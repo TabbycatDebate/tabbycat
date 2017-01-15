@@ -15,7 +15,7 @@ from .models import Debate, DebateTeam
 @admin.register(DebateTeam)
 class DebateTeamAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('team', 'position', 'debate', 'get_tournament', 'get_round')
-    search_fields = ('team', )
+    search_fields = ('team', 'debate')
     raw_id_fields = ('debate', 'team', )
 
     def get_queryset(self, request):
