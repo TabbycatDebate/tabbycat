@@ -80,14 +80,14 @@
       </button>
     {% elif min_venues > checkin_types.2.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="There are too few checked in venues available
-         for the amount of debates — the draw may not generate properly.">
+        data-toggle="tooltip" title="There are too few venue checked in
+         for the number of debates — the draw may not generate properly">
          Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
        </button>
     {% elif min_adjudicators > checkin_types.1.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="There are too few checked in adjudicators
-        available for the amount of debates — the draw may not generate properly">
+        data-toggle="tooltip" title="There are too few adjudicators checked in
+        for the number of debates — the draw may not generate properly">
         Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
     {% elif not checkin_types.0.in_now|divisibleby:2  %}
