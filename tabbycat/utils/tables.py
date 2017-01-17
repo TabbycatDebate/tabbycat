@@ -498,10 +498,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     times_data.append(["", "Postponed"])
                 elif debate.confirmed_ballot and debate.confirmed_ballot.forfeit:
                     times_data.append(["", "Forfeit"])
-                else:
+                elif debate.time:
                     times_data.append([
                         formats.date_format(debate.time, "D jS F"),
                         formats.date_format(debate.time, "h:i A")])
+                else:
+                    times_data.append(["", ""])
             self.add_columns(times_headers, times_data)
 
     def add_draw_conflicts_columns(self, debates):
