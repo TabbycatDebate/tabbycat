@@ -39,18 +39,12 @@
   overflow: hidden;
 }
 
-.division-heading {
-  // Shift up the select to be adjavent to the title
-  padding: 5px 10px;
-
-  h5 {
-    display: inline-block;
-  }
-
-  .form-control {
-    display: inline-block;
-    float: right;
-    max-width: 75%;
+.division-footer {
+  // Create a compact <select> element for the bottom of divison boxes
+  padding: 5px 4px;
+  select {
+    height: auto;
+    padding: 2px 0;
   }
 }
 
