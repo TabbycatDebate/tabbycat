@@ -53,7 +53,7 @@ class VenueConstraintAdmin(admin.ModelAdmin):
             'institution__name', 'institution__code', 'division__name',
             'venue_group__name', 'venue_group__short_name', 'priority')
     list_filter = ('subject_content_type', 'venue_group', 'priority')
-    ordering = ('subject_content_type', 'venue_group' )
+    ordering = ('subject_content_type', 'venue_group')
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related(

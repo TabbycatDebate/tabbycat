@@ -1,7 +1,9 @@
 import random
 
 from .models import Division
-from participants.models import Team, Institution
+
+from participants.models import Institution, Team
+
 
 class DivisionAllocator():
 
@@ -41,7 +43,6 @@ class DivisionAllocator():
             print("---\nSkipping first team allocation as there are no team constraints")
 
         # Get all the relevant institution constraints
-        institutional_constraints = []
         for institution in self.institutions:
             all_constraints.extend(institution.venue_constraints.order_by('-priority'))
 
@@ -50,12 +51,11 @@ class DivisionAllocator():
             return True
         else:
             print("---\nStarting second round team allocations")
-            division_dict, allocated_teams = self.allocate_to_constraints(
-                division_dict, allocated_teams, all_teams, all_constraints, force_fill=True)
+            division_dict, allocated_teams = self.allocate_to_constraints(division_dict, allocated_teams, all_teams, all_constraints, force_fill=True)
 
-            # First round of culls
-            #division_dict, allocated_teams = self.cull_venues(division_dict, allocated_teams)
-            #print("Post-Cull 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict)))
+            # # First round of culls
+            # division_dict, allocated_teams = self.cull_venues(division_dict, allocated_teams)
+            # print("Post-Cull 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict)))
 
             # # Second sweep of allocations
             # unalloacted_teams = [te for te in all_teams if not te in allocated_teams]
