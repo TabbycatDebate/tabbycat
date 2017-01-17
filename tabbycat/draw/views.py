@@ -31,10 +31,6 @@ from .prefetch import populate_history
 logger = logging.getLogger(__name__)
 
 
-# ==============================================================================
-# Viewing Draw (Public)
-# ==============================================================================
-
 class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
     template_name = 'draw_display_by.html'
@@ -79,6 +75,9 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         self.populate_table(draw, table, round, tournament)
         return table
 
+# ==============================================================================
+# Viewing Draw (Public)
+# ==============================================================================
 
 class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTableView):
 
@@ -122,6 +121,15 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
+# ==============================================================================
+# Viewing Draw (Admin)
+# ==============================================================================
+
+class AdminDrawDisplay(LoginRequiredMixin, BaseDrawTableView):
+
+    template_name = 'draw_display.html'
+
+
 class AdminDrawDisplayForRoundByVenueView(LoginRequiredMixin, BaseDrawTableView):
     popovers = True
 
@@ -137,7 +145,6 @@ class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
             [d.aff_team for d in draw[:draw_slice]] + [d.neg_team for d in draw[draw_slice:]],
             hide_institution=True, key="Team")
         super().populate_table(draw, table, round, tournament)
-
 
 # ==============================================================================
 # Draw Creation (Admin)
