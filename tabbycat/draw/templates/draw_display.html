@@ -28,14 +28,14 @@
     <form id="releaseForm" method="POST" action="{% round_url draw-release %}">
       {% csrf_token %}
       <button class="btn btn-primary submit-disable" type="submit">
-        Release Draw
+        Release Draw to Public
       </button>
     </form>
   {% elif round.draw_status == round.STATUS_RELEASED %}
     <form id="unreleaseForm" method="POST" action="{% round_url draw-unrelease %}">
       {% csrf_token %}
       <button class="btn btn-danger submit-disable" type="submit">
-        Unrelease Draw
+        Unrelease Draw to Public
       </button>
     </form>
   {% endif %}
@@ -54,63 +54,69 @@
 
 {% block content %}
 
-  <div class="row vertical-spacing">
-    <div class="col-md-12">
 
-    <div class="btn-group">
-      <a target="_blank" class="btn btn-default" href="{% round_url draw-display-by-venue round %}">
-        <span class="text-primary">
-          Display Draw by Venue <span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-      <a target="_blank" class="btn btn-default" href="{% round_url draw-display-by-team round %}">
-        <span class="text-primary">
-          Display Draw by Team <span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-    </div>
+<div class="row">
+  <div class="col-md-12">
 
-    {% if round.motions_released %}
-      <a target="_blank" class="btn btn-default" href="{% round_url motions-display round %}">
-        <span class="text-primary">
-          Display Motions <span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-    {% else %}
-      <a target="_blank" class="btn btn-default disabled" href="{% round_url motions-display round %}">
-        <span class="text-primary">
-          Display Motions <span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-    {% endif %}
-
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-
-      <div class="btn-group">
-        <a target="_blank" class="btn btn-default" href="{% round_url draw_print_scoresheets round %}">
-          <span class="text-primary">
-            Print Ballots <span class="glyphicon glyphicon-share"></span>
-          </span>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="emoji">🏫</span>
+        <a target="_blank"  href="{% round_url draw-display-by-venue round %}">
+            Display Draw (for the public) ordered by Venue
         </a>
-        <a target="_blank" class="btn btn-default" href="{% round_url draw_print_feedback round %}">
-          <span class="text-primary">
-            Print Feedback Forms <span class="glyphicon glyphicon-share"></span>
-          </span>
-        </a>
-        {% if pref.public_divisions %}
-        <a target="_blank" class="btn btn-default" href="{% round_url master_sheets_list round %}">
-          <span class="text-primary">
-            Print Division Sheets <span class="glyphicon glyphicon-share"></span>
-          </span>
-        </a>
+        <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">👭</span>
+          <a target="_blank"  href="{% round_url draw-display-by-team round %}">
+              Display Draw (for the public) ordered by Team
+          </a>
+          <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">📃</span>
+        {% if round.motions_released %}
+          <a target="_blank"  href="{% round_url motions-display round %}">
+              Display Motions
+          </a>
+          <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
+        {% else %}
+          <a target="_blank" class="disabled" href="{% round_url motions-display round %}">
+              Display Motions
+          </a>
+          <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
         {% endif %}
-      </div>
+      </li>
+    </ul>
 
-    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="emoji">💯</span>
+        <a target="_blank" href="{% round_url draw_print_scoresheets round %}">
+          Print Ballots
+        </a>
+        <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🙅</span>
+        <a target="_blank" href="{% round_url draw_print_feedback round %}">
+          Print Feedback Forms
+        </a>
+        <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
+      </li>
+      {% if pref.public_divisions %}
+      <li class="list-group-item">
+        <span class="emoji">📠</span>
+        <a target="_blank" href="{% round_url master_sheets_list round %}">
+          Print Division Sheets
+        </a>
+        <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
+      </li>
+      {% endif %}
+    </ul>
+
   </div>
+</div>
+
 
 {% endblock content %}

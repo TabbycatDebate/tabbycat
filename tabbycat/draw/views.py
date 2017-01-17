@@ -257,7 +257,7 @@ class AdminDrawWithDetailsView(AdminDrawView):
 # ==============================================================================
 
 class DrawStatusEdit(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
-    round_redirect_pattern_name = 'draw'
+    round_redirect_pattern_name = 'draw-display'
 
 
 class CreateDrawView(DrawStatusEdit):
@@ -331,6 +331,7 @@ class DrawReleaseView(DrawStatusEdit):
         round.draw_status = round.STATUS_RELEASED
         round.save()
         self.log_action()
+        messages.success(request, "Relased the draw; it will now show on the public facing pages of this website")
         return super().post(request, *args, **kwargs)
 
 
@@ -345,6 +346,7 @@ class DrawUnreleaseView(DrawStatusEdit):
         round.draw_status = round.STATUS_CONFIRMED
         round.save()
         self.log_action()
+        messages.success(request, "Unrelased the draw; it will no longer show on the public facing pages of this website")
         return super().post(request, *args, **kwargs)
 
 

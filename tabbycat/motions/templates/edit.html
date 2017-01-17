@@ -7,20 +7,20 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-default submit-disable" href="{% round_url draw-display %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw Display
+    <span class="glyphicon glyphicon-chevron-left"></span> Back to Display
   </a>
   {% if round.motions_released %}
     <form class="" id="unreleaseForm" method="POST" action="{% round_url motions-unrelease %}">
       {% csrf_token %}
       <button class="btn btn-danger submit-disable" type="submit">
-        Unrelease Motions
+        Unrelease Motions to Public
       </button>
     </form>
   {% else %}
     <form class="" id="releaseForm" method="POST" action="{% round_url motions-release %}">
       {% csrf_token %}
       <button class="btn btn-primary submit-disable" type="submit">
-        Release Motions
+        Release Motions to Public
       </button>
     </form>
   {% endif %}

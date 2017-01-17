@@ -2,21 +2,23 @@
 {% load debate_tags %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url edit_adj_allocation %}" class="btn btn-default submit-disable">
-    Edit Adjs
-  </a>
-  <a class="btn btn-default submit-disable" href="{% round_url draw_adjudicators_edit %}" class="btn btn-default submit-disable">
-    Edit Adjs (Old)
-  </a>
-  <a href="{% round_url venues-edit round %}" class="btn btn-default submit-disable">
-    Edit Venues
-  </a>
-  <a href="{% round_url draw-matchups-edit round %}" class="btn btn-default submit-disable">
-    Edit Matchups
-  </a>
+  <div class="btn-group">
+    <a class="btn btn-default submit-disable" href="{% round_url edit_adj_allocation %}" class="btn btn-default submit-disable">
+      Edit Adjs
+    </a>
+    <a class="btn btn-default submit-disable" href="{% round_url draw_adjudicators_edit %}" class="btn btn-default submit-disable">
+      Edit Adjs (Old UI)
+    </a>
+    <a href="{% round_url venues-edit round %}" class="btn btn-default submit-disable">
+      Edit Venues
+    </a>
+    <a href="{% round_url draw-matchups-edit round %}" class="btn btn-default submit-disable">
+      Edit Matchups
+    </a>
+  </div>
   {% if pref.allocation_confirmations %}
     <a href="{% round_url draw-schedule-confirmations %}" class="btn btn-default submit-disable">
-      Shift Confirms
+      Confirm Shifts
     </a>
   {% endif %}
   <a class="btn btn-default submit-disable" href="{% round_url draw-details %}">
