@@ -11,6 +11,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
+from draw.models import Debate
 from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
@@ -386,7 +387,14 @@ class ScheduleDebatesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
-        kwargs['venue_groups'] = VenueGroup.objects.all()
+        tournament = self.get_tournament()
+        vgs = VenueGroup.objects.all()
+        for vg in vgs:
+            first_debate = Debate.objects.filter(venue__group=vg, round__tournament=tournament, time__isnull=False).first()
+            if first_debate:
+                vg.placeholder_date = first_debate.time
+
+        kwargs['venue_groups'] = vgs
         kwargs['divisions'] = Division.objects.filter(tournament=round.tournament).order_by('id')
         return super().get_context_data(**kwargs)
 
@@ -414,6 +422,7 @@ class ApplyDebateScheduleView(DrawStatusEdit):
             if division and division.time_slot:
                 date = request.POST[str(division.venue_group.id)]
                 if date:
+                    print("has date")
                     time = "%s %s" % (date, division.time_slot)
                     try:
                         debate.time = datetime.datetime.strptime(
@@ -423,6 +432,8 @@ class ApplyDebateScheduleView(DrawStatusEdit):
                             time, "%d/%m/%Y %H:%M:%S")  # Others
 
                     debate.save()
+                else:
+                    print("no date")
 
         messages.success(self.request, "Applied schedules to debates")
         return super().post(request, *args, **kwargs)
