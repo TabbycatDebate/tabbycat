@@ -32,10 +32,6 @@ from .prefetch import populate_history
 logger = logging.getLogger(__name__)
 
 
-# ==============================================================================
-# Viewing Draw (Public)
-# ==============================================================================
-
 class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
     template_name = 'draw_display_by.html'
@@ -80,6 +76,9 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         self.populate_table(draw, table, round, tournament)
         return table
 
+# ==============================================================================
+# Viewing Draw (Public)
+# ==============================================================================
 
 class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTableView):
 
@@ -123,6 +122,15 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
+# ==============================================================================
+# Viewing Draw (Admin)
+# ==============================================================================
+
+class AdminDrawDisplay(LoginRequiredMixin, BaseDrawTableView):
+
+    template_name = 'draw_display.html'
+
+
 class AdminDrawDisplayForRoundByVenueView(LoginRequiredMixin, BaseDrawTableView):
     popovers = True
 
@@ -138,7 +146,6 @@ class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
             [d.aff_team for d in draw[:draw_slice]] + [d.neg_team for d in draw[draw_slice:]],
             hide_institution=True, key="Team")
         super().populate_table(draw, table, round, tournament)
-
 
 # ==============================================================================
 # Draw Creation (Admin)
@@ -316,6 +323,7 @@ class ConfirmDrawRegenerationView(SuperuserRequiredMixin, TemplateView):
 
 class DrawReleaseView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_RELEASE
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
@@ -325,11 +333,13 @@ class DrawReleaseView(DrawStatusEdit):
         round.draw_status = round.STATUS_RELEASED
         round.save()
         self.log_action()
+        messages.success(request, "Relased the draw; it will now show on the public facing pages of this website")
         return super().post(request, *args, **kwargs)
 
 
 class DrawUnreleaseView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_UNRELEASE
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
@@ -339,11 +349,13 @@ class DrawUnreleaseView(DrawStatusEdit):
         round.draw_status = round.STATUS_CONFIRMED
         round.save()
         self.log_action()
+        messages.success(request, "Unrelased the draw; it will no longer show on the public facing pages of this website")
         return super().post(request, *args, **kwargs)
 
 
 class SetRoundStartTimeView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         time_text = request.POST["start_time"]

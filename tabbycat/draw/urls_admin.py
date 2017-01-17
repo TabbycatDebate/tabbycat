@@ -5,12 +5,9 @@ from . import views
 urlpatterns = [
 
     # Display
-    url(r'^round/(?P<round_seq>\d+)/$',
-        views.AdminDrawView.as_view(),
-        name='draw'),
-    url(r'^round/(?P<round_seq>\d+)/details/$',
-        views.AdminDrawWithDetailsView.as_view(),
-        name='draw-details'),
+    url(r'^round/(?P<round_seq>\d+)/display/$',
+        views.AdminDrawDisplay.as_view(),
+        name='draw-display'),
     url(r'^round/(?P<round_seq>\d+)/display_by_venue/$',
         views.AdminDrawDisplayForRoundByVenueView.as_view(),
         name='draw-display-by-venue'),
@@ -19,9 +16,15 @@ urlpatterns = [
         name='draw-display-by-team'),
 
     # Creation/Release
+    url(r'^round/(?P<round_seq>\d+)/$',
+        views.AdminDrawView.as_view(),
+        name='draw'),
     url(r'^round/(?P<round_seq>\d+)/create/$',
         views.CreateDrawView.as_view(),
         name='draw-create'),
+    url(r'^round/(?P<round_seq>\d+)/details/$',
+        views.AdminDrawWithDetailsView.as_view(),
+        name='draw-details'),
     url(r'^round/(?P<round_seq>\d+)/confirm/$',
         views.ConfirmDrawCreationView.as_view(),
         name='draw-confirm'),

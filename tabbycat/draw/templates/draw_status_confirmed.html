@@ -19,20 +19,12 @@
 {% endblock %}
 
 {% block page-alerts %}
-  {% if round.motion_set.all.count == 0 %}
-  <div class="alert alert-danger">
-    There are currently no motions entered, which means results cannot be entered.
-    <a href="{% round_url motions-edit round %}" class="alert-link">
-      Edit the motions.
-    </a>
-  </div>
-  {% endif %}
   {% with no_venue=round.num_debates_without_venue %}
     {% if no_venue > 0 %}
       <div class="alert alert-warning" id="">
         {{ no_venue|apnumber|capfirst }} debate{{ no_venue|pluralize:" does,s do" }} not have a venue.
         <a href="{% round_url venues-edit round %}" class="alert-link">
-          Edit the venues.
+          Edit venues.
         </a>
       </div>
     {% endif %}
@@ -71,140 +63,7 @@
     </div>
   {% endif %}
 
-  {% if round.motions_released and not pref.public_motions %}
-    <div class="alert alert-warning">
-      You have released the motions, but they will not show to the public unless
-      the 'public view of motions' setting is enabled in
-      <a class="alert-link" href="{% tournament_url options-tournament-index %}">
-        this tournament's configuration</a>.
-    </div>
-  {% endif %}
-
 {% endblock %}
-
-{% block content %}
-
-  <div class="vertical-spacing">
-
-    <div class="btn-group">
-      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw-display-by-venue round %}">
-        <span class="text-primary">
-          Display by Venue <span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw-display-by-team round %}">
-        <span class="text-primary">
-          Display by Team <span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url motions-display round %}">
-        <span class="text-primary">
-          Display Motions <span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-    </div>
-
-    <div class="btn-group">
-      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_print_scoresheets round %}">
-        <span class="text-primary">
-          Print Ballots <span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url draw_print_feedback round %}">
-        <span class="text-primary">
-          Print Feedback Forms <span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-      {% if pref.public_divisions %}
-      <a target="_blank" class="btn btn-sm btn-default" href="{% round_url master_sheets_list round %}">
-        <span class="text-primary">
-          Print Division Sheets<span class="glyphicon glyphicon-share"></span>
-        </span>
-      </a>
-      {% endif %}
-    </div>
-
-    <div class="btn-group pull-right">
-      <div class="btn-group">
-        {% if not pref.enable_debate_scheduling %}
-          <a class="btn btn-sm pull-right {% if round.starts_at %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#editStartTime">
-            {% if round.starts_at %}
-              Starts at {{ round.starts_at }}
-            {% else %}
-              Add Start Time
-            {% endif %}
-          </a>
-        {% else %}
-          <a href="{% round_url draw-schedule-debates %}" class="btn btn-sm btn-primary submit-disable">
-            Schedule Debates
-          </a>
-        {% endif %}
-      </div>
-      {% if round.motions_released %}
-        <form class="btn-group-input pull-right" id="unreleaseForm" method="POST" action="{% round_url motions-unrelease %}">
-          {% csrf_token %}
-          <button class="btn btn-sm btn-danger submit-disable" type="submit">
-            Unrelease Motions
-          </button>
-        </form>
-      {% else %}
-        <form class="btn-group-input pull-right" id="releaseForm" method="POST" action="{% round_url motions-release %}">
-          {% csrf_token %}
-          <button class="btn btn-sm btn-primary submit-disable" type="submit">
-            Release Motions
-          </button>
-        </form>
-      {% endif %}
-      {% if round.draw_status == round.STATUS_CONFIRMED %}
-        <form class="pull-right" id="releaseForm" method="POST" action="{% round_url draw-release %}">
-          {% csrf_token %}
-          <button class="btn btn-sm btn-primary submit-disable" type="submit">
-            Release Draw
-          </button>
-        </form>
-      {% elif round.draw_status == round.STATUS_RELEASED %}
-        <form class="pull-right" id="unreleaseForm" method="POST" action="{% round_url draw-unrelease %}">
-          {% csrf_token %}
-          <button class="btn btn-sm btn-danger submit-disable" type="submit">
-            Unrelease Draw
-          </button>
-        </form>
-      {% endif %}
-    </div>
-
-  </div>
-
-  <div class="modal fade" id="editStartTime" tabindex="-1" role="dialog" aria-labelledby="editStartTime">
-    <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Change Start Time</h3>
-        </div>
-        <div class="modal-body">
-          <form id="startTimeForm" method="POST" action="{% round_url draw-start-time-set %}" class="form-horizontal">
-            <div class="form-group">
-              <label class="col-sm-4 control-label">
-                Start at
-              </label>
-              <div class="col-sm-6">
-                <input placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time" class="form-control"></input>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label"></label>
-              <div class="col-sm-6">
-                <button type="submit" value="Save" class="btn btn-success submit-disable" data-loading-text="Saving...">Save</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {{ block.super }}
-
-{% endblock content %}
 
 {% block js %}
 

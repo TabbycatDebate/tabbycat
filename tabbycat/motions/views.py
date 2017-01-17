@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import messages
 from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory
@@ -68,7 +69,8 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
             self.log_action(content_object=motion)
         for motion in formset.deleted_objects:
             motion.delete()
-        return redirect_round('draw', self.get_round())
+        messages.success(self.request, 'The motions have been saved.')
+        return redirect_round('motions-edit', round)
 
 
 @admin_required
@@ -97,7 +99,7 @@ def motions_assign(request, round):
         formset = motion_form_set(request.POST)
         formset.save()  # Should be checking for validity but on a deadline and was buggy
         if 'submit' in request.POST:
-            return redirect_round('draw', round)
+            return redirect_round('draw-display', round)
 
     formset = motion_form_set(queryset=Motion.objects.filter(round=round))
     return render(request, "assign.html", dict(formset=formset))
@@ -105,11 +107,12 @@ def motions_assign(request, round):
 
 class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
-    round_redirect_pattern_name = 'draw'
+    round_redirect_pattern_name = 'motions-edit'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
         round.motions_released = self.motions_released
+        messages.success(request, self.message_text)
         round.save()
         self.log_action()
         return super().post(request, *args, **kwargs)
@@ -119,12 +122,14 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
     motions_released = True
+    message_text = "Relased the motions; they will now show on the public facing pages of this website"
 
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE
     motions_released = False
+    message_text = "Unrelased the motions; they will no longer show on the public facing pages of this website"
 
 
 class DisplayMotionsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
