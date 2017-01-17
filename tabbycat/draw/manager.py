@@ -141,13 +141,13 @@ class RoundRobinDrawManager(BaseDrawManager):
     draw_type = "round_robin"
 
     def get_rrseq(self):
-        prior_rrs = list(self.round.tournament.round_set.filter(draw_type=Round.DRAW_ROUNDROBIN).order_by('-seq'))
-        rr_seq = prior_rrs.index(self.round)
-
-        if not rr_seq:
+        prior_rrs = list(self.round.tournament.round_set.filter(draw_type=Round.DRAW_ROUNDROBIN).order_by('seq'))
+        try:
+            rr_seq = prior_rrs.index(self.round) + 1 # Dont 0-index
+        except ValueError:
             raise RuntimeError("Tried to calculate an effective round robin seq but couldn't")
-        else:
-            return rr_seq
+
+        return rr_seq
 
 
 class BaseEliminationDrawManager(BaseDrawManager):
