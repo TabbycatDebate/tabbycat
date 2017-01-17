@@ -1181,9 +1181,9 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
         for bracket in brackets.items():
             teams_list = bracket[1]  # Team Array is second item
-            points = bracket[0]
+            division_seq = bracket[0]
             total_debates = len(teams_list) // 2
-            print("BRACKET %s with %s teams" % (points, len(teams_list)))
+            print("DIVISOIN %s with %s teams" % (division_seq, len(teams_list)))
 
             fold_top = teams_list[:total_debates]
             fold_bottom = teams_list[total_debates:]
@@ -1222,8 +1222,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                 if neg:
                     pairing = Pairing(
                         teams=(paired_teams),
-                        bracket=points,
-                        room_rank=1,
+                        bracket=division_seq,
+                        room_rank=division_seq,
                         division=aff.division
                     )
                     print("\t matchup is %s (%s) vs %s (%s)" % (aff, teams_list.index(aff) + 1, neg, teams_list.index(neg) + 1))
@@ -1234,7 +1234,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                     # Need to deal with Byes and the like here
                     print("couldn't find an opponent")
 
-            pairings[points] = assigned_pairings
+            pairings[division_seq] = assigned_pairings
 
         return pairings
 
