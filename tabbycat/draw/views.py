@@ -11,7 +11,6 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
-from draw.models import Debate
 from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
@@ -75,6 +74,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key, popovers=self.popovers)
         self.populate_table(draw, table, round, tournament)
         return table
+
 
 # ==============================================================================
 # Viewing Draw (Public)
@@ -146,6 +146,7 @@ class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
             [d.aff_team for d in draw[:draw_slice]] + [d.neg_team for d in draw[draw_slice:]],
             hide_institution=True, key="Team")
         super().populate_table(draw, table, round, tournament)
+
 
 # ==============================================================================
 # Draw Creation (Admin)
