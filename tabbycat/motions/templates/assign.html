@@ -5,6 +5,12 @@
 {% block head-title %}Assign Motions for {{ round.name }}{% endblock %}
 {% block page-title %}Assign Motions for {{ round.name }}{% endblock %}
 
+{% block page-subnav-sections %}
+  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
+  </a>
+{% endblock %}
+
 {% block content %}
   <form method="post" action="" class="form-horizontal col-md-12">
     {% csrf_token %}
