@@ -75,6 +75,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         self.populate_table(draw, table, round, tournament)
         return table
 
+
 # ==============================================================================
 # Viewing Draw (Public)
 # ==============================================================================
@@ -145,6 +146,7 @@ class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
             [d.aff_team for d in draw[:draw_slice]] + [d.neg_team for d in draw[draw_slice:]],
             hide_institution=True, key="Team")
         super().populate_table(draw, table, round, tournament)
+
 
 # ==============================================================================
 # Draw Creation (Admin)
