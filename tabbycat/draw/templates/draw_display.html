@@ -11,9 +11,9 @@
   </a>
 
   {% if not pref.enable_debate_scheduling %}
-    <a class="btn {% if round.starts_at %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#editStartTime">
+    <a class="btn {% if round.starts_at %}btn-danger{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#editStartTime">
       {% if round.starts_at %}
-        Starts at {{ round.starts_at }}
+        Debates Start at {{ round.starts_at }}
       {% else %}
         Add Start Time
       {% endif %}
@@ -118,5 +118,33 @@
   </div>
 </div>
 
+
+<div class="modal fade" id="editStartTime" tabindex="-1" role="dialog" aria-labelledby="editStartTime">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Change Start Time</h3>
+      </div>
+      <div class="modal-body">
+        <form id="startTimeForm" method="POST" action="{% round_url draw-start-time-set %}" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-4 control-label">
+              Start at
+            </label>
+            <div class="col-sm-6">
+              <input placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time" class="form-control"></input>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 control-label"></label>
+            <div class="col-sm-6">
+              <button type="submit" value="Save" class="btn btn-success submit-disable" data-loading-text="Saving...">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

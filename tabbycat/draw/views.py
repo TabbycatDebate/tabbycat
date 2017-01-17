@@ -257,7 +257,7 @@ class AdminDrawWithDetailsView(AdminDrawView):
 # ==============================================================================
 
 class DrawStatusEdit(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
-    round_redirect_pattern_name = 'draw-display'
+    round_redirect_pattern_name = 'draw'
 
 
 class CreateDrawView(DrawStatusEdit):
@@ -322,6 +322,7 @@ class ConfirmDrawRegenerationView(SuperuserRequiredMixin, TemplateView):
 
 class DrawReleaseView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_RELEASE
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
@@ -337,6 +338,7 @@ class DrawReleaseView(DrawStatusEdit):
 
 class DrawUnreleaseView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_UNRELEASE
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
@@ -352,6 +354,7 @@ class DrawUnreleaseView(DrawStatusEdit):
 
 class SetRoundStartTimeView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         time_text = request.POST["start_time"]

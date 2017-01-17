@@ -25,9 +25,7 @@
     </a>
   </div>
 
-  <div id="rp{{ r.id }}"
-       class="panel-collapse collapse
-             {% if r.seq == round.seq %}in{% endif %}"
+  <div id="rp{{ r.id }}" class="panel-collapse collapse {% if r.seq == round.seq %}in{% endif %}"
        role="tabpanel"
        aria-labelledby="rh{{ r.id }}">
     <ul class="nav nav-stacked">
@@ -61,15 +59,25 @@
       </li>
       <li>
         <div class="progress-line standard-line"></div>
-        <a href="{% round_url draw-display r %}" class="{% if draw_nav and round == r %}active{% endif %}">
-          <span class="circle-icon small-circle">
+        <a href="{% round_url draw-display r %}"
+          class="{% if display_nav and round == r %}active{% endif %}">
+          <span class="circle-icon small-circle
+            {% if r.seq < current_round.seq %} btn-success
+            {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
+            {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
+            {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
+            {% else %} btn-info{% endif %}">
           <span class="emoji"></span></span>Display
         </a>
       </li>
       <li>
         <div class="progress-line standard-line"></div>
-        <a href="{% round_url motions-edit r %}" class="{% if draw_nav and round == r %}active{% endif %}">
-          <span class="circle-icon small-circle">
+        <a href="{% round_url motions-edit r %}"
+          class="{% if motions_nav and round == r %}active{% endif %}">
+          <span class="circle-icon small-circle
+            {% if r.motion_set.count > 0 %} btn-success
+            {% elif r.draw_status != r.STATUS_NONE and r.seq >= current_round.seq %} btn-info
+            {% else %} btn-inactive{% endif %}">
           <span class="emoji"></span></span>Motions
         </a>
       </li>

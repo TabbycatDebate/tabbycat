@@ -87,6 +87,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
             'draft': result_status_stats[Debate.STATUS_DRAFT],
             'confirmed': result_status_stats[Debate.STATUS_CONFIRMED],
             'postponed': result_status_stats[Debate.STATUS_POSTPONED],
+            'total': len(self._get_draw())
         }
 
         kwargs["has_motions"] = round.motion_set.count() > 0
