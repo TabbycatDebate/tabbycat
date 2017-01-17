@@ -61,6 +61,20 @@
       </li>
       <li>
         <div class="progress-line standard-line"></div>
+        <a href="{% round_url draw r %}" class="{% if draw_nav and round == r %}active{% endif %}">
+          <span class="circle-icon small-circle">
+          <span class="emoji"></span></span>Display
+        </a>
+      </li>
+      <li>
+        <div class="progress-line standard-line"></div>
+        <a href="{% round_url motions-edit r %}" class="{% if draw_nav and round == r %}active{% endif %}">
+          <span class="circle-icon small-circle">
+          <span class="emoji"></span></span>Motions
+        </a>
+      </li>
+      <li>
+        <div class="progress-line standard-line"></div>
         <a href="{% round_url results-round-list r %}"
            class="{% if ballots_nav and round == r %}active{% endif %}">
           <span class="circle-icon small-circle

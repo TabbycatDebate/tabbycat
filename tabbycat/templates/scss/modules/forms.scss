@@ -26,6 +26,10 @@
   max-width: 100%;
 }
 
+.list-group-item .form-group:last-child {
+  margin-bottom: 0; // List group items are already bottom padded
+}
+
 // Center number inputs
 input[type=number] {
   text-align: center;

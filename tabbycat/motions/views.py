@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import messages
 from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory
@@ -68,7 +69,8 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
             self.log_action(content_object=motion)
         for motion in formset.deleted_objects:
             motion.delete()
-        return redirect_round('draw', self.get_round())
+        messages.success(self.request, 'The motions have been saved.')
+        return redirect_round('motions-edit', round)
 
 
 @admin_required
