@@ -18,7 +18,9 @@
 
   // Don't split a table across multiple pages
   table {
-    page-break-inside: avoid;
+    page-break-before: avoid;
+    page-break-inside: auto;
+
     tr {
       page-break-inside: avoid;
       page-break-after: auto;
