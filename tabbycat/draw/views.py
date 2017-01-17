@@ -11,7 +11,6 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
-from draw.models import Debate
 from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
