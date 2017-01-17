@@ -136,7 +136,7 @@ class Pairing(object):
         return self.teams[self._winner_index]
 
 
-def DrawGenerator(draw_type, teams, round=None, results=None, **kwargs):
+def DrawGenerator(draw_type, teams, results=None, rrseq=None, **kwargs):
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
     'draw_type' is mandatory and can be any of 'random', 'power_paired',
@@ -164,7 +164,7 @@ def DrawGenerator(draw_type, teams, round=None, results=None, **kwargs):
     elif draw_type == "elimination":
         klass = EliminationDrawGenerator
 
-    return klass(teams, round, results, **kwargs)
+    return klass(teams, results, rrseq, **kwargs)
 
 
 class BaseDrawGenerator(object):
@@ -198,16 +198,18 @@ class BaseDrawGenerator(object):
     can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
+    requires_rrseq = False
     draw_type = None  # Must be set by subclasses
 
     # All subclasses must define this with any options that may exist.
     DEFAULT_OPTIONS = {}
 
-    def __init__(self, teams, round=None, results=None, **kwargs):
+    def __init__(self, teams, results=None, rrseq=None, **kwargs):
         self.teams = teams
         self.team_flags = dict()
         self.round = round
         self.results = results
+        self.rrseq = rrseq
 
         if self.requires_even_teams:
             if not len(self.teams) % 2 == 0:
@@ -227,6 +229,12 @@ class BaseDrawGenerator(object):
 
         if results is not None:
             self.results = results
+
+        if rrseq is None and self.requires_rrseq:
+            raise TypeError(
+                "'round robin sequence' is required for draw of type {0:s}".format(
+                    self.__class__.__name__))
+
 
         # Compute the full dictionary of default options
         self.options = self.BASE_DEFAULT_OPTIONS.copy()
@@ -1111,8 +1119,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     """ Class for round-robin stype matchups using divisions """
 
     can_be_first_round = True
+    requires_rrseq = True
     requires_even_teams = False
-    requires_prev_results = False
     draw_type = "preliminary"
 
     PAIRING_FUNCTIONS = {
@@ -1122,6 +1130,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
     def generate(self):
+        self.teams = self._exclude_teams_without_divisions()
         self._brackets = self._make_raw_brackets_from_divisions()
         # TODO: resolving brackets with odd numbers here (see resolve_odd_brackets)
         self._pairings = self.generate_pairings(self._brackets)
@@ -1132,6 +1141,12 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
         self.allocate_sides(self._draw)  # Operates in-place
         return self._draw
+
+    def _exclude_teams_without_divisions(self):
+        teams_with_divisions = [t for t in self.teams if t.division]
+        if len(self.teams) - len(teams_with_divisions) > 1:
+            logger.info("There are %d teams lacking a division (and thus excluded from the draw) " % teams_without_divisions)
+        return teams_with_divisions
 
     def _make_raw_brackets_from_divisions(self):
         """Returns an OrderedDict mapping bracket names (normally numbers)
@@ -1160,10 +1175,9 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     def generate_pairings(self, brackets):
         pairings = OrderedDict()
 
-        # TODO see if there's a way to remove this dependency on self.round, since it's the only
-        # place in any DrawGenerator where self.round is used.
-        effective_round = self.round.seq
-        print("-------\nTaking as effective round of %s" % effective_round)
+        # Determine the effective iteration we are on wrt number of RR draws
+        effective_round_seq = self.rrseq
+        print("-------\nTaking as effective round of %s" % effective_round_seq)
 
         for bracket in brackets.items():
             teams_list = bracket[1]  # Team Array is second item
@@ -1182,7 +1196,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]])
             print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]])
 
-            for i in range(1, effective_round):
+            for i in range(1, effective_round_seq):
                 # Left-most bottom goes to position[1] on the top
                 folded_list.insert(1, (folded_list.pop(total_debates)))
                 # Right-most top goes to right-most bottom
