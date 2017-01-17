@@ -35,7 +35,11 @@
                   <h5>{{ vg.short_name }}</h5>
                 </div>
                 <div class="col-md-7">
-                  <input type="date" class="form-control" name="{{ vg.id }}" value="01/01/{% now 'Y' %}">
+                {% if vg.placeholder_date %}
+                  <input type="date" class="form-control" name="{{ vg.id }}" value='{{ vg.placeholder_date|date:"Y" }}-{{ vg.placeholder_date|date:"m" }}-{{ vg.placeholder_date|date:"d" }}'>
+                {% else %}
+                  <input type="date" class="form-control" name="{{ vg.id }}" value="">
+                {% endif %}
                 </div>
               </div>
             </li>
