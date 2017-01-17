@@ -1161,8 +1161,6 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             else:
                 brackets[division] = [team]
 
-        print("------")
-
         # Assigning subranks - fixed based on alphabetical
         for bracket in brackets.values():
             bracket.sort(key=lambda x: x.short_name, reverse=False)
@@ -1177,13 +1175,13 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
 
         # Determine the effective iteration we are on wrt number of RR draws
         effective_round_seq = self.rrseq
-        print("-------\nTaking as effective round of %s" % effective_round_seq)
+        # print("Taking as effective round of %s" % effective_round_seq)
 
         for bracket in brackets.items():
             teams_list = bracket[1]  # Team Array is second item
             division_seq = bracket[0]
             total_debates = len(teams_list) // 2
-            print("DIVISOIN %s with %s teams" % (division_seq, len(teams_list)))
+            # print("DIVISION %s with %s teams" % (division_seq, len(teams_list)))
 
             fold_top = teams_list[:total_debates]
             fold_bottom = teams_list[total_debates:]
@@ -1193,8 +1191,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
             folded_list = list(fold_top)
             folded_list.extend(fold_bottom)
 
-            print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]])
-            print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]])
+            # print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]])
+            # print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]])
 
             for i in range(1, effective_round_seq):
                 # Left-most bottom goes to position[1] on the top
@@ -1203,8 +1201,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                 folded_list.append(folded_list.pop(total_debates))
                 # Print "popping %s iteration %s" % (i, total_debates)
 
-            print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]])
-            print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]])
+            # print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[:total_debates]])
+            # print(["%s - %s" % (teams_list.index(t) + 1, t) for t in folded_list[total_debates:]])
 
             # IE For Round 2 - before and after
             # ['1 - Aquinas 1', '2 - Aquinas 2', '3 - Penrhos 1']
@@ -1226,7 +1224,7 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
                         room_rank=division_seq,
                         division=aff.division
                     )
-                    print("\t matchup is %s (%s) vs %s (%s)" % (aff, teams_list.index(aff) + 1, neg, teams_list.index(neg) + 1))
+                    # print("\t matchup is %s (%s) vs %s (%s)" % (aff, teams_list.index(aff) + 1, neg, teams_list.index(neg) + 1))
                     assigned_pairings.append(pairing)
                     assigned_teams.append(aff)
                     assigned_teams.append(neg)

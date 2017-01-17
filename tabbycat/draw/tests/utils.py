@@ -20,3 +20,9 @@ class TestTeam(object):
 
     def seen(self, other):
         return self.hist.count(other.id)
+
+
+class TestDivision(object):
+
+    def __init__(self):
+        self.name = "1"
