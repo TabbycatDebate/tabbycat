@@ -5,16 +5,15 @@ from .models import DebateTeamMotionPreference, Motion
 # From scipy.stats import chisquare
 
 
-def statistics(round):
+def statistics(tournament, rounds):
 
     motions = Motion.objects.select_related('round').filter(
-        round__seq__lte=round.seq, round__tournament=round.tournament)
+        round__in=rounds)
 
     winners = TeamScore.objects.filter(
         win=True,
         ballot_submission__confirmed=True,
-        ballot_submission__debate__round__tournament=round.tournament,
-        ballot_submission__debate__round__seq__lte=round.seq).select_related(
+        ballot_submission__debate__round__in=rounds).select_related(
         'debate_team', 'ballot_submission__motion')
 
     wins = dict()
@@ -41,12 +40,11 @@ def statistics(round):
 
         motion.c1, motion.p_value = None, None
 
-    if round.tournament.pref('motion_vetoes_enabled'):
+    if tournament.pref('motion_vetoes_enabled'):
         veto_objs = DebateTeamMotionPreference.objects.filter(
             preference=3,
             ballot_submission__confirmed=True,
-            ballot_submission__debate__round__tournament=round.tournament,
-            ballot_submission__debate__round__seq__lte=round.seq).select_related(
+            ballot_submission__debate__round__in=rounds).select_related(
             'debate_team', 'ballot_submission__motion')
         vetoes = dict()
         for pos, _ in DebateTeam.POSITION_CHOICES:

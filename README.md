@@ -4,7 +4,7 @@
 
 Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Australs in Auckland 2010, [Wellington 2012](https://www.facebook.com/Australs2012), [Dunedin 2014](http://australs2014.herokuapp.com), [Daejeon 2015](http://australs2015.herokuapp.com) and [Perth 2016](http://australs2016.herokuapp.com), as well as [many other tournaments of all sizes](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [WAustrals 2016 tab website](http://australs2016.herokuapp.com).
 
-**Want to try it out?** The best way is trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
+**Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
 
 ## Features
 

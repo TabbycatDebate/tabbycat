@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block head-title %}<span class="emoji">👋</span> Welcome!{% endblock %}
+{% block head-title %}<span class="emoji">👋</span> {% trans "Welcome!" %}{% endblock %}
 {% block page-title %}Home{% endblock %}
 {% block nav %}{% endblock %}
 
@@ -13,14 +13,19 @@
       {% if user.is_authenticated %}
         <li class="list-group-item">
           <a href="{{ tournament.get_absolute_url }}">
-            <span class="emoji">🔧</span>{% blocktrans trimmed %}Admin area for {% endblocktrans %}
-            <strong>{{ tournament.name }}</strong>
+            <span class="emoji">🔧</span>
+            {% with tournament_name=tournament.name %}
+              {% blocktrans trimmed %}
+                Admin area for <strong>{{ tournament_name }}</strong>
+              {% endblocktrans %}
+            {% endwith %}
           </a>
         </li>
       {% endif %}
       <li class="list-group-item">
         <a href="{{ tournament.get_public_url }}">
-          <span class="emoji">{% if tournament.emoji %}{{tournament.emoji }}{% else %}🏆{% endif %}</span>{{ tournament.name }}
+          <span class="emoji">{% if tournament.emoji %}{{tournament.emoji }}{% else %}🏆{% endif %}</span>
+          {{ tournament.name }}
         </a>
       </li>
     {% endfor %}

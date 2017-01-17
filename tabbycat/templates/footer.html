@@ -17,8 +17,10 @@
           {% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}
         </h6>
         <p>
-          Tabbycat is an open-source project for tabbing debating tournaments that use two-team formats. It was created by Qi-Shan Lim, Chuan-Zheng Lee</a>, and Philip Belesky.</a>
-          Personal or institutional <a href="http://PayPal.Me/tabbycatproject/0aud">donations to the project's developers</a> are much appreciated.
+          {% blocktrans trimmed %}
+            Tabbycat is an open-source project for tabbing debating tournaments that use two-team formats. It was created by Qi-Shan Lim, Chuan-Zheng Lee, and Philip Belesky.
+            Personal or institutional <a href="http://PayPal.Me/tabbycatproject/0aud">donations to the project's developers</a> are much appreciated.
+          {% endblocktrans %}
         </p>
       </div>
       <div class="col-md-4">
@@ -45,16 +47,19 @@
       <div class="col-md-12">
         <ul class="nav navbar-nav">
           <li class="nav-item">
-            <a class="nav-link " href="https://github.com/czlee/tabbycat/"><span class="glyphicon glyphicon-console"></span> Github</a>
+            <a class="nav-link " href="https://github.com/czlee/tabbycat/"><span class="glyphicon glyphicon-console"></span> {% trans "GitHub" %}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/"><span class="glyphicon glyphicon-info-sign"></span> Documentation</a>
+            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/"><span class="glyphicon glyphicon-info-sign"></span> {% trans "Documentation" %}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/about/support.html"><span class="glyphicon glyphicon-user"></span> Support</a>
+            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/about/support.html"><span class="glyphicon glyphicon-question-sign"></span> {% trans "Support" %}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way"><span class="glyphicon glyphicon-open"></span> Set Up A Copy</a>
+            <a class="nav-link " href="https://www.facebook.com/groups/tabbycat.debate/"><span class="glyphicon glyphicon-user"></span> {% trans "Facebook Group" %}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way"><span class="glyphicon glyphicon-open"></span> {% trans "Set Up A Copy" %}</a>
           </li>
         </ul>
       </div>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-08 11:08-0700\n"
+"POT-Creation-Date: 2017-01-14 16:00-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "That password isn't correct."
 msgstr "Ce n'est pas le bon mot de passe."
 
-#: results/forms.py:366
+#: results/forms.py:365
 msgid "The ballot set can't be both discarded and confirmed."
 msgstr "L'ensemble de bulletins ne peut pas être réjeté et confirmé"
 
-#: results/forms.py:372
+#: results/forms.py:371
 msgid ""
 "The debate status can't be confirmed unless one of the ballot sets is "
 "confirmed."
@@ -34,7 +34,7 @@ msgstr ""
 "Le statut du débat ne peut pas être confirmé sauf qu'une des ensembles de "
 "bulletins est confirmé."
 
-#: results/forms.py:386
+#: results/forms.py:385
 #, python-format
 msgid ""
 "The total scores for the teams are the same (i.e. a draw) for adjudicator "
@@ -43,7 +43,7 @@ msgstr ""
 "Les scores totals pour les deux équipes sont la même (c'est-a-dire, un nul) "
 "pour l'adjudicateur %(adj)s (%(adj_ins)s)"
 
-#: results/forms.py:393
+#: results/forms.py:392
 #, python-format
 msgid ""
 "The margin (%(margin).1f) in the ballot of adjudicator %(adj)s (%(adj_ins)s) "
@@ -52,12 +52,12 @@ msgstr ""
 "La marge (%(margin).1f) dans le bulletin de l'adjudicateur %(adj)s "
 "(%(adj_ins)s) excède la marge maximale admissable (%(max_margin).1f)"
 
-#: results/forms.py:417
+#: results/forms.py:416
 #, python-format
 msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
 msgstr "Il semble que l'orateur %(speaker)s ne soit pas sur l'équipe %(team)s"
 
-#: results/forms.py:426
+#: results/forms.py:425
 #, python-format
 msgid ""
 "The speaker %(speaker)s appears to have given multiple (%(count)d) "
@@ -66,7 +66,7 @@ msgstr ""
 "Il semble que l'orateur %(speaker)s ait fait plusieurs (%(count)d) discours "
 "substantif pour l'équipe %(side)s."
 
-#: results/forms.py:437
+#: results/forms.py:436
 #, python-format
 msgid ""
 "The last substantive speaker and reply speaker for the %(side)s team can't "
@@ -75,7 +75,7 @@ msgstr ""
 "Le dernier orateur et l'orateur de réponse pour l'équipe %(side)s ne peuvent "
 "pas être la même personne."
 
-#: results/forms.py:444
+#: results/forms.py:443
 #, python-format
 msgid ""
 "The reply speaker for the %(side)s team did not give a substantive speech."
