@@ -38,15 +38,13 @@
       <br><span class="small" v-html="cellData['subtext']"></span>
     </span>
 
-    <div class="popover-raw hide" v-if="cellData['popover']">
-      <li v-if="popContent['text']"
-          v-on:click=""
-          v-for="popContent in cellData['popover']['content']" class="list-group-item">
-        <a v-if="popContent['link']" :href="popContent['link']">
-          {{{ popContent['text'] }}}
+    <div class="popover-raw hide" v-if="canSupportPopover">
+      <li v-for="popItem in popOverContent" class="list-group-item">
+        <a v-if="popItem['link']" :href="popItem['link']">
+          {{{ popItem['text'] }}}
         </a>
         <span v-else>
-          {{{ popContent['text'] }}}
+          {{{ popItem['text'] }}}
         </span>
       </li>
     </div>
@@ -63,13 +61,31 @@ export default {
   props: {
     cellData: Object,
   },
+  computed: {
+    canSupportPopover: function() {
+      if (typeof this.cellData['popover'] !== 'undefined') {
+        if (this.cellData['popover'].hasOwnProperty('content')) {
+          return true
+        }
+      }
+      return false
+    },
+    popOverContent: function () {
+      if (this.canSupportPopover === true) {
+        return this.cellData['popover']['content'].filter(function(key){
+          return key['text'] !== ""
+        });
+      }
+      return false
+    }
+  },
   methods: {
     getPopOverTitle: function() {
       return this.cellData['popover']['title'];
     },
     checkForPopover: function(event) {
       // Need to check the data exists for a popover before constructing it
-      if (typeof this.cellData['popover'] !== 'undefined') {
+      if (this.canSupportPopover === true) {
         this.setupPopover(event);
       }
     },

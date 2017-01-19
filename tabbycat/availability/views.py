@@ -13,6 +13,7 @@ from draw.models import Debate
 from draw.utils import partial_break_round_split
 from participants.models import Adjudicator, Team
 from actionlog.models import ActionLogEntry
+from tournaments.models import Round
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
 from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
@@ -48,6 +49,8 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['checkin_types'] = [teams, adjs, venues]
         kwargs['min_adjudicators'] = teams['in_now'] // 2
         kwargs['min_venues'] = teams['in_now'] // 2
+
+        kwargs['error_type'] = getattr(self, 'error_type', None)
         return super().get_context_data(**kwargs)
 
     def _get_breaking_teams_dict(self):
@@ -66,8 +69,13 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             return teams_dict
 
         elif r.draw_type is r.DRAW_BREAK:
-            last_round = r.break_category.round_set.filter(seq__lt=r.seq).order_by('-seq').first()
-            advancing_teams = last_round.debate_set.count()
+            last_round = r.break_category.round_set.filter(stage=Round.STAGE_ELIMINATION,
+                    seq__lt=r.seq).order_by('-seq').first()
+            if last_round is None:
+                self.error_type = 'no_last_round'
+                advancing_teams = 0
+            else:
+                advancing_teams = last_round.debate_set.count()
             return {
                 'type'      : 'Team',
                 'total'     : advancing_teams,
@@ -178,7 +186,7 @@ class BaseBulkActivationView(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirec
 
     def post(self, request, *args, **kwargs):
         self.activate_function()
-        messages.add_message(self.request, messages.SUCCESS, self.activation_msg)
+        messages.success(self.request, self.activation_msg)
         return super().post(request, *args, **kwargs)
 
 

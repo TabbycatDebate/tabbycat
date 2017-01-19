@@ -2,6 +2,7 @@
 Change Log
 ==========
 
+
 1.2.0
 -----
 
@@ -9,10 +10,16 @@ Change Log
 - Added basic infrastructure for creating tabbycat translations
 
 
+1.1.6
+-----
+- A number of minor bug fixes
+- Added basic infrastructure for creating tabbycat translations
+
+
 1.1.5
 -----
-
 - A number of minor bug fixes and improvements to documentation
+
 
 1.1.4
 -----

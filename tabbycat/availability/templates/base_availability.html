@@ -82,11 +82,11 @@
           references: references,
         },
         success: function(data, status) {
-          $.fn.showAlert('success', 'Saved availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the checkins overview page?</a>', 2000);
+          $.fn.showAlert('success', 'Saved availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the check-ins overview page?</a>', 2000);
           btn.button('reset');
         },
         error: function(xhr, error, ex) {
-          $.fn.showAlert('danger', 'Error saving availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the checkins overview page?</a>', 5000);
+          $.fn.showAlert('danger', 'Error saving availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the check-ins overview page?</a>', 5000);
           btn.button('reset');
         }
       });
