@@ -39,7 +39,7 @@
     </span>
 
     <div class="popover-raw hide" v-if="canSupportPopover">
-      <li v-for="popItem in this.cellData['popover']['content']" class="list-group-item">
+      <li v-for="popItem in popOverContent" class="list-group-item">
         <a v-if="popItem['link']" :href="popItem['link']">
           {{{ popItem['text'] }}}
         </a>
@@ -67,6 +67,14 @@ export default {
         if (this.cellData['popover'].hasOwnProperty('content')) {
           return true
         }
+      }
+      return false
+    },
+    popOverContent: function () {
+      if (this.canSupportPopover === true) {
+        return this.cellData['popover']['content'].filter(function(key){
+          return key['text'] !== ""
+        });
       }
       return false
     }
