@@ -2,9 +2,16 @@
 Change Log
 ==========
 
+
+1.1.6
+-----
+- A number of minor bug fixes
+
+
 1.1.5
 -----
 - A number of minor bug fixes and improvements to documentation
+
 
 1.1.4
 -----
