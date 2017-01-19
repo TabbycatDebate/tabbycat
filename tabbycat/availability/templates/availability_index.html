@@ -80,14 +80,14 @@
       </button>
     {% elif min_venues > checkin_types.2.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="There are too few checked in venues available
-         for the amount of debates — the draw may not generate properly.">
+        data-toggle="tooltip" title="There are too few venue checked in
+         for the number of debates — the draw may not generate properly">
          Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
        </button>
     {% elif min_adjudicators > checkin_types.1.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="There are too few checked in adjudicators
-        available for the amount of debates — the draw may not generate properly">
+        data-toggle="tooltip" title="There are too few adjudicators checked in
+        for the number of debates — the draw may not generate properly">
         Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
     {% elif not checkin_types.0.in_now|divisibleby:2  %}
@@ -171,6 +171,17 @@
       like to
       <a href="{% tournament_url breakqual-teams round.break_category.slug %}" class="alert-link">
         review the break for the {{ round.break_category.name }} Break</a>.
+    </div>
+  {% endif %}
+
+  {% if round.draw_type == round.DRAW_BREAK and error_type == 'no_last_round' %}
+    <div class="alert alert-danger">
+      This is a subsequent elimination round, but there aren't any elimination
+      rounds in the same break category ({{ round.break_category.name }}) before
+      it. Is this round meant to be a <strong>first elimination</strong> round
+      instead? You can
+      <a href="{% url 'admin:tournaments_round_change' round.id %}" class="alert-link">
+        edit this round's draw type in the Edit Database area.</a>
     </div>
   {% endif %}
 

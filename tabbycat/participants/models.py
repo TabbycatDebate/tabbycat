@@ -115,7 +115,7 @@ class Team(models.Model):
 
     @property
     def venue_preferences(self):
-        return self.teamvenuepreference_set.all().order_by('-priority')
+        return self.teamvenueconstraint_set.all().order_by('-priority')
 
     TYPE_NONE = 'N'
     TYPE_SWING = 'S'
@@ -176,7 +176,10 @@ class Team(models.Model):
 
     def break_rank_for_category(self, category):
         from breakqual.models import BreakingTeam
-        bt = BreakingTeam.objects.get(break_category=category, team=self)
+        try:
+            bt = BreakingTeam.objects.get(break_category=category, team=self)
+        except BreakingTeam.DoesNotExist:
+            return None
         return bt.break_rank
 
     def get_aff_count(self, seq=None):

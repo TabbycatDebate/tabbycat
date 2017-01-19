@@ -53,9 +53,9 @@ supporting many custom variations of the above formats too.
    :maxdepth: 1
    :caption: About
 
+   about/support
    about/authors
    about/changelog
    about/contributing
    about/licence
-   about/release-notes
    about/tournament-history

@@ -267,7 +267,7 @@ class CreateDrawView(DrawStatusEdit):
         except DrawError as e:
             messages.error(request, "There was a problem creating the draw: " + str(e) + " If this "
                 " issue persists and you're not sure how to resolve it, please contact the developers.")
-            logger.critical(str(e), exc_info=True)
+            logger.error(str(e), exc_info=True)
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
         relevant_adj_venue_constraints = AdjudicatorVenueConstraint.objects.filter(

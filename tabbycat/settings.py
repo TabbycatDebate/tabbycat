@@ -24,9 +24,9 @@ LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-TABBYCAT_VERSION = '1.1.4'
+TABBYCAT_VERSION = '1.1.6'
 TABBYCAT_CODENAME = 'Egyptian Mau'
-READTHEDOCS_VERSION = 'v1.1.4'
+READTHEDOCS_VERSION = 'v1.1.6'
 
 # ==============================================================================
 # Django-specific Module

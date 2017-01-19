@@ -123,10 +123,11 @@ class BaseTeamRecordView(BaseRecordView):
         teamscores = TeamScore.objects.filter(debate_team__team=self.object,
                 ballot_submission__confirmed=True,
                 debate_team__debate__round__seq__lt=tournament.current_round.seq,
-                debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
-                debate_team__debate__round__silent=False).select_related(
+                debate_team__debate__round__draw_status=Round.STATUS_RELEASED).select_related(
                 'debate_team__debate', 'debate_team__debate__round').prefetch_related(
                 'debate_team__debate__debateadjudicator_set__adjudicator')
+        if not tournament.pref('all_results_released'):
+            teamscores = teamscores.filter(debate_team__debate__round__silent=False)
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)
@@ -172,10 +173,11 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         tournament = self.get_tournament()
         debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.object,
                 debate__round__seq__lt=tournament.current_round.seq,
-                debate__round__draw_status=Round.STATUS_RELEASED,
-                debate__round__silent=False).select_related(
+                debate__round__draw_status=Round.STATUS_RELEASED).select_related(
                 'debate', 'debate__round').prefetch_related(
                 'debate__debateadjudicator_set', 'debate__debateadjudicator_set__adjudicator')
+        if not tournament.pref('all_results_released'):
+            debateadjs = debateadjs.filter(debate__round__silent=False)
         debates = [da.debate for da in debateadjs]
         populate_teams(debates)
         populate_wins(debates)
