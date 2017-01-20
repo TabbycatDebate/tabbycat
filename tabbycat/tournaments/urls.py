@@ -67,7 +67,7 @@ urlpatterns = [
         include('options.urls')),
 
     # Printing App
-    url(r'^participants/',
+    url(r'^admin/printing/',
         include('printing.urls_admin')),
 
     # Participants App
