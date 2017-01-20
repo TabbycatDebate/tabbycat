@@ -50,6 +50,15 @@
 
 {% block page-alerts %}
 
+  {% if round.draw_status == round.STATUS_RELEASED and not pref.public_draw %}
+    <div class="alert alert-warning">
+      You have released the draw, but it will not show to the public unless
+      'public view of draw' setting is enabled in
+      <a class="alert-link" href="{% tournament_url options-tournament-index %}">
+         this tournament's configuration</a>.
+    </div>
+  {% endif %}
+
 {% endblock %}
 
 {% block content %}
