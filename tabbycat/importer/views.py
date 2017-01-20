@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.utils import IntegrityError
 from django.shortcuts import render
 
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -29,13 +30,10 @@ def edit_institutions(request, t):
     institutions = []
     institution_lines = request.POST['institutions_raw'].split('\n')
     for line in institution_lines:
-        try:
-            full_name = line.split(',')[0].strip()
-            short_name = line.split(',')[1].strip()
-            institution = Institution(name=full_name, code=short_name)
-            institutions.append(institution)
-        except:
-            pass  # TODO
+        full_name = line.split(',')[0].strip()
+        short_name = line.split(',')[1].strip()
+        institution = Institution(name=full_name, code=short_name)
+        institutions.append(institution)
 
     return render(request,
                   'edit_institutions.html',
@@ -48,6 +46,7 @@ def edit_institutions(request, t):
 def confirm_institutions(request, t):
     institution_names = request.POST.getlist('institution_names')
     institution_codes = request.POST.getlist('institution_codes')
+    added_institutions = 0
 
     for i, key in enumerate(institution_names):
         try:
@@ -55,10 +54,12 @@ def confirm_institutions(request, t):
             short_name = institution_codes[i]
             institution = Institution(name=full_name, code=short_name)
             institution.save()
-        except:
-            pass
+            added_institutions += 1
+        except IntegrityError:
+            messages.error(request, "Institution '%s' already exists" % institution_names[i])
 
-    messages.success(request, "%s Institutions have been added" % len(institution_names))
+    if added_institutions > 0:
+        messages.success(request, "%s Institutions have been added" % len(institution_names))
     return render(request, 'data_index.html')
 
 
@@ -79,19 +80,16 @@ def edit_venues(request, t):
     venues = []
     venue_lines = request.POST['venues_raw'].split('\n')
     for line in venue_lines:
-        try:
-            name = line.split(',')[0].strip()
-            priority = line.split(',')[1].strip()
-            if len(line.split(',')) > 2:
-                venues.append({
-                    'name': name,
-                    'priority': priority,
-                    'group': line.split(',')[2].strip()
-                })
-            else:
-                venues.append({'name': name, 'priority': priority, })
-        except:
-            pass  # TODO
+        name = line.split(',')[0].strip()
+        priority = line.split(',')[1].strip()
+        if len(line.split(',')) > 2:
+            venues.append({
+                'name': name,
+                'priority': priority,
+                'group': line.split(',')[2].strip()
+            })
+        else:
+            venues.append({'name': name, 'priority': priority, })
 
     return render(request, 'edit_venues.html', dict(venues=venues))
 
@@ -255,6 +253,7 @@ def edit_teams(request, t):
 @tournament_view
 def confirm_teams(request, t):
     sorted_post = sorted(request.POST.items())
+    added_teams = 0
     print(sorted_post)
 
     for i in range(0, len(sorted_post) - 1, 4):
@@ -272,13 +271,18 @@ def confirm_teams(request, t):
                            reference=team_name,
                            short_reference=team_name[:34],
                            tournament=t,
-                           use_institution_prefix=use_prefix, )
-            newteam.save()
-            for speaker in speaker_names:
-                newspeaker = Speaker(name=speaker, team=newteam)
-                newspeaker.save()
+                           use_institution_prefix=use_prefix)
+            try:
+                newteam.save()
+                for speaker in speaker_names:
+                    newspeaker = Speaker(name=speaker, team=newteam)
+                    newspeaker.save()
+                added_teams += 1
+            except IntegrityError:
+                messages.error(request, "Team '%s %s' Was not saved because that team already exists." % (institution, team_name))
 
-    messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
+    if added_teams > 0:
+        messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
     return render(request, 'data_index.html')
 
 
