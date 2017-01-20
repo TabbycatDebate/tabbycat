@@ -31,7 +31,7 @@ class Debate(models.Model):
     objects = DebateManager()
 
     round = models.ForeignKey('tournaments.Round', db_index=True)
-    venue = models.ForeignKey('venues.Venue', blank=True, null=True)
+    venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True)
     division = models.ForeignKey('divisions.Division', blank=True, null=True)
 
     bracket = models.FloatField(default=0)
