@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.utils import IntegrityError
 from django.shortcuts import render
 
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -29,14 +30,10 @@ def edit_institutions(request, t):
     institutions = []
     institution_lines = request.POST['institutions_raw'].split('\n')
     for line in institution_lines:
-        try:
-            full_name = line.split(',')[0].strip()
-            short_name = line.split(',')[1].strip()
-            institution = Institution(name=full_name, code=short_name)
-            institutions.append(institution)
-        except Exception as e: # TODO proper handling
-            print("Problem with importing institutions: " + str(e))
-            pass
+        full_name = line.split(',')[0].strip()
+        short_name = line.split(',')[1].strip()
+        institution = Institution(name=full_name, code=short_name)
+        institutions.append(institution)
 
     return render(request,
                   'edit_institutions.html',
@@ -49,6 +46,7 @@ def edit_institutions(request, t):
 def confirm_institutions(request, t):
     institution_names = request.POST.getlist('institution_names')
     institution_codes = request.POST.getlist('institution_codes')
+    added_institutions = 0
 
     for i, key in enumerate(institution_names):
         try:
@@ -56,11 +54,13 @@ def confirm_institutions(request, t):
             short_name = institution_codes[i]
             institution = Institution(name=full_name, code=short_name)
             institution.save()
-        except Exception as e: # TODO proper handling
-            print("Problem with confirming institutions: " + str(e))
-            pass
+            added_institutions += 1
+        except IntegrityError:
+            messages.error(request, "Institution '%s' already exists" % institution_names[i])
 
-    messages.success(request, "%s institutions have been added" % len(institution_names))
+    if added_institutions > 0:
+        messages.success(request, "%s Institutions have been added" % len(institution_names))
+
     return render(request, 'data_index.html')
 
 
@@ -82,22 +82,15 @@ def edit_venues(request, t):
     venue_lines = request.POST['venues_raw'].split('\n')
     for line in venue_lines:
         name = line.split(',')[0].strip()
-
-        try:
-            priority = line.split(',')[1].strip()
-        except IndexError:
-            priority = 50
-        except Exception as e:
-            print("Problem with importing venue priority: " + str(e))
-
-        try:
-            group = line.split(',')[2].strip()
-        except IndexError:
-            group = None
-        except Exception as e:
-            print("Problem with importing venue group: " + str(e))
-
-        venues.append({'name': name, 'priority': priority, 'group': group})
+        priority = line.split(',')[1].strip()
+        if len(line.split(',')) > 2:
+            venues.append({
+                'name': name,
+                'priority': priority,
+                'group': line.split(',')[2].strip()
+            })
+        else:
+            venues.append({'name': name, 'priority': priority})
 
     return render(request, 'edit_venues.html', dict(venues=venues))
 
@@ -110,6 +103,7 @@ def confirm_venues(request, t):
     venue_priorities = request.POST.getlist('venue_priorities')
     venue_groups = request.POST.getlist('venue_groups')
     venue_shares = request.POST.getlist('venue_shares')
+
     for i, key in enumerate(venue_names):
         if venue_groups[i]:
             try:
@@ -185,7 +179,6 @@ def confirm_venue_preferences(request, t):
         venue_group_id = idset.split('_')[1]
 
         if institution_id and venue_group_id and priority:
-            # print('making a pref')
             institution = Institution.objects.get(pk=int(institution_id))
             venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
             venue_preference = VenueConstraint(
@@ -247,7 +240,6 @@ def edit_teams(request, t):
                 'id': institution.id,
                 'available_team_numbers': available_team_numbers
             })
-            # print('____')
 
     return render(request, 'edit_teams.html',
                   dict(institutions=institutions_with_team_numbers,
@@ -259,7 +251,7 @@ def edit_teams(request, t):
 @tournament_view
 def confirm_teams(request, t):
     sorted_post = sorted(request.POST.items())
-    print(sorted_post)
+    added_teams = 0
 
     for i in range(0, len(sorted_post) - 1, 4):
         # Sort through the items advancing 4 at a time
@@ -276,13 +268,18 @@ def confirm_teams(request, t):
                            reference=team_name,
                            short_reference=team_name[:34],
                            tournament=t,
-                           use_institution_prefix=use_prefix, )
-            newteam.save()
-            for speaker in speaker_names:
-                newspeaker = Speaker(name=speaker, team=newteam)
-                newspeaker.save()
+                           use_institution_prefix=use_prefix)
+            try:
+                newteam.save()
+                for speaker in speaker_names:
+                    newspeaker = Speaker(name=speaker, team=newteam)
+                    newspeaker.save()
+                added_teams += 1
+            except IntegrityError:
+                messages.error(request, "Team '%s %s' Was not saved because that team already exists." % (institution, team_name))
 
-    messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
+    if added_teams > 0:
+        messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
     return render(request, 'data_index.html')
 
 

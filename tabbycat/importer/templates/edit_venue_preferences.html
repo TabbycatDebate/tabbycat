@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<div class="alert alert-info" id="">
+<div class="alert alert-info">
   <p>For each institution set a number that represents the priority for each
   venue group (higher is more preferred). Leave as blank if you don't wish to
   add a priority.</p>
@@ -39,8 +39,8 @@
             </div>
 
             <ul class="list-group">
-              <input class="hidden" type="number" name="institutionIDs" value={{ institution.id }} />
 
+              <input class="hidden" type="number" name="institutionIDs" value={{ institution.id }} />
               {% for venue_group in venue_groups %}
                 <li class="list-group-item">
                   <div class="row">
@@ -59,7 +59,6 @@
           </div>
         </div>
       </div>
-      <div class="row"></div>
     {% endfor %}
 
     <div class="form-group row">

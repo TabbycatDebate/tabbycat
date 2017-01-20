@@ -7,6 +7,11 @@
 
 {% block content %}
 
+<div class="alert alert-info">
+  <p>Specify the number of new adjudicators to add per institution.
+  In the next step you can specify their names and ratings</p>
+</div>
+
 {% if institutions.count == 0 %}
 
   <div class="alert alert-warning" role="alert">
