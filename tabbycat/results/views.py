@@ -329,7 +329,6 @@ class EditBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView)
 class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
 
     template_name = 'public_enter_results.html'
-    public_page_preference = 'public_ballots'
     relates_to_new_ballotsub = True
     action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT
 
@@ -380,11 +379,13 @@ class PublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePublicN
     model = Adjudicator
     pk_url_kwarg = 'adj_id'
     allow_null_tournament = True
+    public_page_preference = 'public_ballots'
 
 
 class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, BasePublicNewBallotSetView):
     model = Adjudicator
     allow_null_tournament = True
+    public_page_preference = 'public_ballots_randomised'
 
 
 # ==============================================================================
