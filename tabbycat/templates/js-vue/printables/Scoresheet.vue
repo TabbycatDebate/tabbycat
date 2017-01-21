@@ -35,9 +35,11 @@
         <div class="db-flex-item-2 db-align-horizontal-center db-align-vertical-end" v-html="choice_type"></div>
         <div class="db-flex-item-1 "></div>
         <div class="db-flex-item-2 db-flex-row">
+          <div class="db-item-gutter"></div>
           <div v-for="motion in motions" class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text">
             <span class="db-fill-in">{{ motion.seq }}</span>
           </div>
+          <div class="db-item-gutter"></div>
         </div>
 
       </div>
