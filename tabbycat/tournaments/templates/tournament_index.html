@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% block page-title %}{% trans "Dashboard" %}{% endblock %}
-{% block head-title %}{% trans "Tournament Overview" %}{% endblock %}
+{% block head-title %}<span class="emoji">⏰</span>{% trans "Tournament Overview" %}{% endblock %}
 
 {% block sub-title %}
   {% blocktrans with round_name=round.name round_status=round.get_draw_status_display.lower %}{{ round_name }} is {{ round_status }}{% endblocktrans %}

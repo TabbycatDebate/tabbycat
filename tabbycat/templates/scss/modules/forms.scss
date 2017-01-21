@@ -8,6 +8,9 @@
   font-weight: $headings-font-weight;
   padding: 10px 12px;
 }
+.btn[data-toggle='tooltip'] span {
+  border-bottom: none; // Need to prevent dashed lines in glyphicons in btns
+}
 
 //------------------------------------------------------------------------------
 // Inputs
@@ -21,6 +24,10 @@
   border-width: 2px;
   height: 39px;
   max-width: 100%;
+}
+
+.list-group-item .form-group:last-child {
+  margin-bottom: 0; // List group items are already bottom padded
 }
 
 // Center number inputs

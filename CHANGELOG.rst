@@ -2,6 +2,33 @@
 Change Log
 ==========
 
+
+1.2.0
+-----
+
+- Redesigned the core round workflow; splitting of the "Display Draw" and "Motions" actions into seperate pages to make for a more streamlined user experience
+- Added basic infrastructure for creating tabbycat translations
+
+
+1.1.6
+-----
+- A number of minor bug fixes
+- Added basic infrastructure for creating tabbycat translations
+
+
+1.1.5
+-----
+- A number of minor bug fixes and improvements to documentation
+
+
+1.1.4
+-----
+
+- Redesigned the footer area to better describe Tabbycat and to promote donations and related projects
+- Slight tweaks to the site homepage and main menus to better accomodate the login/log out links
+- A few minor bug fixes and improvements to error reporting
+
+
 1.1.3
 -----
 

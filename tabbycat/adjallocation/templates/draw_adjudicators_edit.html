@@ -2,12 +2,7 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block nav %}{% endblock %}
-{% block header %}{% endblock %}
-{% block footer %}{% endblock %}
-{% block page-subnav-sections %}{% endblock page-subnav-sections %}
-
-{% block content %}
+{% block body %}
 
 <div class="container-fluid">
 <div class="row">
@@ -200,7 +195,7 @@
 </div>
 </div>
 
-{% endblock content %}
+{% endblock body %}
 
 {% block extra-css %}
   <link rel="stylesheet" type="text/css" href="/static/css/allocation-old.css" />

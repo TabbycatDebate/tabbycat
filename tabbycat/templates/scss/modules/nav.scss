@@ -18,7 +18,12 @@
 
 // Offset the sidebar; should be nav-sidebar + 15
 .nav-sidebar-offset {
-  padding-left: $sidebar-width + 15px;
+  padding-left: $sidebar-width;
+}
+.override-sidebar-offset { // For fullscreen pages
+  .nav-sidebar-offset {
+    padding-left: 0;
+  }
 }
 
 .nav-sidebar {

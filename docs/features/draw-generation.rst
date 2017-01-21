@@ -39,6 +39,7 @@ Summary
 | **Draw pairing method**   | How to pair teams   | - Slide                                   |
 |                           | within brackets     | - Fold                                    |
 |                           |                     | - Random                                  |
+|                           |                     | - Adjacent                                |
 +---------------------------+---------------------+-------------------------------------------+
 | **Draw avoid conflicts**  | How to avoid        | - Off                                     |
 |                           | history/institution | - One-up-one-down                         |
@@ -103,9 +104,10 @@ Pairing method
 --------------------------------------------------------------------------------
 It's easiest to describe these by example, using a ten-team bracket:
 
-* `Fold`: 1 vs 10, 2 vs 9, 3 vs 8, 4 vs 7, 5 vs 6.
+* `Fold`: 1 vs 10, 2 vs 9, 3 vs 8, 4 vs 7, 5 vs 6. (Also known as high-low pairing.)
 * `Slide`: 1 vs 6, 2 vs 7, 3 vs 8, 4 vs 9, 5 vs 10.
 * `Random`: paired at random within bracket.
+* `Adjacent`: 1 vs 2, 3 vs 4, 5 vs 6, 7 vs 8, 9 vs 10. (Also known as high-high pairing.)
 
 Teams are always paired within their brackets, after resolving odd brackets.
 

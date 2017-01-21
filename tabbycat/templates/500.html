@@ -5,7 +5,7 @@
   <h2><span class="emoji">🙀</span>Internal Server Error (500)</h2>
 {% endblock %}
 
-{% block nav %}<div class="col-md-12 accommodate-footer">{% endblock %}
+{% block nav %}{% endblock %}
 
 {% block content %}
   <div class="panel panel-default">
@@ -26,7 +26,7 @@
   <script>
     document.getElementById("report-link").href = "https://github.com/czlee/tabbycat/issues/new/?title=Internal%20server%20error%20report&body=I%20hit%20an%20internal%20server%20error%20while%20trying%20to%20load%20this%20URL:%0A" + window.location.href + "%0A%0APlease%20describe%20what%20you%20were%20doing%20when%20the%20error%20happened,%20along%20with%20any%20other%20useful%20information:%0A&labels=error-report";
     document.getElementById("page-url").innerHTML = "(" + window.location.href + ")";
-    if(window.location.href.indexOf("admin") > -1) {
+    if(window.location.href.indexOf("admin") > -1 || window.location.href.indexOf("database") > -1) {
       document.getElementById("error-reporting").style.display = "block";
     }
   </script>

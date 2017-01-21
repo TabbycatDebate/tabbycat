@@ -70,11 +70,11 @@ $adj-button-width: 180px;
     background: $state-success-bg;
   }
   &.fixed-right {
-    top: 0;
+    top: 150px;
     right: 0;
     height: 100%;
     padding-bottom: 50px; // ensure no footer overlaps
-    padding-top: 73px;
+    padding-top: 10px;
   }
   &.fixed-bottom {
     bottom: 0;

@@ -7,8 +7,7 @@
 
 {% block page-subnav-sections %}
   {% if form.errors %}
-    <div class="alert alert-danger alert-dismissable">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <div class="alert alert-danger">
       Please correct the errors below.
       {{ form.non_field_errors }}
     </div>

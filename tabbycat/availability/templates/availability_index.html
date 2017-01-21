@@ -2,47 +2,51 @@
 {% load debate_tags %}
 
 {% block page-subnav-sections %}
-  {% if round.is_break_round %}
-    <a class="btn btn-default disabled">
-      Check In Teams
-    </a>
-  {% else %}
+
+  <div class="btn-group">
+    {% if round.is_break_round %}
+      <a class="btn btn-default disabled">
+        Check In Teams
+      </a>
+    {% else %}
+      <a class="btn btn-default submit-disable"
+         href="{% round_url availability-teams round %}">
+        Check-In Teams
+      </a>
+    {% endif %}
     <a class="btn btn-default submit-disable"
-       href="{% round_url availability-teams round %}">
-      Check In Teams
+       href="{% round_url availability-adjudicators round %}">
+      Check-In Adjs
     </a>
-  {% endif %}
-  <a class="btn btn-default submit-disable"
-     href="{% round_url availability-adjudicators round %}">
-    Check In Adjudicators
-  </a>
-  <a class="btn btn-default submit-disable"
-     href="{% round_url availability-venues round %}">
-    Check In Venues
-  </a>
-  {% if round.is_break_round %}
-    <form method="POST" action="{% round_url availability-checkin-breaking-adjudicators %}">
-      {% csrf_token %}
-      <button class="btn btn-primary submit-disable" type="submit">
-        Check In All Breaking Adjudicators
-      </button>
-    </form>
-  {% else %}
-    <form method="POST" action="{% round_url availability-checkin-all %}">
-      {% csrf_token %}
-      <button class="btn btn-primary submit-disable" type="submit">
-        Check In Everything
-      </button>
-    </form>
-    {% if round.prev %}
-      <form method="POST" action="{% round_url availability-checkin-previous %}">
+    <a class="btn btn-default submit-disable"
+       href="{% round_url availability-venues round %}">
+      Check-In Venues
+    </a>
+  </div>
+
+    {% if round.is_break_round %}
+      <form method="POST" action="{% round_url availability-checkin-breaking-adjudicators %}">
         {% csrf_token %}
         <button class="btn btn-primary submit-disable" type="submit">
-          Check In Everything Active in {{ round.prev.name }}
+          Check In All Breaking Adjs
         </button>
       </form>
+    {% else %}
+      <form method="POST" action="{% round_url availability-checkin-all %}">
+        {% csrf_token %}
+        <button class="btn btn-primary submit-disable" type="submit">
+          Check-In Everything
+        </button>
+      </form>
+      {% if round.prev %}
+        <form method="POST" action="{% round_url availability-checkin-previous %}">
+          {% csrf_token %}
+          <button class="btn btn-primary submit-disable" type="submit">
+            Check-In Active in {{ round.prev.abbreviation }}
+          </button>
+        </form>
+      {% endif %}
     {% endif %}
-  {% endif %}
 
 {% endblock %}
 
@@ -80,14 +84,14 @@
       </button>
     {% elif min_venues > checkin_types.2.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="There are too few checked in venues available
-         for the amount of debates — the draw may not generate properly.">
+        data-toggle="tooltip" title="There are too few venue checked in
+         for the number of debates — the draw may not generate properly">
          Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
        </button>
     {% elif min_adjudicators > checkin_types.1.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="There are too few checked in adjudicators
-        available for the amount of debates — the draw may not generate properly">
+        data-toggle="tooltip" title="There are too few adjudicators checked in
+        for the number of debates — the draw may not generate properly">
         Generate Draw <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
     {% elif not checkin_types.0.in_now|divisibleby:2  %}
@@ -171,6 +175,17 @@
       like to
       <a href="{% tournament_url breakqual-teams round.break_category.slug %}" class="alert-link">
         review the break for the {{ round.break_category.name }} Break</a>.
+    </div>
+  {% endif %}
+
+  {% if round.draw_type == round.DRAW_BREAK and error_type == 'no_last_round' %}
+    <div class="alert alert-danger">
+      This is a subsequent elimination round, but there aren't any elimination
+      rounds in the same break category ({{ round.break_category.name }}) before
+      it. Is this round meant to be a <strong>first elimination</strong> round
+      instead? You can
+      <a href="{% url 'admin:tournaments_round_change' round.id %}" class="alert-link">
+        edit this round's draw type in the Edit Database area.</a>
     </div>
   {% endif %}
 

@@ -48,13 +48,37 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
+# ==============================================================================
+# Shared standings
+# ==============================================================================
+
+class BaseStandingsView(RoundMixin, VueTableTemplateView):
+
+    def get_rounds(self):
+        """Returns all of the rounds that should be included in the tab."""
+        return self.get_tournament().prelim_rounds(until=self.get_round()).order_by('seq')
+
+
 class PublicTabMixin(PublicTournamentPageMixin):
     """Mixin for views that should only be allowed when the tab is released publicly."""
     cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
 
     def get_round(self):
-        # Always show tabs with respect to current round on public tab pages
-        return self.get_tournament().current_round
+        # Always show tabs with respect to current round on public tab pages,
+        # or the last non-silent round if the current round is silent.
+        tournament = self.get_tournament()
+        round = tournament.current_round
+        if round.silent and not tournament.pref('all_results_released'):
+            round = tournament.prelim_rounds(until=round).filter(
+                    silent=False).order_by('seq').last()
+        return round
+
+    def get_rounds(self):
+        # Hide silent rounds
+        rounds = super().get_rounds()
+        if not self.get_tournament().pref('all_results_released'):
+            rounds = rounds.filter(silent=False)
+        return rounds
 
     def populate_result_missing(self, standings):
         # Never highlight missing results on public tab pages
@@ -62,24 +86,15 @@ class PublicTabMixin(PublicTournamentPageMixin):
 
 
 # ==============================================================================
-# Shared standings
-# ==============================================================================
-
-class StandingsView(RoundMixin, VueTableTemplateView):
-    pass
-
-
-# ==============================================================================
 # Speaker standings
 # ==============================================================================
 
-class BaseSpeakerStandingsView(StandingsView):
+class BaseSpeakerStandingsView(BaseStandingsView):
     """Base class for views that display speaker standings."""
 
     rankings = ('rank',)
 
     def get_standings(self):
-        tournament = self.get_tournament()
         round = self.get_round()
 
         speakers = self.get_speakers()
@@ -90,7 +105,7 @@ class BaseSpeakerStandingsView(StandingsView):
                                               rank_filter=rank_filter)
         standings = generator.generate(speakers, round=round)
 
-        rounds = tournament.prelim_rounds(until=round).order_by('seq')
+        rounds = self.get_rounds()
         self.add_round_results(standings, rounds)
         self.populate_result_missing(standings)
 
@@ -229,7 +244,7 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
 # Team standings
 # ==============================================================================
 
-class BaseTeamStandingsView(StandingsView):
+class BaseTeamStandingsView(BaseStandingsView):
     """Base class for views that display team standings."""
 
     page_title = 'Team Standings'
@@ -245,7 +260,7 @@ class BaseTeamStandingsView(StandingsView):
         generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
         standings = generator.generate(teams, round=round)
 
-        rounds = tournament.prelim_rounds(until=round).order_by('seq')
+        rounds = self.get_rounds()
         add_team_round_results(standings, rounds)
         self.populate_result_missing(standings)
 
@@ -303,13 +318,13 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 # Motion standings
 # ==============================================================================
 
-class BaseMotionStandingsView(RoundMixin, VueTableTemplateView):
+class BaseMotionStandingsView(BaseStandingsView):
 
     page_title = 'Motions Tab'
     page_emoji = '💭'
 
     def get_table(self):
-        motions = motion_statistics.statistics(round=self.get_round())
+        motions = motion_statistics.statistics(tournament=self.get_tournament(), rounds=self.get_rounds())
         table = TabbycatTableBuilder(view=self, sort_key="Order")
 
         table.add_round_column([motion.round for motion in motions])
@@ -396,7 +411,8 @@ class DiversityStandingsView(SuperuserRequiredMixin, BaseDiversityStandingsView)
     for_public = False
 
 
-class PublicDiversityStandingsView(PublicTabMixin, BaseDiversityStandingsView):
+class PublicDiversityStandingsView(PublicTournamentPageMixin, BaseDiversityStandingsView):
 
+    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
     public_page_preference = 'public_diversity'
     for_public = True

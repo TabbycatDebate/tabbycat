@@ -69,17 +69,20 @@ function update_speaker() {
 
   var others = [];
   var posno = parseInt(pos.charAt(1));
+
   {% if form.using_replies %}
-  if (posno != {{ form.REPLY_POSITION }})
+    if (posno != {{ form.REPLY_POSITION }})
+      for (var i = 1; i <= {{ form.LAST_SUBSTANTIVE_POSITION }}; i++)
+        if (i != posno) others.push(i);
+    if (posno == {{ form.LAST_SUBSTANTIVE_POSITION }})
+      others.push({{ form.REPLY_POSITION }});
+    if (posno == {{ form.REPLY_POSITION }})
+      others.push({{ form.LAST_SUBSTANTIVE_POSITION }});
+  {% elif form.LAST_SUBSTANTIVE_POSITION %}
     for (var i = 1; i <= {{ form.LAST_SUBSTANTIVE_POSITION }}; i++)
       if (i != posno) others.push(i);
-  if (posno == {{ form.LAST_SUBSTANTIVE_POSITION }})
-    others.push({{ form.REPLY_POSITION }});
-  if (posno == {{ form.REPLY_POSITION }})
-    others.push({{ form.LAST_SUBSTANTIVE_POSITION }});
   {% else %}
-  for (var i = 1; i <= {{ form.LAST_SUBSTANTIVE_POSITION }}; i++)
-    if (i != posno) others.push(i);
+    // If there's no form (ie adj has no debate for this round) do nothing
   {% endif %}
 
   // Detect duplicates

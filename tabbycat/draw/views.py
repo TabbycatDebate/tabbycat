@@ -31,10 +31,6 @@ from .prefetch import populate_history
 logger = logging.getLogger(__name__)
 
 
-# ==============================================================================
-# Viewing Draw (Public)
-# ==============================================================================
-
 class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
     template_name = 'draw_display_by.html'
@@ -80,6 +76,10 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         return table
 
 
+# ==============================================================================
+# Viewing Draw (Public)
+# ==============================================================================
+
 class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTableView):
 
     public_page_preference = 'public_draw'
@@ -120,6 +120,15 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, TemplateView):
             r.draw = r.debate_set_with_prefetches()
         kwargs['all_rounds'] = all_rounds
         return super().get_context_data(**kwargs)
+
+
+# ==============================================================================
+# Viewing Draw (Admin)
+# ==============================================================================
+
+class AdminDrawDisplay(LoginRequiredMixin, BaseDrawTableView):
+
+    template_name = 'draw_display.html'
 
 
 class AdminDrawDisplayForRoundByVenueView(LoginRequiredMixin, BaseDrawTableView):
@@ -270,7 +279,7 @@ class CreateDrawView(DrawStatusEdit):
         except DrawError as e:
             messages.error(request, "There was a problem creating the draw: " + str(e) + " If this "
                 " issue persists and you're not sure how to resolve it, please contact the developers.")
-            logger.critical(str(e), exc_info=True)
+            logger.error(str(e), exc_info=True)
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
         relevant_adj_venue_constraints = VenueConstraint.objects.filter(
@@ -315,6 +324,7 @@ class ConfirmDrawRegenerationView(SuperuserRequiredMixin, TemplateView):
 
 class DrawReleaseView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_RELEASE
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
@@ -324,11 +334,13 @@ class DrawReleaseView(DrawStatusEdit):
         round.draw_status = round.STATUS_RELEASED
         round.save()
         self.log_action()
+        messages.success(request, "Relased the draw; it will now show on the public facing pages of this website")
         return super().post(request, *args, **kwargs)
 
 
 class DrawUnreleaseView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_UNRELEASE
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
@@ -338,11 +350,13 @@ class DrawUnreleaseView(DrawStatusEdit):
         round.draw_status = round.STATUS_CONFIRMED
         round.save()
         self.log_action()
+        messages.success(request, "Unrelased the draw; it will no longer show on the public facing pages of this website")
         return super().post(request, *args, **kwargs)
 
 
 class SetRoundStartTimeView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_START_TIME_SET
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         time_text = request.POST["start_time"]
@@ -372,7 +386,14 @@ class ScheduleDebatesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
-        kwargs['venue_groups'] = VenueGroup.objects.all()
+        tournament = self.get_tournament()
+        vgs = VenueGroup.objects.all()
+        for vg in vgs:
+            first_debate = Debate.objects.filter(venue__group=vg, round__tournament=tournament, time__isnull=False).first()
+            if first_debate:
+                vg.placeholder_date = first_debate.time
+
+        kwargs['venue_groups'] = vgs
         kwargs['divisions'] = Division.objects.filter(tournament=round.tournament).order_by('id')
         return super().get_context_data(**kwargs)
 
@@ -400,6 +421,7 @@ class ApplyDebateScheduleView(DrawStatusEdit):
             if division and division.time_slot:
                 date = request.POST[str(division.venue_group.id)]
                 if date:
+                    print("has date")
                     time = "%s %s" % (date, division.time_slot)
                     try:
                         debate.time = datetime.datetime.strptime(
@@ -409,6 +431,8 @@ class ApplyDebateScheduleView(DrawStatusEdit):
                             time, "%d/%m/%Y %H:%M:%S")  # Others
 
                     debate.save()
+                else:
+                    print("no date")
 
         messages.success(self.request, "Applied schedules to debates")
         return super().post(request, *args, **kwargs)

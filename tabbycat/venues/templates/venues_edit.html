@@ -2,20 +2,26 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block nav %}<div class="col-md-12">{% endblock %}
 {% block footer %}{% endblock %}
 
 {% block head-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
 {% block page-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
+
 {% block page-subnav-sections %}
-  <a class="btn btn-success" id="save">Save Venues</a>
+  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
+  </a>
   <form id="autoallocateForm" method="POST" action="{% round_url venues-auto-allocate %}">
     {% csrf_token %}
     <button class="btn btn-primary submit-disable" type="submit">
       Auto Allocate
     </button>
   </form>
-  <a class="btn btn-danger" href="{% round_url draw %}">Return to Draw</a>
+{% endblock %}
+{% block page-subnav-actions %}
+  <a class="btn btn-success" id="save">
+    <span class="glyphicon glyphicon-floppy-disk"></span> Save Venues
+  </a>
 {% endblock %}
 
 {% block extra-css %}
@@ -25,7 +31,7 @@
 {% block content %}
 <div class="row">
 
-  <div id="scratch" class="col-md-3 fixed-right" style="width: 25%">
+  <div id="scratch" class="fixed-right">
     <table id="unusedTable" class="table">
       <thead>
         <tr>
@@ -42,7 +48,8 @@
     {% endfor %}
   </div>
 
-  <div id="" class="col-md-9">
+  <div class="container-fluid">
+    <div id="main" class="">
 
     {% with ndebates=round.debate_set.count nvenues=round.active_venues.count %}
       {% if ndebates > nvenues %}
@@ -101,6 +108,7 @@
             {% endfor %}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   </div>

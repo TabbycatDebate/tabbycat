@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-08 11:08-0700\n"
+"POT-Creation-Date: 2017-01-14 16:00-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -297,15 +297,15 @@ msgstr ""
 msgid "Elimination rounds must have a break category."
 msgstr "Il faut que les tours à élimination aient un catégorie de break"
 
-#: tournaments/templates/blank_site_start.html:4
+#: tournaments/templates/blank_site_start.html:6
 msgid "Hello!"
 msgstr "Bonjour !"
 
-#: tournaments/templates/blank_site_start.html:12
+#: tournaments/templates/blank_site_start.html:15
 msgid "Welcome to your new Tabbycat installation!"
 msgstr "Bienvenue à votre nouvelle installation de Tabbycat !"
 
-#: tournaments/templates/blank_site_start.html:17
+#: tournaments/templates/blank_site_start.html:20
 msgid ""
 "To get started, you'll need to create the first user account. This account "
 "is a \"superuser\" account: it will be able to edit anything on the site. "
@@ -315,7 +315,7 @@ msgstr ""
 "est un compte « super-utilisateur » : il pourra modifier tout sur le site. "
 "Donc, vous devrez utiliser un mot de passe robuste."
 
-#: tournaments/templates/blank_site_start.html:24
+#: tournaments/templates/blank_site_start.html:27
 msgid ""
 "You can only create this account once, but if you like, you can change the "
 "username and password after it's created, or add new superusers afterwards."
@@ -324,12 +324,12 @@ msgstr ""
 "pourrez changer le nom d'utilisateur et le mot de passe après avoir le "
 "créer, et vous pourrez aussi ajouter des nouveaux super-utilisateurs."
 
-#: tournaments/templates/blank_site_start.html:36
-#: tournaments/templates/create_tournament.html:19
+#: tournaments/templates/blank_site_start.html:38
+#: tournaments/templates/create_tournament.html:20
 msgid "Whoops! There was an error with one or more fields."
 msgstr "Oups !  Il y avait une erreur dans un ou plusieurs champs."
 
-#: tournaments/templates/blank_site_start.html:58
+#: tournaments/templates/blank_site_start.html:60
 msgid "Create account"
 msgstr "Créer compte"
 
@@ -337,41 +337,20 @@ msgstr "Créer compte"
 msgid "Create New Tournament "
 msgstr "Créer nouveau tournoi"
 
-#: tournaments/templates/create_tournament.html:46
+#: tournaments/templates/create_tournament.html:47
 msgid "Create Tournament"
 msgstr "Créer tournoi"
 
 #: tournaments/templates/site_index.html:4
 msgid "Welcome!"
-msgstr "Bienvenue !"
+msgstr "Bienvenue&nbsp;!"
 
-#: tournaments/templates/site_index.html:4
-msgid "Which tournament are you after?"
-msgstr "Quel tournoi cherchez-vous ?"
-
-#: tournaments/templates/site_index.html:5
-msgid "Home"
-msgstr "Accueil"
-
-#: tournaments/templates/site_index.html:19
+#: tournaments/templates/site_index.html:18
 #, python-format
 msgid "Admin area for <strong>%(tournament_name)s</strong>"
 msgstr "Zone administrative de <strong>%(tournament_name)s</strong>"
 
-#: tournaments/templates/site_index.html:30
-#, python-format
-msgid "Public area for <strong>%(tournament_name)s</strong>"
-msgstr "Zone publique de <strong>%(tournament_name)s</strong>"
-
-#: tournaments/templates/site_index.html:37
-msgid "Edit database area"
-msgstr "Zone pour modifier la base de données"
-
-#: tournaments/templates/site_index.html:40
-msgid "Create new tournament"
-msgstr "Créer un nouveau tournoi"
-
-#: tournaments/templates/site_index.html:46
+#: tournaments/templates/site_index.html:35
 #, python-format
 msgid ""
 "It looks like there aren't any tournaments on this site. Would you like to "
@@ -380,21 +359,38 @@ msgstr ""
 "Il semble qu'il n'y ait aucun tournoi sur ce site. Voulez-vous <a href="
 "\"%(create_url)s\">en créer</a> ?"
 
-#: tournaments/templates/site_index.html:62
+#: tournaments/templates/site_index.html:41
 msgid "There are currently no tournaments set up on this site."
 msgstr "Il n'y a pas actuellement de tournois sur ce site."
 
-#: tournaments/templates/site_index.html:72
+#: tournaments/templates/site_index.html:53
 msgid "All Draws by Venue"
 msgstr "Tous les tirages par salle"
 
-#: tournaments/templates/site_index.html:77
+#: tournaments/templates/site_index.html:58
 msgid "All Draws by School"
 msgstr "Tous les tirages par salle"
 
-#: tournaments/templates/site_index.html:82
+#: tournaments/templates/site_index.html:63
 msgid "All Teams and Divisions"
 msgstr "Tous les tirages et toutes les divisions"
+
+#: tournaments/templates/site_index.html:74
+msgid "New Tournament"
+msgstr "Créer un nouveau tournoi"
+
+#: tournaments/templates/site_index.html:80
+msgid "Edit Database Area"
+msgstr "Zone pour modifier la base de données"
+
+#: tournaments/templates/site_index.html:88
+#, python-format
+msgid "Log Out (%(user)s)"
+msgstr "Déconnexion (%(user)s)"
+
+#: tournaments/templates/site_index.html:93
+msgid "Login as Admin"
+msgstr "Se connecter comme admin"
 
 #: tournaments/templates/tournament_index.html:6
 msgid "Dashboard"

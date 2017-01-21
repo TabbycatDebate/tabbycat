@@ -4,7 +4,8 @@
 {% block page-title %}🔓{% trans "Login" context "page title" %}{% endblock %}
 {% block head-title %}<span class="emoji">🔓</span>{% trans "Login" context "page title" %}{% endblock %}
 
-{% block nav %}<div class="col-md-12">{% endblock %}
+
+{% block nav %}{% endblock %}
 {% block page-alerts %}
 <!--[if lte IE 9]>
 <div class="alert alert-warning">
@@ -26,12 +27,12 @@
 
       {% if form.errors %}
         <div class="alert alert-danger">
-          {% trans "Your username and password didn't match."}
+          {% trans "Your username and password didn't match." %}
         </div>
       {% endif %}
 
       {% if next %}
-          {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
           <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
           {% else %}
           <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>

@@ -4,51 +4,53 @@
 {% block head-title %}<span class="emoji">🏆</span>{% trans "Create New Tournament "%}{% endblock %}
 {% block page-title %}Tabbycat{% endblock %}
 
-{% block nav %}<div class="col-md-12">{% endblock %}
+{% block nav %}{% endblock %}
 
 {% block content %}
 
-<div class="panel panel-default"><div class="panel-body">
+<div class="panel panel-default">
+  <div class="panel-body">
 
-  <form action="." method="POST" class="">
+    <form action="." method="POST" class="">
 
-    {% csrf_token %}
+      {% csrf_token %}
 
-    {% if form.errors %}
-      <div class="alert alert-danger">
-        {% trans "Whoops! There was an error with one or more fields." %}
-        {{ form.non_field_errors }}
-      </div>
-    {% endif %}
-
-    {% for field in form %}
-    <div class="form-group">
-      <div class="row">
-        <div class="col-sm-6">
-          <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
-          {{ field|addcss:"form-control" }}
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          {% trans "Whoops! There was an error with one or more fields." %}
+          {{ form.non_field_errors }}
         </div>
-        <div class="col-sm-6">
-          <label></label>
-          <span class="help-block">
-            {{ field.help_text }}
-          </span>
-          {% if field.errors %}
-            {{ field.errors }}
-          {% endif %}
+      {% endif %}
+
+      {% for field in form %}
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+              {{ field|addcss:"form-control" }}
+            </div>
+            <div class="col-sm-6">
+              <label></label>
+              <span class="help-block">
+                {{ field.help_text }}
+              </span>
+              {% if field.errors %}
+                {{ field.errors }}
+              {% endif %}
+            </div>
+          </div>
         </div>
+      {% endfor %}
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-block btn-success form-control col-md-6">
+          {% trans "Create Tournament" %}
+        </button>
       </div>
-    </div>
-    {% endfor %}
 
-    <div class="form-group">
-      <button type="submit" class="btn btn-block btn-success form-control">
-        {% trans "Create Tournament" %}
-      </button>
-    </div>
+    </form>
 
-  </form>
-
-</div></div>
+  </div>
+</div>
 
 {% endblock %}

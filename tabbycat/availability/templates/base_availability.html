@@ -3,6 +3,9 @@
 {% load static %}
 
 {% block page-subnav-sections %}
+  <a href="{% round_url availability-index round %}" class="btn btn-default">
+    <span class="glyphicon glyphicon-chevron-left"></span>Checkins Overview
+  </a>
   {% if round.seq > 1 %}
     <button id="select_previous" class="btn btn-primary" type="button">
       Copy from Previous
@@ -25,7 +28,7 @@
 
 {% block page-subnav-actions %}
   <button id="save_availability" class="btn btn-success submit-disable" >
-    Save Selected
+    <span class="glyphicon glyphicon-floppy-disk"></span> Save Selected
   </button>
 {% endblock %}
 
@@ -79,11 +82,11 @@
           references: references,
         },
         success: function(data, status) {
-          $.fn.showAlert('success', 'Saved availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the checkins overview page?</a>', 2000);
+          $.fn.showAlert('success', 'Saved availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the check-ins overview page?</a>', 2000);
           btn.button('reset');
         },
         error: function(xhr, error, ex) {
-          $.fn.showAlert('danger', 'Error saving availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the checkins overview page?</a>', 5000);
+          $.fn.showAlert('danger', 'Error saving availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the check-ins overview page?</a>', 5000);
           btn.button('reset');
         }
       });

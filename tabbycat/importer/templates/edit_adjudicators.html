@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<div class="alert alert-info alert-dismissable" id="">
+<div class="alert alert-info" id="">
   <p>As per the tournament's configuration, an adjudicator's rating must be
   between {{ pref.adj_min_score }} and {{ pref.adj_max_score }}. Adjudicators
   marked as 'shared' will not be associated with any particular tournament but
@@ -34,7 +34,7 @@
               <div class=" form-horizontal row">
 
                 <input class="hidden" type="text" name="{{ key }}_{{ adjudicator }}_Instititution" value="{{ key }}" />
-                <h5 class="col-sm-1">Adj #{{ adjudicator }}:</h5>
+                <h5 class="col-sm-1">{{ adjudicator }}:</h5>
 
                 <label class="col-sm-1 control-label">Name</label>
                 <div class="col-sm-4">

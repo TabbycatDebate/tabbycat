@@ -37,6 +37,7 @@ thead, .thead {
 }
 
 .vue-sortable {
+  white-space: nowrap; // Stop a toggle being pushed into 2 rows
   &:hover, &:hover .glyphicon {
     color: $brand-success;
     cursor: pointer;

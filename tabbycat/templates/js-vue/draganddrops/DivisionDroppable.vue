@@ -2,14 +2,10 @@
 
   <div class="panel panel-default" v-bind:class="{ 'panel-danger': hasEvenNumbers }">
 
-    <div class="panel-heading division-heading">
-      <h5 class="panel-title">D{{ division.name }} ({{ teams.length }})</h5>
-      <select name="select" class="form-control" v-model="division.venue_group">
-        <option value=""></option>
-        <option v-for="vg in vgs" value="{{ vg.id }}" v-bind:value="vg.id">
-          {{ vg.short_name }}
-        </option>
-      </select>
+    <div class="panel-heading text-center">
+      <h5 class="panel-title">
+        D{{ division.name }} <small>({{ teams.length }} teams)</small>
+      </h5>
     </div>
 
     <div class="panel-body vue-droppable division-droppable"
@@ -28,6 +24,15 @@
         </team-draggable>
       </template>
 
+    </div>
+
+    <div class="panel-footer division-footer">
+      <select name="select" class="form-control btn-sm" v-model="division.venue_group"  v-if="vgs.length > 0">
+        <option value=""></option>
+        <option v-for="vg in vgs" value="{{ vg.id }}" v-bind:value="vg.id">
+          At {{ vg.short_name }}
+        </option>
+      </select>
     </div>
 
   </div>

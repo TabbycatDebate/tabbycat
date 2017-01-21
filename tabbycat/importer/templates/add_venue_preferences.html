@@ -2,50 +2,60 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">🏩</span>Bulk Add Venue Preferences for an Institution{% endblock %}
-{% block page-title %}🏩 Bulk Add Venue Preferences for an Institution{% endblock %}
+{% block head-title %}<span class="emoji">🏩</span>Bulk Add Venue Constraints for an Institution{% endblock %}
+{% block page-title %}🏩 Bulk Add Venue Constraints for an Institution{% endblock %}
 
 {% block content %}
 
-<div class="alert alert-info alert-dismissable" id="">
-  <p>
-    Select which institutions you want to change the preferences of.
-  </p>
+{% if institutions.count == 0 %}
 
-</div>
+  <div class="alert alert-warning" role="alert">
+    You need to add institutions before adding venue constraints.
+  </div>
 
-<form action="{% tournament_url edit_venue_preferences %}" method="POST">
+{% else %}
 
-  <div class="row">
-    <div class="col-md-12">
-      <div class="panel">
+  <div class="alert alert-info" id="">
+    <p>Select which institutions you want to edit the constraints of.</p>
+  </div>
 
-        <ul class="list-group">
-          {% for institution in institutions %}
-            <li class="list-group-item ">
-              <div class="row">
-                <div class="col-sm-1">
-                  <input class="form-control team-name pull-right" type="checkbox"
-                         name="{{ institution.id }}" value=0  min="0" />
+  <form action="{% tournament_url edit_venue_preferences %}" method="POST">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel">
+
+          <ul class="list-group">
+            {% for institution in institutions %}
+              <li class="list-group-item ">
+                <div class="row">
+                  <div class="col-sm-1">
+                    <input class="form-control team-name pull-right" type="checkbox"
+                           name="{{ institution.id }}" value=0  min="0" />
+                  </div>
+                  <label class="control-label">
+                    {{ institution.name }}
+                  </label>
+                  ({{ institution.code }})
                 </div>
-                <label class="col-sm-5 control-label">{{ institution.name }}</label>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
+              </li>
+            {% endfor %}
+          </ul>
 
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="form-group row">
-    <div class="col-md-12">
-      <button type="submit" class="btn btn-primary btn-block">
-        Change Preferences for Institution
-      </button>
+    <div class="form-group row">
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-primary btn-block">
+          Edit Institution's Venue Constraints
+        </button>
+      </div>
     </div>
-  </div>
 
-</form>
+  </form>
+
+{% endif %}
 
 {% endblock content %}
