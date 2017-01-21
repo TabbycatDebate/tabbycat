@@ -5,7 +5,6 @@ from django.views.generic.base import TemplateView
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
 from draw.models import Debate
-from motions.models import Motion
 from participants.models import Adjudicator
 from tournaments.mixins import RoundMixin, TournamentMixin
 from tournaments.models import Tournament
