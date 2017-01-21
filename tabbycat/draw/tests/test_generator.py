@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 from .. import DrawError, DrawGenerator, Pairing
 from ..utils import partial_break_round_split
-from .utils import TestTeam
+from .utils import TestTeam, TestDivision
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 
@@ -37,6 +37,49 @@ class TestRandomDrawGenerator(unittest.TestCase):
                     self.assertEqual(pairing.flags, ["max_swapped"])
                 else:
                     self.assertEqual(pairing.flags, [])
+
+
+class TestRoundRobinDrawGenerator(unittest.TestCase):
+    """Basic unit test for core functionality of round-robin draws."""
+
+    teams = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
+             (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
+
+    def rr_permutation(self, teams, rounds, expected_matches):
+        print("----\nPermutation with teams:", len(teams), rounds)
+        pairings = []
+        for i in range(0, rounds):
+            rd = DrawGenerator("round_robin", teams, results=None, rrseq=i+1)
+            _draw = rd.generate()
+            for pairing in _draw:
+                pairings.append(pairing)
+
+        print("made %s pairings" % len(pairings))
+
+        # Calculate how many pairings have identical matchups over the rounds
+        matches = 0
+        for pair in pairings:
+            search_pairings = list(pairings)
+            search_pairings.remove(pair)
+            for i in range(0, len(search_pairings)):
+                if pair.teams == search_pairings[i].teams or \
+                    pair.teams == search_pairings[i].teams.reverse():
+                    matches = matches + 1
+
+        print("matches:", matches, " expected:", expected_matches)
+        self.assertEqual(matches, expected_matches)
+
+    def test_draw(self):
+        teams = [TestTeam(*args, aff_count=0) for args in self.teams]
+        for t in teams:
+            t.division = TestDivision()
+            t.short_name = t.id
+
+        # Even Numbers
+        self.rr_permutation(teams[:12], 10, 0)
+        self.rr_permutation(teams[:8], 5, 0)
+        self.rr_permutation(teams[:6], 5, 0)
+        # Odd Numbers; TODO
 
 
 class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
