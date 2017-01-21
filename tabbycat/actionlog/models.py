@@ -94,6 +94,7 @@ class ActionLogEntry(models.Model):
 
     type = models.CharField(max_length=10, choices=ACTION_TYPE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    # cascade to avoid double-null user/ip-address
     user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
@@ -101,6 +102,7 @@ class ActionLogEntry(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.SET_NULL, blank=True, null=True)
     round = models.ForeignKey('tournaments.Round', models.SET_NULL, blank=True, null=True)
 
+    # cascade to keep generic foreign keys complete where existent
     content_type = models.ForeignKey(ContentType, models.CASCADE, blank=True, null=True)
     object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_id')

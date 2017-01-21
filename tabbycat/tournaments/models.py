@@ -230,6 +230,7 @@ class Round(models.Model):
     draw_type = models.CharField(max_length=1, choices=DRAW_CHOICES,
         verbose_name=_("draw type"),
         help_text=_("Which draw method to use"))
+    # cascade to avoid break rounds without break categories
     break_category = models.ForeignKey('breakqual.BreakCategory', models.CASCADE, blank=True, null=True,
         verbose_name=_("break category"),
         help_text=_("If elimination round, which break category"))

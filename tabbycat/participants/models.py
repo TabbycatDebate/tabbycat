@@ -34,7 +34,7 @@ class Institution(models.Model):
         help_text="What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\"")
     abbreviation = models.CharField(max_length=8, default="",
         help_text="For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\"")
-    region = models.ForeignKey(Region, models.CASCADE, blank=True, null=True)
+    region = models.ForeignKey(Region, models.SET_NULL, blank=True, null=True)
 
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='institution',
             content_type_field='subject_content_type', object_id_field='subject_id')
@@ -282,6 +282,7 @@ class AdjudicatorManager(models.Manager):
 
 class Adjudicator(Person):
     institution = models.ForeignKey(Institution, models.CASCADE)
+    # cascade to avoid unattached adjudicator pollution when deleting tournaments
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, blank=True, null=True,
         help_text="Adjudicators not assigned to any tournament can be shared between tournaments")
     test_score = models.FloatField(default=0)
