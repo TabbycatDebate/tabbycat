@@ -5,7 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.contrib import messages
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.detail import SingleObjectMixin
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
@@ -135,7 +135,7 @@ class PublicTournamentPageMixin(TournamentMixin):
         tournament = self.get_tournament()
         if tournament is None:
             messages.info(self.request, "That tournament no longer exists")
-            return redirect_tournament('tournament-public-index', tournament)
+            return redirect('tabbycat-index')
         if self.public_page_preference is None:
             raise ImproperlyConfigured("public_page_preference isn't set on this view.")
         if tournament.pref(self.public_page_preference):
