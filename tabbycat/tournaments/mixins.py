@@ -133,6 +133,9 @@ class PublicTournamentPageMixin(TournamentMixin):
 
     def dispatch(self, request, *args, **kwargs):
         tournament = self.get_tournament()
+        if tournament is None:
+            messages.info(self.request, "That tournament no longer exists")
+            return redirect_tournament('tournament-public-index', tournament)
         if self.public_page_preference is None:
             raise ImproperlyConfigured("public_page_preference isn't set on this view.")
         if tournament.pref(self.public_page_preference):
