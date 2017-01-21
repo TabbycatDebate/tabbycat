@@ -39,9 +39,9 @@ export default {
 function initChart(vueContext){
 
   // Responsive width
-  vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10)
+  vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10);
 
-  var x = d3.scale.linear().range([0, vueContext.width])
+  var x = d3.time.scale().range([0, vueContext.width])
   var y = d3.scale.linear().range([vueContext.height, 0])
   var z = d3.scale.ordinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
 
@@ -58,7 +58,7 @@ function initChart(vueContext){
   var matrix = vueContext.graphData; // 4 columns: time_ID,none,draft,confirmed
   var remapped =["c1","c2","c3"].map(function(dat,i){
       return matrix.map(function(d,ii){
-          return {x: d[0], y: d[i+1]};
+          return {x: d3.time.format.iso.parse(d[0]), y: d[i+1]};
       })
   });
   var stacked = d3.layout.stack()(remapped)
@@ -77,23 +77,11 @@ function initChart(vueContext){
     .attr("d", area)
     .style("fill", function(d, i) { return z(i); });
 
-  function formatTimeAgo(time) {
-    var formatted = "-";
-    if (time > 86400)
-      formatted += Math.floor(time / 86400) + "d";
-    if (time > 3600)
-      formatted += Math.floor((time % 86400) / 3600) + "h";
-    if (time > 60)
-      formatted += Math.floor((time % 3600) / 60) + "m";
-    formatted += (time % 60) + "s";
-    return formatted;
-  }
-
   // Add Scales
   var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
-    .tickFormat(function(d) { return formatTimeAgo(d) }); // Format result
+    .tickFormat(d3.time.format("%H:%M"));
 
   svg.append("g").attr("class", "x axis")
     .call(xAxis)

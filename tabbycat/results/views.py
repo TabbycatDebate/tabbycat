@@ -421,18 +421,20 @@ class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
         if len(timestamps) == 0:
             return []
 
-        # Generate the timeline
+        # Generate the timeline, including one-minute margins on either side
+        margin = datetime.timedelta(minutes=1)
         none = rd.debate_set.count()
         draft = 0
         confirmed = 0
-        stats = []
+        stats = [[(timestamps[0][0] - margin).isoformat(), none, draft, confirmed]]
         for time, none_change, draft_change, confirmed_change in timestamps:
-            time_ago = (datetime.datetime.now() - time).total_seconds()
-            stats.append([time_ago, none, draft, confirmed])
+            time_iso = time.isoformat()
+            stats.append([time_iso, none, draft, confirmed])
             none += none_change
             draft += draft_change
             confirmed += confirmed_change
-            stats.append([time_ago, none, draft, confirmed])
+            stats.append([time_iso, none, draft, confirmed])
+        stats.append([(timestamps[-1][0] + margin).isoformat(), none, draft, confirmed])
 
         return stats
 
