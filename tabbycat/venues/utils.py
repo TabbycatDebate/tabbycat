@@ -18,7 +18,8 @@ def venue_conflicts_display(debates):
         key = (ContentType.objects.get_for_model(instance).id, instance.id)
         if key not in constraints:
             return True
-        return any(constraint.venue_group_id == venue.group_id for constraint in constraints[key])
+        return any(constraint.category_id == category.id for constraint in constraints[key]
+                for category in venue.venueconstraintcategory_set.all())
 
     conflict_messages = {debate: [] for debate in debates}
     for debate in debates:
