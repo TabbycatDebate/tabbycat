@@ -3,7 +3,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django import forms
 from gfklookupwidget.widgets import GfkLookupWidget
 
-from .models import Venue, VenueConstraint, VenueGroup
+from .models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
 
 
 @admin.register(VenueGroup)
@@ -47,23 +47,16 @@ class VenueConstraintModelForm(forms.ModelForm):
 @admin.register(VenueConstraint)
 class VenueConstraintAdmin(admin.ModelAdmin):
     form = VenueConstraintModelForm
-    list_display = ('subject', 'group_name', 'priority')
+    list_display = ('subject', 'category', 'priority')
     search_fields = ('adjudicator__name', 'adjudicator__institution__code',
             'adjudicator__institution__name', 'team__short_name', 'team__long_name',
             'institution__name', 'institution__code', 'division__name',
-            'venue_group__name', 'venue_group__short_name', 'priority')
-    list_filter = ('subject_content_type', 'venue_group', 'priority')
-    ordering = ('subject_content_type', 'venue_group')
+            'category__name', 'priority')
+    list_filter = ('subject_content_type', 'category', 'priority')
+    ordering = ('subject_content_type', 'category')
 
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related(
-                'venue_group').prefetch_related('subject')
-
-    def group_name(self, obj):
-        if obj.venue_group is None:
-            return None
-        return obj.venue_group.name
-    group_name.short_description = 'Venue Group'
+        return super().get_queryset(request).select_related('category').prefetch_related('subject')
 
 
 class VenueConstraintInline(GenericTabularInline):
@@ -71,3 +64,11 @@ class VenueConstraintInline(GenericTabularInline):
     ct_field = 'subject_content_type'
     ct_fk_field = 'subject_id'
     extra = 6
+
+
+@admin.register(VenueConstraintCategory)
+class VenueConstraintCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'venues_list')
+
+    def venues_list(self, obj):
+        return ", ".join([v.name for v in obj.venues.all()])

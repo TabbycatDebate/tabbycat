@@ -64,6 +64,17 @@ class VenueConstraintManager(models.Manager):
         ).distinct()
 
 
+class VenueConstraintCategory(models.Model):
+    name = models.CharField(max_length=50)
+    venues = models.ManyToManyField(Venue)
+
+    class Meta:
+        verbose_name_plural = "venue constraint categories"
+
+    def __str__(self):
+        return self.name
+
+
 class VenueConstraint(models.Model):
 
     SUBJECT_CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='team') | \
@@ -71,7 +82,7 @@ class VenueConstraint(models.Model):
         models.Q(app_label='participants', model='institution') | \
         models.Q(app_label='divisions', model='division')
 
-    venue_group = models.ForeignKey(VenueGroup, models.CASCADE)
+    category = models.ForeignKey(VenueConstraintCategory, models.CASCADE)
     priority = models.IntegerField()
 
     subject_content_type = models.ForeignKey(ContentType, models.CASCADE,
@@ -82,4 +93,4 @@ class VenueConstraint(models.Model):
     objects = VenueConstraintManager()
 
     def __str__(self):
-        return "%s for %s [%s]" % (self.subject, self.venue_group, self.priority)
+        return "%s for %s [%s]" % (self.subject, self.category, self.priority)

@@ -104,7 +104,7 @@ class VenueAllocator:
             debate, constraints = debate_constraints.pop(0)
 
             highest_constraint = constraints.pop(0)
-            eligible_venues = set(highest_constraint.venue_group.venues) & set(self._all_venues)
+            eligible_venues = set(highest_constraint.category.venues) & set(self._all_venues)
 
             # If we can't fulfil the highest constraint, bump it down the list.
             if len(eligible_venues) == 0:
@@ -128,7 +128,7 @@ class VenueAllocator:
             for constraint in constraints:
                 if any(sc.subject == constraint.subject for sc in satisified_constraints):
                     continue  # Skip if we've already done a constraint for this subject
-                constraint_venues = set(constraint.venue_group.venues)
+                constraint_venues = set(constraint.category.venues)
                 if eligible_venues.isdisjoint(constraint_venues):
                     logger.debug("Unfilfilled: %s", constraint)
                 else:
