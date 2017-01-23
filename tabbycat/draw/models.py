@@ -31,6 +31,7 @@ class Debate(models.Model):
 
     round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True)
     venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True)
+    # cascade to keep draws clean in event of division deletion
     division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True)
 
     bracket = models.FloatField(default=0)

@@ -397,36 +397,44 @@ class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
 
     def get_data(self):
 
-        intervals = 20
-
-        def minutes_ago(time):
-            time_difference = datetime.datetime.now() - time
-            minutes_ago = time_difference.days * 1440 + time_difference.seconds / 60
-            return minutes_ago
-
         rd = self.get_tournament().current_round
-        ballots = list(BallotSubmission.objects.filter(debate__round=rd).order_by('timestamp'))
-        debates = Debate.objects.filter(round=rd).count()
-        if len(ballots) == 0:
+        ballots = BallotSubmission.objects.filter(debate__round=rd, discarded=False)
+
+        # For each debate, find (a) the first non-discarded submission time, and
+        # (b) the last confirmed confirmation time. (Note that this means when
+        # a ballot is discarded, the graph will change retrospectively.)
+        first_drafts = {}   # keys: debate IDs, values: timestamps
+        confirmations = {}  # keys: debate IDs, values: timestamps
+        for ballot in ballots:
+            did = ballot.debate_id
+            if ballot.timestamp and (did not in first_drafts or first_drafts[did] > ballot.timestamp):
+                first_drafts[did] = ballot.timestamp
+            if ballot.confirmed and ballot.confirm_timestamp and (did not in confirmations or
+                    confirmations[did] < ballot.confirm_timestamp):
+                confirmations[did] = ballot.confirm_timestamp
+
+        # Collate timestamps into a single list. Tuples are (time, none_change, draft_change, confirmed_change)
+        first_draft_timestamps = [(time, -1, +1, 0) for time in first_drafts.values()]
+        confirmation_timestamps = [(time, 0, -1, +1) for time in confirmations.values()]
+        timestamps = sorted(first_draft_timestamps + confirmation_timestamps)
+
+        if len(timestamps) == 0:
             return []
 
-        start_entry = minutes_ago(ballots[0].timestamp)
-        end_entry = minutes_ago(ballots[-1].timestamp)
-        chunks = (end_entry - start_entry) / intervals
-
-        stats = []
-        for i in range(intervals + 1):
-            time_period = (i * chunks) + start_entry
-            stat = [int(time_period), debates, 0, 0]
-            for b in ballots:
-                if minutes_ago(b.timestamp) >= time_period:
-                    if b.debate.result_status == Debate.STATUS_DRAFT:
-                        stat[2] += 1
-                        stat[1] -= 1
-                    elif b.debate.result_status == Debate.STATUS_CONFIRMED:
-                        stat[3] += 1
-                        stat[1] -= 1
-            stats.append(stat)
+        # Generate the timeline, including one-minute margins on either side
+        margin = datetime.timedelta(minutes=1)
+        none = rd.debate_set.count()
+        draft = 0
+        confirmed = 0
+        stats = [[(timestamps[0][0] - margin).isoformat(), none, draft, confirmed]]
+        for time, none_change, draft_change, confirmed_change in timestamps:
+            time_iso = time.isoformat()
+            stats.append([time_iso, none, draft, confirmed])
+            none += none_change
+            draft += draft_change
+            confirmed += confirmed_change
+            stats.append([time_iso, none, draft, confirmed])
+        stats.append([(timestamps[-1][0] + margin).isoformat(), none, draft, confirmed])
 
         return stats
 

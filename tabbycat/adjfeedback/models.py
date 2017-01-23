@@ -8,6 +8,7 @@ from results.models import Submission
 
 class AdjudicatorTestScoreHistory(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE)
+    # cascade to avoid ambiguity, null round indicates beginning of tournament
     round = models.ForeignKey('tournaments.Round', models.CASCADE, blank=True, null=True)
     score = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -146,6 +147,7 @@ class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, db_index=True)
     score = models.FloatField()
 
+    # cascade to avoid double-null sources, each feedback must have exactly one source
     source_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator', models.CASCADE, blank=True, null=True)
     source_team = models.ForeignKey('draw.DebateTeam', models.CASCADE, blank=True, null=True)
 

@@ -89,7 +89,7 @@ class BallotSubmission(Submission):
     motion = models.ForeignKey('motions.Motion', models.SET_NULL, blank=True, null=True)
     copied_from = models.ForeignKey('BallotSubmission', models.SET_NULL, blank=True, null=True)
     discarded = models.BooleanField(default=False)
-    forfeit = models.ForeignKey('draw.DebateTeam', models.CASCADE, blank=True, null=True)
+    forfeit = models.ForeignKey('draw.DebateTeam', models.SET_NULL, blank=True, null=True) # where valid, cascade should be covered by debate
 
     class Meta:
         unique_together = [('debate', 'version')]
