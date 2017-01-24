@@ -3,8 +3,9 @@ sudo: required
 python:
   - "3.4"
   - "3.5"
+  - "3.6"
 addons:
-  postgresql: "9.4"
+  postgresql: "9.6"
 services:
   - postgresql
 install:

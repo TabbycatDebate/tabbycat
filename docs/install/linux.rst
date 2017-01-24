@@ -21,7 +21,7 @@ Short version
 .. parsed-literal::
 
   curl -sL https\:\/\/deb.nodesource.com/setup_5.x | sudo -E bash -    # add Node.js source repository
-  sudo apt-get install python3-dev python3-venv postgresql-9.4 postgresql-server-dev-9.4 nodejs
+  sudo apt-get install python3-dev python3-venv postgresql-9.6 postgresql-server-dev-9.6 nodejs
 
   # either
   wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
@@ -81,9 +81,9 @@ Check the version::
 
 You'll need the *server-dev* package in order to install Psycopg2 later. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
 
-    $ sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4
+    $ sudo apt-get install postgresql-9.6 postgresql-server-dev-9.6
 
-If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.4" in the above commands.
+If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.6" in the above commands.
 
 1(c). Node.js/NPM
 -----------------
@@ -129,7 +129,7 @@ If you've used Git before, you might prefer to clone `our GitHub repository`_ in
 
     $ sudo -u postgres createuser myusername --pwprompt
 
-  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.4/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
+  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.6/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
 
 2. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
 
