@@ -21,8 +21,8 @@
             Tabbycat is an open-source project for tabbing debating tournaments.
             It is developed by volunteers.<br>
           {% endblocktrans %}
-          {% if tournament %}
-            We suggest a donation of <strong>$x</strong> for a tournament of
+          {% if tournament and tournament.team_set.count > 0 %}
+            We suggest a donation of <strong>${{ tournament.team_set.count }}</strong> for a tournament of
             this size. <a href="{% tournament_url tournament-donations %}">About donating to Tabbycat</a>.
           {% else %}
             Personal or institutional <a href="{% url 'donations' %}">donations

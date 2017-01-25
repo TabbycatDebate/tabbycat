@@ -21,9 +21,11 @@
     to be donated by the tournament organisers or tab team. General
     donations from persons or organisations are of course also accepted and appreciated.
   </li>
-  {% if tournament %}
+  {% if tournament and tournament.team_set.count > 0 %}
     <li class="list-group-item">
-      Based on the size of {{ tournament }}'s <strong> we suggest a donation of $x</strong>. The easiest way to donate is <a href="http://PayPal.Me/tabbycatproject/0aud">via Paypal</a>.
+      Based on the size of {{ tournament }}'s our <strong>suggested donation
+      is ${{ tournament.team_set.count }} AUD</strong>. The easiest way to donate
+      is <a href="http://PayPal.Me/tabbycatproject/{{ tournament.team_set.count }}aud">via Paypal</a>.
        Please contact us for other options.
     </li>
   {% else %}
