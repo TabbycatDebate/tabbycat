@@ -3,6 +3,11 @@ Change Log
 ==========
 
 
+1.1.7
+-----
+- Yet more minor bug fixes
+
+
 1.1.6
 -----
 - A number of minor bug fixes
