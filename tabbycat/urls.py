@@ -27,6 +27,11 @@ urlpatterns = [
         tournaments.views.CreateTournamentView.as_view(),
         name='tournament-create'),
 
+    # Top Level Pages
+    url(r'^donations/',
+        tournaments.views.DonationsView.as_view(),
+        name='donations'),
+
     # Admin area
     url(r'^jet/',
         include('jet.urls', 'jet')),

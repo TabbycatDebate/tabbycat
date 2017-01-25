@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load add_field_css i18n %}
+
+{% block head-title %}<span class="emoji">😻</span>{% trans "Donate to Tabbycat"%}{% endblock %}
+{% block page-title %}Donate to Tabbycat{% endblock %}
+
+{% block content %}
+
+<ul class="list-group">
+  <li class="list-group-item active lead">
+    Tabbycat is a volunteer effort. Since 2012 its maintainers have spent thousands of hours improving it.
+  </li>
+  <li class="list-group-item">
+    Donating to Tabbycat the maintainers to better meet recurring costs, such
+    as website hosting. It also helps a little to justify our ongoing time investment in
+     responding to support enquiries, keeping the underpinning software up to date
+     fixing bugs, and developing new features.
+  </li>
+  <li class="list-group-item">
+    We suggest a per-tournament donation of $1 AUD (Australian Dollar) per team;
+    to be donated by the tournament organisers or tab team. General
+    donations from persons or organisations are of course also accepted and appreciated.
+  </li>
+  {% if tournament %}
+    <li class="list-group-item">
+      Based on the size of {{ tournament }}'s <strong> we suggest a donation of $x</strong>. The easiest way to donate is <a href="http://PayPal.Me/tabbycatproject/0aud">via Paypal</a>.
+       Please contact us for other options.
+    </li>
+  {% else %}
+    <li class="list-group-item">
+      The easiest way to donate is <a href="http://PayPal.Me/tabbycatproject/0aud">via Paypal</a>.
+       Please contact us if you require other options.
+    </li>
+  {% endif %}
+</ul>
+
+{% endblock %}

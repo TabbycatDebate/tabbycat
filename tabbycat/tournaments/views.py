@@ -185,3 +185,12 @@ class TournamentPermanentRedirectView(RedirectView):
             logger.error("Tried to redirect non-existent tournament slug '%s'" % slug)
             raise Http404("There isn't a tournament with slug '%s'." % slug)
         return super().get_redirect_url(*args, **kwargs)
+
+
+class DonationsView(CacheMixin, TemplateView):
+    template_name = 'donations.html'
+
+
+class TournamentDonationsView(TournamentMixin, TemplateView):
+    template_name = 'donations.html'
+
