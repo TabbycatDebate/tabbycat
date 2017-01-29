@@ -28,7 +28,6 @@
     var allTeams = {{ allTeams|safe }};
     var allRegions = {{ allRegions|safe }};
     var allCategories = {{ allCategories|safe }};
-
     var roundInfo = {
       'roundName' : '{{ round.abbreviation }}',
       'roundIsPrelim' : {% if round.is_break_round %}false{% else %}true{% endif %},
@@ -36,6 +35,9 @@
       'backToDrawURL': '{% round_url draw %}',
       'updateImportanceURL': '{% round_url save_debate_importance %}',
       'updatePanelURL': '{% round_url save_debate_panel %}',
+      'scoreMin': {{ pref.adj_min_score }},
+      'scoreMax': {{ pref.adj_max_score }},
+      'scoreForVote': {{ pref.adj_min_voting_score }}
     }
   </script>
   {{ block.super }}
