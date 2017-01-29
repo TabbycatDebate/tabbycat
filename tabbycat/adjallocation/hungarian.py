@@ -33,12 +33,15 @@ class HungarianAllocator(Allocator):
     def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
 
-        # Normalise importances back to the 0-5 range expected
+        # Normalise debate importances back to the 0-5 (not +/-2) range expected
         normalised_importance = debate.importance + 2
+
         # Similarly normalise adj scores to the 0-5 range expected
-        adj_score_range = self.MAX_SCORE - self.MIN_SCORE
-        adj_score_scale = adj_score_range / 5
-        normalised_adj_score = adj.score / adj_score_scale
+        score_min = self.MIN_SCORE
+        score_range = self.MAX_SCORE - score_min
+        normalised_adj_score = (adj.score - score_min) / score_range * 5 + 0
+
+        logger.info("%s: raw: %s normalised: %s" % (adj.name, adj.score, normalised_adj_score))
 
         if normalised_adj_score > 5.0:
             logger.warning("%s's score is larger than the range" % adj.name)
