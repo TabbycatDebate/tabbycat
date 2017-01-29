@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'en'
 USE_I18N = True
 
-TABBYCAT_VERSION = '1.1.6'
+TABBYCAT_VERSION = '1.1.7'
 TABBYCAT_CODENAME = 'Egyptian Mau'
-READTHEDOCS_VERSION = 'v1.1.6'
+READTHEDOCS_VERSION = 'v1.1.7'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),

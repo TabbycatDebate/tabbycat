@@ -5,9 +5,13 @@ Change Log
 
 1.2.0
 -----
-
 - Redesigned the core round workflow; splitting of the "Display Draw" and "Motions" actions into seperate pages to make for a more streamlined user experience
 - Added basic infrastructure for creating tabbycat translations
+
+
+1.1.7
+-----
+- Yet more minor bug fixes
 
 
 1.1.6
