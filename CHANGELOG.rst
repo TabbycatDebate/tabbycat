@@ -6,6 +6,7 @@ Change Log
 1.1.7
 -----
 - Yet more minor bug fixes
+- The auto-allocation UI will now detail your minimum rating setting better
 
 
 1.1.6
