@@ -512,21 +512,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         conflicts_by_debate = []
         for debate in debates:
-            conflicts = debate.get_flags_display()  # list of strings
+            # conflicts is a list of (level, message) tuples
+            conflicts = [("warning", flag) for flag in debate.get_flags_display()]
             history = debate.history
             if history > 0:
-                conflicts.append("Teams have met " +
-                    ("once" if history == 1 else "twice" if history == 2 else "%d times" % history))
+                conflicts.append(("warning", "Teams have met " +
+                    ("once" if history == 1 else "twice" if history == 2 else "%d times" % history)))
             if debate.aff_team.institution_id == debate.neg_team.institution_id:
-                conflicts.append("Teams are from the same institution")
+                conflicts.append(("warning", "Teams are from the same institution"))
             conflicts.extend(adjudicator_conflicts_by_debate[debate])
             conflicts.extend(venue_conflicts_by_debate[debate])
             conflicts_by_debate.append(conflicts)
 
         conflicts_header = {'key': "Conflicts/Flags"}
         conflicts_data = [{
-            'text': "<br />".join(conflicts),
-            'class': 'text-danger small'
+            'text': "".join(["<div class=\"text-{0}\">{1}</div>".format(*conflict) for conflict in conflicts]),
+            'class': 'small'
         } for conflicts in conflicts_by_debate]
         self.add_column(conflicts_header, conflicts_data)
 
