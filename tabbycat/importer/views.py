@@ -37,7 +37,7 @@ def add_institutions(request, t):
 @tournament_view
 def edit_institutions(request, t):
     institutions = []
-    institution_lines = request.POST['institutions_raw'].split('\n')
+    institution_lines = request.POST['institutions_raw'].rstrip().split('\n')
     for line in institution_lines:
         full_name = line.split(',')[0].strip()
         full_name = enforce_length(full_name, 'name', Institution, request)
@@ -91,7 +91,7 @@ def add_venues(request, t):
 @tournament_view
 def edit_venues(request, t):
     venues = []
-    venue_lines = request.POST['venues_raw'].split('\n')
+    venue_lines = request.POST['venues_raw'].rstrip().split('\n')
     for line in venue_lines:
         name = line.split(',')[0].strip()
         name = enforce_length(name, 'name', Venue, request)
