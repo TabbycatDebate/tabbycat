@@ -26,6 +26,7 @@ data/*
 
 # Docs
 docs/site/
+issues-*.html
 
 # Tags
 tags

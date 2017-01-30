@@ -20,35 +20,37 @@
   <div class="row">
     <div class="col-md-12">
 
-      {% for category in tournament.breakcategory_set.all %}
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              Teams Eligible for the {{ category.name }} Break
-            </h4>
-          </div>
-          <div class="panel-body round-progresses">
-            <div class="progress">
-              <div class="progress-bar progress-bar-success
-                   {% if category.team_set.count == 0 %}progress-empty{% endif %}"
-                   role="progressbar" aria-valuenow="" aria-valuemin="0"
-                   aria-valuemax="{{ tournament.teams.count }}"
-                   style="width: {% percentage category.team_set.count tournament.teams.count %}%;">
-                <span>{{ category.team_set.count }}/{{ tournament.teams.count }}</span>
+      {% with teams_in_tournament=tournament.team_set.count %}
+        {% for category in categories %}
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                Teams Eligible for the {{ category.name }} Break
+              </h4>
+            </div>
+            <div class="panel-body round-progresses">
+              <div class="progress">
+                <div class="progress-bar progress-bar-success
+                     {% if category.team__count == 0 %}progress-empty{% endif %}"
+                     role="progressbar" aria-valuenow="" aria-valuemin="0"
+                     aria-valuemax="{{ teams_in_tournament }}"
+                     style="width: {% percentage category.team__count teams_in_tournament %}%;">
+                  <span>{{ category.team__count }}/{{ teams_in_tournament }}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      {% empty %}
-        <div class="alert alert-warning" role="alert">
-          This tournament does not have any break categories setup. You can read
-           about how to create breaks
-          <a href="http://tabbycat.readthedocs.io/en/stable/features/breaks.html"
-              class="alert-link" target="_blank">
-            at our documentation.
-          </a>
-        </div>
-      {% endfor %}
+        {% empty %}
+          <div class="alert alert-warning" role="alert">
+            This tournament does not have any break categories setup. You can read
+             about how to create breaks
+            <a href="http://tabbycat.readthedocs.io/en/stable/features/breaks.html"
+                class="alert-link" target="_blank">
+              at our documentation.
+            </a>
+          </div>
+        {% endfor %}
+      {% endwith %}
 
     </div>
   </div>

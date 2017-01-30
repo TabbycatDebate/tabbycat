@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
 from django.views.generic import FormView, TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -22,6 +23,10 @@ class PublicBreakIndexView(PublicTournamentPageMixin, CacheMixin, TemplateView):
 
 class AdminBreakIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
     template_name = 'breaking_index.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['categories'] = self.get_tournament().breakcategory_set.annotate(Count('team'))
+        return super().get_context_data(**kwargs)
 
 
 class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateView):

@@ -9,14 +9,14 @@ Facebook
 
 `Our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ is a good place to ask for help. It's also a good place to keep up with new releases and participate in more general discussions of features and ideas.
 
-Github
+GitHub
 ======
 
-Adding an issue to our `Github repository <https://github.com/czlee/tabbycat/issues>`_ is a great way to let us know about bugs or writeup suggestions for how to improve Tabbycat. Pull requests are also encouraged!
+Adding an issue to our `GitHub repository <https://github.com/czlee/tabbycat/issues>`_ is a great way to let us know about bugs or writeup suggestions for how to improve Tabbycat. Pull requests are also encouraged!
 
 When submitting bugs or reporting errors please let us know your site address (if installed online) or operating system (if local) along with a complete description of the problem along with any error messages.
 
 Email
 =====
 
-Feel free to `contact the maintainers directly <http://tabbycat.readthedocs.io/en/stable/about/authors.html>`_ if you are not able to access Facebook or Github.
+Feel free to `contact the maintainers directly <http://tabbycat.readthedocs.io/en/stable/about/authors.html>`_ if you are not able to access Facebook or GitHub.

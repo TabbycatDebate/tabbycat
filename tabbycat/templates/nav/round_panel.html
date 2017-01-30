@@ -75,7 +75,7 @@
         <a href="{% round_url motions-edit r %}"
           class="{% if motions_nav and round == r %}active{% endif %}">
           <span class="circle-icon small-circle
-            {% if r.motion_set.count > 0 %} btn-success
+            {% if r.motion__count > 0 %} btn-success
             {% elif r.draw_status != r.STATUS_NONE and r.seq >= current_round.seq %} btn-info
             {% else %} btn-inactive{% endif %}">
           <span class="emoji"></span></span>Motions

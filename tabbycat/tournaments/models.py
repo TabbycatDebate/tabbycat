@@ -156,6 +156,11 @@ class Tournament(models.Model):
         """Convenience function for retrieving break rounds. Returns a QuerySet."""
         return self.round_set.filter(stage=Round.STAGE_ELIMINATION)
 
+    def rounds_for_nav(self):
+        """Returns a round QuerySet suitable for the admin nav bar.
+        This currently annotates with motion counts and sorts by stage (preliminary/elimination)."""
+        return self.round_set.order_by('-stage', 'seq').annotate(Count('motion'))
+
     @cached_property
     def adj_feedback_questions(self):
         return self.adjudicatorfeedbackquestion_set.order_by("seq")
