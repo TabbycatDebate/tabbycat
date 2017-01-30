@@ -12,8 +12,9 @@ from venues.models import InstitutionVenueConstraint, Venue, VenueGroup
 def data_index(request, t):
     return render(request, 'data_index.html')
 
-# Used to check and truncate name lengths as needed
+
 def enforce_length(value, type, model, request, extra_limit=0):
+    # Used to check and truncate name lengths as needed
     max_length = model._meta.get_field(type).max_length
     if len(value) > max_length - extra_limit:
         messages.warning(request, "%s %s's name was too long so it \
