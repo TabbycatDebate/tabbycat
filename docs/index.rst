@@ -38,6 +38,7 @@ supporting many custom variations of the above formats too.
 
    features/adjudicator-feedback
    features/adjudicator-allocation
+   features/backups
    features/breaks
    features/data-entry
    features/draw-generation

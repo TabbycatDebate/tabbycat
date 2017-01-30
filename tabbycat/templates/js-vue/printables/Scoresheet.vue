@@ -30,37 +30,25 @@
   <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="data.hasMotions && data.hasVetoes">
 
     <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
-      <div class="db-align-vertical-center db-flex-static">
-        Chosen <br>Motion:
-      </div>
-      <div class="db-flex-item-1 db-flex-row">
-        <div v-for="(index, item) in motions" class="db-align-horizontal-center db-align-vertical-center db-align-horizontal-center db-flex-item-1 db-center-text db-vertical-center-text">
-          <span class="db-fill-in">{{ index + 1 }}</span>
+      <div v-for="choice_type in ['Chosen Motion', 'Aff Veto', 'Neg Veto']" class="db-flex-item-1 db-flex-column">
+
+        <div class="db-flex-item-2 db-align-horizontal-center db-align-vertical-end" v-html="choice_type"></div>
+        <div class="db-flex-item-1 "></div>
+        <div class="db-flex-item-2 db-flex-row">
+          <div class="db-item-gutter"></div>
+          <div v-for="motion in motions" class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text">
+            <span class="db-fill-in">{{ motion.seq }}</span>
+          </div>
+          <div class="db-item-gutter"></div>
         </div>
-      </div>
-      <div class="db-item-gutter"></div>
-      <div class="db-align-vertical-center db-flex-static">
-        Aff <br>Veto:
-      </div>
-      <div class="db-flex-item-1 db-flex-row">
-        <div v-for="(index, item) in motions" class="db-align-horizontal-center db-align-vertical-center db-align-horizontal-center db-flex-item-1 db-center-text db-vertical-center-text">
-          <span class="db-fill-in">{{ index + 1 }}</span>
-        </div>
-      </div>
-      <div class="db-item-gutter"></div>
-      <div class="db-align-vertical-center db-flex-static">
-        Neg <br>Veto:
-      </div>
-      <div class="db-flex-item-1 db-flex-row">
-        <div v-for="(index, item) in motions" class="db-align-horizontal-center db-align-vertical-center db-align-horizontal-center db-flex-item-1 db-center-text db-vertical-center-text">
-          <span class="db-fill-in">{{ index + 1 }}</span>
-        </div>
+
       </div>
     </div>
+
     <div class="db-item-gutter"></div>
     <div class="db-flex-item-2 db-flex-row db-align-vertical-center">
-      <template v-for="(index, item) in motions">
-        {{ index + 1 }}: {{ item.text }}<br>
+      <template v-for="motion in motions" track-by="$index">
+        {{ motion.seq }}: {{ motion.text }}<br>
       </template>
     </div>
 

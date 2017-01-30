@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.utils import IntegrityError
 from django.shortcuts import render
 
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -10,6 +11,16 @@ from venues.models import InstitutionVenueConstraint, Venue, VenueGroup
 @tournament_view
 def data_index(request, t):
     return render(request, 'data_index.html')
+
+
+def enforce_length(value, type, model, request, extra_limit=0):
+    # Used to check and truncate name lengths as needed
+    max_length = model._meta.get_field(type).max_length
+    if len(value) > max_length - extra_limit:
+        messages.warning(request, "%s %s's name was too long so it \
+            was truncated to the %s character limit" % (model.__name__, value, max_length))
+        value = value[:max_length - extra_limit]
+    return value
 
 
 # ==============================================================================
@@ -27,19 +38,20 @@ def add_institutions(request, t):
 @tournament_view
 def edit_institutions(request, t):
     institutions = []
-    institution_lines = request.POST['institutions_raw'].split('\n')
+    institution_lines = request.POST['institutions_raw'].rstrip().split('\n')
     for line in institution_lines:
-        try:
-            full_name = line.split(',')[0].strip()
-            short_name = line.split(',')[1].strip()
-            institution = Institution(name=full_name, code=short_name)
-            institutions.append(institution)
-        except:
-            pass  # TODO
+        full_name = line.split(',')[0].strip()
+        full_name = enforce_length(full_name, 'name', Institution, request)
+        short_name = line.split(',')[1].strip()
+        short_name = enforce_length(short_name, 'code', Institution, request)
 
-    return render(request,
-                  'edit_institutions.html',
-                  dict(institutions=institutions))
+        institution = Institution(name=full_name, code=short_name)
+        institutions.append(institution)
+
+    return render(request, 'edit_institutions.html',
+                  dict(institutions=institutions,
+                  full_name_max=Institution._meta.get_field('name').max_length - 1,
+                  code_max=Institution._meta.get_field('code').max_length - 1))
 
 
 @admin_required
@@ -48,6 +60,7 @@ def edit_institutions(request, t):
 def confirm_institutions(request, t):
     institution_names = request.POST.getlist('institution_names')
     institution_codes = request.POST.getlist('institution_codes')
+    added_institutions = 0
 
     for i, key in enumerate(institution_names):
         try:
@@ -55,10 +68,12 @@ def confirm_institutions(request, t):
             short_name = institution_codes[i]
             institution = Institution(name=full_name, code=short_name)
             institution.save()
-        except:
-            pass
+            added_institutions += 1
+        except IntegrityError:
+            messages.error(request, "Institution '%s' already exists" % institution_names[i])
 
-    messages.success(request, "%s Institutions have been added" % len(institution_names))
+    if added_institutions > 0:
+        messages.success(request, "%s Institutions have been added" % len(institution_names))
     return render(request, 'data_index.html')
 
 
@@ -77,23 +92,22 @@ def add_venues(request, t):
 @tournament_view
 def edit_venues(request, t):
     venues = []
-    venue_lines = request.POST['venues_raw'].split('\n')
+    venue_lines = request.POST['venues_raw'].rstrip().split('\n')
     for line in venue_lines:
-        try:
-            name = line.split(',')[0].strip()
-            priority = line.split(',')[1].strip()
-            if len(line.split(',')) > 2:
-                venues.append({
-                    'name': name,
-                    'priority': priority,
-                    'group': line.split(',')[2].strip()
-                })
-            else:
-                venues.append({'name': name, 'priority': priority, })
-        except:
-            pass  # TODO
+        name = line.split(',')[0].strip()
+        name = enforce_length(name, 'name', Venue, request)
+        priority = line.split(',')[1].strip()
+        if len(line.split(',')) > 2:
+            venues.append({
+                'name': name,
+                'priority': priority,
+                'group': line.split(',')[2].strip()
+            })
+        else:
+            venues.append({'name': name, 'priority': priority, })
 
-    return render(request, 'edit_venues.html', dict(venues=venues))
+    return render(request, 'edit_venues.html', dict(venues=venues,
+                  max_name_length=Venue._meta.get_field('name').max_length - 1))
 
 
 @admin_required
@@ -243,11 +257,11 @@ def edit_teams(request, t):
                 'id': institution.id,
                 'available_team_numbers': available_team_numbers
             })
-            # print('____')
 
     return render(request, 'edit_teams.html',
                   dict(institutions=institutions_with_team_numbers,
-                       default_speakers=default_speakers))
+                       default_speakers=default_speakers,
+                       max_name_length=Team._meta.get_field('reference').max_length - 1))
 
 
 @admin_required
@@ -255,30 +269,48 @@ def edit_teams(request, t):
 @tournament_view
 def confirm_teams(request, t):
     sorted_post = sorted(request.POST.items())
-    print(sorted_post)
+    added_teams = 0
 
     for i in range(0, len(sorted_post) - 1, 4):
         # Sort through the items advancing 4 at a time
         instititution_id = sorted_post[i][1]
         team_name = sorted_post[i + 1][1]
+        team_name = enforce_length(team_name, 'reference', Team, request)
         use_prefix = False
+
         if (sorted_post[i + 2][1] == "yes"):
             use_prefix = True
         speaker_names = sorted_post[i + 3][1].split(',')
 
         institution = Institution.objects.get(id=instititution_id)
         if team_name and speaker_names and institution:
-            newteam = Team(institution=institution,
-                           reference=team_name,
-                           short_reference=team_name[:34],
-                           tournament=t,
-                           use_institution_prefix=use_prefix, )
-            newteam.save()
-            for speaker in speaker_names:
-                newspeaker = Speaker(name=speaker, team=newteam)
-                newspeaker.save()
+            extra_reference_limit = 0
+            extra_short_reference_limit = 0
+            if use_prefix:
+                # Team references/short_references depend on institution names
+                extra_reference_limit = len(institution.name)
+                extra_short_reference_limit = len(institution.code)
 
-    messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
+            reference = enforce_length(team_name, 'reference', Team, request, extra_limit=extra_reference_limit)
+            short_reference = enforce_length(team_name, 'short_reference', Team, request, extra_limit=extra_short_reference_limit)
+
+            newteam = Team(institution=institution,
+                           reference=reference,
+                           short_reference=short_reference,
+                           tournament=t,
+                           use_institution_prefix=use_prefix)
+            try:
+                newteam.save()
+                for speaker in speaker_names:
+                    name = enforce_length(speaker, 'name', Speaker, request)
+                    newspeaker = Speaker(name=name, team=newteam)
+                    newspeaker.save()
+                added_teams += 1
+            except IntegrityError:
+                messages.error(request, "Team '%s %s' Was not saved; probably because that team already exists." % (institution, team_name))
+
+    if added_teams > 0:
+        messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
     return render(request, 'data_index.html')
 
 
@@ -305,8 +337,8 @@ def edit_adjudicators(request, t):
 
     context = {
         'institutions': institutions,
-        'score_avg': round(
-            (t.pref('adj_max_score') + t.pref('adj_min_score')) / 2, 1),
+        'score_avg': round((t.pref('adj_max_score') + t.pref('adj_min_score')) / 2, 1),
+        'max_name_length': Adjudicator._meta.get_field('name').max_length
     }
     return render(request, 'edit_adjudicators.html', context)
 
@@ -321,6 +353,7 @@ def confirm_adjudicators(request, t):
         # Sort through the items advancing 4 at a time
         adj_institution = Institution.objects.get(id=sorted_post[i][1])
         adj_name = sorted_post[i + 1][1]
+        adj_name = enforce_length(adj_name, 'name', Adjudicator, request)
         adj_rating = sorted_post[i + 2][1]
         adj_shared = sorted_post[i + 3][1]
 

@@ -5,7 +5,6 @@ from django.views.generic.base import TemplateView
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
 from draw.models import Debate
-from motions.models import Motion
 from participants.models import Adjudicator
 from tournaments.mixins import RoundMixin, TournamentMixin
 from tournaments.models import Tournament
@@ -140,8 +139,8 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'scoresheet_list.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['motions'] = list(Motion.objects.filter(
-            round=self.get_round()).values_list('text', flat=True).order_by('seq'))
+        motions = self.get_round().motion_set.order_by('seq')
+        kwargs['motions'] = [{'seq': m.seq, 'text': m.text} for m in motions]
         kwargs['ballots'] = []
 
         draw = self.get_round().debate_set_with_prefetches(ordering=(

@@ -329,7 +329,6 @@ class EditBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView)
 class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
 
     template_name = 'public_enter_results.html'
-    public_page_preference = 'public_ballots'
     relates_to_new_ballotsub = True
     action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT
 
@@ -351,6 +350,9 @@ class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
             self.debateadj = DebateAdjudicator.objects.get(adjudicator=self.object, debate__round=round)
         except DebateAdjudicator.DoesNotExist:
             return self.error_page("It looks like you don't have a debate this round.")
+        except DebateAdjudicator.MultipleObjectsReturned:
+            return self.error_page("It looks like you're assigned to two or more debates this round. "
+                    "Please contact a tab room official.")
 
         self.debate = self.debateadj.debate
         self.ballotsub = BallotSubmission(debate=self.debate, ip_address=get_ip_address(self.request),
@@ -377,11 +379,13 @@ class PublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePublicN
     model = Adjudicator
     pk_url_kwarg = 'adj_id'
     allow_null_tournament = True
+    public_page_preference = 'public_ballots'
 
 
 class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, BasePublicNewBallotSetView):
     model = Adjudicator
     allow_null_tournament = True
+    public_page_preference = 'public_ballots_randomised'
 
 
 # ==============================================================================
@@ -504,15 +508,17 @@ class BaseBallotCheckinJsonResponseView(LoginRequiredMixin, RoundMixin, JsonData
         try:
             venue = Venue.objects.get(id=venue_id)
         except Venue.DoesNotExist:
-            raise DebateBallotCheckinError('There aren\'t any venues with that name.')
+            raise DebateBallotCheckinError("There aren't any venues with that name.")
 
         try:
             debate = Debate.objects.get(round=self.get_round(), venue=venue)
         except Debate.DoesNotExist:
-            raise DebateBallotCheckinError('There wasn\'t a debate in venue ' + venue.name + ' this round.')
+            raise DebateBallotCheckinError("There wasn't a debate in venue %s this round." % (venue.name,))
+        except Debate.MultipleObjectsReturned:
+            raise DebateBallotCheckinError("There appear to be multiple debates in venue %s this round." % (venue.name,))
 
         if debate.ballot_in:
-            raise DebateBallotCheckinError('The ballot for venue ' + venue.name + ' has already been checked in.')
+            raise DebateBallotCheckinError("The ballot for venue %s has already been checked in." % (venue.name,))
 
         return debate
 

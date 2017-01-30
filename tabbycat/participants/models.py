@@ -61,7 +61,7 @@ class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True)
     barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
-    phone = models.CharField(max_length=40, blank=True, null=True)
+    phone = models.CharField(max_length=40, null=True, blank=True)
     novice = models.BooleanField(default=False,
         help_text="Novice status is indicated on the tab, and may have its own Break Category or Top Speakers Tab")
 

@@ -57,7 +57,7 @@ If you want to :ref:`import tournament data <importing-initial-data>` from CSV f
 1. Install dependencies
 -----------------------
 
-- Go to `toolbelt.heroku.com <https://toolbelt.heroku.com/>`_ and install the **Heroku Toolbelt**. Then open a command shell and log in using ``heroku login``.
+- Install the `Heroku Command Line Interface (CLI) <https://devcenter.heroku.com/articles/heroku-cli>`_. Then open a command shell and log in using ``heroku login``.
 
 - Windows users need to install **Python**. Follow the instructions in (only!) :ref:`part 1(a) of our Windows instructions <install-python-windows>`.
 
