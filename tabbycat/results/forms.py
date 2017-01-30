@@ -10,6 +10,7 @@ from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 
 from .result import BallotSet, ForfeitBallotSet
+from .utils import set_float_or_int
 
 logger = logging.getLogger(__name__)
 
@@ -57,8 +58,8 @@ class BaseScoreField(forms.FloatField):
             step_value = self.DEFAULT_STEP_VALUE
         self.step_value = kwargs.get('step_value', step_value)
 
-        kwargs.setdefault('min_value', min_value)
-        kwargs.setdefault('max_value', max_value)
+        kwargs.setdefault('min_value', set_float_or_int(min_value, step_value))
+        kwargs.setdefault('max_value', set_float_or_int(max_value, step_value))
 
         # Overwrite the "step" attribute.
         # Note, this overrides everything, so it means you can't set the
@@ -68,7 +69,7 @@ class BaseScoreField(forms.FloatField):
         if isinstance(widget, type):
             widget = widget()
         if isinstance(widget, forms.NumberInput):
-            widget.attrs['step'] = self.step_value
+            widget.attrs['step'] = set_float_or_int(self.step_value, step_value)
         kwargs['widget'] = widget
 
         super(BaseScoreField, self).__init__(*args, **kwargs)
@@ -106,8 +107,8 @@ class ReplyScoreField(BaseScoreField):
     CONFIG_MIN_VALUE_FIELD  = 'reply_score_min'
     CONFIG_MAX_VALUE_FIELD  = 'reply_score_max'
     CONFIG_STEP_VALUE_FIELD = 'reply_score_step'
-    DEFAULT_MIN_VALUE = 34
-    DEFAULT_MAX_VALUE = 41
+    DEFAULT_MIN_VALUE = 34.0
+    DEFAULT_MAX_VALUE = 41.0
     DEFAULT_STEP_VALUE = 0.5
 
 
@@ -143,6 +144,8 @@ class BallotSetForm(forms.Form):
         self.choosing_sides = self.tournament.pref('draw_side_allocations') == 'manual-ballot'
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
         self.max_margin = self.tournament.pref('maximum_margin')
+        self.score_step = self.tournament.pref('score_step')
+        self.reply_score_step = self.tournament.pref('reply_score_step')
 
         self.forfeit_declared = False
 
@@ -307,7 +310,11 @@ class BallotSetForm(forms.Form):
                 initial[self._fieldname_speaker(side, pos)] = speaker.pk
                 for adj in self.adjudicators:
                     score = ballotset.get_score(adj, side, pos)
-                    initial[self._fieldname_score(adj, side, pos)] = score
+                    if pos is self.REPLY_POSITION:
+                        step = self.reply_score_step
+                    else:
+                        step = self.score_step
+                    initial[self._fieldname_score(adj, side, pos)] = set_float_or_int(score, step)
 
         return initial
 
