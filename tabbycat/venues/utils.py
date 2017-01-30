@@ -11,7 +11,7 @@ def venue_conflicts_display(debates):
     participant had constraints and *none* of their constraints were met."""
 
     constraints = {}
-    for vc in VenueConstraint.objects.filter_for_debates(debates):
+    for vc in VenueConstraint.objects.filter_for_debates(debates).select_related('category'):
         constraints.setdefault((vc.subject_content_type_id, vc.subject_id), []).append(vc)
 
     def _add_constraint_message(debate, instance_name, instance, venue):
