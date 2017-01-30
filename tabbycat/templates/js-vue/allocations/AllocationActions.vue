@@ -78,7 +78,8 @@
           If importances have not been set, or are equivalent, it will give stronger panels to
           debates of a higher bracket.</p>
           <p class="">Adjudicators must have a feedback score over <strong>{{ roundInfo.scoreForVote }}</strong> to panel.
-          You can change this in the <em>Draw Rules</em> section of Configuration if needed.</p>
+          You can change this in the <em>Draw Rules</em> section of Configuration if needed. Try modifying this value
+          if you are seeing too few or too many panellists being allocated.</p>
           <div v-if="roundInfo.scoreForVote > roundInfo.scoreMax" class="alert alert-warning">
             The score required to panel ({{ roundInfo.scoreForVote }}) is higher than the maximum adjudicator score ({{ roundInfo.scoreMax }}).
             You should probably lower the score required to panel in settings.
