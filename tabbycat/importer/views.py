@@ -12,6 +12,15 @@ from venues.models import InstitutionVenueConstraint, Venue, VenueGroup
 def data_index(request, t):
     return render(request, 'data_index.html')
 
+# Used to check and truncate name lengths as needed
+def enforce_length(value, type, model, request, extra_limit=0):
+    max_length = model._meta.get_field(type).max_length
+    if len(value) > max_length - extra_limit:
+        messages.warning(request, "%s %s's name was too long so it \
+            was truncated to the %s character limit" % (model.__name__, value, max_length))
+        value = value[:max_length - extra_limit]
+    return value
+
 
 # ==============================================================================
 # Institutions
@@ -31,13 +40,17 @@ def edit_institutions(request, t):
     institution_lines = request.POST['institutions_raw'].split('\n')
     for line in institution_lines:
         full_name = line.split(',')[0].strip()
+        full_name = enforce_length(full_name, 'name', Institution, request)
         short_name = line.split(',')[1].strip()
+        short_name = enforce_length(short_name, 'code', Institution, request)
+
         institution = Institution(name=full_name, code=short_name)
         institutions.append(institution)
 
-    return render(request,
-                  'edit_institutions.html',
-                  dict(institutions=institutions))
+    return render(request, 'edit_institutions.html',
+                  dict(institutions=institutions,
+                  full_name_max=Institution._meta.get_field('name').max_length - 1,
+                  code_max=Institution._meta.get_field('code').max_length - 1))
 
 
 @admin_required
@@ -81,6 +94,7 @@ def edit_venues(request, t):
     venue_lines = request.POST['venues_raw'].split('\n')
     for line in venue_lines:
         name = line.split(',')[0].strip()
+        name = enforce_length(name, 'name', Venue, request)
         priority = line.split(',')[1].strip()
         if len(line.split(',')) > 2:
             venues.append({
@@ -91,7 +105,8 @@ def edit_venues(request, t):
         else:
             venues.append({'name': name, 'priority': priority, })
 
-    return render(request, 'edit_venues.html', dict(venues=venues))
+    return render(request, 'edit_venues.html', dict(venues=venues,
+                  max_name_length=Venue._meta.get_field('name').max_length - 1))
 
 
 @admin_required
@@ -241,11 +256,11 @@ def edit_teams(request, t):
                 'id': institution.id,
                 'available_team_numbers': available_team_numbers
             })
-            # print('____')
 
     return render(request, 'edit_teams.html',
                   dict(institutions=institutions_with_team_numbers,
-                       default_speakers=default_speakers))
+                       default_speakers=default_speakers,
+                       max_name_length=Team._meta.get_field('reference').max_length - 1))
 
 
 @admin_required
@@ -254,32 +269,44 @@ def edit_teams(request, t):
 def confirm_teams(request, t):
     sorted_post = sorted(request.POST.items())
     added_teams = 0
-    print(sorted_post)
 
     for i in range(0, len(sorted_post) - 1, 4):
         # Sort through the items advancing 4 at a time
         instititution_id = sorted_post[i][1]
         team_name = sorted_post[i + 1][1]
+        team_name = enforce_length(team_name, 'reference', Team, request)
         use_prefix = False
+
         if (sorted_post[i + 2][1] == "yes"):
             use_prefix = True
         speaker_names = sorted_post[i + 3][1].split(',')
 
         institution = Institution.objects.get(id=instititution_id)
         if team_name and speaker_names and institution:
+            extra_reference_limit = 0
+            extra_short_reference_limit = 0
+            if use_prefix:
+                # Team references/short_references depend on institution names
+                extra_reference_limit = len(institution.name)
+                extra_short_reference_limit = len(institution.code)
+
+            reference = enforce_length(team_name, 'reference', Team, request, extra_limit=extra_reference_limit)
+            short_reference = enforce_length(team_name, 'short_reference', Team, request, extra_limit=extra_short_reference_limit)
+
             newteam = Team(institution=institution,
-                           reference=team_name,
-                           short_reference=team_name[:34],
+                           reference=reference,
+                           short_reference=short_reference,
                            tournament=t,
                            use_institution_prefix=use_prefix)
             try:
                 newteam.save()
                 for speaker in speaker_names:
-                    newspeaker = Speaker(name=speaker, team=newteam)
+                    name = enforce_length(speaker, 'name', Speaker, request)
+                    newspeaker = Speaker(name=name, team=newteam)
                     newspeaker.save()
                 added_teams += 1
             except IntegrityError:
-                messages.error(request, "Team '%s %s' Was not saved because that team already exists." % (institution, team_name))
+                messages.error(request, "Team '%s %s' Was not saved; probably because that team already exists." % (institution, team_name))
 
     if added_teams > 0:
         messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
@@ -309,8 +336,8 @@ def edit_adjudicators(request, t):
 
     context = {
         'institutions': institutions,
-        'score_avg': round(
-            (t.pref('adj_max_score') + t.pref('adj_min_score')) / 2, 1),
+        'score_avg': round((t.pref('adj_max_score') + t.pref('adj_min_score')) / 2, 1),
+        'max_name_length': Adjudicator._meta.get_field('name').max_length
     }
     return render(request, 'edit_adjudicators.html', context)
 
@@ -325,6 +352,7 @@ def confirm_adjudicators(request, t):
         # Sort through the items advancing 4 at a time
         adj_institution = Institution.objects.get(id=sorted_post[i][1])
         adj_name = sorted_post[i + 1][1]
+        adj_name = enforce_length(adj_name, 'name', Adjudicator, request)
         adj_rating = sorted_post[i + 2][1]
         adj_shared = sorted_post[i + 3][1]
 

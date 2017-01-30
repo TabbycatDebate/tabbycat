@@ -34,11 +34,13 @@
               <div class=" form-horizontal row">
 
                 <input class="hidden" type="text" name="{{ key }}_{{ adjudicator }}_Instititution" value="{{ key }}" />
-                <h5 class="col-sm-1">Adj #{{ adjudicator }}:</h5>
+                <span class="col-sm-1">Adj #{{ adjudicator }}</span>
 
                 <label class="col-sm-1 control-label">Name</label>
                 <div class="col-sm-4">
-                  <input class="form-control col-sm-2" type="text" list="adj-ticks" name="{{ key }}_{{ adjudicator }}_Name" value="An Adjudicator" />
+                  <input class="form-control col-sm-2" value="An Adjudicator"
+                         name="{{ key }}_{{ adjudicator }}_Name" type="text"
+                         maxlength="{{ max_name_length }}" />
                 </div>
 
                 <label class="col-sm-1 control-label">Rating</label>
