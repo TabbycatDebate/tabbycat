@@ -140,7 +140,7 @@ def scoring_stats(adj, scores, debate_adjudications, reply_position):
                 # The margin is the largest team pt difference - the smallest
                 ballot_margins.append(max(aff_pts, neg_pts) - min(aff_pts, neg_pts))
             except TypeError:
-                print(team_split)
+                print(scores)
 
         if ballot_margins:
             print('%s has %s margins %s' % (adj, len(ballot_margins), ballot_margins))
