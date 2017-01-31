@@ -134,14 +134,14 @@
 
       $(".venue").draggable( {
         revert: 'invalid', // revert to initial position if not dropped on a droppable element
-        zIndex: 1000,
+        zIndex: 9000,
         appendTo: "body",
         helper: 'clone',
       });
 
       $("#unusedVenues").droppable( {
         accept: '.venue',
-        hoverClass: 'bg-success',
+        hoverClass: 'vue-is-drag-enter',
         drop: function(event, ui) {
           var venue = ui.draggable; // the object being dragged
           var oldHolder = venue.parent("td");
@@ -154,7 +154,7 @@
       // Droppable elements are targets for draggable elements
       $(".venue-holder").droppable( {
         accept: '.venue',
-        hoverClass: 'bg-success',
+        hoverClass: 'vue-is-drag-enter',
         drop: function(event, ui) {
           var venue = ui.draggable;
           var oldHolder = venue.parent("td");

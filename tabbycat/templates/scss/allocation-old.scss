@@ -129,6 +129,7 @@ $adj-button-width: 180px;
   overflow: hidden;
   height: 32px;
   position: relative;
+  z-index: 1000;
   span {
     float: left;
     max-width: auto;
