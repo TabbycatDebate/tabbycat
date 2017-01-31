@@ -13,8 +13,7 @@ require("bootstrap");
 $(document).ready(function(){
   // Enable hover tooltips for all elements
   $('[data-toggle=tooltip]').tooltip({
-    'html': true,
-    'placement': 'top'
+    'html': true
   });
   // Disable buttons post submission
   $('.submit-disable').on('click', function () {

@@ -6,6 +6,7 @@ Change Log
 1.2.0
 -----
 - Redesigned the core round workflow; splitting of the "Display Draw" and "Motions" actions into seperate pages to make for a more streamlined user experience
+- Added information about autosave status to the Allocations page
 - Added basic infrastructure for creating tabbycat translations
 
 
