@@ -6,28 +6,37 @@ Running a Tournament
 
 Once you've finished the steps in :ref:`starting-a-tournament`, you're ready to go! This page outlines what you would do for each round during the tournament. After the tournament, proceed to :ref:`finishing-a-tournament`.
 
-The menu is on the side of the page. In the admin interface, tournament-wide pages (feedback, standings, and break) are at the top, while round-specific pages (check-ins, draw, and results) are in dropdown's organised by each round;s abbreviation.
+This is all done from an admin interface (*i.e.*, by the tab director or adjudication core member). In the admin interface, tournament-wide pages (feedback, standings, and break) are at the top of the left-hand menu, while round-specific pages (check-ins, draw, display, motions, and results) are in dropdown's organised by each round;s abbreviation.
 
-The workflow for each round is:
+The basic workflow for each round is:
 
-#. :ref:`Generate the draw <generating-the-draw>`
-#. :ref:`Release the draw <releasing-the-draw>`
+#. :ref:`Check-in the teams, adjudicators, and venues present <check-ins>`
+#. :ref:`Generate the draw <generating-the-draw>` and allocate the adjudicators
+#. :ref:`Show/release the draw <releasing-the-draw>`
+#. :ref:`Release/enter <releasing-the-motions>` the motions
 #. Have the debates
-#. :ref:`Enter results <data-entry>`
+#. :ref:`Enter results <entering-results>`
 #. :ref:`Advance to the next round <advancing-round>`
 
+.. _check-ins:
+
+Check-ins
+=========
+
+**Set availability.** For each round, you need to set the venue, team and adjudicator availability. If any of those are not marked as available they will not be used within the draw; so this feature is mostly useful for when adjudicators or venues are only available for certain rounds.
+
+To do this, click the round in the menu, then click **Check-Ins**. Here you can then go to the availability pages for venue, teams, and adjudicators, or check in everything at once. When you've set everything appropriately use the **Generate Draw** button in the top right to advance.
+
+  .. image:: images/checkins-page.png
+
 .. _generating-the-draw:
+
+Note that you can set availabilities in advance of the current round — ie if you know the venue/adjudicator schedules their availabilities can be set ahead of time.
 
 Generating the draw
 ===================
 
-This is all done from an admin interface (*i.e.*, by the tab director or adjudication core member):
-
-1. **Set availability.** For each round, you need to set the venue, team and adjudicator availability. To do this, click the round in the menu, then click **Check-Ins**. Here you can then go to the availability pages for venue, teams, and adjudicators, or check in everything at once. If going to the team/venues/adjudicators page, you would edit the availability and click **Save changes** then return to the overview page.
-
-  .. image:: images/checkins-page.png
-
-2. **Generate the draw.** Hit the **Generate Draw** button on the Check-Ins page. Follow the instructions to generate the draw.
+1. After you hit the **Generate Draw** button on the Check-Ins page follow the instructions to generate the draw.
 
   .. image:: images/draft-draw.png
 
@@ -36,13 +45,15 @@ This is all done from an admin interface (*i.e.*, by the tab director or adjudic
 
     If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our contact details in the :ref:`authors` section.
 
-3. After the draft draw has been confirmed, it will show the confirmed draw page.
+2. After the draft draw has been confirmed, it will show the confirmed draw page.
 
   .. image:: images/draw-without-adjs.png
 
-4. Click **Edit Adjudicators** and allocate adjudicators. It's a good idea to save periodically, in case something goes wrong or you want to revert. See  :ref:`adjudicator allocation <adjudicator-allocation>` for more details about this process.
+3. Click **Edit Adjudicators** and allocate adjudicators. See :ref:`adjudicator allocation <adjudicator-allocation>` for more details about this process.
 
   .. image:: ../features/images/adj-allocation.png
+
+4. Note that if you are using venue constraints the **Draw** page may prompt you to Auto Allocate the venues used to satisfy those constraints; see :ref:`venue-constraints <venue-constraints>` for more details. Regardless of whether you are using venue constraints or not you can change the Venues per-debate in the **Edit Venues** area.
 
 .. _releasing-the-draw:
 
@@ -51,29 +62,39 @@ Releasing the draw
 
 Once you're happy with your adjudicator allocation, you're ready to start the round.
 
-1. **Release to general assembly.** From the (confirmed) *Draw* page, go to **Show by Venue** or **Show by Team** (whichever you prefer). Then put it up on the projector. There are automatic scroll buttons and buttons for changing text sizing.
+1. **Release to general assembly.** From the *Display* page for that round, go to **Show by Venue** or **Show by Team** (whichever you prefer). Then put it up on the projector. There are automatic scroll buttons and buttons for changing text sizing.
 
   .. image:: images/draw-by-venue.png
 
-  .. caution:: The main *Draw* page shows a ranked draw, *i.e.* teams can infer their position on the tab from the version on the admin interface. Unless you want to spare teams the fun of backtabbing, you probably don't want them to see this. So you should turn the projector off before you log in to Tabbycat on the projected computer, and only turn it on once you have the *Show by Venue* or *Show by Team* draw up.
+2. **Release to public.** If you're using the public draw function (where the draw is posted publicly to your Tabbycat website) use the **Release to Public** button to allow the page to display.
 
-  .. tip:: To avoid the site from being overloaded by anxious refreshers, we recommend not releasing the draw to the public until after it's been seen by general assembly.
+  .. tip:: To avoid the site from being overloaded by anxious refreshers, we recommend that large tournaments not release the draw to the public until after it's been seen by general assembly.
 
-2. **Release to public.** If you're using the public draw function, use the **Release to Public** button to publicly display the draw page.
+.. _releasing-the-motions:
 
-3. **Release motions to general assembly.** Release the motions however you would normally release the motions. (Tabbycat won't do this for you.)
+Entering and Releasing Motions
+==============================
 
-4. **Enter and release motions.** Enter the motion(s) for each round using the **Edit Motions** link, then use the **Release Motions to Public** button to publicly display them.
+Tabbycat is agnostic as to whether you enter motions into Tabbycat before or after they are shown publicly. However, they must be entered *at some point* before ballots are entered.
 
-  .. note:: Currently, it's mandatory to enter motions into the system. (You don't have to release them, just enter them.) We eventually intend to make it optional, but this is low priority. If you'd like it to be optional, please get in touch with us and we'll accord it higher priority.
+1. Either before or after their public release motions can be entered in the **Motions** section for that round.
 
-5. Entering results. See :ref:`data-entry` for more details about this process.
+2. **Release to general assembly.** If you are entering motions *before* they are publicly revealed note that there is a *Display Motions* button in the **Display** area that allows you to do a Power Point style motion release.
 
-6. Enter debate results and feedback as they come in (and/or allow online entry of results and feedback).
+3. **Release to public.** As with draws, if you have the *enable public view of motions* setting configured your Tabbycat website will display a running list of motions from the tournament. When this is on, using the **Release Motions to Public** button on the **Motions** page will mark the current set of motions as able to be displayed on this page.
 
-7. Both results and feedback entered in the tab room or online need to be confirmed before the results are counted. To confirm a debate ballot and the debate as a whole, the confirmed checkbox under *Ballot Status* should be ticket in addition to the *Debate Status* being set to Confirmed.
+.. _entering-results:
 
-You can track data entry from the **Overview** page in an admin account (get there by clicking the tournament's name in the menu).
+Entering Results
+================
+
+1. Enter debate results and feedback as they come in (and/or allow online entry of results and feedback).
+
+2. Both results and feedback entered in the tab room or online need to be confirmed before the results are counted. To confirm a debate ballot and the debate as a whole, the confirmed checkbox under *Ballot Status* should be ticket in addition to the *Debate Status* being set to Confirmed.
+
+3. Note that you can track data entry progress from the **Overview** page in an admin account (get there by clicking the tournament's name in the menu).
+
+See :ref:`data-entry` for more details about the data entry process.
 
 .. warning:: For major tournaments, we don't recommend entering any data from an admin's account. This is because the admin interface (intentionally) does not enforce the data confirmation procedure.
 

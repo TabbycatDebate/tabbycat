@@ -15,7 +15,7 @@ Adjudicators can be dragged into position, or into the **Unused** section on the
 Various kinds of information are displayed using different colour codes. When hovering over, or dragging an adjudicator:
 
 - Their conflicts with other adjudicators and teams will show as red highlights
-- Their institutional conflicts with other ajdudicators and teams will show as orange highlights
+- Their institutional conflicts with other adjudicators and teams will show as orange highlights
 - Teams and adjudicators they have previously seen will highlight blue.
 
 These colors are also used when adjudicators are in positions where any of the above apply. IE, in a panel where the team and adjudicator are conflicted, each will be highlighted red. In addition, panels with odd numbers of adjudicators, or that are missing a chair will be highlighted purple.

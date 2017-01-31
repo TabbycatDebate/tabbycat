@@ -14,8 +14,8 @@ Feedback sheets will also be customised in this manner; displaying:
 - The specific questions you established when configuring the :ref:`adjudicator feedback questions <adjudicator-feedback>`
 - The room number
 
-To print the ballots for each round, you would go to the **Draw** page for that round, the click one of the two print links above the table. This opens a new window. In each window, you then use your browser's print function (CTRL-P). In the print window you'll want to turn background graphics on, header/footers off, and set the layout to portrait (feedback sheets) or landscape (score sheets).
+To print the ballots for each round, you would go to the **Display** page for that round, the click one of the two relevant print links. This opens a new window. In each window, you then use your browser's print function (CTRL-P). In the resulting print interface (from your browser) you'll want to turn background graphics on, header/footers off, and set the layout to portrait (feedback sheets) or landscape (score sheets).
 
-Typically you'd save these to PDF for printing, although you should be able to print straight from this dialouge box.
+Typically you'd save these to PDF for printing, although you should be able to print straight from this dialogue box.
 
 .. caution:: Printing works best in Safari and Firefox; use those if possible.
