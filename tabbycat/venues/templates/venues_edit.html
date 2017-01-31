@@ -163,8 +163,8 @@
           var newHomeOff;
           var curOff = venue.offset();
           if (replacing.length == 0) {
-          //   // dropping onto a blank venue holder, construct a hidden node
-          //   // to do position calculation
+            // dropping onto a blank venue holder, construct a hidden node
+            // to do position calculation
             replacing = $(document.createElement("div"));
             replacing.addClass("venue");
             replacing[0].style.visibility = "hidden";
@@ -176,14 +176,11 @@
             venueMoved(replacing, $(this), $("#unusedVenues"));
             $("#unusedVenues").append(replacing);
           }
-
           $(this).append(venue);
           venueMoved(venue, oldHolder, $(this));
-
           venue.css('top', curOff.top - newHomeOff.top);
           venue.css('left', curOff.left - newHomeOff.left);
           venue.animate({'top': '0', 'left': '0'}, 300);
-
         }
 
       });
