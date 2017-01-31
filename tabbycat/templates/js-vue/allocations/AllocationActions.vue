@@ -19,13 +19,13 @@
             Seen Before
           </button>
           <button disabled class="btn conflictable conflicts-toolbar conflict-hover-institutional-conflict">
-            Institutional Conflict
+            Institutional Clash
           </button>
           <button disabled class="btn conflictable conflicts-toolbar conflict-hover-personal-conflict">
-            Personal Conflict
+            Personal Clash
           </button>
           <button disabled class="btn panel-incomplete">
-            Unviable Panel
+            Unbalanced
           </button>
         </div>
         <div v-if="showingGender" class="btn-group btn-group-sm">
