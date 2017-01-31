@@ -105,13 +105,18 @@ $adj-button-width: 180px;
 }
 // Draggables
 .ui-droppable {
-  height: 44px;
+  min-height: 44px;
 }
 .panel-holder,
 .chair-holder,
 .team-holder,
 .venue-holder {
   padding: 5px; // Reduce padding for droppable areas
+}
+.team-holder,
+.venue-holder {
+  min-width: 150px;
+  padding: 3px 2px 0 2px !important;
 }
 .venue,
 .adj,
@@ -154,8 +159,15 @@ $adj-button-width: 180px;
     opacity: 0.5; // Dull the 'shadow' left behind while dragging
   }
 }
-.venue {
+.venue, .team {
+  min-width: 50px;
   max-width: 235px;
+  text-align: center;
+  margin-bottom: 4px;
+  span {
+    display: block;
+    padding-right: 6px;
+  }
 }
 .panel-body .table > tbody > tr:hover td {
   .venue span, .adj span, .team  span{

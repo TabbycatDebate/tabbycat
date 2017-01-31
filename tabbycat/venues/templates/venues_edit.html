@@ -31,25 +31,7 @@
 {% block content %}
 <div class="row">
 
-  <div id="scratch" class="fixed-right">
-    <table id="unusedTable" class="table">
-      <thead>
-        <tr>
-          <th>Unused Venues <span class="glyphicon glyphicon-save pull-right" id="toggle_unused_layout" data-toggle="tooltip" title="Toggle right/bottom alignment"></span></th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-    {% for venue in round.unused_venues %}
-      <div id="venue_{{ venue.id }}" class="btn btn-default btn-block venue">
-        <span>{{ venue }}</span>
-      </div>
-    {% endfor %}
-  </div>
-
   <div class="container-fluid">
-    <div id="main" class="">
 
     {% with ndebates=round.debate_set.count nvenues=round.active_venues.count %}
       {% if ndebates > nvenues %}
@@ -72,10 +54,10 @@
               {% if pref.enable_debate_scheduling %}
                 <th>Time</th>
               {% endif %}
+              <th>Venue</th>
               <th>Affirmative</th>
               <th>Negative</th>
               <th>Adjudicators</th>
-              <th>Venue</th>
             </tr>
           </thead>
           <tbody>
@@ -90,6 +72,13 @@
                   {% endif %}
                 </td>
               {% endif %}
+              <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
+                {% if debate.venue %}
+                <div id="venue_{{ debate.venue.id }}" class="btn btn-default venue">
+                  <span class="">{{ debate.venue }}</span>
+                </div>
+                {% endif %}
+              </td>
               <td>
                 {% include "tables/team.html" with team=debate.aff_team %}
               </td>
@@ -97,13 +86,6 @@
                 {% include "tables/team.html" with team=debate.neg_team %}
               </td>
               {% include "tables/debate_adjudicators_compact.html" %}
-              <td id="debate_{{ debate.id }}" class="venue-holder btn-holder">
-                {% if debate.venue %}
-                <div id="venue_{{ debate.venue.id }}" class="btn btn-block btn-default venue">
-                  <span class="">{{ debate.venue }}</span>
-                </div>
-                {% endif %}
-              </td>
             </tr>
             {% endfor %}
           </tbody>
@@ -111,7 +93,16 @@
       </div>
       </div>
     </div>
-  </div>
+
+    <div id="unusedVenues" class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-adjs">
+      {% for venue in round.unused_venues %}
+        <div id="venue_{{ venue.id }}" class="btn btn-default venue old-unallocated">
+          <span>{{ venue }}</span>
+        </div>
+      {% endfor %}
+    </div><!-- End #unusedVenues -->
+
+  </div><!-- End .container-fluid -->
 
 </div>
 {% endblock content %}
@@ -132,11 +123,11 @@
       // Triggers when a draggable element is placed
       function venueMoved(venue, oldDebate, newDebate) {
         var oldId = oldDebate.attr("id");
-        if (oldId != undefined && oldId != "scratch") {
+        if (oldId != undefined && oldId != "unusedVenues") {
           debates[oldId] = 'none';
         }
         var newId = newDebate.attr("id");
-        if (newId != undefined && newId != "scratch") {
+        if (newId != undefined && newId != "unusedVenues") {
           debates[newId] = venue.attr("id");
         }
       }
@@ -148,7 +139,7 @@
         helper: 'clone',
       });
 
-      $("#scratch").droppable( {
+      $("#unusedVenues").droppable( {
         accept: '.venue',
         hoverClass: 'bg-success',
         drop: function(event, ui) {
@@ -182,8 +173,8 @@
             replacing.remove();
           } else {
             newHomeOff = replacing.offset();
-            venueMoved(replacing, $(this), $("#scratch"));
-            $("#scratch").append(replacing);
+            venueMoved(replacing, $(this), $("#unusedVenues"));
+            $("#unusedVenues").append(replacing);
           }
 
           $(this).append(venue);
