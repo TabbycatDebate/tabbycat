@@ -45,8 +45,8 @@ Each venue can be in as many categories as you like (or none at all).
 
 To add a venue constraint category, go to the **Edit Database** area (under
 Setup), scroll down to "Venues" and click "Venue constraint categories". Then
-click the **+ Add venue constraint categories** button in the top-right of the
-page.
+click the **+ Add venue constraint category** button in the top-right of the
+page. You'll see a page with this on it:
 
 .. image:: images/add-venue-constraint-category.png
 
