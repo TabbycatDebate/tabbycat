@@ -332,7 +332,7 @@ class Round(models.Model):
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, divisions=True, ballotsubs=False,
-            wins=False, ballotsets=False, venues=True, institutions=False):
+            wins=False, ballotsets=False, venues=True, institutions=False, venueconstraints=False):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
@@ -354,6 +354,8 @@ class Round(models.Model):
             debates = debates.select_related('division', 'division__venue_group')
         if venues:
             debates = debates.select_related('venue', 'venue__group')
+        if venueconstraints:
+            debates = debates.prefetch_related('venue__venueconstraintcategory_set')
         if teams or wins or institutions or speakers:
             debates = debates.prefetch_related(
                 Prefetch('debateteam_set',

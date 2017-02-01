@@ -180,7 +180,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         if r.draw_status == r.STATUS_NONE:
             return table # Return Blank
 
-        draw = r.debate_set_with_prefetches(ordering=('room_rank',), institutions=True)
+        draw = r.debate_set_with_prefetches(ordering=('room_rank',), institutions=True, venueconstraints=True)
         populate_history(draw)
         if r.is_break_round:
             table.add_room_rank_columns(draw)

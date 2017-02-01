@@ -368,6 +368,25 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
 
+    def import_venue_constraint_categories(self, f):
+        """Imports venue constraint categories from a file.
+        Each line has:
+            venueconstraintcategory, venue
+        """
+        def venue_constraint_category_interpreter(line):
+            return {'name': line['venueconstraintcategory']}
+
+        counts, errors = self._import(f, vm.VenueConstraintCategory,
+                venue_constraint_category_interpreter, expect_unique=False)
+
+        venue_constraint_category_venue_interpreter = make_interpreter(
+            venueconstraintcategory=lambda x: vm.VenueConstraintCategory.objects.get(name=x),
+            venue=lambda x: vm.Venue.objects.get(name=x),
+        )
+
+        return self._import(f, vm.VenueConstraintCategory.venues.through,
+                venue_constraint_category_venue_interpreter, counts=counts, errors=errors)
+
     def import_adj_venue_constraints(self, f):
         """Imports venue constraints from a file.
         Each line has:
@@ -375,7 +394,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         adj_venue_constraints_interpreter_part = make_interpreter(
             adjudicator=lambda x: pm.Adjudicator.objects.get(name=x),
-            venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
+            category=lambda x: vm.VenueConstraintCategory.objects.get(name=x),
         )
 
         def adj_venue_constraints_interpreter(line):
@@ -394,7 +413,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
         team_venue_constraints_interpreter_part = make_interpreter(
             team=pm.Team.objects.lookup,
-            venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
+            category=lambda x: vm.VenueConstraintCategory.objects.get(name=x),
         )
 
         def team_venue_constraints_interpreter(line):

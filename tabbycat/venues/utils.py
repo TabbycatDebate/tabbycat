@@ -11,14 +11,21 @@ def venue_conflicts_display(debates):
     participant had constraints and *none* of their constraints were met."""
 
     constraints = {}
-    for vc in VenueConstraint.objects.filter_for_debates(debates):
+    for vc in VenueConstraint.objects.filter_for_debates(debates).select_related('category'):
         constraints.setdefault((vc.subject_content_type_id, vc.subject_id), []).append(vc)
 
-    def _constraints_satisfied(instance, venue):
+    def _add_constraint_message(debate, instance_name, instance, venue):
         key = (ContentType.objects.get_for_model(instance).id, instance.id)
         if key not in constraints:
-            return True
-        return any(constraint.venue_group_id == venue.group_id for constraint in constraints[key])
+            return
+        for constraint in constraints[key]:
+            if constraint.category in venue.venueconstraintcategory_set.all():
+                conflict_messages[debate].append(("success", "Venue constraint of {name} ({category}) met".format(
+                        name=instance_name, category=constraint.category.name)))
+                return
+        else:
+            conflict_messages[debate].append(("danger", "Venue does not meet any constraint of {name}".format(
+                    name=instance_name)))
 
     conflict_messages = {debate: [] for debate in debates}
     for debate in debates:
@@ -27,13 +34,11 @@ def venue_conflicts_display(debates):
             continue
 
         for team in debate.teams:
-            if not _constraints_satisfied(team, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of {}".format(team.short_name))
-            if not _constraints_satisfied(team.institution, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of institution {} ({})".format(team.institution.code, team.short_name))
+            _add_constraint_message(debate, team.short_name, team, venue)
+            _add_constraint_message(debate, "institution {} ({})".format(team.institution.code, team.short_name),
+                    team.institution, venue)
 
         for adjudicator in debate.adjudicators.all():
-            if not _constraints_satisfied(adjudicator, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of {}".format(adjudicator.name))
+            _add_constraint_message(debate, adjudicator.name, adjudicator, venue)
 
     return conflict_messages
