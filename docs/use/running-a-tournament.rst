@@ -31,29 +31,28 @@ To do this, click the round in the menu, then click **Check-Ins**. Here you can 
 
 .. _generating-the-draw:
 
-Note that you can set availabilities in advance of the current round — ie if you know the venue/adjudicator schedules their availabilities can be set ahead of time.
+.. note:: You can set availabilities in advance of the current round — ie if you know the venue/adjudicator schedules their availabilities can be set ahead of time.
 
 Generating the draw
 ===================
 
-1. After you hit the **Generate Draw** button on the Check-Ins page follow the instructions to generate the draw.
+1. **Confirm the draft draw**. After advancing from availability section you will first be shown a draft draw that details how the draw was formulated, pointing out pull-ups and conflict swaps and the like.
 
   .. image:: images/draft-draw.png
 
-
-  .. note:: Tabbycat will show you a draft draw before you confirm it. In the draft draw, it'll show you details so that you can understand how it came up with the draw, pointing out pull-ups and conflict swaps and the like. This is for you to double-check. While there are some basic tests on the draw algorithm, it never hurts to sanity-check it again.
+.. note:: The draft draw is for you to double-check. While there are some basic tests on the draw algorithm, it never hurts to sanity-check it again.
 
     If you *do* find something wrong with a draft draw, you can edit the match-ups, but please also let us know what the problem was! You can find our contact details in the :ref:`authors` section.
 
-2. After the draft draw has been confirmed, it will show the confirmed draw page.
+2. Once on the confirmed draw page you can click **Edit Adjudicators**.
 
   .. image:: images/draw-without-adjs.png
 
-3. Click **Edit Adjudicators** and allocate adjudicators. See :ref:`adjudicator allocation <adjudicator-allocation>` for more details about this process.
+3. **Allocate the adjudicators**. Changes here will auto-save; feel free to return to the **Draw** when needed. See :ref:`adjudicator allocation <adjudicator-allocation>` for more details about the allocation process.
 
   .. image:: ../features/images/adj-allocation.png
 
-4. Note that if you are using venue constraints the **Draw** page may prompt you to Auto Allocate the venues used to satisfy those constraints; see :ref:`venue-constraints <venue-constraints>` for more details. Regardless of whether you are using venue constraints or not you can change the Venues per-debate in the **Edit Venues** area.
+.. note:: If you are using venue constraints the **Draw** page may prompt you to Auto Allocate the venues used to satisfy those constraints; see :ref:`venue-constraints <venue-constraints>` for more details. Regardless of whether you are using venue constraints or not you can change the Venues per-debate in the **Edit Venues** area.
 
 .. _releasing-the-draw:
 
@@ -77,7 +76,7 @@ Entering and Releasing Motions
 
 Tabbycat is agnostic as to whether you enter motions into Tabbycat before or after they are shown publicly. However, they must be entered *at some point* before ballots are entered.
 
-1. Either before or after their public release motions can be entered in the **Motions** section for that round.
+1. **Enter the motion text.** Either before or after their public release motions can be entered in the **Motions** section for that round.
 
 2. **Release to general assembly.** If you are entering motions *before* they are publicly revealed note that there is a *Display Motions* button in the **Display** area that allows you to do a Power Point style motion release.
 
