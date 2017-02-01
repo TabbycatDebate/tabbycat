@@ -43,13 +43,32 @@
       {% endfor %}
 
       <div class="form-group">
-        <button type="submit" class="btn btn-block btn-success form-control col-md-6">
+        <button type="submit" class="btn btn-block btn-success form-control">
           {% trans "Create Tournament" %}
         </button>
       </div>
 
     </form>
 
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    <strong>Just trying out Tabbycat?</strong>
+    If you are just learning or playing around with Tabbycat it's easiest
+    to create a 'demo' tournament that is prepopulated with data.
+    This demo tournament can then be easily deleted later on.
+  </div>
+  <div class="panel-body">
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="submit" class="btn btn-primary">
+        {% trans "Create a Demo (for a small/simple tournament)" %}
+      </button>
+      <button type="submit" class="btn btn-primary">
+        {% trans "Create a Demo (for a big/complex tournament)" %}
+      </button>
+    </div>
   </div>
 </div>
 
