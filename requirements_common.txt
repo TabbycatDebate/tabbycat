@@ -1,5 +1,7 @@
 # The necessary dependencies common to both local and heroku installs
+
 # Mental note (cmd to check for updates): pip list --outdated --format=columns
+# Mental note (npm equivalent command):   npm outdated
 
 # Core
 
