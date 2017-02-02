@@ -26,6 +26,9 @@ urlpatterns = [
     url(r'^create/',
         tournaments.views.CreateTournamentView.as_view(),
         name='tournament-create'),
+    url(r'^load_demo/',
+        tournaments.views.LoadDemoView.as_view(),
+        name='load-demo'),
 
     # Admin area
     url(r'^jet/',

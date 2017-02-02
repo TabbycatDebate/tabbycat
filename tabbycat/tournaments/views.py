@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core import management
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
@@ -14,6 +15,7 @@ from django.views.generic.edit import CreateView, FormView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
+from importer.management.commands import importtournament
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
@@ -171,6 +173,17 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     model = Tournament
     form_class = TournamentForm
     template_name = "create_tournament.html"
+
+
+class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
+
+    def post(self, request, *args, **kwargs):
+        source = request.POST.get("source", "")
+        overrides = Tournament.objects.filter(slug=source).exists()
+        management.call_command('importtournament', source,
+                                force=overrides, skip_institutions=overrides)
+        messages.success(self.request, "Created new demo tournament")
+        return redirect('tabbycat-index')
 
 
 class TournamentPermanentRedirectView(RedirectView):

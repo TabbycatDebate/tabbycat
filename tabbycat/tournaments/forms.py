@@ -5,6 +5,8 @@ from django.forms import ModelForm
 from django.utils.translation import ugettext_lazy as _
 
 from breakqual.models import BreakCategory
+from importer.management.commands import importtournament
+from utils.forms import OptionalChoiceField
 
 from .models import Tournament
 from .utils import auto_make_break_rounds, auto_make_rounds
@@ -25,6 +27,12 @@ class TournamentForm(ModelForm):
         required=False,
         label=_("Number of teams in the open break"),
         help_text=_("Leave blank if there are no break rounds."))
+
+    import_options = OptionalChoiceField(
+        label=_("Setup this tournament using demo data"), required=False,
+        help_text=_("Import fake data for those testing/learning Tabbycat"),
+        choices=[('demo_simple','Use simple demo data (for small tournaments)'),
+                 ('demo',       'Use complex demo data (for big tournamens)')])
 
     def save(self):
         tournament = super(TournamentForm, self).save()
@@ -50,4 +58,10 @@ class TournamentForm(ModelForm):
 
         tournament.current_round = tournament.round_set.first()
         tournament.save()
+
+        demo_import = self.cleaned_data["import_options"]
+        if demo_import:
+            print("Importing demo")
+            management.call_command('importtournament', verbosity=0)
+
         return tournament

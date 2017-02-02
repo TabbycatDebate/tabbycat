@@ -43,13 +43,43 @@
       {% endfor %}
 
       <div class="form-group">
-        <button type="submit" class="btn btn-block btn-success form-control col-md-6">
+        <button type="submit" class="btn btn-block btn-success form-control">
           {% trans "Create Tournament" %}
         </button>
       </div>
 
     </form>
 
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    <strong>Just trying out Tabbycat?</strong>
+    If you are just learning or playing around with Tabbycat it's easiest
+    to create a 'demo' tournament that is prepopulated with a fake (but typical)
+    set of teams, adjudicators, venues, and the like.
+    This demo tournament can then be easily deleted later on.
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6">
+        <form action="{% url 'load-demo' %}" method="POST">
+          <input type="hidden" name="source" value="demo_simple">
+          <button type="submit" class="btn btn-primary btn-block">
+            {% trans "Load Demo Data (for a small/simple tournament)" %}
+          </button>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <form action="{% url 'load-demo' %}" method="POST">
+          <input type="hidden" name="source" value="demo">
+          <button type="submit" class="btn btn-primary btn-block">
+            {% trans "Load Demo Data (for a big/complex tournament)" %}
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
