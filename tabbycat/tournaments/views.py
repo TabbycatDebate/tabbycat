@@ -193,4 +193,3 @@ class DonationsView(CacheMixin, TemplateView):
 
 class TournamentDonationsView(TournamentMixin, TemplateView):
     template_name = 'donations.html'
-
