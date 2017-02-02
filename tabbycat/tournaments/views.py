@@ -182,9 +182,9 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
         if Tournament.objects.filter(slug=source).exists():
             messages.warning(self.request, "This kind of demo tournament \
                 already exists; you should delete it (and its institutions) \
-                in the Database area before creating another demo.")
+                in the Edit Database Area before creating another demo.")
         else:
-            management.call_command('importtournament', source)
+            management.call_command(importtournament.Command(), source)
             messages.success(self.request, "Created new demo tournament")
         return redirect('tabbycat-index')
 
