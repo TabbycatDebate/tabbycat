@@ -4,11 +4,11 @@
 -r requirements_common.txt
 
 # Base Heroku Requirements (from the toolbelt)
-dj-database-url>=0.4,<0.5
+dj-database-url==0.4.2
 
 # Mem-Caching
-pylibmc>=1.5,<1.6
-django-pylibmc>=0.6,<0.7
+pylibmc==1.5.1
+django-pylibmc==0.6.1
 
 # Monitoring (note the required heroku add-on is not added by default)
 newrelic
