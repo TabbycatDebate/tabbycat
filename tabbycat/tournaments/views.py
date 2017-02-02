@@ -179,10 +179,13 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
 
     def post(self, request, *args, **kwargs):
         source = request.POST.get("source", "")
-        overrides = Tournament.objects.filter(slug=source).exists()
-        management.call_command('importtournament', source,
-                                force=overrides, skip_institutions=overrides)
-        messages.success(self.request, "Created new demo tournament")
+        if Tournament.objects.filter(slug=source).exists():
+            messages.warning(self.request, "This kind of demo tournament \
+                already exists; you should delete it (and its institutions) \
+                in the Database area before creating another demo.")
+        else:
+            management.call_command('importtournament', source)
+            messages.success(self.request, "Created new demo tournament")
         return redirect('tabbycat-index')
 
 
