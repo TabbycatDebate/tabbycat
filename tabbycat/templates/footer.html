@@ -20,8 +20,8 @@
           {% blocktrans trimmed %}
             Tabbycat is an open-source project developed by volunteers and free to use for tabbing non-profit, non-fundraising tournaments.
           {% endblocktrans %}
-          {% if tournament and tournament.team_set.count > 0 %}
-            For a tournament of this size, we suggest a donation of <strong>${{ tournament.team_set.count }}</strong>.
+          {% if tournament and tournament.billable_teams > 0 %}
+            For a tournament of this size, we suggest a donation of <strong>${{ tournament.billable_teams }}</strong>.
             <a href="{% tournament_url tournament-donations %}">Learn more about donating</a>.
           {% else %}
             Personal or institutional <a href="{% url 'donations' %}">donations

@@ -20,11 +20,11 @@
     your licence to use Tabbycat is conditional upon it. General donations from persons or organisations
     are of course also much appreciated.
   </li>
-  {% if tournament and tournament.team_set.count > 0 %}
+  {% if tournament and tournament.billable_teams > 0 %}
     <li class="list-group-item">
       Our suggested donation from {{ tournament }}, based on its size, is
-      <strong>A${{ tournament.team_set.count }}</strong>. The easiest way to donate is
-      <a href="http://PayPal.Me/tabbycatproject/{{ tournament.team_set.count }}aud">via Paypal</a>, but please don’t
+      <strong>A${{ tournament.billable_teams }}</strong>. The easiest way to donate is
+      <a href="http://PayPal.Me/tabbycatproject/{{ tournament.billable_teams }}aud">via Paypal</a>, but please don’t
       hesitate to contact us if other methods would work better for you.
     </li>
   {% else %}
