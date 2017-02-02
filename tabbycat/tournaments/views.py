@@ -179,7 +179,9 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
 
     def post(self, request, *args, **kwargs):
         source = request.POST.get("source", "")
-        management.call_command('importtournament', source, force=True)
+        overrides = Tournament.objects.filter(slug=source).exists()
+        management.call_command('importtournament', source,
+                                force=overrides, skip_institutions=overrides)
         messages.success(self.request, "Created new demo tournament")
         return redirect('tabbycat-index')
 

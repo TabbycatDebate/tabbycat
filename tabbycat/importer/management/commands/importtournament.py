@@ -25,6 +25,8 @@ class Command(BaseCommand):
                             help='Do not prompt before deleting tournament that already exists.')
         parser.add_argument('--keep-existing', action='store_true', default=False,
                             help='Keep existing tournament and data, skipping lines if they are duplicates.')
+        parser.add_argument('--skip-institutions', action='store_true', default=False,
+                            help='Skip adding institutions to the database.')
         parser.add_argument('--delete-institutions', action='store_true', default=False,
                             help='Delete all institutions from the database. Overrides --keep-existing.')
         parser.add_argument('--delete-venue-groups', action='store_true', default=False,
@@ -58,7 +60,8 @@ class Command(BaseCommand):
         self._make('venue_groups')
         self._make('venues')
         self._make('regions')
-        self._make('institutions')
+        if not options['skip_institutions']:
+            self._make('institutions')
         self._make('break_categories')
         self._make('teams')
         self._make('speakers')
