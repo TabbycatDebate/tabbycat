@@ -8,30 +8,29 @@
 
 <ul class="list-group">
   <li class="list-group-item active lead">
-    Tabbycat is a volunteer effort. Since 2012 its maintainers have spent thousands of hours improving it.
+    Tabbycat is a volunteer effort. Since 2012, its maintainers have spent thousands of hours working on it.
   </li>
   <li class="list-group-item">
-    Donating to Tabbycat the maintainers to better meet recurring costs, such
-    as website hosting. It also helps a little to justify our ongoing time investment in
-     responding to support enquiries, keeping the underpinning software up to date
-     fixing bugs, and developing new features.
+    Donating to Tabbycat helps the maintainers to meet recurring costs and justify our ongoing contributions in
+    responding to support enquiries, keeping the software up to date, fixing bugs, and developing new features.
   </li>
   <li class="list-group-item">
-    We suggest a per-tournament donation of $1 AUD (Australian Dollar) per team;
-    to be donated by the tournament organisers or tab team. General
-    donations from persons or organisations are of course also accepted and appreciated.
+    We suggest that non-profit tournaments budget for a voluntary donation of A$1 (Australian dollar) per team.
+    For tournaments run partly or solely for fundraising or for profit, this payment is <strong>required</strong>, and
+    your licence to use Tabbycat is conditional upon it. General donations from persons or organisations
+    are of course also much appreciated.
   </li>
   {% if tournament and tournament.team_set.count > 0 %}
     <li class="list-group-item">
-      Based on the size of {{ tournament }}'s our <strong>suggested donation
-      is ${{ tournament.team_set.count }} AUD</strong>. The easiest way to donate
-      is <a href="http://PayPal.Me/tabbycatproject/{{ tournament.team_set.count }}aud">via Paypal</a>.
-       Please contact us for other options.
+      Our suggested donation from {{ tournament }}, based on its size, is
+      <strong>A${{ tournament.team_set.count }}</strong>. The easiest way to donate is
+      <a href="http://PayPal.Me/tabbycatproject/{{ tournament.team_set.count }}aud">via Paypal</a>, but please don’t
+      hesitate to contact us if other methods would work better for you.
     </li>
   {% else %}
     <li class="list-group-item">
       The easiest way to donate is <a href="http://PayPal.Me/tabbycatproject/0aud">via Paypal</a>.
-       Please contact us if you require other options.
+       Please <a href="http://tabbycat.readthedocs.io/en/stable/about/support.html">contact us</a> if you require other options.
     </li>
   {% endif %}
 </ul>

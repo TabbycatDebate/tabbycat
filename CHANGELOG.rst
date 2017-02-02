@@ -8,6 +8,7 @@ Change Log
 
 - Redesigned the core round workflow; splitting of the "Display Draw" and "Motions" actions into seperate pages to make for a more streamlined user experience
 - Added basic infrastructure for creating tabbycat translations
+- Added a more explicit donations link and dedicated page along with license clarifications that outline when donations are expected.
 
 
 1.1.6

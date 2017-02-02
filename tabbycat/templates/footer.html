@@ -18,12 +18,11 @@
         </h6>
         <p>
           {% blocktrans trimmed %}
-            Tabbycat is an open-source project for tabbing debating tournaments.
-            It is developed by volunteers.<br>
+            Tabbycat is an open-source project developed by volunteers and free to use for tabbing non-profit, non-fundraising tournaments.
           {% endblocktrans %}
           {% if tournament and tournament.team_set.count > 0 %}
-            We suggest a donation of <strong>${{ tournament.team_set.count }}</strong> for a tournament of
-            this size. <a href="{% tournament_url tournament-donations %}">About donating to Tabbycat</a>.
+            For a tournament of this size, we suggest a donation of <strong>${{ tournament.team_set.count }}</strong>.
+            <a href="{% tournament_url tournament-donations %}">Learn more about donating</a>.
           {% else %}
             Personal or institutional <a href="{% url 'donations' %}">donations
             to the project</a> are much appreciated.
