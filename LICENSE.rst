@@ -15,10 +15,11 @@ Modifications to and redistributions of Tabbycat
 ================================================
 
 We grant you permission to modify and/or redistribute Tabbycat, provided that
-you do not receive any payment for this modification and/or redistribution,
-if you modify Tabbycat, you add prominent notices stating that you modified it,
-all references and functionality relating to donations are kept intact
-this licence page and all attributions of authorship are included as-is.
+
+- you do not receive any payment for this modification and/or redistribution,
+- if you modify Tabbycat, you add prominent notices stating that you modified it,
+- all references and functionality relating to donations are kept intact, and
+- this licence page and all attributions of authorship are included as-is.
 
 Modifying Tabbycat for payment, or using a version of Tabbycat that has been modified for payment, is strictly prohibited without our express permission.
 
