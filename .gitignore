@@ -24,6 +24,9 @@ data/*
 !data/presets/
 !data/fixtures/
 
+# Docker
+dbdata
+
 # Docs
 docs/site/
 issues-*.html
