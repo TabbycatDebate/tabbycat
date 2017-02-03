@@ -2,7 +2,7 @@
 Licence Information
 ===================
 
-We haven't released Tabbycat under an open-source licence, so there is no formal and general right to use this software. Nonetheless, you're welcome to freely use Tabbycat to help run a debating tournament if it is a not-for-profit and not-for-fundraising activity. A voluntary donation of A$1 (Australian dollar) per team would be greatly appreciated, and would help us meet costs and justify our ongoing work and support for Tabbycat users.
+We haven't released Tabbycat under an open-source licence, so there is no formal and general right to use this software. Nonetheless, you're welcome to freely use Tabbycat to help run a debating tournament if it is a not-for-profit and not-for-fundraising activity. A voluntary donation of A$1 (Australian dollar) per team would be greatly appreciated, and would help us meet costs and justify our ongoing work and support for Tabbycat users. (A donation link is in the footer of your Tabbycat site.)
 
 Use at for-profit or fundraising tournaments
 ============================================
@@ -27,4 +27,4 @@ If you use a version of Tabbycat that has been modified by you or a third party 
 DISCLAIMER OF WARRANTY AND LIABILITY
 ====================================
 
-We work on this software in our spare time and make it available for not-for-profit use in the hope that it will benefit the debating community. **It is provided "as is", without any warranty of any kind, express or implied, including without limitation any warranties of merchantability and fitness for a particular purpose., and we disclaim all legal liability By using Tabbycat, you agree that none of its contributors will be held liable for any loss or claim arising directly or indirectly from using the software, or for any loss or claim otherwise in connection with the software.**
+We work on this software in our spare time and make it available for not-for-profit use in the hope that it will benefit the debating community. **It is provided "as is", without any warranty of any kind, express or implied, including without limitation any warranties of merchantability and fitness for a particular purpose, and we disclaim all legal liability. By using Tabbycat, you agree that none of its contributors will be held liable for any loss or claim arising directly or indirectly from using the software, or for any loss or claim otherwise in connection with the software.**
