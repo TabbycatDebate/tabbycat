@@ -185,7 +185,8 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
                 in the Edit Database Area before creating another demo.")
         else:
             management.call_command(importtournament.Command(), source)
-            messages.success(self.request, "Created new demo tournament")
+            messages.success(self.request, "Created new demo tournament. You \
+                                            can access it below.")
         return redirect('tabbycat-index')
 
 

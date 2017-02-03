@@ -10,11 +10,12 @@
 
 <div class="alert alert-info">
   <p>
-    As per <a href="https://github.com/czlee/tabbycat/blob/master/LICENSE.rst">
-    its license</a> Tabbycat is free to use (although donations are encouraged)
-     for <strong>non-profit</strong> and <strong>non-fundraising</strong>
-     tournaments. If your tournament is run for profit or for fundraising note
-     that there is a <a href="{% url 'donations' %}">required payment</a>.
+    Tabbycat is free to use for non-profit and non-fundraising tournaments
+    (although donations are encouraged). If your tournament is run for profit
+    or for fundraising, please note that there is a
+    <a href="{% url 'donations' %}">required payment</a>. For more details,
+    see the <a href="http://tabbycat.readthedocs.io/en/stable/about/licence.html">
+    Tabbycat licence agreement</a>.
   </p>
 </div>
 
@@ -65,15 +66,13 @@
 
 <div class="panel panel-default">
   <div class="panel-body">
-    <strong>Just trying out Tabbycat?</strong>
+    <p><strong>Just trying out Tabbycat?</strong>
     If you are just learning or playing around with Tabbycat it's easiest
     to create a 'demo' tournament that is prepopulated with a fake (but typical)
     set of teams, adjudicators, venues, and the like.
-    This demo tournament can then be easily deleted later on.
-  </div>
-  <div class="panel-body">
+    This demo tournament can then be easily deleted later on.</p>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <form action="{% url 'load-demo' %}" method="POST">
           <input type="hidden" name="source" value="demo_simple">
           <button type="submit" class="btn btn-primary btn-block">
@@ -81,7 +80,7 @@
           </button>
         </form>
       </div>
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <form action="{% url 'load-demo' %}" method="POST">
           <input type="hidden" name="source" value="demo">
           <button type="submit" class="btn btn-primary btn-block">
