@@ -423,3 +423,7 @@ class Round(models.Model):
     @property
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
+
+    @cached_property
+    def billable_teams(self):
+        return self.tournament.team_set.count()

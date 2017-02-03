@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load add_field_css i18n %}
+
+{% block head-title %}<span class="emoji">😻</span>{% trans "Donate to Tabbycat"%}{% endblock %}
+{% block page-title %}Donate to Tabbycat{% endblock %}
+
+{% block content %}
+
+<ul class="list-group">
+  <li class="list-group-item active lead">
+    Tabbycat is a volunteer effort. Since 2012, its maintainers have spent
+    thousands of hours working on it.
+  </li>
+  <li class="list-group-item">
+    Donating to Tabbycat helps the maintainers to meet recurring costs and
+    justify our ongoing contributions in responding to support enquiries,
+    keeping the software up to date, fixing bugs, and developing new features.
+  </li>
+  <li class="list-group-item">
+    We suggest that tournaments budget for a donation of A$1 (Australian dollar)
+     per team. For tournaments run for fundraising or for profit, whether partly
+     or solely, this payment is <strong>required</strong> and your licence to
+    use Tabbycat is conditional upon it. General donations from individuals or
+    organisations are of course also much appreciated.
+  </li>
+  {% if tournament and tournament.billable_teams > 0 %}
+    <li class="list-group-item">
+      Our suggested donation from {{ tournament }}, based on its size, is
+      <strong>A${{ tournament.billable_teams }}</strong>. The easiest way to donate is
+      <a href="http://PayPal.Me/tabbycatproject/{{ tournament.billable_teams }}aud">via Paypal</a>, but please don’t
+      hesitate to contact us if other methods would work better for you.
+    </li>
+  {% else %}
+    <li class="list-group-item">
+      The easiest way to donate is <a href="http://PayPal.Me/tabbycatproject/0aud">via Paypal</a>.
+       Please <a href="http://tabbycat.readthedocs.io/en/stable/about/support.html">contact us</a> if you require other options.
+    </li>
+  {% endif %}
+</ul>
+
+{% endblock %}

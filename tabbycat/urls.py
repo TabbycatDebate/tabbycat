@@ -30,6 +30,11 @@ urlpatterns = [
         tournaments.views.LoadDemoView.as_view(),
         name='load-demo'),
 
+    # Top Level Pages
+    url(r'^donations/',
+        tournaments.views.DonationsView.as_view(),
+        name='donations'),
+
     # Admin area
     url(r'^jet/',
         include('jet.urls', 'jet')),

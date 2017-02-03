@@ -18,9 +18,14 @@
         </h6>
         <p>
           {% blocktrans trimmed %}
-            Tabbycat is an open-source project for tabbing debating tournaments that use two-team formats. It was created by Qi-Shan Lim, Chuan-Zheng Lee, and Philip Belesky.
-            Personal or institutional <a href="http://PayPal.Me/tabbycatproject/0aud">donations to the project's developers</a> are much appreciated.
+            Tabbycat is an open-source project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
           {% endblocktrans %}
+          {% if tournament and tournament.billable_teams > 0 %}
+            For a tournament of this size, we suggest a donation of <strong>${{ tournament.billable_teams }}</strong>.
+            <a href="{% tournament_url tournament-donations %}">Learn more about donating</a>.
+          {% else %}
+            <a href="{% url 'donations' %}">Donations to Tabbycat from individuals or organisations</a> are much appreciated.
+          {% endif %}
         </p>
       </div>
       <div class="col-md-4">
@@ -28,8 +33,8 @@
         <p>
           {% blocktrans trimmed %}
             Using a real debating app makes speaking and adjudicating easier!
-            Check out <a href="https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%20Installs&mt=8">Timekept (for iPhones/iPads)</a>
-            or <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%3Dtabbycat%26utm_medium%3Dfooter">Debatekeeper (for Android)</a>.
+            Check out <a href="https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%20Installs&mt=8">Timekept</a> (iPhone/iPad)
+            or <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%3Dtabbycat%26utm_medium%3Dfooter">Debatekeeper</a> (Android).
           {% endblocktrans %}
         </p>
       </div>
@@ -37,7 +42,7 @@
         <h6>{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
         <p>
           {% blocktrans trimmed %}
-            <a href="http://debatingballot.com" target="_blank">DebatingBallot.com</a> lets you design and print great ballots online.
+            Use <a href="http://debatingballot.com" target="_blank">debatingBallot.com</a> to design and print great ballots online.
           {% endblocktrans %}
         </p>
       </div>
