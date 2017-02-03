@@ -7,9 +7,10 @@ Change Log
 -----
 - Redesigned the core round workflow; splitting of the "Display Draw" and "Motions" actions into separate pages to make for a more streamlined user experience
 - Added information about autosave status to the Allocations page
-- Added basic infrastructure for creating tabbycat translations
+- Started some basic infrastructure for creating Tabbycat translations
+- Separated venue groups from venue constraint categories
 - Added the ability to import 'demo' data when creating a new tournament
-- Added a more explicit donations link and dedicated page along with license clarifications that outline when donations are expected.
+- Added a more explicit donations link and dedicated page along with licence clarifications that outline when donations are expected.
 
 
 1.1.7
