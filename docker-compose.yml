@@ -1,5 +1,6 @@
 # Docker-compose is a way to run multiple containers at once and connect them
-# This sets up and runs postgres, the django dev server
+# This sets up and runs postgres and the django dev server as services
+# Reference: https://docs.docker.com/compose/compose-file/
 
 # Initial setup with
 # $ docker-compose up
@@ -7,38 +8,28 @@
 # Can run management commands with
 # $ docker-compose run web /code/manage.py whatever
 
-# Rebuild images with
-# $ docker build --no-cache .
 
 version: '2'
 services:
   db:
     image: postgres:9.6
-    expose:
-      - "5432"
-    ports:
-    - "5433:5432"
-    # needed? restart: always
-    volumes:
-      - ./dbdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=tabbycat
       - POSTGRES_USER=tabbycat
       - POSTGRES_DB=tabbycat
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
   web:
     build: .
     # Hack to wait until Postgres is up before running things
-    command: ["./bin/docker-wait.sh", "db:5433", "--", "./bin/docker-run.sh"]
+    command: ["./bin/docker-wait.sh", "db:5432", "--", "./bin/docker-run.sh"]
+    depends_on:
+      - db
     environment:
       - DEBUG=1
       - IN_DOCKER=1
     image: django
-    volumes:
-      - .:/tcd
     ports:
       - "8000:8000"
-    expose:
-      - "8000"
-    depends_on:
-      - db
-    # needed? restart: always
+    volumes:
+      - .:/tcd

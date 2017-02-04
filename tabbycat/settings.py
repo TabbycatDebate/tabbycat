@@ -299,7 +299,7 @@ if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
              'USER': 'tabbycat',
              'PASSWORD': 'tabbycat',
              'HOST': 'db',
-             'PORT': 5433, # Non-standard to prvent collisions
+             'PORT': 5432, # Non-standard to prvent collisions
         }
     }
 
