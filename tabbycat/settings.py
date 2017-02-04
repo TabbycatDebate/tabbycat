@@ -289,6 +289,20 @@ if os.environ.get('TRAVIS', '') == 'true':
         }
     }
 
+
+if bool(int(os.environ['IN_DOCKER'])):
+    ALLOWED_HOSTS = ["0.0.0.0"]
+    DATABASES = {
+        'default': {
+             'ENGINE': 'django.db.backends.postgresql',
+             'NAME': 'tabbycat',
+             'USER': 'tabbycat',
+             'PASSWORD': 'tabbycat',
+             'HOST': 'db',
+             'PORT': 5432,
+        }
+    }
+
 # ==============================================================================
 # Local Overrides
 # ==============================================================================

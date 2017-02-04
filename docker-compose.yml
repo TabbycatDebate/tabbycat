@@ -3,25 +3,39 @@
 
 # Initial setup with
 # $ docker-compose up
+
 # Can run management commands with
 # $ docker-compose run web /code/manage.py whatever
+
+# Rebuild images with
+# $ docker build --no-cache .
 
 version: '2'
 services:
   db:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: password
+    image: postgres:9.6
+    restart: always
     volumes:
       - ./dbdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=tabbycat
+      - POSTGRES_USER=tabbycat
+      - POSTGRES_DB=tabbycat
   web:
-    # Hack to wait until Postgres is up before running things
-    command: bash -c "while ! nc -w 1 -z db 5432; do sleep 0.1; done; ./tabbycat/manage.py migrate; while :; do ./tabbycat/manage.py runserver_plus 0.0.0.0:8000; sleep 1; done"
-    image: django
     build: .
+    # Hack to wait until Postgres is up before running things
+    command: ["./bin/docker-wait.sh", "db:5432", "--", "./bin/docker-run.sh"]
+    environment:
+      - DEBUG=1
+      - IN_DOCKER=1
+    image: django
     volumes:
-      - .:/code
+      - .:/tcd
+    ports:
+      - "8000:8000"
+    expose:
+      - "8000"
     depends_on:
       - db
-    environment:
-      IN_DOCKER: 1
+    restart: always
+
