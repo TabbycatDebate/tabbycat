@@ -19,6 +19,3 @@ ADD . /tcd/
 
 # Install our node/python requirements
 RUN pip install -r ./requirements_common.txt && npm install
-
-# This needs to happen else sass gets angry
-RUN npm rebuild node-sass

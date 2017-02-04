@@ -14,7 +14,9 @@ version: '2'
 services:
   db:
     image: postgres:9.6
-    restart: always
+    ports:
+    - "5432:5432"
+    # needed? restart: always
     volumes:
       - ./dbdata:/var/lib/postgresql/data
     environment:
@@ -37,5 +39,5 @@ services:
       - "8000"
     depends_on:
       - db
-    restart: always
+    # needed? restart: always
 
