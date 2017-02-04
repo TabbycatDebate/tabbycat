@@ -19,3 +19,7 @@ ADD . /tcd/
 
 # Install our node/python requirements
 RUN pip install -r ./requirements_common.txt && npm install
+
+# Compile all the static files
+RUN npm rebuild node-sass
+RUN python ./tabbycat/manage.py collectstatic --no-input

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 #   Shorthand to migrate and runserver in docker
 
-# Needs to be done each time else SASS fails to bind
-npm rebuild node-sass
-
-python ./tabbycat/manage.py migrate --no-input
-python ./tabbycat/manage.py runserver 0.0.0.0:8000
+cd tabbycat
+python ./manage.py migrate --no-input
+waitress-serve --threads=12 --host=0.0.0.0 --port=8000 wsgi:application

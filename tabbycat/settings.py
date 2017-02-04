@@ -290,8 +290,8 @@ if os.environ.get('TRAVIS', '') == 'true':
     }
 
 
-if bool(int(os.environ['IN_DOCKER'])):
-    ALLOWED_HOSTS = ["0.0.0.0"]
+if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
+    ALLOWED_HOSTS = ["0.0.0.0", "localhost"]
     DATABASES = {
         'default': {
              'ENGINE': 'django.db.backends.postgresql',
