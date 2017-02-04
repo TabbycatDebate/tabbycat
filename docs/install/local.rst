@@ -41,16 +41,12 @@ installation.
   have your own preferred method of running Django projects, you can also do
   that. Just be aware that we haven't tried it.
 
-.. admonition:: Developers
-  :class: tip
-
-  If you're involved in or interested in developing Tabbycat, you'll want to set
-  up a local installation, because it's much faster to test your code that way.
-
 Okay, so how do I do it?
 ========================
 
-Instructions are here:
+The easiest option is to :ref:`install Tabbycat using Docker <install-docker>`. This method should work across all operating systems and by far the easiest way to get a local copy running.
+
+If installing using Docker does not work, or if you want to be able to modify Tabbycat's code we also have a number of instructions for manually setting up a copy of Tabbycat. There instructions are here:
 
 - :ref:`install-linux`
 - :ref:`install-osx`
