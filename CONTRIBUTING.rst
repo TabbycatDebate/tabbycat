@@ -2,7 +2,7 @@
 Contributing
 ============
 
-Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. `Join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ if you have any questions about how to get started contributing.
+Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. Feel free to `join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ if you have any questions about how to get started.
 
 Bug reports
 ===========
@@ -16,11 +16,9 @@ Please report bugs by opening a new issue in our `GitHub repository <https://git
 Getting started
 ===============
 
-.. important:: We are using the `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_, so please submit any pull requests against the **develop branch** (and not master).
-
-- Generally we prefer that features and bug fixes are submitted as pull requests on their own branch (as described in the git-flow process)
+- To easily test your changes to Tabbycat you probably want a working :ref:`local install <install-local>` (without using Docker)
+- Generally we prefer that features and bug fixes are submitted as pull requests on their own branch (as described in the  `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_). Submitting against `develop` (but not `master`) is fine for small fixes and changes.
 - We use Django's testing tools — it would be great if new features came with unit tests
-- TODO: more detail on tests and pull request checklist/guidelines
 
 Style guide
 ===========

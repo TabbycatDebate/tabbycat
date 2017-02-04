@@ -9,23 +9,20 @@ What is a local installation?
 
 Tabbycat is a web-based system: it's designed to run as a web site. However, instead of installing it on a web server, you can install it on your computer, serving web pages to yourself. This is called a local installation.
 
-Then, when you open your browser, you can use Tabbycat like any other web site. The only difference is that this one is on **your** computer, not some computer in a data centre in a far-away land.
-
-In effect, you are getting your computer to behave like a web server. For this reason, the process is more complicated than what you're probably used to with most installations. Basically, there are more pieces to put together to get everything working.
+Then, when you open your browser, you can use Tabbycat like any other web site. The only difference is that this one is on **your** computer, not some computer in a data centre in a far-away land. In effect, you are getting your computer to behave like a web server.
 
 .. _install-decision:
 
-Should I use a local installation, or one on the internet?
-==========================================================
+Should I use a local installation?
+==================================
 
-In most cases, you should use one on the internet by :ref:`setting up an
-instance on Heroku <install-heroku>`. This has a number of major advantages:
+In most cases, you should make an online Tabbycat installation by :ref:`setting up an instance on Heroku <install-heroku>`. This has a number of major advantages:
 
-- The Heroku installation process is much, much, *much* easier.
+- The installation process is easier.
 - You can enter ballots and manage your tournament from multiple computers.
 - Participants can access the draw, motions, results and more online.
-- Amazon's data centres (where Heroku is hosted) are less likely to fail than
-  your computer is.
+- Heroku's data centers are less likely to fail than your computer.
+- Heroku automatically emails Tabbycat's developers error reports so we can better identify and fix bugs.
 
 In some cases, you might have a good reason to use a local installation. We can
 think of just one such reason: If you won't have access to the internet at your
