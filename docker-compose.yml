@@ -14,8 +14,10 @@ version: '2'
 services:
   db:
     image: postgres:9.6
+    expose:
+      - "5432"
     ports:
-    - "5432:5432"
+    - "5433:5432"
     # needed? restart: always
     volumes:
       - ./dbdata:/var/lib/postgresql/data
@@ -26,7 +28,7 @@ services:
   web:
     build: .
     # Hack to wait until Postgres is up before running things
-    command: ["./bin/docker-wait.sh", "db:5432", "--", "./bin/docker-run.sh"]
+    command: ["./bin/docker-wait.sh", "db:5433", "--", "./bin/docker-run.sh"]
     environment:
       - DEBUG=1
       - IN_DOCKER=1
@@ -40,4 +42,3 @@ services:
     depends_on:
       - db
     # needed? restart: always
-
