@@ -9,6 +9,7 @@ Change Log
 - Added information about autosave status to the Allocations page
 - Added basic infrastructure for creating tabbycat translations
 - Added the ability to import 'demo' data when creating a new tournament
+- Added the ability to dramatically simplify the process of setup Tabbycat locally on all operating systems using Docker
 - Added a more explicit donations link and dedicated page along with license clarifications that outline when donations are expected.
 
 
