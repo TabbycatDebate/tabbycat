@@ -95,15 +95,24 @@ def edit_venues(request, t):
     venues = []
     venue_lines = request.POST['venues_raw'].rstrip().split('\n')
     for line in venue_lines:
-        name = line.split(',')[0].strip()
+        # Sometimes people enter in the lists without a set priority
+        if "," in line:
+            name = line.split(',')[0].strip()
+        else:
+            name = line.strip()
         name = enforce_length(name, 'name', Venue, request)
-        priority = line.split(',')[1].strip()
+
+        # Allow people to not specify a priority when copy pasting
+        if "," in line:
+            priority = line.split(',')[1].strip()
+        else:
+            priority = 100
+        if not priority:
+            priority = 100
+
         if len(line.split(',')) > 2:
-            venues.append({
-                'name': name,
-                'priority': priority,
-                'group': line.split(',')[2].strip()
-            })
+            group = line.split(',')[2].strip()
+            venues.append({'name': name, 'priority': priority, 'group': group})
         else:
             venues.append({'name': name, 'priority': priority})
 
