@@ -10,7 +10,8 @@ Change Log
 - Started some basic infrastructure for creating Tabbycat translations
 - Separated venue groups from venue constraint categories
 - Added the ability to import 'demo' data when creating a new tournament
-- Added a more explicit donations link and dedicated page along with licence clarifications that outline when donations are expected.
+- Added the ability to dramatically simplify the process of setup Tabbycat locally on all operating systems using Docker
+- Added a more explicit donations link and dedicated page along with license clarifications that outline when donations are expected.
 
 
 1.1.7

@@ -290,13 +290,26 @@ if os.environ.get('TRAVIS', '') == 'true':
     }
 
 # ==============================================================================
-# Local Overrides
+# Local Overrides and Docker
 # ==============================================================================
 
-try:
-    LOCAL_SETTINGS
-except NameError:
+if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
+    ALLOWED_HOSTS = ["0.0.0.0", "localhost"]
+    DATABASES = {
+        'default': {
+             'ENGINE': 'django.db.backends.postgresql',
+             'NAME': 'tabbycat',
+             'USER': 'tabbycat',
+             'PASSWORD': 'tabbycat',
+             'HOST': 'db',
+             'PORT': 5432, # Non-standard to prvent collisions
+        }
+    }
+else:
     try:
-        from local_settings import *   # flake8: noqa
-    except ImportError:
-        pass
+        LOCAL_SETTINGS
+    except NameError:
+        try:
+            from local_settings import *   # flake8: noqa
+        except ImportError:
+            pass

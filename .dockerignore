@@ -1,0 +1,10 @@
+# Copying this over will mess up database settings
+*/*/local_settings.py
+
+# Dependencies
+node_modules/
+venv/
+
+# Compilations
+tabbycat/staticfiles/
+docs/
