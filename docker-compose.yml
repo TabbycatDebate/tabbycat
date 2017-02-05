@@ -18,7 +18,7 @@ services:
       - POSTGRES_USER=tabbycat
       - POSTGRES_DB=tabbycat
     volumes:
-      - ./dbdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
   web:
     build: .
     # Hack to wait until Postgres is up before running things
@@ -33,3 +33,5 @@ services:
       - "8000:8000"
     volumes:
       - .:/tcd
+volumes:
+  pgdata:
