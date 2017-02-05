@@ -25,7 +25,7 @@ Modifying Tabbycat for payment, or using a version of Tabbycat that has been mod
 
 If you use a version of Tabbycat that has been modified by you or a third party to run a for-profit or fundraising tournament, the abovementioned donation of A$1 per team is still required.
 
-DISCLAIMER OF WARRANTY AND LIABILITY
+Disclaimer of warranty and liability
 ====================================
 
 We work on this software in our spare time and make it available for not-for-profit use in the hope that it will benefit the debating community. **It is provided "as is", without any warranty of any kind, express or implied, including without limitation any warranties of merchantability and fitness for a particular purpose, and we disclaim all legal liability. By using Tabbycat, you agree that none of its contributors will be held liable for any loss or claim arising directly or indirectly from using the software, or for any loss or claim otherwise in connection with the software.**

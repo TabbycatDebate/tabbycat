@@ -26,7 +26,7 @@ If you'd like to run a tournament with Tabbycat but are not able to set it up, g
 
 ## Licence
 
-We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. We provide no warranty and disclaim all legal liability.
+We haven't released Tabbycat under an open-source licence, so there is no formal and general right to use this software. Nonetheless, you're welcome to freely use Tabbycat to help run a debating tournament. However, if your tournament is run as a for-profit or for-fundraising activity a donation to Tabbycat's maintainers is required. More details [are available in our license information](http://tabbycat.readthedocs.io/en/latest/about/licence.html).
 
 ## Support and Development
 
