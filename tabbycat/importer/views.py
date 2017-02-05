@@ -40,6 +40,11 @@ def edit_institutions(request, t):
     institutions = []
     institution_lines = request.POST['institutions_raw'].rstrip().split('\n')
     for line in institution_lines:
+        if "," not in line or line.split(',')[1].strip() == "":
+            messages.error(request, "Institution '%s' could not be processed \
+                because it did not have a code" % line)
+            continue
+
         full_name = line.split(',')[0].strip()
         full_name = enforce_length(full_name, 'name', Institution, request)
         short_name = line.split(',')[1].strip()
@@ -48,10 +53,15 @@ def edit_institutions(request, t):
         institution = Institution(name=full_name, code=short_name)
         institutions.append(institution)
 
-    return render(request, 'edit_institutions.html',
-                  dict(institutions=institutions,
-                  full_name_max=Institution._meta.get_field('name').max_length - 1,
-                  code_max=Institution._meta.get_field('code').max_length - 1))
+    if len(institutions) == 0:
+        messages.warning(request, "No institutions were added")
+        return render(request, 'data_index.html')
+    else:
+        max_name = Institution._meta.get_field('name').max_length - 1
+        max_code = Institution._meta.get_field('code').max_length - 1
+        return render(request, 'edit_institutions.html', dict(
+                      institutions=institutions,
+                      full_name_max=max_name, code_max=max_code))
 
 
 @admin_required
@@ -100,7 +110,10 @@ def edit_venues(request, t):
             name = line.split(',')[0].strip()
         else:
             name = line.strip()
-        name = enforce_length(name, 'name', Venue, request)
+        if name:
+            name = enforce_length(name, 'name', Venue, request)
+        else:
+            continue
 
         # Allow people to not specify a priority when copy pasting
         if "," in line:
@@ -116,7 +129,11 @@ def edit_venues(request, t):
         else:
             venues.append({'name': name, 'priority': priority})
 
-    return render(request, 'edit_venues.html', dict(venues=venues,
+    if len(venues) == 0:
+        messages.error(request, "No data was entered was entered in the form")
+        return render(request, 'data_index.html')
+    else:
+        return render(request, 'edit_venues.html', dict(venues=venues,
                   max_name_length=Venue._meta.get_field('name').max_length - 1))
 
 
@@ -147,9 +164,14 @@ def confirm_venues(request, t):
         else:
             venue_tournament = t
 
-        venue = Venue(name=venue_names[i], priority=venue_priorities[i],
-                      group=venue_group, tournament=venue_tournament)
-        venue.save()
+        priority = venue_priorities[i]
+        if not priority or not float(priority).is_integer():
+            messages.warning(request, "Venue %s could not be saved because \
+                it did not have a valid priority number" % venue_names[i])
+        else:
+            venue = Venue(name=venue_names[i], priority=venue_priorities[i],
+                          group=venue_group, tournament=venue_tournament)
+            venue.save()
 
     messages.success(request, "%s Venues have been added" % len(venue_names))
     return render(request, 'data_index.html')

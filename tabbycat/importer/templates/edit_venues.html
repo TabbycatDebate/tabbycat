@@ -24,8 +24,8 @@
 
           <label class="col-sm-1 control-label">Priority</label>
           <div class="col-sm-2">
-            <input class="form-control" type="text" name="venue_priorities"
-                   value="{{ venue.priority }}" />
+            <input class="form-control" name="venue_priorities" step="1"
+                   value="{{ venue.priority }}" type="number" min="1" />
           </div>
 
           {% if venue.group %}
