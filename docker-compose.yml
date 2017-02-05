@@ -25,6 +25,8 @@ services:
     command: ["./bin/docker-wait.sh", "db:5432", "--", "./bin/docker-run.sh"]
     depends_on:
       - db
+    expose:
+      - "8000"
     environment:
       - DEBUG=1
       - IN_DOCKER=1
@@ -33,5 +35,7 @@ services:
       - "8000:8000"
     volumes:
       - .:/tcd
+      - node_modules:/tcd/node_modules
 volumes:
   pgdata:
+  node_modules:

@@ -41,6 +41,6 @@ Docker offers a installer for Windows and OSX. Go to the relevant page linked be
 
 3. A terminal window should popup and bunch of text scroll by. If this is your first time running Docker it may take up to half an hour to download and setup the virtul machine.
 
-4. Once the new text stops being added you should be able to go to a web and open up http://0.0.0.0:8000 and see your new Tabbycat website.
+4. Once the new text stops being added you should be able to go to a web and open up http://localhost:8000/ (Windows) or http://0.0.0.0:8000 (OSX/Linux) and see your new Tabbycat website.
 
   .. note:: If you want to reopen Tabbycat at a later time (say after restarting) repeat steps 1 through 3 here.

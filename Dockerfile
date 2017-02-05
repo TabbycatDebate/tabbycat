@@ -18,7 +18,8 @@ WORKDIR /tcd
 ADD . /tcd/
 
 # Install our node/python requirements
-RUN pip install -r ./requirements_common.txt && npm install
+RUN pip install -r ./requirements_common.txt
+RUN npm install
 
 # Compile all the static files
 RUN npm rebuild node-sass
