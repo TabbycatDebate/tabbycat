@@ -31,8 +31,10 @@ First, you need to install all of the software on which Tabbycat depends, if you
 ------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
 
-Download and install Python 3.5 (or later) from the `Python website <https://www.python.org/>`_.
+Download and install Python 3.5 from the `Python website <https://www.python.org/>`_.
 In the installer, check the box to add Python to your PATH (see box below).
+
+.. warning:: The 64-bit version of Python 3.6 currently doesn't work with PostgreSQL 9.6, because of a `bug in Python <http://bugs.python.org/issue28680>`_ affecting `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_. If you're using 64-bit Python, you should use Python 3.5 until the Python 3.6.1 is released.
 
 .. hint:: Which file should I download?
 
@@ -53,7 +55,7 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 
 .. note:: **If you already have Python**, great! Some things to double-check:
 
-  - You must have at least Python 3.4, though we recommend Python 3.5.
+  - You must have at least Python 3.4.
   - Your installation path must not have any spaces in it.
   - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
