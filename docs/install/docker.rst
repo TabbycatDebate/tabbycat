@@ -4,7 +4,7 @@
 Installing Locally using Docker
 ===============================
 
-Docker is an application that makes it very easy to load and run a specific collection of software. It allows us to bundle everything necessary to run Tabbycat into a single 'virtual machine' rather than have users install everything needed step-by-step. Once setup Docker will allow you to start and stop a webserver (that in turn runs Tabbycat) whenever you need.
+Docker is an application that makes it very easy to load and run a specific collection of software. It allows us to bundle everything necessary to run Tabbycat into a single 'virtual machine' rather than have users install everything needed step-by-step. Once set up, Docker will allow you to start and stop a webserver (that in turn runs Tabbycat) whenever you need.
 
 1. Install Docker
 =================

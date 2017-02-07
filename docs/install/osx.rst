@@ -40,7 +40,7 @@ The executable will probably be called ``python3``, rather than ``python``. Chec
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions will use the ``pyvenv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
+  These instructions will use the ``venv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
 
 1(b). PostgreSQL
 --------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ Almost there!
 
 3. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
 
-    $ pyvenv venv
+    $ python3 -m venv venv
 
 4. Run the ``activate`` script. This puts you "into" the virtual environment::
 

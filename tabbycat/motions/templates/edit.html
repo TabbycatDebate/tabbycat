@@ -60,6 +60,9 @@
     <div class="panel panel-default">
       <ul class="list-group">
         {{ formset.management_form }}
+        <li class="list-group-item">
+          <input class="btn btn-success btn-block" type="submit" name="submit" value="Save Motions" />
+        </li>
         {% for form in formset %}
         <li class="list-group-item">
 

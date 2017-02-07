@@ -38,7 +38,7 @@ Short version
 
 Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
 
-  pyvenv venv                                                 # or virtualenv
+  python3 -m venv venv
   source venv/bin/activate
   pip install --upgrade pip
   pip install -r requirements_common.txt
@@ -60,9 +60,9 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 ------------
-As of version 0.8, Tabbycat requires Python 3.4 or later.  You probably already have Python 3.4, but you'll also need the development package in order to install Psycopg2 later.  The ``pyvenv`` command will come in handy too.  Install::
+As of version 0.8, Tabbycat requires Python 3.4 or later.  You probably already have Python 3.4, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
 
-    $ sudo apt-get install python3-dev
+    $ sudo apt-get install python3-dev python3-venv
 
 Check the version::
 
@@ -75,7 +75,7 @@ Check the version::
 .. admonition:: Advanced users
   :class: tip
 
-  If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead of Python's built-in ``pyvenv``.
+  If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead of Python's built-in ``venv`` module.
 
 1(b). PostgreSQL
 ----------------
@@ -179,7 +179,7 @@ Almost there!
          }
      }
 
-6. Navigate to the **tabbycat** sub folder in the terminal, initialize the database, compile the assets, and create a user account for yourself::
+6. Navigate to the **tabbycat** sub-directory, initialize the database, compile the assets, and create a user account for yourself::
 
     $ cd tabbycat
     $ dj migrate
