@@ -76,7 +76,7 @@
         <form action="{% url 'load-demo' %}" method="POST">
           <input type="hidden" name="source" value="demo_simple">
           <button type="submit" class="btn btn-primary btn-block">
-            {% trans "Load Demo Data (for a small/simple tournament)" %}
+            {% trans "Load Demo Data (10-team tournament)" %}
           </button>
         </form>
       </div>
@@ -84,7 +84,7 @@
         <form action="{% url 'load-demo' %}" method="POST">
           <input type="hidden" name="source" value="demo">
           <button type="submit" class="btn btn-primary btn-block">
-            {% trans "Load Demo Data (for a big/complex tournament)" %}
+            {% trans "Load Demo Data (24-team tournament)" %}
           </button>
         </form>
       </div>
