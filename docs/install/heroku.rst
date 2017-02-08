@@ -13,17 +13,19 @@ Click this button:
 .. image:: https://www.herokucdn.com/deploy/button.svg
   :target: https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/master
 
-If you don't already have a Heroku account, it'll prompt you to create one. Once you're logged in to Heroku, choose a name for your installation, then scroll down and click **Deploy**. Once it's finished, click **View** and follow the prompts.
+This is the easiest way to deploy an instance of Tabbycat online. It requires no technical background.
 
-This is the easiest way to deploy an instance of Tabbycat online. It requires no technical background. You can import data using the data importer in the user interface.
+If you don't already have a Heroku account, it'll prompt you to create one. Once you're logged in to Heroku, choose a name for your installation, then scroll down and click **Deploy**. Once it's finished, click **View** and follow the prompts. Once finished, open the site and from there you can easily setup a demo data set (if you just want to learn Tabbycat) or use the data importer to setup a real tournament.
 
-.. note:: Heroku may ask you to attach a credit/debit card to your account. From what we understand this is to provide proof of identity — Tabbycat installations will not charge your card unless you specifically opt in to a paid upgrade.
+.. note:: During the setup process Heroku will ask you to verify your account by adding a credit or debit card. A standard Tabbycat site *will not charge* your card without explicit permission — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
 
-If you have a background in programming, you might prefer the below longer, more traditional method.
+  That said if you do not have access to a credit/debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it does not send error reports to the developers and can handle much less public traffic. We strongly recommend using it only as a last resort, and even then only for small tournaments. `Use this link to setup a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/kitten&env[KITTEN]=true>`_.
+
+If you have a background in programming, you might prefer the method below.
 
 Installation---the long way
 ===========================
-The long way sets you up with more control over your environment.  Because you'll clone `our GitHub repository`_, it'll be easier for you to pull and contribute updates to the source code.  We recommend it if you have experience with Git.  It's also easier with this method to import CSV files using the command-line importer, so if you have a very large tournament, this might make importing initial data easier.
+The long way sets you up with more control over your environment. Because you'll clone `our GitHub repository`_, it'll be easier for you to pull and contribute updates to the source code.  We recommend it if you have experience with Git.  It's also easier with this method to import CSV files using the command-line importer, so if you have a very large tournament, this might make importing initial data easier.
 
 We've tested these instructions successfully on Windows, Linux and Mac OS.
 

@@ -22,9 +22,9 @@ Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/).
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/master)
 
-During the installation process Heroku will ask you to verify your account by adding a credit or debit card to it. A standard Tabbycat site *will not charge* your card without explicit permission — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
+During the installation process Heroku will ask you to verify your account by adding a credit or debit card. A standard Tabbycat site *will not charge* your card without explicit permission — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
 
-That said if you do not have access to a credit or debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account and so does not require a credit/debit card. However, as a result, this version is limited: it does not send error reports to the developers and can handle much less public traffic. We strongly recommend using it only as a last resort, and even then only for small tournaments. [Use this link to setup a Tabbykitten version](https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/kitten&env[KITTEN]=true).
+That said if you do not have access to a credit or debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it does not send error reports to the developers and can handle much less public traffic. We strongly recommend using it only as a last resort, and even then only for small tournaments. [Use this link to setup a Tabbykitten version](https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/kitten&env[KITTEN]=true).
 
 ## Licence
 
