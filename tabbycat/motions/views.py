@@ -122,14 +122,14 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
     motions_released = True
-    message_text = "Relased the motions; they will now show on the public facing pages of this website"
+    message_text = "Released the motions. They will now show on the public-facing pages of this website."
 
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE
     motions_released = False
-    message_text = "Unrelased the motions; they will no longer show on the public facing pages of this website"
+    message_text = "Unreleased the motions. They will no longer show on the public-facing pages of this website."
 
 
 class DisplayMotionsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
