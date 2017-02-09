@@ -56,8 +56,9 @@ First, you need to install all of the software on which Tabbycat depends, if you
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions are for Ubuntu 14.10 and higher. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+  These instructions are for Ubuntu 14.04 and higher. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
+.. _install-linux-python:
 1(a). Python
 ------------
 As of version 0.8, Tabbycat requires Python 3.4 or later.  You probably already have Python 3.4, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
@@ -87,6 +88,7 @@ You'll need the *server-dev* package in order to install Psycopg2 later. As per 
 
 If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.6" in the above commands.
 
+.. _install-linux-nodejs
 1(c). Node.js/NPM
 -----------------
   *Node.js is a JavaScript runtime.*
@@ -100,6 +102,7 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
   $ sudo apt-get install -y nodejs
   $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
+.. _install-linux-source-code:
 2. Get the source code
 ======================
 
@@ -138,6 +141,7 @@ If you've used Git before, you might prefer to clone `our GitHub repository`_ in
     $ sudo -u postgres createdb mydatabasename --owner myusername
 
 
+.. _install-linux-tabbycat:
 4. Install Tabbycat
 ===================
 Almost there!
