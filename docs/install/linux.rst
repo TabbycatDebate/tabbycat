@@ -4,7 +4,7 @@
 Installing Locally on Linux
 ===========================
 
-Before you start, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
+**Before you start:** Be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
 .. attention:: If you just want to quickly setup a copy of Tabbycat to run on Linux we reccomend :ref:`installing using Docker<install-docker>`, which will be much easier than following the instructions below.
 
