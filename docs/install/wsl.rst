@@ -26,7 +26,7 @@ For the most part, these instructions mirror those for doing local installations
 This has a number of consequences:
 
 1. You'll still install the PostgreSQL *client* on the Linux subsystem, using that to communicate with the server on Windows.
-2. Because you won't install the PostgreSQL server, you need to install ``libpq-dev`` instead, in order for the `psycopg2` module to work.
+2. Because you won't install the PostgreSQL server, you need to install ``libpq-dev`` instead, in order for the ``psycopg2`` module to work.
 3. These instructions will direct you to create the PostgreSQL role and database in **pgAdmin**, just like in the :ref:`Windows instructions <install-windows-database>`.
 
 Short version

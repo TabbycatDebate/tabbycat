@@ -89,6 +89,7 @@ You'll need the *server-dev* package in order to install Psycopg2 later. As per 
 If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.6" in the above commands.
 
 .. _install-linux-nodejs
+
 1(c). Node.js/NPM
 -----------------
   *Node.js is a JavaScript runtime.*
@@ -103,6 +104,7 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
   $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 .. _install-linux-source-code:
+
 2. Get the source code
 ======================
 
@@ -142,6 +144,7 @@ If you've used Git before, you might prefer to clone `our GitHub repository`_ in
 
 
 .. _install-linux-tabbycat:
+
 4. Install Tabbycat
 ===================
 Almost there!
