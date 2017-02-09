@@ -1,8 +1,8 @@
 .. _install-wsl::
 
-======================================
-Installing Locally on Bash for Windows
-======================================
+=====================================
+Installing Locally on Bash on Windows
+=====================================
 
 Before you start, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
@@ -21,13 +21,17 @@ Requisite technical background
 Differences from the Linux installation
 =======================================
 
-For the most part, these instructions mirror those for doing local installations on Linux. The differences are:
+For the most part, these instructions mirror those for doing local installations on Linux. The only difference is that, rather than installing PostgreSQL on Linux, you'll install **PostgreSQL for Windows**. The reason for this is that `PostgreSQL doesn't yet work on the Windows Subsystem for Linux <https://github.com/Microsoft/BashOnWindows/issues/61>`_. As of February 2017, there is a fix on the Windows Insider Preview Build, but it's still making its way to general availability.
 
-- PostgreSQL doesn't work on the Windows Subsystem for Linux yet. The workaround is to install PostgreSQL for Windows, and then just install the PostgreSQL *client* on the Linux subsystem, using that to communicate with the server on your Windows machine.
+This has a number of consequences:
+
+1. You'll still install the PostgreSQL *client* on the Linux subsystem, using that to communicate with the server on Windows.
+2. Because you won't install the PostgreSQL server, you need to install ``libpq-dev`` instead, in order for the `psycopg2` module to work.
+3. These instructions will direct you to create the PostgreSQL role and database in **pgAdmin**, just like in the :ref:`Windows instructions <install-windows-database>`.
 
 Short version
 =============
-First, install `PostgreSQL for Windows <https://www.postgresql.org/download/windows/>`_ (on Windows, not on the subsystem for Linux). Once you've set it up, create a new user and grant it create-database privileges. Then, a Bash on Windows shell:
+First, install `PostgreSQL for Windows <https://www.postgresql.org/download/windows/>`_ (on Windows, not on the subsystem for Linux). Once you've set it up, create a new role and database as instructed in the Windows instructions in section :ref:`install-windows-database`. Then, in a Bash on Windows shell:
 
 .. parsed-literal::
 
@@ -42,9 +46,7 @@ First, install `PostgreSQL for Windows <https://www.postgresql.org/download/wind
   git clone https\:\/\/github.com/czlee/tabbycat.git
   git checkout |vrelease|                                         # or master
 
-  createdb mydatabasename
-
-Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
+Then create local_settings.py as described in the :ref:`Linux instructions <local-settings-linux>`, then::
 
   python3 -m venv venv
   source venv/bin/activate
@@ -56,3 +58,36 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   dj collectstatic
   dj createsuperuser
   waitress-serve wsgi:application
+
+1. Install dependencies
+=======================
+
+Follow these instructions:
+
+- :ref:`install-linux-python` in the Linux instructions, on the Bash subsystem
+- :ref:`install-windows-postgresql` in the Windows instructions (in Windows)
+- :ref:`install-linux-nodejs` in the Linux instructions, on the Bash subsystem
+
+2. Get the source code
+======================
+
+Follow the section :ref:`install-linux-source-code` in the Linux instructions, on the Bash subsystem.
+
+3. Set up a new database
+========================
+
+Follow the section :ref:`install-windows-database` in the Windows instructions (in Windows).
+
+4. Install Tabbycat
+===================
+
+Follow the section :ref:`install-linux-tabbycat` in the Linux instructions, on the Bash subsystem.
+
+Starting up an existing Tabbycat instance
+=========================================
+To start your Tabbycat instance up again next time you use your computer::
+
+    $ cd /mnt/c/path/to/my/tabbycat/directory
+    $ source venv/bin/activate
+    $ cd tabbycat
+    $ waitress-serve wsgi:application

@@ -61,6 +61,7 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
   - Your installation path must not have any spaces in it.
   - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
+.. _install-windows-postgresql:
 1(b). PostgreSQL
 ----------------
   *PostgreSQL is a database management system.*
@@ -107,6 +108,7 @@ Download and run the `node.js Windows Installer (.msi) <https://nodejs.org/en/do
 
   Even better, you might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 
+.. _install-windows-database:
 3. Set up a new database
 ========================
 
