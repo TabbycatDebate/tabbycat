@@ -18,6 +18,7 @@ supporting many custom variations of the above formats too.
    install/docker
    install/linux
    install/osx
+   install/wsl
    install/windows
 
 .. _usage-docs:
