@@ -71,17 +71,17 @@ Follow these instructions:
 2. Get the source code
 ======================
 
-Follow the section :ref:`install-linux-source-code` in the Linux instructions, on the Bash subsystem.
+Follow section ":ref:`install-linux-source-code`" in the Linux instructions, on the Bash subsystem.
 
 3. Set up a new database
 ========================
 
-Follow the section :ref:`install-windows-database` in the Windows instructions (in Windows).
+Follow section ":ref:`install-windows-database`" in the Windows instructions (in Windows).
 
 4. Install Tabbycat
 ===================
 
-Follow the section :ref:`install-linux-tabbycat` in the Linux instructions, on the Bash subsystem.
+Follow section ":ref:`install-linux-tabbycat`" in the Linux instructions, on the Bash subsystem.
 
 Starting up an existing Tabbycat instance
 =========================================
