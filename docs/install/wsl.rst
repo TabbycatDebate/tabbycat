@@ -11,7 +11,9 @@ Before you start, be sure to read our page on :ref:`local installations <install
 Requisite technical background
 ==============================
 
-`Bash on Windows is in beta <https://msdn.microsoft.com/en-us/commandline/wsl/about>`_, so you should be confident with command-line interfaces and have at least some experience with Linux. If you're not already familiar with Bash on Windows, you should be willing to familiarise yourself with it, including potentially things not mentioned in these instructions. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest.
+`Bash on Windows is in beta <https://msdn.microsoft.com/en-us/commandline/wsl/about>`_, so you should be confident with command-line interfaces, have at least some experience with Linux and, most importantly, **be willing to work with beta systems**. This means that Bash on Windows isn't yet fully stable and some features are incomplete. We've managed to get it going, but we haven't rigorously tested it, so if you're going to use this for a real tournament, you should either run an entire test tournament first or use a different installation method (like :ref:`Docker <install-docker>`).
+
+If you're not already familiar with Bash on Windows, you should be willing to familiarise yourself with it, including potentially things not mentioned in these instructions. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest.
 
 .. admonition:: Advanced users
   :class: tip
