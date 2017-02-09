@@ -1,4 +1,4 @@
-.. _install-wsl::
+.. _install-wsl:
 
 =====================================
 Installing Locally on Bash on Windows
