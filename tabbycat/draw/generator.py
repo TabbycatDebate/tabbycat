@@ -1154,8 +1154,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         brackets = OrderedDict()
         teams = list(self.teams)
         for team in teams:
-            # Converting from bracket's name to a float (so it can pretend to be a Bracket)
-            division = float(team.division.name)
+            # Using the division ID as the division identifier
+            division = float(team.division.id)
             if division in brackets:
                 brackets[division].append(team)
             else:
