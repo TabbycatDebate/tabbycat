@@ -55,8 +55,10 @@
                 <th>Time</th>
               {% endif %}
               <th>Venue</th>
-              <th>Affirmative</th>
-              <th>Negative</th>
+              {% tournament_side_names tournament 'full' as side_names %}
+              {% for name in side_names %}
+                <th>{{ name }}</th>
+              {% endfor %}
               <th>Adjudicators</th>
             </tr>
           </thead>

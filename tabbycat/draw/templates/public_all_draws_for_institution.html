@@ -17,8 +17,10 @@
           <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
           <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
           <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
-          <th>Aff<span class="hidden-xs">irmative</span></th>
-          <th>Neg<span class="hidden-xs">ative</span></th>
+          {% tournament_side_names tournament 'full' as side_names %}
+          {% for name in side_names %}
+            <th>{{ name }}</th>
+          {% endfor %}
           <th>Motion</th>
         </tr>
       </thead>

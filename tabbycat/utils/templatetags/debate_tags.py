@@ -4,6 +4,7 @@ import re
 from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from tournaments.utils import get_position_name
 
 register = template.Library()
 STATIC_PATH = settings.MEDIA_ROOT
@@ -53,6 +54,14 @@ def debate_draw_status_class(debate):
     elif debate.confirmed_ballot:
         if debate.confirmed_ballot.forfeit:
             return "active text-muted"
+
+
+@register.simple_tag
+def tournament_side_names(tournament, name_type):
+    side_names = [get_position_name(tournament, 'aff', name_type),
+                  get_position_name(tournament, 'neg', name_type)]
+    print(side_names)
+    return side_names
 
 
 class RoundURLNode(template.Node):

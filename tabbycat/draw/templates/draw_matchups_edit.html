@@ -40,8 +40,10 @@
           <thead>
             <tr>
               <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="Venue"></span></th>
-              <th>Affirmative</th>
-              <th>Negative</th>
+              {% tournament_side_names tournament 'full' as side_names %}
+              {% for name in side_names %}
+                <th>{{ name }}</th>
+              {% endfor %}
               <th>Adjudicators</th>
             </tr>
           </thead>
