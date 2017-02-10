@@ -8,6 +8,7 @@ from draw.models import Debate
 from participants.models import Adjudicator
 from tournaments.mixins import RoundMixin, TournamentMixin
 from tournaments.models import Tournament
+from tournaments.utils import get_position_name
 from utils.mixins import SuperuserRequiredMixin
 from venues.models import Venue, VenueGroup
 
@@ -140,12 +141,16 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         motions = self.get_round().motion_set.order_by('seq')
+        tournament = self.get_tournament()
+
         kwargs['motions'] = [{'seq': m.seq, 'text': m.text} for m in motions]
+        kwargs['positions'] = [get_position_name(tournament, "aff", "full").title(),
+                               get_position_name(tournament, "neg", "full").title()]
         kwargs['ballots'] = []
 
         draw = self.get_round().debate_set_with_prefetches(ordering=(
             'venue__group__name', 'venue__name',))
-        show_emoji = self.get_tournament().pref('show_emoji')
+        show_emoji = tournament.pref('show_emoji')
 
         for debate in draw:
             if debate.venue:
