@@ -74,8 +74,9 @@ class DivisionAllocator():
 
         # Sort preferences by priority then do all the allocations
         for constraint in all_constraints:
-
-            if len(division_dict[constraint.venue_group]) >= constraint.venue_group.team_capacity:
+            print("category:", constraint.category)
+            print("CAPACITY:", constraint.category.team_capacity)
+            if len(division_dict[constraint.venue_group]) >= constraint.category.team_capacity:
                 # If this venue is full
                 pass
 

@@ -78,9 +78,9 @@ class VenueConstraintCategory(models.Model):
 class VenueConstraint(models.Model):
 
     SUBJECT_CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='team') | \
-        models.Q(app_label='participants', model='adjudicator') | \
-        models.Q(app_label='participants', model='institution') | \
-        models.Q(app_label='divisions', model='division')
+                                   models.Q(app_label='participants', model='adjudicator') | \
+                                   models.Q(app_label='participants', model='institution') | \
+                                   models.Q(app_label='divisions', model='division')
 
     category = models.ForeignKey(VenueConstraintCategory, models.CASCADE)
     priority = models.IntegerField()

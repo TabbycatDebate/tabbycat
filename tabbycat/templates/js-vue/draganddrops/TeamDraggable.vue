@@ -23,7 +23,7 @@
           Institutional
         </button>
         <button class="btn tbn-sm btn-default" v-for="preference in team.institutional_preferences">
-          {{ preference.venue_group__short_name }} <span class="badge">{{ preference.priority}}</span>
+          {{ preference.category__name }} <span class="badge">{{ preference.priority}}</span>
         </button>
       </div>
       <div class="btn-group pull-right" role="group">
@@ -31,7 +31,7 @@
           Individual
         </button>
         <button class="btn tbn-sm btn-default" v-for="preference in team.team_preferences">
-          {{ preference.venue_group__short_name }} <span class="badge">{{ preference.priority}}</span>
+          {{ preference.category__name }} <span class="badge">{{ preference.priority}}</span>
         </button>
       </div>
     </div>
