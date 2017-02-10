@@ -18,7 +18,7 @@ class HungarianAllocator(Allocator):
 
     def __init__(self, *args, **kwargs):
         super(HungarianAllocator, self).__init__(*args, **kwargs)
-        t = self.debates[0].round.tournament
+        t = self.tournament
         self.MIN_SCORE = t.pref('adj_min_score')
         self.MAX_SCORE = t.pref('adj_max_score')
         self.MIN_VOTING_SCORE = t.pref('adj_min_voting_score')
