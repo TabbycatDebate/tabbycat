@@ -11,7 +11,7 @@ Change Log
 - Separated venue groups from venue constraint categories
 - Added information about autosave status to the allocations page
 - Added button to load a demo tournament when creating a new tournament
-- Added support for different side names, e.g. "Proposition"/"Opposition" instead of "Affirmative"/"Negative"
+- Added support for different side names, *e.g.* "Proposition"/"Opposition" instead of "Affirmative"/"Negative"
 - Added support for Docker-based installations, which are much simpler than existing local install methods
 - Added guidance on database backups to documentation
 - Added a more explicit donations link and dedicated page about donations
