@@ -161,7 +161,7 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 'affEmoji': debate.aff_team.emoji if debate.aff_team.emoji and show_emoji else '',
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],
                 'neg': debate.neg_team.short_name,
-                'negEmoji': debate.neg_team.emoji if debate.aff_team.emoji and show_emoji else '',
+                'negEmoji': debate.neg_team.emoji if debate.neg_team.emoji and show_emoji else '',
                 'negSpeakers': [s.name for s in debate.neg_team.speakers],
                 'panel': []
             }
