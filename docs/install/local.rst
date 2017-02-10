@@ -44,7 +44,7 @@ installation.
 Okay, so how do I do it?
 ========================
 
-The easiest option is to :ref:`**install Tabbycat using Docker** <install-docker>`. This method should work across all operating systems and is by far the easiest way to get a local copy running.
+The easiest option is to :ref:`install Tabbycat using Docker <install-docker>`. This method should work across all operating systems and is by far the easiest way to get a local copy running.
 
 If installing using Docker does not work, or if you want to be able to modify Tabbycat's code we also have a number of instructions for manually setting up a copy of Tabbycat. There instructions are here:
 
