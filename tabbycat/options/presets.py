@@ -1,3 +1,4 @@
+from tournaments.utils import get_position_name_choices
 
 class PreferencesPreset:
     def __init__(self):
@@ -150,7 +151,7 @@ class UADCPreferences(AustralsPreferences):
 
 
 class WSDCPreferences(AustralsPreferences):
-    """ 3 vs 3 with replies, chosen motions, and all adjudicators can receive feedback from teams."""
+    """ 3 vs 3 with replies, chosen motions, prop/opp side labels, and all adjudicators can receive feedback from teams."""
     def __init__(self):
         self.name                                       = "WSDC Rules"
         self.show_in_list                               = True
@@ -173,6 +174,8 @@ class WSDCPreferences(AustralsPreferences):
         # UI Options
         self.ui_options__show_team_institutions         = False
         self.ui_options__show_adjudicator_institutions  = False
+        position_names = get_position_name_choices()
+        self.debate_rules__position_names               = position_names[2][0]
 
 
 class WADLPreferences(PreferencesPreset):
