@@ -8,6 +8,8 @@ Installing Locally on OS X
 
 .. attention:: If you just want to quickly setup a copy of Tabbycat to run on OS X we reccomend :ref:`installing using Docker<install-docker>`, which will be much easier than following the instructions below.
 
+.. attention:: If you just want to quickly setup a copy of Tabbycat to run on OS X we reccomend :ref:`installing using Docker<install-docker>`, which will be much easier than following the instructions below.
+
 Requisite technical knowledge
 ================================================================================
 

@@ -8,6 +8,8 @@ Installing Locally on Linux
 
 .. attention:: If you just want to quickly setup a copy of Tabbycat to run on Linux we reccomend :ref:`installing using Docker<install-docker>`, which will be much easier than following the instructions below.
 
+.. attention:: If you just want to quickly setup a copy of Tabbycat to run on Linux we reccomend :ref:`installing using Docker<install-docker>`, which will be much easier than following the instructions below.
+
 Requisite technical background
 ==============================
 
