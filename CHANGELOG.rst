@@ -6,15 +6,17 @@ Change Log
 1.2.0 (Foldex)
 --------------
 
-- Redesigned the core round workflow; splitting of the "Display Draw" and "Motions" actions into separate pages to make for a more streamlined user experience
-- Started work on some basic infrastructure for creating Tabbycat translations
+- Redesigned the core round workflow, splitting of the "Display Draw" and "Motions" actions into separate pages
+- Started work on basic infrastructure for translations
 - Separated venue groups from venue constraint categories
-- Added information about autosave status to the Allocations page
-- Added the ability to import 'demo' data when creating a new tournament
-- Added the ability to configure the names a tournament uses for each side, such as setting 'Affirmative/Negative' to be 'Proposition/Opposition' instead.
-- Added the ability to dramatically simplify the process of setup Tabbycat locally on all operating systems using Docker
-- Added a more explicit donations link and dedicated page along with license clarifications that outline when donations are expected.
-- Added a 'Tabbykitten' version of Tabbycat that does not require a credit/debit card to deploy on heroku
+- Added information about autosave status to the allocations page
+- Added button to load a demo tournament when creating a new tournament
+- Added support for different side names, e.g. "Proposition"/"Opposition" instead of "Affirmative"/"Negative"
+- Added support for Docker-based installations, which are much simpler than existing local install methods
+- Added guidance on database backups to documentation
+- Added a more explicit donations link and dedicated page about donations
+- Modified licence to clarify that donations are required for some tournaments
+- Added a "Tabbykitten" version of Tabbycat that can be deployed without a credit/debit card
 
 
 1.1.7
