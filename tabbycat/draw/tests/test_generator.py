@@ -46,7 +46,7 @@ class TestRoundRobinDrawGenerator(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def rr_permutation(self, teams, rounds, expected_matches):
-        print("----\nPermutation with teams:", len(teams), rounds)
+        #print("----\nPermutation with teams:", len(teams), rounds)
         pairings = []
         for i in range(0, rounds):
             rd = DrawGenerator("round_robin", teams, results=None, rrseq=i+1)
@@ -54,7 +54,7 @@ class TestRoundRobinDrawGenerator(unittest.TestCase):
             for pairing in _draw:
                 pairings.append(pairing)
 
-        print("made %s pairings" % len(pairings))
+        #print("made %s pairings" % len(pairings))
 
         # Calculate how many pairings have identical matchups over the rounds
         matches = 0
@@ -66,20 +66,20 @@ class TestRoundRobinDrawGenerator(unittest.TestCase):
                     pair.teams == search_pairings[i].teams.reverse():
                     matches = matches + 1
 
-        print("matches:", matches, " expected:", expected_matches)
+        #print("matches:", matches, " expected:", expected_matches)
         self.assertEqual(matches, expected_matches)
 
     def test_draw(self):
         teams = [TestTeam(*args, aff_count=0) for args in self.teams]
-        for t in teams:
-            t.division = TestDivision()
+        for i, t in enumerate(teams):
+            t.division = TestDivision(i)
             t.short_name = t.id
 
         # Even Numbers
         self.rr_permutation(teams[:12], 10, 0)
         self.rr_permutation(teams[:8], 5, 0)
         self.rr_permutation(teams[:6], 5, 0)
-        # Odd Numbers; TODO
+        # TODO: Odd Numbers
 
 
 class TestPowerPairedDrawGeneratorParts(unittest.TestCase):

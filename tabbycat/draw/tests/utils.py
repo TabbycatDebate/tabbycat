@@ -24,5 +24,6 @@ class TestTeam(object):
 
 class TestDivision(object):
 
-    def __init__(self):
-        self.name = "1"
+    def __init__(self, id):
+        self.id = id
+        self.name = "D " + str(id)
