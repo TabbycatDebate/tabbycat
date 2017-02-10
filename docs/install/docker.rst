@@ -11,9 +11,9 @@ Docker is an application that makes it very easy to load and run a specific coll
 1. Install Docker
 =================
 
-**Mac OS X, Linux and Windows 10 Pro/Enterprise/Education users:** Install the Docker from the `Docker downloads page <https://www.docker.com/products/overview>`_.
+**Mac OS X, Linux and Windows 10 Pro/Enterprise/Education users:** Install **Docker** from the `Docker downloads page <https://www.docker.com/products/overview>`_.
 
-**Windows 7, Windows 8 and Windows 10 Home users:** Install `Docker Toolbox <https://www.docker.com/products/docker-toolbox>`_.
+**Windows 7, Windows 8 and Windows 10 Home users:** Install **Docker Toolbox** from the `Docker Toolbox downloads page <https://www.docker.com/products/docker-toolbox>`_.
 
 .. note:: Before or shortly after installing Docker may ask you to enable hypervisor and restart your PC. You must do this step.
 
@@ -53,7 +53,7 @@ If using Docker
 If using Docker Toolbox
 -----------------------
 
-*These instructions apply if you installed Docker, i.e., if you are using Windows 7, Windows 8 or Windows 10 Home.*
+*These instructions apply if you installed Docker Toolbox, i.e., if you are using Windows 7, Windows 8 or Windows 10 Home.*
 
 1. Start the **Docker Quickstart Terminal**.
 
