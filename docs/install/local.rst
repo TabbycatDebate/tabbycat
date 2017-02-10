@@ -21,8 +21,8 @@ In most cases, you should make an online Tabbycat installation by :ref:`setting 
 - The installation process is easier.
 - You can enter ballots and manage your tournament from multiple computers.
 - Participants can access the draw, motions, results and more online.
-- Heroku's data centers are less likely to fail than your computer.
-- Heroku automatically emails Tabbycat's developers error reports so we can better identify and fix bugs.
+- Heroku's data centers are less likely to fail than your computer is.
+- Heroku e-mails Tabbycat's developers error reports to help us fix bugs.
 
 In some cases, you might have a good reason to use a local installation. We can
 think of just one such reason: If you won't have access to the internet at your
