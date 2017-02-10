@@ -4,13 +4,13 @@
 Installing Locally on Windows
 =============================
 
-**Before you start:** Be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
+.. admonition:: Is this the best install method for you?
 
-.. attention:: If you just want to quickly setup a copy of Tabbycat to run on Windows we reccomend :ref:`installing using Docker<install-docker>`, which will be much easier than following the instructions below.
+  In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
-  If you have any experience with Linux, we'd recommend installing it on :ref:`Bash for Windows <install-wsl>` instead, which is much easier than the instructions below, provided that you have experience with Linux.
+  If you just want to quickly set up a copy of Tabbycat to run locally on Windows, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
 
-.. attention:: If you just want to quickly setup a copy of Tabbycat to run on Windows we reccomend :ref:`installing using Docker<install-docker>`, which will be much easier than following the instructions below.
+  If you have Windows 10 and any experience with Linux, consider installing it on :ref:`Bash for Windows <install-wsl>` instead, which is much easier than the process below, provided that you have experience with Linux.
 
 Requisite technical background
 ==============================

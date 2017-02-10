@@ -4,11 +4,11 @@
 Installing Locally on OS X
 ==========================
 
-**Before you start:** Be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
+.. admonition:: Is this the best install method for you?
 
-.. attention:: If you just want to quickly setup a copy of Tabbycat to run on OS X we reccomend :ref:`installing using Docker<install-docker>`, which will be much easier than following the instructions below.
+  In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
-.. attention:: If you just want to quickly setup a copy of Tabbycat to run on OS X we reccomend :ref:`installing using Docker<install-docker>`, which will be much easier than following the instructions below.
+  If you just want to quickly set up a copy of Tabbycat to run locally on OS X, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
 
 Requisite technical knowledge
 ================================================================================
