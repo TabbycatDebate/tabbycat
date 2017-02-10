@@ -1,5 +1,6 @@
 from tournaments.utils import get_position_name_choices
 
+
 class PreferencesPreset:
     def __init__(self):
         self.show_in_list                               = False
