@@ -5,6 +5,7 @@ Installing Locally using Docker
 ===============================
 
 .. admonition:: Is this the best install method for you?
+  :class: attention
 
     In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
@@ -13,11 +14,11 @@ Docker is an application that makes it very easy to load and run a specific coll
 1. Install Docker
 =================
 
-**Mac OS X, Linux and Windows 10 Pro/Enterprise/Education users:** 
+**Mac OS X, Linux and Windows 10 Pro/Enterprise/Education users:**
 
 - Install **Docker** from the `Docker downloads page <https://www.docker.com/products/overview>`_.
 
-**Windows 7, Windows 8 and Windows 10 Home users:** 
+**Windows 7, Windows 8 and Windows 10 Home users:**
 
 - Install **Docker Toolbox** from the `Docker Toolbox downloads page <https://www.docker.com/products/docker-toolbox>`_.
 

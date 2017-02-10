@@ -5,6 +5,7 @@ Installing Locally on OS X
 ==========================
 
 .. admonition:: Is this the best install method for you?
+  :class: attention
 
   In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
