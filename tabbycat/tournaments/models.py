@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 PROHIBITED_TOURNAMENT_SLUGS = [
     'jet', 'database', 'admin', 'accounts',   # System
-    'start', 'create', 'donations', # Setup Wizards
+    'start', 'create', 'donations', 'load_demo', # Setup Wizards
     'draw', 'participants', 'favicon.ico',  # Cross-Tournament app's view roots
     't', '__debug__', 'static']  # Misc
 
