@@ -253,7 +253,10 @@ def confirm_venue_preferences(request, t):
             if venue_group.venues.count() > 0:
                 category.venues = venue_group.venues.all()
             else:
-                messages.warning(request, "No constraints have been assigned for Venue Group %s because there are no venues in this group. You probably want to add some venues to this group and then recreate this constraint." % venue_group.name)
+                messages.warning(request, "No constraints have been assigned "
+                    "for Venue Group %s because there are no venues in this "
+                    "group. You probably want to add some venues to this group "
+                    "and then recreate this constraint." % venue_group.name)
 
             venue_constaint = VenueConstraint(subject=institution,
                                               priority=priority,
