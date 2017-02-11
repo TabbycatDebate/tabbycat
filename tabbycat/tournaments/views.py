@@ -187,12 +187,9 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
     def post(self, request, *args, **kwargs):
         source = request.POST.get("source", "")
 
-        existing_tournament = Tournament.objects.filter(slug=source)
-        if existing_tournament.exists():
-            existing_tournament.delete()
-
         try:
-            management.call_command(importtournament.Command(), source, relaxed=True)
+            management.call_command(importtournament.Command(), source,
+                                    force=True, strict=False)
         except TournamentDataImporterError as e:
             messages.error(self.request, mark_safe("<p>There were one or more errors creating the demo tournament. "
                 "Before retrying, please delete the existing demo tournament <strong>and</strong> "

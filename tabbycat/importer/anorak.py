@@ -78,9 +78,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         Each line has:
             name
         """
-        region_interpreter = make_interpreter(
-            tournament=self.tournament
-        )
+        region_interpreter = make_interpreter()
         return self._import(f, pm.Region, region_interpreter)
 
     def import_institutions(self, f, auto_create_regions=True):
