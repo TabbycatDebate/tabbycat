@@ -20,6 +20,7 @@
         <team-draggable
           :team="team"
           :vg="division.venue_group"
+          :vg-name="division.venue_group__name"
           :save-division-at="saveDivisionAt">
         </team-draggable>
       </template>
@@ -30,7 +31,7 @@
       <select name="select" class="form-control btn-sm" v-model="division.venue_group"  v-if="vgs.length > 0">
         <option value=""></option>
         <option v-for="vg in vgs" value="{{ vg.id }}" v-bind:value="vg.id">
-          At {{ vg.short_name }}
+          At {{ vg.name }} (capacity for {{ vg.total_capacity }} teams)
         </option>
       </select>
     </div>

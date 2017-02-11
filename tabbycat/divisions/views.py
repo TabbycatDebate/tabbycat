@@ -59,11 +59,16 @@ def division_allocations(request, t):
 
     teams = json.dumps(teams_json)
 
-    venue_groups = json.dumps(list(VenueGroup.objects.all().values(
-        'id', 'short_name')))
+    venue_groups = []
+    for vg in VenueGroup.objects.all():
+        venue_groups.append({
+            'id': vg.id,
+            'name': vg.name,
+            'total_capacity': vg.venues.count()})
+    venue_groups = json.dumps(venue_groups)
 
     divisions = json.dumps(list(Division.objects.filter(tournament=t).all().values(
-        'id', 'name', 'venue_group')))
+        'id', 'name', 'venue_group', 'venue_group__name')))
 
     return render(request, "division_allocations.html", dict(
         teams=teams, divisions=divisions, venue_groups=venue_groups))

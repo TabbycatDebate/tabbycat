@@ -6,9 +6,13 @@
 {% block page-title %}Allocate Divisions{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-primary submit-disable" href="{% tournament_url create_division_allocation %}" >Auto-Allocate Teams to Divisions</a>
-  <a class="btn btn-primary submit-disable" href="{% tournament_url create_byes %}" >Auto-Allocate Bye Teams to Divisions</a>
-  <div class="btn btn-inactive text-muted">Preference Given:</div>
+  <a class="btn btn-primary submit-disable" href="{% tournament_url create_division_allocation %}" >
+    Auto-Allocate Teams
+  </a>
+  <a class="btn btn-primary submit-disable" href="{% tournament_url create_byes %}" >
+    Auto-Allocate Bye Teams
+  </a>
+  <div class="btn btn-inactive text-muted">Preference:</div>
   <div class="btn-group btn-group-sm">
     <div class="btn btn-success" disabled="disabled">1/2</div>
     <div class="btn btn-primary" disabled="disabled">3/4</div>
