@@ -297,7 +297,7 @@ if os.environ.get('TRAVIS', '') == 'true':
 # ==============================================================================
 
 if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
-    DEBUG = False
+    DEBUG = True # Just to be sure
     ALLOWED_HOSTS = ["*"]
     DATABASES = {
         'default': {

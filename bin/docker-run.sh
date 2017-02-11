@@ -9,4 +9,4 @@ python ./manage.py migrate --no-input
 
 # Run the server
 # python ./manage.py runserver 0.0.0.0:8000
-waitress-serve --threads=12 --host=0.0.0.0 --port=8000 wsgi:application
+python ./manage.py runserver 0.0.0.0:8000
