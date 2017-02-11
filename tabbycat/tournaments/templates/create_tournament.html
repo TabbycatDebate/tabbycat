@@ -79,6 +79,13 @@
             {% trans "Load Demo Data (10-team tournament)" %}
           </button>
         </form>
+        {% if preexisting_small_demo %}
+          <br>
+          <div class="alert alert-warning">
+            You already have a tournament setup using this data set.
+            Note that reloading the data will first delete that tourament.
+          </div>
+        {% endif %}
       </div>
       <div class="col-sm-6">
         <form action="{% url 'load-demo' %}" method="POST">
@@ -87,6 +94,13 @@
             {% trans "Load Demo Data (24-team tournament)" %}
           </button>
         </form>
+        {% if preexisting_large_demo %}
+          <br>
+          <div class="alert alert-warning">
+            You already have a tournament setup using this data set.
+            Note that reloading the data will first delete that tourament.
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
