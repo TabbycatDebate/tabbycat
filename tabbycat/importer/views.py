@@ -1,10 +1,11 @@
 from django.contrib import messages
+from django.db import models
 from django.db.utils import IntegrityError
 from django.shortcuts import render
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from utils.views import admin_required, expect_post, tournament_view
-from venues.models import Venue, VenueConstraint, VenueGroup
+from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
 
 
 @admin_required
@@ -194,17 +195,30 @@ def add_venue_preferences(request, t):
 @expect_post
 @tournament_view
 def edit_venue_preferences(request, t):
-
     venue_groups = VenueGroup.objects.all()
-    institutions = []
 
+    # Build a list of institutions and possible venue groups with existing data
+    institutions = []
     for institution_id, checked in request.POST.items():
-        institutions.append(Institution.objects.get(pk=institution_id))
+        institution = Institution.objects.get(pk=institution_id)
+        institution.constraints = []
+        for venue_group in venue_groups:
+            # Find all constraints matching this institution and venue group
+            constraint = VenueConstraint.objects.filter(
+                models.Q(institution=institution),
+                category__name=venue_group.name).first()
+            # Prepopulate priority data (because we are wiping each time)
+            institution.constraints.append({
+                'id': venue_group.id,
+                'name': venue_group.name,
+                'priority': constraint.priority if constraint else ''
+            })
+
+        institutions.append(institution)
 
     return render(request,
                   'edit_venue_preferences.html',
-                  dict(institutions=institutions,
-                       venue_groups=venue_groups))
+                  dict(institutions=institutions))
 
 
 @admin_required
@@ -212,27 +226,39 @@ def edit_venue_preferences(request, t):
 @tournament_view
 def confirm_venue_preferences(request, t):
 
+    # Delete existing venue constraints
     for institution_id in request.POST.getlist('institutionIDs'):
         institution = Institution.objects.get(pk=institution_id)
-        VenueConstraint.objects.filter(institution=institution).delete()
+        VenueConstraint.objects.filter(models.Q(institution=institution)).delete()
 
     venue_priorities = request.POST.dict()
     del venue_priorities["institutionIDs"]
 
     created_preferences = 0
+    print(venue_priorities.items())
 
     for idset, priority in venue_priorities.items():
         institution_id = idset.split('_')[0]
         venue_group_id = idset.split('_')[1]
+        print('have a idset', idset, ' priority ', priority)
 
         if institution_id and venue_group_id and priority:
             institution = Institution.objects.get(pk=int(institution_id))
             venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
-            venue_preference = VenueConstraint(
-                subject=institution,
-                priority=priority,
-                venue_group=venue_group)
-            venue_preference.save()
+
+            # Find or make a new venue constraint category for each venue group
+            category, created = VenueConstraintCategory.objects.get_or_create(name=venue_group.name)
+
+            # Assign it all the relevant venues for its particular group
+            if venue_group.venues.count() > 0:
+                category.venues = venue_group.venues.all()
+            else:
+                messages.warning(request, "No constraints have been assigned for Venue Group %s because there are no venues in this group. You probably want to add some venues to this group and then recreate this constraint." % venue_group.name)
+
+            venue_constaint = VenueConstraint(subject=institution,
+                                              priority=priority,
+                                              category=category)
+            venue_constaint.save()
             created_preferences += 1
 
     messages.success(request, "%s Venue Preferences have been added" % created_preferences)

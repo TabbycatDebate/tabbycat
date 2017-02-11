@@ -33,21 +33,21 @@
           <div class="panel">
 
             <div class="panel-heading">
-              <h4 class="panel-title">
+              <h3 class="panel-title">
                 {{ institution.name }} ({{ institution.code }})
-              </h4>
+              </h3>
             </div>
 
             <ul class="list-group">
 
               <input class="hidden" type="number" name="institutionIDs" value={{ institution.id }} />
-              {% for venue_group in venue_groups %}
+              {% for constraint in institution.constraints %}
                 <li class="list-group-item">
                   <div class="row">
 
-                    <label class="col-sm-6 control-label">Priority for {{ venue_group.name }}</label>
+                    <label class="col-sm-6 control-label">Priority for {{ constraint.name }}</label>
                     <div class="col-sm-2">
-                      <input class="form-control" type="number" name="{{ institution.id }}_{{ venue_group.id }}" value="" />
+                      <input class="form-control" type="number" name="{{ institution.id }}_{{ constraint.id }}" value="{{ constraint.priority }}" />
                     </div>
 
                   </div>
