@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 
 class Region(models.Model):
     name = models.CharField(db_index=True, max_length=100)
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE)
 
     def __str__(self):
         return '%s' % (self.name)

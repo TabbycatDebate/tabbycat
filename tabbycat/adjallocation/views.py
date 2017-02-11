@@ -10,7 +10,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from breakqual.utils import categories_ordered
 from draw.models import Debate, DebateTeam
-from participants.models import Adjudicator, Team
+from participants.models import Adjudicator, Region, Team
 from participants.utils import regions_ordered
 from tournaments.models import Round
 from tournaments.mixins import RoundMixin
@@ -90,7 +90,7 @@ def draw_adjudicators_edit(request, round):
         else:
             debate.gender_class = (aff_male_adj_percent // 5) - 10
 
-    regions = round.tournament.region_set.order_by('name')
+    regions = Region.objects.filter(institution__team__tournament=round.tournament).order_by('name').distinct()
     break_categories = round.tournament.breakcategory_set.order_by(
         'seq').exclude(is_general=True)
     # TODO: colors below are redundant

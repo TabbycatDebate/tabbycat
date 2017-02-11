@@ -9,7 +9,7 @@ class TestParticipantLookup(TestCase):
 
     def setUp(self):
         self.tournament = Tournament.objects.create(slug="main")
-        self.region = Region.objects.create(tournament=self.tournament)
+        self.region = Region.objects.create()
         self.institution = Institution.objects.create(name="An Institution", code="Inst",
                 abbreviation="In.", region=self.region)
 
@@ -46,7 +46,7 @@ class TestParticipantLookup(TestCase):
         self.assertRaises(ObjectDoesNotExist, Team.objects.lookup, "Inst 2")
 
     def test_institution_lookup_with_region(self):
-        other_region = Region.objects.create(tournament=self.tournament)
+        other_region = Region.objects.create()
         self.assertEqual(Institution.objects.lookup("An Institution", region=self.region), self.institution)
         self.assertEqual(Institution.objects.lookup("Inst", region=self.region), self.institution)
         self.assertRaises(ObjectDoesNotExist, Institution.objects.lookup, "An Institution", region=other_region)
