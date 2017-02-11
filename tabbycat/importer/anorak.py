@@ -94,8 +94,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 if not line.get('region'):
                     return None
                 return {
-                    'name': line['region'],
-                    'tournament': self.tournament,
+                    'name': line['region']
                 }
             counts, errors = self._import(f, pm.Region, region_interpreter,
                                           expect_unique=False)
