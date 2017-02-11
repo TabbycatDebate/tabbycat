@@ -53,7 +53,7 @@ If using Docker
 
 3. A terminal window should popup and bunch of text scroll by. If this is your first time running Docker it may take up to half an hour to download and set up the virtual machine.
 
-4. Once the new text has stopped scrolling for a little while it should automatically open up the Tabbycat site in your default browser. If this doesn't happen navigation to http://localhost:8000/ (On Windows) or http://0.0.0.0:8000 (On OSX/Linux) yourself.
+4. Once the new text has stopped scrolling for a little while it should automatically open up the Tabbycat site in your default browser. If this doesn't happen open up http://localhost:8000/ (Windows) or http://0.0.0.0:8000 (OSX/Linux) yourself.
 
   .. note:: If you want to reopen Tabbycat at a later time (say after restarting) repeat steps 1 through 3 under 'Run Tabbycat in Docker'.
 
