@@ -115,7 +115,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_venue_groups(self, f):
         """Imports venue groups from a file.
         Each line has:
-            name, short_name[, team_capacity]
+            name, short_name
         """
         return self._import(f, vm.VenueGroup)
 

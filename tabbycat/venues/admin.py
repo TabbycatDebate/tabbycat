@@ -8,7 +8,7 @@ from .models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
 
 @admin.register(VenueGroup)
 class VenueGroupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'short_name', 'team_capacity')
+    list_display = ('name', 'short_name')
     search_fields = ('name', )
 
 

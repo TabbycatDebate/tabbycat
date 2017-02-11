@@ -60,7 +60,7 @@ def division_allocations(request, t):
     teams = json.dumps(teams_json)
 
     venue_groups = json.dumps(list(VenueGroup.objects.all().values(
-        'id', 'short_name', 'team_capacity')))
+        'id', 'short_name')))
 
     divisions = json.dumps(list(Division.objects.filter(tournament=t).all().values(
         'id', 'name', 'venue_group')))

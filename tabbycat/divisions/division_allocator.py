@@ -30,8 +30,9 @@ class DivisionAllocator():
         team_constraints = [] # Get all the relevant team constraints
         for team in all_teams:
             team_constraints.extend(team.venue_constraints.order_by('-priority'))
+        print('Have %s team_constraints' % (team_constraints))
 
-        # First sweep of allocations using team constraints
+        # First sweep of allocations just using team constraints
         if len(team_constraints) > 0:
             print("---\nStarting first round team allocations")
             all_constraints.extend(team_constraints)
@@ -43,27 +44,34 @@ class DivisionAllocator():
             print("---\nSkipping first team allocation as there are no team constraints")
 
         # Get all the relevant institution constraints
+        institutional_constraints = []
         for institution in self.institutions:
-            all_constraints.extend(institution.venue_constraints.order_by('-priority'))
+            institutional_constraints.extend(institution.venue_constraints.order_by('-priority'))
+        print('Have %s institutional_constraints' % (institutional_constraints))
+
+        # Add institutional constraints to the big list
+        all_constraints.extend(institutional_constraints)
 
         if len(all_constraints) == 0:
             print("---\nSkipping subequent allocations as there are no constraints at all")
             return True
-        else:
-            print("---\nStarting second round team allocations")
-            division_dict, allocated_teams = self.allocate_to_constraints(division_dict, allocated_teams, all_teams, all_constraints, force_fill=True)
 
-            # # First round of culls
-            # division_dict, allocated_teams = self.cull_venues(division_dict, allocated_teams)
-            # print("Post-Cull 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict)))
+        print("---\nStarting second round team allocations")
+        division_dict, allocated_teams = self.allocate_to_constraints(
+            division_dict, allocated_teams, all_teams,
+            all_constraints, force_fill=True)
 
-            # # Second sweep of allocations
-            # unalloacted_teams = [te for te in all_teams if not te in allocated_teams]
-            # division_dict, allocated_teams = self.allocate_to_constraints(division_dict, allocated_teams, unalloacted_teams, )
-            # print("Post-Allocate 2: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict)))
+        # # First round of culls
+        # division_dict, allocated_teams = self.cull_venues(division_dict, allocated_teams)
+        # print("Post-Cull 1: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict)))
 
-            self.determine_division_size(division_dict, allocated_teams, all_teams)
-            return True
+        # # Second sweep of allocations
+        # unalloacted_teams = [te for te in all_teams if not te in allocated_teams]
+        # division_dict, allocated_teams = self.allocate_to_constraints(division_dict, allocated_teams, unalloacted_teams, )
+        # print("Post-Allocate 2: have %s/%s teams allocated across %s venues" % (len(allocated_teams), len(all_teams), len(division_dict)))
+
+        self.determine_division_size(division_dict, allocated_teams, all_teams)
+        return True
 
     def allocate_to_constraints(self, division_dict, allocated_teams, all_teams, all_constraints, force_fill=False):
         teams_to_allocate = list(all_teams)
@@ -74,20 +82,30 @@ class DivisionAllocator():
 
         # Sort preferences by priority then do all the allocations
         for constraint in all_constraints:
-            print("category:", constraint.category)
-            print("CAPACITY:", constraint.category.team_capacity)
-            if len(division_dict[constraint.venue_group]) >= constraint.category.team_capacity:
+            # Find the relevant venue group that matches this constraint
+            first_venue = constraint.category.venues.first()
+            vg = [vg for vg in self.venue_groups if first_venue in vg.venues]
+
+            # Not finding a vg is likely because no venues have been assigned with groups
+            if len(vg) == 0:
+                print("Skipped matching constraint because couldn't match it to a Venue Group ")
+                continue
+            else:
+                vg = vg[0]
+
+            # Infer capacity from number of venues
+            vg_capacity = vg.venues.count()
+            print("VenueGroup is:", vg)
+            print("VenueGroup Capacity is:", vg_capacity)
+
+            if len(division_dict[vg]) >= vg_capacity:
                 # If this venue is full
                 pass
 
             elif isinstance(constraint.subject, Team):
                 team = constraint.subject
                 if team not in allocated_teams:
-                    print("\t1: allocating team %s \t\tto venue group %s (%s/%s) \t\tbased on team priority of %s" % (
-                          team, constraint.venue_group,
-                          len(division_dict[constraint.venue_group]), constraint.venue_group.team_capacity,
-                          constraint.priority))
-                    group = constraint.venue_group
+                    group = vg
                     division_dict[group].append(team)
                     allocated_teams.append(team)
                     teams_to_allocate.remove(team)
@@ -95,11 +113,7 @@ class DivisionAllocator():
             elif isinstance(constraint.subject, Institution):
                 for team in teams_to_allocate:
                     if team.institution == constraint.subject and team not in allocated_teams:
-                        print("\t2: allocating team %s \t\tto venue group %s (%s/%s) \t\tbased on inst priority of %s" % (
-                            team, constraint.venue_group,
-                            len(division_dict[constraint.venue_group]), constraint.venue_group.team_capacity,
-                            constraint.priority))
-                        group = constraint.venue_group
+                        group = vg
                         division_dict[group].append(team)
                         allocated_teams.append(team)
                         teams_to_allocate.remove(team)
@@ -107,13 +121,20 @@ class DivisionAllocator():
         # Randomly apply leftovers
         if force_fill:
             for team in teams_to_allocate:
-                venues_with_capacity = [v for v in list(division_dict.keys()) if len(division_dict[v]) <= v.team_capacity - 1]
-                random_veunue = random.choice(venues_with_capacity)
-                if random_veunue:
-                    print("allocating team %s to venue group %s (%s/%s) based on last resort" % (
-                        team, random_veunue, len(division_dict[random_veunue]), random_veunue.team_capacity))
-                    division_dict[random_veunue].append(team)
-                    allocated_teams.append(team)
+                vgs_with_capacity = [
+                    v_g for v_g in list(division_dict.keys()) if len(division_dict[v_g]) <= v_g.venues.count() - 1]
+
+                if len(vgs_with_capacity) is 0:
+                    continue
+
+                random_vg = random.choice(vgs_with_capacity)
+                if not random_vg:
+                    continue
+
+                print("allocating team %s to venue group %s (%s/%s) based on last resort" % (
+                    team, random_vg, len(division_dict[random_vg]), random_vg.venues.count()))
+                division_dict[random_vg].append(team)
+                allocated_teams.append(team)
 
         for group, group_teams in division_dict.items():
             # Trying to mix up the distributions within divisions
@@ -142,7 +163,7 @@ class DivisionAllocator():
 
         for group, group_teams in division_dict.items():
             if len(group_teams) > 0:
-                print("------\n%s has %s/%s teams" % (group, len(group_teams), group.team_capacity))
+                print("------\n%s has %s/%s teams" % (group, len(group_teams), group.venues.count()))
 
                 # Using the ideal division size, how many divisions can we support?
                 possible_ideal_divisions = len(group_teams) // self.ideal_division_size
