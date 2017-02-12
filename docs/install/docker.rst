@@ -9,7 +9,7 @@ Installing Locally using Docker
 
   In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
-Docker is an application that makes it very easy to load and run a specific collection of software. It allows us to bundle everything necessary to run Tabbycat into a single 'virtual machine' rather than have users install everything needed step-by-step. Once set up, Docker will allow you to start and stop a webserver (that in turn runs Tabbycat) on your computer whenever you want and without the need for internet access.
+Docker is an application that makes it very easy to load and run a specific collection of software. It allows us to bundle everything necessary to run Tabbycat into a single package rather than have users install everything needed step-by-step. Once set up, Docker will allow you to start and stop a webserver (that in turn runs Tabbycat) on your computer whenever you want and without the need for internet access.
 
 
 1. Download Tabbycat
@@ -34,9 +34,12 @@ If using Windows 10 Pro, Enterprise, or Education Edition
 ---------------------------------------------------------
 
 1. Install the **Docker App** from the `Docker downloads page <https://www.docker.com/products/overview>`_.
-2. Before or shortly after installing it, Docker may ask you to enable hypervisor and restart your PC. If it asks you this follow the prompts before proceeding.
-3. Once Docker has finished installing, open up the Docker application, then right-click the app's icon (the whale) in the Taskbar.
-4. From there, go to *Settings* and *Shared Drives*. Tick the checkbox next to your hardrive and then click *Apply*.
+2. Before or shortly after installing it, Docker may ask you to enable hypervisor and restart your PC. If it asks you this follow the prompts and restart as asked.
+3. Once Docker has finished installing, open up the newly-installed Docker application, then right-click the app's icon (the whale) in the Taskbar.
+4. From there, hit *Settings* in the menu and *Shared Drives* in the sidebar. Tick the checkbox next to your hardrive and then click *Apply*.
+
+  .. image:: images/tabbycat-docker-drives.png
+      :alt: Share Drives with Docker App
 
 If using Windows 7, Windows 8, or Windows 10 Home Edition
 ---------------------------------------------------------
@@ -66,7 +69,7 @@ If using the Docker App
 
 4. Open up http://localhost:8000/ (Windows) or http://0.0.0.0:8000 (OSX/Linux) in a browser of your choice!
 
-  .. note:: If you want to reopen Tabbycat at a later time (say after restarting) repeat steps 1 through 4 under 'Run Tabbycat in Docker'.
+.. note:: If you want to reopen Tabbycat at a later time (say after restarting) repeat steps 1 through 4 here.
 
 If using the Docker Toolbox
 -----------------------
@@ -85,3 +88,5 @@ If using the Docker Toolbox
 4. Open a browser and go to http://192.168.99.100:8000/, replacing "192.168.99.100" with whatever IP address was shown in step 2.
 
 5. Once you're done and want to stop the Tabbycat server, press Ctrl+C, wait until the next prompt appears, and then run ``docker-machine stop``.
+
+.. note:: If you want to reopen Tabbycat at a later time (say after restarting) repeat steps 1 through 4 here.
