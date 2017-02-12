@@ -10,6 +10,3 @@ cd ..
 
 # Do docker stuff
 docker-compose up
-
-# Open the URL
-open http://0.0.0.0:8000
