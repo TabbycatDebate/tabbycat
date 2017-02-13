@@ -61,6 +61,20 @@ POSITION_NAMES = {
         # Translators: Capitalised first letter of "Opposition", used in abbreviations
         "neg_initial": pgettext_lazy("team name", "O"),
     },
+    'pro-con': {
+        "aff_full": ugettext_lazy("pro"),
+        "neg_full": ugettext_lazy("con"),
+        "aff_possessive": ugettext_lazy("pro's"),
+        "neg_possessive": ugettext_lazy("con's"),
+        "aff_team": ugettext_lazy("pro team"),
+        "neg_team": ugettext_lazy("con team"),
+        "aff_abbr": ugettext_lazy("Pro"),
+        "neg_abbr": ugettext_lazy("Con"),
+        # Translators: Capitalised first letter of "Pro", used in abbreviations
+        "aff_initial": pgettext_lazy("team name", "P"),
+        # Translators: Capitalised first letter of "Con", used in abbreviations
+        "neg_initial": pgettext_lazy("team name", "C"),
+    },
 }
 
 
