@@ -72,7 +72,7 @@ If using the Docker App
 .. note:: If you want to reopen Tabbycat at a later time (say after restarting) repeat steps 1 through 4 here.
 
 If using the Docker Toolbox
------------------------
+---------------------------
 
 *These instructions apply if you installed the Docker Toolbox, i.e., if you are using Windows 7, Windows 8 or Windows 10 Home.*
 
