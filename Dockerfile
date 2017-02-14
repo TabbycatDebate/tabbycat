@@ -17,6 +17,9 @@ WORKDIR /tcd
 # Can this be skipped? Takes ages
 ADD . /tcd/
 
+# Set git to use HTTPS (SSH is often blocked by firewalls)
+RUN git config --global url."https://".insteadOf git://
+
 # Install our node/python requirements
 RUN pip install -r ./requirements_common.txt
 RUN npm install
