@@ -27,8 +27,8 @@ Docker is an application that makes it very easy to load and run a specific coll
 2. Install Docker
 =================
 
-If using OSX or Linux
----------------------
+If using OS X or Linux
+----------------------
 
 - Install the **Docker App** from the `Docker downloads page <https://www.docker.com/products/overview>`_.
 
