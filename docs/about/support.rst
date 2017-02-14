@@ -19,4 +19,4 @@ When submitting bugs or reporting errors please let us know your site address (i
 Email
 =====
 
-Feel free to `contact the maintainers directly <http://tabbycat.readthedocs.io/en/stable/about/authors.html>`_ if you are not able to access Facebook or GitHub.
+Feel free to :ref:`contact the maintainers directly <authors>` if you are not able to access Facebook or GitHub.

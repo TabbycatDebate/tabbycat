@@ -9,6 +9,8 @@ Installing Locally using Docker
 
   In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
+.. attention:: This installation method is newly available in version 1.2. As such, it hasn't been extensively tested. If you encounter any difficulties, `please report the issue on GitHub <https://github.com/czlee/tabbycat/issues/new?labels=installation-docker&title=Docker%20installation%20problem&body=Please%20be%20sure%20to%20include%20your%20operating%20system%20and%20version,%20and%20please%20be%20as%20specific%20as%20you%20can%20about%20the%20problem%20you%20encountered%3A%0D%0D>`_ or (less preferably) :ref:`contact the developers <authors>`.
+
 Docker is an application that makes it very easy to load and run a specific collection of software. It allows us to bundle everything necessary to run Tabbycat into a single package rather than have users install everything needed step-by-step. Once set up, Docker will allow you to start and stop a webserver (that in turn runs Tabbycat) on your computer whenever you want and without the need for internet access.
 
 
