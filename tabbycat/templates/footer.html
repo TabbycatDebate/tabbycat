@@ -1,4 +1,5 @@
 {% load debate_tags %}
+{% load i18n %}
 
 <div class="tabbycat-footer row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
 
@@ -7,25 +8,43 @@
     <div class="row">
       <div class="col-md-6">
         <h6>
-          {% if tournament %}{{ tournament }} runs on {% else %}This site runs on {% endif %}<span class="emoji">😸</span> Tabbycat
+          {% if tournament %}
+            {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed %}This site runs on {% endblocktrans %}
+          {% endif %}
+          <span class="emoji">😸</span> Tabbycat
           {% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}
         </h6>
         <p>
-          Tabbycat is an open-source project for tabbing debating tournaments using two-team formats. It was created by Qi-Shan Lim, Chuan-Zheng Lee</a>, and Philip Belesky.</a>
-          Personal or institutional <a href="http://PayPal.Me/tabbycatproject/0aud">donations to the project's developers</a> are much appreciated.
+          {% blocktrans trimmed %}
+            Tabbycat is an open-source project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
+          {% endblocktrans %}
+          {% if tournament and tournament.billable_teams > 0 %}
+            For a tournament of this size, we suggest a donation of <strong>${{ tournament.billable_teams }}</strong>.
+            <a href="{% tournament_url tournament-donations %}">Learn more about donating</a>.
+          {% else %}
+            <a href="{% url 'donations' %}">Donations to Tabbycat from individuals or organisations</a> are much appreciated.
+          {% endif %}
         </p>
       </div>
       <div class="col-md-4">
-        <h6>Still timing debates with the stopwatch app?</h6>
+        <h6>{% blocktrans trimmed %}Still timing debates with the stopwatch app?{% endblocktrans %}</h6>
         <p>
-          Using a real debating app makes speaking and adjudicating easier!
-          Check out <a href="https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%20Installs&mt=8">Timekept (for iPhones/iPads)</a>
-          or <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%3Dtabbycat%26utm_medium%3Dfooter">Debatekeeper (for Android)</a>.
+          {% blocktrans trimmed %}
+            Using a real debating app makes speaking and adjudicating easier!
+            Check out <a href="https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%20Installs&mt=8">Timekept</a> (iPhone/iPad)
+            or <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%3Dtabbycat%26utm_medium%3Dfooter">Debatekeeper</a> (Android).
+          {% endblocktrans %}
         </p>
       </div>
       <div class="col-md-2">
-        <h6>Need ballots?</h6>
-        <p><a href="http://debatingballot.com" target="_blank">DebatingBallot.com</a> lets you design and print great ballots online.</p>
+        <h6>{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
+        <p>
+          {% blocktrans trimmed %}
+            Use <a href="http://debatingballot.com" target="_blank">debatingBallot.com</a> to design and print great ballots online.
+          {% endblocktrans %}
+        </p>
       </div>
     </div>
 
@@ -33,19 +52,19 @@
       <div class="col-md-12">
         <ul class="nav navbar-nav">
           <li class="nav-item">
-            <a class="nav-link " href="https://github.com/czlee/tabbycat/"><span class="glyphicon glyphicon-console"></span> Github</a>
+            <a class="nav-link " href="https://github.com/czlee/tabbycat/"><span class="glyphicon glyphicon-console"></span> {% trans "GitHub" %}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/"><span class="glyphicon glyphicon-info-sign"></span> Documentation</a>
+            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/"><span class="glyphicon glyphicon-info-sign"></span> {% trans "Documentation" %}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/about/support.html"><span class="glyphicon glyphicon-question-sign"></span> Support</a>
+            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/about/support.html"><span class="glyphicon glyphicon-question-sign"></span> {% trans "Support" %}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link " href="https://www.facebook.com/groups/tabbycat.debate/"><span class="glyphicon glyphicon-user"></span> Facebook Group</a>
+            <a class="nav-link " href="https://www.facebook.com/groups/tabbycat.debate/"><span class="glyphicon glyphicon-user"></span> {% trans "Facebook Group" %}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way"><span class="glyphicon glyphicon-open"></span> Set Up A Copy</a>
+            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/latest/install/heroku.html#installation-the-short-way"><span class="glyphicon glyphicon-open"></span> {% trans "Set Up A Copy" %}</a>
           </li>
         </ul>
       </div>

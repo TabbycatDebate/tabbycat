@@ -4,7 +4,14 @@
 Installing Locally on Windows
 =============================
 
-Before you start, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
+.. admonition:: Is this the best install method for you?
+  :class: attention
+
+  In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
+
+  If you just want to quickly set up a copy of Tabbycat to run locally on Windows, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
+
+  If you have Windows 10 and any experience with Linux, consider installing it on :ref:`Bash for Windows <install-wsl>` instead, which is much easier than the process below, provided that you have experience with Linux.
 
 Requisite technical background
 ==============================
@@ -29,8 +36,10 @@ First, you need to install all of the software on which Tabbycat depends, if you
 ------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
 
-Download and install Python 3.5 (or later) from the `Python website <https://www.python.org/>`_.
+Download and install Python 3.5 from the `Python website <https://www.python.org/>`_.
 In the installer, check the box to add Python to your PATH (see box below).
+
+.. warning:: The 64-bit version of Python 3.6 currently doesn't work with PostgreSQL 9.6, because of a `bug in Python <http://bugs.python.org/issue28680>`_ affecting `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_. If you're using 64-bit Python, you should use Python 3.5 until the Python 3.6.1 is released.
 
 .. hint:: Which file should I download?
 
@@ -51,9 +60,11 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 
 .. note:: **If you already have Python**, great! Some things to double-check:
 
-  - You must have at least Python 3.4, though we recommend Python 3.5.
+  - You must have at least Python 3.4. (Python 2 is not supported.)
   - Your installation path must not have any spaces in it.
   - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
+
+.. _install-windows-postgresql:
 
 1(b). PostgreSQL
 ----------------
@@ -100,6 +111,8 @@ Download and run the `node.js Windows Installer (.msi) <https://nodejs.org/en/do
   If you've used Git before, you might prefer to clone `our GitHub repository`_ instead. Don't forget to check out the |vrelease| tag or the master branch.
 
   Even better, you might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
+
+.. _install-windows-database:
 
 3. Set up a new database
 ========================

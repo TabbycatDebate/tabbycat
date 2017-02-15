@@ -588,7 +588,7 @@ EMOJI_LIST = (
     ("🛀", "🛀"),  # Bath
     # LAME ("🛁", ""),  # Bathtub
     ("⏳", "⏳"),  # Hourglass With Flowing Sand
-    ("⏰", "⏰"),  # Alarm Clock
+    # USED IN UI (tournaments overview) ("⏰", "⏰"),  # Alarm Clock
     # LAME ("⏱", ""),  # Stopwatch
     # LAME ("⏲", ""),  # Timer Clock
     # LAME ("🕛", ""),  # Clock Face Twelve O'Clock

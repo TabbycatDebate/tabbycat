@@ -1,8 +1,8 @@
-seq,name,abbreviation,stage,draw_type,silent
-1,Round 1,R1,P,R,0
-2,Round 2,R2,P,P,0
-3,Round 3,R3,P,P,0
-4,Round 4,R4,P,P,0
-5,Quarterfinals,QF,E,F,1
-6,Semifinals,SF,E,B,1
-7,Grand Final,GF,E,B,1
+seq,name,abbreviation,stage,draw_type,silent,feedback_weight,break_category
+1,Round 1,R1,P,R,0,0.7,
+2,Round 2,R2,P,P,0,0.7,
+3,Round 3,R3,P,P,0,0.7,
+4,Round 4,R4,P,P,0,0.7,
+5,Quarterfinals,QF,E,F,1,0,open
+6,Semifinals,SF,E,B,1,0,open
+7,Grand Final,GF,E,B,1,0,open

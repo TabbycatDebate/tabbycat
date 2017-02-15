@@ -53,9 +53,13 @@ class BlankUnknownBooleanSelect(forms.NullBooleanSelect):
     """Uses '--------' instead of 'Unknown' for the None choice."""
 
     def __init__(self, attrs=None):
-        choices = (('1', ugettext_lazy('--------')),
-                   ('2', ugettext_lazy('Yes')),
-                   ('3', ugettext_lazy('No')))
+        choices = (
+            ('1', '--------'),
+            # Translators: Please leave this blank, it should be left for the base Django translations.
+            ('2', ugettext_lazy('Yes')),
+            # Translators: Please leave this blank, it should be left for the base Django translations.
+            ('3', ugettext_lazy('No'))
+        )
         # skip the NullBooleanSelect constructor
         super(forms.NullBooleanSelect, self).__init__(attrs, choices)
 
@@ -68,6 +72,7 @@ class BooleanSelectField(forms.NullBooleanField):
     def clean(self, value):
         value = super(BooleanSelectField, self).clean(value)
         if self.required and value is None:
+            # Translators: Please leave this blank, it should be left for the base Django translations.
             raise forms.ValidationError(_("This field is required."))
         return value
 
@@ -76,6 +81,7 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
     def clean(self, value):
         value = super(RequiredTypedChoiceField, self).clean(value)
         if value == "None":
+            # Translators: Please leave this blank, it should be left for the base Django translations.
             raise forms.ValidationError(_("This field is required."))
         return value
 

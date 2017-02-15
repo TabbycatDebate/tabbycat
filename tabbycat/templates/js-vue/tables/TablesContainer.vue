@@ -2,7 +2,7 @@
 
   <div>
     <div class="row">
-      <div class="col-md-12 half-vertical-spacing">
+      <div class="col-md-12 half-vertical-spacing hidden-print">
         <div class="input-group">
           <input id="table-search" type="search" class="form-control table-search" placeholder="Find in Table">
           <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>

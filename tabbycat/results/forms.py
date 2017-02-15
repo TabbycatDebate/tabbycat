@@ -10,7 +10,6 @@ from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 
 from .result import BallotSet, ForfeitBallotSet
-from .utils import set_float_or_int
 
 logger = logging.getLogger(__name__)
 
@@ -58,19 +57,8 @@ class BaseScoreField(forms.FloatField):
             step_value = self.DEFAULT_STEP_VALUE
         self.step_value = kwargs.get('step_value', step_value)
 
-        kwargs.setdefault('min_value', set_float_or_int(min_value, step_value))
-        kwargs.setdefault('max_value', set_float_or_int(max_value, step_value))
-
-        # Overwrite the "step" attribute.
-        # Note, this overrides everything, so it means you can't set the
-        # 'step' attribute of the widget directly - you must use the
-        # step_value keyword argument.
-        widget = kwargs.get('widget', self.widget)
-        if isinstance(widget, type):
-            widget = widget()
-        if isinstance(widget, forms.NumberInput):
-            widget.attrs['step'] = set_float_or_int(self.step_value, step_value)
-        kwargs['widget'] = widget
+        kwargs.setdefault('min_value', self.coerce_for_ui(min_value))
+        kwargs.setdefault('max_value', self.coerce_for_ui(max_value))
 
         super(BaseScoreField, self).__init__(*args, **kwargs)
 
@@ -87,6 +75,18 @@ class BaseScoreField(forms.FloatField):
             raise forms.ValidationError(
                 _(msg), code='decimal'
             )
+
+    def widget_attrs(self, widget):
+        attrs = super(BaseScoreField, self).widget_attrs(widget)
+        if isinstance(widget, forms.NumberInput):
+            attrs['step'] = self.coerce_for_ui(self.step_value) # override
+        return attrs
+
+    def coerce_for_ui(self, x):
+        if self.step_value % 1 == 0:
+            return int(x)
+        else:
+            return float(x)
 
 
 class MotionModelChoiceField(forms.ModelChoiceField):
@@ -310,11 +310,8 @@ class BallotSetForm(forms.Form):
                 initial[self._fieldname_speaker(side, pos)] = speaker.pk
                 for adj in self.adjudicators:
                     score = ballotset.get_score(adj, side, pos)
-                    if pos is self.REPLY_POSITION:
-                        step = self.reply_score_step
-                    else:
-                        step = self.score_step
-                    initial[self._fieldname_score(adj, side, pos)] = set_float_or_int(score, step)
+                    coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
+                    initial[self._fieldname_score(adj, side, pos)] = coerce_for_ui(score)
 
         return initial
 

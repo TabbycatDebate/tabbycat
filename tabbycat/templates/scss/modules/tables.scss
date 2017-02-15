@@ -11,6 +11,20 @@
       border-bottom-color: $table-bg-hover;
     }
   }
+  &.hide-hover > tbody > tr:hover td {
+    background-color: transparent;
+    .hide-underline {
+      border-bottom-color: #ccc;
+    }
+  }
+}
+
+// Body class override to disable hovers; mostly for draw display pages
+.override-table-hovers .panel-body .table > tbody > tr:hover td {
+  background-color: transparent;
+  .hide-underline {
+    border-bottom-color: #ccc;
+  }
 }
 
 // For the quick search; needs to fit within the row
@@ -37,6 +51,7 @@ thead, .thead {
 }
 
 .vue-sortable {
+  white-space: nowrap; // Stop a toggle being pushed into 2 rows
   &:hover, &:hover .glyphicon {
     color: $brand-success;
     cursor: pointer;

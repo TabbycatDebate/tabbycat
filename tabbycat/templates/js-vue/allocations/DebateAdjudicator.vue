@@ -105,8 +105,12 @@ export default {
   },
   computed: {
     short_name: function() {
-      var names = this.adjorteam.name.split(" ");
-      return names[0] + " " + names[1][0] + ".";
+      var nameComponents = this.adjorteam.name.split(" ");
+      var name = nameComponents[0]
+      if (typeof nameComponents[1] !== 'undefined') {
+        name += " " + nameComponents[1][0] + "."
+      }
+      return name;
     },
     letter_ranking: function() {
       if (this.adjorteam.ranking === 10) {

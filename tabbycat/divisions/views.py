@@ -4,6 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.db import models
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
@@ -11,7 +12,7 @@ from django.views.decorators.cache import cache_page
 from participants.models import Institution, Team
 from utils.views import admin_required, expect_post, public_optional_tournament_view, tournament_view
 from utils.misc import redirect_tournament
-from venues.models import InstitutionVenueConstraint, TeamVenueConstraint, VenueGroup
+from venues.models import VenueConstraint, VenueGroup
 
 from .division_allocator import DivisionAllocator
 from .models import Division
@@ -39,31 +40,35 @@ def public_divisions(request, t):
 @admin_required
 @tournament_view
 def division_allocations(request, t):
-    # Should be a JsonDataResponseView
-    teams = list(Team.objects.filter(tournament=t).all().values(
-        'id', 'short_reference', 'division', 'use_institution_prefix', 'institution__code', 'institution__id'))
+    # TODO: This should be a JsonDataResponseView
+    teams = Team.objects.filter(tournament=t).all()
+    teams_json = list(teams.values('id', 'short_reference', 'division',
+        'use_institution_prefix', 'institution__code', 'institution__id'))
 
-    for team in teams:
-        team['institutional_preferences'] = list(
-            InstitutionVenueConstraint.objects.filter(
-                institution=team['institution__id']).values(
-                    'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
-        team['team_preferences'] = list(
-            TeamVenueConstraint.objects.filter(
-                team=team['id']).values(
-                    'venue_group__short_name', 'priority', 'venue_group__id').order_by('-priority'))
+    # Build a per-team list of all the relevant institutional/team constraints
+    for team, team_dict in zip(teams, teams_json):
+        team_preferences = VenueConstraint.objects.filter(
+            models.Q(team=team)).order_by('-priority')
+        team_dict['team_preferences'] = list(
+            team_preferences.values('category__name', 'priority'))
 
-        # team['institutional_preferences'] = "test"
-        # team['individual_preferences'] = "test"
+        institutional_preferences = VenueConstraint.objects.filter(
+            models.Q(institution=team.institution)).order_by('-priority')
+        team_dict['institutional_preferences'] = list(
+            institutional_preferences.values('category__name', 'priority'))
 
-    teams = json.dumps(teams)
+    teams = json.dumps(teams_json)
 
-    venue_groups = json.dumps(list(
-        VenueGroup.objects.all().values(
-            'id', 'short_name', 'team_capacity')))
+    venue_groups = []
+    for vg in VenueGroup.objects.all():
+        venue_groups.append({
+            'id': vg.id,
+            'name': vg.name,
+            'total_capacity': vg.venues.count()})
+    venue_groups = json.dumps(venue_groups)
 
     divisions = json.dumps(list(Division.objects.filter(tournament=t).all().values(
-        'id', 'name', 'venue_group')))
+        'id', 'name', 'venue_group', 'venue_group__name')))
 
     return render(request, "division_allocations.html", dict(
         teams=teams, divisions=divisions, venue_groups=venue_groups))

@@ -1,41 +1,59 @@
 {% extends "base.html" %}
-{% load add_field_css %}
+{% load add_field_css i18n %}
 
 {% block nav %}{% endblock %}
 
-{% block head-title %}<span class="emoji">👋</span>Hello!{% endblock %}
+{% block head-title %}<span class="emoji">👋</span>{% trans "Hello!" %}{% endblock %}
 {% block page-title %}Tabbycat{% endblock %}
 
 {% block content %}
 
-  <div class="panel panel-default">
-    <div class="panel-body">
+<div class="alert alert-info">
+  <p>
+    Tabbycat is free to use for non-profit and non-fundraising tournaments
+    (although donations are encouraged). If your tournament is run for profit
+    or for fundraising, please note that there is a
+    <a href="{% url 'donations' %}">required payment</a>. For more details,
+    see the <a href="http://tabbycat.readthedocs.io/en/stable/about/licence.html">
+    Tabbycat licence agreement</a>.
+  </p>
+</div>
 
-      <h4>
+<div class="panel panel-default">
+  <div class="panel-body">
+
+    <h4>
+      {% blocktrans trimmed %}
         Welcome to your new Tabbycat installation!
-      </h4>
-      <p>
+      {% endblocktrans %}
+    </h4>
+    <p>
+      {% blocktrans trimmed %}
         To get started, you'll need to create the first user account. This account
         is a "superuser" account: it will be able to edit anything on the site.
         Therefore, you should use a strong password.
-      </p>
-      <p>
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% blocktrans trimmed %}
         You can only create this account once, but if you like, you can change the
-        username and password after it's created, or add new superusers afterwards.<br><br>
-      </p>
+        username and password after it's created, or add new superusers afterwards.
+      {% endblocktrans %}
+    </p>
 
-      <form action="." method="POST" class="form-horizontal">
+    <form action="." method="POST" class="form-horizontal">
+      {% csrf_token %}
 
-        {% csrf_token %}
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          {% blocktrans trimmed %}
+          Whoops! There was an error with one or more fields.
+          {% endblocktrans %}
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
 
-        {% if form.errors %}
-          <div class="alert alert-danger">
-            Whoops! There was an error with one or more fields.
-            {{ form.non_field_errors }}
-          </div>
-        {% endif %}
-
-        {% for field in form %}
+      {% for field in form %}
         <div class="form-group">
           <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
           <div class="col-md-6">
@@ -45,18 +63,18 @@
             {{ field.errors }}
           {% endif %}
         </div>
-        {% endfor %}
+      {% endfor %}
 
-        <div class="form-group">
-          <div class="col-md-offset-2 col-md-6 col-sm-4">
-            <button type="submit" class="btn btn-success form-control">
-              Create account
-            </button>
-          </div>
+      <div class="form-group">
+        <div class="col-md-offset-2 col-md-6 col-sm-4">
+          <button type="submit" class="btn btn-block btn-success form-control">
+            {% trans "Create Account" %}
+          </button>
         </div>
+      </div>
 
-      </form>
-    </div>
+    </form>
   </div>
+</div>
 
 {% endblock %}

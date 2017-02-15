@@ -21,8 +21,10 @@
             <th><span class="glyphicon glyphicon-calendar" data-toggle="tooltip" title="Date"></span></th>
             <th><span class="glyphicon glyphicon-time" data-toggle="tooltip" title="Time"></span></th>
           {% endif %}
-          <th>Aff<span class="hidden-xs">irmative</span></th>
-          <th>Neg<span class="hidden-xs">ative</span></th>
+          {% tournament_side_names tournament 'full' as side_names %}
+          {% for name in side_names %}
+            <th>{{ name }}</th>
+          {% endfor %}
           {% if pref.enable_division_motions %}
             <th>Motion</th>
           {% endif %}
@@ -57,8 +59,8 @@
               </td>
               {% if pref.enable_division_motions %}
                 <td>
-                  <span>{{ debate.get_division_motions.reference }}</span>
-                  <small title="{{ debate.get_division_motions.text }}" data-toggle="tooltip">(view)</small>
+                  <span>{{ debate.division_motion.reference }}</span>
+                  <small title="{{ debate.division_motion.text }}" data-toggle="tooltip">(view)</small>
                 </td>
               {% endif %}
               {% if not pref.enable_divisions %}

@@ -7,7 +7,7 @@
         <span v-if="index !== 0">, </span>{{ speaker }}
       </em>
     </div>
-    <div class="db-padding-horizontal db-flex-static db-align-vertical-center db-flex-static">
+    <div class="db-padding-horizontal db-flex-static db-align-vertical-center db-flex-static text-muted">
       {{ position }}
     </div>
     <div class="db-padding-horizontal db-flex-static "></div>

@@ -4,6 +4,13 @@
 {% block page-title %}
   Confirm draw regeneration
 {% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
+  </a>
+{% endblock %}
+
 {% block head-title %}
   <span class="emoji"> </span>Confirm Draw Deletion for {{ round.name }}
 {% endblock %}
@@ -15,14 +22,13 @@
     delete <strong>all the debates in the current draw</strong> —  including
     their ballots and adjudicator allocations — and cannot be undone.
     You probably don't want to do this if any results have been entered!</p>
-    <p>
-      <form class="" method="POST" action="{% round_url draw-regenerate %}">
-        {% csrf_token %}
-        <button class="btn btn-danger submit-disable" type="submit">
-          Yes, I want to delete the current draw for {{ round.name }}
-        </button>
-      </form>
-    </p>
   </div>
+
+  <form class="" method="POST" action="{% round_url draw-regenerate %}">
+    {% csrf_token %}
+    <button class="btn btn-block btn-danger submit-disable" type="submit">
+      Yes, I want to delete the current draw for {{ round.name }}
+    </button>
+  </form>
 
 {% endblock %}

@@ -1,0 +1,7 @@
+# Declare files that will always have LF line endings on checkout.
+
+# The docker wait/run commands need this for Windows compatibility
+# Error is ": No such file or directory/usr/bin/env: bash"
+# See: https://github.com/deviantony/docker-elk/issues/36
+
+docker-*.sh text eol=lf

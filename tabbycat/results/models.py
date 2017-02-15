@@ -28,50 +28,38 @@ class Submission(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     version = models.PositiveIntegerField()
-    submitter_type = models.CharField(max_length=1,
-                                      choices=SUBMITTER_TYPE_CHOICES)
+    submitter_type = models.CharField(max_length=1, choices=SUBMITTER_TYPE_CHOICES)
+    confirmed = models.BooleanField(default=False)
 
-    submitter = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        blank=True,
-        null=True,
-        related_name="%(app_label)s_%(class)s_submitted"
-    )  # only relevant if submitter was in tab room
-    confirmer = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        blank=True,
-        null=True,
-        related_name="%(app_label)s_%(class)s_confirmed")
+    # only relevant if submitter was in tab room
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+        blank=True, null=True, related_name="%(app_label)s_%(class)s_submitted")
+    confirmer = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE,
+        blank=True, null=True, related_name="%(app_label)s_%(class)s_confirmed")
     confirm_timestamp = models.DateTimeField(blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     version_lock = Lock()
-
-    confirmed = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
 
     @property
     def _unique_filter_args(self):
-        return dict((arg, getattr(self, arg))
-                    for arg in self._meta.unique_together[0]
+        return dict((arg, getattr(self, arg)) for arg in self._meta.unique_together[0]
                     if arg != 'version')
 
     def save(self, *args, **kwargs):
         # Check for uniqueness.
         if self.confirmed:
             try:
-                current = self.__class__.objects.get(confirmed=True,
-                                                     **
-                                                     self._unique_filter_args)
+                current = self.__class__.objects.get(confirmed=True, **self._unique_filter_args)
             except self.DoesNotExist:
                 pass
             else:
                 if current != self:
-                    logger.warning(
-                        "{} confirmed while {} was already confirmed, setting latter to unconfirmed".format(
-                            self, current))
+                    logger.warning("{} confirmed while {} was already confirmed, setting latter "
+                            "to unconfirmed".format(self, current))
                     current.confirmed = False
                     current.save()
 
@@ -80,11 +68,9 @@ class Submission(models.Model):
         # at the same time and get the same version number.
         with self.version_lock:
             if self.pk is None:
-                existing = self.__class__.objects.filter(**
-                                                         self._unique_filter_args)
+                existing = self.__class__.objects.filter(**self._unique_filter_args)
                 if existing.exists():
-                    self.version = existing.aggregate(models.Max('version'))[
-                        'version__max'] + 1
+                    self.version = existing.aggregate(models.Max('version'))['version__max'] + 1
                 else:
                     self.version = 1
             super(Submission, self).save(*args, **kwargs)
@@ -99,16 +85,11 @@ class BallotSubmission(Submission):
     """Represents a single submission of ballots for a debate.
     (Not a single motion, but a single submission of all ballots for a debate.)"""
 
-    debate = models.ForeignKey('draw.Debate', db_index=True)
-    motion = models.ForeignKey('motions.Motion',
-                               blank=True,
-                               null=True,
-                               on_delete=models.SET_NULL)
-
-    copied_from = models.ForeignKey('BallotSubmission', blank=True, null=True)
+    debate = models.ForeignKey('draw.Debate', models.CASCADE, db_index=True)
+    motion = models.ForeignKey('motions.Motion', models.SET_NULL, blank=True, null=True)
+    copied_from = models.ForeignKey('BallotSubmission', models.SET_NULL, blank=True, null=True)
     discarded = models.BooleanField(default=False)
-
-    forfeit = models.ForeignKey('draw.DebateTeam', blank=True, null=True)
+    forfeit = models.ForeignKey('draw.DebateTeam', models.SET_NULL, blank=True, null=True) # where valid, cascade should be covered by debate
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -117,8 +98,7 @@ class BallotSubmission(Submission):
         return "Ballot for {debate} submitted at {time} (version {version})".format(
             debate=self.debate.matchup,
             version=self.version,
-            time=('<unknown>' if self.timestamp is None else str(
-                self.timestamp.isoformat())))
+            time=('<unknown>' if self.timestamp is None else str(self.timestamp.isoformat())))
 
     @property
     def ballot_set(self):
@@ -130,19 +110,17 @@ class BallotSubmission(Submission):
         # The motion must be from the relevant round
         super().clean()
         if self.motion.round != self.debate.round:
-            raise ValidationError(
-                "Debate is in round {:d} but motion ({:s}) is from round {:d}".format(
-                    self.debate.round, self.motion.reference,
-                    self.motion.round))
+            raise ValidationError("Debate is in round {:d} but motion ({:s}) is from round {:d}".format(
+                    self.debate.round, self.motion.reference, self.motion.round))
         if self.confirmed and self.discarded:
             raise ValidationError("A ballot can't be both confirmed and discarded!")
 
 
 class SpeakerScoreByAdj(models.Model):
     """Holds score given by a particular adjudicator in a debate."""
-    ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator')
-    debate_team = models.ForeignKey('draw.DebateTeam')
+    ballot_submission = models.ForeignKey(BallotSubmission, models.CASCADE)
+    debate_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator', models.CASCADE)
+    debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE)
     score = ScoreField()
     position = models.IntegerField()
 
@@ -170,18 +148,17 @@ class TeamScore(models.Model):
     SpeakerScore objects. We use a separate model for it for performance
     reasons."""
 
-    ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_team = models.ForeignKey('draw.DebateTeam', db_index=True)
+    ballot_submission = models.ForeignKey(BallotSubmission, models.CASCADE)
+    debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE, db_index=True)
 
     points = models.PositiveSmallIntegerField()
-    margin = ScoreField()
     win = models.NullBooleanField()
+    margin = ScoreField()
     score = ScoreField()
     votes_given = models.PositiveSmallIntegerField()
     votes_possible = models.PositiveSmallIntegerField()
 
-    forfeit = models.BooleanField(
-        default=False, blank=False, null=False,
+    forfeit = models.BooleanField(default=False, blank=False, null=False,
         help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
     class Meta:
@@ -202,9 +179,9 @@ class SpeakerScore(models.Model):
     performance enhancement; raw scores are stored in SpeakerScoreByAdj. The
     BallotSet class in result.py calculates this when it saves a ballot set.
     """
-    ballot_submission = models.ForeignKey(BallotSubmission)
-    debate_team = models.ForeignKey('draw.DebateTeam')
-    speaker = models.ForeignKey('participants.Speaker', db_index=True)
+    ballot_submission = models.ForeignKey(BallotSubmission, models.CASCADE)
+    debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE)
+    speaker = models.ForeignKey('participants.Speaker', models.CASCADE, db_index=True)
     score = ScoreField()
     position = models.IntegerField()
 

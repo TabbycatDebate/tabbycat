@@ -56,11 +56,15 @@
 
   <section class="db-flex-row db-flex-item-7 db-margins-m">
     <div class="db-flex-column db-bordered db-flex-item-half">
-      <team-scores position="Aff" :speakers="ballot.affSpeakers" :name="ballot.aff" :emoji="ballot.affEmoji" :data="data"></team-scores>
+      <team-scores :position="positions[0]" :speakers="ballot.affSpeakers"
+                   :name="ballot.aff" :emoji="ballot.affEmoji" :data="data">
+      </team-scores>
     </div>
     <div class="db-item-gutter"></div>
     <div class="db-flex-column db-bordered db-flex-item-half">
-      <team-scores position="Neg" :speakers="ballot.negSpeakers" :name="ballot.neg" :emoji="ballot.negEmoji" :data="data"></team-scores>
+      <team-scores :position="positions[1]" :speakers="ballot.negSpeakers"
+                   :name="ballot.neg" :emoji="ballot.negEmoji" :data="data">
+      </team-scores>
     </div>
   </section>
 
@@ -96,7 +100,7 @@
 import TeamScores from './TeamScores.vue'
 
 export default {
-  props: ['data', 'ballot', 'motions'],
+  props: ['data', 'ballot', 'motions', 'positions'],
   components: {
     TeamScores
   },

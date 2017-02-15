@@ -6,19 +6,25 @@
 {% block page-title %}Allocate Divisions{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-success submit-disable" href="{% tournament_url create_division_allocation %}" >Auto Allocate Divisions</a>
-  <a class="btn btn-success submit-disable" href="{% tournament_url create_division %}" >Add New Division</a>
-  <a class="btn btn-success submit-disable" href="{% tournament_url create_byes %}" >Auto Add Bye Teams</a>
-{% endblock %}
-
-{% block page-subnav-actions %}
-  <div class="btn btn-inactive">Preference Allocated:</div>
-  <div class="btn-group">
+  <a class="btn btn-primary submit-disable" href="{% tournament_url create_division_allocation %}" >
+    Auto-Allocate Teams
+  </a>
+  <a class="btn btn-primary submit-disable" href="{% tournament_url create_byes %}" >
+    Auto-Allocate Bye Teams
+  </a>
+  <div class="btn btn-inactive text-muted">Preference:</div>
+  <div class="btn-group btn-group-sm">
     <div class="btn btn-success" disabled="disabled">1/2</div>
     <div class="btn btn-primary" disabled="disabled">3/4</div>
     <div class="btn btn-warning" disabled="disabled">5+</div>
-    <div class="btn btn-danger" disabled="disabled">None</div>
+    <div class="btn btn-danger" disabled="disabled">NA</div>
   </div>
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <a class="btn btn-success submit-disable" href="{% tournament_url create_division %}" >
+     <span class="glyphicon glyphicon-plus"></span> Add New Division
+  </a>
 {% endblock %}
 
 {% block content %}
@@ -26,7 +32,7 @@
   <div class="row divisions-holder">
     <template v-for="division in divisions | orderBy 'parseInt(name)'" track-by="id">
 
-      <div class="col-md-3">
+      <div class="col-sm-4 col-md-4 col-lg-3">
         <division-droppable
           save-vg-at="{% tournament_url set_division_venue_group %}"
           save-division-at="{% tournament_url set_team_division %}"
@@ -43,7 +49,7 @@
     <div class="col-md-12" class="row">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="panel-title">Teams without Divisions</h4>
+          <h4 class="panel-title">Teams Without Divisions</h4>
         </div>
         <unallocated-division-teams
           :teams="teams"

@@ -31,7 +31,7 @@
   width: $sidebar-width;
   position: fixed;
   height: 100%;
-  z-index: 100;
+  z-index: $z_3;
   padding-left: 0;
   padding-top: 0; // So the pill hover isn't flush
 

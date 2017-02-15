@@ -8,7 +8,7 @@ tournament_preferences_registry = PerInstancePreferenceRegistry()
 
 class TournamentPreferenceModel(PerInstancePreferenceModel):
 
-    instance = models.ForeignKey(Tournament, related_name="preferences")
+    instance = models.ForeignKey(Tournament, models.CASCADE, related_name="preferences")
     registry = tournament_preferences_registry
 
     class Meta(PerInstancePreferenceModel.Meta):

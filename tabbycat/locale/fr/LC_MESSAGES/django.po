@@ -1,0 +1,147 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-01-14 16:00-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/footer.html:12
+#, python-format
+msgid "%(tournament)s runs on"
+msgstr "%(tournament)s fonctionne sur"
+
+#: templates/footer.html:14
+msgid "This site runs on"
+msgstr "Ce site fonctionne sur"
+
+#: templates/footer.html:20
+msgid ""
+"Tabbycat is an open-source project for tabbing debating tournaments that use "
+"two-team formats. It was created by Qi-Shan Lim, Chuan-Zheng Lee, and Philip "
+"Belesky. Personal or institutional <a href=\"http://PayPal.Me/"
+"tabbycatproject/0aud\">donations to the project's developers</a> are much "
+"appreciated."
+msgstr ""
+"Tabbycat est un projet open-source pour tabuler les tournois de débat qui "
+"utilise les formats à deux équipes. C'était créé par Qi-Sham Lim, Chuan-"
+"Zheng Lee, et Philip Belesky. Les <a href=\"http://PayPal.Me/"
+"tabbycatproject/0aud\">dons aux développeurs du projet</a>, soit personnels "
+"soit institutionnels, sont bien appréciés."
+
+#: templates/footer.html:27
+msgid "Still timing debates with the stopwatch app?"
+msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
+
+#: templates/footer.html:29
+#, python-format
+msgid ""
+"Using a real debating app makes speaking and adjudicating easier! Check out "
+"<a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
+"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (for iPhones/iPads)</a> or "
+"<a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
+"\">Debatekeeper (for Android)</a>."
+msgstr ""
+"Une application réelle de débat rend plus facile parler et juger&nbsp;! "
+"Découvrez <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
+"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (pour les iPhones/iPads)</"
+"a> ou <a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
+"\">Debatekeeper (pour Android)</a>."
+
+#: templates/footer.html:37
+msgid "Need ballots?"
+msgstr "Avez-vous besoin des bulletins&nbsp;?"
+
+#: templates/footer.html:39
+msgid ""
+"<a href=\"http://debatingballot.com\" target=\"_blank\">DebatingBallot.com</"
+"a> lets you design and print great ballots online."
+msgstr ""
+"<a href=\"http://debatingballot.com\" target=\"_blank\">DebatingBallot.com</"
+"a> vous permet de dessiner et d'imprimer des bulletins beaux en ligne."
+
+#: templates/footer.html:50
+msgid "GitHub"
+msgstr "GitHub"
+
+#: templates/footer.html:53
+msgid "Documentation"
+msgstr "Documentation"
+
+#: templates/footer.html:56
+msgid "Support"
+msgstr "Aide"
+
+#: templates/footer.html:59
+msgid "Facebook Group"
+msgstr "Groupe sur Facebook"
+
+#: templates/footer.html:62
+msgid "Set Up A Copy"
+msgstr "Installer une copie"
+
+#: templates/registration/login.html:4 templates/registration/login.html:5
+msgctxt "page title"
+msgid "Login"
+msgstr "Connexion"
+
+#: templates/registration/login.html:36
+msgid ""
+"Your account doesn't have access to this page. To proceed, please log in "
+"with an account that has access."
+msgstr ""
+"Votre compte ne vous permet pas d'accéder cette page. Pour continuer, "
+"veuillez vous connecter."
+
+#: templates/registration/login.html:38
+msgid "Please log in to see this page."
+msgstr "Veuillez vous connecter afin de voir ce page."
+
+#: templates/registration/login.html:60
+msgctxt "button"
+msgid "Login"
+msgstr "Connexion"
+
+#. Translators: Put these in the right order,
+#. e.g. side_abbr = "A", metric_abbr = "TSS" -> "ATSS" for "Affirmative's Total Speaker Score"
+#: utils/tables.py:538
+#, python-format
+msgid "%(side_abbr)s%(metric_abbr)s"
+msgstr "%(metric_abbr)s%(side_abbr)s"
+
+#. Translators: Put these in the right order,
+#. e.g. side_possessive = "affirmative's", metric_name = "total speaker score" -> "affirmative's total speaker score"
+#: utils/tables.py:545
+#, python-format
+msgid "%(side_possessive)s %(metric_name)s"
+msgstr "%(metric_name)s %(side_possessive)s"
+
+#. Translators: e.g. team would be "negative team" or "affirmative team",
+#. affirmative would be "affirmative team".
+#: utils/tables.py:598
+#, python-format
+msgid "Number of times this %(team)s has been the %(affirmative)s before"
+msgstr "Nombre de fois que cette %(team)s a déjà été l'%(affirmative)s"
+
+#. Translators: Abbreviation for "affirmative number of affirmatives".
+#. side_abbr is e.g. "A"/"N"/"G"/"O" for affirmative/negative/government/opposition,
+#. aff_abbr is "Aff"/"Gov" for affirmative/government, so "NAff" is the number of times
+#. the negative team has affirmed, or equivalently "OGov".
+#: utils/tables.py:608
+#, python-format
+msgid "%(side_abbr)s%(aff_abbr)ss"
+msgstr "%(side_abbr)s%(aff_abbr)ss"

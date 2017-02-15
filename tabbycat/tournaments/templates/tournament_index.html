@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
+{% load i18n %}
 
-{% block page-title %}Dashboard{% endblock %}
-{% block head-title %}Tournament Overview{% endblock %}
+{% block page-title %}{% trans "Dashboard" %}{% endblock %}
+{% block head-title %}<span class="emoji">⏰</span>{% trans "Tournament Overview" %}{% endblock %}
 
 {% block sub-title %}
-  {{ round.name }} is {{ round.get_draw_status_display.lower }}
-  (this page will refresh its data automatically)
+  {% blocktrans with round_name=round.name round_status=round.get_draw_status_display.lower %}{{ round_name }} is {{ round_status }}{% endblocktrans %}
+  ({% trans "this page will refresh its data automatically" %})
 {% endblock %}
 
 {% block content %}
@@ -22,9 +23,11 @@
         <a href="{% tournament_url data_index %}" class="alert-link">data importer</a>.
         (This is also the <em>Setup > Import Data</em> link on the left.)
       </p>
-      <p>For more information, please consult our
+      {# Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link. #}
+      <p>{% blocktrans trimmed %}For more information, please consult our
         <a href="https://tabbycat.readthedocs.io/en/{{ readthedocs_version }}/use/importing-data.html" class="alert-link" target="_blank">
           documentation on importing initial data</a>.
+          {% endblocktrans %}
       </p>
     </div>
   {% endif %}
@@ -32,7 +35,7 @@
   <div class="row">
     <div class="col-sm-12">
       <h4 class="text-center">
-        Number of Ballots In
+        {% trans "Number of Ballots In"%}
       </h4>
       <div class="panel panel-default">
         <div class="panel-body">
@@ -44,30 +47,30 @@
 
   <div class="row">
     <div class="col-md-6">
-      <h4 class="text-center">Latest Actions</h4>
+      <h4 class="text-center">{% trans "Latest Actions" %}</h4>
       <ul class="list-group">
         <updates-list v-for="action in latestActions"
         :timestamp="action.timestamp" :user="action.user" :type="action.type"
         :param="action.param"></updates-list>
         <li class="list-group-item" v-if="latestActions === 'loading'">
-          Loading...
+          {% trans "Loading..." %}
         </li>
         <li class="list-group-item" v-if="latestActions.length === 0">
-          No Actions In
+          {% trans "No Actions In" %}
         </li>
       </ul>
     </div>
     <div class="col-md-6">
-      <h4 class="text-center">Latest Results</h4>
+      <h4 class="text-center">{% trans "Latest Results" %}</h4>
       <ul class="list-group">
         <updates-list v-for="result in latestResults"
         :timestamp="result.timestamp" :user="result.user" :type="result.type"
         :param="result.param"></updates-list>
         <li class="list-group-item" v-if="latestResults === 'loading'">
-          Loading...
+          {% trans "Loading..." %}
         </li>
         <li class="list-group-item" v-if="latestResults.length === 0">
-          No Results In
+          {% trans "No Results In" %}
         </li>
       </ul>
     </div>

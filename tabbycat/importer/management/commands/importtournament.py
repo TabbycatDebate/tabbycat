@@ -67,6 +67,7 @@ class Command(BaseCommand):
         self._make('motions')
         self._make('sides')
         self._make('questions', self.importer.import_adj_feedback_questions)
+        self._make('venue_constraint_categories')
         self._make('adj_venue_constraints')
         self._make('team_venue_constraints')
 

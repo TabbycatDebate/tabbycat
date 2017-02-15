@@ -16,20 +16,35 @@
   <div class="col-md-12">
     <ul class="list-group">
       <li class="list-group-item">
-        <a href="{% tournament_url add_institutions %}">🏫 Add Institutions</a>
+        <span class="emoji">🏫</span>
+        <a href="{% tournament_url add_institutions %}">
+          Add Institutions
+        </a>
       </li>
       <li class="list-group-item">
-        <a href="{% tournament_url add_teams %}">👯 Add Teams</a>
+        <span class="emoji">👯</span>
+        <a href="{% tournament_url add_teams %}">
+          Add Teams
+        </a>
       </li>
       <li class="list-group-item">
-        <a href="{% tournament_url add_adjudicators %}">👂 Add Adjudicators</a>
+        <span class="emoji">👂</span>
+        <a href="{% tournament_url add_adjudicators %}">
+          Add Adjudicators
+        </a>
       </li>
       <li class="list-group-item">
-        <a href="{% tournament_url add_venues %}">🎪 Add Venues</a>
+        <span class="emoji">🎪</span>
+        <a href="{% tournament_url add_venues %}">
+          Add Venues
+        </a>
       </li>
       {% if pref.enable_venue_groups %}
         <li class="list-group-item">
-          <a href="{% tournament_url add_venue_preferences %}">🏩 Add Venue Preferences</a>
+          <span class="emoji">🏩</span>
+          <a href="{% tournament_url add_venue_preferences %}">
+            Add Venue Constraints for Institutions
+          </a>
         </li>
       {% endif %}
     </ul>

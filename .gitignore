@@ -11,7 +11,6 @@ tabbycat/static/fonts/
 
 # Dependencies
 node_modules
-bower_components
 
 # Data to ignore
 data/*
@@ -24,8 +23,12 @@ data/*
 !data/presets/
 !data/fixtures/
 
+# Docker
+dbdata
+
 # Docs
 docs/site/
+issues-*.html
 
 # Tags
 tags

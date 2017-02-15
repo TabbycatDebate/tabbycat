@@ -1,6 +1,6 @@
 # Tabbycat
 
-[![Deploy](https://img.shields.io/badge/%E2%86%91_Deploy_to-Heroku-7056bf.svg)](https://heroku.com/deploy) [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)  [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/) [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat) [![Dependency Status](https://gemnasium.com/badges/github.com/czlee/tabbycat.svg)](https://gemnasium.com/github.com/czlee/tabbycat)
+[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)  [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/) [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat) [![Dependency Status](https://gemnasium.com/badges/github.com/czlee/tabbycat.svg)](https://gemnasium.com/github.com/czlee/tabbycat)
 
 Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Australs in Auckland 2010, [Wellington 2012](https://www.facebook.com/Australs2012), [Dunedin 2014](http://australs2014.herokuapp.com), [Daejeon 2015](http://australs2015.herokuapp.com) and [Perth 2016](http://australs2016.herokuapp.com), as well as [many other tournaments of all sizes](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [WAustrals 2016 tab website](http://australs2016.herokuapp.com).
 
@@ -20,13 +20,15 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was use
 
 Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/). The fastest way to launch a Tabbycat site is to click this button:
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/master)
 
-If you'd like to run a tournament with Tabbycat but are not able to set it up, get in touch with [Philip](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=) and he can setup a private online copy of the software for your use.
+During the installation process Heroku will ask you to verify your account by adding a credit or debit card. A standard Tabbycat site *will not charge* your card without explicit permission — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
+
+That said if you do not have access to a credit or debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it does not send error reports to the developers and can handle much less public traffic. We strongly recommend using it only as a last resort, and even then only for small tournaments. [Use this link to setup a Tabbykitten version](https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/kitten&env[KITTEN]=true).
 
 ## Licence
 
-We haven't released this under an open-source licence (so there is no formal general right to use this software), but if you're running a debating tournament, you're welcome to use it. It'd be nice if you could please let us know that you're doing so, and let us know how it went. We provide no warranty and disclaim all legal liability.
+We haven't released Tabbycat under an open-source licence, so there is no formal and general right to use this software. Nonetheless, you're welcome to freely use Tabbycat to help run a debating tournament. However, if your tournament is run as a for-profit or for-fundraising activity a donation to Tabbycat's maintainers is required. More details [are available in our license information](http://tabbycat.readthedocs.io/en/latest/about/licence.html).
 
 ## Support and Development
 

@@ -3,7 +3,7 @@ import os
 from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MEDIA_ROOT = (os.path.join(BASE_DIR, 'media'), )
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # ==============================================================================
 # Overwritten in Local
@@ -20,13 +20,16 @@ DEBUG_ASSETS = DEBUG
 
 MEDIA_URL = '/media/'
 TIME_ZONE = 'Australia/Melbourne'
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 USE_I18N = True
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-TABBYCAT_VERSION = '1.1.7'
+TABBYCAT_VERSION = '1.2.0'
 TABBYCAT_CODENAME = 'Egyptian Mau'
-READTHEDOCS_VERSION = 'v1.1.7'
+READTHEDOCS_VERSION = 'v1.2.0'
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 # ==============================================================================
 # Django-specific Module
@@ -75,7 +78,8 @@ INSTALLED_APPS = (
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'django_extensions')  # For Secret Generation Command
+    'django_extensions',  # For Secret Generation Command
+    'gfklookupwidget')
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -268,6 +272,9 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
             }
         }
 
+if os.environ.get('KITTEN', '') == 'true':
+    TABBYCAT_VERSION += "k"
+
 # ==============================================================================
 # Travis CI
 # ==============================================================================
@@ -286,13 +293,27 @@ if os.environ.get('TRAVIS', '') == 'true':
     }
 
 # ==============================================================================
-# Local Overrides
+# Local Overrides and Docker
 # ==============================================================================
 
-try:
-    LOCAL_SETTINGS
-except NameError:
+if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
+    DEBUG = True # Just to be sure
+    ALLOWED_HOSTS = ["*"]
+    DATABASES = {
+        'default': {
+             'ENGINE': 'django.db.backends.postgresql',
+             'NAME': 'tabbycat',
+             'USER': 'tabbycat',
+             'PASSWORD': 'tabbycat',
+             'HOST': 'db',
+             'PORT': 5432, # Non-standard to prvent collisions
+        }
+    }
+else:
     try:
-        from local_settings import *   # flake8: noqa
-    except ImportError:
-        pass
+        LOCAL_SETTINGS
+    except NameError:
+        try:
+            from local_settings import *   # flake8: noqa
+        except ImportError:
+            pass

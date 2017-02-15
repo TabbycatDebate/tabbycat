@@ -1,4 +1,7 @@
 from django.contrib import admin, messages
+from django.db.models import Prefetch
+
+from draw.models import DebateTeam
 
 from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 
@@ -50,14 +53,32 @@ class RoundListFilter(admin.SimpleListFilter):
 # ==============================================================================
 
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
-    list_display  = ('adjudicator', 'confirmed', 'score', 'version',
-                     'source_adjudicator', 'source_team')
+    list_display  = ('adjudicator', 'confirmed', 'score', 'version', 'get_source')
     search_fields = ('adjudicator__name', 'adjudicator__institution__code',
             'score', 'source_adjudicator__adjudicator__name',
             'source_team__team__short_name', 'source_team__team__long_name')
     raw_id_fields = ('source_team',)
     list_filter   = (RoundListFilter, 'adjudicator')
     actions       = ('mark_as_confirmed', 'mark_as_unconfirmed')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+            'source_team__debate__round__tournament',
+            'source_team__team',
+            'source_adjudicator__debate__round__tournament',
+            'source_adjudicator__adjudicator__institution',
+            'adjudicator__institution',
+        ).prefetch_related(
+            Prefetch('source_team__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
+            Prefetch('source_adjudicator__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
+        )
+
+    def get_source(self, obj):
+        if obj.source_team and obj.source_adjudicator:
+            return "<ERROR: both source team and source adjudicator>"
+        else:
+            return obj.source_team or obj.source_adjudicator
+    get_source.short_description = "Source"
 
     # Dynamically generate inline tables for different answer types
     inlines = []

@@ -17,7 +17,7 @@
 .unallocated-adjs {
   max-height: 450px;
   min-height: 54px;
-  z-index: 980; // Need to hover abovve underlying .tooltips
+  z-index: $z_3; // Need to hover abovve underlying .tooltips
 }
 
 .thead {
@@ -52,7 +52,7 @@
   font-size: 10px;
   line-height: 10px;
   opacity: 1;
-  z-index: 100; // Knock back from default so it doesnt clash with modals etc
+  z-index: $z_3; // Knock back from default so it doesnt clash with modals etc
   position: absolute;
   bottom: 0;
   right: 0;

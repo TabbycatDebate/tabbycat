@@ -1,11 +1,6 @@
-from venues.models import AdjudicatorVenueConstraint, InstitutionVenueConstraint, TeamVenueConstraint
+from django.contrib.contenttypes.models import ContentType
 
-
-def _constraints_satisfied(constraints_dict, key, venue):
-    if key not in constraints_dict:
-        return True
-    constraints = constraints_dict[key]
-    return any(constraint.venue_group_id == venue.group_id for constraint in constraints)
+from venues.models import VenueConstraint
 
 
 def venue_conflicts_display(debates):
@@ -15,15 +10,22 @@ def venue_conflicts_display(debates):
     relating to a single participant) is "unfulfilled" if the relevant
     participant had constraints and *none* of their constraints were met."""
 
-    teamconstraints = {}
-    for constraint in TeamVenueConstraint.objects.filter(team__debateteam__debate__in=debates).distinct():
-        teamconstraints.setdefault(constraint.team_id, []).append(constraint)
-    instconstraints = {}
-    for constraint in InstitutionVenueConstraint.objects.filter(institution__team__debateteam__debate__in=debates).distinct():
-        instconstraints.setdefault(constraint.institution_id, []).append(constraint)
-    adjconstraints = {}
-    for constraint in AdjudicatorVenueConstraint.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
-        adjconstraints.setdefault(constraint.adjudicator_id, []).append(constraint)
+    constraints = {}
+    for vc in VenueConstraint.objects.filter_for_debates(debates).select_related('category'):
+        constraints.setdefault((vc.subject_content_type_id, vc.subject_id), []).append(vc)
+
+    def _add_constraint_message(debate, instance_name, instance, venue):
+        key = (ContentType.objects.get_for_model(instance).id, instance.id)
+        if key not in constraints:
+            return
+        for constraint in constraints[key]:
+            if constraint.category in venue.venueconstraintcategory_set.all():
+                conflict_messages[debate].append(("success", "Venue constraint of {name} ({category}) met".format(
+                        name=instance_name, category=constraint.category.name)))
+                return
+        else:
+            conflict_messages[debate].append(("danger", "Venue does not meet any constraint of {name}".format(
+                    name=instance_name)))
 
     conflict_messages = {debate: [] for debate in debates}
     for debate in debates:
@@ -32,13 +34,11 @@ def venue_conflicts_display(debates):
             continue
 
         for team in debate.teams:
-            if not _constraints_satisfied(teamconstraints, team.id, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of {}".format(team.short_name))
-            if not _constraints_satisfied(instconstraints, team.institution_id, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of institution {} ({})".format(team.institution.code, team.short_name))
+            _add_constraint_message(debate, team.short_name, team, venue)
+            _add_constraint_message(debate, "institution {} ({})".format(team.institution.code, team.short_name),
+                    team.institution, venue)
 
         for adjudicator in debate.adjudicators.all():
-            if not _constraints_satisfied(adjconstraints, adjudicator.id, venue):
-                conflict_messages[debate].append("Venue does not meet constraints of {}".format(adjudicator.name))
+            _add_constraint_message(debate, adjudicator.name, adjudicator, venue)
 
     return conflict_messages

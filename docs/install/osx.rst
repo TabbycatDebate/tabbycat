@@ -4,7 +4,12 @@
 Installing Locally on OS X
 ==========================
 
-Before you start, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
+.. admonition:: Is this the best install method for you?
+  :class: attention
+
+  In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
+
+  If you just want to quickly set up a copy of Tabbycat to run locally on OS X, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
 
 Requisite technical knowledge
 ================================================================================
@@ -25,20 +30,19 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 --------------------------------------------------------------------------------
-As of version 0.8, Tabbycat requires Python 3.4 or later. OS X only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
+Tabbycat requires Python 3.4 or later. OS X only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
 
 The executable will probably be called ``python3``, rather than ``python``. Check::
 
     $ python3 --version
     Python 3.4.4
 
-.. warning:: As of version 0.8, Python 2 is not supported. You must use Python 3.4 or
-  higher.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.4 or later.
 
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions will use the ``pyvenv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
+  These instructions will use the ``venv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
 
 1(b). PostgreSQL
 --------------------------------------------------------------------------------
@@ -75,7 +79,7 @@ Download and run the `node.js Mac OS X Installer (.pkg) <https://nodejs.org/en/d
 
     $ createuser myusername --pwprompt
 
-  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.4/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
+  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.6/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
 
 2. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
 
@@ -110,7 +114,7 @@ Almost there!
 
 3. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
 
-    $ pyvenv venv
+    $ python3 -m venv venv
 
 4. Run the ``activate`` script. This puts you "into" the virtual environment::
 

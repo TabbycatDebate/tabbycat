@@ -1,12 +1,13 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.views.generic.base import View
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
-from draw.prefetch import populate_opponents, populate_teams
+from draw.prefetch import populate_opponents
 from results.models import TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (CrossTournamentPageMixin, PublicTournamentPageMixin,
@@ -108,7 +109,8 @@ class BaseTeamRecordView(BaseRecordView):
         tournament = self.get_tournament()
 
         try:
-            kwargs['debateteam'] = self.object.debateteam_set.get(
+            kwargs['debateteam'] = self.object.debateteam_set.select_related(
+                'debate__round').prefetch_related('debate__round__motion_set').get(
                 debate__round=tournament.current_round)
         except ObjectDoesNotExist:
             kwargs['debateteam'] = None
@@ -120,12 +122,17 @@ class BaseTeamRecordView(BaseRecordView):
     def get_table(self):
         """On team record pages, the table is the results table."""
         tournament = self.get_tournament()
-        teamscores = TeamScore.objects.filter(debate_team__team=self.object,
-                ballot_submission__confirmed=True,
-                debate_team__debate__round__seq__lt=tournament.current_round.seq,
-                debate_team__debate__round__draw_status=Round.STATUS_RELEASED).select_related(
-                'debate_team__debate', 'debate_team__debate__round').prefetch_related(
-                'debate_team__debate__debateadjudicator_set__adjudicator')
+        teamscores = TeamScore.objects.filter(
+            debate_team__team=self.object,
+            ballot_submission__confirmed=True,
+            debate_team__debate__round__seq__lt=tournament.current_round.seq,
+            debate_team__debate__round__draw_status=Round.STATUS_RELEASED
+        ).select_related(
+            'debate_team__debate__round'
+        ).prefetch_related(
+            Prefetch('debate_team__debate__debateadjudicator_set', queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
+            'debate_team__debate__debateteam_set'
+        )
         if not tournament.pref('all_results_released'):
             teamscores = teamscores.filter(debate_team__debate__round__silent=False)
         debates = [ts.debate_team.debate for ts in teamscores]
@@ -160,7 +167,12 @@ class BaseAdjudicatorRecordView(BaseRecordView):
 
         try:
             kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-                debate__round=tournament.current_round)
+                debate__round=tournament.current_round
+            ).select_related(
+                'debate__round'
+            ).prefetch_related(
+                'debate__round__motion_set'
+            )
         except ObjectDoesNotExist:
             kwargs['debateadjudications'] = None
 
@@ -171,15 +183,20 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     def get_table(self):
         """On adjudicator record pages, the table is the previous debates table."""
         tournament = self.get_tournament()
-        debateadjs = DebateAdjudicator.objects.filter(adjudicator=self.object,
-                debate__round__seq__lt=tournament.current_round.seq,
-                debate__round__draw_status=Round.STATUS_RELEASED).select_related(
-                'debate', 'debate__round').prefetch_related(
-                'debate__debateadjudicator_set', 'debate__debateadjudicator_set__adjudicator')
+        debateadjs = DebateAdjudicator.objects.filter(
+            adjudicator=self.object,
+            debate__round__seq__lt=tournament.current_round.seq,
+            debate__round__draw_status=Round.STATUS_RELEASED
+        ).select_related(
+            'debate__round'
+        ).prefetch_related(
+            Prefetch('debate__debateadjudicator_set',
+                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
+            'debate__debateteam_set__team__speaker_set'
+        )
         if not tournament.pref('all_results_released'):
             debateadjs = debateadjs.filter(debate__round__silent=False)
         debates = [da.debate for da in debateadjs]
-        populate_teams(debates)
         populate_wins(debates)
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)
 

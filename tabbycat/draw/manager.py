@@ -45,6 +45,10 @@ class BaseDrawManager:
         # Only needed for EliminationDrawManager
         return None
 
+    def get_rrseq(self):
+        # Only needed for RoundRobinDrawManager
+        return None
+
     def _populate_aff_counts(self, teams):
         if self.round.prev:
             prev_seq = self.round.prev.seq
@@ -89,6 +93,7 @@ class BaseDrawManager:
 
         teams = self.get_teams()
         results = self.get_results()
+        rrseq = self.get_rrseq()
         self._populate_aff_counts(teams)
         self._populate_team_position_allocations(teams)
 
@@ -98,7 +103,7 @@ class BaseDrawManager:
         if options.get("side_allocations") == "manual-ballot":
             options["side_allocations"] = "balance"
 
-        drawer = DrawGenerator(self.draw_type, teams, self.round, results=results, **options)
+        drawer = DrawGenerator(self.draw_type, teams, results=results, rrseq=rrseq, **options)
         pairings = drawer.generate()
         self._make_debates(pairings)
         self.round.draw_status = Round.STATUS_DRAFT
@@ -134,6 +139,15 @@ class PowerPairedDrawManager(BaseDrawManager):
 
 class RoundRobinDrawManager(BaseDrawManager):
     draw_type = "round_robin"
+
+    def get_rrseq(self):
+        prior_rrs = list(self.round.tournament.round_set.filter(draw_type=Round.DRAW_ROUNDROBIN).order_by('seq'))
+        try:
+            rr_seq = prior_rrs.index(self.round) + 1 # Dont 0-index
+        except ValueError:
+            raise RuntimeError("Tried to calculate an effective round robin seq but couldn't")
+
+        return rr_seq
 
 
 class BaseEliminationDrawManager(BaseDrawManager):

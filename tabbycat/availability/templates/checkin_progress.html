@@ -8,10 +8,10 @@
   <div class="panel-body round-progresses">
     <div class="row">
 
-      <div class="col-md-1">
+      <div class="col-sm-1">
         {{ round.abbreviation }}
       </div>
-      <div class="{% if round.prev %}col-md-5{% else %}col-md-11{% endif %}">
+      <div class="{% if round.prev %}col-md-5{% else %}col-sm-10{% endif %}">
         <div class="progress">
           <div class="progress-bar progress-bar-success
                       {% if ct.in_now == 0 %}progress-empty{% endif %}"

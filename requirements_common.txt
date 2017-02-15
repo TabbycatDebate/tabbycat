@@ -1,32 +1,35 @@
 # The necessary dependencies common to both local and heroku installs
 
+# Mental note (cmd to check for updates): pip list --outdated --format=columns
+# Mental note (npm equivalent command):   npm outdated
+
 # Core
 
-Django>=1.10,<1.11
-django-appconf>=1.0,<1.1 # Adds helper class for handling app configs
-django-dynamic-preferences>=0.8.4,<0.9 # Settings management
-django-extensions>=1.7,<1.9 # For the generate secret command
-django-ipware>=1.1,<1.2 # IP Address logging
-django-jet>=1.0,<1.1 # Admin Backend
+Django==1.10.5
+django-appconf==1.0.2                   # Helper for handling app configs
+django-dynamic-preferences==0.8.4       # Settings management
+django-extensions==1.7.6                # For the generate secret command
+django-ipware==1.1.6                    # IP Address logging
+django-jet==1.0.4                       # Admin Backend
+django-gfklookupwidget==1.0.5           # Replaces object_id field with a search link
 
 # Database
 
-psycopg2>=2.6,<2.7 # For Django to talk to postgres
-sqlparse>=0.2,<0.3 # Parsing SQL statements
+psycopg2==2.6.2                         # For Django to talk to postgres
+sqlparse==0.2.2                         # Parsing SQL statements
 
 # Pipeline
 
-django-gulp>=2.5,<2.6 # Run gulp tasks with runserver/collectstatic
-whitenoise>=3.2,<3.3 # Static file serving
-waitress>=1.0,<1.1 # For web serving
+django-gulp==2.5.0                      # Run gulp tasks with dj r/collectstatic
+whitenoise==3.3.0                       # Static file serving
+waitress==1.0.1                         # For web serving
 
 # Development Aids
 
-dj-cmd>=0.5 # Provides the dj command alias
-django-debug-toolbar>=1.6,<1.7 # Debug Toolbar
-six>=1.10 # Six is a Python 2 and 3 compatibility library.
-
-flake8>=3.2,<3.3 # For testing/linting (not strictly required)
-flake8-import-order>=0.9 # Flake plugin for import order
-flake8-quotes>=0.8 # Flake plugin for quotes
-pep8-naming>=0.4 # Flake plugin for naming conventions
+dj-cmd==1.0                             # Provides the dj command alias
+django-debug-toolbar==1.6               # Debug Toolbar
+six==1.10                               # Python 2/3 compatibility library
+flake8==3.2.1                           # For testing/linting
+flake8-import-order==0.11               # Flake plugin for import order
+flake8-quotes==0.9.0                    # Flake plugin for quotes
+pep8-naming==0.4.1                      # Flake plugin for naming conventions

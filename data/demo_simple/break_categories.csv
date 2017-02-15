@@ -1,0 +1,2 @@
+name,slug,seq,break_size,is_general,priority,rule
+Open,open,10,8,1,30,standard

@@ -60,7 +60,7 @@
   position: fixed;
   right: 0;
   width: auto;
-  z-index: 1040;
+  z-index: $z_2;
 
   .list-group {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -75,11 +75,16 @@
 .slideover-top {
   bottom: auto;
   top: 0;
+  z-index: $z_2;
 }
 
 //------------------------------------------------------------------------------
 // Modals
 //------------------------------------------------------------------------------
+
+.modal {
+  z-index: $z_1;
+}
 
 .modal-xl { // For motions page; probably feedback also (want super big modals)
   height: 92%;

@@ -5,7 +5,7 @@ def allocate_adjudicators(round, alloc_class):
 
     debates = round.get_draw()
     adjs = list(round.active_adjudicators.filter(novice=False))
-    allocator = alloc_class(debates, adjs)
+    allocator = alloc_class(debates, adjs, round)
 
     for alloc in allocator.allocate():
         alloc.save()
@@ -15,7 +15,8 @@ def allocate_adjudicators(round, alloc_class):
 
 
 class Allocator(object):
-    def __init__(self, debates, adjudicators):
+    def __init__(self, debates, adjudicators, round):
+        self.tournament = round.tournament
         self.debates = list(debates)
         self.adjudicators = adjudicators
 

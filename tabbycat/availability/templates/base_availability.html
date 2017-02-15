@@ -3,6 +3,9 @@
 {% load static %}
 
 {% block page-subnav-sections %}
+  <a href="{% round_url availability-index round %}" class="btn btn-default">
+    <span class="glyphicon glyphicon-chevron-left"></span>Checkins Overview
+  </a>
   {% if round.seq > 1 %}
     <button id="select_previous" class="btn btn-primary" type="button">
       Copy from Previous
@@ -25,7 +28,7 @@
 
 {% block page-subnav-actions %}
   <button id="save_availability" class="btn btn-success submit-disable" >
-    Save Selected
+    <span class="glyphicon glyphicon-floppy-disk"></span> Save Selected
   </button>
 {% endblock %}
 

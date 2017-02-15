@@ -6,9 +6,16 @@ Importing Initial Data
 
 Once you've got Tabbycat installed, the next step is to import data for the tournament. The initial import requires details of all institutions, teams, speakers and adjudicators, and specifications for how many rounds and their properties. We don't currently have a way of doing this from the web interface. There are a few ways to do it.
 
-.. note:: With any method, the objective is to create one ``Tournament`` object, and ``Round``, ``Venue``, ``Institution``, ``Team``, ``Speaker``, ``Adjudicator``, ``AdjudicatorConflict`` and ``AdjudicatorInstitutionConflict`` objects for each round, venue, and so on
+.. note:: With any method, the objective is to create one ``Tournament`` object, and then the ``Round``, ``Venue``, ``Institution``, ``Team``, ``Speaker``, ``Adjudicator``, ``AdjudicatorConflict`` and ``AdjudicatorInstitutionConflict`` objects for each round, venue, and so on
 
 .. _import-manual-setup:
+
+Creating a tournament
+=====================
+
+Immediately after you install Tabbycat and create a user account the site will prompt you to **Create a New Tournament**. Filling in the information here will create the basic tournament, round, and break information needed; leaving you to enter the other data (teams, adjudicators, venues, *etc.*) using any of the below methods.
+
+.. note:: If you are just learning, trying, or experimenting with Tabbycat we offer two types of demo datasets on this **Create Page**. Clicking either will create a new tournament fully populated with all the teams, speakers, institutions, *etc.* needed to immediately start running rounds.
 
 Manual setup
 ============

@@ -2,7 +2,7 @@
 Contributing
 ============
 
-Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. `Join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ if you have any questions about how to get started contributing.
+Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. Feel free to `join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ if you have any questions about how to get started.
 
 Bug reports
 ===========
@@ -16,11 +16,9 @@ Please report bugs by opening a new issue in our `GitHub repository <https://git
 Getting started
 ===============
 
-.. important:: We are using the `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_, so please submit any pull requests against the **develop branch** (and not master).
-
-- Generally we prefer that features and bug fixes are submitted as pull requests on their own branch (as described in the git-flow process)
+- To easily test your changes to Tabbycat you probably want a working :ref:`local install <install-local>` (without using Docker)
+- Generally we prefer that features and bug fixes are submitted as pull requests on their own branch (as described in the  `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_). Submitting against `develop` (but not `master`) is fine for small fixes and changes.
 - We use Django's testing tools — it would be great if new features came with unit tests
-- TODO: more detail on tests and pull request checklist/guidelines
 
 Style guide
 ===========
@@ -60,3 +58,17 @@ Then start the server::
     $ sphinx-autobuild docs docs/_build/html --port 7999
 
 You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1:7999>`_.
+
+Release Checklist
+=================
+
+1. Bump version numbers in ``docs/conf.py`` and ``tabbycat/settings.py``
+2. Update the main ``CHANGELOG.rst`` file
+3. Shift remaining issues from the Github Milestone
+4. Create and finish the release branch as per git-flow
+5. Ensure the tag is correct (``vX.Y.Z``) and published to Github
+6. Back-merge ``master`` to the ``kitten`` branch
+7. Back-merge ``develop`` to the in-progress feature branches
+8. Push ``master`` to the release pipeline repository
+9. Issue a formal release with change notes on Github
+10. Post change notes on the Facebook group

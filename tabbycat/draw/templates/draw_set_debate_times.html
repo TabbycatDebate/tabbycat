@@ -6,14 +6,14 @@
 {% block sub-title %}for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" class="btn btn-default submit-disable">
-    Back to Draw
+  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
   </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
   <a href="{% round_url draw-schedule-apply %}" class="btn btn-success submit-disable" id="assignTimes">
-    Apply Times to Debates
+    <span class="glyphicon glyphicon-floppy-disk"></span> Apply Times to Debates
   </a>
 {% endblock %}
 
@@ -31,11 +31,15 @@
           {% for vg in venue_groups %}
             <li class="list-group-item">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-5">
                   <h5>{{ vg.short_name }}</h5>
                 </div>
-                <div class="col-md-6">
-                  <input type="date" class="form-control" name="{{ vg.id }}" value="01/01/{% now 'Y' %}">
+                <div class="col-md-7">
+                {% if vg.placeholder_date %}
+                  <input type="date" class="form-control" name="{{ vg.id }}" value='{{ vg.placeholder_date|date:"Y" }}-{{ vg.placeholder_date|date:"m" }}-{{ vg.placeholder_date|date:"d" }}'>
+                {% else %}
+                  <input type="date" class="form-control" name="{{ vg.id }}" value="">
+                {% endif %}
                 </div>
               </div>
             </li>
@@ -56,10 +60,10 @@
           {% endif %}
           <div class="col-md-6">
             <div class="row">
-              <div class="col-md-6">
-                <h5>{{ d.name }} <small>({{ d.venue_group.short_name }})</small></h5>
+              <div class="col-md-5">
+                <h5>{{ d.name }} <small>{{ d.venue_group.short_name }}</small></h5>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-7">
                 <input type="time" class="form-control jquery-division-time" name="{{ d.id }}" value="{{ d.time_slot|time:'H:i' }}">
               </div>
             </div>

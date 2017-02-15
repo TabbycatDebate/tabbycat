@@ -1,14 +1,11 @@
-from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
 class VenueGroup(models.Model):
     name = models.CharField(unique=True, max_length=200)
     short_name = models.CharField(max_length=25)
-    team_capacity = models.IntegerField(
-        blank=True,
-        null=True,
-        help_text="The greatest possible number of teams that can debate in this venue group")
 
     @property
     def divisions_count(self):
@@ -27,11 +24,11 @@ class VenueGroup(models.Model):
 
 class Venue(models.Model):
     name = models.CharField(max_length=40)
-    group = models.ForeignKey(VenueGroup, blank=True, null=True)
+    group = models.ForeignKey(VenueGroup, models.SET_NULL, blank=True, null=True)
     priority = models.IntegerField(
         help_text="Venues with a higher priority number will be preferred in the draw")
-    tournament = models.ForeignKey(
-        'tournaments.Tournament', blank=True, null=True, db_index=True,
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        blank=True, null=True, db_index=True,
         help_text="Venues not assigned to any tournament can be shared between tournaments")
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
@@ -50,51 +47,46 @@ class Venue(models.Model):
         return "<Venue: %s (%s) [%s]>" % (str(self), self.priority, self.id)
 
 
-class BaseVenueConstraint(models.Model):
-    venue_group = models.ForeignKey(VenueGroup)
-    priority = models.IntegerField()
+class VenueConstraintManager(models.Manager):
+
+    def filter_for_debates(self, debates):
+        """Convenience function. Filters for all constraints relevant to the
+        given iterable of debates."""
+        return VenueConstraint.objects.filter(
+            models.Q(team__debateteam__debate__in=debates) |
+            models.Q(institution__team__debateteam__debate__in=debates) |
+            models.Q(adjudicator__debateadjudicator__debate__in=debates) |
+            models.Q(division__debate__in=debates)
+        ).distinct()
+
+
+class VenueConstraintCategory(models.Model):
+    name = models.CharField(max_length=50)
+    venues = models.ManyToManyField(Venue)
 
     class Meta:
-        abstract = True
+        verbose_name_plural = "venue constraint categories"
 
     def __str__(self):
-        return "%s for %s [%s]" % (self.subject, self.venue_group, self.priority)
-
-    @property
-    def subject(self):
-        """Subclasses must override to return something that can be compared
-        so that if two constraints (a, b) relate to the same requestor,
-        a.subject == b.subject."""
-        raise NotImplementedError("Subclasses must implement subject()")
+        return self.name
 
 
-class TeamVenueConstraint(BaseVenueConstraint):
-    team = models.ForeignKey('participants.Team')
+class VenueConstraint(models.Model):
 
-    @property
-    def subject(self):
-        return self.team
+    SUBJECT_CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='team') | \
+                                   models.Q(app_label='participants', model='adjudicator') | \
+                                   models.Q(app_label='participants', model='institution') | \
+                                   models.Q(app_label='divisions', model='division')
 
+    category = models.ForeignKey(VenueConstraintCategory, models.CASCADE)
+    priority = models.IntegerField()
 
-class AdjudicatorVenueConstraint(BaseVenueConstraint):
-    adjudicator = models.ForeignKey('participants.Adjudicator')
+    subject_content_type = models.ForeignKey(ContentType, models.CASCADE,
+            limit_choices_to=SUBJECT_CONTENT_TYPE_CHOICES)
+    subject_id = models.PositiveIntegerField()
+    subject = GenericForeignKey('subject_content_type', 'subject_id')
 
-    @property
-    def subject(self):
-        return self.adjudicator
+    objects = VenueConstraintManager()
 
-
-class InstitutionVenueConstraint(BaseVenueConstraint):
-    institution = models.ForeignKey('participants.Institution')
-
-    @property
-    def subject(self):
-        return self.institution
-
-
-class DivisionVenueConstraint(BaseVenueConstraint):
-    division = models.ForeignKey('divisions.Division')
-
-    @property
-    def subject(self):
-        return self.division
+    def __str__(self):
+        return "%s for %s [%s]" % (self.subject, self.category, self.priority)

@@ -1,6 +1,7 @@
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, Section, StringPreference
 
 from standings.teams import TeamStandingsGenerator
+from tournaments.utils import get_position_name_choices
 
 from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
@@ -370,6 +371,16 @@ class MotionVetoes(BooleanPreference):
     default = True
 
 
+@tournament_preferences_registry.register
+class PositionNames(ChoicePreference):
+    help_text = "What to call the teams"
+    verbose_name = "Position names"
+    section = debate_rules
+    name = 'position_names'
+    choices = get_position_name_choices()
+    default = 'aff-neg'
+
+
 # ==============================================================================
 standings = Section('standings')
 # ==============================================================================
@@ -718,11 +729,20 @@ class ShowEmoji(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class ShowInstitutions(BooleanPreference):
-    help_text = "Shows the institutions column where appropriate"
-    verbose_name = 'Show institutions'
+class ShowTeamInstitutions(BooleanPreference):
+    help_text = "In tables listing teams, adds a column showing their institutions"
+    verbose_name = 'Show team institutions'
     section = ui_options
-    name = 'show_institutions'
+    name = 'show_team_institutions'
+    default = True
+
+
+@tournament_preferences_registry.register
+class ShowAdjudicatorInstitutions(BooleanPreference):
+    help_text = "In tables listing adjudicators, adds a column showing their institutions"
+    verbose_name = 'Show adjudicator institutions'
+    section = ui_options
+    name = 'show_adjudicator_institutions'
     default = True
 
 

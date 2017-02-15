@@ -1,10 +1,9 @@
 import logging
-from warnings import warn
 
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
-from participants.models import Team
+from tournaments.utils import get_position_name
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
@@ -30,28 +29,27 @@ class Debate(models.Model):
 
     objects = DebateManager()
 
-    round = models.ForeignKey('tournaments.Round', db_index=True)
+    round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True)
     venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True)
-    division = models.ForeignKey('divisions.Division', blank=True, null=True)
+    # cascade to keep draws clean in event of division deletion
+    division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True)
 
     bracket = models.FloatField(default=0)
     room_rank = models.IntegerField(default=0)
 
-    time = models.DateTimeField(
-        blank=True, null=True,
+    time = models.DateTimeField(blank=True, null=True,
         help_text="The time/date of a debate if it is specifically scheduled")
 
     # comma-separated list of strings
-    flags = models.CharField(max_length=100, blank=True, null=True)
+    flags = models.CharField(max_length=100, blank=True)
 
     importance = models.IntegerField(default=0)
-    result_status = models.CharField(max_length=1,
-                                     choices=STATUS_CHOICES,
-                                     default=STATUS_NONE)
+    result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
     ballot_in = models.BooleanField(default=False)
 
     def __contains__(self, team):
-        return team in (self.aff_team, self.neg_team)
+        # Deprecated 13/9/2016, remove after 13/10/2016
+        raise RuntimeError("'team in debate' syntax is deprecated, use 'team in debate.teams' instead")
 
     def __str__(self):
         description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
@@ -67,58 +65,88 @@ class Debate(models.Model):
         # This method is used by __str__, so it's not allowed to crash (ever)
         try:
             return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
-        except (Team.DoesNotExist, Team.MultipleObjectsReturned):
+        except (ObjectDoesNotExist, MultipleObjectsReturned):
             dts = self.debateteam_set.all()
             if all(dt.position == DebateTeam.POSITION_UNALLOCATED for dt in dts):
                 return ", ".join([dt.team.short_name for dt in dts])
             else:
-                return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display().lower())
-                    for dt in dts])
+                return self._teams_and_positions_display()
+
+    def _teams_and_positions_display(self):
+        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display())
+                for dt in self.debateteam_set.all()])
+
+    # --------------------------------------------------------------------------
+    # Team properties
+    # --------------------------------------------------------------------------
+    # Team properties are stored in the dict `self._team_properties`, except for
+    # the list of all teams, which is in `self._teams`. These are lazily
+    # evaluated: on the first call of any team property,
+    # `self._populate_teams()` is run to populate all team properties in a
+    # single database query, then the appropriate value is returned.
+    #
+    # If the team in question doesn't exist or there is more than one, the
+    # property in question will raise an ObjectDoesNotExist or
+    # MultipleObjectsReturned exception, so that it behaves like a database
+    # query. This exception raising is lazy: it does so only when the errant
+    # property is called, rather than raising straight away in
+    # `self._populate_teams()`.
+    #
+    # Callers that wish to retrieve the teams of many debates should add
+    #   prefetch_related(Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team'))
+    # to their query set.
+
+    def _populate_teams(self):
+        """Populates the team attributes from self.debateteam_set."""
+        dts = self.debateteam_set.all()
+        if not dts._prefetch_done:  # uses internal undocumented flag of Django's QuerySet model
+            dts = dts.select_related('team')
+
+        self._teams = []
+        self._multiple_found = []
+        self._team_properties = {}
+
+        for dt in dts:
+            self._teams.append(dt.team)
+            if dt.position == DebateTeam.POSITION_AFFIRMATIVE:
+                if 'aff_team' in self._team_properties:
+                    self._multiple_found.extend(['aff_team', 'aff_dt'])
+                self._team_properties['aff_team'] = dt.team
+                self._team_properties['aff_dt'] = dt
+            elif dt.position == DebateTeam.POSITION_NEGATIVE:
+                if 'neg_team' in self._team_properties:
+                    self._multiple_found.extend(['neg_team', 'neg_dt'])
+                self._team_properties['neg_team'] = dt.team
+                self._team_properties['neg_dt'] = dt
+
+    def _team_property(attr):  # noqa: N805
+        """Used to construct properties that rely on self._populate_teams()."""
+        @property
+        def _property(self):
+            if not hasattr(self, '_team_properties'):
+                self._populate_teams()
+            if attr in self._multiple_found:
+                raise MultipleObjectsReturned("Multiple objects found for attribute '%s' in debate ID %d. "
+                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_positions_display()))
+            try:
+                return self._team_properties[attr]
+            except KeyError:
+                raise ObjectDoesNotExist("No object found for attribute '%s' in debate ID %d. "
+                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_positions_display()))
+        return _property
 
     @property
     def teams(self):
-        """Returns an iterable object containing the teams in the debate in
-        arbitrary order. The iterable may be a list or a QuerySet."""
-        try:
-            return [self._aff_team, self._neg_team]
-        except AttributeError:
-            return Team.objects.filter(debateteam__debate=self)
+        # No need for _team_property overhead, this list is guaranteed to exist
+        # (it just might be empty).
+        if not hasattr(self, '_teams'):
+            self._populate_teams()
+        return self._teams
 
-    @property
-    def aff_team(self):
-        try:
-            return self._aff_team # may be populated by Round.debate_set_with_prefetches
-        except AttributeError:
-            self._aff_team = Team.objects.select_related('institution').get(
-                debateteam__debate=self, debateteam__position=DebateTeam.POSITION_AFFIRMATIVE)
-            return self._aff_team
-
-    @property
-    def neg_team(self):
-        try:
-            return self._neg_team
-        except AttributeError:
-            self._neg_team = Team.objects.select_related('institution').get(
-                debateteam__debate=self, debateteam__position=DebateTeam.POSITION_NEGATIVE)
-            return self._neg_team
-
-    @property
-    def aff_dt(self):
-        try:
-            return self._aff_dt # may be populated by Round.debate_set_with_prefetches
-        except AttributeError:
-            self._aff_dt = self.debateteam_set.select_related('team', 'team__institution').get(
-                position=DebateTeam.POSITION_AFFIRMATIVE)
-            return self._aff_dt
-
-    @property
-    def neg_dt(self):
-        try:
-            return self._neg_dt # may be populated by Round.debate_set_with_prefetches
-        except AttributeError:
-            self._neg_dt = self.debateteam_set.select_related('team', 'team__institution').get(
-                position=DebateTeam.POSITION_NEGATIVE)
-            return self._neg_dt # may be populated by Round.debate_set_with_prefetches
+    aff_team = _team_property('aff_team')
+    neg_team = _team_property('neg_team')
+    aff_dt = _team_property('aff_dt')
+    neg_dt = _team_property('neg_dt')
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
@@ -128,13 +156,12 @@ class Debate(models.Model):
         return getattr(self, '%s_dt' % side)
 
     def get_side(self, team):
-        # Deprecated 25/7/2016, does not appear to be used anywhere, remove after 25/8/2016.
-        warn("Debate.get_side() is deprecated", stacklevel=2)
-        if self.aff_team == team:
-            return 'aff'
-        if self.neg_team == team:
-            return 'neg'
-        return None
+        # Deprecated 12/9/2016, remove after 12/10/2016
+        raise RuntimeError("Debate.get_side() is deprecated.")
+
+    # --------------------------------------------------------------------------
+    # Other properties
+    # --------------------------------------------------------------------------
 
     @property
     def confirmed_ballot(self):
@@ -181,15 +208,14 @@ class Debate(models.Model):
             return self._adjudicators
 
     @property
-    def get_division_motions(self):
+    def division_motion(self):
         from motions.models import Motion
-        motions = Motion.objects.filter(round=self.round, divisions=self.division)
-        if motions.count() > 0:
-            return motions[0] # Pretty sure this should never be > 1
-        else:
-            # Its easiest to assume a division motion is always present, so
+        try:
+            # Pretty sure there should never be > 1
+            Motion.objects.filter(round=self.round, divisions=self.division).first()
+        except ObjectDoesNotExist:
+            # It's easiest to assume a division motion is always present, so
             # return a fake one if it is not
-            from motions.models import Motion
             return Motion(text='-', reference='-')
 
 
@@ -204,14 +230,14 @@ class DebateTeam(models.Model):
     POSITION_AFFIRMATIVE = 'A'
     POSITION_NEGATIVE = 'N'
     POSITION_UNALLOCATED = 'u'
-    POSITION_CHOICES = ((POSITION_AFFIRMATIVE, 'Affirmative'),
-                        (POSITION_NEGATIVE, 'Negative'),
-                        (POSITION_UNALLOCATED, 'Unallocated'), )
+    POSITION_CHOICES = ((POSITION_AFFIRMATIVE, 'affirmative'),
+                        (POSITION_NEGATIVE, 'negative'),
+                        (POSITION_UNALLOCATED, 'unallocated'), )
 
     objects = DebateTeamManager()
 
-    debate = models.ForeignKey(Debate, db_index=True)
-    team = models.ForeignKey('participants.Team')
+    debate = models.ForeignKey(Debate, models.CASCADE, db_index=True)
+    team = models.ForeignKey('participants.Team', models.CASCADE)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __str__(self):
@@ -232,15 +258,13 @@ class DebateTeam(models.Model):
 
     @property
     def opposition(self):
-        # Added 11/7/2016, convert to RuntimeError after 1.1.2 release, then remove a month after that
-        warn("DebateTeam.opposition is deprecated, use DebateTeam.opponent instead.", stacklevel=2)
-        return self.opponent
+        # Deprecated 12/9/2016, remove after 12/10/2016
+        raise RuntimeError("DebateTeam.opposition is deprecated, use DebateTeam.opponent instead.")
 
     @property
     def result(self):
-        # Added 12/9/2016, convert to RuntimeError after 1.1.2 release, then remove a month after that
-        warn("DebateTeam.result is deprecated, use DebateTeam.get_result_display() instead.", stacklevel=2)
-        return self.get_result_display()
+        # Deprecated 12/9/2016, remove after 12/10/2016
+        raise RuntimeError("DebateTeam.result is deprecated, use DebateTeam.get_result_display() instead.")
 
     def get_result_display(self):
         if self.win is True:
@@ -266,6 +290,16 @@ class DebateTeam(models.Model):
                 self._win = None
             return self._win
 
+    def get_position_name(self, tournament=None):
+        """Should be used instead of get_position_display() on views.
+        `tournament` can be passed in if known, for performance."""
+        if self.position == DebateTeam.POSITION_AFFIRMATIVE:
+            return get_position_name(tournament or self.debate.round.tournament, 'aff', 'full')
+        elif self.position == DebateTeam.POSITION_NEGATIVE:
+            return get_position_name(tournament or self.debate.round.tournament, 'neg', 'full')
+        else:
+            return self.get_position_display()
+
 
 class TeamPositionAllocation(models.Model):
     """Model to store team position allocations for tournaments like Joynt
@@ -278,8 +312,8 @@ class TeamPositionAllocation(models.Model):
     POSITION_UNALLOCATED = DebateTeam.POSITION_UNALLOCATED
     POSITION_CHOICES = DebateTeam.POSITION_CHOICES
 
-    round = models.ForeignKey('tournaments.Round')
-    team = models.ForeignKey('participants.Team')
+    round = models.ForeignKey('tournaments.Round', models.CASCADE)
+    team = models.ForeignKey('participants.Team', models.CASCADE)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     class Meta:

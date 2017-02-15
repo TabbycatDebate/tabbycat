@@ -85,7 +85,7 @@
                         {% if not current_round.motions_released %}
                           <em>Motions are not released to public.</em><br />
                         {% endif %}
-                        {% if debate.round.motion_set.all|length == 1 %}
+                        {% if debate.round.motion_set.count == 1 %}
                           <strong>Motion:</strong> {{ debate.round.motion_set.first.text }}
                         {% else %}
                           {% for motion in debate.round.motion_set.all %}

@@ -1,13 +1,23 @@
 {% extends "base.html" %}
-{% load add_field_css %}
+{% load add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🏆</span>Create New Tournament{% endblock %}
+{% block head-title %}<span class="emoji">🏆</span>{% trans "Create New Tournament "%}{% endblock %}
 {% block page-title %}Tabbycat{% endblock %}
-
 
 {% block nav %}{% endblock %}
 
 {% block content %}
+
+<div class="alert alert-info">
+  <p>
+    Tabbycat is free to use for non-profit and non-fundraising tournaments
+    (although donations are encouraged). If your tournament is run for profit
+    or for fundraising, please note that there is a
+    <a href="{% url 'donations' %}">required payment</a>. For more details,
+    see the <a href="http://tabbycat.readthedocs.io/en/stable/about/licence.html">
+    Tabbycat licence agreement</a>.
+  </p>
+</div>
 
 <div class="panel panel-default">
   <div class="panel-body">
@@ -18,7 +28,7 @@
 
       {% if form.errors %}
         <div class="alert alert-danger">
-          Whoops! There was an error with one or more fields.
+          {% trans "Whoops! There was an error with one or more fields." %}
           {{ form.non_field_errors }}
         </div>
       {% endif %}
@@ -44,13 +54,55 @@
       {% endfor %}
 
       <div class="form-group">
-        <button type="submit" class="btn btn-block btn-success form-control col-md-6">
-          Create Tournament
+        <button type="submit" class="btn btn-block btn-success form-control">
+          {% trans "Create Tournament" %}
         </button>
       </div>
 
     </form>
 
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    <p><strong>Just trying out Tabbycat?</strong>
+    If you are just learning or playing around with Tabbycat it's easiest
+    to create a 'demo' tournament that is prepopulated with a fake (but typical)
+    set of teams, adjudicators, venues, and the like.
+    This demo tournament can then be easily deleted later on.</p>
+    <div class="row">
+      <div class="col-sm-6">
+        <form action="{% url 'load-demo' %}" method="POST">
+          <input type="hidden" name="source" value="demo_simple">
+          <button type="submit" class="btn btn-primary btn-block">
+            {% trans "Load Demo Data (10-team tournament)" %}
+          </button>
+        </form>
+        {% if preexisting_small_demo %}
+          <br>
+          <div class="alert alert-warning">
+            You already have a tournament setup using this data set. Reloading
+            the data will delete <strong>all data</strong> from that tourament.
+          </div>
+        {% endif %}
+      </div>
+      <div class="col-sm-6">
+        <form action="{% url 'load-demo' %}" method="POST">
+          <input type="hidden" name="source" value="demo">
+          <button type="submit" class="btn btn-primary btn-block">
+            {% trans "Load Demo Data (24-team tournament)" %}
+          </button>
+        </form>
+        {% if preexisting_large_demo %}
+          <br>
+          <div class="alert alert-warning">
+            You already have a tournament setup using this data set. Reloading
+            the data will delete <strong>all data</strong> from that tourament.
+          </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>
 

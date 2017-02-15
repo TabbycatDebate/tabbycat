@@ -7,6 +7,9 @@ urlpatterns = [
     url(r'^$',
         views.TournamentPublicHomeView.as_view(),
         name='tournament-public-index'),
+    url(r'^donations/$',
+        views.TournamentDonationsView.as_view(),
+        name='tournament-donations'),
     url(r'^admin/overview/$',
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
@@ -67,7 +70,7 @@ urlpatterns = [
         include('options.urls')),
 
     # Printing App
-    url(r'^participants/',
+    url(r'^admin/printing/',
         include('printing.urls_admin')),
 
     # Participants App

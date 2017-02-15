@@ -140,4 +140,7 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('tabbycat/templates/js-bundles/*.js', ['js-browserify']);
   gulp.watch('tabbycat/templates/**/*.vue', ['js-browserify']);
   gulp.watch('tabbycat/**/*.html', ['html-reload']);
+  console.log('---------------------------\n');
+  console.log('Finished building Tabbycat!\n');
+  console.log('---------------------------');
 });

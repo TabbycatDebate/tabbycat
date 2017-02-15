@@ -5,15 +5,19 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core import management
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
+from django.utils.safestring import mark_safe
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.edit import CreateView, FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
+from importer.management.commands import importtournament
+from importer.base import TournamentDataImporterError
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
@@ -172,6 +176,32 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     form_class = TournamentForm
     template_name = "create_tournament.html"
 
+    def get_context_data(self, **kwargs):
+        kwargs["preexisting_small_demo"] = Tournament.objects.filter(slug="demo_simple").exists()
+        kwargs["preexisting_large_demo"] = Tournament.objects.filter(slug="demo").exists()
+        return super().get_context_data(**kwargs)
+
+
+class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
+
+    def post(self, request, *args, **kwargs):
+        source = request.POST.get("source", "")
+
+        try:
+            management.call_command(importtournament.Command(), source,
+                                    force=True, strict=False)
+        except TournamentDataImporterError as e:
+            messages.error(self.request, mark_safe("<p>There were one or more errors creating the demo tournament. "
+                "Before retrying, please delete the existing demo tournament <strong>and</strong> "
+                "the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:"
+                "<ul>" + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"))
+            logger.critical("Error importing demo tournament: " + str(e))
+        else:
+            messages.success(self.request, "Created new demo tournament. You "
+                "can access it below.")
+
+        return redirect('tabbycat-index')
+
 
 class TournamentPermanentRedirectView(RedirectView):
     """Redirect old-style /t/<slug>/... URLs to new-style /<slug>/... URLs."""
@@ -185,3 +215,11 @@ class TournamentPermanentRedirectView(RedirectView):
             logger.error("Tried to redirect non-existent tournament slug '%s'" % slug)
             raise Http404("There isn't a tournament with slug '%s'." % slug)
         return super().get_redirect_url(*args, **kwargs)
+
+
+class DonationsView(CacheMixin, TemplateView):
+    template_name = 'donations.html'
+
+
+class TournamentDonationsView(TournamentMixin, TemplateView):
+    template_name = 'donations.html'

@@ -1,3 +1,5 @@
+from tournaments.utils import get_position_name_choices
+
 
 class PreferencesPreset:
     def __init__(self):
@@ -33,6 +35,9 @@ class AustralsPreferences(PreferencesPreset):
         self.standings__standings_missed_debates        = 2  # TODO= check this
         self.standings__team_standings_precedence       = ['wins', 'speaks_sum']
         self.standings__rank_speakers_by                = 'total'
+        # UI Options
+        self.ui_options__show_team_institutions         = False
+        self.ui_options__show_adjudicator_institutions  = True
 
 
 class AustralianEastersPreferences(AustralsPreferences):
@@ -147,7 +152,7 @@ class UADCPreferences(AustralsPreferences):
 
 
 class WSDCPreferences(AustralsPreferences):
-    """ 3 vs 3 with replies, chosen motions, and all adjudicators can receive feedback from teams."""
+    """ 3 vs 3 with replies, chosen motions, prop/opp side labels, and all adjudicators can receive feedback from teams."""
     def __init__(self):
         self.name                                       = "WSDC Rules"
         self.show_in_list                               = True
@@ -168,7 +173,10 @@ class WSDCPreferences(AustralsPreferences):
         # Standings
         self.standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg']
         # UI Options
-        self.ui_options__show_institutions              = False
+        self.ui_options__show_team_institutions         = False
+        self.ui_options__show_adjudicator_institutions  = False
+        position_names = get_position_name_choices()
+        self.debate_rules__position_names               = position_names[2][0]
 
 
 class WADLPreferences(PreferencesPreset):
@@ -195,7 +203,8 @@ class WADLPreferences(PreferencesPreset):
         # UI Options
         self.ui_options__show_novices                   = True
         self.ui_options__show_emoji                     = False
-        self.ui_options__show_institutions              = False
+        self.ui_options__show_team_institutions         = False
+        self.ui_options__show_adjudicator_institutions  = False
         self.ui_options__show_speakers_in_draw          = False
         self.ui_options__public_motions_order           = 'reverse'
         self.ui_options__show_all_draws                 = True

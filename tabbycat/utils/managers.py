@@ -1,4 +1,5 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ImproperlyConfigured
+from django.db.models import Q
 
 
 class LookupByNameFieldsMixin:
@@ -12,10 +13,12 @@ class LookupByNameFieldsMixin:
     name_fields = []
 
     def lookup(self, name, **kwargs):
-        for field in self.name_fields:
-            try:
-                kwargs[field] = name
-                return self.get(**kwargs)
-            except ObjectDoesNotExist:
-                kwargs.pop(field)
-        raise self.model.DoesNotExist("No %s matching '%s'" % (self.model._meta.verbose_name, name))
+        if len(self.name_fields) < 1:
+            raise ImproperlyConfigured("There must be at least one name field in name_fields "
+                "when using LookupByNameFieldsMixin.")
+
+        q = Q(**{self.name_fields[0]: name})
+        for field in self.name_fields[1:]:
+            q |= Q(**{field: name})
+
+        return self.get(q, **kwargs)

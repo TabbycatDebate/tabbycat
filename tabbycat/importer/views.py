@@ -1,10 +1,11 @@
 from django.contrib import messages
+from django.db import models
 from django.db.utils import IntegrityError
 from django.shortcuts import render
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from utils.views import admin_required, expect_post, tournament_view
-from venues.models import InstitutionVenueConstraint, Venue, VenueGroup
+from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
 
 
 @admin_required
@@ -40,6 +41,11 @@ def edit_institutions(request, t):
     institutions = []
     institution_lines = request.POST['institutions_raw'].rstrip().split('\n')
     for line in institution_lines:
+        if "," not in line or line.split(',')[1].strip() == "":
+            messages.error(request, "Institution '%s' could not be processed \
+                because it did not have a code" % line)
+            continue
+
         full_name = line.split(',')[0].strip()
         full_name = enforce_length(full_name, 'name', Institution, request)
         short_name = line.split(',')[1].strip()
@@ -48,10 +54,15 @@ def edit_institutions(request, t):
         institution = Institution(name=full_name, code=short_name)
         institutions.append(institution)
 
-    return render(request, 'edit_institutions.html',
-                  dict(institutions=institutions,
-                  full_name_max=Institution._meta.get_field('name').max_length - 1,
-                  code_max=Institution._meta.get_field('code').max_length - 1))
+    if len(institutions) == 0:
+        messages.warning(request, "No institutions were added")
+        return render(request, 'data_index.html')
+    else:
+        max_name = Institution._meta.get_field('name').max_length - 1
+        max_code = Institution._meta.get_field('code').max_length - 1
+        return render(request, 'edit_institutions.html', dict(
+                      institutions=institutions,
+                      full_name_max=max_name, code_max=max_code))
 
 
 @admin_required
@@ -74,6 +85,7 @@ def confirm_institutions(request, t):
 
     if added_institutions > 0:
         messages.success(request, "%s Institutions have been added" % len(institution_names))
+
     return render(request, 'data_index.html')
 
 
@@ -94,19 +106,35 @@ def edit_venues(request, t):
     venues = []
     venue_lines = request.POST['venues_raw'].rstrip().split('\n')
     for line in venue_lines:
-        name = line.split(',')[0].strip()
-        name = enforce_length(name, 'name', Venue, request)
-        priority = line.split(',')[1].strip()
-        if len(line.split(',')) > 2:
-            venues.append({
-                'name': name,
-                'priority': priority,
-                'group': line.split(',')[2].strip()
-            })
+        # Sometimes people enter in the lists without a set priority
+        if "," in line:
+            name = line.split(',')[0].strip()
         else:
-            venues.append({'name': name, 'priority': priority, })
+            name = line.strip()
+        if name:
+            name = enforce_length(name, 'name', Venue, request)
+        else:
+            continue
 
-    return render(request, 'edit_venues.html', dict(venues=venues,
+        # Allow people to not specify a priority when copy pasting
+        if "," in line:
+            priority = line.split(',')[1].strip()
+        else:
+            priority = 100
+        if not priority:
+            priority = 100
+
+        if len(line.split(',')) > 2:
+            group = line.split(',')[2].strip()
+            venues.append({'name': name, 'priority': priority, 'group': group})
+        else:
+            venues.append({'name': name, 'priority': priority})
+
+    if len(venues) == 0:
+        messages.error(request, "No data was entered was entered in the form")
+        return render(request, 'data_index.html')
+    else:
+        return render(request, 'edit_venues.html', dict(venues=venues,
                   max_name_length=Venue._meta.get_field('name').max_length - 1))
 
 
@@ -114,11 +142,11 @@ def edit_venues(request, t):
 @expect_post
 @tournament_view
 def confirm_venues(request, t):
-    print(request.POST)
     venue_names = request.POST.getlist('venue_names')
     venue_priorities = request.POST.getlist('venue_priorities')
     venue_groups = request.POST.getlist('venue_groups')
     venue_shares = request.POST.getlist('venue_shares')
+
     for i, key in enumerate(venue_names):
         if venue_groups[i]:
             try:
@@ -137,9 +165,14 @@ def confirm_venues(request, t):
         else:
             venue_tournament = t
 
-        venue = Venue(name=venue_names[i], priority=venue_priorities[i],
-                      group=venue_group, tournament=venue_tournament)
-        venue.save()
+        priority = venue_priorities[i]
+        if not priority or not float(priority).is_integer():
+            messages.warning(request, "Venue %s could not be saved because \
+                it did not have a valid priority number" % venue_names[i])
+        else:
+            venue = Venue(name=venue_names[i], priority=venue_priorities[i],
+                          group=venue_group, tournament=venue_tournament)
+            venue.save()
 
     messages.success(request, "%s Venues have been added" % len(venue_names))
     return render(request, 'data_index.html')
@@ -162,17 +195,30 @@ def add_venue_preferences(request, t):
 @expect_post
 @tournament_view
 def edit_venue_preferences(request, t):
-
     venue_groups = VenueGroup.objects.all()
-    institutions = []
 
+    # Build a list of institutions and possible venue groups with existing data
+    institutions = []
     for institution_id, checked in request.POST.items():
-        institutions.append(Institution.objects.get(pk=institution_id))
+        institution = Institution.objects.get(pk=institution_id)
+        institution.constraints = []
+        for venue_group in venue_groups:
+            # Find all constraints matching this institution and venue group
+            constraint = VenueConstraint.objects.filter(
+                models.Q(institution=institution),
+                category__name=venue_group.name).first()
+            # Prepopulate priority data (because we are wiping each time)
+            institution.constraints.append({
+                'id': venue_group.id,
+                'name': venue_group.name,
+                'priority': constraint.priority if constraint else ''
+            })
+
+        institutions.append(institution)
 
     return render(request,
                   'edit_venue_preferences.html',
-                  dict(institutions=institutions,
-                       venue_groups=venue_groups))
+                  dict(institutions=institutions))
 
 
 @admin_required
@@ -180,29 +226,42 @@ def edit_venue_preferences(request, t):
 @tournament_view
 def confirm_venue_preferences(request, t):
 
+    # Delete existing venue constraints
     for institution_id in request.POST.getlist('institutionIDs'):
         institution = Institution.objects.get(pk=institution_id)
-        InstitutionVenueConstraint.objects.filter(
-            institution=institution).delete()
+        VenueConstraint.objects.filter(models.Q(institution=institution)).delete()
 
     venue_priorities = request.POST.dict()
     del venue_priorities["institutionIDs"]
 
     created_preferences = 0
+    print(venue_priorities.items())
 
     for idset, priority in venue_priorities.items():
         institution_id = idset.split('_')[0]
         venue_group_id = idset.split('_')[1]
+        print('have a idset', idset, ' priority ', priority)
 
         if institution_id and venue_group_id and priority:
-            # print('making a pref')
             institution = Institution.objects.get(pk=int(institution_id))
             venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
-            venue_preference = InstitutionVenueConstraint(
-                institution=institution,
-                priority=priority,
-                venue_group=venue_group)
-            venue_preference.save()
+
+            # Find or make a new venue constraint category for each venue group
+            category, created = VenueConstraintCategory.objects.get_or_create(name=venue_group.name)
+
+            # Assign it all the relevant venues for its particular group
+            if venue_group.venues.count() > 0:
+                category.venues = venue_group.venues.all()
+            else:
+                messages.warning(request, "No constraints have been assigned "
+                    "for Venue Group %s because there are no venues in this "
+                    "group. You probably want to add some venues to this group "
+                    "and then recreate this constraint." % venue_group.name)
+
+            venue_constaint = VenueConstraint(subject=institution,
+                                              priority=priority,
+                                              category=category)
+            venue_constaint.save()
             created_preferences += 1
 
     messages.success(request, "%s Venue Preferences have been added" % created_preferences)

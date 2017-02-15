@@ -19,6 +19,9 @@ export default {
         },
         success: function() {
           console.log("Saved change for " + resourceType)
+          // If an autosave counter exists; update it
+          var now = new Date()
+          $('#saveTime').text("Saved at " + now.getHours() + ":" + now.getMinutes())
         }
       });
     }

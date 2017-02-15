@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% load add_field_css %}
+{% load add_field_css i18n %}
 
-{% block page-title %}🔓Login{% endblock %}
-{% block head-title %}<span class="emoji">🔓</span>Login{% endblock %}
+{% block page-title %}🔓{% trans "Login" context "page title" %}{% endblock %}
+{% block head-title %}<span class="emoji">🔓</span>{% trans "Login" context "page title" %}{% endblock %}
 
 
 {% block nav %}{% endblock %}
@@ -27,16 +27,15 @@
 
       {% if form.errors %}
         <div class="alert alert-danger">
-          Your username and password didn't match.
+          {% trans "Your username and password didn't match." %}
         </div>
       {% endif %}
 
       {% if next %}
-          {% if user.is_authenticated %}
-          <div class="alert alert-warning">Your account doesn't have access to this page. To proceed,
-          please log in with an account that has access.</div>
+        {% if user.is_authenticated %}
+          <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
           {% else %}
-          <div class="alert alert-warning">Please log in to see this page.</div>
+          <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>
           {% endif %}
       {% endif %}
     </div>
@@ -58,7 +57,7 @@
       <div class="form-group">
         <div class="col-md-offset-2 col-md-2 col-sm-4">
           <button type="submit" class="btn btn-success">
-            Login
+            {% trans "Login" context "button" %}
           </button>
         </div>
       </div>

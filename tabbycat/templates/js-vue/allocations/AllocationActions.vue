@@ -4,10 +4,14 @@
     <nav class="navbar navbar-default navbar-fixed-top">
 
       <div class="navbar-form navbar-left btn-group btn-group-sm">
-        <a href="{{ roundInfo.backToDrawURL }}" class="btn btn-default btn-sm">
-          <span class="glyphicon glyphicon-chevron-left"></span>
-          Back to {{ roundInfo.roundName }} Draw
+        <a href="{{ roundInfo.backToDrawURL }}" class="btn btn-default btn-sm"
+           data-toggle="tooltip" data-placement="bottom"
+           title="Return to {{ roundInfo.roundName }}'s Draw">
+          <span class="glyphicon glyphicon-chevron-left"></span> Back
         </a>
+        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Changes allocation are saved whenever an adjudicator's position is changed. Do not edit/change allocations across multiple browsers/computers!">
+          <span id="saveTime">Unsaved (no changes)</span>
+        </button>
         <a class="btn btn-success btn-sm" v-on:click="confirmAutoAllocation">
           Auto Allocate
         </a>
@@ -19,13 +23,13 @@
             Seen Before
           </button>
           <button disabled class="btn conflictable conflicts-toolbar conflict-hover-institutional-conflict">
-            Institutional Conflict
+            Institutional Clash
           </button>
           <button disabled class="btn conflictable conflicts-toolbar conflict-hover-personal-conflict">
-            Personal Conflict
+            Personal Clash
           </button>
           <button disabled class="btn panel-incomplete">
-            Unviable Panel
+            Unbalanced
           </button>
         </div>
         <div v-if="showingGender" class="btn-group btn-group-sm">
@@ -128,6 +132,9 @@ export default {
           self.resetAutoAllocationModal(event.target)
           $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
           self.$dispatch('set-debate-panels', JSON.parse(data))
+          // Update the save counter (this normally goes through AjaxMixin.vue)
+          var now = new Date()
+          $('#saveTime').text("Saved at " + now.getHours() + ":" + now.getMinutes())
         },
         error: function(data, textStatus, jqXHR) {
           self.resetAutoAllocationModal(event.target)

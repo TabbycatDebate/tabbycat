@@ -2,47 +2,51 @@
 {% load debate_tags %}
 
 {% block page-subnav-sections %}
-  {% if round.is_break_round %}
-    <a class="btn btn-default disabled">
-      Check In Teams
-    </a>
-  {% else %}
+
+  <div class="btn-group">
+    {% if round.is_break_round %}
+      <a class="btn btn-default disabled">
+        Check In Teams
+      </a>
+    {% else %}
+      <a class="btn btn-default submit-disable"
+         href="{% round_url availability-teams round %}">
+        Check In Teams
+      </a>
+    {% endif %}
     <a class="btn btn-default submit-disable"
-       href="{% round_url availability-teams round %}">
-      Check In Teams
+       href="{% round_url availability-adjudicators round %}">
+      Check In Adjs
     </a>
-  {% endif %}
-  <a class="btn btn-default submit-disable"
-     href="{% round_url availability-adjudicators round %}">
-    Check In Adjudicators
-  </a>
-  <a class="btn btn-default submit-disable"
-     href="{% round_url availability-venues round %}">
-    Check In Venues
-  </a>
-  {% if round.is_break_round %}
-    <form method="POST" action="{% round_url availability-checkin-breaking-adjudicators %}">
-      {% csrf_token %}
-      <button class="btn btn-primary submit-disable" type="submit">
-        Check In All Breaking Adjudicators
-      </button>
-    </form>
-  {% else %}
-    <form method="POST" action="{% round_url availability-checkin-all %}">
-      {% csrf_token %}
-      <button class="btn btn-primary submit-disable" type="submit">
-        Check In Everything
-      </button>
-    </form>
-    {% if round.prev %}
-      <form method="POST" action="{% round_url availability-checkin-previous %}">
+    <a class="btn btn-default submit-disable"
+       href="{% round_url availability-venues round %}">
+      Check In Venues
+    </a>
+  </div>
+
+    {% if round.is_break_round %}
+      <form method="POST" action="{% round_url availability-checkin-breaking-adjudicators %}">
         {% csrf_token %}
         <button class="btn btn-primary submit-disable" type="submit">
-          Check In Active in {{ round.prev.abbreviation }}
+          Check In All Breaking Adjs
         </button>
       </form>
+    {% else %}
+      <form method="POST" action="{% round_url availability-checkin-all %}">
+        {% csrf_token %}
+        <button class="btn btn-primary submit-disable" type="submit">
+          Check In Everything
+        </button>
+      </form>
+      {% if round.prev %}
+        <form method="POST" action="{% round_url availability-checkin-previous %}">
+          {% csrf_token %}
+          <button class="btn btn-primary submit-disable" type="submit">
+            Check In Active in {{ round.prev.abbreviation }}
+          </button>
+        </form>
+      {% endif %}
     {% endif %}
-  {% endif %}
 
 {% endblock %}
 

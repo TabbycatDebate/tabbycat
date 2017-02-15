@@ -19,6 +19,11 @@
   fill: black;
 }
 
+// Preventing flickering hover tooltips
+.d3-tooltip {
+  pointer-events: none;
+}
+
 // For feedback graph
 
 .d3-feedback-trend {

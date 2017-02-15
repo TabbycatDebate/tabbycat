@@ -15,8 +15,10 @@ supporting many custom variations of the above formats too.
 
    install/heroku
    install/local
+   install/docker
    install/linux
    install/osx
+   install/wsl
    install/windows
 
 .. _usage-docs:

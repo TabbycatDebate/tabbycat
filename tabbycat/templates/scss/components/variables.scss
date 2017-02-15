@@ -66,3 +66,11 @@ $break-cat-3:             #00c79b;
 
 $sidebar-width: 155px;
 $tooltip-max-width: 330px;
+
+//------------------------------------------------------------------------------
+// Z-Index Hierarchy
+//------------------------------------------------------------------------------
+
+$z_1: 2030; // Mostly modals
+$z_2: 1530; // Hover elements like tooltips or the adj info sliderover display
+$z_3: 1030; // Fixed floating elements like unallocated spots or fixed headers

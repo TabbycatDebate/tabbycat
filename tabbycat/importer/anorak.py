@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.models import ContentType
+
 import adjallocation.models as am
 import adjfeedback.models as fm
 import breakqual.models as bm
@@ -76,9 +78,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         Each line has:
             name
         """
-        region_interpreter = make_interpreter(
-            tournament=self.tournament
-        )
+        region_interpreter = make_interpreter()
         return self._import(f, pm.Region, region_interpreter)
 
     def import_institutions(self, f, auto_create_regions=True):
@@ -92,8 +92,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 if not line.get('region'):
                     return None
                 return {
-                    'name': line['region'],
-                    'tournament': self.tournament,
+                    'name': line['region']
                 }
             counts, errors = self._import(f, pm.Region, region_interpreter,
                                           expect_unique=False)
@@ -113,7 +112,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_venue_groups(self, f):
         """Imports venue groups from a file.
         Each line has:
-            name, short_name[, team_capacity]
+            name, short_name
         """
         return self._import(f, vm.VenueGroup)
 
@@ -366,29 +365,62 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
 
+    def import_venue_constraint_categories(self, f):
+        """Imports venue constraint categories from a file.
+        Each line has:
+            venueconstraintcategory, venue
+        """
+        def venue_constraint_category_interpreter(line):
+            return {'name': line['venueconstraintcategory']}
+
+        counts, errors = self._import(f, vm.VenueConstraintCategory,
+                venue_constraint_category_interpreter, expect_unique=False)
+
+        venue_constraint_category_venue_interpreter = make_interpreter(
+            venueconstraintcategory=lambda x: vm.VenueConstraintCategory.objects.get(name=x),
+            venue=lambda x: vm.Venue.objects.get(name=x),
+        )
+
+        return self._import(f, vm.VenueConstraintCategory.venues.through,
+                venue_constraint_category_venue_interpreter, counts=counts, errors=errors)
+
     def import_adj_venue_constraints(self, f):
         """Imports venue constraints from a file.
         Each line has:
             adjudicator, group, priority
         """
-        adj_venue_constraints_interpreter = make_interpreter(
+        adj_venue_constraints_interpreter_part = make_interpreter(
             adjudicator=lambda x: pm.Adjudicator.objects.get(name=x),
-            venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
+            category=lambda x: vm.VenueConstraintCategory.objects.get(name=x),
         )
 
-        return self._import(f, vm.AdjudicatorVenueConstraint, adj_venue_constraints_interpreter)
+        def adj_venue_constraints_interpreter(line):
+            line = adj_venue_constraints_interpreter_part(line)
+            line['subject_id'] = line['adjudicator'].id
+            line['subject_content_type'] = ContentType.objects.get_for_model(pm.Adjudicator)
+            del line['adjudicator']
+            return line
+
+        return self._import(f, vm.VenueConstraint, adj_venue_constraints_interpreter)
 
     def import_team_venue_constraints(self, f):
         """Imports venue constraints from a file.
         Each line has:
             team, group, priority
         """
-        team_venue_constraints_interpreter = make_interpreter(
+        team_venue_constraints_interpreter_part = make_interpreter(
             team=pm.Team.objects.lookup,
-            venue_group=lambda x: vm.VenueGroup.objects.get(name=x),
+            category=lambda x: vm.VenueConstraintCategory.objects.get(name=x),
         )
 
-        return self._import(f, vm.TeamVenueConstraint, team_venue_constraints_interpreter)
+        def team_venue_constraints_interpreter(line):
+            line = team_venue_constraints_interpreter_part(line)
+            line['subject_id'] = line['team'].id
+            line['subject_content_type'] = ContentType.objects.get_for_model(pm.Team)
+            del line['team']
+            return line
+
+        return self._import(f, vm.VenueConstraint, team_venue_constraints_interpreter)
 
     def auto_make_rounds(self, num_rounds):
         """Makes the number of rounds specified. The first one is random and the

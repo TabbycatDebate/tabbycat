@@ -2,6 +2,7 @@ import math
 
 from django.forms.fields import IntegerField
 from django.forms import ModelForm
+from django.utils.translation import ugettext_lazy as _
 
 from breakqual.models import BreakCategory
 
@@ -17,13 +18,13 @@ class TournamentForm(ModelForm):
 
     num_prelim_rounds = IntegerField(
         min_value=1,
-        label="Number of preliminary rounds")
+        label=_("Number of preliminary rounds"))
 
     break_size = IntegerField(
         min_value=2,
         required=False,
-        label="Number of teams in the open break",
-        help_text="Leave blank if there are no break rounds.")
+        label=_("Number of teams in the open break"),
+        help_text=_("Leave blank if there are no break rounds."))
 
     def save(self):
         tournament = super(TournamentForm, self).save()
@@ -33,7 +34,8 @@ class TournamentForm(ModelForm):
         if break_size:
             open_break = BreakCategory(
                 tournament=tournament,
-                name="Open",
+                # Translators: This is the name given to the 'Open Break'.
+                name=_("Open"),
                 slug="open",
                 seq=1,
                 break_size=break_size,
@@ -48,4 +50,5 @@ class TournamentForm(ModelForm):
 
         tournament.current_round = tournament.round_set.first()
         tournament.save()
+
         return tournament
