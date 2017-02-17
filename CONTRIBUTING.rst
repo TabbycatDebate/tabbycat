@@ -62,13 +62,14 @@ You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1
 Release Checklist
 =================
 
-1. Bump version numbers in ``docs/conf.py`` and ``tabbycat/settings.py``
-2. Update the main ``CHANGELOG.rst`` file
-3. Shift remaining issues from the Github Milestone
-4. Create and finish the release branch as per git-flow
-5. Ensure the tag is correct (``vX.Y.Z``) and published to Github
-6. Back-merge ``master`` to the ``kitten`` branch
-7. Back-merge ``develop`` to the in-progress feature branches
-8. Push ``master`` to the release pipeline repository
-9. Issue a formal release with change notes on Github
-10. Post change notes on the Facebook group
+1. Check that all migrations have been generated and committed into Git.
+2. Bump version numbers in ``docs/conf.py`` and ``tabbycat/settings.py``
+3. Update the main ``CHANGELOG.rst`` file
+4. Shift remaining issues from the Github Milestone
+5. Create and finish the release branch as per git-flow
+6. Ensure the tag is correct (``vX.Y.Z``) and published to Github
+7. Back-merge ``master`` to the ``kitten`` branch
+8. Back-merge ``develop`` to the in-progress feature branches
+9. Push ``master`` to the release pipeline repository
+10. Issue a formal release with change notes on Github
+11. Post change notes on the Facebook group
