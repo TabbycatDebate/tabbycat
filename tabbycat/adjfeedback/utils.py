@@ -121,9 +121,15 @@ def scoring_stats(adj, scores, debate_adjudications, reply_position):
     adj.avg_margin = None
 
     if len(scores) > 0:
+        # Cleaning
+        scores = [s.score for s in scores if hasattr(s, 'ballot_submission')]
+        scores = [s.score for s in scores if hasattr(s, 'position')]
+        scores = [s.score for s in scores if hasattr(s, 'score')]
+
         # Figure out average speaks given (filter out replyes)
         substantives = [s for s in scores if s.position != reply_position]
-        adj.avg_score = sum(s.score for s in substantives) / len(substantives)
+        if len(substantives) > 0:
+            adj.avg_score = sum(s.score for s in substantives) / len(substantives)
 
         # Figure out average margin by summing speaks (post splitting them in 2)
         ballot_ids = [score.ballot_submission for score in scores]
