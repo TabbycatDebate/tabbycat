@@ -53,28 +53,29 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 
 def get_feedback_overview(t, adjudicators):
 
-    all_debate_adjudicators = list(DebateAdjudicator.objects.all().select_related(
-        'adjudicator'))
-    all_adj_feedbacks = list(AdjudicatorFeedback.objects.filter(confirmed=True).select_related(
-        'adjudicator', 'source_adjudicator', 'source_team',
-        'source_adjudicator__debate__round', 'source_team__debate__round').exclude(
-            source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE))
-    all_adj_scores = list(SpeakerScoreByAdj.objects.filter(
-        ballot_submission__confirmed=True).select_related(
-        'debate_adjudicator__adjudicator', 'ballot_submission'))
-    rounds = t.prelim_rounds(until=t.current_round)
+    rounds = list(t.prelim_rounds(until=t.current_round))
+    debate_adjudicators = DebateAdjudicator.objects.filter(debate__round__tournament=t)
+    adj_feedbacks = AdjudicatorFeedback.objects.filter(
+                        confirmed=True,
+                        source_adjudicator__debate__round__in=rounds).select_related(
+                        'adjudicator', 'source_adjudicator', 'source_team', 'source_adjudicator__debate__round', 'source_team__debate__round').exclude(
+                        source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
+    adj_scores = SpeakerScoreByAdj.objects.filter(
+                        ballot_submission__confirmed=True,
+                        debate_adjudicator__debate__round__in=rounds).select_related(
+                        'debate_adjudicator__adjudicator', 'ballot_submission').exclude(
+                        position=t.REPLY_POSITION)
 
     for adj in adjudicators:
         # Gather feedback scores for graphs
-        feedbacks = [f for f in all_adj_feedbacks if f.adjudicator == adj]
-        debate_adjudications = [a for a in all_debate_adjudicators if a.adjudicator.id is adj.id]
-        scores = [s for s in all_adj_scores if s.debate_adjudicator.adjudicator.id is adj.id]
+        feedbacks = [f for f in adj_feedbacks if f.adjudicator == adj]
+        debate_adjudications = [a for a in debate_adjudicators if a.adjudicator == adj]
+        scores = [s for s in adj_scores if s.debate_adjudicator.adjudicator == adj]
 
         # Gather a dict of round-by-round feedback for the graph
-        adj.feedback_data = feedback_stats(adj, rounds, feedbacks, all_debate_adjudicators)
+        adj.feedback_data = feedback_stats(adj, rounds, feedbacks, debate_adjudicators)
         # Sum up remaining stats
-        reply_position = t.REPLY_POSITION
-        adj = scoring_stats(adj, scores, debate_adjudications, reply_position)
+        adj = scoring_stats(adj, scores, debate_adjudications)
 
     return adjudicators
 
@@ -114,43 +115,35 @@ def feedback_stats(adj, rounds, feedbacks, all_debate_adjudicators):
     return feedback_data
 
 
-def scoring_stats(adj, scores, debate_adjudications, reply_position):
-    # Processing scores to get average margins
+def scoring_stats(adj, scores, debate_adjudications):
     adj.debates = len(debate_adjudications)
     adj.avg_score = None
     adj.avg_margin = None
 
-    if len(scores) > 0:
-        # Cleaning
-        scores = [s.score for s in scores if hasattr(s, 'ballot_submission')]
-        scores = [s.score for s in scores if hasattr(s, 'position')]
-        scores = [s.score for s in scores if hasattr(s, 'score')]
+    if len(scores) == 0 or len(debate_adjudications) == 0:
+        return adj
 
-        # Figure out average speaks given (filter out replyes)
-        substantives = [s for s in scores if s.position != reply_position]
-        if len(substantives) > 0:
-            adj.avg_score = sum(s.score for s in substantives) / len(substantives)
+    adj.avg_score = sum(s.score for s in scores) / len(scores)
+    # Figure out average margin by summing speaks (post splitting them in 2)
+    ballot_ids = [s.ballot_submission for s in scores]
+    ballot_ids = sorted(set([b.id for b in ballot_ids])) # Deduplicate
+    ballot_margins = []
 
-        # Figure out average margin by summing speaks (post splitting them in 2)
-        ballot_ids = [score.ballot_submission for score in scores]
-        ballot_ids = sorted(set([b.id for b in ballot_ids])) # Deduplicate
-        ballot_margins = []
+    for id in ballot_ids:
+        # For each unique ballot id make an array of all its scores
+        scores = [s.score for s in scores if s.ballot_submission.id == id]
+        speakers = int(len(scores) / 2)
+        try:
+            # Get the team totals by summing each half of the scores array
+            aff_pts, neg_pts = sum(scores[:speakers]), sum(scores[speakers:])
+            # The margin is the largest team pt difference - the smallest
+            ballot_margins.append(max(aff_pts, neg_pts) - min(aff_pts, neg_pts))
+        except TypeError:
+            print(scores)
 
-        for id in ballot_ids:
-            # For each unique ballot id make an array of all its scores
-            scores = [s.score for s in scores if s.ballot_submission.id is id]
-            speakers = int(len(scores) / 2)
-            try:
-                # Get the team totals by summing each half of the scores array
-                aff_pts, neg_pts = sum(scores[:speakers]), sum(scores[speakers:])
-                # The margin is the largest team pt difference - the smallest
-                ballot_margins.append(max(aff_pts, neg_pts) - min(aff_pts, neg_pts))
-            except TypeError:
-                print(scores)
-
-        if ballot_margins:
-            print('%s has %s margins %s' % (adj, len(ballot_margins), ballot_margins))
-            adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
+    if ballot_margins:
+        print('%s has %s margins %s' % (adj, len(ballot_margins), ballot_margins))
+        adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
 
     return adj
 
