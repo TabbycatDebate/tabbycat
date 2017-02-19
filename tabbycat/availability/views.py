@@ -83,6 +83,15 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 'message'   : '%s advancing teams are debating this round' % advancing_teams
             }
 
+        else: # this should never happen, but it did once...
+            self.error_type = 'bad_draw_type_for_break_round'
+            return {
+                'type' : 'Team',
+                'total': 0,
+                'in_now' : 0,
+                'message': "status unclear — see message above"
+            }
+
     def _get_dict(self, queryset_all):
         contenttype = ContentType.objects.get_for_model(queryset_all.model)
         availability_queryset = RoundAvailability.objects.filter(content_type=contenttype)
