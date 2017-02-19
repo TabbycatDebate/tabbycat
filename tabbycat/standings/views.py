@@ -323,6 +323,10 @@ class BaseMotionStandingsView(BaseStandingsView):
     page_title = 'Motions Tab'
     page_emoji = '💭'
 
+    def get_rounds(self):
+        """Returns all of the rounds that should be included in the tab."""
+        return self.get_tournament().round_set.order_by('seq')
+
     def get_table(self):
         motions = motion_statistics.statistics(tournament=self.get_tournament(), rounds=self.get_rounds())
         table = TabbycatTableBuilder(view=self, sort_key="Order")

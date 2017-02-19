@@ -483,7 +483,7 @@ class RepliesTabReleased(BooleanPreference):
 
 @tournament_preferences_registry.register
 class MotionTabReleased(BooleanPreference):
-    help_text = "Enables public display of the motions tab. Intended for use after the tournament."
+    help_text = "Enables public display of all motions and win/loss/selection information. This includes all motions — whether they have been marked as released or not. Intended for use after the tournament."
     verbose_name = "Release motions tab to public"
     section = tab_release
     name = "motion_tab_released"
@@ -645,7 +645,7 @@ class PublicResults(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicMotions(BooleanPreference):
-    help_text = "Enables the public page showing released motions"
+    help_text = "Enables the public page showing motions that have been explicitly released to the public"
     verbose_name = "Enable public view of motions"
     section = public_features
     name = "public_motions"
