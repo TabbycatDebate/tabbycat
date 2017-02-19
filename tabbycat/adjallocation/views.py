@@ -14,7 +14,7 @@ from participants.models import Adjudicator, Region, Team
 from participants.utils import regions_ordered
 from tournaments.models import Round
 from tournaments.mixins import RoundMixin
-from utils.mixins import JsonDataResponseView, SuperuserRequiredMixin
+from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
@@ -277,23 +277,23 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, Template
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, JsonDataResponseView):
+class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
-    def get_data(self):
+    def post_data(self):
         round = self.get_round()
         allocate_adjudicators(round, HungarianAllocator)
         return debates_to_json(round.debate_set_with_prefetches(), self.get_tournament(), round)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         round = self.get_round()
         if round.draw_status == Round.STATUS_RELEASED:
             return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
         if round.draw_status != Round.STATUS_CONFIRMED:
             return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
         self.log_action()
-        return super().get(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
 
 class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
