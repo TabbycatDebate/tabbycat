@@ -126,7 +126,7 @@ export default {
     createAutoAllocation: function(event) {
       var self = this
       $(event.target).button('loading')
-      $.getJSON({
+      $.post({
         url: this.roundInfo.createAutoAllocationURL,
         success: function(data, textStatus, jqXHR) {
           self.resetAutoAllocationModal(event.target)
@@ -139,7 +139,8 @@ export default {
         error: function(data, textStatus, jqXHR) {
           self.resetAutoAllocationModal(event.target)
           $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
-        }
+        },
+        dataType: "json"
       });
     },
     showRegion: function() {
