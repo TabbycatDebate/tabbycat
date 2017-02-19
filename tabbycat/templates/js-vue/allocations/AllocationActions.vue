@@ -133,8 +133,10 @@ export default {
           $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
           self.$dispatch('set-debate-panels', JSON.parse(data))
           // Update the save counter (this normally goes through AjaxMixin.vue)
-          var now = new Date()
-          $('#saveTime').text("Saved at " + now.getHours() + ":" + now.getMinutes())
+          var savedAt = new Date()
+          var hours = savedAt.getHours()
+          var minutes = ('0'+ savedAt.getMinutes()).slice(-2); // ":09" not ":9"
+          $('#saveTime').text("Saved at " + hours + ":" + minutes)
         },
         error: function(data, textStatus, jqXHR) {
           self.resetAutoAllocationModal(event.target)
