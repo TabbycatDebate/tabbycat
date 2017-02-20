@@ -144,7 +144,7 @@ For a myriad of reasons, we strongly advise against disabling this. But if for s
 Upgrading your database size
 ----------------------------
 
-The free plan of `Heroku Postgres <https://elements.heroku.com/addons/heroku-postgresql>`_, "Hobby Dev", should work for most small tournaments. For large tournaments, however, you may find that you exceed the 10,000-row limit of this plan. It's difficult to give general guidance on how many rows you're likely to use, because on which features of Tabbycat you use (_e.g._, if you use adjudicator feedback). But to give some idea, Australs 2016, which had 74 teams and 8 preliminary rounds and used adjudicator feedback, ended up at around 30,000 rows.
+The free plan of `Heroku Postgres <https://elements.heroku.com/addons/heroku-postgresql>`_, "Hobby Dev", should work for most small tournaments. For large tournaments, however, you may find that you exceed the 10,000-row limit of this plan. It's difficult to give general guidance on how many rows you're likely to use, because on which features of Tabbycat you use (*e.g.*, if you use adjudicator feedback). But to give some idea, Australs 2016, which had 74 teams and 8 preliminary rounds and used adjudicator feedback, ended up at around 30,000 rows.
 
 If you need more than 10,000 rows, you'll need to upgrade to a paid Heroku Postgres Plan. The 10,000,000 rows allowed in the lowest paid plan, "Hobby Basic", should certainly be more than sufficient.
 
@@ -158,4 +158,4 @@ Your Heroku app will be available at ``yourappname.herokuapp.com``. You may want
 - `Custom Domain Names for Apps <https://devcenter.heroku.com/articles/custom-domains>`_
 - `Heroku SSL <https://devcenter.heroku.com/articles/ssl>`_
 
-The custom domain name basically requires two things: a DNS ``CNAME`` entry on your website targeting ``yourappname.herokuapp.com``, and the custom domain configured on Heroku using ``heroku domains:add tab.yourwebsite.com``.  If you use a custom domain, you'll also need to provide an SSL certificate for it and add it using the ``heroku certs:add`` command.
+The custom domain name basically requires two things: a DNS ``CNAME`` entry on your website targeting ``yourappname.herokuapp.com``, and the custom domain configured on Heroku using ``heroku domains:add tab.yourwebsite.com``.  You'll also need to provide an SSL certificate for your custom domain and add it using the ``heroku certs:add`` command.
