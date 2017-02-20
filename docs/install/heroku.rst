@@ -127,20 +127,35 @@ In order to use the ``importtournament`` command directly on the server, your da
 
     heroku run tabbycat/manage.py importtournament <yourdatadirectoryname> --slug <slug> --name <Your Awesome Tournament> --short-name <Awesome>
 
-Addons
-======
+Heroku options you may want to change
+=====================================
 
-For Australs 2014, we found that the ``hobby-dev`` plan of `Heroku Postgres <https://elements.heroku.com/addons/heroku-postgresql>`_ didn't allow for more than 10,000 database rows, so we upgraded to ``hobby-basic``, which was enough (and costs a few dollars). At the end of that tournament, we had about 20,000 rows. For similar-sized tournaments (84 teams, 8 prelim rounds), you'll probably find your usage about the same, wheras small tournaments should fit within the 10,000 row limit easily.
+If you have a large tournament, you may want to customize your Heroku app. This section provides some guidance on upgrades and settings you may wish to consider. Some of these configurations require you to have the `Heroku Command Line Interface (CLI) <https://devcenter.heroku.com/articles/heroku-cli>`_ installed.
 
-If you're not sure, you can always start at ``hobby-dev``—just be prepared to `upgrade <https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups>`_ during the tournament if you run close to capacity.
+HTTPS
+-----
+
+Starting from version 1.3, all Tabbycat sites deployed to Heroku will redirect all traffic to HTTPS by default.
+
+For a myriad of reasons, we strongly advise against disabling this. But if for some reason you need to run on plain HTTP, you can do this by setting the ``DISABLE_HTTPS_REDIRECTS`` config variable in Heroku to ``disable`` (see `Heroku documentation on config vars <https://devcenter.heroku.com/articles/config-vars>`_). The value of the config var must be ``disable``; if it's anything else, HTTPS redirects will remain in place.
+
+.. tip:: Most modern browsers, after having been redirected by a site to HTTPS once, remember that that site requires HTTPS and go there for all subsequent visits even if the user typed in a plain http:// address. It may do this because it cached the HTTP 301 permanent redirect, stored an HSTS entry and/or tagged its session cookie to require HTTPS. If, after disabling HTTPS on your Tabbycat site, you find that you're still being redirected to HTTPS, first try a browser or computer that *hasn't* visited the site before. If that works, then remove the relevant entry from your (original) browser's cache, HSTS set and cookies, and try again.
+
+Upgrading your database size
+----------------------------
+
+The free plan of `Heroku Postgres <https://elements.heroku.com/addons/heroku-postgresql>`_, "Hobby Dev", should work for most small tournaments. For large tournaments, however, you may find that you exceed the 10,000-row limit of this plan. It's difficult to give general guidance on how many rows you're likely to use, because on which features of Tabbycat you use (_e.g._, if you use adjudicator feedback). But to give some idea, Australs 2016, which had 74 teams and 8 preliminary rounds and used adjudicator feedback, ended up at around 30,000 rows.
+
+If you need more than 10,000 rows, you'll need to upgrade to a paid Heroku Postgres Plan. The 10,000,000 rows allowed in the lowest paid plan, "Hobby Basic", should certainly be more than sufficient.
+
+If you're not sure, you can always start at Hobby Dev—just be prepared to `upgrade <https://devcenter.heroku.com/articles/upgrade-heroku-postgres-with-pgbackups>`_ during the tournament if you run close to capacity.
 
 Custom domain names
-===================
+-------------------
 
-Your Heroku app will be available at *yourappname.herokuapp.com*. You may want it to be a subdomain of your tournament's website, like `tab.australasians2015.org <http://tab.australasians2015.org>`_. Instructions for this are `in the Heroku documentation <https://devcenter.heroku.com/articles/custom-domains>`_. Basically there are two things to do:
+Your Heroku app will be available at ``yourappname.herokuapp.com``. You may want it to be a subdomain of your tournament's website, like ``tab.australasians2015.org``. If so, you'll need to configure your custom domain and SSL. Instructions for both are in the Heroku Dev Center:
 
-1. Add a DNS entry to your website, with record ``CNAME``, name ``tab`` (or whatever you prefer) and target ``yourappname.herokuapp.com``. You'll need to figure out how to do this with your tournament website hosting service (which is probably not Heroku).
+- `Custom Domain Names for Apps <https://devcenter.heroku.com/articles/custom-domains>`_
+- `Heroku SSL <https://devcenter.heroku.com/articles/ssl>`_
 
-2. Add a custom subdomain to Heroku, like this::
-
-    heroku domains:add tab.yourwebsite.com
+The custom domain name basically requires two things: a DNS ``CNAME`` entry on your website targeting ``yourappname.herokuapp.com``, and the custom domain configured on Heroku using ``heroku domains:add tab.yourwebsite.com``.  If you use a custom domain, you'll also need to provide an SSL certificate for it and add it using the ``heroku certs:add`` command.
