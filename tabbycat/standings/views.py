@@ -349,6 +349,10 @@ class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
 class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
     public_page_preference = 'motion_tab_released'
 
+    def get_rounds(self):
+        """Returns all of the rounds that should be included in the tab."""
+        return self.get_tournament().round_set.order_by('seq')
+
 
 # ==============================================================================
 # Current team standings (win-loss records only)
