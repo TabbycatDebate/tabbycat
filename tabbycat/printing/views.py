@@ -103,34 +103,49 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             'target': target.name, 'targetPosition': target_p
         }
 
+    def get_team_feedbacks(self, debate, team):
+        team_paths = self.get_tournament().pref('feedback_from_teams')
+        ballots = []
+
+        if team_paths == 'orallist':
+            target = debate.adjudicators.chair
+            ballots.append(self.construct_info(debate.venue, team, "Team",
+                                               target.adjudicator, ""))
+        elif team_paths == 'all-adjs':
+            for target in debate.debateadjudicator_set.all():
+                ballots.append(self.construct_info(debate.venue, team, "Team",
+                                                   target.adjudicator, ""))
+
+        return ballots
+
+    def get_adj_feedbacks(self, debate):
+        adj_paths = self.get_tournament().pref('feedback_paths')
+        ballots = []
+
+        debateadjs = debate.debateadjudicator_set.all()
+        for debateadj in debateadjs:
+            sadj = debateadj.adjudicator
+            spos = debate.adjudicators.get_position(sadj)
+            targets = expected_feedback_targets(debateadj, feedback_paths=adj_paths, debate=debate)
+            for tadj, tpos in targets:
+                ballots.append(self.construct_info(debate.venue, sadj, spos, tadj, tpos))
+
+        return ballots
+
     def get_context_data(self, **kwargs):
         kwargs['questions'] = self.questions_json_dict()
         kwargs['ballots'] = []
 
-        feedback_paths_option = self.get_tournament().pref('feedback_paths')
         draw = self.get_round().debate_set_with_prefetches(ordering=(
             'venue__group__name', 'venue__name'))
 
         for debate in draw:
-            chair = debate.adjudicators.chair
-            if not chair:
-                continue
-
             if self.from_team():
                 for team in debate.teams:
-                    kwargs['ballots'].append(self.construct_info(
-                        debate.venue, team, "Team", chair, ""))
+                    kwargs['ballots'].extend(self.get_team_feedbacks(debate, team))
 
             if self.from_adj():
-                debateadjs = debate.debateadjudicator_set.all()
-                for debateadj in debateadjs:
-                    sadj = debateadj.adjudicator
-                    spos = debate.adjudicators.get_position(sadj)
-                    targets = expected_feedback_targets(debateadj, feedback_paths=feedback_paths_option,
-                            debate=debate)
-                    for tadj, tpos in targets:
-                        kwargs['ballots'].append(self.construct_info(
-                            debate.venue, sadj, spos, tadj, tpos))
+                kwargs['ballots'].extend(self.get_adj_feedbacks(debate))
 
         return super().get_context_data(**kwargs)
 
