@@ -3,6 +3,12 @@ Change Log
 ==========
 
 
+1.2.1
+-----
+
+- A number of minor bug fixes
+
+
 1.2.0 (Foldex)
 --------------
 
