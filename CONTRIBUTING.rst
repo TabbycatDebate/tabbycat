@@ -62,13 +62,17 @@ You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1
 Release Checklist
 =================
 
-1. Bump version numbers in ``docs/conf.py`` and ``tabbycat/settings.py``
-2. Update the main ``CHANGELOG.rst`` file
-3. Shift remaining issues from the Github Milestone
-4. Create and finish the release branch as per git-flow
-5. Ensure the tag is correct (``vX.Y.Z``) and published to Github
-6. Back-merge ``master`` to the ``kitten`` branch
-7. Back-merge ``develop`` to the in-progress feature branches
-8. Push ``master`` to the release pipeline repository
-9. Issue a formal release with change notes on Github
-10. Post change notes on the Facebook group
+1. Check that all migrations have been generated and committed into Git
+2. Bump version number in ``docs/conf.py``
+3. Bump version number and (if applicable) codename in ``tabbycat/settings.py``
+4. Update the main ``CHANGELOG.rst`` file
+5. Check that the last Travis CI build passed
+6. Check that ``deploy_heroku.py`` still works
+7. Shift remaining issues from the Github Milestone
+8. Create and finish the release branch as per git-flow
+9. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub
+10. Back-merge ``master`` to the ``kitten`` branch
+11. Back-merge ``develop`` to the in-progress feature branches
+12. Push ``master`` to the release pipeline repository
+13. Issue a formal release with change notes on GitHub
+14. Post change notes on the Facebook group

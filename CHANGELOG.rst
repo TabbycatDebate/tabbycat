@@ -11,6 +11,7 @@ Change Log
 
 1.2.0 (Foldex)
 --------------
+*Release date: 15 February 2017*
 
 - Changed the core workflow by splitting display- and motion- related activities into separate pages to simplify each stage of running a round
 - Added support for Docker-based installations to make local/offline installations much more simple
@@ -25,6 +26,7 @@ Change Log
 
 1.1.7
 -----
+*Release date: 31 January 2017*
 
 - Yet more minor bug fixes
 - The auto-allocation UI will now detail your minimum rating setting better
@@ -33,6 +35,7 @@ Change Log
 
 1.1.6
 -----
+*Release date: 19 January 2017*
 
 - A number of minor bug fixes
 - Added basic infrastructure for creating tabbycat translations
@@ -40,12 +43,14 @@ Change Log
 
 1.1.5
 -----
+*Release date: 12 January 2017*
 
 - A number of minor bug fixes and improvements to documentation
 
 
 1.1.4
 -----
+*Release date: 25 November 2016*
 
 - Redesigned the footer area to better describe Tabbycat and to promote donations and related projects
 - Slight tweaks to the site homepage and main menus to better accomodate the login/log out links
@@ -54,6 +59,7 @@ Change Log
 
 1.1.3
 -----
+*Release date: 15 September 2016*
 
 - Fixed bug affecting some migrations from earlier versions
 - Made latest results show question mark rather than crash if a team is missing
@@ -63,6 +69,7 @@ Change Log
 
 1.1.2
 -----
+*Release date: 14 September 2016*
 
 - Allow panels with even number of adjudicators (with warnings), by giving chair the casting vote
 - Removed defunct person check-in, which hasn't been used since 2010
@@ -75,12 +82,14 @@ Change Log
 
 1.1.1
 -----
+*Release date: 8 September 2016*
 
 - Fixed a bug where the team standings and team tab would crash when some emoji were not set
 
 
 1.1.0 (Egyptian Mau)
 --------------------
+*Release date: 3 September 2016*
 
 - Added support for the United Asian Debating Championships style
 - Added support for the World Schools Debating Championships style
@@ -91,6 +100,7 @@ Change Log
 
 1.0.1
 -----
+*Release date: 19 August 2016*
 
 - Fixed a minor bug with the visual importer affecting similarly named institutions
 - Fixed error message when user tries to auto-allocate adjudicators on unconfirmed or released draw
@@ -99,6 +109,8 @@ Change Log
 
 1.0.0 (Devon Rex)
 -----------------
+*Release date: 16 August 2016*
+
 Redesigned and redeveloped adjudicator allocation page
   - Redesigned interface, featuring clearer displays of conflict and diversity information
   - Changes to importances and panels are now automatically saved
@@ -126,6 +138,8 @@ Feedback
 
 0.9.0 (Chartreux)
 -----------------
+*Release date: 13 June 2016*
+
 - Added a beta implementation of the break rounds workflow
 - Added venue constraints, to allow participants or divisions to preferentially be given venues from predefined groups
 - Added a button to regenerate draws
@@ -140,6 +154,8 @@ Feedback
 
 0.8.3
 -----
+*Release date: 4 April 2016*
+
 - Restored and reworking printing functionality for scoresheets/feedback
 - Restored Edit Venues and Edit Matchups on the draw pages
 - Reworked tournament data importers to use csv.DictReader, so that column order in files doesn't matter
@@ -150,12 +166,15 @@ Feedback
 
 0.8.2
 -----
+*Release date: 20 March 2016*
+
 - Fixed issue where scores from individual ballots would be deleted when any other panel in the round was edited
 - Fixed issue where page crashes for URLs with "tab" in it but that aren't recognized tab pages
 
 
 0.8.1
 -----
+*Release date: 15 March 2016*
 
 - Fixed a bug where editing a Team in the admin section could cause an error
 - Added instructions on how to account for speakers speaking twice to docs
@@ -164,6 +183,7 @@ Feedback
 
 0.8.0 (Bengal)
 --------------
+*Release date: 29 February 2016*
 
 - Upgraded to Python 3.4, dropped support for Python 2
 - Restructured directories and, as a consequence, changed database schema
@@ -180,6 +200,7 @@ Feedback
 
 0.7.0 (Abyssinian)
 ------------------
+*Release date: 31 July 2015*
 
 - Support for multiple tournaments
 - Improved and extensible tournament data importer
