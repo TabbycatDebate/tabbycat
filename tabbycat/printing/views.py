@@ -1,5 +1,6 @@
 import json
 
+from django.contrib import messages
 from django.views.generic.base import TemplateView
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
@@ -69,11 +70,11 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = 'feedback_list.html'
 
-    def from_team(self):
+    def has_team_questions(self):
         return AdjudicatorFeedbackQuestion.objects.filter(
             tournament=self.get_round().tournament, from_team=True).exists()
 
-    def from_adj(self):
+    def has_adj_questions(self):
         return AdjudicatorFeedbackQuestion.objects.filter(
             tournament=self.get_round().tournament, from_adj=True).exists()
 
@@ -139,13 +140,20 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         draw = self.get_round().debate_set_with_prefetches(ordering=(
             'venue__group__name', 'venue__name'))
 
-        for debate in draw:
-            if self.from_team():
-                for team in debate.teams:
-                    kwargs['ballots'].extend(self.get_team_feedbacks(debate, team))
+        if not self.has_team_questions():
+            messages.info(self.request, "No feedback questions have been added "
+                          " for teams on adjudicators. Check the documentation "
+                          " for information on how to add these.")
+        if not self.has_adj_questions():
+            messages.info(self.request, "No feedback questions have been added "
+                          " for adjudicators on adjudicators. Check the "
+                          "documentation for information on how to add these.")
 
-            if self.from_adj():
-                kwargs['ballots'].extend(self.get_adj_feedbacks(debate))
+        for debate in draw:
+            for team in debate.teams:
+                kwargs['ballots'].extend(self.get_team_feedbacks(debate, team))
+
+            kwargs['ballots'].extend(self.get_adj_feedbacks(debate))
 
         return super().get_context_data(**kwargs)
 
