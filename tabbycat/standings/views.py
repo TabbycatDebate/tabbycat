@@ -26,22 +26,29 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     template_name = 'standings_index.html'
 
     def get_context_data(self, **kwargs):
+        t = self.get_tournament()
         round = self.get_round()
 
-        speaks = SpeakerScore.objects.filter(ballot_submission__confirmed=True).exclude(
-            position=round.tournament.REPLY_POSITION).select_related('debate_team__debate__round')
+        speaks = SpeakerScore.objects.filter(
+                    ballot_submission__confirmed=True,
+                    speaker__team__tournament=t).exclude(
+                    position=t.REPLY_POSITION).select_related(
+                    'debate_team__debate__round')
         kwargs["top_speaks"] = speaks.order_by('-score')[:10]
         kwargs["bottom_speaks"] = speaks.order_by('score')[:10]
 
         margins = TeamScore.objects.filter(
-            ballot_submission__confirmed=True, margin__gte=0).select_related(
-            'debate_team__team', 'debate_team__debate__round',
-            'debate_team__team__institution')
+                    ballot_submission__confirmed=True,
+                    debate_team__team__tournament=t,
+                    margin__gte=0).select_related(
+                    'debate_team__team', 'debate_team__debate__round',
+                    'debate_team__team__institution')
         kwargs["top_margins"] = margins.order_by('-margin')[:10]
         kwargs["bottom_margins"] = margins.order_by('margin')[:10]
 
-        motions = Motion.objects.filter(round__seq__lte=round.seq).annotate(
-            Count('ballotsubmission'))
+        motions = Motion.objects.filter(
+                    round__seq__lte=round.seq, round__tournament=t).annotate(
+                    Count('ballotsubmission'))
         kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:10]
         kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:10]
 
