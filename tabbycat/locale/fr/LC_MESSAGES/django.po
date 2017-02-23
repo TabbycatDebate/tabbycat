@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-14 16:00-0800\n"
+"POT-Creation-Date: 2017-02-23 13:56-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,68 +29,64 @@ msgstr "Ce site fonctionne sur"
 
 #: templates/footer.html:20
 msgid ""
-"Tabbycat is an open-source project for tabbing debating tournaments that use "
-"two-team formats. It was created by Qi-Shan Lim, Chuan-Zheng Lee, and Philip "
-"Belesky. Personal or institutional <a href=\"http://PayPal.Me/"
-"tabbycatproject/0aud\">donations to the project's developers</a> are much "
-"appreciated."
+"Tabbycat is an open-source project developed by volunteers, and is free to "
+"use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
-"Tabbycat est un projet open-source pour tabuler les tournois de débat qui "
-"utilise les formats à deux équipes. C'était créé par Qi-Sham Lim, Chuan-"
-"Zheng Lee, et Philip Belesky. Les <a href=\"http://PayPal.Me/"
-"tabbycatproject/0aud\">dons aux développeurs du projet</a>, soit personnels "
-"soit institutionnels, sont bien appréciés."
+"Tabbycat est un projet open source, développe par des bénévoles. Vous pouvez "
+"l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
+"collecter des fonds."
 
-#: templates/footer.html:27
+#: templates/footer.html:32
 msgid "Still timing debates with the stopwatch app?"
 msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
 
-#: templates/footer.html:29
+#: templates/footer.html:34
 #, python-format
 msgid ""
 "Using a real debating app makes speaking and adjudicating easier! Check out "
 "<a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
-"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (for iPhones/iPads)</a> or "
-"<a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a "
+"href=\"https://play.google.com/store/apps/details?id=net.czlee."
 "debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
-"\">Debatekeeper (for Android)</a>."
+"\">Debatekeeper</a> (Android)."
 msgstr ""
 "Une application réelle de débat rend plus facile parler et juger&nbsp;! "
 "Découvrez <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
-"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (pour les iPhones/iPads)</"
-"a> ou <a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (iPhone/iPad)</a> ou <a "
+"href=\"https://play.google.com/store/apps/details?id=net.czlee."
 "debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
-"\">Debatekeeper (pour Android)</a>."
+"\">Debatekeeper (Android)</a>."
 
-#: templates/footer.html:37
+#: templates/footer.html:42
 msgid "Need ballots?"
 msgstr "Avez-vous besoin des bulletins&nbsp;?"
 
-#: templates/footer.html:39
+#: templates/footer.html:44
 msgid ""
-"<a href=\"http://debatingballot.com\" target=\"_blank\">DebatingBallot.com</"
-"a> lets you design and print great ballots online."
+"Use <a href=\"http://debatingballot.com\" target=\"_blank\">debatingBallot."
+"com</a> to design and print great ballots online."
 msgstr ""
-"<a href=\"http://debatingballot.com\" target=\"_blank\">DebatingBallot.com</"
-"a> vous permet de dessiner et d'imprimer des bulletins beaux en ligne."
+"Utilisez <a href=\"http://debatingballot.com\" target=\"_blank"
+"\">DebatingBallot.com</a> pour dessiner et d'imprimer des bulletins beaux en "
+"ligne."
 
-#: templates/footer.html:50
+#: templates/footer.html:55
 msgid "GitHub"
 msgstr "GitHub"
 
-#: templates/footer.html:53
+#: templates/footer.html:58
 msgid "Documentation"
 msgstr "Documentation"
 
-#: templates/footer.html:56
+#: templates/footer.html:61
 msgid "Support"
 msgstr "Aide"
 
-#: templates/footer.html:59
+#: templates/footer.html:64
 msgid "Facebook Group"
 msgstr "Groupe sur Facebook"
 
-#: templates/footer.html:62
+#: templates/footer.html:67
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
 
@@ -98,6 +94,10 @@ msgstr "Installer une copie"
 msgctxt "page title"
 msgid "Login"
 msgstr "Connexion"
+
+#: templates/registration/login.html:30
+msgid "Your username and password didn't match."
+msgstr "Votre nom d'utilisateur et votre mot de passe n'ont pas correspondu."
 
 #: templates/registration/login.html:36
 msgid ""
@@ -118,21 +118,21 @@ msgstr "Connexion"
 
 #. Translators: Put these in the right order,
 #. e.g. side_abbr = "A", metric_abbr = "TSS" -> "ATSS" for "Affirmative's Total Speaker Score"
-#: utils/tables.py:538
+#: utils/tables.py:541
 #, python-format
 msgid "%(side_abbr)s%(metric_abbr)s"
 msgstr "%(metric_abbr)s%(side_abbr)s"
 
 #. Translators: Put these in the right order,
 #. e.g. side_possessive = "affirmative's", metric_name = "total speaker score" -> "affirmative's total speaker score"
-#: utils/tables.py:545
+#: utils/tables.py:548
 #, python-format
 msgid "%(side_possessive)s %(metric_name)s"
 msgstr "%(metric_name)s %(side_possessive)s"
 
 #. Translators: e.g. team would be "negative team" or "affirmative team",
 #. affirmative would be "affirmative team".
-#: utils/tables.py:598
+#: utils/tables.py:601
 #, python-format
 msgid "Number of times this %(team)s has been the %(affirmative)s before"
 msgstr "Nombre de fois que cette %(team)s a déjà été l'%(affirmative)s"
@@ -141,7 +141,7 @@ msgstr "Nombre de fois que cette %(team)s a déjà été l'%(affirmative)s"
 #. side_abbr is e.g. "A"/"N"/"G"/"O" for affirmative/negative/government/opposition,
 #. aff_abbr is "Aff"/"Gov" for affirmative/government, so "NAff" is the number of times
 #. the negative team has affirmed, or equivalently "OGov".
-#: utils/tables.py:608
+#: utils/tables.py:611
 #, python-format
 msgid "%(side_abbr)s%(aff_abbr)ss"
 msgstr "%(side_abbr)s%(aff_abbr)ss"
