@@ -13,12 +13,9 @@ engines:
       - php
     exclude_paths:
       - "tabbycat/*/migrations/*.py"
+      - "tabbycat/*/tests/*.py"
       - "tabbycat/*/urls*.py"
       - "tabbycat/options/dynamic_preferences_registry.py"
-      - "tabbycat/draw/tests/test_generator.py"
-      - "tabbycat/draw/tests/test_one_up_one_down.py"
-    exclude_fingerprints:
-      - 5eb53f480bfbacf8ed37c29d64a9555e
   eslint:
     enabled: true
   fixme:
