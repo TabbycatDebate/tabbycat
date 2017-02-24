@@ -1,7 +1,9 @@
 from django.contrib import admin
+from django.db.models import Prefetch
 
 from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
 
+from draw.models import DebateTeam
 from utils.admin import TabbycatModelAdminFieldsMixin
 
 
@@ -38,7 +40,8 @@ admin.site.register(TeamScore, TeamScoreAdmin)
 # ==============================================================================
 
 class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
-    list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'position', 'get_speaker_name', 'score')
+    list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'position',
+                    'get_speaker_name', 'score', 'ghost')
     search_fields = ('debate_team__debate__round__abbreviation',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'speaker__name')
@@ -49,7 +52,9 @@ class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
         return super(SpeakerScoreAdmin, self).get_queryset(request).select_related(
             'debate_team__debate__round',
             'debate_team__team__institution', 'debate_team__team__tournament',
-            'ballot_submission')
+            'ballot_submission').prefetch_related(
+            Prefetch('ballot_submission__debate__debateteam_set',
+                queryset=DebateTeam.objects.select_related('team')))
 
 admin.site.register(SpeakerScore, SpeakerScoreAdmin)
 
