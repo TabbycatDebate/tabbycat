@@ -12,6 +12,7 @@ engines:
       - php
     exclude_paths:
       - "tabbycat/options/dynamic_preferences_registry.py"
+      - "tabbycat/*/migrations/*.py"
   eslint:
     enabled: true
   fixme:
