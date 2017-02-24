@@ -16,6 +16,8 @@ engines:
       - "tabbycat/*/tests/*.py"
       - "tabbycat/*/urls*.py"
       - "tabbycat/options/dynamic_preferences_registry.py"
+    exclude_fingerprints:
+      - 5eb53f480bfbacf8ed37c29d64a9555e
   eslint:
     enabled: true
   fixme:
@@ -24,6 +26,7 @@ engines:
     enabled: true
     exclude_paths:
       - "tabbycat/draw/generator.py"
+      - "tabbycat/adjallocation/munkres.py"
 ratings:
   paths:
   - "**.css"
