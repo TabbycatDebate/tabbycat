@@ -216,7 +216,6 @@ class SpeakerScore(models.Model):
     score = ScoreField(verbose_name=_("score"))
     position = models.IntegerField(verbose_name=_("position"))
 
-
     objects = SpeakerScoreManager()
 
     class Meta:
