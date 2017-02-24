@@ -8,17 +8,21 @@ engines:
       languages:
       - ruby
       - javascript
-      - python
+      - python:
+          mass_threshold: 50
       - php
     exclude_paths:
       - "tabbycat/options/dynamic_preferences_registry.py"
       - "tabbycat/*/migrations/*.py"
+      - "tabbycat/draw/tests/test_generator.py"
   eslint:
     enabled: true
   fixme:
     enabled: true
   radon:
     enabled: true
+    exclude_paths:
+      - "tabbycat/draw/generator.py"
 ratings:
   paths:
   - "**.css"
