@@ -1,6 +1,11 @@
 # Tabbycat
 
-[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)  [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/) [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat) [![Dependency Status](https://gemnasium.com/badges/github.com/czlee/tabbycat.svg)](https://gemnasium.com/github.com/czlee/tabbycat)
+[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)
+[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/)
+[![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat)
+[![Dependency Status](https://gemnasium.com/badges/github.com/czlee/tabbycat.svg)](https://gemnasium.com/github.com/czlee/tabbycat)
+[![Code Climate](https://codeclimate.com/github/czlee/tabbycat/badges/gpa.svg)](https://codeclimate.com/github/czlee/tabbycat)
+[![Test Coverage](https://codeclimate.com/github/czlee/tabbycat/badges/coverage.svg)](https://codeclimate.com/github/czlee/tabbycat/coverage)
 
 Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Australs in Auckland 2010, [Wellington 2012](https://www.facebook.com/Australs2012), [Dunedin 2014](http://australs2014.herokuapp.com), [Daejeon 2015](http://australs2015.herokuapp.com) and [Perth 2016](http://australs2016.herokuapp.com), as well as [many other tournaments of all sizes](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [WAustrals 2016 tab website](http://australs2016.herokuapp.com).
 
