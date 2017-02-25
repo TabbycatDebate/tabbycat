@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from dynamic_preferences.admin import PerInstancePreferenceAdmin
-from dynamic_preferences.models import GlobalPreferenceModel, UserPreferenceModel
+from dynamic_preferences.models import GlobalPreferenceModel
+from dynamic_preferences.users.models import UserPreferenceModel
 
 from .models import TournamentPreferenceModel
 
@@ -16,4 +17,3 @@ class TournamentPreferenceAdmin(PerInstancePreferenceAdmin):
 
 admin.site.register(TournamentPreferenceModel, TournamentPreferenceAdmin)
 admin.site.unregister(GlobalPreferenceModel)
-admin.site.unregister(UserPreferenceModel)

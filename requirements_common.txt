@@ -7,7 +7,7 @@
 
 Django==1.10.5
 django-appconf==1.0.2                   # Helper for handling app configs
-django-dynamic-preferences==0.8.4       # Settings management
+django-dynamic-preferences==1.0.0       # Settings management
 django-extensions==1.7.6                # For the generate secret command
 django-ipware==1.1.6                    # IP Address logging
 django-jet==1.0.4                       # Admin Backend
