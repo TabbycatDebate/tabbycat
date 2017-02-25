@@ -59,9 +59,9 @@ If you want to :ref:`import tournament data <importing-initial-data>` from CSV f
 1. Install dependencies
 -----------------------
 
-- Install the `Heroku Command Line Interface (CLI) <https://devcenter.heroku.com/articles/heroku-cli>`_. Then open a command shell and log in using ``heroku login``.
+- Install the `Heroku Command Line Interface (CLI) <https://devcenter.heroku.com/articles/heroku-cli>`_, then log in with the command ``heroku login``.
 
-- Windows users need to install **Python**. Follow the instructions in (only!) :ref:`part 1(a) of our Windows instructions <install-python-windows>`.
+- Windows users need to install **Python**. Follow (only!) :ref:`part 1(a) of our Windows instructions <install-python-windows>`.
 
 - If you don't already have **Git**, follow the `instructions on the GitHub website <https://help.github.com/articles/set-up-git>`_ to set up Git.
 

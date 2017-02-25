@@ -47,13 +47,16 @@ def team_status_classes(team):
 
 @register.simple_tag
 def debate_draw_status_class(debate):
-    if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
+    if debate.aff_team and debate.aff_team.type == 'B':
+        return "active text-muted"
+    elif debate.neg_team and debate.neg_team.type == 'B':
         return "active text-muted"
     elif debate.result_status == "P":
         return "active text-muted"
-    elif debate.confirmed_ballot:
-        if debate.confirmed_ballot.forfeit:
-            return "active text-muted"
+    elif debate.confirmed_ballot and debate.confirmed_ballot.forfeit:
+        return "active text-muted"
+
+    return ""
 
 
 @register.simple_tag

@@ -74,6 +74,16 @@
     </section>
   </template>
 
+  <template v-if="question.type === 'comment'">
+    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1">
+      <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
+        <div class="db-align-vertical-center db-padding-horizontal db-flex-item db-vertical-center-text">
+          <em>{{ question.text }}</em>
+        </div>
+      </div>
+    </section>
+  </template>
+
 </template>
 
 <script>

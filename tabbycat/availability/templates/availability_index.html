@@ -189,6 +189,19 @@
     </div>
   {% endif %}
 
+  {% if error_type == 'bad_draw_type_for_break_round' %}
+    <div class="alert alert-danger">
+      This is an elimination round, but its draw type is
+      <strong>{{ round.get_draw_type_display|lower }}</strong>.
+      This combination isn't allowed — the draw type of elimination rounds must
+      be either <strong>first elimination</strong> (if it's the first
+      elimination round in its break category) or <strong>subsequent
+      elimination</strong>. Please
+      <a href="{% url 'admin:tournaments_round_change' round.id %}" class="alert-link">
+        change this round's draw type in the Edit Database area.</a>
+    </div>
+  {% endif %}
+
 {% endblock %}
 
 {% block content %}
