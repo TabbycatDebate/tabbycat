@@ -39,7 +39,7 @@ if (typeof updateActionsURL !== 'undefined' && updateResultsURL !== 'undefined')
       latestResults: 'loading',
       pollFrequency: 30000, // 30 seconds
       updateActionsURL: updateActionsURL, // From template
-      updateResultsURL: updateResultsURL, // From template
+      updateResultsURL: updateResultsURL  // From template
   };
   vueMethods['updateActions'] = function() {
     this.fetchData(updateActionsURL, 'actions');

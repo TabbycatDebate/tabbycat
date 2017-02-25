@@ -83,11 +83,11 @@ if args.teams:
         "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq, affects_averages=True)}
     ).distinct().order_by("-points", "-speaker_score")
 
-    print teams.query  # flake8: noqa
-    print teams.count()
+    print(teams.query)
+    print(teams.count())
 
     for team in teams:
-        print "{0:<20} {1:>10} {2:>5}".format(team.short_name, team.points, team.speaker_score)
+        print("{0:<20} {1:>10} {2:>5}".format(team.short_name, team.points, team.speaker_score))
 
 if args.speakers:
     speakers = Speaker.objects.filter(
@@ -120,19 +120,19 @@ if args.speakers:
     )
     speakers = speakers.extra({"total": EXTRA_QUERY}).distinct().order_by("-total")
 
-    print speakers.query
-    print speakers.count()
+    print(speakers.query)
+    print(speakers.count())
 
     '''
-    print SpeakerScore.objects.filter(
+    print(SpeakerScore.objects.filter(
         ballot_submission__confirmed=True,
         debate_team__debate__round__seq__lte = round.seq,
         position__lte = round.tournament.LAST_SUBSTANTIVE_POSITION
-    ).distinct().count()
+    ).distinct().count())
     '''
 
     for speaker in speakers:
-        print "{0:<30} {1:>10.2f}".format(speaker.name, speaker.total)
+        print("{0:<30} {1:>10.2f}".format(speaker.name, speaker.total))
 
 if args.replies:
     speakers = Speaker.objects.filter(
@@ -163,8 +163,8 @@ if args.replies:
         position=round.tournament.REPLY_POSITION
     )}).distinct().order_by('-average', '-replies', 'name')
 
-    print speakers.query
-    print speakers.count()
+    print(speakers.query)
+    print(speakers.count())
 
     for speaker in speakers:
-        print "{0:<30} {1:>7.2f} {2:>2d}".format(speaker.name, speaker.average, speaker.replies)
+        print("{0:<30} {1:>7.2f} {2:>2d}".format(speaker.name, speaker.average, speaker.replies))

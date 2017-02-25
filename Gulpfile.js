@@ -40,7 +40,7 @@ gulp.task('fonts-compile', function() {
       'node_modules/lato-font/fonts/**/*.svg',
       'node_modules/lato-font/fonts/**/*.ttf',
       'node_modules/lato-font/fonts/**/*.woff',
-      'node_modules/lato-font/fonts/**/*.woff2',
+      'node_modules/lato-font/fonts/**/*.woff2'
     ])
     .pipe(rename({dirname: ''})) // Remove folder structure
     .pipe(gulp.dest(outputDir + 'fonts/'));
@@ -63,16 +63,14 @@ gulp.task("js-vendor-compile", function() {
     'node_modules/jquery/dist/jquery.js', // For Debug Toolbar
     'node_modules/datatables.net/js/jquery.dataTables.js', // Deprecate,
     'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
-    'tabbycat/templates/js-vendor/jquery-ui.min.js', // Deprecate,
+    'tabbycat/templates/js-vendor/jquery-ui.min.js' // Deprecate,
     ])
     .pipe(isProduction ? uglify() : gutil.noop()) // Doesnt crash
     .pipe(gulp.dest(outputDir + '/js/vendor/'));
 });
 
 gulp.task("js-compile", function() {
-  gulp.src([
-    'tabbycat/templates/js-standalones/*.js',
-    ])
+  gulp.src(['tabbycat/templates/js-standalones/*.js'])
     // Can't run uglify() until django logic is out of standalone js files
     // .pipe(isProduction ? uglify() : gutil.noop())
     .pipe(gulp.dest(outputDir + '/js/'))
@@ -128,7 +126,7 @@ gulp.task('build', [
   'styles-compile',
   'js-vendor-compile',
   'js-compile',
-  'js-browserify',
+  'js-browserify'
  ]);
 
 // Runs when debug is True and when runserver/collectstatic is called

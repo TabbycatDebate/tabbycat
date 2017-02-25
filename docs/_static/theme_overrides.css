@@ -22,5 +22,5 @@ pre.literal-block, .rst-content .literal-block, .rst-content pre.literal-block {
   margin-bottom: 12px;
 }
 .rst-content table.docutils ul:last-child {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }

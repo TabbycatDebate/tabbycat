@@ -131,14 +131,14 @@ def get_diversity_data_sets(t, for_public):
         if t.pref('public_breaking_teams') is True or for_public is False:
             data_sets['speakers_region'].append(compile_data(
                 'Breaking', Speaker.objects.filter(team__tournament=t, team__breakingteam__isnull=False), 'team__institution__region__name',
-                    filters=region_filters, count=True))
+                filters=region_filters, count=True))
         if Speaker.objects.filter(team__tournament=t).filter(novice=True).count() > 0:
             data_sets['speakers_region'].append(compile_data(
                 'Pros', Speaker.objects.filter(team__tournament=t, novice=False), 'team__institution__region__name',
-                    filters=region_filters, count=True))
+                filters=region_filters, count=True))
             data_sets['speakers_region'].append(compile_data(
                 'Novices', Speaker.objects.filter(team__tournament=t, novice=True), 'team__institution__region__name',
-                    filters=region_filters, count=True))
+                filters=region_filters, count=True))
 
     # ==========================================================================
     # Adjudicators Demographics
