@@ -93,18 +93,31 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             qdict['choice_options'] = question.choices_for_number_scale
         return qdict
 
-    def add_default_scale(self):
+    def add_defaults(self):
+        t = self.get_tournament()
+        default_questions = []
+
+        if t.pref('feedback_introduction'):
+            default_scale_info = AdjudicatorFeedbackQuestion(
+                text=t.pref('feedback_introduction'), seq=0,
+                answer_type='comment', # Custom type just for print display
+                required=True, from_team=True, from_adj=True
+            )
+            default_questions.append(self.question_to_json(default_scale_info))
+
         default_scale_question = AdjudicatorFeedbackQuestion(
             text='Overall Score', seq=0,
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
             required=True, from_team=True, from_adj=True,
-            min_value=self.get_tournament().pref('adj_min_score'),
-            max_value=self.get_tournament().pref('adj_max_score')
+            min_value=t.pref('adj_min_score'),
+            max_value=t.pref('adj_max_score')
         )
-        return self.question_to_json(default_scale_question)
+        default_questions.append(self.question_to_json(default_scale_question))
+
+        return default_questions
 
     def questions_json_dict(self):
-        questions = [self.add_default_scale()]
+        questions = self.add_defaults()
         for question in self.get_round().tournament.adj_feedback_questions:
             questions.append(self.question_to_json(question))
 
