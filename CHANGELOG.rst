@@ -5,8 +5,10 @@ Change Log
 
 1.2.1
 -----
+*Release date: 25 February 2017*
 
-- A number of minor bug fixes
+- Printable feedback forms will now display the default rating scale, any configured introduction text, and better prompt you to add additional questions
+- A number of other minor bug fixes
 
 
 1.2.0 (Foldex)

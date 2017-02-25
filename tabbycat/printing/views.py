@@ -78,21 +78,49 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         return AdjudicatorFeedbackQuestion.objects.filter(
             tournament=self.get_round().tournament, from_adj=True).exists()
 
-    def questions_json_dict(self):
-        questions = []
-        for q in self.get_round().tournament.adj_feedback_questions:
-            q_set = {
-                'text': q.text, 'seq': q.seq, 'type': q.answer_type,
-                'required': json.dumps(q.answer_type),
-                'from_team': json.dumps(q.from_team),
-                'from_adj': json.dumps(q.from_adj),
-            }
-            if q.choices:
-                q_set['choice_options'] = q.choices.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
-            elif q.min_value is not None and q.max_value is not None:
-                q_set['choice_options'] = q.choices_for_number_scale
+    def question_to_json(self, question):
+        qdict = {
+            'text': question.text,
+            'seq': question.seq,
+            'type': question.answer_type,
+            'required': json.dumps(question.answer_type),
+            'from_team': json.dumps(question.from_team),
+            'from_adj': json.dumps(question.from_adj),
+        }
+        if question.choices:
+            qdict['choice_options'] = question.choices.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
+        elif question.min_value is not None and question.max_value is not None:
+            qdict['choice_options'] = question.choices_for_number_scale
+        return qdict
 
-            questions.append(q_set)
+    def add_defaults(self):
+        t = self.get_tournament()
+        default_questions = []
+
+        if t.pref('feedback_introduction'):
+            default_scale_info = AdjudicatorFeedbackQuestion(
+                text=t.pref('feedback_introduction'), seq=0,
+                answer_type='comment', # Custom type just for print display
+                required=True, from_team=True, from_adj=True
+            )
+            default_questions.append(self.question_to_json(default_scale_info))
+
+        default_scale_question = AdjudicatorFeedbackQuestion(
+            text='Overall Score', seq=0,
+            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
+            required=True, from_team=True, from_adj=True,
+            min_value=t.pref('adj_min_score'),
+            max_value=t.pref('adj_max_score')
+        )
+        default_questions.append(self.question_to_json(default_scale_question))
+
+        return default_questions
+
+    def questions_json_dict(self):
+        questions = self.add_defaults()
+        for question in self.get_round().tournament.adj_feedback_questions:
+            questions.append(self.question_to_json(question))
+
         return questions
 
     def construct_info(self, venue, source, source_p, target, target_p):
@@ -140,14 +168,16 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         draw = self.get_round().debate_set_with_prefetches(ordering=(
             'venue__group__name', 'venue__name'))
 
+        message = ""
         if not self.has_team_questions():
-            messages.info(self.request, "No feedback questions have been added "
-                          " for teams on adjudicators. Check the documentation "
-                          " for information on how to add these.")
+            message += "No feedback questions have been added " + \
+                       "for teams on adjudicators."
         if not self.has_adj_questions():
-            messages.info(self.request, "No feedback questions have been added "
-                          " for adjudicators on adjudicators. Check the "
-                          "documentation for information on how to add these.")
+            message += "No feedback questions have been added " + \
+                       "for adjudicators on adjudicators. "
+        if message is not "":
+            messages.warning(self.request, message + "Check the " +
+                "documentation for information on how to add these.")
 
         for debate in draw:
             for team in debate.teams:
