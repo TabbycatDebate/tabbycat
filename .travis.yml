@@ -13,6 +13,6 @@ install:
   - pip install -r requirements_common.txt
   - pip install codeclimate-test-reporter
 script:
-  - flake8 tabbycat
-  - cd tabbycat && dj test -v 2
-  - coverage run manage.py test -v 1
+  - flake8 .
+  - dj test -v 2
+  - cd tabbycat && coverage run manage.py test -v 1

@@ -1,8 +1,10 @@
 """Unit tests for the Anorak importer."""
 
-from unittest import skip
 import logging
 import os.path
+
+from unittest import skip
+from settings import BASE_DIR
 
 from django.test import TestCase
 
@@ -14,15 +16,17 @@ import participants.models as pm
 import tournaments.models as tm
 import venues.models as vm
 
+
 from ..anorak import AnorakTournamentDataImporter
 from ..base import TournamentDataImporterError
 
 
 class TestImporterAnorak(TestCase):
 
-    TESTDIR = "../data/test/standard"
-    TESTDIR_CHOICES = "../data/test/choices"
-    TESTDIR_ERRORS = "../data/test/errors"
+    # BASE_DIR is /tabbycat this allows tests to run from there or project root
+    TESTDIR = os.path.join(BASE_DIR, '../data/test/standard')
+    TESTDIR_CHOICES = os.path.join(BASE_DIR, '../data/test/choices')
+    TESTDIR_ERRORS = os.path.join(BASE_DIR, '../data/test/errors')
 
     def setUp(self):
         super(TestImporterAnorak, self).setUp()
