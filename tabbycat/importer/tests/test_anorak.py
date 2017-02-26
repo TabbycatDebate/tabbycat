@@ -4,6 +4,7 @@ import logging
 import os.path
 
 from unittest import skip
+
 from settings import BASE_DIR
 
 from django.test import TestCase
@@ -15,7 +16,6 @@ import motions.models as mm
 import participants.models as pm
 import tournaments.models as tm
 import venues.models as vm
-
 
 from ..anorak import AnorakTournamentDataImporter
 from ..base import TournamentDataImporterError
