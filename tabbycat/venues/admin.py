@@ -3,7 +3,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django import forms
 from gfklookupwidget.widgets import GfkLookupWidget
 
-from .models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
+from .models import Venue, VenueCategory, VenueConstraint, VenueConstraintCategory, VenueGroup
 
 
 @admin.register(VenueGroup)
@@ -26,6 +26,15 @@ class VenueAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('group')
+
+
+@admin.register(VenueCategory)
+class VenueCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'display_in_venue_name',
+            'display_in_public_tooltip', 'venues_list')
+
+    def venues_list(self, obj):
+        return ", ".join([v.name for v in obj.venues.all()])
 
 
 # ==============================================================================

@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 class VenueGroup(models.Model):
@@ -47,6 +48,49 @@ class Venue(models.Model):
         return "<Venue: %s (%s) [%s]>" % (str(self), self.priority, self.id)
 
 
+class VenueCategory(models.Model):
+    """Represents a category of venues, typically used for (physical real-world)
+    navigation aid, division allocations and/or venue constraints."""
+
+    DISPLAY_NONE = '-'
+    DISPLAY_PREFIX = 'P'
+    DISPLAY_SUFFIX = 'S'
+    DISPLAY_IN_VENUE_NAME_CHOICES = ((DISPLAY_NONE, _("Don't display in venue name")),
+                                     (DISPLAY_PREFIX, _("Display as prefix")),
+                                     (DISPLAY_SUFFIX, _("Display as suffix")))
+
+    name = models.CharField(max_length=80,
+        verbose_name=_("name"),
+        help_text=_("Name of category, e.g., \"Purple\", \"Step-free access\", "
+            "\"Close to tab room\". This name is shown when the category is "
+            "prefixed or suffixed to a venue name in the draw, e.g., \"Purple – G05\"."))
+    description = models.CharField(max_length=200, blank=True,
+        verbose_name=_("description"),
+        help_text=_("Description, as the predicate of a sentence, e.g. \"has step-free access\", "
+            "\"is close to the briefing hall\". This description follows \"This venue\" when "
+            "shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."))
+
+    venues = models.ManyToManyField(Venue, verbose_name=_("venues"))
+
+    display_in_venue_name = models.CharField(max_length=1, choices=DISPLAY_IN_VENUE_NAME_CHOICES,
+        verbose_name=_("display in venue name"),
+        help_text=_("Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""))
+    display_in_public_tooltip = models.BooleanField(
+        verbose_name=_("display in public tooltip"),
+        help_text=_("Displays the description in the tooltip for the venue on public pages. "
+            "The description, if not blank, will always show on admin pages."))
+
+    class Meta:
+        verbose_name = _("venue category")
+        verbose_name_plural = _("venue categories")
+
+    def __repr__(self):
+        return "<VenueCategory: %s [%d]>" % (self.name, self.id)
+
+    def __str__(self):
+        return self.name
+
+
 class VenueConstraintManager(models.Manager):
 
     def filter_for_debates(self, debates):
@@ -78,7 +122,7 @@ class VenueConstraint(models.Model):
                                    models.Q(app_label='participants', model='institution') | \
                                    models.Q(app_label='divisions', model='division')
 
-    category = models.ForeignKey(VenueConstraintCategory, models.CASCADE)
+    category = models.ForeignKey(VenueCategory, models.CASCADE)
     priority = models.IntegerField()
 
     subject_content_type = models.ForeignKey(ContentType, models.CASCADE,
