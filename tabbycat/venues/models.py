@@ -35,14 +35,31 @@ class Venue(models.Model):
     round_availabilities = GenericRelation('availability.RoundAvailability')
 
     class Meta:
-        ordering = ['group', 'name']
-        index_together = ['group', 'name']
+        ordering = ['name']
+        index_together = ['name']
+
+    @property
+    def display_name(self):
+        categories = self.venuecategory_set.all()
+        prefixes = []
+        suffixes = []
+        for category in categories:
+            if category.display_in_venue_name == VenueCategory.DISPLAY_PREFIX:
+                prefixes.append(category.name)
+            elif category.display_in_venue_name == VenueCategory.DISPLAY_SUFFIX:
+                suffixes.append(category.name)
+        display_name = ""
+        if prefixes:
+            prefixes.sort()
+            display_name += ", ".join(prefixes) + " – "
+        display_name += self.name
+        if suffixes:
+            suffixes.sort()
+            display_name += " – " + ", ".join(suffixes)
+        return display_name
 
     def __str__(self):
-        if self.group:
-            return '%s – %s' % (self.group, self.name)
-        else:
-            return '%s' % (self.name)
+        return self.display_name
 
     def __repr__(self):
         return "<Venue: %s (%s) [%s]>" % (str(self), self.priority, self.id)

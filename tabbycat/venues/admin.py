@@ -14,18 +14,16 @@ class VenueGroupAdmin(admin.ModelAdmin):
 
 @admin.register(Venue)
 class VenueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group_name', 'priority', 'tournament')
-    list_filter = ('group', 'priority', 'tournament')
+    list_display = ('display_name', 'priority', 'tournament', 'categories_list')
+    list_filter = ('venuecategory', 'priority', 'tournament')
     search_fields = ('name',)
 
-    def group_name(self, obj):
-        if obj.group is None:
-            return None
-        return obj.group.name
-    group_name.short_description = 'Venue Group'
+    def categories_list(self, obj):
+        return ", ".join([c.name for c in obj.venuecategory_set.all()])
 
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related('group')
+        return super().get_queryset(request).select_related(
+                'tournament').prefetch_related('venuecategory_set')
 
 
 @admin.register(VenueCategory)
@@ -35,6 +33,9 @@ class VenueCategoryAdmin(admin.ModelAdmin):
 
     def venues_list(self, obj):
         return ", ".join([v.name for v in obj.venues.all()])
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('venues')
 
 
 # ==============================================================================
