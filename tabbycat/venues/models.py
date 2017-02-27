@@ -90,9 +90,10 @@ class VenueCategory(models.Model):
     venues = models.ManyToManyField(Venue, verbose_name=_("venues"))
 
     display_in_venue_name = models.CharField(max_length=1, choices=DISPLAY_IN_VENUE_NAME_CHOICES,
+        default=DISPLAY_NONE,
         verbose_name=_("display in venue name"),
         help_text=_("Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""))
-    display_in_public_tooltip = models.BooleanField(
+    display_in_public_tooltip = models.BooleanField(default=False,
         verbose_name=_("display in public tooltip"),
         help_text=_("Displays the description in the tooltip for the venue on public pages. "
             "The description, if not blank, will always show on admin pages."))
