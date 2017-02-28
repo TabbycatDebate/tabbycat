@@ -328,7 +328,7 @@ class Round(models.Model):
         warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=2)
         related = ('venue',)
         if self.tournament.pref('enable_divisions'):
-            related += ('division', 'division__venue_group')
+            related += ('division', 'division__venue_category')
         return self.debate_set.order_by(*ordering).select_related(*related)
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
@@ -352,9 +352,9 @@ class Round(models.Model):
                     queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             )
         if divisions and self.tournament.pref('enable_divisions'):
-            debates = debates.select_related('division', 'division__venue_group')
+            debates = debates.select_related('division', 'division__venue_category')
         if venues:
-            debates = debates.select_related('venue', 'venue__group')
+            debates = debates.select_related('venue').prefetch_related('venue__venuecategory_set')
         if venueconstraints:
             debates = debates.prefetch_related('venue__venueconstraintcategory_set')
         if teams or wins or institutions or speakers:
