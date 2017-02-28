@@ -136,10 +136,9 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         team_paths = self.get_tournament().pref('feedback_from_teams')
         ballots = []
 
-        if team_paths == 'orallist':
-            target = debate.adjudicators.chair
+        if team_paths == 'orallist' and debate.adjudicators.chair:
             ballots.append(self.construct_info(debate.venue, team, "Team",
-                                               target.adjudicator, ""))
+                                               debate.adjudicators.chair, ""))
         elif team_paths == 'all-adjs':
             for target in debate.debateadjudicator_set.all():
                 ballots.append(self.construct_info(debate.venue, team, "Team",
