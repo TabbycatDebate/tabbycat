@@ -5,6 +5,11 @@ Change Log
 
 1.2.1
 -----
+*Release date: ???*
+
+
+1.2.1
+-----
 *Release date: 25 February 2017*
 
 - Printable feedback forms will now display the default rating scale, any configured introduction text, and better prompt you to add additional questions
