@@ -18,23 +18,19 @@ def convert_venueconstraintcategory_to_venuecategory(apps, schema_editor):
 
     mapping = {} # old VenueConstraintCategory to new VenueCategory
 
+    for old_category in VenueConstraintCategory.objects.all():
+        new_category = VenueCategory()
+        new_category.name = old_category.name
+        new_category.description = old_category.name
+        new_category.display_in_venue_name = '-'
+        new_category.display_in_public_tooltip = False
+        new_category.save()
+        new_category.venues.set(old_category.venues.all())
+        new_category.save()
+
+        mapping[old_category.id] = new_category.id
+
     for constraint in VenueConstraint.objects.all():
-
-        # create category if it doesn't already exist
-        if constraint.old_category_id not in mapping:
-            old_category = constraint.old_category
-
-            new_category = VenueCategory()
-            new_category.name = old_category.name
-            new_category.description = old_category.name
-            new_category.display_in_venue_name = '-'
-            new_category.display_in_public_tooltip = False
-            new_category.save()
-            new_category.venues.set(old_category.venues.all())
-            new_category.save()
-
-            mapping[constraint.old_category_id] = new_category.id
-
         constraint.category_id = mapping[constraint.old_category_id]
         constraint.save()
 
