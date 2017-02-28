@@ -24,19 +24,24 @@ class VenueGroup(models.Model):
 
 
 class Venue(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=40,
+        verbose_name=_("name"))
     group = models.ForeignKey(VenueGroup, models.SET_NULL, blank=True, null=True)
     priority = models.IntegerField(
-        help_text="Venues with a higher priority number will be preferred in the draw")
+        verbose_name=_("priority"),
+        help_text=_("Venues with a higher priority number will be preferred when allocating venues to debates"))
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         blank=True, null=True, db_index=True,
-        help_text="Venues not assigned to any tournament can be shared between tournaments")
+        verbose_name=_("tournament"),
+        help_text=_("Venues not assigned to any tournament can be shared between tournaments"))
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
 
     class Meta:
         ordering = ['name']
         index_together = ['name']
+        verbose_name = _("venue")
+        verbose_name_plural = _("venues")
 
     @property
     def display_name(self):
@@ -140,15 +145,22 @@ class VenueConstraint(models.Model):
                                    models.Q(app_label='participants', model='institution') | \
                                    models.Q(app_label='divisions', model='division')
 
-    category = models.ForeignKey(VenueCategory, models.CASCADE)
-    priority = models.IntegerField()
+    category = models.ForeignKey(VenueCategory, models.CASCADE,
+        verbose_name=_("category"))
+    priority = models.IntegerField(verbose_name=_("priority"))
 
     subject_content_type = models.ForeignKey(ContentType, models.CASCADE,
-            limit_choices_to=SUBJECT_CONTENT_TYPE_CHOICES)
-    subject_id = models.PositiveIntegerField()
+        verbose_name=_("subject content type"),
+        limit_choices_to=SUBJECT_CONTENT_TYPE_CHOICES)
+    subject_id = models.PositiveIntegerField(
+        verbose_name=_("subject ID"))
     subject = GenericForeignKey('subject_content_type', 'subject_id')
 
     objects = VenueConstraintManager()
+
+    class Meta:
+        verbose_name = _("venue constraint")
+        verbose_name_plural = _("venue constraints")
 
     def __str__(self):
         return "%s for %s [%s]" % (self.subject, self.category, self.priority)
