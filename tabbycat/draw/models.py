@@ -212,7 +212,7 @@ class Debate(models.Model):
         from motions.models import Motion
         try:
             # Pretty sure there should never be > 1
-            Motion.objects.filter(round=self.round, divisions=self.division).first()
+            return Motion.objects.filter(round=self.round, divisions=self.division).first()
         except ObjectDoesNotExist:
             # It's easiest to assume a division motion is always present, so
             # return a fake one if it is not
