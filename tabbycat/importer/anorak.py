@@ -109,43 +109,63 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return counts, errors
 
-    def import_venue_groups(self, f):
-        """Imports venue groups from a file.
-        Each line has:
-            name, short_name
-        """
-        return self._import(f, vm.VenueGroup)
-
-    def import_venues(self, f, auto_create_groups=True):
-        """Imports venues from a file, also creating venue groups as needed
-        (unless 'auto_create_groups' is False).
+    def import_venues(self, f, auto_create_categories=True):
+        """Imports venues from a file, also creating venue categories as needed
+        (unless 'auto_create_categories' is False). This function only adds one
+        category per venue; use `import_venue_categories` to create further
+        categories.
 
         Each line has:
-            name, priority, venue_group.name
+            name, priority, category
         """
-
-        if auto_create_groups:
-            def venue_group_interpreter(line):
-                if not line.get('group'):
-                    return None
-                return {
-                    'name'       : line['group'],
-                    'short_name' : line['group'][:25],
-                }
-            counts, errors = self._import(
-                f, vm.VenueGroup, venue_group_interpreter, expect_unique=False)
-        else:
-            counts = None
-            errors = None
 
         venue_interpreter = make_interpreter(
             tournament=self.tournament,
-            group=lambda x: vm.VenueGroup.objects.get(name=x),
+            DELETE=['category'],
+            category=lambda x: vm.VenueCategory.objects.get(name=x),
         )
-        counts, errors = self._import(f, vm.Venue, venue_interpreter,
-                                      counts=counts, errors=errors)
+        counts, errors = self._import(f, vm.Venue, venue_interpreter)
+
+        if auto_create_categories:
+            def venue_category_interpreter(line):
+                if not line.get('category'):
+                    return None
+                return {'name': line['category']}
+            counts, errors = self._import(
+                    f, vm.VenueCategory, venue_category_interpreter,
+                    expect_unique=False, counts=counts, errors=errors)
+
+        def venue_category_venue_interpreter(line):
+            if not line.get('category'):
+                return None
+            return {
+                'venuecategory': vm.VenueCategory.objects.get(name=line['category']),
+                'venue': vm.Venue.objects.get(name=line['name'])
+            }
+
+        counts, errors = self._import(f, vm.VenueCategory.venues.through,
+                venue_category_venue_interpreter, counts=counts, errors=errors)
 
         return counts, errors
+
+    def import_venue_categories(self, f):
+        """Imports venue categories from a file.
+        Each line has:
+            venuecategory, venue
+        """
+        def venue_category_interpreter(line):
+            return {'name': line['venuecategory']}
+
+        counts, errors = self._import(f, vm.VenueCategory,
+                venue_category_interpreter, expect_unique=False)
+
+        venue_category_venue_interpreter = make_interpreter(
+            venuecategory=lambda x: vm.VenueCategory.objects.get(name=x),
+            venue=lambda x: vm.Venue.objects.get(name=x),
+        )
+
+        return self._import(f, vm.VenueCategory.venues.through,
+                venue_category_venue_interpreter, counts=counts, errors=errors)
 
     def import_break_categories(self, f):
         """Imports break categories from a file.
@@ -365,29 +385,10 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
 
-    def import_venue_categories(self, f):
-        """Imports venue categories from a file.
-        Each line has:
-            venuecategory, venue
-        """
-        def venue_category_interpreter(line):
-            return {'name': line['venuecategory']}
-
-        counts, errors = self._import(f, vm.VenueCategory,
-                venue_category_interpreter, expect_unique=False)
-
-        venue_category_venue_interpreter = make_interpreter(
-            venuecategory=lambda x: vm.VenueCategory.objects.get(name=x),
-            venue=lambda x: vm.Venue.objects.get(name=x),
-        )
-
-        return self._import(f, vm.VenueCategory.venues.through,
-                venue_category_venue_interpreter, counts=counts, errors=errors)
-
     def import_adj_venue_constraints(self, f):
         """Imports venue constraints from a file.
         Each line has:
-            adjudicator, group, priority
+            adjudicator, category, priority
         """
         adj_venue_constraints_interpreter_part = make_interpreter(
             adjudicator=lambda x: pm.Adjudicator.objects.get(name=x),
@@ -406,7 +407,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_team_venue_constraints(self, f):
         """Imports venue constraints from a file.
         Each line has:
-            team, group, priority
+            team, category, priority
         """
         team_venue_constraints_interpreter_part = make_interpreter(
             team=pm.Team.objects.lookup,

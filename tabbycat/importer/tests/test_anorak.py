@@ -67,7 +67,8 @@ class TestImporterAnorak(TestCase):
     def test_venues(self):
         f = self._open_csv_file(self.TESTDIR, "venues")
         counts, errors = self.importer.import_venues(f)
-        self.assertCountsDictEqual(counts, {vm.VenueGroup: 7, vm.Venue: 23})
+        self.assertCountsDictEqual(counts, {vm.VenueCategory: 7, vm.Venue: 23,
+                vm.VenueCategory.venues.through: 19})
         self.assertFalse(errors)
 
     def test_institutions(self):
@@ -174,7 +175,8 @@ class TestImporterAnorak(TestCase):
         self.importer.strict = False
         with self.assertLogs(self.logger, logging.WARNING) as logscm:
             counts, errors = self.importer.import_venues(f)
-        self.assertCountsDictEqual(counts, {vm.Venue: 20, vm.VenueGroup: 7})
+        self.assertCountsDictEqual(counts, {vm.VenueCategory: 7, vm.Venue: 20,
+                vm.VenueCategory.venues.through: 20})
         self.assertEqual(len(errors), 3)
         self.assertEqual(len(logscm.records), 3)
         self.importer.strict = True
