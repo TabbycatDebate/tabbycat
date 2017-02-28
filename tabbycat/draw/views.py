@@ -617,8 +617,12 @@ class AllDrawsForVenueView(CrossTournamentPageMixin, CacheMixin, TemplateView):
     template_name = 'public_all_draws_for_venue.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['venue_group'] = VenueGroup.objects.get(pk=self.kwargs['venue_id'])
-        kwargs['debates'] = Debate.objects.filter(
-            division__venue_group=kwargs['venue_group']).select_related(
-            'round', 'round__tournament', 'division')
+        try:
+            kwargs['venue_group'] = VenueGroup.objects.get(pk=self.kwargs['venue_id'])
+            kwargs['debates'] = Debate.objects.filter(
+                division__venue_group=kwargs['venue_group']).select_related(
+                'round', 'round__tournament', 'division')
+        except VenueGroup.DoesNotExist:
+            messages.warning(self.request, 'This venue group does not exist.')
+
         return super().get_context_data(**kwargs)
