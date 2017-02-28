@@ -418,21 +418,31 @@ class ApplyDebateScheduleView(DrawStatusEdit):
         debates = Debate.objects.filter(round=round)
         for debate in debates:
             division = debate.teams[0].division
-            if division and division.time_slot:
-                date = request.POST[str(division.venue_group.id)]
-                if date:
-                    print("has date")
-                    time = "%s %s" % (date, division.time_slot)
-                    try:
-                        debate.time = datetime.datetime.strptime(
-                            time, "%Y-%m-%d %H:%M:%S")  # Chrome
-                    except ValueError:
-                        debate.time = datetime.datetime.strptime(
-                            time, "%d/%m/%Y %H:%M:%S")  # Others
+            if not division and not division.time_slot:
+                continue
 
-                    debate.save()
-                else:
-                    print("no date")
+            date = request.POST[str(division.venue_group.id)]
+            if not date:
+                continue
+
+            time = "%s %s" % (date, division.time_slot)
+            try:
+                debate.time = datetime.datetime.strptime(time,
+                                "%Y-%m-%d %H:%M:%S")  # Safari default
+            except ValueError:
+                pass
+            try:
+                debate.time = datetime.datetime.strptime(time,
+                                "%d/%m/%Y %H:%M:%S")  # Chrome default
+            except ValueError:
+                pass
+            try:
+                debate.time = datetime.datetime.strptime(time,
+                                "%d/%m/%y %H:%M:%S")  # User typing
+            except ValueError:
+                pass
+
+            debate.save()
 
         messages.success(self.request, "Applied schedules to debates")
         return super().post(request, *args, **kwargs)
