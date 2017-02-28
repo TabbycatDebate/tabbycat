@@ -166,6 +166,9 @@ class TestImporterAnorak(TestCase):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
         with self.assertRaises(TournamentDataImporterError) as raisescm, self.assertLogs(self.logger, logging.ERROR) as logscm:
             self.importer.import_venues(f)
+        # There are three bad lines in the CSV file, and because this raises
+        # the exception straight after the Venue creation loop, it bad line
+        # generates one error (not two, as in the non-strict version below).
         self.assertEqual(len(raisescm.exception), 3)
         self.assertCountEqual([e.lineno for e in raisescm.exception.entries], (9, 17, 21))
         self.assertEqual(len(logscm.records), 3)
@@ -177,6 +180,9 @@ class TestImporterAnorak(TestCase):
             counts, errors = self.importer.import_venues(f)
         self.assertCountsDictEqual(counts, {vm.VenueCategory: 7, vm.Venue: 20,
                 vm.VenueCategory.venues.through: 20})
-        self.assertEqual(len(errors), 3)
-        self.assertEqual(len(logscm.records), 3)
+        # There are three bad lines in the CSV file, but each one generates
+        # two errors: one creating the venue itself, and one creating the
+        # venuecategory-venue relationship (because the venue doesn't exist).
+        self.assertEqual(len(errors), 6)
+        self.assertEqual(len(logscm.records), 6)
         self.importer.strict = True
