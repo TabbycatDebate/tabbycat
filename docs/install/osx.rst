@@ -87,7 +87,7 @@ Download and run the `node.js Mac OS X Installer (.pkg) <https://nodejs.org/en/d
 
 3. In terminal type in::
 
-    $ PATH="/Applications/Postgres.app/Contents/Versions/9.5/bin:$PATH"
+    $ PATH="/Applications/Postgres.app/Contents/Versions/9.6/bin:$PATH"
 
 4. Install Tabbycat
 ================================================================================

@@ -20,8 +20,10 @@ export default {
         success: function() {
           console.log("Saved change for " + resourceType)
           // If an autosave counter exists; update it
-          var now = new Date()
-          $('#saveTime').text("Saved at " + now.getHours() + ":" + now.getMinutes())
+          var savedAt = new Date()
+          var hours = savedAt.getHours()
+          var minutes = ('0'+ savedAt.getMinutes()).slice(-2); // ":09" not ":9"
+          $('#saveTime').text("Saved at " + hours + ":" + minutes)
         }
       });
     }
