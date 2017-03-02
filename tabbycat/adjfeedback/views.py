@@ -254,7 +254,7 @@ class GetAdjFeedback(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
     def parse_feedback(self, f, questions):
 
         if f.source_team:
-            source_annotation = " (" + f.source_team.result + ")"
+            source_annotation = " (" + f.source_team.get_result_display() + ")"
         elif f.source_adjudicator:
             source_annotation = " (" + f.source_adjudicator.get_type_display() + ")"
         else:
