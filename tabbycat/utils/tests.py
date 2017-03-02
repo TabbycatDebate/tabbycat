@@ -4,6 +4,7 @@ import logging
 from django.core.urlresolvers import reverse
 from django.test import Client, override_settings, TestCase
 
+from draw.models import DebateTeam
 from tournaments.models import Tournament
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
@@ -128,5 +129,6 @@ class BaseDebateTestCase(TestCase):
             Venue.objects.create(name="IVenue %s" % i, priority=i)
 
     def tearDown(self):
-        self.t.delete()
+        DebateTeam.objects.all().delete()
         Institution.objects.all().delete()
+        self.t.delete()
