@@ -237,7 +237,7 @@ class DebateTeam(models.Model):
     objects = DebateTeamManager()
 
     debate = models.ForeignKey(Debate, models.CASCADE, db_index=True)
-    team = models.ForeignKey('participants.Team', models.CASCADE)
+    team = models.ForeignKey('participants.Team', models.PROTECT)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __str__(self):
