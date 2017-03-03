@@ -2,36 +2,53 @@
 
 {% if protected %}
   <div style="background-color: #f0dada; padding: 15px 15px 5px; margin-bottom: 20px; border-radius: 4px;">
-    {% with model_name=opts.model_name model_verbose_name=opts.verbose_name %}
-      <p>
+    <p>
+      {% if object_name %}
         {% blocktrans trimmed %}
-        <strong>Warning:</strong> If there are “debate team” objects in the above
-        list, <strong>you probably shouldn't delete the
-        {{ model_verbose_name }}(s)</strong>. This is especially the case if any
-        team that would be deleted has already participated in a debate. If a team
-        already has a result entered for it, deleting the team also deletes those
-        results, <strong>which normally breaks the tab</strong>, even if you think
-        you don't need those results anymore. If a team has debated and is
-        withdrawing from the tournament, you should <strong>not</strong> delete
-        it. Just mark the team inactive under the “Check-Ins” section of the
-        Tabbycat admin area.
+          <strong>Warning:</strong> If there are “debate team” objects in the
+          above list, <strong>you probably shouldn't delete this
+          {{ object_name }}</strong>.
         {% endblocktrans %}
-      </p>
-      {% if model_name == 'institution' %}
-        <p>
+      {% else %}
         {% blocktrans trimmed %}
-          Note that deleting an institution also deletes all teams from that
-          institution.
+          <strong>Warning:</strong> If there are “debate team” objects in the
+          above list, <strong>you probably shouldn't delete these
+          {{ objects_name }}</strong>.
         {% endblocktrans %}
-        </p>
       {% endif %}
+      {# Translators: This follows the above sentence in the same paragraph. #}
+      {% blocktrans trimmed %}
+        This is especially the case if any team that would be deleted has
+        already participated in a debate. If a team already has a result entered
+        for it, deleting the team also deletes those results, <strong>which
+        normally breaks the tab</strong>, even if you think you don't need those
+        results anymore. If a team has debated and is withdrawing from the
+        tournament, you should <strong>not</strong> delete it. Just mark the
+        team inactive under the “Check-Ins” section of the Tabbycat admin area.
+      {% endblocktrans %}
+    </p>
+    {% if opts.model_name == 'institution' %}
       <p>
-        {% blocktrans trimmed %}
-        If you're very sure about deleting this {{ model_verbose_name }}, please
-        delete the above objects first, and be sure to heed the warning that you
-        will see on the “debate team” objects page before proceeding.
-        {% endblocktrans %}
+      {% blocktrans trimmed %}
+        Note that deleting an institution also deletes all teams from that
+        institution.
+      {% endblocktrans %}
       </p>
-    {% endwith %}
+    {% endif %}
+    <p>
+      {% if object_name %}
+        {% blocktrans trimmed %}
+          If you're very sure about deleting this {{ object_name }}, please
+          delete the above objects first, and be sure to heed the warning that
+          you will see on the “debate team” objects page before proceeding.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed %}
+          If you're very sure about deleting these {{ objects_name }}, please
+          delete the above objects first, and be sure to heed the warning that
+          you will see on the “debate team” objects page before proceeding.
+        {% endblocktrans %}
+      {% endif %}
+    </p>
   </div>
 {% endif %}
