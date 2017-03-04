@@ -3,6 +3,13 @@ Change Log
 ==========
 
 
+1.2.2
+-----
+*Release date: 4 March 2017*
+
+- Protected debate-team objects from cascaded deletion, and added warning messages with guidance when users would otherwise do this
+- A number of other minor bug fixes
+
 1.2.1
 -----
 *Release date: 25 February 2017*

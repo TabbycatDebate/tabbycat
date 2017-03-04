@@ -87,8 +87,9 @@ class BaseTestResult(TestCase):
             DebateAdjudicator.objects.create(debate=self.debate, adjudicator=adj, type=adjtype)
 
     def tearDown(self):
-        self.t.delete()
+        DebateTeam.objects.all().delete()
         Institution.objects.all().delete()
+        self.t.delete()
 
     def _get_team(self, team):
         if team in ['aff', 'neg']:
