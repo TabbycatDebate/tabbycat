@@ -1,5 +1,6 @@
 import json
 
+from django.contrib import messages
 from django.views.generic.base import TemplateView
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
@@ -69,29 +70,57 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = 'feedback_list.html'
 
-    def from_team(self):
+    def has_team_questions(self):
         return AdjudicatorFeedbackQuestion.objects.filter(
             tournament=self.get_round().tournament, from_team=True).exists()
 
-    def from_adj(self):
+    def has_adj_questions(self):
         return AdjudicatorFeedbackQuestion.objects.filter(
             tournament=self.get_round().tournament, from_adj=True).exists()
 
-    def questions_json_dict(self):
-        questions = []
-        for q in self.get_round().tournament.adj_feedback_questions:
-            q_set = {
-                'text': q.text, 'seq': q.seq, 'type': q.answer_type,
-                'required': json.dumps(q.answer_type),
-                'from_team': json.dumps(q.from_team),
-                'from_adj': json.dumps(q.from_adj),
-            }
-            if q.choices:
-                q_set['choice_options'] = q.choices.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
-            elif q.min_value is not None and q.max_value is not None:
-                q_set['choice_options'] = q.choices_for_number_scale
+    def question_to_json(self, question):
+        qdict = {
+            'text': question.text,
+            'seq': question.seq,
+            'type': question.answer_type,
+            'required': json.dumps(question.answer_type),
+            'from_team': json.dumps(question.from_team),
+            'from_adj': json.dumps(question.from_adj),
+        }
+        if question.choices:
+            qdict['choice_options'] = question.choices.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
+        elif question.min_value is not None and question.max_value is not None:
+            qdict['choice_options'] = question.choices_for_number_scale
+        return qdict
 
-            questions.append(q_set)
+    def add_defaults(self):
+        t = self.get_tournament()
+        default_questions = []
+
+        if t.pref('feedback_introduction'):
+            default_scale_info = AdjudicatorFeedbackQuestion(
+                text=t.pref('feedback_introduction'), seq=0,
+                answer_type='comment', # Custom type just for print display
+                required=True, from_team=True, from_adj=True
+            )
+            default_questions.append(self.question_to_json(default_scale_info))
+
+        default_scale_question = AdjudicatorFeedbackQuestion(
+            text='Overall Score', seq=0,
+            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
+            required=True, from_team=True, from_adj=True,
+            min_value=t.pref('adj_min_score'),
+            max_value=t.pref('adj_max_score')
+        )
+        default_questions.append(self.question_to_json(default_scale_question))
+
+        return default_questions
+
+    def questions_json_dict(self):
+        questions = self.add_defaults()
+        for question in self.get_round().tournament.adj_feedback_questions:
+            questions.append(self.question_to_json(question))
+
         return questions
 
     def construct_info(self, venue, source, source_p, target, target_p):
@@ -103,34 +132,57 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             'target': target.name, 'targetPosition': target_p
         }
 
+    def get_team_feedbacks(self, debate, team):
+        team_paths = self.get_tournament().pref('feedback_from_teams')
+        ballots = []
+
+        if team_paths == 'orallist' and debate.adjudicators.chair:
+            ballots.append(self.construct_info(debate.venue, team, "Team",
+                                               debate.adjudicators.chair, ""))
+        elif team_paths == 'all-adjs':
+            for target in debate.debateadjudicator_set.all():
+                ballots.append(self.construct_info(debate.venue, team, "Team",
+                                                   target.adjudicator, ""))
+
+        return ballots
+
+    def get_adj_feedbacks(self, debate):
+        adj_paths = self.get_tournament().pref('feedback_paths')
+        ballots = []
+
+        debateadjs = debate.debateadjudicator_set.all()
+        for debateadj in debateadjs:
+            sadj = debateadj.adjudicator
+            spos = debate.adjudicators.get_position(sadj)
+            targets = expected_feedback_targets(debateadj, feedback_paths=adj_paths, debate=debate)
+            for tadj, tpos in targets:
+                ballots.append(self.construct_info(debate.venue, sadj, spos, tadj, tpos))
+
+        return ballots
+
     def get_context_data(self, **kwargs):
         kwargs['questions'] = self.questions_json_dict()
         kwargs['ballots'] = []
 
-        feedback_paths_option = self.get_tournament().pref('feedback_paths')
         draw = self.get_round().debate_set_with_prefetches(ordering=(
             'venue__group__name', 'venue__name'))
 
+        message = ""
+        if not self.has_team_questions():
+            message += "No feedback questions have been added " + \
+                       "for teams on adjudicators."
+        if not self.has_adj_questions():
+            message += "No feedback questions have been added " + \
+                       "for adjudicators on adjudicators. "
+        if message is not "":
+            messages.warning(self.request, message + "Check the " +
+                "documentation for information on how to add these.")
+
         for debate in draw:
-            chair = debate.adjudicators.chair
-            if not chair:
-                continue
+            for team in debate.teams:
+                kwargs['ballots'].extend(self.get_team_feedbacks(debate, team))
 
-            if self.from_team():
-                for team in debate.teams:
-                    kwargs['ballots'].append(self.construct_info(
-                        debate.venue, team, "Team", chair, ""))
-
-            if self.from_adj():
-                debateadjs = debate.debateadjudicator_set.all()
-                for debateadj in debateadjs:
-                    sadj = debateadj.adjudicator
-                    spos = debate.adjudicators.get_position(sadj)
-                    targets = expected_feedback_targets(debateadj, feedback_paths=feedback_paths_option,
-                            debate=debate)
-                    for tadj, tpos in targets:
-                        kwargs['ballots'].append(self.construct_info(
-                            debate.venue, sadj, spos, tadj, tpos))
+            kwargs['ballots'].extend(self.get_adj_feedbacks(debate))
 
         return super().get_context_data(**kwargs)
 

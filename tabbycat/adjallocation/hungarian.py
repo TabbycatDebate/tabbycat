@@ -30,6 +30,12 @@ class HungarianAllocator(Allocator):
 
         self.DUPLICATE_ALLOCATIONS = t.pref('duplicate_adjs')
 
+        self.FEEDBACK_WEIGHT = t.current_round.feedback_weight
+
+    def populate_adj_scores(self, adjudicators):
+        for adj in adjudicators:
+            adj._hungarian_score = adj.weighted_score(self.FEEDBACK_WEIGHT)
+
     def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
 
@@ -39,12 +45,12 @@ class HungarianAllocator(Allocator):
         # Similarly normalise adj scores to the 0-5 range expected
         score_min = self.MIN_SCORE
         score_range = self.MAX_SCORE - score_min
-        normalised_adj_score = (adj.score - score_min) / score_range * 5 + 0
+        normalised_adj_score = (adj._hungarian_score - score_min) / score_range * 5 + 0
 
         if normalised_adj_score > 5.0:
-            logger.warning("%s's score %s is larger than the range" % (adj.name, adj.score))
+            logger.warning("%s's score %s is larger than the range" % (adj.name, adj._hungarian_score))
         elif normalised_adj_score < 0.0:
-            logger.warning("%s's score %s is smaller than the range" % (adj.name, adj.score))
+            logger.warning("%s's score %s is smaller than the range" % (adj.name, adj._hungarian_score))
 
         cost += self.CONFLICT_PENALTY * adj.conflict_with(debate.aff_team)
         cost += self.CONFLICT_PENALTY * adj.conflict_with(debate.neg_team)
@@ -52,25 +58,27 @@ class HungarianAllocator(Allocator):
         cost += self.HISTORY_PENALTY * adj.seen_team(debate.neg_team, debate.round)
 
         impt = (normalised_importance or self.DEFAULT_IMPORTANCE) + adjustment
-        diff = 5 + impt - adj.score
+        diff = 5 + impt - adj._hungarian_score
         if diff > 0.25:
             cost += 100000 * exp(diff - 0.25)
 
-        cost += (self.MAX_SCORE - adj.score) * 100
+        cost += (self.MAX_SCORE - adj._hungarian_score) * 100
 
         return cost
 
     def allocate(self):
         from adjallocation.allocation import AdjudicatorAllocation
 
+        self.populate_adj_scores(self.adjudicators)
+
         # Remove trainees
-        self.adjudicators = [a for a in self.adjudicators if a.score >= self.MIN_VOTING_SCORE]
+        self.adjudicators = [a for a in self.adjudicators if a._hungarian_score >= self.MIN_VOTING_SCORE]
         logger.info("There are %s non-trainee adjudidcators", len(self.adjudicators))
 
         # Sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
         shuffle(self.adjudicators_sorted)  # Randomize equally-ranked judges
-        self.adjudicators_sorted.sort(key=lambda a: a.score, reverse=True)
+        self.adjudicators_sorted.sort(key=lambda a: a._hungarian_score, reverse=True)
         self.debates_sorted = list(self.debates)
         self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)
 
@@ -185,7 +193,7 @@ class HungarianAllocator(Allocator):
             # that the chair is the highest-ranked adjudicator in the panel
             for i, d in enumerate(panel_debates):
                 a = AdjudicatorAllocation(d)
-                p[i].sort(key=lambda a: a.score, reverse=True)
+                p[i].sort(key=lambda a: a._hungarian_score, reverse=True)
                 a.chair = p[i].pop(0)
                 a.panellists = p[i]
                 alloc.append(a)

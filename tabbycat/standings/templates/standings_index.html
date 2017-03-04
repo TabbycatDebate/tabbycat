@@ -35,6 +35,32 @@
         </ul>
       </div>
     </div>
+    {% if pref.motion_vetoes_enabled %}
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+          <h4 class="panel-title">Most Popular Motions</h4>
+        </div>
+        <!-- List group -->
+        <ul class="list-group">
+          {% if top_motions %}
+            {% for top_motion in top_motions %}
+              <li class="list-group-item">
+                {{ top_motion.reference }} in
+                {{ top_motion.round.abbreviation }}
+                <span class="badge pull-right">{{ top_motion.ballotsubmission__count }}</span>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">
+              No data yet
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
     <div class="{% if pref.motion_vetoes_enabled %}col-md-4{% else %}col-md-6{% endif %}">
       <div class="panel panel-default">
         <!-- Default panel contents -->
@@ -60,31 +86,6 @@
         </ul>
       </div>
     </div>
-    {% if pref.motion_vetoes_enabled %}
-    <div class="col-md-4">
-      <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading">
-          <h4 class="panel-title">Most Popular Motions</h4>
-        </div>
-        <!-- List group -->
-        <ul class="list-group">
-          {% if top_motions %}
-            {% for top_motion in top_motions %}
-              <li class="list-group-item">
-                {{ top_motion.reference }}
-                <span class="badge pull-right">{{ top_motion.ballotsubmission__count }}</span>
-              </li>
-            {% endfor %}
-          {% else %}
-            <li class="list-group-item">
-              No data yet
-            </li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-    {% endif %}
 
   </div>
   <div class="row">
@@ -113,6 +114,32 @@
         </ul>
       </div>
     </div>
+    {% if pref.motion_vetoes_enabled %}
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+          <h4 class="panel-title">Least Popular Motions</h4>
+        </div>
+        <!-- List group -->
+        <ul class="list-group">
+          {% if bottom_motions %}
+            {% for bottom_motion in bottom_motions %}
+              <li class="list-group-item">
+                {{ bottom_motion.reference }} in
+                {{ bottom_motion.round.abbreviation }}
+                <span class="badge pull-right">{{ bottom_motion.ballotsubmission__count }}</span>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">
+              No data yet
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
     <div class="{% if pref.motion_vetoes_enabled %}col-md-4{% else %}col-md-6{% endif %}">
       <div class="panel panel-default">
         <!-- Default panel contents -->
@@ -138,30 +165,5 @@
         </ul>
       </div>
     </div>
-    {% if pref.motion_vetoes_enabled %}
-    <div class="col-md-4">
-      <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading">
-          <h4 class="panel-title">Least Popular Motions</h4>
-        </div>
-        <!-- List group -->
-        <ul class="list-group">
-          {% if bottom_motions %}
-            {% for bottom_motion in bottom_motions %}
-              <li class="list-group-item">
-                {{ bottom_motion.reference }}
-                <span class="badge pull-right">{{ bottom_motion.ballotsubmission__count }}</span>
-              </li>
-            {% endfor %}
-          {% else %}
-            <li class="list-group-item">
-              No data yet
-            </li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-    {% endif %}
   </div>
 {% endblock %}

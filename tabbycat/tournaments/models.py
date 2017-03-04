@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.utils.encoding import force_text
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
@@ -273,7 +274,7 @@ class Round(models.Model):
         # Draw type must be consistent with stage
         valid_draw_types = Round.VALID_DRAW_TYPES_BY_STAGE[self.stage]
         if self.draw_type not in valid_draw_types:
-            display_names = [name for value, name in Round.DRAW_CHOICES if value in valid_draw_types]
+            display_names = [force_text(name) for value, name in Round.DRAW_CHOICES if value in valid_draw_types]
             errors['draw_type'] = ValidationError(_("A round in the %(stage)s stage must have a "
                 "draw type that is one of: %(valid)s"), params={
                     'stage': self.get_stage_display().lower(),

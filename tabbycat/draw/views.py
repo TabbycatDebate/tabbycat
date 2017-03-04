@@ -418,21 +418,31 @@ class ApplyDebateScheduleView(DrawStatusEdit):
         debates = Debate.objects.filter(round=round)
         for debate in debates:
             division = debate.teams[0].division
-            if division and division.time_slot:
-                date = request.POST[str(division.venue_group.id)]
-                if date:
-                    print("has date")
-                    time = "%s %s" % (date, division.time_slot)
-                    try:
-                        debate.time = datetime.datetime.strptime(
-                            time, "%Y-%m-%d %H:%M:%S")  # Chrome
-                    except ValueError:
-                        debate.time = datetime.datetime.strptime(
-                            time, "%d/%m/%Y %H:%M:%S")  # Others
+            if not division and not division.time_slot:
+                continue
 
-                    debate.save()
-                else:
-                    print("no date")
+            date = request.POST[str(division.venue_group.id)]
+            if not date:
+                continue
+
+            time = "%s %s" % (date, division.time_slot)
+            try:
+                debate.time = datetime.datetime.strptime(time,
+                                "%Y-%m-%d %H:%M:%S")  # Safari default
+            except ValueError:
+                pass
+            try:
+                debate.time = datetime.datetime.strptime(time,
+                                "%d/%m/%Y %H:%M:%S")  # Chrome default
+            except ValueError:
+                pass
+            try:
+                debate.time = datetime.datetime.strptime(time,
+                                "%d/%m/%y %H:%M:%S")  # User typing
+            except ValueError:
+                pass
+
+            debate.save()
 
         messages.success(self.request, "Applied schedules to debates")
         return super().post(request, *args, **kwargs)
@@ -607,8 +617,12 @@ class AllDrawsForVenueView(CrossTournamentPageMixin, CacheMixin, TemplateView):
     template_name = 'public_all_draws_for_venue.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['venue_group'] = VenueGroup.objects.get(pk=self.kwargs['venue_id'])
-        kwargs['debates'] = Debate.objects.filter(
-            division__venue_group=kwargs['venue_group']).select_related(
-            'round', 'round__tournament', 'division')
+        try:
+            kwargs['venue_group'] = VenueGroup.objects.get(pk=self.kwargs['venue_id'])
+            kwargs['debates'] = Debate.objects.filter(
+                division__venue_group=kwargs['venue_group']).select_related(
+                'round', 'round__tournament', 'division')
+        except VenueGroup.DoesNotExist:
+            messages.warning(self.request, 'This venue group does not exist.')
+
         return super().get_context_data(**kwargs)

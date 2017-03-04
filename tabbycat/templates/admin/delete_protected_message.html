@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if protected %}
+<p style="margin-top: 10px">
+  {% blocktrans trimmed %}
+  You need to delete the above objects first.
+  {% endblocktrans %}
+</p>
+{% endif %}

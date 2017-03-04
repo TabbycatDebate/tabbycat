@@ -87,7 +87,7 @@ def motions_assign(request, round):
     class ModelAssignForm(ModelForm):
         divisions = MyModelChoiceField(
             widget=CheckboxSelectMultiple,
-            queryset=Division.objects.filter(tournament=round.tournament).order_by('venue_group'))
+            queryset=Division.objects.filter(tournament=round.tournament).order_by('venue_group', 'name'))
 
         class Meta:
             model = Motion
