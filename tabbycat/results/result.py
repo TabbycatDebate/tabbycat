@@ -132,6 +132,10 @@ class Scoresheet(ResultBuffer):
                 self._load_team(dt)
             self.assert_loaded()
 
+    def __repr__(self):
+        return "<Scoresheet at {id:#x} for {adj!s} in {bsub!s}>".format(
+                id=id(self), adj=self.adjudicator, bsub=self.ballotsub)
+
     # --------------------------------------------------------------------------
     # Initialisation methods (external initialisers may find these helpful)
     # --------------------------------------------------------------------------
@@ -316,6 +320,9 @@ class BallotSet(ResultBuffer):
             for dt in self.dts:
                 self._load_team(dt)
             self.assert_loaded()
+
+    def __repr__(self):
+        return "<BallotSet at {id:#x} for {bsub!s}>".format(id=id(self), bsub=self.ballotsub)
 
     # --------------------------------------------------------------------------
     # Initialisation methods (external initialisers may find these helpful)

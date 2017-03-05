@@ -98,7 +98,8 @@ class BallotSubmission(Submission):
         if self.timestamp is None:
             return "[{0.id}] Ballot for {0.debate!s}, no submission time (v{0.version})".format(self)
         else:
-            return "[{0.id}] Ballot for {0.debate!s}, submitted at {0.timestamp:%Y-%m-%dT%H:%M:%S} (v{0.version})".format(self)
+            return ("[{0.id}] Ballot for {0.debate!s}, submitted at "
+                "{0.timestamp:%Y-%m-%dT%H:%M:%S} (v{0.version})").format(self)
 
     @property
     def ballot_set(self):
@@ -129,6 +130,10 @@ class SpeakerScoreByAdj(models.Model):
                             'ballot_submission')]
         index_together = ['ballot_submission', 'debate_adjudicator']
         verbose_name_plural = 'speaker scores by adj'
+
+    def __str__(self):
+        return ("[{0.ballot_submission_id}/{0.id}] {0.score} at {0.position} for "
+            "{0.debate_team!s} from {0.debate_adjudicator!s}").format(self)
 
     @property
     def debate(self):
@@ -164,6 +169,10 @@ class TeamScore(models.Model):
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]
 
+    def __str__(self):
+        return ("[{0.ballot_submission_id}/{0.id}] {0.points}, {0.score} for "
+            "{0.debate_team!s}").format(self)
+
 
 class SpeakerScoreManager(models.Manager):
     use_for_related_fields = True
@@ -189,6 +198,10 @@ class SpeakerScore(models.Model):
 
     class Meta:
         unique_together = [('debate_team', 'position', 'ballot_submission')]
+
+    def __str__(self):
+        return ("[{0.ballot_submission_id}/{0.id}] {0.score} at {0.position} for "
+            "{0.speaker.name} in {0.debate_team!s}").format(self)
 
     def clean(self):
         super().clean()
