@@ -95,10 +95,10 @@ class BallotSubmission(Submission):
         unique_together = [('debate', 'version')]
 
     def __str__(self):
-        return "Ballot for {debate} submitted at {time} (version {version})".format(
-            debate=self.debate.matchup,
-            version=self.version,
-            time=('<unknown>' if self.timestamp is None else str(self.timestamp.isoformat())))
+        if self.timestamp is None:
+            return "[{0.id}] Ballot for {0.debate!s}, no submission time (v{0.version})".format(self)
+        else:
+            return "[{0.id}] Ballot for {0.debate!s}, submitted at {0.timestamp:%Y-%m-%dT%H:%M:%S} (v{0.version})".format(self)
 
     @property
     def ballot_set(self):
