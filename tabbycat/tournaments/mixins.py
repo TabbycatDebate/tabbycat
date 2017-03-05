@@ -151,6 +151,9 @@ class CrossTournamentPageMixin(PublicTournamentPageMixin):
     but are optionally viewed. They check the last available tournament object
     and check its preferences"""
 
+    def get_round(self):
+        return None  # Override Parent
+
     def get_tournament(self):
         tournament = Tournament.objects.order_by('id').last()
         return tournament
