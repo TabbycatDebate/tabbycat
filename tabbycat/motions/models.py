@@ -33,6 +33,4 @@ class DebateTeamMotionPreference(models.Model):
         unique_together = [('debate_team', 'preference', 'ballot_submission')]
 
     def __str__(self):
-        return "{motion:s} ({pref:d}) by {dt:s}".format(
-                pref=self.preference, motion=self.motion.reference,
-                dt=str(self.debate_team))
+        return "{0.motion.reference:s} ({0.preference:d}) by {0.debate_team!s}".format(self)
