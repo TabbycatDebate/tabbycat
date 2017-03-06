@@ -5,7 +5,7 @@
 
 # Core
 
-Django==1.10.5
+Django==1.10.6
 django-appconf==1.0.2                   # Helper for handling app configs
 django-dynamic-preferences==1.0.0       # Settings management
 django-extensions==1.7.7                # For the generate secret command
@@ -15,8 +15,8 @@ django-gfklookupwidget==1.0.5           # Replaces object_id field with a search
 
 # Database
 
-psycopg2==2.6.2                         # For Django to talk to postgres
-sqlparse==0.2.2                         # Parsing SQL statements
+psycopg2==2.7.0                         # For Django to talk to postgres
+sqlparse==0.2.3                         # Parsing SQL statements
 
 # Pipeline
 
@@ -27,7 +27,7 @@ waitress==1.0.2                         # For web serving
 # Development Aids
 
 dj-cmd==1.0                             # Provides the dj command alias
-django-debug-toolbar==1.6               # Debug Toolbar
+django-debug-toolbar==1.7               # Debug Toolbar
 six==1.10                               # Python 2/3 compatibility library
 flake8==3.3.0                           # For testing/linting
 flake8-import-order==0.12               # Flake plugin for import order
