@@ -406,15 +406,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
                          show_divisions=True, hide_institution=False, key="Team"):
 
-        if self.tournament.pref('enable_divisions') and show_divisions:
-            divisions_header = {
-                'key': 'Division',
-                'icon': 'glyphicon-th-list',
-                'tooltip': 'Division'
-            }
-            divisions = ['D' + t.division.name if t.division else '' for t in teams]
-            self.add_column(divisions_header, divisions)
-
         team_data = [self._team_cell(team, hide_emoji=hide_emoji)
             for team in teams]
         self.add_column(key, team_data)
