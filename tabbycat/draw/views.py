@@ -65,8 +65,11 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         return draw
 
     def populate_table(self, draw, table, round, tournament):
+        if hasattr(self, 'cross_tournament') and self.cross_tournament is True:
+            table.add_tournament_column(d.round.tournament for d in draw) # For cross-tournament draws
+
         if not round:
-            table.add_round_column(d.round for d in draw)  # For mass draws
+            table.add_round_column(d.round for d in draw) # For mass draws
 
         table.add_debate_venue_columns(draw)
         table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key=aff_name(tournament))

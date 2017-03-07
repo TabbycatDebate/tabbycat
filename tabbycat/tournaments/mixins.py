@@ -150,6 +150,7 @@ class CrossTournamentPageMixin(PublicTournamentPageMixin):
     """Mixin for views that show pages with data drawn from multiple tournaments
     but are optionally viewed. They check the last available tournament object
     and check its preferences"""
+    cross_tournament = True
 
     def get_round(self):
         return None  # Override Parent
