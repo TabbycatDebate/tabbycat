@@ -476,16 +476,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'key': "Venue",
             'icon': 'glyphicon-map-marker',
         }
-        if self.tournament.pref('enable_venue_groups'):
-            venue_data = [
-                debate.division.venue_group.short_name if debate.division
-                else (debate.venue.group.short_name + ' ' + debate.venue.name) if debate.venue and debate.venue.group
-                else debate.venue.name if debate.venue
-                else ''
-                for debate in debates
-            ]
-        else:
-            venue_data = [debate.venue.name if debate.venue else '' for debate in debates]
+        venue_data = [debate.venue.display_name if debate.venue else '' for debate in debates]
         self.add_column(venue_header, venue_data)
 
         if with_times and self.tournament.pref('enable_debate_scheduling'):

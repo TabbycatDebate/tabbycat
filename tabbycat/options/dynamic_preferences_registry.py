@@ -883,15 +883,6 @@ class EnableAdjNotes(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class EnableVenueGroups(BooleanPreference):
-    help_text = "Enables the display of venue groups"
-    verbose_name = "Enable venue groups"
-    section = league_options
-    name = "enable_venue_groups"
-    default = False
-
-
-@tournament_preferences_registry.register
 class EnableVenueTimes(BooleanPreference):
     help_text = "Enables specific dates and times to be set for debates"
     verbose_name = "Enable debate scheduling"

@@ -56,11 +56,11 @@ class Venue(models.Model):
         display_name = ""
         if prefixes:
             prefixes.sort()
-            display_name += ", ".join(prefixes) + " – "
+            display_name += ", ".join(prefixes) + " "
         display_name += self.name
         if suffixes:
             suffixes.sort()
-            display_name += " – " + ", ".join(suffixes)
+            display_name += " " + ", ".join(suffixes)
         return display_name
 
     def __str__(self):
