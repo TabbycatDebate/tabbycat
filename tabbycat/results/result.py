@@ -383,6 +383,8 @@ class BallotSet(ResultBuffer):
 
     @property
     def is_complete(self):
+        if self.debate.adjudicators.chair is None:
+            return False
         if not all(sheet.is_complete for sheet in self.adjudicator_sheets.values()):
             return False
         if not all(self.speakers[dt][p] is not None for dt in self.dts for p in self.POSITIONS):
