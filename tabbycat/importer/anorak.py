@@ -167,6 +167,23 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         return self._import(f, vm.VenueCategory.venues.through,
                 venue_category_venue_interpreter, counts=counts, errors=errors)
 
+    def import_venue_constraint_categories(self, f):
+        """Imports venue constraint categories from a file.
+        Each line has:
+            entity, venuecategory, priority
+        """
+        # def venue_constraint_category_interpreter(line):
+        #     return {'name': line['venuecategory']}
+
+        # counts, errors = self._import(f, vm.VenueCategory,
+        #         venue_constraint_category_interpreter, expect_unique=False)
+
+        # return self._import(f, vm.VenueConstraintCategory.venues.through,
+        #         venue_constraint_category_interpreter, counts=counts, errors=errors)
+
+        return None
+
+
     def import_break_categories(self, f):
         """Imports break categories from a file.
 
