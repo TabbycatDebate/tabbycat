@@ -44,9 +44,9 @@
                 <td>{{ debate.division.name }}</td>
               {% endif %}
               {% if debate.division %}
-                <td>{{ debate.division.venue_group.short_name }}</td>
+                <td>{{ debate.division.venue_category.name }}</td>
               {% else %}
-                <td>{{ debate.venue.group.short_name }}</td>
+                <td>{{ debate.venue.venue_category.display_name }}</td>
               {% endif %}
               {% if pref.enable_debate_scheduling %}
                 {% include "tables/debate_status.html" %}

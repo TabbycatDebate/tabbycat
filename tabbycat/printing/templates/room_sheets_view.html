@@ -17,7 +17,7 @@
 
   {% for venue in venues %}
     <div class="printable-page-break">
-      <h1 class="text-center">{{ venue.name }}</h1>
+      <h1 class="text-center">{{ venue.display_name }}</h1>
 
       {% for debate in venue.debates %}
         <div class="panel panel-default">

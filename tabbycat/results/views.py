@@ -486,8 +486,9 @@ class BallotCheckinView(LoginRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['ballots_left'] = ballot_checkin_number_left(self.get_round())
-        kwargs['venue_options'] = Venue.objects.filter(debate__round=self.get_round(),
-                debate__ballot_in=False).order_by('name')
+        venues = Venue.objects.filter(debate__round=self.get_round(),
+                debate__ballot_in=False)
+        kwargs['venue_options'] = [v.display_name for v in venues]
 
         return super().get_context_data(**kwargs)
 

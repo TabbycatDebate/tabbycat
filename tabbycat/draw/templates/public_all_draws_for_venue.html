@@ -37,11 +37,9 @@
             <td>
               {{ debate.division.name }}
             </td>
-            {% if debate.division %}
-              <td>{{ debate.division.venue_group.short_name }}</td>
-            {% else %}
-              <td>{{ debate.venue.group.short_name }}</td>
-            {% endif %}
+            <td>
+              {{ debate.venue.display_name }}
+            </td>
             {% include "tables/debate_status.html" %}
             <td >
               {{ debate.aff_team.short_name }}

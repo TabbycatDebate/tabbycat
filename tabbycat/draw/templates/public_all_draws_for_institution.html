@@ -30,11 +30,6 @@
             <td><span title="{{ debate.round.name }}" data-toggle="tooltip">{{ debate.round.abbreviation }}</span></td>
             <td>{{ debate.aff_team.tournament.short_name }}</td>
             <td>{{ debate.division.name }}</td>
-              {% if debate.division %}
-                <td>{{ debate.division.venue_group.short_name }}</td>
-              {% else %}
-                <td>{{ debate.venue.group.short_name }}</td>
-              {% endif %}
             {% include "tables/debate_status.html" %}
             <td >
               {% if debate.aff_team.institution == institution %}

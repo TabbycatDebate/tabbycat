@@ -183,7 +183,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return None
 
-
     def import_break_categories(self, f):
         """Imports break categories from a file.
 

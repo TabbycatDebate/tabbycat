@@ -27,7 +27,7 @@
           <span class="hidden-xs">Add result from </span>{{ da.adjudicator.name }}
           </a>
         </td>
-        <td>{% if da.debate.venue.group %}{{ venue.group.name }} {% endif %}{{ da.debate.venue.name }}</td>
+        <td>{{ da.debate.venue.display_name }}</td>
         <td>
           {% include "tables/team.html" with team=da.debate.aff_team %}
         </td>
