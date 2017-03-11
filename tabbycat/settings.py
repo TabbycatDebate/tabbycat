@@ -253,6 +253,11 @@ if 'DJANGO_SECRET_KEY' in os.environ and os.environ.get('DISABLE_HTTPS_REDIRECTS
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
+# Store Tab Director Emails for reporting purposes
+if 'TAB_DIRECTOR_EMAIL' in os.environ:
+    TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL', '')
+
+# Memcache Services
 if os.environ.get('MEMCACHIER_SERVERS', ''):
     try:
         os.environ['MEMCACHE_SERVERS'] = os.environ[
@@ -280,6 +285,7 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
             }
         }
 
+# Add an indicator that this site is running on a free tier
 if os.environ.get('KITTEN', '') == 'true':
     TABBYCAT_VERSION += "k"
 
