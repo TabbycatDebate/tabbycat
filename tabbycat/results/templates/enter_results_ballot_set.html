@@ -88,18 +88,23 @@
             </h4>
           </div>
           <div class="panel-body form-panel">
+
             {% if form.choosing_sides %}
               <p class="sides-before-scores-warning text-warning col-xs-12">Assign sides before entering scores</p>
             {% endif %}
+
             <div class="clearfix scoresheet row">
-              <div class="col-md-6 position position-aff pull-left" {% if forloop.first %}id="team-{{ debate.aff_team.id }}{% endif %}">
+
+              <div class="col-md-6  col-xs-12 position position-aff pull-left" {% if forloop.first %}id="team-{{ debate.aff_team.id }}{% endif %}">
                 <div class="form-group">
-                  <label class="h4 col-xs-offset-1 control-label aff-team-name" >{{ debate.aff_team.short_name }}</label>
+                  <label class="h4 col-md-offset-1 col-xs-offset-1 control-label aff-team-name" >{{ debate.aff_team.short_name }}</label>
                 </div>
                 {% for position in adj.position_iter %}
                   <div class="form-group aff js-team-speakers s{{ position.pos }}">
-                    <label class="col-md-2 col-xs-3 control-label speaker-position-label">{{ position }}A</label>
-                    <div class="col-md-7 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
+                    <label class="col-md-2 col-xs-9 control-label speaker-position-label">
+                      {{ position }}A
+                    </label>
+                    <div class="col-md-7 col-xs-9 {{ position.aff_speaker.errors|yesno:'error,' }}">
                       {% if forloop.parentloop.first %}
                         {{ position.aff_speaker|addcss:"form-control js-speaker required aff-speaker" }}
                         {{ position.aff_speaker.errors }}
@@ -107,7 +112,7 @@
                         <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
                       {% endif %}
                     </div>
-                    <div class="col-md-3 col-xs-2 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
+                    <div class="col-md-3 col-xs-9 aff score form-control-parent {{ position.aff_score_errors|yesno:'error,' }}">
                       {{ position.aff_score }}
                       {{ position.aff_score_errors }}
                       {{ position.aff_score.errors }}
@@ -115,23 +120,25 @@
                   </div>
                 {% endfor %}
                 <div class="form-group">
-                  <label class="col-md-2 col-xs-3 control-label" >Total</label>
-                  <div class="form-control-parent col-md-3 col-md-offset-4">
+                  <label class="col-md-2 col-xs-9 control-label" >Total</label>
+                  <div class="form-control-parent col-md-3 col-md-offset-4 col-xs-9">
                     <div name="aff_margin" class="btn btn-block btn-default aff_margin" type="text" readonly />+0</div>
                   </div>
-                  <div class="form-control-parent col-md-3">
+                  <div class="form-control-parent col-md-3 col-xs-9">
                     <div name="aff_total" class="btn btn-block btn-default aff_total" type="text" readonly />00</div>
                   </div>
                 </div>
+
               </div>
-              <div class="col-md-6 position position-neg pull-right" {% if forloop.first %}id="team-{{ debate.neg_team.id }}{% endif %}">
+
+              <div class="col-md-6 col-xs-12 position position-neg pull-right" {% if forloop.first %}id="team-{{ debate.neg_team.id }}{% endif %}">
                 <div class="form-group">
-                  <label class="h4 col-xs-offset-1 control-label neg-team-name" >{{ debate.neg_team.short_name }}</label>
+                  <label class="h4 col-md-offset-1 col-xs-offset-1  control-label neg-team-name" >{{ debate.neg_team.short_name }}</label>
                 </div>
                {% for position in adj.position_iter %}
                   <div class="form-group neg js-team-speakers s{{ position.pos }}">
-                    <label class="col-md-2 col-xs-3 control-label speaker-position-label">{{ position }}N</label>
-                    <div class="col-md-7 col-xs-6 {{ position.aff_speaker.errors|yesno:'error,' }}">
+                    <label class="col-md-2 col-xs-9 control-label speaker-position-label">{{ position }}N</label>
+                    <div class="col-md-7 col-xs-9 {{ position.aff_speaker.errors|yesno:'error,' }}">
                       {% if forloop.parentloop.first %}
                           {{ position.neg_speaker|addcss:"form-control js-speaker required neg-speaker" }}
                           {{ position.neg_speaker.errors }}
@@ -139,7 +146,7 @@
                         <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
                       {% endif %}
                     </div>
-                    <div class="col-md-3 col-xs-2 neg score form-control-parent {{ position.neg_score_errors|yesno:'error,' }}">
+                    <div class="col-md-3 col-xs-9 neg score form-control-parent {{ position.neg_score_errors|yesno:'error,' }}">
                       {{ position.neg_score }}
                       {{ position.neg_score_errors }}
                       {{ position.neg_score.errors }}
@@ -147,11 +154,11 @@
                   </div>
                 {% endfor %}
                 <div class="form-group">
-                  <label class="col-md-2 col-xs-3 control-label" >Total</label>
-                  <div class="form-control-parent col-md-3 col-md-offset-4">
+                  <label class="col-md-2 col-xs-3 control-label col-xs-9" >Total</label>
+                  <div class="form-control-parent col-md-3 col-md-offset-4 col-xs-9">
                     <div name="neg_margin" class="btn btn-block btn-default neg_margin" type="text" readonly />+0</div>
                   </div>
-                  <div class="form-control-parent col-md-3">
+                  <div class="form-control-parent col-md-3 col-xs-9">
                     <div name="neg_total" class="btn btn-block btn-default neg_total" type="text" readonly />+0</div>
                   </div>
                 </div>

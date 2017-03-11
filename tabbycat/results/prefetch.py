@@ -83,6 +83,7 @@ def populate_ballotsets(ballotsubs, prefetched_debates=[]):
         return
 
     POSITIONS = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0]).POSITIONS  # noqa: N806
+    ballotsubs = list(ballotsubs)
 
     prefetched_debates_by_id = {debate.id: debate for debate in prefetched_debates}
     debateteams_by_debate_id = {}
