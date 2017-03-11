@@ -126,7 +126,7 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     def construct_info(self, venue, source, source_p, target, target_p):
         source_n = source.name if hasattr(source, 'name') else source.short_name
         return {
-            'room': "%s %s" % (venue.name if venue else "", "(" + venue.group.short_name + ")" if venue and venue.group else '', ),
+            'room': venue.display_name if venue else '',
             'authorInstitution': source.institution.code,
             'author': source_n, 'authorPosition': source_p,
             'target': target.name, 'targetPosition': target_p
@@ -165,8 +165,7 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['questions'] = self.questions_json_dict()
         kwargs['ballots'] = []
 
-        draw = self.get_round().debate_set_with_prefetches(ordering=(
-            'venue__group__name', 'venue__name'))
+        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name'))
 
         message = ""
         if not self.has_team_questions():
@@ -201,20 +200,12 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                                get_position_name(tournament, "neg", "full").title()]
         kwargs['ballots'] = []
 
-        draw = self.get_round().debate_set_with_prefetches(ordering=(
-            'venue__group__name', 'venue__name',))
+        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name'))
         show_emoji = tournament.pref('show_emoji')
 
         for debate in draw:
-            if debate.venue:
-                room = debate.venue.name
-                if debate.venue.group:
-                    room += " (" + debate.venue.group.short_name + ")"
-            else:
-                room = ''
-
             debate_info = {
-                'room': room,
+                'room': debate.venue.display_name if debate.venue else '',
                 'aff': debate.aff_team.short_name,
                 'affEmoji': debate.aff_team.emoji if debate.aff_team.emoji and show_emoji else '',
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],
