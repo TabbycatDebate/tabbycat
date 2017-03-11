@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+1.2.3
+-----
+
+- Improved the display of the admin ballot entry form on mobile devices
+
 
 1.2.2
 -----
