@@ -14,6 +14,10 @@
         "DJANGO_SECRET_KEY": {
             "description": "A secret key for cryptographic signing of user sessions.",
             "generator": "secret"
+        },
+        "TAB_DIRECTOR_EMAIL": {
+          "description": "Your email address. Tabbycat's developers may need to contact you to help diagnose any unexpected errors.",
+          "value": ""
         }
     },
     "buildpacks": [
