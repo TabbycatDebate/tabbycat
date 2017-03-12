@@ -53,6 +53,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
     })
 
+    lookup_venue_category_display =  make_lookup("venue category display", {
+        (""): vm.VenueCategory.DISPLAY_SUFFIX,
+        ("suffix"): vm.VenueCategory.DISPLAY_SUFFIX,
+        ("prefix"): vm.VenueCategory.DISPLAY_PREFIX
+    })
+
     def import_rounds(self, f):
         """Imports rounds from a file.
         Each line has:
@@ -151,37 +157,17 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_venue_categories(self, f):
         """Imports venue categories from a file.
         Each line has:
-            venuecategory, venue
+            name,display_in_venue_name
         """
-        def venue_category_interpreter(line):
-            return {'name': line['venuecategory']}
+
+        venue_category_interpreter = make_interpreter(
+            display_in_venue_name=self.lookup_venue_category_display,
+        )
 
         counts, errors = self._import(f, vm.VenueCategory,
                 venue_category_interpreter, expect_unique=False)
 
-        venue_category_venue_interpreter = make_interpreter(
-            venuecategory=lambda x: vm.VenueCategory.objects.get(name=x),
-            venue=lambda x: vm.Venue.objects.get(name=x),
-        )
-
-        return self._import(f, vm.VenueCategory.venues.through,
-                venue_category_venue_interpreter, counts=counts, errors=errors)
-
-    def import_venue_constraint_categories(self, f):
-        """Imports venue constraint categories from a file.
-        Each line has:
-            entity, venuecategory, priority
-        """
-        # def venue_constraint_category_interpreter(line):
-        #     return {'name': line['venuecategory']}
-
-        # counts, errors = self._import(f, vm.VenueCategory,
-        #         venue_constraint_category_interpreter, expect_unique=False)
-
-        # return self._import(f, vm.VenueConstraintCategory.venues.through,
-        #         venue_constraint_category_interpreter, counts=counts, errors=errors)
-
-        return None
+        return counts, errors
 
     def import_break_categories(self, f):
         """Imports break categories from a file.

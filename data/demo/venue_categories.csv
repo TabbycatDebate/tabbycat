@@ -1,8 +1,9 @@
-venuecategory,venue
-Step-free access,K03
-Step-free access,K04
-Step-free access,K05
-Step-free access,K06
-Close to tab,K05
-Close to tab,K06
-Close to tab,K08
+name,display_in_venue_name
+(Accessible),suffix
+Close to tab,
+Apple,prefix
+Banana,prefix
+Coconut,prefix
+Date,prefix
+Feijoa,prefix
+Very Small,

@@ -29,6 +29,8 @@ class Command(BaseCommand):
                             help='Delete all institutions from the database. Overrides --keep-existing.')
         parser.add_argument('--delete-venue-categories', action='store_true', default=False,
                             help='Delete all venue categories from the database. Overrides --keep-existing.')
+        parser.add_argument('--delete-regions', action='store_true', default=False,
+                            help='Delete all regions categories from the database. Overrides --keep-existing.')
         parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
                             help='Don\'t crash if there is an error, just skip and keep going.')
 
@@ -50,6 +52,8 @@ class Command(BaseCommand):
             self.delete_institutions()
         if options['delete_venue_categories']:
             self.delete_venue_categories()
+        if options['delete_regions']:
+            self.delete_regions()
         self.make_tournament()
         loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
         self.importer = AnorakTournamentDataImporter(
@@ -67,7 +71,6 @@ class Command(BaseCommand):
         self._make('motions')
         self._make('sides')
         self._make('questions', self.importer.import_adj_feedback_questions)
-        self._make('venue_constraint_categories')
         self._make('adj_venue_constraints')
         self._make('team_venue_constraints')
 
@@ -155,6 +158,11 @@ class Command(BaseCommand):
         """Deletes all venue categories from the database."""
         self._warning("Deleting all venue categories from the database")
         vm.VenueCategory.objects.all().delete()
+
+    def delete_regions(self):
+        """Deletes all regions from the database."""
+        self._warning("Deleting all regions from the database")
+        pm.Region.objects.all().delete()
 
     def make_tournament(self):
         """Given the path, does everything necessary to create the tournament,

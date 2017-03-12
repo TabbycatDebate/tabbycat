@@ -30,6 +30,7 @@ class VenueAdmin(admin.ModelAdmin):
 class VenueCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'display_in_venue_name',
             'display_in_public_tooltip', 'venues_list')
+    ordering = ('name',)
 
     def venues_list(self, obj):
         return ", ".join([v.name for v in obj.venues.all()])
