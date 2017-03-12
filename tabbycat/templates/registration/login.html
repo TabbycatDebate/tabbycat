@@ -23,8 +23,6 @@
   <div class="row">
     <div class="col-md-12">
 
-      {% csrf_token %}
-
       {% if form.errors %}
         <div class="alert alert-danger">
           {% trans "Your username and password didn't match." %}
@@ -47,10 +45,10 @@
         <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
         <div class="col-md-6">
           {{field|addcss:"form-control"}}
+          {% if field.errors %}
+            {{ field.errors }}
+          {% endif %}
         </div>
-        {% if field.errors %}
-          {{ field.errors }}
-        {% endif %}
       </div>
       {% endfor %}
 
@@ -59,6 +57,11 @@
           <button type="submit" class="btn btn-success">
             {% trans "Login" context "button" %}
           </button>
+        </div>
+        <div class="col-md-offset-2 col-md-2 col-sm-4" align=right>
+          <p>
+            <a href="{% url 'password_reset' %}">{% trans "I forgot my password" %}</a>
+          </p>
         </div>
       </div>
 
