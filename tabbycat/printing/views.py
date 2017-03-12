@@ -125,18 +125,17 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
     def construct_info(self, venue, source, source_p, target, target_p):
         source_n = source.name if hasattr(source, 'name') else source.short_name
-        if venue:
-            venue_name = venue.display_name
-        else:
-            venue_name = ''
         return {
-            'room': venue_name,
+            'room': venue.display_name if venue else '',
             'authorInstitution': source.institution.code,
             'author': source_n, 'authorPosition': source_p,
             'target': target.name, 'targetPosition': target_p
         }
 
     def get_team_feedbacks(self, debate, team):
+        if len(debate.adjudicators) is 0:
+            return []
+
         team_paths = self.get_tournament().pref('feedback_from_teams')
         ballots = []
 
@@ -169,7 +168,7 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['questions'] = self.questions_json_dict()
         kwargs['ballots'] = []
 
-        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name'))
+        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
 
         message = ""
         if not self.has_team_questions():
@@ -187,6 +186,7 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 kwargs['ballots'].extend(self.get_team_feedbacks(debate, team))
 
             kwargs['ballots'].extend(self.get_adj_feedbacks(debate))
+            pass
 
         return super().get_context_data(**kwargs)
 
@@ -204,12 +204,12 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                                get_position_name(tournament, "neg", "full").title()]
         kwargs['ballots'] = []
 
-        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name'))
+        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
         show_emoji = tournament.pref('show_emoji')
 
         for debate in draw:
             debate_info = {
-                'room': 'TODO',
+                'room': debate.venue.display_name if debate.venue else '',
                 'aff': debate.aff_team.short_name,
                 'affEmoji': debate.aff_team.emoji if debate.aff_team.emoji and show_emoji else '',
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],

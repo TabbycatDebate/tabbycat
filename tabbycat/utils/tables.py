@@ -475,6 +475,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         venue_header = {
             'key': "Venue",
             'icon': 'glyphicon-map-marker',
+            'tooltip': "Venue"
         }
         venue_data = [debate.venue.display_name if debate.venue else '' for debate in debates]
         self.add_column(venue_header, venue_data)
