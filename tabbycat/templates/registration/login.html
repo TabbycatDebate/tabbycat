@@ -2,8 +2,7 @@
 {% load add_field_css i18n %}
 
 {% block page-title %}🔓{% trans "Login" context "page title" %}{% endblock %}
-{% block head-title %}<span class="emoji">🔓</span>{% trans "Login" context "page title" %}{% endblock %}
-
+{% block head-title %}{% endblock %}
 
 {% block nav %}{% endblock %}
 {% block page-alerts %}
@@ -20,54 +19,53 @@
 
 <form id="login" action="." method="POST" class="form-horizontal">
   {% csrf_token %}
+
+
+
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6 col-md-offset-3 col-sm-12">
+      <div class="panel panel-default">
 
-      {% if form.errors %}
-        <div class="alert alert-danger">
-          {% trans "Your username and password didn't match." %}
+        <div class="panel-heading panel-title">
+          <h4>🔓{% trans "Login to Tabbycat" context "page title" %}</h4>
         </div>
-      {% endif %}
 
-      {% if next %}
-        {% if user.is_authenticated %}
-          <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
-          {% else %}
-          <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>
-          {% endif %}
-      {% endif %}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      {% for field in form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
-        <div class="col-md-6">
-          {{field|addcss:"form-control"}}
-          {% if field.errors %}
-            {{ field.errors }}
-          {% endif %}
-        </div>
-      </div>
-      {% endfor %}
+        <div class="panel-body">
 
-      <div class="form-group">
-        <div class="col-md-offset-2 col-md-2 col-sm-4">
-          <button type="submit" class="btn btn-success">
+          {% if form.errors %}
+            <div class="alert alert-danger">
+              {% trans "Your username and password didn't match." %}
+            </div>
+          {% endif %}
+          {% if next %}
+            {% if user.is_authenticated %}
+              <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
+            {% else %}
+              <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>
+            {% endif %}
+          {% endif %}
+
+          {% for field in form %}
+          <div class="vertical-spacing">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field|addcss:"form-control" }}
+            {% if field.errors %}
+              {{ field.errors }}
+            {% endif %}
+          </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-block btn-success vertical-spacing">
             {% trans "Login" context "button" %}
           </button>
-        </div>
-        <div class="col-md-offset-2 col-md-2 col-sm-4" align=right>
-          <p>
+          <input type="hidden" name="next" value="{{ next }}" />
+          <div class="text-center">
             <a href="{% url 'password_reset' %}">{% trans "I forgot my password" %}</a>
-          </p>
+          </div>
         </div>
+
       </div>
-
-      <input type="hidden" name="next" value="{{ next }}" />
-
     </div>
   </div>
+
 </form>
 {% endblock %}
