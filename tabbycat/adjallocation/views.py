@@ -1,26 +1,22 @@
 import json
 import logging
 
-from django.db.utils import IntegrityError
 from django.views.generic.base import TemplateView, View
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from breakqual.utils import categories_ordered
-from draw.models import Debate, DebateTeam
-from participants.models import Adjudicator, Region, Team
+from draw.models import Debate
+from participants.models import Team
 from participants.utils import regions_ordered
 from tournaments.models import Round
 from tournaments.mixins import RoundMixin
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
-from utils.views import admin_required, expect_post, round_view
 
 from .allocator import allocate_adjudicators
-from .allocation import AdjudicatorAllocation
 from .hungarian import HungarianAllocator
-from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
+from .models import DebateAdjudicator
 from .utils import adjs_to_json, debates_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
 
 
