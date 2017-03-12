@@ -53,7 +53,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
     })
 
-    lookup_venue_category_display =  make_lookup("venue category display", {
+    lookup_venue_category_display = make_lookup("venue category display", {
         (""): vm.VenueCategory.DISPLAY_SUFFIX,
         ("suffix"): vm.VenueCategory.DISPLAY_SUFFIX,
         ("prefix"): vm.VenueCategory.DISPLAY_PREFIX

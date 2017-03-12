@@ -19,7 +19,7 @@
             <input id="venue" class="form-control" type="text" name="venue" list="venues_list" />
             <datalist id="venues_list">
               {% for venue in venue_options %}
-                <option data-value="{{ venue.id }}" value="{{ venue.name.display_name }}">
+                <option data-value="{{ venue.id }}" value="{{ venue.display_name }}">
               {% endfor %}
             </datalist>
           </div>
