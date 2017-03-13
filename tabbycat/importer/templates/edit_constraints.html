@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">🏩</span>Edit Venue Constraints for {{ entity_type }}{% endblock %}
+{% block page-title %}🏩Edit Venue Constraints for {{ entity_type }}{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info">
+  <p>For each {{ entity_type }} set a number that represents the priority for each
+  venue category (higher is more preferred). Leave as blank if you don't wish to
+  add a priority.</p>
+  <p>Submitting this form will <strong>delete all previous constraints for all
+  {{ entity_type }}</strong>, even if they are not specified on this page, and then
+  add these constraints. Note that these constraints apply across all
+  tournaments!</p>
+</div>
+
+{% if venue_categories.count == 0 %}
+
+  <div class="alert alert-warning" role="alert">
+     You have no venue categories setup; thus there are no preferences to allocate
+  </div>
+
+{% else %}
+
+  <!-- TODO: not particularly elegant; need to pass the url from the view somehow -->
+  {% if entity_type == "Institution" %}
+    <form action="{% tournament_url confirm_institutions_constraints %}" method="POST">
+  {% endif %}
+  {% if entity_type == "Team" %}
+    <form action="{% tournament_url confirm_teams_constraints %}" method="POST">
+  {% endif %}
+  {% if entity_type == "Adjudicator" %}
+    <form action="{% tournament_url confirm_adjudicators_constraints %}" method="POST">
+  {% endif %}
+
+    {% for entity in entities %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel">
+
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                {% if entity.name %}
+                  {{ entity.name }}
+                {% else %}
+                  {{ entity.short_name }}<!-- For Teams -->
+                {% endif %}
+              </h3>
+            </div>
+
+            <ul class="list-group">
+
+              <input class="hidden" type="number" name="entityIDs" value={{ entity.id }} />
+              {% for constraint in entity.constraints %}
+                <li class="list-group-item">
+                  <div class="row">
+
+                    <label class="col-sm-6 control-label">Priority for {{ constraint.name }}</label>
+                    <div class="col-sm-2">
+                      <input class="form-control" type="number" name="{{ entity.id }}_{{ constraint.id }}" value="{{ constraint.priority }}" />
+                    </div>
+
+                  </div>
+                </li>
+              {% endfor %}
+
+            </ul>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="form-group row">
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-success btn-block">
+          Save {{ entity_type }} Constraints
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+{% endif %}
+
+{% endblock content %}

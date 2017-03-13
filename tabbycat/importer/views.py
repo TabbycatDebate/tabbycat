@@ -1,11 +1,14 @@
 from django.contrib import messages
-from django.db import models
+from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
 from django.shortcuts import render
+from django.views.generic.base import TemplateView
 
 from participants.models import Adjudicator, Institution, Speaker, Team
+from tournaments.mixins import TournamentMixin
+from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, tournament_view
-from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueCategory
+from venues.models import Venue, VenueCategory, VenueConstraint
 
 
 @admin_required
@@ -188,96 +191,6 @@ def confirm_venues(request, t):
 
 
 # ==============================================================================
-# Venue Preferences
-# ==============================================================================
-
-@admin_required
-@tournament_view
-def add_venue_preferences(request, t):
-    institutions = Institution.objects.all()
-    return render(request,
-                  'add_venue_preferences.html',
-                  dict(institutions=institutions))
-
-
-@admin_required
-@expect_post
-@tournament_view
-def edit_venue_preferences(request, t):
-    venue_groups = VenueGroup.objects.all()
-
-    # Build a list of institutions and possible venue groups with existing data
-    institutions = []
-    for institution_id, checked in request.POST.items():
-        institution = Institution.objects.get(pk=institution_id)
-        institution.constraints = []
-        for venue_group in venue_groups:
-            # Find all constraints matching this institution and venue group
-            constraint = VenueConstraint.objects.filter(
-                models.Q(institution=institution),
-                category__name=venue_group.name).first()
-            # Prepopulate priority data (because we are wiping each time)
-            institution.constraints.append({
-                'id': venue_group.id,
-                'name': venue_group.name,
-                'priority': constraint.priority if constraint else ''
-            })
-
-        institutions.append(institution)
-
-    return render(request,
-                  'edit_venue_preferences.html',
-                  dict(institutions=institutions))
-
-
-@admin_required
-@expect_post
-@tournament_view
-def confirm_venue_preferences(request, t):
-
-    # Delete existing venue constraints
-    for institution_id in request.POST.getlist('institutionIDs'):
-        institution = Institution.objects.get(pk=institution_id)
-        VenueConstraint.objects.filter(models.Q(institution=institution)).delete()
-
-    venue_priorities = request.POST.dict()
-    del venue_priorities["institutionIDs"]
-
-    created_preferences = 0
-    print(venue_priorities.items())
-
-    for idset, priority in venue_priorities.items():
-        institution_id = idset.split('_')[0]
-        venue_group_id = idset.split('_')[1]
-        print('have a idset', idset, ' priority ', priority)
-
-        if institution_id and venue_group_id and priority:
-            institution = Institution.objects.get(pk=int(institution_id))
-            venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
-
-            # Find or make a new venue constraint category for each venue group
-            category, created = VenueConstraintCategory.objects.get_or_create(name=venue_group.name)
-
-            # Assign it all the relevant venues for its particular group
-            if venue_group.venues.count() > 0:
-                category.venues = venue_group.venues.all()
-            else:
-                messages.warning(request, "No constraints have been assigned "
-                    "for Venue Group %s because there are no venues in this "
-                    "group. You probably want to add some venues to this group "
-                    "and then recreate this constraint." % venue_group.name)
-
-            venue_constaint = VenueConstraint(subject=institution,
-                                              priority=priority,
-                                              category=category)
-            venue_constaint.save()
-            created_preferences += 1
-
-    messages.success(request, "%s Venue Preferences have been added" % created_preferences)
-    return render(request, 'data_index.html')
-
-
-# ==============================================================================
 # Teams
 # ==============================================================================
 
@@ -438,3 +351,97 @@ def confirm_adjudicators(request, t):
 
     messages.success(request, "%s Adjudicators have been added" % int((len(sorted_post) - 1) / 3))
     return render(request, 'data_index.html')
+
+
+# ==============================================================================
+# Importing Shared
+# ==============================================================================
+
+class ConfirmDataView(TournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+    tournament_redirect_pattern_name = 'data_index'
+
+
+# ==============================================================================
+# Importing Venue Category Constraints
+# ==============================================================================
+
+class AddConstraintsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
+    template_name = 'add_constraints.html'
+    type = None
+
+    def get_context_data(self, **kwargs):
+        kwargs["entities"] = self.type.objects.all()
+        kwargs["entity_type"] = self.type.__name__
+        return super().get_context_data(**kwargs)
+
+
+class EditConstraintsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
+    template_name = 'edit_constraints.html'
+    type = None
+
+    def post(self, request, *args, **kwargs):
+        venue_categories = VenueCategory.objects.all()
+        entities = []
+        for entity_id, checked in request.POST.items():
+            entity = self.type.objects.get(pk=entity_id)
+            entity.constraints = []
+
+            for venue_category in venue_categories:
+                # Find all constraints matching this entity
+                content_type = ContentType.objects.get_for_model(self.type)
+                constraint = VenueConstraint.objects.filter(
+                    category=venue_category,
+                    subject_content_type=content_type,
+                    subject_id=entity_id).first()
+
+                # Prepopulate priority data (because we are wiping each time)
+                entity.constraints.append({
+                    'id': venue_category.id,
+                    'name': venue_category.name,
+                    'priority': constraint.priority if constraint else ''
+                })
+
+            entities.append(entity)
+
+        context = self.get_context_data(entities)
+        return super(TemplateView, self).render_to_response(context)
+
+    def get_context_data(self, entities, **kwargs):
+        kwargs["venue_categories"] = VenueCategory.objects.all()
+        kwargs["entities"] = entities
+        kwargs["entity_type"] = self.type.__name__
+        return super().get_context_data(**kwargs)
+
+
+class ConfirmConstraintsView(ConfirmDataView):
+    type = None
+
+    def post(self, request, *args, **kwargs):
+        # Delete existing constraints for this type
+        for entity_id in request.POST.getlist('entityIDs'):
+            entity = self.type.objects.get(pk=entity_id)
+            content_type = ContentType.objects.get_for_model(self.type)
+            VenueConstraint.objects.filter(subject_content_type=content_type,
+                                           subject_id=entity_id).delete()
+
+        venue_priorities = request.POST.dict()
+        del venue_priorities["entityIDs"]
+
+        created_constraints = 0
+        print(venue_priorities.items())
+
+        for idset, priority in venue_priorities.items():
+            entity_id = idset.split('_')[0]
+            venue_category_id = idset.split('_')[1]
+            print('have a idset', idset, ' priority ', priority)
+
+            if entity_id and venue_category_id and priority:
+                entity = self.type.objects.get(pk=int(entity_id))
+                category = VenueCategory.objects.get(pk=int(venue_category_id))
+                VenueConstraint(subject=entity, priority=priority,
+                                category=category).save()
+                created_constraints += 1
+
+        messages.success(request, "%s Venue Constraints for %ss have been added" %
+                                  (created_constraints, self.type.__name__))
+        return super().post(request, *args, **kwargs)
