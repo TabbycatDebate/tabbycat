@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'en'
 USE_I18N = True
 
-TABBYCAT_VERSION = '1.2.1'
+TABBYCAT_VERSION = '1.2.2'
 TABBYCAT_CODENAME = 'Foldex'
-READTHEDOCS_VERSION = 'v1.2.1'
+READTHEDOCS_VERSION = 'v1.2.2'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
@@ -245,7 +245,7 @@ except:
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Require HTTPS
-if 'DJANGO_SECRET_KEY' in os.environ and os.environ.get('DISABLE_HTTPS_REDIRECT', '') != 'disable':
+if 'DJANGO_SECRET_KEY' in os.environ and os.environ.get('DISABLE_HTTPS_REDIRECTS', '') != 'disable':
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -253,6 +253,11 @@ if 'DJANGO_SECRET_KEY' in os.environ and os.environ.get('DISABLE_HTTPS_REDIRECT'
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
+# Store Tab Director Emails for reporting purposes
+if 'TAB_DIRECTOR_EMAIL' in os.environ:
+    TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL', '')
+
+# Memcache Services
 if os.environ.get('MEMCACHIER_SERVERS', ''):
     try:
         os.environ['MEMCACHE_SERVERS'] = os.environ[
@@ -280,6 +285,7 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
             }
         }
 
+# Add an indicator that this site is running on a free tier
 if os.environ.get('KITTEN', '') == 'true':
     TABBYCAT_VERSION += "k"
 

@@ -150,7 +150,7 @@ def scoring_stats(adj, scores, adjudications):
 def parse_feedback(feedback, questions):
 
     if feedback.source_team:
-        source_annotation = " (" + feedback.source_team.result + ")"
+        source_annotation = " (" + feedback.source_team.get_result_display() + ")"
     elif feedback.source_adjudicator:
         source_annotation = " (" + feedback.source_adjudicator.get_type_display() + ")"
     else:

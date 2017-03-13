@@ -14,5 +14,4 @@ install:
   - pip install codeclimate-test-reporter
 script:
   - flake8 .
-  - dj test -v 2
-  - cd tabbycat && coverage run manage.py test -v 1
+  - cd tabbycat && coverage run manage.py test -v 2

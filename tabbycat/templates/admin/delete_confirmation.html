@@ -1,0 +1,6 @@
+{% extends "admin/delete_confirmation.html" %}
+
+{% block content %}
+  {{ block.super }}
+  {% include "admin/delete_protected_message.html" %}
+{% endblock %}

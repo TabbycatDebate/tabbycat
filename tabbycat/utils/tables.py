@@ -282,13 +282,23 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         return cell
 
-    def add_round_column(self, rounds, key="Round"):
+    def add_tournament_column(self, tournaments, key="Tournament"):
+        header = {
+            'key': key, 'icon': 'glyphicon-tags', 'tooltip': 'Tournament'
+        }
         data = [{
-            'sort': round.seq,
-            'text': round.abbreviation,
-            'tooltip': round.name,
+            'sort': t.seq, 'text': t.short_name, 'tooltip': t.short_name,
+        } for t in tournaments]
+        self.add_column(header, data)
+
+    def add_round_column(self, rounds, key="Round"):
+        header = {
+            'key': key, 'icon': 'glyphicon-time', 'tooltip': 'Round'
+        }
+        data = [{
+            'sort': round.seq, 'text': round.abbreviation, 'tooltip': round.name,
         } for round in rounds]
-        self.add_column(key, data)
+        self.add_column(header, data)
 
     def add_adjudicator_columns(self, adjudicators, hide_institution=False,
             hide_metadata=False, subtext=None):
@@ -405,15 +415,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
                          show_divisions=True, hide_institution=False, key="Team"):
-
-        if self.tournament.pref('enable_divisions') and show_divisions:
-            divisions_header = {
-                'key': 'Division',
-                'icon': 'glyphicon-th-list',
-                'tooltip': 'Division'
-            }
-            divisions = ['D' + t.division.name if t.division else '' for t in teams]
-            self.add_column(divisions_header, divisions)
 
         team_data = [self._team_cell(team, hide_emoji=hide_emoji)
             for team in teams]

@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 
 import participants.models as pm
 import venues.models as vm
+from draw.models import DebateTeam
 from tournaments.models import Tournament
 from importer.anorak import AnorakTournamentDataImporter
 from importer.base import DUPLICATE_INFO, TournamentDataImporterFatal
@@ -204,6 +205,7 @@ class Command(BaseCommand):
                 response = input("Are you sure? ")
                 if response != "yes":
                     raise CommandError("Cancelled by user.")
+            DebateTeam.objects.filter(team__tournament__slug=slug).delete()
             Tournament.objects.filter(slug=slug).delete()
 
         elif not exists and self.options['keep_existing']:
