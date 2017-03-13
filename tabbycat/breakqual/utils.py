@@ -1,7 +1,7 @@
 import math
 import logging
 
-from django.db.models import Count, F, Sum
+from django.db.models import Count, Sum
 from django.db.models.expressions import RawSQL
 
 from standings.teams import TeamStandingsGenerator
@@ -76,10 +76,10 @@ def breakcategories_with_counts(tournament):
         AND breakqual_breakingteam.break_rank IS NULL
     """, ())
     categories = tournament.breakcategory_set.annotate(
-            eligible=Count('team', distinct=True),
-            breaking=breaking,
-            excluded=excluded
-        )
+        eligible=Count('team', distinct=True),
+        breaking=breaking,
+        excluded=excluded
+    )
     for category in categories:
         category.nonbreaking = category.eligible - category.breaking - category.excluded
     return categories
