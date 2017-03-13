@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from utils.views import admin_required, expect_post, tournament_view
-from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
+from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueCategory
 
 
 @admin_required
@@ -125,8 +125,8 @@ def edit_venues(request, t):
             priority = 100
 
         if len(line.split(',')) > 2:
-            group = line.split(',')[2].strip()
-            venues.append({'name': name, 'priority': priority, 'group': group})
+            category = line.split(',')[2].strip()
+            venues.append({'name': name, 'priority': priority, 'category': category})
         else:
             venues.append({'name': name, 'priority': priority})
 
@@ -144,35 +144,44 @@ def edit_venues(request, t):
 def confirm_venues(request, t):
     venue_names = request.POST.getlist('venue_names')
     venue_priorities = request.POST.getlist('venue_priorities')
-    venue_groups = request.POST.getlist('venue_groups')
+    venue_categories = request.POST.getlist('venue_categories')
+    category_displays = request.POST.getlist('category_displays')
     venue_shares = request.POST.getlist('venue_shares')
 
     for i, key in enumerate(venue_names):
-        if venue_groups[i]:
-            try:
-                venue_group = VenueGroup.objects.get(short_name=venue_groups[i])
-            except VenueGroup.DoesNotExist:
-                try:
-                    venue_group = VenueGroup.objects.get(name=venue_groups[i])
-                except VenueGroup.DoesNotExist:
-                    venue_group = VenueGroup(name=venue_groups[i],
-                                             short_name=venue_groups[i][:15]).save()
-        else:
-            venue_group = None
-
+        venue_tournament = t
         if venue_shares[i] == "yes":
             venue_tournament = None
-        else:
-            venue_tournament = t
 
         priority = venue_priorities[i]
         if not priority or not float(priority).is_integer():
             messages.warning(request, "Venue %s could not be saved because \
                 it did not have a valid priority number" % venue_names[i])
-        else:
-            venue = Venue(name=venue_names[i], priority=venue_priorities[i],
-                          group=venue_group, tournament=venue_tournament)
-            venue.save()
+            continue
+
+        venue = Venue(name=venue_names[i], priority=venue_priorities[i],
+                      tournament=venue_tournament)
+        venue.save()
+
+        if venue_categories[i]:
+            display = VenueCategory.DISPLAY_NONE
+            try:
+                if category_displays[i] == "prefix":
+                    display = VenueCategory.DISPLAY_PREFIX
+                elif category_displays[i] == "suffix":
+                    display = VenueCategory.DISPLAY_SUFFIX
+            except IndexError:
+                pass
+
+            try:
+                venue_category = VenueCategory.objects.get(name=venue_categories[i])
+            except VenueCategory.DoesNotExist:
+                venue_category = VenueCategory(name=venue_categories[i],
+                                               display_in_venue_name=display)
+                venue_category.save()
+
+            venue_category.venues.add(venue)
+            venue_category.save()
 
     messages.success(request, "%s Venues have been added" % len(venue_names))
     return render(request, 'data_index.html')

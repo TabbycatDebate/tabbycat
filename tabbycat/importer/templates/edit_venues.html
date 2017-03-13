@@ -7,6 +7,16 @@
 
 {% block content %}
 
+<div class="alert alert-info" id="">
+  <p>
+    Venue categories can be automatically included in the venue names that get
+    shown during draws. For example if the Venue <em>1.05</em> has the "Red" category and that
+    is set to disply as prefix or suffix, it will show as <em>Red 1.05</em> or <em>1.05 Red</em> respectively.
+    <br><br>
+    Venues with lower priorities are allocated in the draw last. If you have more venues than you need you can mark the worst venues with a lower priority number.
+  </p>
+</div>
+
 <form id="addVenues" action="{% tournament_url confirm_venues %}" method="POST">
 
   <ul class="list-group">
@@ -17,7 +27,7 @@
 
           <label class="col-sm-1 control-label">Name</label>
 
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <input class="form-control" type="text" name="venue_names"
                    value="{{ venue.name }}" maxlength="{{ max_name_length }}" />
           </div>
@@ -28,9 +38,22 @@
                    value="{{ venue.priority }}" type="number" min="1" />
           </div>
 
-          <input class="hidden" type="text" name="venue_groups" value="" />
+          {% if venue.category %}
+            <input class="hidden" type="text" name="venue_categories" value="{{ venue.category }}" />
+            <label class="col-sm-2 control-label">Display '{{ venue.category }}' as </label>
+            <div class="col-sm-2">
+              <select class="form-control" name="category_displays">
+                <option value="" selected>don't display</option>
+                <option value="prefix">prefix</option>
+                <option value="suffix">suffix</option>
+              </select>
+            </div>
+          {% else %}
+            <input class="hidden" type="text" name="venue_categories" value="" />
+            <div class="col-sm-4"></div>
+          {% endif %}
 
-          <div class="col-sm-2">
+          <div class="col-sm-2 {% if not pref.share_venues %}hidden{% endif %}">
             <select class="form-control" name="venue_shares">
               <option value="yes">Shared</option>
               <option value="no" selected>Unshared</option>
