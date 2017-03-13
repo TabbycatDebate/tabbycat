@@ -35,8 +35,7 @@ class MasterSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
                 'division', 'division__venue_group', 'round',
                 'round__tournament').filter(
                     # All Debates, with a matching round, at the same venue group name
-                    round__seq=round.seq,
-                    round__tournament=tournament,
+                    round__seq=self.get_round().seq, round__tournament=tournament,
                     # Hack - remove when venue groups are unified
                     division__venue_group__short_name=base_venue_group.short_name
             ).order_by('round', 'division__venue_group__short_name', 'division')
@@ -57,8 +56,7 @@ class RoomSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         for venue in venues:
             venue.debates = Debate.objects.filter(
                 # All Debates, with a matching round, at the same venue group name
-                round__seq=round.seq,
-                venue=venue
+                round__seq=self.get_round().seq, venue=venue
             ).select_related('round__tournament').order_by('round__tournament__seq')
 
         kwargs['base_venue_group'] = base_venue_group

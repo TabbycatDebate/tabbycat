@@ -14,7 +14,8 @@
     <ul class="list-group">
       {% for venue_group in venue_groups %}
         <li class="list-group-item">
-          <a href="{% url 'printing.views.MasterSheetsView' tournament.slug current_round.seq venue_group.id %}">
+          <a href="{% url 'master_sheets_view' tournament.slug current_round.seq venue_group.id %}">
+          {# <a href="{% url 'printing.views.MasterSheetsView' tournament.slug current_round.seq venue_group.id %}"> #}
             {{ venue_group.short_name }}
           </a>
         </li>
@@ -31,7 +32,8 @@
     <ul class="list-group">
       {% for venue_group in venue_groups %}
         <li class="list-group-item">
-          <a href="{% url 'printing.views.RoomSheetsView' tournament.slug current_round.seq venue_group.id %}">
+          <a href="{% url 'room_sheets_view' tournament.slug current_round.seq venue_group.id %}">
+          {# <a href="{% url 'printing.views.RoomSheetsView' tournament.slug current_round.seq venue_group.id %}"> #}
             {{ venue_group.short_name }}
           </a>
         </li>
