@@ -7,7 +7,7 @@
   <a href="{% tournament_url adjfeedback-add-index %}">Enter Feedback</a>
 </li>
 {% if pref.enable_divisions %}
-  <li><a href="{% round_url master_sheets_list current_round %}">Division Sheets</a></li>
+  <li><a href="{% round_url printing-master-sheets-list current_round %}">Division Sheets</a></li>
 {% endif %}
 <li {% if draw_nav %}class="active"{% endif %}>
   <a href="{% tournament_url draw-public-current-round %}" target="_blank">View Draw</a>
