@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
 from django.views.generic import FormView, TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -10,7 +9,7 @@ from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixi
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
 
-from .utils import get_breaking_teams
+from .utils import breakcategories_with_counts, get_breaking_teams
 from .generator import BreakGenerator
 from .models import BreakCategory, BreakingTeam
 from . import forms
@@ -25,7 +24,10 @@ class AdminBreakIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView)
     template_name = 'breaking_index.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['categories'] = self.get_tournament().breakcategory_set.annotate(Count('team'))
+        tournament = self.get_tournament()
+        kwargs['categories'] = breakcategories_with_counts(tournament)
+        kwargs['no_teams_eligible'] = not BreakCategory.team_set.through.objects.filter(breakcategory__tournament=tournament).exists()
+        kwargs['break_not_generated'] = not BreakingTeam.objects.filter(break_category__tournament=tournament).exists()
         return super().get_context_data(**kwargs)
 
 

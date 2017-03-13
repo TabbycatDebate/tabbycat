@@ -1,7 +1,8 @@
 import math
 import logging
 
-from django.db.models import Sum
+from django.db.models import Count, F, Sum
+from django.db.models.expressions import RawSQL
 
 from standings.teams import TeamStandingsGenerator
 
@@ -61,6 +62,27 @@ def categories_ordered(t):
     } for count, bc in enumerate(categories)]
 
     return data
+
+
+def breakcategories_with_counts(tournament):
+    breaking = RawSQL("""
+        SELECT DISTINCT COUNT(breakqual_breakingteam.id) FROM breakqual_breakingteam
+        WHERE breakqual_breakcategory.id = breakqual_breakingteam.break_category_id
+        AND breakqual_breakingteam.break_rank IS NOT NULL
+    """, ())
+    excluded = RawSQL("""
+        SELECT DISTINCT COUNT(breakqual_breakingteam.id) FROM breakqual_breakingteam
+        WHERE breakqual_breakcategory.id = breakqual_breakingteam.break_category_id
+        AND breakqual_breakingteam.break_rank IS NULL
+    """, ())
+    categories = tournament.breakcategory_set.annotate(
+            eligible=Count('team', distinct=True),
+            breaking=breaking,
+            excluded=excluded
+        )
+    for category in categories:
+        category.nonbreaking = category.eligible - category.breaking - category.excluded
+    return categories
 
 
 def determine_liveness(thresholds, wins):
