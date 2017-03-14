@@ -90,12 +90,17 @@ export default {
           allocatedIDs.push(this.debates[i].panel[j].id)
         }
       }
-      // From this list identify adjs not present in a panel
       for (var property in this.adjudicators) {
-        if (this.adjudicators.hasOwnProperty(property)) {
-          if (allocatedIDs.indexOf(Number(property)) === -1) {
-            unAllocatedAdjudicators.push(this.adjudicators[property])
+        if (this.roundInfo.allowDuplicateAllocations !== true) {
+          // From this list identify adjs not present in a panel
+          if (this.adjudicators.hasOwnProperty(property)) {
+            if (allocatedIDs.indexOf(Number(property)) === -1) {
+              unAllocatedAdjudicators.push(this.adjudicators[property])
+            }
           }
+        } else {
+          // Return all adjudicators regardless of panle assignments
+          unAllocatedAdjudicators.push(this.adjudicators[property])
         }
       }
       return unAllocatedAdjudicators

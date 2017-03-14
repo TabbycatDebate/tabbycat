@@ -37,7 +37,8 @@
       'updatePanelURL': '{% round_url save_debate_panel %}',
       'scoreMin': {{ pref.adj_min_score }},
       'scoreMax': {{ pref.adj_max_score }},
-      'scoreForVote': {{ pref.adj_min_voting_score }}
+      'scoreForVote': {{ pref.adj_min_voting_score }},
+      'allowDuplicateAllocations': {{ pref.duplicate_adjs|lower }}
     }
   </script>
   {{ block.super }}
