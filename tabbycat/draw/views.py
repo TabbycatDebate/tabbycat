@@ -20,7 +20,7 @@ from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixi
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
-from venues.models import VenueConstraint, VenueGroup
+from venues.models import VenueCategory, VenueConstraint
 
 from .dbutils import delete_round_draw
 from .generator import DrawError
@@ -404,13 +404,15 @@ class ScheduleDebatesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     def get_context_data(self, **kwargs):
         round = self.get_round()
         tournament = self.get_tournament()
-        vgs = VenueGroup.objects.all()
-        for vg in vgs:
-            first_debate = Debate.objects.filter(venue__group=vg, round__tournament=tournament, time__isnull=False).first()
-            if first_debate:
-                vg.placeholder_date = first_debate.time
+        vcs = VenueCategory.objects.all()
+        for vc in vcs:
+            for venue in vc.venues.all():
+                debate = Debate.objects.filter(venue=venue, round__tournament=tournament, time__isnull=False).first()
+                if debate:
+                    vc.placeholder_date = debate.time
+                    break
 
-        kwargs['venue_groups'] = vgs
+        kwargs['venue_categories'] = vcs
         kwargs['divisions'] = Division.objects.filter(tournament=round.tournament).order_by('id')
         return super().get_context_data(**kwargs)
 
@@ -601,7 +603,7 @@ class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, Template
     template_name = 'public_all_tournament_venues.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['venues'] = VenueGroup.objects.all()
+        kwargs['venues'] = VenueCategory.objects.all()
         return super().get_context_data(**kwargs)
 
 
@@ -639,17 +641,17 @@ class AllDrawsForInstitutionView(CrossTournamentPageMixin, CacheMixin, BaseDrawT
 class AllDrawsForVenueView(CrossTournamentPageMixin, CacheMixin, BaseDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
-    def get_venue_group(self):
+    def get_venue_category(self):
         try:
-            return VenueGroup.objects.get(pk=self.kwargs['venue_id'])
-        except VenueGroup.DoesNotExist:
-            messages.warning(self.request, 'This venue group does not exist.')
+            return VenueCategory.objects.get(pk=self.kwargs['venue_id'])
+        except VenueCategory.DoesNotExist:
+            messages.warning(self.request, 'This venue category does not exist.')
 
     def get_page_title(self):
-        return 'All Debates at %s' % self.get_venue_group().name
+        return 'All Debates at %s' % self.get_venue_category().name
 
     def get_draw(self):
         draw = Debate.objects.filter(
-            division__venue_group=self.get_venue_group()).select_related(
+            division__venue_category=self.get_venue_category()).select_related(
             'round', 'round__tournament', 'division')
         return draw

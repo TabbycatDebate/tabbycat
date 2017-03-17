@@ -892,15 +892,6 @@ class EnableVenueTimes(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class EnableVenueOverlaps(BooleanPreference):
-    help_text = "Allow and automatically debates to be placed in the first room"
-    verbose_name = "Enable venue overlaps"
-    section = league_options
-    name = "enable_venue_overlaps"
-    default = False
-
-
-@tournament_preferences_registry.register
 class ShareAdjs(BooleanPreference):
     help_text = 'Use shared adjudicators (those without a set tournament) in this tournament'
     verbose_name = "Share adjudicators"

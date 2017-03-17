@@ -7,11 +7,11 @@ from participants.models import Institution, Team
 
 class DivisionAllocator():
 
-    def __init__(self, teams, divisions, venue_groups, tournament, institutions):
+    def __init__(self, teams, divisions, venue_categories, tournament, institutions):
         print("Allocating divisions for %s" % tournament)
         self.teams = teams
         self.divisions = divisions
-        self.venue_groups = venue_groups
+        self.venue_categories = venue_categories
         self.tournament = tournament
         self.institutions = institutions
         # cannot see teams more than once
@@ -22,7 +22,7 @@ class DivisionAllocator():
 
     def allocate(self):
         # Entry Point
-        division_dict = {v: [] for v in self.venue_groups}
+        division_dict = {v: [] for v in self.venue_categories}
         allocated_teams = []
         all_constraints = []
         all_teams = self.teams
@@ -84,28 +84,28 @@ class DivisionAllocator():
         for constraint in all_constraints:
             # Find the relevant venue group that matches this constraint
             first_venue = constraint.category.venues.first()
-            vg = [vg for vg in self.venue_groups if first_venue in vg.venues]
+            vc = [vc for vc in self.venue_categories if first_venue in vc.venues.all()]
 
-            # Not finding a vg is likely because no venues have been assigned with groups
-            if len(vg) == 0:
+            # Not finding a vc is likely because no venues have been assigned with groups
+            if len(vc) == 0:
                 print("Skipped matching constraint because couldn't match it to a Venue Group ")
                 continue
             else:
-                vg = vg[0]
+                vc = vc[0]
 
             # Infer capacity from number of venues
-            vg_capacity = vg.venues.count()
-            print("VenueGroup is:", vg)
-            print("VenueGroup Capacity is:", vg_capacity)
+            vc_capacity = vc.venues.count()
+            print("VenueGroup is:", vc)
+            print("VenueGroup Capacity is:", vc_capacity)
 
-            if len(division_dict[vg]) >= vg_capacity:
+            if len(division_dict[vc]) >= vc_capacity:
                 # If this venue is full
                 pass
 
             elif isinstance(constraint.subject, Team):
                 team = constraint.subject
                 if team not in allocated_teams:
-                    group = vg
+                    group = vc
                     division_dict[group].append(team)
                     allocated_teams.append(team)
                     teams_to_allocate.remove(team)
@@ -113,7 +113,7 @@ class DivisionAllocator():
             elif isinstance(constraint.subject, Institution):
                 for team in teams_to_allocate:
                     if team.institution == constraint.subject and team not in allocated_teams:
-                        group = vg
+                        group = vc
                         division_dict[group].append(team)
                         allocated_teams.append(team)
                         teams_to_allocate.remove(team)
@@ -121,22 +121,22 @@ class DivisionAllocator():
         # Randomly apply leftovers
         if force_fill:
             for team in teams_to_allocate:
-                vgs_with_capacity = [
+                vcs_with_capacity = [
                     v_g for v_g in list(division_dict.keys()) if len(division_dict[v_g]) <= v_g.venues.count() - 1]
 
-                if len(vgs_with_capacity) is 0:
+                if len(vcs_with_capacity) is 0:
                     continue
 
-                random_vg = random.choice(vgs_with_capacity)
-                if not random_vg:
+                random_vc = random.choice(vcs_with_capacity)
+                if not random_vc:
                     continue
 
-                print("allocating team %s to venue group %s (%s/%s) based on last resort" % (
-                    team, random_vg, len(division_dict[random_vg]), random_vg.venues.count()))
-                division_dict[random_vg].append(team)
+                print("allocating team %s to venue category %s (%s/%s) based on last resort" % (
+                    team, random_vc, len(division_dict[random_vc]), random_vc.venues.count()))
+                division_dict[random_vc].append(team)
                 allocated_teams.append(team)
 
-        for group, group_teams in division_dict.items():
+        for category, group_teams in division_dict.items():
             # Trying to mix up the distributions within divisions
             random.shuffle(group_teams)
             random.shuffle(group_teams)
@@ -147,23 +147,23 @@ class DivisionAllocator():
     def cull_venues(self, division_dict, allocated_teams):
 
         culled_division_dict = {}
-        for group, group_teams in division_dict.items():
+        for category, group_teams in division_dict.items():
             if len(group_teams) > 0 and len(group_teams) < self.minimum_division_size:
                 # If the amount of allocated teams is not enough for one division
-                print("\t culling %s because too few teams (%s)" % (group, len(group_teams)))
+                print("\t culling %s because too few teams (%s)" % (category, len(group_teams)))
                 for ttr in group_teams:
                     allocated_teams.remove(ttr)
             else:
-                culled_division_dict[group] = group_teams
+                culled_division_dict[category] = group_teams
 
         return culled_division_dict, allocated_teams
 
     def determine_division_size(self, division_dict, allocated_teams, all_teams):
         di = 1  # index of current division
 
-        for group, group_teams in division_dict.items():
+        for category, group_teams in division_dict.items():
             if len(group_teams) > 0:
-                print("------\n%s has %s/%s teams" % (group, len(group_teams), group.venues.count()))
+                print("------\n%s has %s/%s teams" % (category, len(group_teams), category.venues.count()))
 
                 # Using the ideal division size, how many divisions can we support?
                 possible_ideal_divisions = len(group_teams) // self.ideal_division_size
@@ -175,11 +175,11 @@ class DivisionAllocator():
 
                 if min(possible_ideal_remainder, possible_small_remainder) == possible_ideal_remainder and possible_ideal_divisions > 0:
                     di = self.create_venue_divisions(
-                        group, group_teams, di, self.ideal_division_size,
+                        category, group_teams, di, self.ideal_division_size,
                         possible_ideal_divisions, possible_ideal_remainder)
                 elif min(possible_ideal_remainder, possible_small_remainder) == possible_small_remainder and possible_small_divisions > 0:
                     di = self.create_venue_divisions(
-                        group, group_teams, di, self.minimum_division_size,
+                        category, group_teams, di, self.minimum_division_size,
                         possible_small_divisions, possible_small_remainder)
                 else:
                     print("\t no options - this shouldn't happen")
@@ -192,12 +192,12 @@ class DivisionAllocator():
             # print("\t %s not allocated" % ute)
             pass
 
-    def create_division(self, di, group, group_teams, team_index, division_size):
+    def create_division(self, di, category, group_teams, team_index, division_size):
 
         new_division, created = Division.objects.get_or_create(
             name=str(di),
             tournament=self.tournament,
-            venue_group=group
+            venue_category=category
         )
         for i in range(team_index, team_index+division_size):
             group_teams[i].division = new_division
@@ -205,7 +205,7 @@ class DivisionAllocator():
 
         print("\t Made division #%s of size %s" % (new_division, division_size))
 
-    def create_venue_divisions(self, group, group_teams, di, base_division_size,
+    def create_venue_divisions(self, category, group_teams, di, base_division_size,
                                possible_divisions, remainder):
 
         random.shuffle(group_teams)
@@ -218,7 +218,7 @@ class DivisionAllocator():
 
         team_index = 0
         for division_size in divisions:
-            self.create_division(di, group, group_teams, team_index, division_size)
+            self.create_division(di, category, group_teams, team_index, division_size)
             team_index += division_size
             di += 1
 

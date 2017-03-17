@@ -23,22 +23,22 @@
   <div class="col-md-5">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title">Assign Dates to Venue Groups</h4>
+        <h4 class="panel-title">Assign Dates to Venue Catgories</h4>
       </div>
       <form id="assignForm" method="POST" action="{% round_url draw-schedule-apply %}">
         {% csrf_token %}
         <ul class="list-group">
-          {% for vg in venue_groups %}
+          {% for vc in venue_categories %}
             <li class="list-group-item">
               <div class="row">
                 <div class="col-md-5">
-                  <h5>{{ vg.short_name }}</h5>
+                  <h5>{{ vc.name }}</h5>
                 </div>
                 <div class="col-md-7">
-                {% if vg.placeholder_date %}
-                  <input type="date" class="form-control" name="{{ vg.id }}" value='{{ vg.placeholder_date|date:"Y" }}-{{ vg.placeholder_date|date:"m" }}-{{ vg.placeholder_date|date:"d" }}'>
+                {% if vc.placeholder_date %}
+                  <input type="date" class="form-control" name="{{ vc.id }}" value='{{ vc.placeholder_date|date:"Y" }}-{{ vc.placeholder_date|date:"m" }}-{{ vc.placeholder_date|date:"d" }}'>
                 {% else %}
-                  <input type="date" class="form-control" name="{{ vg.id }}" value="">
+                  <input type="date" class="form-control" name="{{ vc.id }}" value="">
                 {% endif %}
                 </div>
               </div>

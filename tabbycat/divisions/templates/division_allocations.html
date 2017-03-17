@@ -6,12 +6,18 @@
 {% block page-title %}Allocate Divisions{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-primary submit-disable" href="{% tournament_url create_division_allocation %}" >
-    Auto-Allocate Teams
-  </a>
-  <a class="btn btn-primary submit-disable" href="{% tournament_url create_byes %}" >
-    Auto-Allocate Bye Teams
-  </a>
+  <form method="POST" action="{% tournament_url create_division_allocation %}">
+    {% csrf_token %}
+    <button class="btn btn-primary submit-disable" type="submit" >
+      Auto-Allocate Teams
+    </button>
+  </form>
+  <form method="POST" action="{% tournament_url create_byes %}">
+    {% csrf_token %}
+    <button class="btn btn-primary submit-disable" type="submit" >
+      Auto-Allocate Bye Teams
+    </button>
+  </form>
   <div class="btn btn-inactive text-muted">Preference:</div>
   <div class="btn-group btn-group-sm">
     <div class="btn btn-success" disabled="disabled">1/2</div>
@@ -22,9 +28,13 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a class="btn btn-success submit-disable" href="{% tournament_url create_division %}" >
-     <span class="glyphicon glyphicon-plus"></span> Add New Division
-  </a>
+
+  <form method="POST" action="{% tournament_url create_division %}">
+    {% csrf_token %}
+    <button class="btn btn-success submit-disable" type="submit" >
+      <span class="glyphicon glyphicon-plus"></span> Add New Division
+    </button>
+  </form>
 {% endblock %}
 
 {% block content %}
@@ -34,11 +44,11 @@
 
       <div class="col-sm-4 col-md-4 col-lg-3">
         <division-droppable
-          save-vg-at="{% tournament_url set_division_venue_group %}"
+          save-vc-at="{% tournament_url set_division_venue_category %}"
           save-division-at="{% tournament_url set_team_division %}"
           :division="division"
           :teams="teams | filterBy division.id in 'division'"
-          :vgs="venueGroups">
+          :vcs="venueCategories">
         </division-droppable>
       </div>
 
@@ -68,7 +78,7 @@
     draggedComponent: null,
     teams: {{ teams | safe }},
     divisions: {{ divisions | safe }},
-    venueGroups: {{ venue_groups | safe }}
+    venueCategories: {{ venue_categories | safe }}
   }
   // Todo: create a DivisionsContainer; move these methods there
   var divisionsMethods = {
