@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'en'
 USE_I18N = True
 
-TABBYCAT_VERSION = '1.2.2'
+TABBYCAT_VERSION = '1.2.3'
 TABBYCAT_CODENAME = 'Foldex'
-READTHEDOCS_VERSION = 'v1.2.2'
+READTHEDOCS_VERSION = 'v1.2.3'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
