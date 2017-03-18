@@ -35,7 +35,8 @@ class MasterSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
                 'division', 'division__venue_group', 'round',
                 'round__tournament').filter(
                     # All Debates, with a matching round, at the same venue group name
-                    round__seq=self.get_round().seq, round__tournament=tournament,
+                    round__seq=self.get_round().seq,
+                    round__tournament=tournament,
                     # Hack - remove when venue groups are unified
                     division__venue_group__short_name=base_venue_group.short_name
             ).order_by('round', 'division__venue_group__short_name', 'division')
