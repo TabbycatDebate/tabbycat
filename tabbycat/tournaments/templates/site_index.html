@@ -84,6 +84,12 @@
   {% endif %}
   {% if user.is_authenticated %}
     <li class="list-group-item">
+      <span class="glyphicon glyphicon-erase"></span>&nbsp;
+      <a class="" href="TODO">
+        {% blocktrans trimmed %}Change Password ({{ user }}){% endblocktrans %}
+      </a>
+    </li>
+    <li class="list-group-item">
       <span class="glyphicon glyphicon-lock"></span>&nbsp;
       <a class="" href="{% url 'logout' %}">
         {% blocktrans trimmed %}Log Out ({{ user }}){% endblocktrans %}
