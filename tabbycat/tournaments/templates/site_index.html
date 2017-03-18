@@ -14,9 +14,15 @@
         <li class="list-group-item">
           <a href="{{ tournament.get_absolute_url }}">
             {% with tournament_name=tournament.name %}
-              <span class="emoji">🔧</span>{% blocktrans trimmed %}
+              {% if user.is_superuser %}
+                <span class="emoji">🔧</span>{% blocktrans trimmed %}
                 Admin area for <strong>{{ tournament_name }}</strong>
-              {% endblocktrans %}
+                {% endblocktrans %}
+              {% else %}
+                <span class="emoji">🔧</span>{% blocktrans trimmed %}
+                Assistant area for <strong>{{ tournament_name }}</strong>
+                {% endblocktrans %}
+              {% endif %}
             {% endwith %}
           </a>
         </li>
