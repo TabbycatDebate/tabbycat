@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     # Overview
     url(r'^$',
-        views.tournament_config_index,
+        views.TournamentConfigIndexView.as_view(),
         name='options-tournament-index'),
 
     # Per Type
@@ -42,9 +42,9 @@ urlpatterns = [
 
     # Presets
     url(r'^presets/confirm/(?P<preset_name>\w+)/$',
-        views.tournament_preference_confirm,
+        views.ConfirmTournamentPreferencesView.as_view(),
         name="tournament_preference_confirm"),
     url(r'^presets/apply/(?P<preset_name>\w+)/$',
-        views.tournament_preference_apply,
+        views.ApplyTournamentPreferencesView.as_view(),
         name="tournament_preference_apply"),
 ]

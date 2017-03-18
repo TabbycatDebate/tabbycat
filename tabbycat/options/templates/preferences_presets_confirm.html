@@ -11,7 +11,7 @@
 {% block content %}
 
   <ul class="list-group">
-    {% for preference in preferences %}
+    {% for preference in preset_preferences %}
       <li class="list-group-item">
         <h4 class="{% if preference.current_value != preference.new_value %}text-success{% else %}text-muted{% endif %}">
           {{ preference.name }}
