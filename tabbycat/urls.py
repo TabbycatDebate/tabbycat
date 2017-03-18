@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin, messages
+from django.contrib.auth.views import logout as auth_logout
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.views.generic.base import RedirectView
@@ -43,6 +44,10 @@ urlpatterns = [
         RedirectView.as_view(url='/database/%(page)s', permanent=True)),
 
     # Accounts
+    url(r'^accounts/logout/$',
+        auth_logout,
+        {'next_page': '/'},  # override to specify next_page
+        name='logout'),
     url(r'^accounts/',
         include('django.contrib.auth.urls')),
 
