@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static debate_tags i18n %}
+
+{% block head-title %}<span class="emoji">🏫</span>{% trans "Bulk Add Institutions" context "page title" %}{% endblock %}
+{% block page-title %}🏫 {% trans "Bulk Add Institutions" context "page title" %}{% endblock %}
+
+{% block content %}
+
+<h4>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h4>
+
+<div class="alert alert-info">
+  <p>
+    Paste a list of institutions with one institution per line and following the format of:
+    <em>Full Name,Nickname</em>. For example:<br><br>
+    <em>Victoria University of Wellington,VIC<br>
+    University of Melbourne,MUDS<br>
+    Universiti Teknologi MARA,UTMARA</em><br><br>
+    Note that teams that use an institutional prefix will use the Nickname for this purpose, ie "MUDS 1".
+  </p>
+</div>
+
+<form action="." method="POST">
+  {% csrf_token %}
+  {{ wizard.management_form }}
+
+  {% if wizard.form.institutions_raw.errors %}
+  <div class="alert alert-danger">
+    <p>{% trans 'There were some problems with this data:' %}</p>
+    {{ wizard.form.institutions_raw.errors }}
+  </div>
+  {% endif %}
+
+  <div class="form-group">
+    {{ wizard.form.institutions_raw }}
+  </div>
+  {% blocktrans with number=wizard.steps.step1|add:1 asvar submit_label %}Go to Step {{ number }}{% endblocktrans %}
+  <input type="submit" class="btn btn-primary btn-block submit-disable" value="{{ submit_label }}">
+
+</form>
+
+{% endblock content %}

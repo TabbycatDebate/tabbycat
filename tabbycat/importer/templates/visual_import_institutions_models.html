@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load add_field_css static debate_tags i18n %}
+
+{% block head-title %}<span class="emoji">🏫</span>{% trans "Bulk Add Institutions" context "page title" %}{% endblock %}
+{% block page-title %}🏫 {% trans "Bulk Add Institutions" context "page title" %}{% endblock %}
+
+{% block content %}
+
+<h4>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h4>
+
+<form id="addInstitutions" action="." method="POST">
+  {% csrf_token %}
+  {{ wizard.management_form }}
+  {{ wizard.form.management_form }}
+
+  {% if wizard.form.non_form_errors %}
+  <div class="alert alert-danger">
+    <p>There are some problems with the data on this form:</p>
+    {{ wizard.form.non_form_errors }}
+  </div>
+  {% endif %}
+
+  <div class="row">
+
+    {% for form in wizard.form %}{# actually a formset #}
+    <div class="col-md-6">
+      <div class="panel">
+        <div class="panel-body">
+
+          <div class=" form-horizontal">
+            {{ form.id }}
+            {% for field in form.visible_fields %}
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="{{ field.id_for_label }}">
+                {{ field.label }}
+              </label>
+              <div class="col-sm-8">
+                {{ field|addcss:"form-control" }}
+                {{ field.errors }}
+              </div>
+            </div>
+            {% endfor %}
+            {{ form.non_field_errors }}
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <div class="row">
+    <div class=" form-horizontal col-md-12">
+      <button type="submit" class="btn btn-default"  value="{{ wizard.steps.prev }}">{% trans "Previous Step" %}</button>
+      <input type="submit" class="btn btn-success submit-disable" value="{% trans 'Save All Institutions' %}" />
+    </div>
+  </div>
+
+</form>
+
+{% endblock content %}
