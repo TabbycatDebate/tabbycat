@@ -4,25 +4,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-# class VenueGroup(models.Model):
-#     name = models.CharField(unique=True, max_length=200)
-#     short_name = models.CharField(max_length=25)
-
-#     @property
-#     def divisions_count(self):
-#         return self.division_set.count()
-
-#     @property
-#     def venues(self):
-#         return self.venue_set.all()
-
-#     class Meta:
-#         ordering = ['short_name']
-
-#     def __str__(self):
-#         return self.short_name or self.name
-
-
 class Venue(models.Model):
     name = models.CharField(max_length=40,
         verbose_name=_("name"))
@@ -125,17 +106,6 @@ class VenueConstraintManager(models.Manager):
             models.Q(adjudicator__debateadjudicator__debate__in=debates) |
             models.Q(division__debate__in=debates)
         ).distinct()
-
-
-# class VenueConstraintCategory(models.Model):
-#     name = models.CharField(max_length=50)
-#     venues = models.ManyToManyField(Venue)
-
-#     class Meta:
-#         verbose_name_plural = "venue constraint categories"
-
-#     def __str__(self):
-#         return self.name
 
 
 class VenueConstraint(models.Model):

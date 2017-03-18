@@ -33,10 +33,6 @@ class VenueCategoryAdmin(admin.ModelAdmin):
         return super().get_queryset(request).prefetch_related('venues')
 
 
-# ==============================================================================
-# VenueConstraint models
-# ==============================================================================
-
 class VenueConstraintModelForm(forms.ModelForm):
     class Meta(object):
         model = VenueConstraint
