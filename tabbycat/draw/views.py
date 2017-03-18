@@ -437,10 +437,12 @@ class ApplyDebateScheduleView(DrawStatusEdit):
         debates = Debate.objects.filter(round=round)
         for debate in debates:
             division = debate.teams[0].division
-            if not division and not division.time_slot:
+            if not division:
+                continue
+            if not division.time_slot:
                 continue
 
-            date = request.POST[str(division.venue_group.id)]
+            date = request.POST[str(division.venue_category.id)]
             if not date:
                 continue
 
@@ -632,7 +634,7 @@ class AllDrawsForInstitutionView(CrossTournamentPageMixin, CacheMixin, BaseDrawT
         institution = self.get_institution()
         debate_teams = DebateTeam.objects.filter(
             team__institution=institution).select_related(
-            'debate', 'debate__division', 'debate__division__venue_group',
+            'debate', 'debate__division', 'debate__division__venue_category',
             'debate__round')
         draw = [dt.debate for dt in debate_teams]
         return draw

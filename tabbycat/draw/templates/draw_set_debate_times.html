@@ -20,7 +20,7 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-md-5">
+  <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">Assign Dates to Venue Catgories</h4>
@@ -48,7 +48,7 @@
       </form>
     </div>
   </div>
-  <div class="col-md-7">
+  <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">Assign Times to Divisions</h4>
@@ -60,10 +60,10 @@
           {% endif %}
           <div class="col-md-6">
             <div class="row">
-              <div class="col-md-5">
-                <h5>{{ d.name }} <small>{{ d.venue_group.short_name }}</small></h5>
+              <div class="col-md-4">
+                <h5>{{ d.name }} <small>{{ d.venue_category.name }}</small></h5>
               </div>
-              <div class="col-md-7">
+              <div class="col-md-8">
                 <input type="time" class="form-control jquery-division-time" name="{{ d.id }}" value="{{ d.time_slot|time:'H:i' }}">
               </div>
             </div>

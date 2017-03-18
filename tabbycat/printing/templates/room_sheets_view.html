@@ -2,10 +2,10 @@
 {% load debate_tags %}
 
 {% block head-title %}
-  <div class="text-center hidden-print">Room Sheets for Debates at {{ base_venue_group.short_name }} in {{ round.name }}</div>
+  <div class="text-center hidden-print">Room Sheets for Debates at {{ base_venue_category.name }} in {{ round.name }}</div>
 {% endblock %}
 {% block page-title %}
-  Room Sheets for Debates at {{ venue_group.short_name }}
+  Room Sheets for Debates at {{ venue_category.name }}
 {% endblock %}
 
 {% block nav %}{% endblock %}

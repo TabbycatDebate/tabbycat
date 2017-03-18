@@ -11,15 +11,15 @@ from tournaments.mixins import RoundMixin, TournamentMixin
 from tournaments.models import Tournament
 from tournaments.utils import get_position_name
 from utils.mixins import SuperuserRequiredMixin
-from venues.models import Venue, VenueGroup
+from venues.models import Venue, VenueCategory
 
 
 class MasterSheetsListView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     template_name = 'division_sheets_list.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['standings'] = VenueGroup.objects.all()
-        kwargs['venue_groups'] = VenueGroup.objects.all()
+        kwargs['standings'] = VenueCategory.objects.all()
+        kwargs['venue_categories'] = VenueCategory.objects.all()
         return super().get_context_data(**kwargs)
 
 
@@ -27,21 +27,21 @@ class MasterSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     template_name = 'master_sheets_view.html'
 
     def get_context_data(self, **kwargs):
-        venue_group_id = self.kwargs['venue_group_id']
-        base_venue_group = VenueGroup.objects.get(id=venue_group_id)
+        venue_category_id = self.kwargs['venue_category_id']
+        base_venue_category = VenueCategory.objects.get(id=venue_category_id)
         active_tournaments = Tournament.objects.filter(active=True)
         for tournament in list(active_tournaments):
             tournament.debates = Debate.objects.select_related(
-                'division', 'division__venue_group', 'round',
+                'division', 'division__venue_category', 'round',
                 'round__tournament').filter(
-                    # All Debates, with a matching round, at the same venue group name
+                    # All Debates, with a matching round, at the same venue category name
                     round__seq=round.seq,
                     round__tournament=tournament,
-                    # Hack - remove when venue groups are unified
-                    division__venue_group__short_name=base_venue_group.short_name
-            ).order_by('round', 'division__venue_group__short_name', 'division')
+                    # Hack - remove when venue category are unified
+                    division__venue_category__short_name=base_venue_category.name
+            ).order_by('round', 'division__venue_category__short_name', 'division')
 
-        kwargs['base_venue_group'] = base_venue_group
+        kwargs['base_venue_category'] = base_venue_category
         kwargs['active_tournaments'] = active_tournaments
         return super().get_context_data(**kwargs)
 
@@ -50,18 +50,18 @@ class RoomSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     template_name = 'room_sheets_view.html'
 
     def get_context_data(self, **kwargs):
-        venue_group_id = self.kwargs['venue_group_id']
-        base_venue_group = VenueGroup.objects.get(id=venue_group_id)
-        venues = Venue.objects.filter(group=base_venue_group)
+        venue_category_id = self.kwargs['venue_category_id']
+        base_venue_category = VenueCategory.objects.get(id=venue_category_id)
+        venues = Venue.objects.filter(category=base_venue_category)
 
         for venue in venues:
             venue.debates = Debate.objects.filter(
-                # All Debates, with a matching round, at the same venue group name
+                # All Debates, with a matching round, at the same venue category name
                 round__seq=round.seq,
                 venue=venue
             ).select_related('round__tournament').order_by('round__tournament__seq')
 
-        kwargs['base_venue_group'] = base_venue_group
+        kwargs['base_venue_category'] = base_venue_category
         kwargs['venues'] = venues
         return super().get_context_data(**kwargs)
 

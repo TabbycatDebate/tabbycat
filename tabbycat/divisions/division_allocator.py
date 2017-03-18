@@ -78,7 +78,7 @@ class DivisionAllocator():
         random.shuffle(all_teams)
         random.shuffle(all_constraints)
         all_constraints.sort(key=lambda x: x.priority, reverse=True)
-        # Division dictionary structure: { <VenueGroup: PC Wed W1>: [], <VenueGroup: PC Wed W2>: [], ... }
+        # Division dictionary structure: { <VenueCategory: PC Wed W1>: [], <VenueCategory: PC Wed W2>: [], ... }
 
         # Sort preferences by priority then do all the allocations
         for constraint in all_constraints:
@@ -95,8 +95,8 @@ class DivisionAllocator():
 
             # Infer capacity from number of venues
             vc_capacity = vc.venues.count()
-            print("VenueGroup is:", vc)
-            print("VenueGroup Capacity is:", vc_capacity)
+            print("VenueCategory is:", vc)
+            print("VenueCategory Capacity is:", vc_capacity)
 
             if len(division_dict[vc]) >= vc_capacity:
                 # If this venue is full

@@ -5,7 +5,7 @@
 {% block head-title %}
   {% if new %}New Ballot Set for{% else %}Edit Ballot Set for{% endif %}
   {{ debate.matchup }} <small>Round {{ debate.round }}
-  @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}
+  @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}
   {{ debate.venue.display_name }}</small>
 {% endblock %}
 
