@@ -125,7 +125,6 @@ class BaseTeamRecordView(BaseRecordView):
         teamscores = TeamScore.objects.filter(
             debate_team__team=self.object,
             ballot_submission__confirmed=True,
-            debate_team__debate__round__seq__lt=tournament.current_round.seq,
             debate_team__debate__round__draw_status=Round.STATUS_RELEASED
         ).select_related(
             'debate_team__debate__round'
@@ -134,7 +133,10 @@ class BaseTeamRecordView(BaseRecordView):
             'debate_team__debate__debateteam_set'
         )
         if not tournament.pref('all_results_released'):
-            teamscores = teamscores.filter(debate_team__debate__round__silent=False)
+            teamscores = teamscores.filter(
+                debate_team__debate__round__silent=False,
+                debate_team__debate__round__seq__lt=tournament.current_round.seq
+            )
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)
@@ -185,7 +187,6 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         tournament = self.get_tournament()
         debateadjs = DebateAdjudicator.objects.filter(
             adjudicator=self.object,
-            debate__round__seq__lt=tournament.current_round.seq,
             debate__round__draw_status=Round.STATUS_RELEASED
         ).select_related(
             'debate__round'
@@ -195,7 +196,10 @@ class BaseAdjudicatorRecordView(BaseRecordView):
             'debate__debateteam_set__team__speaker_set'
         )
         if not tournament.pref('all_results_released'):
-            debateadjs = debateadjs.filter(debate__round__silent=False)
+            debateadjs = debateadjs.filter(
+                debate__round__silent=False,
+                debate__round__seq__lt=tournament.current_round.seq,
+            )
         debates = [da.debate for da in debateadjs]
         populate_wins(debates)
         populate_confirmed_ballots(debates, motions=True, ballotsets=True)

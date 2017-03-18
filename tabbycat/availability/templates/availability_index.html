@@ -127,14 +127,14 @@
 
   {% if min_adjudicators > checkin_types.1.in_now %}
     <div class="alert alert-warning">
-      There need to be at least {{ min_adjudicators }} checked in adjudicators
+      There need to be at least {{ min_adjudicators }} adjudicators checked in
       given the number of debates.
     </div>
   {% endif %}
 
   {% if min_venues > checkin_types.2.in_now %}
     <div class="alert alert-warning">
-      There need to be at least {{ min_venues }} checked in venues given the
+      There need to be at least {{ min_venues }} venues checked in given the
       number of debates.
     </div>
   {% endif %}

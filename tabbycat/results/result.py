@@ -132,6 +132,10 @@ class Scoresheet(ResultBuffer):
                 self._load_team(dt)
             self.assert_loaded()
 
+    def __repr__(self):
+        return "<Scoresheet at {id:#x} for {adj!s} in {bsub!s}>".format(
+                id=id(self), adj=self.adjudicator, bsub=self.ballotsub)
+
     # --------------------------------------------------------------------------
     # Initialisation methods (external initialisers may find these helpful)
     # --------------------------------------------------------------------------
@@ -317,6 +321,9 @@ class BallotSet(ResultBuffer):
                 self._load_team(dt)
             self.assert_loaded()
 
+    def __repr__(self):
+        return "<BallotSet at {id:#x} for {bsub!s}>".format(id=id(self), bsub=self.ballotsub)
+
     # --------------------------------------------------------------------------
     # Initialisation methods (external initialisers may find these helpful)
     # --------------------------------------------------------------------------
@@ -376,6 +383,8 @@ class BallotSet(ResultBuffer):
 
     @property
     def is_complete(self):
+        if not self.debate.adjudicators.has_chair:
+            return False
         if not all(sheet.is_complete for sheet in self.adjudicator_sheets.values()):
             return False
         if not all(self.speakers[dt][p] is not None for dt in self.dts for p in self.POSITIONS):

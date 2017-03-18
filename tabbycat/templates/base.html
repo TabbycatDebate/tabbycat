@@ -70,7 +70,7 @@
 
         <div class="row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
           <div class="col-md-12">
-            <div class="form-inline messages" id="messages-container db-hide">
+            <div class="form-inline messages db-hide" id="messages-container">
               {% if messages %}
                 {% for message in messages %}
                   <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated">

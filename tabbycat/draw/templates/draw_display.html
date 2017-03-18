@@ -101,14 +101,14 @@
     <ul class="list-group">
       <li class="list-group-item">
         <span class="emoji">💯</span>
-        <a target="_blank" href="{% round_url draw_print_scoresheets round %}">
+        <a target="_blank" href="{% round_url printing-scoresheets round %}">
           Print Ballots
         </a>
         <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
       </li>
       <li class="list-group-item">
         <span class="emoji">🙅</span>
-        <a target="_blank" href="{% round_url draw_print_feedback round %}">
+        <a target="_blank" href="{% round_url printing-feedback round %}">
           Print Feedback Forms
         </a>
         <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
@@ -116,7 +116,7 @@
       {% if pref.public_divisions %}
       <li class="list-group-item">
         <span class="emoji">📠</span>
-        <a target="_blank" href="{% round_url master_sheets_list round %}">
+        <a target="_blank" href="{% round_url printing-master-sheets-list round %}">
           Print Division Sheets
         </a>
         <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
