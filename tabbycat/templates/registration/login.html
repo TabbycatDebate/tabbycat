@@ -49,11 +49,10 @@
           <div class="vertical-spacing">
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
             {{ field|addcss:"form-control" }}
-            {% if field.errors %}
-              {{ field.errors }}
-            {% endif %}
+            {{ field.errors }}
           </div>
           {% endfor %}
+
           <button type="submit" class="btn btn-block btn-success vertical-spacing">
             {% trans "Log In" context "button" %}
           </button>
