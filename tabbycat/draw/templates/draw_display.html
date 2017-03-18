@@ -5,50 +5,55 @@
 {% block page-title %}Draw Display for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
+{% if user.is_superuser %}
 
-  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
-  </a>
-
-  {% if not pref.enable_debate_scheduling %}
-    <a class="btn {% if round.starts_at %}btn-danger{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#editStartTime">
-      {% if round.starts_at %}
-        Debates Start at {{ round.starts_at }}
-      {% else %}
-        Add Start Time
-      {% endif %}
+    <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+      <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
     </a>
-  {% else %}
-    <a href="{% round_url draw-schedule-debates %}" class="btn btn-default submit-disable">
-      Schedule Debates
-    </a>
-  {% endif %}
 
-  {% if round.draw_status == round.STATUS_CONFIRMED %}
-    <form id="releaseForm" method="POST" action="{% round_url draw-release %}">
-      {% csrf_token %}
-      <button class="btn btn-primary submit-disable" type="submit">
-        Release Draw to Public
-      </button>
-    </form>
-  {% elif round.draw_status == round.STATUS_RELEASED %}
-    <form id="unreleaseForm" method="POST" action="{% round_url draw-unrelease %}">
-      {% csrf_token %}
-      <button class="btn btn-danger submit-disable" type="submit">
-        Unrelease Draw to Public
-      </button>
-    </form>
-  {% endif %}
+    {% if not pref.enable_debate_scheduling %}
+      <a class="btn {% if round.starts_at %}btn-danger{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#editStartTime">
+        {% if round.starts_at %}
+          Debates Start at {{ round.starts_at }}
+        {% else %}
+          Add Start Time
+        {% endif %}
+      </a>
+    {% else %}
+      <a href="{% round_url draw-schedule-debates %}" class="btn btn-default submit-disable">
+        Schedule Debates
+      </a>
+    {% endif %}
 
+    {% if round.draw_status == round.STATUS_CONFIRMED %}
+      <form id="releaseForm" method="POST" action="{% round_url draw-release %}">
+        {% csrf_token %}
+        <button class="btn btn-primary submit-disable" type="submit">
+          Release Draw to Public
+        </button>
+      </form>
+    {% elif round.draw_status == round.STATUS_RELEASED %}
+      <form id="unreleaseForm" method="POST" action="{% round_url draw-unrelease %}">
+        {% csrf_token %}
+        <button class="btn btn-danger submit-disable" type="submit">
+          Unrelease Draw to Public
+        </button>
+      </form>
+    {% endif %}
+
+{% endif %}
 {% endblock %}
 
 {% block page-subnav-actions %}
+{% if user.is_superuser %}
   <a class="btn btn-success submit-disable" href="{% round_url motions-edit %}">
     Enter Motions <span class="glyphicon glyphicon-chevron-right"></span>
   </a>
+{% endif %}
 {% endblock %}
 
 {% block page-alerts %}
+{% if user.is_superuser %}
 
   {% if round.draw_status == round.STATUS_RELEASED and not pref.public_draw %}
     <div class="alert alert-warning">
@@ -59,10 +64,10 @@
     </div>
   {% endif %}
 
+{% endif %}
 {% endblock %}
 
 {% block content %}
-
 
 <div class="row">
   <div class="col-md-12">

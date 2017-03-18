@@ -4,17 +4,6 @@ from . import views
 
 urlpatterns = [
 
-    # Display
-    url(r'^round/(?P<round_seq>\d+)/display/$',
-        views.AdminDrawDisplay.as_view(),
-        name='draw-display'),
-    url(r'^round/(?P<round_seq>\d+)/display_by_venue/$',
-        views.AdminDrawDisplayForRoundByVenueView.as_view(),
-        name='draw-display-by-venue'),
-    url(r'^round/(?P<round_seq>\d+)/display_by_team/$',
-        views.AdminDrawDisplayForRoundByTeamView.as_view(),
-        name='draw-display-by-team'),
-
     # Creation/Release
     url(r'^round/(?P<round_seq>\d+)/$',
         views.AdminDrawView.as_view(),
@@ -34,12 +23,6 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/regenerate/$',
         views.DrawRegenerateView.as_view(),
         name='draw-regenerate'),
-    url(r'^round/(?P<round_seq>\d+)/release/$',
-        views.DrawReleaseView.as_view(),
-        name='draw-release'),
-    url(r'^round/(?P<round_seq>\d+)/unrelease/$',
-        views.DrawUnreleaseView.as_view(),
-        name='draw-unrelease'),
 
     # Side Editing
     url(r'^sides/$',
@@ -52,6 +35,23 @@ urlpatterns = [
         views.SaveDrawMatchups.as_view(),
         name='draw-matchups-save'),
 
+    # Display
+    url(r'^round/(?P<round_seq>\d+)/display/$',
+        views.AdminDrawDisplay.as_view(),
+        name='draw-display'),
+    url(r'^round/(?P<round_seq>\d+)/display_by_venue/$',
+        views.AdminDrawDisplayForRoundByVenueView.as_view(),
+        name='draw-display-by-venue'),
+    url(r'^round/(?P<round_seq>\d+)/display_by_team/$',
+        views.AdminDrawDisplayForRoundByTeamView.as_view(),
+        name='draw-display-by-team'),
+    url(r'^round/(?P<round_seq>\d+)/release/$',
+        views.DrawReleaseView.as_view(),
+        name='draw-release'),
+    url(r'^round/(?P<round_seq>\d+)/unrelease/$',
+        views.DrawUnreleaseView.as_view(),
+        name='draw-unrelease'),
+
     # Scheduling
     url(r'^round/(?P<round_seq>\d+)/schedule_debates/$',
         views.ScheduleDebatesView.as_view(),
@@ -62,8 +62,8 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/confirms/$',
         views.ScheduleConfirmationsView.as_view(),
         name='draw-schedule-confirmations'),
-
     url(r'^round/(?P<round_seq>\d+)/start_time/set/$',
         views.SetRoundStartTimeView.as_view(),
         name='draw-start-time-set'),
+
 ]
