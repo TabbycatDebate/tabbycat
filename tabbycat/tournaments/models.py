@@ -356,7 +356,7 @@ class Round(models.Model):
         if venues:
             debates = debates.select_related('venue').prefetch_related('venue__venuecategory_set')
         if venueconstraints:
-            debates = debates.prefetch_related('venue__venuecategory_set__venueconstraint_set')
+            debates = debates.prefetch_related('venue__venuecategory_set')
         if teams or wins or institutions or speakers:
             debates = debates.prefetch_related(
                 Prefetch('debateteam_set',
