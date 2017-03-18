@@ -4,29 +4,29 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-class VenueGroup(models.Model):
-    name = models.CharField(unique=True, max_length=200)
-    short_name = models.CharField(max_length=25)
+# class VenueGroup(models.Model):
+#     name = models.CharField(unique=True, max_length=200)
+#     short_name = models.CharField(max_length=25)
 
-    @property
-    def divisions_count(self):
-        return self.division_set.count()
+#     @property
+#     def divisions_count(self):
+#         return self.division_set.count()
 
-    @property
-    def venues(self):
-        return self.venue_set.all()
+#     @property
+#     def venues(self):
+#         return self.venue_set.all()
 
-    class Meta:
-        ordering = ['short_name']
+#     class Meta:
+#         ordering = ['short_name']
 
-    def __str__(self):
-        return self.short_name or self.name
+#     def __str__(self):
+#         return self.short_name or self.name
 
 
 class Venue(models.Model):
     name = models.CharField(max_length=40,
         verbose_name=_("name"))
-    group = models.ForeignKey(VenueGroup, models.SET_NULL, blank=True, null=True)
+    # group = models.ForeignKey(VenueGroup, models.SET_NULL, blank=True, null=True)
     priority = models.IntegerField(
         verbose_name=_("priority"),
         help_text=_("Venues with a higher priority number will be preferred when allocating venues to debates"))
@@ -127,15 +127,15 @@ class VenueConstraintManager(models.Manager):
         ).distinct()
 
 
-class VenueConstraintCategory(models.Model):
-    name = models.CharField(max_length=50)
-    venues = models.ManyToManyField(Venue)
+# class VenueConstraintCategory(models.Model):
+#     name = models.CharField(max_length=50)
+#     venues = models.ManyToManyField(Venue)
 
-    class Meta:
-        verbose_name_plural = "venue constraint categories"
+#     class Meta:
+#         verbose_name_plural = "venue constraint categories"
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class VenueConstraint(models.Model):

@@ -4,13 +4,12 @@
 Venue Constraints
 =================
 
-.. attention:: This changed in version 1.2. Previously, venue constraints
-    used the same venue groups that were used for grouping venues together. Now,
-    venue constraint categories are specified separately from venue groups.
+.. attention:: This changed in version 1.3. Previously, venue constraints
+    used a venue constrain categories. Now they use venue categories and venue groups no longer exist.
 
 Tabbycat supports a basic form of venue constraints. A **venue constraint** is a
 requirement that a particular **team, adjudicator, institution** or **division**
-be assigned to a venue in a particular **venue constraint category**.  Typical
+be assigned to a venue in a particular **venue category**.  Typical
 uses would include:
 
 - Meeting venue accessibility requirements of particular teams (*e.g.* step-free
@@ -18,9 +17,9 @@ uses would include:
 - Placing adjudication core and tab team members close to the tab room
 - Keeping all debates in a division in one location
 
-Constraints apply to **venue constraint categories**, not individual venues.
+Constraints apply to **venue categories**, not individual venues.
 That is, you specify that (say) a team should be given a venue from a particular
-*list* of venues. Of course, it's permissible for a venue constraint category to
+*list* of venues. Of course, it's permissible for a venue category to
 have only one venue in it.
 
 The algorithm used to satisfy venue constraints is not guaranteed to be optimal.
@@ -29,11 +28,11 @@ even though some other allocation would have satisfied all (or more)
 constraints. In almost all practical circumstances, however, it should work, and
 save human effort (and time) in specially allocating rooms.
 
-Adding venue constraint categories
-==================================
+Adding venue categories
+=======================
 
-Before you add venue constraints, you first need to add venue constraint
-categories. Each venue constraint category is a list of venues, typically
+Before you add venue constraints, you first need to add venue
+categories. Each venue category is a list of venues, typically
 satisfying a particular need. For example, you might have a category for each of the following:
 
 - Venues with step-free access
@@ -43,12 +42,12 @@ satisfying a particular need. For example, you might have a category for each of
 
 Each venue can be in as many categories as you like (or none at all).
 
-To add a venue constraint category, go to the **Edit Database** area (under
-Setup), scroll down to "Venues" and click "Venue constraint categories". Then
-click the **+ Add venue constraint category** button in the top-right of the
+To add a venue category, go to the **Edit Database** area (under
+Setup), scroll down to "Venues" and click "Venue categories". Then
+click the **+ Add venue category** button in the top-right of the
 page. You'll see a page with this on it:
 
-.. image:: images/add-venue-constraint-category.png
+.. image:: images/add-venue-category.png
 
 Give your category a name (like "Step-free access"), assign it some venues, then
 click one of the "Save" buttons.
@@ -66,7 +65,7 @@ this on it:
 For each constraint, you need to specify four things:
 
 +---------------------+---------------------------------------------------------+
-| **Category**        | The venue constraint category to which the subject of   |
+| **Category**        | The venue category to which the subject of              |
 |                     | this constraint should be locked.                       |
 +---------------------+---------------------------------------------------------+
 | **Priority**        | This is a number used to resolve conflicts between      |
