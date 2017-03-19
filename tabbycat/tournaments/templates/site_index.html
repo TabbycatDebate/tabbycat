@@ -91,7 +91,7 @@
   {% if user.is_authenticated %}
     <li class="list-group-item">
       <span class="glyphicon glyphicon-erase"></span>&nbsp;
-      <a class="" href="TODO">
+      <a class="" href="{% url 'password_change' %}">
         {% blocktrans trimmed %}Change Password ({{ user }}){% endblocktrans %}
       </a>
     </li>
