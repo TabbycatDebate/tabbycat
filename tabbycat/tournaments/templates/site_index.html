@@ -30,7 +30,7 @@
       <li class="list-group-item">
         <a href="{{ tournament.get_public_url }}">
           <span class="emoji">
-            {% if tournament.emoji %}{{tournament.emoji }}{% else %}🏆{% endif %}
+            {{ tournament.emoji|default:"🏆" }}
           </span>{{ tournament.name }}
         </a>
       </li>
@@ -57,17 +57,17 @@
   <ul class="list-group">
     <li class="list-group-item">
       <a href="{% url 'all_tournaments-all-venues' %}">
-        <span class="emoji">🎪</span>{% blocktrans trimmed %}All Draws by Venue{% endblocktrans %}
+        <span class="emoji">🎪</span>{% trans "All Draws by Venue" %}
       </a>
     </li>
     <li class="list-group-item">
       <a href="{% url 'all-tournaments-all-institutions' %}">
-        <span class="emoji">🏢</span>{% blocktrans trimmed %}All Draws by School{% endblocktrans %}
+        <span class="emoji">🏢</span>{% trans "All Draws by School" %}
       </a>
     </li>
     <li class="list-group-item">
       <a href="{% url 'all-tournaments-all-teams' %}">
-        <span class="emoji">👯</span>{% blocktrans trimmed %}All Teams and Divisions{% endblocktrans %}
+        <span class="emoji">👯</span>{% trans "All Teams and Divisions" %}
       </a>
     </li>
   </ul>
@@ -78,13 +78,13 @@
     <li class="list-group-item">
       <span class="glyphicon glyphicon-pencil"></span>&nbsp;
       <a href="{% url 'tournament-create' %}">
-        {% blocktrans trimmed %}New Tournament{% endblocktrans %}
+        {% trans "New Tournament" %}
       </a>
     </li>
     <li class="list-group-item">
       <span class="glyphicon glyphicon-edit"></span>&nbsp;
       <a href="{% url 'admin:index' %}">
-        {% blocktrans trimmed %}Edit Database Area{% endblocktrans %}
+        {% trans "Edit Database Area" %}
       </a>
     </li>
   {% endif %}
@@ -92,18 +92,18 @@
     <li class="list-group-item">
       <span class="glyphicon glyphicon-erase"></span>&nbsp;
       <a class="" href="{% url 'password_change' %}">
-        {% blocktrans trimmed %}Change Password ({{ user }}){% endblocktrans %}
+        {% blocktrans %}Change Password ({{ user }}){% endblocktrans %}
       </a>
     </li>
     <li class="list-group-item">
       <span class="glyphicon glyphicon-lock"></span>&nbsp;
       <a class="" href="{% url 'logout' %}">
-        {% blocktrans trimmed %}Log Out ({{ user }}){% endblocktrans %}
+        {% blocktrans %}Log Out ({{ user }}){% endblocktrans %}
       </a>
     </li>
   {% else %}
     <li class="list-group-item">
-      <span class="emoji">🔓</span><a class="" href="{% url 'login' %}">{% blocktrans trimmed %}Log In as Admin{% endblocktrans %}</a>
+      <span class="emoji">🔓</span><a class="" href="{% url 'login' %}">{% trans "Log In as Admin" %}</a>
     </li>
   {% endif %}
 </ul>
