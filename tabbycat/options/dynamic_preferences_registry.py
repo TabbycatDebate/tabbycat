@@ -698,6 +698,7 @@ class FeedbackProgress(BooleanPreference):
     name = 'feedback_progress'
     default = False
 
+
 @tournament_preferences_registry.register
 class AssistantDisplayMotions(BooleanPreference):
     help_text = "Allows assistant users to see the page for displaying motions"
