@@ -417,7 +417,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
     choices = TeamStandingsGenerator.get_metric_choices()
     nfields = 8
     allow_empty = True
-    default = ['points', 'speaks_avg']
+    default = ['wins', 'speaks_avg']
 
 
 @tournament_preferences_registry.register
