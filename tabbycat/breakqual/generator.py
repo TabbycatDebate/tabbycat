@@ -15,10 +15,6 @@ def BreakGenerator(category, **kwargs):  # noqa: N802
     return klass(category, **kwargs)
 
 
-class BreakGeneratorError(RuntimeError):
-    pass
-
-
 # Verify that the available generators match the choices in the BreakCategory model
 generator_keys = set(base.registry.keys())
 model_choices = set(key for key, _ in BreakCategory.BREAK_QUALIFICATION_CHOICES)

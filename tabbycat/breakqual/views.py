@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
+from django.utils.translation import ugettext as _
 from django.views.generic import FormView, TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -10,6 +11,7 @@ from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixi
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
 
+from .base import BreakGeneratorError
 from .utils import get_breaking_teams
 from .generator import BreakGenerator
 from .models import BreakCategory, BreakingTeam
@@ -59,7 +61,26 @@ class PublicBreakingTeamsView(PublicTournamentPageMixin, CacheMixin, BaseBreakin
     public_page_preference = 'public_breaking_teams'
 
 
-class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreakingTeamsView, FormView):
+class GenerateBreakMixin:
+
+    def generate_break(self, categories):
+        """Generates the break for the given categories. Adds a messages error
+        for each category where break generation failed; returns a string
+        containing a list of names of categories where breaks were successfully
+        generated."""
+        successes = []
+        for category in categories:
+            try:
+                BreakGenerator(category).generate()
+            except BreakGeneratorError as e:
+                messages.error(self.request, _("There was an error generating the break for category "
+                    "%(category)s: %(message)s") % {'category': category.name, 'message': str(e)})
+            else:
+                successes.append(category.name)
+        return ", ".join(successes)
+
+
+class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, SuperuserRequiredMixin, BaseBreakingTeamsView, FormView):
     # inherit from two views, not best practice but works in this scenario
 
     form_class = forms.BreakingTeamsForm
@@ -107,14 +128,19 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreaking
         form.save()
 
         if 'save_update_all' in self.request.POST:
-            for category in self.get_tournament().breakcategory_set.order_by('-priority'):
-                BreakGenerator(category).generate()
-            messages.success(self.request, "Changes to breaking team remarks saved "
-                    "and teams break updated for all break categories.")
+            successes = self.generate_break(self.get_tournament().breakcategory_set.order_by('-priority'))
+            if successes:
+                messages.success(self.request, _("Changes to breaking team remarks saved "
+                        "and teams break updated for the following break categories: "
+                        "%(categories)s.") % {'categories': successes})
+
         elif 'save_update_one' in self.request.POST:
-            BreakGenerator(self.object).generate()
-            messages.success(self.request, "Changes to breaking team remarks saved "
-                    "and teams break updated for break category %s." % self.object.name)
+            successes = self.generate_break([self.object])
+            if successes:
+                messages.success(self.request, _("Changes to breaking team remarks saved "
+                        "and teams break updated for break category %(category)s.") %
+                        {'category': self.object.name})
+
         else:
             messages.success(self.request, "Changes to breaking team remarks saved.")
 
@@ -129,7 +155,7 @@ class BreakingTeamsFormView(LogActionMixin, SuperuserRequiredMixin, BaseBreaking
         return super().post(request, *args, **kwargs)
 
 
-class GenerateAllBreaksView(LogActionMixin, TournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+class GenerateAllBreaksView(GenerateBreakMixin, LogActionMixin, TournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_GENERATE_ALL
     tournament_redirect_pattern_name = 'breakqual-teams'
@@ -137,9 +163,12 @@ class GenerateAllBreaksView(LogActionMixin, TournamentMixin, SuperuserRequiredMi
     def post(self, request, *args, **kwargs):
         BreakingTeam.objects.filter(break_category__tournament=self.get_tournament()).delete()
         tournament = self.get_tournament()
-        for category in tournament.breakcategory_set.order_by('-priority'):
-            BreakGenerator(category).generate()
-        messages.success(request, "Teams break generated for all break categories.")
+
+        successes = self.generate_break(tournament.breakcategory_set.order_by('-priority'))
+        if successes:
+            messages.success(request, _("Teams break generated for the following break categories: "
+                "%(categories)s.") % {'categories': successes})
+
         self.log_action()
         return super().post(request, *args, **kwargs)
 
