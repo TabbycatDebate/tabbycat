@@ -4,6 +4,7 @@ from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.detail import SingleObjectMixin
@@ -117,11 +118,11 @@ class PublicTournamentPageMixin(TournamentMixin):
     attribute to the name of the preference that controls whether the page is
     enabled.
 
-    If a public user tries to access the page while it is disabled in the
-    tournament options, they will be redirected to the public index page for
-    that tournament, and shown a generic message that the page isn't enabled.
-    The message can be overridden through the `disabled_message` class attribute
-    or, if it needs to be generated dynamically, by overriding the
+    If someone tries to access the page while it is disabled in the tournament
+    options, they will be redirected to the public index page for that
+    tournament, and shown a generic message that the page isn't enabled. The
+    message can be overridden through the `disabled_message` class attribute or,
+    if it needs to be generated dynamically, by overriding the
     `get_disabled_message()` method.
     """
 
@@ -134,7 +135,7 @@ class PublicTournamentPageMixin(TournamentMixin):
     def dispatch(self, request, *args, **kwargs):
         tournament = self.get_tournament()
         if tournament is None:
-            messages.info(self.request, "That tournament no longer exists")
+            messages.info(self.request, "That tournament no longer exists.")
             return redirect('tabbycat-index')
         if self.public_page_preference is None:
             raise ImproperlyConfigured("public_page_preference isn't set on this view.")
@@ -144,6 +145,36 @@ class PublicTournamentPageMixin(TournamentMixin):
             logger.error("Tried to access a disabled public page")
             messages.error(self.request, self.get_disabled_message())
             return redirect_tournament('tournament-public-index', tournament)
+
+
+class OptionalAssistantTournamentPageMixin(TournamentMixin, UserPassesTestMixin):
+    """Mixin for pages that are intended for assistants, but can be enabled and
+    disabled by a tournament preference. If the preference is enabled, then
+    assistants and superusers can see it; if not, only superusers can see it.
+
+    Views using the mixins should set the `assistant_page_preference` class
+    attribute to the name of the preference that controls whether assistants
+    can see this page.
+
+    If an anonymous user tries to access this page, they will be redirected to
+    the login page. If an assistant user tries to access this page while
+    assistant access is disabled, they will be redirected to the login page."""
+
+    assistant_page_preference = None
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        if not self.request.user.is_authenticated:
+            return False
+
+        # if we got this far, it's an assistant user
+        tournament = self.get_tournament()
+        if tournament is None:
+            return False
+        if self.assistant_page_preference is None:
+            raise ImproperlyConfigured("assistant_page_preference isn't set on this view.")
+        return tournament.pref(self.assistant_page_preference)
 
 
 class CrossTournamentPageMixin(PublicTournamentPageMixin):

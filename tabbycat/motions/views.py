@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
+from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin
 from utils.misc import redirect_round
 from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
 
@@ -113,8 +113,9 @@ class UnreleaseMotionsView(BaseReleaseMotionsView):
     message_text = "Unreleased the motions. They will no longer show on the public-facing pages of this website."
 
 
-class DisplayMotionsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class DisplayMotionsView(OptionalAssistantTournamentPageMixin, RoundMixin, TemplateView):
 
+    assistant_page_preference = 'assistant_display_motions'
     template_name = 'show.html'
 
     def get_context_data(self, **kwargs):

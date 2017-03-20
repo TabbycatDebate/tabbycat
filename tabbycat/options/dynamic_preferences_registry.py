@@ -698,6 +698,14 @@ class FeedbackProgress(BooleanPreference):
     name = 'feedback_progress'
     default = False
 
+@tournament_preferences_registry.register
+class AssistantDisplayMotions(BooleanPreference):
+    help_text = "Allows assistant users to see the page for displaying motions"
+    verbose_name = "Enable assistant view of motion display"
+    section = public_features
+    name = 'assistant_display_motions'
+    default = True
+
 # ==============================================================================
 ui_options = Section('ui_options')
 # ==============================================================================
