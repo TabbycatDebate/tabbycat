@@ -53,3 +53,10 @@ input[type="checkbox"].form-control {
 .text-area-limited {
   max-height: 75px;
 }
+
+// Inline form errors from django
+.errorlist, label.error {
+  color: $state-danger-text;
+  padding: 10px 0 0 5px;
+  font-weight: bold;
+}
