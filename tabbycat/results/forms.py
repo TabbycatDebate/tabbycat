@@ -199,6 +199,7 @@ class BallotSetForm(forms.Form):
          - motion,               if there is more than one motion
          - aff/neg_motion_veto,  if motion vetoes are being noted, one for each team
          - aff/neg_speaker_s#,   one for each speaker
+         - aff/neg_ghost_s#,     whether score should be a duplicate
          - aff/neg_score_a#_s#,  one for each score
         """
 
@@ -314,8 +315,11 @@ class BallotSetForm(forms.Form):
 
         for side, pos in self.SIDES_AND_POSITIONS:
             speaker = ballotset.get_speaker(side, pos)
+            is_ghost = ballotset.get_ghost(side, pos)
             if speaker:
                 initial[self._fieldname_speaker(side, pos)] = speaker.pk
+                initial[self._fieldname_ghost(side, pos)] = is_ghost
+
                 for adj in self.adjudicators:
                     score = ballotset.get_score(adj, side, pos)
                     coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
@@ -494,6 +498,8 @@ class BallotSetForm(forms.Form):
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 ballotset.set_speaker(side, pos, speaker)
+                is_ghost = self.cleaned_data[self._fieldname_ghost(side, pos)]
+                ballotset.set_ghosts(side, pos, is_ghost)
                 for adj in self.adjudicators:
                     score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
                     ballotset.set_score(adj, side, pos, score)

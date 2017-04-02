@@ -116,11 +116,11 @@ $('.score input').change(function() {
 
 $('.js-team-speakers select').change(update_speakers).each(update_speaker);
 
-
 // Show/hide on initial input
 $( ".iron-person input" ).each(function(index) {
-  if ($(this).attr('checked') === true) {
+  if ($(this).attr('checked') === 'checked') {
     $("#hasIron").val('1');
+    $(".iron-person").show()
   }
 });
 
