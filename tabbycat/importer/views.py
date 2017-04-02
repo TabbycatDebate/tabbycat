@@ -14,7 +14,8 @@ from utils.views import admin_required, expect_post, tournament_view
 from utils.mixins import SuperuserRequiredMixin
 from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
 
-from .forms import ImportInstitutionsRawForm, InstitutionForm
+from .forms import (ImportInstitutionsRawForm, ImportTeamsNumbersForm,
+                    InstitutionForm, TeamDetailsForm)
 
 
 class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
@@ -26,7 +27,7 @@ class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, Sess
         ('raw', ImportInstitutionsRawForm),
         ('models', formset_factory(InstitutionForm, extra=0)),
     ]
-    tournament_redirect_pattern_name = 'data_index'
+    tournament_redirect_pattern_name = 'importer-visual-index'
 
     def get_template_names(self):
         return 'visual_import_institutions_%s.html' % self.steps.current
@@ -43,6 +44,42 @@ class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, Sess
         instances = [form.save() for form in form_dict['models']]
         messages.success(self.request, _("Added %(count)d institutions.") % {'count': len(instances)})
         return HttpResponseRedirect(self.get_redirect_url())
+
+
+class ImportTeamsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
+    form_list = [
+        ('numbers', ImportTeamsNumbersForm),
+        ('details', formset_factory(TeamDetailsForm, extra=0)),
+    ]
+    tournament_redirect_pattern_name = 'importer-visual-index'
+
+    def get_template_names(self):
+        return 'visual_import_teams_%s.html' % self.steps.current
+
+    def get_form_kwargs(self, step):
+        if step == 'numbers':
+            return {'institutions': Institution.objects.all()}
+        else:
+            return {'form_kwargs': {
+                'tournament': self.get_tournament(),
+            }}
+
+    def get_form_initial(self, step):
+        if step == 'details':
+            data = self.get_cleaned_data_for_step('numbers')
+            initial = []
+            for institution in Institution.objects.all():
+                number = data.get('number_institution_%d' % institution.id, 0)
+                for i in range(1, number+1):
+                    initial.append({
+                        'institution': institution.id,
+                        'reference': str(i),
+                        'use_institution_prefix': True,
+                    })
+            return initial
+
+        else:
+            return super().get_form_initial(step)
 
 # ==============================================================================
 # Old forms

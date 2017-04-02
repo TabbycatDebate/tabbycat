@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static debate_tags i18n %}
+{% load static debate_tags add_field_css i18n %}
 
 {% block head-title %}<span class="emoji">🏫</span>{% trans "Bulk Add Institutions" context "page title" %}{% endblock %}
 {% block page-title %}🏫 {% trans "Bulk Add Institutions" context "page title" %}{% endblock %}
@@ -31,7 +31,7 @@
   {% endif %}
 
   <div class="form-group">
-    {{ wizard.form.institutions_raw }}
+    {{ wizard.form.institutions_raw|addcss:"form-control" }}
   </div>
   <input type="submit" class="btn btn-primary btn-block submit-disable" value="{% trans 'Next Step' %}">
 

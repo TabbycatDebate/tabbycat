@@ -29,8 +29,10 @@ urlpatterns = [
     url(r'^visual/$',
         views.ImporterVisualIndexView.as_view(),
         name='importer-visual-index'),
-
     url(r'^visual/institutions/$',
         views.ImportInstitutionsWizardView.as_view(),
         name='importer-visual-institutions'),
+    url(r'^visual/teams/$',
+        views.ImportTeamsWizardView.as_view(),
+        name='importer-visual-teams'),
 ]
