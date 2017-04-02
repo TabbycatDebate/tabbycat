@@ -432,7 +432,10 @@ class BallotSetForm(forms.Form):
                             _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
                             params={'speaker': speaker.name, 'team': team.short_name}, code='speaker_wrongteam')
                         )
-                    speaker_counts[speaker] += 1
+
+                    # Don't increment the speaker count if the speech is marked as a ghost
+                    if not self.cleaned_data.get(self._fieldname_ghost(side, pos)):
+                        speaker_counts[speaker] += 1
 
                 # The substantive speakers must be unique.
                 for speaker, count in speaker_counts.items():
