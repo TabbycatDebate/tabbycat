@@ -2,8 +2,10 @@ import csv
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 from django.utils.translation import ugettext as _
 
+from participants.models import Institution
 
 class ImportValidationError(ValidationError):
 
@@ -47,3 +49,10 @@ class ImportInstitutionsRawForm(forms.Form):
             raise ValidationError(errors)
 
         return institutions
+
+
+class InstitutionForm(forms.ModelForm):
+
+    class Meta:
+        model = Institution
+        fields = ('name', 'code')

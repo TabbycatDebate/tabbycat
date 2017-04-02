@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.db import models
 from django.db.utils import IntegrityError
-from django.forms import modelformset_factory
+from django.forms import formset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
@@ -13,7 +13,7 @@ from utils.views import admin_required, expect_post, tournament_view
 from utils.mixins import SuperuserRequiredMixin
 from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
 
-from .forms import ImportInstitutionsRawForm
+from .forms import ImportInstitutionsRawForm, InstitutionForm
 
 
 @admin_required
@@ -40,7 +40,7 @@ def enforce_length(value, type, model, request, extra_limit=0):
 class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
     form_list = [
         ('raw', ImportInstitutionsRawForm),
-        ('models', modelformset_factory(Institution, fields=('name', 'code'))),
+        ('models', formset_factory(InstitutionForm, extra=0)),
     ]
     tournament_redirect_pattern_name = 'data_index'
 
@@ -50,19 +50,13 @@ class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, Sess
     def get_form_initial(self, step):
         """Overridden so that the second step ('models') initializes with data
         from the first step ('raw')."""
-        if step == 'models' and step == self.steps.next: # hack to populate only when rendering next step
+        if step == 'models':
             return self.get_cleaned_data_for_step('raw')['institutions_raw']
         else:
             return super().get_form_initial(step)
 
-    def get_form(self, step=None, *args, **kwargs):
-        form = super().get_form(step, *args, **kwargs)
-        if step == 'models' and form.initial_extra is not None:
-            form.extra = len(form.initial_extra)
-        return form
-
     def done(self, form_list, form_dict, **kwargs):
-        instances = form_dict['models'].save()
+        instances = [form.save() for form in form_dict['models']]
         messages.success(self.request, _("Added %(count)d institutions.") % {'count': len(instances)})
         return HttpResponseRedirect(self.get_redirect_url())
 

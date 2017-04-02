@@ -33,8 +33,7 @@
   <div class="form-group">
     {{ wizard.form.institutions_raw }}
   </div>
-  {% blocktrans with number=wizard.steps.step1|add:1 asvar submit_label %}Go to Step {{ number }}{% endblocktrans %}
-  <input type="submit" class="btn btn-primary btn-block submit-disable" value="{{ submit_label }}">
+  <input type="submit" class="btn btn-primary btn-block submit-disable" value="{% trans 'Next Step' %}">
 
 </form>
 
