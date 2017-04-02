@@ -43,6 +43,9 @@
     min-height: 100vh; // Push the footer down
     padding-bottom: 220px; // Leave room for the footer
   }
+  .override-accommodate-footer .accommodate-footer {
+    padding-bottom: 0px;
+  }
 }
 
 // For Phones

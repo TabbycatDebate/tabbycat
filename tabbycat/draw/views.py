@@ -149,12 +149,12 @@ class AdminDrawDisplay(LoginRequiredMixin, BaseDrawTableView):
 
 
 class AdminDrawDisplayForRoundByVenueView(LoginRequiredMixin, BaseDrawTableView):
-    popovers = False
+    popovers = True
 
 
 class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
     sort_key = 'Team'
-    popovers = False
+    popovers = True
 
     def populate_table(self, draw, table, round, tournament):
         draw = list(draw) + list(draw) # Double up the draw
@@ -204,7 +204,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         else:
             table.add_debate_bracket_columns(draw)
 
-        table.add_debate_venue_columns(draw)
+        table.add_debate_venue_columns(draw, for_admin=True)
         table.add_team_columns([d.aff_team for d in draw], key=aff_name(tournament).capitalize(),
             hide_institution=True)
         table.add_team_columns([d.neg_team for d in draw], key=neg_name(tournament).capitalize(),

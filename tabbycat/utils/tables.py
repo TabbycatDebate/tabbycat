@@ -462,7 +462,31 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
-    def add_debate_venue_columns(self, debates, with_times=True):
+    def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):
+
+        def construct_venue_cell(venue):
+            if not venue:
+                return {}
+
+            if for_admin:
+                categories = venue.venuecategory_set.all()
+            else:
+                categories = venue.venuecategory_set.filter(display_in_public_tooltip=True)
+
+            cell = {'text': venue.display_name}
+            if len(categories) == 0:
+                return cell
+
+            cat_sentence = "This venue "
+            for i, category in enumerate(categories):
+                cat_sentence += "<strong>%s</strong>, " % category.description.strip()
+                if i == len(categories) - 2:
+                    cat_sentence += "and "
+
+            cell['popover'] = {'title': venue.display_name,
+                               'content': [{'text': cat_sentence[:-2] + "."}]}
+            return cell
+
         if self.tournament.pref('enable_divisions') and len(debates) > 0:
             if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
                 divisions_header = {
@@ -478,7 +502,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'icon': 'glyphicon-map-marker',
             'tooltip': "Venue"
         }
-        venue_data = [debate.venue.display_name if debate.venue else '' for debate in debates]
+        venue_data = [construct_venue_cell(d.venue) for d in debates]
+
         self.add_column(venue_header, venue_data)
 
         if with_times and self.tournament.pref('enable_debate_scheduling'):
