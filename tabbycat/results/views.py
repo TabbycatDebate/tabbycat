@@ -72,7 +72,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
             admin=self.request.user.is_superuser, sort_key="Status")
         table.add_ballot_status_columns(draw)
         table.add_ballot_entry_columns(draw)
-        table.add_debate_venue_columns(draw)
+        table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw)
         table.add_debate_adjudicators_column(draw, show_splits=True)
         return table
@@ -486,13 +486,9 @@ class BallotCheckinView(LoginRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['ballots_left'] = ballot_checkin_number_left(self.get_round())
-
-        if self.get_tournament().pref('enable_venue_groups'):
-            ordering = ('group__short_name', 'name')
-        else:
-            ordering = ('name',)
-        kwargs['venue_options'] = Venue.objects.filter(debate__round=self.get_round(),
-                debate__ballot_in=False).order_by(*ordering)
+        venues = Venue.objects.filter(debate__round=self.get_round(),
+                debate__ballot_in=False)
+        kwargs['venue_options'] = venues
 
         return super().get_context_data(**kwargs)
 

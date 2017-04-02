@@ -19,14 +19,6 @@
   }
 }
 
-// Body class override to disable hovers; mostly for draw display pages
-.override-table-hovers .panel-body .table > tbody > tr:hover td {
-  background-color: transparent;
-  .hide-underline {
-    border-bottom-color: #ccc;
-  }
-}
-
 // For the quick search; needs to fit within the row
 .table-search {
   height: 41px;

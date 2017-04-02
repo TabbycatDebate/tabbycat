@@ -12,11 +12,10 @@
       <h4 class="panel-title">Master Sheets</h4>
     </div>
     <ul class="list-group">
-      {% for venue_group in venue_groups %}
+      {% for venue_category in venue_categories %}
         <li class="list-group-item">
-          <a href="{% round_url printing-master-sheets-view current_round venue_group.id %}">
-          {# <a href="{% url 'printing.views.MasterSheetsView' tournament.slug current_round.seq venue_group.id %}"> #}
-            {{ venue_group.short_name }}
+          <a href="{% url 'printing.views.MasterSheetsView' tournament.slug current_round.seq venue_category.id %}">
+            {{ venue_category.name }}
           </a>
         </li>
       {% endfor %}
@@ -30,11 +29,10 @@
       <h4 class="panel-title">Room Sheets</h4>
     </div>
     <ul class="list-group">
-      {% for venue_group in venue_groups %}
+      {% for venue_category in venue_categories %}
         <li class="list-group-item">
-          <a href="{% round_url printing-room-sheets-view current_round venue_group.id %}">
-          {# <a href="{% url 'printing.views.RoomSheetsView' tournament.slug current_round.seq venue_group.id %}"> #}
-            {{ venue_group.short_name }}
+          <a href="{% url 'printing.views.RoomSheetsView' tournament.slug current_round.seq venue_category.id %}">
+            {{ venue_category.name }}
           </a>
         </li>
       {% endfor %}

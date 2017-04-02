@@ -11,7 +11,7 @@ class MyModelChoiceField(ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return "D%s @ %s" % (
             obj.name,
-            obj.venue_group.short_name,
+            obj.venue_category.name,
         )
 
 

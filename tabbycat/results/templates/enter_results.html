@@ -5,10 +5,10 @@
 
 {% block head-title %}
     {% if new %}New Ballot Set for{% else %}Edit Ballot Set for{% endif %}
-    {{ debate.matchup }} <small> {{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}</small>
+    {{ debate.matchup }} <small> {{ debate.round.name }} @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}</small>
 {% endblock %}
 
-{% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}{% endblock %}
+{% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}{% endblock %}
 {% block page-subnav-sections %}
   {% if not new %}
     <a class="btn btn-default" href="{% tournament_url results-ballotset-new debate.id %}">
