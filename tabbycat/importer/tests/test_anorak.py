@@ -118,23 +118,22 @@ class TestImporterAnorak(TestCase):
         self.assertFalse(errors)
 
     def test_venue_categories(self):
-        self.test_venues()
         f = self._open_csv_file(self.TESTDIR, "venue_categories")
         counts, errors = self.importer.import_venue_categories(f)
-        self.assertCountsDictEqual(counts, {vm.VenueCategory: 7})
+        self.assertCountsDictEqual(counts, {vm.VenueCategory: 8})
         self.assertFalse(errors)
 
     def test_adj_venue_constraints(self):
-        self.test_adjudicators()
         self.test_venue_categories()
+        self.test_adjudicators()
         f = self._open_csv_file(self.TESTDIR, "adj_venue_constraints")
         counts, errors = self.importer.import_adj_venue_constraints(f)
         self.assertCountsDictEqual(counts, {vm.VenueConstraint: 3})
         self.assertFalse(errors)
 
     def test_team_venue_constraints(self):
-        self.test_speakers()
         self.test_venue_categories()
+        self.test_speakers()
         f = self._open_csv_file(self.TESTDIR, "team_venue_constraints")
         counts, errors = self.importer.import_team_venue_constraints(f)
         self.assertCountsDictEqual(counts, {vm.VenueConstraint: 2})
