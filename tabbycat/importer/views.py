@@ -5,13 +5,12 @@ from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
-from django.views.generic.edit import FormView
 from formtools.wizard.views import SessionWizardView
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.mixins import TournamentMixin
 from utils.views import admin_required, expect_post, tournament_view
-from utils.mixins import ModelFormSetView, SuperuserRequiredMixin
+from utils.mixins import SuperuserRequiredMixin
 from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
 
 from .forms import ImportInstitutionsRawForm
