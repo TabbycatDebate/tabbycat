@@ -192,24 +192,15 @@ class AdjudicatorAllocation:
     # ==========================================================================
     # Deprecated
     # ==========================================================================
+    # These were all deprecated on 26/02/2017, remove after 26/03/2017
 
     @property
     def list(self):
-        warn("AdjudicatorAllocation.list is deprecated, use AdjudicatorAllocation.voting() instead", stacklevel=2)
-        a = [self.chair]
-        a.extend(self.panellists)
-        return a
+        raise RuntimeError("AdjudicatorAllocation.list is deprecated, use AdjudicatorAllocation.voting() instead")
 
     def __iter__(self):
-        warn("AdjudicatorAllocation.__iter__() is deprecated, use .with_positions() or .with_debateadj_types() instead", stacklevel=2)
-        if self.chair is not None:
-            yield DebateAdjudicator.TYPE_CHAIR, self.chair
-        for a in self.panellists:
-            yield DebateAdjudicator.TYPE_PANEL, a
-        for a in self.trainees:
-            yield DebateAdjudicator.TYPE_TRAINEE, a
+        raise RuntimeError("AdjudicatorAllocation.__iter__() is deprecated, use .with_positions() or .with_debateadj_types() instead")
 
     @property
     def panel(self):
-        warn("AdjudicatorAllocation.panel is deprecated, use AdjudicatorAllocation.panellists instead", stacklevel=2)
-        return self.panellists
+        raise RuntimeError("AdjudicatorAllocation.panel is deprecated, use AdjudicatorAllocation.panellists instead")

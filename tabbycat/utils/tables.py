@@ -282,13 +282,23 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         return cell
 
-    def add_round_column(self, rounds, key="Round"):
+    def add_tournament_column(self, tournaments, key="Tournament"):
+        header = {
+            'key': key, 'icon': 'glyphicon-tags', 'tooltip': 'Tournament'
+        }
         data = [{
-            'sort': round.seq,
-            'text': round.abbreviation,
-            'tooltip': round.name,
+            'sort': t.seq, 'text': t.short_name, 'tooltip': t.short_name,
+        } for t in tournaments]
+        self.add_column(header, data)
+
+    def add_round_column(self, rounds, key="Round"):
+        header = {
+            'key': key, 'icon': 'glyphicon-time', 'tooltip': 'Round'
+        }
+        data = [{
+            'sort': round.seq, 'text': round.abbreviation, 'tooltip': round.name,
         } for round in rounds]
-        self.add_column(key, data)
+        self.add_column(header, data)
 
     def add_adjudicator_columns(self, adjudicators, hide_institution=False,
             hide_metadata=False, subtext=None):
@@ -406,15 +416,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
                          show_divisions=True, hide_institution=False, key="Team"):
 
-        if self.tournament.pref('enable_divisions') and show_divisions:
-            divisions_header = {
-                'key': 'Division',
-                'icon': 'glyphicon-th-list',
-                'tooltip': 'Division'
-            }
-            divisions = ['D' + t.division.name if t.division else '' for t in teams]
-            self.add_column(divisions_header, divisions)
-
         team_data = [self._team_cell(team, hide_emoji=hide_emoji)
             for team in teams]
         self.add_column(key, team_data)
@@ -461,7 +462,31 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
-    def add_debate_venue_columns(self, debates, with_times=True):
+    def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):
+
+        def construct_venue_cell(venue):
+            if not venue:
+                return {}
+
+            if for_admin:
+                categories = venue.venuecategory_set.all()
+            else:
+                categories = venue.venuecategory_set.filter(display_in_public_tooltip=True)
+
+            cell = {'text': venue.display_name}
+            if len(categories) == 0:
+                return cell
+
+            cat_sentence = "This venue "
+            for i, category in enumerate(categories):
+                cat_sentence += "<strong>%s</strong>, " % category.description.strip()
+                if i == len(categories) - 2:
+                    cat_sentence += "and "
+
+            cell['popover'] = {'title': venue.display_name,
+                               'content': [{'text': cat_sentence[:-2] + "."}]}
+            return cell
+
         if self.tournament.pref('enable_divisions') and len(debates) > 0:
             if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
                 divisions_header = {
@@ -475,17 +500,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
         venue_header = {
             'key': "Venue",
             'icon': 'glyphicon-map-marker',
+            'tooltip': "Venue"
         }
-        if self.tournament.pref('enable_venue_groups'):
-            venue_data = [
-                debate.division.venue_group.short_name if debate.division
-                else (debate.venue.group.short_name + ' ' + debate.venue.name) if debate.venue and debate.venue.group
-                else debate.venue.name if debate.venue
-                else ''
-                for debate in debates
-            ]
-        else:
-            venue_data = [debate.venue.name if debate.venue else '' for debate in debates]
+        venue_data = [construct_venue_cell(d.venue) for d in debates]
+
         self.add_column(venue_header, venue_data)
 
         if with_times and self.tournament.pref('enable_debate_scheduling'):

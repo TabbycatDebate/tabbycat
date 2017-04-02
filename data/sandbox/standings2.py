@@ -1,9 +1,9 @@
 """Sandbox for figuring out how to do team standings with more complicated rules."""
 
 import header
-import tournaments.models as m
+import tournaments.models as tm
 from participants.models import Team
-import results.models as m
+import results.models as rm
 from django.db import models
 import random
 
@@ -38,8 +38,8 @@ teams = teams.extra({
     "speaker_score": EXTRA_QUERY.format(field="score", round=round.seq)}
 ).distinct()
 
-print teams.query  # flake8: noqa
-print teams.count()
+print(teams.query)
+print(teams.count())
 
 # Add draw strength annotation.
 for team in teams:
@@ -51,9 +51,10 @@ for team in teams:
     team.draw_strength = draw_strength
 
 for team in teams:
-    print "{0:<20} {1:>10} {2:>7.2f} {3:>3}".format(team.short_name, team.points, team.speaker_score, team.draw_strength)
+    print("{0:<20} {1:>10} {2:>7.2f} {3:>3}".format(
+        team.short_name, team.points, team.speaker_score, team.draw_strength))
 
-print "=" * 50
+print("=" * 50)
 
 
 def who_beat_whom(team1, team2):
@@ -70,7 +71,7 @@ def who_beat_whom(team1, team2):
     wins1 = get_wins(team1, team2)
     wins2 = get_wins(team2, team1)
     # Print this to the logs, just so we know it happened
-    print "who beat whom, {0} vs {1}: {2} wins against {3}".format(team1, team2, wins1, wins2)
+    print("who beat whom, {0} vs {1}: {2} wins against {3}".format(team1, team2, wins1, wins2))
     return cmp(wins1, wins2)
 
 
@@ -97,15 +98,16 @@ if args.who_beat_whom:
     for team1, team2 in itertools.combinations(teams, 2):
         result = who_beat_whom(team1, team2)
         if result:
-            print str(team1).ljust(20), str(team2).ljust(20), result
+            print(str(team1).ljust(20), str(team2).ljust(20), result)
             total += 1
 
-    print "total:", total
-    print "=" * 50
+    print("total:", total)
+    print("=" * 50)
 
 sorted_teams = list(teams)
 random.shuffle(sorted_teams)  # Shuffle first, so that if teams are truly equal, they'll be in random order
 sorted_teams.sort(cmp=cmp_teams, reverse=True)
 
 for team in sorted_teams:
-    print "{0:<20} {1:>10} {2:>7.2f} {3:>3}".format(team.short_name, team.points, team.speaker_score, team.draw_strength)
+    print("{0:<20} {1:>10} {2:>7.2f} {3:>3}".format(
+        team.short_name, team.points, team.speaker_score, team.draw_strength))

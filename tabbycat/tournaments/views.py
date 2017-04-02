@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.edit import CreateView, FormView
 
@@ -18,6 +19,7 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from importer.management.commands import importtournament
 from importer.base import TournamentDataImporterError
+from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
@@ -122,14 +124,22 @@ class RoundIncrementView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, Pos
         if next_round:
             tournament.current_round = next_round
             tournament.save()
-            messages.success(request, "Advanced the current round. The current round is now %s. "
-                "Woohoo! Keep it up!" % next_round.name)
             self.log_action(round=next_round, content_object=next_round)
-            return redirect_round('availability-index', next_round)
+
+            if (next_round.stage == Round.STAGE_ELIMINATION and
+                    self.get_round().stage == Round.STAGE_PRELIMINARY):
+                messages.success(request, _("The current round has been advanced to %(round)s. "
+                        "You've made it to the end of the preliminary rounds! Congratulations! "
+                        "The next step is to generate the break.") % {'round': next_round.name})
+                return redirect_tournament('breakqual-index', tournament)
+            else:
+                messages.success(request, _("The current round has been advanced to %(round)s. "
+                    "Woohoo! Keep it up!") % {'round': next_round.name})
+                return redirect_round('availability-index', next_round)
 
         else:
-            messages.error(request, "Whoops! Could not advance round, because there's no round "
-                "after this round!")
+            messages.error(request, _("Whoops! Could not advance round, because there's no round "
+                "after this round!"))
             return super().post(request, *args, **kwargs)
 
 

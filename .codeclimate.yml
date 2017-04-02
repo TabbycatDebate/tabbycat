@@ -1,0 +1,39 @@
+---
+engines:
+  csslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+      - javascript
+      - python:
+          mass_threshold: 50
+      - php
+    exclude_paths:
+      - "tabbycat/*/migrations/*.py"
+      - "tabbycat/*/tests/*.py"
+      - "tabbycat/*/urls*.py"
+      - "tabbycat/options/dynamic_preferences_registry.py"
+    exclude_fingerprints:
+      - 5eb53f480bfbacf8ed37c29d64a9555e
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  radon:
+    enabled: true
+    exclude_paths:
+      - "tabbycat/draw/generator.py"
+      - "tabbycat/adjallocation/munkres.py"
+ratings:
+  paths:
+  - "**.css"
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+  - "**.py"
+  - "**.rb"

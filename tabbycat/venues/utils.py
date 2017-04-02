@@ -19,7 +19,7 @@ def venue_conflicts_display(debates):
         if key not in constraints:
             return
         for constraint in constraints[key]:
-            if constraint.category in venue.venueconstraintcategory_set.all():
+            if constraint.category in venue.venuecategory_set.all():
                 conflict_messages[debate].append(("success", "Venue constraint of {name} ({category}) met".format(
                         name=instance_name, category=constraint.category.name)))
                 return

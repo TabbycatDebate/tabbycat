@@ -19,8 +19,8 @@
       <template v-for="team in teams" track-by="id">
         <team-draggable
           :team="team"
-          :vg="division.venue_group"
-          :vg-name="division.venue_group__name"
+          :vc="division.venue_category"
+          :vc-name="division.venue_category__name"
           :save-division-at="saveDivisionAt">
         </team-draggable>
       </template>
@@ -28,10 +28,10 @@
     </div>
 
     <div class="panel-footer division-footer">
-      <select name="select" class="form-control btn-sm" v-model="division.venue_group"  v-if="vgs.length > 0">
+      <select name="select" class="form-control btn-sm" v-model="division.venue_category"  v-if="vcs.length > 0">
         <option value=""></option>
-        <option v-for="vg in vgs" value="{{ vg.id }}" v-bind:value="vg.id">
-          At {{ vg.name }} (capacity for {{ vg.total_capacity }} teams)
+        <option v-for="vc in vcs" value="{{ vc.id }}" v-bind:value="vc.id">
+          At {{ vc.name }} (capacity for {{ vc.total_capacity }} teams)
         </option>
       </select>
     </div>
@@ -49,29 +49,29 @@ export default {
   mixins: [DroppableMixin],
   props: {
     'division': {},
-    'vgs': {},
+    'vcs': {},
     'teams': {},
-    'save-vg-at': {},
+    'save-vc-at': {},
     'save-division-at': {},
     'isDroppable': { default: false },
     'dragCounter': { default: 0 }
   },
   watch: {
-    'division.venue_group': function (newVal, oldVal) {
-      var vg_id = this.division.venue_group;
+    'division.venue_category': function (newVal, oldVal) {
+      var vc_id = this.division.venue_category;
       var division_id = this.division.id;
       $.ajax({
-          url: this.saveVgAt,
+          url: this.saveVcAt,
           type: "POST",
           data: {
-            'venueGroup': vg_id,
+            'venueCategory': vc_id,
             'division': division_id,
           },
           success:function(response){
-            console.log('Saved division ' + division_id + ' to venue group ' + vg_id)
+            console.log('Saved division ' + division_id + ' to venue venue_category ' + vc_id)
           },
           error:function (xhr, textStatus, thrownError){
-            alert('Failed to save a division ' + division_id + '\s venue group change')
+            alert('Failed to save a division ' + division_id + '\s venue venue_category change')
           }
       });
     },

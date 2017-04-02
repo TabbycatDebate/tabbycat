@@ -2,14 +2,15 @@
 {% load debate_tags %}
 
 {% block head-title %}
-  <div class="text-center hidden-print">Master Sheet for Debates at {{ base_venue_group.short_name }} in {{ round.name }}</div>
+  <div class="text-center hidden-print">Master Sheet for Debates at {{ base_venue_category.name }} in {{ round.name }}</div>
 {% endblock %}
 {% block page-title %}
-  Master Sheet for Debates at {{ venue_group.short_name }}
+  Master Sheet for Debates at {{ venue_category.name }}
 {% endblock %}
 
 {% block nav %}{% endblock %}
 {% block footer %}{% endblock footer %}
+{% block body-class %}override-sidebar-offset{% endblock %}
 
 {% block content %}
 
@@ -51,7 +52,7 @@
                 {% ifchanged debate.division.name %}table-division-top{% endifchanged %}
               ">
                 <td>{{ debate.division.name }}</td>
-                <td>{{ debate.venue.name }}</td>
+                <td>{{ debate.venue.display_name }}</td>
                 <td>{{ debate.aff_team.short_name }}</td>
                 <td>{{ debate.neg_team.short_name }}</td>
                 <td></td>

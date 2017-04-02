@@ -24,7 +24,7 @@
       <div class="alert alert-warning" id="">
         {{ no_venue|apnumber|capfirst }} debate{{ no_venue|pluralize:" does,s do" }} not have a venue.
         <a href="{% round_url venues-edit round %}" class="alert-link">
-          Edit venues.
+          Allocate venues.
         </a>
       </div>
     {% endif %}
@@ -47,7 +47,7 @@
             {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of adjudicators.
           {% endif %}
           <a href="{% round_url edit_adj_allocation %}" class="alert-link">
-            Edit adjudicators.
+            Allocate adjudicators.
           </a>
         </div>
       {% endif %}

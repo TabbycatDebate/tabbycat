@@ -5,6 +5,31 @@
 {% block head-title %}<span class="emoji">👑</span>Breaks{% endblock %}
 {% block page-title %}Breaks{% endblock %}
 
+{% block page-alerts %}
+  {% if not categories.exists %}
+    <div class="alert alert-warning" role="alert">
+      This tournament does not have any break categories set up. You can read
+       about how to create breaks
+      <a href="http://tabbycat.readthedocs.io/en/stable/features/breaks.html"
+          class="alert-link" target="_blank">
+        at our documentation.
+      </a>
+    </div>
+  {% elif no_teams_eligible %}
+    <div class="alert alert-warning" role="alert">
+      It looks like no teams are eligible for the break. To set which teams are
+      eligible, click the <a href="{% tournament_url breakqual-edit-eligibility %}">
+      Edit Teams' Eligibility</a> button above-right.
+    </div>
+  {% elif break_not_generated %}
+    <div class="alert alert-info" role="alert">
+      The break hasn't been generated yet. To generate it, view any of the team
+      breaks (via the above buttons), and then click on "Generate the Break
+      for All Categories".
+    </div>
+  {% endif %}
+{% endblock %}
+
 {% block page-subnav-sections %}
   {% include "breakqual_subnav.html" %}
 {% endblock %}
@@ -26,28 +51,43 @@
             <div class="panel-heading">
               <h4 class="panel-title">
                 Teams Eligible for the {{ category.name }} Break
+                {% if category.nonbreaking != category.eligible %}
+                  ({{ category.eligible }})
+                {% endif %}
               </h4>
             </div>
             <div class="panel-body round-progresses">
               <div class="progress">
-                <div class="progress-bar progress-bar-success
-                     {% if category.team__count == 0 %}progress-empty{% endif %}"
-                     role="progressbar" aria-valuenow="" aria-valuemin="0"
-                     aria-valuemax="{{ teams_in_tournament }}"
-                     style="width: {% percentage category.team__count teams_in_tournament %}%;">
-                  <span>{{ category.team__count }}/{{ teams_in_tournament }}</span>
-                </div>
+                {% if category.nonbreaking == category.eligible %}
+                  <div class="progress-bar progress-bar-primary
+                       {% if category.eligible == 0 %}progress-empty{% endif %}"
+                       role="progressbar" aria-valuenow="" aria-valuemin="0"
+-                     aria-valuemax="{{ teams_in_tournament }}"
+                       style="width: {% percentage category.eligible teams_in_tournament %}%;">
+                    <span>{{ category.eligible }} of {{ teams_in_tournament }} eligible</span>
+                  </div>
+                {% else %}
+                  <div class="progress-bar progress-bar-success
+                       {% if category.breaking == 0 %}progress-empty{% endif %}"
+                       role="progressbar"
+                       style="width: {% percentage category.breaking teams_in_tournament %}%;">
+                    <span>{{ category.breaking }} breaking</span>
+                  </div>
+                  <div class="progress-bar progress-bar-warning
+                       {% if category.excluded == 0 %}progress-empty{% endif %}"
+                       role="progressbar"
+                       style="width: {% percentage category.excluded teams_in_tournament %}%;">
+                    <span>{{ category.excluded }} excluded </span>
+                  </div>
+                  <div class="progress-bar progress-bar-primary
+                       {% if category.nonbreaking == 0 %}progress-empty{% endif %}"
+                       role="progressbar"
+                       style="width: {% percentage category.nonbreaking teams_in_tournament %}%;">
+                    <span>{{ category.nonbreaking }} not breaking</span>
+                  </div>
+                {% endif %}
               </div>
             </div>
-          </div>
-        {% empty %}
-          <div class="alert alert-warning" role="alert">
-            This tournament does not have any break categories setup. You can read
-             about how to create breaks
-            <a href="http://tabbycat.readthedocs.io/en/stable/features/breaks.html"
-                class="alert-link" target="_blank">
-              at our documentation.
-            </a>
           </div>
         {% endfor %}
       {% endwith %}

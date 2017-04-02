@@ -3,34 +3,35 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django import forms
 from gfklookupwidget.widgets import GfkLookupWidget
 
-from .models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
-
-
-@admin.register(VenueGroup)
-class VenueGroupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'short_name')
-    search_fields = ('name', )
+from .models import Venue, VenueCategory, VenueConstraint
 
 
 @admin.register(Venue)
 class VenueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group_name', 'priority', 'tournament')
-    list_filter = ('group', 'priority', 'tournament')
+    list_display = ('display_name', 'priority', 'tournament', 'categories_list')
+    list_filter = ('venuecategory', 'priority', 'tournament')
     search_fields = ('name',)
 
-    def group_name(self, obj):
-        if obj.group is None:
-            return None
-        return obj.group.name
-    group_name.short_description = 'Venue Group'
+    def categories_list(self, obj):
+        return ", ".join([c.name for c in obj.venuecategory_set.all()])
 
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related('group')
+        return super().get_queryset(request).select_related(
+                'tournament').prefetch_related('venuecategory_set')
 
 
-# ==============================================================================
-# VenueConstraint models
-# ==============================================================================
+@admin.register(VenueCategory)
+class VenueCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'display_in_venue_name',
+            'display_in_public_tooltip', 'venues_list')
+    ordering = ('name',)
+
+    def venues_list(self, obj):
+        return ", ".join([v.name for v in obj.venues.all()])
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('venues')
+
 
 class VenueConstraintModelForm(forms.ModelForm):
     class Meta(object):
@@ -64,11 +65,3 @@ class VenueConstraintInline(GenericTabularInline):
     ct_field = 'subject_content_type'
     ct_fk_field = 'subject_id'
     extra = 6
-
-
-@admin.register(VenueConstraintCategory)
-class VenueConstraintCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'venues_list')
-
-    def venues_list(self, obj):
-        return ", ".join([v.name for v in obj.venues.all()])

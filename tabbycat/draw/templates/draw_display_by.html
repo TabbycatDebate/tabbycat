@@ -2,12 +2,11 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block body-class %}override-sidebar-offset override-table-hovers{% endblock %}
+{% block body-class %}override-sidebar-offset override-accommodate-footer{% endblock %}
 
 {% block nav %}
   {# For admins the draw opens without menu (for displaying publicly)#}
   {% if 'admin/' in request.path and user.is_superuser %}
-
   {% else %}
     {{ block.super }}
   {% endif %}
@@ -16,37 +15,52 @@
 {% block footer %}{% endblock %}
 
 {% block page-subnav-sections %}
-<div class="hidden-sm hidden-xs">
-  <span class="btn btn-secondary">Scroll Speed:</span>
-  <div class="btn-group hidden-xs scroll-speeds">
-    <a class="btn btn-default" data-target="0.07" id="scroll_draw1">Fast</a>
-    <a class="btn btn-default" data-target="0.055" id="scroll_draw2"><span class="hidden-xs">Medium</span></a>
-    <a class="btn btn-default" data-target="0.04" id="scroll_draw3">Slow</a>
-    <a class="btn btn-default" data-target="0.025" id="scroll_draw4">Extra Slow</a>
+  <div class="hidden-sm hidden-xs">
+    <span class="btn btn-secondary">Scroll Speed:</span>
+    <div class="btn-group hidden-xs scroll-speeds">
+      <a class="btn btn-default" data-target="0.07" id="scroll_draw1">Fast</a>
+      <a class="btn btn-default" data-target="0.055" id="scroll_draw2"><span class="hidden-xs">Medium</span></a>
+      <a class="btn btn-default" data-target="0.04" id="scroll_draw3">Slow</a>
+      <a class="btn btn-default" data-target="0.025" id="scroll_draw4">Extra Slow</a>
+    </div>
+    <span class="btn btn-secondary">Text Size:</span>
+    <div class="btn-group text-size">
+      <a class="btn btn-default" data-target="draw-xs" id="tiny_text">Tiny</a>
+      <a class="btn btn-default" data-target="draw-s" id="small_text">Small</a>
+      <a class="btn btn-default" data-target="draw-m" id="medium_text">Medium</a>
+      <a class="btn btn-default" data-target="draw-l" id="large_text">Large</a>
+      <a class="btn btn-default" data-target="draw-xl" id="huge_text">Huge</a>
+    </div>
+    <a class="btn btn-default " data-target="draw-xs" id="stop_scrolling">Stop Scrolling</a>
   </div>
-  <span class="btn btn-secondary">Text Size:</span>
-  <div class="btn-group text-size">
-    <a class="btn btn-default" data-target="draw-xs" id="tiny_text">Tiny</a>
-    <a class="btn btn-default" data-target="draw-s" id="small_text">Small</a>
-    <a class="btn btn-default" data-target="draw-m" id="medium_text">Medium</a>
-    <a class="btn btn-default" data-target="draw-l" id="large_text">Large</a>
-    <a class="btn btn-default" data-target="draw-xl" id="huge_text">Huge</a>
-  </div>
-  <a class="btn btn-default " data-target="draw-xs" id="stop_scrolling">Stop Scrolling</a>
-</div>
 {% endblock %}
 
 {% block js %}
   {{ block.super }}
   <script>
+    function startScrolling() {
+      $('[data-toggle="tooltip"]').attr("data-toggle", "notip").css("pointer-events", "none")
+      $('.table').addClass("hide-hover") // Hide the row highlight effect
+      $('.popover').hide() // Hide any currently triggered popovers
+      $('#stop_scrolling').show();
+    }
+    function stopScrolling() {
+      $('[data-toggle="notip"]').attr("data-toggle", "tooltip").css("pointer-events", "auto")
+      $('html, body').stop()
+      $('.table').removeClass("hide-hover")
+      $('#stop_scrolling').hide();
+    }
     $(document).ready( function() {
       $('#stop_scrolling').hide();
       $(".scroll-speeds .btn").click(function(event){
         var speed = $(document).height() / $(this).attr('data-target');
-        $('#stop_scrolling').show();
-        $('html, body').animate({
-          scrollTop: $(document).height() - $(window).height()
-        }, speed, "linear");
+        startScrolling()
+        $('html, body').animate(
+          { scrollTop: $(document).height() - $(window).height()},
+          speed, // duration
+          "linear", // easing
+          function() { stopScrolling() } // on complete function
+        );
         return false;
       });
       $(".text-size .btn").click(function(event){
@@ -58,14 +72,8 @@
     });
     $(document).keydown(function(e) {
       e.stopPropagation();
-      if (e.keyCode === 27 || e.keyCode === 38) {
-        $('html, body').stop()
-        $('#stop_scrolling').hide();
-      }
+      if (e.keyCode === 27 || e.keyCode === 38) { stopScrolling() }
     });
-    $('#stop_scrolling').click(function(event){
-      $('html, body').stop()
-      $('#stop_scrolling').hide();
-    });
+    $('#stop_scrolling').click(function(event){ stopScrolling() });
   </script>
 {% endblock js %}

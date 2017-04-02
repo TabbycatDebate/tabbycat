@@ -47,10 +47,6 @@ class Debate(models.Model):
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
     ballot_in = models.BooleanField(default=False)
 
-    def __contains__(self, team):
-        # Deprecated 13/9/2016, remove after 13/10/2016
-        raise RuntimeError("'team in debate' syntax is deprecated, use 'team in debate.teams' instead")
-
     def __str__(self):
         description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
         try:
@@ -155,10 +151,6 @@ class Debate(models.Model):
         """dt = DebateTeam"""
         return getattr(self, '%s_dt' % side)
 
-    def get_side(self, team):
-        # Deprecated 12/9/2016, remove after 12/10/2016
-        raise RuntimeError("Debate.get_side() is deprecated.")
-
     # --------------------------------------------------------------------------
     # Other properties
     # --------------------------------------------------------------------------
@@ -192,11 +184,6 @@ class Debate(models.Model):
             return self._history
 
     @property
-    def draw_conflicts(self):
-        # Deprecated 14/9/2016, remove after 14/10/2016
-        raise RuntimeError("Debate.draw_conflicts is deprecated.")
-
-    @property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
@@ -212,7 +199,7 @@ class Debate(models.Model):
         from motions.models import Motion
         try:
             # Pretty sure there should never be > 1
-            Motion.objects.filter(round=self.round, divisions=self.division).first()
+            return Motion.objects.filter(round=self.round, divisions=self.division).first()
         except ObjectDoesNotExist:
             # It's easiest to assume a division motion is always present, so
             # return a fake one if it is not
@@ -237,7 +224,7 @@ class DebateTeam(models.Model):
     objects = DebateTeamManager()
 
     debate = models.ForeignKey(Debate, models.CASCADE, db_index=True)
-    team = models.ForeignKey('participants.Team', models.CASCADE)
+    team = models.ForeignKey('participants.Team', models.PROTECT)
     position = models.CharField(max_length=1, choices=POSITION_CHOICES)
 
     def __str__(self):
@@ -255,16 +242,6 @@ class DebateTeam(models.Model):
                 logger.warning("No opponent found for %s", str(self))
                 self._opponent = None
             return self._opponent
-
-    @property
-    def opposition(self):
-        # Deprecated 12/9/2016, remove after 12/10/2016
-        raise RuntimeError("DebateTeam.opposition is deprecated, use DebateTeam.opponent instead.")
-
-    @property
-    def result(self):
-        # Deprecated 12/9/2016, remove after 12/10/2016
-        raise RuntimeError("DebateTeam.result is deprecated, use DebateTeam.get_result_display() instead.")
 
     def get_result_display(self):
         if self.win is True:

@@ -7,10 +7,10 @@
 {% block sub-title %}
   <small>
     {{ debate.round.name }} @
-    {% if debatedivision.venue_group %}
-      {{ debate.division.venue_group.short_name }}
+    {% if debatedivision.venue_category %}
+      {{ debate.division.venue_category.short_name }}
     {% endif %}
-    {{ debate.venue.name }}
+    {{ debate.venue.display_name }}
   </small>
 {% endblock %}
 

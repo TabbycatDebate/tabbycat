@@ -31,3 +31,6 @@ class DebateTeamMotionPreference(models.Model):
 
     class Meta:
         unique_together = [('debate_team', 'preference', 'ballot_submission')]
+
+    def __str__(self):
+        return "{0.motion.reference:s} ({0.preference:d}) by {0.debate_team!s}".format(self)

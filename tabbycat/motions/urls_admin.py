@@ -7,7 +7,7 @@ urlpatterns = [
         views.EditMotionsView.as_view(),
         name='motions-edit'),
     url(r'^assign/$',
-        views.motions_assign,
+        views.AssignMotionsView.as_view(),
         name='motions_assign'),
     url(r'^release/$',
         views.ReleaseMotionsView.as_view(),

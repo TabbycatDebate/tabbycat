@@ -49,11 +49,14 @@
             <li><a href="{% round_url draw-public-for-round r %}">{{ r.name }}</a></li>
           {% endif %}
         {% endfor %}
-        <li>
-          <a class="public-draw-nav" href="{% tournament_url draw-public-all-draws %}">
-            View All
-          </a>
-        </li>
+        {% if pref.enable_mass_draws > 0 %}
+          <li role="separator" class="divider"></li>
+          <li>
+            <a class="public-draw-nav" href="{% tournament_url draw-public-all-draws %}">
+              View All
+            </a>
+          </li>
+        {% endif %}
       </ul>
     </li>
   {% endif %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">🏩</span>Bulk Add Venue Constraints for {{ entity_type }}s{% endblock %}
+{% block page-title %}🏩 Bulk Add Venue Constraints for {{ entity_type }}s{% endblock %}
+
+{% block content %}
+
+{% if entities.count == 0 %}
+
+  <div class="alert alert-warning" role="alert">
+    You need to add some {{ entity_type }}s before adding venue constraints for them.
+  </div>
+
+{% else %}
+
+  <div class="alert alert-info" id="">
+    <p>Select which {{ entity_type }} you want to add or edit venue constraints for.</p>
+  </div>
+
+  <!-- TODO: not particularly elegant; need to pass the url from the view somehow -->
+  {% if entity_type == "Institution" %}
+    <form action="{% tournament_url edit_institutions_constraints %}" method="POST">
+  {% endif %}
+  {% if entity_type == "Team" %}
+    <form action="{% tournament_url edit_teams_constraints %}" method="POST">
+  {% endif %}
+  {% if entity_type == "Adjudicator" %}
+    <form action="{% tournament_url edit_adjudicators_constraints %}" method="POST">
+  {% endif %}
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel">
+
+          <ul class="list-group">
+            {% for entity in entities %}
+              <li class="list-group-item ">
+                <div class="row">
+                  <div class="col-sm-1">
+                    <input class="form-control team-name pull-right" type="checkbox"
+                           name="{{ entity.id }}" value=0  min="0" />
+                  </div>
+                  <label class="control-label">
+                    {% if entity.name %}
+                      {{ entity.name }}
+                    {% else %}
+                      {{ entity.short_name }}<!-- For Teams -->
+                    {% endif %}
+                  </label>
+                  {% if entity.code %}
+                    ({{ entity.code }})
+                  {% endif %}<!-- For Institutions -->
+                  {% if entity.institution %}
+                    ({{ entity.institution }})
+                  {% endif %}<!-- For Teams/Adjs -->
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-primary btn-block">
+          Edit These {{ entity_type }}'s Venue Constraints
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+{% endif %}
+
+{% endblock content %}

@@ -111,10 +111,11 @@ class BallotSubmission(Submission):
         verbose_name_plural = _("ballot submissions")
 
     def __str__(self):
-        return "Ballot for {debate} submitted at {time} (version {version})".format(
-            debate=self.debate.matchup,
-            version=self.version,
-            time=('<unknown>' if self.timestamp is None else str(self.timestamp.isoformat())))
+        if self.timestamp is None:
+            return "[{0.id}] Ballot for {0.debate!s}, no submission time (v{0.version})".format(self)
+        else:
+            return ("[{0.id}] Ballot for {0.debate!s}, submitted at "
+                "{0.timestamp:%Y-%m-%dT%H:%M:%S} (v{0.version})").format(self)
 
     @property
     def ballot_set(self):
@@ -152,6 +153,10 @@ class SpeakerScoreByAdj(models.Model):
         index_together = ['ballot_submission', 'debate_adjudicator']
         verbose_name = _("speaker score by adjudicator")
         verbose_name_plural = _("speaker scores by adjudicator")
+
+    def __str__(self):
+        return ("[{0.ballot_submission_id}/{0.id}] {0.score} at {0.position} for "
+            "{0.debate_team!s} from {0.debate_adjudicator!s}").format(self)
 
     @property
     def debate(self):
@@ -192,6 +197,10 @@ class TeamScore(models.Model):
         verbose_name = _("team score")
         verbose_name_plural = _("team scores")
 
+    def __str__(self):
+        return ("[{0.ballot_submission_id}/{0.id}] {0.points}, {0.score} for "
+            "{0.debate_team!s}").format(self)
+
 
 class SpeakerScoreManager(models.Manager):
     use_for_related_fields = True
@@ -228,6 +237,10 @@ class SpeakerScore(models.Model):
         unique_together = [('debate_team', 'position', 'ballot_submission')]
         verbose_name = _("speaker score")
         verbose_name_plural = _("speaker scores")
+
+    def __str__(self):
+        return ("[{0.ballot_submission_id}/{0.id}] {0.score} at {0.position} for "
+            "{0.speaker.name} in {0.debate_team!s}").format(self)
 
     def clean(self):
         super().clean()

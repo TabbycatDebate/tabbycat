@@ -74,13 +74,14 @@
 
           <div class="form-group">
             <label for="{{ form.text.id_for_label }}" class="col-sm-1 control-label" {% if form.text.help_text %}data-toggle="tooltip" title="{{ form.text.help_text }}"{% endif %}>
-              {{ form.text.label }} {{ form.text.errors }}
+              {{ form.text.label }}
             </label>
             <div class="col-sm-8">
-              {{form.text|addcss:"form-control help-anchor required text-area-limited"}}
+              {{ form.text|addcss:"form-control help-anchor required text-area-limited"}}
+              {{ form.text.errors }}
             </div>
             <div class="col-sm-3 help-block">
-              {{form.text.help_text}}
+              {{ form.text.help_text }}
             </div>
           </div>
           <div class="form-group">
@@ -88,10 +89,10 @@
               {{ form.reference.label }}  {{ form.reference.errors }}
             </label>
             <div class="col-sm-8">
-              {{form.reference|addcss:"form-control required"}}
+              {{ form.reference|addcss:"form-control required" }}
             </div>
             <div class="col-sm-3 help-block">
-              {{form.reference.help_text}}
+              {{ form.reference.help_text }}
             </div>
           </div>
           <div class="form-group">

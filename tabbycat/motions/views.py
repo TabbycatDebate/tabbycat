@@ -1,21 +1,16 @@
-from django.shortcuts import render
 from django.contrib import messages
 from django.db.models import Q
-from django.forms import ModelForm
 from django.forms.models import modelformset_factory
-from django.forms.widgets import CheckboxSelectMultiple
-from django.forms.models import ModelMultipleChoiceField
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from divisions.models import Division
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin
 from utils.misc import redirect_round
 from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
-from utils.views import admin_required, round_view
 
 from .models import Motion
+from .forms import ModelAssignForm
 
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
@@ -73,36 +68,22 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
         return redirect_round('motions-edit', round)
 
 
-@admin_required
-@round_view
-def motions_assign(request, round):
+class AssignMotionsView(SuperuserRequiredMixin, RoundMixin, ModelFormSetView):
 
-    class MyModelChoiceField(ModelMultipleChoiceField):
-        def label_from_instance(self, obj):
-            return "D%s @ %s" % (
-                obj.name,
-                obj.venue_group.short_name,
-            )
+    template_name = 'assign.html'
+    formset_factory_kwargs = dict(extra=0, fields=['divisions'])
+    formset_model = Motion
 
-    class ModelAssignForm(ModelForm):
-        divisions = MyModelChoiceField(
-            widget=CheckboxSelectMultiple,
-            queryset=Division.objects.filter(tournament=round.tournament).order_by('venue_group'))
+    def get_formset_queryset(self):
+        return self.get_round().motion_set.all()
 
-        class Meta:
-            model = Motion
-            fields = ("divisions",)
+    def get_formset_class(self):
+        return modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
 
-    motion_form_set = modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
-
-    if request.method == 'POST':
-        formset = motion_form_set(request.POST)
+    def formset_valid(self, formset):
         formset.save()  # Should be checking for validity but on a deadline and was buggy
-        if 'submit' in request.POST:
-            return redirect_round('draw-display', round)
-
-    formset = motion_form_set(queryset=Motion.objects.filter(round=round))
-    return render(request, "assign.html", dict(formset=formset))
+        messages.success(self.request, 'Those motion assignments have been saved.')
+        return redirect_round('motions-edit', self.get_round())
 
 
 class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):

@@ -2,11 +2,28 @@
 Change Log
 ==========
 
+1.2.3
+-----
+*Release date: 17 March 2017*
+
+- Improved the display of the admin ballot entry form on mobile devices
+- A number of other minor bug fixes
+
+
+1.2.2
+-----
+*Release date: 4 March 2017*
+
+- Protected debate-team objects from cascaded deletion, and added warning messages with guidance when users would otherwise do this
+- A number of other minor bug fixes
+
 
 1.2.1
 -----
+*Release date: 25 February 2017*
 
-- A number of minor bug fixes
+- Printable feedback forms will now display the default rating scale, any configured introduction text, and better prompt you to add additional questions
+- A number of other minor bug fixes
 
 
 1.2.0 (Foldex)

@@ -11,15 +11,15 @@ from tournaments.mixins import RoundMixin, TournamentMixin
 from tournaments.models import Tournament
 from tournaments.utils import get_position_name
 from utils.mixins import SuperuserRequiredMixin
-from venues.models import Venue, VenueGroup
+from venues.models import Venue, VenueCategory
 
 
 class MasterSheetsListView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     template_name = 'division_sheets_list.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['standings'] = VenueGroup.objects.all()
-        kwargs['venue_groups'] = VenueGroup.objects.all()
+        kwargs['standings'] = VenueCategory.objects.all()
+        kwargs['venue_categories'] = VenueCategory.objects.all()
         return super().get_context_data(**kwargs)
 
 
@@ -27,21 +27,21 @@ class MasterSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     template_name = 'master_sheets_view.html'
 
     def get_context_data(self, **kwargs):
-        venue_group_id = self.kwargs['venue_group_id']
-        base_venue_group = VenueGroup.objects.get(id=venue_group_id)
+        venue_category_id = self.kwargs['venue_category_id']
+        base_venue_category = VenueCategory.objects.get(id=venue_category_id)
         active_tournaments = Tournament.objects.filter(active=True)
         for tournament in list(active_tournaments):
             tournament.debates = Debate.objects.select_related(
-                'division', 'division__venue_group', 'round',
+                'division', 'division__venue_category', 'round',
                 'round__tournament').filter(
-                    # All Debates, with a matching round, at the same venue group name
-                    round__seq=round.seq,
+                    # All Debates, with a matching round, at the same venue category name
+                    round__seq=self.get_round().seq,
                     round__tournament=tournament,
-                    # Hack - remove when venue groups are unified
-                    division__venue_group__short_name=base_venue_group.short_name
-            ).order_by('round', 'division__venue_group__short_name', 'division')
+                    # Hack - remove when venue category are unified
+                    division__venue_category__short_name=base_venue_category.name
+            ).order_by('round', 'division__venue_category__short_name', 'division')
 
-        kwargs['base_venue_group'] = base_venue_group
+        kwargs['base_venue_category'] = base_venue_category
         kwargs['active_tournaments'] = active_tournaments
         return super().get_context_data(**kwargs)
 
@@ -50,18 +50,17 @@ class RoomSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     template_name = 'room_sheets_view.html'
 
     def get_context_data(self, **kwargs):
-        venue_group_id = self.kwargs['venue_group_id']
-        base_venue_group = VenueGroup.objects.get(id=venue_group_id)
-        venues = Venue.objects.filter(group=base_venue_group)
+        venue_category_id = self.kwargs['venue_category_id']
+        base_venue_category = VenueCategory.objects.get(id=venue_category_id)
+        venues = Venue.objects.filter(category=base_venue_category)
 
         for venue in venues:
             venue.debates = Debate.objects.filter(
-                # All Debates, with a matching round, at the same venue group name
+                # All Debates, with a matching round, at the same venue category name
                 round__seq=round.seq,
-                venue=venue
             ).select_related('round__tournament').order_by('round__tournament__seq')
 
-        kwargs['base_venue_group'] = base_venue_group
+        kwargs['base_venue_category'] = base_venue_category
         kwargs['venues'] = venues
         return super().get_context_data(**kwargs)
 
@@ -78,40 +77,70 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         return AdjudicatorFeedbackQuestion.objects.filter(
             tournament=self.get_round().tournament, from_adj=True).exists()
 
-    def questions_json_dict(self):
-        questions = []
-        for q in self.get_round().tournament.adj_feedback_questions:
-            q_set = {
-                'text': q.text, 'seq': q.seq, 'type': q.answer_type,
-                'required': json.dumps(q.answer_type),
-                'from_team': json.dumps(q.from_team),
-                'from_adj': json.dumps(q.from_adj),
-            }
-            if q.choices:
-                q_set['choice_options'] = q.choices.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
-            elif q.min_value is not None and q.max_value is not None:
-                q_set['choice_options'] = q.choices_for_number_scale
+    def question_to_json(self, question):
+        qdict = {
+            'text': question.text,
+            'seq': question.seq,
+            'type': question.answer_type,
+            'required': json.dumps(question.answer_type),
+            'from_team': json.dumps(question.from_team),
+            'from_adj': json.dumps(question.from_adj),
+        }
+        if question.choices:
+            qdict['choice_options'] = question.choices.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
+        elif question.min_value is not None and question.max_value is not None:
+            qdict['choice_options'] = question.choices_for_number_scale
+        return qdict
 
-            questions.append(q_set)
+    def add_defaults(self):
+        t = self.get_tournament()
+        default_questions = []
+
+        if t.pref('feedback_introduction'):
+            default_scale_info = AdjudicatorFeedbackQuestion(
+                text=t.pref('feedback_introduction'), seq=0,
+                answer_type='comment', # Custom type just for print display
+                required=True, from_team=True, from_adj=True
+            )
+            default_questions.append(self.question_to_json(default_scale_info))
+
+        default_scale_question = AdjudicatorFeedbackQuestion(
+            text='Overall Score', seq=0,
+            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
+            required=True, from_team=True, from_adj=True,
+            min_value=t.pref('adj_min_score'),
+            max_value=t.pref('adj_max_score')
+        )
+        default_questions.append(self.question_to_json(default_scale_question))
+
+        return default_questions
+
+    def questions_json_dict(self):
+        questions = self.add_defaults()
+        for question in self.get_round().tournament.adj_feedback_questions:
+            questions.append(self.question_to_json(question))
+
         return questions
 
     def construct_info(self, venue, source, source_p, target, target_p):
         source_n = source.name if hasattr(source, 'name') else source.short_name
         return {
-            'room': "%s %s" % (venue.name if venue else "", "(" + venue.group.short_name + ")" if venue and venue.group else '', ),
+            'room': venue.display_name if venue else '',
             'authorInstitution': source.institution.code,
             'author': source_n, 'authorPosition': source_p,
             'target': target.name, 'targetPosition': target_p
         }
 
     def get_team_feedbacks(self, debate, team):
+        if len(debate.adjudicators) is 0:
+            return []
+
         team_paths = self.get_tournament().pref('feedback_from_teams')
         ballots = []
 
-        if team_paths == 'orallist':
-            target = debate.adjudicators.chair
+        if team_paths == 'orallist' and debate.adjudicators.chair:
             ballots.append(self.construct_info(debate.venue, team, "Team",
-                                               target.adjudicator, ""))
+                                               debate.adjudicators.chair, ""))
         elif team_paths == 'all-adjs':
             for target in debate.debateadjudicator_set.all():
                 ballots.append(self.construct_info(debate.venue, team, "Team",
@@ -137,23 +166,25 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         kwargs['questions'] = self.questions_json_dict()
         kwargs['ballots'] = []
 
-        draw = self.get_round().debate_set_with_prefetches(ordering=(
-            'venue__group__name', 'venue__name'))
+        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
 
+        message = ""
         if not self.has_team_questions():
-            messages.info(self.request, "No feedback questions have been added "
-                          " for teams on adjudicators. Check the documentation "
-                          " for information on how to add these.")
+            message += "No feedback questions have been added " + \
+                       "for teams on adjudicators."
         if not self.has_adj_questions():
-            messages.info(self.request, "No feedback questions have been added "
-                          " for adjudicators on adjudicators. Check the "
-                          "documentation for information on how to add these.")
+            message += "No feedback questions have been added " + \
+                       "for adjudicators on adjudicators. "
+        if message is not "":
+            messages.warning(self.request, message + "Check the " +
+                "documentation for information on how to add these.")
 
         for debate in draw:
             for team in debate.teams:
                 kwargs['ballots'].extend(self.get_team_feedbacks(debate, team))
 
             kwargs['ballots'].extend(self.get_adj_feedbacks(debate))
+            pass
 
         return super().get_context_data(**kwargs)
 
@@ -171,20 +202,12 @@ class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                                get_position_name(tournament, "neg", "full").title()]
         kwargs['ballots'] = []
 
-        draw = self.get_round().debate_set_with_prefetches(ordering=(
-            'venue__group__name', 'venue__name',))
+        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
         show_emoji = tournament.pref('show_emoji')
 
         for debate in draw:
-            if debate.venue:
-                room = debate.venue.name
-                if debate.venue.group:
-                    room += " (" + debate.venue.group.short_name + ")"
-            else:
-                room = ''
-
             debate_info = {
-                'room': room,
+                'room': debate.venue.display_name if debate.venue else '',
                 'aff': debate.aff_team.short_name,
                 'affEmoji': debate.aff_team.emoji if debate.aff_team.emoji and show_emoji else '',
                 'affSpeakers': [s.name for s in debate.aff_team.speakers],

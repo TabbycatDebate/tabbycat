@@ -5,10 +5,10 @@
 
 {% block head-title %}
     {% if new %}New Ballot Set for{% else %}Edit Ballot Set for{% endif %}
-    {{ debate.matchup }} <small> {{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}</small>
+    {{ debate.matchup }} <small> {{ debate.round.name }} @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}</small>
 {% endblock %}
 
-{% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_group %}{{ debate.division.venue_group.short_name }} {% endif %}{{ debate.venue.name }}{% endblock %}
+{% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}{% endblock %}
 {% block page-subnav-sections %}
   {% if not new %}
     <a class="btn btn-default" href="{% tournament_url results-ballotset-new debate.id %}">
@@ -42,7 +42,7 @@
             <div class="panel-body form-panel">
               <div class="form-group col-md-6">
                 <div class="row">
-                  <label class="col-sm-6 col-xs-9 control-label" for="{{ form.discarded.auto_id }}">
+                  <label class="col-sm-6 col-xs-7 control-label" for="{{ form.discarded.auto_id }}">
                       This ballot is discarded
                   </label>
                   <div class="col-sm-6 col-xs-3">
@@ -53,7 +53,7 @@
               </div>
               <div class="form-group col-md-6">
                 <div class="row">
-                  <label class="col-sm-6 col-xs-9 control-label" for="{{ form.confirmed.auto_id }}">
+                  <label class="col-sm-6 col-xs-7 control-label" for="{{ form.confirmed.auto_id }}">
                       This is the confirmed ballot
                   </label>
                   <div class="col-sm-6 col-xs-3">
@@ -77,14 +77,14 @@
             </div>
             <div class="panel-body form-panel">
               <div class="form-group">
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-xs-12">
                   {{ form.debate_result_status|addcss:"form-control" }}
                   {{ form.debate_result_status.errors }}
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-xs-9">
                   <input id="submit" class="save btn btn-success btn-block submit-disable" type="submit" value="Save Ballot" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-xs-9">
                   <a class="btn btn-default btn-block btn-danger" href="{% round_url results-round-list debate.round %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel Entry</a>
                 </div>
               </div>

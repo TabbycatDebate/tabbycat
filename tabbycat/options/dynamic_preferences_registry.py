@@ -417,7 +417,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
     choices = TeamStandingsGenerator.get_metric_choices()
     nfields = 8
     allow_empty = True
-    default = ['points', 'speaks_avg']
+    default = ['wins', 'speaks_avg']
 
 
 @tournament_preferences_registry.register
@@ -883,29 +883,11 @@ class EnableAdjNotes(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class EnableVenueGroups(BooleanPreference):
-    help_text = "Enables the display of venue groups"
-    verbose_name = "Enable venue groups"
-    section = league_options
-    name = "enable_venue_groups"
-    default = False
-
-
-@tournament_preferences_registry.register
 class EnableVenueTimes(BooleanPreference):
     help_text = "Enables specific dates and times to be set for debates"
     verbose_name = "Enable debate scheduling"
     section = league_options
     name = "enable_debate_scheduling"
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableVenueOverlaps(BooleanPreference):
-    help_text = "Allow and automatically debates to be placed in the first room"
-    verbose_name = "Enable venue overlaps"
-    section = league_options
-    name = "enable_venue_overlaps"
     default = False
 
 

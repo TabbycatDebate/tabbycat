@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.translation import ungettext
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Round, Tournament
 
@@ -28,39 +30,58 @@ class RoundAdmin(admin.ModelAdmin):
                      'draw_status')
     actions = ['mark_as_silent', 'mark_as_not_silent', 'release_motions', 'unrelease_motions']
 
-    def _construct_message_for_user(self, request, count, action, **kwargs):
-        message_bit = "1 round was " if count == 1 else "{:d} rounds were ".format(count)
-        self.message_user(request, message_bit + action, **kwargs)
-
     def mark_as_silent(self, request, queryset):
         updated = queryset.update(silent=True)
-        self._construct_message_for_user(request, updated, "marked as silent.")
+        message = ungettext(
+            "%(count)d round object was marked as silent.",
+            "%(count)d round objects were marked as silent.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
 
     def mark_as_not_silent(self, request, queryset):
         updated = queryset.update(silent=False)
-        self._construct_message_for_user(request, updated, "marked as not silent.")
+        message = ungettext(
+            "%(count)d round object was marked as not silent.",
+            "%(count)d round objects were marked as not silent.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
 
     def release_motions(self, request, queryset):
         updated = queryset.update(motions_released=True)
-        self._construct_message_for_user(request, updated, "marked as motions released.")
+        message = ungettext(
+            "%(count)d round object was marked as motions released.",
+            "%(count)d round objects were marked as motions released.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
 
     def unrelease_motions(self, request, queryset):
         updated = queryset.update(motions_released=False)
-        self._construct_message_for_user(request, updated, "marked as motions not released.")
+        message = ungettext(
+            "%(count)d round object was marked as motions not released.",
+            "%(count)d round objects were marked as motions not released.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
 
     for value, verbose_name in Round.STATUS_CHOICES:
 
         def _make_set_draw_status(value, verbose_name):
             def _set_draw_status(modeladmin, request, queryset):
                 count = queryset.update(draw_status=value)
-                message_bit = "1 round had its" if count == 1 else "{:d} rounds had their".format(
-                    count)
-                modeladmin.message_user(
-                    request, message_bit + " draw status set to " + verbose_name)
+                message = ungettext(
+                    "%(count)d round had its draw status set to %(status)s.",
+                    "%(count)d rounds had their draw status set to %(status)s.",
+                    count
+                ) % {'count': count, 'status': verbose_name.lower()}
+                modeladmin.message_user(request, message)
 
             # so that they look different to RoundAdmin
-            _set_draw_status.__name__ = "set_draw_status_%s" % verbose_name.lower()
-            _set_draw_status.short_description = "Set draw status to %s" % verbose_name.lower()
+            _set_draw_status.__name__ = "set_draw_status_%s" % value.lower()
+            _set_draw_status.short_description = _("Set draw status to %(status)s") % \
+                    {'status': verbose_name.lower()}
             return _set_draw_status
 
         actions.append(_make_set_draw_status(value, verbose_name))

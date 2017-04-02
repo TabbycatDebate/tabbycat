@@ -68,16 +68,16 @@ def tournament_side_names(tournament, name_type):
 
 
 class RoundURLNode(template.Node):
-    def __init__(self, view_name, round=None):
+    def __init__(self, view_name, round=None, args=[]):
         self.view_name = view_name
         self.round = round
+        self.args = args
 
     def render(self, context):
-        if self.round:
-            round = self.round.resolve(context)
-        else:
-            round = context['round']
-        return reverse(self.view_name, args=[round.tournament.slug, round.seq])
+        round = self.round.resolve(context) if self.round else context['round']
+        args = [round.tournament.slug, round.seq]
+        args.extend(a.resolve(context) for a in self.args)
+        return reverse(self.view_name, args=args)
 
 
 class TournamentURLNode(template.Node):
@@ -101,24 +101,26 @@ class TournamentAbsoluteURLNode(TournamentURLNode):
 @register.tag
 def round_url(parser, token):
     bits = token.split_contents()
-    if len(bits) == 3:
+    if len(bits) >= 3:
         round = parser.compile_filter(bits[2])
+        args = [parser.compile_filter(b) for b in bits[3:]]
     else:
         round = None
-    return RoundURLNode(bits[1], round)
+        args = []
+    return RoundURLNode(bits[1], round, args)
 
 
 @register.tag
 def tournament_url(parser, token):
     bits = token.split_contents()
-    args = tuple([parser.compile_filter(b) for b in bits[2:]])
+    args = [parser.compile_filter(b) for b in bits[2:]]
     return TournamentURLNode(bits[1], args)
 
 
 @register.tag
 def tournament_absurl(parser, token):
     bits = token.split_contents()
-    args = tuple([parser.compile_filter(b) for b in bits[2:]])
+    args = [parser.compile_filter(b) for b in bits[2:]]
     return TournamentAbsoluteURLNode(bits[1], args)
 
 
