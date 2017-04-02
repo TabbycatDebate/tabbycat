@@ -58,6 +58,8 @@ class ImportInstitutionsRawForm(forms.Form):
 
 
 class InstitutionForm(forms.ModelForm):
+    """Form for the formset used in the second step of the simple institutions
+    importer."""
 
     class Meta:
         model = Institution
@@ -83,21 +85,23 @@ class ImportTeamsNumbersForm(forms.Form):
         for institution in self.institutions:
             label = _("%(name)s (%(code)s)") % {'name': institution.name, 'code': institution.code}
             self.fields['number_institution_%d' % institution.id] = forms.IntegerField(
-                    min_value=0, label=label, widget=forms.NumberInput(attrs={'placeholder': 0}))
+                    min_value=0, label=label, required=False,
+                    widget=forms.NumberInput(attrs={'placeholder': 0}))
 
 
 class TeamDetailsForm(forms.ModelForm):
+    """Form for the formset used in the second step of the simple teams
+    importer."""
 
-    # The purpose of the institution field is to protect against changes in
-    # the form between rendering and submission, for example, if the user
-    # reloads the team details step in a different tab with different numbers
-    # of teams. Putting the institution ID in a hidden field makes the client
-    # send it with the form, keeping the information in a submission consistent.
+    # This field protects against changes to the form between rendering and
+    # submission, for example, if the user reloads the team details step in a
+    # different tab with different numbers of teams. Putting the institution ID
+    # in a hidden field makes the client send it with the form, keeping the
+    # information in a submission consistent.
     institution = forms.ModelChoiceField(queryset=Institution.objects.all(),
             widget=forms.HiddenInput)
 
-    speakers = forms.CharField(widget=forms.Textarea(attrs={'rows': 3,
-            'placeholder': ugettext_lazy("Speaker 1\nSpeaker 2\nSpeaker 3")}))
+    speakers = forms.CharField(required=True) # widget is set in form constructor
 
     class Meta:
         model = Team
@@ -113,7 +117,8 @@ class TeamDetailsForm(forms.ModelForm):
 
         # Set speaker widget to match tournament settings
         nspeakers = tournament.pref('substantive_speakers')
-        self.fields['speakers'].widget = forms.Textarea(attrs={'rows': nspeakers})
+        self.fields['speakers'].widget = forms.Textarea(attrs={'rows': nspeakers,
+                'placeholder': _("One speaker's name per line")})
         self.initial.setdefault('speakers', "\n".join(
                 _("Speaker %d") % i for i in range(1, nspeakers+1)))
 
@@ -126,14 +131,17 @@ class TeamDetailsForm(forms.ModelForm):
         # Split into list of names, removing blank lines.
         names = self.cleaned_data['speakers'].split('\n')
         names = [name.strip() for name in names]
-        return [name for name in names if name]
+        names = [name for name in names if name]
+        if len(names) == 0:
+            self.add_error('speakers', _("There must be at least one speaker."))
+        return names
 
     def _post_clean_speakers(self):
         """Validates the Speaker instances that would be created."""
-        for name in self.cleaned_data['speakers']:
+        for name in self.cleaned_data.get('speakers', []):
             try:
-                speaker = Speaker(name=name, team=self.instance)
-                speaker.full_clean()
+                speaker = Speaker(name=name)
+                speaker.full_clean(exclude=('team',))
             except ValidationError as errors:
                 for field, e in errors: # replace field with `speakers`
                     self.add_error('speakers', e)
@@ -142,12 +150,22 @@ class TeamDetailsForm(forms.ModelForm):
         super()._post_clean()
         self._post_clean_speakers()
 
+    def validate_unique(self):
+        """Overrides ModelForm.validate_unique to include tournament in the check."""
+        exclude = self._get_validation_exclusions()
+        if 'tournament' in exclude:
+            exclude.remove('tournament')
+        self.instance.tournament = self.tournament
+        try:
+            self.instance.validate_unique(exclude=exclude)
+        except ValidationError as e:
+            self._update_errors(e)
+
     def save(self):
         # First save the team, then create the speakers
         team = super().save(commit=False)
         team.short_reference = team.reference[:TEAM_SHORT_REFERENCE_LENGTH]
         team.tournament = self.tournament
-        team.institution_id = self.cleaned_data['institution_id']
         team.save()
 
         for name in self.cleaned_data['speakers']:

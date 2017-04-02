@@ -30,20 +30,25 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h5 class="panel-title">
-              {% blocktrans trimmed with institution_name=forms.grouper %}
+              {% blocktrans trimmed with institution_name=forms.grouper.name %}
                 Teams for {{ institution_name }}
               {% endblocktrans %}
             </h5>
           </div>
           <div class="panel-body no-bottom-padding">
 
-            {{ form.non_field_errors }}
-
             {% for form in forms.list %}
+
               <div class=" form-horizontal">
                 {% for field in form.hidden_fields %}
                   {{ field }}
                 {% endfor %}
+
+                {% if form.non_field_errors %}
+                  <div class="col-sm-12">
+                    {{ form.non_field_errors }}
+                  </div>
+                {% endif %}
 
                 {% for field in form.visible_fields %}
                   <div class="form-group">

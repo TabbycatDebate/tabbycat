@@ -68,8 +68,10 @@ class ImportTeamsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWiza
         if step == 'details':
             data = self.get_cleaned_data_for_step('numbers')
             initial = []
-            for institution in Institution.objects.all():
+            for institution in Institution.objects.order_by('name'):
                 number = data.get('number_institution_%d' % institution.id, 0)
+                if number is None: # field left blank
+                    continue
                 for i in range(1, number+1):
                     initial.append({
                         'institution': institution.id,
@@ -80,6 +82,11 @@ class ImportTeamsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWiza
 
         else:
             return super().get_form_initial(step)
+
+    def done(self, form_list, form_dict, **kwargs):
+        instances = [form.save() for form in form_dict['details']]
+        messages.success(self.request, _("Added %(count)d teams." % {'count': len(instances)}))
+        return HttpResponseRedirect(self.get_redirect_url())
 
 # ==============================================================================
 # Old forms
