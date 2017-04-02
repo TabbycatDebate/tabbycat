@@ -178,6 +178,10 @@ class BallotSetForm(forms.Form):
         return '%(side)s_speaker_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
+    def _fieldname_ghost(side, pos):
+        return '%(side)s_ghost_s%(pos)d' % {'side': side, 'pos': pos}
+
+    @staticmethod
     def _fieldname_score(adj, side, pos):
         return '%(side)s_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
 
@@ -239,7 +243,11 @@ class BallotSetForm(forms.Form):
                 queryset = self.debate.get_team(side).speakers
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(queryset=queryset)
 
-            # 4(b). Speaker scores
+            # 4(b). Ghost fields
+            self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
+                label="Mark this as a duplicate speech")
+
+            # 4(c). Speaker scores
             scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
@@ -528,6 +536,12 @@ class BallotSetForm(forms.Form):
 
             def neg_speaker(self):
                 return form[form._fieldname_speaker('neg', self.pos)]
+
+            def aff_ghost(self):
+                return form[form._fieldname_ghost('aff', self.pos)]
+
+            def neg_ghost(self):
+                return form[form._fieldname_ghost('neg', self.pos)]
 
             def _scores(self, side):
                 for adj in form.adjudicators:

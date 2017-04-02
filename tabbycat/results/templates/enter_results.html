@@ -41,26 +41,16 @@
             </div>
             <div class="panel-body form-panel">
               <div class="form-group col-md-6">
-                <div class="row">
-                  <label class="col-sm-6 col-xs-7 control-label" for="{{ form.discarded.auto_id }}">
-                      This ballot is discarded
-                  </label>
-                  <div class="col-sm-6 col-xs-3">
-                      {{ form.discarded|addcss:"form-control" }}
-                      {{ form.discarded.errors }}
-                  </div>
-                </div>
+                <label>
+                  {{ form.discarded }}
+                  {{ form.discarded.errors }} This ballot is discarded
+                </label>
               </div>
               <div class="form-group col-md-6">
-                <div class="row">
-                  <label class="col-sm-6 col-xs-7 control-label" for="{{ form.confirmed.auto_id }}">
-                      This is the confirmed ballot
-                  </label>
-                  <div class="col-sm-6 col-xs-3">
-                      {{ form.confirmed|addcss:"form-control" }}
-                      {{ form.confirmed.errors }}
-                  </div>
-                </div>
+                <label>
+                  {{ form.confirmed }}
+                  {{ form.confirmed.errors }} This is the confirmed ballot
+                </label>
               </div>
             </div>
           </div>
