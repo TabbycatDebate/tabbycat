@@ -486,7 +486,7 @@ class BallotSet(ResultBuffer):
         Raises an exception if the speaker isn't in the team."""
         return self._set_speaker(self._dt(team), position, speaker)
 
-    def set_ghosts(self, team, position, is_ghost):
+    def set_ghost(self, team, position, is_ghost):
         """Sets whether the speaker score object is a duplicate in this team and position"""
         return self._set_ghost(self._dt(team), position, is_ghost)
 

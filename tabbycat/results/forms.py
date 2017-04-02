@@ -505,7 +505,7 @@ class BallotSetForm(forms.Form):
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 ballotset.set_speaker(side, pos, speaker)
                 is_ghost = self.cleaned_data[self._fieldname_ghost(side, pos)]
-                ballotset.set_ghosts(side, pos, is_ghost)
+                ballotset.set_ghost(side, pos, is_ghost)
                 for adj in self.adjudicators:
                     score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
                     ballotset.set_score(adj, side, pos, score)

@@ -37,12 +37,16 @@ As a general principle, Tabbycat requires all ballots to be looked at by two peo
   - It can be helpful to think about the room layout to maximize efficiency.
   - Some tab rooms like to assign some to data entry and some to verification. This isn't really necessary, since Tabbycat doesn't let the same person enter and verify the same ballot. (This is one of many reasons why every person should have their own account.)
 
-Speakers who speak twice
-========================
+Duplicate/Swing Speeches
+===========================
 
-Note that the ballot entry interface will not let you have a single person speak in more than one position. If a speaker is 'iron manning' the best approach is to go into the **Edit Database** section (under **Setup** in the admin area's menu) and add a new speaker to that team for this purpose. Once in the Edit Data section, go to **Participants** then **Teams** then the **Speakers** tab. Typically it is best practice to indicate in their name they are delivering a second speech (ie "Jane Smith Repeat") and to assign them the position that received the lower of the two scores.
+.. image:: images/iron-speakers.png
 
-.. tip:: There is a option under **Standings** in the **Config** section that specifies the number of debates that you can miss before you will not show on the tab. By default it is set to 1, but if need be this can be increased to hide these 'fake' speakers from the final speaker tab.
+When entering the ballots there is a toggle label *'Iron' speeches*. When set to "yes" this allows you to have the same speaker deliver multiple speeches provided their extra speeches are labelled on the form as 'duplicates'. Typically, most tournaments require that lesser 'iron man' speech is discarded from the tab, which would mean that you would mark the lower speaker of the two scores as the duplicate (note that this may require you to check each score's average across a panel).
+
+Speeches marked as duplicates are not included in the speaker tab. This means that they can also be used to exclude swing speakers from the tab as needed; even if they do not actually speak twice. To do so, change the name of the swing speaker to be that of an existing team member and ensure that that speech is marked as a duplicate.
+
+.. tip:: There is also an option under **Standings** in the **Config** section that specifies the number of debates a speaker can miss before you will not show on the tab. By default it is set to 1, but if need be this can be increased to hide swing speakers from the final speaker tab.
 
 Feedback entry
 ==============

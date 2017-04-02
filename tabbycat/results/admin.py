@@ -62,7 +62,7 @@ class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     search_fields = ('debate_team__debate__round__abbreviation',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'speaker__name')
-    list_filter = ('score', 'debate_team__debate__round')
+    list_filter = ('score', 'debate_team__debate__round', 'ghost')
     raw_id_fields = ('debate_team', 'ballot_submission')
 
     def get_queryset(self, request):
