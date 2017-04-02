@@ -5,6 +5,7 @@ from django.forms import formset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
+from django.views.generic import TemplateView
 from formtools.wizard.views import SessionWizardView
 
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -16,25 +17,8 @@ from venues.models import Venue, VenueConstraint, VenueConstraintCategory, Venue
 from .forms import ImportInstitutionsRawForm, InstitutionForm
 
 
-@admin_required
-@tournament_view
-def data_index(request, t):
-    return render(request, 'data_index.html')
-
-
-def enforce_length(value, type, model, request, extra_limit=0):
-    # Used to check and truncate name lengths as needed
-    max_length = model._meta.get_field(type).max_length
-    if len(value) > max_length - extra_limit:
-        messages.warning(request, "%s %s's name was too long so it \
-            was truncated to the %s character limit" % (model.__name__, value, max_length))
-        value = value[:max_length - extra_limit]
-    return value
-
-
-# ==============================================================================
-# Institutions
-# ==============================================================================
+class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+    template_name = 'visual_import_index.html'
 
 
 class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
@@ -59,6 +43,31 @@ class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, Sess
         instances = [form.save() for form in form_dict['models']]
         messages.success(self.request, _("Added %(count)d institutions.") % {'count': len(instances)})
         return HttpResponseRedirect(self.get_redirect_url())
+
+# ==============================================================================
+# Old forms
+# ==============================================================================
+
+
+@admin_required
+@tournament_view
+def data_index(request, t):
+    return render(request, 'data_index.html')
+
+
+def enforce_length(value, type, model, request, extra_limit=0):
+    # Used to check and truncate name lengths as needed
+    max_length = model._meta.get_field(type).max_length
+    if len(value) > max_length - extra_limit:
+        messages.warning(request, "%s %s's name was too long so it \
+            was truncated to the %s character limit" % (model.__name__, value, max_length))
+        value = value[:max_length - extra_limit]
+    return value
+
+
+# ==============================================================================
+# Institutions
+# ==============================================================================
 
 
 @admin_required

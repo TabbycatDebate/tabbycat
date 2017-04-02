@@ -26,5 +26,11 @@ urlpatterns = [
     url(r'^data/venue_preferences/edit/$',      views.edit_venue_preferences,       name='edit_venue_preferences'),
     url(r'^data/venue_preferences/confirm/$',   views.confirm_venue_preferences,    name='confirm_venue_preferences'),
 
-    url(r'^visual/institutions/$',              views.ImportInstitutionsWizardView.as_view(),  name='importer-visual-institutions'),
+    url(r'^visual/$',
+        views.ImporterVisualIndexView.as_view(),
+        name='importer-visual-index'),
+
+    url(r'^visual/institutions/$',
+        views.ImportInstitutionsWizardView.as_view(),
+        name='importer-visual-institutions'),
 ]

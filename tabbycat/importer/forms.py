@@ -2,10 +2,10 @@ import csv
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm
 from django.utils.translation import ugettext as _
 
 from participants.models import Institution
+
 
 class ImportValidationError(ValidationError):
 
@@ -22,7 +22,7 @@ class ImportInstitutionsRawForm(forms.Form):
     the split data."""
 
     institutions_raw = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 20, 'cols': 80}))
+        widget=forms.Textarea(attrs={'rows': 20, 'class': 'form-control'}))
 
     def clean_institutions_raw(self):
         lines = self.cleaned_data['institutions_raw'].split('\n')

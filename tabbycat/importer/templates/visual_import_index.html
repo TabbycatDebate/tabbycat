@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">📑</span>Bulk Add Data{% endblock %}
+{% block page-title %}📑 Bulk Add Data{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info">
+  <p>There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">a few ways of
+  getting data into Tabbycat</a> with different levels of convenience depending on the size of the tournament and your
+   technical background. The below tools are the easiest to use and work well for small and medium sized tournaments.</p>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="emoji">🏫</span>
+        <a href="{% tournament_url importer-visual-institutions %}">
+          Add Institutions
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">👯</span>
+        <a href="{% tournament_url add_teams %}">
+          Add Teams
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">👂</span>
+        <a href="{% tournament_url add_adjudicators %}">
+          Add Adjudicators
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🎪</span>
+        <a href="{% tournament_url add_venues %}">
+          Add Venues
+        </a>
+      </li>
+      {% if pref.enable_venue_groups %}
+        <li class="list-group-item">
+          <span class="emoji">🏩</span>
+          <a href="{% tournament_url add_venue_preferences %}">
+            Add Venue Constraints for Institutions
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+{% endblock content %}
