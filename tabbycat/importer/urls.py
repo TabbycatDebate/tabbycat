@@ -35,4 +35,7 @@ urlpatterns = [
     url(r'^visual/teams/$',
         views.ImportTeamsWizardView.as_view(),
         name='importer-visual-teams'),
+    url(r'^visual/adjudicators/$',
+        views.ImportAdjudicatorsWizardView.as_view(),
+        name='importer-visual-adjudicators'),
 ]

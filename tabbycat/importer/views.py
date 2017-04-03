@@ -14,8 +14,8 @@ from utils.views import admin_required, expect_post, tournament_view
 from utils.mixins import SuperuserRequiredMixin
 from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
 
-from .forms import (ImportInstitutionsRawForm, ImportTeamsNumbersForm,
-                    TeamDetailsForm)
+from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
+                    NumberForEachInstitutionForm, TeamDetailsForm)
 
 
 class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
@@ -81,12 +81,8 @@ class ImportInstitutionsWizardView(BaseImportWizardView):
         return self.get_cleaned_data_for_step('raw')['institutions_raw']
 
 
-class ImportTeamsWizardView(BaseImportWizardView):
-    model = Team
-    form_list = [
-        ('numbers', NumberForEachInstitutionForm),
-        ('details', modelformset_factory(Team, form=TeamDetailsForm, extra=0)),
-    ]
+class BaseImportByInstitutionWizardView(BaseImportWizardView):
+    """Common functionality in teams and institutions wizards."""
 
     def get_form_kwargs(self, step):
         if step == 'numbers':
@@ -96,24 +92,46 @@ class ImportTeamsWizardView(BaseImportWizardView):
 
     def get_details_form_initial(self):
         data = self.get_cleaned_data_for_step('numbers')
-        initial = []
+        initial_list = []
         for institution in Institution.objects.order_by('name'):
             number = data.get('number_institution_%d' % institution.id, 0)
             if number is None: # field left blank
                 continue
             for i in range(1, number+1):
-                initial.append({
-                    'institution': institution.id,
-                    'reference': str(i),
-                    'use_institution_prefix': True,
-                })
-        return initial
+                initial = {'institution': institution.id}
+                initial.update(self.get_details_instance_initial(i))
+                initial_list.append(initial)
+        return initial_list
+
+    def get_details_instance_initial(self):
+        raise NotImplementedError
+
+
+class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
+    model = Team
+    form_list = [
+        ('numbers', NumberForEachInstitutionForm),
+        ('details', modelformset_factory(Team, form=TeamDetailsForm, extra=0)),
+    ]
+
+    def get_details_instance_initial(self, i):
+        return {'reference': str(i), 'use_institution_prefix': True}
+
+
+class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
+    model = Adjudicator
+    form_list = [
+        ('numbers', NumberForEachInstitutionForm),
+        ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
+    ]
+
+    def get_details_instance_initial(self, i):
+        return {'name': _("Adjudicator %(number)d") % {'number': i}, 'test_score': 2.5}
 
 
 # ==============================================================================
 # Old forms
 # ==============================================================================
-
 
 @admin_required
 @tournament_view
