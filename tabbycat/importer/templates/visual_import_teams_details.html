@@ -39,16 +39,16 @@
 
             {% for form in forms.list %}
 
+              {% if form.non_field_errors %}
+                <div class="col-sm-12">
+                  {{ form.non_field_errors }}
+                </div>
+              {% endif %}
+
               <div class=" form-horizontal">
                 {% for field in form.hidden_fields %}
                   {{ field }}
                 {% endfor %}
-
-                {% if form.non_field_errors %}
-                  <div class="col-sm-12">
-                    {{ form.non_field_errors }}
-                  </div>
-                {% endif %}
 
                 {% for field in form.visible_fields %}
                   <div class="form-group">

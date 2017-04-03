@@ -3,7 +3,6 @@ import csv
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
 
 from participants.models import Institution, Speaker, Team
 
@@ -57,15 +56,6 @@ class ImportInstitutionsRawForm(forms.Form):
         return institutions
 
 
-class InstitutionForm(forms.ModelForm):
-    """Form for the formset used in the second step of the simple institutions
-    importer."""
-
-    class Meta:
-        model = Institution
-        fields = ('name', 'code')
-
-
 # ==============================================================================
 # Teams
 # ==============================================================================
@@ -91,7 +81,10 @@ class ImportTeamsNumbersForm(forms.Form):
 
 class TeamDetailsForm(forms.ModelForm):
     """Form for the formset used in the second step of the simple teams
-    importer."""
+    importer. As well as the usual functions for managing a Team instance, this
+    model also allows for a hidden input as the institution (rather than a
+    ModelChoiceField), manages the tournament separately and provides a textarea
+    input for speakers."""
 
     # This field protects against changes to the form between rendering and
     # submission, for example, if the user reloads the team details step in a
@@ -112,8 +105,9 @@ class TeamDetailsForm(forms.ModelForm):
         }
 
     def __init__(self, tournament, *args, **kwargs):
-        self.tournament = tournament
         super().__init__(*args, **kwargs)
+
+        self.tournament = tournament
 
         # Set speaker widget to match tournament settings
         nspeakers = tournament.pref('substantive_speakers')
@@ -124,8 +118,9 @@ class TeamDetailsForm(forms.ModelForm):
 
         # Grab an `institution_for_display` to help render the form. This is
         # not used anywhere in the form logic.
-        institution_id = self.initial['institution']
-        self.institution_for_display = Institution.objects.get(id=institution_id)
+        if 'institution' in self.initial:
+            institution_id = self.initial['institution']
+            self.institution_for_display = Institution.objects.get(id=institution_id)
 
     def clean_speakers(self):
         # Split into list of names, removing blank lines.
@@ -161,14 +156,15 @@ class TeamDetailsForm(forms.ModelForm):
         except ValidationError as e:
             self._update_errors(e)
 
-    def save(self):
+    def save(self, commit=True):
         # First save the team, then create the speakers
         team = super().save(commit=False)
         team.short_reference = team.reference[:TEAM_SHORT_REFERENCE_LENGTH]
         team.tournament = self.tournament
-        team.save()
 
-        for name in self.cleaned_data['speakers']:
-            team.speaker_set.create(name=name)
+        if commit:
+            team.save()
+            for name in self.cleaned_data['speakers']:
+                team.speaker_set.create(name=name)
 
         return team

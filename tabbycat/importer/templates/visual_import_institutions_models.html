@@ -28,19 +28,24 @@
         <div class="panel-body">
 
           <div class=" form-horizontal">
+            {% if form.non_field_errors %}
+              <div class="col-sm-12">
+                {{ form.non_field_errors }}
+              </div>
+            {% endif %}
+
             {{ form.id }}
             {% for field in form.visible_fields %}
-            <div class="form-group">
-              <label class="col-sm-3 control-label" for="{{ field.id_for_label }}">
-                {{ field.label }}
-              </label>
-              <div class="col-sm-8">
-                {{ field|addcss:"form-control" }}
-                {{ field.errors }}
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="{{ field.id_for_label }}">
+                  {{ field.label }}
+                </label>
+                <div class="col-sm-8">
+                  {{ field|addcss:"form-control" }}
+                  {{ field.errors }}
+                </div>
               </div>
-            </div>
             {% endfor %}
-            {{ form.non_field_errors }}
           </div>
 
         </div>

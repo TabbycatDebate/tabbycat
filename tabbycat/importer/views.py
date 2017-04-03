@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.db import models
 from django.db.utils import IntegrityError
-from django.forms import formset_factory
+from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
@@ -15,7 +15,7 @@ from utils.mixins import SuperuserRequiredMixin
 from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
 
 from .forms import (ImportInstitutionsRawForm, ImportTeamsNumbersForm,
-                    InstitutionForm, TeamDetailsForm)
+                    TeamDetailsForm)
 
 
 class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
@@ -25,8 +25,9 @@ class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateV
 class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
     form_list = [
         ('raw', ImportInstitutionsRawForm),
-        ('models', formset_factory(InstitutionForm, extra=0)),
+        ('models', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
     ]
+    instance_dict = {'models': Institution.objects.none()}
     tournament_redirect_pattern_name = 'importer-visual-index'
 
     def get_template_names(self):
@@ -35,13 +36,20 @@ class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, Sess
     def get_form_initial(self, step):
         """Overridden so that the second step ('models') initializes with data
         from the first step ('raw')."""
-        if step == 'models':
+        if step == 'models' and step == self.steps.next:
             return self.get_cleaned_data_for_step('raw')['institutions_raw']
         else:
             return super().get_form_initial(step)
 
+    def get_form(self, step=None, **kwargs):
+        form = super().get_form(step, **kwargs)
+        if step == 'models':
+            form.extra = len(form.initial_extra)
+            form.save_as_new = True
+        return form
+
     def done(self, form_list, form_dict, **kwargs):
-        instances = [form.save() for form in form_dict['models']]
+        instances = form_dict['models'].save()
         messages.success(self.request, _("Added %(count)d institutions.") % {'count': len(instances)})
         return HttpResponseRedirect(self.get_redirect_url())
 
@@ -49,8 +57,9 @@ class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, Sess
 class ImportTeamsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
     form_list = [
         ('numbers', ImportTeamsNumbersForm),
-        ('details', formset_factory(TeamDetailsForm, extra=0)),
+        ('details', modelformset_factory(Team, form=TeamDetailsForm, extra=0, can_delete=False)),
     ]
+    instance_dict = {'details': Team.objects.none()}
     tournament_redirect_pattern_name = 'importer-visual-index'
 
     def get_template_names(self):
@@ -59,13 +68,12 @@ class ImportTeamsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWiza
     def get_form_kwargs(self, step):
         if step == 'numbers':
             return {'institutions': Institution.objects.all()}
-        else:
-            return {'form_kwargs': {
-                'tournament': self.get_tournament(),
-            }}
+        elif step == 'details':
+            return {'form_kwargs': {'tournament': self.get_tournament()}}
 
     def get_form_initial(self, step):
-        if step == 'details':
+        print(step, self.steps.next)
+        if step == 'details' and step == self.steps.next:
             data = self.get_cleaned_data_for_step('numbers')
             initial = []
             for institution in Institution.objects.order_by('name'):
@@ -83,8 +91,15 @@ class ImportTeamsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWiza
         else:
             return super().get_form_initial(step)
 
+    def get_form(self, step=None, **kwargs):
+        form = super().get_form(step, **kwargs)
+        if step == 'details':
+            form.extra = len(form.initial_extra)
+            form.save_as_new = True
+        return form
+
     def done(self, form_list, form_dict, **kwargs):
-        instances = [form.save() for form in form_dict['details']]
+        instances = form_dict['details'].save()
         messages.success(self.request, _("Added %(count)d teams." % {'count': len(instances)}))
         return HttpResponseRedirect(self.get_redirect_url())
 
