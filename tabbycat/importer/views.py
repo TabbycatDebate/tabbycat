@@ -25,31 +25,31 @@ class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateV
 class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
     form_list = [
         ('raw', ImportInstitutionsRawForm),
-        ('models', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
+        ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
     ]
-    instance_dict = {'models': Institution.objects.none()}
+    instance_dict = {'details': Institution.objects.none()}
     tournament_redirect_pattern_name = 'importer-visual-index'
 
     def get_template_names(self):
         return 'visual_import_institutions_%s.html' % self.steps.current
 
     def get_form_initial(self, step):
-        """Overridden so that the second step ('models') initializes with data
+        """Overridden so that the second step ('details') initializes with data
         from the first step ('raw')."""
-        if step == 'models' and step == self.steps.next:
+        if step == 'details' and step == self.steps.next:
             return self.get_cleaned_data_for_step('raw')['institutions_raw']
         else:
             return super().get_form_initial(step)
 
     def get_form(self, step=None, **kwargs):
         form = super().get_form(step, **kwargs)
-        if step == 'models':
+        if step == 'details':
             form.extra = len(form.initial_extra)
             form.save_as_new = True
         return form
 
     def done(self, form_list, form_dict, **kwargs):
-        instances = form_dict['models'].save()
+        instances = form_dict['details'].save()
         messages.success(self.request, _("Added %(count)d institutions.") % {'count': len(instances)})
         return HttpResponseRedirect(self.get_redirect_url())
 
