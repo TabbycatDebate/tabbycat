@@ -22,48 +22,71 @@ class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateV
     template_name = 'visual_import_index.html'
 
 
-class ImportInstitutionsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
-    form_list = [
-        ('raw', ImportInstitutionsRawForm),
-        ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
-    ]
-    instance_dict = {'details': Institution.objects.none()}
+class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
+    """Common functionality for the import wizard views. In particular, this
+    class implements functionality for a "details" step that is initialized
+    with data from the previous step. The details step shows a ModelFormSet
+    associated with a specified model."""
+
+    DETAILS_STEP = 'details'
     tournament_redirect_pattern_name = 'importer-visual-index'
 
+    model = None  # must be specified by subclass
+
+    def get_details_form_initial(self):
+        raise NotImplementedError
+
     def get_template_names(self):
-        return 'visual_import_institutions_%s.html' % self.steps.current
+        return ['visual_import_%(model)ss_%(step)s.html' % {
+            'model': self.model._meta.model_name,
+            'step': self.steps.current
+        }]
 
     def get_form_initial(self, step):
-        """Overridden so that the second step ('details') initializes with data
-        from the first step ('raw')."""
-        if step == 'details' and step == self.steps.next:
-            return self.get_cleaned_data_for_step('raw')['institutions_raw']
+        """Overridden to initialize the 'details' step with data from a previous
+        step."""
+        if step == self.DETAILS_STEP and step == self.steps.next:
+            return self.get_details_form_initial()
         else:
             return super().get_form_initial(step)
 
+    def get_form_instance(self, step):
+        if step == self.DETAILS_STEP:
+            return self.model.objects.none()
+        else:
+            return super().get_form_instance(step)
+
     def get_form(self, step=None, **kwargs):
         form = super().get_form(step, **kwargs)
-        if step == 'details':
+        if step == self.DETAILS_STEP:
             form.extra = len(form.initial_extra)
             form.save_as_new = True
         return form
 
     def done(self, form_list, form_dict, **kwargs):
-        instances = form_dict['details'].save()
-        messages.success(self.request, _("Added %(count)d institutions.") % {'count': len(instances)})
+        instances = form_dict[self.DETAILS_STEP].save()
+        messages.success(self.request, _("Added %(count)d %(model_plural)s.") % {
+                'count': len(instances), 'model_plural': self.model._meta.verbose_name_plural})
         return HttpResponseRedirect(self.get_redirect_url())
 
 
-class ImportTeamsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
+class ImportInstitutionsWizardView(BaseImportWizardView):
+    model = Institution
     form_list = [
-        ('numbers', ImportTeamsNumbersForm),
-        ('details', modelformset_factory(Team, form=TeamDetailsForm, extra=0, can_delete=False)),
+        ('raw', ImportInstitutionsRawForm),
+        ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
     ]
-    instance_dict = {'details': Team.objects.none()}
-    tournament_redirect_pattern_name = 'importer-visual-index'
 
-    def get_template_names(self):
-        return 'visual_import_teams_%s.html' % self.steps.current
+    def get_details_form_initial(self):
+        return self.get_cleaned_data_for_step('raw')['institutions_raw']
+
+
+class ImportTeamsWizardView(BaseImportWizardView):
+    model = Team
+    form_list = [
+        ('numbers', NumberForEachInstitutionForm),
+        ('details', modelformset_factory(Team, form=TeamDetailsForm, extra=0)),
+    ]
 
     def get_form_kwargs(self, step):
         if step == 'numbers':
@@ -71,37 +94,21 @@ class ImportTeamsWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWiza
         elif step == 'details':
             return {'form_kwargs': {'tournament': self.get_tournament()}}
 
-    def get_form_initial(self, step):
-        print(step, self.steps.next)
-        if step == 'details' and step == self.steps.next:
-            data = self.get_cleaned_data_for_step('numbers')
-            initial = []
-            for institution in Institution.objects.order_by('name'):
-                number = data.get('number_institution_%d' % institution.id, 0)
-                if number is None: # field left blank
-                    continue
-                for i in range(1, number+1):
-                    initial.append({
-                        'institution': institution.id,
-                        'reference': str(i),
-                        'use_institution_prefix': True,
-                    })
-            return initial
+    def get_details_form_initial(self):
+        data = self.get_cleaned_data_for_step('numbers')
+        initial = []
+        for institution in Institution.objects.order_by('name'):
+            number = data.get('number_institution_%d' % institution.id, 0)
+            if number is None: # field left blank
+                continue
+            for i in range(1, number+1):
+                initial.append({
+                    'institution': institution.id,
+                    'reference': str(i),
+                    'use_institution_prefix': True,
+                })
+        return initial
 
-        else:
-            return super().get_form_initial(step)
-
-    def get_form(self, step=None, **kwargs):
-        form = super().get_form(step, **kwargs)
-        if step == 'details':
-            form.extra = len(form.initial_extra)
-            form.save_as_new = True
-        return form
-
-    def done(self, form_list, form_dict, **kwargs):
-        instances = form_dict['details'].save()
-        messages.success(self.request, _("Added %(count)d teams." % {'count': len(instances)}))
-        return HttpResponseRedirect(self.get_redirect_url())
 
 # ==============================================================================
 # Old forms
