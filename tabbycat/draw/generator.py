@@ -61,10 +61,10 @@ class Pairing(object):
             self.teams[0], self.teams[1], self.bracket, self.room_rank)
 
     @property
-    def venue_group(self):
+    def venue_category(self):
         """Abstracted to allow future extension to more causes of venue groups,
         e.g. accessibility."""
-        return self.division.venue_group if self.division else None
+        return self.division.venue_category if self.division else None
 
     @property
     def aff_team(self):

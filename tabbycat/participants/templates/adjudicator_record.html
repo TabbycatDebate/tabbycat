@@ -48,11 +48,8 @@
                       <a href="{% tournament_url participants-public-team-record debate.neg_team.pk %}"
                          class="list-group-item-text">{{ debate.neg_team.short_name }}</a> in
                     {% endif %}
-                    {% if debate.venue.group %}
-                      <strong>{{ debate.venue.group.short_name }}</strong> —
-                    {% endif %}
-                    <strong>{{ debate.venue.name }}</strong>.
-                  </strong></li>
+                    <strong>{{ debate.venue.display_name }}</strong>.
+                  </li>
 
                   {# Round start time #}
                   {% if current_round.starts_at %}

@@ -28,8 +28,10 @@ class Command(BaseCommand):
                             help='Keep existing tournament and data, skipping lines if they are duplicates.')
         parser.add_argument('--delete-institutions', action='store_true', default=False,
                             help='Delete all institutions from the database. Overrides --keep-existing.')
-        parser.add_argument('--delete-venue-groups', action='store_true', default=False,
-                            help='Delete all venue groups from the database. Overrides --keep-existing.')
+        parser.add_argument('--delete-venue-categories', action='store_true', default=False,
+                            help='Delete all venue categories from the database. Overrides --keep-existing.')
+        parser.add_argument('--delete-regions', action='store_true', default=False,
+                            help='Delete all regions categories from the database. Overrides --keep-existing.')
         parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
                             help='Don\'t crash if there is an error, just skip and keep going.')
 
@@ -49,14 +51,16 @@ class Command(BaseCommand):
 
         if options['delete_institutions']:
             self.delete_institutions()
-        if options['delete_venue_groups']:
-            self.delete_venue_groups()
+        if options['delete_venue_categories']:
+            self.delete_venue_categories()
+        if options['delete_regions']:
+            self.delete_regions()
         self.make_tournament()
         loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
         self.importer = AnorakTournamentDataImporter(
             self.t, loglevel=loglevel, strict=options['strict'], expect_unique=not options['keep_existing'])
 
-        self._make('venue_groups')
+        self._make('venue_categories')
         self._make('venues')
         self._make('regions')
         self._make('institutions')
@@ -68,7 +72,6 @@ class Command(BaseCommand):
         self._make('motions')
         self._make('sides')
         self._make('questions', self.importer.import_adj_feedback_questions)
-        self._make('venue_constraint_categories')
         self._make('adj_venue_constraints')
         self._make('team_venue_constraints')
 
@@ -152,10 +155,15 @@ class Command(BaseCommand):
         self._warning("Deleting all institutions from the database")
         pm.Institution.objects.all().delete()
 
-    def delete_venue_groups(self):
-        """Deletes all venue groups from the database."""
-        self._warning("Deleting all venue groups from the database")
-        vm.VenueGroup.objects.all().delete()
+    def delete_venue_categories(self):
+        """Deletes all venue categories from the database."""
+        self._warning("Deleting all venue categories from the database")
+        vm.VenueCategory.objects.all().delete()
+
+    def delete_regions(self):
+        """Deletes all regions from the database."""
+        self._warning("Deleting all regions from the database")
+        pm.Region.objects.all().delete()
 
     def make_tournament(self):
         """Given the path, does everything necessary to create the tournament,

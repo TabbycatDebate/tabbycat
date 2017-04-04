@@ -190,6 +190,7 @@ class BaseTournamentDataImporter(object):
             counts = Counter()
         if errors is None:
             errors = TournamentDataImporterError()
+        _errors = TournamentDataImporterError() # keep this run's errors separate
         if expect_unique is None:
             expect_unique = self.expect_unique
         skipped_because_existing = 0
@@ -208,7 +209,7 @@ class BaseTournamentDataImporter(object):
             except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
                 message = "Couldn't parse line: " + str(e)
-                errors.add(lineno, model, message)
+                _errors.add(lineno, model, message)
                 continue
 
             if kwargs_list is None:
@@ -224,7 +225,7 @@ class BaseTournamentDataImporter(object):
                 if kwargs_expect_unique in kwargs_seen:
                     if expect_unique:
                         message = "Duplicate " + description
-                        errors.add(lineno, model, message)
+                        _errors.add(lineno, model, message)
                     else:
                         self.logger.log(DUPLICATE_INFO, "Skipping duplicate " + description)
                     continue
@@ -241,7 +242,7 @@ class BaseTournamentDataImporter(object):
                     inst = model(**kwargs)
                 except MultipleObjectsReturned as e:
                     if expect_unique:
-                        errors.add(lineno, model, str(e))
+                        _errors.add(lineno, model, str(e))
                     continue
                 except FieldError as e:
                     match = re.match("Cannot resolve keyword '(\w+)' into field.", str(e))
@@ -257,16 +258,16 @@ class BaseTournamentDataImporter(object):
                     else:
                         raise
                 except ValueError as e:
-                    errors.add(lineno, model, str(e))
+                    _errors.add(lineno, model, str(e))
                     continue
                 except ValidationError as e:
-                    errors.update_with_validation_error(lineno, model, e)
+                    _errors.update_with_validation_error(lineno, model, e)
                     continue
                 else:
                     skipped_because_existing += 1
                     if expect_unique:
                         message = description + " already exists"
-                        errors.add(lineno, model, message)
+                        _errors.add(lineno, model, message)
                     else:
                         self.logger.log(DUPLICATE_INFO, "Skipping %s, already exists", description)
                     continue
@@ -274,20 +275,21 @@ class BaseTournamentDataImporter(object):
                 try:
                     inst.full_clean()
                 except ValidationError as e:
-                    errors.update_with_validation_error(lineno, model, e)
+                    _errors.update_with_validation_error(lineno, model, e)
                     continue
 
                 self.logger.debug("Listing to create: " + description)
                 insts.append(inst)
 
-        if errors:
+        if _errors:
             if self.strict:
-                for message in errors.itermessages():
+                for message in _errors.itermessages():
                     self.logger.error(message)
-                raise errors
+                raise _errors
             else:
-                for message in errors.itermessages():
+                for message in _errors.itermessages():
                     self.logger.warning(message)
+                errors.update(_errors)
 
         for inst in insts:
             self.logger.debug("Made %s: %r", model._meta.verbose_name, inst)

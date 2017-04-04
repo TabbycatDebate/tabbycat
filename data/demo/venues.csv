@@ -1,24 +1,24 @@
-name,priority,group
-"M04",10,
-"M05",10,Apple
-"M10",10,Apple
-"M11",10,Apple
+name,priority,category
+"01",10,Apple
+"02",10,Apple
+"03",10,Apple
 "G01",10,Banana
 "G02",10,Banana
 "G03",10,Banana
 "G04",10,Coconut
 "G05",10,Coconut
 "G06",10,Coconut
-"G07",10,
 "G08",10,Coconut
-"K03",20,Date
-"K04",20,Date
-"K05",20,Date
-"K06",20,
-"K08",20,Date
-"P01",30,Feijoa
-"P03",30,Feijoa
-"P05",30,Kiwifruit
-"P07",30,Kiwifruit
-"Z09",40,Lemon
-"Z10",40,
+"103",20,Date
+"104",20,Date
+"205",20,Date
+"308",20,Date
+"4.01",30,Feijoa
+"4.03",30,Feijoa
+"Basement A",30,Kiwifruit
+"Basement B",30,Kiwifruit
+"Z09",40,Close to tab
+"Z10",40,Close to tab
+"Main Hall",10,(Accessible)
+"Sub Hall",20,(Accessible)
+"Outside",10,

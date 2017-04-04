@@ -40,9 +40,9 @@
                 <td>{{ motion.round.abbreviation }}</td>
                 <td>{{ motion.reference }}</td>
                 <td>
-                  {% regroup motion.divisions.all by venue_group as unique_venues %}
-                  {% for venue_group in unique_venues %}
-                    {{ venue_group.grouper.short_name }},
+                  {% regroup motion.divisions.all by venue_category as unique_venues %}
+                  {% for venue_category in unique_venues %}
+                    {{ venue_category.grouper.short_name }},
                   {% endfor %}
                 </td>
                 <td>
