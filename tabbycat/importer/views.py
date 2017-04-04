@@ -15,7 +15,8 @@ from utils.views import admin_required, expect_post, tournament_view
 from venues.models import Venue, VenueCategory, VenueConstraint
 
 from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
-                    NumberForEachInstitutionForm, TeamDetailsForm)
+                    ImportVenuesRawForm, NumberForEachInstitutionForm,
+                    TeamDetailsForm, VenueDetailsForm)
 
 
 class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
@@ -79,6 +80,23 @@ class ImportInstitutionsWizardView(BaseImportWizardView):
 
     def get_details_form_initial(self):
         return self.get_cleaned_data_for_step('raw')['institutions_raw']
+
+
+class ImportVenuesWizardView(BaseImportWizardView):
+    model = Venue
+    form_list = [
+        ('raw', ImportVenuesRawForm),
+        ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0))
+    ]
+
+    def get_form_kwargs(self, step):
+        if step == 'details':
+            return {'form_kwargs': {'tournament': self.get_tournament()}}
+        else:
+            return super().get_form_kwargs(step)
+
+    def get_details_form_initial(self):
+        return self.get_cleaned_data_for_step('raw')['venues_raw']
 
 
 class BaseImportByInstitutionWizardView(BaseImportWizardView):

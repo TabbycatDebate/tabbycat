@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
 from participants.models import Adjudicator, Institution, Speaker, Team
+from venues.models import Venue
 
 logger = logging.getLogger(__name__)
 TEAM_SHORT_REFERENCE_LENGTH = Team._meta.get_field('short_reference').max_length
@@ -20,6 +21,10 @@ class ImportValidationError(ValidationError):
         }
         super().__init__(message, *args, **kwargs)
 
+
+# ==============================================================================
+# Numbers and raw forms
+# ==============================================================================
 
 class NumberForEachInstitutionForm(forms.Form):
     """Form that presents one numeric field for each institution, for the user
@@ -40,10 +45,6 @@ class NumberForEachInstitutionForm(forms.Form):
                     min_value=0, label=label, required=False,
                     widget=forms.NumberInput(attrs={'placeholder': 0}))
 
-
-# ==============================================================================
-# Institutions
-# ==============================================================================
 
 class ImportInstitutionsRawForm(forms.Form):
     """Form that takes in a CSV-style list of institutions, splits it and stores
@@ -75,47 +76,54 @@ class ImportInstitutionsRawForm(forms.Form):
         if errors:
             raise ValidationError(errors)
 
+        if len(institutions) == 0:
+            raise ValidationError(_("There were no institutions to import."))
+
         return institutions
 
 
-# ==============================================================================
-# Teams and adjudicators
-# ==============================================================================
+class ImportVenuesRawForm(forms.Form):
+    """Form that takes in a CSV-style list of venues, splits it and stores the
+    split data."""
+
+    venues_raw = forms.CharField(widget=forms.Textarea(attrs={'rows': 20}))
+
+    def clean_venues_raw(self):
+        lines = self.cleaned_data['venues_raw'].split('\n')
+        venues = []
+
+        for i, line in enumerate(csv.reader(lines), start=1):
+            if len(line) < 1:
+                continue # skip blank lines
+            params = {}
+            params['name'] = line[0]
+            params['priority'] = line[1] if len(line) > 1 else '100'
+
+            params = {k: v.strip() for k, v in params.items()}
+            venues.append(params)
+
+        if len(venues) == 0:
+            raise ValidationError(_("There were no venues to import."))
+
+        return venues
 
 
-class BaseParticipantDetailsForm(forms.ModelForm):
+# ==============================================================================
+# Details forms
+# ==============================================================================
+
+class BaseTournamentObjectDetailsForm(forms.ModelForm):
     """Form for the formset used in the second step of the simple importer. As
-    well as the usual functions for managing an instance, this model also allows
-    for a hidden input as the institution (rather than a ModelChoiceField),
+    well as the usual functions for managing an instance, this model also
     manages the tournament separately.
 
-    This doesn't do all common functionality. Subclasses must do the following:
-        - Override save() to populate the tournament field, if applicable.
-        - Ensure that 'institution' is the 'fields' attribute of the Meta class.
+    This doesn't do everything. Subclasses must override save() to populate the
+    tournament field, if applicable.
     """
-
-    # This field protects against changes to the form between rendering and
-    # submission, for example, if the user reloads the team details step in a
-    # different tab with different numbers of teams/adjudicators. Putting the
-    # institution ID in a hidden field makes the client send it with the form,
-    # keeping the information in a submission consistent.
-    institution = forms.ModelChoiceField(queryset=Institution.objects.all(),
-            widget=forms.HiddenInput)
 
     def __init__(self, tournament, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.tournament = tournament
-
-        # Grab an `institution_for_display` to help render the form. This is
-        # not used anywhere in the form logic.
-        institution_id = self.initial.get('institution')
-        if institution_id is None:
-            institution_id = self.data.get(self.add_prefix('institution'))
-        try:
-            self.institution_for_display = Institution.objects.get(id=institution_id)
-        except Institution.DoesNotExist:
-            logger.error("Could not find institution from initial or data")
 
     def validate_unique(self):
         """Overrides ModelForm.validate_unique to include tournament in the check."""
@@ -129,7 +137,56 @@ class BaseParticipantDetailsForm(forms.ModelForm):
             self._update_errors(e)
 
 
-class TeamDetailsForm(BaseParticipantDetailsForm):
+class SharedBetweenTournamentsObjectForm(BaseTournamentObjectDetailsForm):
+
+    shared = forms.BooleanField(initial=False, required=False)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.tournament = None if self.cleaned_data.get('shared', False) else self.tournament
+        if commit:
+            instance.save()
+        return instance
+
+
+class VenueDetailsForm(SharedBetweenTournamentsObjectForm):
+
+    class Meta:
+        model = Venue
+        fields = ('name', 'priority')
+
+
+class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
+    """Adds a hidden input for the institution and automatic detection of the
+    institution from initial or data.
+
+    Subclasses must ensure that `'institution'` is in the `fields` attribute
+    of the Meta class.
+    """
+
+    # This field protects against changes to the form between rendering and
+    # submission, for example, if the user reloads the team details step in a
+    # different tab with different numbers of teams/adjudicators. Putting the
+    # institution ID in a hidden field makes the client send it with the form,
+    # keeping the information in a submission consistent.
+    institution = forms.ModelChoiceField(queryset=Institution.objects.all(),
+            widget=forms.HiddenInput)
+
+    def __init__(self, tournament, *args, **kwargs):
+        super().__init__(tournament, *args, **kwargs)
+
+        # Grab an `institution_for_display` to help render the form. This is
+        # not used anywhere in the form logic.
+        institution_id = self.initial.get('institution')
+        if institution_id is None:
+            institution_id = self.data.get(self.add_prefix('institution'))
+        try:
+            self.institution_for_display = Institution.objects.get(id=institution_id)
+        except Institution.DoesNotExist:
+            logger.error("Could not find institution from initial or data")
+
+
+class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     """Adds provision for a textarea input for speakers."""
 
     speakers = forms.CharField(required=True) # widget is set in form constructor
@@ -189,11 +246,9 @@ class TeamDetailsForm(BaseParticipantDetailsForm):
         return team
 
 
-class AdjudicatorDetailsForm(BaseParticipantDetailsForm):
+class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitutionObjectDetailsForm):
     """Also provides for the boolean 'shared' field, which indicates that the
     adjudicator should not be attached to a tournament."""
-
-    shared = forms.BooleanField(initial=False, required=False)
 
     class Meta:
         model = Adjudicator
@@ -201,11 +256,3 @@ class AdjudicatorDetailsForm(BaseParticipantDetailsForm):
         labels = {
             'test_score': _("Rating"),
         }
-
-    def save(self, commit=True):
-        # First save the team, then create the speakers
-        adjudicator = super().save(commit=False)
-        adjudicator.tournament = None if self.cleaned_data.get('shared', False) else self.tournament
-        if commit:
-            adjudicator.save()
-        return adjudicator

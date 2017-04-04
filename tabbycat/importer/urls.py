@@ -53,7 +53,6 @@ urlpatterns = [
     url(r'^data/constraints/adjudicators/confirm/$',
         views.ConfirmConstraintsView.as_view(type=Adjudicator),
         name='confirm_adjudicators_constraints'),
-        
 
     url(r'^visual/$',
         views.ImporterVisualIndexView.as_view(),
@@ -67,4 +66,7 @@ urlpatterns = [
     url(r'^visual/adjudicators/$',
         views.ImportAdjudicatorsWizardView.as_view(),
         name='importer-visual-adjudicators'),
+    url(r'^visual/venues/$',
+        views.ImportVenuesWizardView.as_view(),
+        name='importer-visual-venues'),
 ]
