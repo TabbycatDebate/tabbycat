@@ -16,4 +16,7 @@ urlpatterns = [
     url(r'^categories/$',
         views.VenueCategoriesView.as_view(),
         name='venues-categories'),
+    url(r'^constraints/$',
+        views.VenueConstraintsView.as_view(),
+        name='venues-constraints'),
 ]

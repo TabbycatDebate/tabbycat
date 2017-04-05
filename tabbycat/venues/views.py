@@ -12,7 +12,7 @@ from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
 
 from .allocator import allocate_venues
-from .models import Venue, VenueCategory
+from .models import Venue, VenueCategory, VenueConstraint
 
 
 class EditVenuesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
@@ -79,6 +79,28 @@ class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetV
             })
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-categories', self.get_tournament())
+        return result
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_tournament('importer-visual-index', self.get_tournament())
+
+
+class VenueConstraintsView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+    template_name = 'venue_constraints_edit.html'
+    formset_model = VenueConstraint
+    formset_factory_kwargs = {
+        'fields': ('subject_content_type', 'subject_id', 'category', 'priority'),
+        'extra': 3
+    }
+
+    def formset_valid(self, formset):
+        result = super().formset_valid(formset)
+        if self.instances:
+            messages.success(self.request, _("Saved %(count)d venue constraints.") % {
+                'count': len(self.instances)
+            })
+        if "add_more" in self.request.POST:
+            return redirect_tournament('venues-constraints', self.get_tournament())
         return result
 
     def get_success_url(self, *args, **kwargs):
