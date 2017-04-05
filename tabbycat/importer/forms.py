@@ -138,6 +138,8 @@ class BaseTournamentObjectDetailsForm(forms.ModelForm):
 
 
 class SharedBetweenTournamentsObjectForm(BaseTournamentObjectDetailsForm):
+    """Also provides for the boolean 'shared' field, which indicates that the
+    adjudicator should not be attached to a tournament."""
 
     shared = forms.BooleanField(initial=False, required=False)
 
@@ -247,8 +249,6 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
 
 
 class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitutionObjectDetailsForm):
-    """Also provides for the boolean 'shared' field, which indicates that the
-    adjudicator should not be attached to a tournament."""
 
     class Meta:
         model = Adjudicator

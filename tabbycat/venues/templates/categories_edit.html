@@ -7,6 +7,16 @@
 
 {% block content %}
 
+  <div class="alert alert-info">
+    {% blocktrans trimmed %}
+      Venue categories allow you to
+        <ul>
+          <li>group venues together into "zones" to display in the draw and make navigation easier for participants, and/or</li>
+          <li>specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.</li>
+        </ul>
+    {% endblocktrans %}
+  </div>
+
   {% if formset.errors %}
   <div class="alert alert-danger">
     <p>{% trans "There are some problems with the data on this form:" %}</p>
