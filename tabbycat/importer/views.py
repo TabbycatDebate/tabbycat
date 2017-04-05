@@ -19,6 +19,8 @@ from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
                     TeamDetailsForm, VenueDetailsForm)
 
 
+# TODO log actions for all of these?
+
 class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
     template_name = 'visual_import_index.html'
 

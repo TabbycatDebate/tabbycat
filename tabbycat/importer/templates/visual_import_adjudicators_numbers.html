@@ -27,7 +27,13 @@
   <form method="POST">
     {% csrf_token %}
     {{ wizard.management_form }}
-    {{ form.non_field_errors }}
+
+    {% if wizard.form.non_form_errors %}
+    <div class="alert alert-danger">
+      <p>{% trans "There are some problems with the data on this form:" %}</p>
+      {{ wizard.form.non_form_errors }}
+    </div>
+    {% endif %}
 
     <div class="panel panel-default">
       <ul class="list-group">

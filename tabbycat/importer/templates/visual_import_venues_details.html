@@ -18,6 +18,7 @@
   </p>
 
   <p>
+  {# TODO translate when tournament_url asvar available #}
     Venues marked as 'shared' will not be associated with any particular
     tournament but will be available to any tournament which has the
     <a href="{% tournament_url options-tournament-league %}" class="alert-link">"Share Adjudicators" setting</a> enabled.
@@ -29,9 +30,9 @@
   {{ wizard.management_form }}
   {{ wizard.form.management_form }}
 
-  {% if wizard.form.non_form_errors %}
+  {% if wizard.form.errors %}
   <div class="alert alert-danger">
-    <p>There are some problems with the data on this form:</p>
+    <p>{% trans "There are some problems with the data on this form:" %}</p>
     {{ wizard.form.non_form_errors }}
   </div>
   {% endif %}
