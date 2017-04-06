@@ -30,19 +30,12 @@ ADJUDICATOR_POSITION_NAMES = {
 # General, but only used here
 # ==============================================================================
 
-class IntegerRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
-    """Used by IntegerRadioSelect."""
-    outer_html = '<div{id_attr} class="flex-horizontal">{content}</div>'
-    inner_html = '<div class="flex-1 text-center">{choice_value}{sub_widgets}</div>'
-
-
-class IntegerRadioSelect(forms.RadioSelect):
-    renderer = IntegerRadioFieldRenderer
-
+class SpacedRadioWidget(forms.RadioSelect):
+    template_name='spaced_choice_widget.html'
 
 class IntegerScaleField(forms.IntegerField):
     """Class to do integer scale fields."""
-    widget = IntegerRadioSelect
+    widget = SpacedRadioWidget()
 
     def __init__(self, *args, **kwargs):
         super(IntegerScaleField, self).__init__(*args, **kwargs)
@@ -90,20 +83,14 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
 # Feedback Fields
 # ==============================================================================
 
-class AdjudicatorFeedbackCheckboxFieldRenderer(forms.widgets.CheckboxFieldRenderer):
-    """Used by AdjudicatorFeedbackCheckboxSelectMultiple."""
-    outer_html = '<div{id_attr} class="feedback-multiple-select">{content}</div>'
-    inner_html = '<div class="feedback-option">{choice_value}{sub_widgets}</div>'
-
-
-class AdjudicatorFeedbackCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
-    renderer = AdjudicatorFeedbackCheckboxFieldRenderer
+class BlockChecboxWidget(forms.CheckboxSelectMultiple):
+    template_name='spaced_choice_widget.html'
 
 
 class AdjudicatorFeedbackCheckboxSelectMultipleField(forms.MultipleChoiceField):
     """Class to do multiple choice fields following our conventions.
     Specifically, converts to a string rather than a list."""
-    widget = AdjudicatorFeedbackCheckboxSelectMultiple
+    widget = BlockChecboxWidget()
 
     def clean(self, value):
         value = super(AdjudicatorFeedbackCheckboxSelectMultipleField, self).clean(value)
