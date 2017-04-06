@@ -334,6 +334,7 @@ class BallotSet(ResultBuffer):
         prior to calling this function."""
         try:
             self.speakers = {dt: dict.fromkeys(self.POSITIONS, None) for dt in self.dts}
+            self.ghosts = {dt: dict.fromkeys(self.POSITIONS, None) for dt in self.dts}
             self.motion_veto = dict.fromkeys(self.dts, None)
 
             # Values from the database are returned if requested before
@@ -407,6 +408,7 @@ class BallotSet(ResultBuffer):
         buffer."""
         for ss in self.ballotsub.speakerscore_set.filter(debate_team=dt).select_related('speaker'):
             self.speakers[dt][ss.position] = ss.speaker
+            self.ghosts[dt][ss.position] = ss.ghost
             # ignore the speaker score itself, just look at SpeakerScoreByAdjs
 
         try:
@@ -436,9 +438,10 @@ class BallotSet(ResultBuffer):
 
         for pos in self.POSITIONS:
             speaker = self.speakers[dt][pos]
+            is_ghost = self.ghosts[dt][pos]
             score = self._get_avg_score(dt, pos)
             self.ballotsub.speakerscore_set.update_or_create(debate_team=dt,
-                position=pos, defaults=dict(speaker=speaker, score=score))
+                position=pos, defaults=dict(speaker=speaker, score=score, ghost=is_ghost))
 
         if self.motion_veto[dt] is not None:
             self.ballotsub.debateteammotionpreference_set.update_or_create(
@@ -463,6 +466,11 @@ class BallotSet(ResultBuffer):
         """Returns the speaker object for team/position."""
         return self._get_speaker(self._dt(team), position)
 
+    def get_ghost(self, team, position):
+        """Returns whether or not the speaker score is a duplicate in this
+        team and position."""
+        return self._get_ghost(self._dt(team), position)
+
     def get_score(self, adj, team, position):
         """Returns the score given by the adjudicator for the speaker in this
         team and position."""
@@ -478,12 +486,19 @@ class BallotSet(ResultBuffer):
         Raises an exception if the speaker isn't in the team."""
         return self._set_speaker(self._dt(team), position, speaker)
 
+    def set_ghost(self, team, position, is_ghost):
+        """Sets whether the speaker score object is a duplicate in this team and position"""
+        return self._set_ghost(self._dt(team), position, is_ghost)
+
     def set_score(self, adj, team, position, score):
         """Set the score given by adjudicator for this team and position."""
         return self._set_score(adj, self._dt(team), position, score)
 
     def _get_speaker(self, dt, position):
         return self.speakers[dt].get(position)
+
+    def _get_ghost(self, dt, position):
+        return self.ghosts[dt].get(position)
 
     def _get_score(self, adj, dt, position):
         return self.adjudicator_sheets[adj]._get_score(dt, position)
@@ -497,6 +512,9 @@ class BallotSet(ResultBuffer):
         if speaker not in dt.team.speakers:
             raise ValueError("Speaker %s isn't in team %s" % (speaker.name, dt.team.short_name))
         self.speakers[dt][position] = speaker
+
+    def _set_ghost(self, dt, position, is_ghost):
+        self.ghosts[dt][position] = is_ghost
 
     def _set_score(self, adj, dt, position, score):
         self.adjudicator_sheets[adj]._set_score(dt, position, score)

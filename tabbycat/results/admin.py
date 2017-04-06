@@ -57,19 +57,21 @@ class TeamScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
 
 @admin.register(SpeakerScore)
 class SpeakerScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
-    list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'position', 'get_speaker_name', 'score')
+    list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'position',
+                    'get_speaker_name', 'score', 'ghost')
     search_fields = ('debate_team__debate__round__abbreviation',
                      'debate_team__team__reference', 'debate_team__team__institution__code',
                      'speaker__name')
-    list_filter = ('score', 'debate_team__debate__round')
+    list_filter = ('score', 'debate_team__debate__round', 'ghost')
     raw_id_fields = ('debate_team', 'ballot_submission')
 
     def get_queryset(self, request):
         return super(SpeakerScoreAdmin, self).get_queryset(request).select_related(
             'debate_team__debate__round',
             'debate_team__team__institution', 'debate_team__team__tournament',
-            'ballot_submission__debate__round__tournament').prefetch_related(
-            Prefetch('ballot_submission__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
+            'ballot_submission').prefetch_related(
+            Prefetch('ballot_submission__debate__debateteam_set',
+                queryset=DebateTeam.objects.select_related('team')))
 
 
 # ==============================================================================

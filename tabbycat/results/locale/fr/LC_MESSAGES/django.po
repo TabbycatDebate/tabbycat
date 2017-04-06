@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-24 15:48+1100\n"
+"POT-Creation-Date: 2017-02-24 16:20+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -237,19 +237,35 @@ msgstr "scores d'équipe"
 msgid "speaker"
 msgstr "orateur"
 
-#: results/models.py:224
+#: results/models.py:218
+msgid "ghost"
+msgstr "fantôme"
+
+#: results/models.py:219
+msgid ""
+"If checked, this score does not count towards the speaker tab. This is "
+"typically checked for speeches where someone spoke twice to make up for an "
+"absent teammate (sometimes known as \"iron-person\" or \"iron-man\" "
+"speeches)."
+msgstr ""
+"Si c'est coché, cette score ne comptera pas pour le tab d'orateurs. Ce champ "
+"est typiquement coché pour les discours où un orateur a parlé plus d'une "
+"fois afin de compenser le discours d'un coéquipier absent (parfois appelé un "
+"discours « iron-person » ou « iron-man »)."
+
+#: results/models.py:228
 msgid "speaker score"
 msgstr "score d'orateur"
 
-#: results/models.py:225
+#: results/models.py:229
 msgid "speaker scores"
 msgstr "scores d'orateur"
 
-#: results/models.py:230
+#: results/models.py:234
 msgid "The debate team and speaker must be from the same team."
 msgstr "La débat-équipe et l'orateur doivent être de la même équipe."
 
-#: results/models.py:233
+#: results/models.py:237
 msgid "The ballot submission and debate team must relate to the same debate."
 msgstr ""
 "La soumission de bulletin et la débat-équipe doivent concerner le même débat."

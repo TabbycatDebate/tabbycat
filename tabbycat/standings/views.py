@@ -30,7 +30,7 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         round = self.get_round()
 
         speaks = SpeakerScore.objects.filter(
-                    ballot_submission__confirmed=True,
+                    ballot_submission__confirmed=True, ghost=False,
                     speaker__team__tournament=t).exclude(
                     position=t.REPLY_POSITION).select_related(
                     'debate_team__debate__round')

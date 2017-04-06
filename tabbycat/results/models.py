@@ -224,6 +224,12 @@ class SpeakerScore(models.Model):
         verbose_name=_("speaker"))
     score = ScoreField(verbose_name=_("score"))
     position = models.IntegerField(verbose_name=_("position"))
+    ghost = models.BooleanField(default=False,
+        verbose_name=_("ghost"),
+        help_text=_("If checked, this score does not count towards the speaker tab. "
+            "This is typically checked for speeches where someone spoke twice to "
+            "make up for an absent teammate (sometimes known as \"iron-person\" or "
+            "\"iron-man\" speeches)."))
 
     objects = SpeakerScoreManager()
 

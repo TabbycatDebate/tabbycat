@@ -178,6 +178,10 @@ class BallotSetForm(forms.Form):
         return '%(side)s_speaker_s%(pos)d' % {'side': side, 'pos': pos}
 
     @staticmethod
+    def _fieldname_ghost(side, pos):
+        return '%(side)s_ghost_s%(pos)d' % {'side': side, 'pos': pos}
+
+    @staticmethod
     def _fieldname_score(adj, side, pos):
         return '%(side)s_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
 
@@ -195,6 +199,7 @@ class BallotSetForm(forms.Form):
          - motion,               if there is more than one motion
          - aff/neg_motion_veto,  if motion vetoes are being noted, one for each team
          - aff/neg_speaker_s#,   one for each speaker
+         - aff/neg_ghost_s#,     whether score should be a duplicate
          - aff/neg_score_a#_s#,  one for each score
         """
 
@@ -239,7 +244,11 @@ class BallotSetForm(forms.Form):
                 queryset = self.debate.get_team(side).speakers
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(queryset=queryset)
 
-            # 4(b). Speaker scores
+            # 4(b). Ghost fields
+            self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
+                label="Mark this as a duplicate speech")
+
+            # 4(c). Speaker scores
             scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
@@ -306,8 +315,11 @@ class BallotSetForm(forms.Form):
 
         for side, pos in self.SIDES_AND_POSITIONS:
             speaker = ballotset.get_speaker(side, pos)
+            is_ghost = ballotset.get_ghost(side, pos)
             if speaker:
                 initial[self._fieldname_speaker(side, pos)] = speaker.pk
+                initial[self._fieldname_ghost(side, pos)] = is_ghost
+
                 for adj in self.adjudicators:
                     score = ballotset.get_score(adj, side, pos)
                     coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
@@ -326,6 +338,9 @@ class BallotSetForm(forms.Form):
         if self.motions.count() > 1:
             order.append('motion')
             order.extend(self._fieldname_motion_veto(side) for side in self.SIDES)
+
+        order.append('ghost') # Dummy item; as input is created on the front end
+        self.irontabindex = len(order) # Set the tab index it would have had
 
         for side, pos in self.SIDES_AND_POSITIONS:
             order.append(self._fieldname_speaker(side, pos))
@@ -420,7 +435,10 @@ class BallotSetForm(forms.Form):
                             _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
                             params={'speaker': speaker.name, 'team': team.short_name}, code='speaker_wrongteam')
                         )
-                    speaker_counts[speaker] += 1
+
+                    # Don't increment the speaker count if the speech is marked as a ghost
+                    if not self.cleaned_data.get(self._fieldname_ghost(side, pos)):
+                        speaker_counts[speaker] += 1
 
                 # The substantive speakers must be unique.
                 for speaker, count in speaker_counts.items():
@@ -486,6 +504,8 @@ class BallotSetForm(forms.Form):
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 ballotset.set_speaker(side, pos, speaker)
+                is_ghost = self.cleaned_data[self._fieldname_ghost(side, pos)]
+                ballotset.set_ghost(side, pos, is_ghost)
                 for adj in self.adjudicators:
                     score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
                     ballotset.set_score(adj, side, pos, score)
@@ -528,6 +548,12 @@ class BallotSetForm(forms.Form):
 
             def neg_speaker(self):
                 return form[form._fieldname_speaker('neg', self.pos)]
+
+            def aff_ghost(self):
+                return form[form._fieldname_ghost('aff', self.pos)]
+
+            def neg_ghost(self):
+                return form[form._fieldname_ghost('neg', self.pos)]
 
             def _scores(self, side):
                 for adj in form.adjudicators:
