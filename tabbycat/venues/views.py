@@ -82,7 +82,7 @@ class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetV
         return result
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-visual-index', self.get_tournament())
+        return reverse_tournament('importer-simple-index', self.get_tournament())
 
 
 class VenueConstraintsView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
@@ -104,4 +104,4 @@ class VenueConstraintsView(SuperuserRequiredMixin, TournamentMixin, ModelFormSet
         return result
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-visual-index', self.get_tournament())
+        return reverse_tournament('importer-simple-index', self.get_tournament())

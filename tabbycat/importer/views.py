@@ -21,8 +21,8 @@ from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
 
 # TODO log actions for all of these?
 
-class ImporterVisualIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
-    template_name = 'visual_import_index.html'
+class ImporterSimpleIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+    template_name = 'simple_import_index.html'
 
 
 class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
@@ -32,7 +32,7 @@ class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizar
     associated with a specified model."""
 
     DETAILS_STEP = 'details'
-    tournament_redirect_pattern_name = 'importer-visual-index'
+    tournament_redirect_pattern_name = 'importer-simple-index'
 
     model = None  # must be specified by subclass
 
@@ -40,7 +40,7 @@ class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizar
         raise NotImplementedError
 
     def get_template_names(self):
-        return ['visual_import_%(model)ss_%(step)s.html' % {
+        return ['simple_import_%(model)ss_%(step)s.html' % {
             'model': self.model._meta.model_name,
             'step': self.steps.current
         }]
