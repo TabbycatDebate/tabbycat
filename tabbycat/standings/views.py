@@ -175,6 +175,7 @@ class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsV
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
     public_page_preference = 'speaker_tab_released'
+    public_limit_preference = 'speaker_tab_limit'
 
 
 class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):
@@ -191,6 +192,7 @@ class NoviceStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
 
 class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
     public_page_preference = 'novices_tab_released'
+    public_limit_preference = 'novices_tab_limit'
 
 
 class BaseProStandingsView(BaseStandardSpeakerStandingsView):
@@ -208,6 +210,7 @@ class ProStandingsView(SuperuserRequiredMixin, BaseProStandingsView):
 
 class PublicProTabView(PublicTabMixin, BaseProStandingsView):
     public_page_preference = 'pros_tab_released'
+    public_limit_preference = 'pros_tab_limit'
 
 
 class BaseReplyStandingsView(BaseSpeakerStandingsView):
@@ -245,6 +248,7 @@ class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
     public_page_preference = 'replies_tab_released'
+    public_limit_preference = 'replies_tab_limit'
 
 
 # ==============================================================================
@@ -315,6 +319,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     Once the tab is released, to the public the team standings are known as the
     "team tab"."""
     public_page_preference = 'team_tab_released'
+    public_limit_preference = 'team_tab_limit'
     rankings = ('rank',)
 
     def show_ballots(self):
