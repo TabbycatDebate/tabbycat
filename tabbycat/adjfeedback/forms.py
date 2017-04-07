@@ -31,7 +31,8 @@ ADJUDICATOR_POSITION_NAMES = {
 # ==============================================================================
 
 class SpacedRadioWidget(forms.RadioSelect):
-    template_name='spaced_choice_widget.html'
+    template_name = 'spaced_choice_widget.html'
+
 
 class IntegerScaleField(forms.IntegerField):
     """Class to do integer scale fields."""
@@ -84,7 +85,7 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
 # ==============================================================================
 
 class BlockChecboxWidget(forms.CheckboxSelectMultiple):
-    template_name='spaced_choice_widget.html'
+    template_name = 'spaced_choice_widget.html'
 
 
 class AdjudicatorFeedbackCheckboxSelectMultipleField(forms.MultipleChoiceField):
