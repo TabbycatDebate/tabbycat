@@ -1,5 +1,6 @@
 import os
 import re
+from warnings import warn
 
 from django import template
 from django.conf import settings
@@ -226,6 +227,7 @@ def round_url(parser, token):
 
 @register.tag
 def tournament_url(parser, token):
+    warn("Then {% tournament_url %} tag is deprecated, use the new {% tournamenturl %} instead.", stacklevel=2)
     bits = token.split_contents()
     args = [parser.compile_filter(b) for b in bits[2:]]
     return OldTournamentURLNode(bits[1], args)
@@ -233,6 +235,7 @@ def tournament_url(parser, token):
 
 @register.tag
 def tournament_absurl(parser, token):
+    warn("Then {% round_url %} tag is deprecated, use the new {% roundurl %} instead.", stacklevel=2)
     bits = token.split_contents()
     args = [parser.compile_filter(b) for b in bits[2:]]
     return TournamentAbsoluteURLNode(bits[1], args)
