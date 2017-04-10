@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<form id="addInstitutions" action="{% tournament_url confirm_institutions %}" method="POST">
+<form id="addInstitutions" action="{% tournamenturl 'confirm_institutions' %}" method="POST">
   {% csrf_token %}
 
   <div class="row">

@@ -11,7 +11,7 @@
 
   <div class="col-md-6">
     <ul class="list-group">
-        <a href="{% tournament_url options-tournament-scoring %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-scoring' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">💯</span>Score Rules
           </h4>
@@ -19,7 +19,7 @@
             The settings that determine the range of points that can awarded to speeches, replies, and teams.
           </p>
         </a>
-        <a href="{% tournament_url options-tournament-draw-rules %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-draw-rules' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">📏</span>Draw Rules
           </h4>
@@ -27,7 +27,7 @@
             The settings that determine how teams are matched together in the draw and how adjudicators are auto-allocated.
           </p>
         </a>
-        <a href="{% tournament_url options-tournament-debate-rules %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-debate-rules' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">⚖</span>Debate Rules
           </h4>
@@ -35,7 +35,7 @@
             The settings that determine how many speeches there are per side, how motions are decided, and whether replies are delivered.
           </p>
         </a>
-        <a href="{% tournament_url options-tournament-standings %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-standings' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">📊</span>Standings
           </h4>
@@ -43,7 +43,7 @@
             The settings that determine how teams and speakers are ranked for in the released tabs.
           </p>
         </a>
-        <a href="{% tournament_url options-tournament-feedback %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-feedback' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">🙅</span>Feedback
           </h4>
@@ -55,7 +55,7 @@
   </div>
   <div class="col-md-6">
     <ul class="list-group">
-        <a href="{% tournament_url options-tournament-tab-release %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-tab-release' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">🚨</span>Tab Release
           </h4>
@@ -63,7 +63,7 @@
             The settings that determine when to release a public tab is made visible and what data it shows.
           </p>
         </a>
-        <a href="{% tournament_url options-tournament-data-entry %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-data-entry' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">📝</span>Data Entry
           </h4>
@@ -71,7 +71,7 @@
             The settings that determine how ballots and feedback are entered, including online submission options.
           </p>
         </a>
-        <a href="{% tournament_url options-tournament-public-features %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-public-features' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">📢</span>Public Features
           </h4>
@@ -79,7 +79,7 @@
             The settings that determine what information the site displays to the publicly accessible page.
           </p>
         </a>
-        <a href="{% tournament_url options-tournament-ui %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-ui' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">💻</span>UI Options
           </h4>
@@ -87,7 +87,7 @@
             The settings that determine small tweaks in what information is presented by the interface.
           </p>
         </a>
-        <a href="{% tournament_url options-tournament-league %}" class="list-group-item">
+        <a href="{% tournamenturl 'options-tournament-league' %}" class="list-group-item">
           <h4 class="list-group-item-heading">
             <span class="emoji">🏫</span>League Options
           </h4>
@@ -109,7 +109,7 @@
         and giving you the option to confirm them.</p>
       </div>
       {% for preset in presets %}
-        <a href="{% tournament_url tournament_preference_confirm preset.slugified_name %}" class="list-group-item">
+        <a href="{% tournamenturl 'tournament_preference_confirm' preset.slugified_name %}" class="list-group-item">
           <h4 class="list-group-item-heading">Apply {{ preset.name }}</h4>
           <p>{{ preset.description }}</p>
         </a>

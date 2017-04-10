@@ -22,7 +22,7 @@
           {% endblocktrans %}
           {% if tournament and tournament.billable_teams > 0 %}
             For a tournament of this size, we suggest a donation of <strong>${{ tournament.billable_teams }}</strong>.
-            <a href="{% tournament_url tournament-donations %}">Learn more about donating</a>.
+            <a href="{% tournamenturl 'tournament-donations' %}">Learn more about donating</a>.
           {% else %}
             <a href="{% url 'donations' %}">Donations to Tabbycat from individuals or organisations</a> are much appreciated.
           {% endif %}

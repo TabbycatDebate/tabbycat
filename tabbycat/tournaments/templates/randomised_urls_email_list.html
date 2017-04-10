@@ -6,7 +6,7 @@
 
 {% block content %}
 
-  <form action="{% tournament_url confirm-feedback-urls-send %}" method="POST" class="vertical-spacing">
+  <form action="{% tournamenturl 'confirm-feedback-urls-send' %}" method="POST" class="vertical-spacing">
     {% csrf_token %}
     <button class="btn btn-success btn-block" type="submit">
       Send Emails to Teams and Adjudicators

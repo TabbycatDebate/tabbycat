@@ -23,7 +23,7 @@
         {% for da in das %}
         <tr>
         <td>
-          <a href="{% tournament_url results-public-ballotset-new-pk da.adjudicator.id %}">
+          <a href="{% tournamenturl 'results-public-ballotset-new-pk' da.adjudicator.id %}">
           <span class="hidden-xs">Add result from </span>{{ da.adjudicator.name }}
           </a>
         </td>

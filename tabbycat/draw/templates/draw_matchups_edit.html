@@ -6,7 +6,7 @@
 {% block page-title %}Edit Matchups{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
     <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
   </a>
 {% endblock %}
@@ -185,7 +185,7 @@
           });
           $.ajax( {
             type: "POST",
-            url: "{% round_url draw-matchups-save %}",
+            url: "{% roundurl 'draw-matchups-save' %}",
             data: data,
             success: function(data, status) {
               btn.attr("disabled", false);

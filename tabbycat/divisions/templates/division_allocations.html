@@ -6,13 +6,13 @@
 {% block page-title %}Allocate Divisions{% endblock %}
 
 {% block page-subnav-sections %}
-  <form method="POST" action="{% tournament_url create_division_allocation %}">
+  <form method="POST" action="{% tournamenturl 'create_division_allocation' %}">
     {% csrf_token %}
     <button class="btn btn-primary submit-disable" type="submit" >
       Auto-Allocate Teams
     </button>
   </form>
-  <form method="POST" action="{% tournament_url create_byes %}">
+  <form method="POST" action="{% tournamenturl 'create_byes' %}">
     {% csrf_token %}
     <button class="btn btn-primary submit-disable" type="submit" >
       Auto-Allocate Bye Teams
@@ -29,7 +29,7 @@
 
 {% block page-subnav-actions %}
 
-  <form method="POST" action="{% tournament_url create_division %}">
+  <form method="POST" action="{% tournamenturl 'create_division' %}">
     {% csrf_token %}
     <button class="btn btn-success submit-disable" type="submit" >
       <span class="glyphicon glyphicon-plus"></span> Add New Division
@@ -44,8 +44,8 @@
 
       <div class="col-sm-4 col-md-4 col-lg-3">
         <division-droppable
-          save-vc-at="{% tournament_url set_division_venue_category %}"
-          save-division-at="{% tournament_url set_team_division %}"
+          save-vc-at="{% tournamenturl 'set_division_venue_category' %}"
+          save-division-at="{% tournamenturl 'set_team_division' %}"
           :division="division"
           :teams="teams | filterBy division.id in 'division'"
           :vcs="venueCategories">
@@ -63,7 +63,7 @@
         </div>
         <unallocated-division-teams
           :teams="teams"
-          save-division-at="{% tournament_url set_team_division %}">
+          save-division-at="{% tournamenturl 'set_team_division' %}">
         </unallocated-division-teams>
       </div>
     </div>
