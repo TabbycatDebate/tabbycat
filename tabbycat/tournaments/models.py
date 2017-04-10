@@ -46,7 +46,7 @@ class Tournament(models.Model):
     slug = models.SlugField(unique=True, validators=[validate_tournament_slug],
         verbose_name=_("slug"),
         help_text=_("The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""))
-    current_round = models.ForeignKey('Round', models.SET_NULL, null=True, blank=True, related_name='tournament_',
+    current_round = models.ForeignKey('Round', models.SET_NULL, null=True, blank=True, related_name='current_tournament',
         verbose_name=_("current round"),
         help_text=_("Must be set for the tournament to start! (Set after rounds are inputted)"))
     welcome_msg = models.TextField(blank=True, null=True, default="",
