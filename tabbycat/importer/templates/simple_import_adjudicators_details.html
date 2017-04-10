@@ -9,13 +9,17 @@
 <h4>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h4>
 
 <div class="alert alert-info" id="">
-  {# TODO translate this once we have 'asvar' functionality in tournament_url #}
-  <p>As per this tournament's configuration, an adjudicator's rating must be
-  between {{ pref.adj_min_score }} and {{ pref.adj_max_score }}. Adjudicators
-  marked as 'shared' will not be associated with any particular tournament but
-  will be available to any tournament which has the
-  <a href="{% tournament_url options-tournament-league %}" class="alert-link">
-  "Share Adjudicators" setting</a> enabled.</p>
+  {% tournamenturl 'options-tournament-league' as options_league_url %}
+  <p>
+    {% blocktrans trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score %}
+      As per this tournament's configuration, an adjudicator's rating must be
+      between {{ min_score }} and {{ max_score }}. Adjudicators marked as
+      'shared' will not be associated with any particular tournament but will be
+      available to any tournament which has the
+      <a href="{{ options_league_url }}" class="alert-link">"Share Adjudicators"
+      setting</a> enabled.
+    {% endblocktrans %}
+  </p>
 </div>
 
 <form method="POST">

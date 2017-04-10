@@ -17,38 +17,38 @@
     <ul class="list-group">
       <li class="list-group-item">
         <span class="emoji">🏫</span>
-        <a href="{% tournament_url importer-simple-institutions %}">
+        <a href="{% tournamenturl 'importer-simple-institutions' %}">
           Add Institutions
         </a>
       </li>
       <li class="list-group-item">
         <span class="emoji">👯</span>
-        <a href="{% tournament_url importer-simple-teams %}">
+        <a href="{% tournamenturl 'importer-simple-teams' %}">
           Add Teams
         </a>
       </li>
       <li class="list-group-item">
         <span class="emoji">👂</span>
-        <a href="{% tournament_url importer-simple-adjudicators %}">
+        <a href="{% tournamenturl 'importer-simple-adjudicators' %}">
           Add Adjudicators
         </a>
       </li>
       <li class="list-group-item">
         <span class="emoji">🎪</span>
-        <a href="{% tournament_url importer-simple-venues %}">
+        <a href="{% tournamenturl 'importer-simple-venues' %}">
           Add Venues
         </a>
       </li>
       <li class="list-group-item">
         <span class="emoji">🎪</span>
-        <a href="{% tournament_url venues-categories %}">
+        <a href="{% tournamenturl 'venues-categories' %}">
           Edit Venue Categories
         </a>
       </li>
       {% if pref.enable_venue_groups %}
         <li class="list-group-item">
           <span class="emoji">🏩</span>
-          <a href="{% tournament_url add_venue_preferences %}">
+          <a href="{% tournamenturl 'add_venue_preferences' %}">
             Add Venue Constraints for Institutions
           </a>
         </li>

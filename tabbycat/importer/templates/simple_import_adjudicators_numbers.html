@@ -9,8 +9,12 @@
 {% if wizard.form.fields|length == 0 %}
 
   <div class="alert alert-warning" role="alert">
-    {# TODO Once tournament_url has 'as var' capability, add a link to "add institutions" to this text. #}
-    {% trans "You need to add institutions before adding adjudicators." %}
+    {% tournamenturl 'importer-simple-institutions' as import_institutions_url %}
+    {% blocktrans trimmed %}
+      You need to
+      <a href="{{ import_institutions_url }}" class="alert-link">add institutions</a>
+      before adding adjudicators.
+    {% endblocktrans %}
   </div>
 
 {% else %}

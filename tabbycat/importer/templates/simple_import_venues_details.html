@@ -18,10 +18,13 @@
   </p>
 
   <p>
-  {# TODO translate when tournament_url asvar available #}
-    Venues marked as 'shared' will not be associated with any particular
-    tournament but will be available to any tournament which has the
-    <a href="{% tournament_url options-tournament-league %}" class="alert-link">"Share Adjudicators" setting</a> enabled.
+    {% tournamenturl 'options-tournament-league' as options_league_url %}
+    {% blocktrans trimmed %}
+      Venues marked as 'shared' will not be associated with any particular
+      tournament but will be available to any tournament which has the
+      <a href="{{ options_league_url }}" class="alert-link">"Share Venues"
+      setting</a> enabled.
+    {% endblocktrans %}
   </p>
 </div>
 
