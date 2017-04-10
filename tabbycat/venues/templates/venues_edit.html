@@ -8,10 +8,10 @@
 {% block page-title %}Edit Venues for {{ round.abbreviation }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
     <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
   </a>
-  <form id="autoallocateForm" method="POST" action="{% round_url venues-auto-allocate %}">
+  <form id="autoallocateForm" method="POST" action="{% roundurl 'venues-auto-allocate' %}">
     {% csrf_token %}
     <button class="btn btn-primary submit-disable" type="submit">
       Auto Allocate
@@ -37,7 +37,7 @@
       {% if ndebates > nvenues %}
         <div class="alert alert-warning">
           There are {{ ndebates }} debates in this round but only {{ nvenues }} venues.
-          <a href="{% round_url availability-venues round %}" class="alert-link">
+          <a href="{% roundurl 'availability-venues' round %}" class="alert-link">
             Check in more venues</a>.
         </div>
       {% endif %}
@@ -192,7 +192,7 @@
         btn.attr("disabled", true);
         $.ajax( {
           type: "POST",
-          url: "{% round_url venues-save %}",
+          url: "{% roundurl 'venues-save' %}",
           data: debates,
           success: function(data, status) {
             btn.attr("disabled", false);

@@ -23,7 +23,7 @@
     {% if no_venue > 0 %}
       <div class="alert alert-warning" id="">
         {{ no_venue|apnumber|capfirst }} debate{{ no_venue|pluralize:" does,s do" }} not have a venue.
-        <a href="{% round_url venues-edit round %}" class="alert-link">
+        <a href="{% roundurl 'venues-edit' round %}" class="alert-link">
           Allocate venues.
         </a>
       </div>
@@ -32,7 +32,7 @@
   {% if active_adjs.count < draw.count %}
     <div class="alert alert-danger" id="">
       There are currently fewer checked-in adjudicators than there are rooms.
-      <a href="{% round_url availability-adjudicators round %}" class="alert-link">
+      <a href="{% roundurl 'availability-adjudicators' round %}" class="alert-link">
         Check in some more adjudicators.
       </a>
     </div>
@@ -46,7 +46,7 @@
           {% if even_panel > 0 %}
             {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of adjudicators.
           {% endif %}
-          <a href="{% round_url edit_adj_allocation %}" class="alert-link">
+          <a href="{% roundurl 'edit_adj_allocation' %}" class="alert-link">
             Allocate adjudicators.
           </a>
         </div>

@@ -38,14 +38,14 @@
                     {% endif %}
                     adjudicating
                     {% if admin_page %}
-                      <a href="{% tournament_url participants-team-record debate.aff_team.pk %}"
+                      <a href="{% tournamenturl 'participants-team-record' debate.aff_team.pk %}"
                          class="list-group-item-text">{{ debate.aff_team.short_name }}</a> vs
-                      <a href="{% tournament_url participants-team-record debate.neg_team.pk %}"
+                      <a href="{% tournamenturl 'participants-team-record' debate.neg_team.pk %}"
                          class="list-group-item-text">{{ debate.neg_team.short_name }}</a> in
                     {% else %}
-                      <a href="{% tournament_url participants-public-team-record debate.aff_team.pk %}"
+                      <a href="{% tournamenturl 'participants-public-team-record' debate.aff_team.pk %}"
                          class="list-group-item-text">{{ debate.aff_team.short_name }}</a> vs
-                      <a href="{% tournament_url participants-public-team-record debate.neg_team.pk %}"
+                      <a href="{% tournamenturl 'participants-public-team-record' debate.neg_team.pk %}"
                          class="list-group-item-text">{{ debate.neg_team.short_name }}</a> in
                     {% endif %}
                     <strong>{{ debate.venue.display_name }}</strong>.
@@ -65,7 +65,7 @@
                         {% with adjudicators=debate.adjudicators %}
                           <strong>Adjudicator{{ adjudicators|length|pluralize }}:</strong>
                           {% for adj, adjtype in adjudicators.with_positions %}
-                            <a href="{% if admin_page %}{% tournament_url participants-adjudicator-record adj.pk %}{% else %}{% tournament_url participants-public-adjudicator-record adj.pk %}{% endif %}">
+                            <a href="{% if admin_page %}{% tournamenturl 'participants-adjudicator-record' adj.pk %}{% else %}{% tournamenturl 'participants-public-adjudicator-record' adj.pk %}{% endif %}">
                               {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
                           {% endfor %}
                         {% endwith %}

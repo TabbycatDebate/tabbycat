@@ -11,13 +11,13 @@
     <ul class="list-group">
     {% if pref.public_breaking_teams %}
       {% for category in tournament.breakcategory_set.all %}
-      <li class="list-group-item"><a  href="{% tournament_url breakqual-public-teams category.slug %}">
+      <li class="list-group-item"><a  href="{% tournamenturl 'breakqual-public-teams' category.slug %}">
         {{ category.name }} Break
       </a></li>
       {% endfor %}
     {% endif %}
     {% if pref.public_breaking_adjs %}
-      <li class="list-group-item"><a href="{% tournament_url breakqual-public-adjs %}">
+      <li class="list-group-item"><a href="{% tournamenturl 'breakqual-public-adjs' %}">
         Adjudicators
       </a></li>
     {% endif %}

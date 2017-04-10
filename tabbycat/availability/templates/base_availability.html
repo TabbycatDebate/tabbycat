@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block page-subnav-sections %}
-  <a href="{% round_url availability-index round %}" class="btn btn-default">
+  <a href="{% roundurl 'availability-index' round %}" class="btn btn-default">
     <span class="glyphicon glyphicon-chevron-left"></span>Checkins Overview
   </a>
   {% if round.seq > 1 %}
@@ -19,7 +19,7 @@
   </button>
   {% if round.is_break_round and page_title == 'Adjudicator Check-Ins' %}
     <a class="btn btn-primary submit-disable"
-       href="{% round_url availability-checkin-breaking-adjudicators %}">
+       href="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
       Check In All Breaking
     </a>
   {% endif %}
@@ -38,7 +38,7 @@
   <script>
 
     var updateURL = '{{ update_url }}';
-    var overviewURL = '{% round_url availability-index round %}';
+    var overviewURL = '{% roundurl 'availability-index' round %}';
 
     $('#select_all').click(function() {
       $(":checkbox.vue-table-checkbox").each(function(){

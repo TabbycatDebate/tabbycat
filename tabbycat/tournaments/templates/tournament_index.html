@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+ {% extends "base.html" %}
 {% load static %}
 {% load debate_tags %}
 {% load i18n %}
@@ -20,7 +20,7 @@
         import your initial tournament data: the institutions, teams, adjudicators
         and venues that are in your tournament. There are a number of ways to do
         this. For small-to-medium tournaments, you can use the visual
-        <a href="{% tournament_url data_index %}" class="alert-link">data importer</a>.
+        <a href="{% tournamenturl 'data_index' %}" class="alert-link">data importer</a>.
         (This is also the <em>Setup > Import Data</em> link on the left.)
       </p>
       {# Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link. #}
@@ -39,7 +39,7 @@
       </h4>
       <div class="panel panel-default">
         <div class="panel-body">
-          <ballots-graph poll-url="{% tournament_url results-ballots-graph-data %}"></ballots-graph>
+          <ballots-graph poll-url="{% tournamenturl 'results-ballots-graph-data' %}"></ballots-graph>
         </div>
       </div>
     </div>
@@ -80,8 +80,8 @@
 
 {% block js %}
   <script>
-    var updateActionsURL = '{% tournament_url actionlog-latest-json %}';
-    var updateResultsURL = '{% tournament_url results-latest-json %}';
+    var updateActionsURL = '{% tournamenturl 'actionlog-latest-json' %}';
+    var updateResultsURL = '{% tournamenturl 'results-latest-json' %}';
   </script>
   {{ block.super }}
 {% endblock %}

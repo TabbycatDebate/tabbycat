@@ -17,7 +17,7 @@
   </p>
 </div>
 
-<form id="addVenues" action="{% tournament_url confirm_venues %}" method="POST">
+<form id="addVenues" action="{% tournamenturl 'confirm_venues' %}" method="POST">
 
   <ul class="list-group">
     {% for venue in venues %}

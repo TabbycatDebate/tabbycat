@@ -6,18 +6,18 @@
 {% block page-title %}Edit Motions for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url draw-display %}">
+  <a class="btn btn-default submit-disable" href="{% roundurl 'draw-display' %}">
     <span class="glyphicon glyphicon-chevron-left"></span> Back to Display
   </a>
   {% if round.motions_released %}
-    <form class="" id="unreleaseForm" method="POST" action="{% round_url motions-unrelease %}">
+    <form class="" id="unreleaseForm" method="POST" action="{% roundurl 'motions-unrelease' %}">
       {% csrf_token %}
       <button class="btn btn-danger submit-disable" type="submit">
         Unrelease Motions to Public
       </button>
     </form>
   {% else %}
-    <form class="" id="releaseForm" method="POST" action="{% round_url motions-release %}">
+    <form class="" id="releaseForm" method="POST" action="{% roundurl 'motions-release' %}">
       {% csrf_token %}
       <button class="btn btn-primary submit-disable" type="submit">
         Release Motions to Public
@@ -25,14 +25,14 @@
     </form>
   {% endif %}
   {% if pref.enable_division_motions %}
-    <a href="{% round_url motions_assign %}" class="btn btn-default submit-disable">
+    <a href="{% roundurl 'motions_assign' %}" class="btn btn-default submit-disable">
       Assign Motions to Divisions
     </a>
   {% endif %}
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a href="{% round_url results-round-list %}" class="btn btn-success">
+  <a href="{% roundurl 'results-round-list' %}" class="btn btn-success">
     Enter Results<span class="glyphicon glyphicon-chevron-right"></span>
   </a>
 {% endblock %}
@@ -47,7 +47,7 @@
     <div class="alert alert-warning">
       You have released the motions, but they will not show to the public unless
       the 'public view of motions' setting is enabled in
-      <a class="alert-link" href="{% tournament_url options-tournament-index %}">
+      <a class="alert-link" href="{% tournamenturl 'options-tournament-index' %}">
         this tournament's configuration</a>.
     </div>
   {% endif %}
