@@ -60,3 +60,19 @@ input[type="checkbox"].form-control {
   padding: 10px 0 0 5px;
   font-weight: bold;
 }
+
+//------------------------------------------------------------------------------
+// Widgets
+//------------------------------------------------------------------------------
+
+// IE Horizontal choice/radio options; align form elements & text horizontally
+
+.form-spaced-choice {
+  label {
+    display: block;
+    text-align: center;
+  }
+  input {
+    margin: 0 auto;
+  }
+}
