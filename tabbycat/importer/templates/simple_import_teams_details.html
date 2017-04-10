@@ -1,17 +1,21 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">👯</span>{% trans 'Bulk Add Teams' context 'page title' %}{% endblock %}
+{% block head-title %}<span class="emoji">👯</span>{% trans 'Bulk Add Teams' context 'page title' %} (Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}){% endblock %}
 {% block page-title %}👯 {% trans 'Bulk Add Teams' context 'page title' %}{% endblock %}
 
 {% block content %}
-
-<h4>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h4>
 
 <form method="POST">
   {% csrf_token %}
   {{ wizard.management_form }}
   {{ wizard.form.management_form }}
+
+  <div class="row">
+    <div class="form-horizontal col-md-12 page-sub-nav">
+      <button type="submit" class="btn btn-default" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><span class="glyphicon glyphicon-chevron-left"></span>{% trans "Previous Step" %}</button>
+    </div>
+  </div>
 
   {% if wizard.form.errors %}
   <div class="alert alert-danger">
@@ -53,10 +57,10 @@
 
                 {% for field in form.visible_fields %}
                   <div class="form-group">
-                    <label class="col-sm-3 control-label" for="{{ field.id_for_label }}">
+                    <label class="col-sm-4 control-label" for="{{ field.id_for_label }}">
                       {{ field.label }}
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                       {{ field|addcss:"form-control" }}
                       {{ field.errors }}
                     </div>
@@ -77,8 +81,7 @@
 
   <div class="row">
     <div class=" form-horizontal col-md-12">
-      <button type="submit" class="btn btn-default" name="wizard_goto_step" value="{{ wizard.steps.prev }}">{% trans "Previous Step" %}</button>
-      <input type="submit" class="btn btn-success" value="{% trans 'Save All Teams' %}" />
+      <input type="submit" class="btn btn-block btn-success" value="{% trans 'Save All Teams' %}" />
     </div>
   </div>
 

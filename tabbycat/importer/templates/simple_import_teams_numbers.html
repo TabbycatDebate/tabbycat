@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">👯</span>{% trans 'Bulk Add Teams' context 'page title' %}{% endblock %}
+{% block head-title %}<span class="emoji">👯</span>{% trans 'Bulk Add Teams' context 'page title' %} (Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}){% endblock %}
 {% block page-title %}👯 {% trans 'Bulk Add Teams' context 'page title' %}{% endblock %}
 
 {% block content %}
@@ -18,8 +18,6 @@
   </div>
 
 {% else %}
-
-  <h4>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</h4>
 
   <div class="alert alert-info">
     <p>{% blocktrans trimmed %}
