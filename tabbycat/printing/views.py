@@ -52,12 +52,12 @@ class RoomSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
     def get_context_data(self, **kwargs):
         venue_category_id = self.kwargs['venue_category_id']
         base_venue_category = VenueCategory.objects.get(id=venue_category_id)
-        venues = Venue.objects.filter(category=base_venue_category)
+        venues = Venue.objects.filter(venuecategory=base_venue_category)
 
         for venue in venues:
             venue.debates = Debate.objects.filter(
                 # All Debates, with a matching round, at the same venue category name
-                round__seq=round.seq,
+                round__seq=self.get_round().seq,
             ).select_related('round__tournament').order_by('round__tournament__seq')
 
         kwargs['base_venue_category'] = base_venue_category
