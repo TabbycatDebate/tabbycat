@@ -73,7 +73,7 @@ def tournament_side_names(tournament, name_type):
 class TournamentURLNode(URLNode):
 
     def __init__(self, view_name, args, kwargs, asvar):
-        self._args = args
+        self._args = args      # static copy, as we modify self.args in render()
         self._kwargs = kwargs
         super().__init__(view_name, args, kwargs, asvar)
 
@@ -92,7 +92,7 @@ class TournamentURLNode(URLNode):
         except KeyError:
             raise TemplateSyntaxError("tournamenturl can only be used in contexts with a tournament rtf ")
         tournament_slug = Variable("'" + tournament_slug + "'")
-        self.args = list(self._args)
+        self.args = list(self._args)      # make a copy in case render() gets called multiple times
         self.kwargs = dict(self._kwargs)
 
         if self.kwargs:
@@ -112,24 +112,28 @@ class RoundURLNode(URLNode):
         elif len(args) > 0:
             self.round = args.pop(0)
         else:
-            self.round = None  # take from context
-        self._args = args
+            self.round = None  # None means take from context
+        self._args = args      # static copy, as we modify self.args in render()
         self._kwargs = kwargs
 
         super().__init__(view_name, args, kwargs, asvar)
 
     def render(self, context):
         """Add the round to the arguments, then render as usual."""
+
+        # Similar comment as for TournamentURLNode.render()
         round = self.round.resolve(context) if self.round else context['round']
         tournament_slug = Variable("'" + round.tournament.slug + "'")
         round_seq = Variable("'%d'" % round.seq)
-        self.args = list(self._args)
+        self.args = list(self._args)      # make a copy in case render() gets called multiple times
         self.kwargs = dict(self._kwargs)
+
         if self.kwargs:
             self.kwargs['tournament_slug'] = tournament_slug
             self.kwargs['round_seq'] = round_seq
         else:
             self.args = [tournament_slug, round_seq] + self.args
+
         return super().render(context)
 
 
@@ -172,6 +176,7 @@ def tournamenturl(parser, token):
     or the tournament in the context if no tournament is given."""
     args = get_url_args(parser, token)
     return TournamentURLNode(*args)
+
 
 @register.tag
 def roundurl(parser, token):
