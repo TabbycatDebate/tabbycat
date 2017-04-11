@@ -12,4 +12,11 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/autoallocate/$',
         views.AutoAllocateVenuesView.as_view(),
         name='venues-auto-allocate'),
+
+    url(r'^categories/$',
+        views.VenueCategoriesView.as_view(),
+        name='venues-categories'),
+    url(r'^constraints/$',
+        views.VenueConstraintsView.as_view(),
+        name='venues-constraints'),
 ]

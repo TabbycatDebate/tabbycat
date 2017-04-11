@@ -55,6 +55,13 @@
 
 {% block content %}
 
+  {% if formset.errors %}
+  <div class="alert alert-danger">
+    <p>{% trans "There are some problems with the data on this form:" %}</p>
+    {{ formset.non_form_errors }}
+  </div>
+  {% endif %}
+
   <form method="POST" action="" class="form-horizontal">
     {% csrf_token %}
     <div class="panel panel-default">
@@ -67,8 +74,8 @@
         <li class="list-group-item">
 
           {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-              <p>{{ form.non_field_errors }}
+            <div class="col-sm-12">
+              {{ form.non_field_errors }}
             </div>
           {% endif %}
 

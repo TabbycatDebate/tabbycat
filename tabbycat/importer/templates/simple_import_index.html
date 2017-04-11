@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">📑</span>Bulk Add Data{% endblock %}
+{% block page-title %}📑 Bulk Add Data{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info">
+  <p>There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">a few ways of
+  getting data into Tabbycat</a> with different levels of convenience depending on the size of the tournament and your
+   technical background. The below tools are the easiest to use and work well for small and medium sized tournaments.</p>
+   <p>If you are having problems with this importer you can use the <a href="{% tournamenturl 'old_importer_index' %}">older version</a>.
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="emoji">🏫</span>
+        <a href="{% tournamenturl 'importer-simple-institutions' %}">
+          Add Institutions
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">👯</span>
+        <a href="{% tournamenturl 'importer-simple-teams' %}">
+          Add Teams
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">👂</span>
+        <a href="{% tournamenturl 'importer-simple-adjudicators' %}">
+          Add Adjudicators
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🎪</span>
+        <a href="{% tournamenturl 'importer-simple-venues' %}">
+          Add Venues
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🏪</span>
+        <a href="{% tournamenturl 'venues-categories' %}">
+          Edit Venue Categories
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🏰</span>
+        <a href="{% tournamenturl 'venues-constraints' %}">
+          Edit Venue Constraints
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endblock content %}

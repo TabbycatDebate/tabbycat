@@ -77,6 +77,9 @@ class Person(models.Model):
     pronoun = models.CharField(max_length=10, blank=True,
         help_text="If printing ballots using Tabbycat there is the option to pre-print pronouns")
 
+    def __str__(self):
+        return str(self.name)
+
     @property
     def has_contact(self):
         return bool(self.email or self.phone)

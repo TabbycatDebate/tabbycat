@@ -1,8 +1,12 @@
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
+from django.forms import modelformset_factory
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic.base import TemplateView
+from django.utils.translation import ugettext as _
+from django.views.generic import TemplateView
+from formtools.wizard.views import SessionWizardView
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.mixins import TournamentMixin
@@ -10,11 +14,149 @@ from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, tournament_view
 from venues.models import Venue, VenueCategory, VenueConstraint
 
+from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
+                    ImportVenuesRawForm, NumberForEachInstitutionForm,
+                    TeamDetailsForm, VenueDetailsForm)
+
+
+# TODO log actions for all of these?
+
+class ImporterSimpleIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+    template_name = 'simple_import_index.html'
+
+
+class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
+    """Common functionality for the import wizard views. In particular, this
+    class implements functionality for a "details" step that is initialized
+    with data from the previous step. The details step shows a ModelFormSet
+    associated with a specified model."""
+
+    DETAILS_STEP = 'details'
+    tournament_redirect_pattern_name = 'importer-simple-index'
+
+    model = None  # must be specified by subclass
+
+    def get_details_form_initial(self):
+        raise NotImplementedError
+
+    def get_template_names(self):
+        return ['simple_import_%(model)ss_%(step)s.html' % {
+            'model': self.model._meta.model_name,
+            'step': self.steps.current
+        }]
+
+    def get_form_initial(self, step):
+        """Overridden to initialize the 'details' step with data from a previous
+        step."""
+        if step == self.DETAILS_STEP and step == self.steps.next:
+            return self.get_details_form_initial()
+        else:
+            return super().get_form_initial(step)
+
+    def get_form_instance(self, step):
+        if step == self.DETAILS_STEP:
+            return self.model.objects.none()
+        else:
+            return super().get_form_instance(step)
+
+    def get_form(self, step=None, **kwargs):
+        form = super().get_form(step, **kwargs)
+        if step == self.DETAILS_STEP:
+            form.extra = len(form.initial_extra)
+            form.save_as_new = True
+        return form
+
+    def done(self, form_list, form_dict, **kwargs):
+        instances = form_dict[self.DETAILS_STEP].save()
+        messages.success(self.request, _("Added %(count)d %(model_plural)s.") % {
+                'count': len(instances), 'model_plural': self.model._meta.verbose_name_plural})
+        return HttpResponseRedirect(self.get_redirect_url())
+
+
+class ImportInstitutionsWizardView(BaseImportWizardView):
+    model = Institution
+    form_list = [
+        ('raw', ImportInstitutionsRawForm),
+        ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
+    ]
+
+    def get_details_form_initial(self):
+        return self.get_cleaned_data_for_step('raw')['institutions_raw']
+
+
+class ImportVenuesWizardView(BaseImportWizardView):
+    model = Venue
+    form_list = [
+        ('raw', ImportVenuesRawForm),
+        ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0))
+    ]
+
+    def get_form_kwargs(self, step):
+        if step == 'details':
+            return {'form_kwargs': {'tournament': self.get_tournament()}}
+        else:
+            return super().get_form_kwargs(step)
+
+    def get_details_form_initial(self):
+        return self.get_cleaned_data_for_step('raw')['venues_raw']
+
+
+class BaseImportByInstitutionWizardView(BaseImportWizardView):
+    """Common functionality in teams and institutions wizards."""
+
+    def get_form_kwargs(self, step):
+        if step == 'numbers':
+            return {'institutions': Institution.objects.all()}
+        elif step == 'details':
+            return {'form_kwargs': {'tournament': self.get_tournament()}}
+
+    def get_details_form_initial(self):
+        data = self.get_cleaned_data_for_step('numbers')
+        initial_list = []
+        for institution in Institution.objects.order_by('name'):
+            number = data.get('number_institution_%d' % institution.id, 0)
+            if number is None: # field left blank
+                continue
+            for i in range(1, number+1):
+                initial = {'institution': institution.id}
+                initial.update(self.get_details_instance_initial(i))
+                initial_list.append(initial)
+        return initial_list
+
+    def get_details_instance_initial(self):
+        raise NotImplementedError
+
+
+class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
+    model = Team
+    form_list = [
+        ('numbers', NumberForEachInstitutionForm),
+        ('details', modelformset_factory(Team, form=TeamDetailsForm, extra=0)),
+    ]
+
+    def get_details_instance_initial(self, i):
+        return {'reference': str(i), 'use_institution_prefix': True}
+
+
+class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
+    model = Adjudicator
+    form_list = [
+        ('numbers', NumberForEachInstitutionForm),
+        ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
+    ]
+
+    def get_details_instance_initial(self, i):
+        return {'name': _("Adjudicator %(number)d") % {'number': i}, 'test_score': 2.5}
+
+
+# ==============================================================================
+# Old forms
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def data_index(request, t):
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
 
 
 def enforce_length(value, type, model, request, extra_limit=0):
@@ -31,10 +173,11 @@ def enforce_length(value, type, model, request, extra_limit=0):
 # Institutions
 # ==============================================================================
 
+
 @admin_required
 @tournament_view
 def add_institutions(request, t):
-    return render(request, 'add_institutions.html')
+    return render(request, 'old_importer/add_institutions.html')
 
 
 @admin_required
@@ -59,11 +202,11 @@ def edit_institutions(request, t):
 
     if len(institutions) == 0:
         messages.warning(request, "No institutions were added")
-        return render(request, 'data_index.html')
+        return render(request, 'old_importer/data_index.html')
     else:
         max_name = Institution._meta.get_field('name').max_length - 1
         max_code = Institution._meta.get_field('code').max_length - 1
-        return render(request, 'edit_institutions.html', dict(
+        return render(request, 'old_importer/edit_institutions.html', dict(
                       institutions=institutions,
                       full_name_max=max_name, code_max=max_code))
 
@@ -89,7 +232,7 @@ def confirm_institutions(request, t):
     if added_institutions > 0:
         messages.success(request, "%s Institutions have been added" % len(institution_names))
 
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
 
 
 # ==============================================================================
@@ -99,7 +242,7 @@ def confirm_institutions(request, t):
 @admin_required
 @tournament_view
 def add_venues(request, t):
-    return render(request, 'add_venues.html')
+    return render(request, 'old_importer/add_venues.html')
 
 
 @admin_required
@@ -135,9 +278,9 @@ def edit_venues(request, t):
 
     if len(venues) == 0:
         messages.error(request, "No data was entered was entered in the form")
-        return render(request, 'data_index.html')
+        return render(request, 'old_importer/data_index.html')
     else:
-        return render(request, 'edit_venues.html', dict(venues=venues,
+        return render(request, 'old_importer/edit_venues.html', dict(venues=venues,
                   max_name_length=Venue._meta.get_field('name').max_length - 1))
 
 
@@ -187,7 +330,7 @@ def confirm_venues(request, t):
             venue_category.save()
 
     messages.success(request, "%s Venues have been added" % len(venue_names))
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
 
 
 # ==============================================================================
@@ -198,7 +341,7 @@ def confirm_venues(request, t):
 @tournament_view
 def add_teams(request, t):
     institutions = Institution.objects.all()
-    return render(request, 'add_teams.html', dict(institutions=institutions))
+    return render(request, 'old_importer/add_teams.html', dict(institutions=institutions))
 
 
 @admin_required
@@ -239,7 +382,7 @@ def edit_teams(request, t):
                 'available_team_numbers': available_team_numbers
             })
 
-    return render(request, 'edit_teams.html',
+    return render(request, 'old_importer/edit_teams.html',
                   dict(institutions=institutions_with_team_numbers,
                        default_speakers=default_speakers,
                        max_name_length=Team._meta.get_field('reference').max_length - 1))
@@ -292,7 +435,7 @@ def confirm_teams(request, t):
 
     if added_teams > 0:
         messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
 
 
 # ==============================================================================
@@ -303,7 +446,7 @@ def confirm_teams(request, t):
 @tournament_view
 def add_adjudicators(request, t):
     institutions = Institution.objects.all()
-    return render(request, 'add_adjudicators.html', dict(institutions=institutions))
+    return render(request, 'old_importer/add_adjudicators.html', dict(institutions=institutions))
 
 
 @admin_required
@@ -321,7 +464,7 @@ def edit_adjudicators(request, t):
         'score_avg': round((t.pref('adj_max_score') + t.pref('adj_min_score')) / 2, 1),
         'max_name_length': Adjudicator._meta.get_field('name').max_length
     }
-    return render(request, 'edit_adjudicators.html', context)
+    return render(request, 'old_importer/edit_adjudicators.html', context)
 
 
 @admin_required
@@ -350,7 +493,7 @@ def confirm_adjudicators(request, t):
             newadj.save()
 
     messages.success(request, "%s Adjudicators have been added" % int((len(sorted_post) - 1) / 3))
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
 
 
 # ==============================================================================
@@ -366,7 +509,7 @@ class ConfirmDataView(TournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectV
 # ==============================================================================
 
 class AddConstraintsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
-    template_name = 'add_constraints.html'
+    template_name = 'old_importer/add_constraints.html'
     type = None
 
     def get_context_data(self, **kwargs):
@@ -376,7 +519,7 @@ class AddConstraintsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
 
 
 class EditConstraintsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
-    template_name = 'edit_constraints.html'
+    template_name = 'old_importer/edit_constraints.html'
     type = None
 
     def post(self, request, *args, **kwargs):
