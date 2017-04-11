@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.forms import SelectMultiple, TextInput
+from django.forms import Select, SelectMultiple, TextInput
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView, View
@@ -108,9 +108,10 @@ class VenueConstraintsView(SuperuserRequiredMixin, TournamentMixin, ModelFormSet
                 'category': 'Venue Category'
             },
             'help_texts': {
-                'subject_id': 'Start typing the name of the person/team/institution you want to constrain'
+                'subject_id': 'Delete the existing number and start typing the name of the person/team/institution you want to constrain to lookup their ID.'
             },
             'widgets': {
+                'subject_content_type': Select(attrs={'data-filter': True}),
                 'subject_id': SelectPrepopulated(data_list=self.subject_choices())
             },
             'extra': 3
@@ -124,7 +125,10 @@ class VenueConstraintsView(SuperuserRequiredMixin, TournamentMixin, ModelFormSet
         tournament = self.get_tournament()
         options = []
 
-        adjudicators = Adjudicator.objects.filter(tournament=tournament).values_list('id', 'name').order_by('name')
+        if tournament.pref('share_adjs'):
+            adjudicators = Adjudicator.objects.filter(tournament=tournament).values_list('id', 'name').order_by('name')
+        else:
+            adjudicators = Adjudicator.objects.values_list('id', 'name').order_by('name')
         options.extend([(a[0], a[1] + ' (Adjudicator)') for a in adjudicators])
 
         teams = Team.objects.filter(tournament=tournament).values_list('id', 'short_name').order_by('short_name')

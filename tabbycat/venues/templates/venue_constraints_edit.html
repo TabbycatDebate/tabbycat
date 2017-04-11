@@ -79,3 +79,43 @@
   </form>
 
 {% endblock content %}
+
+{% block js %}
+
+  {{ block.super }}
+
+  <script>
+    $(document).ready( function() {
+
+      function filterContentIDs(filteredList, filterToType) {
+        $(filteredList).children().each(function() {
+          // For each element in the data list check if contains the type
+          // This works as we suffixed the text; ie John Smith (Adjudicator)
+          if ($(this).text().toLowerCase().indexOf(filterToType) !== -1) {
+            $(this).prop('disabled', false);
+          } else {
+            $(this).prop('disabled', true);
+          }
+        });
+      }
+
+      // Initial filtering of the options based on preset content type
+      $("select[data-filter]").each(function() {
+        var selectedType = $(this).find(":selected").text(); // Get selected type
+        var filteredList = $(this).parent().parent().parent().find("datalist")
+        filterContentIDs(filteredList, selectedType)
+      });
+
+      // Update filters on change of selected content type
+      $("select[data-filter]").change(function() {
+        var subjectIDInput = $(this).parent().parent().parent().find("input[list]")
+        $(subjectIDInput).val(null); // Set ID to none when type changes
+        var filteredList = $(this).parent().parent().parent().find("datalist")
+        var selectedType = $(this).find(":selected").text(); // Get selected type
+        filterContentIDs(filteredList, selectedType)
+      });
+
+    });
+  </script>
+
+{% endblock %}
