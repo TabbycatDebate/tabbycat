@@ -6,44 +6,6 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^data/$',                                     views.data_index,               name='data_index'),
-
-    url(r'^data/institutions/$',                        views.add_institutions,         name='add_institutions'),
-    url(r'^data/institutions/edit/$',                   views.edit_institutions,        name='edit_institutions'),
-    url(r'^data/institutions/confirm/$',                views.confirm_institutions,     name='confirm_institutions'),
-
-    url(r'^data/teams/$',                               views.add_teams,                name='add_teams'),
-    url(r'^data/teams/edit/$',                          views.edit_teams,               name='edit_teams'),
-    url(r'^data/teams/confirm/$',                       views.confirm_teams,            name='confirm_teams'),
-
-    url(r'^data/adjudicators/$',                        views.add_adjudicators,         name='add_adjudicators'),
-    url(r'^data/adjudicators/edit/$',                   views.edit_adjudicators,        name='edit_adjudicators'),
-    url(r'^data/adjudicators/confirm/$',                views.confirm_adjudicators,     name='confirm_adjudicators'),
-
-    url(r'^data/venues/$',                              views.add_venues,               name='add_venues'),
-    url(r'^data/venues/edit/$',                         views.edit_venues,              name='edit_venues'),
-    url(r'^data/venues/confirm/$',                      views.confirm_venues,           name='confirm_venues'),
-
-    url(r'^data/constraints/institutions/$',
-        views.AddConstraintsView.as_view(type=Institution),
-        name='add_institution_constraints'),
-    url(r'^data/constraints/institutions/edit/$',
-        views.EditConstraintsView.as_view(type=Institution),
-        name='edit_institutions_constraints'),
-    url(r'^data/constraints/institutions/confirm/$',
-        views.ConfirmConstraintsView.as_view(type=Institution),
-        name='confirm_institutions_constraints'),
-
-    url(r'^data/constraints/teams/$',
-        views.AddConstraintsView.as_view(type=Team),
-        name='add_team_constraints'),
-    url(r'^data/constraints/teams/edit/$',
-        views.EditConstraintsView.as_view(type=Team),
-        name='edit_teams_constraints'),
-    url(r'^data/constraints/teams/confirm/$',
-        views.ConfirmConstraintsView.as_view(type=Team),
-        name='confirm_teams_constraints'),
-
     url(r'^data/constraints/adjudicators/$',
         views.AddConstraintsView.as_view(type=Adjudicator),
         name='add_adjudicator_constraints'),
@@ -69,4 +31,42 @@ urlpatterns = [
     url(r'^simple/venues/$',
         views.ImportVenuesWizardView.as_view(),
         name='importer-simple-venues'),
+
+    url(r'^old_importer/$',                                     views.data_index,               name='old_importer_index'),
+
+    url(r'^old_importer/institutions/$',                        views.add_institutions,         name='add_institutions'),
+    url(r'^old_importer/institutions/edit/$',                   views.edit_institutions,        name='edit_institutions'),
+    url(r'^old_importer/institutions/confirm/$',                views.confirm_institutions,     name='confirm_institutions'),
+
+    url(r'^old_importer/teams/$',                               views.add_teams,                name='add_teams'),
+    url(r'^old_importer/teams/edit/$',                          views.edit_teams,               name='edit_teams'),
+    url(r'^old_importer/teams/confirm/$',                       views.confirm_teams,            name='confirm_teams'),
+
+    url(r'^old_importer/adjudicators/$',                        views.add_adjudicators,         name='add_adjudicators'),
+    url(r'^old_importer/adjudicators/edit/$',                   views.edit_adjudicators,        name='edit_adjudicators'),
+    url(r'^old_importer/adjudicators/confirm/$',                views.confirm_adjudicators,     name='confirm_adjudicators'),
+
+    url(r'^old_importer/venues/$',                              views.add_venues,               name='add_venues'),
+    url(r'^old_importer/venues/edit/$',                         views.edit_venues,              name='edit_venues'),
+    url(r'^old_importer/venues/confirm/$',                      views.confirm_venues,           name='confirm_venues'),
+
+    url(r'^data/constraints/institutions/$',
+        views.AddConstraintsView.as_view(type=Institution),
+        name='add_institution_constraints'),
+    url(r'^data/constraints/institutions/edit/$',
+        views.EditConstraintsView.as_view(type=Institution),
+        name='edit_institutions_constraints'),
+    url(r'^data/constraints/institutions/confirm/$',
+        views.ConfirmConstraintsView.as_view(type=Institution),
+        name='confirm_institutions_constraints'),
+
+    url(r'^data/constraints/teams/$',
+        views.AddConstraintsView.as_view(type=Team),
+        name='add_team_constraints'),
+    url(r'^data/constraints/teams/edit/$',
+        views.EditConstraintsView.as_view(type=Team),
+        name='edit_teams_constraints'),
+    url(r'^data/constraints/teams/confirm/$',
+        views.ConfirmConstraintsView.as_view(type=Team),
+        name='confirm_teams_constraints'),
 ]
