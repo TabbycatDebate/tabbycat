@@ -87,10 +87,36 @@ class PublicTabMixin(PublicTournamentPageMixin):
             rounds = rounds.filter(silent=False)
         return rounds
 
+    def limit_rank_display(self, standings):
+
+        if self.public_limit_preference:
+            tournament = self.get_tournament()
+            ranks_limit = tournament.pref(self.public_limit_preference)
+
+            if ranks_limit > 0:
+                for i, info in enumerate(standings.standings):
+                    print(info.rankings["rank"][0], ranks_limit)
+                    if info.rankings["rank"][0] > ranks_limit:
+                        del standings.standings[i]
+
+                # TODO: properly filter and return only the subset of ranks
+
+        return standings
+
+
     def populate_result_missing(self, standings):
         # Never highlight missing results on public tab pages
         pass
 
+    def get_page_title(self):
+        # If set, make a note of any rank limitations in the title
+        if self.public_limit_preference:
+            tournament = self.get_tournament()
+            ranks_limit = tournament.pref(self.public_limit_preference)
+            if ranks_limit > 0:
+                return self.page_title + " (Top %s Only)" % ranks_limit
+
+        return self.page_title
 
 # ==============================================================================
 # Speaker standings
@@ -111,6 +137,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
                                               extra_metrics,
                                               rank_filter=rank_filter)
         standings = generator.generate(speakers, round=round)
+        standings = self.limit_rank_display(standings)
 
         rounds = self.get_rounds()
         self.add_round_results(standings, rounds)
@@ -132,6 +159,10 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         table.add_metric_columns(standings)
 
         return table
+
+    def limit_rank_display(self, standings):
+        # Only filter ranks on PublicTabMixin
+        return standings
 
     def get_rank_filter(self):
         return None
