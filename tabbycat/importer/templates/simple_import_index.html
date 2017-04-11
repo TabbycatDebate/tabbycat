@@ -41,19 +41,17 @@
         </a>
       </li>
       <li class="list-group-item">
-        <span class="emoji">🎪</span>
+        <span class="emoji">🏪</span>
         <a href="{% tournamenturl 'venues-categories' %}">
           Edit Venue Categories
         </a>
       </li>
-      {% if pref.enable_venue_groups %}
-        <li class="list-group-item">
-          <span class="emoji">🏩</span>
-          <a href="{% tournamenturl 'add_venue_preferences' %}">
-            Add Venue Constraints for Institutions
-          </a>
-        </li>
-      {% endif %}
+      <li class="list-group-item">
+        <span class="emoji">🏰</span>
+        <a href="{% tournamenturl 'venues-constraints' %}">
+          Edit Venue Constraints
+        </a>
+      </li>
     </ul>
   </div>
 </div>

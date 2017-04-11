@@ -2,8 +2,8 @@
 {% load add_field_css debate_tags i18n %}
 {% load debate_tags %}
 
-{% block head-title %}{% trans "Venue Categories" %}{% endblock %}
-{% block page-title %}{% trans "Venue Categories" %}{% endblock %}
+{% block head-title %}<span class="emoji">🏪</span>{% trans "Venue Categories" %}{% endblock %}
+{% block page-title %}🏪{% trans "Venue Categories" %}{% endblock %}
 
 {% block content %}
 
@@ -45,10 +45,10 @@
 
           {% for field in form.visible_fields %}
             <div class="form-group">
-              <label class="col-sm-2 control-label" for="{{ field.id_for_label }}">
+              <label class="col-sm-3 control-label" for="{{ field.id_for_label }}">
                 {{ field.label }}
               </label>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 {{ field|addcss:"form-control" }}
               </div>
               <div class="col-sm-6">
@@ -63,8 +63,14 @@
         </li>
         {% endfor %}
         <li class="list-group-item">
-          <input class="btn btn-success" type="submit" name="submit" value="{% trans 'Save Venue Categories' %}" />
-          <input class="btn btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
+          <div class="row">
+            <div class="col-md-6">
+              <input class="btn btn-block btn-success" type="submit" name="submit" value="{% trans 'Save Venue Categories' %}" />
+            </div>
+            <div class="col-md-6">
+              <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
+            </div>
+          </div>
         </li>
       </ul>
     </div>

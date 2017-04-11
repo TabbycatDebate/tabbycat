@@ -1,0 +1,9 @@
+<input list="{{ widget.name }}_list" type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value }}"{% endif %} {% for name, value in widget.attrs.items %}{% if value is not False and name != 'data_list' %} {{ name }}{% if value is not True %}="{{ value }}"{% endif %}{% endif %}{% endfor %} />
+
+<datalist id="{{ widget.name }}_list">
+  {% for option in widget.attrs.data_list %}
+
+    <option value="{{ option.0 }}">{{ option.1 }}</option>
+
+  {% endfor %}
+</datalist>
