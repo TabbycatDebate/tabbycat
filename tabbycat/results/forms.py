@@ -83,6 +83,8 @@ class BaseScoreField(forms.FloatField):
         return attrs
 
     def coerce_for_ui(self, x):
+        if x is None:
+            return None
         if self.step_value % 1 == 0:
             return int(x)
         else:
