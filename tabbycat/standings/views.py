@@ -92,14 +92,12 @@ class PublicTabMixin(PublicTournamentPageMixin):
         if self.public_limit_preference:
             tournament = self.get_tournament()
             ranks_limit = tournament.pref(self.public_limit_preference)
-
             if ranks_limit > 0:
-                for i, info in enumerate(standings.standings):
-                    print(info.rankings["rank"][0], ranks_limit)
-                    if info.rankings["rank"][0] > ranks_limit:
-                        del standings.standings[i]
+                new_standings = []
+                for standing in standings.iteruntil(lambda x: x.rankings["rank"][0] > ranks_limit):
+                    new_standings.append(standing)
 
-                # TODO: properly filter and return only the subset of ranks
+                return new_standings
 
         return standings
 
@@ -137,16 +135,17 @@ class BaseSpeakerStandingsView(BaseStandingsView):
                                               extra_metrics,
                                               rank_filter=rank_filter)
         standings = generator.generate(speakers, round=round)
-        standings = self.limit_rank_display(standings)
 
         rounds = self.get_rounds()
         self.add_round_results(standings, rounds)
         self.populate_result_missing(standings)
+        standings = self.limit_rank_display(standings)
 
         return standings, rounds
 
     def get_table(self):
         standings, rounds = self.get_standings()
+
         table = TabbycatTableBuilder(view=self, sort_key="Rk")
 
         table.add_ranking_columns(standings)
@@ -301,6 +300,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         extra_metrics = tournament.pref('team_standings_extra_metrics')
         generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
         standings = generator.generate(teams, round=round)
+        standings = self.limit_rank_display(standings)
 
         rounds = self.get_rounds()
         add_team_round_results(standings, rounds)

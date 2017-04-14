@@ -162,6 +162,12 @@ class Standings:
         been generated."""
         return iter(self.standings)
 
+    def iteruntil(self, stopwhen):
+        for standing in self.standings:
+            if stopwhen(standing):
+                break
+            yield standing
+
     def infoview(self):
         return self.infos.values()
 
