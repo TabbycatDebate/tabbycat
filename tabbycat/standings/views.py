@@ -143,7 +143,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         table = TabbycatTableBuilder(view=self, sort_key="Rk")
 
         # Easiest to redact info here before passing to column constructors
-        if self.public_page_preference:
+        if hasattr(self, 'public_page_preference'):
             for info in standings:
                 if info.speaker.anonymous:
                     info.speaker.anonymise = True
