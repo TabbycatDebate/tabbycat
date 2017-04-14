@@ -88,19 +88,12 @@ class PublicTabMixin(PublicTournamentPageMixin):
         return rounds
 
     def limit_rank_display(self, standings):
-
+        """Sets the rank limit on the generated standings."""
         if self.public_limit_preference:
             tournament = self.get_tournament()
-            ranks_limit = tournament.pref(self.public_limit_preference)
-            if ranks_limit > 0:
-                new_standings = []
-                for standing in standings.iteruntil(lambda x: x.rankings["rank"][0] > ranks_limit):
-                    new_standings.append(standing)
-
-                return new_standings
-
-        return standings
-
+            rank_limit = tournament.pref(self.public_limit_preference)
+            if rank_limit > 0:
+                standings.set_rank_limit(rank_limit)
 
     def populate_result_missing(self, standings):
         # Never highlight missing results on public tab pages
@@ -139,7 +132,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         rounds = self.get_rounds()
         self.add_round_results(standings, rounds)
         self.populate_result_missing(standings)
-        standings = self.limit_rank_display(standings)
+        self.limit_rank_display(standings)
 
         return standings, rounds
 
@@ -161,7 +154,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
 
     def limit_rank_display(self, standings):
         # Only filter ranks on PublicTabMixin
-        return standings
+        pass
 
     def get_rank_filter(self):
         return None
@@ -300,7 +293,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         extra_metrics = tournament.pref('team_standings_extra_metrics')
         generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
         standings = generator.generate(teams, round=round)
-        standings = self.limit_rank_display(standings)
+        self.limit_rank_display(standings)
 
         rounds = self.get_rounds()
         add_team_round_results(standings, rounds)
