@@ -62,6 +62,8 @@ class Person(models.Model):
     phone = models.CharField(max_length=40, blank=True)
     novice = models.BooleanField(default=False,
         help_text="Novice status is indicated on the tab, and may have its own Break Category or Top Speakers Tab")
+    anonymous = models.BooleanField(default=False,
+        help_text="Anonymous persons will have their name and team redacted on public tab releases")
 
     checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True, null=True)

@@ -163,6 +163,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         AdjudicatorAllocation.POSITION_TRAINEE: "trainee",
     }
 
+    REDACTED = "-"
+
     def __init__(self, view=None, **kwargs):
         """Constructor.
         - If `tournament` is specified, it becomes the default tournament for
@@ -416,8 +418,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
                          show_divisions=True, hide_institution=False, key="Team"):
 
-        team_data = [self._team_cell(team, hide_emoji=hide_emoji)
-            for team in teams]
+        team_data = [self._team_cell(team, hide_emoji=hide_emoji) if not team.anonymise else self.REDACTED for team in teams]
         self.add_column(key, team_data)
 
         if break_categories:
@@ -428,10 +429,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'key': "Institution",
                 'icon': 'glyphicon-home',
                 'tooltip': "Institution",
-            }, [team.institution.code for team in teams])
+            }, [team.institution.code if not team.anonymise else self.REDACTED for team in teams])
 
     def add_speaker_columns(self, speakers, key="Name"):
-        self.add_column(key, [speaker.name for speaker in speakers])
+        self.add_column(key, [speaker.name if not speaker.anonymise else self.REDACTED
+                              for speaker in speakers])
         if self.tournament.pref('show_novices'):
             novice_header = {
                 'key': "Novice",
