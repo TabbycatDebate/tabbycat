@@ -13,7 +13,7 @@
     </p>
 </div>
 
-<form id="" action="{% tournament_url confirm_teams %}" method="POST">
+<form id="" action="{% tournamenturl 'confirm_teams' %}" method="POST">
   {% csrf_token %}
   {% for institution in institutions %}
     {% if institution.available_team_numbers %}

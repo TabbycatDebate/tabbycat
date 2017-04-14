@@ -18,7 +18,7 @@
   {% elif no_teams_eligible %}
     <div class="alert alert-warning" role="alert">
       It looks like no teams are eligible for the break. To set which teams are
-      eligible, click the <a href="{% tournament_url breakqual-edit-eligibility %}">
+      eligible, click the <a href="{% tournamenturl 'breakqual-edit-eligibility' %}">
       Edit Teams' Eligibility</a> button above-right.
     </div>
   {% elif break_not_generated %}
@@ -35,7 +35,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a class="btn btn-success" href="{% tournament_url breakqual-edit-eligibility %}">
+  <a class="btn btn-success" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
     <span class="glyphicon glyphicon-pencil"></span> Edit Teams' Eligibility
   </a>
 {% endblock %}

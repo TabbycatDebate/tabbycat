@@ -9,10 +9,10 @@
 {% block page-alerts %}{% endblock %}
 
 {% block enter-feedback-adj-link %}
-  <a href="{% tournament_url adjfeedback-public-add-from-adjudicator-pk adj.id %}">
+  <a href="{% tournamenturl 'adjfeedback-public-add-from-adjudicator-pk' adj.id %}">
   Add feedback from {{ adj.name }}</a>
 {% endblock %}
 {% block enter-feedback-team-link %}
-  <a href="{% tournament_url adjfeedback-public-add-from-team-pk team.id %}">
+  <a href="{% tournamenturl 'adjfeedback-public-add-from-team-pk' team.id %}">
   Add feedback from {{ team.long_name }}</a>
 {% endblock %}

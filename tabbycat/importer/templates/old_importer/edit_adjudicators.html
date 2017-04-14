@@ -12,11 +12,11 @@
   between {{ pref.adj_min_score }} and {{ pref.adj_max_score }}. Adjudicators
   marked as 'shared' will not be associated with any particular tournament but
   will be available to any tournament which has the
-  <a href="{% tournament_url options-tournament-league %}" class="alert-link">
+  <a href="{% tournamenturl 'options-tournament-league' %}" class="alert-link">
   Share Adjudicators" setting enabled</a>.</p>
 </div>
 
-<form id="addAdjudicators" action="{% tournament_url confirm_adjudicators %}" method="POST">
+<form id="addAdjudicators" action="{% tournamenturl 'confirm_adjudicators' %}" method="POST">
 
   {% for key, values in institutions.items %}
 

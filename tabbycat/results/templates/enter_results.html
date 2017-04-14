@@ -14,7 +14,7 @@
     <span class="glyphicon glyphicon-chevron-left"></span> Back to All Results
   </a>
   {% if not new %}
-    <a class="btn btn-default" href="{% tournament_url results-ballotset-new debate.id %}">
+    <a class="btn btn-default" href="{% tournamenturl 'results-ballotset-new' debate.id %}">
       Create a new ballot set for this debate
     </a>
   {% endif %}
@@ -78,7 +78,7 @@
                   <input id="submit" class="save btn btn-success btn-block submit-disable" type="submit" value="Save Ballot" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
                 </div>
                 <div class="col-sm-4 col-xs-9">
-                  <a class="btn btn-default btn-block btn-danger" href="{% round_url results-round-list debate.round %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel Entry</a>
+                  <a class="btn btn-default btn-block btn-danger" href="{% roundurl 'results-round-list' debate.round %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel Entry</a>
                 </div>
               </div>
             </div>

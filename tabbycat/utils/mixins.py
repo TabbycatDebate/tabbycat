@@ -210,7 +210,7 @@ class ModelFormSetMixin(FormSetMixin):
             return formset_class(queryset=self.get_formset_queryset())
 
     def formset_valid(self, formset):
-        formset.save()
+        self.instances = formset.save()
         return super().formset_valid(formset)
 
 

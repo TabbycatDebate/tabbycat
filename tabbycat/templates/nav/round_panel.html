@@ -32,7 +32,7 @@
       <div class="progress-line standard-line"></div>
       <li>
         <div class="progress-line standard-line"></div>
-        <a href="{% round_url availability-index r %}"
+        <a href="{% roundurl 'availability-index' r %}"
            class="{% if availability_nav and round == r %}active{% endif %}">
           <span class="circle-icon small-circle
             {% if r.seq < current_round.seq %} btn-success
@@ -46,7 +46,7 @@
       </li>
       <li>
         <div class="progress-line standard-line"></div>
-        <a href="{% round_url draw r %}"
+        <a href="{% roundurl 'draw' r %}"
            class="{% if draw_nav and round == r %}active{% endif %}">
           <span class="circle-icon small-circle
             {% if r.seq < current_round.seq %} btn-success
@@ -59,7 +59,7 @@
       </li>
       <li>
         <div class="progress-line standard-line"></div>
-        <a href="{% round_url draw-display r %}"
+        <a href="{% roundurl 'draw-display' r %}"
           class="{% if display_nav and round == r %}active{% endif %}">
           <span class="circle-icon small-circle
             {% if r.seq < current_round.seq %} btn-success
@@ -72,7 +72,7 @@
       </li>
       <li>
         <div class="progress-line standard-line"></div>
-        <a href="{% round_url motions-edit r %}"
+        <a href="{% roundurl 'motions-edit' r %}"
           class="{% if motions_nav and round == r %}active{% endif %}">
           <span class="circle-icon small-circle
             {% if r.motion__count > 0 %} btn-success
@@ -83,7 +83,7 @@
       </li>
       <li>
         <div class="progress-line standard-line"></div>
-        <a href="{% round_url results-round-list r %}"
+        <a href="{% roundurl 'results-round-list' r %}"
            class="{% if ballots_nav and round == r %}active{% endif %}">
           <span class="circle-icon small-circle
             {% if r.seq < current_round.seq %} btn-success

@@ -7,7 +7,7 @@
 {% block page-subnav-sections %}
 {% if user.is_superuser %}
 
-    <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+    <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
       <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
     </a>
 
@@ -20,20 +20,20 @@
         {% endif %}
       </a>
     {% else %}
-      <a href="{% round_url draw-schedule-debates %}" class="btn btn-default submit-disable">
+      <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-default submit-disable">
         Schedule Debates
       </a>
     {% endif %}
 
     {% if round.draw_status == round.STATUS_CONFIRMED %}
-      <form id="releaseForm" method="POST" action="{% round_url draw-release %}">
+      <form id="releaseForm" method="POST" action="{% roundurl 'draw-release' %}">
         {% csrf_token %}
         <button class="btn btn-primary submit-disable" type="submit">
           Release Draw to Public
         </button>
       </form>
     {% elif round.draw_status == round.STATUS_RELEASED %}
-      <form id="unreleaseForm" method="POST" action="{% round_url draw-unrelease %}">
+      <form id="unreleaseForm" method="POST" action="{% roundurl 'draw-unrelease' %}">
         {% csrf_token %}
         <button class="btn btn-danger submit-disable" type="submit">
           Unrelease Draw to Public
@@ -46,7 +46,7 @@
 
 {% block page-subnav-actions %}
 {% if user.is_superuser %}
-  <a class="btn btn-success submit-disable" href="{% round_url motions-edit %}">
+  <a class="btn btn-success submit-disable" href="{% roundurl 'motions-edit' %}">
     Enter Motions <span class="glyphicon glyphicon-chevron-right"></span>
   </a>
 {% endif %}
@@ -59,7 +59,7 @@
     <div class="alert alert-warning">
       You have released the draw, but it will not show to the public unless
       'public view of draw' setting is enabled in
-      <a class="alert-link" href="{% tournament_url options-tournament-index %}">
+      <a class="alert-link" href="{% tournamenturl 'options-tournament-index' %}">
          this tournament's configuration</a>.
     </div>
   {% endif %}
@@ -75,14 +75,14 @@
     <ul class="list-group">
       <li class="list-group-item">
         <span class="emoji">🏫</span>
-        <a target="_blank"  href="{% round_url draw-display-by-venue round %}">
+        <a target="_blank"  href="{% roundurl 'draw-display-by-venue' round %}">
             Display Draw (for the public) ordered by Venue
         </a>
         <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
       </li>
       <li class="list-group-item">
         <span class="emoji">👭</span>
-          <a target="_blank"  href="{% round_url draw-display-by-team round %}">
+          <a target="_blank"  href="{% roundurl 'draw-display-by-team' round %}">
               Display Draw (for the public) ordered by Team
           </a>
           <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
@@ -90,12 +90,12 @@
       <li class="list-group-item">
         <span class="emoji">📃</span>
         {% if round.motions_released %}
-          <a target="_blank"  href="{% round_url motions-display round %}">
+          <a target="_blank"  href="{% roundurl 'motions-display' round %}">
               Display Motions (for the public)
           </a>
           <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
         {% else %}
-          <a target="_blank" class="disabled" href="{% round_url motions-display round %}">
+          <a target="_blank" class="disabled" href="{% roundurl 'motions-display' round %}">
               Display Motions (for the public)
           </a>
           <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
@@ -106,14 +106,14 @@
     <ul class="list-group">
       <li class="list-group-item">
         <span class="emoji">💯</span>
-        <a target="_blank" href="{% round_url printing-scoresheets round %}">
+        <a target="_blank" href="{% roundurl 'printing-scoresheets' round %}">
           Print Ballot Forms
         </a>
         <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
       </li>
       <li class="list-group-item">
         <span class="emoji">🙅</span>
-        <a target="_blank" href="{% round_url printing-feedback round %}">
+        <a target="_blank" href="{% roundurl 'printing-feedback' round %}">
           Print Feedback Forms
         </a>
         <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
@@ -121,7 +121,7 @@
       {% if pref.public_divisions %}
       <li class="list-group-item">
         <span class="emoji">📠</span>
-        <a target="_blank" href="{% round_url printing-master-sheets-list round %}">
+        <a target="_blank" href="{% roundurl 'printing-master-sheets-list' round %}">
           Print Division Sheets
         </a>
         <span class="badge badge-default badge-pill"><span class="glyphicon glyphicon-share"></span></span>
@@ -140,7 +140,7 @@
         <h3>Change Start Time</h3>
       </div>
       <div class="modal-body">
-        <form id="startTimeForm" method="POST" action="{% round_url draw-start-time-set %}" class="form-horizontal">
+        <form id="startTimeForm" method="POST" action="{% roundurl 'draw-start-time-set' %}" class="form-horizontal">
           <div class="form-group">
             <label class="col-sm-4 control-label">
               Start at

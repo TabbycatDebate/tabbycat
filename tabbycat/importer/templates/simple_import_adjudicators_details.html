@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static debate_tags add_field_css i18n %}
+
+{% block head-title %}<span class="emoji">👯</span>{% trans 'Bulk Add Adjudicators' context 'page title' %} (Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}){% endblock %}
+{% block page-title %}👯 {% trans 'Bulk Add Adjudicators' context 'page title' %}{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info" id="">
+  {% tournamenturl 'options-tournament-league' as options_league_url %}
+  <p>
+    {% blocktrans trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score %}
+      As per this tournament's configuration, an adjudicator's rating must be
+      between {{ min_score }} and {{ max_score }}. Adjudicators marked as
+      'shared' will not be associated with any particular tournament but will be
+      available to any tournament which has the
+      <a href="{{ options_league_url }}" class="alert-link">"Share Adjudicators"
+      setting</a> enabled.
+    {% endblocktrans %}
+  </p>
+</div>
+
+<form method="POST">
+  {% csrf_token %}
+  {{ wizard.management_form }}
+  {{ wizard.form.management_form }}
+
+  <div class="row">
+    <div class="form-horizontal col-md-12 page-sub-nav">
+      <button type="submit" class="btn btn-default" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><span class="glyphicon glyphicon-chevron-left"></span>{% trans "Previous Step" %}</button>
+    </div>
+  </div>
+
+  {% if wizard.form.non_form_errors %}
+  <div class="alert alert-danger">
+    <p>{% trans "There are some problems with the data on this form:" %}</p>
+    {{ wizard.form.non_form_errors }}
+  </div>
+  {% endif %}
+
+  {% regroup wizard.form.forms by institution_for_display as forms_by_institution %}
+
+  {% for forms in forms_by_institution %}
+
+    <div class="row">
+      <div class="col-sm-12">
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h5 class="panel-title">
+              {% blocktrans trimmed with institution_name=forms.grouper.name %}
+                Adjudicators for {{ institution_name }}
+              {% endblocktrans %}
+            </h5>
+          </div>
+          <ul class="list-group">
+
+            {% for form in forms.list %}
+
+              <li class="list-group-item">
+
+                <div class="form-horizontal row">
+
+                  {% if form.non_field_errors %}
+                    <div class="col-sm-12">
+                      {{ form.non_field_errors }}
+                    </div>
+                  {% endif %}
+
+                  {% for field in form.hidden_fields %}
+                    {{ field }}
+                  {% endfor %}
+
+                  <label class="col-sm-2 control-label" for="{{ form.name.id_for_label }}">
+                    Adjudicator {{ forloop.counter }}'s {{ form.name.label }}
+                  </label>
+                  <div class="col-sm-4">
+                    {{ form.name|addcss:"form-control" }}
+                    {{ form.name.errors }}
+                  </div>
+
+                  <label class="col-sm-1 control-label" for="{{ form.test_score.id_for_label }}">
+                    {{ form.test_score.label }}
+                  </label>
+                  <div class="col-sm-2">
+                    {{ form.test_score|addcss:"form-control" }}
+                    {{ form.test_score.errors }}
+                  </div>
+
+                  <label class="col-sm-1 control-label" for="{{ form.shared.id_for_label }}">
+                    {{ form.shared.label }}
+                  </label>
+                  <div class="col-sm-2">
+                    {{ form.shared|addcss:"form-control" }}
+                    {{ form.shared.errors }}
+                  </div>
+
+                </div>
+
+              </li>
+            {% endfor %}
+
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+  {% endfor %}
+
+  <div class="row">
+    <div class=" form-horizontal col-md-12">
+      <input type="submit" class="btn btn-block btn-success" value="{% trans 'Save All Adjudicators' %}" />
+    </div>
+  </div>
+
+</form>
+
+{% endblock content %}

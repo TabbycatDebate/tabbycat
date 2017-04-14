@@ -62,6 +62,8 @@ class Person(models.Model):
     phone = models.CharField(max_length=40, blank=True)
     novice = models.BooleanField(default=False,
         help_text="Novice status is indicated on the tab, and may have its own Break Category or Top Speakers Tab")
+    anonymous = models.BooleanField(default=False,
+        help_text="Anonymous persons will have their name and team redacted on public tab releases")
 
     checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True, null=True)
@@ -76,6 +78,9 @@ class Person(models.Model):
         help_text="Gender is displayed in the adjudicator allocation interface, and nowhere else")
     pronoun = models.CharField(max_length=10, blank=True,
         help_text="If printing ballots using Tabbycat there is the option to pre-print pronouns")
+
+    def __str__(self):
+        return str(self.name)
 
     @property
     def has_contact(self):

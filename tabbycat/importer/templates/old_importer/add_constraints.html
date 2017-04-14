@@ -21,13 +21,13 @@
 
   <!-- TODO: not particularly elegant; need to pass the url from the view somehow -->
   {% if entity_type == "Institution" %}
-    <form action="{% tournament_url edit_institutions_constraints %}" method="POST">
+    <form action="{% tournamenturl 'edit_institutions_constraints' %}" method="POST">
   {% endif %}
   {% if entity_type == "Team" %}
-    <form action="{% tournament_url edit_teams_constraints %}" method="POST">
+    <form action="{% tournamenturl 'edit_teams_constraints' %}" method="POST">
   {% endif %}
   {% if entity_type == "Adjudicator" %}
-    <form action="{% tournament_url edit_adjudicators_constraints %}" method="POST">
+    <form action="{% tournamenturl 'edit_adjudicators_constraints' %}" method="POST">
   {% endif %}
 
     <div class="row">

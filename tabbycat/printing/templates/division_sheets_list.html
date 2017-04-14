@@ -14,7 +14,7 @@
     <ul class="list-group">
       {% for venue_category in venue_categories %}
         <li class="list-group-item">
-          <a href="{% url 'printing.views.MasterSheetsView' tournament.slug current_round.seq venue_category.id %}">
+          <a href="{% roundurl 'printing-master-sheets-view' current_round venue_category.id %}">
             {{ venue_category.name }}
           </a>
         </li>
@@ -31,7 +31,7 @@
     <ul class="list-group">
       {% for venue_category in venue_categories %}
         <li class="list-group-item">
-          <a href="{% url 'printing.views.RoomSheetsView' tournament.slug current_round.seq venue_category.id %}">
+          <a href="{% roundurl 'printing-room-sheets-view' current_round venue_category.id %}">
             {{ venue_category.name }}
           </a>
         </li>

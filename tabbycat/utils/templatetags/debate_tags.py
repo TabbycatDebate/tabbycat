@@ -1,9 +1,12 @@
 import os
 import re
+from warnings import warn
 
 from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.template.base import kwarg_re, TemplateSyntaxError, Variable
+from django.template.defaulttags import URLNode
 from tournaments.utils import get_position_name
 
 register = template.Library()
@@ -67,7 +70,124 @@ def tournament_side_names(tournament, name_type):
     return side_names
 
 
-class RoundURLNode(template.Node):
+class TournamentURLNode(URLNode):
+
+    def __init__(self, view_name, args, kwargs, asvar):
+        self._args = args      # static copy, as we modify self.args in render()
+        self._kwargs = kwargs
+        super().__init__(view_name, args, kwargs, asvar)
+
+    def render(self, context):
+        """Add the tournament in the context to the arguments, then render as
+        usual."""
+
+        # In order to take advantage of the superclass's method, the easiest
+        # thing to do is to grab the string we want to insert, and turn it into
+        # a (literal) Variable for the superclass. This is a little roundabout,
+        # since we're creating a variable only for it to be turned back into
+        # the string again, but it's better than copy-pasting the superclass's
+        # method itself.
+        try:
+            tournament_slug = context['tournament'].slug
+        except KeyError:
+            raise TemplateSyntaxError("tournamenturl can only be used in contexts with a tournament rtf ")
+        tournament_slug = Variable("'" + tournament_slug + "'")
+        self.args = list(self._args)      # make a copy in case render() gets called multiple times
+        self.kwargs = dict(self._kwargs)
+
+        if self.kwargs:
+            self.kwargs['tournament_slug'] = tournament_slug
+        else:
+            self.args.insert(0, tournament_slug)
+
+        return super().render(context)
+
+
+class RoundURLNode(URLNode):
+
+    def __init__(self, view_name, args, kwargs, asvar):
+        # Pull round out of the arguments, then let URLNode do the rest.
+        if "round" in kwargs:
+            self.round = kwargs.pop("round")
+        elif len(args) > 0:
+            self.round = args.pop(0)
+        else:
+            self.round = None  # None means take from context
+        self._args = args      # static copy, as we modify self.args in render()
+        self._kwargs = kwargs
+
+        super().__init__(view_name, args, kwargs, asvar)
+
+    def render(self, context):
+        """Add the round to the arguments, then render as usual."""
+
+        # Similar comment as for TournamentURLNode.render()
+        round = self.round.resolve(context) if self.round else context['round']
+        tournament_slug = Variable("'" + round.tournament.slug + "'")
+        round_seq = Variable("'%d'" % round.seq)
+        self.args = list(self._args)      # make a copy in case render() gets called multiple times
+        self.kwargs = dict(self._kwargs)
+
+        if self.kwargs:
+            self.kwargs['tournament_slug'] = tournament_slug
+            self.kwargs['round_seq'] = round_seq
+        else:
+            self.args = [tournament_slug, round_seq] + self.args
+
+        return super().render(context)
+
+
+def get_url_args(parser, token):
+    """Helper function, returns the arguments necessary to construct a URL node.
+    This code is copied directly from `url` in django/template/defaulttags.py,
+    except that instead of constructing a URL node with the identified
+    parameters, it simply returns the parameters in a tuple.
+    """
+
+    bits = token.split_contents()
+    if len(bits) < 2:
+        raise TemplateSyntaxError("'%s' takes at least one argument, the name of a url()." % bits[0])
+    viewname = parser.compile_filter(bits[1])
+    args = []
+    kwargs = {}
+    asvar = None
+    bits = bits[2:]
+    if len(bits) >= 2 and bits[-2] == 'as':
+        asvar = bits[-1]
+        bits = bits[:-2]
+
+    if len(bits):
+        for bit in bits:
+            match = kwarg_re.match(bit)
+            if not match:
+                raise TemplateSyntaxError("Malformed arguments to url tag")
+            name, value = match.groups()
+            if name:
+                kwargs[name] = parser.compile_filter(value)
+            else:
+                args.append(parser.compile_filter(value))
+
+    return viewname, args, kwargs, asvar
+
+
+@register.tag
+def tournamenturl(parser, token):
+    """Returns an absolute URL given the matching view for the given tournament,
+    or the tournament in the context if no tournament is given."""
+    args = get_url_args(parser, token)
+    return TournamentURLNode(*args)
+
+
+@register.tag
+def roundurl(parser, token):
+    """Returns an absolute URL given the matching view for the given tournament
+    and round, or the tournament and round in the context if no tournament is
+    given."""
+    args = get_url_args(parser, token)
+    return RoundURLNode(*args)
+
+
+class OldRoundURLNode(template.Node):
     def __init__(self, view_name, round=None, args=[]):
         self.view_name = view_name
         self.round = round
@@ -80,7 +200,7 @@ class RoundURLNode(template.Node):
         return reverse(self.view_name, args=args)
 
 
-class TournamentURLNode(template.Node):
+class OldTournamentURLNode(template.Node):
     def __init__(self, view_name, args):
         self.view_name = view_name
         self.args = args
@@ -107,18 +227,20 @@ def round_url(parser, token):
     else:
         round = None
         args = []
-    return RoundURLNode(bits[1], round, args)
+    return OldRoundURLNode(bits[1], round, args)
 
 
 @register.tag
 def tournament_url(parser, token):
+    warn("Then {% tournament_url %} tag is deprecated, use the new {% tournamenturl %} instead.", stacklevel=2)
     bits = token.split_contents()
     args = [parser.compile_filter(b) for b in bits[2:]]
-    return TournamentURLNode(bits[1], args)
+    return OldTournamentURLNode(bits[1], args)
 
 
 @register.tag
 def tournament_absurl(parser, token):
+    warn("Then {% round_url %} tag is deprecated, use the new {% roundurl %} instead.", stacklevel=2)
     bits = token.split_contents()
     args = [parser.compile_filter(b) for b in bits[2:]]
     return TournamentAbsoluteURLNode(bits[1], args)

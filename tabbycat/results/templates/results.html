@@ -8,10 +8,10 @@
 
 {% block page-subnav-sections %}
   {% if user.is_superuser %}
-    <a href="{% round_url motions-edit %}" class="btn btn-default">
+    <a href="{% roundurl 'motions-edit' %}" class="btn btn-default">
       <span class="glyphicon glyphicon-chevron-left"></span> Edit Motions
     </a>
-    <a class="btn btn-default submit-disable" href="{% round_url results-ballot-checkin round %}">
+    <a class="btn btn-default submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
       Check In Ballots
     </a>
   {% endif %}
@@ -19,7 +19,7 @@
 
 {% block page-subnav-actions %}
   {% if user.is_superuser and round.seq < tournament.round_set.count and current_round == round %}
-    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger{% endif %} submit-disable" href="{% round_url round_increment_check %}">
+    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger{% endif %} submit-disable" href="{% roundurl 'round_increment_check' %}">
       Advance to Next Round <span class="glyphicon glyphicon-chevron-right"></span>
     </a>
   {% endif %}
@@ -29,7 +29,7 @@
   {% if not has_motions %}
     <div class="alert alert-danger">
       Currently there are no motions entered for this round, so debate results
-      cannot be entered. <a href="{% round_url motions-edit current_round %}" class="alert-link">Add Motions.</a>
+      cannot be entered. <a href="{% roundurl 'motions-edit' current_round %}" class="alert-link">Add Motions.</a>
     </div>
   {% endif %}
   {% with even_panel=round.num_debates_with_even_panel %}
@@ -49,7 +49,7 @@
       <div class="btn-group btn-group-justified vertical-spacing" role="group">
 
         {% if not user.is_superuser %}
-          <a class="btn btn-default submit-disable" href="{% round_url results-ballot-checkin round %}">
+          <a class="btn btn-default submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
             Check-In Ballots
           </a>
         {% endif %}
@@ -80,11 +80,11 @@
 
   {{ block.super }}
 
-  <form id="postponeForm" action="{% round_url results-postpone-debate %}" method="POST">
+  <form id="postponeForm" action="{% roundurl 'results-postpone-debate' %}" method="POST">
     <input type="hidden" id="postpone_debate_id" name="debate_id" />
   </form>
 
-  <form id="unpostponeForm" action="{% round_url results-unpostpone-debate %}" method="POST">
+  <form id="unpostponeForm" action="{% roundurl 'results-unpostpone-debate' %}" method="POST">
     <input type="hidden" id="unpostpone_debate_id" name="debate_id" />
   </form>
 

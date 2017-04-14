@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static debate_tags add_field_css i18n %}
+
+{% block head-title %}<span class="emoji">👯</span>{% trans 'Bulk Add Teams' context 'page title' %} (Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}){% endblock %}
+{% block page-title %}👯 {% trans 'Bulk Add Teams' context 'page title' %}{% endblock %}
+
+{% block content %}
+
+{% if wizard.form.fields|length == 0 %}
+
+  <div class="alert alert-warning" role="alert">
+    {% tournamenturl 'importer-simple-institutions' as import_institutions_url %}
+    {% blocktrans trimmed %}
+      You need to
+      <a href="{{ import_institutions_url }}" class="alert-link">add institutions</a>
+      before adding teams.
+    {% endblocktrans %}
+  </div>
+
+{% else %}
+
+  <div class="alert alert-info">
+    <p>{% blocktrans trimmed %}
+      Specify the number of new teams to add per institution. In the next step
+      you can specify team and speaker names.
+    {% endblocktrans %}</p>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ wizard.management_form }}
+
+    {% if wizard.form.errors %}
+    <div class="alert alert-danger">
+      <p>{% trans "There are some problems with the data on this form:" %}</p>
+      {{ wizard.form.non_form_errors }}
+    </div>
+    {% endif %}
+
+    <div class="panel panel-default">
+      <ul class="list-group">
+
+        {% for field in wizard.form %}
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-sm-2">
+                {{ field|addcss:"form-control" }}
+                {{ field.errors }}
+              </div>
+              <label class="col-sm-10" for="{{ field.id_for_label }}">
+                {{ field.label }}
+              </label>
+            </div>
+          </li>
+        {% endfor %}
+
+        <li class="list-group-item">
+          <input type="submit" class="btn btn-primary btn-block" value="{% trans 'Next Step' %}" />
+        </li>
+
+      </ul>
+    </div>
+  </form>
+
+{% endif %}
+
+{% endblock content %}
