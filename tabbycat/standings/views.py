@@ -109,6 +109,7 @@ class PublicTabMixin(PublicTournamentPageMixin):
 
         return self.page_title
 
+
 # ==============================================================================
 # Speaker standings
 # ==============================================================================
@@ -142,9 +143,11 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         table = TabbycatTableBuilder(view=self, sort_key="Rk")
 
         # Easiest to redact info here before passing to column constructors
-        for info in standings:
-            info.speaker.anonymise = info.speaker.anonymous if self.public_page_preference else False
-            info.speaker.team.anonymise = info.speaker.anonymous if self.public_page_preference else False
+        if self.public_page_preference:
+            for info in standings:
+                if info.speaker.anonymous:
+                    info.speaker.anonymise = True
+                    info.speaker.team.anonymise = True
 
         table.add_ranking_columns(standings)
         table.add_speaker_columns([info.speaker for info in standings])
