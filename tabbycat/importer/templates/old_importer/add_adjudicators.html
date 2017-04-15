@@ -2,25 +2,31 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">👯</span>Bulk Add Teams{% endblock %}
-{% block page-title %}👯 Bulk Add Teams{% endblock %}
+{% block head-title %}<span class="emoji">👂</span>Bulk Add Adjudicators{% endblock %}
+{% block page-title %}👂 Bulk Add Adjudicators{% endblock %}
 
 {% block content %}
+
+<div class="alert alert-info">
+  <p>Specify the number of new adjudicators to add per institution.
+  In the next step you can specify their names and ratings</p>
+</div>
 
 {% if institutions.count == 0 %}
 
   <div class="alert alert-warning" role="alert">
-    You need to add institutions before adding teams.
+    You need to add institutions before adding adjudicators.
   </div>
 
 {% else %}
 
-  <div class="alert alert-info">
-    <p>Specify the number of new teams to add per institution. In the next step
-    you can specify team and speaker names.</p>
+  <div class="alert alert-info" id="">
+    <p>Specify the number of new adjudicators to add per institution.
+    In the next step you can specify their names and ratings</p>
   </div>
 
-  <form action="{% tournament_url edit_teams %}" method="POST">
+  <form action="{% tournamenturl 'edit_adjudicators' %}" method="POST">
+
     <div class="panel panel-default">
       <ul class="list-group">
 
@@ -28,8 +34,8 @@
           <li class="list-group-item">
             <div class="row">
               <div class="col-sm-2">
-                <input type="number" class="form-control"
-                       name="{{ institution.id }}" placeholder="0" min="0">
+                <input type="number" class="form-control" name="{{ institution.id }}"
+                       id="" placeholder="0" min="0">
               </div>
               <label class="col-sm-10">
                 {{ institution }} ({{ institution.code }})
@@ -40,12 +46,13 @@
 
         <li class="list-group-item">
           <button type="submit" class="btn btn-primary btn-block">
-            Submit Teams List
+            Submit Adjudicators List
           </button>
         </li>
 
       </ul>
     </div>
+
   </form>
 
 {% endif %}

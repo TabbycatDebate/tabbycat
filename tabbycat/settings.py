@@ -80,7 +80,8 @@ INSTALLED_APPS = (
     'dynamic_preferences',
     'dynamic_preferences.users.apps.UserPreferencesConfig',
     'django_extensions',  # For Secret Generation Command
-    'gfklookupwidget')
+    'gfklookupwidget',
+    'formtools')
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'

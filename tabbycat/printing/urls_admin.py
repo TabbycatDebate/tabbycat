@@ -16,11 +16,11 @@ urlpatterns = [
         views.MasterSheetsListView.as_view(),
         name='printing-master-sheets-list'),
 
-    url(r'^round/(?P<round_seq>\d+)/master_sheets/venue_group/(?P<venue_group_id>\d+)/$',
+    url(r'^round/(?P<round_seq>\d+)/master_sheets/venue_category/(?P<venue_category_id>\d+)/$',
         views.MasterSheetsView.as_view(),
         name='printing-master-sheets-view'),
 
-    url(r'^round/(?P<round_seq>\d+)/room_sheets_view/venue_group/(?P<venue_group_id>\d+)/$',
+    url(r'^round/(?P<round_seq>\d+)/room_sheets_view/venue_category/(?P<venue_category_id>\d+)/$',
         views.RoomSheetsView.as_view(),
         name='printing-room-sheets-view'),
 

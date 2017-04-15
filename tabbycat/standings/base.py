@@ -91,13 +91,14 @@ class StandingInfo:
             except KeyError:
                 yield (None, False)
 
-    def get_ranking(self, key):
-        """Returns the numeric rank (without equality information), or None
-        if there is no ranking associated with this key."""
+    def get_ranking(self, key, default=None):
+        """Returns the numeric rank (without equality information), or None (or
+        the value provided in `default`) if there is no ranking associated with
+        this key."""
         try:
             return self.rankings[key][0]
         except KeyError:
-            return None
+            return default
 
 
 class Standings:
@@ -134,6 +135,7 @@ class Standings:
         self.infos = {instance: StandingInfo(self, instance) for instance in instances}
         self.ranked = False
         self.rank_filter = rank_filter
+        self._rank_limit = None
 
         self.metric_keys = list()
         self.ranking_keys = list()
@@ -160,7 +162,21 @@ class Standings:
         """Returns an iterator that iterates over constituent BaseStandingInfo
         objects in ranked order. Raises AttributeError if rankings have not yet
         been generated."""
-        return iter(self.standings)
+        if self._rank_limit:
+            return self.iteruntil(self._rank_limit)
+        else:
+            return iter(self.standings)
+
+    def iteruntil(self, rank_limit, key="rank"):
+        """Stops iterating when the rank exceeds `rank_limit`. If there isn't a
+        "rank" ranking for any particular StandingInfo, it acts as if the rank
+        were zero. Therefore, if the standings haven't been annotated with a
+        "rank", then this will end up iterating through the entire standings.
+        If `key` is specified, it is used instead of "rank"."""
+        for info in self.standings:
+            if info.get_ranking(key, 0) > rank_limit:
+                break
+            yield info
 
     def infoview(self):
         return self.infos.values()
@@ -220,6 +236,15 @@ class Standings:
 
     def filter(self, include_filter):
         self.infos = {instance: info for instance, info in self.infos.items() if include_filter(info)}
+
+    def set_rank_limit(self, rank_limit):
+        """Sets the rank limit on these standings. This doesn't affect the data
+        held by a Standings instance, but if the rank limit is set, then when
+        the standings are iterated over, the iteration stops once the rank limit
+        is exceeded. For example, if the rank limit is set to 10, then iterating
+        over the standings will only produce the top ten speakers (including
+        those tied on 10th)."""
+        self._rank_limit = rank_limit
 
 
 class BaseStandingsGenerator:

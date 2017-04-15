@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags i18n %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">🏪</span>{% trans "Venue Categories" %}{% endblock %}
+{% block page-title %}🏪{% trans "Venue Categories" %}{% endblock %}
+
+{% block content %}
+
+  <div class="alert alert-info">
+    {% blocktrans trimmed %}
+      Venue categories allow you to
+        <ul>
+          <li>group venues together into "zones" to display in the draw and make navigation easier for participants, and/or</li>
+          <li>specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.</li>
+        </ul>
+    {% endblocktrans %}
+  </div>
+
+  {% if formset.errors %}
+  <div class="alert alert-danger">
+    <p>{% trans "There are some problems with the data on this form:" %}</p>
+    {{ formset.non_form_errors }}
+  </div>
+  {% endif %}
+
+  <form method="POST" action="" class="form-horizontal">
+    {% csrf_token %}
+    <div class="panel panel-default">
+      <ul class="list-group">
+        {{ formset.management_form }}
+
+        {% for form in formset %}
+        <li class="list-group-item">
+
+          {% if form.non_field_errors %}
+            <div class="col-sm-12">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          {% for field in form.hidden_fields %}
+            {{ field }}
+          {% endfor %}
+
+          {% for field in form.visible_fields %}
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="{{ field.id_for_label }}">
+                {{ field.label }}
+              </label>
+              <div class="col-sm-3">
+                {{ field|addcss:"form-control" }}
+              </div>
+              <div class="col-sm-6">
+                <span class="help-block">
+                  {{ field.help_text }}
+                </span>
+                {{ field.errors }}
+              </div>
+            </div>
+          {% endfor %}
+
+        </li>
+        {% endfor %}
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-md-6">
+              <input class="btn btn-block btn-success" type="submit" name="submit" value="{% trans 'Save Venue Categories' %}" />
+            </div>
+            <div class="col-md-6">
+              <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </form>
+
+{% endblock content %}

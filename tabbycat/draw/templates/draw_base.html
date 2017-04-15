@@ -3,33 +3,33 @@
 
 {% block page-subnav-sections %}
   <div class="btn-group">
-    <a class="btn btn-default submit-disable" href="{% round_url edit_adj_allocation %}" class="btn btn-default submit-disable">
+    <a class="btn btn-default submit-disable" href="{% roundurl 'edit_adj_allocation' %}" class="btn btn-default submit-disable">
       Allocate Adjudicators
     </a>
-    <a href="{% round_url venues-edit round %}" class="btn btn-default submit-disable">
+    <a href="{% roundurl 'venues-edit' round %}" class="btn btn-default submit-disable">
       Allocate Venues
     </a>
   </div>
   {% if pref.allocation_confirmations %}
-    <a href="{% round_url draw-schedule-confirmations %}" class="btn btn-default submit-disable">
+    <a href="{% roundurl 'draw-schedule-confirmations' %}" class="btn btn-default submit-disable">
       Confirm Shifts
     </a>
   {% endif %}
   <div class="btn-group">
-    <a href="{% round_url draw-matchups-edit round %}" class="btn btn-default submit-disable">
+    <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-default submit-disable">
       Edit Draw
     </a>
-    <a class="btn btn-default submit-disable" href="{% round_url draw-confirm-regenerate %}" class="btn btn-default submit-disable">
+    <a class="btn btn-default submit-disable" href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-default submit-disable">
       Remake Draw
     </a>
   </div>
-  <a class="btn btn-default submit-disable" href="{% round_url draw-details %}">
+  <a class="btn btn-default submit-disable" href="{% roundurl 'draw-details' %}">
     Draw Details
   </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a href="{% round_url draw-display %}" class="btn btn-success">
+  <a href="{% roundurl 'draw-display' %}" class="btn btn-success">
     Display Draw<span class="glyphicon glyphicon-chevron-right"></span>
   </a>
 {% endblock %}

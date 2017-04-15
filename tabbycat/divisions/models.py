@@ -9,7 +9,7 @@ class Division(models.Model):
         help_text="The order in which divisions are displayed")
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE)
     time_slot = models.TimeField(blank=True, null=True)
-    venue_group = models.ForeignKey('venues.VenueGroup', models.SET_NULL, blank=True, null=True)
+    venue_category = models.ForeignKey('venues.VenueCategory', models.SET_NULL, blank=True, null=True)
 
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='division',
             content_type_field='subject_content_type', object_id_field='subject_id')

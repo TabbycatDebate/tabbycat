@@ -39,7 +39,7 @@ class TournamentConfigIndexView(SuperuserRequiredMixin, TournamentMixin, Templat
 
 class TournamentPreferenceFormView(SuperuserRequiredMixin, LogActionMixin, TournamentMixin, PreferenceFormView):
     registry = tournament_preferences_registry
-    section = None
+    section_slug = None
     template_name = "preferences_section_set.html"
 
     action_log_type = ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT
@@ -53,7 +53,8 @@ class TournamentPreferenceFormView(SuperuserRequiredMixin, LogActionMixin, Tourn
 
     def get_form_class(self, *args, **kwargs):
         tournament = self.get_tournament()
-        form_class = tournament_preference_form_builder(instance=tournament, section=self.section)
+        form_class = tournament_preference_form_builder(instance=tournament,
+                                                        section=self.section_slug)
         return form_class
 
 

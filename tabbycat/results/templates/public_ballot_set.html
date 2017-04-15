@@ -7,16 +7,16 @@
 {% block sub-title %}
   <small>
     {{ debate.round.name }} @
-    {% if debatedivision.venue_group %}
-      {{ debate.division.venue_group.short_name }}
+    {% if debatedivision.venue_category %}
+      {{ debate.division.venue_category.short_name }}
     {% endif %}
-    {{ debate.venue.name }}
+    {{ debate.venue.display_name }}
   </small>
 {% endblock %}
 
 {% block page-subnav-sections %}
 <div class="btn-group">
-  <a class="btn btn-default form-control" href="{% round_url results-public-round debate.round %}">Return to Results for {{ debate.round.name }}</a>
+  <a class="btn btn-default form-control" href="{% roundurl 'results-public-round' debate.round %}">Return to Results for {{ debate.round.name }}</a>
 </div>
 {% endblock %}
 

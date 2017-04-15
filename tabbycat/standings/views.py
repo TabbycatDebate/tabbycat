@@ -30,7 +30,7 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         round = self.get_round()
 
         speaks = SpeakerScore.objects.filter(
-                    ballot_submission__confirmed=True,
+                    ballot_submission__confirmed=True, ghost=False,
                     speaker__team__tournament=t).exclude(
                     position=t.REPLY_POSITION).select_related(
                     'debate_team__debate__round')
@@ -87,9 +87,27 @@ class PublicTabMixin(PublicTournamentPageMixin):
             rounds = rounds.filter(silent=False)
         return rounds
 
+    def limit_rank_display(self, standings):
+        """Sets the rank limit on the generated standings."""
+        if self.public_limit_preference:
+            tournament = self.get_tournament()
+            rank_limit = tournament.pref(self.public_limit_preference)
+            if rank_limit > 0:
+                standings.set_rank_limit(rank_limit)
+
     def populate_result_missing(self, standings):
         # Never highlight missing results on public tab pages
         pass
+
+    def get_page_title(self):
+        # If set, make a note of any rank limitations in the title
+        if self.public_limit_preference:
+            tournament = self.get_tournament()
+            ranks_limit = tournament.pref(self.public_limit_preference)
+            if ranks_limit > 0:
+                return self.page_title + " (Top %s Only)" % ranks_limit
+
+        return self.page_title
 
 
 # ==============================================================================
@@ -115,12 +133,21 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         rounds = self.get_rounds()
         self.add_round_results(standings, rounds)
         self.populate_result_missing(standings)
+        self.limit_rank_display(standings)
 
         return standings, rounds
 
     def get_table(self):
         standings, rounds = self.get_standings()
+
         table = TabbycatTableBuilder(view=self, sort_key="Rk")
+
+        # Easiest to redact info here before passing to column constructors
+        if hasattr(self, 'public_page_preference'):
+            for info in standings:
+                if info.speaker.anonymous:
+                    info.speaker.anonymise = True
+                    info.speaker.team.anonymise = True
 
         table.add_ranking_columns(standings)
         table.add_speaker_columns([info.speaker for info in standings])
@@ -132,6 +159,10 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         table.add_metric_columns(standings)
 
         return table
+
+    def limit_rank_display(self, standings):
+        # Only filter ranks on PublicTabMixin
+        pass
 
     def get_rank_filter(self):
         return None
@@ -175,6 +206,7 @@ class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsV
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
     public_page_preference = 'speaker_tab_released'
+    public_limit_preference = 'speaker_tab_limit'
 
 
 class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):
@@ -191,6 +223,7 @@ class NoviceStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
 
 class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
     public_page_preference = 'novices_tab_released'
+    public_limit_preference = 'novices_tab_limit'
 
 
 class BaseProStandingsView(BaseStandardSpeakerStandingsView):
@@ -208,6 +241,7 @@ class ProStandingsView(SuperuserRequiredMixin, BaseProStandingsView):
 
 class PublicProTabView(PublicTabMixin, BaseProStandingsView):
     public_page_preference = 'pros_tab_released'
+    public_limit_preference = 'pros_tab_limit'
 
 
 class BaseReplyStandingsView(BaseSpeakerStandingsView):
@@ -245,6 +279,7 @@ class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
     public_page_preference = 'replies_tab_released'
+    public_limit_preference = 'replies_tab_limit'
 
 
 # ==============================================================================
@@ -266,6 +301,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         extra_metrics = tournament.pref('team_standings_extra_metrics')
         generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
         standings = generator.generate(teams, round=round)
+        self.limit_rank_display(standings)
 
         rounds = self.get_rounds()
         add_team_round_results(standings, rounds)
@@ -315,6 +351,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     Once the tab is released, to the public the team standings are known as the
     "team tab"."""
     public_page_preference = 'team_tab_released'
+    public_limit_preference = 'team_tab_limit'
     rankings = ('rank',)
 
     def show_ballots(self):

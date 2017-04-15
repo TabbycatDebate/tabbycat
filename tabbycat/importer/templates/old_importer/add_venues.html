@@ -10,15 +10,16 @@
 <div class="alert alert-info" id="">
   <p>
     Paste a list of venues with one venue per line and following the format of:
-    <em>Name,Priority{% if pref.enable_venue_groups %}, Venue Group{% endif %}</em>.
+    <em>Name,Priority,Venue Category</em>.
      For example:<br><br>
-    <em>Green 140,200{% if pref.enable_venue_groups %},Block A{% endif %}<br>
-    Red 2.9.0,100{% if pref.enable_venue_groups %},Big Hall{% endif %}<br>
-    Black 11G,50{% if pref.enable_venue_groups %},Block A{% endif %}</em>
+    <em>140,200,Red<br>
+    2.9.0,100,Red<br>
+    11G,50</em><br><br>
+    Venue categories are optional — they can be used to visually classify groups of venues or for creating rules that ensure particular people get priority access to certain types of rooms.
   </p>
 </div>
 
-<form action="{% tournament_url edit_venues %}" method="POST">
+<form action="{% tournamenturl 'edit_venues' %}" method="POST">
 
   <div class="form-group">
     <textarea class="form-control" name="venues_raw" rows="20"></textarea>

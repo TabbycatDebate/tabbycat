@@ -446,12 +446,30 @@ class TeamTabReleased(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class TeamTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X teams in the public tab (set to 0 to show all teams)."
+    verbose_name = "Top teams cutoff"
+    section = tab_release
+    name = "team_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
 class SpeakerTabReleased(BooleanPreference):
     help_text = "Enables public display of the speaker tab. Intended for use after the tournament."
     verbose_name = "Release speaker tab to public"
     section = tab_release
     name = "speaker_tab_released"
     default = False
+
+
+@tournament_preferences_registry.register
+class SpeakerTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X speakers in the public tab (set to 0 to show all speakers)."
+    verbose_name = "Top speakers cutoff"
+    section = tab_release
+    name = "speaker_tab_limit"
+    default = 0
 
 
 @tournament_preferences_registry.register
@@ -464,6 +482,15 @@ class ProsTabReleased(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class ProsTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X pro speakers in the public tab (set to 0 to show all pro speakers)."
+    verbose_name = "Top pros cutoff"
+    section = tab_release
+    name = "pros_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
 class NovicesTabReleased(BooleanPreference):
     help_text = "Enables public display of a novice-speakers only tab. Intended for use after the tournament."
     verbose_name = "Release novices tab to public"
@@ -473,12 +500,30 @@ class NovicesTabReleased(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class NovicesTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X novices in the public tab (set to 0 to show all novices)."
+    verbose_name = "Top novices cutoff"
+    section = tab_release
+    name = "novices_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
 class RepliesTabReleased(BooleanPreference):
     help_text = "Enables public display of the replies tab. Intended for use after the tournament."
     verbose_name = "Release replies tab to public"
     section = tab_release
     name = "replies_tab_released"
     default = False
+
+
+@tournament_preferences_registry.register
+class RepliesTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X repliers in the public tab (set to 0 to show all repliers)."
+    verbose_name = "Top replies cutoff"
+    section = tab_release
+    name = "replies_tab_limit"
+    default = 0
 
 
 @tournament_preferences_registry.register
@@ -892,29 +937,11 @@ class EnableAdjNotes(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class EnableVenueGroups(BooleanPreference):
-    help_text = "Enables the display of venue groups"
-    verbose_name = "Enable venue groups"
-    section = league_options
-    name = "enable_venue_groups"
-    default = False
-
-
-@tournament_preferences_registry.register
 class EnableVenueTimes(BooleanPreference):
     help_text = "Enables specific dates and times to be set for debates"
     verbose_name = "Enable debate scheduling"
     section = league_options
     name = "enable_debate_scheduling"
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableVenueOverlaps(BooleanPreference):
-    help_text = "Allow and automatically debates to be placed in the first room"
-    verbose_name = "Enable venue overlaps"
-    section = league_options
-    name = "enable_venue_overlaps"
     default = False
 
 

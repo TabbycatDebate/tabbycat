@@ -163,6 +163,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         AdjudicatorAllocation.POSITION_TRAINEE: "trainee",
     }
 
+    BLANK_TEXT = "—"
+
     def __init__(self, view=None, **kwargs):
         """Constructor.
         - If `tournament` is specified, it becomes the default tournament for
@@ -240,7 +242,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def _result_cell(self, ts, compress=False, show_score=False, show_ballots=False):
         if not hasattr(ts, 'debate_team') or not hasattr(ts.debate_team.opponent, 'team'):
-            return {'text': '-'}
+            return {'text': self.BLANK_TEXT}
 
         opp = ts.debate_team.opponent.team
         opp_vshort = '<i class="emoji">' + opp.emoji + '</i>' if opp.emoji else "…"
@@ -410,14 +412,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
         motion_data = [{
             'text': motion.reference if motion.reference else '?',
             'popover': {'content' : [{'text': motion.text}]}
-        } if motion else "—" for motion in motions]
+        } if motion else self.BLANK_TEXT for motion in motions]
         self.add_column(key, motion_data)
 
     def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
                          show_divisions=True, hide_institution=False, key="Team"):
 
         team_data = [self._team_cell(team, hide_emoji=hide_emoji)
-            for team in teams]
+                     if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams]
         self.add_column(key, team_data)
 
         if break_categories:
@@ -428,10 +430,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'key': "Institution",
                 'icon': 'glyphicon-home',
                 'tooltip': "Institution",
-            }, [team.institution.code for team in teams])
+            }, [team.institution.code if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams])
 
     def add_speaker_columns(self, speakers, key="Name"):
-        self.add_column(key, [speaker.name for speaker in speakers])
+        self.add_column(key, [speaker.name if not hasattr(speaker, 'anonymise') else "<em>Redacted</em>"
+                              for speaker in speakers])
         if self.tournament.pref('show_novices'):
             novice_header = {
                 'key': "Novice",
@@ -462,7 +465,31 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
-    def add_debate_venue_columns(self, debates, with_times=True):
+    def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):
+
+        def construct_venue_cell(venue):
+            if not venue:
+                return {}
+
+            if for_admin:
+                categories = venue.venuecategory_set.all()
+            else:
+                categories = venue.venuecategory_set.filter(display_in_public_tooltip=True)
+
+            cell = {'text': venue.display_name}
+            if len(categories) == 0:
+                return cell
+
+            cat_sentence = "This venue "
+            for i, category in enumerate(categories):
+                cat_sentence += "<strong>%s</strong>, " % category.description.strip()
+                if i == len(categories) - 2:
+                    cat_sentence += "and "
+
+            cell['popover'] = {'title': venue.display_name,
+                               'content': [{'text': cat_sentence[:-2] + "."}]}
+            return cell
+
         if self.tournament.pref('enable_divisions') and len(debates) > 0:
             if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
                 divisions_header = {
@@ -476,17 +503,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
         venue_header = {
             'key': "Venue",
             'icon': 'glyphicon-map-marker',
+            'tooltip': "Venue"
         }
-        if self.tournament.pref('enable_venue_groups'):
-            venue_data = [
-                debate.division.venue_group.short_name if debate.division
-                else (debate.venue.group.short_name + ' ' + debate.venue.name) if debate.venue and debate.venue.group
-                else debate.venue.name if debate.venue
-                else ''
-                for debate in debates
-            ]
-        else:
-            venue_data = [debate.venue.name if debate.venue else '' for debate in debates]
+        venue_data = [construct_venue_cell(d.venue) for d in debates]
+
         self.add_column(venue_header, venue_data)
 
         if with_times and self.tournament.pref('enable_debate_scheduling'):
@@ -673,7 +693,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     debateteam = debate.get_dt(pos)
                     team = debate.get_team(pos)
                 except ObjectDoesNotExist:
-                    row.append("-")
+                    row.append(self.BLANK_TEXT)
                     continue
                 except MultipleObjectsReturned:
                     row.append("<error>")

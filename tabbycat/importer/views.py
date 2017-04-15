@@ -1,17 +1,162 @@
 from django.contrib import messages
-from django.db import models
+from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
+from django.forms import modelformset_factory
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.utils.translation import ugettext as _
+from django.views.generic import TemplateView
+from formtools.wizard.views import SessionWizardView
 
 from participants.models import Adjudicator, Institution, Speaker, Team
+from tournaments.mixins import TournamentMixin
+from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
 from utils.views import admin_required, expect_post, tournament_view
-from venues.models import Venue, VenueConstraint, VenueConstraintCategory, VenueGroup
+from venues.models import Venue, VenueCategory, VenueConstraint
 
+from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
+                    ImportVenuesRawForm, NumberForEachInstitutionForm,
+                    TeamDetailsForm, VenueDetailsForm)
+
+
+# TODO log actions for all of these?
+
+class ImporterSimpleIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+    template_name = 'simple_import_index.html'
+
+
+class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
+    """Common functionality for the import wizard views. In particular, this
+    class implements functionality for a "details" step that is initialized
+    with data from the previous step. The details step shows a ModelFormSet
+    associated with a specified model."""
+
+    DETAILS_STEP = 'details'
+    tournament_redirect_pattern_name = 'importer-simple-index'
+
+    model = None  # must be specified by subclass
+
+    def get_details_form_initial(self):
+        raise NotImplementedError
+
+    def get_template_names(self):
+        return ['simple_import_%(model)ss_%(step)s.html' % {
+            'model': self.model._meta.model_name,
+            'step': self.steps.current
+        }]
+
+    def get_form_initial(self, step):
+        """Overridden to initialize the 'details' step with data from a previous
+        step."""
+        if step == self.DETAILS_STEP and step == self.steps.next:
+            return self.get_details_form_initial()
+        else:
+            return super().get_form_initial(step)
+
+    def get_form_instance(self, step):
+        if step == self.DETAILS_STEP:
+            return self.model.objects.none()
+        else:
+            return super().get_form_instance(step)
+
+    def get_form(self, step=None, **kwargs):
+        form = super().get_form(step, **kwargs)
+        if step == self.DETAILS_STEP:
+            form.extra = len(form.initial_extra)
+            form.save_as_new = True
+        return form
+
+    def done(self, form_list, form_dict, **kwargs):
+        instances = form_dict[self.DETAILS_STEP].save()
+        messages.success(self.request, _("Added %(count)d %(model_plural)s.") % {
+                'count': len(instances), 'model_plural': self.model._meta.verbose_name_plural})
+        return HttpResponseRedirect(self.get_redirect_url())
+
+
+class ImportInstitutionsWizardView(BaseImportWizardView):
+    model = Institution
+    form_list = [
+        ('raw', ImportInstitutionsRawForm),
+        ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
+    ]
+
+    def get_details_form_initial(self):
+        return self.get_cleaned_data_for_step('raw')['institutions_raw']
+
+
+class ImportVenuesWizardView(BaseImportWizardView):
+    model = Venue
+    form_list = [
+        ('raw', ImportVenuesRawForm),
+        ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0))
+    ]
+
+    def get_form_kwargs(self, step):
+        if step == 'details':
+            return {'form_kwargs': {'tournament': self.get_tournament()}}
+        else:
+            return super().get_form_kwargs(step)
+
+    def get_details_form_initial(self):
+        return self.get_cleaned_data_for_step('raw')['venues_raw']
+
+
+class BaseImportByInstitutionWizardView(BaseImportWizardView):
+    """Common functionality in teams and institutions wizards."""
+
+    def get_form_kwargs(self, step):
+        if step == 'numbers':
+            return {'institutions': Institution.objects.all()}
+        elif step == 'details':
+            return {'form_kwargs': {'tournament': self.get_tournament()}}
+
+    def get_details_form_initial(self):
+        data = self.get_cleaned_data_for_step('numbers')
+        initial_list = []
+        for institution in Institution.objects.order_by('name'):
+            number = data.get('number_institution_%d' % institution.id, 0)
+            if number is None: # field left blank
+                continue
+            for i in range(1, number+1):
+                initial = {'institution': institution.id}
+                initial.update(self.get_details_instance_initial(i))
+                initial_list.append(initial)
+        return initial_list
+
+    def get_details_instance_initial(self):
+        raise NotImplementedError
+
+
+class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
+    model = Team
+    form_list = [
+        ('numbers', NumberForEachInstitutionForm),
+        ('details', modelformset_factory(Team, form=TeamDetailsForm, extra=0)),
+    ]
+
+    def get_details_instance_initial(self, i):
+        return {'reference': str(i), 'use_institution_prefix': True}
+
+
+class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
+    model = Adjudicator
+    form_list = [
+        ('numbers', NumberForEachInstitutionForm),
+        ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
+    ]
+
+    def get_details_instance_initial(self, i):
+        return {'name': _("Adjudicator %(number)d") % {'number': i}, 'test_score': 2.5}
+
+
+# ==============================================================================
+# Old forms
+# ==============================================================================
 
 @admin_required
 @tournament_view
 def data_index(request, t):
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
 
 
 def enforce_length(value, type, model, request, extra_limit=0):
@@ -28,10 +173,11 @@ def enforce_length(value, type, model, request, extra_limit=0):
 # Institutions
 # ==============================================================================
 
+
 @admin_required
 @tournament_view
 def add_institutions(request, t):
-    return render(request, 'add_institutions.html')
+    return render(request, 'old_importer/add_institutions.html')
 
 
 @admin_required
@@ -56,11 +202,11 @@ def edit_institutions(request, t):
 
     if len(institutions) == 0:
         messages.warning(request, "No institutions were added")
-        return render(request, 'data_index.html')
+        return render(request, 'old_importer/data_index.html')
     else:
         max_name = Institution._meta.get_field('name').max_length - 1
         max_code = Institution._meta.get_field('code').max_length - 1
-        return render(request, 'edit_institutions.html', dict(
+        return render(request, 'old_importer/edit_institutions.html', dict(
                       institutions=institutions,
                       full_name_max=max_name, code_max=max_code))
 
@@ -86,7 +232,7 @@ def confirm_institutions(request, t):
     if added_institutions > 0:
         messages.success(request, "%s Institutions have been added" % len(institution_names))
 
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
 
 
 # ==============================================================================
@@ -96,7 +242,7 @@ def confirm_institutions(request, t):
 @admin_required
 @tournament_view
 def add_venues(request, t):
-    return render(request, 'add_venues.html')
+    return render(request, 'old_importer/add_venues.html')
 
 
 @admin_required
@@ -125,16 +271,16 @@ def edit_venues(request, t):
             priority = 100
 
         if len(line.split(',')) > 2:
-            group = line.split(',')[2].strip()
-            venues.append({'name': name, 'priority': priority, 'group': group})
+            category = line.split(',')[2].strip()
+            venues.append({'name': name, 'priority': priority, 'category': category})
         else:
             venues.append({'name': name, 'priority': priority})
 
     if len(venues) == 0:
         messages.error(request, "No data was entered was entered in the form")
-        return render(request, 'data_index.html')
+        return render(request, 'old_importer/data_index.html')
     else:
-        return render(request, 'edit_venues.html', dict(venues=venues,
+        return render(request, 'old_importer/edit_venues.html', dict(venues=venues,
                   max_name_length=Venue._meta.get_field('name').max_length - 1))
 
 
@@ -144,128 +290,47 @@ def edit_venues(request, t):
 def confirm_venues(request, t):
     venue_names = request.POST.getlist('venue_names')
     venue_priorities = request.POST.getlist('venue_priorities')
-    venue_groups = request.POST.getlist('venue_groups')
+    venue_categories = request.POST.getlist('venue_categories')
+    category_displays = request.POST.getlist('category_displays')
     venue_shares = request.POST.getlist('venue_shares')
 
     for i, key in enumerate(venue_names):
-        if venue_groups[i]:
-            try:
-                venue_group = VenueGroup.objects.get(short_name=venue_groups[i])
-            except VenueGroup.DoesNotExist:
-                try:
-                    venue_group = VenueGroup.objects.get(name=venue_groups[i])
-                except VenueGroup.DoesNotExist:
-                    venue_group = VenueGroup(name=venue_groups[i],
-                                             short_name=venue_groups[i][:15]).save()
-        else:
-            venue_group = None
-
+        venue_tournament = t
         if venue_shares[i] == "yes":
             venue_tournament = None
-        else:
-            venue_tournament = t
 
         priority = venue_priorities[i]
         if not priority or not float(priority).is_integer():
             messages.warning(request, "Venue %s could not be saved because \
                 it did not have a valid priority number" % venue_names[i])
-        else:
-            venue = Venue(name=venue_names[i], priority=venue_priorities[i],
-                          group=venue_group, tournament=venue_tournament)
-            venue.save()
+            continue
+
+        venue = Venue(name=venue_names[i], priority=venue_priorities[i],
+                      tournament=venue_tournament)
+        venue.save()
+
+        if venue_categories[i]:
+            display = VenueCategory.DISPLAY_NONE
+            try:
+                if category_displays[i] == "prefix":
+                    display = VenueCategory.DISPLAY_PREFIX
+                elif category_displays[i] == "suffix":
+                    display = VenueCategory.DISPLAY_SUFFIX
+            except IndexError:
+                pass
+
+            try:
+                venue_category = VenueCategory.objects.get(name=venue_categories[i])
+            except VenueCategory.DoesNotExist:
+                venue_category = VenueCategory(name=venue_categories[i],
+                                               display_in_venue_name=display)
+                venue_category.save()
+
+            venue_category.venues.add(venue)
+            venue_category.save()
 
     messages.success(request, "%s Venues have been added" % len(venue_names))
-    return render(request, 'data_index.html')
-
-
-# ==============================================================================
-# Venue Preferences
-# ==============================================================================
-
-@admin_required
-@tournament_view
-def add_venue_preferences(request, t):
-    institutions = Institution.objects.all()
-    return render(request,
-                  'add_venue_preferences.html',
-                  dict(institutions=institutions))
-
-
-@admin_required
-@expect_post
-@tournament_view
-def edit_venue_preferences(request, t):
-    venue_groups = VenueGroup.objects.all()
-
-    # Build a list of institutions and possible venue groups with existing data
-    institutions = []
-    for institution_id, checked in request.POST.items():
-        institution = Institution.objects.get(pk=institution_id)
-        institution.constraints = []
-        for venue_group in venue_groups:
-            # Find all constraints matching this institution and venue group
-            constraint = VenueConstraint.objects.filter(
-                models.Q(institution=institution),
-                category__name=venue_group.name).first()
-            # Prepopulate priority data (because we are wiping each time)
-            institution.constraints.append({
-                'id': venue_group.id,
-                'name': venue_group.name,
-                'priority': constraint.priority if constraint else ''
-            })
-
-        institutions.append(institution)
-
-    return render(request,
-                  'edit_venue_preferences.html',
-                  dict(institutions=institutions))
-
-
-@admin_required
-@expect_post
-@tournament_view
-def confirm_venue_preferences(request, t):
-
-    # Delete existing venue constraints
-    for institution_id in request.POST.getlist('institutionIDs'):
-        institution = Institution.objects.get(pk=institution_id)
-        VenueConstraint.objects.filter(models.Q(institution=institution)).delete()
-
-    venue_priorities = request.POST.dict()
-    del venue_priorities["institutionIDs"]
-
-    created_preferences = 0
-    print(venue_priorities.items())
-
-    for idset, priority in venue_priorities.items():
-        institution_id = idset.split('_')[0]
-        venue_group_id = idset.split('_')[1]
-        print('have a idset', idset, ' priority ', priority)
-
-        if institution_id and venue_group_id and priority:
-            institution = Institution.objects.get(pk=int(institution_id))
-            venue_group = VenueGroup.objects.get(pk=int(venue_group_id))
-
-            # Find or make a new venue constraint category for each venue group
-            category, created = VenueConstraintCategory.objects.get_or_create(name=venue_group.name)
-
-            # Assign it all the relevant venues for its particular group
-            if venue_group.venues.count() > 0:
-                category.venues = venue_group.venues.all()
-            else:
-                messages.warning(request, "No constraints have been assigned "
-                    "for Venue Group %s because there are no venues in this "
-                    "group. You probably want to add some venues to this group "
-                    "and then recreate this constraint." % venue_group.name)
-
-            venue_constaint = VenueConstraint(subject=institution,
-                                              priority=priority,
-                                              category=category)
-            venue_constaint.save()
-            created_preferences += 1
-
-    messages.success(request, "%s Venue Preferences have been added" % created_preferences)
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
 
 
 # ==============================================================================
@@ -276,7 +341,7 @@ def confirm_venue_preferences(request, t):
 @tournament_view
 def add_teams(request, t):
     institutions = Institution.objects.all()
-    return render(request, 'add_teams.html', dict(institutions=institutions))
+    return render(request, 'old_importer/add_teams.html', dict(institutions=institutions))
 
 
 @admin_required
@@ -317,7 +382,7 @@ def edit_teams(request, t):
                 'available_team_numbers': available_team_numbers
             })
 
-    return render(request, 'edit_teams.html',
+    return render(request, 'old_importer/edit_teams.html',
                   dict(institutions=institutions_with_team_numbers,
                        default_speakers=default_speakers,
                        max_name_length=Team._meta.get_field('reference').max_length - 1))
@@ -370,7 +435,7 @@ def confirm_teams(request, t):
 
     if added_teams > 0:
         messages.success(request, "%s Teams have been added" % int((len(sorted_post) - 1) / 4))
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
 
 
 # ==============================================================================
@@ -381,7 +446,7 @@ def confirm_teams(request, t):
 @tournament_view
 def add_adjudicators(request, t):
     institutions = Institution.objects.all()
-    return render(request, 'add_adjudicators.html', dict(institutions=institutions))
+    return render(request, 'old_importer/add_adjudicators.html', dict(institutions=institutions))
 
 
 @admin_required
@@ -399,7 +464,7 @@ def edit_adjudicators(request, t):
         'score_avg': round((t.pref('adj_max_score') + t.pref('adj_min_score')) / 2, 1),
         'max_name_length': Adjudicator._meta.get_field('name').max_length
     }
-    return render(request, 'edit_adjudicators.html', context)
+    return render(request, 'old_importer/edit_adjudicators.html', context)
 
 
 @admin_required
@@ -428,4 +493,98 @@ def confirm_adjudicators(request, t):
             newadj.save()
 
     messages.success(request, "%s Adjudicators have been added" % int((len(sorted_post) - 1) / 3))
-    return render(request, 'data_index.html')
+    return render(request, 'old_importer/data_index.html')
+
+
+# ==============================================================================
+# Importing Shared
+# ==============================================================================
+
+class ConfirmDataView(TournamentMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+    tournament_redirect_pattern_name = 'data_index'
+
+
+# ==============================================================================
+# Importing Venue Category Constraints
+# ==============================================================================
+
+class AddConstraintsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
+    template_name = 'old_importer/add_constraints.html'
+    type = None
+
+    def get_context_data(self, **kwargs):
+        kwargs["entities"] = self.type.objects.all()
+        kwargs["entity_type"] = self.type.__name__
+        return super().get_context_data(**kwargs)
+
+
+class EditConstraintsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
+    template_name = 'old_importer/edit_constraints.html'
+    type = None
+
+    def post(self, request, *args, **kwargs):
+        venue_categories = VenueCategory.objects.all()
+        entities = []
+        for entity_id, checked in request.POST.items():
+            entity = self.type.objects.get(pk=entity_id)
+            entity.constraints = []
+
+            for venue_category in venue_categories:
+                # Find all constraints matching this entity
+                content_type = ContentType.objects.get_for_model(self.type)
+                constraint = VenueConstraint.objects.filter(
+                    category=venue_category,
+                    subject_content_type=content_type,
+                    subject_id=entity_id).first()
+
+                # Prepopulate priority data (because we are wiping each time)
+                entity.constraints.append({
+                    'id': venue_category.id,
+                    'name': venue_category.name,
+                    'priority': constraint.priority if constraint else ''
+                })
+
+            entities.append(entity)
+
+        context = self.get_context_data(entities)
+        return super(TemplateView, self).render_to_response(context)
+
+    def get_context_data(self, entities, **kwargs):
+        kwargs["venue_categories"] = VenueCategory.objects.all()
+        kwargs["entities"] = entities
+        kwargs["entity_type"] = self.type.__name__
+        return super().get_context_data(**kwargs)
+
+
+class ConfirmConstraintsView(ConfirmDataView):
+    type = None
+
+    def post(self, request, *args, **kwargs):
+        # Delete existing constraints for this type
+        for entity_id in request.POST.getlist('entityIDs'):
+            entity = self.type.objects.get(pk=entity_id)
+            content_type = ContentType.objects.get_for_model(self.type)
+            VenueConstraint.objects.filter(subject_content_type=content_type,
+                                           subject_id=entity_id).delete()
+
+        venue_priorities = request.POST.dict()
+        del venue_priorities["entityIDs"]
+
+        created_constraints = 0
+        print(venue_priorities.items())
+
+        for idset, priority in venue_priorities.items():
+            entity_id = idset.split('_')[0]
+            venue_category_id = idset.split('_')[1]
+            print('have a idset', idset, ' priority ', priority)
+
+            if entity_id and venue_category_id and priority:
+                entity = self.type.objects.get(pk=int(entity_id))
+                category = VenueCategory.objects.get(pk=int(venue_category_id))
+                VenueConstraint(subject=entity, priority=priority,
+                                category=category).save()
+                created_constraints += 1
+
+        messages.success(request, "%s Venue Constraints for %ss have been added" %
+                                  (created_constraints, self.type.__name__))
+        return super().post(request, *args, **kwargs)

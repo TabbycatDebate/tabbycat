@@ -8,8 +8,8 @@ from .models import Division
 # ==============================================================================
 
 class DivisionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'tournament', 'venue_group', 'time_slot')
-    list_filter = ('tournament', 'venue_group')
+    list_display = ('name', 'tournament', 'venue_category', 'time_slot')
+    list_filter = ('tournament', 'venue_category')
     search_fields = ('name', )
     ordering = ('tournament', 'name', )
 

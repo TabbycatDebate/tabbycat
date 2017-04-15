@@ -27,6 +27,6 @@
     {% endfor %}
   </ul>
 
-  <a href="{% tournament_url tournament_preference_apply preset_name %}" class="btn btn-success btn-block submit-disable" data-loading-text="Saving...">Apply Presets</a>
+  <a href="{% tournamenturl 'tournament_preference_apply' preset_name %}" class="btn btn-success btn-block submit-disable" data-loading-text="Saving...">Apply Presets</a>
 
 {% endblock content %}

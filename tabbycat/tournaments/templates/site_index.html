@@ -8,34 +8,32 @@
 {% block content %}
 
 <ul class="list-group">
-  {% if tournaments.all.exists %}
-    {% for tournament in tournaments %}
-      {% if user.is_authenticated %}
-        <li class="list-group-item">
-          <a href="{{ tournament.get_absolute_url }}">
-            {% with tournament_name=tournament.name %}
-              {% if user.is_superuser %}
-                <span class="emoji">🔧</span>{% blocktrans trimmed %}
-                Admin area for <strong>{{ tournament_name }}</strong>
-                {% endblocktrans %}
-              {% else %}
-                <span class="emoji">🔧</span>{% blocktrans trimmed %}
-                Assistant area for <strong>{{ tournament_name }}</strong>
-                {% endblocktrans %}
-              {% endif %}
-            {% endwith %}
-          </a>
-        </li>
-      {% endif %}
+  {% for tournament in tournaments %}
+    {% if user.is_authenticated %}
       <li class="list-group-item">
-        <a href="{{ tournament.get_public_url }}">
-          <span class="emoji">
-            {{ tournament.emoji|default:"🏆" }}
-          </span>{{ tournament.name }}
+        <a href="{{ tournament.get_absolute_url }}">
+          {% with tournament_name=tournament.name %}
+            {% if user.is_superuser %}
+              <span class="emoji">🔧</span>{% blocktrans trimmed %}
+              Admin area for <strong>{{ tournament_name }}</strong>
+              {% endblocktrans %}
+            {% else %}
+              <span class="emoji">🔧</span>{% blocktrans trimmed %}
+              Assistant area for <strong>{{ tournament_name }}</strong>
+              {% endblocktrans %}
+            {% endif %}
+          {% endwith %}
         </a>
       </li>
-    {% endfor %}
-  {% else %}
+    {% endif %}
+    <li class="list-group-item">
+      <a href="{{ tournament.get_public_url }}">
+        <span class="emoji">
+          {{ tournament.emoji|default:"🏆" }}
+        </span>{{ tournament.name }}
+      </a>
+    </li>
+  {% empty %}
     {% if user.is_authenticated %}
       <li class="list-group-item">
         {% url 'tournament-create' as create_url %}
@@ -50,7 +48,7 @@
         {% endblocktrans %}
       </li>
     {% endif %}
-  {% endif %}
+  {% endfor %}
 </ul>
 
 {% if tournaments.0.preferences.league_options__enable_mass_draws %}

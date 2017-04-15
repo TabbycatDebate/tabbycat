@@ -57,7 +57,7 @@
     aria-multiselectable="true">
 
   <li class="standalone">
-     <a href="{% tournament_url tournament-admin-home %}"
+     <a href="{% tournamenturl 'tournament-admin-home' %}"
         class="{% if overview_nav %}active{% endif %}">
         <span class="circle-icon icon-container">
           <span class="glyphicon glyphicon-th"></span>
@@ -67,7 +67,7 @@
   </li>
   {% if pref.side_allocations_enabled == 'preallocated' %}
     <li class="standalone">
-      <a href="{% tournament_url draw-side-allocations %}"
+      <a href="|{% tournamenturl 'draw-side-allocations' %}"
          class="{% if sides_nav %}active{% endif %}">
         <span class="circle-icon icon-container">
           <span class="glyphicon glyphicon-resize-horizontal"></span>
@@ -78,7 +78,7 @@
   {% endif %}
   {% if pref.enable_divisions %}
     <li class="standalone">
-      <a href="{% tournament_url division_allocations %}"
+      <a href="{% tournamenturl 'division_allocations' %}"
          class="{% if divisions_nav %}active {% endif %}">
         <span class="circle-icon icon-container">
           <span class="glyphicon glyphicon-th-list"></span>
@@ -88,7 +88,7 @@
     </li>
   {% endif %}
   <li class="standalone">
-    <a href="{% tournament_url adjfeedback-overview %}"
+    <a href="{% tournamenturl 'adjfeedback-overview' %}"
        class="{% if feedback_nav %} active {% endif %}">
       <span class="circle-icon icon-container">
         <span class="glyphicon glyphicon-comment"></span>
@@ -97,7 +97,7 @@
     </a>
   </li>
   <li class="standalone">
-    <a href="{% round_url standings-index current_round %}"
+    <a href="{% roundurl 'standings-index' current_round %}"
        class="{% if standings_nav %} active {% endif %}">
       <span class="circle-icon icon-container">
         <span class="glyphicon glyphicon-stats"></span>
@@ -129,7 +129,7 @@
       <ul class="nav nav-pills nav-stacked">
         <li>
           <a class="{% if options_nav %}active{% endif %}"
-             href="{% tournament_url options-tournament-index %}">
+             href="{% tournamenturl 'options-tournament-index' %}">
             <span class="circle-icon icon-container">
               <span class="glyphicon glyphicon-cog"></span>
             </span>
@@ -138,7 +138,7 @@
         </li>
         <li>
           <a class="{% if import_nav %}active{% endif %}"
-             href="{% tournament_url data_index %}">
+             href="{% tournamenturl 'importer-simple-index' %}">
             <span class="circle-icon icon-container">
               <span class="glyphicon glyphicon-download"></span>
             </span>
@@ -164,7 +164,7 @@
           <div class="progress-line standard-line"></div>
           <div class="">
              <a class="{% if break_nav %}active{% endif %}"
-                href="{% tournament_url breakqual-index %}">
+                href="{% tournamenturl 'breakqual-index' %}">
               <span class="circle-icon icon-container">
                 <span class="glyphicon glyphicon-gift"></span>
               </span>

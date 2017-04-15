@@ -5,7 +5,7 @@
 {% block page-title %}Shift Confirmations{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
     <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
   </a>
 {% endblock %}
@@ -24,7 +24,7 @@
             <li class="list-group-item {% if shift.timing_confirmed == True %}list-group-item-success{% elif shift.timing_confirmed == False %}list-group-item-danger{% endif %}">
               {{ shift.debate.round.tournament.short_name }}
               {{ shift.debate.round.abbreviation }} —
-              {{ shift.debate.division.venue_group }} @
+              {{ shift.debate.division.venue_category }} @
               {{ shift.debate.time.time|time:'h:i' }}
               {% if shift.timing_confirmed == True %}
                 <span class="glyphicon glyphicon-ok pull-right"></span>

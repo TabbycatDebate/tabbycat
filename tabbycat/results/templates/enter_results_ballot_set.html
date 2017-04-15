@@ -13,14 +13,15 @@
     </div>
   {% endif %}
 
-  {% if form.choose_sides %}
-    <div class="row">
-      <div class="col-md-12">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">Sides</h4>
-          </div>
-          <div class="panel-body form-panel">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">Debate Information</h4>
+        </div>
+        <div class="panel-body form-panel">
+
+          {% if form.choose_sides %}
             <div class="form-group">
               <label class="col-sm-2 col-md-2 col-xs-6 control-label" >Sides</label>
               <div class="col-sm-10">
@@ -28,56 +29,54 @@
                 {{ form.choose_sides.errors }}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="hidden">
-      {% for field in form.fake_speaker_selects %}
-        {{ field }}
-      {% endfor %}
-    </div>
-  {% endif %}
+            <div class="hidden">
+              {% for field in form.fake_speaker_selects %}
+                {{ field }}
+              {% endfor %}
+            </div>
+          {% endif %}
 
-
-  {% if pref.enable_motions or pref.enable_motions %}
-    <div class="row">
-      <div class="col-md-12">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">Motion</h4>
+          {% if pref.enable_motions %}
+          <div class="form-group">
+            <label class="col-sm-2 col-xs-6 control-label" >Selected motion</label>
+            <div class="col-sm-10">
+              {{ form.motion|addcss:"form-control motion required" }}
+              {{ form.motion.errors }}
+            </div>
           </div>
-          <div class="panel-body form-panel">
-            {% if pref.enable_motions %}
+          {% endif %}
+
+          {% if pref.motion_vetoes_enabled %}
             <div class="form-group">
-              <label class="col-sm-2 col-md-2 col-xs-6 control-label" >Chosen</label>
+              <label class="col-sm-2 col-xs-6 control-label" >Aff's motion veto</label>
               <div class="col-sm-10">
-                {{ form.motion|addcss:"form-control motion required" }}
-                {{ form.motion.errors }}
+                {{ form.aff_motion_veto|addcss:"form-control motion" }}
+                {{ form.aff_motion_veto.errors }}
               </div>
             </div>
-            {% endif %}
-            {% if pref.motion_vetoes_enabled %}
-                <div class="form-group">
-                  <label class="col-sm-2 col-md-2 col-xs-6 control-label" >Aff Veto</label>
-                  <div class="col-sm-10">
-                    {{ form.aff_motion_veto|addcss:"form-control motion" }}
-                    {{ form.aff_motion_veto.errors }}
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-2 col-md-2 col-xs-6 control-label" >Neg Veto</label>
-                  <div class="col-sm-10">
-                    {{ form.neg_motion_veto|addcss:"form-control motion" }}
-                    {{ form.neg_motion_veto.errors }}
-                  </div>
-                </div>
-            {% endif %}
+            <div class="form-group">
+              <label class="col-sm-2 col-xs-6 control-label" >Neg's motion veto</label>
+              <div class="col-sm-10">
+                {{ form.neg_motion_veto|addcss:"form-control motion" }}
+                {{ form.neg_motion_veto.errors }}
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="form-group">
+            <label class="col-sm-2 col-xs-6 control-label" >'Iron' speeches</label>
+            <div class="col-sm-10">
+              <select class="form-control required" id="hasIron" name="iron" tabindex="{{ form.irontabindex }}" required="" aria-required="true">
+                <option value="0">No; there were no speakers who spoke multiple times</option>
+                <option value="1">Yes; there were speakers who spoke multiple times</option>
+              </select>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
-  {% endif %}
+  </div>
 
   {% for adj in form.adj_iter %}
     <div class="row">
@@ -108,6 +107,12 @@
                       {% if forloop.parentloop.first %}
                         {{ position.aff_speaker|addcss:"form-control js-speaker required aff-speaker" }}
                         {{ position.aff_speaker.errors }}
+                        <div class="iron-person form-label" style="display: none">
+                          <span data-toggle="tooltip" title="Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate.">
+                            <span>{{ position.aff_ghost.label_tag }}</span>
+                          </span>
+                          {{ position.aff_ghost }}
+                        </div>
                       {% else %}
                         <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
                       {% endif %}
@@ -142,6 +147,12 @@
                       {% if forloop.parentloop.first %}
                           {{ position.neg_speaker|addcss:"form-control js-speaker required neg-speaker" }}
                           {{ position.neg_speaker.errors }}
+                          <div class="iron-person form-label" style="display: none">
+                            <span data-toggle="tooltip" title="Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate.">
+                              <span>{{ position.neg_ghost.label_tag }}</span>
+                            </span>
+                            {{ position.neg_ghost }}
+                          </div>
                       {% else %}
                         <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
                       {% endif %}

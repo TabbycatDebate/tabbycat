@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags i18n %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">🏰</span>{% trans "Venue Constraints" %}{% endblock %}
+{% block page-title %}🏰{% trans "Venue Constraints" %}{% endblock %}
+
+{% block content %}
+
+  <div class="alert alert-info">
+    {% blocktrans trimmed %}
+      Venue constraints tell the venue allocator to try to keep the specified
+      team or adjudicator, or all teams (but not adjudicators) from the
+      specified institution, in a venue in the given category. The "priority"
+      field resolves conflicting constraints: the higher priority takes
+      precedence. You can also use the priority field to specify
+      "lower-preference" constraints, which are taken if a higher-priority
+      constraint couldn't be met.
+    {% endblocktrans %}
+  </div>
+
+  {% if formset.errors %}
+  <div class="alert alert-danger">
+    <p>{% trans "There are some problems with the data on this form:" %}</p>
+    {{ formset.non_form_errors }}
+  </div>
+  {% endif %}
+
+  <form method="POST" action="" class="form-horizontal">
+    {% csrf_token %}
+    <div class="panel panel-default">
+      <ul class="list-group">
+        {{ formset.management_form }}
+
+        {% for form in formset %}
+        <li class="list-group-item">
+
+          {% if form.non_field_errors %}
+            <div class="col-sm-12">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          {% for field in form.hidden_fields %}
+            {{ field }}
+          {% endfor %}
+
+          {% for field in form.visible_fields %}
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="{{ field.id_for_label }}">
+                {{ field.label }}
+              </label>
+              <div class="col-sm-4">
+                {{ field|addcss:"form-control" }}
+              </div>
+              <div class="col-sm-6">
+                <span class="help-block">
+                  {{ field.help_text }}
+                </span>
+                {{ field.errors }}
+              </div>
+            </div>
+          {% endfor %}
+
+        </li>
+        {% endfor %}
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-md-6">
+              <input class="btn btn-block btn-success" type="submit" name="submit" value="{% trans 'Save Venue Constraints' %}" />
+            </div>
+            <div class="col-md-6">
+              <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </form>
+
+{% endblock content %}
+
+{% block js %}
+
+  {{ block.super }}
+
+  <script>
+    $(document).ready( function() {
+
+      function filterContentIDs(filteredList, filterToType) {
+        $(filteredList).children().each(function() {
+          // For each element in the data list check if contains the type
+          // This works as we suffixed the text; ie John Smith (Adjudicator)
+          if ($(this).text().toLowerCase().indexOf(filterToType) !== -1) {
+            $(this).prop('disabled', false);
+          } else {
+            $(this).prop('disabled', true);
+          }
+        });
+      }
+
+      // Initial filtering of the options based on preset content type
+      $("select[data-filter]").each(function() {
+        var selectedType = $(this).find(":selected").text(); // Get selected type
+        var filteredList = $(this).parent().parent().parent().find("datalist")
+        filterContentIDs(filteredList, selectedType)
+      });
+
+      // Update filters on change of selected content type
+      $("select[data-filter]").change(function() {
+        var subjectIDInput = $(this).parent().parent().parent().find("input[list]")
+        $(subjectIDInput).val(null); // Set ID to none when type changes
+        var filteredList = $(this).parent().parent().parent().find("datalist")
+        var selectedType = $(this).find(":selected").text(); // Get selected type
+        filterContentIDs(filteredList, selectedType)
+      });
+
+    });
+  </script>
+
+{% endblock %}

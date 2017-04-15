@@ -12,7 +12,7 @@
   <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title">From a Team</h4>
+        <h4 class="panel-title">A Team</h4>
       </div>
       <div class="panel-body">
         <table id="dataTableA" class="table">
@@ -29,7 +29,7 @@
           <tr id="team_{{ team.id }}">
             <td>
               {% block enter-feedback-team-link %}
-                <a href="{% tournament_url adjfeedback-add-from-team team.id %}">
+                <a href="{% tournamenturl 'adjfeedback-add-from-team' team.id %}">
                 {{ team.short_name }}</a>
               {% endblock %}
             </td>
@@ -47,7 +47,7 @@
   <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title">From an Adjudicator</h4>
+        <h4 class="panel-title">An Adjudicator</h4>
       </div>
       <div class="panel-body">
         <table id="dataTableB" class="table">
@@ -64,7 +64,7 @@
           <tr id="adj_{{ adj.id }}">
             <td>
               {% block enter-feedback-adj-link %}
-                <a href="{% tournament_url adjfeedback-add-from-adjudicator adj.id %}">
+                <a href="{% tournamenturl 'adjfeedback-add-from-adjudicator' adj.id %}">
                 {{ adj.name }}</a>
               {% endblock %}
             </td>

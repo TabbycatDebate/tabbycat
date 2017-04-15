@@ -49,8 +49,8 @@ export default {
   mixins: [DraggableMixin],
   props: {
     'team': {},
-    'vg': { default: null },
-    'vg-name': { default: null },
+    'vc': { default: null },
+    'vc-name': { default: null },
     'save-division-at': {},
     'isDragging': { default: false },
     'show': { default: false }
@@ -64,28 +64,28 @@ export default {
       }
     },
     preference_allocated: function() {
-      if (this.vgName === null) {
+      if (this.vcName === null) {
         return 'btn-default';
       } else if (typeof this.team.team_preferences !== 'undefined' && this.team.team_preferences.length > 0) {
-        if (typeof this.team.team_preferences[0] !== 'undefined' && this.team.team_preferences[0].venue_group__id == this.vgName) {
+        if (typeof this.team.team_preferences[0] !== 'undefined' && this.team.team_preferences[0].venue_category__id == this.vcName) {
           return 'btn-success';
-        } else if (typeof this.team.team_preferences[1] !== 'undefined' && this.team.team_preferences[1].category__name == this.vgName) {
+        } else if (typeof this.team.team_preferences[1] !== 'undefined' && this.team.team_preferences[1].category__name == this.vcName) {
           return 'btn-success';
-        } else if (typeof this.team.team_preferences[2] !== 'undefined' && this.team.team_preferences[2].category__name == this.vgName) {
+        } else if (typeof this.team.team_preferences[2] !== 'undefined' && this.team.team_preferences[2].category__name == this.vcName) {
           return 'btn-info';
-        } else if (typeof this.team.team_preferences[3] !== 'undefined' && this.team.team_preferences[3].category__name == this.vgName) {
+        } else if (typeof this.team.team_preferences[3] !== 'undefined' && this.team.team_preferences[3].category__name == this.vcName) {
           return 'btn-info';
         } else {
           return 'btn-warning';
         }
       } else if (typeof this.team.institutional_preferences !== 'undefined' && this.team.institutional_preferences.length > 0) {
-        if (typeof this.team.institutional_preferences[0] !== 'undefined' && this.team.institutional_preferences[0].category__name == this.vgName) {
+        if (typeof this.team.institutional_preferences[0] !== 'undefined' && this.team.institutional_preferences[0].category__name == this.vcName) {
           return 'btn-success';
-        } else if (typeof this.team.institutional_preferences[1] !== 'undefined' && this.team.institutional_preferences[1].category__name == this.vgName) {
+        } else if (typeof this.team.institutional_preferences[1] !== 'undefined' && this.team.institutional_preferences[1].category__name == this.vcName) {
           return 'btn-success';
-        } else if (typeof this.team.institutional_preferences[2] !== 'undefined' && this.team.institutional_preferences[2].category__name == this.vgName) {
+        } else if (typeof this.team.institutional_preferences[2] !== 'undefined' && this.team.institutional_preferences[2].category__name == this.vcName) {
           return 'btn-info';
-        } else if (typeof this.team.institutional_preferences[3] !== 'undefined' && this.team.institutional_preferences[3].category__name == this.vgName) {
+        } else if (typeof this.team.institutional_preferences[3] !== 'undefined' && this.team.institutional_preferences[3].category__name == this.vcName) {
           return 'btn-info';
         } else {
           return 'btn-warning';
