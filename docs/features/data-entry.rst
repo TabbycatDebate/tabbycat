@@ -46,7 +46,7 @@ When entering the ballots there is a toggle label *'Iron' speeches*. When set to
 
 Speeches marked as duplicates are not included in the speaker tab. This means that they can also be used to exclude swing speakers from the tab as needed; even if they do not actually speak twice. To do so, change the name of the swing speaker to be that of an existing team member and ensure that that speech is marked as a duplicate.
 
-.. tip:: There is also an option under **Standings** in the **Config** section that specifies the number of debates a speaker can miss before you will not show on the tab. By default it is set to 1, but if need be this can be increased to hide swing speakers from the final speaker tab.
+.. tip:: There is also an option under **Standings** in the **Configuration** section that specifies the number of debates a speaker can miss before you will not show on the tab. By default it is set to 1, but if need be this can be increased to hide swing speakers from the final speaker tab.
 
 Feedback entry
 ==============
@@ -55,12 +55,31 @@ Feedback entry
 
 Feedback doesn't have the same verification process as ballots. Feedback that is entered by the tab room is assumed to be confirmed. If feedback is entered multiple times, all copies are retained but only the last one "counts" (is considered confirmed).
 
-Online ballot submissions
-=========================
+Online entry
+============
 
-.. todo:: We haven't written this documentation yet.
+There are two methods of allowing ballots and feedback to be submitted online. Both are set in the **Data Entry** page of each tournament's **Configuration** section and can be set independently; both in whether each can be submitted online at all and in which method of online submission are available.
 
-Online feedback submissions
-===========================
+Private URLs
+============
 
-.. todo:: We haven't written this documentation yet.
+The first method of data entry is used 'randomised URLs'. When this setting is enabled you can create a special URL that is unique to a particular team or adjudicator. This link contains a number of random characters and is not displayed publicly; it is in effect a secret that only that particular participant should know. Presuming people do not share these links to others this provides a means to (relatively) securely identify who is submitting what information. Because Tabbycat knows which team or adjudicator has which URL it will only allow them to submit feedback/ballots for debates that they were speakers/adjudicators in.
+
+These links must be generated within Tabbycat after the preference is enabled. To do so go to the **Feedback** section and then the **Randomised URLs** area. Once there you will be prompted to generate those URLs for all participants, which — once generated — will be presented in separate tables (one for teams; one for adjudicators).
+
+.. image:: images/randomised-urls.png
+
+These URLs can then be distributed to each person in a number of ways. There are pages within Tabbycat for printing them out (one URL per page labelled by recipient) or emailing them out (providing participants have been assigned email addresses). In the past tournaments have also used data from this table to send out SMSs by bulk, or distributed them to institutional representatives to disburse.
+
+.. tip:: You can assign email address to participants using the :ref:`importtournament command <importtournament-command>` when importing your registration data, or by going to the *Edit Data* area and looking up each Speaker/Adjudicator.
+
+.. tip:: If, after generating the randomised URLs, you add additional Teams or Adjudicators you can go to the *Edit Data* area , looking up each Speaker/Adjudicator, and type in a bunch of random characters as their *Url key* to assign them a random URL for them.
+
+Public URLs
+===========
+
+The second method of data entry is using 'normal URLs'. This essentially means that any users visiting the public version of the site is able to submit a ballot or feedback (as specified by their respective settings). They do so by self-selecting which Team or Adjudicator they are then entering in a form as normal.
+
+This is, rather obviously, not a particularly secure method of data entry — nothing is stopping anyone on the site from entering data as someone else. The data can be checked, verified, and edited as normal by admins however. As such, this method is only recommended for small tournaments where you can trust those present to enter accurate information (or where accuracy is not crucial).
+
+.. tip:: There is an additional setting to set a 'tournament password' that needs to be submitted to enable the form.  It is imagined, that if enabled, this password would only be distributed to tournament participants. However this only helps (at best) prevent non-participants from entering information; the fundamental problem of not verifying who is submitting what information is still present.

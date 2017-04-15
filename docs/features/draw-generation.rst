@@ -7,7 +7,7 @@ The draw generator is quite flexible. You can specify a number of settings to su
 
 Options
 =======
-The options discussed here are set in the **Config** page as described in :ref:`starting a tournament <starting-a-tournament>`.
+The options discussed here are set in the **Configuration** page as described in :ref:`starting a tournament <starting-a-tournament>`.
 
 .. caution:: The valid options for intermediate bubbles change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
 
