@@ -7,7 +7,7 @@ from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
 from draw.models import Debate
 from participants.models import Adjudicator
-from tournaments.mixins import RoundMixin, TournamentMixin
+from tournaments.mixins import OptionalAssistantTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Tournament
 from tournaments.utils import get_position_name
 from utils.mixins import SuperuserRequiredMixin
@@ -65,8 +65,9 @@ class RoomSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, TemplateView):
 
+    assistant_page_permissions = ['all_areas', 'results_draw']
     template_name = 'feedback_list.html'
 
     def has_team_questions(self):
@@ -189,8 +190,9 @@ class PrintFeedbackFormsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class PrintScoreSheetsView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, TemplateView):
 
+    assistant_page_permissions = ['all_areas']
     template_name = 'scoresheet_list.html'
 
     def get_context_data(self, **kwargs):

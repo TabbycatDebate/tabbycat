@@ -149,18 +149,19 @@ class PublicTournamentPageMixin(TournamentMixin):
 
 class OptionalAssistantTournamentPageMixin(TournamentMixin, UserPassesTestMixin):
     """Mixin for pages that are intended for assistants, but can be enabled and
-    disabled by a tournament preference. If the preference is enabled, then
-    assistants and superusers can see it; if not, only superusers can see it.
+    disabled by a tournament preference. This preference sets of access tiers;
+    if the page requires a certain tier to acess it then only superusers can
+    view it.
 
-    Views using the mixins should set the `assistant_page_preference` class
-    attribute to the name of the preference that controls whether assistants
-    can see this page.
+    Views using the mixins should set the `assistant_page_permissions` class to
+    match one or more of the values defined in the AssistantAccess preference's
+    available choices.
 
     If an anonymous user tries to access this page, they will be redirected to
     the login page. If an assistant user tries to access this page while
     assistant access is disabled, they will be redirected to the login page."""
 
-    assistant_page_preference = None
+    assistant_page_permissions = None
 
     def test_func(self):
         if self.request.user.is_superuser:
@@ -172,9 +173,12 @@ class OptionalAssistantTournamentPageMixin(TournamentMixin, UserPassesTestMixin)
         tournament = self.get_tournament()
         if tournament is None:
             return False
-        if self.assistant_page_preference is None:
-            raise ImproperlyConfigured("assistant_page_preference isn't set on this view.")
-        return tournament.pref(self.assistant_page_preference)
+        if self.assistant_page_permissions is None:
+            raise ImproperlyConfigured("assistant_page_permissions isn't set on this view.")
+        if tournament.pref('assistant_access') in self.assistant_page_permissions:
+            return True
+        else:
+            return False
 
 
 class CrossTournamentPageMixin(PublicTournamentPageMixin):

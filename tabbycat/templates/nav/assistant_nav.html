@@ -9,6 +9,8 @@
 {% if pref.enable_divisions %}
   <li><a href="{% roundurl 'printing-master-sheets-list' current_round %}">Division Sheets</a></li>
 {% endif %}
+{% if pref.assistant_access != "results_only" %}
 <li {% if draw_nav %}class="active"{% endif %}>
   <a href="{% roundurl 'draw-display' current_round %}">Display/Print Draw</a>
 </li>
+{% endif %}

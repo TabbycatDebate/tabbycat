@@ -631,6 +631,23 @@ class EnableMotions(BooleanPreference):
     name = "enable_motions"
     default = True
 
+
+@tournament_preferences_registry.register
+class AssistantAccess(ChoicePreference):
+    help_text = "Whether assistants can access pages that can reveal matchups \
+        and motions ahead of public release (these pages are useful for \
+        displaying draws/motions to the public and for printing ballots)."
+    verbose_name = "Assistant user access"
+    section = data_entry
+    name = 'assistant_access'
+    default = 'all_areas'
+    choices = (
+        ('all_areas', 'All areas'),
+        ('results_draw', 'Just results entry and draw display'),
+        ('results_only', 'Only results entry'),
+    )
+
+
 # ==============================================================================
 public_features = Section('public_features')
 # ==============================================================================
@@ -743,14 +760,6 @@ class FeedbackProgress(BooleanPreference):
     name = 'feedback_progress'
     default = False
 
-
-@tournament_preferences_registry.register
-class AssistantDisplayMotions(BooleanPreference):
-    help_text = "Allows assistant users to see the page for displaying motions"
-    verbose_name = "Enable assistant view of motion display"
-    section = public_features
-    name = 'assistant_display_motions'
-    default = True
 
 # ==============================================================================
 ui_options = Section('ui_options')

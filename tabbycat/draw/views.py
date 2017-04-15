@@ -13,7 +13,7 @@ from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
 from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import CrossTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import CrossTournamentPageMixin, OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.utils import aff_name, get_position_name, neg_name
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
@@ -145,14 +145,20 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, Ba
 # ==============================================================================
 
 class AdminDrawDisplay(LoginRequiredMixin, BaseDrawTableView):
+
+    assistant_page_permissions = ['all_areas', 'results_draw']
     template_name = 'draw_display.html'
 
 
-class AdminDrawDisplayForRoundByVenueView(LoginRequiredMixin, BaseDrawTableView):
+class AdminDrawDisplayForRoundByVenueView(OptionalAssistantTournamentPageMixin, BaseDrawTableView):
+
+    assistant_page_permissions = ['all_areas', 'results_draw']
     popovers = True
 
 
-class AdminDrawDisplayForRoundByTeamView(LoginRequiredMixin, BaseDrawTableView):
+class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, BaseDrawTableView):
+
+    assistant_page_permissions = ['all_areas', 'results_draw']
     sort_key = 'Team'
     popovers = True
 

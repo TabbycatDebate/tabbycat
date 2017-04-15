@@ -115,7 +115,7 @@ class UnreleaseMotionsView(BaseReleaseMotionsView):
 
 class DisplayMotionsView(OptionalAssistantTournamentPageMixin, RoundMixin, TemplateView):
 
-    assistant_page_preference = 'assistant_display_motions'
+    assistant_page_permissions = ['all_areas']
     template_name = 'show.html'
 
     def get_context_data(self, **kwargs):
