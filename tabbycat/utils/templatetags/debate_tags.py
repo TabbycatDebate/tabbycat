@@ -103,6 +103,16 @@ class TournamentURLNode(URLNode):
         return super().render(context)
 
 
+class TournamentAbsoluteURLNode(TournamentURLNode):
+    def render(self, context):
+        path = super(OldTournamentAbsoluteURLNode, self).render(context)
+        if self.asvar:
+            context[self.asvar] = context['request'].build_absolute_uri(context[self.asvar])
+            return path
+        else:
+            return context['request'].build_absolute_uri(path)
+
+
 class RoundURLNode(URLNode):
 
     def __init__(self, view_name, args, kwargs, asvar):
@@ -179,6 +189,12 @@ def tournamenturl(parser, token):
 
 
 @register.tag
+def tournament_absurl(parser, token):
+    args = get_url_args(parser, token)
+    return TournamentAbsoluteURLNode(*args)
+
+
+@register.tag
 def roundurl(parser, token):
     """Returns an absolute URL given the matching view for the given tournament
     and round, or the tournament and round in the context if no tournament is
@@ -212,12 +228,6 @@ class OldTournamentURLNode(template.Node):
         return reverse(self.view_name, args=args)
 
 
-class OldTournamentAbsoluteURLNode(OldTournamentURLNode):
-    def render(self, context):
-        path = super(OldTournamentAbsoluteURLNode, self).render(context)
-        return context['request'].build_absolute_uri(path)
-
-
 @register.tag
 def round_url(parser, token):
     warn("Then {% round_url %} tag is deprecated, use the new {% roundurl %} instead.", stacklevel=2)
@@ -237,14 +247,6 @@ def tournament_url(parser, token):
     bits = token.split_contents()
     args = [parser.compile_filter(b) for b in bits[2:]]
     return OldTournamentURLNode(bits[1], args)
-
-
-@register.tag
-def tournament_absurl(parser, token):
-    warn("Then {% tournament_absurl %} tag is deprecated, use the new {% tournament_absurl %} instead.", stacklevel=2)
-    bits = token.split_contents()
-    args = [parser.compile_filter(b) for b in bits[2:]]
-    return OldTournamentAbsoluteURLNode(bits[1], args)
 
 
 @register.filter

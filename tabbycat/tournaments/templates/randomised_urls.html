@@ -17,7 +17,7 @@
       participants, and are too worried about fraud to use a publicly accessible
       page where <em>anyone</em> can enter <em>any</em> submission. The URLs
       will look something like this:
-      <b>{% tournament_absurl adjfeedback-public-add-from-team-randomised "9dnflp3z" %}</b>.
+      <b>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' '9dnflp3z' %}</b>.
     {% endif %}
   </p>
 
@@ -109,12 +109,12 @@
               {% if adj.url_key %}
                 {% if pref.public_feedback_randomised %}
                   <td>
-                    {% tournament_absurl adjfeedback-public-add-from-adjudicator-randomised adj.url_key %}
+                    {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
                   </td>
                 {% endif %}
                 {% if pref.public_ballots_randomised %}
                   <td>
-                    {% tournament_absurl results-public-ballotset-new-randomised adj.url_key %}
+                    {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
                   </td>
                 {% endif %}
                 {% if pref.allocation_confirmations %}
@@ -152,7 +152,7 @@
                 </td>
                 <td>
                   {% if team.url_key %}
-                    {% tournament_absurl adjfeedback-public-add-from-team-randomised team.url_key %}
+                    {% tournament_absurl 'adjfeedback-public-add-from-team-randomised' team.url_key %}
                   {% else %}
                     no URL
                   {% endif %}
