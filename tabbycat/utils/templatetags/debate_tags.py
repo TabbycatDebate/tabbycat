@@ -105,7 +105,7 @@ class TournamentURLNode(URLNode):
 
 class TournamentAbsoluteURLNode(TournamentURLNode):
     def render(self, context):
-        path = super(OldTournamentAbsoluteURLNode, self).render(context)
+        path = super(TournamentAbsoluteURLNode, self).render(context)
         if self.asvar:
             context[self.asvar] = context['request'].build_absolute_uri(context[self.asvar])
             return path
