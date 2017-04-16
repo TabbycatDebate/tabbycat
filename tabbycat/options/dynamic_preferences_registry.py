@@ -634,9 +634,9 @@ class EnableMotions(BooleanPreference):
 
 @tournament_preferences_registry.register
 class AssistantAccess(ChoicePreference):
-    help_text = "Whether assistants can access pages that can reveal matchups \
-        and motions ahead of public release (these pages are useful for \
-        displaying draws/motions to the public and for printing ballots)."
+    help_text = ("Whether assistants can access pages that can reveal matchups "
+        "and motions ahead of public release (these pages are useful for "
+        "displaying draws/motions to the public and for printing ballots).")
     verbose_name = "Assistant user access"
     section = data_entry
     name = 'assistant_access'
