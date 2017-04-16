@@ -12,34 +12,29 @@ def initialise_emoji_options(teams):
 
     # Get list of all emoji already in use. Teams without emoji are assigned by team ID.
     assigned_emoji_teams = teams.filter(emoji__isnull=False).values_list('emoji', flat=True)
-    unassigned_emoji_teams = teams.filter(emoji__isnull=True).values_list('id', flat=True)
 
     # Start with a list of all emoji...
-    emoji_options = list(range(0, len(EMOJI_LIST) - 1))
+    emoji_options = [e[0] for e in EMOJI_LIST]
 
     # Then remove the ones that are already in use
-    for index in itertools.chain(assigned_emoji_teams, unassigned_emoji_teams):
-        if index in emoji_options:
-            emoji_options.remove(index)
+    for assigned_emoji in assigned_emoji_teams:
+        if assigned_emoji in emoji_options:
+            emoji_options.remove(assigned_emoji)
 
     return emoji_options
 
 
 def get_emoji(emoji_options):
     """Retrieves an emoji. If there are any not currently in returns one of
-    those. Otherwise, returns any one at random."""
-    try:
-        emoji_id = random.choice(emoji_options)
-    except IndexError:
-        logger.error("No more choices left for emoji, choosing at random")
-        return EMOJI_LIST[random.randint(0, len(EMOJI_LIST) - 1)][0]
+    those. Otherwise, returns blank to avoid violating the unique constraint."""
 
-    emoji_options.remove(emoji_id)
-    return EMOJI_LIST[emoji_id][0]
+    if len(emoji_options) > 0:
+        return random.choice(emoji_options)
+    else:
+        return None
 
 
 # With thanks to emojipedia.org
-
 EMOJI_LIST = (
     # Unicode Version 1.1 (these all render using primitive icons)
     # DOESNT SHOW ("☺️", "☺️"),  # White Smiling Face
