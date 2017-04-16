@@ -10,7 +10,7 @@ from django.utils.functional import cached_property
 from tournaments.models import Round
 from utils.managers import LookupByNameFieldsMixin
 
-from .emoji import get_emoji, initialise_emoji_options, EMOJI_LIST
+from .emoji import EMOJI_LIST, get_emoji, initialise_emoji_options
 
 logger = logging.getLogger(__name__)
 
