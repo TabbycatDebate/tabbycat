@@ -309,6 +309,10 @@ class BaseTeamStandingsView(BaseStandingsView):
 
         return standings, rounds
 
+    def limit_rank_display(self, standings):
+        # Only filter ranks on PublicTabMixin
+        pass
+
     def get_table(self):
         standings, rounds = self.get_standings()
 
