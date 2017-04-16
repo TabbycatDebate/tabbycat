@@ -642,7 +642,7 @@ class AssistantAccess(ChoicePreference):
     name = 'assistant_access'
     default = 'all_areas'
     choices = (
-        ('all_areas', 'All areas'),
+        ('all_areas', 'All areas (results entry, draw display, and motions)'),
         ('results_draw', 'Just results entry and draw display'),
         ('results_only', 'Only results entry'),
     )
