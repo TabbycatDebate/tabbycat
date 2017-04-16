@@ -245,13 +245,14 @@ class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, Po
                 team_link = self.request.build_absolute_uri(team_path)
                 message = (''
                     'Hi %s, \n\n'
-                    'At %s we are using an online ' + self.url_type +
-                    ' system. Your ' + self.url_type +
-                    'can be submitted at the following URL. This URL is unique to'
-                    ' you — do not share it as anyone with this link can submit ' +
-                     self.url_type + 's on your behalf. It will not change so we '
-                     ' suggest bookmarking it. The URL is: \n\n %s'
-                     % (speaker.name, tournament.short_name, speaker.team.short_name, team_link))
+                    'At %s we are using an online feedback system. As part of %s '
+                    'your team\'s feedback can be submitted at the following URL. '
+                    'This URL is unique to you — do not share it as anyone with '
+                    'this link can submit feedback on your team\s '
+                    ' behalf. It will not change so we suggest bookmarking it. '
+                    'The URL is: \n\n %s'
+                     % (speaker.name, tournament.short_name,
+                        speaker.team.short_name, team_link))
 
                 try:
                     send_mail("Your Feedback URL for %s" % tournament.short_name,
@@ -277,13 +278,13 @@ class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, Po
             adj_link = self.request.build_absolute_uri(adj_path)
             message = (''
                 'Hi %s, \n\n'
-                'At %s we are using an online ' + self.url_type +
-                ' system. Your ' + self.url_type +
-                'can be submitted at the following URL. This URL is unique to'
-                ' you — do not share it as anyone with this link can submit ' +
-                self.url_type + 's on your behalf. It will not change so we '
-                 ' suggest bookmarking it. The URL is: \n\n %s'
-                 % (adjudicator.name, tournament.short_name, adj_link))
+                'At %s we are using an online %s system. Your %s '
+                'can be submitted at the following URL. This URL is unique to '
+                'you — do not share it as anyone with this link can submit '
+                '%ss on your behalf. It will not change so we suggest '
+                'bookmarking it. The URL is: \n\n %s'
+                 % (adjudicator.name, tournament.short_name, self.url_type,
+                    self.url_type, self.url_type, adj_link))
 
             try:
                 send_mail("Your Feedback URL for %s" % tournament.short_name,
