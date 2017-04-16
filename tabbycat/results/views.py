@@ -333,6 +333,11 @@ class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
     relates_to_new_ballotsub = True
     action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['password'] = True
+        return kwargs
+
     def get_success_url(self):
         return reverse_tournament('tournament-public-index', self.get_tournament())
 
