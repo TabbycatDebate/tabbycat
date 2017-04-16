@@ -182,10 +182,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         return self._import(f, bm.BreakCategory, break_category_interpreter)
 
     def import_teams(self, f, create_dummy_speakers=False):
-        """Imports teams from a file, assigning emoji as needed.
-        If 'create_dummy_speakers' is True, also creates dummy speakers."""
+        """Imports teams from a file. If 'create_dummy_speakers' is True,
+        it also creates dummy speakers."""
 
-        self.initialise_emoji_options()
         team_interpreter_part = make_interpreter(
             tournament=self.tournament,
             institution=pm.Institution.objects.lookup
@@ -196,8 +195,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             line['short_reference'] = line['reference'][:34]
             return line
 
-        counts, errors = self._import(f, pm.Team, team_interpreter,
-            generated_fields={'emoji': self.get_emoji})
+        counts, errors = self._import(f, pm.Team, team_interpreter)
 
         if create_dummy_speakers:
             def speakers_interpreter(line):
@@ -219,7 +217,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
 
         if auto_create_teams:
-            self.initialise_emoji_options()
 
             def team_interpreter(line):
                 interpreted = {
@@ -232,8 +229,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     interpreted['use_institution_prefix'] = line['use_institution_prefix']
                 return interpreted
             counts, errors = self._import(f, pm.Team, team_interpreter,
-                                          expect_unique=False,
-                                          generated_fields={'emoji': self.get_emoji})
+                                          expect_unique=False)
         else:
             counts = None
             errors = None

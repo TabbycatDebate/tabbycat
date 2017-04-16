@@ -1,4 +1,42 @@
 # -*- coding: utf-8 -*-
+import random
+import itertools
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def initialise_emoji_options(teams):
+    """Initialises a list of permissible emoji. Should be called before
+    self.get_emoji()."""
+
+    # Get list of all emoji already in use. Teams without emoji are assigned by team ID.
+    assigned_emoji_teams = teams.filter(emoji__isnull=False).values_list('emoji', flat=True)
+    unassigned_emoji_teams = teams.filter(emoji__isnull=True).values_list('id', flat=True)
+
+    # Start with a list of all emoji...
+    emoji_options = list(range(0, len(EMOJI_LIST) - 1))
+
+    # Then remove the ones that are already in use
+    for index in itertools.chain(assigned_emoji_teams, unassigned_emoji_teams):
+        if index in emoji_options:
+            emoji_options.remove(index)
+
+    return emoji_options
+
+
+def get_emoji(emoji_options):
+    """Retrieves an emoji. If there are any not currently in returns one of
+    those. Otherwise, returns any one at random."""
+    try:
+        emoji_id = random.choice(emoji_options)
+    except IndexError:
+        logger.error("No more choices left for emoji, choosing at random")
+        return EMOJI_LIST[random.randint(0, len(EMOJI_LIST) - 1)][0]
+
+    emoji_options.remove(emoji_id)
+    return EMOJI_LIST[emoji_id][0]
+
 
 # With thanks to emojipedia.org
 

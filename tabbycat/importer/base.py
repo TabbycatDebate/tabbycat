@@ -3,14 +3,10 @@
 import csv
 import re
 import logging
-import itertools
-import random
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError, FieldError
 from collections import Counter
 from types import GeneratorType
 
-from participants.models import Team
-from participants.emoji import EMOJI_LIST
 
 NON_FIELD_ERRORS = '__all__'
 DUPLICATE_INFO = 19  # Logging level just below INFO
@@ -301,30 +297,3 @@ class BaseTournamentDataImporter(object):
 
         counts.update({model: len(insts)})
         return counts, errors
-
-    def initialise_emoji_options(self):
-        """Initialises a list of permissible emoji. Should be called before
-        self.get_emoji()."""
-
-        # Get list of all emoji already in use. Teams without emoji are assigned by team ID.
-        assigned_emoji_teams = Team.objects.filter(emoji__isnull=False).values_list('emoji', flat=True)
-        unassigned_emoji_teams = Team.objects.filter(emoji__isnull=True).values_list('id', flat=True)
-
-        # Start with a list of all emoji...
-        self.emoji_options = list(range(0, len(EMOJI_LIST) - 1))
-
-        # Then remove the ones that are already in use
-        for index in itertools.chain(assigned_emoji_teams, unassigned_emoji_teams):
-            if index in self.emoji_options:
-                self.emoji_options.remove(index)
-
-    def get_emoji(self):
-        """Retrieves an emoji. If there are any not currently in returns one of
-        those. Otherwise, returns any one at random."""
-        try:
-            emoji_id = random.choice(self.emoji_options)
-        except IndexError:
-            self.logger.error("No more choices left for emoji, choosing at random")
-            return EMOJI_LIST[random.randint(0, len(EMOJI_LIST) - 1)][0]
-        self.emoji_options.remove(emoji_id)
-        return EMOJI_LIST[emoji_id][0]
