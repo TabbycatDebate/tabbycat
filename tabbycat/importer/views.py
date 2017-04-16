@@ -1,3 +1,7 @@
+import logging
+
+from django.core.mail import send_mail
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
@@ -6,11 +10,14 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView
+
 from formtools.wizard.views import SessionWizardView
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.mixins import TournamentMixin
+from utils.misc import reverse_tournament
 from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.urlkeys import populate_url_keys
 from utils.views import admin_required, expect_post, tournament_view
 from venues.models import Venue, VenueCategory, VenueConstraint
 
@@ -18,8 +25,10 @@ from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
                     ImportVenuesRawForm, NumberForEachInstitutionForm,
                     TeamDetailsForm, VenueDetailsForm)
 
+logger = logging.getLogger(__name__)
 
-# TODO log actions for all of these?
+
+# TODO: add log actions for all of these?
 
 class ImporterSimpleIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
     template_name = 'simple_import_index.html'
@@ -147,6 +156,155 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
 
     def get_details_instance_initial(self, i):
         return {'name': _("Adjudicator %(number)d") % {'number': i}, 'test_score': 2.5}
+
+
+# ==============================================================================
+# Randomised URL creation
+# ==============================================================================
+
+class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+
+    template_name = 'randomised_urls.html'
+    show_emails = False
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['teams'] = tournament.team_set.all().order_by('short_name')
+        if not tournament.pref('share_adjs'):
+            kwargs['adjs'] = tournament.adjudicator_set.all().order_by('name')
+        else:
+            kwargs['adjs'] = Adjudicator.objects.all().order_by('name')
+        kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
+            tournament.team_set.filter(url_key__isnull=False).exists()
+        kwargs['tournament_slug'] = tournament.slug
+        return super().get_context_data(**kwargs)
+
+
+class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+
+    tournament_redirect_pattern_name = 'randomised-urls-view'
+
+    def post(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+
+        # Only works if there are no randomised URLs now
+        if tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
+                tournament.team_set.filter(url_key__isnull=False).exists():
+            messages.error(
+                self.request, "There are already randomised URLs. " +
+                "You must use the Django management commands to populate or " +
+                "delete randomised URLs.")
+        else:
+            populate_url_keys(tournament.adjudicator_set.all())
+            populate_url_keys(tournament.team_set.all())
+            messages.success(self.request, "Randomised URLs were generated for all teams and adjudicators.")
+
+        return super().post(request, *args, **kwargs)
+
+
+class EmailRandomisedUrlsView(RandomisedUrlsView):
+
+    show_emails = True
+    template_name = 'randomised_urls_email_list.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['url_type'] = self.url_type
+        return super().get_context_data(**kwargs)
+
+
+class EmailBallotUrlsView(EmailRandomisedUrlsView):
+
+    url_type = 'ballot'
+
+
+class EmailFeedbackUrlsView(EmailRandomisedUrlsView):
+
+    url_type = 'feedback'
+
+
+class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+
+    tournament_redirect_pattern_name = 'randomised-urls-view'
+
+    def post(self, request, *args, **kwargs):
+
+        tournament = self.get_tournament()
+        speakers = Speaker.objects.filter(team__tournament=tournament,
+            team__url_key__isnull=False, email__isnull=False)
+        adjudicators = tournament.adjudicator_set.filter(
+            url_key__isnull=False, email__isnull=False)
+
+        if self.url_type is 'feedback':
+            for speaker in speakers:
+                if speaker.email is None:
+                    continue
+
+                team_path = reverse_tournament(
+                    'adjfeedback-public-add-from-team-randomised',
+                    tournament, kwargs={'url_key': speaker.team.url_key})
+                team_link = self.request.build_absolute_uri(team_path)
+                message = (''
+                    'Hi %s, \n\n'
+                    'At %s we are using an online ' + self.url_type +
+                    ' system. Your ' + self.url_type +
+                    'can be submitted at the following URL. This URL is unique to'
+                    ' you — do not share it as anyone with this link can submit ' +
+                     self.url_type + 's on your behalf. It will not change so we '
+                     ' suggest bookmarking it. The URL is: \n\n %s'
+                     % (speaker.name, tournament.short_name, speaker.team.short_name, team_link))
+
+                try:
+                    send_mail("Your Feedback URL for %s" % tournament.short_name,
+                        message, settings.DEFAULT_FROM_EMAIL, [speaker.email],
+                        fail_silently=False)
+                    logger.info("Sent email with key to %s (%s)" % (speaker.email, speaker.name))
+                except:
+                    logger.info("Failed to send email to %s speaker.email")
+
+        for adjudicator in adjudicators:
+            if adjudicator.email is None:
+                continue
+
+            if self.url_type is 'feedback':
+                adj_path = reverse_tournament(
+                    'adjfeedback-public-add-from-adjudicator-randomised',
+                    tournament, kwargs={'url_key': adjudicator.url_key})
+            elif self.url_type is 'ballot':
+                adj_path = reverse_tournament(
+                    'results-public-ballotset-new-randomised',
+                    tournament, kwargs={'url_key': adjudicator.url_key})
+
+            adj_link = self.request.build_absolute_uri(adj_path)
+            message = (''
+                'Hi %s, \n\n'
+                'At %s we are using an online ' + self.url_type +
+                ' system. Your ' + self.url_type +
+                'can be submitted at the following URL. This URL is unique to'
+                ' you — do not share it as anyone with this link can submit ' +
+                self.url_type + 's on your behalf. It will not change so we '
+                 ' suggest bookmarking it. The URL is: \n\n %s'
+                 % (adjudicator.name, tournament.short_name, adj_link))
+
+            try:
+                send_mail("Your Feedback URL for %s" % tournament.short_name,
+                    message, settings.DEFAULT_FROM_EMAIL, [adjudicator.email],
+                    fail_silently=False)
+                logger.info("Sent email with key to %s (%s)" % (adjudicator.email, adjudicator.name))
+            except:
+                logger.info("Failed to send email %s" % adjudicator.email)
+
+        messages.success(self.request, "Emails were sent for all teams and adjudicators.")
+        return super().post(request, *args, **kwargs)
+
+
+class ConfirmEmailBallotUrlsView(ConfirmEmailRandomisedUrlsView):
+
+    url_type = 'ballot'
+
+
+class ConfirmEmailFeedbackUrlsView(ConfirmEmailRandomisedUrlsView):
+
+    url_type = 'feedback'
 
 
 # ==============================================================================

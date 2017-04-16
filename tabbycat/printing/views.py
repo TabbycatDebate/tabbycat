@@ -246,18 +246,34 @@ class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
         return super().get_context_data(**kwargs)
 
 
-class FeedbackURLsView(TournamentMixin, SuperuserRequiredMixin, TemplateView):
+class PrintableRandomisedURLs(TournamentMixin, SuperuserRequiredMixin, TemplateView):
 
-    template_name = 'feedback_url_sheets.html'
+    template_name = 'randomised_url_sheets.html'
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
-        kwargs['teams'] = tournament.team_set.all().order_by('institution', 'reference')
+        kwargs['sheet_type'] = self.sheet_type
+        kwargs['tournament_slug'] = tournament.slug
+
+        if self.sheet_type is not 'ballot':
+            kwargs['teams'] = tournament.team_set.all().order_by('institution', 'reference')
+
         if not tournament.pref('share_adjs'):
             kwargs['adjs'] = tournament.adjudicator_set.all().order_by('name')
         else:
             kwargs['adjs'] = Adjudicator.objects.all().order_by('name')
+
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
             tournament.team_set.filter(url_key__isnull=False).exists()
-        kwargs['tournament_slug'] = tournament.slug
+
         return super().get_context_data(**kwargs)
+
+
+class PrintFeedbackURLsView(PrintableRandomisedURLs):
+
+    sheet_type = 'feedback'
+
+
+class PrintBallotURLsView(PrintableRandomisedURLs):
+
+    sheet_type = 'ballot'

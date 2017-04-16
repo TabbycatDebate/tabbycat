@@ -75,6 +75,10 @@ These URLs can then be distributed to each person in a number of ways. There are
 
 .. tip:: If, after generating the randomised URLs, you add additional Teams or Adjudicators you can go to the *Edit Data* area , looking up each Speaker/Adjudicator, and type in a bunch of random characters as their *Url key* to assign them a random URL for them.
 
+.. tip:: You can delete the current set of URLs by running this command in a shell on your server (replacing TOURNAMENT_SLUG with the appropriate value):
+    ``python manage.py randomisedurls delete --tournament TOURNAMENT_SLUG``
+
+
 Public URLs
 ===========
 

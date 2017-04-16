@@ -65,17 +65,4 @@ urlpatterns = [
         views.TabroomAddFeedbackView.as_view(model=Adjudicator),
         name='adjfeedback-add-from-adjudicator'),
 
-    # URLS
-    url(r'^randomised_urls/$',
-        views.RandomisedUrlsView.as_view(),
-        name='randomised-urls-view'),
-    url(r'^randomised_urls/generate/$',
-        views.GenerateRandomisedUrlsView.as_view(),
-        name='randomised-urls-generate'),
-    url(r'^randomised_urls/emails/list/$',
-        views.EmailRandomisedUrlsView.as_view(),
-        name='randomised-urls-email'),
-    url(r'^randomised_urls/emails/confirm/$',
-        views.ConfirmEmailRandomisedUrlsView.as_view(),
-        name='confirm-feedback-urls-send'),
 ]

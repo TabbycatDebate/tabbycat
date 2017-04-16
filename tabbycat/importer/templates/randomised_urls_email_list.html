@@ -1,0 +1,110 @@
+{% extends "randomised_urls.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Email Randomised {{ url_type|title }} URLs{% endblock %}
+{% block page-title %}Email Randomised {{ url_type|title }} URLs{% endblock %}
+
+{% block content %}
+
+  {% if url_type == 'feedback' %}
+    <form action="{% tournamenturl 'confirm-feedback-urls-send' %}" method="POST" class="vertical-spacing">
+  {% elif url_type == 'ballot' %}
+    <form action="{% tournamenturl 'confirm-ballot-urls-send' %}" method="POST" class="vertical-spacing">
+  {% endif %}
+    {% csrf_token %}
+    <button class="btn btn-success btn-block" type="submit">
+      Send Emails with {{ url_type|title }} URLs to Teams and Adjudicators
+    </button>
+  </form>
+
+  <div class="row">
+
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading strong">Adjudicators With Email Addresses</div>
+        <div class="panel-body">
+          {% for adj in adjs %}
+            {% if adj.url_key and adj.email %}
+              {{ adj.name }}, {{ adj.email }},
+              <small>
+              {% if url_type == 'feedback' %}
+                {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
+              {% elif url_type == 'ballot' %}
+                {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
+              {% endif %}
+              </small>
+              <br>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {% if url_type == 'feedback' %}
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading strong">Teams With Email Addresses</div>
+          <div class="panel-body">
+            {% for team in teams %}
+              {% if team.url_key %}
+                {% for speaker in team.speakers %}
+                  {% if speaker.email %}
+                    {{ team.short_name }}, {{ speaker.name }}, {{ speaker.email }},
+                    <small>
+                    {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' team.url_key %}
+                    </small>
+                    <br>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading strong">Adjudicators Without Email Addresses</div>
+        <div class="panel-body">
+          {% for adj in adjs %}
+            {% if adj.url_key %}
+              {% if not adj.email %}
+                {{ adj.name }}, No Email,
+                <small>
+                {% if url_type == 'feedback' %}
+                  {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
+                {% elif url_type == 'ballot' %}
+                  {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
+                {% endif %}
+                </small>
+                <br>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {% if url_type == 'feedback' %}
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading strong">Teams Without Email Addresses</div>
+          <div class="panel-body">
+            {% for team in teams %}
+              {% if team.url_key %}
+                {% for speaker in team.speakers %}
+                  {% if not speaker.email %}
+                    {{ team.short_name }}, {{ speaker.name }}, No Email<br>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+{% endblock content %}

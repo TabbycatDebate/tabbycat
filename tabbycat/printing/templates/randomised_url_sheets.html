@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block page-title %}Printable Feedback URLs{% endblock %}
+{% block page-title %}Printable {{ sheet_type|title }} URLs{% endblock %}
 
 {% block header %}{% endblock %}
 {% block nav %}{% endblock %}
 {% block footer %}{% endblock footer %}
+{% block body-class %}override-sidebar-offset{% endblock %}
 
 {% block page-alerts %}
   <div class="alert alert-info hidden-print">
@@ -20,25 +21,29 @@
   {% for adj in adjs %}
     <div class="h1 text-center printable-page-break">
       <br>
-      Feedback URL for {{ adj.name }} ({{ adj.institution.code }})
+      {{ sheet_type|title }} URL for {{ adj.name }} ({{ adj.institution.code }})
     </div>
     <div class="h4 text-center printable-page-break">
       <br><br><br>
-      Please bookmark the following URL, you will use it to submit feedback
+      Please bookmark the following URL, you will use it to submit {{ sheet_type }}s
       throughout the tournament:
       <br><br>
-      {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
+      {% if sheet_type == 'feedback' %}
+        {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
+      {% elif sheet_type == 'ballot' %}
+        {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
+      {% endif %}
     </div>
   {% endfor %}
 
   {% for team in teams %}
     <div class="h1 text-center printable-page-break">
       <br>
-      Feedback URL for {{ team.short_name }}
+      {{ sheet_type|title }} URL for {{ team.short_name }}
     </div>
     <div class="h4 text-center printable-page-break">
       <br><br><br>
-      Please bookmark the following URL, you will use it to submit feedback
+      Please bookmark the following URL, you will use it to submit {{ sheet_type }}s
       throughout the tournament:
       <br><br>
       {% tournament_absurl 'adjfeedback-public-add-from-team-randomised' team.url_key %}

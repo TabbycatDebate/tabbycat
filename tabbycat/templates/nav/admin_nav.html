@@ -146,6 +146,15 @@
           </a>
         </li>
         <li>
+          <a class="{% if import_random %}active{% endif %}"
+             href="{% tournamenturl 'randomised-urls-view' %}">
+            <span class="circle-icon icon-container">
+              <span class="glyphicon glyphicon-link"></span>
+            </span>
+            Random URLs
+          </a>
+        </li>
+        <li>
           <a href="{% url 'admin:index' %}" target="_blank">
             <span class="circle-icon icon-container">
               <span class="glyphicon glyphicon-edit"></span>

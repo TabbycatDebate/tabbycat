@@ -14,6 +14,7 @@ urlpatterns = [
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
 
+    # Round Progression
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment_check/$',
         views.RoundIncrementConfirmView.as_view(),
         name='round_increment_check'),

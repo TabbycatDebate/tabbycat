@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">🎲</span> Randomised URLs{% endblock %}
+{% block page-title %}🎲 Randomised URLs{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-default" href="{% tournamenturl 'randomised-urls-view' %}">
+    View/Generate URLs
+  </a>
+  <div class="btn-group">
+    <a class="btn btn-default" href="{% tournamenturl 'printing-feedback-urls' %}" target="_blank">
+      Print Feedback URLs
+    </a>
+    <a class="btn btn-default" href="{% tournamenturl 'printing-ballot-urls' %}" target="_blank">
+      Print Ballot URLs
+    </a>
+  </div>
+  <div class="btn-group">
+    <a class="btn btn-default" href="{% tournamenturl 'email-feedback-urls' %}">
+      Email Feedback URLs
+    </a>
+    <a class="btn btn-default" href="{% tournamenturl 'email-ballot-urls' %}">
+      Email Ballot URLs
+    </a>
+  </div>
+{% endblock %}
+
+{% block content %}
+
+  <div class="alert alert-info">
+
+    <p>
+      {% if exists %}
+        The randomised URLs for public ballot and/or feedback submission are given below.
+      {% else %}
+        Randomised URLs are used for public ballot and/or feedback submission. You
+        should use them if you have a means of distributing crazy-looking URLs to
+        participants, and are too worried about fraud to use a publicly accessible
+        page where <em>anyone</em> can enter <em>any</em> submission. The URLs
+        will look something like this:
+        <strong><small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' '9dnflp3z' %}</small></strong>.
+        </p><p>
+      {% endif %}
+      Anyone with the URLs can access the relevant data entry page. The idea is
+      that it's hard to guess another key (the random-looking string), so you should
+      make each URL accessible only to the team or adjudicator in question.
+      <a href="http://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls">
+      Read more about random URLs.</a>
+    </p>
+
+  </div>
+
+  {% if not pref.public_ballots_randomised and not pref.public_feedback_randomised and not pref.allocation_confirmations %}
+    <div class="alert alert-danger">
+      The <strong>public ballots randomised</strong> and <strong>public feedback
+      randomised</strong> configuration settings are both disabled. Any
+      generated URLs will not work unless you enable them on the
+      <a href="{% tournamenturl 'options-tournament-data-entry' %}">tournament
+      configuration page</a>.
+    </div>
+  {% endif %}
+
+  {% if pref.public_ballots and pref.public_ballots_randomised %}
+    <div class="alert alert-danger">
+      The <strong>public ballots</strong> (non-randomised) configuration setting
+      is enabled, which means that the
+      <a href="{% tournamenturl 'results-public-ballot-submission-index' %}">
+      page in the public interface from which anyone can enter any ballot</a>,
+      without knowing any special URLs, is enabled. This defeats the purpose of
+      the <strong>public ballots randomised</strong> setting. You may wish to
+      consider disabling the non-randomised setting on the
+      <a href="{% tournamenturl 'options-tournament-data-entry' %}">tournament
+      configuration page</a>.
+    </div>
+  {% endif %}
+
+  {% if pref.public_feedback and pref.public_feedback_randomised %}
+    <div class="alert alert-danger">
+      The <strong>public feedback</strong> (non-randomised) configuration
+      setting is enabled, which means that the
+      <a href="{% tournamenturl 'adjfeedback-public-add-index' %}">page in the
+      public interface from which anyone can enter any feedback</a>, without
+      knowing any special URLs, is enabled. This defeats the purpose of the
+      <strong>public feedback randomised</strong> setting. You may wish to
+      consider disabling the non-randomised settings on the
+      <a href="{% tournamenturl 'options-tournament-data-entry' %}">tournament
+      configuration page</a>.
+    </div>
+  {% endif %}
+
+  {% if exists %}
+
+    <div class="panel panel-default col-md-12">
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Adjudicator</th>
+              {% if pref.public_feedback_randomised %}
+                <th>Feedback URL</th>
+              {% endif %}
+              {% if pref.public_ballots_randomised %}
+                <th>Ballot URL</th>
+              {% endif %}
+              {% if pref.allocation_confirmations %}
+                <th>Shifts URL</th>
+              {% endif %}
+              <th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for adj in adjs %}
+              <tr>
+                <td>
+                  {{ adj.name }}
+                </td>
+                {% if adj.url_key %}
+                  {% if pref.public_feedback_randomised %}
+                    <td>
+                      <small>{% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}</small>
+                    </td>
+                  {% endif %}
+                  {% if pref.public_ballots_randomised %}
+                    <td>
+                      <small>{% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}</small>
+                    </td>
+                  {% endif %}
+                  {% if pref.allocation_confirmations %}
+                    <td>
+                      <small>{% url 'participants-public-confirm-shift' adj.url_key %}</small>
+                    </td>
+                  {% endif %}
+                {% else %}
+                  <td>no URL</td><td>no URL</td>
+                {% endif %}
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="3">No adjudicators have randomised URLs.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel panel-default col-md-12">
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Feedback URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for team in teams %}
+              <tr>
+                <td>
+                  {% include "tables/team.html" with team=team %}
+                </td>
+                <td>
+                  {% if team.url_key %}
+                    <small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' team.url_key %}</small>
+                  {% else %}
+                    no URL
+                  {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="3">No teams have randomised URLs.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  {% else %}
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h5>There are no randomised URLs assigned.
+        Would you like to generate them?</h5>
+      </div>
+      <div class="panel-body">
+        <form action="{% tournamenturl 'randomised-urls-generate' %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-success btn-block" id="generateRandomisedUrls" type="submit">
+          Generate randomised URLs for ballot and feedback submission
+        </button>
+        </form>
+      </div>
+    </div>
+
+  {% endif %}
+
+{% endblock content %}
