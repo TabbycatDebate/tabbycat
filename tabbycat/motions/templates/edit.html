@@ -18,7 +18,13 @@
   {% else %}
     <form class="" id="releaseForm" method="POST" action="{% roundurl 'motions-release' %}">
       {% csrf_token %}
-      <button class="btn btn-primary submit-disable" type="submit">
+      <button class="btn btn-primary submit-disable" type="submit"
+        data-toggle="tooltip" data-placement="bottom"
+        title="Releasing motions makes them available the public-facing pages of
+        this site. If your tournament is configured to display a running
+        list of motions, or to allow adjudicators to submit ballots that require
+        motion selection you will need to release each round's motions before
+        that can happen.">
         Release Motions to Public
       </button>
     </form>
