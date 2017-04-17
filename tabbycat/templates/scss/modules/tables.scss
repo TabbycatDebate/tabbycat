@@ -78,7 +78,7 @@ thead, .thead {
 
 // For Phones
 @media (max-width: $screen-sm-min) {
-  .table-continer {
+  .table-container {
     margin-right: -15px;
     margin-left: -15px;
     border-left: 0;
@@ -96,5 +96,8 @@ thead, .thead {
   .table > tbody > tr > td {
     padding-left: 4px;
     padding-right: 4px;
+  }
+  .table > tbody > tr > td:first-child {
+    padding-left: 10px; // Compensate for reduced left margins on phones
   }
 }

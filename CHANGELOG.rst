@@ -14,6 +14,7 @@ Change Log
 - Added the ability to redact individual person's identifying details from speaker tabs
 - Added the ability for user passwords to be easily reset
 - Added a minimal set of default questions to newly created Tournaments.
+- A number of other minor bug fixes and enhancements
 
 
 1.2.3
