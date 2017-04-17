@@ -9,6 +9,13 @@
 
 {% block content %}
 
+  {% if tournament.current_round.seq == 1 and tournament.current_round.draw_status != tournament.current_round.STATUS_RELEASED %}
+    <div class="alert alert-warning">
+      There are no feedback options because no rounds have been released to the
+      public yet. Check back when they have!
+    </div>
+  {% endif %}
+
   {% if form.errors %}
   <div class="alert alert-danger">
     <p>There are some problems with this feedback submission. Please review and correct them.</p>
