@@ -10,7 +10,7 @@ from django.utils.functional import cached_property
 from tournaments.models import Round
 from utils.managers import LookupByNameFieldsMixin
 
-from .emoji import EMOJI_LIST, get_emoji, initialise_emoji_options
+from .emoji import EMOJI_LIST, pick_unused_emoji
 
 logger = logging.getLogger(__name__)
 
@@ -127,11 +127,9 @@ class Team(models.Model):
                     (TYPE_BYE, 'Bye'), )
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE)
 
-    def construct_emoji():
-        emoji_options = initialise_emoji_options(Team.objects.all())
-        return get_emoji(emoji_options)
+    emoji = models.CharField(max_length=2, blank=True, null=True, default=pick_unused_emoji, choices=EMOJI_LIST) # uses null=True to allow multiple teams to have no emoji
 
-    emoji = models.CharField(max_length=2, blank=True, null=True, default=construct_emoji, choices=EMOJI_LIST) # uses null=True to allow multiple teams to have no emoji
+    construct_emoji = pick_unused_emoji # historical reference for migration 0026_auto_20170416_2332
 
     class Meta:
         unique_together = [
