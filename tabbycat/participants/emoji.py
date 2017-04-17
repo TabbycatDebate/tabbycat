@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import random
-import itertools
 import logging
 
 logger = logging.getLogger(__name__)
