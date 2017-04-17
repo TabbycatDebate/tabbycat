@@ -17,9 +17,10 @@
     </div>
   {% elif no_teams_eligible %}
     <div class="alert alert-warning" role="alert">
-      It looks like no teams are eligible for the break. To set which teams are
-      eligible, click the <a href="{% tournamenturl 'breakqual-edit-eligibility' %}">
-      Edit Teams' Eligibility</a> button above-right.
+      It looks like no teams are currently marked as eligible for the break.
+      To set which teams are eligible, click the
+      <a href="{% tournamenturl 'breakqual-edit-eligibility' %}">
+      Edit Eligibility</a> button above-right.
     </div>
   {% elif break_not_generated %}
     <div class="alert alert-info" role="alert">
@@ -35,7 +36,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a class="btn btn-success" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
+  <a class="btn btn-primary" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
     <span class="glyphicon glyphicon-pencil"></span> Edit Teams' Eligibility
   </a>
 {% endblock %}
@@ -64,7 +65,7 @@
                        role="progressbar" aria-valuenow="" aria-valuemin="0"
 -                     aria-valuemax="{{ teams_in_tournament }}"
                        style="width: {% percentage category.eligible teams_in_tournament %}%;">
-                    <span>{{ category.eligible }} of {{ teams_in_tournament }} eligible</span>
+                    <span>{{ category.eligible }}/{{ teams_in_tournament }}</span>
                   </div>
                 {% else %}
                   <div class="progress-bar progress-bar-success

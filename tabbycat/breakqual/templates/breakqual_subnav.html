@@ -2,15 +2,17 @@
 
   <a class="btn btn-default"
      href="{% tournamenturl 'breakqual-index' %}">
-    Overview
+    Breaks Overview
   </a>
+  <div class="btn-group">
   {% for category in tournament.breakcategory_set.all %}
     <a class="btn btn-default"
        href="{% tournamenturl 'breakqual-teams' category.slug %}">
-      View {{ category.name }} Break
+      {{ category.name }} Break
     </a>
   {% endfor %}
+  </div>
   <a class="btn btn-default"
      href="{% tournamenturl 'breakqual-adjudicators' %}">
-    View Adjudicators Break
+    Adjudicators' Break
   </a>
