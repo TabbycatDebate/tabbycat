@@ -86,9 +86,11 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
         speakers = getattr(debate, '%s_team' % side).speakers
         for i in range(1, last_substantive_position+1):
             bset.set_speaker(team=side, position=i, speaker=speakers[i - 1])
+            bset.set_ghost(side, i, False)
 
         reply_speaker = random.randint(0, last_substantive_position-1) if reply_random else 0
         bset.set_speaker(team=side, position=reply_position, speaker=speakers[reply_speaker])
+        bset.set_ghost(side, reply_position, False)
 
         for adj in debate.adjudicators.voting():
             for pos in debate.round.tournament.POSITIONS:
