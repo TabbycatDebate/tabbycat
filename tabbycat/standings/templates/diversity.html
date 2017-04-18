@@ -101,14 +101,14 @@
       </div>
       <div class="panel-body text-center">
         <template v-for="set in graphsData['speakers_results']">
-          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+          <text-display :graph-data="set['data'].reverse()" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
         <template v-if="graphsData['speakers_results'].length === 0">
           <p>No Gender Information</p>
         </template>
         <hr>
         <template v-for="set in graphsData['detailed_speakers_results']">
-          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+          <text-display :graph-data="set['data'].reverse()" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
         <template v-if="graphsData['detailed_speakers_results'].length === 0">
           <p>No Region Information</p>
@@ -124,14 +124,14 @@
       </div>
       <div class="panel-body text-center">
         <template v-for="set in graphsData['adjudicators_results']">
-          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+          <text-display :graph-data="set['data'].reverse()" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
         <template v-if="graphsData['adjudicators_results'].length === 0">
           <p>No Adjudicator Ratings Yet</p>
         </template>
         <hr>
         <template v-for="set in graphsData['detailed_adjudicators_results']">
-          <text-display :graph-data="set['data']" :title="set['title']" :datum="set['datum']"></donut-chart>
+          <text-display :graph-data="set['data'].reverse()" :title="set['title']" :datum="set['datum']"></donut-chart>
         </template>
         <template v-if="graphsData['detailed_adjudicators_results'].length === 0">
           <p>No Adjudicator-Adjudicator Feedback</p>
