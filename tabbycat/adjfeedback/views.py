@@ -74,6 +74,7 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView
         t = self.get_tournament()
         adjudicators = self.get_adjudicators()
         populate_feedback_scores(adjudicators)
+        # Gather stats necessary to construct the graphs
         adjudicators = get_feedback_overview(t, adjudicators)
         table = FeedbackTableBuilder(view=self, sort_key='Overall Score',
                                      sort_order='desc')

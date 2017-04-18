@@ -60,14 +60,14 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             ' <span class="position-display panellist">&nbsp;Panellist&nbsp;</span>' +
             ' <span class="position-display trainee">&nbsp;Trainee&nbsp;</span>'
         }
-        feedback_data = [{
+        feedback_graph_data = [{
             'graphData': adj.feedback_data,
             'component': 'feedback-trend',
             'minScore': self.tournament.pref('adj_min_score'),
             'maxScore': self.tournament.pref('adj_max_score'),
             'roundSeq': len(self.tournament.prelim_rounds()),
         } for adj in adjudicators]
-        self.add_column(feedback_head, feedback_data)
+        self.add_column(feedback_head, feedback_graph_data)
 
     def add_feedback_link_columns(self, adjudicators):
         link_head = {
