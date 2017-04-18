@@ -9,7 +9,7 @@
       <span class="badge">{{ feedback.score }}</span>
       <span class="h5">
         On {{ feedback.adjudicator.name }}
-        ({{ feedback.adjudicator.institution.code }}{% if feedback.debate_adjudicator %}, {{ feedback.debate_adjudicator.get_type_display }}{% endif %})
+        ({{ feedback.adjudicator.institution.code }}){% if feedback.debate_adjudicator %} as {{ feedback.debate_adjudicator.get_type_display }}{% endif %}
       </span>
   </li>
   {% for item in feedback.items %}
