@@ -7,9 +7,6 @@ class Command(TournamentCommand):
 
     help = "Regenerates all emoji for a given tournament's teams"
 
-    def add_arguments(self, parser):
-        super(Command, self).add_arguments(parser)
-
     def handle_tournament(self, tournament, **options):
         all_teams = tournament.team_set.all()
 
