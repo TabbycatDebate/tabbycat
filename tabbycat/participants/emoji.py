@@ -5,20 +5,28 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def pick_unused_emoji(teams=None, used=[]):
+def pick_unused_emoji(teams=None, used=None):
     """Picks an emoji that is not already in use by any team in `teams`. If
     `teams` is not specified, it picks an emoji not in use by any team in the
-    database. If no emoji are left, it returns `None`. If `used` is specified,
-    it should be a list (or string) of emoji, and it also avoids emoji in
-    `used`, returning `None` if no emoji are left are excluding them.
+    database. If no emoji are left, it returns `None`.
+
+    If `used` is specified, it should be a list of emoji, and it also avoids
+    emoji in `used` and appends the chosen emoji to the list.
     """
     if teams is None:
         from .models import Team
         teams = Team.objects.all()
-    emoji_in_db = teams.filter(emoji__isnull=False).values_list('emoji', flat=True)
-    unused_emoji = [e[0] for e in EMOJI_LIST if e[0] not in emoji_in_db and e[0] not in used]
+
+    used_emoji = teams.filter(emoji__isnull=False).values_list('emoji', flat=True)
+    if used is not None:
+        used_emoji = list(used_emoji) + used
+    unused_emoji = [e[0] for e in EMOJI_LIST if e[0] not in used_emoji]
+
     try:
-        return random.choice(unused_emoji)
+        emoji = random.choice(unused_emoji)
+        if used is not None:
+            used.append(emoji)
+        return emoji
     except IndexError:
         return None
 
