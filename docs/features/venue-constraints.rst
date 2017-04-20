@@ -5,7 +5,7 @@ Venue Constraints
 =================
 
 .. attention:: This changed in version 1.3. Previously, venue constraints
-    used a venue constrain categories. Now they use venue categories and venue groups no longer exist.
+    used venue constraint categories. Now they use venue categories and venue groups no longer exist.
 
 Tabbycat supports a basic form of venue constraints. A **venue constraint** is a
 requirement that a particular **team, adjudicator, institution** or **division**
