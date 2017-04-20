@@ -65,6 +65,8 @@ Private URLs
 
 The first method of data entry is used 'randomised URLs'. When this setting is enabled you can create a special URL that is unique to a particular team or adjudicator. This link contains a number of random characters and is not displayed publicly; it is in effect a secret that only that particular participant should know. Presuming people do not share these links to others this provides a means to (relatively) securely identify who is submitting what information. Because Tabbycat knows which team or adjudicator has which URL it will only allow them to submit feedback/ballots for debates that they were speakers/adjudicators in.
 
+.. warning:: Private URLs should provide more than adequate security for almost all tournaments' purposes, but they aren't foolproof. Anyone with access to the URL for a participant can submit feedback from them, so it's important that participants not share their URLs. This also means participants need to be careful when submitting from devices they do not own, because the URL will be logged in that device's browser history.
+
 These links must be generated within Tabbycat after the preference is enabled. To do so go to the **Feedback** section and then the **Randomised URLs** area. Once there you will be prompted to generate those URLs for all participants, which — once generated — will be presented in separate tables (one for teams; one for adjudicators).
 
 .. image:: images/randomised-urls.png
