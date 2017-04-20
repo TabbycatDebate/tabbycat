@@ -5,31 +5,29 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def initialise_emoji_options(teams):
-    """Initialises a list of permissible emoji. Should be called before
-    self.get_emoji()."""
+def pick_unused_emoji(teams=None, used=None):
+    """Picks an emoji that is not already in use by any team in `teams`. If
+    `teams` is not specified, it picks an emoji not in use by any team in the
+    database. If no emoji are left, it returns `None`.
 
-    # Get list of all emoji already in use. Teams without emoji are assigned by team ID.
-    assigned_emoji_teams = teams.filter(emoji__isnull=False).values_list('emoji', flat=True)
+    If `used` is specified, it should be a list of emoji, and it also avoids
+    emoji in `used` and appends the chosen emoji to the list.
+    """
+    if teams is None:
+        from .models import Team
+        teams = Team.objects.all()
 
-    # Start with a list of all emoji...
-    emoji_options = [e[0] for e in EMOJI_LIST]
+    used_emoji = teams.filter(emoji__isnull=False).values_list('emoji', flat=True)
+    if used is not None:
+        used_emoji = list(used_emoji) + used
+    unused_emoji = [e[0] for e in EMOJI_LIST if e[0] not in used_emoji]
 
-    # Then remove the ones that are already in use
-    for assigned_emoji in assigned_emoji_teams:
-        if assigned_emoji in emoji_options:
-            emoji_options.remove(assigned_emoji)
-
-    return emoji_options
-
-
-def get_emoji(emoji_options):
-    """Retrieves an emoji. If there are any not currently in returns one of
-    those. Otherwise, returns blank to avoid violating the unique constraint."""
-
-    if len(emoji_options) > 0:
-        return random.choice(emoji_options)
-    else:
+    try:
+        emoji = random.choice(unused_emoji)
+        if used is not None:
+            used.append(emoji)
+        return emoji
+    except IndexError:
         return None
 
 

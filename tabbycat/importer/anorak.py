@@ -9,6 +9,7 @@ import participants.models as pm
 import tournaments.models as tm
 import tournaments.utils
 import venues.models as vm
+from participants.emoji import pick_unused_emoji
 
 from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
 
@@ -195,7 +196,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             line['short_reference'] = line['reference'][:34]
             return line
 
-        counts, errors = self._import(f, pm.Team, team_interpreter)
+        used_emoji = []
+        counts, errors = self._import(f, pm.Team, team_interpreter,
+                generated_fields={'emoji': (lambda: pick_unused_emoji(used=used_emoji))})
 
         if create_dummy_speakers:
             def speakers_interpreter(line):
@@ -228,8 +231,13 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 if line.get('use_institution_prefix'):
                     interpreted['use_institution_prefix'] = line['use_institution_prefix']
                 return interpreted
-            counts, errors = self._import(f, pm.Team, team_interpreter,
-                                          expect_unique=False)
+
+            used_emoji = []
+            counts, errors = self._import(f, pm.Team, team_interpreter, expect_unique=False,
+                    generated_fields={'emoji': (lambda: pick_unused_emoji(used=used_emoji))})
+
+            print("used_emoji:", used_emoji)
+
         else:
             counts = None
             errors = None
