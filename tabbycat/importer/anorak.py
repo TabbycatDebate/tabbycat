@@ -236,8 +236,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             counts, errors = self._import(f, pm.Team, team_interpreter, expect_unique=False,
                     generated_fields={'emoji': (lambda: pick_unused_emoji(used=used_emoji))})
 
-            print("used_emoji:", used_emoji)
-
         else:
             counts = None
             errors = None
