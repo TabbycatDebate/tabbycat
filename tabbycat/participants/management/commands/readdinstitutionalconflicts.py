@@ -20,4 +20,3 @@ class Command(TournamentCommand):
                 institution=adj.institution)
                 self_conflict.save()
                 self.stdout.write("Adding self-institutional conflict for {}".format(adj.name))
-

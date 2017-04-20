@@ -9,6 +9,7 @@ import participants.models as pm
 import tournaments.models as tm
 import tournaments.utils
 import venues.models as vm
+from participants.emoji import pick_unused_emoji
 
 from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
 
@@ -189,8 +190,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             tournament=self.tournament,
             institution=pm.Institution.objects.lookup
         )
-
         used_emoji = []
+
         def team_interpreter(line):
             line = team_interpreter_part(line)
             line['short_reference'] = line['reference'][:34]
@@ -223,8 +224,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
 
         if auto_create_teams:
-
             used_emoji = []
+
             def team_interpreter(line):
                 emoji = pick_unused_emoji(used=used_emoji)
                 used_emoji.append(emoji)
