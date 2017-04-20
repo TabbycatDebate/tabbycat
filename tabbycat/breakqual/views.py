@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
 from django.utils.translation import ugettext as _
 from django.views.generic import FormView, TemplateView
 
