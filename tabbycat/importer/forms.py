@@ -192,10 +192,11 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     """Adds provision for a textarea input for speakers."""
 
     speakers = forms.CharField(required=True) # widget is set in form constructor
+    short_reference = forms.CharField(widget=forms.HiddenInput, required=False) # doesn't actually do anything, just placeholder to avoid validation failure
 
     class Meta:
         model = Team
-        fields = ('reference', 'use_institution_prefix', 'institution')
+        fields = ('reference', 'short_reference', 'use_institution_prefix', 'institution')
         labels = {
             'reference': _("Name (excluding institution name)"),
             'use_institution_prefix': _("Prefix team name with institution name?"),
@@ -220,6 +221,13 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
             self.add_error('speakers', _("There must be at least one speaker."))
         return names
 
+    def clean_short_reference(self):
+        # Ignore the actual field value, and replace with the (long) reference.
+        # The purpose of this is to ensure that this field is populated, because
+        # Team.clean() checks it, so it can't just be excluded using `exclude=`.
+        reference = self.cleaned_data.get('reference', '')
+        return reference[:TEAM_SHORT_REFERENCE_LENGTH]
+
     def _post_clean_speakers(self):
         """Validates the Speaker instances that would be created."""
         for name in self.cleaned_data.get('speakers', []):
@@ -237,7 +245,6 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     def save(self, commit=True):
         # First save the team, then create the speakers
         team = super().save(commit=False)
-        team.short_reference = team.reference[:TEAM_SHORT_REFERENCE_LENGTH]
         team.tournament = self.tournament
 
         if commit:
