@@ -2,8 +2,8 @@
 Change Log
 ==========
 
-1.3.0
------
+1.3.0 (Genetta)
+---------------
 *Release date: TBC*
 
 - Added the ability to mark speeches as duplicates when entering ballots so that they will not show in speaker tabs, intended for use with 'iron-man' speeches and swing speakers
