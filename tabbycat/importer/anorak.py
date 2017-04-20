@@ -190,9 +190,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             institution=pm.Institution.objects.lookup
         )
 
+        used_emoji = []
         def team_interpreter(line):
             line = team_interpreter_part(line)
             line['short_reference'] = line['reference'][:34]
+
+            emoji = pick_unused_emoji(used=used_emoji)
+            used_emoji.append(emoji)
+            line['emoji'] = emoji
+
             return line
 
         counts, errors = self._import(f, pm.Team, team_interpreter)
@@ -218,12 +224,16 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         if auto_create_teams:
 
+            used_emoji = []
             def team_interpreter(line):
+                emoji = pick_unused_emoji(used=used_emoji)
+                used_emoji.append(emoji)
                 interpreted = {
                     'tournament':  self.tournament,
                     'institution':  pm.Institution.objects.lookup(line['institution']),
                     'reference':  line['team_name'],
                     'short_reference':  line['team_name'][:34],
+                    'emoji':  emoji,
                 }
                 if line.get('use_institution_prefix'):
                     interpreted['use_institution_prefix'] = line['use_institution_prefix']
