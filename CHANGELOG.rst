@@ -6,11 +6,12 @@ Change Log
 -----
 *Release date: TBC*
 
-- Added the ability to mark speeches as duplicates when entering ballots so that they will not show in speaker tabs. This should make dealing with 'Iron Man' speeches and swing speakers much easier.
-- Reworked the venue constraints system and venue display options by removing Venue Groups and Venue Constraint Categories in favour of Venue Categories, Venue Constraints, and new options for configuring how a given category affects how a venue is named in the draw.
-- Relocated the Random URLs pages to the Setup section and added pages from printing/emailing out the ballot submission URLs
+- Added the ability to mark speeches as duplicates when entering ballots so that they will not show in speaker tabs, intended for use with 'iron-man' speeches and swing speakers
+- Reworked venue constraints and venue display options by streamlining "venue groups" and "venue constraint categories" into a single "venue category" type, with options for how they are used and displayed
+- Relocated the Random URLs pages to the Setup section and added pages for printing/emailing out the ballot submission URLs
+- Reworked the simple data importer (formerly the visual importer) to improve its robustness
 - Added a preference for controlling whether assistant users have access to pages that can reveal draw or motions information ahead of their public release
-- Added the ability to limit tab releases to a given number of ranks (ie only show the top 10 speakers)
+- Added the ability to limit tab releases to a given number of ranks (*i.e.* only show the top 10 speakers)
 - Added the ability to redact individual person's identifying details from speaker tabs
 - Added the ability for user passwords to be easily reset
 - Added a minimal set of default questions to newly created Tournaments.
