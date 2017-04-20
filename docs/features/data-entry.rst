@@ -38,7 +38,7 @@ As a general principle, Tabbycat requires all ballots to be looked at by two peo
   - Some tab rooms like to assign some to data entry and some to verification. This isn't really necessary, since Tabbycat doesn't let the same person enter and verify the same ballot. (This is one of many reasons why every person should have their own account.)
 
 Duplicate/Swing Speeches
-===========================
+------------------------
 
 .. image:: images/iron-speakers.png
 
@@ -61,9 +61,9 @@ Online entry
 There are two methods of allowing ballots and feedback to be submitted online. Both are set in the **Data Entry** page of each tournament's **Configuration** section and can be set independently; both in whether each can be submitted online at all and in which method of online submission are available.
 
 Private URLs
-============
+------------
 
-The first method of data entry is used 'randomised URLs'. When this setting is enabled you can create a special URL that is unique to a particular team or adjudicator. This link contains a number of random characters and is not displayed publicly; it is in effect a secret that only that particular participant should know. Presuming people do not share these links to others this provides a means to (relatively) securely identify who is submitting what information. Because Tabbycat knows which team or adjudicator has which URL it will only allow them to submit feedback/ballots for debates that they were speakers/adjudicators in.
+The first method of data entry is using 'randomised URLs'. When this setting is enabled you can create a special URL that is unique to a particular team or adjudicator. This link contains a number of random characters and is not displayed publicly; it is in effect a secret that only that particular participant should know. Presuming people do not share these links to others this provides a means to (relatively) securely identify who is submitting what information. Because Tabbycat knows which team or adjudicator has which URL it will only allow them to submit feedback/ballots for debates that they were speakers/adjudicators in.
 
 .. warning:: Private URLs should provide more than adequate security for almost all tournaments' purposes, but they aren't foolproof. Anyone with access to the URL for a participant can submit feedback from them, so it's important that participants not share their URLs. This also means participants need to be careful when submitting from devices they do not own, because the URL will be logged in that device's browser history.
 
@@ -82,7 +82,7 @@ These URLs can then be distributed to each person in a number of ways. There are
 
 
 Public URLs
-===========
+-----------
 
 The second method of data entry is using 'normal URLs'. This essentially means that any users visiting the public version of the site is able to submit a ballot or feedback (as specified by their respective settings). They do so by self-selecting which Team or Adjudicator they are then entering in a form as normal.
 
