@@ -364,6 +364,7 @@ class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, B
         'confirm_on_submit': True,
         'enforce_required': False,
         'include_unreleased_draws': True,
+        'use_tournament_password': False,
     }
 
     def form_valid(self, form):
@@ -384,6 +385,7 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
         'confirm_on_submit': True,
         'enforce_required': True,
         'include_unreleased_draws': False,
+        'use_tournament_password': True,
     }
 
     def form_valid(self, form):

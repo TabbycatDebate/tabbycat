@@ -216,7 +216,8 @@ def make_feedback_form_class(source, tournament, *args, **kwargs):
 
 
 def make_feedback_form_class_for_adj(source, tournament, submission_fields, confirm_on_submit=False,
-                                     enforce_required=True, include_unreleased_draws=False):
+                                     enforce_required=True, include_unreleased_draws=False,
+                                     use_tournament_password=False):
     """Constructs a FeedbackForm class specific to the given source adjudicator.
     Parameters are as for make_feedback_form_class."""
 
@@ -246,7 +247,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
 
     class FeedbackForm(BaseFeedbackForm):
         _tournament = tournament  # BaseFeedbackForm setting
-        _use_tournament_password = True  # BaseFeedbackForm setting
+        _use_tournament_password = use_tournament_password  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
         question_filter = dict(from_adj=True)
@@ -265,7 +266,8 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
 
 
 def make_feedback_form_class_for_team(source, tournament, submission_fields, confirm_on_submit=False,
-                                      enforce_required=True, include_unreleased_draws=False):
+                                      enforce_required=True, include_unreleased_draws=False,
+                                      use_tournament_password=False):
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
 
@@ -310,7 +312,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
 
     class FeedbackForm(BaseFeedbackForm):
         _tournament = tournament  # BaseFeedbackForm setting
-        _use_tournament_password = True  # BaseFeedbackForm setting
+        _use_tournament_password = use_tournament_password  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
         question_filter = dict(from_team=True)
