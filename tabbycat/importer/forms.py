@@ -263,3 +263,9 @@ class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitution
         labels = {
             'test_score': _("Rating"),
         }
+
+    def save(self, commit=True):
+        adj = super().save(commit=commit)
+        if commit and adj.institution:
+            adj.adjudicatorinstitutionconflict_set.create(institution=adj.institution)
+        return adj
