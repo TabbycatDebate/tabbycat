@@ -89,7 +89,7 @@ class PublicTabMixin(PublicTournamentPageMixin):
 
     def limit_rank_display(self, standings):
         """Sets the rank limit on the generated standings."""
-        if self.public_limit_preference:
+        if hasattr(self, 'public_limit_preference'):
             tournament = self.get_tournament()
             rank_limit = tournament.pref(self.public_limit_preference)
             if rank_limit > 0:
@@ -101,7 +101,7 @@ class PublicTabMixin(PublicTournamentPageMixin):
 
     def get_page_title(self):
         # If set, make a note of any rank limitations in the title
-        if self.public_limit_preference:
+        if hasattr(self, 'public_limit_preference'):
             tournament = self.get_tournament()
             ranks_limit = tournament.pref(self.public_limit_preference)
             if ranks_limit > 0:
