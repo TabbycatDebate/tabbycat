@@ -31,6 +31,18 @@
   </div>
 {% endif %}
 
+{% if not object.round_set.exists %}
+  <div class="alert alert-danger">
+    {% url 'admin:tournaments_round_changelist' as round_changelist_url %}
+    {% blocktrans trimmed with tournament_name=tournament.name %}
+      The tournament <strong>{{ tournament_name }}</strong> has no rounds.
+      You'll need to <a href="{{ round_changelist_url }}">add rounds and
+      associate them with this tournament</a> before you can set the current
+      round.
+    {% endblocktrans %}
+  </div>
+{% endif %}
+
 <div class="panel panel-default">
   <div class="panel-body">
 
