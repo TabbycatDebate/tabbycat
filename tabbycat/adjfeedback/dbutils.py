@@ -35,7 +35,7 @@ COMMENTS = {
 
 def add_feedback_to_round(round, **kwargs):
     """Calls add_feedback() for every debate in the given round."""
-    for debate in round.get_draw():
+    for debate in round.debate_set_with_prefetches():
         add_feedback(debate, **kwargs)
 
 
@@ -75,7 +75,7 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
         (debate.neg_team, debate.adjudicators.chair),
     ]
     sources_and_subjects.extend(itertools.permutations(
-        (adj for type, adj in debate.adjudicators), 2))
+        (adj for adj, position in debate.adjudicators.with_debateadj_types()), 2))
 
     fbs = list()
 
