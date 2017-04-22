@@ -4,25 +4,27 @@
 
 {% block page-subnav-sections %}
   <a href="{% roundurl 'availability-index' round %}" class="btn btn-default">
-    <span class="glyphicon glyphicon-chevron-left"></span>Checkins Overview
+    <span class="glyphicon glyphicon-chevron-left"></span>Overview
   </a>
-  {% if round.seq > 1 %}
-    <button id="select_previous" class="btn btn-primary" type="button">
-      Copy from Previous
-    </button>
-  {% endif %}
-  <button id="select_all" class="btn btn-primary">
-    Select All
-  </button>
-  <button id="select_none" class="btn btn-primary">
-    Select None
-  </button>
   {% if round.is_break_round and page_title == 'Adjudicator Check-Ins' %}
     <a class="btn btn-primary submit-disable"
        href="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
       Check In All Breaking
     </a>
   {% endif %}
+  {% if round.seq > 1 %}
+    <button id="select_previous" class="btn btn-default" type="button">
+      Copy from Previous
+    </button>
+  {% endif %}
+  <div class="btn-group">
+    <button id="select_all" class="btn btn-default">
+      Select All
+    </button>
+    <button id="select_none" class="btn btn-default">
+      Select None
+    </button>
+  </div>
   {{ block.super }}
 {% endblock %}
 
