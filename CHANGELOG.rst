@@ -15,6 +15,7 @@ Change Log
 - Added the ability to redact individual person's identifying details from speaker tabs
 - Added the ability for user passwords to be easily reset
 - Added a minimal set of default questions to newly created Tournaments.
+- When a tournament's current round is set, redirect to a page where it can be set, rather than crashing
 - A number of other minor bug fixes and enhancements
 
 
