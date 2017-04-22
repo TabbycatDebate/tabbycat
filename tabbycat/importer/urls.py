@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.views.generic.base import RedirectView
 
 from participants.models import Adjudicator, Institution, Team
 
@@ -32,39 +33,54 @@ urlpatterns = [
         views.ImportVenuesWizardView.as_view(),
         name='importer-simple-venues'),
 
-    # URLS Generation
-    url(r'^randomised_urls/$',
+    # Private URLs
+    url(r'^private-urls/$',
         views.RandomisedUrlsView.as_view(),
         name='randomised-urls-view'),
-    url(r'^randomised_urls/generate/$',
+    url(r'^private-urls/generate/$',
         views.GenerateRandomisedUrlsView.as_view(),
         name='randomised-urls-generate'),
 
-    url(r'^randomised_urls/email/ballot/$',
+    url(r'^private-urls/email/ballot/$',
         views.EmailBallotUrlsView.as_view(),
         name='email-ballot-urls'),
-    url(r'^randomised_urls/emails/ballot/confirm/$',
+    url(r'^private-urls/emails/ballot/confirm/$',
         views.ConfirmEmailBallotUrlsView.as_view(),
         name='confirm-ballot-urls-send'),
 
-    url(r'^randomised_urls/email/feedback/$',
+    url(r'^private-urls/email/feedback/$',
         views.EmailFeedbackUrlsView.as_view(),
         name='email-feedback-urls'),
-    url(r'^randomised_urls/emails/confirm/$',
+    url(r'^private-urls/emails/confirm/$',
         views.ConfirmEmailFeedbackUrlsView.as_view(),
         name='confirm-feedback-urls-send'),
 
+    # Old URLs for randomised URLs, now permanent redirects
+    url(r'^randomised_urls/$',
+        RedirectView.as_view(permanent=True, pattern_name='randomised-urls-view')),
+    url(r'^randomised_urls/generate/$',
+        RedirectView.as_view(permanent=True, pattern_name='randomised-urls-generate')),
+    url(r'^randomised_urls/email/ballot/$',
+        RedirectView.as_view(permanent=True, pattern_name='email-ballot-urls')),
+    url(r'^randomised_urls/emails/ballot/confirm/$',
+        RedirectView.as_view(permanent=True, pattern_name='confirm-ballot-urls-send')),
+    url(r'^randomised_urls/email/feedback/$',
+        RedirectView.as_view(permanent=True, pattern_name='email-feedback-urls')),
+    url(r'^randomised_urls/emails/confirm/$',
+        RedirectView.as_view(permanent=True, pattern_name='confirm-feedback-urls-send')),
+
+    # Old importer
     url(r'^old_importer/institutions/$',
-        views.add_institutions,\
+        views.add_institutions,
         name='add_institutions'),
     url(r'^old_importer/institutions/edit/$',
-        views.edit_institutions,\
+        views.edit_institutions,
         name='edit_institutions'),
     url(r'^old_importer/institutions/confirm/$',
-        views.confirm_institutions,\
+        views.confirm_institutions,
         name='confirm_institutions'),
     url(r'^old_importer/teams/$',
-        views.add_teams,\
+        views.add_teams,
         name='add_teams'),
 
     url(r'^old_importer/$',
