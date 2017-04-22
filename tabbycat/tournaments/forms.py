@@ -1,13 +1,13 @@
 import math
 
 from django.forms.fields import IntegerField
-from django.forms import ModelForm
+from django.forms import ModelChoiceField, ModelForm
 from django.utils.translation import ugettext_lazy as _
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 
-from .models import Tournament
+from .models import Tournament, Round
 from .utils import auto_make_break_rounds, auto_make_rounds
 
 
@@ -70,8 +70,21 @@ class TournamentForm(ModelForm):
         return tournament
 
 
+class CurrentRoundField(ModelChoiceField):
+
+    def label_from_instance(self, obj):
+        return obj.name
+
+
 class SetCurrentRoundForm(ModelForm):
+
+    current_round = CurrentRoundField(queryset=Round.objects.none(),
+            required=True, empty_label=None)
 
     class Meta:
         model = Tournament
         fields = ('current_round',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['current_round'].queryset = self.instance.round_set.all()

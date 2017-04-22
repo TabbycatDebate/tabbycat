@@ -9,8 +9,9 @@
 {% block content %}
 
 <div class="alert alert-info">
-  {% blocktrans trimmed %}
-    On this page, you can set the <strong>current round</strong> of the tournament.
+  {% blocktrans trimmed with tournament_name=tournament.name %}
+    On this page, you can set the <strong>current round</strong> of the tournament
+    <strong>{{ tournament_name }}</strong>.
   {% endblocktrans %}
 </div>
 
