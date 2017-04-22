@@ -394,18 +394,37 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
             self.source_name, self.adj_feedback.adjudicator.name))
         return result
 
-    def get_success_url(self):
-        return reverse_tournament('tournament-public-index', self.get_tournament())
-
 
 class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is a randomised one."""
     public_page_preference = 'public_feedback_randomised'
 
+    def get_success_url(self):
+        # Redirect to non-cached page: their original private URL
+        if isinstance(self.object, Adjudicator):
+            return reverse_tournament('adjfeedback-public-add-from-adjudicator-randomised',
+                self.get_tournament(), kwargs={'url_key': self.object.url_key})
+        elif isinstance(self.object, Team):
+            return reverse_tournament('adjfeedback-public-add-from-team-randomised',
+                self.get_tournament(), kwargs={'url_key': self.object.url_key})
+        else:
+            raise ValueError("Private feedback source is not of a valid type")
+
 
 class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is by object ID."""
     public_page_preference = 'public_feedback'
+
+    def get_success_url(self):
+        # Redirect to non-cached page: the public feedback form
+        if isinstance(self.object, Adjudicator):
+            return reverse_tournament('adjfeedback-public-add-from-adjudicator-pk',
+                self.get_tournament(), kwargs={'source_id': self.object.id})
+        elif isinstance(self.object, Team):
+            return reverse_tournament('adjfeedback-public-add-from-team-pk',
+                self.get_tournament(), kwargs={'source_id': self.object.id})
+        else:
+            raise ValueError("Public feedback source is not of a valid type")
 
 
 class AdjudicatorActionError(RuntimeError):

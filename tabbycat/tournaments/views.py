@@ -70,8 +70,8 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         return super().get_context_data(**kwargs)
 
 
-class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):
-    template_name = 'round_increment_check.html'
+class RoundAdvanceConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+    template_name = 'round_advance_check.html'
 
     def get(self, request, *args, **kwargs):
         round = self.get_round()
@@ -91,7 +91,7 @@ class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView
         return super().get_context_data(**kwargs)
 
 
-class RoundIncrementView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, PostOnlyRedirectView):
+class RoundAdvanceView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_ADVANCE
     round_redirect_pattern_name = 'results-round-list' # standard redirect is only on error
