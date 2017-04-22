@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 
-from .models import Tournament, Round
+from .models import Round, Tournament
 from .utils import auto_make_break_rounds, auto_make_rounds
 
 

@@ -6,6 +6,13 @@
   <span class="emoji">🙏</span>Set Current Round
 {% endblock %}
 
+{% block nav %}
+  {# Don't show the nav pane if there's no current round, because it'll crash. #}
+  {% if current_round %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 
 {% if next %}

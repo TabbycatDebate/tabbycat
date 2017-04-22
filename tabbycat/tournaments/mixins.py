@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlparse, urlunparse
 
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
@@ -6,7 +7,9 @@ from django.core.urlresolvers import NoReverseMatch
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseRedirect, QueryDict
+from django.shortcuts import get_object_or_404, redirect, reverse
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic.detail import SingleObjectMixin
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
@@ -15,6 +18,14 @@ from utils.mixins import TabbycatPageTitlesMixin
 from .models import Round, Tournament
 
 logger = logging.getLogger(__name__)
+
+
+def add_query_parameter(url, name, value):
+    parts = list(urlparse(url))
+    query = QueryDict(parts[4], mutable=True)
+    query[name] = value
+    parts[4] = query.urlencode(parts)
+    return urlunparse(parts)
 
 
 class TournamentMixin(TabbycatPageTitlesMixin):
@@ -58,6 +69,26 @@ class TournamentMixin(TabbycatPageTitlesMixin):
             except NoReverseMatch:
                 pass
         return super().get_redirect_url(*args, **kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        if tournament.current_round_id is None:
+            full_path = self.request.get_full_path()
+            if hasattr(self.request, 'user') and self.request.user.is_authenticated:
+                logger.critical("Current round wasn't set, redirecting to set-current-round page, was looking for %s" % full_path)
+                set_current_round_url = reverse_tournament('tournament-set-current-round', self.get_tournament())
+                redirect_url = add_query_parameter(set_current_round_url, 'next', full_path)
+                return HttpResponseRedirect(redirect_url)
+            else:
+                logger.critical("Current round wasn't set, redirecting to site index, was looking for %s" % full_path)
+                messages.error(request, _("There's a problem with the data for the tournament "
+                    "%(tournament_name)s. Please contact ask a tab director to set its current round.") % {
+                    'tournament_name': tournament.name
+                })
+                home_url = reverse('tabbycat-index')
+                redirect_url = add_query_parameter(home_url, 'redirect', 'false')
+                return HttpResponseRedirect(redirect_url)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class RoundMixin(TournamentMixin):

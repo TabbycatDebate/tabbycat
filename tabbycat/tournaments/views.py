@@ -13,7 +13,7 @@ from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import RedirectView, TemplateView
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, FormView, UpdateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -38,6 +38,8 @@ class PublicSiteIndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         tournaments = Tournament.objects.all()
+        if request.GET.get('redirect', '') == 'false':
+            return super().get(request, *args, **kwargs)
         if tournaments.count() == 1 and not request.user.is_authenticated:
             logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
             return redirect_tournament('tournament-public-index', tournaments.first())
