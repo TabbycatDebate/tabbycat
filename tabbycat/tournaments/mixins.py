@@ -82,9 +82,9 @@ class TournamentMixin(TabbycatPageTitlesMixin):
             else:
                 logger.critical("Current round wasn't set, redirecting to site index, was looking for %s" % full_path)
                 messages.error(request, _("There's a problem with the data for the tournament "
-                    "%(tournament_name)s. Please contact ask a tab director to set its current round.") % {
-                    'tournament_name': tournament.name
-                })
+                    "%(tournament_name)s. Please contact a tab director and ask them to set its "
+                    "current round.") % {'tournament_name': tournament.name}
+                )
                 home_url = reverse('tabbycat-index')
                 redirect_url = add_query_parameter(home_url, 'redirect', 'false')
                 return HttpResponseRedirect(redirect_url)
