@@ -64,31 +64,10 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
-        round = tournament.current_round
-        assert(round is not None)
-        kwargs["round"] = round
+        kwargs["round"] = tournament.current_round
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
         kwargs["blank"] = not (tournament.team_set.exists() or tournament.adjudicator_set.exists() or tournament.venue_set.exists())
         return super().get_context_data(**kwargs)
-
-    def get(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
-        if tournament.current_round is None:
-            if self.request.user.is_superuser:
-                tournament.current_round = tournament.round_set.order_by('seq').first()
-                if tournament.current_round is None:
-                    return HttpResponse('<p>Error: This tournament has no rounds; '
-                                        ' you\'ll need to add some in the '
-                                        '<a href="' + reverse('admin:tournaments_round_changelist') +
-                                        '">Edit Database</a> area.</p>')
-                messages.warning(self.request, "The current round wasn't set, "
-                                 "so it's been automatically set to the first round.")
-                logger.warning("Automatically set current round to {}".format(tournament.current_round))
-                tournament.save()
-                self.request.tournament = tournament  # Update for context processors
-            else:
-                raise Http404()
-        return super().get(self, request, *args, **kwargs)
 
 
 class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):
