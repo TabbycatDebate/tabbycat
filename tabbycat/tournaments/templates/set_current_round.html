@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load add_field_css i18n %}
+
+{% block page-title %}Set Current Round{% endblock %}
+{% block head-title %}
+  <span class="emoji">🙏</span>Set Current Round
+{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info">
+  {% blocktrans trimmed %}
+    On this page, you can set the <strong>current round</strong> of the tournament.
+  {% endblocktrans %}
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+
+    <form action="." method="POST" class="">
+
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          {% trans "Whoops! There was an error with one or more fields." %}
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+    <div class="form-group">
+      <div class="form-horizontal row">
+        <label for="{{ form.current_round.id_for_label }}" class="col-sm-3 control-label">
+          {{ form.current_round.label }}
+        </label>
+        <div class="col-sm-6">
+          {{ form.current_round|addcss:"form-control" }}
+          {{ form.current_round.errors }}
+        </div>
+      </div>
+    </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-block btn-success form-control">
+          {% trans "Set Current Round" %}
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+
+{% endblock %}

@@ -21,6 +21,9 @@ urlpatterns = [
     url(r'^admin/round/(?P<round_seq>\d+)/round_increment/$',
         views.RoundIncrementView.as_view(),
         name='round_increment'),
+    url(r'^admin/set-current-round/$',
+        views.SetCurrentRoundView.as_view(),
+        name='tournament-set-current-round'),
 
     # Action Logs App
     url(r'^admin/action_log/',

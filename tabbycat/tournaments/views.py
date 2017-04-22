@@ -12,7 +12,7 @@ from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import RedirectView, TemplateView
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -24,7 +24,7 @@ from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
 
-from .forms import TournamentForm
+from .forms import SetCurrentRoundForm, TournamentForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
 
@@ -211,6 +211,13 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
                 "can access it below.")
 
         return redirect('tabbycat-index')
+
+
+class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
+    model = Tournament
+    form_class = SetCurrentRoundForm
+    template_name = 'set_current_round.html'
+    slug_url_kwarg = 'tournament_slug'
 
 
 class TournamentPermanentRedirectView(RedirectView):

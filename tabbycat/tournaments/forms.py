@@ -68,3 +68,10 @@ class TournamentForm(ModelForm):
         tournament.save()
 
         return tournament
+
+
+class SetCurrentRoundForm(ModelForm):
+
+    class Meta:
+        model = Tournament
+        fields = ('current_round',)
