@@ -191,13 +191,13 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
         if tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
                 tournament.team_set.filter(url_key__isnull=False).exists():
             messages.error(
-                self.request, "There are already randomised URLs. " +
+                self.request, "There are already private URLs. " +
                 "You must use the Django management commands to populate or " +
-                "delete randomised URLs.")
+                "delete private URLs.")
         else:
             populate_url_keys(tournament.adjudicator_set.all())
             populate_url_keys(tournament.team_set.all())
-            messages.success(self.request, "Randomised URLs were generated for all teams and adjudicators.")
+            messages.success(self.request, "Private URLs were generated for all teams and adjudicators.")
 
         return super().post(request, *args, **kwargs)
 

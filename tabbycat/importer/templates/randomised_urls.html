@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}<span class="emoji">🎲</span> Randomised URLs{% endblock %}
-{% block page-title %}🎲 Randomised URLs{% endblock %}
+{% block head-title %}<span class="emoji">🎲</span> Private URLs{% endblock %}
+{% block page-title %}🎲 Private URLs{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default" href="{% tournamenturl 'randomised-urls-view' %}">
@@ -32,9 +32,9 @@
 
     <p>
       {% if exists %}
-        The randomised URLs for public ballot and/or feedback submission are given below.
+        The private URLs for public ballot and/or feedback submission are given below.
       {% else %}
-        Randomised URLs are used for public ballot and/or feedback submission. You
+        Private URLs are used for public ballot and/or feedback submission. You
         should use them if you have a means of distributing crazy-looking URLs to
         participants, and are too worried about fraud to use a publicly accessible
         page where <em>anyone</em> can enter <em>any</em> submission. The URLs
@@ -42,20 +42,21 @@
         <strong><small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' '9dnflp3z' %}</small></strong>.
         </p><p>
       {% endif %}
-      Anyone with the URLs can access the relevant data entry page. The idea is
+      Anyone with the URL can access the relevant data entry page. The idea is
       that it's hard to guess another key (the random-looking string), so you should
       make each URL accessible only to the team or adjudicator in question.
       <a href="http://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls">
-      Read more about random URLs.</a>
+      Read more about private URLs.</a>
     </p>
 
   </div>
 
   {% if not pref.public_ballots_randomised and not pref.public_feedback_randomised and not pref.allocation_confirmations %}
     <div class="alert alert-danger">
-      The <strong>public ballots randomised</strong> and <strong>public feedback
-      randomised</strong> configuration settings are both disabled. Any
-      generated URLs will not work unless you enable them on the
+      The <strong>public ballots with private URLs</strong> and
+      <strong>public feedback with  private URLs</strong> configuration
+      settings are both disabled. Any generated URLs will not work unless you
+      enable them on the
       <a href="{% tournamenturl 'options-tournament-data-entry' %}">tournament
       configuration page</a>.
     </div>
@@ -63,13 +64,13 @@
 
   {% if pref.public_ballots and pref.public_ballots_randomised %}
     <div class="alert alert-danger">
-      The <strong>public ballots</strong> (non-randomised) configuration setting
+      The <strong>public ballots</strong> (non-private) configuration setting
       is enabled, which means that the
       <a href="{% tournamenturl 'results-public-ballot-submission-index' %}">
       page in the public interface from which anyone can enter any ballot</a>,
       without knowing any special URLs, is enabled. This defeats the purpose of
-      the <strong>public ballots randomised</strong> setting. You may wish to
-      consider disabling the non-randomised setting on the
+      the <strong>public ballots with private URLs</strong> setting. You may wish to
+      consider disabling the non-private setting on the
       <a href="{% tournamenturl 'options-tournament-data-entry' %}">tournament
       configuration page</a>.
     </div>
@@ -77,13 +78,13 @@
 
   {% if pref.public_feedback and pref.public_feedback_randomised %}
     <div class="alert alert-danger">
-      The <strong>public feedback</strong> (non-randomised) configuration
+      The <strong>public feedback</strong> (non-private) configuration
       setting is enabled, which means that the
       <a href="{% tournamenturl 'adjfeedback-public-add-index' %}">page in the
       public interface from which anyone can enter any feedback</a>, without
       knowing any special URLs, is enabled. This defeats the purpose of the
-      <strong>public feedback randomised</strong> setting. You may wish to
-      consider disabling the non-randomised settings on the
+      <strong>public feedback with private URLs</strong> setting. You may wish to
+      consider disabling the non-private settings on the
       <a href="{% tournamenturl 'options-tournament-data-entry' %}">tournament
       configuration page</a>.
     </div>
@@ -129,7 +130,7 @@
               </tr>
             {% empty %}
               <tr>
-                <td colspan="3">No adjudicators have randomised URLs.</td>
+                <td colspan="3">No adjudicators have private URLs.</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -162,7 +163,7 @@
               </tr>
             {% empty %}
               <tr>
-                <td colspan="3">No teams have randomised URLs.</td>
+                <td colspan="3">No teams have private URLs.</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -174,14 +175,13 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h5>There are no randomised URLs assigned.
-        Would you like to generate them?</h5>
+        <h5>There are no private URLs assigned. Would you like to generate them?</h5>
       </div>
       <div class="panel-body">
         <form action="{% tournamenturl 'randomised-urls-generate' %}" method="POST">
         {% csrf_token %}
         <button class="btn btn-success btn-block" id="generateRandomisedUrls" type="submit">
-          Generate randomised URLs for ballot and feedback submission
+          Generate private URLs for ballot and feedback submission
         </button>
         </form>
       </div>

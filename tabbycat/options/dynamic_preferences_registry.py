@@ -571,8 +571,8 @@ class PublicBallots(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicBallotsRandomised(BooleanPreference):
-    help_text = "Enables public interface to add ballots using randomised URLs"
-    verbose_name = "Enable public ballots with randomised URLs"
+    help_text = "Enables public interface to add ballots using private (randomised, per-person) URLs"
+    verbose_name = "Enable public ballots with private URLs"
     section = data_entry
     name = "public_ballots_randomised"
     default = False
@@ -589,8 +589,8 @@ class PublicFeedback(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicFeedbackRandomised(BooleanPreference):
-    help_text = "Enables public interface to add feedback using randomised URLs"
-    verbose_name = "Enable public feedback with randomised URLs"
+    help_text = "Enables public interface to add feedback using private (randomised, per-person) URLs"
+    verbose_name = "Enable public feedback with private URLs"
     section = data_entry
     name = "public_feedback_randomised"
     default = False

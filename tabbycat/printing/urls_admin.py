@@ -12,7 +12,7 @@ urlpatterns = [
         views.PrintFeedbackFormsView.as_view(),
         name='printing-feedback'),
 
-    # Random URL distribution
+    # Private URL distribution
     url(r'^feedback_urls_sheets/',
         views.PrintFeedbackURLsView.as_view(),
         name='printing-ballot-urls'),

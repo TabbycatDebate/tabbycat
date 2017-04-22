@@ -7,7 +7,7 @@ from ...urlkeys import delete_url_keys, populate_url_keys
 
 class Command(TournamentCommand):
 
-    help = "Generates or deletes randomised URLs"
+    help = "Generates or deletes private URLs"
 
     def add_arguments(self, parser):
         subparsers = parser.add_subparsers(dest="subcommand",
@@ -20,12 +20,12 @@ class Command(TournamentCommand):
         generate.add_argument('--teams-only',
                               action="store_true",
                               default=False,
-                              help="Only generate randomised URLs for teams")
+                              help="Only generate private URLs for teams")
         generate.add_argument(
             '--adjs-only',
             action="store_true",
             default=False,
-            help="Only generate randomised URLs for adjudicators")
+            help="Only generate private URLs for adjudicators")
         generate.add_argument('-l',
                               '--length',
                               type=int,
@@ -44,7 +44,7 @@ class Command(TournamentCommand):
         self.options = options
 
         if options['subcommand'] == "delete":
-            self.stdout.write("Deleting all randomised URLs...")
+            self.stdout.write("Deleting all private URLs...")
             delete_url_keys(tournament.adjudicator_set.all())
             delete_url_keys(tournament.team_set.all())
 
@@ -64,9 +64,9 @@ class Command(TournamentCommand):
 
         model_name = relatedmanager.model._meta.verbose_name_plural.lower()
         if existing.exists():
-            self.stdout.write(self.style.WARNING("Skipping {0:d} {1:s} that already have randomised URLs. Use --overwrite to overwrite them.".format(
+            self.stdout.write(self.style.WARNING("Skipping {0:d} {1:s} that already have private URLs. Use --overwrite to overwrite them.".format(
                 existing.count(), model_name)))
 
-        self.stdout.write("Generating randomised URLs for {0:d} {1:s}".format(
+        self.stdout.write("Generating private URLs for {0:d} {1:s}".format(
             queryset.count(), model_name))
         populate_url_keys(queryset, self.options['length'])
