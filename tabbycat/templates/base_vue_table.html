@@ -2,7 +2,7 @@
 {% load debate_tags %}
 
 {% block content %}
-  <tables-container :tables-data=tablesData></tables-container>
+  <tables-container :tables-data=tablesData orientation={{ tables_orientation|safe }} ></tables-container>
 {% endblock content %}
 
 {% block js %}

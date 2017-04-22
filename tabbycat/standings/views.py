@@ -370,13 +370,14 @@ class BaseMotionStandingsView(BaseStandingsView):
 
     page_title = 'Motions Tab'
     page_emoji = '💭'
+    tables_orientation = 'rows'
 
     def get_rounds(self):
         """Returns all of the rounds that should be included in the tab."""
         return self.get_tournament().round_set.order_by('seq')
 
-    def get_table(self):
-        motions = motion_statistics.statistics(tournament=self.get_tournament(), rounds=self.get_rounds())
+    def get_motions_table(self, t, rounds):
+        motions = motion_statistics.statistics(tournament=t, rounds=rounds)
         table = TabbycatTableBuilder(view=self, sort_key="Order")
 
         table.add_round_column([motion.round for motion in motions])
@@ -389,6 +390,12 @@ class BaseMotionStandingsView(BaseStandingsView):
         table.add_column("Neg Wins", [motion.neg_wins for motion in motions])
         return table
 
+    def get_tables(self):
+        t = self.get_tournament()
+        in_rounds = self.get_motions_table(t, t.prelim_rounds())
+        out_rounds = self.get_motions_table(t, t.break_rounds())
+        return [in_rounds, out_rounds]
+
 
 class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
     template_name = 'standings_base.html'
@@ -396,10 +403,6 @@ class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
 
 class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
     public_page_preference = 'motion_tab_released'
-
-    def get_rounds(self):
-        """Returns all of the rounds that should be included in the tab."""
-        return self.get_tournament().round_set.order_by('seq')
 
 
 # ==============================================================================

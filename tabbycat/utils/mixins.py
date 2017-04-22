@@ -146,11 +146,13 @@ class VueTableTemplateView(TemplateView):
      a team name row, but also institution/category status as needed)."""
 
     template_name = 'base_vue_table.html'
+    tables_orientation = 'columns' # Layout option: tables as rows or as columns
 
     def get_context_data(self, **kwargs):
         tables = self.get_tables()
         kwargs["tables_count"] = list(range(len(tables)))
         kwargs["tables_data"] = json.dumps([table.jsondict() for table in tables])
+        kwargs["tables_orientation"] = self.tables_orientation
         return super().get_context_data(**kwargs)
 
     def get_table(self):
