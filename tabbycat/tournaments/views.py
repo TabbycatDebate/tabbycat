@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import management
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import Http404, HttpResponse
+from django.core.urlresolvers import reverse_lazy
+from django.http import Http404
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
