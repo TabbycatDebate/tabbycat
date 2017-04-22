@@ -52,7 +52,7 @@ def get_menu_highlight(request):
         return {'feedback_progress_nav': True}
     elif "feedback" in request.path:
         return {'feedback_nav': True}
-    elif "randomised" in request.path:
+    elif "private-urls" in request.path:
         return {'import_random': True}
     elif "import" in request.path:
         return {'import_nav': True}
