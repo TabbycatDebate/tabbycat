@@ -48,6 +48,9 @@ thead, .thead {
     color: $brand-success;
     cursor: pointer;
   }
+  .vue-sort-key {
+    margin-left: -2px; // There is always a space after the key; reduce this gap
+  }
 }
 
 //------------------------------------------------------------------------------
