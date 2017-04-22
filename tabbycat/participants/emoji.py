@@ -180,7 +180,7 @@ EMOJI_LIST = (
     ("⚽", "⚽"),  # Soccer Ball
     # DOESN"T SHOW ("⚾", ""),  # Baseball
     # LAME ("⛳", ""),  # Flag in Hole
-    # LAME ("⛸", ""),  # Ice Skate
+    ("⛸", ""),  # Ice Skate
     # LAME ("⛷", ""),  # Skier
     # LAME ("⛹", ""),  # Person With Ball
     ("⛏", "⛏"),  # Pick
@@ -196,7 +196,7 @@ EMOJI_LIST = (
     ("😂", "😂"),  # Face With Tears of Joy
     # TOO SIMILAR ("😃", ""),  # Smiling Face With Open Mouth
     ("😄", "😄"),  # Smiling Face With Open Mouth and Smiling Eyes
-    # TOO SIMILAR ("😅", ""),  # Smiling Face With Open Mouth and Cold Sweat
+    ("😅", ""),  # Smiling Face With Open Mouth and Cold Sweat
     ("😆", "😆"),  # Smiling Face With Open Mouth and Tightly-Closed Eyes
     ("😉", "😉"),  # Winking Face
     ("😊", "😊"),  # Smiling Face With Smiling Eyes
@@ -209,16 +209,16 @@ EMOJI_LIST = (
     ("😐", "😐"),  # Neutral Face
     # TOO SIMILAR ("😶", ""),  # Face Without Mouth
     ("😏", "😏"),  # Smirking Face
-    # TOO SIMILAR ("😣", ""),  # Persevering Face
+    ("😣", ""),  # Persevering Face
     ("😥", "😥"),  # Disappointed but Relieved Face
     # TOO SIMILAR ("😪", ""),  # Sleepy Face
-    # TOO SIMILAR ("😫", ""),  # Tired Face
+    ("😫", ""),  # Tired Face
     # TOO SIMILAR ("😌", ""),  # Relieved Face
     ("😜", "😜"),  # Face With Stuck-Out Tongue and Winking Eye
     # TOO SIMILAR ("😝", ""),  # Face With Stuck-Out Tongue and Tightly-Closed Eyes
     # TOO SIMILAR ("😒", ""),  # Unamused Face
-    # TOO SIMILAR ("😓", ""),  # Face With Cold Sweat
-    # TOO SIMILAR ("😔", ""),  # Pensive Face
+    ("😓", ""),  # Face With Cold Sweat
+    ("😔", ""),  # Pensive Face
     ("😖", "😖"),  # Confounded Face
     ("😷", "😷"),  # Face With Medical Mask
     ("😲", "😲"),  # Astonished Face
@@ -313,13 +313,13 @@ EMOJI_LIST = (
     # LAME ("💟", ""),  # Heart Decoration
     ("💌", "💌"),  # Love Letter
     ("💧", "💧"),  # Droplet
-    # LAME ("💤", ""),  # Sleeping Symbol
+    ("💤", ""),  # Sleeping Symbol
     # LAME ("💢", ""),  # Anger Symbol
     ("💣", "💣"),  # Bomb
     ("💥", "💥"),  # Collision Symbol
     ("💦", "💦"),  # Splashing Sweat Symbol
     ("💨", "💨"),  # Dash Symbol
-    # LAME ("💫", ""),  # Dizzy Symbol
+    ("💫", ""),  # Dizzy Symbol
     # LAME ("💬", ""),  # Speech Balloon
     # LAME ("💭", ""),  # Thought Balloon
     ("👓", "👓"),  # Eyeglasses
@@ -404,30 +404,30 @@ EMOJI_LIST = (
     ("🐔", "🐔"),  # Chicken
     # LAME ("🐓", ""),  # Rooster
     # LAME ("🐣", ""),  # Hatching Chick
-    # LAME ("🐤", ""),  # Baby Chick
-    # LAME ("🐥", ""),  # Front-Facing Baby Chick
+    # TOO SIMILAR ("🐤", ""),  # Baby Chick
+    ("🐥", ""),  # Front-Facing Baby Chick
     ("🐦", "🐦"),  # Bird
     ("🐧", "🐧"),  # Penguin
     ("🐸", "🐸"),  # Frog Face
     # LAME ("🐊", ""),  # Crocodile
-    # LAME ("🐢", ""),  # Turtle
+    ("🐢", ""),  # Turtle
     ("🐍", "🐍"),  # Snake
     ("🐲", "🐲"),  # Dragon Face
     # LAME ("🐉", ""),  # Dragon
     ("🐳", "🐳"),  # Spouting Whale
     # TOO SIMILAR ("🐋", ""),  # Whale
-    # TOO SIMILAR ("🐬", ""),  # Dolphin
+    ("🐬", ""),  # Dolphin
     ("🐟", "🐟"),  # Fish
-    # LAME ("🐠", ""),  # Tropical Fish
+    ("🐠", ""),  # Tropical Fish
     # LAME ("🐡", ""),  # Blowfish
     ("🐙", "🐙"),  # Octopus
     ("🐚", "🐚"),  # Spiral Shell
-    # LAME ("🐌", ""),  # Snail
-    # LAME ("🐛", ""),  # Bug
+    ("🐌", ""),  # Snail
+    ("🐛", ""),  # Bug
     # LAME ("🐜", ""),  # Ant
     ("🐝", "🐝"),  # Honeybee
     # LAME ("🐞", ""),  # Lady Beetle
-    # LAME ("💐", ""),  # Bouquet
+    ("💐", ""),  # Bouquet
     ("🌸", "🌸"),  # Cherry Blossom
     # LAME ("💮", ""),  # White Flower
     ("🌹", "🌹"),  # Rose
@@ -438,10 +438,10 @@ EMOJI_LIST = (
     ("🌱", ""),  # Seedling
     # LAME ("🌲", ""),  # Evergreen Tree
     # LAME ("🌳", ""),  # Deciduous Tree
-    # LAME ("🌴", ""),  # Palm Tree
+    ("🌴", ""),  # Palm Tree
     ("🌵", "🌵"),  # Cactus
     # LAME ("🌾", ""),  # Ear of Rice
-    # LAME ("🌿", ""),  # Herb
+    ("🌿", ""),  # Herb
     ("🍀", ""),  # Four Leaf Clover
     ("🍁", "🍁"),  # Maple Leaf
     # LAME ("🍂", ""),  # Fallen Leaf
@@ -468,7 +468,7 @@ EMOJI_LIST = (
     # LAME ("🍖", ""),  # Meat on Bone
     # LAME ("🍗", ""),  # Poultry Leg
     ("🍔", "🍔"),  # Hamburger
-    # LAME ("🍟", ""),  # French Fries
+    ("🍟", ""),  # French Fries
     ("🍕", "🍕"),  # Slice of Pizza
     # LAME ("🍲", ""),  # Pot of Food
     # LAME ("🍱", ""),  # Bento Box
@@ -517,7 +517,7 @@ EMOJI_LIST = (
     ("🏢", "🏢"),  # Office Building
     # TOO SIMILAR ("🏣", ""),  # Japanese Post Office
     # TOO SIMILAR ("🏤", ""),  # European Post Office
-    # TOO SIMILAR ("🏥", ""),  # Hospital
+    ("🏥", ""),  # Hospital
     # TOO SIMILAR ("🏦", ""),  # Bank
     # TOO SIMILAR ("🏨", ""),  # Hotel
     ("🏩", "🏩"),  # Love Hotel
@@ -526,7 +526,7 @@ EMOJI_LIST = (
     # TOO SIMILAR ("🏬", ""),  # Department Store
     # TOO SIMILAR ("🏭", ""),  # Factory
     # TOO SIMILAR ("🏯", ""),  # Japanese Castle
-    # TOO SIMILAR ("🏰", ""),  # European Castle
+    ("🏰", ""),  # European Castle
     # TOO SIMILAR ("💒", ""),  # Wedding
     # TOO SIMILAR ("🗼", ""),  # Tokyo Tower
     # TOO SIMILAR ("🗽", ""),  # Statue of Liberty
@@ -542,8 +542,8 @@ EMOJI_LIST = (
     # LAME ("🗿", ""),  # Moyai
     # LAME ("🌌", ""),  # Milky Way
     # LAME ("🎠", ""),  # Carousel Horse
-    # LAME ("🎡", ""),  # Ferris Wheel
-    # LAME ("🎢", ""),  # Roller Coaster
+    ("🎡", ""),  # Ferris Wheel
+    ("🎢", ""),  # Roller Coaster
     # LAME ("💈", ""),  # Barber Pole
     # USED BY THE UI ("🎪", ""),  # Circus Tent // venue checkins/adding
     # LAME ("🎭", ""),  # Performing Arts
@@ -699,7 +699,7 @@ EMOJI_LIST = (
     # LAME ("🏂", ""),  # Snowboarder
     # LAME ("🏄", ""),  # Surfer
     # LAME ("🏇", ""),  # Horse Racing
-    # LAME ("🏊", ""),  # Swimmer
+    ("🏊", ""),  # Swimmer
     # LAME ("🚴", ""),  # Bicyclist
     # LAME ("🚵", ""),  # Mountain Bicyclist
     # USED BY UI ("🏆", ""),  # Trophy // for adding new tournament/list of tournaments
@@ -821,7 +821,7 @@ EMOJI_LIST = (
     # LAME ("📋", ""),  # Clipboard
     # LAME ("📌", ""),  # Pushpin
     # LAME ("📍", ""),  # Round Pushpin
-    # LAME ("📎", ""),  # Paperclip
+    ("📎", ""),  # Paperclip
     ("📏", "📏"),  # Straight Ruler
     ("📐", "📐"),  # Triangular Ruler
     # LAME ("📛", ""),  # Name Badge
@@ -1202,7 +1202,7 @@ EMOJI_LIST = (
     # LAME ("🍽", ""),  # Fork and Knife With Plate
     # LAME ("🗺", ""),  # World Map
     # LAME ("🏔", ""),  # Snow Capped Mountain
-    # LAME ("🏕", ""),  # Camping
+    ("🏕", ""),  # Camping
     # LAME ("🏖", ""),  # Beach With Umbrella
     # LAME ("🏜", ""),  # Desert
     # LAME ("🏝", ""),  # Desert Island
@@ -1218,8 +1218,8 @@ EMOJI_LIST = (
     # LAME ("🛣", ""),  # Motorway
     # LAME ("🛤", ""),  # Railway Track
     # LAME ("🛳", ""),  # Passenger Ship
-    # LAME ("🛥", ""),  # Motor Boat
-    # LAME ("🛩", ""),  # Small Airplane
+    ("🛥", ""),  # Motor Boat
+    ("🛩", ""),  # Small Airplane
     # LAME ("🛫", ""),  # Airplane Departure
     # LAME ("🛬", ""),  # Airplane Arriving
     # LAME ("🛰", ""),  # Satellite
@@ -1236,15 +1236,15 @@ EMOJI_LIST = (
     # LAME ("🌨", ""),  # Cloud With Snow
     ("🌩", "🌩"),  # Cloud With Lightning
     ("🌪", "🌪"),  # Cloud With Tornado
-    ("🌫", "🌫"),  # Fog
+    # LAME ("🌫", "🌫"),  # Fog
     ("🌬", "🌬"),  # Wind Blowing Face
     ("🎖", "🎖"),  # Military Medal
     ("🎗", "🎗"),  # Reminder Ribbon
     ("🎞", "🎞"),  # Film Frames
     # LAME ("🎟", ""),  # Admission Tickets
-    ("🏷", "🏷"),  # Label
+    # LAME ("🏷", "🏷"),  # Label
     # LAME ("🏌", ""),  # Golfer
-    # LAME ("🏋", ""),  # Weight Lifter
+    ("🏋", ""),  # Weight Lifter
     # LAME ("🏎", ""),  # Racing Car
     # LAME ("🏍", ""),  # Racing Motorcycle
     ("🏅", "🏅"),  # Sports Medal
@@ -1260,9 +1260,9 @@ EMOJI_LIST = (
     # LAME ("🖱", ""),  # Three Button Mouse
     ("🖲", "🖲"),  # Trackball
     # LAME ("📽", ""),  # Film Projector
-    # LAME ("📸", ""),  # Camera With Flash
+    ("📸", ""),  # Camera With Flash
     ("🕯", "🕯"),  # Candle
-    # LAME ("🗞", ""),  # Rolled-Up Newspaper
+    ("🗞", ""),  # Rolled-Up Newspaper
     # LAME ("🗳", ""),  # Ballot Box With Ballot
     ("🖋", "🖋"),  # Lower Left Fountain Pen
     # LAME ("🖊", ""),  # Lower Left Ballpoint Pen
@@ -1276,7 +1276,7 @@ EMOJI_LIST = (
     # LAME ("🗄", ""),  # File Cabinet
     ("🗑", "🗑"),  # Wastebasket
     # LAME ("🗝", ""),  # Old Key
-    # LAME ("🛠", ""),  # Hammer and Wrench
+    ("🛠", ""),  # Hammer and Wrench
     # LAME ("🗜", ""),  # Compression
     ("🗡", "🗡"),  # Dagger Knife
     ("🛡", "🛡"),  # Shield
@@ -1306,7 +1306,7 @@ EMOJI_LIST = (
     ("🦄", "🦄"),  # Unicorn Face
     # LAME ("🦃", ""),  # Turkey
     ("🦀", "🦀"),  # Crab
-    # LAME ("🦂", ""),  # Scorpion
+    ("🦂", ""),  # Scorpion
     ("🧀", "🧀"),  # Cheese Wedge
     ("🌭", "🌭"),  # Hot Dog
     ("🌮", "🌮"),  # Taco
@@ -1326,4 +1326,77 @@ EMOJI_LIST = (
     ("🏓", "🏓"),  # Table Tennis Paddle and Ball
     # TOO SIMILAR ("🏸", ""),  # Badminton Racquet and Shuttlecock
     ("🏹", "🏹"),  # Bow and Arrow
+    # Unicode Version 9.0
+    ("🤣", "🤣"),     # Rolling on the Floor Laughing
+    ("🤤", "🤤"),     # Drooling Face
+    ("🤢", "🤢"),     # Nauseated Face
+    ("🤧", "🤧"),     # Sneezing Face
+    ("🤠", "🤠"),     # Cowboy Hat Face
+    ("🤡", "🤡"),     # Clown Face
+    ("🤥", "🤥"),     # Lying Face
+    ("🤴", "🤴"),     # Prince
+    ("🤵", "🤵"),     # Man in Tuxedo
+    ("🤰", "🤰"),     # Pregnant Woman
+    ("🤶", "🤶"),     # Mrs. Claus
+    ("🤦", "🤦"),     # Person Facepalming
+    ("🤷", "🤷"),     # Person Shrugging
+    ("🕺", "🕺"),     # Man Dancing
+    ("🤺", "🤺"),     # Person Fencing
+    ("🤸", "🤸"),     # Person Cartwheeling
+    # LAME ("🤼", "🤼"),     # People Wrestling
+    # LAME ("🤽", "🤽"),     # Person Playing Water Polo
+    # LAME ("🤾", "🤾"),     # Person Playing Handball
+    ("🤹", "🤹"),     # Person Juggling
+    ("🤳", "🤳"),     # Selfie
+    ("🤞", "🤞"),     # Crossed Fingers
+    ("🤙", "🤙"),     # Call Me Hand
+    ("🤛", "🤛"),     # Left-Facing Fist
+    ("🤜", "🤜"),     # Right-Facing Fist
+    ("🤚", "🤚"),     # Raised Back of Hand
+    ("🤝", "🤝"),     # Handshake
+    ("🖤", "🖤"),     # Black Heart
+    # TOO SIMILAR ("🦍", "🦍"),     # Gorilla
+    ("🦊", "🦊"),     # Fox Face
+    ("🦌", "🦌"),     # Deer
+    # TOO SIMILAR ("🦏", "🦏"),     # Rhinoceros
+    ("🦇", "🦇"),     # Bat
+    ("🦅", "🦅"),     # Eagle
+    ("🦆", "🦆"),     # Duck
+    ("🦉", "🦉"),     # Owl
+    ("🦎", "🦎"),     # Lizard
+    ("🦈", "🦈"),     # Shark
+    ("🦐", "🦐"),     # Shrimp
+    ("🦑", "🦑"),     # Squid
+    ("🦋", "🦋"),     # Butterfly
+    ("🥀", "🥀"),     # Wilted Flower
+    ("🥝", "🥝"),     # Kiwi Fruit
+    ("🥑", "🥑"),     # Avocado
+    ("🥔", "🥔"),     # Potato
+    ("🥕", "🥕"),     # Carrot
+    ("🥒", "🥒"),     # Cucumber
+    ("🥜", "🥜"),     # Peanuts
+    ("🥐", "🥐"),     # Croissant
+    ("🥖", "🥖"),     # Baguette Bread
+    ("🥞", "🥞"),     # Pancakes
+    # LAME ("🥓", "🥓"),     # Bacon
+    ("🥙", "🥙"),     # Stuffed Flatbread
+    ("🥚", "🥚"),     # Egg
+    # LAME ("🥘", "🥘"),     # Shallow Pan of Food
+    ("🥗", "🥗"),     # Green Salad
+    ("🥛", "🥛"),     # Glass of Milk
+    ("🥂", "🥂"),     # Clinking Glasses
+    ("🥃", "🥃"),     # Tumbler Glass
+    ("🥄", "🥄"),     # Spoon
+    # LAME ("🛴", "🛴"),     # Kick Scooter
+    # LAME ("🛵", "🛵"),     # Motor Scooter
+    # LAME ("🛑", "🛑"),     # Stop Sign
+    ("🛶", "🛶"),     # Canoe
+    # LAME ("🥇", "🥇"),     # 1st Place Medal
+    # LAME ("🥈", "🥈"),     # 2nd Place Medal
+    # LAME ("🥉", "🥉"),     # 3rd Place Medal
+    ("🥊", "🥊"),     # Boxing Glove
+    ("🥋", "🥋"),     # Martial Arts Uniform
+    ("🥅", "🥅"),     # Goal Net
+    ("🥁", "🥁"),     # Drum
+    ("🛒", "🛒"),     # Shopping Cart
 )
