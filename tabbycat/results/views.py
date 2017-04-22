@@ -338,12 +338,12 @@ class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
         kwargs['password'] = True
         return kwargs
 
-    def get_success_url(self):
-        return reverse_tournament('tournament-public-index', self.get_tournament())
-
     def add_success_message(self):
         messages.success(self.request, "Thanks, %s! Your ballot for %s has been recorded." % (
                 self.object.name, self.debate.matchup))
+
+    def get_success_url(self):
+        return reverse_tournament('post-results-public-ballotset-new', self.get_tournament())
 
     def populate_objects(self):
         self.object = self.get_object() # must be populated before self.error_page() called
@@ -392,6 +392,19 @@ class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Ba
     model = Adjudicator
     allow_null_tournament = True
     public_page_preference = 'public_ballots_randomised'
+
+    def get_context_data(self, **kwargs):
+        # Add the message about this being a private URL here (so not on public)
+        messages.info(self.request, "This page is specific to you, %s. The URL doesn't change, so if you bookmark it, you can easily return here after each debate." % self.object.name)
+        return super().get_context_data(**kwargs)
+
+
+class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
+    """This exists as a non-cached placeholder page that users are sent to
+    after submitting a random ballot. Added because sending them back to their
+    private URL brings up the same form again with a double-submission error"""
+
+    template_name = 'base.html'
 
 
 # ==============================================================================

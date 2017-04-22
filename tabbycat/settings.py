@@ -133,7 +133,7 @@ CACHES = {
 }
 
 # Use the cache for sessions rather than the db
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
 # Static Files and Compilation
@@ -156,9 +156,12 @@ STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
 GULP_PRODUCTION_COMMAND = "npm run gulp build -- --production"
 GULP_DEVELOP_COMMAND = "npm run gulp build -- --development"
 
+
 # ==============================================================================
 # Logging
 # ==============================================================================
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 if os.environ.get('SENDGRID_USERNAME', ''):
     SERVER_EMAIL = os.environ['SENDGRID_USERNAME']
