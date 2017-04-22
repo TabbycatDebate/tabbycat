@@ -8,7 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import management
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, resolve_url
+from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import RedirectView, TemplateView
@@ -21,7 +22,7 @@ from importer.management.commands import importtournament
 from importer.base import TournamentDataImporterError
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
-from utils.misc import redirect_round, redirect_tournament
+from utils.misc import redirect_round, redirect_tournament, reverse_tournament
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
 
 from .forms import SetCurrentRoundForm, TournamentForm
@@ -218,6 +219,36 @@ class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
     form_class = SetCurrentRoundForm
     template_name = 'set_current_round.html'
     slug_url_kwarg = 'tournament_slug'
+    redirect_field_name = 'next'
+
+    def get_redirect_to(self, use_default=True):
+        redirect_to = self.request.POST.get(
+            self.redirect_field_name,
+            self.request.GET.get(self.redirect_field_name, '')
+        )
+        if not redirect_to and use_default:
+            return reverse_tournament('tournament-admin-home', tournament=self.object)
+        else:
+            return redirect_to
+
+    def get_success_url(self):
+        # Copied from django.contrib.auth.views.LoginView.get_success_url
+        redirect_to = self.get_redirect_to(use_default=True)
+        url_is_safe = is_safe_url(
+            url=redirect_to,
+            allowed_hosts={self.request.get_host()},
+            require_https=self.request.is_secure(),
+        )
+        if not url_is_safe:
+            return resolve_url(settings.LOGIN_REDIRECT_URL)
+        return redirect_to
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            self.redirect_field_name: self.get_redirect_to(use_default=False),
+        })
+        return context
 
 
 class TournamentPermanentRedirectView(RedirectView):
