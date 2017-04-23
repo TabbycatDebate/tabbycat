@@ -12,12 +12,12 @@
   -khtml-user-drag: element;
   -webkit-user-drag: element;
   user-select: none; // Text should be unselectable or highlights go crazy
-  background: #fff; // Need to override default :hover bg state that gets stuck
   &:active {
     top: 2px;
   }
   &:hover {
     cursor: move;
+    background: #fff; // Need to override default :hover bg state that gets stuck
   }
   margin: 0 4px 4px 0;
   padding: 6px;

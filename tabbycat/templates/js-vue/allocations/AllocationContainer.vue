@@ -121,13 +121,16 @@ export default {
   },
   methods: {
     removeAdjudicatorHighlights(adjudicator) {
-      console.log('Removing highlights from', adjudicator.name);
-      // Whenever an adj is moved remove highlights from their previous position
+      // Remove hover conflicts from all those who are conflicted with said adj
       this.toggleConflicts(false, 'hover', adjudicator, adjudicator.conflicts);
       this.toggleHistories(false, 'hover', adjudicator, adjudicator.histories);
+      // Remove conflicts on the adj themselves
+      adjudicator.conflicted.panel.personal = false
+      adjudicator.conflicted.panel.institutional = false
+      adjudicator.conflicted.panel.history = false
     },
     moveAdjudicatorToUnused(adjudicator, previousDebateId) {
-      console.log('Moving', adjudicator.name, ' to unused ', ' from ', previousDebateId);
+      // console.log('Moving', adjudicator.name, ' to unused ', ' from ', previousDebateId);
       // Remove adj from any panels they came from
       this.removeAdjudicatorFromPosition(adjudicator, previousDebateId)
       adjudicator.allocated = false
@@ -161,7 +164,7 @@ export default {
     'unset-dragged-adj': function() {
       this.currentlyDragging = null;
     },
-    // Determine hover conflicts
+    // Set hover conflicts
     'set-hover-conflicts': function(origin, conflicts_dict, histories_dict) {
       this.toggleConflicts(true, 'hover', origin, conflicts_dict);
       this.toggleHistories(true, 'hover', origin, histories_dict);
