@@ -5,6 +5,7 @@
 {% block head-title %}
   <span class="emoji">🙏</span>Set Current Round
 {% endblock %}
+{% block body-class %}override-sidebar-offset{% endblock %}
 
 {% block nav %}
   {# Don't show the nav pane if there's no current round, because it'll crash. #}
@@ -18,8 +19,9 @@
 {% if next %}
   <div class="alert alert-warning">
     {% blocktrans trimmed with tournament_name=tournament.name %}
-      In order for Tabbycat to work, please set the <strong>current round</strong>
-      of the tournament <strong>{{ tournament_name }}</strong>.
+      No round is currently set. In order for Tabbycat to work, please set the
+      <strong>current round</strong> of the tournament
+      <strong>{{ tournament_name }}</strong>.
     {% endblocktrans %}
   </div>
 {% else %}
