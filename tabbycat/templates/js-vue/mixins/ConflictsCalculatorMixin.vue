@@ -40,7 +40,7 @@ export default {
         this.conflictableTeams, conflictState, 'institutional', conflictValue, true)
     },
     unsetAll: function(conflictState, conflictables) {
-      // Sometimes, such as on panel calcs can't toggle of in a pinpoint manner
+      // Sometimes, such as on panel calcs can't toggle off in a pinpoint manner
       // So we do so in bulk for all conflictables and properties
       for (var reference in conflictables) {
         if (conflictables.hasOwnProperty(reference)) {
@@ -51,7 +51,8 @@ export default {
         }
       }
     },
-    findMatchingConflicts: function(conflicts, origin, conflictables, hoverOrPanel, typeOfClash, isConflicted, isInstitutional) {
+    findMatchingConflicts: function(conflicts, origin, conflictables,
+      hoverOrPanel, typeOfClash, isConflicted, isInstitutional) {
       // Loop through all conflicts; dispatch to Individual/Institutional
       if (typeof conflicts === 'undefined' || conflicts === null) {
         return

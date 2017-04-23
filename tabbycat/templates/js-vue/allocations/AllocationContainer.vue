@@ -119,6 +119,43 @@ export default {
       return this.adjudicators;
     },
   },
+  methods: {
+    removeAdjudicatorHighlights(adjudicator) {
+      // Remove hover conflicts from all those who are conflicted with said adj
+      this.toggleConflicts(false, 'hover', adjudicator, adjudicator.conflicts);
+      this.toggleHistories(false, 'hover', adjudicator, adjudicator.histories);
+      // Remove conflicts on the adj themselves
+      adjudicator.conflicted.panel.personal = false
+      adjudicator.conflicted.panel.institutional = false
+      adjudicator.conflicted.panel.history = false
+    },
+    moveAdjudicatorToUnused(adjudicator, previousDebateId) {
+      // console.log('Moving', adjudicator.name, ' to unused ', ' from ', previousDebateId);
+      // Remove adj from any panels they came from
+      this.removeAdjudicatorFromPosition(adjudicator, previousDebateId)
+      adjudicator.allocated = false
+    },
+    removeAdjudicatorFromPosition(adjudicator, previousDebateId) {
+      // console.log('Removing', adjudicator.name, ' from ', previousDebateId);
+      this.removeAdjudicatorHighlights(adjudicator)
+      if (typeof previousDebateId === 'undefined' || previousDebateId === false) {
+        adjudicator.allocated = true; // Triggers remove from unused area
+      } else {
+        var fromPanel = this.debatesByID[previousDebateId].panel
+        var toRemoveIndex = fromPanel.findIndex(function(value) {
+          return value.id === adjudicator.id;
+        });
+        fromPanel.splice(toRemoveIndex, 1);
+      }
+    },
+    moveAdjudicatorToPosition(adjudicator, targetPanel, targetPosition) {
+      // console.log('Adding', adjudicator.name, ' to ', targetPanel);
+      // Ensure they are removed from the unallocated table
+      adjudicator.allocated = true
+      // Find the debate object that was dropped into and add the adj to it
+      targetPanel.push({'id': adjudicator.id, 'position': targetPosition})
+    }
+  },
   events: {
     // Determine dragged object
     'set-dragged-adj': function(dragInfo) {
@@ -127,12 +164,12 @@ export default {
     'unset-dragged-adj': function() {
       this.currentlyDragging = null;
     },
-    // Determine hover conflicts
-    'set-hover-conflicts': function (origin, conflicts_dict, histories_dict) {
+    // Set hover conflicts
+    'set-hover-conflicts': function(origin, conflicts_dict, histories_dict) {
       this.toggleConflicts(true, 'hover', origin, conflicts_dict);
       this.toggleHistories(true, 'hover', origin, histories_dict);
     },
-    'unset-hover-conflicts': function (origin, conflicts_dict, histories_dict) {
+    'unset-hover-conflicts': function(origin, conflicts_dict, histories_dict) {
       this.toggleConflicts(false, 'hover', origin, conflicts_dict);
       this.toggleHistories(false, 'hover', origin, histories_dict);
     },
@@ -151,67 +188,43 @@ export default {
         this.teams[teamID][set_type] = set_state
       }
     },
-    // Set or unset dragg adjs to panels
     'set-adj-unused': function() {
-      var adj = this.currentlyDragging.adj
-      // Remove adj from any panels they came from
-      if (typeof this.currentlyDragging.debateId !== 'undefined') {
-        var fromDebateId = this.currentlyDragging.debateId
-        var fromPanel = this.debatesByID[fromDebateId].panel
-        var toRemoveIndex = fromPanel.findIndex(function(value) {
-          return value.id === adj.id;
-        });
-        fromPanel.splice(toRemoveIndex, 1);
-      }
-      // Remove any highlights from hovers
-      this.toggleConflicts(false, 'hover', adj, adj.conflicts);
-      this.toggleHistories(false, 'hover', adj, adj.histories);
+      // Set or unset dragged adjs to panels
+      this.moveAdjudicatorToUnused(this.currentlyDragging.adj, this.currentlyDragging.debateId)
     },
-    'set-adj-panel': function(toDebateId, toPosition) {
-      // Construct a lookup object to find the debate by it's ID
-      var adj = this.currentlyDragging.adj
-      var toPanel = this.debatesByID[toDebateId].panel
-
-      if (typeof this.currentlyDragging.debateId !== 'undefined') {
-        var fromDebateId = this.currentlyDragging.debateId
-        var fromPosition = this.currentlyDragging.position
-        var fromPanel = this.debatesByID[fromDebateId].panel
-      } else {
-        var fromDebateId = false
-        var fromPosition = false
-      }
+    'set-adj-panel': function(targetDebateId, targetPosition) {
+      var draggedAdjudicator = this.currentlyDragging.adj
+      var previousDebateId = this.currentlyDragging.debateId
+      var targetPanel = this.debatesByID[targetDebateId].panel
 
       // If moving to become a chair; remove/swap the current chair first
-      if (toPosition === "C") {
+      if (targetPosition === "C") {
         // Check if there is a current chair
-        var currentChairIndex = toPanel.findIndex(function(value) {
+        var currentChairIndex = targetPanel.findIndex(function(value) {
           return value.position === "C";
         });
+        // If there is infact a current chair; check if we need to do a swap
         if (currentChairIndex !== -1) {
-          // If there is infact a current chair; check if we need to do a swap
-          // If moving from a previous position do a swap
-          if (fromDebateId !== false) {
-            // Find the about to be replaced chair & add to old position
-            var oldChairID = toPanel[currentChairIndex].id;
-            fromPanel.push({'id': oldChairID, 'position': fromPosition});
+          var currentChairId = targetPanel[currentChairIndex].id;
+          var currentChair = this.adjudicators[currentChairId]
+          if (typeof previousDebateId === 'undefined' || previousDebateId === false) {
+            // If coming from unused then shift the old chair to unused
+            this.moveAdjudicatorToUnused(currentChair, targetDebateId)
+          } else {
+            // If coming from a previous debate swap current chair into the
+            // dragged adjudicator's old position
+            var fromPanel = this.debatesByID[previousDebateId].panel
+            var fromPosition = this.currentlyDragging.position
+            this.removeAdjudicatorFromPosition(currentChair, targetDebateId)
+            this.moveAdjudicatorToPosition(currentChair, fromPanel, fromPosition)
           }
-          // Remove original chair
-          toPanel.splice(toRemoveIndex, 1);
         }
       }
-      if (fromDebateId === false) {
-        adj.allocated = true; // Triggers remove from unused area
-      } else {
-        var toRemoveIndex = fromPanel.findIndex(function(value) {
-          return value.id === adj.id;
-        });
-        fromPanel.splice(toRemoveIndex, 1);
-      }
-      // Remove any highlights from hovers
-      this.toggleConflicts(false, 'hover', adj, adj.conflicts);
-      this.toggleHistories(false, 'hover', adj, adj.histories);
-      // Find the debate object that was dropped into and add the adj to it
-      toPanel.push({'id': adj.id, 'position': toPosition})
+
+      // Remove
+      this.removeAdjudicatorFromPosition(draggedAdjudicator, previousDebateId)
+      // Add
+      this.moveAdjudicatorToPosition(draggedAdjudicator, targetPanel, targetPosition)
     },
     'set-debate-panels': function(newDebatesResponse) {
       // Dispatched from the AllocationActions. Note that this.debates are props
