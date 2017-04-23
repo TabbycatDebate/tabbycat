@@ -106,7 +106,7 @@
         the settings for basic rules; double check our
         <a href="https://tabbycat.readthedocs.io/" target="_blank">documentation</a> to ensure they are
         correct for your tournament. These links will display settings changes
-        and giving you the option to confirm them.</p>
+        and give you the option to confirm them.</p>
       </div>
       {% for preset in presets %}
         <a href="{% tournamenturl 'tournament_preference_confirm' preset.slugified_name %}" class="list-group-item">
@@ -114,6 +114,16 @@
           <p>{{ preset.description }}</p>
         </a>
       {% endfor %}
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      <a href="{% tournamenturl 'tournament-set-current-round' %}" class="list-group-item">
+        <h4 class="list-group-item-heading">Manually Set Current Round</h4>
+        <p>Tabbycat will prompt you to advanced the current round on on each round's results page. If, however there are special circumstances that require you to override this and set the current round backwards or forwards, use this page.</p>
+      </a>
     </ul>
   </div>
 </div>
