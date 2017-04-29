@@ -179,7 +179,7 @@ class Scoresheet(ResultBuffer):
         """Loads the scores for the given DebateTeam from the database into the
         buffer."""
         scores = self.ballotsub.speakerscorebyadj_set.filter(
-            debate_adjudicator=self.da, debate_team=dt)
+            debate_adjudicator=self.da, debate_team=dt, position__in=self.POSITIONS)
         for ss in scores:
             self._set_score(dt, ss.position, ss.score)
 
@@ -406,7 +406,8 @@ class BallotSet(ResultBuffer):
     def _load_team(self, dt):
         """Loads the scores for the given DebateTeam from the database into the
         buffer."""
-        for ss in self.ballotsub.speakerscore_set.filter(debate_team=dt).select_related('speaker'):
+        for ss in self.ballotsub.speakerscore_set.filter(debate_team=dt,
+                position__in=self.POSITIONS).select_related('speaker'):
             self.speakers[dt][ss.position] = ss.speaker
             self.ghosts[dt][ss.position] = ss.ghost
             # ignore the speaker score itself, just look at SpeakerScoreByAdjs
