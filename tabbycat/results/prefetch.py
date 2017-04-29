@@ -116,6 +116,7 @@ def populate_ballotsets(ballotsubs, prefetched_debates=[]):
     for ss in speakerscores:
         ballotset = ballotsets_by_ballotsub_id[ss.ballot_submission_id]
         ballotset.speakers[ss.debate_team][ss.position] = ss.speaker
+        ballotset.ghosts[ss.debate_team][ss.position] = ss.ghost
 
     # Populate teamscores
     teamscores = TeamScore.objects.filter(

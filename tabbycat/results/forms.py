@@ -30,8 +30,7 @@ class TournamentPasswordField(forms.CharField):
             self.password = tournament.pref('public_password')
         else:
             raise TypeError("'tournament' is a required keyword argument")
-        if 'label' not in kwargs:
-            kwargs['label'] = "Tournament password"
+        kwargs.setdefault('label', "Tournament password")
         super(TournamentPasswordField, self).__init__(*args, **kwargs)
 
     def clean(self, value):
