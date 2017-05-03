@@ -4,6 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
@@ -29,7 +30,8 @@ def public_divisions(request, t):
     if len(divisions) > 0:
         venue_groups = set(d.venue_group for d in divisions)
         for uvg in venue_groups:
-            uvg.divisions = [d for d in divisions if d.venue_group == uvg]
+            if uvg:
+                uvg.divisions = [d for d in divisions if d.venue_group == uvg]
     else:
         venue_groups = None
         messages.success(request, 'No divisions have been assigned yet.')
@@ -168,7 +170,11 @@ def set_division_time(request, t):
     if request.POST['division'] == '':
         division = None
     else:
-        division.time_slot = request.POST['time']
-        division.save()
+        try:
+            division.time_slot = request.POST['time']
+            division.save()
+        except ValidationError:
+            division.time_slot = None
+            division.save()
 
     return HttpResponse("ok")
