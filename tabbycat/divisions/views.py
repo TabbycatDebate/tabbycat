@@ -3,6 +3,7 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView, View
@@ -30,7 +31,8 @@ class PublicDivisionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
         if len(divisions) > 0:
             venue_categories = set(d.venue_category for d in divisions)
             for uvc in venue_categories:
-                uvc.divisions = [d for d in divisions if d.venue_category == uvc]
+                if uvc:
+                    uvc.divisions = [d for d in divisions if d.venue_category == uvc]
             kwargs["venue_categories"] = venue_categories
         else:
             kwargs["round"] = None
@@ -167,6 +169,10 @@ class SetDivisionTimeView(TournamentMixin, SuperuserRequiredMixin, View):
         if self.request.POST['division'] == '':
             division = None
         else:
-            division.time_slot = self.request.POST['time']
-            division.save()
+            try:
+                division.time_slot = request.POST['time']
+                division.save()
+            except ValidationError:
+                division.time_slot = None
+                division.save()
         return HttpResponse()
