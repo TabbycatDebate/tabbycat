@@ -34,10 +34,22 @@ For sufficiently small tournaments, you might just choose to edit the database v
 
 Visual importer
 ===============
-For medium sized tournaments there are a number of tools that allow you to import information by copy and pasting from spreadsheets. Or by adding data in bulk and editing key information later.
 
-1. Open the "Import Data" area of the site under the **Setup** link in the menu (once your have created a tournament and logged in)
-2. Follow the instructions for each particular section
+For small or medium sized tournaments there are a number of tools that allow you to easily import information in bulk. These are located in the "Import Data" area of the site under the **Setup** link in the menu (once you have created a tournament and logged in).
+
+.. image:: images/add-institutions.png
+
+To get started you'll need to first add some Institutions, as per the instructions in that section. Once Institutions are added you can then add Teams and Adjudicators in each of the relevant sections.
+
+.. image:: images/add-teams-1.png
+
+.. image:: images/add-teams-2.png
+
+This is a two-step process. First nominate the number of new Teams/Adjudicators to add for each institution. In the subsequent step of each respective section it will then ask you to fill in additional details such as team names, speaker names, etc.
+
+If you would like to assign Venues to :ref:`Venue Categories <venue-constraints>` you'll need to first add those categories. Once finished (or if not using categories) venues can then be added in their own section by copy-pasting a list in from a spreadsheet.
+
+Once venues have been added you can then add or edit :ref:`Venue Constraints <venue-constraints>` if necessary.
 
 .. note:: If copy-pasting from a spreadsheet, it is often easiest to make values be separated by commas by saving the spreadsheet as a \*.csv file, then opening said file in a plain text editor (such as Notepad or TextEdit) and copy/pasting from there.
 
