@@ -11,7 +11,7 @@ django-dynamic-preferences==1.1.0       # Settings management
 django-extensions==1.7.8                # For the generate secret command
 django-formtools==2.0                   # Form wizards
 django-ipware==1.1.6                    # IP Address logging
-django-jet==1.0.5                       # Admin Backend
+django-jet==1.0.6                       # Admin Backend
 django-gfklookupwidget==1.0.5           # Replaces object_id field with a search link
 
 # Database
