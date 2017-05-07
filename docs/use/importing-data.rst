@@ -4,9 +4,35 @@
 Importing Initial Data
 ======================
 
-Once you've got Tabbycat installed, the next step is to import data for the tournament. The initial import requires details of all institutions, teams, speakers and adjudicators, and specifications for how many rounds and their properties. We don't currently have a way of doing this from the web interface. There are a few ways to do it.
+Once you've got Tabbycat installed, the next step is to import data for the tournament: that is, import details of teams, speakers, adjudicators and rounds. There are a few ways to do this, each with their advantages and disadvantages.
 
-.. note:: With any method, the objective is to create one ``Tournament`` object, and then the ``Round``, ``Venue``, ``Institution``, ``Team``, ``Speaker``, ``Adjudicator``, ``AdjudicatorConflict`` and ``AdjudicatorInstitutionConflict`` objects for each round, venue, and so on
+To help you decide which to choose, here's a summary:
+
++----------------------+-------------------+--------------------+----------------------+
+|        Method        |  Recommended for  |      Drawcard      |       Drawback       |
++======================+===================+====================+======================+
+| **Simple importer**  | Small and         | Easy to use        | Only deals with      |
+|                      | medium-sized      |                    | basic data           |
+|                      | tournaments       |                    |                      |
++----------------------+-------------------+--------------------+----------------------+
+| **Edit database**    | Additional        | Can handle all     | Very cumbersome      |
+|                      | information not   | types of           |                      |
+|                      | handled by simple | information        |                      |
+|                      | importer          |                    |                      |
++----------------------+-------------------+--------------------+----------------------+
+| ``importtournament`` | Large tournaments | Easier to repeat,  | Requires technical   |
+| **command**          |                   | can handle most    | background           |
+|                      |                   | formats of         |                      |
+|                      |                   | information        |                      |
++----------------------+-------------------+--------------------+----------------------+
+| **Write your own     | Large tournaments | Easier to repeat,  | Requires technical   |
+| importer**           | with custom needs | will take          | background and       |
+|                      |                   | information in     | (modest) development |
+|                      |                   | whatever format it | effort               |
+|                      |                   | is already in      |                      |
++----------------------+-------------------+--------------------+----------------------+
+
+The initial import requires details of all institutions, teams, speakers and adjudicators, and specifications for how many rounds and their properties. We don't currently have a way of doing this from the web interface. There are a few ways to do it.
 
 .. _import-manual-setup:
 
@@ -17,22 +43,7 @@ Immediately after you install Tabbycat and create a user account the site will p
 
 .. note:: If you are just learning, trying, or experimenting with Tabbycat we offer two types of demo datasets on this **Create Page**. Clicking either will create a new tournament fully populated with all the teams, speakers, institutions, *etc.* needed to immediately start running rounds.
 
-Manual setup
-============
-
-For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface (under Setup > Edit Database).
-
-.. caution:: The Django administrative interface is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. When you're setting up a tournament for the first time, this is highly unlikely to happen, but it's worth keeping in mind.
-
-1. Open up your the admin area of your site by going to the URL with /admin/ on the end, `e.g.` if your URL root is 127.0.0.1:8000, then http://127.0.0.1:8000/admin/.
-2. Then click **Tournaments** and then **Tournaments** in the sidebar.
-3. Create a new Tournament object, and input all of its rounds
-4. Create the Venues (under **Venues** > **Venues**)
-5. Create the Institutions (under **Participants** > **Institutions**)
-6. Create the Teams, and input their speakers (under **Participants** > **Teams**)
-7. Create the Adjudicators, and input their conflicts (under **Participants** > **Adjudicators**)
-
-Visual importer
+Simple importer
 ===============
 
 For small or medium sized tournaments there are a number of tools that allow you to easily import information in bulk. These are located in the "Import Data" area of the site under the **Setup** link in the menu (once you have created a tournament and logged in).
@@ -52,6 +63,21 @@ If you would like to assign Venues to :ref:`Venue Categories <venue-constraints>
 Once venues have been added you can then add or edit :ref:`Venue Constraints <venue-constraints>` if necessary.
 
 .. note:: If copy-pasting from a spreadsheet, it is often easiest to make values be separated by commas by saving the spreadsheet as a \*.csv file, then opening said file in a plain text editor (such as Notepad or TextEdit) and copy/pasting from there.
+
+Manual setup
+============
+
+For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface (under Setup > Edit Database).
+
+.. caution:: The Django administrative interface is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. When you're setting up a tournament for the first time, this is highly unlikely to happen, but it's worth keeping in mind.
+
+1. Open up your the admin area of your site by going to the URL with /admin/ on the end, `e.g.` if your URL root is 127.0.0.1:8000, then http://127.0.0.1:8000/admin/.
+2. Then click **Tournaments** and then **Tournaments** in the sidebar.
+3. Create a new Tournament object, and input all of its rounds
+4. Create the Venues (under **Venues** > **Venues**)
+5. Create the Institutions (under **Participants** > **Institutions**)
+6. Create the Teams, and input their speakers (under **Participants** > **Teams**)
+7. Create the Adjudicators, and input their conflicts (under **Participants** > **Adjudicators**)
 
 .. _importtournament-command:
 
