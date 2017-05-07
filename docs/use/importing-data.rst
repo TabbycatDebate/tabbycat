@@ -9,42 +9,45 @@ Once you've got Tabbycat installed, the next step is to import data for the tour
 To help you decide which to choose, here's a summary:
 
 +----------------------+-------------------+--------------------+----------------------+
-|        Method        |  Recommended for  |      Drawcard      |       Drawback       |
+|        Method        |  Best For         |      Drawcard      |       Drawback       |
 +======================+===================+====================+======================+
-| **Simple importer**  | Small and         | Easy to use        | Only deals with      |
-|                      | medium-sized      |                    | basic data           |
+| **Simple**           | Small and         | Easy to use        | Only deals with      |
+| **importer**         | medium-sized      |                    | basic data           |
 |                      | tournaments       |                    |                      |
 +----------------------+-------------------+--------------------+----------------------+
-| **Edit database**    | Additional        | Can handle all     | Very cumbersome      |
-|                      | information not   | types of           |                      |
-|                      | handled by simple | information        |                      |
-|                      | importer          |                    |                      |
+| **Edit**             | Adding data not   | Can handle all     | Adding large amounts |
+| **database**         | handled by the    | types of           | of data is time      |
+|                      | simple importer   | information        | consuming            |
+|                      | or editing        |                    |                      |
+|                      | existing data     |                    |                      |
 +----------------------+-------------------+--------------------+----------------------+
-| ``importtournament`` | Large tournaments | Easier to repeat,  | Requires technical   |
-| **command**          |                   | can handle most    | background           |
-|                      |                   | formats of         |                      |
-|                      |                   | information        |                      |
+| ``importtournament`` | Large tournaments | Easier to repeat,  | Requires basic       |
+| **command**          |                   | can handle most    | knowledge of how to  |
+|                      |                   | formats of         | use a command line   |
+|                      |                   | information        | interface            |
 +----------------------+-------------------+--------------------+----------------------+
-| **Write your own     | Large tournaments | Easier to repeat,  | Requires technical   |
-| importer**           | with custom needs | will take          | background and       |
-|                      |                   | information in     | (modest) development |
-|                      |                   | whatever format it | effort               |
-|                      |                   | is already in      |                      |
+| **Developing your    | Large tournaments | Easier to repeat,  | Requires basic       |
+| own importer**       | with custom needs | will take          | knowledge of how     |
+|                      |                   | information in     | to program in python |
+|                      |                   | whatever format it | and the time         |
+|                      |                   | is already in      | to do so             |
 +----------------------+-------------------+--------------------+----------------------+
 
 The initial import requires details of all institutions, teams, speakers and adjudicators, and specifications for how many rounds and their properties. We don't currently have a way of doing this from the web interface. There are a few ways to do it.
 
 .. _import-manual-setup:
 
-Creating a tournament
-=====================
+Creating tournaments
+====================
 
 Immediately after you install Tabbycat and create a user account the site will prompt you to **Create a New Tournament**. Filling in the information here will create the basic tournament, round, and break information needed; leaving you to enter the other data (teams, adjudicators, venues, *etc.*) using any of the below methods.
 
 .. note:: If you are just learning, trying, or experimenting with Tabbycat we offer two types of demo datasets on this **Create Page**. Clicking either will create a new tournament fully populated with all the teams, speakers, institutions, *etc.* needed to immediately start running rounds.
 
-Simple importer
-===============
+If you ever need to create additional tournaments you can do so by going to your copy of Tabbycat's homepage, or by using the drop-down menu at the top-left once you have entered the admin area for a tournament.
+
+The simple importer
+===================
 
 For small or medium sized tournaments there are a number of tools that allow you to easily import information in bulk. These are located in the "Import Data" area of the site under the **Setup** link in the menu (once you have created a tournament and logged in).
 
@@ -67,7 +70,7 @@ Once venues have been added you can then add or edit :ref:`Venue Constraints <ve
 Manual setup
 ============
 
-For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface (under Setup > Edit Database).
+For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface (under Setup > Edit Database). This is also the method to use if just adding small amounts of data or to make edits to existing data.
 
 .. caution:: The Django administrative interface is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. When you're setting up a tournament for the first time, this is highly unlikely to happen, but it's worth keeping in mind.
 
@@ -107,7 +110,7 @@ The ``importtournament`` script can be run on Heroku directly; you just need to 
 
 If you want to import locally and push the database to the server, you can use the ``heroku pg:push`` command. We assume that, if you want to use this method, you know what you're doing or are comfortable reading the Heroku documentation to find out. We're happy to help if you have questions about this, but for most tournaments, committing the data to the server and running the script on the server directly will be easier.
 
-Writing your own importer
-=========================
+Developing your own importer
+============================
 
 If our suggested file formats cause you headaches, it might be easier to write your own importer. We have a generic importer framework that should make this easier, so for some tournaments it might (very conceivably) be faster to write your own importer to conform to your data, than it is to make your data conform to our importer. You need a background in Python in order to do this. For more details, see :ref:`tournament-data-importers`.
