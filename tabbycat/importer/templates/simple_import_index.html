@@ -1,16 +1,23 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">📑</span>Bulk Add Data{% endblock %}
-{% block page-title %}📑 Bulk Add Data{% endblock %}
+{% block head-title %}<span class="emoji">📑</span>Simple Importer{% endblock %}
+{% block page-title %}📑 Simple Importer{% endblock %}
 
 {% block content %}
 
 <div class="alert alert-info">
-  <p>There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">a few ways of
-  getting data into Tabbycat</a> with different levels of convenience depending on the size of the tournament and your
-   technical background. The below tools are the easiest to use and work well for small and medium sized tournaments.</p>
-   <p>If you are having problems with this importer you can use the <a href="{% tournamenturl 'data_index' %}">older version</a>.
+  <p>
+    {% blocktrans trimmed %}
+      There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments.
+    {% endblocktrans %}
+  </p>
+  <p>
+    {% tournamenturl 'data_index' as oldimporterurl %}
+    {% blocktrans trimmed %}
+      If you are having problems with this importer, you can use the <a href="{{ oldimporterurl }}">older version</a>.
+    {% endblocktrans %}
+  </p>
 </div>
 
 <div class="row">
@@ -19,37 +26,37 @@
       <li class="list-group-item">
         <span class="emoji">🏫</span>
         <a href="{% tournamenturl 'importer-simple-institutions' %}">
-          Add Institutions
+          {% trans "Add Institutions" %}
         </a>
       </li>
       <li class="list-group-item">
         <span class="emoji">👯</span>
         <a href="{% tournamenturl 'importer-simple-teams' %}">
-          Add Teams
+          {% trans "Add Teams" %}
         </a>
       </li>
       <li class="list-group-item">
         <span class="emoji">👂</span>
         <a href="{% tournamenturl 'importer-simple-adjudicators' %}">
-          Add Adjudicators
+          {% trans "Add Adjudicators" %}
         </a>
       </li>
       <li class="list-group-item">
         <span class="emoji">🎪</span>
         <a href="{% tournamenturl 'importer-simple-venues' %}">
-          Add Venues
+          {% trans "Add Venues" %}
         </a>
       </li>
       <li class="list-group-item">
         <span class="emoji">🏪</span>
         <a href="{% tournamenturl 'venues-categories' %}">
-          Add/Edit Venue Categories
+          {% trans "Add/Edit Venue Categories" %}
         </a>
       </li>
       <li class="list-group-item">
         <span class="emoji">🏰</span>
         <a href="{% tournamenturl 'venues-constraints' %}">
-          Add/Edit Venue Constraints
+          {% trans "Add/Edit Venue Constraints" %}
         </a>
       </li>
     </ul>
