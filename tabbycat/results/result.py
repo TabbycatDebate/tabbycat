@@ -334,7 +334,7 @@ class BallotSet(ResultBuffer):
         prior to calling this function."""
         try:
             self.speakers = {dt: dict.fromkeys(self.POSITIONS, None) for dt in self.dts}
-            self.ghosts = {dt: dict.fromkeys(self.POSITIONS, None) for dt in self.dts}
+            self.ghosts = {dt: dict.fromkeys(self.POSITIONS, False) for dt in self.dts}
             self.motion_veto = dict.fromkeys(self.dts, None)
 
             # Values from the database are returned if requested before

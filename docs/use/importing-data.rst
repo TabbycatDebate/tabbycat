@@ -4,54 +4,81 @@
 Importing Initial Data
 ======================
 
-Once you've got Tabbycat installed, the next step is to import data for the tournament. The initial import requires details of all institutions, teams, speakers and adjudicators, and specifications for how many rounds and their properties. We don't currently have a way of doing this from the web interface. There are a few ways to do it.
+Once you've got Tabbycat installed, the next step is to import data for the tournament: that is, import details of teams, speakers, adjudicators and rounds. There are a few ways to do this, each with their advantages and disadvantages.
 
-.. note:: With any method, the objective is to create one ``Tournament`` object, and then the ``Round``, ``Venue``, ``Institution``, ``Team``, ``Speaker``, ``Adjudicator``, ``AdjudicatorConflict`` and ``AdjudicatorInstitutionConflict`` objects for each round, venue, and so on
+To help you decide which to choose, here's a summary:
 
-.. _import-manual-setup:
++----------------------+-------------------+--------------------+----------------------+
+|        Method        |      Best for     |      Drawcard      |       Drawback       |
++======================+===================+====================+======================+
+| **Demonstration      | Trying out        | Loads sample data  | Not for use with     |
+| data**               | Tabbycat          | in one click       | real tournaments     |
+|                      |                   |                    |                      |
++----------------------+-------------------+--------------------+----------------------+
+| **Simple             | Small and         | Easy to use        | Only deals with      |
+| importer**           | medium-sized      |                    | basic data           |
+|                      | tournaments       |                    |                      |
++----------------------+-------------------+--------------------+----------------------+
+| **Edit               | Adding data not   | Can handle all     | Adding large amounts |
+| database**           | handled by the    | types of           | of data is time      |
+|                      | simple importer   | information        | consuming            |
+|                      | or editing        |                    |                      |
+|                      | existing data     |                    |                      |
++----------------------+-------------------+--------------------+----------------------+
+| ``importtournament`` | Large tournaments | Easier to repeat,  | Requires basic       |
+| **command**          |                   | can handle most    | knowledge of how to  |
+|                      |                   | formats of         | use a command line   |
+|                      |                   | information        | interface            |
++----------------------+-------------------+--------------------+----------------------+
+| **Developing your    | Large tournaments | Easier to repeat,  | Requires background  |
+| own importer**       | with custom needs | will take          | in Python and        |
+|                      |                   | information in     | and learning about   |
+|                      |                   | whatever format it | the importer classes |
+|                      |                   | is already in      |                      |
++----------------------+-------------------+--------------------+----------------------+
 
-Creating a tournament
-=====================
+Demonstration data
+==================
+If you're just learning or experimenting with Tabbycat, there are two demonstration datasets available, each with a sample set of teams, adjudicators, *etc.*, so that you can immediately start running rounds. Just be aware that these probably won't relate to anyone at your real-life tournament.
 
-Immediately after you install Tabbycat and create a user account the site will prompt you to **Create a New Tournament**. Filling in the information here will create the basic tournament, round, and break information needed; leaving you to enter the other data (teams, adjudicators, venues, *etc.*) using any of the below methods.
+To load a demonstration dataset, click **New Tournament** link on the home page (once logged in as admin). You'll see a page titled "Create New Tournament". Scroll to the bottom of this page and click on one of the links at the bottom.
 
-.. note:: If you are just learning, trying, or experimenting with Tabbycat we offer two types of demo datasets on this **Create Page**. Clicking either will create a new tournament fully populated with all the teams, speakers, institutions, *etc.* needed to immediately start running rounds.
-
-Manual setup
-============
-
-For sufficiently small tournaments, you might just choose to edit the database via the Django administrative interface (under Setup > Edit Database).
-
-.. caution:: The Django administrative interface is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. When you're setting up a tournament for the first time, this is highly unlikely to happen, but it's worth keeping in mind.
-
-1. Open up your the admin area of your site by going to the URL with /admin/ on the end, `e.g.` if your URL root is 127.0.0.1:8000, then http://127.0.0.1:8000/admin/.
-2. Then click **Tournaments** and then **Tournaments** in the sidebar.
-3. Create a new Tournament object, and input all of its rounds
-4. Create the Venues (under **Venues** > **Venues**)
-5. Create the Institutions (under **Participants** > **Institutions**)
-6. Create the Teams, and input their speakers (under **Participants** > **Teams**)
-7. Create the Adjudicators, and input their conflicts (under **Participants** > **Adjudicators**)
-
-Visual importer
+Simple importer
 ===============
+The simple importer is the easiest way to get a tournament going, and we recommend it for small- and medium-sized tournaments. It allows you to add institutions, teams, adjudicators, venues, venue categories and venue constraints. (If you need to add anything else, use the :ref:`Edit Database area <import-edit-database>` instead.)
 
-For small or medium sized tournaments there are a number of tools that allow you to easily import information in bulk. These are located in the "Import Data" area of the site under the **Setup** link in the menu (once you have created a tournament and logged in).
+To get started, create a new tournament using the **New Tournament** link on the home page (once logged in as admin). It'll ask you for a few basic pieces of information.
+
+.. image:: images/create-tournament.png
+
+Then, once you're in your tournament, click **Setup** in the left-hand menu, then **Import Data**, to open the simple importer.
+
+.. image:: images/simple-importer.png
+
+You first need to add institutions. Once institutions are added, you can then add teams and adjudicators in the relevant sections. Each of these is a two-step process:
+
+- For **institutions** and **venues**, it will first ask you to copy-paste a list of names and properties in a comma-separated table format.  The second step is to confirm individual fiels.
+- For **teams** and **adjudicators**, it will first ask you how many teams/adjudicators to add for each institution.  The second step is to fill in their details, for example, names.
 
 .. image:: images/add-institutions.png
-
-To get started you'll need to first add some Institutions, as per the instructions in that section. Once Institutions are added you can then add Teams and Adjudicators in each of the relevant sections.
 
 .. image:: images/add-teams-1.png
 
 .. image:: images/add-teams-2.png
 
-This is a two-step process. First nominate the number of new Teams/Adjudicators to add for each institution. In the subsequent step of each respective section it will then ask you to fill in additional details such as team names, speaker names, etc.
+Finally, if you would like to use venue categories and/or :ref:`venue constraints <venue-constraints>`, you can do so using the two last sections of the simple importer.
 
-If you would like to assign Venues to :ref:`Venue Categories <venue-constraints>` you'll need to first add those categories. Once finished (or if not using categories) venues can then be added in their own section by copy-pasting a list in from a spreadsheet.
+.. note:: If copying and pasting from a spreadsheet, an easy way to make a comma-separated table is to save a spreadsheet with the relevant information as a \*.csv file, then open this file in a plain text editor (such as Notepad or TextEdit), and copying it from there.
 
-Once venues have been added you can then add or edit :ref:`Venue Constraints <venue-constraints>` if necessary.
+.. _import-edit-database:
 
-.. note:: If copy-pasting from a spreadsheet, it is often easiest to make values be separated by commas by saving the spreadsheet as a \*.csv file, then opening said file in a plain text editor (such as Notepad or TextEdit) and copy/pasting from there.
+Editing the database
+====================
+Sometimes, the simple importer just isn't enough---whether because you need more customization than the simple importer handles (*e.g.* adjudicator feedback questions), or because some participants changed their details after you imported the inital data. In this case, the easiest thing to do is to edit the database via the Django administrative interface (under Setup > Edit Database).
+
+The general pattern goes like this: Go to **Setup > Edit Database**, find the type of object you wish to add/change, and click "Add" or "Change". Then, fill in what you need to and save the object.
+
+.. caution:: The Edit Database area is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. For participant information this is hard to do, but it's worth keeping in mind.
 
 .. _importtournament-command:
 
@@ -72,7 +99,7 @@ This script has a number of options. They're worth taking a look at before you r
 
   $ ./manage.py importtournament --help
 
-4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-manual-setup`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
+4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-edit-database`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
 
 ``importtournament`` on Heroku installs
 ========================================
@@ -81,7 +108,7 @@ The ``importtournament`` script can be run on Heroku directly; you just need to 
 
 If you want to import locally and push the database to the server, you can use the ``heroku pg:push`` command. We assume that, if you want to use this method, you know what you're doing or are comfortable reading the Heroku documentation to find out. We're happy to help if you have questions about this, but for most tournaments, committing the data to the server and running the script on the server directly will be easier.
 
-Writing your own importer
-=========================
+Developing your own importer
+============================
 
 If our suggested file formats cause you headaches, it might be easier to write your own importer. We have a generic importer framework that should make this easier, so for some tournaments it might (very conceivably) be faster to write your own importer to conform to your data, than it is to make your data conform to our importer. You need a background in Python in order to do this. For more details, see :ref:`tournament-data-importers`.

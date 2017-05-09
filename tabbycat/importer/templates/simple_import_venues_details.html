@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🎪</span>{% trans "Bulk Add Venues" context 'page title' %} (Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}){% endblock %}
-{% block page-title %}🎪 {% trans "Bulk Add Venues" context 'page title' %}{% endblock %}
+{% block head-title %}<span class="emoji">🎪</span>{% trans "Add Venues" context 'page title' %}
+{% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
+{% block page-title %}🎪 {% trans "Add Venues" context 'page title' %}{% endblock %}
 
 {% block content %}
 
