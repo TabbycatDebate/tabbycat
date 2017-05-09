@@ -70,6 +70,8 @@ Finally, if you would like to use venue categories and/or :ref:`venue constraint
 
 .. note:: If copying and pasting from a spreadsheet, an easy way to make a comma-separated table is to save a spreadsheet with the relevant information as a \*.csv file, then open this file in a plain text editor (such as Notepad or TextEdit), and copying it from there.
 
+.. _import-edit-database:
+
 Editing the database
 ====================
 Sometimes, the simple importer just isn't enough---whether because you need more customization than the simple importer handles (*e.g.* adjudicator feedback questions), or because some participants changed their details after you imported the inital data. In this case, the easiest thing to do is to edit the database via the Django administrative interface (under Setup > Edit Database).
@@ -97,7 +99,7 @@ This script has a number of options. They're worth taking a look at before you r
 
   $ ./manage.py importtournament --help
 
-4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-manual-setup`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
+4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-edit-database`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
 
 ``importtournament`` on Heroku installs
 ========================================
