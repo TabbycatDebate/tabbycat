@@ -471,12 +471,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if not venue:
                 return {}
 
+            cell = {'text': venue.display_name}
             if for_admin:
                 categories = venue.venuecategory_set.all()
             else:
                 categories = venue.venuecategory_set.filter(display_in_public_tooltip=True)
+                if self.tournament.pref('hide_venues'):
+                    # For leagues we only show the public the venue category
+                    cell['text'] = venue.display_name.replace(venue.name, '')
 
-            cell = {'text': venue.display_name}
             if len(categories) == 0:
                 return cell
 

@@ -7,9 +7,9 @@
 
 {% block content %}
   <ul class="list-group">
-    {% for venue in venues %}
-      <a href="{% url 'all-draws-for-venue' venue.id %}"class="list-group-item">
-        <span>Draws for {{ venue.display_name }}</span>
+    {% for vc in venue_categories %}
+      <a href="{% url 'all-draws-for-venue' vc.id %}"class="list-group-item">
+        <span>Draws for {{ vc.description }}</span>
         <span class="badge">VIEW ALL</span>
       </a>
     {% endfor %}

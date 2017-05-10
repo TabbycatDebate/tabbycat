@@ -611,7 +611,7 @@ class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, Template
     template_name = 'public_all_tournament_venues.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['venues'] = VenueCategory.objects.all()
+        kwargs['venue_categories'] = VenueCategory.objects.all()
         return super().get_context_data(**kwargs)
 
 
