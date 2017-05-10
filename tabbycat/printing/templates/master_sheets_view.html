@@ -17,6 +17,7 @@
 <div class="col-md-12">
 
   {% for tournament in active_tournaments %}
+    {% if tournament.debates|length > 0 %}
 
     <div class="panel panel-default printable-mastersheet">
       <div class="panel-heading">
@@ -79,6 +80,7 @@
       </div>
     </div>
 
+    {% endif %}
   {% endfor %}
 
   <div class="panel panel-default">

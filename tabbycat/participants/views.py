@@ -10,9 +10,8 @@ from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgres
 from draw.prefetch import populate_opponents
 from results.models import TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
-from tournaments.mixins import (CrossTournamentPageMixin, PublicTournamentPageMixin,
-                                SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
-                                TournamentMixin)
+from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
+                                SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import reverse_tournament
 from utils.mixins import CacheMixin, ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
@@ -239,7 +238,7 @@ class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorReco
 # Shift scheduling
 # ==============================================================================
 
-class PublicConfirmShiftView(CrossTournamentPageMixin, SingleObjectByRandomisedUrlMixin, ModelFormSetView):
+class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, ModelFormSetView):
     # Django doesn't have a class-based view for formsets, so this implements
     # the form processing analogously to FormView, with less decomposition.
     # See also: motions.views.EditMotionsView.

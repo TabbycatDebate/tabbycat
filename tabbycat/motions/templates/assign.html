@@ -21,7 +21,7 @@
       {% for form in formset %}
         {{ form.id }}
         <ul class="list-group assign-motions-lists col-sm-3">
-          <li class="list-group-item">
+          <li class="list-group-item" style="min-height: 135px;">
             <h4 class="list-group-item-heading">{{ form.instance.reference }}</h4>
             <p class="list-group-item-text">{{ form.instance.text }}</p>
           </li>
