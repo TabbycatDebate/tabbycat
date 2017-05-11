@@ -41,10 +41,10 @@
     <div class="popover-raw hide" v-if="canSupportPopover">
       <li v-for="popItem in popOverContent" class="list-group-item">
         <a v-if="popItem['link']" :href="popItem['link']">
-          {{{ popItem['text'] }}}
+          <span v-html="popItem['text']"></span>
         </a>
         <span v-else>
-          {{{ popItem['text'] }}}
+          <span v-html="popItem['text']"></span>
         </span>
       </li>
     </div>

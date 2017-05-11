@@ -30,7 +30,7 @@
     <div class="panel-footer division-footer">
       <select name="select" class="form-control btn-sm" v-model="division.venue_category"  v-if="vcs.length > 0">
         <option value=""></option>
-        <option v-for="vc in vcs" value="{{ vc.id }}" v-bind:value="vc.id">
+        <option v-for="vc in vcs" v-bind:value="vc.id" v-bind:value="vc.id">
           At {{ vc.name }} (capacity for {{ vc.total_capacity }} teams)
         </option>
       </select>

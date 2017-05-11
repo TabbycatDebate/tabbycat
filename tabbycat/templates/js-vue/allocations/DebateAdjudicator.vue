@@ -34,7 +34,7 @@
 
     </div>
     <div class="history-tooltip tooltip" v-if="historyHighlightText">
-      <div class="tooltip-inner conflictable conflict-hover-{{ this.historyHighlightText }}-ago">
+      <div v-bind:class="'tooltip-inner conflictable conflict-hover-' + this.historyHighlightText + '-ago'">
         {{ historyHighlightText }} ago
       </div>
     </div>
@@ -52,12 +52,12 @@
         <li class="list-group-item flex-horizontal">
           <div class="flex-1 btn-toolbar">
             <div class="btn-group btn-group-sm " role="group">
-              <div class="btn btn-default gender-display gender-{{ adjorteam.gender }}">
+              <div v-bind:class="'btn btn-default gender-display gender-' + adjorteam.gender">
                 {{ adjorteam.name }}
               </div>
             </div>
             <div class="btn-group btn-group-sm" role="group">
-              <div class="btn btn-default region-display region-{{ adjorteam.region.seq }}">
+              <div v-bind:class="'btn btn-default region-display region-' + adjorteam.region.seq">
                 <span class="glyphicon glyphicon-globe"></span>
                 {{ adjorteam.institution.name }} {{ adjorteam.region.name }}
               </div>

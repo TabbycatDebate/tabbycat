@@ -3,7 +3,7 @@
   <div class="db-flex-item-2 db-flex-row db-bottom-border">
     <div class="db-padding-horizontal db-flex-item db-align-vertical-center">
       <h6><span class="emoji" v-if="emoji">{{ emoji }}</span>&nbsp;{{ name }}&nbsp;</h6>
-      <em v-for="(index, speaker) in speakers">
+      <em v-for="(speaker, index) in speakers">
         <span v-if="index !== 0">, </span>{{ speaker }}
       </em>
     </div>

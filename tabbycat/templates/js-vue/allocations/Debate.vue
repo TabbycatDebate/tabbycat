@@ -2,13 +2,15 @@
   <div class="row flex-horizontal">
 
     <div class="flex-cell flex-vertical-center bordered-bottom">
-      <div class="flex-1 text-center" data-toggle="tooltip" title="Debate is in the {{ debate.bracket }} bracket">
+      <div class="flex-1 text-center" data-toggle="tooltip"
+           v-bind:title="'Debate is in the ' + debate.bracket + ' bracket'">
         {{ debate.bracket }}
       </div>
     </div>
 
     <div class="flex-cell flex-vertical-center bordered-bottom">
-      <div class="flex-1 text-center" data-toggle="tooltip" title="{{ liveness }} break categories are live">
+      <div class="flex-1 text-center" data-toggle="tooltip"
+           v-bind:title="liveness + ' break categories are live'">
         {{ liveness }}
       </div>
     </div>
@@ -31,7 +33,8 @@
       <div class="panel panel-default panel-debate">
         <div class="flex-horizontal positions-parent">
           <div class="flex-cell flex-vertical-center bordered-bottom">
-            <div class="flex-1" data-toggle="tooltip" title="{{ panelScore }} is the average rating of this panel's voting majority">
+            <div class="flex-1" data-toggle="tooltip"
+                 v-bind:title="panelScore + ' is the average rating of this panel\'s voting majority'">
               {{ panelScore }}
             </div>
           </div>

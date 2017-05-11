@@ -4,9 +4,9 @@
     <nav class="navbar navbar-default navbar-fixed-top">
 
       <div class="navbar-form navbar-left btn-group btn-group-sm">
-        <a href="{{ roundInfo.backToDrawURL }}" class="btn btn-default btn-sm"
+        <a v-bind:href="roundInfo.backToDrawURL" class="btn btn-default btn-sm"
            data-toggle="tooltip" data-placement="bottom"
-           title="Return to {{ roundInfo.roundName }}'s Draw">
+           v-bind:title="'Return to ' + roundInfo.roundName + '\'s Draw'">
           <span class="glyphicon glyphicon-chevron-left"></span> Back
         </a>
         <button class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Changes allocation are saved whenever an adjudicator's position is changed. Do not edit/change allocations across multiple browsers/computers!">
@@ -40,13 +40,13 @@
         </div>
         <div v-if="showingRegion" class="btn-group btn-group-sm">
           <button disabled v-for="region in regions"
-            class="btn btn-default region-display region-{{ region.seq }}">
+            v-bind:class="'btn btn-default region-display region-' + region.seq">
             {{ region.name }}
           </button>
         </div>
         <div v-if="showingCategory" class="btn-group btn-group-sm">
           <button disabled v-for="category in categories"
-            class="btn btn-default category-display category-{{ category.seq }}">
+            v-bind:class="'btn btn-default category-display category-' + category.seq">
             {{ category.name }} Break
           </button>
           <button disabled class="btn btn-default">

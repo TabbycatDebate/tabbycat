@@ -8,7 +8,7 @@
       v-on:mouseenter="setHighlights"
       v-on:mouseleave="unsetHighlights">
       <div class="history-tooltip tooltip" v-if="historyHighlightText">
-        <div class="tooltip-inner conflictable conflict-hover-{{ this.historyHighlightText }}-ago">
+        <div v-bind:class="'tooltip-inner conflictable conflict-hover-' + this.historyHighlightText + '-ago'">
           {{ historyHighlightText }} ago
         </div>
       </div>
@@ -32,13 +32,13 @@
           <div class="flex-1 btn-toolbar">
             <div class="btn-group btn-group-sm " role="group">
               <template v-for="speaker in adjorteam.speakers">
-                <div class="btn btn-default gender-display gender-{{ speaker.gender }}">
+                <div v-bind:class="'btn btn-default gender-display gender-' + speaker.gender">
                   {{ speaker.name }}
                 </div>
               </template>
             </div>
             <div class="btn-group btn-group-sm" role="group">
-              <div class="btn btn-default region-display region-{{ adjorteam.region.seq }}">
+              <div v-bind:class="'btn btn-default region-display region-' + adjorteam.region.seq">
                 <span class="glyphicon glyphicon-globe"></span>
                   {{ adjorteam.institution.name }} {{ adjorteam.region.name }}
               </div>
@@ -46,7 +46,7 @@
           </div>
           <div class="btn-toolbar pull-right">
             <div class="btn-group btn-group-sm pull-right" role="group" v-for="bc in adjorteam.categories">
-              <div class="btn category-display category-{{ bc.seq }}">
+              <div v-bind:class="'btn category-display category-' + bc.seq">
                 <span class="glyphicon glyphicon-globe"></span> {{ bc.name }}
               </div>
               <div class="btn btn-success" v-if="bc.will_break === true">

@@ -12,7 +12,7 @@
 
     <div class="row">
       <div v-for="(tableIndex, tableData) in tablesData" v-bind:class="tableClass">
-        <div class="panel panel-default table-container" id="tableContainer{{ table_index }}">
+        <div class="panel panel-default table-container" v-bind:id="'tableContainer' + table_index">
           <div class="panel-heading" v-if="tableData['title']">
             <h4 class="panel-title">{{ tableData['title'] }}</h4>
           </div>

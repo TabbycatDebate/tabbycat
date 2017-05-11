@@ -5,7 +5,7 @@
     <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
       <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
         Your panellists are
-        <span v-for="(i, adj) in ballotsExcludingSelf">
+        <span v-for="(adj, i) in ballotsExcludingSelf">
           <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ adj.name }}</strong>
           <span v-if="adj.position === 'c'">(Chair, {{ adj.institution }})</span>
           <span v-if="adj.position === 'o'">(Solo Chair, {{ adj.institution }})</span>
