@@ -7,7 +7,7 @@
 
 Django==1.11.1
 django-appconf==1.0.2                   # Helper for handling app configs
-django-dynamic-preferences==1.1.0       # Settings management
+django-dynamic-preferences==1.1.1       # Settings management
 django-extensions==1.7.9                # For the generate secret command
 django-formtools==2.0                   # Form wizards
 django-ipware==1.1.6                    # IP Address logging
@@ -21,7 +21,7 @@ sqlparse==0.2.3                         # Parsing SQL statements
 
 # Pipeline
 
-django-gulp==2.5.0                      # Run gulp tasks with dj r/collectstatic
+django-gulp==2.5.1                      # Run gulp tasks with dj r/collectstatic
 whitenoise==3.3.0                       # Static file serving
 waitress==1.0.2                         # For web serving
 
