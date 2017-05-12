@@ -32,6 +32,7 @@
   // Items below here should be admin only ideally
   import FeedbackTrend from '../graphs/FeedbackTrend.vue'
 
+
   export default {
     props: {
       tableHeaders: Array,

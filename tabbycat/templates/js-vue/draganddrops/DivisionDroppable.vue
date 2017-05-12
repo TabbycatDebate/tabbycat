@@ -16,7 +16,7 @@
       v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
       :data-id="division.id">
 
-      <template v-for="team in teams" track-by="id">
+      <template v-for="team in teams" v-bind:key="team.id">
         <team-draggable
           :team="team"
           :vc="division.venue_category"

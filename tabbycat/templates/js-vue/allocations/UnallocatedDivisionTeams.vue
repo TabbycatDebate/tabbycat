@@ -11,7 +11,7 @@
     <team-draggable
       v-for="team in teams | orderBy 'institution__code'"
       v-if="team.division === null"
-      track-by="id"
+      v-bind:key="team.id"
       :team="team"
       :save-division-at="saveDivisionAt">
     </team-draggable>
@@ -23,12 +23,18 @@
 <script>
 import TeamDraggable from  '../draganddrops/TeamDraggable.vue'
 import DroppableMixin from '../mixins/DroppableMixin.vue'
+import _ from 'lodash'
 
 export default {
   mixins: [DroppableMixin],
   props: {
     teams: Array,
     'save-division-at': {},
+  },
+  computed: {
+    teamsOrderedByCode: function() {
+      return _.orderBy(this.teams, 'institution__code', ['asc'])
+    }
   },
   components: {
     'TeamDraggable': TeamDraggable

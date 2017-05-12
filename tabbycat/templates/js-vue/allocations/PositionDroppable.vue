@@ -14,7 +14,7 @@
     class="">
 
     <debate-adjudicator
-      v-for="adj in adjudicators | orderBy 'score' -1"
+      v-for="adj in adjudicatorsOrderedByScore"
       :adjorteam="adj"
       :position="position"
       :debate-id="debateId">
@@ -27,6 +27,7 @@
 <script>
 import DebateAdjudicator from './DebateAdjudicator.vue'
 import DroppableMixin from '../mixins/DroppableMixin.vue'
+import _ from 'lodash'
 
 export default {
   mixins: [DroppableMixin],
@@ -44,6 +45,9 @@ export default {
       } else {
         return false
       }
+    },
+    adjudicatorsOrderedByScore: function() {
+      return _.orderBy(this.adjudicators, 'score', ['desc'])
     }
   },
   components: {

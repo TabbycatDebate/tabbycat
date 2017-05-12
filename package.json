@@ -31,6 +31,7 @@
     "jquery-validation": "1.16.0",
     "lato-font": "2.0.0",
     "live-reload": "1.1.0",
+    "lodash": "4.17.4",
     "vinyl-source-stream": "1.1.0",
     "vue": "1.0.26",
     "vue-hot-reload-api": "2.0.5",

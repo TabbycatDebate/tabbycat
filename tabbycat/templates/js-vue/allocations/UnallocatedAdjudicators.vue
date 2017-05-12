@@ -9,12 +9,10 @@
     class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-adjs">
 
     <debate-adjudicator v-if="roundInfo.roundIsPrelim"
-      v-for="adj in adjudicators | orderBy 'score' -1"
-      :adjorteam="adj">
+      v-for="adj in adjudicatorsOrderedByScore" :adjorteam="adj">
     </debate-adjudicator>
     <debate-adjudicator v-if="!roundInfo.roundIsPrelim"
-      v-for="adj in adjudicators | orderBy 'name'"
-      :adjorteam="adj">
+      v-for="adj in adjudicatorsOrderedByName" :adjorteam="adj">
     </debate-adjudicator>
 
   </nav>
@@ -24,12 +22,21 @@
 <script>
 import DebateAdjudicator from './DebateAdjudicator.vue'
 import DroppableMixin from '../mixins/DroppableMixin.vue'
+import _ from 'lodash'
 
 export default {
   mixins: [DroppableMixin],
   props: {
     adjudicators: Array,
     roundInfo: Object
+  },
+  computed: {
+    adjudicatorsOrderedByName: function() {
+      return _.orderBy(this.adjudicators, 'name', ['asc'])
+    },
+    adjudicatorsOrderedByScore: function() {
+      return _.orderBy(this.adjudicators, 'score', ['desc'])
+    }
   },
   components: {
     'DebateAdjudicator': DebateAdjudicator

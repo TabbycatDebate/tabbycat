@@ -22,21 +22,34 @@
   </template>
 
   <template v-if="ballot.authorPosition !== 'Team'">
-    <feedback-question v-for="question in data.questions | filterBy 'true' in 'from_adj' | orderBy 'seq'" :question="question" ></feedback-question>
+    <feedback-question v-for="question in adjQuestions" :question="question" ></feedback-question>
   </template>
 
   <template v-if="ballot.authorPosition === 'Team'">
-    <feedback-question v-for="question in data.questions | filterBy 'true' in 'from_team' | orderBy 'seq'" :question="question" ></feedback-question>
+    <feedback-question v-for="question in teamQuestions" :question="question" ></feedback-question>
   </template>
 
 </template>
 
 <script>
-  import FeedbackQuestion from './FeedbackQuestion.vue'
-  export default {
-    components: {
-      FeedbackQuestion
+import FeedbackQuestion from './FeedbackQuestion.vue'
+import _ from 'lodash'
+
+export default {
+  components: {
+    FeedbackQuestion
+  },
+  computed: {
+    questionsOrderedBySeq: function() {
+      return _.orderBy(this.data.questions, 'seq', ['asc'])
     },
-    props: ['data', 'ballot'],
-  }
+    adjQuestions: function() {
+      return _.filter(this.questionsOrderedBySeq, { 'from_adj':  'true' })
+    },
+    teamQuestions: function() {
+      return _.filter(this.questionsOrderedBySeq, { 'from_team':  'true' })
+    },
+  },
+  props: ['data', 'ballot'],
+}
 </script>

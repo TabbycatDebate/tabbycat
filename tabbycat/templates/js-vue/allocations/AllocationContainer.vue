@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <debate v-for="debate in debates | orderBy 'importance' -1"
+      <debate v-for="debate in debatesSortedByImportance"
         :debate="debate"
         :aff="teams[debate.aff_team]"
         :neg="teams[debate.neg_team]"
@@ -63,6 +63,7 @@ import Debate from './Debate.vue'
 import AllocationActions from './AllocationActions.vue'
 import UnallocatedAdjudicators from './UnallocatedAdjudicators.vue'
 import ConflictsCalculatorMixin from '../mixins/ConflictsCalculatorMixin.vue'
+import _ from 'lodash'
 
 export default {
   components: {
@@ -111,6 +112,9 @@ export default {
         lookup[this.debates[i].id] = this.debates[i];
       }
       return lookup;
+    },
+    debatesSortedByImportance: function() {
+      return _.orderBy(this.debates, 'importance', ['desc'])
     },
     conflictableTeams: function() {
       return this.teams;

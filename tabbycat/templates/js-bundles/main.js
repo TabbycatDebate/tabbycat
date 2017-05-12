@@ -1,13 +1,14 @@
 // The base template with universal or near-universal functionality (imported on all pages)
 
 //------------------------------------------------------------------------------
-// jQuery and Boostrap
+// jQuery, Lodash, and Boostrap
 //------------------------------------------------------------------------------
 
 var $ = require("jquery");
 global.jQuery = $; // Set for bootstrap
 window.$ = $; // Set for browser window
-require("bootstrap");
+
+require("bootstrap"); // Need to call boostrap functions from within Vue etc
 
 // Mount global jquery stuff here
 $(document).ready(function(){
