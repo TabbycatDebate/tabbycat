@@ -39,51 +39,50 @@
       </div>
     </div>
 
-    <div class="slideover-top"
-        :class="{ 'slideover-info': showSlideOver}"
-        v-if="showSlideOver"
-        transition="expand">
-      <div class="list-group">
-        <li class="list-group-item">
-          <h4 class="no-bottom-margin no-top-margin text-center">
-            {{ adjorteam.name }} ({{ adjorteam.institution.name }})
-          </h4>
-        </li>
-        <li class="list-group-item flex-horizontal">
-          <div class="flex-1 btn-toolbar">
-            <div class="btn-group btn-group-sm " role="group">
-              <div v-bind:class="'btn btn-default gender-display gender-' + adjorteam.gender">
-                {{ adjorteam.name }}
+    <transition name="expand">
+      <div class="slideover-top" :class="{ 'slideover-info': showSlideOver}" v-if="showSlideOver">
+        <div class="list-group">
+          <li class="list-group-item">
+            <h4 class="no-bottom-margin no-top-margin text-center">
+              {{ adjorteam.name }} ({{ adjorteam.institution.name }})
+            </h4>
+          </li>
+          <li class="list-group-item flex-horizontal">
+            <div class="flex-1 btn-toolbar">
+              <div class="btn-group btn-group-sm " role="group">
+                <div v-bind:class="'btn btn-default gender-display gender-' + adjorteam.gender">
+                  {{ adjorteam.name }}
+                </div>
+              </div>
+              <div class="btn-group btn-group-sm" role="group">
+                <div v-bind:class="'btn btn-default region-display region-' + adjorteam.region.seq">
+                  <span class="glyphicon glyphicon-globe"></span>
+                  {{ adjorteam.institution.name }} {{ adjorteam.region.name }}
+                </div>
               </div>
             </div>
-            <div class="btn-group btn-group-sm" role="group">
-              <div v-bind:class="'btn btn-default region-display region-' + adjorteam.region.seq">
-                <span class="glyphicon glyphicon-globe"></span>
-                {{ adjorteam.institution.name }} {{ adjorteam.region.name }}
+            <div class="btn-toolbar pull-right">
+              <div class="btn-group btn-group-sm " role="group">
+                <div class="btn btn-default">
+                  {{ adjorteam.score }}
+                </div>
+                <div class="btn btn-default">
+                  Feedback Rating
+                </div>
+              </div>
+              <div class="btn-group btn-group-sm " role="group">
+                <div class="btn btn-default">
+                  {{ letter_ranking }}
+                </div>
+                <div class="btn btn-default">
+                  Feedback Scale ({{ adjorteam.ranking }}th Percentile)
+                </div>
               </div>
             </div>
-          </div>
-          <div class="btn-toolbar pull-right">
-            <div class="btn-group btn-group-sm " role="group">
-              <div class="btn btn-default">
-                {{ adjorteam.score }}
-              </div>
-              <div class="btn btn-default">
-                Feedback Rating
-              </div>
-            </div>
-            <div class="btn-group btn-group-sm " role="group">
-              <div class="btn btn-default">
-                {{ letter_ranking }}
-              </div>
-              <div class="btn btn-default">
-                Feedback Scale ({{ adjorteam.ranking }}th Percentile)
-              </div>
-            </div>
-          </div>
-        </li>
+          </li>
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 
 

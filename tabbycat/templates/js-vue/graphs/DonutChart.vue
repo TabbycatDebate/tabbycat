@@ -17,7 +17,7 @@ export default {
     padding: { type: Number, default: 1 },
     regions: Array,
   },
-  ready: function() {
+  mounted: function() {
     if (this.graphData !== undefined) {
       InitChart(this); // Only init if we have some info
     }

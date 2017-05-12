@@ -14,7 +14,7 @@ export default {
     height: { type: Number, default: 55 },
     padding: { type: Number, default: 6 },
   },
-  ready: function() {
+  mounted: function() {
     if (typeof this.cellData.graphData !== 'undefined' && this.cellData.graphData.length > 0) {
       InitChart(this); // Only init if we have some info
     }

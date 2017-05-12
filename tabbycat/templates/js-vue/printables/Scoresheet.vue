@@ -47,7 +47,7 @@
 
     <div class="db-item-gutter"></div>
     <div class="db-flex-item-2 db-flex-row db-align-vertical-center">
-      <template v-for="motion in motions" track-by="$index">
+      <template v-for="(motion, index) in motions">
         {{ motion.seq }}: {{ motion.text }}<br>
       </template>
     </div>

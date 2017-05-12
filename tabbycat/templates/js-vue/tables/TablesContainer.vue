@@ -60,7 +60,7 @@ export default {
     orientation: String, // Passed down from template
     filterKey: { default: '' }
   },
-  ready: function() {
+  mounted: function() {
     var self = this;
     var tableSearchBox = document.getElementById('table-search');
     tableSearchBox.oninput = function() {

@@ -9,7 +9,7 @@
     class="panel-body vue-droppable">
 
     <team-draggable
-      v-for="team in teams | orderBy 'institution__code'"
+      v-for="team in teamsOrderedByCode"
       v-if="team.division === null"
       v-bind:key="team.id"
       :team="team"
