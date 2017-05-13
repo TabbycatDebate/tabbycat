@@ -501,7 +501,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 divisions_data = ['D' + d.division.name if d.division else '' for d in debates]
                 self.add_column(divisions_header, divisions_data)
 
-        if self.tournament.pref('division_venues') and not for_admin:
+        if self.tournament.pref('division_venues'):
             # For public displays of the draw fopr leagues we only
             # show the venue category derive from each debate's division
             venue_data = [{'text': d.division.venue_category if d.division else ''} for d in debates]
