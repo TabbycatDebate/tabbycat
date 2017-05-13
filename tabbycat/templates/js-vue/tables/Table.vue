@@ -86,6 +86,7 @@
         var orderedHeaderIndex = _.findIndex(this.headers, {'key': this.sortKey});
         if (orderedHeaderIndex === -1) {
           console.log("Couldn't locate sort key: ", this.sortKey, " in headers", this.headers)
+          return this.rows
         }
         // Sort the array of rows based on the value of the cell index
         return _.orderBy(this.rows, function(row) {

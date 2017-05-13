@@ -1,8 +1,9 @@
 <template>
   <div>
 
-    <allocation-actions
-      :regions="regions" :categories="categories" :round-info="roundInfo">
+    <allocation-actions :regions="regions" :categories="categories" :round-info="roundInfo"
+                        v-on:auto-allocate="reloadDebates"
+                        v-on:toggle-diversity-highlights="displayDiversityHighlights">
     </allocation-actions>
 
     <div class="col-md-12 allocation-container">
@@ -158,7 +159,29 @@ export default {
       adjudicator.allocated = true
       // Find the debate object that was dropped into and add the adj to it
       targetPanel.push({'id': adjudicator.id, 'position': targetPosition})
-    }
+    },
+    reloadDebates: function(newDebatesResponse) {
+      // Dispatched from the AllocationActions. Note that this.debates are props
+      // in this component; not data. Need to call up to the root element to set
+      this.$parent.$set('allDebates', newDebatesResponse)
+      // Trigger child Debate components to recalculate conflicts
+      this.$broadcast('recheck-panel-conflicts')
+    },
+    displayDiversityHighlights: function(set_state, set_type) {
+      // Sets diveristy state on the original object
+      // so that it will persist through drag/drops when the element is removed
+      for (var adjID in this.adjudicators) {
+        this.adjudicators[adjID].region_show = false
+        this.adjudicators[adjID].gender_show = false
+        this.adjudicators[adjID][set_type] = set_state
+      }
+      for (var teamID in this.teams) {
+        this.teams[teamID].region_show = false
+        this.teams[teamID].category_show = false
+        this.teams[teamID].gender_show = false
+        this.teams[teamID][set_type] = set_state
+      }
+    },
   },
   events: {
     // Determine dragged object
@@ -176,21 +199,6 @@ export default {
     'unset-hover-conflicts': function(origin, conflicts_dict, histories_dict) {
       this.toggleConflicts(false, 'hover', origin, conflicts_dict);
       this.toggleHistories(false, 'hover', origin, histories_dict);
-    },
-    'set_diversity_highlights': function(set_state, set_type) {
-      // Sets diveristy state on the original object
-      // so that it will persist through drag/drops when the element is removed
-      for (var adjID in this.adjudicators) {
-        this.adjudicators[adjID].region_show = false
-        this.adjudicators[adjID].gender_show = false
-        this.adjudicators[adjID][set_type] = set_state
-      }
-      for (var teamID in this.teams) {
-        this.teams[teamID].region_show = false
-        this.teams[teamID].category_show = false
-        this.teams[teamID].gender_show = false
-        this.teams[teamID][set_type] = set_state
-      }
     },
     'set-adj-unused': function() {
       // Set or unset dragged adjs to panels
@@ -229,13 +237,6 @@ export default {
       this.removeAdjudicatorFromPosition(draggedAdjudicator, previousDebateId)
       // Add
       this.moveAdjudicatorToPosition(draggedAdjudicator, targetPanel, targetPosition)
-    },
-    'set-debate-panels': function(newDebatesResponse) {
-      // Dispatched from the AllocationActions. Note that this.debates are props
-      // in this component; not data. Need to call up to the root element to set
-      this.$parent.$set('allDebates', newDebatesResponse)
-      // Trigger child Debate components to recalculate conflicts
-      this.$broadcast('recheck-panel-conflicts')
     }
   }
 

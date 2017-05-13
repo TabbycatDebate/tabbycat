@@ -54,15 +54,18 @@
           </button>
         </div>
         <div class="btn-group btn-group-sm">
-          <button class="btn btn-default nav-link hoverable" v-on:click="showRegion" v-bind:class="showingRegion ? 'active' : ''">
+          <button class="btn btn-default nav-link hoverable"
+                  v-on:click="showRegion" v-bind:class="showingRegion ? 'active' : ''">
             <span class="glyphicon" v-bind:class="showingRegion ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
             Region
           </button>
-          <button class="btn btn-default nav-link hoverable" v-on:click="showGender" v-bind:class="showingGender ? 'active' : ''">
+          <button class="btn btn-default nav-link hoverable"
+                  v-on:click="showGender" v-bind:class="showingGender ? 'active' : ''">
             <span class="glyphicon" v-bind:class="showingGender ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
             Gender
           </button>
-          <button class="btn btn-default nav-link hoverable" v-on:click="showCategory" v-bind:class="showingCategory ? 'active' : ''">
+          <button class="btn btn-default nav-link hoverable"
+                  v-on:click="showCategory" v-bind:class="showingCategory ? 'active' : ''">
             <span class="glyphicon" v-bind:class="showingCategory ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
             Category
           </button>
@@ -131,7 +134,7 @@ export default {
         success: function(data, textStatus, jqXHR) {
           self.resetAutoAllocationModal(event.target)
           $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
-          self.$dispatch('set-debate-panels', JSON.parse(data))
+          self.$emit('auto-allocate', JSON.parse(data))
           // Update the save counter (this normally goes through AjaxMixin.vue)
           var savedAt = new Date()
           var hours = savedAt.getHours()
@@ -149,19 +152,19 @@ export default {
       this.showingRegion = !this.showingRegion;
       this.showingGender = false;
       this.showingCategory = false;
-      this.$dispatch('set_diversity_highlights', this.showingRegion, 'region_show')
+      this.$emit('toggle-diversity-highlights', this.showingRegion, 'region_show')
     },
     showGender: function() {
       this.showingGender = !this.showingGender;
       this.showingRegion = false;
       this.showingCategory = false;
-      this.$dispatch('set_diversity_highlights', this.showingGender, 'gender_show')
+      this.$emit('toggle-diversity-highlights', this.showingGender, 'gender_show')
     },
     showCategory: function() {
       this.showingCategory = !this.showingCategory;
       this.showingGender = false;
       this.showingRegion = false;
-      this.$dispatch('set_diversity_highlights', this.showingCategory, 'category_show')
+      this.$emit('toggle-diversity-highlights', this.showingCategory, 'category_show')
     }
   }
 }
