@@ -4,8 +4,11 @@
     <div class="row">
       <div class="col-md-12 half-vertical-spacing hidden-print">
         <div class="input-group">
-          <input id="table-search" type="search" class="form-control table-search" placeholder="Find in Table">
-          <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+          <input id="table-search" type="search" v-model="filterKey"
+                 class="form-control table-search" placeholder="Find in Table">
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-search"></span>
+          </span>
         </div>
       </div>
     </div>
@@ -22,8 +25,8 @@
               :table-content="tableData['data']"
               :table-class="tableData['class']"
               :filter-key="filterKey"
-              :default-sort-key="tableData['sort_key']"
-              :default-sort-order="tableData['sort_order']">
+              :sort-key="tableData['sort_key']"
+              :sort-order="tableData['sort_order'] === '' ? 'asc' : tableData['sort_order']"
             </smart-table>
           </div>
         </div>
@@ -39,6 +42,11 @@ import SmartTable from './Table.vue'
 export default {
   components: {
     SmartTable
+  },
+  methods: {
+    getOrSetSortOrder: function (predefinedOrder) {
+      console.log(getOrSetSortOrder)
+    }
   },
   computed: {
     tableClass: function () {
@@ -59,13 +67,6 @@ export default {
     tablesData: Array, // Passed down from main.js
     orientation: String, // Passed down from template
     filterKey: { default: '' }
-  },
-  mounted: function() {
-    var self = this;
-    var tableSearchBox = document.getElementById('table-search');
-    tableSearchBox.oninput = function() {
-      self.filterKey = tableSearchBox.value;
-    };
   }
 }
 

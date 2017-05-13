@@ -1,17 +1,17 @@
 <!-- Table Template -->
 <template>
 
-  <th class="vue-sortable" v-on:click="notifySortByHeader()">
+  <th class="vue-sortable" v-on:click="resort(header['key'])">
 
-    <span :title="headerData['tooltip']"
-          :data-toggle="headerData['tooltip'] ? 'tooltip' : null"
-          :v-on:hover="headerData['tooltip'] ? showTooltip  : null">
+    <span :title="header['tooltip']"
+          :data-toggle="header['tooltip'] ? 'tooltip' : null"
+          :v-on:hover="header['tooltip'] ? showTooltip  : null">
 
-      <span v-if="headerData['icon']" class="glyphicon" :class="headerData['icon']"></span>
-      <span v-if="headerData['text']" v-html="headerData['text']"></span>
+      <span v-if="header['icon']" class="glyphicon" :class="header['icon']"></span>
+      <span v-if="header['text']" v-html="header['text']"></span>
 
-      <span v-if="!headerData.hasOwnProperty('icon') && !headerData.hasOwnProperty('text')">
-        <span>{{ headerData['key'] }}</span>
+      <span v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('text')">
+        <span>{{ header['key'] }}</span>
       </span>
 
     </span>
@@ -26,30 +26,29 @@
 <script>
 export default {
   props: {
-    headerData: Object,
-    headerIndex: Number,
-    sortOrder: Number,
-    sortIndex: Number
+    header: Object,
+    sortOrder: String,
+    sortKey: String
   },
   computed: {
     sortClasses: function() {
-      if (this.sortIndex === this.headerIndex && this.sortOrder < 0) {
-        var classes = "text-success glyphicon-sort-by-attributes-alt";
-      } else if (this.sortIndex === this.headerIndex && this.sortOrder > 0) {
-        var classes = "text-success glyphicon-sort-by-attributes";
-      } else {
-        var classes = "text-muted glyphicon-sort";
+      if (this.sortKey === this.header.key) {
+        if (this.sortOrder === "asc") {
+          return "text-success glyphicon-sort-by-attributes-alt";
+        } else {
+          return "text-success glyphicon-sort-by-attributes";
+        }
       }
-      return classes;
+      return "text-muted glyphicon-sort";
     }
   },
   methods: {
     showTooltip: function(event) {
       $(event.target).tooltip('show')
     },
-    notifySortByHeader: function () {
+    resort: function (newSortKey) {
       // Notify the parent table to all rows by this index
-      this.$dispatch('receiveSortByHeader', this.headerIndex)
+      this.$emit('resort', newSortKey)
     }
   },
 }

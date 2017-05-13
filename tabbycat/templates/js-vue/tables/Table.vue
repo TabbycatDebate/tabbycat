@@ -3,11 +3,11 @@
   <table class="table" :class="tableClass">
     <thead>
       <tr>
-        <th v-for="(headerIndex, headerData) in headers" :header-index="headerIndex"
-            :header-data="headerData"
-            :sort-index="sortIndex"
+        <th v-for="header in headers" v-on:resort="updateSorting(newSortKey)"
+            :header="header"
+            :sort-key="sortKey"
             :sort-order="sortOrder"
-            is="smartHeader">
+            is="smartHeader" >
         </th>
       </tr>
     </thead>
@@ -15,7 +15,7 @@
       <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
         <td class="empty-cell text-center text-muted">No Data Available</td>
       </tr>
-      <tr v-for="row in rows | filterBy filterKey | caseInsensitiveOrderBy sortIndex sortOrder">
+      <tr v-for="row in rowsFilteredByKey">
         <td v-for="(cellIndex, cellData) in row"
           :is="cellData['component'] ? cellData['component'] : 'SmartCell'"
           :cell-data="cellData">
@@ -31,15 +31,15 @@
   import SmartCell from './Cell.vue'
   // Items below here should be admin only ideally
   import FeedbackTrend from '../graphs/FeedbackTrend.vue'
-
+  import _ from 'lodash'
 
   export default {
     props: {
       tableHeaders: Array,
       tableContent: Array,
       filterKey: String,
-      defaultSortKey: String,
-      defaultSortOrder: String,
+      sortKey: String,
+      sortOrder: String,
       tableClass: String
     },
     components: {
@@ -47,70 +47,13 @@
       SmartCell,
       FeedbackTrend,
     },
-    data: function () {
-      return {
-        sortIndex: this.getDefaultSortIndex(),
-        sortOrder: this.getDefaultSortOrder()
-      }
-    },
-    filters: {
-      caseInsensitiveOrderBy: function (arr, sortIndex, reverse) {
-        // This is basically a copy of Vue's native orderBy except we are
-        // overriding the last part to see if the cell has custom sorting
-        if (sortIndex === null) {
-          return arr; // If not set then return default order (can be desirable)
-        } else {
-          var order = (reverse && reverse < 0) ? -1 : 1;
-          return arr.slice().sort(function (a, b) {
-            // Check if cell has custom sorting
-            if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].sort) !== 'undefined') {
-              a = a[sortIndex].sort;
-              b = b[sortIndex].sort;
-            } else if (a[sortIndex] && b[sortIndex] && typeof(a[sortIndex].text) !== 'undefined') {
-              a = a[sortIndex].text;
-              b = b[sortIndex].text;
-            } else {
-              console.log('Error sorting; sort key probably doesnt exist for that cell');
-            }
-            return a === b ? 0 : a > b ? order : -order;
-          });
-        }
-      }
-    },
     methods: {
-      getDefaultSortOrder: function() {
-        if (this.defaultSortOrder === "desc") {
-          return -1;
-        } else {
-          return 1;
+      updateSorting: function(newSortKey) {
+        if (this.sortKey !== newSortKey) {
+          this.sortKey = newSortKey
         }
-      },
-      getDefaultSortIndex: function() {
-        // Find the index of the column that matches the default sorting key
-        var index = null // if no defaultSortKey is set leave as null
-        if (typeof(this.tableHeaders) !== 'undefined') { // Check table is not empty
-          for (var i = 0; i < this.tableHeaders.length; i++) {
-            if (typeof this.tableHeaders[i].key !== 'undefined' && this.defaultSortKey !== "") {
-              if (this.tableHeaders[i].key.toLowerCase() === this.defaultSortKey.toLowerCase()) {
-                index = i
-              }
-            }
-          }
-        }
-        return index
-      },
-    },
-    events: {
-      receiveSortByHeader: function (headerIndex) {
-        // Set the current sorting key; flip it (x * -1) if already in place
-        // We have to modify the original .data so that the computed props will update
-        if (this.sortIndex === headerIndex) {
-          this.sortOrder = this.sortOrder * -1;
-        } else {
-          this.sortOrder = 1;
-        }
-        this.sortIndex = headerIndex;
-      },
+        // TODO: toggle sort order?
+      }
     },
     computed: {
       rows: function() {
@@ -135,6 +78,33 @@
         }
         return headers
       },
+      rowsOrderedByKey: function() {
+        // Find the index of the cell matching the sortKey within each row
+        var orderedHeaderIndex = _.findIndex(this.headers, {'key': this.sortKey});
+        // Sort the array of rows based on the value of the cell index
+        return _.orderBy(this.rows, function(row) {
+          var cell = row[orderedHeaderIndex]
+          var cellData = _.isUndefined(cell.sort) ? cell.text : cell.sort
+          return _.lowerCase(cellData)
+        }, this.sortOrder)
+      },
+      rowsFilteredByKey: function() {
+        if (this.filterKey === '') {
+          return this.rowsOrderedByKey
+        }
+        var filterKey = this.filterKey
+        return _.filter(this.rowsOrderedByKey, function(row) {
+          // Filter through all rows; within each row check...
+          var rowContainsMatch = false
+          _.forEach(row, function(cell) {
+            // ...and see if  has cells whose text-string contains filterKey
+            if (_.includes(_.lowerCase(cell.text), _.lowerCase(filterKey))) {
+              rowContainsMatch = true
+            }
+          })
+          return rowContainsMatch
+        })
+      }
     }
   }
 </script>
