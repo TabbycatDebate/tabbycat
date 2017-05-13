@@ -5,6 +5,8 @@
     v-on:dragenter="dragEnter"
     v-on:dragleave="dragLeave"
     v-on:drop="drop"
+    v-on:set-dragged-adj="propogateSetAdj"
+    v-on:unset-dragged-adj="propogateUnsetAdj"
     v-bind:class="['vue-droppable', {
         'panel-incomplete': isIncomplete,
         'vue-is-drag-enter': isDroppable,
@@ -56,6 +58,12 @@ export default {
   methods: {
     'handleDrop': function(event) {
       this.$dispatch('set-adj-panel', this.debateId, this.position)
+    }
+    'propogateSetAdj': function() {
+
+    }
+    'propogateUnsetSetAdj': function() {
+      this.$emit('unset-dragged-adj')
     }
   }
 }

@@ -150,14 +150,14 @@ export default {
     },
     handleDragStart: function(event) {
       // Set this adj's id as the data for receiving object
-      this.$dispatch('set-dragged-adj', {
+      this.$emit('set-dragged-adj', {
         'adj': this.adjorteam,
         'position': this.position,
         'debateId': this.debateId
       })
     },
     handleDragEnd: function(event) {
-      this.$dispatch('unset-dragged-adj')
+      this.$emit('unset-dragged-adj')
       this.showSlideOver = false;
     },
   },

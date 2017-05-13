@@ -38,20 +38,23 @@
               {{ panelScore }}
             </div>
           </div>
-          <position-droppable
-            :adjudicators="debateAdjudicators.chair"
-            :debate-id="debate.id"
-            :position="'C'">
+          <position-droppable :adjudicators="debateAdjudicators.chair"
+                              :debate-id="debate.id" :position="'C'"
+                              v-on:set-dragged-adj="propogateSetAdj"
+                              v-on:propogateUnsetAdj="propogateUnsetAdj"
+            >
           </position-droppable>
-          <position-droppable
-            :adjudicators="debateAdjudicators.panelists"
-            :debate-id="debate.id"
-            :position="'P'">
+          <position-droppable :adjudicators="debateAdjudicators.panelists"
+                              :debate-id="debate.id" :position="'P'"
+                              v-on:set-dragged-adj="propogateSetAdj"
+                              v-on:propogateUnsetAdj="propogateUnsetAdj"
+            >
           </position-droppable>
-          <position-droppable
-            :adjudicators="debateAdjudicators.trainees"
-            :debate-id="debate.id"
-            :position="'T'">
+          <position-droppable :adjudicators="debateAdjudicators.trainees"
+                              :debate-id="debate.id" :position="'T'"
+                              v-on:set-dragged-adj="propogateSetAdj"
+                              v-on:propogateUnsetAdj="propogateUnsetAdj"
+            >
           </position-droppable>
         </div>
       </div>
