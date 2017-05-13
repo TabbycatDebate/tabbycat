@@ -1,7 +1,7 @@
 <!-- Table Template -->
 <template>
 
-  <th class="vue-sortable" v-on:click="resort(header['key'])">
+  <th class="vue-sortable" v-on:click="resort()">
 
     <span :title="header['tooltip']"
           :data-toggle="header['tooltip'] ? 'tooltip' : null"
@@ -46,9 +46,9 @@ export default {
     showTooltip: function(event) {
       $(event.target).tooltip('show')
     },
-    resort: function (newSortKey) {
+    resort: function() {
       // Notify the parent table to all rows by this index
-      this.$emit('resort', newSortKey)
+      this.$emit('resort', this.header['key'])
     }
   },
 }

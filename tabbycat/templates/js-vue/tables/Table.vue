@@ -3,7 +3,7 @@
   <table class="table" :class="tableClass">
     <thead>
       <tr>
-        <th v-for="header in headers" v-on:resort="updateSorting(newSortKey)"
+        <th v-for="header in headers" v-on:resort="updateSorting"
             :header="header"
             :sort-key="sortKey"
             :sort-order="sortOrder"
@@ -49,10 +49,13 @@
     },
     methods: {
       updateSorting: function(newSortKey) {
-        if (this.sortKey !== newSortKey) {
+        if (this.sortKey === newSortKey) {
+          // If sorting by the same key then flip the sort order
+          this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc"
+        } else {
           this.sortKey = newSortKey
+          this.sortOrder = "desc"
         }
-        // TODO: toggle sort order?
       }
     },
     computed: {
@@ -81,6 +84,9 @@
       rowsOrderedByKey: function() {
         // Find the index of the cell matching the sortKey within each row
         var orderedHeaderIndex = _.findIndex(this.headers, {'key': this.sortKey});
+        if (orderedHeaderIndex === -1) {
+          console.log("Couldn't locate sort key: ", this.sortKey, " in headers", this.headers)
+        }
         // Sort the array of rows based on the value of the cell index
         return _.orderBy(this.rows, function(row) {
           var cell = row[orderedHeaderIndex]
