@@ -149,6 +149,7 @@ export default {
       this.isHovering = false;
     },
     handleDragStart: function(event) {
+      console.log('setDraggedAdj debateadj');
       // Set this adj's id as the data for receiving object
       this.$emit('set-dragged-adj', {
         'adj': this.adjorteam,
@@ -157,6 +158,7 @@ export default {
       })
     },
     handleDragEnd: function(event) {
+      console.log('unsetDraggedAdj debateadj');
       this.$emit('unset-dragged-adj')
       this.showSlideOver = false;
     },

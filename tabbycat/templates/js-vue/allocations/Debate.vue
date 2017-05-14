@@ -40,19 +40,19 @@
           </div>
           <position-droppable :adjudicators="debateAdjudicators.chair"
                               :debate-id="debate.id" :position="'C'"
-                              v-on:set-dragged-adj="propogateSetAdj"
+                              v-on:propogateSetAdj="propogateSetAdj"
                               v-on:propogateUnsetAdj="propogateUnsetAdj"
             >
           </position-droppable>
           <position-droppable :adjudicators="debateAdjudicators.panelists"
                               :debate-id="debate.id" :position="'P'"
-                              v-on:set-dragged-adj="propogateSetAdj"
+                              v-on:propogateSetAdj="propogateSetAdj"
                               v-on:propogateUnsetAdj="propogateUnsetAdj"
             >
           </position-droppable>
           <position-droppable :adjudicators="debateAdjudicators.trainees"
                               :debate-id="debate.id" :position="'T'"
-                              v-on:set-dragged-adj="propogateSetAdj"
+                              v-on:propogateSetAdj="propogateSetAdj"
                               v-on:propogateUnsetAdj="propogateUnsetAdj"
             >
           </position-droppable>
@@ -193,6 +193,14 @@ export default {
           this.toggleHistories(conflictValue, 'panel', team, adj.histories);
         }
       }
+    },
+    propogateSetAdj(info) {
+      console.log('setDraggedAdj debate');
+      this.$emit('propogate-set-adj', info)
+    },
+    propogateUnsetAdj() {
+      console.log('unsetDraggedAdj debate');
+      this.$emit('propogate-unset-adj')
     }
   },
   created: function() {

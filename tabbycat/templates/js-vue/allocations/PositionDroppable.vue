@@ -56,14 +56,16 @@ export default {
     'DebateAdjudicator': DebateAdjudicator
   },
   methods: {
-    'handleDrop': function(event) {
+    handleDrop(event) {
       this.$dispatch('set-adj-panel', this.debateId, this.position)
-    }
-    'propogateSetAdj': function() {
-
-    }
-    'propogateUnsetSetAdj': function() {
-      this.$emit('unset-dragged-adj')
+    },
+    propogateSetAdj(info) {
+      console.log('setDraggedAdj positiondroppable');
+      this.$emit('propogate-set-adj', info)
+    },
+    propogateUnsetAdj() {
+      console.log('unsetDraggedAdj positiondroppable');
+      this.$emit('propogate-unset-adj')
     }
   }
 }

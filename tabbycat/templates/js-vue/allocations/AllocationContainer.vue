@@ -37,7 +37,9 @@
         :aff="teams[debate.aff_team]"
         :neg="teams[debate.neg_team]"
         :all-adjudicators="adjudicators"
-        :round-info="roundInfo">
+        :round-info="roundInfo"
+        v-on:propogateSetAdj="setDraggedAdj"
+        v-on:propogateUnsetAdj="unsetDraggedAdj">
       </debate>
 
     </div>
@@ -125,6 +127,15 @@ export default {
     },
   },
   methods: {
+    // Determine dragged object
+    setDraggedAdj(draggedAdjInfo) {
+      console.log('setDraggedAdj alloccontain');
+      this.currentlyDragging = draggedAdjInfo;
+    },
+    unsetDraggedAdj() {
+      console.log('unsetDraggedAdj alloccontain');
+      this.currentlyDragging = null;
+    },
     removeAdjudicatorHighlights(adjudicator) {
       // Remove hover conflicts from all those who are conflicted with said adj
       this.toggleConflicts(false, 'hover', adjudicator, adjudicator.conflicts);
@@ -184,13 +195,6 @@ export default {
     },
   },
   events: {
-    // Determine dragged object
-    'set-dragged-adj': function(dragInfo) {
-      this.currentlyDragging = dragInfo;
-    },
-    'unset-dragged-adj': function() {
-      this.currentlyDragging = null;
-    },
     // Set hover conflicts
     'set-hover-conflicts': function(origin, conflicts_dict, histories_dict) {
       this.toggleConflicts(true, 'hover', origin, conflicts_dict);
