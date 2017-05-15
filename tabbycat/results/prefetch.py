@@ -6,7 +6,7 @@ from motions.models import DebateTeamMotionPreference
 from tournaments.models import Tournament
 
 from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
-from .result import BallotSet, Scoresheet
+from .result_old import BallotSet, Scoresheet
 
 
 def populate_wins(debates):

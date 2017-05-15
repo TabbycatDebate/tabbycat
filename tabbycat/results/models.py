@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from .result import BallotSet
+from .result_old import BallotSet
 
 logger = logging.getLogger(__name__)
 
@@ -182,13 +182,18 @@ class TeamScore(models.Model):
         verbose_name=_("debate team"))
 
     points = models.PositiveSmallIntegerField(verbose_name=_("points"))
-    win = models.NullBooleanField(verbose_name=_("win"))
-    margin = ScoreField(verbose_name=_("margin"))
-    score = ScoreField(verbose_name=_("score"))
-    votes_given = models.PositiveSmallIntegerField(verbose_name=_("votes given"))
-    votes_possible = models.PositiveSmallIntegerField(verbose_name=_("votes possible"))
+    win = models.NullBooleanField(null=True, blank=True,
+        verbose_name=_("win"))
+    margin = ScoreField(null=True, blank=True,
+        verbose_name=_("margin"))
+    score = ScoreField(null=True, blank=True,
+        verbose_name=_("score"))
+    votes_given = models.PositiveSmallIntegerField(null=True, blank=True,
+        verbose_name=_("votes given"))
+    votes_possible = models.PositiveSmallIntegerField(null=True, blank=True,
+        verbose_name=_("votes possible"))
 
-    forfeit = models.BooleanField(default=False, blank=False, null=False,
+    forfeit = models.BooleanField(default=False,
         verbose_name=_("forfeit"),
         help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 

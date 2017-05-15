@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 
-from .result import BallotSet, ForfeitBallotSet
+from .result_old import BallotSet, ForfeitBallotSet
 
 logger = logging.getLogger(__name__)
 
