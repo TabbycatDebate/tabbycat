@@ -10,6 +10,7 @@ since the scoresheet classes don't know about team identities, the word "team"
 should not appear in any of them.
 """
 
+
 class BaseScoresheet:
 
     @property
@@ -131,3 +132,11 @@ class LowPointWinsAllowedScoresheet(ScoresMixin, ResultOnlyScoresheet):
     """This is basically a declared winner scoresheet, with scores that don't
     matter as far as the result is concerned."""
     pass
+
+
+SCORESHEET_CLASSES = {
+    'result-only': ResultOnlyScoresheet,
+    'high-required': HighPointWinsRequiredScoresheet,
+    'tied-allowed': TiedPointWinsAllowedScoresheet,
+    'low-allowed': LowPointWinsAllowedScoresheet,
+}

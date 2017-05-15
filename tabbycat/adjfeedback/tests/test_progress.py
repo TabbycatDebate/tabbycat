@@ -7,7 +7,7 @@ from adjfeedback.models import AdjudicatorFeedback
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission
-from results.result import BallotSet
+from results.result_old import BallotSet
 from tournaments.models import Round, Tournament
 from venues.models import Venue
 

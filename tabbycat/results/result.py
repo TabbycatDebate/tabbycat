@@ -26,19 +26,29 @@ Notes on terminology:
  - "Team" refers to the actual team (e.g. Auckland 1).
 """
 
+import logging
+
 from draw.models import DebateTeam
+
+from .scoresheet import SCORESHEET_CLASSES
+
+logger = logging.getLogger(__name__)
 
 
 class BaseDebateResult:
     """Base class for debate results.
 
-    Subclasses should implement a `_get_<field>` method for each field of
-    TeamScore that is relevant to them, for example, `_get_win(side)` or
-    `get_margin(side)`. These methods take one argument, a side string, e.g.
-    `'aff'` or `'og'`. When saving TeamScore objects to the database, the base
-    class calls these methods to get the value it should save to that field. If
-    the method does not exist, it does not write to that field, which normally
-    means that the field will be left as null.
+    The base class implements management of side allocations, speaker identities
+    and ghosts. Other functions are left to subclasses.
+
+    Subclasses should implement a `teamscorefield_<fieldname>` method for each
+    field of TeamScore that is relevant to them, for example,
+    `teamscorefield_win(side)` or `teamscorefield_margin(side)`. These methods
+    take one argument, a side string, e.g. `'aff'` or `'og'`, and return the
+    value that should be saved to that field. When saving TeamScore objects to
+    the database, the base class calls these methods to get the value it should
+    save to that field. If the method does not exist, it does not write to that
+    field, which normally means that the field will be left as null.
     """
 
     SIDE_KEYS = {
@@ -68,8 +78,7 @@ class BaseDebateResult:
             self.POSITIONS = self.debate.round.tournament.POSITIONS
 
             self.init_blank_buffer()
-            self.load_debateteams()
-            self.load_speakers()
+            self.load_from_db()
             self.assert_loaded()
 
     def __repr__(self):
@@ -91,7 +100,7 @@ class BaseDebateResult:
 
         except AttributeError:
             if not hasattr(self, 'SIDES') or not hasattr(self, 'POSITIONS'):
-                raise AttributeError("The DebateResult instance must have dts and POSITIONS attributes before init_blank_buffer() is called.")
+                raise AttributeError("The DebateResult instance must have SIDES and POSITIONS attributes before init_blank_buffer() is called.")
             else:
                 raise
 
@@ -119,6 +128,10 @@ class BaseDebateResult:
             raise KeyError
         return side
 
+    def load_from_db(self):
+        self.load_debateteams()
+        self.load_speakers()
+
     def load_debateteams(self):
         for dt in self.debate.debateteam_set.select_related('team'):
             try:
@@ -132,7 +145,7 @@ class BaseDebateResult:
         for ss in self.ballotsub.speakerscore_set.filter(debate_team__debate=self.debate,
                 position__in=self.POSITIONS).select_related('speaker'):
             try:
-                side = self._side(dt)
+                side = self._side(ss.debate_team)
             except KeyError:
                 continue
             self.speakers[side][ss.position] = ss.speaker
@@ -143,13 +156,13 @@ class BaseDebateResult:
         for side in self.SIDES:
             dt = self.debateteams[side]
 
-            teamscore_fields = {}
+            teamscorefields = {}
             for field in self.TEAMSCORE_FIELDS:
-                get_field = getattr(self, '_get_%s' % field, None)
+                get_field = getattr(self, 'teamscorefield_%s' % field, None)
                 if get_field is not None:
-                    teamscore_fields[field] = get_field(side)
+                    teamscorefields[field] = get_field(side)
             self.ballotsub.teamscore_set.update_or_create(debate_team=dt,
-                    defaults=teamscore_fields)
+                    defaults=teamscorefields)
 
             for pos in self.POSITIONS:
                 speaker = self.speakers[side][pos]
@@ -167,13 +180,49 @@ class BaseDebateResult:
         Arguments must be a list of Team instances, which each must relate to a
         DebateTeam instance in this debate. (Sides are saved immediately to
         enable the use of side keys to refer to teams.)"""
-        debateteams_by_team = {dt.team: dt for dt in debateteams}
+        debateteams_by_team = {dt.team: dt for dt in self.debateteams}
         for side, team in zip(self.SIDES, teams):
             debateteam = debateteams_by_team[team]
             debateteam.position = self.SIDE_KEYS_REVERSE[side]
             debateteam.save()
-        self.load_debateteams(self.debate.debateteam_set.select_related('team')) # refresh self.dts
+        self.load_debateteams(self.debate.debateteam_set.select_related('team')) # refresh
+
+    def get_speaker(self, side, position):
+        return self.speakers[side].get(position)
+
+    def set_speaker(self, side, position, speaker):
+        if position not in self.POSITIONS:
+            logger.error("Tried to set speaker in position %s, valid positions are %s", position, self.POSITIONS)
+            return
+        team = self.debateteams[side].team
+        if speaker not in team.speakers:
+            logger.error("Speaker %s isn't in team %s", speaker.name, team.short_name)
+            return
+        self.speakers[side][position] = speaker
+
+    def get_ghost(self, side, position):
+        return self.ghosts[side].get(position)
+
+    def set_ghost(self, side, position, is_ghost):
+        if position not in self.POSITIONS:
+            logger.error("Tried to set ghost in position %s, valid positions are %s" % (position, self.POSITIONS))
+            return
+        self.ghosts[side][position] = is_ghost
 
 
 class VotingDebateResult(BaseDebateResult):
-    pass
+
+    def init_blank_buffer(self):
+        super().init_blank_buffer()
+        scoresheet_pref = self.debate.round.tournament.pref('scoresheet_type')
+        scoresheet_class = SCORESHEET_CLASSES[scoresheet_pref]
+        self.scoresheets = {adj: scoresheet_class(self.POSITIONS)
+                for adj in self.debate.adjudicators.voting()}
+
+    def load_from_db(self):
+        super().init_blank_buffer()
+        self.load_scoresheets()
+
+    def load_scoresheets(self):
+        # CONTINUE HERE
+        pass

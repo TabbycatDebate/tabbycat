@@ -10,7 +10,7 @@ from draw.models import Debate, DebateTeam
 from results.models import BallotSubmission
 from adjallocation.models import DebateAdjudicator
 
-from ..result import BallotSet
+from ..result_old import BallotSet
 
 
 class BaseTestResult(TestCase):
