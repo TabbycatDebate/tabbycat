@@ -14,7 +14,7 @@ should not appear in any of them.
 class BaseScoresheet:
 
     @property
-    def complete(self):
+    def is_complete(self):
         """Base implementation. Does nothing."""
         return True
 
@@ -35,10 +35,10 @@ class ScoresMixin:
         self.scores = {side: dict.fromkeys(self.POSITIONS, None) for side in self.SIDES}
 
     @property
-    def complete(self):
+    def is_complete(self):
         scores_complete = all(self.scores[s][p] is not None for s in self.SIDES
                 for p in self.POSITIONS)
-        return super().complete and scores_complete
+        return super().is_complete and scores_complete
 
     def set_score(self, side, position, score):
         self.scores[side][position] = score
@@ -65,8 +65,8 @@ class DeclaredWinnerMixin:
         self.declared_winner = None
 
     @property
-    def complete(self):
-        return super().complete and (self.declared_winner in self.SIDES)
+    def is_complete(self):
+        return super().is_complete and (self.declared_winner in self.SIDES)
 
     def set_declared_winner(self, winner):
         assert winner in self.SIDES or winner is None, "Declared winner must be one of " + ", ".join(map(repr, self.SIDES))
@@ -83,7 +83,7 @@ class BaseTwoTeamScoresheet(BaseScoresheet):
     def winner(self):
         """Returns 'aff' is the affirmative team won, and 'neg' if the negative
         team won. `self._get_winner()` must be implemented by subclasses."""
-        if not self.complete:
+        if not self.is_complete:
             return None
         return self._get_winner()
 

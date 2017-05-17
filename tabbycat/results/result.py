@@ -24,9 +24,20 @@ Notes on terminology:
  - "Side" means the team position, e.g. affirmative (in two-team) or opening
    government (in BP). By convention, these are represented as strings.
  - "Team" refers to the actual team (e.g. Auckland 1).
+
+A few notes on error checking:
+ - In general, the validity of 'side' and 'position' arguments aren't checked.
+   It is the responsibility of the caller to comply with valid values.
+ - When loading from the database, it filters for `self.side_db_values` and
+   `self.positions` to prevent queries from returning instances with invalid
+   side and position arguments.
+ - When scores aren't being used, `self.positions` should be set to an empty
+   list. It it assumed that this is sufficient to prevent it from calling
+   methods specific to classes inheriting `ScoreMixin` (in scoresheet.py).
 """
 
 import logging
+from statistics import mean
 
 from draw.models import DebateTeam
 
@@ -41,6 +52,19 @@ class BaseDebateResult:
     The base class implements management of side allocations, speaker identities
     and ghosts. Other functions are left to subclasses.
 
+    The loading process calls three functions in turn:
+      - First, it calls `self.init_blank_buffer()`, which should initialize
+        "blank" buffers for all information that it stores to eventually be
+        saved to the database.
+      - Then, it calls `self.load_from_db()`, which reads the database and
+        populates the buffers accordingly.
+      - Finally, it calls, `self.assert_loaded()`, which verifies that the
+        buffers are of the correct form, and raises an `AssertionError` if they
+        are not. (It does not check for completeness, only form.)
+
+    Subclasses should extend these functions as necessary to accommodate the
+    additional buffers they add to the class.
+
     Subclasses should implement a `teamscorefield_<fieldname>` method for each
     field of TeamScore that is relevant to them, for example,
     `teamscorefield_win(side)` or `teamscorefield_margin(side)`. These methods
@@ -51,11 +75,14 @@ class BaseDebateResult:
     field, which normally means that the field will be left as null.
     """
 
-    SIDE_KEYS = {
+    # These are exhaustive lists/dicts of all possible values that these are
+    # allowed to take, in any format.
+    SIDE_KEY_MAP = {
         DebateTeam.POSITION_AFFIRMATIVE: 'aff',
         DebateTeam.POSITION_NEGATIVE: 'neg',
+        # exclude POSITION_UNALLOCATED: you can't assign scores until sides are allocated
     }
-    SIDE_KEYS_REVERSE = {v: k for k, v in SIDE_KEYS.items()}
+    SIDE_KEY_MAP_REVERSE = {v: k for k, v in SIDE_KEY_MAP.items()}
     TEAMSCORE_FIELDS = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible']
 
     def __init__(self, ballotsub, load=True):
@@ -65,95 +92,122 @@ class BaseDebateResult:
         If `load` is False, the constructor will not load any data from the
         database (at all). It is then the responsibility of the caller to do so;
         the instance will crash otherwise, as the relevant attributes will not
-        be created. (For example, in prefetch.py, populate_ballotsets() uses
-        this to load BallotSets in bulk.) Callers can use
-        BallotSet.assert_load() to check that data was loaded correctly.
+        be created. (For example, in prefetch.py, `populate_ballotsets()` uses
+        this to load BallotSets in bulk.) Callers can use `.init_blank_buffer()`
+        to initialize the correct buffers and `.assert_loaded()` to check that
+        data was loaded correctly.
         """
 
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
+        self.tournament = self.debate.round.tournament
+
+        # side are to be extended to BP later
+        self.sides = ['aff', 'neg']
+        self.side_db_values = [self.SIDE_KEY_MAP_REVERSE[side] for side in self.sides]
 
         if load:
-            self.SIDES = ['aff', 'neg']  # to be extended to BP later
-            self.POSITIONS = self.debate.round.tournament.POSITIONS
+            self.positions = self.tournament.positions
 
             self.init_blank_buffer()
             self.load_from_db()
             self.assert_loaded()
 
     def __repr__(self):
-        return "<DebateResult at {id:#x for {bsub!s}>".format(id=id(self), bsub=self.ballotsub)
+        return "<{classname} at {id:#x for {bsub!s}>".format(
+            classname=self.__class__.__name__, id=id(self), bsub=self.ballotsub)
 
     # --------------------------------------------------------------------------
-    # Initialisation methods (external initialisers may find these helpful)
+    # Management methods
     # --------------------------------------------------------------------------
 
     def init_blank_buffer(self):
         """Initialises the data attributes. External initialisers might find
-        this helpful. The `self.SIDES` and `self.POSITIONS` attributes must be set
-        prior to calling this function."""
+        this helpful. The `self.sides` and `self.positions` attributes must be
+        set prior to calling this function. Subclasses should extend this
+        method as necessary."""
 
         try:
-            self.debateteams = dict.fromkeys(self.SIDES, None)
-            self.speakers = {side: dict.fromkeys(self.POSITIONS, None) for side in self.SIDES}
-            self.ghosts = {side: dict.fromkeys(self.POSITIONS, False) for side in self.SIDES}
+            self.debateteams = dict.fromkeys(self.sides, None)
+            self.speakers = {side: dict.fromkeys(self.positions, None) for side in self.sides}
+            self.ghosts = {side: dict.fromkeys(self.positions, False) for side in self.sides}
 
         except AttributeError:
-            if not hasattr(self, 'SIDES') or not hasattr(self, 'POSITIONS'):
-                raise AttributeError("The DebateResult instance must have SIDES and POSITIONS attributes before init_blank_buffer() is called.")
+            if not hasattr(self, 'sides') or not hasattr(self, 'positions'):
+                raise AttributeError("The DebateResult instance must have sides and positions attributes before init_blank_buffer() is called.")
             else:
                 raise
 
     def assert_loaded(self):
-        assert len(self.debateteams) == 2
-        assert len(self.speakers) == 2
-        assert len(self.ghosts) == 2
-        for side in self.SIDES:
-            assert side in self.debateteams
-            assert side in self.speakers
-            assert side in self.ghosts
-            assert len(self.speakers[side]) == len(self.POSITIONS)
-            assert all(pos in self.speakers[side] for pos in self.POSITIONS)
-            assert len(self.ghosts[side]) == len(self.POSITIONS)
-            assert all(pos in self.ghosts[side] for pos in self.POSITIONS)
+        """Raise an AssertionError if there is some problem with the data
+        structure. External initialisers might find this helpful. Subclasses
+        should extend this method as necessary."""
+
+        assert set(self.debateteams) == set(self.sides)
+        assert set(self.speakers) == set(self.sides)
+        assert set(self.ghosts) == set(self.sides)
+        for side in self.sides:
+            assert set(self.speakers[side]) == set(self.positions)
+            assert set(self.ghosts[side]) == set(self.positions)
+
+    @property
+    def is_complete(self):
+        """Returns True if all elements of the results have been populated;
+        False if any one is missing. Subclasses should extend this method as
+        necessary."""
+
+        if any(self.debateteams[side] is None for side in self.sides):
+            return False
+        if any(self.speakers[s][p] is None for s in self.sides for p in self.positions):
+            return False
+        return True
+
+    def identical(self, other):
+        """Returns True of all fields are the same as those in `other`."""
+        if self.debateteams != other.debateteams:
+            return False
+        if self.speakers != other.speakers:
+            return False
+        if self.ghosts != other.ghosts:
+            return False
+        return True
 
     # --------------------------------------------------------------------------
     # Load and save methods
     # --------------------------------------------------------------------------
 
-    def _side(self, debateteam):
-        """Returns the side string for the given debateteam."""
-        side = self.SIDE_KEYS[debateteam.position]
-        if side not in self.SIDES:
-            raise KeyError
-        return side
-
     def load_from_db(self):
+        """Populates the buffer from the database. Subclasses should extend this
+        method as necessary."""
         self.load_debateteams()
         self.load_speakers()
 
     def load_debateteams(self):
-        for dt in self.debate.debateteam_set.select_related('team'):
-            try:
-                side = self._side(dt)
-            except KeyError:
-                continue
+        debateteams = self.debate.debateteam_set.filter(
+                position__in=self.side_db_values).select_related('team')
+
+        for dt in debateteams:
+            side = self.SIDE_KEY_MAP[dt.position]
             self.debateteams[side] = dt
 
     def load_speakers(self):
         """Loads team and speaker identities from the database into the buffer."""
-        for ss in self.ballotsub.speakerscore_set.filter(debate_team__debate=self.debate,
-                position__in=self.POSITIONS).select_related('speaker'):
-            try:
-                side = self._side(ss.debate_team)
-            except KeyError:
-                continue
+
+        speakerscores = self.ballotsub.speakerscore_set.filter(
+            debate_team__debate=self.debate,
+            debate_team__position__in=self.side_db_values,
+            position__in=self.positions,
+        ).select_related('speaker')
+
+        for ss in speakerscores:
+            side = self.SIDE_KEY_MAP[ss.debate_team.position]
             self.speakers[side][ss.position] = ss.speaker
             self.ghosts[side][ss.position] = ss.ghost
 
     def save(self):
         """Saves to the database."""
-        for side in self.SIDES:
+
+        for side in self.sides:
             dt = self.debateteams[side]
 
             teamscorefields = {}
@@ -164,10 +218,10 @@ class BaseDebateResult:
             self.ballotsub.teamscore_set.update_or_create(debate_team=dt,
                     defaults=teamscorefields)
 
-            for pos in self.POSITIONS:
+            for pos in self.positions:
                 speaker = self.speakers[side][pos]
                 is_ghost = self.ghosts[side][pos]
-                score = self._get_speaker_score(side, pos)
+                score = self.get_speaker_score(side, pos)
                 self.ballotsub.speakerscore_set.update_or_create(debate_team=dt,
                     position=pos, defaults=dict(speaker=speaker, score=score, ghost=is_ghost))
 
@@ -180,49 +234,220 @@ class BaseDebateResult:
         Arguments must be a list of Team instances, which each must relate to a
         DebateTeam instance in this debate. (Sides are saved immediately to
         enable the use of side keys to refer to teams.)"""
+
         debateteams_by_team = {dt.team: dt for dt in self.debateteams}
-        for side, team in zip(self.SIDES, teams):
+        for side, team in zip(self.sides, teams):
             debateteam = debateteams_by_team[team]
-            debateteam.position = self.SIDE_KEYS_REVERSE[side]
+            debateteam.position = self.SIDE_KEY_MAP_REVERSE[side]
             debateteam.save()
         self.load_debateteams(self.debate.debateteam_set.select_related('team')) # refresh
 
-    def get_speaker(self, side, position):
-        return self.speakers[side].get(position)
+    # def get_speaker(self, side, position):
+    #     return self.speakers[side].get(position)
 
-    def set_speaker(self, side, position, speaker):
-        if position not in self.POSITIONS:
-            logger.error("Tried to set speaker in position %s, valid positions are %s", position, self.POSITIONS)
-            return
-        team = self.debateteams[side].team
-        if speaker not in team.speakers:
-            logger.error("Speaker %s isn't in team %s", speaker.name, team.short_name)
-            return
-        self.speakers[side][position] = speaker
+    # def set_speaker(self, side, position, speaker):
+    #     team = self.debateteams[side].team
+    #     if speaker not in team.speakers:
+    #         logger.error("Speaker %s isn't in team %s", speaker.name, team.short_name)
+    #         return
+    #     self.speakers[side][position] = speaker
 
-    def get_ghost(self, side, position):
-        return self.ghosts[side].get(position)
+    # def get_ghost(self, side, position):
+    #     return self.ghosts[side].get(position)
 
-    def set_ghost(self, side, position, is_ghost):
-        if position not in self.POSITIONS:
-            logger.error("Tried to set ghost in position %s, valid positions are %s" % (position, self.POSITIONS))
-            return
-        self.ghosts[side][position] = is_ghost
+    # def set_ghost(self, side, position, is_ghost):
+    #     self.ghosts[side][position] = is_ghost
+
+    def get_speaker_score(self, side, position):
+        raise NotImplementedError
 
 
 class VotingDebateResult(BaseDebateResult):
 
+    def __init__(self, *args, **kwargs):
+        scoresheet_pref = kwargs.pop('scoresheet_pref', None)
+        if scoresheet_pref is None:  # avoid cache hit if provided as kwarg
+            scoresheet_pref = self.tournament.pref('scoresheet_type')
+        self.scoresheet_class = SCORESHEET_CLASSES[scoresheet_pref]
+
+        self._decision_calculated = False
+
+        super().__init__(*args, **kwargs)
+
+    # --------------------------------------------------------------------------
+    # Management methods
+    # --------------------------------------------------------------------------
+
     def init_blank_buffer(self):
         super().init_blank_buffer()
-        scoresheet_pref = self.debate.round.tournament.pref('scoresheet_type')
-        scoresheet_class = SCORESHEET_CLASSES[scoresheet_pref]
-        self.scoresheets = {adj: scoresheet_class(self.POSITIONS)
-                for adj in self.debate.adjudicators.voting()}
+        self.scoresheets = {}  # don't load adjudicators, it's a database hit
+
+    def assert_loaded(self):
+        super().assert_loaded()
+        assert set(self.debate.adjudicators.voting()) == set(self.scoresheets)
+        assert self.sides == ['aff', 'neg'], "VotingDebateResult can only be used for two-team formats."
+
+    @property
+    def is_complete(self):
+        if not super().is_complete:
+            return False
+        if not self.debate.adjudicators.has_chair:
+            return False
+        if not all(sheet.is_complete for sheet in self.scoresheets.values()):
+            return False
+        return True
+
+    def identical(self, other):
+        if not super().identical(other):
+            return False
+        if not set(self.scoresheets.keys()) == set(other.scoresheets.keys()):
+            return False
+        for adj, other_sheet in other.scoresheets.items():
+            if not self.scoresheets[adj].identical(other_sheet):
+                return False
+        return True
+
+    # --------------------------------------------------------------------------
+    # Load and save methods
+    # --------------------------------------------------------------------------
 
     def load_from_db(self):
-        super().init_blank_buffer()
+        super().load_from_db()
         self.load_scoresheets()
 
     def load_scoresheets(self):
-        # CONTINUE HERE
-        pass
+        adjudicators = list(self.debate.adjudicators.voting())
+        self.scoresheets = {adj: self.scoresheet_class(self.positions) for adj in adjudicators}
+        speakerscorebyadjs = self.ballotsub.speakerscorebyadj_set.filter(
+            debate_adjudicator__debate=self.debate,
+            debate_adjudicator__adjudicator__in=adjudicators,
+            debate_team__position__in=self.side_db_values,
+            position__in=self.positions,
+        )
+
+        for ssba in speakerscorebyadjs:
+            side = self.SIDE_KEY_MAP[ss.debate_team.position]
+            self.set_score(ss.debate_adjudicator.adjudicator, side, ss.position, ss.score)
+
+    # --------------------------------------------------------------------------
+    # Data setting and retrieval
+    # --------------------------------------------------------------------------
+
+    # def get_score(self, adjudicator, side, position):
+    #     return self.scoresheets[adjudicator].get_score(side, position)
+
+    def set_score(self, adjudicator, side, position, score):
+        scoresheet = self.scoresheets[adjudicator]
+        scoresheet.set_score(side, position, score)
+
+    # --------------------------------------------------------------------------
+    # Calculated fields
+    # --------------------------------------------------------------------------
+
+    def _calc_decision(self):
+        """Calculates the majority decision and puts the adjudicators for each
+        team in self._adjs_by_side and the winning DebateTeam in self._winner.
+        If the panel is evenly split, it awards the debate to the team for which
+        the chair voted.
+
+        Raises AssertionError if scores are incomplete.
+        Raises ResultError there is a draw somewhere among the adjudicators.
+        """
+
+        assert self.is_complete, "Tried to calculate decision on an incomplete ballot set."
+
+        self._adjs_by_side = {side: [] for side in self.sides} # group adjs by vote
+        for adj, sheet in self.scoresheets.items():
+            winner = sheet.winner()
+            if winner is None:
+                raise ResultError("The scoresheet for %s does not have a winner." % adj.name)
+            self._adjs_by_side[winner].append(adj)
+
+        votes_aff = len(self._adjs_by_side['aff'])
+        votes_neg = len(self._adjs_by_side['neg'])
+
+        if votes_aff > votes_neg:
+            self._winner = 'aff'
+        elif votes_neg > votes_aff:
+            self._winner = 'neg'
+        else:
+            logger.warning("Adjudicators split %d-%d in debate %s, awarding by chair casting vote.", count0, count1, self.debate)
+            self._winner = self.scoresheets[self.debate.adjudicators.chair].winner()
+
+        self._decision_calculated = True
+
+    def _requires_decision(default): # flake8: noqa
+        def wrap(func):
+            @wraps(func)
+            def wrapped(self, *args, **kwargs):
+                if not self.is_complete:
+                    return default
+                if not self._decision_calculated:
+                    self._calc_decision()
+                return func(self, *args, **kwargs)
+            return wrapped
+        return wrap
+
+    @property
+    @_requires_decision([])
+    def majority_adjudicators(self):
+        return self._adjs_by_dt[self._winner]
+
+    # @property
+    # @_requires_decision(None)
+    # def winning_team(self):
+    #     return self.debateteams[self._winner].team
+
+    def _majority_average_total(self, side):
+        return mean(self.scoresheets[adj].get_total(side) for adj in self.majority_adjudicators)
+
+    def _dissenting_inclusive_average_total(self, side):
+        return mean(sheet[adj].get_total(side) for sheet in self.scoresheets)
+
+    def get_speaker_score(self, side, position, score):
+        if not self.is_complete:
+            return None
+        return mean(self.scoresheets[adj].get_score(side, position) for adj in self.majority_adjudicators)
+
+    # --------------------------------------------------------------------------
+    # Team score fields
+    # --------------------------------------------------------------------------
+
+    @_requires_decision(None)
+    def teamscore_points(self, side):
+        if side == self._winner:
+            return 1
+        else:
+            return 0
+
+    @_requires_decision(None)
+    def teamscore_win(self, side):
+        return side == self._winner
+
+    def teamscore_score(self, side):
+        return self._majority_average_total(side)
+
+    def teamscore_margin(self, side):
+        if self.tournament.pref('margin_includes_dissenters'):
+            total_method = self._dissenting_inclusive_average_total
+        else:
+            total_method = self._majority_average_total
+
+        aff_total = total_method('aff')
+        neg_total = total_method('neg')
+        if aff_total is None or neg_total is None:
+            return None
+
+        aff_margin = aff_total - neg_total
+        if side == 'aff':
+            return aff_margin
+        else:
+            return -aff_margin
+
+    def teamscore_votes_given(self, side):
+        return len(self._adjs_by_side(side))
+
+    def teamscore_votes_possible(self, side):
+        return len(self.sheets)
+
+    # CONTINUE HERE with methods for UI display
