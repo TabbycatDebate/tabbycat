@@ -398,12 +398,6 @@ class VotingDebateResult(BaseDebateResult):
     # def winning_team(self):
     #     return self.debateteams[self._winner].team
 
-    def _majority_average_total(self, side):
-        return mean(self.scoresheets[adj].get_total(side) for adj in self.majority_adjudicators)
-
-    def _dissenting_inclusive_average_total(self, side):
-        return mean(sheet[adj].get_total(side) for sheet in self.scoresheets)
-
     def get_speaker_score(self, side, position, score):
         if not self.is_complete:
             return None
@@ -425,24 +419,24 @@ class VotingDebateResult(BaseDebateResult):
         return side == self._winner
 
     def teamscore_score(self, side):
-        return self._majority_average_total(side)
+        if self.tournament.pref('margin_includes_dissenters'):
+            return mean(sheet[adj].get_total(side) for sheet in self.scoresheets)
+        else:
+            return mean(self.scoresheets[adj].get_total(side) for adj in self.majority_adjudicators)
 
     def teamscore_margin(self, side):
-        if self.tournament.pref('margin_includes_dissenters'):
-            total_method = self._dissenting_inclusive_average_total
-        else:
-            total_method = self._majority_average_total
+        aff_total = self.teamscore_score('aff')
+        neg_total = self.teamscore_score('neg')
 
-        aff_total = total_method('aff')
-        neg_total = total_method('neg')
         if aff_total is None or neg_total is None:
             return None
 
-        aff_margin = aff_total - neg_total
         if side == 'aff':
-            return aff_margin
+            return aff_total - neg_total
+        elif side == 'neg':
+            return neg_total - aff_total
         else:
-            return -aff_margin
+            raise ValueError("side must be 'aff' or 'neg'")
 
     def teamscore_votes_given(self, side):
         return len(self._adjs_by_side(side))
