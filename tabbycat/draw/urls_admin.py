@@ -29,7 +29,7 @@ urlpatterns = [
         views.SideAllocationsView.as_view(),
         name='draw-side-allocations'),
     url(r'^round/(?P<round_seq>\d+)/matchups/edit/$',
-        views.DrawMatchupsEditView.as_view(),
+        views.EditMatchupsView.as_view(),
         name='draw-matchups-edit'),
     # DEPRECATE
     url(r'^round/(?P<round_seq>\d+)/matchups/edit_old/$',

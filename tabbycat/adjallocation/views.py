@@ -6,33 +6,30 @@ from django.http import HttpResponse, HttpResponseBadRequest
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from breakqual.utils import categories_ordered
+# from breakqual.utils import categories_ordered
 from draw.models import Debate
-from participants.models import Team
-from participants.utils import regions_ordered
+# from participants.models import Team
+# from participants.utils import regions_ordered
 from tournaments.models import Round
-from tournaments.mixins import RoundMixin
+from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
 from utils.json import debates_to_json
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import DebateAdjudicator
-from .utils import adjs_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
+# from .utils import adjs_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
 
 
 logger = logging.getLogger(__name__)
 
 
-class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+class EditAdjudicatorAllocationView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = 'edit_adjudicators.html'
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
-
-        draw = round.debate_set_with_prefetches(ordering=('room_rank',),
-                                                speakers=False, divisions=False)
 
         # teams = Team.objects.filter(debateteam__debate__round=r).prefetch_related('speaker_set')
         # adjs = get_adjs(self.get_round())
@@ -49,11 +46,10 @@ class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, Template
         # kwargs['allAdjudicators'] = adjs_to_json(adjs, regions, t)
 
         kwargs['vueUnusedAdjudicators'] = json.dumps([t.serialize() for t in round.unused_adjudicators()])
-        kwargs['vueDebates'] = debates_to_json(draw, round)
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, JsonDataResponsePostView):
+class CreateAutoAllocation(LogActionMixin, SuperuserRequiredMixin, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 

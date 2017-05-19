@@ -12,8 +12,10 @@ from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.detail import SingleObjectMixin
 
+from utils.json import debates_to_json
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import TabbycatPageTitlesMixin
+
 
 from .models import Round, Tournament
 
@@ -258,3 +260,17 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     """
     slug_field = 'url_key'
     slug_url_kwarg = 'url_key'
+
+
+class DrawForDragAndDropMixin(RoundMixin):
+    """Provides the base set of constructors used to assemble a the
+    drag and drop table used for editing matchups/adjs/venues with a
+    drag and drop interface """
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        draw = round.debate_set_with_prefetches(ordering=('room_rank',),
+                                                speakers=False, divisions=False)
+
+        kwargs['vueDebates'] = debates_to_json(draw, round)
+        return super().get_context_data(**kwargs)

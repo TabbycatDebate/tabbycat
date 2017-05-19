@@ -9,8 +9,7 @@ from django.views.generic import TemplateView, View
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
-from tournaments.mixins import RoundMixin, TournamentMixin
-from utils.json import debates_to_json
+from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, TournamentMixin
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
 
@@ -18,16 +17,12 @@ from .allocator import allocate_venues
 from .models import Venue, VenueCategory, VenueConstraint
 
 
-class EditVenuesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class EditVenuesView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = "edit_venues.html"
 
     def get_context_data(self, **kwargs):
-        round = self.get_round()
-        draw = round.debate_set_with_prefetches(speakers=False)
-
-        kwargs['vueUnusedVenues'] = json.dumps([v.serialize() for v in round.unused_venues()])
-        kwargs['vueDebates'] = debates_to_json(draw, round)
+        kwargs['vueUnusedVenues'] = json.dumps([v.serialize() for v in self.get_round().unused_venues()])
         return super().get_context_data(**kwargs)
 
 

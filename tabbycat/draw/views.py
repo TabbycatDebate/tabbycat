@@ -14,10 +14,9 @@ from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
 from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import CrossTournamentPageMixin, OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import CrossTournamentPageMixin, DrawForDragAndDropMixin, OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.utils import aff_name, get_position_name, neg_name
-from utils.json import debates_to_json
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
@@ -516,15 +515,11 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
     public_page_preference = 'public_side_allocations'
 
 
-class DrawMatchupsEditView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'edit_matchups.html'
 
     def get_context_data(self, **kwargs):
-        round = self.get_round()
-        draw = round.debate_set_with_prefetches(ordering=('room_rank',))
-
-        kwargs['vueUnusedTeams'] = json.dumps([t.serialize() for t in round.unused_teams()])
-        kwargs['vueDebates'] = debates_to_json(draw, round)
+        kwargs['vueUnusedTeams'] = json.dumps([t.serialize() for t in self.get_round().unused_teams()])
         return super().get_context_data(**kwargs)
 
 

@@ -13,6 +13,7 @@ from django.utils.encoding import force_text
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, TemplateView, View
 
+
 logger = logging.getLogger(__name__)
 
 
