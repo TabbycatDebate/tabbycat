@@ -7,7 +7,7 @@
        v-on:mouseenter="show = true"
        v-on:mouseleave="show = false" -->
     <div class="h4 inline-flex">
-      {{ team.short_name }}
+      {{ adjudicator.name }}
     </div>
 
 <!--   <transition name="expand">
@@ -46,7 +46,7 @@ import DraggableMixin from '../mixins/DraggableMixin.vue'
 export default {
   mixins: [DraggableMixin],
   props: {
-    'team': Object,
+    'adjudicator': Object,
     // 'vc': { default: null },
     // 'vc-name': { default: null },
     // 'save-division-at': {},

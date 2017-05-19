@@ -12,6 +12,7 @@
   -khtml-user-drag: element;
   -webkit-user-drag: element;
   user-select: none; // Text should be unselectable or highlights go crazy
+
   &:active {
     top: 2px;
   }
@@ -19,8 +20,20 @@
     cursor: move;
     background: #fff; // Need to override default :hover bg state that gets stuck
   }
+
   margin: 0 4px 4px 0;
   padding: 6px;
+  border: 4px solid $btn-default-border;
+  height: 42px;
+  padding-top: 4px; // Center the Score
+  text-align: left;
+
+  // Adj scores; Team/Venue names
+  .h4 {
+    margin: 0;
+    min-width: 30px;
+    padding-top: 4px; // Center the Score
+  }
 }
 
 .vue-is-dragging {

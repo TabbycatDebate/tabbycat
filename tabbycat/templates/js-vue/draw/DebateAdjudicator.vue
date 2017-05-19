@@ -14,11 +14,11 @@
       :id="adjorteam.id"
       class="vue-draggable adj-draggable btn btn-default popover-parent">
 
-      <div class="h4 adj-score">
+      <div class="h4 inline-flex">
         <span>{{ adjorteam.score }}</span>
       </div>
 
-      <div class="adj-info">
+      <div class="inline-flex">
         <span>
           {{ short_name }}<br>
           <span class="small text-muted subtitle">

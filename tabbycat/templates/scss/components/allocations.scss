@@ -2,9 +2,35 @@
 // General Layout
 //------------------------------------------------------------------------------
 
-.allocation-container {
+.draw-container {
   padding-bottom: 500px; // Need to offset the adjs panel max height
-  padding-top: 85px; // Need to compensate for the fixed header
+
+  .draw-row:last-child {
+    border-bottom: 1px solid $btn-default-border;
+    border-radius: 0 0 4px 4px;
+  }
+}
+
+.draw-header {
+  @extend .draw-row;
+  border-top: 1px solid $btn-default-border;
+  border-radius: 4px 4px 0 0;
+  padding-top: 8px;
+}
+
+.draw-row {
+  @extend .row;
+  @extend .flex-horizontal;
+  background: #fff; // Need to compensate for lack of table background
+  border-radius: 4px;
+  border-left: 1px solid $btn-default-border;
+  border-right: 1px solid $btn-default-border;
+}
+
+.draw-cell {
+  @extend .flex-cell;
+  @extend .flex-vertical-center;
+  @extend .bordered-bottom;
 }
 
 .allocations { // For fullscreen pages
@@ -14,10 +40,13 @@
   }
 }
 
-.unallocated-adjs {
+.unallocated-items {
   max-height: 450px;
   min-height: 54px;
   z-index: $z_3; // Need to hover abovve underlying .tooltips
+  > div {
+    display: inline-flex;
+  }
 }
 
 .thead {
@@ -117,23 +146,11 @@
 //------------------------------------------------------------------------------
 
 .adj-draggable {
-  height: 42px;
-  padding-top: 4px; // Center the Score
-  text-align: left;
 
   // Allow the rating and title to set the box size dynamically
   display: flex;
   flex-direction: row;
-  .adj-info,
-  .adj-score {
-    display: inline-flex;
-  }
 
-  .h4 {
-    margin: 0;
-    min-width: 30px;
-    padding-top: 4px; // Center the Score
-  }
 
   span {
     border-bottom: 0;

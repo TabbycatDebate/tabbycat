@@ -26,28 +26,30 @@ logger = logging.getLogger(__name__)
 
 class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
-    template_name = 'edit_adj_allocation.html'
+    template_name = 'edit_adjudicators.html'
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
-        r = self.get_round()
+        round = self.get_round()
 
-        draw = r.debate_set_with_prefetches(ordering=('room_rank',), speakers=False, divisions=False)
+        draw = round.debate_set_with_prefetches(ordering=('room_rank',),
+                                                speakers=False, divisions=False)
 
-        teams = Team.objects.filter(debateteam__debate__round=r).prefetch_related('speaker_set')
-        adjs = get_adjs(self.get_round())
+        # teams = Team.objects.filter(debateteam__debate__round=r).prefetch_related('speaker_set')
+        # adjs = get_adjs(self.get_round())
 
-        regions = regions_ordered(t)
-        categories = categories_ordered(t)
-        adjs, teams = populate_conflicts(adjs, teams)
-        adjs, teams = populate_histories(adjs, teams, t, r)
+        # regions = regions_ordered(t)
+        # categories = categories_ordered(t)
+        # adjs, teams = populate_conflicts(adjs, teams)
+        # adjs, teams = populate_histories(adjs, teams, t, r)
 
-        kwargs['allRegions'] = json.dumps(regions)
-        kwargs['allCategories'] = json.dumps(categories)
-        kwargs['allDebates'] = debates_to_json(draw, t, r)
-        kwargs['allTeams'] = teams_to_json(teams, regions, categories, t, r)
-        kwargs['allAdjudicators'] = adjs_to_json(adjs, regions, t)
+        # kwargs['allRegions'] = json.dumps(regions)
+        # kwargs['allCategories'] = json.dumps(categories)
+        # kwargs['allDebates'] = debates_to_json(draw, t, r)
+        # kwargs['allTeams'] = teams_to_json(teams, regions, categories, t, r)
+        # kwargs['allAdjudicators'] = adjs_to_json(adjs, regions, t)
 
+        kwargs['vueUnusedAdjudicators'] = json.dumps([t.serialize() for t in round.unused_adjudicators()])
+        kwargs['vueDebates'] = debates_to_json(draw, round)
         return super().get_context_data(**kwargs)
 
 

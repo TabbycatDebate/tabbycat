@@ -1,18 +1,22 @@
 <template>
-<div class="col-md-12 allocation-container">
+<div class="col-md-12 draw-container">
 
   <div class="vertical-spacing" id="messages-container"></div>
 
   <draw-header :positions="positions"></draw-header>
 
   <debate v-for="debate in debates" :debate="debate">
-    <venue-draggable slot="venue" :venue="debate.venue"></venue-draggable>
+
+    <template v-for="(team, index) in debate.teams">
+      <team-draggable :team="team" :slot="index"> </team-draggable>
+    </template>
+
   </debate>
 
   <unallocated-container>
 
-    <div v-for="unallocated in unallocatedItems">
-      <venue-draggable :venue="unallocated"></venue-draggable>
+    <div v-for="unallocatedTeam in unallocatedItems">
+      <team-draggable :team="unallocatedTeam"> </team-draggable>
     </div>
 
   </unallocated-container>
@@ -22,16 +26,16 @@
 
 <script>
 import DrawContainer from '../mixins/DrawContainer.vue'
-import DrawHeader from '../base/DrawHeader.vue'
-import Debate from './Debate.vue'
 import UnallocatedContainer from '../base/UnallocatedContainer.vue'
-import VenueDraggable from '../draganddrops/VenueDraggable.vue'
+import DrawHeader from '../draw/DrawHeader.vue'
+import Debate from '../draw/Debate.vue'
+import TeamDraggable from '../draganddrops/TeamDraggable.vue'
 import _ from 'lodash'
 
 
 export default {
   components: {
-    DrawHeader, Debate, UnallocatedContainer, VenueDraggable
+    DrawHeader, UnallocatedContainer, Debate, TeamDraggable
   },
   mixins: [
     DrawContainer

@@ -4,7 +4,7 @@
 // v-on:dragstart="dragStart"
 // v-on:dragend="dragEnd"
 // class="vue-draggable"
-// v-bind:class="[isDragging ? vue-is-dragging : '']"
+// v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
 // Subclass can provide handleDragStart() and handleDragEnd()
 // Any :hover CSS rules on the subclass should instead be computed from isDragging
 // else they wont be remove upon a drop
@@ -16,6 +16,11 @@ export default {
   },
   start: 'parent-start',
   end: 'parent-end',
+  computed: {
+    componentClasses: function() {
+      return "vue-draggable btn btn-sm"
+    },
+  },
   methods: {
     dragStart: function(event) {
       this.isDragging = true;

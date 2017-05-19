@@ -1,16 +1,14 @@
 <template>
 
-  <div class="vue-draggable btn btn-sm"
-    draggable=true
-    v-bind:class="[isDragging ? vue-is-dragging : '']"
-    v-on:dragstart="handleDragStart"
-    v-on:dragend="handleDragEnd"
-    :data-id="venue.id"
-    v-on:mouseenter="show = true"
-    v-on:mouseleave="show = false">
-    <span>
+  <div draggable=true
+       v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
+       v-on:dragstart="handleDragStart"
+       v-on:dragend="handleDragEnd"><!--
+       v-on:mouseenter="show = true"
+       v-on:mouseleave="show = false" -->
+    <div class="h4 inline-flex">
       {{ venue.name }}
-    </span>
+    </div>
   </div>
 
 </template>
@@ -22,6 +20,7 @@ export default {
   mixins: [DraggableMixin],
   props: {
     'venue': Object,
+    'show': { default: false }
   },
   computed: {
 

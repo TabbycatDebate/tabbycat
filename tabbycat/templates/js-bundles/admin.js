@@ -103,11 +103,14 @@ var vueData = vueBases.baseData;
 
 // TODO: get everything to hand from this generic scaffold
 
-import EditMatchupsContainer from  '../js-vue/draw/EditMatchupsContainer.vue'
+import EditMatchupsContainer from  '../js-vue/base/EditMatchupsContainer.vue'
 vueComponents['EditMatchupsContainer'] = EditMatchupsContainer
 
-import EditVenuesContainer from  '../js-vue/draw/EditVenuesContainer.vue'
+import EditVenuesContainer from  '../js-vue/base/EditVenuesContainer.vue'
 vueComponents['EditVenuesContainer'] = EditVenuesContainer
+
+import EditAdjudicatorsContainer from  '../js-vue/base/EditAdjudicatorsContainer.vue'
+vueComponents['EditAdjudicatorsContainer'] = EditAdjudicatorsContainer
 
 //------------------------------------------------------------------------------
 // Main Vue Instance

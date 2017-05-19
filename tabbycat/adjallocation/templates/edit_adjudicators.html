@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block nav %}{% endblock %}
+{% block header %}{% endblock %}
+{% block subheader %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block page-subnav-sections %}{% endblock page-subnav-sections %}
+{% block body-class %}override-sidebar-offset allocations{% endblock %}
+
+{% block content %}
+
+<div id="vueMount">
+
+  <edit-adjudicators-container :debates=debates :unallocated-items=unallocatedItems>
+
+  </edit-adjudicators-container>
+
+</div>
+
+{% endblock content %}
+
+{#   <allocation-container
+    :debates=allDebates
+    :adjudicators=allAdjudicators
+    :teams=allTeams
+    :regions=allRegions
+    :categories=allCategories
+    :round-info=roundInfo>
+  </allocation-container>
+ #}
+
+{% block js %}
+  <script>
+    window.vueData = {
+      debates: {{ vueDebates|safe }},
+      unallocatedItems: {{ vueUnusedAdjudicators|safe }}
+    }
+    // var allDebates = {{ allDebates|safe }};
+    // var allAdjudicators = {{ allAdjudicators|safe }};
+    // var allTeams = {{ allTeams|safe }};
+    // var allRegions = {{ allRegions|safe }};
+    // var allCategories = {{ allCategories|safe }};
+    // var roundInfo = {
+    //   'roundName' : '{{ round.abbreviation }}',
+    //   'roundIsPrelim' : {% if round.is_break_round %}false{% else %}true{% endif %},
+    //   'createAutoAllocationURL': '{% roundurl 'create_auto_allocation' %}',
+    //   'backToDrawURL': '{% roundurl 'draw' %}',
+    //   'updateImportanceURL': '{% roundurl 'save_debate_importance' %}',
+    //   'updatePanelURL': '{% roundurl 'save_debate_panel' %}',
+    //   'scoreMin': {{ pref.adj_min_score }},
+    //   'scoreMax': {{ pref.adj_max_score }},
+    //   'scoreForVote': {{ pref.adj_min_voting_score }},
+    //   'allowDuplicateAllocations': {{ pref.duplicate_adjs|lower }}
+    // }
+  </script>
+  {{ block.super }}
+{% endblock js %}

@@ -6,7 +6,7 @@
     v-on:dragleave="dragLeave"
     v-on:drop="drop"
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
-    class="navbar navbar-default navbar-fixed-bottom vue-droppable">
+    class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-items">
 
     <slot>
       <!-- Container sets unallocated items here -->
