@@ -973,11 +973,11 @@ class ShareVenues(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class OnlyShowVenueCategories(BooleanPreference):
-    help_text = 'Don\'t show individual venue names in public draws (ie only show the category) '
-    verbose_name = "Hide individual venues"
+class DeriveVenueFromDivison(BooleanPreference):
+    help_text = 'Don\'t show individual venue names in public draws; instead show the division\'s Venue Category'
+    verbose_name = "Use division venue categories"
     section = league_options
-    name = "hide_venues"
+    name = "division_venues"
     default = False
 
 

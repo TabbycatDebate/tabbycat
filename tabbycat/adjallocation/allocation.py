@@ -188,19 +188,3 @@ class AdjudicatorAllocation:
             _, created = DebateAdjudicator.objects.update_or_create(debate=self.debate, adjudicator=adj,
                     defaults={'type': t})
             logger.info("updating: %s, %s, %s, created = %s" % (self.debate, adj, t, created))
-
-    # ==========================================================================
-    # Deprecated
-    # ==========================================================================
-    # These were all deprecated on 26/02/2017, remove after 26/03/2017
-
-    @property
-    def list(self):
-        raise RuntimeError("AdjudicatorAllocation.list is deprecated, use AdjudicatorAllocation.voting() instead")
-
-    def __iter__(self):
-        raise RuntimeError("AdjudicatorAllocation.__iter__() is deprecated, use .with_positions() or .with_debateadj_types() instead")
-
-    @property
-    def panel(self):
-        raise RuntimeError("AdjudicatorAllocation.panel is deprecated, use AdjudicatorAllocation.panellists instead")
