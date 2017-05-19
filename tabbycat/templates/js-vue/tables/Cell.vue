@@ -88,9 +88,6 @@ export default {
       if (this.canSupportPopover === true) {
         this.setupPopover(event);
       }
-    },
-    emitSignal: function(signalName, signalData) {
-      this.$dispatch(signalName, signalData)
     }
   }
 }

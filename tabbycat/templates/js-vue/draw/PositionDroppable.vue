@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     handleDrop(event) {
-      this.$dispatch('set-adj-panel', this.debateId, this.position)
+      this.$emit('set-adj-panel', this.debateId, this.position)
     },
     propogateSetAdj(info) {
       console.log('setDraggedAdj positiondroppable');

@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.forms.models import model_to_dict
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -43,6 +44,10 @@ class Venue(models.Model):
             suffixes.sort()
             display_name += " " + ", ".join(suffixes)
         return display_name
+
+    def serialize(self):
+        venue = model_to_dict(self)
+        return venue
 
     def __str__(self):
         return self.display_name

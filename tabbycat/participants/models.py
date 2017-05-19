@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.forms.models import model_to_dict
 from django.utils.functional import cached_property
 
 from tournaments.models import Round
@@ -272,6 +273,13 @@ class Team(models.Model):
         self.long_name = self._construct_long_name()
         super().save(*args, **kwargs)
 
+    def serialize(self):
+        team = model_to_dict(self)
+        team['break_categories'] = None # Populate later if needed?
+        team['short_name'] = self.short_name
+        team['long_name'] = self.long_name
+        return team
+
 
 class Speaker(Person):
     team = models.ForeignKey(Team, models.CASCADE)
@@ -392,3 +400,10 @@ class Adjudicator(Person):
         if before_round is not None:
             d = d.filter(debate__round__seq__lt=before_round.seq)
         return d.count()
+
+    def serialize(self):
+        intermediate = model_to_dict(self)
+        intermediate['conflicts'] = None # Populate later if needed?
+        intermediate['institutional_conflicts'] = None # Populate later if needed?
+        intermediate['institution_conflicts'] = None # Populate later if needed?
+        return intermediate

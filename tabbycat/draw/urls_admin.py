@@ -31,6 +31,10 @@ urlpatterns = [
     url(r'^round/(?P<round_seq>\d+)/matchups/edit/$',
         views.DrawMatchupsEditView.as_view(),
         name='draw-matchups-edit'),
+    # DEPRECATE
+    url(r'^round/(?P<round_seq>\d+)/matchups/edit_old/$',
+        views.DrawMatchupsEditOldView.as_view(),
+        name='draw-matchups-edit-old'),
     url(r'^round/(?P<round_seq>\d+)/matchups/save/$',
         views.SaveDrawMatchups.as_view(),
         name='draw-matchups-save'),

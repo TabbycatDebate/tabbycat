@@ -13,11 +13,12 @@ from participants.utils import regions_ordered
 from tournaments.models import Round
 from tournaments.mixins import RoundMixin
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
+from utils.json import debates_to_json
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import DebateAdjudicator
-from .utils import adjs_to_json, debates_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
+from .utils import adjs_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
 
 
 logger = logging.getLogger(__name__)

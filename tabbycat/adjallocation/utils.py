@@ -182,23 +182,6 @@ def populate_histories(adjs, teams, t, r):
     return adjs, teams
 
 
-def debates_to_json(draw, t, r):
-
-    data = [{
-        'id': debate.id,
-        'bracket': debate.bracket,
-        'importance': debate.importance,
-        'aff_team': debate.aff_team.id,
-        'neg_team': debate.neg_team.id,
-        'panel': [{
-            'id': adj.id,
-            'position': position,
-        } for adj, position in debate.adjudicators.with_debateadj_types()],
-
-    } for debate in draw]
-    return json.dumps(data)
-
-
 def adjs_to_json(adjs, regions, t):
     """Converts to a standard JSON object for Vue components to use"""
 

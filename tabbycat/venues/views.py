@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.forms import Select, SelectMultiple, TextInput
 from django.http import HttpResponse
@@ -8,6 +10,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from tournaments.mixins import RoundMixin, TournamentMixin
+from utils.json import debates_to_json
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
 
@@ -17,7 +20,20 @@ from .models import Venue, VenueCategory, VenueConstraint
 
 class EditVenuesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
-    template_name = "venues_edit.html"
+    template_name = "edit_venues.html"
+
+    def get_context_data(self, **kwargs):
+        round = self.get_round()
+        draw = round.debate_set_with_prefetches(speakers=False)
+
+        kwargs['vueUnusedVenues'] = json.dumps([v.serialize() for v in round.unused_venues()])
+        kwargs['vueDebates'] = debates_to_json(draw, round)
+        return super().get_context_data(**kwargs)
+
+
+class EditVenuesOld(SuperuserRequiredMixin, RoundMixin, TemplateView):
+
+    template_name = "venues_edit_old.html"
 
     def get_context_data(self, **kwargs):
         kwargs['draw'] = self.get_round().debate_set_with_prefetches(speakers=False)
