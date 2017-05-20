@@ -37,6 +37,7 @@ A few notes on error checking:
 """
 
 import logging
+from functools import wraps
 from statistics import mean
 
 from draw.models import DebateTeam
@@ -107,7 +108,7 @@ class BaseDebateResult:
         self.side_db_values = [self.SIDE_KEY_MAP_REVERSE[side] for side in self.sides]
 
         if load:
-            self.positions = self.tournament.positions
+            self.positions = self.tournament.POSITIONS
 
             self.init_blank_buffer()
             self.load_from_db()
@@ -242,21 +243,21 @@ class BaseDebateResult:
             debateteam.save()
         self.load_debateteams(self.debate.debateteam_set.select_related('team')) # refresh
 
-    # def get_speaker(self, side, position):
-    #     return self.speakers[side].get(position)
+    def get_speaker(self, side, position):
+        return self.speakers[side].get(position)
 
-    # def set_speaker(self, side, position, speaker):
-    #     team = self.debateteams[side].team
-    #     if speaker not in team.speakers:
-    #         logger.error("Speaker %s isn't in team %s", speaker.name, team.short_name)
-    #         return
-    #     self.speakers[side][position] = speaker
+    def set_speaker(self, side, position, speaker):
+        team = self.debateteams[side].team
+        if speaker not in team.speakers:
+            logger.error("Speaker %s isn't in team %s", speaker.name, team.short_name)
+            return
+        self.speakers[side][position] = speaker
 
-    # def get_ghost(self, side, position):
-    #     return self.ghosts[side].get(position)
+    def get_ghost(self, side, position):
+        return self.ghosts[side].get(position)
 
-    # def set_ghost(self, side, position, is_ghost):
-    #     self.ghosts[side][position] = is_ghost
+    def set_ghost(self, side, position, is_ghost):
+        self.ghosts[side][position] = is_ghost
 
     def get_speaker_score(self, side, position):
         raise NotImplementedError
@@ -264,15 +265,18 @@ class BaseDebateResult:
 
 class VotingDebateResult(BaseDebateResult):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, ballotsub, **kwargs):
+
         scoresheet_pref = kwargs.pop('scoresheet_pref', None)
         if scoresheet_pref is None:  # avoid cache hit if provided as kwarg
-            scoresheet_pref = self.tournament.pref('scoresheet_type')
+            # can't use self.tournament, it's created by the super constructor
+            scoresheet_pref = ballotsub.debate.round.tournament.pref('scoresheet_type')
         self.scoresheet_class = SCORESHEET_CLASSES[scoresheet_pref]
 
         self._decision_calculated = False
 
-        super().__init__(*args, **kwargs)
+        # super constructor performs the load
+        super().__init__(ballotsub, **kwargs)
 
     # --------------------------------------------------------------------------
     # Management methods
@@ -391,16 +395,15 @@ class VotingDebateResult(BaseDebateResult):
     @property
     @_requires_decision([])
     def majority_adjudicators(self):
-        return self._adjs_by_dt[self._winner]
+        return self._adjs_by_side[self._winner]
 
     # @property
     # @_requires_decision(None)
     # def winning_team(self):
     #     return self.debateteams[self._winner].team
 
-    def get_speaker_score(self, side, position, score):
-        if not self.is_complete:
-            return None
+    @_requires_decision(None)
+    def get_speaker_score(self, side, position):
         return mean(self.scoresheets[adj].get_score(side, position) for adj in self.majority_adjudicators)
 
     # --------------------------------------------------------------------------
@@ -408,25 +411,25 @@ class VotingDebateResult(BaseDebateResult):
     # --------------------------------------------------------------------------
 
     @_requires_decision(None)
-    def teamscore_points(self, side):
+    def teamscorefield_points(self, side):
         if side == self._winner:
             return 1
         else:
             return 0
 
     @_requires_decision(None)
-    def teamscore_win(self, side):
+    def teamscorefield_win(self, side):
         return side == self._winner
 
-    def teamscore_score(self, side):
+    def teamscorefield_score(self, side):
         if self.tournament.pref('margin_includes_dissenters'):
             return mean(sheet[adj].get_total(side) for sheet in self.scoresheets)
         else:
             return mean(self.scoresheets[adj].get_total(side) for adj in self.majority_adjudicators)
 
-    def teamscore_margin(self, side):
-        aff_total = self.teamscore_score('aff')
-        neg_total = self.teamscore_score('neg')
+    def teamscorefield_margin(self, side):
+        aff_total = self.teamscorefield_score('aff')
+        neg_total = self.teamscorefield_score('neg')
 
         if aff_total is None or neg_total is None:
             return None
@@ -438,10 +441,10 @@ class VotingDebateResult(BaseDebateResult):
         else:
             raise ValueError("side must be 'aff' or 'neg'")
 
-    def teamscore_votes_given(self, side):
-        return len(self._adjs_by_side(side))
+    def teamscorefield_votes_given(self, side):
+        return len(self._adjs_by_side[side])
 
-    def teamscore_votes_possible(self, side):
-        return len(self.sheets)
+    def teamscorefield_votes_possible(self, side):
+        return len(self.scoresheets)
 
     # CONTINUE HERE with methods for UI display
