@@ -153,6 +153,7 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
         set_emoji(self.instances, self.get_tournament())
         return redirect
 
+
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     model = Adjudicator
     form_list = [
