@@ -18,7 +18,6 @@ def set_emoji(teams, tournament):
     emojis = random.sample(unused_emoji, len(teams))
 
     for team, emoji in zip(teams, emojis):
-        print(team, ord(emoji))
         team.emoji = emoji
         team.save()
 

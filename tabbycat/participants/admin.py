@@ -87,7 +87,6 @@ class TeamAdmin(admin.ModelAdmin):
             'institution', 'division')
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
-        print("formfield_for_choice_field,", db_field.name)
         if db_field.name == 'emoji' and kwargs.get("initial", None) is None:
             kwargs["initial"] = pick_unused_emoji()
         return super().formfield_for_choice_field(db_field, request, **kwargs)
