@@ -5,7 +5,25 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def pick_unused_emoji(teams=None, used=None):
+def set_emoji(teams, tournament):
+    """Sets the emoji of every team in `teams` to a randomly chosen and unique
+    emoji.  Every team in `teams` must be from the same tournament, and that
+    tournament must be provided as the second argument."""
+
+    used_emoji = tournament.team_set.filter(emoji__isnull=False).values_list('emoji', flat=True)
+    unused_emoji = [e[0] for e in EMOJI_LIST if e[0] not in used_emoji]
+
+    if len(teams) > len(unused_emoji):
+        teams = teams[:len(unused_emoji)]
+    emojis = random.sample(unused_emoji, len(teams))
+
+    for team, emoji in zip(teams, emojis):
+        print(team, ord(emoji))
+        team.emoji = emoji
+        team.save()
+
+
+def pick_unused_emoji(teams=None, used=None, tournament=None):
     """Picks an emoji that is not already in use by any team in `teams`. If
     `teams` is not specified, it picks an emoji not in use by any team in the
     database. If no emoji are left, it returns `None`.
@@ -13,7 +31,9 @@ def pick_unused_emoji(teams=None, used=None):
     If `used` is specified, it should be a list of emoji, and it also avoids
     emoji in `used` and appends the chosen emoji to the list.
     """
-    if teams is None:
+    if teams is None and tournament is not None:
+        teams = tournament.team_set.all()
+    elif teams is None:
         from .models import Team
         teams = Team.objects.all()
 
