@@ -23,7 +23,7 @@ def set_emoji(teams, tournament):
         team.save()
 
 
-def pick_unused_emoji(teams=None, used=None, tournament=None):
+def pick_unused_emoji(teams=None, used=None):
     """Picks an emoji that is not already in use by any team in `teams`. If
     `teams` is not specified, it picks an emoji not in use by any team in the
     database. If no emoji are left, it returns `None`.
@@ -31,9 +31,7 @@ def pick_unused_emoji(teams=None, used=None, tournament=None):
     If `used` is specified, it should be a list of emoji, and it also avoids
     emoji in `used` and appends the chosen emoji to the list.
     """
-    if teams is None and tournament is not None:
-        teams = tournament.team_set.all()
-    elif teams is None:
+    if teams is None:
         from .models import Team
         teams = Team.objects.all()
 
