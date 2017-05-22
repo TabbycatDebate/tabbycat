@@ -130,6 +130,7 @@ class BaseTournamentDataImporter(object):
         if 'loglevel' in kwargs:
             self.logger.setLevel(kwargs['loglevel'])
         self.expect_unique = kwargs.get('expect_unique', True)
+        self.reset_counts()
 
     def reset_counts(self):
         self.counts = Counter()
