@@ -50,15 +50,15 @@ class TestImporterAnorak(TestCase):
     def test_break_categories(self):
         f = self._open_csv_file(self.TESTDIR, "break_categories")
         self.importer.import_break_categories(f)
-        self.assertCountsDictEqual(self.counts, {bm.BreakCategory: 3})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {bm.BreakCategory: 3})
+        self.assertFalse(self.importer.errors)
 
     def test_rounds(self):
         self.test_break_categories()
         f = self._open_csv_file(self.TESTDIR, "rounds")
         self.importer.import_rounds(f)
-        self.assertCountsDictEqual(self.counts, {tm.Round: 10})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {tm.Round: 10})
+        self.assertFalse(self.importer.errors)
 
     def test_auto_make_rounds(self):
         self.importer.auto_make_rounds(7)
@@ -67,77 +67,77 @@ class TestImporterAnorak(TestCase):
     def test_venues(self):
         f = self._open_csv_file(self.TESTDIR, "venues")
         self.importer.import_venues(f)
-        self.assertCountsDictEqual(self.counts, {vm.VenueCategory: 8, vm.Venue: 23,
+        self.assertCountsDictEqual(self.importer.counts, {vm.VenueCategory: 8, vm.Venue: 23,
                 vm.VenueCategory.venues.through: 22})
-        self.assertFalse(self.errors)
+        self.assertFalse(self.importer.errors)
 
     def test_institutions(self):
         f = self._open_csv_file(self.TESTDIR, "institutions")
         self.importer.import_institutions(f)
-        self.assertCountsDictEqual(self.counts, {pm.Institution: 13, pm.Region: 6})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {pm.Institution: 13, pm.Region: 6})
+        self.assertFalse(self.importer.errors)
 
     @skip("test file does not yet exist")
     def test_teams(self):
         f = self._open_csv_file(self.TESTDIR, "teams")  # noqa
         self.importer.import_teams(self)
-        self.assertCountsDictEqual(self.counts, {pm.Team: 12})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {pm.Team: 12})
+        self.assertFalse(self.importer.errors)
 
     def test_speakers(self):
         self.test_institutions()
         f = self._open_csv_file(self.TESTDIR, "speakers")
         self.importer.import_speakers(f)
-        self.assertCountsDictEqual(self.counts, {pm.Team: 24, pm.Speaker: 72})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {pm.Team: 24, pm.Speaker: 72})
+        self.assertFalse(self.importer.errors)
 
     def test_adjudicators(self):
         self.test_speakers()
         f = self._open_csv_file(self.TESTDIR, "judges")
         self.importer.import_adjudicators(f)
-        self.assertCountsDictEqual(self.counts, {
+        self.assertCountsDictEqual(self.importer.counts, {
             pm.Adjudicator: 27,
             fm.AdjudicatorTestScoreHistory: 24,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 5,
             am.AdjudicatorConflict: 8,
         })
-        self.assertFalse(self.errors)
+        self.assertFalse(self.importer.errors)
 
     def test_motions(self):
         self.test_rounds()
         f = self._open_csv_file(self.TESTDIR, "motions")
         self.importer.import_motions(f)
-        self.assertCountsDictEqual(self.counts, {mm.Motion: 18})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {mm.Motion: 18})
+        self.assertFalse(self.importer.errors)
 
     def test_adj_feedback_questions(self):
         f = self._open_csv_file(self.TESTDIR, "questions")
         self.importer.import_adj_feedback_questions(f)
-        self.assertCountsDictEqual(self.counts, {fm.AdjudicatorFeedbackQuestion: 11})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {fm.AdjudicatorFeedbackQuestion: 11})
+        self.assertFalse(self.importer.errors)
 
     def test_venue_categories(self):
         f = self._open_csv_file(self.TESTDIR, "venue_categories")
         self.importer.import_venue_categories(f)
-        self.assertCountsDictEqual(self.counts, {vm.VenueCategory: 8})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {vm.VenueCategory: 8})
+        self.assertFalse(self.importer.errors)
 
     def test_adj_venue_constraints(self):
         self.test_venue_categories()
         self.test_adjudicators()
         f = self._open_csv_file(self.TESTDIR, "adj_venue_constraints")
         self.importer.import_adj_venue_constraints(f)
-        self.assertCountsDictEqual(self.counts, {vm.VenueConstraint: 3})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {vm.VenueConstraint: 3})
+        self.assertFalse(self.importer.errors)
 
     def test_team_venue_constraints(self):
         self.test_venue_categories()
         self.test_speakers()
         f = self._open_csv_file(self.TESTDIR, "team_venue_constraints")
         self.importer.import_team_venue_constraints(f)
-        self.assertCountsDictEqual(self.counts, {vm.VenueConstraint: 2})
-        self.assertFalse(self.errors)
+        self.assertCountsDictEqual(self.importer.counts, {vm.VenueConstraint: 2})
+        self.assertFalse(self.importer.errors)
 
     def test_invalid_line(self):
         self.test_speakers()
@@ -152,14 +152,14 @@ class TestImporterAnorak(TestCase):
         self.test_speakers()
         f = self._open_csv_file(self.TESTDIR_CHOICES, "judges")
         self.importer.import_adjudicators(f)
-        self.assertCountsDictEqual(self.counts, {
+        self.assertCountsDictEqual(self.importer.counts, {
             pm.Adjudicator: 27,
             am.AdjudicatorAdjudicatorConflict: 0,
             fm.AdjudicatorTestScoreHistory: 27,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorConflict: 7,
         })
-        self.assertFalse(self.errors)
+        self.assertFalse(self.importer.errors)
 
     def test_blank_entry_strict(self):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
@@ -177,11 +177,11 @@ class TestImporterAnorak(TestCase):
         self.importer.strict = False
         with self.assertLogs(self.logger, logging.WARNING) as logscm:
             self.importer.import_venues(f)
-        self.assertCountsDictEqual(self.counts, {vm.VenueCategory: 7, vm.Venue: 20,
+        self.assertCountsDictEqual(self.importer.counts, {vm.VenueCategory: 7, vm.Venue: 20,
                 vm.VenueCategory.venues.through: 20})
         # There are three bad lines in the CSV file, but each one generates
         # two errors: one creating the venue itself, and one creating the
         # venuecategory-venue relationship (because the venue doesn't exist).
-        self.assertEqual(len(self.errors), 6)
+        self.assertEqual(len(self.importer.errors), 6)
         self.assertEqual(len(logscm.records), 6)
         self.importer.strict = True
