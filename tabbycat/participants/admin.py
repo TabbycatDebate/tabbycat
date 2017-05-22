@@ -6,6 +6,7 @@ from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConf
 from adjfeedback.models import AdjudicatorTestScoreHistory
 from venues.admin import VenueConstraintInline
 
+from .emoji import pick_unused_emoji
 from .models import Adjudicator, Institution, Region, Speaker, Team
 
 
@@ -66,8 +67,8 @@ class TeamForm(forms.ModelForm):
         fields = '__all__'
 
     def clean_url_key(self):
-        return self.cleaned_data[
-            'url_key'] or None  # So that the url key can be unique and be blank
+        # So that the url key can be unique and be blank
+        return self.cleaned_data['url_key'] or None
 
 
 class TeamAdmin(admin.ModelAdmin):
@@ -84,6 +85,10 @@ class TeamAdmin(admin.ModelAdmin):
         return super(TeamAdmin, self).get_queryset(request).prefetch_related(
             'institution', 'division')
 
+    def formfield_for_choice_field(self, db_field, request, **kwargs):
+        if db_field.name == 'emoji' and kwargs.get("initial", None) is None:
+            kwargs["initial"] = pick_unused_emoji()
+        return super().formfield_for_choice_field(db_field, request, **kwargs)
 
 admin.site.register(Team, TeamAdmin)
 
