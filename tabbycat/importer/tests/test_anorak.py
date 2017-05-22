@@ -55,6 +55,7 @@ class TestImporterAnorak(TestCase):
 
     def test_rounds(self):
         self.test_break_categories()
+        self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "rounds")
         self.importer.import_rounds(f)
         self.assertCountsDictEqual(self.importer.counts, {tm.Round: 10})
@@ -86,6 +87,7 @@ class TestImporterAnorak(TestCase):
 
     def test_speakers(self):
         self.test_institutions()
+        self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "speakers")
         self.importer.import_speakers(f)
         self.assertCountsDictEqual(self.importer.counts, {pm.Team: 24, pm.Speaker: 72})
@@ -93,6 +95,7 @@ class TestImporterAnorak(TestCase):
 
     def test_adjudicators(self):
         self.test_speakers()
+        self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "judges")
         self.importer.import_adjudicators(f)
         self.assertCountsDictEqual(self.importer.counts, {
@@ -106,6 +109,7 @@ class TestImporterAnorak(TestCase):
 
     def test_motions(self):
         self.test_rounds()
+        self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "motions")
         self.importer.import_motions(f)
         self.assertCountsDictEqual(self.importer.counts, {mm.Motion: 18})
@@ -125,7 +129,9 @@ class TestImporterAnorak(TestCase):
 
     def test_adj_venue_constraints(self):
         self.test_venue_categories()
+        self.importer.reset_counts()
         self.test_adjudicators()
+        self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "adj_venue_constraints")
         self.importer.import_adj_venue_constraints(f)
         self.assertCountsDictEqual(self.importer.counts, {vm.VenueConstraint: 3})
@@ -133,7 +139,9 @@ class TestImporterAnorak(TestCase):
 
     def test_team_venue_constraints(self):
         self.test_venue_categories()
+        self.importer.reset_counts()
         self.test_speakers()
+        self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "team_venue_constraints")
         self.importer.import_team_venue_constraints(f)
         self.assertCountsDictEqual(self.importer.counts, {vm.VenueConstraint: 2})
@@ -141,6 +149,7 @@ class TestImporterAnorak(TestCase):
 
     def test_invalid_line(self):
         self.test_speakers()
+        self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR_ERRORS, "judges_invalid_line")
         with self.assertRaises(TournamentDataImporterError) as raisescm, self.assertLogs(self.logger, logging.ERROR) as logscm:
             self.importer.import_adjudicators(f)
@@ -150,6 +159,7 @@ class TestImporterAnorak(TestCase):
 
     def test_weird_choices_judges(self):
         self.test_speakers()
+        self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR_CHOICES, "judges")
         self.importer.import_adjudicators(f)
         self.assertCountsDictEqual(self.importer.counts, {
