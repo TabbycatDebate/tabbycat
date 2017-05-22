@@ -13,7 +13,7 @@
 }
 
 //------------------------------------------------------------------------------
-// Inputs
+// Inputs (in general)
 //------------------------------------------------------------------------------
 
 // Give buttons more padding
@@ -62,11 +62,20 @@ input[type="checkbox"].form-control {
 }
 
 //------------------------------------------------------------------------------
-// Widgets
+// Custom Widgets
 //------------------------------------------------------------------------------
 
-// IE Horizontal choice/radio options; align form elements & text horizontally
+// Forfeits spacing is (by default) off; needs correcting
+.forfeits-group {
+  list-style-type: none;
+  padding-left: 0;
+  li {
+    float: left;
+    width: 46%;
+  }
+}
 
+// IE Horizontal choice/radio options; align form elements & text horizontally
 .form-spaced-choice {
   flex-wrap: wrap;
 

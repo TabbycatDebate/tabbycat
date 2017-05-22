@@ -1,6 +1,6 @@
 from utils.management.base import TournamentCommand
 
-from ...emoji import pick_unused_emoji
+from ...emoji import set_emoji
 
 
 class Command(TournamentCommand):
@@ -10,8 +10,6 @@ class Command(TournamentCommand):
     def handle_tournament(self, tournament, **options):
         all_teams = tournament.team_set.all()
         all_teams.update(emoji=None)
-        for team in all_teams:
-            team.emoji = pick_unused_emoji(all_teams)
-            team.save()
+        set_emoji(all_teams, tournament)
         self.stdout.write("Assigned emoji to {count} teams in tournament {tournament}".format(
                 count=all_teams.count(), tournament=tournament))

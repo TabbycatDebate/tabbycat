@@ -64,10 +64,6 @@ urlpatterns = [
     url(r'^(?P<tournament_slug>[-\w_]+)/',
         include('tournaments.urls')),
 
-    # Participants Cross Tournament
-    url(r'^participants/',
-        include('participants.urls_crosst')),
-
     # Draws Cross Tournament
     url(r'^draw/',
         include('draw.urls_crosst'))

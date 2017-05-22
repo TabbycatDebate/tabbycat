@@ -81,8 +81,10 @@ class Command(BaseCommand):
                 message = "\033[0;36m" + message + "\033[0m\n"
             self.stdout.write(message)
 
-    def _print_result(self, counts, errors):
+    def _print_result(self):
         if self.verbosity > 0:
+            counts = self.importer.counts
+            errors = self.importer.errors
             if errors:
                 for message in errors.itermessages():
                     if self.color:
@@ -125,11 +127,12 @@ class Command(BaseCommand):
             import_method = getattr(self.importer, 'import_' + filename)
         if f is not None:
             self._print_stage("Importing %s.csv" % filename)
+            self.importer.reset_counts()
             try:
-                counts, errors = import_method(f)
+                import_method(f)
             except TournamentDataImporterFatal as e:
                 raise CommandError(e)
-            self._print_result(counts, errors)
+            self._print_result()
 
     def get_data_path(self, arg):
         """Returns the directory for the given command-line argument. If the

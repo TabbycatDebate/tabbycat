@@ -121,7 +121,7 @@
                   </td>
                   {% if pref.allocation_confirmations %}
                     <td>
-                      <small>{% url 'participants-public-confirm-shift' adj.url_key %}</small>
+                      <small>{% tournament_absurl 'participants-public-confirm-shift' adj.url_key %}</small>
                     </td>
                   {% endif %}
                 {% else %}

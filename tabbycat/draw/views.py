@@ -611,7 +611,7 @@ class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, Template
     template_name = 'public_all_tournament_venues.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['venues'] = VenueCategory.objects.all()
+        kwargs['venue_categories'] = VenueCategory.objects.all()
         return super().get_context_data(**kwargs)
 
 
@@ -653,10 +653,16 @@ class AllDrawsForVenueView(CrossTournamentPageMixin, CacheMixin, BaseDrawTableVi
         try:
             return VenueCategory.objects.get(pk=self.kwargs['venue_id'])
         except VenueCategory.DoesNotExist:
-            messages.warning(self.request, 'This venue category does not exist.')
+            messages.warning(self.request, 'This venue category does not exist \
+                or the URL for it might have changed. Try finding it again \
+                from the homepage.')
+            return False
 
     def get_page_title(self):
-        return 'All Debates at %s' % self.get_venue_category().name
+        if self.get_venue_category():
+            return 'All Debates at %s' % self.get_venue_category().name
+        else:
+            return 'Unknown Venue Category'
 
     def get_draw(self):
         draw = Debate.objects.filter(

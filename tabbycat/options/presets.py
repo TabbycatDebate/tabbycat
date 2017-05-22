@@ -218,6 +218,7 @@ class WADLPreferences(PreferencesPreset):
         self.league_options__enable_debate_scheduling   = True
         self.league_options__share_adjs                 = True
         self.league_options__share_venues               = True
+        self.league_options__division_venues            = True
         self.league_options__duplicate_adjs             = True
         self.league_options__public_divisions           = True
         self.league_options__enable_divisions           = True

@@ -18,4 +18,7 @@ urlpatterns = [
         views.TeamSpeakersJsonView.as_view(),
         name='participants-team-speakers'),
 
+    url(r'^shifts/(?P<url_key>\w+)/$',
+        views.PublicConfirmShiftView.as_view(),
+        name='participants-public-confirm-shift')
 ]

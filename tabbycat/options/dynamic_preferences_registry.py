@@ -973,6 +973,15 @@ class ShareVenues(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class DeriveVenueFromDivison(BooleanPreference):
+    help_text = 'Don\'t show individual venue names in public draws; instead show the division\'s Venue Category'
+    verbose_name = "Use division venue categories"
+    section = league_options
+    name = "division_venues"
+    default = False
+
+
+@tournament_preferences_registry.register
 class DuplicateAdjs(BooleanPreference):
     help_text = "If unchecked, adjudicators can only be given one room per round"
     verbose_name = "Allow adjudicators to be allocated to multiple rooms"

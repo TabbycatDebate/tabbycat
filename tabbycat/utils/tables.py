@@ -471,12 +471,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if not venue:
                 return {}
 
+            cell = {'text': venue.display_name}
             if for_admin:
                 categories = venue.venuecategory_set.all()
             else:
                 categories = venue.venuecategory_set.filter(display_in_public_tooltip=True)
 
-            cell = {'text': venue.display_name}
             if len(categories) == 0:
                 return cell
 
@@ -491,6 +491,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return cell
 
         if self.tournament.pref('enable_divisions') and len(debates) > 0:
+            # Add divisions immediately before the venue in in-rounds if enabled
             if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
                 divisions_header = {
                     'key': 'Division',
@@ -500,16 +501,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 divisions_data = ['D' + d.division.name if d.division else '' for d in debates]
                 self.add_column(divisions_header, divisions_data)
 
+        if self.tournament.pref('division_venues'):
+            # For public displays of the draw fopr leagues we only
+            # show the venue category derive from each debate's division
+            venue_data = [{'text': d.division.venue_category if d.division else ''} for d in debates]
+        else:
+            venue_data = [construct_venue_cell(d.venue) for d in debates]
+
         venue_header = {
             'key': "Venue",
             'icon': 'glyphicon-map-marker',
             'tooltip': "Venue"
         }
-        venue_data = [construct_venue_cell(d.venue) for d in debates]
-
         self.add_column(venue_header, venue_data)
 
         if with_times and self.tournament.pref('enable_debate_scheduling'):
+            # If scheduling is enabled show date/times immediately after venues
             times_headers = ["Date", "Time"]
             times_data = []
             for debate in debates:

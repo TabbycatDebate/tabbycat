@@ -10,11 +10,11 @@ from participants.models import Adjudicator
 from tournaments.mixins import OptionalAssistantTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Tournament
 from tournaments.utils import get_position_name
-from utils.mixins import SuperuserRequiredMixin
-from venues.models import Venue, VenueCategory
+from utils.mixins import LoginRequiredMixin, SuperuserRequiredMixin
+from venues.models import VenueCategory
 
 
-class MasterSheetsListView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class MasterSheetsListView(LoginRequiredMixin, RoundMixin, TemplateView):
     template_name = 'division_sheets_list.html'
 
     def get_context_data(self, **kwargs):
@@ -23,7 +23,7 @@ class MasterSheetsListView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class MasterSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class MasterSheetsView(LoginRequiredMixin, RoundMixin, TemplateView):
     template_name = 'master_sheets_view.html'
 
     def get_context_data(self, **kwargs):
@@ -38,30 +38,32 @@ class MasterSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
                     round__seq=self.get_round().seq,
                     round__tournament=tournament,
                     # Hack - remove when venue category are unified
-                    division__venue_category__short_name=base_venue_category.name
-            ).order_by('round', 'division__venue_category__short_name', 'division')
+                    division__venue_category__name=base_venue_category.name
+            ).order_by('round', 'division__venue_category__name', 'division')
 
         kwargs['base_venue_category'] = base_venue_category
         kwargs['active_tournaments'] = active_tournaments
         return super().get_context_data(**kwargs)
 
 
-class RoomSheetsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class RoomSheetsView(LoginRequiredMixin, RoundMixin, TemplateView):
     template_name = 'room_sheets_view.html'
 
     def get_context_data(self, **kwargs):
         venue_category_id = self.kwargs['venue_category_id']
         base_venue_category = VenueCategory.objects.get(id=venue_category_id)
-        venues = Venue.objects.filter(venuecategory=base_venue_category)
+        venues_list = []
 
-        for venue in venues:
-            venue.debates = Debate.objects.filter(
-                # All Debates, with a matching round, at the same venue category name
-                round__seq=self.get_round().seq,
-            ).select_related('round__tournament').order_by('round__tournament__seq')
+        # Get a unique list of venue names (avoid getting duplicates across tournaments)
+        for venue in set(base_venue_category.venues.order_by('name').values_list('name', flat=True)):
+            venues_list.append({'name': venue, 'debates': []})
+            # All Debates, with a matching round, at the same venue category
+            venues_list[-1]['debates'] = Debate.objects.filter(
+                round__seq=self.get_round().seq, venue__name=venue).order_by('round__tournament__seq').all()
+            print(venues_list[-1])
 
         kwargs['base_venue_category'] = base_venue_category
-        kwargs['venues'] = venues
+        kwargs['venues'] = venues_list
         return super().get_context_data(**kwargs)
 
 

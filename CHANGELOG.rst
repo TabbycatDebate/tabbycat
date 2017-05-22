@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+
+1.4.0 (Havana Brown)
+--------------------
+
+
 1.3.0 (Genetta)
 ---------------
 *Release date: 9 May 2017*
