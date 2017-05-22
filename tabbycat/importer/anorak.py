@@ -9,7 +9,7 @@ import participants.models as pm
 import tournaments.models as tm
 import tournaments.utils
 import venues.models as vm
-from participants.emoji import pick_unused_emoji
+from participants.emoji import set_emoji
 
 from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
 
@@ -72,13 +72,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             break_category=lambda x: bm.BreakCategory.objects.get(
                 slug=x, tournament=self.tournament)
         )
-        counts, errors = self._import(f, tm.Round, round_interpreter)
+        self._import(f, tm.Round, round_interpreter)
 
         # Set the round with the lowest known seqno to be the current round.
         self.tournament.current_round = self.tournament.round_set.order_by('seq').first()
         self.tournament.save()
-
-        return counts, errors
 
     def import_regions(self, f):
         """Imports regions from a file.
@@ -86,7 +84,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             name
         """
         region_interpreter = make_interpreter()
-        return self._import(f, pm.Region, region_interpreter)
+        self._import(f, pm.Region, region_interpreter)
 
     def import_institutions(self, f, auto_create_regions=True):
         """Imports institutions from a file, also creating regions as needed
@@ -94,6 +92,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         Each line has:
             name, code, abbreviation, region
         """
+
         if auto_create_regions:
             def region_interpreter(line):
                 if not line.get('region'):
@@ -101,20 +100,13 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 return {
                     'name': line['region']
                 }
-            counts, errors = self._import(f, pm.Region, region_interpreter,
-                                          expect_unique=False)
-        else:
-            counts = None
-            errors = None
+            self._import(f, pm.Region, region_interpreter, expect_unique=False)
 
         institution_interpreter = make_interpreter(
             region=lambda x: pm.Region.objects.get(name=x)
         )
 
-        counts, errors = self._import(f, pm.Institution, institution_interpreter,
-                                      counts=counts, errors=errors)
-
-        return counts, errors
+        self._import(f, pm.Institution, institution_interpreter)
 
     def import_venues(self, f, auto_create_categories=True):
         """Imports venues from a file, also creating venue categories as needed
@@ -131,16 +123,14 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             DELETE=['category'],
             category=lambda x: vm.VenueCategory.objects.get(name=x),
         )
-        counts, errors = self._import(f, vm.Venue, venue_interpreter)
+        self._import(f, vm.Venue, venue_interpreter)
 
         if auto_create_categories:
             def venue_category_interpreter(line):
                 if not line.get('category'):
                     return None
                 return {'name': line['category']}
-            counts, errors = self._import(
-                    f, vm.VenueCategory, venue_category_interpreter,
-                    expect_unique=False, counts=counts, errors=errors)
+            self._import(f, vm.VenueCategory, venue_category_interpreter, expect_unique=False)
 
         def venue_category_venue_interpreter(line):
             if not line.get('category'):
@@ -150,10 +140,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'venue': vm.Venue.objects.get(name=line['name'])
             }
 
-        counts, errors = self._import(f, vm.VenueCategory.venues.through,
-                venue_category_venue_interpreter, counts=counts, errors=errors)
-
-        return counts, errors
+        self._import(f, vm.VenueCategory.venues.through, venue_category_venue_interpreter)
 
     def import_venue_categories(self, f):
         """Imports venue categories from a file.
@@ -165,10 +152,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             display_in_venue_name=self.lookup_venue_category_display,
         )
 
-        counts, errors = self._import(f, vm.VenueCategory,
-                venue_category_interpreter, expect_unique=False)
-
-        return counts, errors
+        self._import(f, vm.VenueCategory, venue_category_interpreter, expect_unique=False)
 
     def import_break_categories(self, f):
         """Imports break categories from a file.
@@ -180,7 +164,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         break_category_interpreter = make_interpreter(
             tournament=self.tournament,
         )
-        return self._import(f, bm.BreakCategory, break_category_interpreter)
+        self._import(f, bm.BreakCategory, break_category_interpreter)
 
     def import_teams(self, f, create_dummy_speakers=False):
         """Imports teams from a file. If 'create_dummy_speakers' is True,
@@ -196,9 +180,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             line['short_reference'] = line['reference'][:34]
             return line
 
-        used_emoji = []
-        counts, errors = self._import(f, pm.Team, team_interpreter,
-                generated_fields={'emoji': (lambda: pick_unused_emoji(used=used_emoji))})
+        teams = self._import(f, pm.Team, team_interpreter)
+        set_emoji(teams, self.tournament)
 
         if create_dummy_speakers:
             def speakers_interpreter(line):
@@ -206,8 +189,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     institution=pm.Institution.objects.lookup(line['institution']))
                 for name in ["1st Speaker", "2nd Speaker", "3rd Speaker", "Reply Speaker"]:
                     yield dict(name=name, team=team)
-            counts, errors = self._import(f, pm.Speaker, speakers_interpreter,
-                                          counts=counts, errors=errors)
+            self._import(f, pm.Speaker, speakers_interpreter)
 
     def import_speakers(self, f, auto_create_teams=True):
         """Imports speakers from a file, also creating teams as needed (unless
@@ -232,13 +214,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     interpreted['use_institution_prefix'] = line['use_institution_prefix']
                 return interpreted
 
-            used_emoji = []
-            counts, errors = self._import(f, pm.Team, team_interpreter, expect_unique=False,
-                    generated_fields={'emoji': (lambda: pick_unused_emoji(used=used_emoji))})
-
-        else:
-            counts = None
-            errors = None
+            teams = self._import(f, pm.Team, team_interpreter, expect_unique=False)
+            set_emoji(teams, self.tournament)
 
         speaker_interpreter_part = make_interpreter(
             DELETE=['use_institution_prefix', 'institution', 'team_name'],
@@ -251,10 +228,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 institution=institution, reference=line['team_name'], tournament=self.tournament)
             line = speaker_interpreter_part(line)
             return line
-        counts, errors = self._import(f, pm.Speaker, speaker_interpreter,
-                                      counts=counts, errors=errors)
-
-        return counts, errors
+        self._import(f, pm.Speaker, speaker_interpreter)
 
     def import_adjudicators(self, f, auto_conflict=True):
         """Imports adjudicators from a file. Institutions are not created as
@@ -274,7 +248,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             gender=self.lookup_gender,
             DELETE=['team_conflicts', 'institution_conflicts', 'adj_conflicts']
         )
-        counts, errors = self._import(f, pm.Adjudicator, adjudicator_interpreter)
+        self._import(f, pm.Adjudicator, adjudicator_interpreter)
 
         def test_score_interpreter(line):
             institution = pm.Institution.objects.lookup(line['institution'])
@@ -284,9 +258,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'score'       : line['test_score'],
                     'round'       : None,
                 }
-        counts, errors = self._import(f, fm.AdjudicatorTestScoreHistory,
-                                      test_score_interpreter, counts=counts,
-                                      errors=errors)
+        self._import(f, fm.AdjudicatorTestScoreHistory, test_score_interpreter)
 
         def own_institution_conflict_interpreter(line):
             institution = pm.Institution.objects.lookup(line['institution'])
@@ -294,9 +266,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 'adjudicator' : pm.Adjudicator.objects.get(name=line['name'], institution=institution, tournament=self.tournament),
                 'institution' : institution,
             }
-        counts, errors = self._import(f, am.AdjudicatorInstitutionConflict,
-                                      own_institution_conflict_interpreter,
-                                      counts=counts, errors=errors)
+        self._import(f, am.AdjudicatorInstitutionConflict, own_institution_conflict_interpreter)
 
         def institution_conflict_interpreter(line):
             if not line.get('institution_conflicts'):
@@ -310,9 +280,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator' : adjudicator,
                     'institution' : institution,
                 }
-        counts, errors = self._import(f, am.AdjudicatorInstitutionConflict,
-                                      institution_conflict_interpreter,
-                                      counts=counts, errors=errors)
+        self._import(f, am.AdjudicatorInstitutionConflict, institution_conflict_interpreter)
 
         def team_conflict_interpreter(line):
             if not line.get('team_conflicts'):
@@ -327,9 +295,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator' : adjudicator,
                     'team'        : team,
                 }
-        counts, errors = self._import(f, am.AdjudicatorConflict,
-                                      team_conflict_interpreter,
-                                      counts=counts, errors=errors)
+        self._import(f, am.AdjudicatorConflict, team_conflict_interpreter)
 
         def adj_conflict_interpreter(line):
             if not line.get('adj_conflicts'):
@@ -344,11 +310,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator'               : adjudicator,
                     'conflict_adjudicator'      : conflicted_adj,
                 }
-        counts, errors = self._import(f, am.AdjudicatorAdjudicatorConflict,
-                                      adj_conflict_interpreter,
-                                      counts=counts, errors=errors)
-
-        return counts, errors
+        self._import(f, am.AdjudicatorAdjudicatorConflict, adj_conflict_interpreter)
 
     def import_motions(self, f):
         """Imports motions from a file.
@@ -358,7 +320,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         motions_interpreter = make_interpreter(
             round=lambda x: tm.Round.objects.lookup(x, tournament=self.tournament),
         )
-        return self._import(f, mm.Motion, motions_interpreter)
+        self._import(f, mm.Motion, motions_interpreter)
 
     def import_sides(self, f):
         """Imports sides from a file.
@@ -374,7 +336,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'team'     : team,
                     'position' : self.lookup_team_position(side),
                 }
-        return self._import(f, dm.TeamPositionAllocation, side_interpreter)
+        self._import(f, dm.TeamPositionAllocation, side_interpreter)
 
     def import_adj_feedback_questions(self, f):
         """Imports adjudicator feedback questions from a file.
@@ -387,7 +349,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             answer_type=self.lookup_feedback_answer_type,
         )
 
-        return self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
+        self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
 
     def import_adj_venue_constraints(self, f):
         """Imports venue constraints from a file.
@@ -406,7 +368,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             del line['adjudicator']
             return line
 
-        return self._import(f, vm.VenueConstraint, adj_venue_constraints_interpreter)
+        self._import(f, vm.VenueConstraint, adj_venue_constraints_interpreter)
 
     def import_team_venue_constraints(self, f):
         """Imports venue constraints from a file.
@@ -425,7 +387,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             del line['team']
             return line
 
-        return self._import(f, vm.VenueConstraint, team_venue_constraints_interpreter)
+        self._import(f, vm.VenueConstraint, team_venue_constraints_interpreter)
 
     def auto_make_rounds(self, num_rounds):
         """Makes the number of rounds specified. The first one is random and the
