@@ -4,7 +4,7 @@ Change Log
 
 1.3.1
 -----
-*Release date: TBD*
+*Release date: 26 May 2017*
 
 - Fixed bug that allowed duplicate emoji to be occasionally generated
 
