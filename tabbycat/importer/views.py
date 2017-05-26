@@ -13,6 +13,7 @@ from django.views.generic import TemplateView
 
 from formtools.wizard.views import SessionWizardView
 
+from participants.emoji import set_emoji
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.mixins import TournamentMixin
 from utils.misc import reverse_tournament
@@ -76,9 +77,9 @@ class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizar
         return form
 
     def done(self, form_list, form_dict, **kwargs):
-        instances = form_dict[self.DETAILS_STEP].save()
+        self.instances = form_dict[self.DETAILS_STEP].save()
         messages.success(self.request, _("Added %(count)d %(model_plural)s.") % {
-                'count': len(instances), 'model_plural': self.model._meta.verbose_name_plural})
+                'count': len(self.instances), 'model_plural': self.model._meta.verbose_name_plural})
         return HttpResponseRedirect(self.get_redirect_url())
 
 
@@ -145,6 +146,12 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
 
     def get_details_instance_initial(self, i):
         return {'reference': str(i), 'use_institution_prefix': True}
+
+    def done(self, form_list, form_dict, **kwargs):
+        # Also set emoji on teams
+        redirect = super().done(form_list, form_dict, **kwargs)
+        set_emoji(self.instances, self.get_tournament())
+        return redirect
 
 
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
