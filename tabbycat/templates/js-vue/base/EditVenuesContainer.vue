@@ -6,7 +6,7 @@
   <draw-header :positions="positions"></draw-header>
 
   <debate v-for="debate in debates" :debate="debate">
-    <venue-draggable slot="venue" :venue="debate.venue"></venue-draggable>
+    <venue-draggable slot="svenue" :venue="debate.venue"></venue-draggable>
   </debate>
 
   <unallocated-container>

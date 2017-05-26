@@ -7,35 +7,48 @@
 
   <debate v-for="debate in debates" :debate="debate">
 
-    <importance>
+    <simportance>
       <debate-importance
         :id="debate.id"
         :importance="debate.importance">
         <!-- :url="this.roundInfo['updateImportanceURL']" -->
+        TD
       </debate-importance>
-    </importance>
+    </simportance>
 
-    <panel>
+    <spanel>
       TODO
-<!--       <debate-adjudicator-droppable
-          :adjudicators="debateAdjudicators.chair"
-          :debate-id="debate.id" :position="'C'"
-          v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj">
+      <debate-adjudicator-droppable
+          :adjudicators="getAdjudicatorsByPosition(debate, 'C')"
+          :debate-id="debate.id" :position="'C'">
+          <!-- v-on:propogateSetAdj="propogateSetAdj"
+          v-on:propogateUnsetAdj="propogateUnsetAdj"
+v-on:propogateSetAdj="propogateSetAdj"
+          v-on:propogateUnsetAdj="propogateUnsetAdj"
+v-on:propogateSetAdj="propogateSetAdj"
+          v-on:propogateUnsetAdj="propogateUnsetAdj" -->
       </debate-adjudicator-droppable>
       <debate-adjudicator-droppable
-          :adjudicators="debateAdjudicators.panelists"
-          :debate-id="debate.id" :position="'P'"
-          v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj">
+          :adjudicators="getAdjudicatorsByPosition(debate, 'P')"
+          :debate-id="debate.id" :position="'P'">
+          <!-- v-on:propogateSetAdj="propogateSetAdj"
+          v-on:propogateUnsetAdj="propogateUnsetAdj"
+v-on:propogateSetAdj="propogateSetAdj"
+          v-on:propogateUnsetAdj="propogateUnsetAdj"
+v-on:propogateSetAdj="propogateSetAdj"
+          v-on:propogateUnsetAdj="propogateUnsetAdj" -->
       </debate-adjudicator-droppable>
       <debate-adjudicator-droppable
-          :adjudicators="debateAdjudicators.trainees"
-          :debate-id="debate.id" :position="'T'"
-          v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj">
-      </debate-adjudicator-droppable> -->
-    </panel>
+          :adjudicators="getAdjudicatorsByPosition(debate, 'T')"
+          :debate-id="debate.id" :position="'T'">
+          <!-- v-on:propogateSetAdj="propogateSetAdj"
+          v-on:propogateUnsetAdj="propogateUnsetAdj"
+v-on:propogateSetAdj="propogateSetAdj"
+          v-on:propogateUnsetAdj="propogateUnsetAdj"
+v-on:propogateSetAdj="propogateSetAdj"
+          v-on:propogateUnsetAdj="propogateUnsetAdj" -->
+      </debate-adjudicator-droppable>
+    </spanel>
 
   </debate>
 
@@ -74,6 +87,9 @@ export default {
   computed: {
   },
   methods: {
+    getAdjudicatorsByPosition: function(debate, position) {
+      return _.filter(debate.panel, { 'position': position });
+    }
   },
   events: {
   }

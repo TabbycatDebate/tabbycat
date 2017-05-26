@@ -8,7 +8,7 @@
   <debate v-for="debate in debates" :debate="debate">
 
     <template v-for="(team, index) in debate.teams">
-      <team-draggable :team="team" :slot="index"> </team-draggable>
+      <team-draggable :team="team" :slot="'sposition' + index"> </team-draggable>
     </template>
 
   </debate>

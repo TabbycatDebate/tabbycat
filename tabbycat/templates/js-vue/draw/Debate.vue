@@ -16,7 +16,7 @@
 
     <div class="draw-cell">
       <div class="flex-1">
-        <slot name="importance">
+        <slot name="simportance">
           {{ debate.importance }}
         </slot>
       </div>
@@ -24,14 +24,14 @@
 
     <div class="draw-cell">
       <div class="flex-2">
-        <slot name="venue">{{ debate.venue.name }}</slot>
+        <slot name="svenue">{{ debate.venue.name }}</slot>
       </div>
     </div>
 
     <template v-for="(team, index) in debate.teams">
       <div class="draw-cell">
         <div class="flex-2">
-          <slot :name="index">
+          <slot :name="'sposition' + index">
             {{ team.short_name }}
           </slot>
         </div>
@@ -40,7 +40,7 @@
 
     <div class="draw-cell">
       <div class="flex-6 text-center">
-        <slot name="panel">
+        <slot name="spanel">
           <span v-for="panellist in debate.panel">
             {{ panellist.adjudicator.name }} ({{ panellist.position }}),
           </span>
