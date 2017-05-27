@@ -4,7 +4,7 @@ and paste into test_result.py."""
 import random
 import pprint
 
-SPEAKERS_PER_TEAM = 2
+SPEAKERS_PER_TEAM = 3
 ADJS_PER_DEBATE = 2
 TEAMS_PER_DEBATE = 2
 
@@ -31,5 +31,6 @@ testdata['majority_margins'] = [aff_margin, -aff_margin]
 
 testdata['num_adjs_for_team'] = [testdata['winner_by_adj'].count('aff'), testdata['winner_by_adj'].count('neg')]
 testdata['num_adjs'] = ADJS_PER_DEBATE
+testdata['num_speakers_per_team'] = SPEAKERS_PER_TEAM
 
 pprint.pprint(testdata)

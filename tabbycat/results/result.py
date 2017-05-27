@@ -116,7 +116,7 @@ class BaseDebateResult:
             self.assert_loaded()
 
     def __repr__(self):
-        return "<{classname} at {id:#x for {bsub!s}>".format(
+        return "<{classname} at {id:#x} for {bsub!s}>".format(
             classname=self.__class__.__name__, id=id(self), bsub=self.ballotsub)
 
     # --------------------------------------------------------------------------
@@ -155,13 +155,21 @@ class BaseDebateResult:
     @property
     def is_complete(self):
         """Returns True if all elements of the results have been populated;
-        False if any one is missing. Subclasses should extend this method as
-        necessary."""
+        False if any one is missing.  Logs (but does not raise) the exception if
+        self.assert_loaded() fails.
+
+        Subclasses should extend this method as necessary."""
+
+        try:
+            self.assert_loaded()
+        except AssertionError:
+            logger.exception("When checking for completeness, DebateResult.assert_loaded() failed.")
 
         if any(self.debateteams[side] is None for side in self.sides):
             return False
         if any(self.speakers[s][p] is None for s in self.sides for p in self.positions):
             return False
+
         return True
 
     def identical(self, other):
@@ -391,7 +399,7 @@ class VotingDebateResult(BaseDebateResult):
         elif votes_neg > votes_aff:
             self._winner = 'neg'
         else:
-            logger.warning("Adjudicators split %d-%d in debate %s, awarding by chair casting vote.", count0, count1, self.debate)
+            logger.warning("Adjudicators split %d-%d in debate %s, awarding by chair casting vote.", votes_aff, votes_neg, self.debate)
             self._winner = self.scoresheets[self.debate.adjudicators.chair].winner()
 
         self._decision_calculated = True

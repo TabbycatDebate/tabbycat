@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 import json
 import logging
 
@@ -8,6 +9,22 @@ from draw.models import DebateTeam
 from tournaments.models import Tournament
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
+
+
+@contextmanager
+def disable_logs(level, returnto=logging.NOTSET):
+    """Disables logging at or above `level` while in the context manager.
+
+    Usage:
+        import logging
+        from utils.tests import disable_logs
+
+        with disable_logs(logging.WARNING): # or other level
+            # test code
+    """
+    logging.disable(level)
+    yield
+    logging.disable(returnto)
 
 
 class BaseTableViewTest():
@@ -97,9 +114,8 @@ class ConditionalTableViewTest(BaseTableViewTest):
         self.t.preferences[self.view_toggle] = False
 
         # Disable logging to silence the admin-page-only warning
-        logging.disable(logging.CRITICAL)
-        response = self.get_response()
-        logging.disable(logging.NOTSET)
+        with disable_logs(logging.CRITICAL):
+            response = self.get_response()
 
         # 302 redirect shoould be issued if setting is not enabled
         self.assertEqual(response.status_code, 302)

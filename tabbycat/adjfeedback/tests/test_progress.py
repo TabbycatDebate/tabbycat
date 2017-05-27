@@ -9,6 +9,7 @@ from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission
 from results.result_old import BallotSet
 from tournaments.models import Round, Tournament
+from utils.tests import disable_logs
 from venues.models import Venue
 
 from ..progress import FeedbackExpectedSubmissionFromAdjudicatorTracker, FeedbackExpectedSubmissionFromTeamTracker
@@ -249,10 +250,9 @@ class TestFeedbackProgress(TestCase):
     def test_adj_on_adj_multiple_submission(self):
         debate = self._create_debate((0, 1), (0, 1, 2), "aan")
         for a in (1, 2):
-            logging.disable(logging.WARNING)
-            self._create_feedback(self._da(debate, 0), a)
-            feedback2 = self._create_feedback(self._da(debate, 0), a)
-            logging.disable(logging.NOTSET)
+            with disable_logs(logging.WARNING):
+                self._create_feedback(self._da(debate, 0), a)
+                feedback2 = self._create_feedback(self._da(debate, 0), a)
             self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, True, 1, [feedback2])
 
     def test_adj_on_adj_trainees_not_submitted(self):
