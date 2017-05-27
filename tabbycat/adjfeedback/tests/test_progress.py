@@ -250,7 +250,7 @@ class TestFeedbackProgress(TestCase):
     def test_adj_on_adj_multiple_submission(self):
         debate = self._create_debate((0, 1), (0, 1, 2), "aan")
         for a in (1, 2):
-            with suppress_logs('results.result', logging.WARNING):  # suppress duplicate confirmed warning
+            with suppress_logs('results.models', logging.WARNING):  # suppress duplicate confirmed warning
                 self._create_feedback(self._da(debate, 0), a)
                 feedback2 = self._create_feedback(self._da(debate, 0), a)
             self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, True, 1, [feedback2])
