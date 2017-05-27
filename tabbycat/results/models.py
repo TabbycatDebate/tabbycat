@@ -48,7 +48,7 @@ class Submission(models.Model):
     ip_address = models.GenericIPAddressField(blank=True, null=True,
         verbose_name=_("IP address"))
 
-    version_lock = Lock()
+    save_lock = Lock()
 
     class Meta:
         abstract = True
@@ -59,17 +59,17 @@ class Submission(models.Model):
                     if arg != 'version')
 
     def save(self, *args, **kwargs):
-        # Check for uniqueness.
-        # The update should be atomic, so there shouldn't be a race condition.
-        if self.confirmed:
-            unconfirmed = self.__class__.objects.filter(confirmed=True).exclude(pk=self.pk).update(confirmed=False)
-            if unconfirmed > 0:
-                logger.info("Unconfirmed %d ballot submission(s) so that %s could be confirmed", unconfirmed, self)
-
-        # Assign the version field to one more than the current maximum version.
         # Use a lock to protect against the possibility that two submissions do this
-        # at the same time and get the same version number.
-        with self.version_lock:
+        # at the same time and both be confirmed or get the same version number.
+        with self.save_lock:
+
+            # Check for uniqueness.
+            if self.confirmed:
+                unconfirmed = self.__class__.objects.filter(confirmed=True).exclude(pk=self.pk).update(confirmed=False)
+                if unconfirmed > 0:
+                    logger.info("Unconfirmed %d %s so that %s could be confirmed", unconfirmed, self._meta.verbose_name_plural, self)
+
+            # Assign the version field to one more than the current maximum version.
             if self.pk is None:
                 existing = self.__class__.objects.filter(**self._unique_filter_args)
                 if existing.exists():
