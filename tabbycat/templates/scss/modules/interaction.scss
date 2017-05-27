@@ -54,12 +54,13 @@
 //------------------------------------------------------------------------------
 
 .slideover-info {
-  bottom: 0;
+  top: 0;
   height: auto;
   left: 0;
   position: fixed;
   right: 0;
   width: auto;
+  border-radius: 0;
   z-index: $z_2;
 
   .list-group {
@@ -70,12 +71,6 @@
   .list-group-item:last-child {
     border-radius: 0;
   }
-}
-
-.slideover-top {
-  bottom: auto;
-  top: 0;
-  z-index: $z_2;
 }
 
 //------------------------------------------------------------------------------

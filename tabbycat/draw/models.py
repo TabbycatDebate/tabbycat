@@ -208,7 +208,7 @@ class Debate(models.Model):
 
     def serialize(self):
         debate = model_to_dict(self)
-        debate['venue'] = model_to_dict(self.venue) if self.venue else None
+        debate['venue'] = self.venue.serialize() if self.venue else None
         debate['teams'] = [team.serialize() for team in self.teams]
         debate['positions'] = ['Aff', 'Neg']
         debate['panel'] = [{

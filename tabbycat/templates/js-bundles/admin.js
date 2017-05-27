@@ -119,6 +119,10 @@ vueComponents['EditAdjudicatorsContainer'] = EditAdjudicatorsContainer
 // This is the main data package setout in the django template
 var vueData = window.vueData // We need to mount props from the window itself
 
+// This is an coordinating instance used for inter-component pub/sub interfaces
+var eventHub = new Vue()
+Vue.prototype.$eventHub = eventHub
+
 new Vue({
   el: '#vueMount',
   components: vueComponents,

@@ -265,12 +265,16 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
 class DrawForDragAndDropMixin(RoundMixin):
     """Provides the base set of constructors used to assemble a the
     drag and drop table used for editing matchups/adjs/venues with a
-    drag and drop interface """
+    drag and drop interface. Override annotate method to add per view data """
+
+    def annotate_draw(self, draw):
+        return draw
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
         draw = round.debate_set_with_prefetches(ordering=('room_rank',),
                                                 speakers=False, divisions=False)
+        draw = self.annotate_draw(draw)
 
         kwargs['vueDebates'] = json.dumps([d.serialize() for d in draw])
         return super().get_context_data(**kwargs)

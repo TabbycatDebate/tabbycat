@@ -3,9 +3,9 @@
   <div draggable=true
        v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
        v-on:dragstart="handleDragStart"
-       v-on:dragend="handleDragEnd"><!--
-       v-on:mouseenter="show = true"
-       v-on:mouseleave="show = false" -->
+       v-on:dragend="handleDragEnd"
+       v-on:mouseenter="showSlideOver"
+       v-on:mouseleave="hideSlideOver">
     <div class="h4 inline-flex">
       {{ venue.name }}
     </div>
@@ -26,6 +26,12 @@ export default {
 
   },
   methods: {
+    showSlideOver: function(event) {
+      this.$eventHub.$emit('set-slideover', this.venue)
+    },
+    hideSlideOver: function(event) {
+      this.$eventHub.$emit('unset-slideover')
+    },
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-venue', this);
     },

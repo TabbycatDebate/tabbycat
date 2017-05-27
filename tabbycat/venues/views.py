@@ -21,9 +21,29 @@ class EditVenuesView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateVi
 
     template_name = "edit_venues.html"
 
+    def add_venue_constraints(self, venue, all_constraints):
+        if venue.venuecategory_set.count() > 0:
+            categories = venue.venuecategory_set.all()
+            constraints = all_constraints.filter(category__in=categories)
+            setattr(venue, 'constraints', [vc.serialize() for vc in constraints])
+        else:
+            setattr(venue, 'constraints', None)
+        return venue
+
+    def annotate_draw(self, draw):
+        vcs = VenueConstraint.objects.all()
+        for debate in draw:
+            debate.venue = self.add_venue_constraints(debate.venue, vcs)
+        return draw
+
     def get_context_data(self, **kwargs):
-        unused_venus = [v.serialize() for v in self.get_round().unused_venues()]
-        kwargs['vueUnusedVenues'] = json.dumps(unused_venus)
+        unused_venues = self.get_round().unused_venues()
+        vcs = VenueConstraint.objects.all()
+        # Need to annotate unused venues with the relevant constraints
+        for venue in unused_venues:
+            self.add_venue_constraints(venue, vcs)
+
+        kwargs['vueUnusedVenues'] = json.dumps([v.serialize() for v in unused_venues])
         return super().get_context_data(**kwargs)
 
 

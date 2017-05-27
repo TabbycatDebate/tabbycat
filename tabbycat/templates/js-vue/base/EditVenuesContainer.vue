@@ -3,6 +3,8 @@
 
   <div class="vertical-spacing" id="messages-container"></div>
 
+  <venue-slideover :venue="slideOverVenue"></venue-slideover>
+
   <draw-header :positions="positions"></draw-header>
 
   <debate v-for="debate in debates" :debate="debate" :key="debate.id">
@@ -31,12 +33,23 @@ import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import GenericDroppable from '../draganddrops/GenericDroppable.vue'
 import VenueDraggable from '../draganddrops/VenueDraggable.vue'
+import VenueSlideover from '../slideovers/VenueSlideover.vue'
 import _ from 'lodash'
 
 
 export default {
   components: {
-    UnallocatedContainer, DrawHeader, Debate, GenericDroppable, VenueDraggable
+    UnallocatedContainer, DrawHeader, Debate, GenericDroppable,
+    VenueDraggable, VenueSlideover
+  },
+  created: function () {
+    this.$eventHub.$on('set-slideover', this.setSlideover)
+    this.$eventHub.$on('unset-slideover', this.unsetSlideover)
+  },
+  data: function() {
+    return {
+      slideOverVenue: null
+    }
   },
   mixins: [
     DrawContainer
@@ -46,6 +59,12 @@ export default {
   computed: {
   },
   methods: {
+    setSlideover: function(venue) {
+      this.slideOverVenue = venue
+    },
+    unsetSlideover: function() {
+      this.slideOverVenue = null
+    },
   },
   events: {
   }

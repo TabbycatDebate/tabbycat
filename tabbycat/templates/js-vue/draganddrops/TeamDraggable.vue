@@ -10,31 +10,7 @@
       {{ team.short_name }}
     </div>
 
-<!--   <transition name="expand">
-    <div class="panel panel-info slideover-info" v-show="show">
-      <div class="panel-body" v-if="hasPreferences">
-        <div class="btn-group" role="group">
-          <button class="btn btn-sm btn-link" v-if="team.institutional_preferences.length > 0">
-            Institutional
-          </button>
-          <button class="btn tbn-sm btn-default" v-for="preference in team.institutional_preferences">
-            {{ preference.category__name }} <span class="badge">{{ preference.priority}}</span>
-          </button>
-        </div>
-        <div class="btn-group pull-right" role="group">
-          <button class="btn btn-sm btn-link" v-if="team.team_preferences.length > 0">
-            Individual
-          </button>
-          <button class="btn tbn-sm btn-default" v-for="preference in team.team_preferences">
-            {{ preference.category__name }} <span class="badge">{{ preference.priority}}</span>
-          </button>
-        </div>
-      </div>
-      <div class="panel-body" v-else="hasPreferences">
-        No division preferences set
-      </div>
-    </div>
-  </transition> -->
+
 
   </div>
 
