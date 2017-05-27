@@ -247,17 +247,24 @@ class BaseDebateResult:
         DebateTeam instance in this debate. (Sides are saved immediately to
         enable the use of side keys to refer to teams.)"""
 
-        debateteams_by_team = {dt.team: dt for dt in self.debateteams}
+        debateteams_by_team = {dt.team: dt for dt in self.debate.debateteam_set.filter(team__in=teams)}
         for side, team in zip(self.sides, teams):
-            debateteam = debateteams_by_team[team]
+            try:
+                debateteam = debateteams_by_team[team]
+            except KeyError:
+                raise ValueError("Team %s is not in debate %s" % (team, self.debate))
             debateteam.position = self.SIDE_KEY_MAP_REVERSE[side]
             debateteam.save()
-        self.load_debateteams(self.debate.debateteam_set.select_related('team')) # refresh
+
+        self.debate._populate_teams()  # refresh
+        self.load_debateteams()  # refresh
 
     def get_speaker(self, side, position):
         return self.speakers[side].get(position)
 
     def set_speaker(self, side, position, speaker):
+        if self.debateteams[side] is None:
+            raise TypeError("Set sides using self.set_sides() before setting speakers")
         team = self.debateteams[side].team
         if speaker not in team.speakers:
             logger.error("Speaker %s isn't in team %s", speaker.name, team.short_name)

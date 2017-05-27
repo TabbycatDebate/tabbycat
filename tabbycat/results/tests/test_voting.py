@@ -112,12 +112,14 @@ class TestVotingDebateResult(TestCase):
 
     def setUp(self):
         self.t = Tournament.objects.create(slug="resulttest", name="ResultTest")
+        self.teams = []
         for i in range(2):
             inst = Institution.objects.create(code="Inst{:d}".format(i), name="Institution {:d}".format(i))
             team = Team.objects.create(tournament=self.t, institution=inst, reference="Team {:d}".format(i), use_institution_prefix=False)
+            self.teams.append(team)
             for j in range(3):
                 Speaker.objects.create(team=team, name="Speaker {:d}-{:d}".format(i, j))
-        inst = Institution.objects.create(code="Adjs", name="Adjudicators")
+
         venue = Venue.objects.create(name="Venue", priority=10)
 
         rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
@@ -127,6 +129,7 @@ class TestVotingDebateResult(TestCase):
         for team, side in zip(Team.objects.all(), sides):
             DebateTeam.objects.create(debate=self.debate, team=team, position=side)
 
+        inst = Institution.objects.create(code="Adjs", name="Adjudicators")
         self.adjs = [Adjudicator.objects.create(tournament=self.t, institution=inst,
                 name="Adjudicator {:d}".format(i), test_score=5) for i in range(3)]
 
@@ -144,35 +147,34 @@ class TestVotingDebateResult(TestCase):
         if name in self.t._prefs:    # clear model-level cache
             del self.t._prefs[name]
 
-    def save_complete_result(self, testdata, post_create=None):
+    def save_blank_result(self, nadjs=3, nspeakers=3):
 
-        nspeakers = testdata['num_speakers_per_team']
         self._set_tournament_preference('debate_rules', 'substantive_speakers', nspeakers)
 
         # set debate adjudicators (depends on how many adjs there are, so can't do in setUp())
         self.debate.adjudicators.chair = self.adjs[0]
-        self.debate.adjudicators.panellists = self.adjs[1:testdata['num_adjs']]
+        self.debate.adjudicators.panellists = self.adjs[1:nadjs]
         with disable_logs(logging.INFO):
             self.debate.adjudicators.save()
 
-        # unconfirm existing ballot
-        try:
-            existing = BallotSubmission.objects.get(debate=self.debate, confirmed=True)
-        except BallotSubmission.DoesNotExist:
-            pass
-        else:
-            existing.confirmed = False
-            existing.save()
+        # unconfirm existing ballots
+        self.debate.ballotsubmission_set.update(confirmed=False)
 
         ballotsub = BallotSubmission.objects.create(debate=self.debate, confirmed=True,
                 submitter_type=BallotSubmission.SUBMITTER_TABROOM)
 
-        result = VotingDebateResult(ballotsub, scoresheet_pref='high-required')
+        return VotingDebateResult(ballotsub, scoresheet_pref='high-required')
+
+    def save_complete_result(self, testdata, post_create=None):
+
+        nspeakers = testdata['num_speakers_per_team']
+
+        result = self.save_blank_result(nadjs=testdata['num_adjs'], nspeakers=nspeakers)
         if post_create:
             post_create(result)
 
-        for side in self.SIDES:
-            speakers = self.debate.get_team(side).speaker_set.all()[0:nspeakers]
+        for side, team in zip(self.SIDES, self.teams):
+            speakers = team.speaker_set.all()[0:nspeakers]
             for pos, speaker in enumerate(speakers, start=1):
                 result.set_speaker(side, pos, speaker)
             result.set_speaker(side, nspeakers+1, speakers[0])
@@ -194,11 +196,11 @@ class TestVotingDebateResult(TestCase):
         This decorator then sets up the BallotSet and runs the test once for
         each test dataset in BaseTestResult.testdata."""
         def foo(self):
-            for testdata_key in self.testdata:
-                testdata = self.testdata[testdata_key]
-                self.save_complete_result(testdata)
-                result = self._get_result()
-                test_fn(self, result, testdata)
+            for key, testdata in self.testdata.items():
+                with self.subTest("testdata[%s]" % key):
+                    self.save_complete_result(testdata)
+                    result = self._get_result()
+                    test_fn(self, result, testdata)
         return foo
 
     @on_all_datasets
@@ -300,3 +302,37 @@ class TestVotingDebateResult(TestCase):
             self.assertAlmostEqual(result.teamscorefield_votes_possible(side),
                 sum(testdata['num_adjs_for_team']))
 
+    # ==========================================================================
+    # Unknown sides
+    # ==========================================================================
+
+    def _unset_sides(self):
+        for dt in self.debate.debateteam_set.all():
+            dt.position = DebateTeam.POSITION_UNALLOCATED
+            dt.save()
+
+    def test_save_speaker_with_unknown_sides(self):
+        self._unset_sides()
+        result = self.save_blank_result()
+        self.assertRaises(TypeError, result.set_speaker, 'aff', 1, None)
+
+    def test_unknown_speaker(self):
+        self.save_complete_result(self.testdata[1])
+        result = self._get_result()
+        neg_speaker = self.teams[1].speaker_set.first()
+        with self.assertLogs('results.result', level=logging.ERROR):
+            result.set_speaker('aff', 1, neg_speaker)
+
+    def test_initially_unknown_sides(self):
+        self._set_tournament_preference('scoring', 'margin_includes_dissenters', False)
+        self._unset_sides()
+        testdata = self.testdata[1]
+        self.save_complete_result(testdata,
+                post_create=lambda result: result.set_sides(*self.teams))
+        result = self._get_result()
+
+        # Just check a couple of fields
+        for side, margin in zip(self.SIDES, testdata['majority_margins']):
+            with disable_logs(logging.WARNING):
+                self.assertEqual(result.teamscorefield_win(side), side == testdata['winner'])
+                self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
