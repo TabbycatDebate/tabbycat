@@ -459,6 +459,7 @@ class VotingDebateResult(BaseDebateResult):
         else:
             raise ValueError("side must be 'aff' or 'neg'")
 
+    @_requires_decision(None)
     def teamscorefield_votes_given(self, side):
         return len(self._adjs_by_side[side])
 

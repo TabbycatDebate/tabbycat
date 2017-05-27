@@ -20,9 +20,10 @@ class TestVotingDebateResult(TestCase):
         'totals_by_adj': [[263, 261.5], [262, 263], [262.5, 268]],
         'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
         'majority_totals': [262.25, 265.5],
-        'winner_by_adj': [0, 1, 1],
-        'winner': 1,
-        'num_adjs_for_team': [1, 2]
+        'majority_margins': [-3.25, 3.25],
+        'winner_by_adj': ['aff', 'neg', 'neg'],
+        'winner': 'neg',
+        'num_adjs_for_team': [1, 2],
     }
     testdata[2] = {
         'scores': [[[73.0, 76.0, 79.0, 37.5], [77.0, 77.0, 78.0, 39.0]],
@@ -32,20 +33,23 @@ class TestVotingDebateResult(TestCase):
         'majority_scores': [[75.0, 75.33333333333333, 75.33333333333333, 36.166666666666664],
                             [77.0, 77.33333333333333, 76.0, 37.666666666666664]],
         'majority_totals': [261.8333333333333, 268.0],
-        'winner_by_adj': [1, 1, 1],
-        'winner': 1,
+        'majority_margins': [-6.166666666666667, 6.166666666666667],
+        'winner_by_adj': ['neg', 'neg', 'neg'],
+        'winner': 'neg',
         'num_adjs_for_team': [0, 3],
     }
     testdata[3] = {
         'majority_scores': [[75.5, 76.5, 77.5, 38.75], [71.5, 71.5, 75.0, 38.5]],
-        'winner': 0,
-        'winner_by_adj': [1, 0, 0],
+        'winner': 'aff',
+        'winner_by_adj': ['neg', 'aff', 'aff'],
         'totals_by_adj': [[261.0, 271.5], [268.5, 259.0], [268.0, 254.0]],
         'majority_totals': [268.25, 256.5],
+        'majority_margins': [11.75, -11.75],
         'scores': [[[73.0, 70.0, 78.0, 40.0], [80.0, 78.0, 75.0, 38.5]],
                    [[79.0, 75.0, 75.0, 39.5], [73.0, 73.0, 73.0, 40.0]],
                    [[72.0, 78.0, 80.0, 38.0], [70.0, 70.0, 77.0, 37.0]]],
         'num_adjs_for_team': [2, 1],
+        'num_adjs': 3,
     }
 
     SIDES = ['aff', 'neg']
@@ -145,3 +149,49 @@ class TestVotingDebateResult(TestCase):
         for side, totals in zip(self.SIDES, testdata['majority_scores']):
             for pos, score in enumerate(totals, start=1):
                 self.assertEqual(result.get_speaker_score(side, pos), score)
+
+    @on_all_datasets
+    def test_individual_scores(self, result, testdata):
+        for adj, sheet in zip(self.adjs, testdata['scores']):
+            for side, scores in zip(self.SIDES, sheet):
+                for pos, score in enumerate(scores, start=1):
+                    self.assertEqual(result.get_score(adj, side, pos), score)
+
+    @on_all_datasets
+    def test_winner_by_adj(self, result, testdata):
+        for adj, winner in zip(self.adjs, testdata['winner_by_adj']):
+            self.assertEqual(result.scoresheets[adj].winner(), winner)
+
+    @on_all_datasets
+    def test_teamscorefield_points(self, result, testdata):
+        for side in self.SIDES:
+            points = 1 if side == testdata['winner'] else 0
+            self.assertEqual(result.teamscorefield_points(side), points)
+
+    @on_all_datasets
+    def test_teamscorefield_win(self, result, testdata):
+        for side in self.SIDES:
+            win = side == testdata['winner']
+            self.assertEqual(result.teamscorefield_win(side), win)
+
+    @on_all_datasets
+    def test_teamscorefield_score(self, result, testdata):
+        for side, total in zip(self.SIDES, testdata['majority_totals']):
+            self.assertAlmostEqual(result.teamscorefield_score(side), total)
+
+    @on_all_datasets
+    def test_teamscorefield_margin(self, result, testdata):
+        for side, margin in zip(self.SIDES, testdata['majority_margins']):
+            self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
+
+    @on_all_datasets
+    def test_teamscorefield_votes_given(self, result, testdata):
+        for side, votes in zip(self.SIDES, testdata['num_adjs_for_team']):
+            self.assertAlmostEqual(result.teamscorefield_votes_given(side), votes)
+
+    @on_all_datasets
+    def test_teamscorefield_votes_possible(self, result, testdata):
+        for side in self.SIDES:
+            self.assertAlmostEqual(result.teamscorefield_votes_possible(side),
+                    sum(testdata['num_adjs_for_team']))
+
