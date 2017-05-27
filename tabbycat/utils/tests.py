@@ -10,21 +10,30 @@ from tournaments.models import Tournament
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
 
+logger = logging.getLogger(__name__)
+
 
 @contextmanager
-def disable_logs(level, returnto=logging.NOTSET):
-    """Disables logging at or above `level` while in the context manager.
+def suppress_logs(name, level, returnto=logging.NOTSET):
+    """Suppresses logging at or below `level` from the logger named `name` while
+    in the context manager. The name of the logger must be provided, and as a
+    matter of practice should be as specific as possible, to avoid overly
+    suppressing logs.
 
     Usage:
         import logging
-        from utils.tests import disable_logs
+        from utils.tests import suppress_logs
 
-        with disable_logs(logging.WARNING): # or other level
+        with suppress_logs('results.result', logging.WARNING): # or other level
             # test code
     """
-    logging.disable(level)
+    if '.' not in name and returnto == logging.NOTSET:
+        logger.warning("Top-level modules (%s) should not be passed to suppress_logs", name)
+
+    suppressed_logger = logging.getLogger(name)
+    suppressed_logger.setLevel(level+1)
     yield
-    logging.disable(returnto)
+    suppressed_logger.setLevel(returnto)
 
 
 class BaseTableViewTest():
@@ -114,8 +123,8 @@ class ConditionalTableViewTest(BaseTableViewTest):
         self.t.preferences[self.view_toggle] = False
 
         # Disable logging to silence the admin-page-only warning
-        with disable_logs(logging.CRITICAL):
-            response = self.get_response()
+        # with disable_logs(logging.CRITICAL):
+        response = self.get_response()
 
         # 302 redirect shoould be issued if setting is not enabled
         self.assertEqual(response.status_code, 302)

@@ -1,7 +1,7 @@
 import logging
 
 from breakqual.models import BreakingTeam
-from utils.tests import ConditionalTableViewTest, disable_logs, TestCase
+from utils.tests import ConditionalTableViewTest, suppress_logs, TestCase
 
 
 class BreakingTeamsViewTest(ConditionalTableViewTest):
@@ -20,7 +20,7 @@ class BreakingTeamsViewTest(ConditionalTableViewTest):
 
     def test_set_preference(self):
         # Suppress standings queryset info logging
-        with disable_logs(logging.INFO):
+        with suppress_logs('standings.metrics', logging.INFO):
             super().test_set_preference()
 
 
