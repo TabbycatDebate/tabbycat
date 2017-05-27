@@ -1,3 +1,4 @@
+import json
 import logging
 from urllib.parse import urlparse, urlunparse
 
@@ -12,7 +13,6 @@ from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.detail import SingleObjectMixin
 
-from utils.json import debates_to_json
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import TabbycatPageTitlesMixin
 
@@ -272,5 +272,5 @@ class DrawForDragAndDropMixin(RoundMixin):
         draw = round.debate_set_with_prefetches(ordering=('room_rank',),
                                                 speakers=False, divisions=False)
 
-        kwargs['vueDebates'] = debates_to_json(draw, round)
+        kwargs['vueDebates'] = json.dumps([d.serialize() for d in draw])
         return super().get_context_data(**kwargs)

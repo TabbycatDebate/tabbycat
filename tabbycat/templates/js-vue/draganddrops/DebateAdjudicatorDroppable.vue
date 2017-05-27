@@ -1,7 +1,8 @@
 <template>
 
-  <div
-    v-on:dragover.prevent
+  <div>
+
+    <!--     v-on:dragover.prevent
     v-on:dragenter="dragEnter"
     v-on:dragleave="dragLeave"
     v-on:drop="drop"
@@ -12,61 +13,57 @@
         'vue-is-drag-enter': isDroppable,
         'flex-1': position !== 'P',
         'flex-2': position === 'P'
-    }]"
-    class="">
+    }]" -->
 
-    <debate-adjudicator
-      v-for="adj in adjudicatorsOrderedByScore"
-      :adjorteam="adj"
-      :position="position"
-      :debate-id="debateId">
-    </debate-adjudicator>
+    <adjudicator-draggable v-for="debateAdjudicator in adjudicatorsOrderedByScore"
+      :adjudicator="debateAdjudicator.adjudicator">
+    </adjudicator-draggable>
 
   </div>
 
 </template>
 
 <script>
-import DebateAdjudicator from './DebateAdjudicator.vue'
+import AdjudicatorDraggable from './AdjudicatorDraggable.vue'
 import DroppableMixin from '../mixins/DroppableMixin.vue'
 import _ from 'lodash'
 
 export default {
+  components: {
+    AdjudicatorDraggable
+  },
   mixins: [DroppableMixin],
   props: {
-    adjudicators: Array,
+    positionAdjudicators: Array,
     position: String,
-    debateId: Number
+    // debateId: Number
   },
   computed: {
-    isIncomplete: function () {
-      if (this.position === "C" && this.adjudicators.length === 0) {
-        return true
-      } else if (this.position === "P" && Math.abs(this.adjudicators.length % 2) == 1) {
-        return true
-      } else {
-        return false
-      }
-    },
+    // isIncomplete: function () {
+    //   if (this.position === "C" && this.adjudicators.length === 0) {
+    //     return true
+    //   } else if (this.position === "P" && Math.abs(this.adjudicators.length % 2) == 1) {
+    //     return true
+    //   } else {
+    //     return false
+    //   }
+    // },
     adjudicatorsOrderedByScore: function() {
-      return _.orderBy(this.adjudicators, 'score', ['desc'])
+      return _.orderBy(this.positionAdjudicators, 'score', ['desc'])
     }
-  },
-  components: {
-    'DebateAdjudicator': DebateAdjudicator
   },
   methods: {
-    handleDrop(event) {
-      this.$emit('set-adj-panel', this.debateId, this.position)
-    },
-    propogateSetAdj(info) {
-      console.log('setDraggedAdj positiondroppable');
-      this.$emit('propogate-set-adj', info)
-    },
-    propogateUnsetAdj() {
-      console.log('unsetDraggedAdj positiondroppable');
-      this.$emit('propogate-unset-adj')
-    }
+    // handleDrop(event) {
+    //   this.$emit('set-adj-panel', this.debateId, this.position)
+    // },
+    // propogateSetAdj(info) {
+    //   console.log('setDraggedAdj positiondroppable');
+    //   this.$emit('propogate-set-adj', info)
+    // },
+    // propogateUnsetAdj() {
+    //   console.log('unsetDraggedAdj positiondroppable');
+    //   this.$emit('propogate-unset-adj')
+    // }
   }
 }
 </script>

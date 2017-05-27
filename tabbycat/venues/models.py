@@ -46,8 +46,7 @@ class Venue(models.Model):
         return display_name
 
     def serialize(self):
-        venue = model_to_dict(self)
-        return venue
+        return model_to_dict(self)
 
     def __str__(self):
         return self.display_name

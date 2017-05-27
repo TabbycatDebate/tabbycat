@@ -402,8 +402,8 @@ class Adjudicator(Person):
         return d.count()
 
     def serialize(self):
-        intermediate = model_to_dict(self)
-        intermediate['conflicts'] = None # Populate later if needed?
-        intermediate['institutional_conflicts'] = None # Populate later if needed?
-        intermediate['institution_conflicts'] = None # Populate later if needed?
-        return intermediate
+        adj = model_to_dict(self)
+        adj['conflicts'] = None # Populate later if needed?
+        adj['institutional_conflicts'] = None # Populate later if needed?
+        adj['institution_conflicts'] = None # Populate later if needed?
+        return adj

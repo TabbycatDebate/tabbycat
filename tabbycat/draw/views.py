@@ -520,7 +520,8 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
     template_name = 'edit_matchups.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['vueUnusedTeams'] = json.dumps([t.serialize() for t in self.get_round().unused_teams()])
+        unused_teams = [t.serialize() for t in self.get_round().unused_teams()]
+        kwargs['vueUnusedTeams'] = json.dumps(unused_teams)
         return super().get_context_data(**kwargs)
 
 

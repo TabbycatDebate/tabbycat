@@ -2,6 +2,7 @@ import logging
 
 from django.db import models
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from django.forms.models import model_to_dict
 
 from tournaments.utils import get_position_name
 
@@ -204,6 +205,17 @@ class Debate(models.Model):
             # It's easiest to assume a division motion is always present, so
             # return a fake one if it is not
             return Motion(text='-', reference='-')
+
+    def serialize(self):
+        debate = model_to_dict(self)
+        debate['venue'] = model_to_dict(self.venue) if self.venue else None
+        debate['teams'] = [team.serialize() for team in self.teams]
+        debate['positions'] = ['Aff', 'Neg']
+        debate['panel'] = [{
+            'adjudicator': adj.serialize(),
+            'position': position,
+        } for adj, position in self.adjudicators.with_debateadj_types()]
+        return debate
 
 
 class DebateTeamManager(models.Manager):

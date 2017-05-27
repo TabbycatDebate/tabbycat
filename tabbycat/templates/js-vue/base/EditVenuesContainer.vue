@@ -5,8 +5,12 @@
 
   <draw-header :positions="positions"></draw-header>
 
-  <debate v-for="debate in debates" :debate="debate">
-    <venue-draggable slot="svenue" :venue="debate.venue"></venue-draggable>
+  <debate v-for="debate in debates" :debate="debate" :key="debate.id">
+
+    <generic-droppable slot="svenue">
+      <venue-draggable v-if="debate.venue !== null" :venue="debate.venue"></venue-draggable>
+    </generic-droppable>
+
   </debate>
 
   <unallocated-container>
@@ -25,13 +29,14 @@ import DrawContainer from '../mixins/DrawContainer.vue'
 import UnallocatedContainer from '../base/UnallocatedContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
+import GenericDroppable from '../draganddrops/GenericDroppable.vue'
 import VenueDraggable from '../draganddrops/VenueDraggable.vue'
 import _ from 'lodash'
 
 
 export default {
   components: {
-    UnallocatedContainer, DrawHeader, Debate, VenueDraggable
+    UnallocatedContainer, DrawHeader, Debate, GenericDroppable, VenueDraggable
   },
   mixins: [
     DrawContainer

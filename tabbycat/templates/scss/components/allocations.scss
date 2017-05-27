@@ -5,8 +5,7 @@
 .draw-container {
   padding-bottom: 500px; // Need to offset the adjs panel max height
 
-  .draw-row:last-child {
-    border-bottom: 1px solid $btn-default-border;
+  .draw-row:last-of-type {
     border-radius: 0 0 4px 4px;
   }
 }
@@ -22,7 +21,6 @@
   @extend .row;
   @extend .flex-horizontal;
   background: #fff; // Need to compensate for lack of table background
-  border-radius: 4px;
   border-left: 1px solid $btn-default-border;
   border-right: 1px solid $btn-default-border;
 }

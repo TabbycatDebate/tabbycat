@@ -5,10 +5,12 @@
 
   <draw-header :positions="positions"></draw-header>
 
-  <debate v-for="debate in debates" :debate="debate">
+  <debate v-for="debate in debates" :debate="debate" :key="debate.id">
 
     <template v-for="(team, index) in debate.teams">
-      <team-draggable :team="team" :slot="'sposition' + index"> </team-draggable>
+      <generic-droppable :slot="'sposition' + index">
+        <team-draggable :team="team"></team-draggable>
+      </generic-droppable>
     </template>
 
   </debate>
@@ -29,13 +31,14 @@ import DrawContainer from '../mixins/DrawContainer.vue'
 import UnallocatedContainer from '../base/UnallocatedContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
+import GenericDroppable from '../draganddrops/GenericDroppable.vue'
 import TeamDraggable from '../draganddrops/TeamDraggable.vue'
 import _ from 'lodash'
 
 
 export default {
   components: {
-    DrawHeader, UnallocatedContainer, Debate, TeamDraggable
+    DrawHeader, UnallocatedContainer, Debate, GenericDroppable, TeamDraggable
   },
   mixins: [
     DrawContainer

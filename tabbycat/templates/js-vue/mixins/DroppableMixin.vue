@@ -29,7 +29,7 @@ export default {
         this.handleDragLeave(event);
       }
     },
-    drop:  function(event) {
+    drop: function(event) {
       this.dragCounter = 0;
       this.isDroppable = false;
       if (typeof this.handleDrop === 'function') {

@@ -22,7 +22,8 @@ class EditVenuesView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateVi
     template_name = "edit_venues.html"
 
     def get_context_data(self, **kwargs):
-        kwargs['vueUnusedVenues'] = json.dumps([v.serialize() for v in self.get_round().unused_venues()])
+        unused_venus = [v.serialize() for v in self.get_round().unused_venues()]
+        kwargs['vueUnusedVenues'] = json.dumps(unused_venus)
         return super().get_context_data(**kwargs)
 
 

@@ -27,10 +27,10 @@ export default {
   },
   methods: {
     handleDragStart: function(event) {
-      this.$dispatch('started-dragging-venue', this);
+      // this.$dispatch('started-dragging-venue', this);
     },
     handleDragEnd: function(event) {
-      this.$dispatch('stopped-dragging-venue');
+      // this.$dispatch('stopped-dragging-venue');
     },
   }
 }

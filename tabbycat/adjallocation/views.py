@@ -13,7 +13,6 @@ from draw.models import Debate
 from tournaments.models import Round
 from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
-from utils.json import debates_to_json
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
@@ -45,7 +44,8 @@ class EditAdjudicatorAllocationView(DrawForDragAndDropMixin, SuperuserRequiredMi
         # kwargs['allTeams'] = teams_to_json(teams, regions, categories, t, r)
         # kwargs['allAdjudicators'] = adjs_to_json(adjs, regions, t)
 
-        kwargs['vueUnusedAdjudicators'] = json.dumps([t.serialize() for t in round.unused_adjudicators()])
+        unused_adjs = [t.serialize() for t in round.unused_adjudicators()]
+        kwargs['vueUnusedAdjudicators'] = json.dumps(unused_adjs)
         return super().get_context_data(**kwargs)
 
 
@@ -56,7 +56,8 @@ class CreateAutoAllocation(LogActionMixin, SuperuserRequiredMixin, JsonDataRespo
     def post_data(self):
         round = self.get_round()
         allocate_adjudicators(round, HungarianAllocator)
-        return debates_to_json(round.debate_set_with_prefetches(), self.get_tournament(), round)
+        # Probably needs to be fixed
+        return [d.serialize() for d in round.debate_set_with_prefetches()]
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()

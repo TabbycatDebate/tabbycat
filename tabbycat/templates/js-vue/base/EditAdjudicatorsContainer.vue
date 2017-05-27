@@ -5,50 +5,19 @@
 
   <draw-header :positions="positions"></draw-header>
 
-  <debate v-for="debate in debates" :debate="debate">
+  <debate v-for="debate in debates" :debate="debate" :key="debate.id">
 
-    <simportance>
-      <debate-importance
-        :id="debate.id"
-        :importance="debate.importance">
-        <!-- :url="this.roundInfo['updateImportanceURL']" -->
-        TD
-      </debate-importance>
-    </simportance>
+    <debate-importance slot="simportance"
+      :id="debate.id" :importance="debate.importance"></debate-importance>
 
-    <spanel>
-      TODO
-      <debate-adjudicator-droppable
-          :adjudicators="getAdjudicatorsByPosition(debate, 'C')"
-          :debate-id="debate.id" :position="'C'">
-          <!-- v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj"
-v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj"
-v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj" -->
-      </debate-adjudicator-droppable>
-      <debate-adjudicator-droppable
-          :adjudicators="getAdjudicatorsByPosition(debate, 'P')"
-          :debate-id="debate.id" :position="'P'">
-          <!-- v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj"
-v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj"
-v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj" -->
-      </debate-adjudicator-droppable>
-      <debate-adjudicator-droppable
-          :adjudicators="getAdjudicatorsByPosition(debate, 'T')"
-          :debate-id="debate.id" :position="'T'">
-          <!-- v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj"
-v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj"
-v-on:propogateSetAdj="propogateSetAdj"
-          v-on:propogateUnsetAdj="propogateUnsetAdj" -->
-      </debate-adjudicator-droppable>
-    </spanel>
+    <div slot="spanel">
+      <debate-adjudicator-droppable :position="'C'"
+        :position-adjudicators="getAdjudicatorsByPosition(debate, 'C')"></debate-adjudicator-droppable>
+      <debate-adjudicator-droppable :position="'P'"
+        :position-adjudicators="getAdjudicatorsByPosition(debate, 'P')"></debate-adjudicator-droppable>
+      <debate-adjudicator-droppable :position="'T'"
+        :position-adjudicators="getAdjudicatorsByPosition(debate, 'T')"></debate-adjudicator-droppable>
+    </div>
 
   </debate>
 
@@ -68,7 +37,8 @@ import DrawContainer from '../mixins/DrawContainer.vue'
 import UnallocatedContainer from '../base/UnallocatedContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
-// import DebateAdjudicatorDroppable from '../draganddrops/DebateAdjudicatorDroppable.vue'
+import DebateImportance from '../draw/DebateImportance.vue'
+import DebateAdjudicatorDroppable from '../draganddrops/DebateAdjudicatorDroppable.vue'
 import AdjudicatorDraggable from '../draganddrops/AdjudicatorDraggable.vue'
 
 import _ from 'lodash'
@@ -76,8 +46,8 @@ import _ from 'lodash'
 
 export default {
   components: {
-    UnallocatedContainer, DrawHeader, Debate,
-    AdjudicatorDraggable
+    UnallocatedContainer, DrawHeader, Debate, DebateImportance,
+    DebateAdjudicatorDroppable, AdjudicatorDraggable
   },
   mixins: [
     DrawContainer
