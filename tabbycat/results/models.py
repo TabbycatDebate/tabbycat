@@ -60,14 +60,8 @@ class Submission(models.Model):
 
     def save(self, *args, **kwargs):
         # Use a lock to protect against the possibility that two submissions do this
-        # at the same time and both be confirmed or get the same version number.
+        # at the same time and get the same version number or both be confirmed.
         with self.save_lock:
-
-            # Check for uniqueness.
-            if self.confirmed:
-                unconfirmed = self.__class__.objects.filter(confirmed=True).exclude(pk=self.pk).update(confirmed=False)
-                if unconfirmed > 0:
-                    logger.info("Unconfirmed %d %s so that %s could be confirmed", unconfirmed, self._meta.verbose_name_plural, self)
 
             # Assign the version field to one more than the current maximum version.
             if self.pk is None:
@@ -76,6 +70,13 @@ class Submission(models.Model):
                     self.version = existing.aggregate(models.Max('version'))['version__max'] + 1
                 else:
                     self.version = 1
+
+            # Check for uniqueness.
+            if self.confirmed:
+                unconfirmed = self.__class__.objects.filter(confirmed=True).exclude(pk=self.pk).update(confirmed=False)
+                if unconfirmed > 0:
+                    logger.info("Unconfirmed %d %s so that %s could be confirmed", unconfirmed, self._meta.verbose_name_plural, self)
+
             super(Submission, self).save(*args, **kwargs)
 
     def clean(self):
