@@ -73,7 +73,8 @@ class Submission(models.Model):
 
             # Check for uniqueness.
             if self.confirmed:
-                unconfirmed = self.__class__.objects.filter(confirmed=True).exclude(pk=self.pk).update(confirmed=False)
+                unconfirmed = self.__class__.objects.filter(confirmed=True,
+                        **self._unique_filter_args).exclude(pk=self.pk).update(confirmed=False)
                 if unconfirmed > 0:
                     logger.info("Unconfirmed %d %s so that %s could be confirmed", unconfirmed, self._meta.verbose_name_plural, self)
 
