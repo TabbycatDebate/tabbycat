@@ -24,6 +24,7 @@ class TestVotingDebateResult(TestCase):
         'winner_by_adj': ['aff', 'neg', 'neg'],
         'winner': 'neg',
         'num_adjs_for_team': [1, 2],
+        'num_adjs': 3,
     }
     testdata[2] = {
         'scores': [[[73.0, 76.0, 79.0, 37.5], [77.0, 77.0, 78.0, 39.0]],
@@ -37,6 +38,7 @@ class TestVotingDebateResult(TestCase):
         'winner_by_adj': ['neg', 'neg', 'neg'],
         'winner': 'neg',
         'num_adjs_for_team': [0, 3],
+        'num_adjs': 3,
     }
     testdata[3] = {
         'majority_scores': [[75.5, 76.5, 77.5, 38.75], [71.5, 71.5, 75.0, 38.5]],
@@ -50,6 +52,29 @@ class TestVotingDebateResult(TestCase):
                    [[72.0, 78.0, 80.0, 38.0], [70.0, 70.0, 77.0, 37.0]]],
         'num_adjs_for_team': [2, 1],
         'num_adjs': 3,
+    }
+    testdata[4] = {
+        'majority_margins': [-0.5, 0.5],
+        'majority_scores': [[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]],
+        'majority_totals': [187.5, 188.0],
+        'num_adjs': 1,
+        'num_adjs_for_team': [0, 1],
+        'scores': [[[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]]],
+        'totals_by_adj': [[187.5, 188.0]],
+        'winner': 'neg',
+        'winner_by_adj': ['neg']
+    }
+    testdata[5] = { # even panel, chair gets casting vote
+        'majority_margins': [-4.5, 4.5],
+        'majority_scores': [[80.0, 74.0, 35.5], [79.0, 76.0, 39.0]],
+        'majority_totals': [189.5, 194.0],
+        'num_adjs': 2,
+        'num_adjs_for_team': [1, 1],
+        'scores': [[[80.0, 74.0, 35.5], [79.0, 76.0, 39.0]],
+                   [[80.0, 79.0, 37.5], [73.0, 71.0, 39.5]]],
+        'totals_by_adj': [[189.5, 194.0], [196.5, 183.5]],
+        'winner': 'neg',
+        'winner_by_adj': ['neg', 'aff']
     }
 
     SIDES = ['aff', 'neg']
@@ -74,9 +99,6 @@ class TestVotingDebateResult(TestCase):
             DebateTeam.objects.create(debate=self.debate, team=team, position=side)
 
         self.adjs = list(Adjudicator.objects.all())
-        adjtypes = [DebateAdjudicator.TYPE_CHAIR, DebateAdjudicator.TYPE_PANEL, DebateAdjudicator.TYPE_PANEL]
-        for adj, adjtype in zip(self.adjs, adjtypes):
-            DebateAdjudicator.objects.create(debate=self.debate, adjudicator=adj, type=adjtype)
 
     def tearDown(self):
         DebateTeam.objects.all().delete()
@@ -88,6 +110,12 @@ class TestVotingDebateResult(TestCase):
         return VotingDebateResult(ballotsub, scoresheet_pref='high-required')
 
     def save_complete_result(self, testdata, post_create=None):
+
+        # set debate adjudicators (depends on how many adjs there are, so can't do in setUp())
+        self.debate.adjudicators.chair = self.adjs[0]
+        self.debate.adjudicators.panellists = self.adjs[1:testdata['num_adjs']]
+        self.debate.adjudicators.save()
+
         # unconfirm existing ballot
         try:
             existing = BallotSubmission.objects.get(debate=self.debate, confirmed=True)

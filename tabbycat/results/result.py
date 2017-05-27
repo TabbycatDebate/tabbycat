@@ -209,6 +209,8 @@ class BaseDebateResult:
     def save(self):
         """Saves to the database."""
 
+        assert self.is_complete, "Tried to save an incomplete result"
+
         for side in self.sides:
             dt = self.debateteams[side]
 
@@ -442,9 +444,11 @@ class VotingDebateResult(BaseDebateResult):
     def teamscorefield_win(self, side):
         return side == self._winner
 
+    @_requires_decision(None)
     def teamscorefield_score(self, side):
         return mean(self.scoresheets[adj].get_total(side) for adj in self.relevant_adjudicators)
 
+    @_requires_decision(None)
     def teamscorefield_margin(self, side):
         aff_total = self.teamscorefield_score('aff')
         neg_total = self.teamscorefield_score('neg')
