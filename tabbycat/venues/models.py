@@ -50,8 +50,6 @@ class Venue(models.Model):
         venue['categories'] = [{
             'id': vc.id, 'name': vc.name, 'description': vc.description
         } for vc in self.venuecategory_set.all()]
-        if hasattr(self, 'constraints'):
-            venue['constraints'] = self.constraints # Annotated for Edit Draw
         return venue
 
     def __str__(self):
@@ -147,4 +145,11 @@ class VenueConstraint(models.Model):
 
     def serialize(self):
         constraint = model_to_dict(self)
+        constraint['subject_type'] = self.subject_content_type.name
+        if self.subject_content_type.name == 'team':
+            constraint['subject_name'] = self.subject.short_name
+        elif self.subject_content_type.name == 'adjudicator':
+            constraint['subject_name'] = self.subject.name
+        elif self.subject_content_type.name == 'institution':
+            constraint['subject_name'] = self.subject.code
         return constraint

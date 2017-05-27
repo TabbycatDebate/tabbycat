@@ -3,7 +3,7 @@
 
   <div class="vertical-spacing" id="messages-container"></div>
 
-  <venue-slideover :venue="slideOverVenue"></venue-slideover>
+  <venue-constraints-slideover :venue="slideSubject" :constraints="slideConstraints"></venue-slideover>
 
   <draw-header :positions="positions"></draw-header>
 
@@ -33,14 +33,14 @@ import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import GenericDroppable from '../draganddrops/GenericDroppable.vue'
 import VenueDraggable from '../draganddrops/VenueDraggable.vue'
-import VenueSlideover from '../slideovers/VenueSlideover.vue'
+import VenuesConstraintSlideover from '../slideovers/VenuesConstraintSlideover.vue'
 import _ from 'lodash'
 
 
 export default {
   components: {
     UnallocatedContainer, DrawHeader, Debate, GenericDroppable,
-    VenueDraggable, VenueSlideover
+    VenueDraggable, VenuesConstraintSlideover
   },
   created: function () {
     this.$eventHub.$on('set-slideover', this.setSlideover)
@@ -48,22 +48,38 @@ export default {
   },
   data: function() {
     return {
-      slideOverVenue: null
+      slideSubject: null,
+      slideConstraints: null
     }
   },
   mixins: [
     DrawContainer
   ],
   props: {
+    venueConstraints: Array,
   },
   computed: {
   },
   methods: {
+    getConstraintsForVenue(venue) {
+      // Build array of this venue's categories as IDs
+      var category_ids = _.map(venue.categories, 'id')
+      if (category_ids.length > 0) {
+        // Match IDs to venue constraint categories
+        return _.filter(this.venueConstraints, function(vc) {
+          return _.includes(category_ids, vc.id);
+        });
+      } else {
+        return null
+      }
+    },
     setSlideover: function(venue) {
-      this.slideOverVenue = venue
+      this.slideSubject = venue
+      this.slideConstraints = this.getConstraintsForVenue(venue)
     },
     unsetSlideover: function() {
-      this.slideOverVenue = null
+      // this.slideSubject = null
+      // this.slideConstraints = null
     },
   },
   events: {
