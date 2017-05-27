@@ -1,7 +1,7 @@
 import logging
 
 from breakqual.models import BreakingTeam
-from utils.tests import disable_logs, ConditionalTableViewTest, TestCase
+from utils.tests import ConditionalTableViewTest, disable_logs, TestCase
 
 
 class BreakingTeamsViewTest(ConditionalTableViewTest):
