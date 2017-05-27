@@ -122,9 +122,8 @@ class ConditionalTableViewTest(BaseTableViewTest):
         # Check a page is not resolving when the preference is not set
         self.t.preferences[self.view_toggle] = False
 
-        # Disable logging to silence the admin-page-only warning
-        # with disable_logs(logging.CRITICAL):
-        response = self.get_response()
+        with self.assertLogs('tournaments.mixins', logging.ERROR):
+            response = self.get_response()
 
         # 302 redirect shoould be issued if setting is not enabled
         self.assertEqual(response.status_code, 302)
