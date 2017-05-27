@@ -60,17 +60,11 @@ class Submission(models.Model):
 
     def save(self, *args, **kwargs):
         # Check for uniqueness.
+        # The update should be atomic, so there shouldn't be a race condition.
         if self.confirmed:
-            try:
-                current = self.__class__.objects.get(confirmed=True, **self._unique_filter_args)
-            except self.DoesNotExist:
-                pass
-            else:
-                if current != self:
-                    logger.warning("{} confirmed while {} was already confirmed, setting latter "
-                            "to unconfirmed".format(self, current))
-                    current.confirmed = False
-                    current.save()
+            unconfirmed = self.__class__.objects.filter(confirmed=True).exclude(pk=self.pk).update(confirmed=False)
+            if unconfirmed > 0:
+                logger.info("Unconfirmed %d ballot submission(s) so that %s could be confirmed", unconfirmed, self)
 
         # Assign the version field to one more than the current maximum version.
         # Use a lock to protect against the possibility that two submissions do this
