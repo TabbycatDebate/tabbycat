@@ -3,32 +3,42 @@ and paste into test_result.py."""
 
 import random
 import pprint
+from statistics import mean
 
 SPEAKERS_PER_TEAM = 3
-ADJS_PER_DEBATE = 2
+ADJS_PER_DEBATE = 3
 TEAMS_PER_DEBATE = 2
 
 testdata = dict()
 
+# Generate scores
 testdata['scores'] = [[[float(random.randint(70, 80)) for pos in range(SPEAKERS_PER_TEAM)] +
                       [float(random.randint(70, 80))/2] for team in range(TEAMS_PER_DEBATE)] for adj in range(ADJS_PER_DEBATE)]
 
+# Individual ballots
 testdata['totals_by_adj'] = [[sum(team) for team in adj] for adj in testdata['scores']]
-
 testdata['winner_by_adj'] = ['aff' if (adj[0] > adj[1]) else 'neg' for adj in testdata['totals_by_adj']]
 
+# Scores including dissenters
+testdata['everyone_scores'] = [[mean(adj[team][pos] for adj in testdata['scores']) for pos in range(SPEAKERS_PER_TEAM+1)]
+                               for team in range(TEAMS_PER_DEBATE)]
+testdata['everyone_totals'] = [sum(team) for team in testdata['everyone_scores']]
+aff_margin = testdata['everyone_totals'][0] - testdata['everyone_totals'][1]
+testdata['everyone_margins'] = [aff_margin, -aff_margin]
+
+# Decision
 testdata['winner'] = 'aff' if (testdata['winner_by_adj'].count('aff') > testdata['winner_by_adj'].count('neg')) else 'neg'
 
-majority = [adj for i, adj in enumerate(testdata['scores']) if testdata['winner_by_adj'][i] == testdata['winner']]
-
-testdata['majority_scores'] = [[sum(adj[team][pos]for adj in majority)/len(majority) for pos in range(SPEAKERS_PER_TEAM+1)]
+# Scores excluding dissenters
+majority = [adj for winner_by_adj, adj in zip(testdata['winner_by_adj'], testdata['scores']) if winner_by_adj == testdata['winner']]
+testdata['majority_scores'] = [[mean(adj[team][pos] for adj in majority) for pos in range(SPEAKERS_PER_TEAM+1)]
                                for team in range(TEAMS_PER_DEBATE)]
-
 testdata['majority_totals'] = [sum(team) for team in testdata['majority_scores']]
-
 aff_margin = testdata['majority_totals'][0] - testdata['majority_totals'][1]
 testdata['majority_margins'] = [aff_margin, -aff_margin]
+testdata['majority_adjs'] = [i for i, winner_by_adj in enumerate(testdata['winner_by_adj']) if winner_by_adj == testdata['winner']]
 
+# Metadata
 testdata['num_adjs_for_team'] = [testdata['winner_by_adj'].count('aff'), testdata['winner_by_adj'].count('neg')]
 testdata['num_adjs'] = ADJS_PER_DEBATE
 testdata['num_speakers_per_team'] = SPEAKERS_PER_TEAM

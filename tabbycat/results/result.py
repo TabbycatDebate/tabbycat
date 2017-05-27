@@ -416,17 +416,15 @@ class VotingDebateResult(BaseDebateResult):
             return wrapped
         return wrap
 
-    @property
     @_requires_decision([])
     def majority_adjudicators(self):
         return self._adjs_by_side[self._winner]
 
-    @property
     def relevant_adjudicators(self):
         if self.tournament.pref('margin_includes_dissenters'):
             return self.scoresheets.keys()
         else:
-            return self.majority_adjudicators
+            return self.majority_adjudicators()
 
     # @property
     # @_requires_decision(None)
@@ -435,7 +433,7 @@ class VotingDebateResult(BaseDebateResult):
 
     @_requires_decision(None)
     def get_speaker_score(self, side, position):
-        return mean(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators)
+        return mean(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators())
 
     # --------------------------------------------------------------------------
     # Team score fields
@@ -454,7 +452,7 @@ class VotingDebateResult(BaseDebateResult):
 
     @_requires_decision(None)
     def teamscorefield_score(self, side):
-        return mean(self.scoresheets[adj].get_total(side) for adj in self.relevant_adjudicators)
+        return mean(self.scoresheets[adj].get_total(side) for adj in self.relevant_adjudicators())
 
     @_requires_decision(None)
     def teamscorefield_margin(self, side):

@@ -17,6 +17,11 @@ class TestVotingDebateResult(TestCase):
 
     testdata = dict()
     testdata[1] = {
+        'everyone_margins': [-1.6666666666666288, 1.6666666666666288],
+        'everyone_scores': [[74.66666666666667, 75.33333333333333, 75.0, 37.5],
+                            [76.33333333333333, 75.0, 75.33333333333333, 37.5]],
+        'everyone_totals': [262.5, 264.16666666666667],
+        'majority_adjs': [1, 2],
         'majority_margins': [-3.25, 3.25],
         'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
         'majority_totals': [262.25, 265.5],
@@ -31,9 +36,14 @@ class TestVotingDebateResult(TestCase):
         'winner_by_adj': ['aff', 'neg', 'neg'],
     }
     testdata[2] = {
+        'everyone_margins': [-6.166666666666667, 6.166666666666667],
+        'everyone_scores': [[75.0, 75.33333333333333, 75.33333333333333, 36.166666666666667],
+                            [77.0, 77.33333333333333, 76.0, 37.666666666666667]],
+        'everyone_totals': [261.8333333333333, 268.0],
+        'majority_adjs': [0, 1, 2],
         'majority_margins': [-6.166666666666667, 6.166666666666667],
-        'majority_scores': [[75.0, 75.33333333333333, 75.33333333333333, 36.166666666666664],
-                            [77.0, 77.33333333333333, 76.0, 37.666666666666664]],
+        'majority_scores': [[75.0, 75.33333333333333, 75.33333333333333, 36.166666666666667],
+                            [77.0, 77.33333333333333, 76.0, 37.666666666666667]],
         'majority_totals': [261.8333333333333, 268.0],
         'num_adjs': 3,
         'num_adjs_for_team': [0, 3],
@@ -46,6 +56,11 @@ class TestVotingDebateResult(TestCase):
         'winner_by_adj': ['neg', 'neg', 'neg'],
     }
     testdata[3] = {
+        'everyone_margins': [4.33333333333333, -4.33333333333333],
+        'everyone_scores': [[74.66666666666667, 74.33333333333333, 77.66666666666667, 39.166666666666667],
+                            [74.33333333333333, 73.66666666666667, 75.0, 38.5]],
+        'everyone_totals': [265.83333333333333, 261.5],
+        'majority_adjs': [1, 2],
         'majority_margins': [11.75, -11.75],
         'majority_scores': [[75.5, 76.5, 77.5, 38.75], [71.5, 71.5, 75.0, 38.5]],
         'majority_totals': [268.25, 256.5],
@@ -60,6 +75,10 @@ class TestVotingDebateResult(TestCase):
         'winner_by_adj': ['neg', 'aff', 'aff'],
     }
     testdata[4] = {
+        'everyone_margins': [-0.5, 0.5],
+        'everyone_scores': [[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]],
+        'everyone_totals': [187.5, 188.0],
+        'majority_adjs': [0],
         'majority_margins': [-0.5, 0.5],
         'majority_scores': [[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]],
         'majority_totals': [187.5, 188.0],
@@ -71,7 +90,11 @@ class TestVotingDebateResult(TestCase):
         'winner': 'neg',
         'winner_by_adj': ['neg'],
     }
-    testdata[5] = { # even panel, chair gets casting vote
+    testdata[5] = { # even panel, chair gets casting vote, note this is a low-point win
+        'everyone_margins': [4.25, -4.25],
+        'everyone_scores': [[80.0, 76.5, 36.5], [76.0, 73.5, 39.25]],
+        'everyone_totals': [193.0, 188.75],
+        'majority_adjs': [0],
         'majority_margins': [-4.5, 4.5],
         'majority_scores': [[80.0, 74.0, 35.5], [79.0, 76.0, 39.0]],
         'majority_totals': [189.5, 194.0],
@@ -95,8 +118,6 @@ class TestVotingDebateResult(TestCase):
             for j in range(3):
                 Speaker.objects.create(team=team, name="Speaker {:d}-{:d}".format(i, j))
         inst = Institution.objects.create(code="Adjs", name="Adjudicators")
-        for i in range(3):
-            Adjudicator.objects.create(tournament=self.t, institution=inst, name="Adjudicator {:d}".format(i), test_score=5)
         venue = Venue.objects.create(name="Venue", priority=10)
 
         rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
@@ -106,7 +127,8 @@ class TestVotingDebateResult(TestCase):
         for team, side in zip(Team.objects.all(), sides):
             DebateTeam.objects.create(debate=self.debate, team=team, position=side)
 
-        self.adjs = list(Adjudicator.objects.all())
+        self.adjs = [Adjudicator.objects.create(tournament=self.t, institution=inst,
+                name="Adjudicator {:d}".format(i), test_score=5) for i in range(3)]
 
     def tearDown(self):
         DebateTeam.objects.all().delete()
@@ -117,12 +139,15 @@ class TestVotingDebateResult(TestCase):
         ballotsub = BallotSubmission.objects.get(debate=self.debate, confirmed=True)
         return VotingDebateResult(ballotsub, scoresheet_pref='high-required')
 
+    def _set_tournament_preference(self, section, name, value):
+        self.t.preferences[section + '__' + name] = value
+        if name in self.t._prefs:    # clear model-level cache
+            del self.t._prefs[name]
+
     def save_complete_result(self, testdata, post_create=None):
 
         nspeakers = testdata['num_speakers_per_team']
-        self.t.preferences['debate_rules__substantive_speakers'] = nspeakers
-        if 'substantive_speakers' in self.t._prefs:
-            del self.t._prefs['substantive_speakers']
+        self._set_tournament_preference('debate_rules', 'substantive_speakers', nspeakers)
 
         # set debate adjudicators (depends on how many adjs there are, so can't do in setUp())
         self.debate.adjudicators.chair = self.adjs[0]
@@ -188,8 +213,23 @@ class TestVotingDebateResult(TestCase):
                 self.assertEqual(result.scoresheets[adj].get_total(side), total)
 
     @on_all_datasets
-    def test_majority_scores(self, result, testdata):
+    def test_majority_adjudicators(self, result, testdata):
+        majority = [self.adjs[i] for i in testdata['majority_adjs']]
+        with disable_logs(logging.WARNING):
+            self.assertCountEqual(result.majority_adjudicators(), majority)
+
+    @on_all_datasets
+    def test_speaker_scores_majority(self, result, testdata):
+        self._set_tournament_preference('scoring', 'margin_includes_dissenters', False)
         for side, totals in zip(self.SIDES, testdata['majority_scores']):
+            for pos, score in enumerate(totals, start=1):
+                with disable_logs(logging.WARNING):
+                    self.assertEqual(result.get_speaker_score(side, pos), score)
+
+    @on_all_datasets
+    def test_speaker_scores_everyone(self, result, testdata):
+        self._set_tournament_preference('scoring', 'margin_includes_dissenters', True)
+        for side, totals in zip(self.SIDES, testdata['everyone_scores']):
             for pos, score in enumerate(totals, start=1):
                 with disable_logs(logging.WARNING):
                     self.assertEqual(result.get_speaker_score(side, pos), score)
@@ -221,14 +261,30 @@ class TestVotingDebateResult(TestCase):
                 self.assertEqual(result.teamscorefield_win(side), win)
 
     @on_all_datasets
-    def test_teamscorefield_score(self, result, testdata):
+    def test_teamscorefield_score_majority(self, result, testdata):
+        self._set_tournament_preference('scoring', 'margin_includes_dissenters', False)
         for side, total in zip(self.SIDES, testdata['majority_totals']):
             with disable_logs(logging.WARNING):
                 self.assertAlmostEqual(result.teamscorefield_score(side), total)
 
     @on_all_datasets
-    def test_teamscorefield_margin(self, result, testdata):
+    def test_teamscorefield_margin_majority(self, result, testdata):
+        self._set_tournament_preference('scoring', 'margin_includes_dissenters', False)
         for side, margin in zip(self.SIDES, testdata['majority_margins']):
+            with disable_logs(logging.WARNING):
+                self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
+
+    @on_all_datasets
+    def test_teamscorefield_score_everyone(self, result, testdata):
+        self._set_tournament_preference('scoring', 'margin_includes_dissenters', True)
+        for side, total in zip(self.SIDES, testdata['everyone_totals']):
+            with disable_logs(logging.WARNING):
+                self.assertAlmostEqual(result.teamscorefield_score(side), total)
+
+    @on_all_datasets
+    def test_teamscorefield_margin_everyone(self, result, testdata):
+        self._set_tournament_preference('scoring', 'margin_includes_dissenters', True)
+        for side, margin in zip(self.SIDES, testdata['everyone_margins']):
             with disable_logs(logging.WARNING):
                 self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
 
