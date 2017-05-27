@@ -10,7 +10,7 @@ from adjallocation.models import DebateAdjudicator
 from ..result import VotingDebateResult
 
 
-class BaseTestVoting(TestCase):
+class TestVotingDebateResult(TestCase):
 
     testdata = dict()
     testdata[1] = {
@@ -62,16 +62,14 @@ class BaseTestVoting(TestCase):
             Adjudicator.objects.create(tournament=self.t, institution=inst, name="Adjudicator {:d}".format(i), test_score=5)
         venue = Venue.objects.create(name="Venue", priority=10)
 
-        self.adjs = list(Adjudicator.objects.all())
-        self.teams = list(Team.objects.all())
-
         rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
         self.debate = Debate.objects.create(round=rd, venue=venue)
 
         sides = [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]
-        for team, side in zip(self.teams, sides):
+        for team, side in zip(Team.objects.all(), sides):
             DebateTeam.objects.create(debate=self.debate, team=team, position=side)
 
+        self.adjs = list(Adjudicator.objects.all())
         adjtypes = [DebateAdjudicator.TYPE_CHAIR, DebateAdjudicator.TYPE_PANEL, DebateAdjudicator.TYPE_PANEL]
         for adj, adjtype in zip(self.adjs, adjtypes):
             DebateAdjudicator.objects.create(debate=self.debate, adjudicator=adj, type=adjtype)
@@ -133,6 +131,17 @@ class BaseTestVoting(TestCase):
 
     @on_all_datasets
     def test_save(self, result, testdata):
-        # Just run self.save_complete_result
-        pass
+        # Run self.save_complete_result and check completeness
+        self.assertTrue(result.is_complete)
 
+    @on_all_datasets
+    def test_totals_by_adj(self, result, testdata):
+        for adj, totals in zip(self.adjs, testdata['totals_by_adj']):
+            for side, total in zip(self.SIDES, totals):
+                self.assertEqual(result.scoresheets[adj].get_total(side), total)
+
+    @on_all_datasets
+    def test_majority_scores(self, result, testdata):
+        for side, totals in zip(self.SIDES, testdata['majority_scores']):
+            for pos, score in enumerate(totals, start=1):
+                self.assertEqual(result.get_speaker_score(side, pos), score)

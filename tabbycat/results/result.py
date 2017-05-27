@@ -41,6 +41,7 @@ from functools import wraps
 from statistics import mean
 
 from draw.models import DebateTeam
+from adjallocation.models import DebateAdjudicator
 
 from .scoresheet import SCORESHEET_CLASSES
 
@@ -320,25 +321,38 @@ class VotingDebateResult(BaseDebateResult):
         self.load_scoresheets()
 
     def load_scoresheets(self):
-        adjudicators = list(self.debate.adjudicators.voting())
-        self.scoresheets = {adj: self.scoresheet_class(self.positions) for adj in adjudicators}
+        debateadjs = self.debate.debateadjudicator_set.exclude(type=DebateAdjudicator.TYPE_TRAINEE)
+        self.debateadjs = {da.adjudicator: da for da in debateadjs}
+        self.scoresheets = {adj: self.scoresheet_class(self.positions) for adj in self.debateadjs.keys()}
+
         speakerscorebyadjs = self.ballotsub.speakerscorebyadj_set.filter(
-            debate_adjudicator__debate=self.debate,
-            debate_adjudicator__adjudicator__in=adjudicators,
+            debate_adjudicator__in=debateadjs,
             debate_team__position__in=self.side_db_values,
             position__in=self.positions,
         )
 
         for ssba in speakerscorebyadjs:
-            side = self.SIDE_KEY_MAP[ss.debate_team.position]
-            self.set_score(ss.debate_adjudicator.adjudicator, side, ss.position, ss.score)
+            side = self.SIDE_KEY_MAP[ssba.debate_team.position]
+            self.set_score(ssba.debate_adjudicator.adjudicator, side, ssba.position, ssba.score)
+
+    def save(self):
+        super().save()
+
+        for adj, sheet in self.scoresheets.items():
+            da = self.debateadjs[adj]
+            for side in self.sides:
+                dt = self.debateteams[side]
+                for pos in self.positions:
+                    self.ballotsub.speakerscorebyadj_set.update_or_create(
+                        debate_team=dt, debate_adjudicator=da, position=pos,
+                        defaults=dict(score=self.get_score(adj, side, pos)))
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval
     # --------------------------------------------------------------------------
 
-    # def get_score(self, adjudicator, side, position):
-    #     return self.scoresheets[adjudicator].get_score(side, position)
+    def get_score(self, adjudicator, side, position):
+        return self.scoresheets[adjudicator].get_score(side, position)
 
     def set_score(self, adjudicator, side, position, score):
         scoresheet = self.scoresheets[adjudicator]
@@ -397,6 +411,13 @@ class VotingDebateResult(BaseDebateResult):
     def majority_adjudicators(self):
         return self._adjs_by_side[self._winner]
 
+    @property
+    def relevant_adjudicators(self):
+        if self.tournament.pref('margin_includes_dissenters'):
+            return self.scoresheets.keys()
+        else:
+            return self.majority_adjudicators
+
     # @property
     # @_requires_decision(None)
     # def winning_team(self):
@@ -404,7 +425,7 @@ class VotingDebateResult(BaseDebateResult):
 
     @_requires_decision(None)
     def get_speaker_score(self, side, position):
-        return mean(self.scoresheets[adj].get_score(side, position) for adj in self.majority_adjudicators)
+        return mean(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators)
 
     # --------------------------------------------------------------------------
     # Team score fields
@@ -422,10 +443,7 @@ class VotingDebateResult(BaseDebateResult):
         return side == self._winner
 
     def teamscorefield_score(self, side):
-        if self.tournament.pref('margin_includes_dissenters'):
-            return mean(sheet[adj].get_total(side) for sheet in self.scoresheets)
-        else:
-            return mean(self.scoresheets[adj].get_total(side) for adj in self.majority_adjudicators)
+        return mean(self.scoresheets[adj].get_total(side) for adj in self.relevant_adjudicators)
 
     def teamscorefield_margin(self, side):
         aff_total = self.teamscorefield_score('aff')
