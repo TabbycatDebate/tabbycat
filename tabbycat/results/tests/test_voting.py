@@ -335,3 +335,67 @@ class TestVotingDebateResult(TestCase):
             with suppress_logs('results.result', logging.WARNING):
                 self.assertEqual(result.teamscorefield_win(side), side == testdata['winner'])
                 self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
+
+    # ==========================================================================
+    # Not complete
+    # ==========================================================================
+
+    def incomplete_test(test_fn):  # flake8: noqa
+        def foo(self):
+            testdata = self.testdata[1]
+            if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
+                self.save_complete_result(testdata)
+            result = self._get_result()
+            test_fn(self, result)
+            self.assertFalse(result.is_complete)
+        return foo
+
+    @incomplete_test
+    def test_unfilled_debateteam(self, result):
+        result.debateteams["aff"] = None
+
+    @incomplete_test
+    def test_unfilled_speaker(self, result):
+        result.speakers["neg"][1] = None
+
+    @incomplete_test
+    def test_unfilled_scoresheet_score(self, result):
+        result.scoresheets[self.adjs[0]].scores["aff"][1] = None
+
+    # ==========================================================================
+    # Not properly loaded
+    # ==========================================================================
+
+    def bad_load_assertion_test(test_fn):  # flake8: noqa
+        def foo(self):
+            testdata = self.testdata[1]
+            if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
+                self.save_complete_result(testdata)
+            result = self._get_result()
+            test_fn(self, result)
+            self.assertRaises(AssertionError, result.assert_loaded)
+        return foo
+
+    @bad_load_assertion_test
+    def test_extraneous_debateteam(self, result):
+        result.debateteams["test"] = None
+
+    @bad_load_assertion_test
+    def test_extraneous_team_in_speakers(self, result):
+        result.speakers["test"] = None
+
+    @bad_load_assertion_test
+    def test_extraneous_team_in_ghosts(self, result):
+        result.ghosts["test"] = True
+
+    @bad_load_assertion_test
+    def test_extraneous_speaker(self, result):
+        result.speakers["aff"][5] = None
+
+    @bad_load_assertion_test
+    def test_extraneous_ghost(self, result):
+        result.ghosts["aff"][5] = None
+
+    @bad_load_assertion_test
+    def test_extraneous_scoresheet(self, result):
+        result.scoresheets["not-an-adj"] = None

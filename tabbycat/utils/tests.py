@@ -125,7 +125,7 @@ class ConditionalTableViewTest(BaseTableViewTest):
         with self.assertLogs('tournaments.mixins', logging.ERROR):
             response = self.get_response()
 
-        # 302 redirect shoould be issued if setting is not enabled
+        # 302 redirect should be issued if setting is not enabled
         self.assertEqual(response.status_code, 302)
 
 
