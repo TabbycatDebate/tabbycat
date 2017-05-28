@@ -6,11 +6,10 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission
+from results.result import VotingDebateResult    # absolute import to keep logger's name consistent
 from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
 from venues.models import Venue
-
-from ..result import VotingDebateResult
 
 
 class TestVotingDebateResult(TestCase):
@@ -320,7 +319,7 @@ class TestVotingDebateResult(TestCase):
         self.save_complete_result(self.testdata[1])
         result = self._get_result()
         neg_speaker = self.teams[1].speaker_set.first()
-        with self.assertLogs('results.result', level=logging.ERROR):
+        with self.assertLogs('results.result', level=logging.ERROR) as cm:
             result.set_speaker('aff', 1, neg_speaker)
 
     def test_initially_unknown_sides(self):
