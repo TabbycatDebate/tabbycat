@@ -30,8 +30,7 @@ import DraggableMixin from '../mixins/DraggableMixin.vue'
 export default {
   mixins: [DraggableMixin],
   props: {
-    'venue': Object,
-    'show': { default: false }
+    'venue': Object
   },
   computed: {
 

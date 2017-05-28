@@ -32,7 +32,7 @@ export default {
     // 'vc-name': { default: null },
     // 'save-division-at': {},
     // 'isDragging': { default: false },
-    'show': { default: false }
+    // 'show': { default: false }
   },
   computed: {
     // hasPreferences: function () {
@@ -75,6 +75,12 @@ export default {
     // }
   },
   methods: {
+    showSlideOver: function(event) {
+      this.$eventHub.$emit('set-slideover', this.venue)
+    },
+    hideSlideOver: function(event) {
+      this.$eventHub.$emit('unset-slideover')
+    },
     // saveDivision: function() {
     //   var team_id = this.team.id;
     //   var division_id = this.team.division;
