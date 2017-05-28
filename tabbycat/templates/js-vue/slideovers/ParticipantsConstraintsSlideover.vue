@@ -4,14 +4,9 @@
       <div class="list-group">
         <li class="list-group-item">
           <h4 class="no-bottom-margin no-top-margin text-center">
-            {{ venue.name }}
-            <span v-if="!venue.categories.length">(No Categories)</span>
-            <span v-else>
-              (<span v-for="category in venue.categories">{{ category.name }}, </span>)
-            </span>
           </h4>
         </li>
-        <li class="list-group-item flex-horizontal" v-if="constraints">
+        <!-- <li class="list-group-item flex-horizontal" v-if="constraints">
           <div class="btn-toolbar center-block">
             <div class="btn-group btn-group-sm" role="group">
               <div class="btn btn-default">Teams</div>
@@ -35,7 +30,7 @@
               <div class="btn btn-default text-muted" v-if="!institutionConstraints.length">No constraints</div>
             </div>
           </div>
-        </li>
+        </li> -->
       </div>
     </div>
 

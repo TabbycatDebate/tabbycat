@@ -519,9 +519,24 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
 class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'edit_matchups.html'
 
+    def add_team_points(self, team, serialized_team):
+        serialized_team['wins'] = team.wins_count
+        return serialized_team
+
+    def annotate_draw(self, draw, serialised_draw):
+        for debate, serialized_debate in zip(draw, serialised_draw):
+            for t, serialt in zip(debate.teams, serialized_debate['teams']):
+                serialt = self.add_team_points(t, serialt)
+
+        return serialised_draw
+
     def get_context_data(self, **kwargs):
-        unused_teams = [t.serialize() for t in self.get_round().unused_teams()]
-        kwargs['vueUnusedTeams'] = json.dumps(unused_teams)
+        unused = [t for t in self.get_round().unused_teams()]
+        serialized_unused = [t.serialize() for t in unused]
+        for t, serialt in zip(unused, serialized_unused):
+            serialt = self.add_team_points(t, serialt)
+
+        kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
         return super().get_context_data(**kwargs)
 
 

@@ -267,14 +267,14 @@ class DrawForDragAndDropMixin(RoundMixin):
     drag and drop table used for editing matchups/adjs/venues with a
     drag and drop interface. Override annotate method to add per view data """
 
-    def annotate_draw(self, draw):
-        return draw
+    def annotate_draw(self, draw, serialised_draw):
+        return serialised_draw
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
         draw = round.debate_set_with_prefetches(ordering=('room_rank',),
                                                 speakers=False, divisions=False)
-        draw = self.annotate_draw(draw)
-
-        kwargs['vueDebates'] = json.dumps([d.serialize() for d in draw])
+        serialised_draw = [d.serialize() for d in draw]
+        draw = self.annotate_draw(draw, serialised_draw)
+        kwargs['vueDebates'] = json.dumps(serialised_draw)
         return super().get_context_data(**kwargs)

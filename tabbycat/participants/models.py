@@ -275,6 +275,7 @@ class Team(models.Model):
 
     def serialize(self):
         team = model_to_dict(self)
+        team['institution_name'] = self.institution.code
         team['break_categories'] = None # Populate later if needed?
         team['short_name'] = self.short_name
         team['long_name'] = self.long_name
@@ -403,6 +404,8 @@ class Adjudicator(Person):
 
     def serialize(self):
         adj = model_to_dict(self)
+        adj['score'] = "{}".format(self.score)
+        adj['insitution_name'] = self.institution.code # Populate later if needed?
         adj['conflicts'] = None # Populate later if needed?
         adj['institutional_conflicts'] = None # Populate later if needed?
         adj['institution_conflicts'] = None # Populate later if needed?

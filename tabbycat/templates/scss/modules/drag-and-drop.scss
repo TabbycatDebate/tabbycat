@@ -7,11 +7,10 @@
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
-  user-select: none;
+  user-select: none; // Text should be unselectable or highlights go crazy
   /* Required to make elements draggable in old WebKit */
   -khtml-user-drag: element;
   -webkit-user-drag: element;
-  user-select: none; // Text should be unselectable or highlights go crazy
 
   &:active {
     top: 2px;
@@ -21,19 +20,30 @@
     background: #fff; // Need to override default :hover bg state that gets stuck
   }
 
-  margin: 0 4px 4px 0;
-  padding: 6px;
+  background: #fff; // Need to override default :hover bg state that gets stuck
+  margin: 4px 4px 4px 0; // Need spacing offsets so they don't bunch
+  padding: 5px 6px;
   border: 4px solid $btn-default-border;
   height: 42px;
-  padding-top: 4px; // Center the Score
   text-align: left;
 
+  @extend .flex-horizontal;
+
   // Adj scores; Team/Venue names
-  .h4 {
-    margin: 0;
-    min-width: 30px;
-    padding-top: 4px; // Center the Score
+  .draggable-prefix {
+    @extend .flex-vertical-center; // Vertically center score
+    padding-right: 6px;
   }
+  .draggable-title {
+    overflow: auto;
+    line-height: 8px; // Compress text/sub-text spacing
+    .subtitle {
+      font-size: 11px; // Extra small subtext
+    }
+    // @extend .inline-flex;
+    // @extend .flex-vertical-center;
+  }
+
 }
 
 .vue-is-dragging {
@@ -48,7 +58,19 @@
 .vue-droppable {
   background: $gray-lighter;
   min-height: 40px;
-  padding: 4px 0 0 4px;
+  padding: 0 0 0 4px;
+}
+
+.draw-cell .vue-droppable {
+  width: 100%;
+  height: 100%;
+}
+.flex-cell.vue-droppable-container {
+  padding: 0; // Suppress padding for larger drop area
+}
+.thead.vue-droppable-container span {
+  margin-left: 8px; // Compensate for suppressed padding
+  display: inline-block;
 }
 
 .division-droppable {

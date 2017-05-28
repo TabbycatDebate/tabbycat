@@ -3,24 +3,28 @@
 
   <div class="vertical-spacing" id="messages-container"></div>
 
-  <venue-constraints-slideover :venue="slideSubject" :constraints="slideConstraints"></venue-slideover>
+  <venues-constraints-slideover :venue="slideSubject" :constraints="slideConstraints"></venues-constraints-slideover>
 
-  <draw-header :positions="positions"></draw-header>
+  <draw-header :positions="positions">
+    <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
+      <span>Venue</span>
+    </div>
+  </draw-header>
 
   <debate v-for="debate in debates" :debate="debate" :key="debate.id">
-
-    <generic-droppable slot="svenue">
-      <venue-draggable v-if="debate.venue !== null" :venue="debate.venue"></venue-draggable>
-    </generic-droppable>
-
+    <div class="draw-cell flex-12 vue-droppable-container" slot="svenue">
+      <generic-droppable>
+        <slot name="svenue">
+          <venue-draggable v-if="debate.venue !== null" :venue="debate.venue"></venue-draggable>
+        </slot>
+      </generic-droppable>
+    </div>
   </debate>
 
   <unallocated-container>
-
     <div v-for="unallocatedVenue in unallocatedItems">
       <venue-draggable :venue="unallocatedVenue"></venue-draggable>
     </div>
-
   </unallocated-container>
 
 </div>
@@ -33,14 +37,14 @@ import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import GenericDroppable from '../draganddrops/GenericDroppable.vue'
 import VenueDraggable from '../draganddrops/VenueDraggable.vue'
-import VenuesConstraintSlideover from '../slideovers/VenuesConstraintSlideover.vue'
+import VenuesConstraintsSlideover from '../slideovers/VenuesConstraintsSlideover.vue'
 import _ from 'lodash'
 
 
 export default {
   components: {
     UnallocatedContainer, DrawHeader, Debate, GenericDroppable,
-    VenueDraggable, VenuesConstraintSlideover
+    VenueDraggable, VenuesConstraintsSlideover
   },
   created: function () {
     this.$eventHub.$on('set-slideover', this.setSlideover)

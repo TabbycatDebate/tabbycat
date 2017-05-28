@@ -6,11 +6,16 @@
        v-on:dragend="handleDragEnd"><!--
        v-on:mouseenter="show = true"
        v-on:mouseleave="show = false" -->
-    <div class="h4 inline-flex">
-      {{ team.short_name }}
+
+    <div class="draggable-prefix">
+      <h4>{{ team.wins }}</h4>
     </div>
-
-
+    <div class="draggable-title">
+      <h5 class="no-top-margin no-bottom-margin">{{ team.short_name }}</h5>
+      <span class="small text-muted subtitle">
+        {{ team.institution_name }}
+      </span>
+    </div>
 
   </div>
 

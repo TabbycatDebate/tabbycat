@@ -1,9 +1,15 @@
 <template>
 
-  <div>
+  <div class="vue-droppable"
+       ><!--
+       v-on:dragover.prevent
+       v-on:drop="drop"
+       v-on:dragenter="dragEnter"
+       v-on:dragleave="dragLeave"
+       v-bind:class="{ 'vue-is-drag-enter': isDroppable }" -->
 
     <slot>
-      <!-- Container sets dropped items here -->
+      <!-- Container sets the dropped items here -->
     </slot>
 
   </div>

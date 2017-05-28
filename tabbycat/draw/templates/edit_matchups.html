@@ -2,8 +2,8 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}Edit Matchups{% endblock %}
-{% block page-title %}Edit Matchups{% endblock %}
+{% block head-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
+{% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
@@ -15,7 +15,7 @@
 
 <div id="vueMount">
 
-  <edit-matchups-container :debates=debates :unallocated-items=unallocatedItems>
+  <edit-matchups-container :debates="debates" :unallocated-items="unallocatedItems">
 
   </edit-matchups-container>
 

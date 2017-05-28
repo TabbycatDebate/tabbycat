@@ -10,35 +10,35 @@
         ?
     </div>
 
-    <div class="draw-cell flex-1">
-      <slot name="simportance">
+    <slot name="simportance">
+      <div class="draw-cell flex-1">
         {{ debate.importance }}
-      </slot>
-    </div>
+      </div>
+    </slot>
 
-    <div class="draw-cell flex-2">
-      <slot name="svenue">
+    <slot name="svenue">
+      <div class="draw-cell flex-2">
         <span v-if="debate.venue">{{ debate.venue.name }}</span>
-      </slot>
-    </div>
+      </div>
+    </slot>
 
     <template v-for="(team, index) in debate.teams">
-      <div class="draw-cell flex-3">
-        <slot :name="'sposition' + index">
+      <slot :name="'sposition' + index">
+        <div class="draw-cell flex-6">
           {{ team.short_name }}
-        </slot>
-      </div>
+        </div>
+      </slot>
     </template>
 
-    <div class="draw-cell flex-6">
-      <slot name="spanel">
-        <div>
+    <slot name="spanel">
+      <div class="draw-cell flex-12">
+        <div><!-- Need a container else they align -->
           <span v-for="panellist in debate.panel">
             {{ panellist.adjudicator.name }} ({{ panellist.position }}),
           </span>
         </div>
-      </slot>
-    </div>
+      </div>
+    </slot>
 
   </div>
 </template>

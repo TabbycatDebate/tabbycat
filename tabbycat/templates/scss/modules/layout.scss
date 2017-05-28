@@ -8,6 +8,9 @@
 .half-vertical-spacing {
   margin-bottom: $line-height-computed * 0.5;
 }
+.no-top-margin {
+  margin-top: 0;
+}
 .no-bottom-padding {
   padding-bottom: 0; // Mostly for panel-body elements
 }
@@ -17,9 +20,6 @@
 .no-side-padding {
   padding-left: 0;
   padding-right: 0;
-}
-.no-top-margin {
-  margin-top: 0;
 }
 
 //------------------------------------------------------------------------------

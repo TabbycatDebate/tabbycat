@@ -6,9 +6,20 @@
        v-on:dragend="handleDragEnd"
        v-on:mouseenter="showSlideOver"
        v-on:mouseleave="hideSlideOver">
-    <div class="h4 inline-flex">
-      {{ venue.name }}
+
+    <div class="draggable-prefix">
+      <h4>{{ venue.priority }}</h4>
     </div>
+    <div class="draggable-title">
+      <h5 class="no-top-margin no-bottom-margin">{{ venue.name }}</h5>
+      <span class="small text-muted subtitle" v-for="c in venue.categories">
+        {{ c.name }}
+      </span>
+      <span class="small text-muted subtitle" v-if="!venue.categories.length">
+        N/A
+      </span>
+    </div>
+
   </div>
 
 </template>

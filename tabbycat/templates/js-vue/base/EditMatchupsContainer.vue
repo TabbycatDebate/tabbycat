@@ -3,24 +3,29 @@
 
   <div class="vertical-spacing" id="messages-container"></div>
 
-  <draw-header :positions="positions"></draw-header>
+  <draw-header :positions="positions">
+    <template slot="hteams">
+      <div class="thead flex-cell flex-8 vue-droppable-container" data-toggle="tooltip" title="test"
+        v-for="position in positions">
+        <span>{{ position }}</span>
+      </div>
+    </template>
+  </draw-header>
 
   <debate v-for="debate in debates" :debate="debate" :key="debate.id">
-
     <template v-for="(team, index) in debate.teams">
-      <generic-droppable :slot="'sposition' + index">
-        <team-draggable :team="team"></team-draggable>
-      </generic-droppable>
+      <div class="draw-cell flex-8 vue-droppable-container" :slot="'sposition' + index">
+        <generic-droppable>
+          <team-draggable :team="team"></team-draggable>
+        </generic-droppable>
+      </div>
     </template>
-
   </debate>
 
   <unallocated-container>
-
     <div v-for="unallocatedTeam in unallocatedItems">
       <team-draggable :team="unallocatedTeam"> </team-draggable>
     </div>
-
   </unallocated-container>
 
 </div>
