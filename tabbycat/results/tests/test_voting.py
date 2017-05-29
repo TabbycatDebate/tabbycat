@@ -16,25 +16,42 @@ class TestVotingDebateResult(TestCase):
 
     testdata = dict()
     testdata[1] = {
-        'everyone_margins': [-1.6666666666666288, 1.6666666666666288],
-        'everyone_scores': [[74.66666666666667, 75.33333333333333, 75.0, 37.5],
-                            [76.33333333333333, 75.0, 75.33333333333333, 37.5]],
-        'everyone_totals': [262.5, 264.16666666666667],
-        'majority_adjs': [1, 2],
-        'majority_margins': [-3.25, 3.25],
-        'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
-        'majority_totals': [262.25, 265.5],
-        'num_adjs': 3,
-        'num_adjs_for_team': [1, 2],
-        'num_speakers_per_team': 3,
+        # data that gets written to the form
+        'declared_winners': ['neg', 'neg', 'neg'],
         'scores': [[[75.0, 76.0, 74.0, 38.0], [76.0, 73.0, 75.0, 37.5]],
                    [[74.0, 75.0, 76.0, 37.0], [77.0, 74.0, 74.0, 38.0]],
                    [[75.0, 75.0, 75.0, 37.5], [76.0, 78.0, 77.0, 37.0]]],
+        # calculated fields that are the same in all scoresheet types
+        'everyone_margins': [-1.66666666666667, 1.66666666666667],
+        'everyone_scores': [[74.66666666666667, 75.33333333333333, 75.0, 37.5],
+                            [76.33333333333333, 75.0, 75.33333333333333, 37.5]],
+        'everyone_totals': [262.5, 264.16666666666667],
+        'num_adjs': 3,
+        'num_speakers_per_team': 3,
         'totals_by_adj': [[263, 261.5], [262, 263], [262.5, 268]],
-        'winner': 'neg',
-        'winner_by_adj': ['aff', 'neg', 'neg'],
+        # calculated fields that depend on the scoresheet type
+        # 'high-required': {
+            'majority_adjs': [1, 2],
+            'majority_margins': [-3.25, 3.25],
+            'majority_scores': [[74.5, 75, 75.5, 37.25], [76.5, 76, 75.5, 37.5]],
+            'majority_totals': [262.25, 265.5],
+            'num_adjs_for_team': [1, 2],
+            'winner': 'neg',
+            'winner_by_adj': ['aff', 'neg', 'neg'],
+        # },
+        # 'low-allowed': {
+        #     'majority_adjs': [0, 1, 2],
+        #     'majority_margins': [-1.66666666666667, 1.66666666666667],
+        #     'majority_scores': [[74.66666666666667, 75.33333333333333, 75.0, 37.5],
+        #                         [76.33333333333333, 75.0, 75.33333333333333, 37.5]],
+        #     'majority_totals': [262.5, 264.16666666666667],
+        #     'num_adjs_for_team': [0, 3],
+        #     'winner': 'neg',
+        #     'winner_by_adj': ['neg', 'neg', 'neg'],
+        # }
     }
     testdata[2] = {
+        'declared_winners': ['aff', 'neg', 'neg'],
         'everyone_margins': [-6.166666666666667, 6.166666666666667],
         'everyone_scores': [[75.0, 75.33333333333333, 75.33333333333333, 36.166666666666667],
                             [77.0, 77.33333333333333, 76.0, 37.666666666666667]],
@@ -55,6 +72,7 @@ class TestVotingDebateResult(TestCase):
         'winner_by_adj': ['neg', 'neg', 'neg'],
     }
     testdata[3] = {
+        'declared_winners': ['neg', 'aff', 'neg'],
         'everyone_margins': [4.33333333333333, -4.33333333333333],
         'everyone_scores': [[74.66666666666667, 74.33333333333333, 77.66666666666667, 39.166666666666667],
                             [74.33333333333333, 73.66666666666667, 75.0, 38.5]],
@@ -74,6 +92,7 @@ class TestVotingDebateResult(TestCase):
         'winner_by_adj': ['neg', 'aff', 'aff'],
     }
     testdata[4] = {
+        'declared_winners': ['aff'],
         'everyone_margins': [-0.5, 0.5],
         'everyone_scores': [[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]],
         'everyone_totals': [187.5, 188.0],
@@ -90,6 +109,7 @@ class TestVotingDebateResult(TestCase):
         'winner_by_adj': ['neg'],
     }
     testdata[5] = { # even panel, chair gets casting vote, note this is a low-point win
+        'declared_winners': ['neg', 'aff'],
         'everyone_margins': [4.25, -4.25],
         'everyone_scores': [[80.0, 76.5, 36.5], [76.0, 73.5, 39.25]],
         'everyone_totals': [193.0, 188.75],
@@ -141,10 +161,6 @@ class TestVotingDebateResult(TestCase):
         Institution.objects.all().delete()
         self.t.delete()
 
-    # ==========================================================================
-    # General decorators and utilities
-    # ==========================================================================
-
     def set_tournament_preference(self, section, name, value):
         self.t.preferences[section + '__' + name] = value
         if name in self.t._prefs:    # clear model-level cache
@@ -164,15 +180,29 @@ class TestVotingDebateResult(TestCase):
             return wrapped
         return wrap
 
+    def on_scoresheet_types(*scoresheet_types):
+        """Decorator. Tests on all scoresheet types listed in the argument."""
+        def wrap(test_fn):
+            def wrapped(self, *args, **kwargs):
+                for scoresheet_type in scoresheet_types:
+                    with self.subTest(scoresheet_type=scoresheet_type):
+                        self.set_tournament_preference('scoring', 'scoresheet_type', scoresheet_type)
+                        test_fn(self, *args, **kwargs)
+            return wrapped
+        return wrap
+
+    on_all_scoresheet_types = on_scoresheet_types('high-required', 'low-allowed', 'tied-allowed', 'result-only')
+
     def on_all_datasets(test_fn):  # flake8: noqa
-        """Decorator. Tests should be written to take three arguments: self,
-        result and testdata. `result` is a VotingDebateResult object. `testdata`
-        is a value of BaseTestResult.testdata. This decorator then sets up the
+        """Decorator. Tests on all datasets in self.testdata. Tests should be
+        written to take three arguments: self, result and testdata. `result` is
+        a VotingDebateResult object. `testdata` is a value of
+        BaseTestResult.testdata. This decorator then sets up the
         VotingDebateResult and runs the test once for each test dataset in
         BaseTestResult.testdata."""
         def wrap(self):
             for key, testdata in self.testdata.items():
-                with self.subTest("testdata[%s]" % key):
+                with self.subTest(testdata=key):
                     self.save_complete_result(testdata)
                     result = self.get_result()
                     test_fn(self, result, testdata)
@@ -180,7 +210,7 @@ class TestVotingDebateResult(TestCase):
 
     def get_result(self):
         ballotsub = BallotSubmission.objects.get(debate=self.debate, confirmed=True)
-        return VotingDebateResult(ballotsub, scoresheet_pref='high-required')
+        return VotingDebateResult(ballotsub)
 
     def save_blank_result(self, nadjs=3, nspeakers=3):
 
@@ -198,7 +228,7 @@ class TestVotingDebateResult(TestCase):
         ballotsub = BallotSubmission.objects.create(debate=self.debate, confirmed=True,
                 submitter_type=BallotSubmission.SUBMITTER_TABROOM)
 
-        return VotingDebateResult(ballotsub, scoresheet_pref='high-required')
+        return VotingDebateResult(ballotsub)
 
     def save_complete_result(self, testdata, post_create=None):
 
@@ -215,10 +245,15 @@ class TestVotingDebateResult(TestCase):
             result.set_speaker(side, nspeakers+1, speakers[0])
             # ghost fields should be False by default
 
-        for adj, sheet in zip(self.adjs, testdata['scores']):
-            for side, teamscores in zip(self.SIDES, sheet):
-                for pos, score in enumerate(teamscores, start=1):
-                    result.set_score(adj, side, pos, score)
+        if result.requires_scores:
+            for adj, sheet in zip(self.adjs, testdata['scores']):
+                for side, teamscores in zip(self.SIDES, sheet):
+                    for pos, score in enumerate(teamscores, start=1):
+                        result.set_score(adj, side, pos, score)
+
+        if result.requires_declared_winners:
+            for adj, declared_winner in zip(self.adjs, testdata['declared_winners']):
+                result.set_declared_winner(adj, declared_winner)
 
         with suppress_logs('results.result', logging.WARNING):
             result.save()
@@ -227,23 +262,27 @@ class TestVotingDebateResult(TestCase):
     # Normal operation
     # ==========================================================================
 
+    # @on_all_scoresheet_types
     @on_all_datasets
     def test_save(self, result, testdata):
         # Run self.save_complete_result and check completeness
         self.assertTrue(result.is_complete)
 
+    # @on_scoresheet_types('high-required', 'low-allowed', 'tied-allowed')
     @on_all_datasets
     def test_totals_by_adj(self, result, testdata):
         for adj, totals in zip(self.adjs, testdata['totals_by_adj']):
             for side, total in zip(self.SIDES, totals):
                 self.assertEqual(total, result.scoresheets[adj].get_total(side))
 
+    # @on_scoresheet_types('high-required', 'low-allowed', 'tied-allowed')
     @on_all_datasets
     def test_majority_adjudicators(self, result, testdata):
         majority = [self.adjs[i] for i in testdata['majority_adjs']]
         with suppress_logs('results.result', logging.WARNING):
             self.assertCountEqual(majority, result.majority_adjudicators())
 
+    # @on_scoresheet_types('high-required', 'low-allowed', 'tied-allowed')
     @on_all_datasets
     def test_individual_scores(self, result, testdata):
         for adj, sheet in zip(self.adjs, testdata['scores']):

@@ -48,6 +48,10 @@ from .scoresheet import SCORESHEET_CLASSES
 logger = logging.getLogger(__name__)
 
 
+class ResultError(RuntimeError):
+    pass
+
+
 class BaseDebateResult:
     """Base class for debate results.
 
@@ -107,13 +111,10 @@ class BaseDebateResult:
         # side are to be extended to BP later
         self.sides = ['aff', 'neg']
         self.side_db_values = [self.SIDE_KEY_MAP_REVERSE[side] for side in self.sides]
+        self.positions = self.tournament.POSITIONS
 
         if load:
-            self.positions = self.tournament.POSITIONS
-
-            self.init_blank_buffer()
-            self.load_from_db()
-            self.assert_loaded()
+            self.full_load()
 
     def __repr__(self):
         return "<{classname} at {id:#x} for {bsub!s}>".format(
@@ -122,6 +123,11 @@ class BaseDebateResult:
     # --------------------------------------------------------------------------
     # Management methods
     # --------------------------------------------------------------------------
+
+    def full_load(self):
+        self.init_blank_buffer()
+        self.load_from_db()
+        self.assert_loaded()
 
     def init_blank_buffer(self):
         """Initialises the data attributes. External initialisers might find
@@ -283,18 +289,20 @@ class BaseDebateResult:
 
 class VotingDebateResult(BaseDebateResult):
 
-    def __init__(self, ballotsub, **kwargs):
+    def __init__(self, ballotsub, load=True):
 
-        scoresheet_pref = kwargs.pop('scoresheet_pref', None)
-        if scoresheet_pref is None:  # avoid cache hit if provided as kwarg
-            # can't use self.tournament, it's created by the super constructor
-            scoresheet_pref = ballotsub.debate.round.tournament.pref('scoresheet_type')
-        self.scoresheet_class = SCORESHEET_CLASSES[scoresheet_pref]
+        super().__init__(ballotsub, load=False)  # hold off load until more is set up
+
+        scoresheet_type = self.tournament.pref('scoresheet_type')
+        self.scoresheet_class = SCORESHEET_CLASSES[scoresheet_type]
+
+        self.requires_scores = hasattr(self.scoresheet_class, 'set_score')
+        self.requires_declared_winners = hasattr(self.scoresheet_class, 'set_declared_winner')
 
         self._decision_calculated = False
 
-        # super constructor performs the load
-        super().__init__(ballotsub, **kwargs)
+        if load:
+            self.full_load()
 
     # --------------------------------------------------------------------------
     # Management methods
@@ -369,11 +377,35 @@ class VotingDebateResult(BaseDebateResult):
     # --------------------------------------------------------------------------
 
     def get_score(self, adjudicator, side, position):
-        return self.scoresheets[adjudicator].get_score(side, position)
+        try:
+            return self.scoresheets[adjudicator].get_score(side, position)
+        except AttributeError:
+            logger.exception("Tried to get score, but scoresheet doesn't do scores. "
+                    "self.requires_scores is %s", self.requires_scores)
+            return None
 
     def set_score(self, adjudicator, side, position, score):
         scoresheet = self.scoresheets[adjudicator]
-        scoresheet.set_score(side, position, score)
+        try:
+            scoresheet.set_score(side, position, score)
+        except AttributeError:
+            logger.exception("Tried to set score, but scoresheet doesn't do scores. "
+                    "self.requires_scores is %s", self.requires_scores)
+
+    def get_declared_winner(self, adjudicator):
+        try:
+            return self.scoresheets[adjudicator].get_declared_winner()
+        except AttributeError:
+            logger.exception("Tried to get declared winner, but scoresheet doesn't do declared winners. "
+                    "self.requires_declared_winners is %s", self.requires_declared_winners)
+            return None
+
+    def set_declared_winner(self, adjudicator, declared_winner):
+        try:
+            return self.scoresheets[adjudicator].set_declared_winner(declared_winner)
+        except AttributeError:
+            logger.exception("Tried to set declared winner, but scoresheet doesn't do declared winners. "
+                    "self.requires_declared_winners is %s", self.requires_declared_winners)
 
     # --------------------------------------------------------------------------
     # Calculated fields

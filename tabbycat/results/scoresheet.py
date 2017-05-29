@@ -13,6 +13,10 @@ should not appear in any of them.
 
 class BaseScoresheet:
 
+    def __init__(self, *args, **kwargs):
+        """Absorb leftover arguments."""
+        pass
+
     @property
     def is_complete(self):
         """Base implementation. Does nothing."""
@@ -71,6 +75,9 @@ class DeclaredWinnerMixin:
     def set_declared_winner(self, winner):
         assert winner in self.SIDES or winner is None, "Declared winner must be one of " + ", ".join(map(repr, self.SIDES))
         self.declared_winner = winner
+
+    def get_declared_winner(self):
+        return self.declared_winner
 
     def identical(self, other):
         return super().identical(other) and self.declared_winner == other.declared_winner
