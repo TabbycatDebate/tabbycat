@@ -141,18 +141,50 @@ class TestVotingDebateResult(TestCase):
         Institution.objects.all().delete()
         self.t.delete()
 
-    def _get_result(self):
-        ballotsub = BallotSubmission.objects.get(debate=self.debate, confirmed=True)
-        return VotingDebateResult(ballotsub, scoresheet_pref='high-required')
+    # ==========================================================================
+    # General decorators and utilities
+    # ==========================================================================
 
-    def _set_tournament_preference(self, section, name, value):
+    def set_tournament_preference(self, section, name, value):
         self.t.preferences[section + '__' + name] = value
         if name in self.t._prefs:    # clear model-level cache
             del self.t._prefs[name]
 
+    def with_preference(section, name, value):  # flake8: noqa
+        """Decorator. Sets a tournament preference before it begins the wrapped
+        function. The main purpose of this decorator is to be used with other
+        decorators, otherwise it could obviously just be achieved with a single
+        line at the beginning of the function. This decorator should normally be
+        placed first in the decorator chain, so that it is the outermost
+        wrapper."""
+        def wrap(test_fn):
+            def wrapped(self, *args, **kwargs):
+                self.set_tournament_preference(section, name, value)
+                test_fn(self, *args, **kwargs)
+            return wrapped
+        return wrap
+
+    def on_all_datasets(test_fn):  # flake8: noqa
+        """Decorator. Tests should be written to take three arguments: self,
+        result and testdata. `result` is a VotingDebateResult object. `testdata`
+        is a value of BaseTestResult.testdata. This decorator then sets up the
+        VotingDebateResult and runs the test once for each test dataset in
+        BaseTestResult.testdata."""
+        def wrap(self):
+            for key, testdata in self.testdata.items():
+                with self.subTest("testdata[%s]" % key):
+                    self.save_complete_result(testdata)
+                    result = self.get_result()
+                    test_fn(self, result, testdata)
+        return wrap
+
+    def get_result(self):
+        ballotsub = BallotSubmission.objects.get(debate=self.debate, confirmed=True)
+        return VotingDebateResult(ballotsub, scoresheet_pref='high-required')
+
     def save_blank_result(self, nadjs=3, nspeakers=3):
 
-        self._set_tournament_preference('debate_rules', 'substantive_speakers', nspeakers)
+        self.set_tournament_preference('debate_rules', 'substantive_speakers', nspeakers)
 
         # set debate adjudicators (depends on how many adjs there are, so can't do in setUp())
         self.debate.adjudicators.chair = self.adjs[0]
@@ -191,32 +223,9 @@ class TestVotingDebateResult(TestCase):
         with suppress_logs('results.result', logging.WARNING):
             result.save()
 
-    def on_all_datasets(test_fn):  # flake8: noqa
-        """Decorator. Tests should be written to take three arguments: self,
-        result and testdata. `result` is a VotingDebateResult object. `testdata`
-        is a value of BaseTestResult.testdata. This decorator then sets up the
-        VotingDebateResult and runs the test once for each test dataset in
-        BaseTestResult.testdata."""
-        def wrap(self):
-            for key, testdata in self.testdata.items():
-                with self.subTest("testdata[%s]" % key):
-                    self.save_complete_result(testdata)
-                    result = self._get_result()
-                    test_fn(self, result, testdata)
-        return wrap
-
-    def on_all_datasets_with(relevant_adjs):  # flake8: noqa
-        """Decorator. Like @on_all_datasets, but also sets the
-        margin_includes_dissenters preference according to `relevant_adjs`
-        before it begins."""
-        assert relevant_adjs in ['majority', 'everyone']
-        def wrap(test_fn):
-            def wrapped(self):
-                self._set_tournament_preference('scoring', 'margin_includes_dissenters',
-                    relevant_adjs == 'everyone')
-                TestVotingDebateResult.on_all_datasets(test_fn)(self)
-            return wrapped
-        return wrap
+    # ==========================================================================
+    # Normal operation
+    # ==========================================================================
 
     @on_all_datasets
     def test_save(self, result, testdata):
@@ -254,6 +263,10 @@ class TestVotingDebateResult(TestCase):
         for adj, winner in zip(self.adjs, testdata['winner_by_adj']):
             self.assertEqual(result.scoresheets[adj].winner(), winner)
 
+    # --------------------------------------------------------------------------
+    # Speaker scores
+    # --------------------------------------------------------------------------
+
     def _get_speakerscore_in_db(self, side, pos):
         return SpeakerScore.objects.get(
             ballot_submission__debate=self.debate,
@@ -262,7 +275,8 @@ class TestVotingDebateResult(TestCase):
             position=pos
         )
 
-    @on_all_datasets_with('majority')
+    @with_preference('scoring', 'margin_includes_dissenters', False)
+    @on_all_datasets
     def test_speaker_scores_majority(self, result, testdata):
         for side, totals in zip(self.SIDES, testdata['majority_scores']):
             for pos, score in enumerate(totals, start=1):
@@ -270,13 +284,18 @@ class TestVotingDebateResult(TestCase):
                     self.assertAlmostEqual(score, self._get_speakerscore_in_db(side, pos).score)
                     self.assertAlmostEqual(score, result.get_speaker_score(side, pos))
 
-    @on_all_datasets_with('everyone')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    @on_all_datasets
     def test_speaker_scores_everyone(self, result, testdata):
         for side, totals in zip(self.SIDES, testdata['everyone_scores']):
             for pos, score in enumerate(totals, start=1):
                 with suppress_logs('results.result', logging.WARNING):
                     self.assertAlmostEqual(score, self._get_speakerscore_in_db(side, pos).score)
                     self.assertAlmostEqual(score, result.get_speaker_score(side, pos))
+
+    # --------------------------------------------------------------------------
+    # Team scores
+    # --------------------------------------------------------------------------
 
     def _get_teamscore_in_db(self, side):
         return TeamScore.objects.get(
@@ -301,28 +320,32 @@ class TestVotingDebateResult(TestCase):
                 self.assertEqual(win, self._get_teamscore_in_db(side).win)
                 self.assertEqual(win, result.teamscorefield_win(side))
 
-    @on_all_datasets_with('majority')
+    @with_preference('scoring', 'margin_includes_dissenters', False)
+    @on_all_datasets
     def test_teamscorefield_score_majority(self, result, testdata):
         for side, total in zip(self.SIDES, testdata['majority_totals']):
             with suppress_logs('results.result', logging.WARNING):
                 self.assertAlmostEqual(total, self._get_teamscore_in_db(side).score)
                 self.assertAlmostEqual(total, result.teamscorefield_score(side))
 
-    @on_all_datasets_with('majority')
+    @with_preference('scoring', 'margin_includes_dissenters', False)
+    @on_all_datasets
     def test_teamscorefield_margin_majority(self, result, testdata):
         for side, margin in zip(self.SIDES, testdata['majority_margins']):
             with suppress_logs('results.result', logging.WARNING):
                 self.assertAlmostEqual(margin, self._get_teamscore_in_db(side).margin)
                 self.assertAlmostEqual(margin, result.teamscorefield_margin(side))
 
-    @on_all_datasets_with('everyone')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    @on_all_datasets
     def test_teamscorefield_score_everyone(self, result, testdata):
         for side, total in zip(self.SIDES, testdata['everyone_totals']):
             with suppress_logs('results.result', logging.WARNING):
                 self.assertAlmostEqual(total, self._get_teamscore_in_db(side).score)
                 self.assertAlmostEqual(total, result.teamscorefield_score(side))
 
-    @on_all_datasets_with('everyone')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    @on_all_datasets
     def test_teamscorefield_margin_everyone(self, result, testdata):
         for side, margin in zip(self.SIDES, testdata['everyone_margins']):
             with suppress_logs('results.result', logging.WARNING):
@@ -359,18 +382,18 @@ class TestVotingDebateResult(TestCase):
 
     def test_unknown_speaker(self):
         self.save_complete_result(self.testdata[1])
-        result = self._get_result()
+        result = self.get_result()
         neg_speaker = self.teams[1].speaker_set.first()
         with self.assertLogs('results.result', level=logging.ERROR) as cm:
             result.set_speaker('aff', 1, neg_speaker)
 
     def test_initially_unknown_sides(self):
-        self._set_tournament_preference('scoring', 'margin_includes_dissenters', False)
+        self.set_tournament_preference('scoring', 'margin_includes_dissenters', False)
         self._unset_sides()
         testdata = self.testdata[1]
         self.save_complete_result(testdata,
                 post_create=lambda result: result.set_sides(*self.teams))
-        result = self._get_result()
+        result = self.get_result()
 
         # Just check a couple of fields
         for side, margin in zip(self.SIDES, testdata['majority_margins']):
@@ -389,7 +412,7 @@ class TestVotingDebateResult(TestCase):
             testdata = self.testdata[1]
             if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
                 self.save_complete_result(testdata)
-            result = self._get_result()
+            result = self.get_result()
             test_fn(self, result)
             self.assertFalse(result.is_complete)
         return wrap
@@ -415,7 +438,7 @@ class TestVotingDebateResult(TestCase):
             testdata = self.testdata[1]
             if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
                 self.save_complete_result(testdata)
-            result = self._get_result()
+            result = self.get_result()
             test_fn(self, result)
             self.assertRaises(AssertionError, result.assert_loaded)
         return wrap
