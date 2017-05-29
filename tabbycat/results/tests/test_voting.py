@@ -5,7 +5,7 @@ from django.test import TestCase
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
-from results.models import BallotSubmission
+from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
 from results.result import VotingDebateResult    # absolute import to keep logger's name consistent
 from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
@@ -108,6 +108,10 @@ class TestVotingDebateResult(TestCase):
     }
 
     SIDES = ['aff', 'neg']
+    SIDE_KEY_MAP_REVERSE = {
+        'aff': DebateTeam.POSITION_AFFIRMATIVE,
+        'neg': DebateTeam.POSITION_NEGATIVE,
+    }
 
     def setUp(self):
         self.t = Tournament.objects.create(slug="resulttest", name="ResultTest")
@@ -188,19 +192,31 @@ class TestVotingDebateResult(TestCase):
             result.save()
 
     def on_all_datasets(test_fn):  # flake8: noqa
-        """Decorator.
-        Tests should be written to take three arguments: self, ballotset and
-        testdata. 'ballotset' is a BallotSet object. 'testdata' is a value of
-        BaseTestResult.testdata.
-        This decorator then sets up the BallotSet and runs the test once for
-        each test dataset in BaseTestResult.testdata."""
-        def foo(self):
+        """Decorator. Tests should be written to take three arguments: self,
+        result and testdata. `result` is a VotingDebateResult object. `testdata`
+        is a value of BaseTestResult.testdata. This decorator then sets up the
+        VotingDebateResult and runs the test once for each test dataset in
+        BaseTestResult.testdata."""
+        def wrap(self):
             for key, testdata in self.testdata.items():
                 with self.subTest("testdata[%s]" % key):
                     self.save_complete_result(testdata)
                     result = self._get_result()
                     test_fn(self, result, testdata)
-        return foo
+        return wrap
+
+    def on_all_datasets_with(relevant_adjs):  # flake8: noqa
+        """Decorator. Like @on_all_datasets, but also sets the
+        margin_includes_dissenters preference according to `relevant_adjs`
+        before it begins."""
+        assert relevant_adjs in ['majority', 'everyone']
+        def wrap(test_fn):
+            def wrapped(self):
+                self._set_tournament_preference('scoring', 'margin_includes_dissenters',
+                    relevant_adjs == 'everyone')
+                TestVotingDebateResult.on_all_datasets(test_fn)(self)
+            return wrapped
+        return wrap
 
     @on_all_datasets
     def test_save(self, result, testdata):
@@ -211,95 +227,121 @@ class TestVotingDebateResult(TestCase):
     def test_totals_by_adj(self, result, testdata):
         for adj, totals in zip(self.adjs, testdata['totals_by_adj']):
             for side, total in zip(self.SIDES, totals):
-                self.assertEqual(result.scoresheets[adj].get_total(side), total)
+                self.assertEqual(total, result.scoresheets[adj].get_total(side))
 
     @on_all_datasets
     def test_majority_adjudicators(self, result, testdata):
         majority = [self.adjs[i] for i in testdata['majority_adjs']]
         with suppress_logs('results.result', logging.WARNING):
-            self.assertCountEqual(result.majority_adjudicators(), majority)
-
-    @on_all_datasets
-    def test_speaker_scores_majority(self, result, testdata):
-        self._set_tournament_preference('scoring', 'margin_includes_dissenters', False)
-        for side, totals in zip(self.SIDES, testdata['majority_scores']):
-            for pos, score in enumerate(totals, start=1):
-                with suppress_logs('results.result', logging.WARNING):
-                    self.assertEqual(result.get_speaker_score(side, pos), score)
-
-    @on_all_datasets
-    def test_speaker_scores_everyone(self, result, testdata):
-        self._set_tournament_preference('scoring', 'margin_includes_dissenters', True)
-        for side, totals in zip(self.SIDES, testdata['everyone_scores']):
-            for pos, score in enumerate(totals, start=1):
-                with suppress_logs('results.result', logging.WARNING):
-                    self.assertEqual(result.get_speaker_score(side, pos), score)
+            self.assertCountEqual(majority, result.majority_adjudicators())
 
     @on_all_datasets
     def test_individual_scores(self, result, testdata):
         for adj, sheet in zip(self.adjs, testdata['scores']):
             for side, scores in zip(self.SIDES, sheet):
                 for pos, score in enumerate(scores, start=1):
-                    self.assertEqual(result.get_score(adj, side, pos), score)
+                    score_in_db = SpeakerScoreByAdj.objects.get(
+                        ballot_submission__debate=self.debate,
+                        ballot_submission__confirmed=True,
+                        debate_team__position=self.SIDE_KEY_MAP_REVERSE[side],
+                        debate_adjudicator__adjudicator=adj,
+                        position=pos).score
+                    self.assertEqual(score, score_in_db)
+                    self.assertEqual(score, result.get_score(adj, side, pos))
 
     @on_all_datasets
     def test_winner_by_adj(self, result, testdata):
         for adj, winner in zip(self.adjs, testdata['winner_by_adj']):
             self.assertEqual(result.scoresheets[adj].winner(), winner)
 
+    def _get_speakerscore_in_db(self, side, pos):
+        return SpeakerScore.objects.get(
+            ballot_submission__debate=self.debate,
+            ballot_submission__confirmed=True,
+            debate_team__position=self.SIDE_KEY_MAP_REVERSE[side],
+            position=pos
+        )
+
+    @on_all_datasets_with('majority')
+    def test_speaker_scores_majority(self, result, testdata):
+        for side, totals in zip(self.SIDES, testdata['majority_scores']):
+            for pos, score in enumerate(totals, start=1):
+                with suppress_logs('results.result', logging.WARNING):
+                    self.assertAlmostEqual(score, self._get_speakerscore_in_db(side, pos).score)
+                    self.assertAlmostEqual(score, result.get_speaker_score(side, pos))
+
+    @on_all_datasets_with('everyone')
+    def test_speaker_scores_everyone(self, result, testdata):
+        for side, totals in zip(self.SIDES, testdata['everyone_scores']):
+            for pos, score in enumerate(totals, start=1):
+                with suppress_logs('results.result', logging.WARNING):
+                    self.assertAlmostEqual(score, self._get_speakerscore_in_db(side, pos).score)
+                    self.assertAlmostEqual(score, result.get_speaker_score(side, pos))
+
+    def _get_teamscore_in_db(self, side):
+        return TeamScore.objects.get(
+            ballot_submission__debate=self.debate,
+            ballot_submission__confirmed=True,
+            debate_team__position=self.SIDE_KEY_MAP_REVERSE[side]
+        )
+
     @on_all_datasets
     def test_teamscorefield_points(self, result, testdata):
         for side in self.SIDES:
             points = 1 if side == testdata['winner'] else 0
             with suppress_logs('results.result', logging.WARNING):
-                self.assertEqual(result.teamscorefield_points(side), points)
+                self.assertEqual(points, self._get_teamscore_in_db(side).points)
+                self.assertEqual(points, result.teamscorefield_points(side))
 
     @on_all_datasets
     def test_teamscorefield_win(self, result, testdata):
         for side in self.SIDES:
             win = side == testdata['winner']
             with suppress_logs('results.result', logging.WARNING):
-                self.assertEqual(result.teamscorefield_win(side), win)
+                self.assertEqual(win, self._get_teamscore_in_db(side).win)
+                self.assertEqual(win, result.teamscorefield_win(side))
 
-    @on_all_datasets
+    @on_all_datasets_with('majority')
     def test_teamscorefield_score_majority(self, result, testdata):
-        self._set_tournament_preference('scoring', 'margin_includes_dissenters', False)
         for side, total in zip(self.SIDES, testdata['majority_totals']):
             with suppress_logs('results.result', logging.WARNING):
-                self.assertAlmostEqual(result.teamscorefield_score(side), total)
+                self.assertAlmostEqual(total, self._get_teamscore_in_db(side).score)
+                self.assertAlmostEqual(total, result.teamscorefield_score(side))
 
-    @on_all_datasets
+    @on_all_datasets_with('majority')
     def test_teamscorefield_margin_majority(self, result, testdata):
-        self._set_tournament_preference('scoring', 'margin_includes_dissenters', False)
         for side, margin in zip(self.SIDES, testdata['majority_margins']):
             with suppress_logs('results.result', logging.WARNING):
-                self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
+                self.assertAlmostEqual(margin, self._get_teamscore_in_db(side).margin)
+                self.assertAlmostEqual(margin, result.teamscorefield_margin(side))
 
-    @on_all_datasets
+    @on_all_datasets_with('everyone')
     def test_teamscorefield_score_everyone(self, result, testdata):
-        self._set_tournament_preference('scoring', 'margin_includes_dissenters', True)
         for side, total in zip(self.SIDES, testdata['everyone_totals']):
             with suppress_logs('results.result', logging.WARNING):
-                self.assertAlmostEqual(result.teamscorefield_score(side), total)
+                self.assertAlmostEqual(total, self._get_teamscore_in_db(side).score)
+                self.assertAlmostEqual(total, result.teamscorefield_score(side))
 
-    @on_all_datasets
+    @on_all_datasets_with('everyone')
     def test_teamscorefield_margin_everyone(self, result, testdata):
-        self._set_tournament_preference('scoring', 'margin_includes_dissenters', True)
         for side, margin in zip(self.SIDES, testdata['everyone_margins']):
             with suppress_logs('results.result', logging.WARNING):
-                self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
+                self.assertAlmostEqual(margin, self._get_teamscore_in_db(side).margin)
+                self.assertAlmostEqual(margin, result.teamscorefield_margin(side))
 
     @on_all_datasets
     def test_teamscorefield_votes_given(self, result, testdata):
         for side, votes in zip(self.SIDES, testdata['num_adjs_for_team']):
             with suppress_logs('results.result', logging.WARNING):
-                self.assertAlmostEqual(result.teamscorefield_votes_given(side), votes)
+                self.assertEqual(votes, self._get_teamscore_in_db(side).votes_given)
+                self.assertEqual(votes, result.teamscorefield_votes_given(side))
 
     @on_all_datasets
     def test_teamscorefield_votes_possible(self, result, testdata):
+        nadjs = testdata['num_adjs']
         for side in self.SIDES:
-            self.assertAlmostEqual(result.teamscorefield_votes_possible(side),
-                sum(testdata['num_adjs_for_team']))
+            self.assertEqual(nadjs, self._get_teamscore_in_db(side).votes_possible)
+            self.assertEqual(nadjs, result.teamscorefield_votes_possible(side))
 
     # ==========================================================================
     # Unknown sides
@@ -333,7 +375,9 @@ class TestVotingDebateResult(TestCase):
         # Just check a couple of fields
         for side, margin in zip(self.SIDES, testdata['majority_margins']):
             with suppress_logs('results.result', logging.WARNING):
+                self.assertEqual(self._get_teamscore_in_db(side).win, side == testdata['winner'])
                 self.assertEqual(result.teamscorefield_win(side), side == testdata['winner'])
+                self.assertAlmostEqual(self._get_teamscore_in_db(side).margin, margin)
                 self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
 
     # ==========================================================================
@@ -341,14 +385,14 @@ class TestVotingDebateResult(TestCase):
     # ==========================================================================
 
     def incomplete_test(test_fn):  # flake8: noqa
-        def foo(self):
+        def wrap(self):
             testdata = self.testdata[1]
             if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
                 self.save_complete_result(testdata)
             result = self._get_result()
             test_fn(self, result)
             self.assertFalse(result.is_complete)
-        return foo
+        return wrap
 
     @incomplete_test
     def test_unfilled_debateteam(self, result):
@@ -367,14 +411,14 @@ class TestVotingDebateResult(TestCase):
     # ==========================================================================
 
     def bad_load_assertion_test(test_fn):  # flake8: noqa
-        def foo(self):
+        def wrap(self):
             testdata = self.testdata[1]
             if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
                 self.save_complete_result(testdata)
             result = self._get_result()
             test_fn(self, result)
             self.assertRaises(AssertionError, result.assert_loaded)
-        return foo
+        return wrap
 
     @bad_load_assertion_test
     def test_extraneous_debateteam(self, result):
