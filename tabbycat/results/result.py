@@ -401,6 +401,7 @@ class VotingDebateResult(BaseDebateResult):
                     "self.takes_scores is %s", self.takes_scores)
 
     def get_declared_winner(self, adjudicator):
+        """Not currently used, in place for future implementation of declared winners."""
         try:
             return self.scoresheets[adjudicator].get_declared_winner()
         except AttributeError:
@@ -409,6 +410,7 @@ class VotingDebateResult(BaseDebateResult):
             return None
 
     def set_declared_winner(self, adjudicator, declared_winner):
+        """Not currently used, in place for future implementation of declared winners."""
         try:
             return self.scoresheets[adjudicator].set_declared_winner(declared_winner)
         except AttributeError:
@@ -426,7 +428,7 @@ class VotingDebateResult(BaseDebateResult):
         the chair voted.
 
         Raises AssertionError if scores are incomplete.
-        Raises ResultError there is a draw somewhere among the adjudicators.
+        Raises ResultError any scoresheet doesn't have a winner.
         """
 
         assert self.is_complete(), "Tried to calculate decision on an incomplete ballot set."

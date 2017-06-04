@@ -73,14 +73,14 @@ class TestTwoTeamScoresheets(unittest.TestCase):
     def test_result_only(self, testdata):
         scoresheet = ResultOnlyScoresheet()
         scoresheet.set_declared_winner(testdata['declared_winner'])
-        self.assertEqual(scoresheet.is_complete, testdata['complete_declared'])
+        self.assertEqual(scoresheet.is_complete(), testdata['complete_declared'])
         self.assertEqual(scoresheet.winner(), testdata['declared_winner'])
 
     @on_all_testdata
     def test_high_points_required(self, testdata):
         scoresheet = HighPointWinsRequiredScoresheet(testdata['positions'])
         self.load_scores(scoresheet, testdata)
-        self.assertEqual(scoresheet.is_complete, testdata['complete_scores'])
+        self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'])
         self.assertEqual(scoresheet.winner(), testdata['calculated_winner'])
         for side, total in zip(self.SIDES, testdata['totals']):
             self.assertEqual(scoresheet.get_total(side), total)
@@ -90,8 +90,8 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         scoresheet = LowPointWinsAllowedScoresheet(testdata['positions'])
         scoresheet.set_declared_winner(testdata['declared_winner'])
         self.load_scores(scoresheet, testdata)
-        self.assertEqual(scoresheet.is_complete, testdata['complete_scores'] and testdata['complete_declared'])
-        self.assertEqual(scoresheet.winner(), testdata['declared_winner'] if scoresheet.is_complete else None)
+        self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'] and testdata['complete_declared'])
+        self.assertEqual(scoresheet.winner(), testdata['declared_winner'] if scoresheet.is_complete() else None)
         for side, total in zip(self.SIDES, testdata['totals']):
             self.assertEqual(scoresheet.get_total(side), total)
 
@@ -100,8 +100,8 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         scoresheet = TiedPointWinsAllowedScoresheet(testdata['positions'])
         scoresheet.set_declared_winner(testdata['declared_winner'])
         self.load_scores(scoresheet, testdata)
-        self.assertEqual(scoresheet.is_complete, testdata['complete_scores'] and testdata['complete_declared'])
-        if scoresheet.is_complete and (testdata['calculated_winner'] in [testdata['declared_winner'], None]):
+        self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'] and testdata['complete_declared'])
+        if scoresheet.is_complete() and (testdata['calculated_winner'] in [testdata['declared_winner'], None]):
             winner = testdata['declared_winner']
         else:
             winner = None
