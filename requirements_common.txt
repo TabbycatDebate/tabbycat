@@ -5,7 +5,7 @@
 
 # Core
 
-Django==1.11.1
+Django==1.11.2
 django-appconf==1.0.2                   # Helper for handling app configs
 django-dynamic-preferences==1.1.1       # Settings management
 django-extensions==1.7.9                # For the generate secret command
@@ -32,5 +32,5 @@ django-debug-toolbar==1.8               # Debug Toolbar
 six==1.10                               # Python 2/3 compatibility library
 flake8==3.3.0                           # For testing/linting
 flake8-import-order==0.12               # Flake plugin for import order
-flake8-quotes==0.9.0                    # Flake plugin for quotes
+flake8-quotes==0.11.0                   # Flake plugin for quotes
 pep8-naming==0.4.1                      # Flake plugin for naming conventions
