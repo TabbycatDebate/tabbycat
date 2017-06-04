@@ -14,6 +14,10 @@ from venues.models import Venue
 
 class TestVotingDebateResult(TestCase):
 
+    # Currently, the low-allowed and tie-allowed data aren't actually used, but
+    # they are in place for future use, for when declared winners get fully
+    # implemented.
+
     testdata = dict()
 
     testdata['high'] = { # standard high-point win
@@ -548,6 +552,7 @@ class TestVotingDebateResult(TestCase):
             result = self.get_result()
             test_fn(self, result)
             self.assertFalse(result.is_complete())
+            self.assertFalse(result.is_valid())
         return wrap
 
     @incomplete_test

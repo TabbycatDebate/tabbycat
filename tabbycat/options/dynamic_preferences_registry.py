@@ -11,6 +11,7 @@ from .models import tournament_preferences_registry
 scoring = Section('scoring')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class ScoresheetType(ChoicePreference):
     help_text = "Determines what fields the scoresheet takes and constraints on scoring"
@@ -18,12 +19,13 @@ class ScoresheetType(ChoicePreference):
     name = 'scoresheet_type'
     verbose_name = "Scoresheet type"
     choices = (
-        ('winner-only', "Winner only (no scores)"),
+        # ('winner-only', "Winner only (no scores)"),
         ('high-required', "High-point wins required"),
-        ('tied-allowed', "Tied-point wins allowed"),
-        ('low-allowed', "Low-point wins allowed"),
+        # ('tied-allowed', "Tied-point wins allowed"),
+        # ('low-allowed', "Low-point wins allowed"),
     )
     default = 'high-required'
+
 
 @tournament_preferences_registry.register
 class MinimumSpeakerScore(FloatPreference):
