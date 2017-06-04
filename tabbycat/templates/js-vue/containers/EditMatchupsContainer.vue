@@ -3,7 +3,7 @@
 
     <div class="vertical-spacing" id="messages-container"></div>
 
-    <!-- <team-slideover :team="slideSubject"></team-slideover> -->
+    <slide-over-item :subject="slideOverItem"></slide-over-item>
 
     <draw-header :positions="positions">
       <template slot="hteams">
@@ -34,20 +34,20 @@
 </template>
 
 <script>
-import DrawContainer from '../containers/DrawContainer.vue'
+import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableTeam from '../draganddrops/DraggableTeam.vue'
-// import TeamSlideover from '../slideovers/TeamSlideover.vue'
+import SlideOverItem from '../infoovers/SlideOverItem.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [DrawContainer],
+  mixins: [DrawContainerMixin],
   components: {
-    DrawHeader, UnallocatedItemsContainer, Debate, DroppableGeneric, DraggableTeam,
-    // TeamSlideover
+    DrawHeader, UnallocatedItemsContainer, Debate, DroppableGeneric,
+    DraggableTeam, SlideOverItem
   }
 }
 

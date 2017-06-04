@@ -2,6 +2,8 @@
 // Subclass should set on the hoverable element:
 // v-on:mouseenter="showSlideOver( SUBJECT_DATA )
 // v-on:mouseleave="hideSlideOver( SUBJECT_DATA )
+// Subclass should usually overrite formatForSlideOver() with their own data
+
 
 export default {
   props: {
@@ -9,12 +11,16 @@ export default {
   computed: {
   },
   methods: {
-    showSlideOver: function(event, subjectData) {
-      this.$eventHub.$emit('set-slideover', subjectData)
+    showSlideOver: function(event, subject) {
+      console.log('show slide')
+      this.$eventHub.$emit('set-slideover', this.formatForSlideOver(subject))
     },
     hideSlideOver: function(event) {
       this.$eventHub.$emit('unset-slideover')
     },
+    formatForSlideOver: function(subject) {
+      return subject
+    }
   }
 }
 </script>

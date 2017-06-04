@@ -11,7 +11,8 @@
         <div class="flex-3 btn-toolbar">
           <div class="btn-group btn-group-sm">
             <template v-for="speaker in team.speakers">
-              <div :class="'btn btn-default gender-display gender-' + speaker.gender">
+              <div :class="['gender-' + speaker.gender,
+                            'btn btn-default gender-display']">
                 {{ speaker.name }}
               </div>
             </template>

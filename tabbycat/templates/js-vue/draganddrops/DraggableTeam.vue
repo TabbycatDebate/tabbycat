@@ -14,7 +14,7 @@
     <div class="draggable-title">
       <h5 class="no-top-margin no-bottom-margin">{{ team.short_name }}</h5>
       <span class="small text-muted subtitle">
-        {{ team.institution.name }}
+        {{ team.institution.code }}
       </span>
     </div>
 
@@ -24,9 +24,10 @@
 <script>
 import DraggableMixin from '../draganddrops/DraggableMixin.vue'
 import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
+import SlideOverTeamMixin from '../infoovers/SlideOverTeamMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, SlideOverSubjectMixin],
+  mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverTeamMixin],
   props: { 'team': Object },
   methods: {
     handleDragStart: function(event) {

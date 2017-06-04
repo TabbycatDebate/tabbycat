@@ -3,8 +3,7 @@
 
     <div class="vertical-spacing" id="messages-container"></div>
 
-    <!-- <constraints-slideover :venue="slideSubject" :constraints="slideInfo"></constraints-slideover> -->
-    <!-- <team-slideover :team="slideSubject"></team-slideover> -->
+    <slide-over-item :subject="slideOverItem"></slide-over-item>
 
     <draw-header :positions="positions">
       <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
@@ -32,20 +31,20 @@
 </template>
 
 <script>
-import DrawContainer from '../containers/DrawContainer.vue'
+import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableVenue from '../draganddrops/DraggableVenue.vue'
-// import ConstraintsSlideover from '../slideovers/ConstraintsSlideOver.vue'
+import SlideOverItem from '../infoovers/SlideOverItem.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [DrawContainer],
+  mixins: [DrawContainerMixin],
   components: {
     UnallocatedItemsContainer, DrawHeader, Debate, DroppableGeneric,
-    DraggableVenue, // ConstraintsSlideover
+    DraggableVenue, SlideOverItem
   },
   props: {
     venueConstraints: Array,

@@ -1,7 +1,7 @@
 <script>
 export default {
   data: function() {
-    return { slideSubject: null, slideInfo: null }
+    return { slideOverItem: null }
   },
   props: {
     debates: Array,
@@ -18,12 +18,8 @@ export default {
     this.$eventHub.$on('unset-slideover', this.unsetSlideover)
   },
   methods: {
-    annotateSlideInfo: function() {
-      return null; // Subclasses should implement own method to add data
-    },
     setSlideover: function(object) {
-      this.slideSubject = object
-      this.slideInfo = this.annotateSlideInfo(object)
+      this.slideOverItem = object
     },
     unsetSlideover: function() {
       // this.slideSubject = null

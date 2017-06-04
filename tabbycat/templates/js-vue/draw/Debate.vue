@@ -24,20 +24,16 @@
 
     <template v-for="(team, index) in debate.teams">
       <slot :name="'sposition' + index">
-        <div class="draw-cell flex-6"
-             v-on:mouseenter="showSlideOver(team)"
-             v-on:mouseleave="hideSlideOver">
-          {{ team.short_name }}
-        </div>
+        <draw-team :team="team"></draw-team>
       </slot>
     </template>
 
     <slot name="spanel">
       <div class="draw-cell flex-12">
         <div><!-- Need a container else they align -->
-          <span v-for="panellist in debate.panel">
-            {{ panellist.adjudicator.name }} ({{ panellist.position }}),
-          </span>
+          <draw-adjudicator v-for="panellist in debate.panel"
+                            :adjudicator="panellist.adjudicator"
+                            :position="panellist.position"></draw-adjudicator>
         </div>
       </div>
     </slot>
@@ -46,10 +42,12 @@
 </template>
 
 <script>
+import DrawTeam from '../draw/DrawTeam.vue'
+import DrawAdjudicator from '../draw/DrawAdjudicator.vue'
 import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
 
 export default {
-  components: {  },
+  components: {DrawTeam, DrawAdjudicator},
   mixins: [SlideOverSubjectMixin],
   props: {
     debate: Object,

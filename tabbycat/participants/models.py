@@ -278,7 +278,7 @@ class Team(models.Model):
         team['short_name'] = self.short_name
         team['long_name'] = self.long_name
         team['institution'] = {
-            'name': self.institution.name, 'id': self.institution.id}
+            'name': self.institution.name, 'id': self.institution.id, 'code': self.institution.code}
         team['region'] = {
             'name': self.region.name, 'id': self.region.id, 'class': None} if self.region else None
         team['speakers'] = [{
@@ -412,10 +412,10 @@ class Adjudicator(Person):
 
     def serialize(self):
         adj = model_to_dict(self)
-        adj['score'] = "{0:0.1f}".format(self.score)
+        adj['score'] = "{0:0.1f}".format(self.score) # Fix to get round / move to annotator
         adj['region'] = {'name': self.region.name, 'id': self.region.id, 'class': None} if self.region else None
         adj['institution'] = {
-            'name': self.institution.name, 'id': self.institution.id}
+            'name': self.institution.name, 'id': self.institution.id, 'code': self.institution.code} if self.institution else None
         adj['conflicts'] = None # Populate later if needed?
         adj['institutional_conflicts'] = None # Populate later if needed?
         adj['institution_conflicts'] = None # Populate later if needed?

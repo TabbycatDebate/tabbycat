@@ -3,7 +3,8 @@
 //------------------------------------------------------------------------------
 
 [data-toggle='tooltip'],
-[data-toggle="popover"] {
+[data-toggle="popover"],
+.slideover-target {
   &:hover {
     cursor: help; // for tooltips
     span {

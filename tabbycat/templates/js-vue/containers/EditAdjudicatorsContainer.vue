@@ -3,7 +3,7 @@
 
     <div class="vertical-spacing" id="messages-container"></div>
 
-    <!-- <team-slideover :team="slideSubject"></team-slideover> -->
+    <slide-over-item :subject="slideOverItem"></slide-over-item>
 
     <draw-header :positions="positions">
       <div class="thead flex-cell flex-4" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import DrawContainer from '../containers/DrawContainer.vue'
+import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
@@ -68,14 +68,14 @@ import DebateImportance from '../draw/DebateImportance.vue'
 // import DebateAdjudicatorDroppable from '../draganddrops/DebateAdjudicatorDroppable.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
+import SlideOverItem from '../infoovers/SlideOverItem.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [DrawContainer],
+  mixins: [DrawContainerMixin],
   components: {
     UnallocatedItemsContainer, DrawHeader, Debate, DebateImportance,
-    // DebateAdjudicatorDroppable,
-    DroppableGeneric, DraggableAdjudicator
+    DroppableGeneric, DraggableAdjudicator, SlideOverItem
   },
   methods: {
     getAdjudicatorsByPosition: function(debate, position) {

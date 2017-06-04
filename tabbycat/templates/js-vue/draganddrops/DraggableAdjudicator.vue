@@ -2,7 +2,9 @@
   <div draggable=true
        v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
        v-on:dragstart="handleDragStart"
-       v-on:dragend="handleDragEnd"><!--
+       v-on:dragend="handleDragEnd"
+       v-on:mouseenter="showSlideOver(adjudicator)"
+       v-on:mouseleave="hideSlideOver"><!--
        v-on:mouseenter="show = true"
        v-on:mouseleave="show = false" -->
 
@@ -11,8 +13,8 @@
     </div>
     <div class="draggable-title">
       <h5 class="no-top-margin no-bottom-margin">{{ initialledName }}</h5>
-      <span class="small text-muted subtitle">
-        {{ adjudicator.insitution_name }}
+      <span class="small text-muted subtitle" v-if="adjudicator.institution">
+        {{ adjudicator.institution.code }}
       </span>
     </div>
 
@@ -22,9 +24,10 @@
 <script>
 import DraggableMixin from '../draganddrops/DraggableMixin.vue'
 import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
+import SlideOverAdjudicatorMixin from '../infoovers/SlideOverAdjudicatorMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, SlideOverSubjectMixin],
+  mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin],
   props: {
     'adjudicator': Object,
     'show': { default: false }
