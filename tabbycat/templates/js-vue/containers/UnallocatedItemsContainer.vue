@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import DroppableMixin from '../mixins/DroppableMixin.vue'
+import DroppableMixin from '../draganddrops/DroppableMixin.vue'
 
 export default {
   mixins: [DroppableMixin],

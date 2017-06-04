@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import AjaxMixin from '../mixins/AjaxMixin.vue'
+import AjaxMixin from '../AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],

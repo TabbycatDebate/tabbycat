@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import DraggableMixin from '../mixins/DraggableMixin.vue'
-import AjaxMixin from '../mixins/AjaxMixin.vue'
+import DraggableMixin from '../draganddrops/DraggableMixin.vue'
+import AjaxMixin from '../AjaxMixin.vue'
 
 export default {
   mixins: [DraggableMixin, AjaxMixin],

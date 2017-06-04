@@ -3,8 +3,8 @@
 
   <div class="vertical-spacing" id="messages-container"></div>
 
-  <constraints-slideover :venue="slideSubject" :constraints="slideInfo"></constraints-slideover>
-  <team-slideover :team="slideSubject"></team-slideover>
+  <!-- <constraints-slideover :venue="slideSubject" :constraints="slideInfo"></constraints-slideover> -->
+  <!-- <team-slideover :team="slideSubject"></team-slideover> -->
 
   <draw-header :positions="positions">
     <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
@@ -14,31 +14,31 @@
 
   <debate v-for="debate in debates" :debate="debate" :key="debate.id">
     <div class="draw-cell flex-12 vue-droppable-container" slot="svenue">
-      <generic-droppable>
+      <droppable-generic>
         <slot name="svenue">
-          <venue-draggable v-if="debate.venue !== null" :venue="debate.venue"></venue-draggable>
+          <draggable-venue v-if="debate.venue !== null" :venue="debate.venue"></draggable-venue>
         </slot>
-      </generic-droppable>
+      </droppable-generic>
     </div>
   </debate>
 
-  <unallocated-container>
+  <unallocated-items-container>
     <div v-for="unallocatedVenue in unallocatedItems">
-      <venue-draggable :venue="unallocatedVenue"></venue-draggable>
+      <draggable-venue :venue="unallocatedVenue"></draggable-venue>
     </div>
-  </unallocated-container>
+  </unallocated-items-container>
 
 </div>
 </template>
 
 <script>
-import DrawContainer from '../mixins/DrawContainer.vue'
-import UnallocatedContainer from '../base/UnallocatedContainer.vue'
+import DrawContainer from '../containers/DrawContainer.vue'
+import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
-import GenericDroppable from '../draganddrops/GenericDroppable.vue'
-import VenueDraggable from '../draganddrops/VenueDraggable.vue'
-import ConstraintsSlideover from '../slideovers/ConstraintsSlideover.vue'
+import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
+import DraggableVenue from '../draganddrops/DraggableVenue.vue'
+// import ConstraintsSlideover from '../slideovers/ConstraintsSlideOver.vue'
 import _ from 'lodash'
 
 
@@ -47,8 +47,8 @@ export default {
     DrawContainer
   ],
   components: {
-    UnallocatedContainer, DrawHeader, Debate, GenericDroppable,
-    VenueDraggable, ConstraintsSlideover
+    UnallocatedItemsContainer, DrawHeader, Debate, DroppableGeneric,
+    DraggableVenue, // ConstraintsSlideover
   },
   props: {
     venueConstraints: Array,

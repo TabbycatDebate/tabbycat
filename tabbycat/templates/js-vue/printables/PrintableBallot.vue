@@ -22,18 +22,16 @@
 </template>
 
 <script>
-import BallotHeader from './BallotHeader.vue'
-import BallotFooter from './BallotFooter.vue'
-import Feedback from './Feedback.vue'
-import Scoresheet from './Scoresheet.vue'
+import PrintableBallotHeader from './PrintableBallotHeader.vue'
+import PrintableBallotFooter from './PrintableBallotFooter.vue'
+import PrintableFeedback from './PrintableFeedback.vue'
+import PrintableScoresheet from './PrintableScoresheet.vue'
 
 export default {
   props: ['data', 'ballot', 'motions', 'positions'],
   components: {
-    BallotHeader,
-    BallotFooter,
-    Feedback,
-    Scoresheet
+    PrintableBallotHeader, PrintableBallotFooter,
+    PrintableFeedback, PrintableScoresheet
   },
 }
 </script>

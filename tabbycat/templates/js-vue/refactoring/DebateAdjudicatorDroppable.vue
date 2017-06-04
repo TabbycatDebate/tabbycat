@@ -15,22 +15,22 @@
         'flex-2': position === 'P'
     }]" -->
 
-    <adjudicator-draggable v-for="debateAdjudicator in adjudicatorsOrderedByScore"
+    <draggable-adjudicator v-for="debateAdjudicator in adjudicatorsOrderedByScore"
       :adjudicator="debateAdjudicator.adjudicator">
-    </adjudicator-draggable>
+    </draggable-adjudicator>
 
   </div>
 
 </template>
 
 <script>
-import AdjudicatorDraggable from './AdjudicatorDraggable.vue'
-import DroppableMixin from '../mixins/DroppableMixin.vue'
+import DraggableAdjudicator from './DraggableAdjudicator.vue'
+import DroppableMixin from '../draganddrops/DroppableMixin.vue'
 import _ from 'lodash'
 
 export default {
   components: {
-    AdjudicatorDraggable
+    DraggableAdjudicator
   },
   mixins: [DroppableMixin],
   props: {

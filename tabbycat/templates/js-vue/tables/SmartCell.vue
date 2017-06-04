@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import PopoverMixin from '../mixins/PopoverMixin.vue'
+import PopoverMixin from '../infoovers/PopoverMixin.vue'
 
 export default {
   mixins: [PopoverMixin],

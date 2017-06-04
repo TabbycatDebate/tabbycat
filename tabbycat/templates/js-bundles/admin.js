@@ -31,7 +31,7 @@ Vue.prototype.$eventHub = eventHub
 // // Tournament Homepage
 // //------------------------------------------------------------------------------
 
-// import UpdatesList from  '../js-vue/UpdatesList.vue'
+// import UpdatesList from  '../js-vue/graphs/UpdatesList.vue'
 // import BallotsGraph from '../js-vue/graphs/BallotsGraph.vue'
 
 // if (typeof updateActionsURL !== 'undefined' && updateResultsURL !== 'undefined') {
@@ -75,7 +75,7 @@ Vue.prototype.$eventHub = eventHub
 // // Printables
 // //------------------------------------------------------------------------------
 
-// import Ballot from  '../js-vue/printables/Ballot.vue'
+// import Ballot from  '../js-vue/printables/PrintableBallot.vue'
 
 // if (typeof printableBaseData !== 'undefined' && printableBaseData !== null) {
 //   vueData = printableBaseData; // From Template
@@ -88,14 +88,14 @@ Vue.prototype.$eventHub = eventHub
 
 // import DivisionDroppable from  '../js-vue/draganddrops/DivisionDroppable.vue'
 // import UnallocatedDivisionTeams from  '../js-vue/allocations/UnallocatedDivisionTeams.vue'
-// import TeamDraggable from  '../js-vue/draganddrops/TeamDraggable.vue'
+// import DraggableTeam from  '../js-vue/draganddrops/DraggableTeam.vue'
 
 // if (typeof divisionsBaseData !== 'undefined' && divisionsBaseData !== null) {
 //   vueData = divisionsBaseData; // From Template
 //   vueMethods = divisionsMethods; // From Template
 //   vueEvents = divisionsEvents; // From Template
 //   vueComponents['DivisionDroppable'] = DivisionDroppable;
-//   vueComponents['TeamDraggable'] = TeamDraggable;
+//   vueComponents['DraggableTeam'] = DraggableTeam;
 //   vueComponents['UnallocatedDivisionTeams'] = UnallocatedDivisionTeams;
 // }
 
@@ -103,13 +103,13 @@ Vue.prototype.$eventHub = eventHub
 // New Generics
 //------------------------------------------------------------------------------
 
-import EditMatchupsContainer from  '../js-vue/base/EditMatchupsContainer.vue'
+import EditMatchupsContainer from  '../js-vue/containers/EditMatchupsContainer.vue'
 vueComponents['EditMatchupsContainer'] = EditMatchupsContainer
 
-import EditVenuesContainer from  '../js-vue/base/EditVenuesContainer.vue'
+import EditVenuesContainer from  '../js-vue/containers/EditVenuesContainer.vue'
 vueComponents['EditVenuesContainer'] = EditVenuesContainer
 
-import EditAdjudicatorsContainer from  '../js-vue/base/EditAdjudicatorsContainer.vue'
+import EditAdjudicatorsContainer from  '../js-vue/containers/EditAdjudicatorsContainer.vue'
 vueComponents['EditAdjudicatorsContainer'] = EditAdjudicatorsContainer
 
 //------------------------------------------------------------------------------

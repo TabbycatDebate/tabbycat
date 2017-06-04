@@ -8,21 +8,21 @@
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
     class="panel-body vue-droppable">
 
-    <team-draggable
+    <draggable-team
       v-for="team in teamsOrderedByCode"
       v-if="team.division === null"
       v-bind:key="team.id"
       :team="team"
       :save-division-at="saveDivisionAt">
-    </team-draggable>
+    </draggable-team>
 
   </div>
 
 </template>
 
 <script>
-import TeamDraggable from  '../draganddrops/TeamDraggable.vue'
-import DroppableMixin from '../mixins/DroppableMixin.vue'
+import DraggableTeam from  '../draganddrops/DraggableTeam.vue'
+import DroppableMixin from '../draganddrops/DroppableMixin.vue'
 import _ from 'lodash'
 
 export default {
@@ -37,7 +37,7 @@ export default {
     }
   },
   components: {
-    'TeamDraggable': TeamDraggable
+    'DraggableTeam': DraggableTeam
   },
   methods: {
     handleDrop: function(ev) {

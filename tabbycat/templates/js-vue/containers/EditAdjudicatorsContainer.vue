@@ -3,7 +3,7 @@
 
   <div class="vertical-spacing" id="messages-container"></div>
 
-  <team-slideover :team="slideSubject"></team-slideover>
+  <!-- <team-slideover :team="slideSubject"></team-slideover> -->
 
   <draw-header :positions="positions">
     <div class="thead flex-cell flex-4" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
@@ -30,52 +30,53 @@
     <template slot="svenue"><!-- Hide Venues --></template>
     <template slot="spanel">
       <div class="draw-cell flex-12 vue-droppable-container">
-        <generic-droppable>
-          <adjudicator-draggable v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'C')"
-            :adjudicator="debateAdjudicator.adjudicator"></adjudicator-draggable>
-        </generic-droppable>
+        <droppable-generic>
+          <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'C')"
+            :adjudicator="debateAdjudicator.adjudicator"></draggable-adjudicator>
+        </droppable-generic>
       </div>
       <div class="draw-cell flex-12 vue-droppable-container">
-        <generic-droppable>
-          <adjudicator-draggable v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'P')"
-            :adjudicator="debateAdjudicator.adjudicator"></adjudicator-draggable>
-        </generic-droppable>
+        <droppable-generic>
+          <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'P')"
+            :adjudicator="debateAdjudicator.adjudicator"></draggable-adjudicator>
+        </droppable-generic>
       </div>
       <div class="draw-cell flex-12 vue-droppable-container">
-        <generic-droppable>
-          <adjudicator-draggable v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'T')"
-            :adjudicator="debateAdjudicator.adjudicator"></adjudicator-draggable>
-        </generic-droppable>
+        <droppable-generic>
+          <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'T')"
+            :adjudicator="debateAdjudicator.adjudicator"></draggable-adjudicator>
+        </droppable-generic>
       </div>
     </template>
   </debate>
 
-  <unallocated-container>
+  <unallocated-items-container>
     <div v-for="unallocatedAdj in unallocatedItems">
-      <adjudicator-draggable :adjudicator="unallocatedAdj"></venue-draggable>
+      <draggable-adjudicator :adjudicator="unallocatedAdj"></draggable-adjudicator>
     </div>
-  </unallocated-container>
+  </unallocated-items-container>
 
 </div>
 </template>
 
 <script>
-import DrawContainer from '../mixins/DrawContainer.vue'
-import UnallocatedContainer from '../base/UnallocatedContainer.vue'
+import DrawContainer from '../containers/DrawContainer.vue'
+import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import DebateImportance from '../draw/DebateImportance.vue'
-import DebateAdjudicatorDroppable from '../draganddrops/DebateAdjudicatorDroppable.vue'
-import GenericDroppable from '../draganddrops/GenericDroppable.vue'
-import AdjudicatorDraggable from '../draganddrops/AdjudicatorDraggable.vue'
+// import DebateAdjudicatorDroppable from '../draganddrops/DebateAdjudicatorDroppable.vue'
+import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
+import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 
 import _ from 'lodash'
 
 
 export default {
   components: {
-    UnallocatedContainer, DrawHeader, Debate, DebateImportance,
-    DebateAdjudicatorDroppable, GenericDroppable, AdjudicatorDraggable
+    UnallocatedItemsContainer, DrawHeader, Debate, DebateImportance,
+    // DebateAdjudicatorDroppable,
+    DroppableGeneric, DraggableAdjudicator
   },
   mixins: [
     DrawContainer

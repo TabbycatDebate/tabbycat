@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import AjaxMixin from '../mixins/AjaxMixin.vue'
+import AjaxMixin from '../AjaxMixin.vue'
 import DebateTeam from './DebateTeam.vue'
 import DebateImportance from './DebateImportance.vue'
 import PositionDroppable from './PositionDroppable.vue'

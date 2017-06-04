@@ -21,7 +21,7 @@
 
 <script>
 import DebateAdjudicator from './DebateAdjudicator.vue'
-import DroppableMixin from '../mixins/DroppableMixin.vue'
+import DroppableMixin from '../draganddrops/DroppableMixin.vue'
 import _ from 'lodash'
 
 export default {

@@ -27,8 +27,8 @@
 </template>
 
 <script>
-  import SmartHeader from './Header.vue'
-  import SmartCell from './Cell.vue'
+  import SmartHeader from './SmartHeader.vue'
+  import SmartCell from './SmartCell.vue'
   // Items below here should be admin only ideally
   import FeedbackTrend from '../graphs/FeedbackTrend.vue'
   import _ from 'lodash'

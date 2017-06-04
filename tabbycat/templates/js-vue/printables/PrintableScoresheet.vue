@@ -97,13 +97,11 @@
 </template>
 
 <script>
-import TeamScores from './TeamScores.vue'
+import PrintableTeamScores from './PrintableTeamScores.vue'
 
 export default {
   props: ['data', 'ballot', 'motions', 'positions'],
-  components: {
-    TeamScores
-  },
+  components: { PrintableTeamScores },
   computed: {
     ballotsExcludingSelf: function() {
       var authorIndex = this.ballot.panel.indexOf(this.ballot.author);

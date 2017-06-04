@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import SlideOverSubjectMixin from '../slideovers/SlideOverSubjectMixin.vue'
+import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
 
 export default {
   components: {  },

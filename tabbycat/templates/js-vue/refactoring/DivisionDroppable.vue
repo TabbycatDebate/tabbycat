@@ -17,12 +17,12 @@
       :data-id="division.id">
 
       <template v-for="team in teams" v-bind:key="team.id">
-        <team-draggable
+        <draggable-team
           :team="team"
           :vc="division.venue_category"
           :vc-name="division.venue_category__name"
           :save-division-at="saveDivisionAt">
-        </team-draggable>
+        </draggable-team>
       </template>
 
     </div>
@@ -42,8 +42,8 @@
 
 <!-- Division Droppable Component Behaviour -->
 <script>
-import DroppableMixin from '../mixins/DroppableMixin.vue'
-import TeamDraggable from  './TeamDraggable.vue'
+import DroppableMixin from '../draganddrops/DroppableMixin.vue'
+import DraggableTeam from  './DraggableTeam.vue'
 
 export default {
   mixins: [DroppableMixin],
@@ -84,7 +84,7 @@ export default {
     }
   },
   components: {
-    'TeamDraggable': TeamDraggable
+    'DraggableTeam': DraggableTeam
   },
   methods: {
     handleDrop: function(ev) {

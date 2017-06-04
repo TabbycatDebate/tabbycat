@@ -32,12 +32,12 @@
 </template>
 
 <script>
-import FeedbackQuestion from './FeedbackQuestion.vue'
+import PrintableFeedbackQuestion from './PrintableFeedbackQuestion.vue'
 import _ from 'lodash'
 
 export default {
   components: {
-    FeedbackQuestion
+    PrintableFeedbackQuestion
   },
   computed: {
     questionsOrderedBySeq: function() {
