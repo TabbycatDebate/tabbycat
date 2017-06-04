@@ -43,34 +43,36 @@ $.fn.extend({
 });
 
 //------------------------------------------------------------------------------
-// Vues
+// Vue Structure Setup
 //------------------------------------------------------------------------------
 
-// Plugin mounting points for components/data
-var baseComponents = {}
-var baseData = {}
+// Setup the main constructs used for custom components
+var vueComponents = {}
+
+// This is the main data package setout in the django template
+var vueData = window.vueData // We need to mount props from the window itself
+
+//------------------------------------------------------------------------------
+// Vue Shared Components Setup
+//------------------------------------------------------------------------------
 
 // Table-based Views
 import TablesContainer from '../js-vue/tables/TablesContainer.vue'
-
-if (typeof tablesData !== 'undefined' && tablesData !== null) {
-  // All vue data table views must provide this base tablesData in the template
-  baseComponents['TablesContainer'] = TablesContainer;
-  baseData['tablesData'] = tablesData;
-}
+vueComponents['TablesContainer'] = TablesContainer
 
 // Graph-based Views
 import TextDisplay from '../js-vue/graphs/TextDisplay.vue'
-import DonutChart from  '../js-vue/graphs/DonutChart.vue'
+vueComponents['TextDisplay'] = TextDisplay
 
-if (typeof graphsData !== 'undefined' && graphsData !== null) {
-  baseComponents['TextDisplay'] = TextDisplay
-  baseComponents['DonutChart'] = DonutChart
-  baseData['graphsData'] = graphsData
-}
+import DonutChart from  '../js-vue/graphs/DonutChart.vue'
+vueComponents['DonutChart'] = DonutChart
+
+//------------------------------------------------------------------------------
+// Expose data for admin/public.js to import
+//------------------------------------------------------------------------------
 
 // For admin modules
 export default {
-  baseComponents: baseComponents,
-  baseData: baseData,
+  baseComponents: vueComponents,
+  baseData: vueData,
 }

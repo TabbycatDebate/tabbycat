@@ -235,7 +235,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'popover': {'title': team.long_name, 'content': []}
         }
         if self._show_speakers_in_draw:
-            cell['popover']['content'].append({'text': [" " + s.name for s in team.speakers]})
+            cell['popover']['content'].append({'text': ", ".join([s.name for s in team.speakers])})
         if self._show_record_links:
             cell['popover']['content'].append(self._team_record_link(team))
         return cell
@@ -469,7 +469,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         def construct_venue_cell(venue):
             if not venue:
-                return {}
+                return {'text': ''}
 
             cell = {'text': venue.display_name}
             if for_admin:

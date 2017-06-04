@@ -179,6 +179,8 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
 
 class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     detailed = False
+    sort_key = 'Bracket'
+    sort_order = 'desc'
 
     def get_page_title(self):
         round = self.get_round()
@@ -201,7 +203,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     def get_table(self):
         r = self.get_round()
         tournament = self.get_tournament()
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key, sort_order=self.sort_order)
         if r.draw_status == r.STATUS_NONE:
             return table # Return Blank
 

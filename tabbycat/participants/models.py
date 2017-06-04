@@ -278,11 +278,11 @@ class Team(models.Model):
         team['short_name'] = self.short_name
         team['long_name'] = self.long_name
         team['institution'] = {
-            'name': self.institution.name, 'id': self.institution.id }
+            'name': self.institution.name, 'id': self.institution.id}
         team['region'] = {
-            'name': self.region.name, 'id': self.region.id } if self.region else None
+            'name': self.region.name, 'id': self.region.id} if self.region else None
         team['speakers'] = [{
-            'name': s.name, 'id': s.id, 'gender': s.gender } for s in list(self.speakers)]
+            'name': s.name, 'id': s.id, 'gender': s.gender} for s in list(self.speakers)]
         team['break_categories'] = [{
             'id': bc.id, 'name': bc.name, 'seq': bc.seq,
             # 'will_break': determine_liveness(thresholds[bc['id']], team.wins_count)

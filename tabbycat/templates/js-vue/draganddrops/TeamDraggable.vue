@@ -36,7 +36,6 @@ export default {
   },
   methods: {
     showSlideOver: function(event) {
-      console.log('show slide')
       this.$eventHub.$emit('set-slideover', this.team)
     },
     hideSlideOver: function(event) {

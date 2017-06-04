@@ -2,11 +2,13 @@
 var Vue = require('vue');
 import vueBases from './main.js';
 
-// Setup the main constructs used for custom components
-var vueComponents = vueBases.baseComponents;
-var vueData = vueBases.baseData;
+// Redefine variables from import so that they can be edited
+var vueComponents = vueBases.baseComponents
+var vueData = vueBases.baseData
 
-// var vueMethods = {}, vueCreated = null, vueFilters = {}, vueEvents = {};
+// This is an coordinating instance used for inter-component pub/sub interfaces
+var eventHub = new Vue()
+Vue.prototype.$eventHub = eventHub
 
 // //------------------------------------------------------------------------------
 // // Adj Allocation
@@ -101,8 +103,6 @@ var vueData = vueBases.baseData;
 // New Generics
 //------------------------------------------------------------------------------
 
-// TODO: get everything to hand from this generic scaffold
-
 import EditMatchupsContainer from  '../js-vue/base/EditMatchupsContainer.vue'
 vueComponents['EditMatchupsContainer'] = EditMatchupsContainer
 
@@ -115,13 +115,6 @@ vueComponents['EditAdjudicatorsContainer'] = EditAdjudicatorsContainer
 //------------------------------------------------------------------------------
 // Main Vue Instance
 //------------------------------------------------------------------------------
-
-// This is the main data package setout in the django template
-var vueData = window.vueData // We need to mount props from the window itself
-
-// This is an coordinating instance used for inter-component pub/sub interfaces
-var eventHub = new Vue()
-Vue.prototype.$eventHub = eventHub
 
 new Vue({
   el: '#vueMount',

@@ -7,7 +7,7 @@
             :header="header"
             :sort-key="sortKey"
             :sort-order="sortOrder"
-            is="smartHeader" >
+            is="smartHeader">
         </th>
       </tr>
     </thead>
@@ -16,7 +16,7 @@
         <td class="empty-cell text-center text-muted">No Data Available</td>
       </tr>
       <tr v-for="row in rowsFilteredByKey">
-        <td v-for="(cellIndex, cellData) in row"
+        <td v-for="(cellData, cellIndex) in row"
           :is="cellData['component'] ? cellData['component'] : 'SmartCell'"
           :cell-data="cellData">
         </td>
@@ -34,18 +34,33 @@
   import _ from 'lodash'
 
   export default {
-    props: {
-      tableHeaders: Array,
-      tableContent: Array,
-      filterKey: String,
-      sortKey: String,
-      sortOrder: String,
-      tableClass: String
-    },
     components: {
       SmartHeader,
       SmartCell,
       FeedbackTrend,
+    },
+    props: {
+      tableHeaders: Array,
+      tableContent: Array,
+      tableClass: String,
+      defaultSortKey: '',
+      defaultSortOrder: ''
+    },
+    data: function() {
+      // Sort Key/Order need to be internal state; only passed on by
+      // the parent for their default values
+      return { sortKey: '', sortOrder: '', filterKey: '' }
+    },
+    created: function() {
+      // Set default sort orders and sort keys if they are given
+      if (this.defaultSortKey) {
+        this.sortKey = this.defaultSortKey
+      }
+      if (this.defaultSortOrder) {
+        this.sortOrder = this.defaultSortOrder
+      }
+      // Watch for changes in the search box
+      this.$eventHub.$on('update-table-filters', this.updateFiltering)
     },
     methods: {
       updateSorting: function(newSortKey) {
@@ -56,6 +71,9 @@
           this.sortKey = newSortKey
           this.sortOrder = "desc"
         }
+      },
+      updateFiltering: function(filterKey) {
+        this.filterKey = filterKey
       }
     },
     computed: {
