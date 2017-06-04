@@ -1,5 +1,4 @@
 <template>
-
   <div draggable=true
        v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
        v-on:dragstart="handleDragStart"
@@ -20,7 +19,6 @@
     </div>
 
   </div>
-
 </template>
 
 <script>
@@ -29,10 +27,7 @@ import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin],
-  props: {
-    'team': Object,
-    // 'isDragging': { default: false },
-  },
+  props: { 'team': Object },
   methods: {
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-team', this);

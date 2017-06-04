@@ -1,5 +1,4 @@
 <template>
-
   <div draggable=true
        v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
        v-on:dragstart="handleDragStart"
@@ -10,6 +9,7 @@
     <div class="draggable-prefix">
       <h4>{{ venue.priority }}</h4>
     </div>
+
     <div class="draggable-title">
       <h5 class="no-top-margin no-bottom-margin">{{ venue.name }}</h5>
       <span class="small text-muted subtitle" v-for="c in venue.categories">
@@ -21,7 +21,6 @@
     </div>
 
   </div>
-
 </template>
 
 <script>
@@ -30,12 +29,8 @@ import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin],
-  props: {
-    'venue': Object
-  },
-  computed: {
-
-  },
+  props: { 'venue': Object },
+  computed: { },
   methods: {
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-venue', this);

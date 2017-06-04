@@ -22,9 +22,7 @@ import AjaxMixin from '../AjaxMixin.vue'
 
 export default {
   mixins: [DraggableMixin, AjaxMixin],
-  props: {
-    droppable: Object,
-  },
+  props: { droppable: Object },
   methods: {
     handleDragStart: function(event) {
     },

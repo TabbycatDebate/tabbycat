@@ -26,6 +26,7 @@ import _ from 'lodash'
 
 export default {
   mixins: [DroppableMixin],
+  components: {DebateAdjudicator},
   props: {
     adjudicators: Array,
     roundInfo: Object
@@ -37,9 +38,6 @@ export default {
     adjudicatorsOrderedByScore: function() {
       return _.orderBy(this.adjudicators, 'score', ['desc'])
     }
-  },
-  components: {
-    'DebateAdjudicator': DebateAdjudicator
   },
   methods: {
     handleDrop: function(ev) {

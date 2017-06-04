@@ -5,6 +5,7 @@
 // v-on:dragend="dragEnd"
 // class="vue-draggable"
 // v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
+//
 // Subclass can provide handleDragStart() and handleDragEnd()
 // Any :hover CSS rules on the subclass should instead be computed from isDragging
 // else they wont be remove upon a drop

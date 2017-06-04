@@ -1,5 +1,4 @@
 <template>
-
   <header class="db-margins-m db-flex-row db-flex-item-1">
 
     <div class="db-align-vertical-end db-flex-item-3">
@@ -29,7 +28,6 @@
     </div>
 
   </header>
-
 </template>
 
 <script>

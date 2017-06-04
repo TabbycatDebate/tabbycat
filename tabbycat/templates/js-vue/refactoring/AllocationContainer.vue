@@ -69,12 +69,8 @@ import ConflictsCalculatorMixin from '../mixins/ConflictsCalculatorMixin.vue'
 import _ from 'lodash'
 
 export default {
-  components: {
-    AllocationActions, Debate, UnallocatedAdjudicators
-  },
-  mixins: [
-    ConflictsCalculatorMixin
-  ],
+  components: {AllocationActions, Debate, UnallocatedAdjudicators},
+  mixins: [ConflictsCalculatorMixin],
   props: {
     debates: Array,
     adjudicators: Object,

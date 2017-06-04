@@ -29,9 +29,7 @@ import DroppableMixin from '../draganddrops/DroppableMixin.vue'
 import _ from 'lodash'
 
 export default {
-  components: {
-    DraggableAdjudicator
-  },
+  components: {DraggableAdjudicator},
   mixins: [DroppableMixin],
   props: {
     positionAdjudicators: Array,

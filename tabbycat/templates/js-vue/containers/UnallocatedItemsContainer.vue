@@ -8,9 +8,7 @@
     v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
     class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-items">
 
-    <slot>
-      <!-- Container sets unallocated items here -->
-    </slot>
+    <slot><!-- Container sets unallocated items here --></slot>
 
   </nav>
 
@@ -20,14 +18,6 @@
 import DroppableMixin from '../draganddrops/DroppableMixin.vue'
 
 export default {
-  mixins: [DroppableMixin],
-  props: {
-  },
-  computed: {
-  },
-  components: {
-  },
-  methods: {
-  }
+  mixins: [DroppableMixin]
 }
 </script>

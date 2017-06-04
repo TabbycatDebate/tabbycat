@@ -1,5 +1,4 @@
 <template>
-
   <section class="db-margins-m db-bordered db-flex-row db-flex-item-1">
 
     <div class="db-padding-horizontal db-align-vertical-center db-flex-item-1 db-vertical-center-text">
@@ -22,7 +21,6 @@
     </div>
 
   </section>
-
 </template>
 
 <script>

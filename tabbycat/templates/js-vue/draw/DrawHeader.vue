@@ -1,5 +1,4 @@
 <template>
-
   <div class="draw-header subtitle">
 
     <slot name="hbacket">
@@ -40,25 +39,12 @@
     </slot>
 
   </div>
-
 </template>
 
 <script>
-
 export default {
-  components: {
-  },
-  mixins: [
-  ],
   props: {
     positions: Array,
-  },
-  computed: {
-  },
-  methods: {
-  },
-  events: {
   }
 }
-
 </script>

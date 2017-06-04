@@ -88,5 +88,4 @@ function initChart(vueContext){
     .attr("transform", "translate(0," + vueContext.height + ")");
 
 };
-
 </script>

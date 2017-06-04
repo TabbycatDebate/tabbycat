@@ -45,7 +45,6 @@
 import _ from 'lodash'
 
 export default {
-  mixins: [],
   props: {
     'venue': Object,
     'constraints': Array

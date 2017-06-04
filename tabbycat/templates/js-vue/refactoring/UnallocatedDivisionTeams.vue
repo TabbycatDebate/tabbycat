@@ -27,6 +27,7 @@ import _ from 'lodash'
 
 export default {
   mixins: [DroppableMixin],
+  components: {'DraggableTeam': DraggableTeam},
   props: {
     teams: Array,
     'save-division-at': {},
@@ -35,9 +36,6 @@ export default {
     teamsOrderedByCode: function() {
       return _.orderBy(this.teams, 'institution__code', ['asc'])
     }
-  },
-  components: {
-    'DraggableTeam': DraggableTeam
   },
   methods: {
     handleDrop: function(ev) {

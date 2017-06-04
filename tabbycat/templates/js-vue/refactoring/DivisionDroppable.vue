@@ -47,6 +47,7 @@ import DraggableTeam from  './DraggableTeam.vue'
 
 export default {
   mixins: [DroppableMixin],
+  components: {DraggableTeam},
   props: {
     'division': {},
     'vcs': {},
@@ -82,9 +83,6 @@ export default {
       // `this` points to the vm instance
       return (this.teams.length % 2) == 1;
     }
-  },
-  components: {
-    'DraggableTeam': DraggableTeam
   },
   methods: {
     handleDrop: function(ev) {

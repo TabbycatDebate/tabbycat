@@ -95,7 +95,10 @@ import DiversityHighlightsMixin from '../mixins/DiversityHighlightsMixin.vue'
 import ConflictsHighlightsMixin from '../mixins/ConflictsHighlightsMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, AjaxMixin, DiversityHighlightsMixin, ConflictsHighlightsMixin],
+  mixins: [
+    DraggableMixin, AjaxMixin, DiversityHighlightsMixin,
+    ConflictsHighlightsMixin
+  ],
   props: {
     adjorteam: Object,
     position: String,

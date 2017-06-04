@@ -1,9 +1,11 @@
 <template>
   <div>
+
     <input max="2" min="-2" step="1" type="range" v-model="importance">
     <div class="small text-center text-muted">
       {{ importanceDescription }}
     </div>
+
   </div>
 </template>
 

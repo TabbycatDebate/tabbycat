@@ -1,5 +1,4 @@
 <template>
-
   <td :class="cellData['class'] ? cellData['class'] : null">
 
     <!-- Sorting key -->
@@ -50,7 +49,6 @@
     </div>
 
   </td>
-
 </template>
 
 <script>

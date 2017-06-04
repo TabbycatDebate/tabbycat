@@ -1,5 +1,4 @@
 <template>
-
   <div class="row">
 
     <template v-for="(d, index) in graphData">

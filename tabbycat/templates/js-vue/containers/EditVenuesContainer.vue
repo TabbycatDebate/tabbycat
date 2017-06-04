@@ -1,34 +1,34 @@
 <template>
-<div class="col-md-12 draw-container">
+  <div class="col-md-12 draw-container">
 
-  <div class="vertical-spacing" id="messages-container"></div>
+    <div class="vertical-spacing" id="messages-container"></div>
 
-  <!-- <constraints-slideover :venue="slideSubject" :constraints="slideInfo"></constraints-slideover> -->
-  <!-- <team-slideover :team="slideSubject"></team-slideover> -->
+    <!-- <constraints-slideover :venue="slideSubject" :constraints="slideInfo"></constraints-slideover> -->
+    <!-- <team-slideover :team="slideSubject"></team-slideover> -->
 
-  <draw-header :positions="positions">
-    <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
-      <span>Venue</span>
-    </div>
-  </draw-header>
+    <draw-header :positions="positions">
+      <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
+        <span>Venue</span>
+      </div>
+    </draw-header>
 
-  <debate v-for="debate in debates" :debate="debate" :key="debate.id">
-    <div class="draw-cell flex-12 vue-droppable-container" slot="svenue">
-      <droppable-generic>
-        <slot name="svenue">
-          <draggable-venue v-if="debate.venue !== null" :venue="debate.venue"></draggable-venue>
-        </slot>
-      </droppable-generic>
-    </div>
-  </debate>
+    <debate v-for="debate in debates" :debate="debate" :key="debate.id">
+      <div class="draw-cell flex-12 vue-droppable-container" slot="svenue">
+        <droppable-generic>
+          <slot name="svenue">
+            <draggable-venue v-if="debate.venue !== null" :venue="debate.venue"></draggable-venue>
+          </slot>
+        </droppable-generic>
+      </div>
+    </debate>
 
-  <unallocated-items-container>
-    <div v-for="unallocatedVenue in unallocatedItems">
-      <draggable-venue :venue="unallocatedVenue"></draggable-venue>
-    </div>
-  </unallocated-items-container>
+    <unallocated-items-container>
+      <div v-for="unallocatedVenue in unallocatedItems">
+        <draggable-venue :venue="unallocatedVenue"></draggable-venue>
+      </div>
+    </unallocated-items-container>
 
-</div>
+  </div>
 </template>
 
 <script>
@@ -41,11 +41,8 @@ import DraggableVenue from '../draganddrops/DraggableVenue.vue'
 // import ConstraintsSlideover from '../slideovers/ConstraintsSlideOver.vue'
 import _ from 'lodash'
 
-
 export default {
-  mixins: [
-    DrawContainer
-  ],
+  mixins: [DrawContainer],
   components: {
     UnallocatedItemsContainer, DrawHeader, Debate, DroppableGeneric,
     DraggableVenue, // ConstraintsSlideover
@@ -72,5 +69,4 @@ export default {
   events: {
   }
 }
-
 </script>

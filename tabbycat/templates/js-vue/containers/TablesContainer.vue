@@ -1,5 +1,4 @@
 <template>
-
   <div>
 
     <div class="row">
@@ -34,16 +33,13 @@
     </div>
 
   </div>
-
 </template>
 
 <script>
 import SmartTable from '../tables/SmartTable.vue'
 
 export default {
-  components: {
-    SmartTable
-  },
+  components: {SmartTable},
   props: {
     tablesData: Array, // Passed down from main.js
     orientation: String, // Passed down from template
@@ -75,5 +71,4 @@ export default {
     }
   },
 }
-
 </script>

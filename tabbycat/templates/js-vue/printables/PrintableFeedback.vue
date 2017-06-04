@@ -36,9 +36,7 @@ import PrintableFeedbackQuestion from './PrintableFeedbackQuestion.vue'
 import _ from 'lodash'
 
 export default {
-  components: {
-    PrintableFeedbackQuestion
-  },
+  components: {PrintableFeedbackQuestion},
   computed: {
     questionsOrderedBySeq: function() {
       return _.orderBy(this.data.questions, 'seq', ['asc'])

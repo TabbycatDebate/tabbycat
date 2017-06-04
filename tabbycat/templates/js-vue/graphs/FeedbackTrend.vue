@@ -1,7 +1,9 @@
 <template>
+
   <td class="unpadded-cell">
     <div class="d3-graph d3-feedback-trend"></div>
   </td>
+
 </template>
 
 <script>

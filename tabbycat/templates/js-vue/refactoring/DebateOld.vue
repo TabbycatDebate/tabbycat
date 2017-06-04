@@ -72,12 +72,8 @@ import PositionDroppable from './PositionDroppable.vue'
 import ConflictsCalculatorMixin from '../mixins/ConflictsCalculatorMixin.vue'
 
 export default {
-  components: {
-    DebateTeam, DebateImportance, PositionDroppable
-  },
-  mixins: [
-    AjaxMixin, ConflictsCalculatorMixin
-  ],
+  components: {DebateTeam, DebateImportance, PositionDroppable},
+  mixins: [AjaxMixin, ConflictsCalculatorMixin],
   props: {
     allAdjudicators: Object,
     debate: Object,

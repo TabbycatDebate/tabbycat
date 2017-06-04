@@ -1,5 +1,4 @@
 <template>
-
   <section class="db-score-sheet db-flex-item db-flex-column">
 
     <ballot-header :data="data" :ballot="ballot">
@@ -18,7 +17,6 @@
     </ballot-footer>
 
   </section>
-
 </template>
 
 <script>

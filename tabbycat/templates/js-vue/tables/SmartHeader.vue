@@ -1,6 +1,5 @@
 <!-- Table Template -->
 <template>
-
   <th class="vue-sortable" v-on:click="resort()">
 
     <span :title="header['tooltip']"
@@ -19,10 +18,8 @@
     <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
 
   </th>
-
 </template>
 
-<!-- Table Component Behaviour -->
 <script>
 export default {
   props: {

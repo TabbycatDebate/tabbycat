@@ -1,7 +1,5 @@
 <script>
 export default {
-  mixins: [
-  ],
   data: function() {
     return { slideSubject: null, slideInfo: null }
   },
@@ -31,8 +29,6 @@ export default {
       // this.slideSubject = null
       // this.slideConstraints = null
     },
-  },
-  events: {
   }
 }
 </script>

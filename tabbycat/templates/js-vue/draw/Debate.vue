@@ -55,5 +55,4 @@ export default {
     debate: Object,
   },
 }
-
 </script>

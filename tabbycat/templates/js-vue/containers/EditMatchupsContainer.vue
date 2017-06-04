@@ -1,36 +1,36 @@
 <template>
-<div class="col-md-12 draw-container">
+  <div class="col-md-12 draw-container">
 
-  <div class="vertical-spacing" id="messages-container"></div>
+    <div class="vertical-spacing" id="messages-container"></div>
 
-  <!-- <team-slideover :team="slideSubject"></team-slideover> -->
+    <!-- <team-slideover :team="slideSubject"></team-slideover> -->
 
-  <draw-header :positions="positions">
-    <template slot="hteams">
-      <div class="thead flex-cell flex-8 vue-droppable-container" data-toggle="tooltip" title="test"
-        v-for="position in positions">
-        <span>{{ position }}</span>
+    <draw-header :positions="positions">
+      <template slot="hteams">
+        <div class="thead flex-cell flex-8 vue-droppable-container" data-toggle="tooltip" title="test"
+          v-for="position in positions">
+          <span>{{ position }}</span>
+        </div>
+      </template>
+    </draw-header>
+
+    <debate v-for="debate in debates" :debate="debate" :key="debate.id">
+      <template v-for="(team, index) in debate.teams">
+        <div class="draw-cell flex-8 vue-droppable-container" :slot="'sposition' + index">
+          <droppable-generic>
+            <draggable-team :team="team"></draggable-team>
+          </droppable-generic>
+        </div>
+      </template>
+    </debate>
+
+    <unallocated-items-container>
+      <div v-for="unallocatedTeam in unallocatedItems">
+        <draggable-team :team="unallocatedTeam"> </draggable-team>
       </div>
-    </template>
-  </draw-header>
+    </unallocated-items-container>
 
-  <debate v-for="debate in debates" :debate="debate" :key="debate.id">
-    <template v-for="(team, index) in debate.teams">
-      <div class="draw-cell flex-8 vue-droppable-container" :slot="'sposition' + index">
-        <droppable-generic>
-          <draggable-team :team="team"></draggable-team>
-        </droppable-generic>
-      </div>
-    </template>
-  </debate>
-
-  <unallocated-items-container>
-    <div v-for="unallocatedTeam in unallocatedItems">
-      <draggable-team :team="unallocatedTeam"> </draggable-team>
-    </div>
-  </unallocated-items-container>
-
-</div>
+  </div>
 </template>
 
 <script>
@@ -43,21 +43,12 @@ import DraggableTeam from '../draganddrops/DraggableTeam.vue'
 // import TeamSlideover from '../slideovers/TeamSlideover.vue'
 import _ from 'lodash'
 
-
 export default {
-  mixins: [
-    DrawContainer
-  ],
+  mixins: [DrawContainer],
   components: {
     DrawHeader, UnallocatedItemsContainer, Debate, DroppableGeneric, DraggableTeam,
     // TeamSlideover
-  },
-  props: {
-  },
-  computed: {
-  },
-  methods: {
-  },
+  }
 }
 
 </script>
