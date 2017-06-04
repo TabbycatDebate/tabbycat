@@ -17,10 +17,12 @@ class BaseScoresheet:
         """Absorb leftover arguments."""
         pass
 
-    @property
     def is_complete(self):
         """Base implementation. Does nothing."""
         return True
+
+    def is_valid(self):
+        return self.is_complete()
 
     def identical(self, other):
         """Base implementation. Does nothing."""
@@ -38,11 +40,10 @@ class ScoresMixin:
         self.POSITIONS = positions
         self.scores = {side: dict.fromkeys(self.POSITIONS, None) for side in self.SIDES}
 
-    @property
     def is_complete(self):
         scores_complete = all(self.scores[s][p] is not None for s in self.SIDES
                 for p in self.POSITIONS)
-        return super().is_complete and scores_complete
+        return super().is_complete() and scores_complete
 
     def set_score(self, side, position, score):
         self.scores[side][position] = score
@@ -68,9 +69,8 @@ class DeclaredWinnerMixin:
         super().__init__(*args, **kwargs)
         self.declared_winner = None
 
-    @property
     def is_complete(self):
-        return super().is_complete and (self.declared_winner in self.SIDES)
+        return super().is_complete() and (self.declared_winner in self.SIDES)
 
     def set_declared_winner(self, winner):
         assert winner in self.SIDES or winner is None, "Declared winner must be one of " + ", ".join(map(repr, self.SIDES))
@@ -90,9 +90,12 @@ class BaseTwoTeamScoresheet(BaseScoresheet):
     def winner(self):
         """Returns 'aff' is the affirmative team won, and 'neg' if the negative
         team won. `self._get_winner()` must be implemented by subclasses."""
-        if not self.is_complete:
+        if not self.is_complete():
             return None
         return self._get_winner()
+
+    def is_valid(self):
+        return super().is_complete() and self._get_winner() is not None
 
 
 class ResultOnlyScoresheet(DeclaredWinnerMixin, BaseTwoTeamScoresheet):
@@ -142,7 +145,7 @@ class LowPointWinsAllowedScoresheet(ScoresMixin, ResultOnlyScoresheet):
 
 
 SCORESHEET_CLASSES = {
-    'result-only': ResultOnlyScoresheet,
+    'winner-only': ResultOnlyScoresheet,
     'high-required': HighPointWinsRequiredScoresheet,
     'tied-allowed': TiedPointWinsAllowedScoresheet,
     'low-allowed': LowPointWinsAllowedScoresheet,

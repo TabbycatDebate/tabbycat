@@ -18,7 +18,7 @@ class ScoresheetType(ChoicePreference):
     name = 'scoresheet_type'
     verbose_name = "Scoresheet type"
     choices = (
-        ('result-only', "Result only (no scores)"),
+        ('winner-only', "Winner only (no scores)"),
         ('high-required', "High-point wins required"),
         ('tied-allowed', "Tied-point wins allowed"),
         ('low-allowed', "Low-point wins allowed"),

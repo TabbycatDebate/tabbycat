@@ -158,7 +158,6 @@ class BaseDebateResult:
             assert set(self.speakers[side]) == set(self.positions)
             assert set(self.ghosts[side]) == set(self.positions)
 
-    @property
     def is_complete(self):
         """Returns True if all elements of the results have been populated;
         False if any one is missing.  Logs (but does not raise) the exception if
@@ -177,6 +176,13 @@ class BaseDebateResult:
             return False
 
         return True
+
+    def is_valid(self):
+        """Returns True if the result is a valid result, i.e., contains no
+        contradictions. The base implementation just calls `self.is_complete()`.
+        If this is overridden, it must return False if `self.is_complete()` is
+        False."""
+        return self.is_complete()
 
     def identical(self, other):
         """Returns True of all fields are the same as those in `other`."""
@@ -223,7 +229,7 @@ class BaseDebateResult:
     def save(self):
         """Saves to the database."""
 
-        assert self.is_complete, "Tried to save an incomplete result"
+        assert self.is_complete(), "Tried to save an incomplete result"
 
         for side in self.sides:
             dt = self.debateteams[side]
@@ -296,8 +302,8 @@ class VotingDebateResult(BaseDebateResult):
         scoresheet_type = self.tournament.pref('scoresheet_type')
         self.scoresheet_class = SCORESHEET_CLASSES[scoresheet_type]
 
-        self.requires_scores = hasattr(self.scoresheet_class, 'set_score')
-        self.requires_declared_winners = hasattr(self.scoresheet_class, 'set_declared_winner')
+        self.takes_scores = hasattr(self.scoresheet_class, 'set_score')
+        self.takes_declared_winners = hasattr(self.scoresheet_class, 'set_declared_winner')
 
         self._decision_calculated = False
 
@@ -317,15 +323,17 @@ class VotingDebateResult(BaseDebateResult):
         assert set(self.debate.adjudicators.voting()) == set(self.scoresheets)
         assert self.sides == ['aff', 'neg'], "VotingDebateResult can only be used for two-team formats."
 
-    @property
     def is_complete(self):
-        if not super().is_complete:
+        if not super().is_complete():
             return False
         if not self.debate.adjudicators.has_chair:
             return False
-        if not all(sheet.is_complete for sheet in self.scoresheets.values()):
+        if not all(sheet.is_complete() for sheet in self.scoresheets.values()):
             return False
         return True
+
+    def is_valid(self):
+        return self.is_complete() and all(sheet.is_valid() for sheet in self.scoresheets.values())
 
     def identical(self, other):
         if not super().identical(other):
@@ -381,7 +389,7 @@ class VotingDebateResult(BaseDebateResult):
             return self.scoresheets[adjudicator].get_score(side, position)
         except AttributeError:
             logger.exception("Tried to get score, but scoresheet doesn't do scores. "
-                    "self.requires_scores is %s", self.requires_scores)
+                    "self.takes_scores is %s", self.takes_scores)
             return None
 
     def set_score(self, adjudicator, side, position, score):
@@ -390,14 +398,14 @@ class VotingDebateResult(BaseDebateResult):
             scoresheet.set_score(side, position, score)
         except AttributeError:
             logger.exception("Tried to set score, but scoresheet doesn't do scores. "
-                    "self.requires_scores is %s", self.requires_scores)
+                    "self.takes_scores is %s", self.takes_scores)
 
     def get_declared_winner(self, adjudicator):
         try:
             return self.scoresheets[adjudicator].get_declared_winner()
         except AttributeError:
             logger.exception("Tried to get declared winner, but scoresheet doesn't do declared winners. "
-                    "self.requires_declared_winners is %s", self.requires_declared_winners)
+                    "self.takes_declared_winners is %s", self.takes_declared_winners)
             return None
 
     def set_declared_winner(self, adjudicator, declared_winner):
@@ -405,7 +413,7 @@ class VotingDebateResult(BaseDebateResult):
             return self.scoresheets[adjudicator].set_declared_winner(declared_winner)
         except AttributeError:
             logger.exception("Tried to set declared winner, but scoresheet doesn't do declared winners. "
-                    "self.requires_declared_winners is %s", self.requires_declared_winners)
+                    "self.takes_declared_winners is %s", self.takes_declared_winners)
 
     # --------------------------------------------------------------------------
     # Calculated fields
@@ -421,7 +429,7 @@ class VotingDebateResult(BaseDebateResult):
         Raises ResultError there is a draw somewhere among the adjudicators.
         """
 
-        assert self.is_complete, "Tried to calculate decision on an incomplete ballot set."
+        assert self.is_complete(), "Tried to calculate decision on an incomplete ballot set."
 
         self._adjs_by_side = {side: [] for side in self.sides} # group adjs by vote
         for adj, sheet in self.scoresheets.items():
@@ -447,7 +455,7 @@ class VotingDebateResult(BaseDebateResult):
         def wrap(func):
             @wraps(func)
             def wrapped(self, *args, **kwargs):
-                if not self.is_complete:
+                if not self.is_complete():
                     return default
                 if not self._decision_calculated:
                     self._calc_decision()
