@@ -275,10 +275,18 @@ class Team(models.Model):
 
     def serialize(self):
         team = model_to_dict(self)
-        team['institution_name'] = self.institution.code
-        team['break_categories'] = None # Populate later if needed?
         team['short_name'] = self.short_name
         team['long_name'] = self.long_name
+        team['institution'] = {
+            'name': self.institution.name, 'id': self.institution.id }
+        team['region'] = {
+            'name': self.region.name, 'id': self.region.id } if self.region else None
+        team['speakers'] = [{
+            'name': s.name, 'id': s.id, 'gender': s.gender } for s in list(self.speakers)]
+        team['break_categories'] = [{
+            'id': bc.id, 'name': bc.name, 'seq': bc.seq,
+            # 'will_break': determine_liveness(thresholds[bc['id']], team.wins_count)
+        } for bc in self.break_categories.all()] if self.break_categories else None
         return team
 
 
@@ -404,7 +412,7 @@ class Adjudicator(Person):
 
     def serialize(self):
         adj = model_to_dict(self)
-        adj['score'] = "{}".format(self.score)
+        adj['score'] = "{0:0.1f}".format(self.score)
         adj['insitution_name'] = self.institution.code # Populate later if needed?
         adj['conflicts'] = None # Populate later if needed?
         adj['institutional_conflicts'] = None # Populate later if needed?

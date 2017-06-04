@@ -3,6 +3,8 @@
 
   <div class="vertical-spacing" id="messages-container"></div>
 
+  <team-slideover :team="slideSubject"></team-slideover>
+
   <draw-header :positions="positions">
     <template slot="hteams">
       <div class="thead flex-cell flex-8 vue-droppable-container" data-toggle="tooltip" title="test"
@@ -38,24 +40,23 @@ import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import GenericDroppable from '../draganddrops/GenericDroppable.vue'
 import TeamDraggable from '../draganddrops/TeamDraggable.vue'
+import TeamSlideover from '../slideovers/TeamSlideover.vue'
 import _ from 'lodash'
 
 
 export default {
-  components: {
-    DrawHeader, UnallocatedContainer, Debate, GenericDroppable, TeamDraggable
-  },
   mixins: [
     DrawContainer
   ],
+  components: {
+    DrawHeader, UnallocatedContainer, Debate, GenericDroppable, TeamDraggable, TeamSlideover
+  },
   props: {
   },
   computed: {
   },
   methods: {
   },
-  events: {
-  }
 }
 
 </script>

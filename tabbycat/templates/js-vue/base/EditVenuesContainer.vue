@@ -3,7 +3,7 @@
 
   <div class="vertical-spacing" id="messages-container"></div>
 
-  <venues-constraints-slideover :venue="slideSubject" :constraints="slideConstraints"></venues-constraints-slideover>
+  <constraints-slideover :venue="slideSubject" :constraints="slideInfo"></constraints-slideover>
 
   <draw-header :positions="positions">
     <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
@@ -37,35 +37,25 @@ import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import GenericDroppable from '../draganddrops/GenericDroppable.vue'
 import VenueDraggable from '../draganddrops/VenueDraggable.vue'
-import VenuesConstraintsSlideover from '../slideovers/VenuesConstraintsSlideover.vue'
+import ConstraintsSlideover from '../slideovers/ConstraintsSlideover.vue'
 import _ from 'lodash'
 
 
 export default {
-  components: {
-    UnallocatedContainer, DrawHeader, Debate, GenericDroppable,
-    VenueDraggable, VenuesConstraintsSlideover
-  },
-  created: function () {
-    this.$eventHub.$on('set-slideover', this.setSlideover)
-    this.$eventHub.$on('unset-slideover', this.unsetSlideover)
-  },
-  data: function() {
-    return {
-      slideSubject: null,
-      slideConstraints: null
-    }
-  },
   mixins: [
     DrawContainer
   ],
+  components: {
+    UnallocatedContainer, DrawHeader, Debate, GenericDroppable,
+    VenueDraggable, ConstraintsSlideover
+  },
   props: {
     venueConstraints: Array,
   },
   computed: {
   },
   methods: {
-    getConstraintsForVenue(venue) {
+    annotateSlideInfo(venue) {
       // Build array of this venue's categories as IDs
       var category_ids = _.map(venue.categories, 'id')
       if (category_ids.length > 0) {
@@ -76,15 +66,7 @@ export default {
       } else {
         return null
       }
-    },
-    setSlideover: function(venue) {
-      this.slideSubject = venue
-      this.slideConstraints = this.getConstraintsForVenue(venue)
-    },
-    unsetSlideover: function() {
-      // this.slideSubject = null
-      // this.slideConstraints = null
-    },
+    }
   },
   events: {
   }
