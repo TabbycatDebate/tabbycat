@@ -3,6 +3,8 @@
 
   <div class="vertical-spacing" id="messages-container"></div>
 
+  <team-slideover :team="slideSubject"></team-slideover>
+
   <draw-header :positions="positions">
     <div class="thead flex-cell flex-4" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
       <span>Priority</span>

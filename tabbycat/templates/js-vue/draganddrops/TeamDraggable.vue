@@ -4,7 +4,7 @@
        v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
        v-on:dragstart="handleDragStart"
        v-on:dragend="handleDragEnd"
-       v-on:mouseenter="showSlideOver"
+       v-on:mouseenter="showSlideOver(team)"
        v-on:mouseleave="hideSlideOver"><!--
        v-on:mouseenter="show = true"
        v-on:mouseleave="show = false" -->
@@ -25,22 +25,15 @@
 
 <script>
 import DraggableMixin from '../mixins/DraggableMixin.vue'
+import SlideOverSubjectMixin from '../slideovers/SlideOverSubjectMixin.vue'
 
 export default {
-  mixins: [DraggableMixin],
+  mixins: [DraggableMixin, SlideOverSubjectMixin],
   props: {
     'team': Object,
     // 'isDragging': { default: false },
   },
-  computed: {
-  },
   methods: {
-    showSlideOver: function(event) {
-      this.$eventHub.$emit('set-slideover', this.team)
-    },
-    hideSlideOver: function(event) {
-      this.$eventHub.$emit('unset-slideover')
-    },
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-team', this);
     },

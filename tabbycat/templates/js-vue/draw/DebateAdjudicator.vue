@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <transition name="expand">
+<!--     <transition name="expand">
       <div class="slideover-top" :class="{ 'slideover-info': showSlideOver}" v-if="showSlideOver">
         <div class="list-group">
           <li class="list-group-item">
@@ -82,7 +82,7 @@
           </li>
         </div>
       </div>
-    </transition>
+    </transition> -->
   </div>
 
 

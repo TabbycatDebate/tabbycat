@@ -24,7 +24,9 @@
 
     <template v-for="(team, index) in debate.teams">
       <slot :name="'sposition' + index">
-        <div class="draw-cell flex-6">
+        <div class="draw-cell flex-6"
+             v-on:mouseenter="showSlideOver(team)"
+             v-on:mouseleave="hideSlideOver">
           {{ team.short_name }}
         </div>
       </slot>
@@ -44,20 +46,13 @@
 </template>
 
 <script>
+import SlideOverSubjectMixin from '../slideovers/SlideOverSubjectMixin.vue'
 
 export default {
-  components: {
-  },
-  mixins: [
-  ],
+  components: {  },
+  mixins: [SlideOverSubjectMixin],
   props: {
     debate: Object,
-  },
-  computed: {
-  },
-  events: {
-  },
-  methods: {
   },
 }
 

@@ -4,6 +4,7 @@
   <div class="vertical-spacing" id="messages-container"></div>
 
   <constraints-slideover :venue="slideSubject" :constraints="slideInfo"></constraints-slideover>
+  <team-slideover :team="slideSubject"></team-slideover>
 
   <draw-header :positions="positions">
     <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">

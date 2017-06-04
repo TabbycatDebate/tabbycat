@@ -4,7 +4,7 @@
        v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
        v-on:dragstart="handleDragStart"
        v-on:dragend="handleDragEnd"
-       v-on:mouseenter="showSlideOver"
+       v-on:mouseenter="showSlideOver(venue)"
        v-on:mouseleave="hideSlideOver">
 
     <div class="draggable-prefix">
@@ -26,9 +26,10 @@
 
 <script>
 import DraggableMixin from '../mixins/DraggableMixin.vue'
+import SlideOverSubjectMixin from '../slideovers/SlideOverSubjectMixin.vue'
 
 export default {
-  mixins: [DraggableMixin],
+  mixins: [DraggableMixin, SlideOverSubjectMixin],
   props: {
     'venue': Object
   },
@@ -36,12 +37,6 @@ export default {
 
   },
   methods: {
-    showSlideOver: function(event) {
-      this.$eventHub.$emit('set-slideover', this.venue)
-    },
-    hideSlideOver: function(event) {
-      this.$eventHub.$emit('unset-slideover')
-    },
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-venue', this);
     },
