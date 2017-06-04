@@ -10,8 +10,11 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
 from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, redirect, reverse
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.detail import SingleObjectMixin
+
+from participants.models import Region
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import TabbycatPageTitlesMixin
@@ -265,9 +268,45 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
 class DrawForDragAndDropMixin(RoundMixin):
     """Provides the base set of constructors used to assemble a the
     drag and drop table used for editing matchups/adjs/venues with a
-    drag and drop interface. Override annotate method to add per view data """
+    drag and drop interface. Subclass annotate method to add extra view data """
+
+    def annotate_break_classes(self, serialised_teams):
+        """We can't style break categories in CSS because we need a defined range;
+        this normalises IDs of the break categories so the CSS classes can work"""
+        breaks_seq = {}
+        for i, r in enumerate(self.break_categories):
+            breaks_seq[r.id] = i
+        for team in serialised_teams:
+            for bc in team['break_categories']:
+                bc['class'] = breaks_seq[bc['id']]
+
+        return serialised_teams
+
+    def annotate_region_classes(self, adj_or_teams):
+        """Same as above, but for regions"""
+        regions_seq = {}
+        for i, r in enumerate(self.regions):
+            regions_seq[r.id] = i
+        for a_or_t in adj_or_teams:
+            if a_or_t['region']:
+                a_or_t['region']['class'] = regions_seq[a_or_t['region']['id']]
+
+        return adj_or_teams
+
+    @cached_property
+    def break_categories(self):
+        return self.get_tournament().breakcategory_set.order_by('id')
+
+    @cached_property
+    def regions(self):
+        return Region.objects.all()
 
     def annotate_draw(self, draw, serialised_draw):
+        # Need to unique-ify/reorder break categories/regions for consistent CSS
+        for d in serialised_draw:
+            d['teams'] = self.annotate_break_classes(d['teams'])
+            d['teams'] = self.annotate_region_classes(d['teams'])
+
         return serialised_draw
 
     def get_context_data(self, **kwargs):

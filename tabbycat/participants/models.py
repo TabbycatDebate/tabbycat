@@ -280,13 +280,13 @@ class Team(models.Model):
         team['institution'] = {
             'name': self.institution.name, 'id': self.institution.id}
         team['region'] = {
-            'name': self.region.name, 'id': self.region.id} if self.region else None
+            'name': self.region.name, 'id': self.region.id, 'class': None} if self.region else None
         team['speakers'] = [{
-            'name': s.name, 'id': s.id, 'gender': s.gender} for s in list(self.speakers)]
+            'name': s.name, 'id': s.id, 'gender': s.gender} for s in list(self.speakers.order_by('name'))]
         team['break_categories'] = [{
-            'id': bc.id, 'name': bc.name, 'seq': bc.seq,
+            'id': bc.id, 'name': bc.name, 'seq': bc.seq, 'class': None
             # 'will_break': determine_liveness(thresholds[bc['id']], team.wins_count)
-        } for bc in self.break_categories.all()] if self.break_categories else None
+        } for bc in self.break_categories.order_by('seq')] if self.break_categories else None
         return team
 
 
@@ -413,7 +413,9 @@ class Adjudicator(Person):
     def serialize(self):
         adj = model_to_dict(self)
         adj['score'] = "{0:0.1f}".format(self.score)
-        adj['insitution_name'] = self.institution.code # Populate later if needed?
+        adj['region'] = {'name': self.region.name, 'id': self.region.id, 'class': None} if self.region else None
+        adj['institution'] = {
+            'name': self.institution.name, 'id': self.institution.id}
         adj['conflicts'] = None # Populate later if needed?
         adj['institutional_conflicts'] = None # Populate later if needed?
         adj['institution_conflicts'] = None # Populate later if needed?

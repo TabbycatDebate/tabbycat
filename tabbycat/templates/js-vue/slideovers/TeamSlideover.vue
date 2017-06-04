@@ -8,7 +8,7 @@
         </h4>
       </li>
       <li class="list-group-item flex-horizontal">
-        <div class="flex-1 btn-toolbar">
+        <div class="flex-3 btn-toolbar">
           <div class="btn-group btn-group-sm " role="group">
             <template v-for="speaker in team.speakers">
               <div :class="'btn btn-default gender-display gender-' + speaker.gender">
@@ -16,17 +16,21 @@
               </div>
             </template>
           </div>
-          <div class="btn-group btn-group-sm" role="group">
-            <div :class="'btn btn-default region-display region-' + team.region.seq">
+        </div>
+
+        <div class="flex-1 btn-toolbar">
+          <div class="btn-group btn-group-sm center-block" role="group">
+            <div :class="'btn btn-default region-display ' + regionClass">
               <span class="glyphicon glyphicon-globe"></span>
                 {{ team.institution.name }} {{ team.region.name }}
             </div>
           </div>
         </div>
-        <div class="btn-toolbar pull-right">
+
+        <div class="flex-3 btn-toolbar">
           <div class="btn-group btn-group-sm pull-right" role="group" v-for="bc in team.break_categories">
-            <div :class="'btn category-display category-' + bc.seq">
-              <span class="glyphicon glyphicon-globe"></span> {{ bc.name }}
+            <div :class="'btn category-display category-' + bc.class">
+              <span class="glyphicon glyphicon-globe"></span> {{ bc.name }} Break
             </div>
         <!--     <div class="btn btn-success" v-if="bc.will_break === true">
               SAFE ({{ team.wins }} Wins)
@@ -50,13 +54,17 @@
 import _ from 'lodash'
 
 export default {
-  mixins: [],
   props: {
     'team': Object,
   },
   computed: {
-  },
-  methods: {
+    'regionClass': function() {
+      if (this.team.region) {
+        return 'region-' + this.team.region.class
+      } else {
+        return ''
+      }
+    }
   }
 }
 </script>
