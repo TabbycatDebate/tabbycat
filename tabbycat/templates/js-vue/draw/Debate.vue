@@ -17,14 +17,16 @@
     </slot>
 
     <slot name="svenue">
-      <div class="draw-cell flex-2">
-        <span v-if="debate.venue">{{ debate.venue.name }}</span>
+      <div class="draw-cell flex-3">
+        <draw-venue :venue="debate.venue"></draw-venue>
       </div>
     </slot>
 
     <template v-for="(team, index) in debate.teams">
       <slot :name="'sposition' + index">
-        <draw-team :team="team"></draw-team>
+        <div class="draw-cell flex-6">
+          <draw-team :team="team"></draw-team>
+        </div>
       </slot>
     </template>
 
@@ -43,11 +45,12 @@
 
 <script>
 import DrawTeam from '../draw/DrawTeam.vue'
+import DrawVenue from '../draw/DrawVenue.vue'
 import DrawAdjudicator from '../draw/DrawAdjudicator.vue'
 import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
 
 export default {
-  components: {DrawTeam, DrawAdjudicator},
+  components: {DrawTeam, DrawVenue, DrawAdjudicator},
   mixins: [SlideOverSubjectMixin],
   props: {
     debate: Object,

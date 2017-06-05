@@ -20,7 +20,7 @@
     </slot>
 
     <slot name="hvenue">
-      <div class="thead flex-cell flex-2" data-toggle="tooltip" title="test">
+      <div class="thead flex-cell flex-3" data-toggle="tooltip" title="The venue of this debate">
         <span class="glyphicon glyphicon-map-marker"></span>
       </div>
     </slot>

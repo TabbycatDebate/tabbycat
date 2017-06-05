@@ -116,13 +116,17 @@ vueComponents['EditAdjudicatorsContainer'] = EditAdjudicatorsContainer
 // Main Vue Instance
 //------------------------------------------------------------------------------
 
-new Vue({
-  el: '#vueMount',
-  components: vueComponents,
-  // created: vueCreated,
-  data: vueData,
-  // events: vueEvents,
-  // filters: vueFilters,
-  // methods: vueMethods
-});
+// Only instantiate Vue if there is set vueData; otherwise the mount is missing
+if (typeof vueData !== 'undefined') {
 
+  new Vue({
+    el: '#vueMount',
+    components: vueComponents,
+    // created: vueCreated,
+    data: vueData,
+    // events: vueEvents,
+    // filters: vueFilters,
+    // methods: vueMethods
+  });
+
+}

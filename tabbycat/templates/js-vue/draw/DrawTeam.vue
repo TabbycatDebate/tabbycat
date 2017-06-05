@@ -1,5 +1,5 @@
 <template>
-  <div class="draw-cell flex-6 slideover-target"
+  <div class="slideover-target"
        v-on:mouseenter="showSlideOver(team)"
        v-on:mouseleave="hideSlideOver">
 

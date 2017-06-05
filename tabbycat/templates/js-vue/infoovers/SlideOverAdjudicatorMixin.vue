@@ -1,41 +1,38 @@
 <script>
 // Mainly just handles formatting the object for the slideover
+import SlideOverDiversityMixin from '../infoovers/SlideOverDiversityMixin.vue'
 import _ from 'lodash'
 
 export default {
+  mixins: [SlideOverDiversityMixin],
   computed: {
-    institutionDetailForSlideOver: function() {
-      var adj = this.adjudicator
-      if (adj.region === null || _.isUndefined(adj.region)) {
-        return { 'title': adj.institution.code,
-                 'icon': 'glyphicon-globe',
-                 'class': '' }
-      } else {
-        return { 'title': adj.institution.name + ' (' + adj.region.name + ')',
-                 'icon': 'glyphicon-globe',
-                 'class': 'region-display region-' + adj.region.class }
-      }
+    ratingsFeature: function() {
+      var ratings = [
+        { 'title': this.adjudicator.score + ' Feedback', 'icon': 'glyphicon-signal' },
+        { 'title': 'A+ Percentile (X%)', 'icon': 'glyphicon-ok' }
+      ]
+      return ratings
+    },
+    genderFeature: function() {
+      var gender = [
+        { 'title': this.adjudicator.name + this.genderNameForSlideOver(this.adjudicator),
+          'class': 'gender-display gender-' + this.adjudicator.gender,
+          'icon': 'glyphicon-user' }
+      ]
+      return gender
     },
   },
   methods: {
     formatForSlideOver: function(subject) {
-      var adj = this.adjudicator
       return {
-        'title': adj.name,
+        'title': this.adjudicator.name,
         'tiers': [{
           'features': [
-            [{ 'title': adj.name + ' (' + adj.gender +  ')',
-                      'class': 'gender-display gender-' + adj.gender,
-                      'icon': 'glyphicon-user' }],
-            [this.institutionDetailForSlideOver],
-            [{ 'title': adj.score + ' Feedback',
-                      'class': '',
-                      'icon': 'glyphicon-signal' },
-                    { 'title': 'A+ Percentile (X%)',
-                      'class': '',
-                      'icon': 'glyphicon-ok' }],
-          ]},
-        ]
+            this.genderFeature,
+            this.institutionDetailForSlideOver(this.adjudicator),
+            this.ratingsFeature
+          ]
+        }]
       }
     }
   }

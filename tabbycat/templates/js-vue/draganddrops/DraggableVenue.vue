@@ -26,9 +26,10 @@
 <script>
 import DraggableMixin from '../draganddrops/DraggableMixin.vue'
 import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
+import SlideOverVenueMixin from '../infoovers/SlideOverVenueMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, SlideOverSubjectMixin],
+  mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverVenueMixin],
   props: { 'venue': Object },
   computed: { },
   methods: {
