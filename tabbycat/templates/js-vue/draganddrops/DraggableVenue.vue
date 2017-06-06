@@ -1,10 +1,10 @@
 <template>
   <div draggable=true
-       v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
-       v-on:dragstart="handleDragStart"
-       v-on:dragend="handleDragEnd"
-       v-on:mouseenter="showSlideOver(venue)"
-       v-on:mouseleave="hideSlideOver">
+       :class="[componentClasses, isDragging ? vue-is-dragging : '']"
+       @dragstart="handleDragStart"
+       @dragend="handleDragEnd"
+       @mouseenter="showSlideOver(venue)"
+       @mouseleave="hideSlideOver">
 
     <div class="draggable-prefix">
       <h4>{{ venue.priority }}</h4>

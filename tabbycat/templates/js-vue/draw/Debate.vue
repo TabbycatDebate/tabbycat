@@ -2,12 +2,12 @@
   <div class="draw-row">
 
     <div class="draw-cell flex-1 flex-horizontal-center" data-toggle="tooltip"
-         v-bind:title="'Debate is in the ' + debate.bracket + ' bracket'">
+         :title="'Debate is in the ' + debate.bracket + ' bracket'">
       {{ debate.bracket }}
     </div>
 
     <div class="draw-cell flex-1 flex-horizontal-center">
-      <!-- v-bind:title="liveness + ' break categories are live'" -->
+      <!-- :title="liveness + ' break categories are live'" -->
       ?
     </div>
 

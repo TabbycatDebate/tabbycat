@@ -1,5 +1,5 @@
 <template>
-  <div v-on:mouseover="showTooltip = true" v-on:mouseleave="showTooltip = false">
+  <div @mouseover="showTooltip = true" @mouseleave="showTooltip = false">
 
     <input max="2" min="-2" step="1" type="range"
            v-model.number="setImportance" type="number">

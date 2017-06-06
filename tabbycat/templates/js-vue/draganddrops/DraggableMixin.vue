@@ -1,10 +1,10 @@
 <script>
 // Subclass should set on root:
 // draggable=true
-// v-on:dragstart="dragStart"
-// v-on:dragend="dragEnd"
+// @dragstart="dragStart"
+// @dragend="dragEnd"
 // class="vue-draggable"
-// v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
+// :class="[componentClasses, isDragging ? vue-is-dragging : '']"
 //
 // Subclass can provide handleDragStart() and handleDragEnd()
 // Any :hover CSS rules on the subclass should instead be computed from isDragging

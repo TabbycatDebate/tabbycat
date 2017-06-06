@@ -5,7 +5,7 @@
       <div class="col-md-12 half-vertical-spacing hidden-print">
         <div class="input-group">
           <input id="table-search" type="search"
-                 v-model="filterKey" v-on:keyup="updateTableFilters"
+                 v-model="filterKey" @keyup="updateTableFilters"
                  class="form-control table-search" placeholder="Find in Table">
           <span class="input-group-addon">
             <span class="glyphicon glyphicon-search"></span>

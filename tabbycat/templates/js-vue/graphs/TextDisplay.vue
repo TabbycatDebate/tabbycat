@@ -4,7 +4,7 @@
     <template v-for="(d, index) in graphData">
 
       <div class="col-md-4 text-center">
-        <h4 v-bind:class="'no-bottom-margin text-body gender-text gender-' + d.label.toLowerCase()">
+        <h4 :class="'no-bottom-margin text-body gender-text gender-' + d.label.toLowerCase()">
           {{ offset(d.count) }}
         </h4>
       </div>

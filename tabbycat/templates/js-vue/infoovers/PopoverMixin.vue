@@ -2,7 +2,7 @@
 // Inheriting componets should provide a getPopOverTitle() method
 // Along with providing an element with the "popover-raw" class as a direct
 // descendent of the component's root template
-// They can then trigger showPopover; ie "v-on:mouseover="showPopover""
+// They can then trigger showPopover; ie "@mouseover="showPopover""
 // Note that once triggered, it will handle its own show/hide events
 
 export default {

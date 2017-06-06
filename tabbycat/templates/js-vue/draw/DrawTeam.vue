@@ -1,7 +1,7 @@
 <template>
   <div class="slideover-target"
-       v-on:mouseenter="showSlideOver(team)"
-       v-on:mouseleave="hideSlideOver">
+       @mouseenter="showSlideOver(team)"
+       @mouseleave="hideSlideOver">
 
     <span>{{ team.short_name }}</span>
 

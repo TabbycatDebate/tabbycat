@@ -3,7 +3,7 @@
 
     <thead>
       <tr>
-        <th v-for="header in headers" v-on:resort="updateSorting"
+        <th v-for="header in headers" @resort="updateSorting"
             :header="header"
             :sort-key="sortKey"
             :sort-order="sortOrder"

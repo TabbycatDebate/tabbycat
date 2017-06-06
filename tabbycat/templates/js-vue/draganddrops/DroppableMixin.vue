@@ -1,10 +1,10 @@
 <script>
 // Subclass should set on root:
-// v-on:dragover.prevent
-// v-on:dragenter="dragEnter"
-// v-on:dragleave="dragLeave"
-// v-bind:class="{ 'vue-is-drag-enter': isDroppable }"
-// v-on:drop="drop"
+// @dragover.prevent
+// @dragenter="dragEnter"
+// @dragleave="dragLeave"
+// :class="{ 'vue-is-drag-enter': isDroppable }"
+// @drop="drop"
 // Subclasses can implement a handleDragEnter() handleDragLeave() handleDrop()
 
 export default {

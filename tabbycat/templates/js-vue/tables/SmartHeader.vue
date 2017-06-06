@@ -1,10 +1,10 @@
 <!-- Table Template -->
 <template>
-  <th class="vue-sortable" v-on:click="resort()">
+  <th class="vue-sortable" @click="resort()">
 
     <span :title="header['tooltip']"
           :data-toggle="header['tooltip'] ? 'tooltip' : null"
-          :v-on:hover="header['tooltip'] ? showTooltip  : null">
+          :@hover="header['tooltip'] ? showTooltip  : null">
 
       <span v-if="header['icon']" class="glyphicon" :class="header['icon']"></span>
       <span v-if="header['text']" v-html="header['text']"></span>

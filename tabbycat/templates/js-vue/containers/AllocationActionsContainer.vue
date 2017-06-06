@@ -13,7 +13,7 @@
                     title="Changes allocation are saved whenever an adjudicator's position is changed. Do not edit/change allocations across multiple browsers/computers!">
               <span id="saveTime">No changes</span>
             </button>
-            <a class="btn btn-success btn-sm" v-on:click="confirmAutoAllocation">
+            <a class="btn btn-success btn-sm" @click="confirmAutoAllocation">
               Auto Allocate
             </a>
           </div>
@@ -58,17 +58,17 @@
         </div>
         <div class="btn-toolbar">
           <div class="btn-group btn-group-sm">
-            <button v-on:click="showRegion"
+            <button @click="showRegion"
                     :class="['btn btn-default nav-link hoverable', showingRegion ? 'active' : '']">
               <span :class="['glyphicon', showingRegion ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
               Region
             </button>
-            <button v-on:click="showGender"
+            <button @click="showGender"
                     :class="['btn btn-default nav-link hoverable', showingGender ? 'active' : '']">
               <span :class="['glyphicon', showingGender ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
               Gender
             </button>
-            <button v-on:click="showCategory"
+            <button @click="showCategory"
                     :class="['btn btn-default nav-link hoverable', showingCategory ? 'active' : '']">
               <span :class="['glyphicon', showingCategory ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
               Category
@@ -100,7 +100,7 @@
               You should probably raise the score required to panel in settings.
             </div> -->
             <button type="submit" class="btn btn-block btn-success"
-                    v-on:click="createAutoAllocation"
+                    @click="createAutoAllocation"
                     data-loading-text="Loading Auto Allocation...">
               Create Automatic Allocation
             </button>

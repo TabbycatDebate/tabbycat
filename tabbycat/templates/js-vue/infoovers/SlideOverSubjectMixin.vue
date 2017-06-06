@@ -1,7 +1,7 @@
 <script>
 // Subclass should set on the hoverable element:
-// v-on:mouseenter="showSlideOver( SUBJECT_DATA )
-// v-on:mouseleave="hideSlideOver( SUBJECT_DATA )
+// @mouseenter="showSlideOver( SUBJECT_DATA )
+// @mouseleave="hideSlideOver( SUBJECT_DATA )
 // Subclass should usually overrite formatForSlideOver() with their own data
 
 

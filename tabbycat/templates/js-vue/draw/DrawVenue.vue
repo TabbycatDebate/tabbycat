@@ -1,7 +1,7 @@
 <template>
   <div class="slideover-target"
-       v-on:mouseenter="showSlideOver(venue)"
-       v-on:mouseleave="hideSlideOver">
+       @mouseenter="showSlideOver(venue)"
+       @mouseleave="hideSlideOver">
 
     <span v-if="venue">{{ venue.name }}</span>
 

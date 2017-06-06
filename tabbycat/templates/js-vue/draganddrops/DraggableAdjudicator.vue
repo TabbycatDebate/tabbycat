@@ -1,12 +1,12 @@
 <template>
   <div draggable=true
-       v-bind:class="[componentClasses, isDragging ? vue-is-dragging : '']"
-       v-on:dragstart="handleDragStart"
-       v-on:dragend="handleDragEnd"
-       v-on:mouseenter="showSlideOver(adjudicator)"
-       v-on:mouseleave="hideSlideOver"><!--
-       v-on:mouseenter="show = true"
-       v-on:mouseleave="show = false" -->
+       :class="[componentClasses, isDragging ? vue-is-dragging : '']"
+       @dragstart="handleDragStart"
+       @dragend="handleDragEnd"
+       @mouseenter="showSlideOver(adjudicator)"
+       @mouseleave="hideSlideOver"><!--
+       @mouseenter="show = true"
+       @mouseleave="show = false" -->
 
     <div class="draggable-prefix">
       <h4>{{ adjudicator.score }}</h4>

@@ -1,6 +1,6 @@
 <template>
-  <span v-on:mouseenter="showSlideOver(adjudicator)"
-        v-on:mouseleave="hideSlideOver"
+  <span @mouseenter="showSlideOver(adjudicator)"
+        @mouseleave="hideSlideOver"
         class="slideover-target">
 
     <span>{{ adjudicator.name }} ({{ position }})</span>,

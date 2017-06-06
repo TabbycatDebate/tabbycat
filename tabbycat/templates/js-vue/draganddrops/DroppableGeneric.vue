@@ -2,11 +2,11 @@
 
   <div class="vue-droppable"
        ><!--
-       v-on:dragover.prevent
-       v-on:drop="drop"
-       v-on:dragenter="dragEnter"
-       v-on:dragleave="dragLeave"
-       v-bind:class="{ 'vue-is-drag-enter': isDroppable }" -->
+       @dragover.prevent
+       @drop="drop"
+       @dragenter="dragEnter"
+       @dragleave="dragLeave"
+       :class="{ 'vue-is-drag-enter': isDroppable }" -->
 
     <slot>
       <!-- Container sets the dropped items here -->

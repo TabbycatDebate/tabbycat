@@ -16,7 +16,7 @@
     <span
       :title="cellData['tooltip']"
       :data-toggle="cellData['popover'] || cellData['tooltip'] ? 'tooltip' : ''"
-      v-on:mouseover="checkForPopover">
+      @mouseover="checkForPopover">
 
       <!-- Links and modals -->
       <span v-if="cellData['link'] || cellData['modal']">
