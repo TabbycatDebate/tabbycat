@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-12 draw-container allocation-container">
 
-    <allocation-actions-container></allocation-actions-container>
+    <allocation-actions-container :round-info="roundInfo"></allocation-actions-container>
 
     <div class="vertical-spacing" id="messages-container"></div>
 
@@ -83,7 +83,10 @@ export default {
     AllocationActionsContainer, UnallocatedItemsContainer, DrawHeader, Debate,
     DebateImportance, DroppableGeneric, DraggableAdjudicator, SlideOverItem
   },
+  props: { roundInfo: Object },
   created: function() {
+    this.$eventHub.$on('update-allocation', this.updateAllocation)
+    this.$eventHub.$on('update-unallocated', this.updateUnallocated)
     this.$eventHub.$on('update-importance', this.updateImportance)
   },
   computed: {
@@ -96,12 +99,22 @@ export default {
       return _.filter(debate.panel, { 'position': position })
     },
     updateImportance: function(debateID, importance) {
-      _.find(this.debates, { 'id': debateID }).importance = importance
+      // This fires after autoAllocation; unclear why
+      var debateToUpdateImportance = _.find(this.debates, { 'id': debateID })
+      if (!_.isUndefined(debateToUpdateImportance)) {
+        debateToUpdateImportance.importance = importance
+      }
       // var ajaxData = {
       //   debate_id: debateID,
       //   importance: importance
       // }
       //this.update(this.url, ajaxData, 'debate ' + this.id + '\'s importance')
+    },
+    updateAllocation: function(updatedDebates) {
+      this.debates = updatedDebates
+    },
+    updateUnallocated(updatedUnallocatedAdjudicators) {
+      this.unallocatedItems = updatedUnallocatedAdjudicators
     }
   }
 }

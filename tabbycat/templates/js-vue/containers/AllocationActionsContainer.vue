@@ -13,14 +13,14 @@
                     title="Changes allocation are saved whenever an adjudicator's position is changed. Do not edit/change allocations across multiple browsers/computers!">
               <span id="saveTime">No changes</span>
             </button>
-            <a class="btn btn-success btn-sm" @click="confirmAutoAllocation">
+            <a class="btn btn-success btn-sm" @click="showAutoAllocationModal">
               Auto Allocate
             </a>
           </div>
         </div>
 
         <div class="btn-toolbar">
-          <div v-if="!showingGender && !showingCategory && !showingRegion" class="btn-group btn-group-sm">
+          <div v-if="!highlightRegion && !highlightGender && !highlightCategory" class="btn-group btn-group-sm">
             <button disabled class="btn conflictable conflicts-toolbar conflict-hover-2-ago">
               Seen Before
             </button>
@@ -34,43 +34,43 @@
               Unbalanced
             </button>
           </div>
-          <div v-if="showingGender" class="btn-group btn-group-sm">
+          <div v-if="highlightGender" class="btn-group btn-group-sm">
             <button disabled class="btn gender-display gender-male">Male</button>
             <button disabled class="btn gender-display gender-f">Female</button>
             <button disabled class="btn gender-display gender-o">Other</button>
             <button disabled class="btn btn-default">Unknown</button>
           </div>
-          <div v-if="showingRegion" class="btn-group btn-group-sm">
-            <!-- <button disabled v-for="region in regions"
-              class="btn btn-default region-display region-{{ region.seq }}">
+          <div v-if="highlightRegion" class="btn-group btn-group-sm">
+            <button v-for="region in roundInfo.regions" disabled
+                    :class="['btn btn-default region-display', 'region-' + region.class]">
               {{ region.name }}
-            </button> -->
+            </button>
           </div>
-          <div v-if="showingCategory" class="btn-group btn-group-sm">
-            <!-- <button disabled v-for="category in categories"
-              class="btn btn-default category-display category-{{ category.seq }}">
+          <div v-if="highlightCategory" class="btn-group btn-group-sm">
+            <button v-for="category in roundInfo.categories" disabled
+                    :class="['btn btn-default category-display', 'category-' + category.class]">
               {{ category.name }} Break
             </button>
             <button disabled class="btn btn-default">
               No Category Assigned
-            </button> -->
+            </button>
           </div>
         </div>
         <div class="btn-toolbar">
           <div class="btn-group btn-group-sm">
-            <button @click="showRegion"
-                    :class="['btn btn-default nav-link hoverable', showingRegion ? 'active' : '']">
-              <span :class="['glyphicon', showingRegion ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
+            <button @click="toggleHighlight('highlightRegion')"
+                    :class="['btn btn-default nav-link hoverable', highlightRegion ? 'active' : '']">
+              <span :class="['glyphicon', highlightRegion ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
               Region
             </button>
-            <button @click="showGender"
-                    :class="['btn btn-default nav-link hoverable', showingGender ? 'active' : '']">
-              <span :class="['glyphicon', showingGender ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
+            <button @click="toggleHighlight('highlightGender')"
+                    :class="['btn btn-default nav-link hoverable', highlightGender ? 'active' : '']">
+              <span :class="['glyphicon', highlightGender ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
               Gender
             </button>
-            <button @click="showCategory"
-                    :class="['btn btn-default nav-link hoverable', showingCategory ? 'active' : '']">
-              <span :class="['glyphicon', showingCategory ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
+            <button @click="toggleHighlight('highlightCategory')"
+                    :class="['btn btn-default nav-link hoverable', highlightCategory ? 'active' : '']">
+              <span :class="['glyphicon', highlightCategory ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
               Category
             </button>
           </div>
@@ -79,82 +79,31 @@
       </div>
     </nav>
 
-    <div class="modal fade" id="confirmAutoAlert" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-            <p class="lead">Using auto-allocate will <strong>remove all existing adjudicator allocations</strong> and
-            create new panels for all debates.</p>
-            <p>The allocator forms stronger panels for debates that have been assigned higher importances.
-            If importances have not been set, or are equivalent, it will give stronger panels to
-            debates of a higher bracket.</p>
-<!--             <p>Adjudicators must have a feedback score over <strong>{{ roundInfo.scoreForVote }}</strong> to panel.
-            You can change this in the <em>Draw Rules</em> section of Configuration if needed. Try modifying this value
-            if you are seeing too few or too many panellists being allocated.</p>
-            <div v-if="roundInfo.scoreForVote > roundInfo.scoreMax" class="alert alert-warning">
-              The score required to panel ({{ roundInfo.scoreForVote }}) is higher than the maximum adjudicator score ({{ roundInfo.scoreMax }}).
-              You should probably lower the score required to panel in settings.
-            </div>
-            <div v-if="roundInfo.scoreForVote < roundInfo.scoreMin" class="alert alert-warning">
-              The score required to panel ({{ roundInfo.scoreForVote }}) is lower than the minimum adjudicator score ({{ roundInfo.scoreMin }}).
-              You should probably raise the score required to panel in settings.
-            </div> -->
-            <button type="submit" class="btn btn-block btn-success"
-                    @click="createAutoAllocation"
-                    data-loading-text="Loading Auto Allocation...">
-              Create Automatic Allocation
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <allocation-modal :round-info="roundInfo"></allocation-modal>
 
   </div>
 </template>
 
-
 <script>
+import AllocationModal from '../infoovers/AllocationModal.vue'
+
 export default {
-  props: {
-    // regions: Array,
-    // categories: Array,
-    // roundInfo: Object,
-  },
+  props: { roundInfo: Object },
+  components: { AllocationModal },
   data: function() {
-    return {
-      showingRegion: false,
-      showingGender: false,
-      showingCategory: false
-    }
+    // Internal state storing the status of which modal is being toggled
+    return { highlightRegion: false, highlightGender: false, highlightCategory: false }
   },
   methods: {
-    confirmAutoAllocation: function() {
+    showAutoAllocationModal: function() {
       $('#confirmAutoAlert').modal('show');
     },
-    resetAutoAllocationModal: function(button) {
-      $(button).button('reset');
-      $('#confirmAutoAlert').modal('hide');
-    },
-    createAutoAllocation: function(event) {
-      // TODO
-    },
-    showRegion: function() {
-      this.showingRegion = !this.showingRegion;
-      this.showingGender = false;
-      this.showingCategory = false;
-      //this.$dispatch('set_diversity_highlights', this.showingRegion, 'region_show')
-    },
-    showGender: function() {
-      this.showingGender = !this.showingGender;
-      this.showingRegion = false;
-      this.showingCategory = false;
-      //this.$dispatch('set_diversity_highlights', this.showingGender, 'gender_show')
-    },
-    showCategory: function() {
-      this.showingCategory = !this.showingCategory;
-      this.showingGender = false;
-      this.showingRegion = false;
-      //this.$dispatch('set_diversity_highlights', this.showingCategory, 'category_show')
+    toggleHighlight: function(type) {
+      // Turn off all highlights; toggle the one just clicked
+      this.highlightRegion = type === 'highlightRegion' ? !this[type]: false
+      this.highlightGender = type === 'highlightGender' ? !this[type]: false
+      this.highlightCategory = type === 'highlightCategory' ? !this[type]: false
+      this.$eventHub.$emit('set-highlights', this[type], type)
     }
   }
 }

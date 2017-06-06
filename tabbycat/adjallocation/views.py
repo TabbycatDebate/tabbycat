@@ -6,9 +6,9 @@ from django.http import HttpResponse, HttpResponseBadRequest
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-# from breakqual.utils import categories_ordered
+from breakqual.models import BreakCategory
 from draw.models import Debate
-# from participants.models import Team
+from participants.models import Region
 # from participants.utils import regions_ordered
 from tournaments.models import Round
 from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin
@@ -23,41 +23,50 @@ from .models import DebateAdjudicator
 logger = logging.getLogger(__name__)
 
 
-class EditAdjudicatorAllocationView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
+class AllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
+
+    def get_unallocated_adjudicators(self):
+        round = self.get_round()
+        unused_adjs = [t.serialize() for t in round.unused_adjudicators()]
+        return json.dumps(unused_adjs)
+
+
+class EditAdjudicatorAllocationView(AllocationViewBase, TemplateView):
 
     template_name = 'edit_adjudicators.html'
 
     def get_context_data(self, **kwargs):
-        round = self.get_round()
-
-        # teams = Team.objects.filter(debateteam__debate__round=r).prefetch_related('speaker_set')
-        # adjs = get_adjs(self.get_round())
-
         # regions = regions_ordered(t)
         # categories = categories_ordered(t)
         # adjs, teams = populate_conflicts(adjs, teams)
         # adjs, teams = populate_histories(adjs, teams, t, r)
+        kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
 
-        # kwargs['allRegions'] = json.dumps(regions)
-        # kwargs['allCategories'] = json.dumps(categories)
-        # kwargs['allDebates'] = debates_to_json(draw, t, r)
-        # kwargs['allTeams'] = teams_to_json(teams, regions, categories, t, r)
-        # kwargs['allAdjudicators'] = adjs_to_json(adjs, regions, t)
+        # Need to extract and annotate regions for the allcoation actions key
+        all_regions = [r.serialize for r in Region.objects.order_by('id')]
+        for i, r in enumerate(all_regions):
+            r['class'] = i
+        kwargs['vueRegions'] = json.dumps(all_regions)
 
-        unused_adjs = [t.serialize() for t in round.unused_adjudicators()]
-        kwargs['vueUnusedAdjudicators'] = json.dumps(unused_adjs)
+        # Need to extract and annotate categories for the allcoation actions key
+        all_bcs = [c.serialize for c in BreakCategory.objects.filter(
+            tournament=self.get_tournament()).order_by('id')]
+        for i, bc in enumerate(all_bcs):
+            bc['class'] = i
+        kwargs['vueCategories'] = json.dumps(all_bcs)
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, SuperuserRequiredMixin, JsonDataResponsePostView):
+class CreateAutoAllocation(LogActionMixin, AllocationViewBase, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
     def post_data(self):
-        round = self.get_round()
-        allocate_adjudicators(round, HungarianAllocator)
-        # Probably needs to be fixed
-        return [d.serialize() for d in round.debate_set_with_prefetches()]
+        allocate_adjudicators(self.get_round(), HungarianAllocator)
+        return {
+            'debates': self.get_draw(),
+            'unallocatedAdjudicators': self.get_unallocated_adjudicators()
+        }
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()

@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 
-
 class BreakCategory(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE)
     name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")
@@ -43,6 +42,13 @@ class BreakCategory(models.Model):
         """Returns a QuerySet of BreakingTeam instances representing teams who
         will actually compete in the elimination round series."""
         return self.breakingteam_set.filter(break_rank__isnull=False)
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id, 'name': self.name, 'seq': self.seq, 'class': None
+            # 'will_break': determine_liveness(thresholds[bc['id']], team.wins_count)
+        }
 
 
 class BreakingTeam(models.Model):

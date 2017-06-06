@@ -27,6 +27,7 @@ export default {
     // We initially sync the internalValue with the value passed in by the parent
     this.internalImportance = this.importance;
     this.initiallySet = true
+    console.log('created')
   },
   computed: {
     importanceDescription: function() {

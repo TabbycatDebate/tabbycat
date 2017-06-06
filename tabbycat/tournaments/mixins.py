@@ -299,7 +299,7 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     @cached_property
     def regions(self):
-        return Region.objects.all()
+        return Region.objects.order_by('id')
 
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
@@ -309,11 +309,14 @@ class DrawForDragAndDropMixin(RoundMixin):
 
         return serialised_draw
 
-    def get_context_data(self, **kwargs):
+    def get_draw(self):
         round = self.get_round()
         draw = round.debate_set_with_prefetches(ordering=('-importance', 'room_rank',),
                                                 speakers=False, divisions=False)
         serialised_draw = [d.serialize() for d in draw]
         draw = self.annotate_draw(draw, serialised_draw)
-        kwargs['vueDebates'] = json.dumps(serialised_draw)
+        return json.dumps(serialised_draw)
+
+    def get_context_data(self, **kwargs):
+        kwargs['vueDebates'] = self.get_draw()
         return super().get_context_data(**kwargs)

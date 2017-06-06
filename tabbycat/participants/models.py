@@ -22,6 +22,9 @@ class Region(models.Model):
     def __str__(self):
         return '%s' % (self.name)
 
+    @property
+    def serialize(self):
+        return { 'name': self.name, 'id': self.id, 'class': None }
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['code', 'name', 'abbreviation']
@@ -55,6 +58,9 @@ class Institution(models.Model):
         else:
             return self.code[:5]
 
+    @property
+    def serialize(self):
+        return { 'name': self.name, 'id': self.id, 'code': self.code }
 
 class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True)
@@ -277,16 +283,12 @@ class Team(models.Model):
         team = model_to_dict(self)
         team['short_name'] = self.short_name
         team['long_name'] = self.long_name
-        team['institution'] = {
-            'name': self.institution.name, 'id': self.institution.id, 'code': self.institution.code}
-        team['region'] = {
-            'name': self.region.name, 'id': self.region.id, 'class': None} if self.region else None
-        team['speakers'] = [{
-            'name': s.name, 'id': s.id, 'gender': s.gender} for s in list(self.speakers.order_by('name'))]
-        team['break_categories'] = [{
-            'id': bc.id, 'name': bc.name, 'seq': bc.seq, 'class': None
-            # 'will_break': determine_liveness(thresholds[bc['id']], team.wins_count)
-        } for bc in self.break_categories.order_by('seq')] if self.break_categories else None
+        team['institution'] = self.institution.serialize
+        team['region'] = self.region.serialize if self.region else None
+        speakers = list(self.speakers.order_by('name'))
+        team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in speakers]
+        break_categories = self.break_categories.all()
+        team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
         return team
 
 
@@ -413,9 +415,8 @@ class Adjudicator(Person):
     def serialize(self):
         adj = model_to_dict(self)
         adj['score'] = "{0:0.1f}".format(self.score) # Fix to get round / move to annotator
-        adj['region'] = {'name': self.region.name, 'id': self.region.id, 'class': None} if self.region else None
-        adj['institution'] = {
-            'name': self.institution.name, 'id': self.institution.id, 'code': self.institution.code} if self.institution else None
+        adj['region'] = self.region.serialize if self.region else None
+        adj['institution'] = self.institution.serialize if self.institution else None
         adj['conflicts'] = None # Populate later if needed?
         adj['institutional_conflicts'] = None # Populate later if needed?
         adj['institution_conflicts'] = None # Populate later if needed?
