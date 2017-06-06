@@ -17,8 +17,17 @@
   display: flex;
 }
 
-.inline-flex {
+.flex-horizontal-center {
+  justify-content: center;
+  display: flex;
+}
+
+.flex-inline {
   display: inline-flex;
+}
+
+.flex-justify {
+  justify-content: space-between;
 }
 
 .flex-1 {

@@ -25,7 +25,6 @@ export default {
   methods: {
     formatForSlideOver: function(subject) {
       return {
-        'title': this.adjudicator.name,
         'tiers': [{
           'features': [
             this.genderFeature,

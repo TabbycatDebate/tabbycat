@@ -2,25 +2,25 @@
   <div class="draw-header subtitle">
 
     <slot name="hbacket">
-      <div class="thead flex-cell flex-1" data-toggle="tooltip" title="Debate's Bracket">
+      <div class="thead flex-cell flex-1 flex-horizontal-center" data-toggle="tooltip" title="Debate's Bracket">
         <span class="glyphicon glyphicon-stats"></span>
       </div>
     </slot>
 
     <slot name="hcats">
-      <div class="thead flex-cell flex-1" data-toggle="tooltip" title="How many break categories are live in this room">
+      <div class="thead flex-cell flex-1 flex-horizontal-center" data-toggle="tooltip" title="How many break categories are live in this room">
         <span class="glyphicon glyphicon-heart"></span>
       </div>
     </slot>
 
     <slot name="himportance">
-      <div class="thead flex-cell flex-1" data-toggle="tooltip" title="The assigned priority value of this debate">
+      <div class="thead flex-cell flex-1 flex-horizontal-center" data-toggle="tooltip" title="The assigned priority value of this debate">
         <span class="glyphicon glyphicon-stats"></span>
       </div>
     </slot>
 
     <slot name="hvenue">
-      <div class="thead flex-cell flex-3" data-toggle="tooltip" title="The venue of this debate">
+      <div class="thead flex-cell flex-6" data-toggle="tooltip" title="The venue of this debate">
         <span class="glyphicon glyphicon-map-marker"></span>
       </div>
     </slot>

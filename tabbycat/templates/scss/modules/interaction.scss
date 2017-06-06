@@ -56,21 +56,22 @@
 
 .slideover-info {
   top: 0;
-  height: auto;
   left: 0;
-  position: fixed;
   right: 0;
+  height: auto;
+  position: fixed;
   width: auto;
-  border-radius: 0;
+  margin: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   z-index: $z_2;
+  border: 0;
 
-  .list-group {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    margin-bottom: 0; // override default
-  }
-
-  .list-group-item:last-child {
+  .list-group-item {
+    padding: 7px 3px; // Tighten up spacing of the sub elements
     border-radius: 0;
+  }
+  .list-group-item:first-child {
+    border-top: 0;
   }
 }
 
@@ -105,15 +106,10 @@
   to { transform: scale(1) rotate(360deg); }
 }
 
-// Used in the divisions allocations page for the slide-in-bottom element
-.expand-transition {
-  height: default;
-  transition: all .3s ease;
+// Used by slideover panel
+.slide-over-enter-active, .slide-over-leave-active {
+  transition: opacity .35s ease;
 }
-
-.expand-enter,
-.expand-leave {
-  height: 0;
+.slide-over-enter, .slide-over-leave-to {
   opacity: 0;
-  display: none;
 }

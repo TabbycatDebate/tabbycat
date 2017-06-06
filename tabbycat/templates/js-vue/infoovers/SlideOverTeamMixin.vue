@@ -16,25 +16,25 @@ export default {
       })
       return categories
     },
-    speakersFeature: function() {
+    teamInfoFeature: function() {
       var self = this
-      var speakers = _.map(this.team.speakers, function(s) {
+      var teamInfo = { 'title': this.team.long_name }
+      var speakersInfo = _.map(this.team.speakers, function(s) {
         return {
           'title': s.name + self.genderNameForSlideOver(s),
           'class': 'gender-display gender-' + s.gender,
           'icon': 'glyphicon-user'
         }
       })
-      return speakers
+      return _.concat(teamInfo, speakersInfo)
     }
   },
   methods: {
     formatForSlideOver: function(subject) {
       return {
-        'title': this.team.long_name,
         'tiers': [{
           'features': [
-            this.speakersFeature,
+            this.teamInfoFeature,
             this.institutionDetailForSlideOver(this.team),
             this.breakCategoriesFeature
           ]

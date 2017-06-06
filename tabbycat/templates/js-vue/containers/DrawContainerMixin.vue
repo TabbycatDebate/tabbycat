@@ -22,8 +22,7 @@ export default {
       this.slideOverItem = object
     },
     unsetSlideover: function() {
-      // this.slideSubject = null
-      // this.slideConstraints = null
+      this.slideOverItem = null
     },
   }
 }

@@ -12,7 +12,6 @@ export default {
   },
   methods: {
     showSlideOver: function(event, subject) {
-      console.log('show slide')
       this.$eventHub.$emit('set-slideover', this.formatForSlideOver(subject))
     },
     hideSlideOver: function(event) {

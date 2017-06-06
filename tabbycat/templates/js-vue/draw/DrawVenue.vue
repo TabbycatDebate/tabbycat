@@ -3,7 +3,7 @@
        v-on:mouseenter="showSlideOver(venue)"
        v-on:mouseleave="hideSlideOver">
 
-    <span>{{ venue.name }}</span>
+    <span v-if="venue">{{ venue.name }}</span>
 
   </div>
 </template>

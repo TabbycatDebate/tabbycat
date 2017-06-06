@@ -2,9 +2,22 @@
 // General Layout
 //------------------------------------------------------------------------------
 
-.draw-container {
-  padding-bottom: 500px; // Need to offset the adjs panel max height
+.allocation-actions {
+  .navbar {
+    min-height: auto;
+  }
+  .navbar-form {
+    margin: 0 0;
+    padding: 7px 4px; // Tweak to match slideovers
+  }
+}
 
+.allocation-container {
+  padding-top: 75px; // Need to offset the hidden elements from slideover
+  padding-bottom: 500px; // Need to offset the adjs panel max height
+}
+
+.draw-container {
   .draw-row:last-of-type {
     border-radius: 0 0 4px 4px;
   }
@@ -33,7 +46,8 @@
 
 .allocations { // For fullscreen pages
   .accommodate-footer {
-    padding-left: 0;
+    padding-left: 4px;
+    padding-right: 4px;
     background: $alt-bg;
   }
 }
@@ -57,9 +71,9 @@
 }
 
 .flex-cell {
-  min-width: 40px;
-  padding-left: $table-cell-padding;
-  padding-right: $table-cell-padding;
+  min-width: 30px;
+  padding-left: $table-cell-padding - 2;
+  padding-right: $table-cell-padding - 2;
 }
 
 .bordered-bottom {

@@ -1,12 +1,14 @@
 <template>
-  <div class="col-md-12 draw-container">
+  <div class="col-md-12 draw-container allocation-container">
+
+    <allocation-actions-container></allocation-actions-container>
 
     <div class="vertical-spacing" id="messages-container"></div>
 
     <slide-over-item :subject="slideOverItem"></slide-over-item>
 
     <draw-header :positions="positions">
-      <div class="thead flex-cell flex-4" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
+      <div class="thead flex-cell flex-4 text-center" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
         <span>Priority</span>
       </div>
       <template slot="hvenue"><!-- Hide Venues --></template>
@@ -32,26 +34,29 @@
         <div class="draw-cell flex-12 vue-droppable-container">
           <droppable-generic>
             <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'C')"
-              :adjudicator="debateAdjudicator.adjudicator"></draggable-adjudicator>
+              :adjudicator="debateAdjudicator.adjudicator"
+              :key="debateAdjudicator.adjudicator.id"></draggable-adjudicator>
           </droppable-generic>
         </div>
         <div class="draw-cell flex-12 vue-droppable-container">
           <droppable-generic>
             <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'P')"
-              :adjudicator="debateAdjudicator.adjudicator"></draggable-adjudicator>
+              :adjudicator="debateAdjudicator.adjudicator"
+              :key="debateAdjudicator.adjudicator.id"></draggable-adjudicator>
           </droppable-generic>
         </div>
         <div class="draw-cell flex-12 vue-droppable-container">
           <droppable-generic>
             <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'T')"
-              :adjudicator="debateAdjudicator.adjudicator"></draggable-adjudicator>
+              :adjudicator="debateAdjudicator.adjudicator"
+              :key="debateAdjudicator.adjudicator.id"></draggable-adjudicator>
           </droppable-generic>
         </div>
       </template>
     </debate>
 
     <unallocated-items-container>
-      <div v-for="unallocatedAdj in unallocatedItems">
+      <div v-for="unallocatedAdj in unallocatedAdjsByScore">
         <draggable-adjudicator :adjudicator="unallocatedAdj"></draggable-adjudicator>
       </div>
     </unallocated-items-container>
@@ -60,6 +65,7 @@
 </template>
 
 <script>
+import AllocationActionsContainer from '../containers/AllocationActionsContainer.vue'
 import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
@@ -74,8 +80,13 @@ import _ from 'lodash'
 export default {
   mixins: [DrawContainerMixin],
   components: {
-    UnallocatedItemsContainer, DrawHeader, Debate, DebateImportance,
-    DroppableGeneric, DraggableAdjudicator, SlideOverItem
+    AllocationActionsContainer, UnallocatedItemsContainer, DrawHeader, Debate,
+    DebateImportance, DroppableGeneric, DraggableAdjudicator, SlideOverItem
+  },
+  computed: {
+    unallocatedAdjsByScore: function() {
+      return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
+    }
   },
   methods: {
     getAdjudicatorsByPosition: function(debate, position) {

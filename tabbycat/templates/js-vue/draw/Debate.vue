@@ -1,23 +1,24 @@
 <template>
   <div class="draw-row">
 
-    <div class="draw-cell flex-1" data-toggle="tooltip" v-bind:title="'Debate is in the ' + debate.bracket + ' bracket'">
+    <div class="draw-cell flex-1 flex-horizontal-center" data-toggle="tooltip"
+         v-bind:title="'Debate is in the ' + debate.bracket + ' bracket'">
       {{ debate.bracket }}
     </div>
 
-    <div class="draw-cell flex-1" data-toggle="tooltip">
+    <div class="draw-cell flex-1 flex-horizontal-center" data-toggle="tooltip">
       <!-- v-bind:title="liveness + ' break categories are live'" -->
-        ?
+      ?
     </div>
 
     <slot name="simportance">
-      <div class="draw-cell flex-1">
+      <div class="draw-cell flex-1 flex-horizontal-center">
         {{ debate.importance }}
       </div>
     </slot>
 
     <slot name="svenue">
-      <div class="draw-cell flex-3">
+      <div class="draw-cell flex-6">
         <draw-venue :venue="debate.venue"></draw-venue>
       </div>
     </slot>
@@ -34,8 +35,10 @@
       <div class="draw-cell flex-12">
         <div><!-- Need a container else they align -->
           <draw-adjudicator v-for="panellist in debate.panel"
-                            :adjudicator="panellist.adjudicator"
-                            :position="panellist.position"></draw-adjudicator>
+            :adjudicator="panellist.adjudicator"
+            :position="panellist.position"
+            :key="panellist.adjudicator.id">
+          </draw-adjudicator>
         </div>
       </div>
     </slot>

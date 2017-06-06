@@ -26,9 +26,10 @@ export default {
     },
     formatForSlideOver: function(subject) {
       return {
-        'title': this.venue.name + ' (Priority of ' + this.venue.priority + ')',
         'tiers': [{
           'features': [
+            [{ 'title': this.venue.name + ' (Priority of ' + this.venue.priority + ')',
+               'icon': 'glyphicon-map-marker' }],
             this.venueCategoriesFeature,
             // this.institutionDetailForSlideOver(this.team),
             // this.categoriesFeature()
