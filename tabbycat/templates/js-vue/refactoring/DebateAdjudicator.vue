@@ -1,6 +1,6 @@
 <template>
 
-  <div class="inline-flex tooltip-holder">
+  <div class="flex-inline tooltip-holder">
     <div
       draggable=true
       v-on:dragstart="dragStart"
@@ -14,11 +14,11 @@
       :id="adjorteam.id"
       class="vue-draggable adj-draggable btn btn-default popover-parent">
 
-      <div class="h4 inline-flex">
+      <div class="h4 flex-inline">
         <span>{{ adjorteam.score }}</span>
       </div>
 
-      <div class="inline-flex">
+      <div class="flex-inline">
         <span>
           {{ short_name }}<br>
           <span class="small text-muted subtitle">

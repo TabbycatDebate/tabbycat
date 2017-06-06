@@ -1,6 +1,6 @@
 <template>
 
-  <div class="inline-flex bordered-bottom tooltip-holder">
+  <div class="flex-inline bordered-bottom tooltip-holder">
     <div class="debate-team flex-cell flex-vertical-center"
       v-bind:class="[diversityHighlights, diversityState,
                      conflictsHighlights,

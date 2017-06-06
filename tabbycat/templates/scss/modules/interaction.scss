@@ -50,6 +50,11 @@
   top: 0;
 }
 
+.tooltip-vue {
+  // Sometimes we use the Bootstrap CSS to show/hide tooltips but do so via vue
+  opacity: 1; // So override the default hidden opacity
+}
+
 //------------------------------------------------------------------------------
 // For Division Drag and Drops
 //------------------------------------------------------------------------------
