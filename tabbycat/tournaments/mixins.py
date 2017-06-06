@@ -311,7 +311,7 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     def get_context_data(self, **kwargs):
         round = self.get_round()
-        draw = round.debate_set_with_prefetches(ordering=('room_rank',),
+        draw = round.debate_set_with_prefetches(ordering=('-importance', 'room_rank',),
                                                 speakers=False, divisions=False)
         serialised_draw = [d.serialize() for d in draw]
         draw = self.annotate_draw(draw, serialised_draw)

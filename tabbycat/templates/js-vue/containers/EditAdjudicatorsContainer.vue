@@ -83,6 +83,9 @@ export default {
     AllocationActionsContainer, UnallocatedItemsContainer, DrawHeader, Debate,
     DebateImportance, DroppableGeneric, DraggableAdjudicator, SlideOverItem
   },
+  created: function() {
+    this.$eventHub.$on('update-importance', this.updateImportance)
+  },
   computed: {
     unallocatedAdjsByScore: function() {
       return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
@@ -90,7 +93,15 @@ export default {
   },
   methods: {
     getAdjudicatorsByPosition: function(debate, position) {
-      return _.filter(debate.panel, { 'position': position });
+      return _.filter(debate.panel, { 'position': position })
+    },
+    updateImportance: function(debateID, importance) {
+      _.find(this.debates, { 'id': debateID }).importance = importance
+      // var ajaxData = {
+      //   debate_id: debateID,
+      //   importance: importance
+      // }
+      //this.update(this.url, ajaxData, 'debate ' + this.id + '\'s importance')
     }
   }
 }

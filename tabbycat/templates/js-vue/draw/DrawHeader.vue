@@ -15,7 +15,7 @@
 
     <slot name="himportance">
       <div class="thead flex-cell flex-1 flex-horizontal-center" data-toggle="tooltip" title="The assigned priority value of this debate">
-        <span class="glyphicon glyphicon-stats"></span>
+        <span class="glyphicon glyphicon-fire"></span>
       </div>
     </slot>
 
