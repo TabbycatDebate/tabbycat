@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 
+
 class BreakCategory(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE)
     name = models.CharField(max_length=50, help_text="Name to be displayed, e.g., \"ESL\"")

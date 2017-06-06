@@ -18,7 +18,7 @@ export default {
   start: 'parent-start',
   end: 'parent-end',
   computed: {
-    componentClasses: function() {
+    draggableClasses: function() {
       return "vue-draggable btn btn-sm"
     },
   },

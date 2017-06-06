@@ -76,6 +76,10 @@
   padding-right: $table-cell-padding - 2;
 }
 
+.cell-padding-helper {
+  padding: 6px 0;
+}
+
 .bordered-bottom {
   border-bottom: 1px solid $table-border-color;
 }
@@ -120,6 +124,16 @@
 //------------------------------------------------------------------------------
 // Debate Layout
 //------------------------------------------------------------------------------
+
+.draw-team-cell {
+  > div {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    padding: 0px 5px;
+  }
+}
 
 .panel-debate {
   // Overwrite .panel defaults

@@ -306,6 +306,8 @@ class DrawForDragAndDropMixin(RoundMixin):
         for d in serialised_draw:
             d['teams'] = self.annotate_break_classes(d['teams'])
             d['teams'] = self.annotate_region_classes(d['teams'])
+            for panellist in d['panel']:
+                panellist['adjudicator'] = self.annotate_region_classes([panellist['adjudicator']])[0]
 
         return serialised_draw
 

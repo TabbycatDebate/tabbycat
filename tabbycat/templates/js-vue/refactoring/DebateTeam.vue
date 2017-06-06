@@ -29,8 +29,13 @@ import ConflictsHighlightsMixin from '../mixins/ConflictsHighlightsMixin.vue'
 export default {
   mixins: [DiversityHighlightsMixin, ConflictsHighlightsMixin],
   props: {
-    adjorteam: Object,
+    tea: Object,
     showSlideOver: { default: false }
+  },
+  computed: {
+    highlightableObject: function {
+      return this.adjudicator
+    }
   },
   methods: {
     setHighlights: function() {

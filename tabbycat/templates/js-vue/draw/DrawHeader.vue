@@ -26,9 +26,9 @@
     </slot>
 
     <slot name="hteams">
-      <div class="thead flex-cell flex-6 debate-team" data-toggle="tooltip" title="test"
+      <div class="thead flex-cell flex-6 draw-team-cell" data-toggle="tooltip" title="test"
         v-for="position in positions">
-      {{ position }}
+        <div class="cell-padding-helper">{{ position }}</div>
       </div>
     </slot>
 

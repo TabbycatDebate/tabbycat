@@ -25,7 +25,7 @@
 
     <template v-for="(team, index) in debate.teams">
       <slot :name="'sposition' + index">
-        <div class="draw-cell flex-6">
+        <div class="draw-cell flex-6 draw-team-cell">
           <draw-team :team="team"></draw-team>
         </div>
       </slot>

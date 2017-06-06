@@ -1,6 +1,6 @@
 <template>
   <div draggable=true
-       :class="[componentClasses, isDragging ? vue-is-dragging : '']"
+       :class="[draggableClasses, isDragging ? vue-is-dragging : '']"
        @dragstart="handleDragStart"
        @dragend="handleDragEnd"
        @mouseenter="showSlideOver(venue)"

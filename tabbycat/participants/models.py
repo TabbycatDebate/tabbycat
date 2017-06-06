@@ -5,7 +5,6 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.forms.models import model_to_dict
 from django.utils.functional import cached_property
 
 from tournaments.models import Round
@@ -24,7 +23,8 @@ class Region(models.Model):
 
     @property
     def serialize(self):
-        return { 'name': self.name, 'id': self.id, 'class': None }
+        return {'name': self.name, 'id': self.id, 'class': None}
+
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['code', 'name', 'abbreviation']
@@ -60,7 +60,8 @@ class Institution(models.Model):
 
     @property
     def serialize(self):
-        return { 'name': self.name, 'id': self.id, 'code': self.code }
+        return {'name': self.name, 'id': self.id, 'code': self.code}
+
 
 class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True)
@@ -280,15 +281,14 @@ class Team(models.Model):
         super().save(*args, **kwargs)
 
     def serialize(self):
-        team = model_to_dict(self)
-        team['short_name'] = self.short_name
-        team['long_name'] = self.long_name
+        team = {'short_name': self.short_name, 'long_name': self.long_name}
         team['institution'] = self.institution.serialize
         team['region'] = self.region.serialize if self.region else None
         speakers = list(self.speakers.order_by('name'))
         team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in speakers]
         break_categories = self.break_categories.all()
         team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
+        team['highlights'] = {'region': False, 'gender': False, 'category': False}
         return team
 
 
@@ -413,11 +413,12 @@ class Adjudicator(Person):
         return d.count()
 
     def serialize(self):
-        adj = model_to_dict(self)
+        adj = {'name': self.name, 'gender': self.gender}
         adj['score'] = "{0:0.1f}".format(self.score) # Fix to get round / move to annotator
         adj['region'] = self.region.serialize if self.region else None
         adj['institution'] = self.institution.serialize if self.institution else None
         adj['conflicts'] = None # Populate later if needed?
         adj['institutional_conflicts'] = None # Populate later if needed?
         adj['institution_conflicts'] = None # Populate later if needed?
+        adj['highlights'] = {'region': False, 'gender': False, 'category': False}
         return adj

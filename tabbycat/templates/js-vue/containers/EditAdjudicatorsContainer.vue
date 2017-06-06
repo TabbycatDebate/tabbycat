@@ -65,13 +65,12 @@
 </template>
 
 <script>
-import AllocationActionsContainer from '../containers/AllocationActionsContainer.vue'
+import AllocationActionsContainer from '../allocations/AllocationActions.vue'
 import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import DebateImportance from '../draw/DebateImportance.vue'
-// import DebateAdjudicatorDroppable from '../draganddrops/DebateAdjudicatorDroppable.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 import SlideOverItem from '../infoovers/SlideOverItem.vue'
@@ -88,6 +87,7 @@ export default {
     this.$eventHub.$on('update-allocation', this.updateAllocation)
     this.$eventHub.$on('update-unallocated', this.updateUnallocated)
     this.$eventHub.$on('update-importance', this.updateImportance)
+    this.$eventHub.$on('set-highlights', this.setHighlights)
   },
   computed: {
     unallocatedAdjsByScore: function() {
@@ -115,6 +115,17 @@ export default {
     },
     updateUnallocated(updatedUnallocatedAdjudicators) {
       this.unallocatedItems = updatedUnallocatedAdjudicators
+    },
+    setHighlights(highlights) {
+      _.forEach(this.teams, function(item) {
+        item.highlights = highlights
+      })
+      _.forEach(this.adjudicators, function(item) {
+        item.highlights = highlights
+      })
+      _.forEach(this.unallocatedItems, function(item) {
+        item.highlights = highlights
+      })
     }
   }
 }

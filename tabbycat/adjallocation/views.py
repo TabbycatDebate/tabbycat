@@ -28,6 +28,8 @@ class AllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
     def get_unallocated_adjudicators(self):
         round = self.get_round()
         unused_adjs = [t.serialize() for t in round.unused_adjudicators()]
+        unused_adjs = self.annotate_region_classes(unused_adjs)
+
         return json.dumps(unused_adjs)
 
 
