@@ -7,29 +7,16 @@
 {% block head-title %}<span class="emoji">🏪</span> Edit Venues for {{ round.abbreviation }}{% endblock %}
 {% block page-title %}🏪Edit Venues for {{ round.abbreviation }}{% endblock %}
 
-{% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
-  </a>
-  <form id="autoallocateForm" method="POST" action="{% roundurl 'venues-auto-allocate' %}">
-    {% csrf_token %}
-    <button class="btn btn-primary submit-disable" type="submit">
-      Auto Allocate
-    </button>
-  </form>
-{% endblock %}
-
 {% block content %}
+  <div id="vueMount">
 
-<div id="vueMount">
+    <edit-venues-container :initial-debates="debates"
+                           :initial-unallocated-items="unallocatedItems"
+                           :venue-constraints="venueConstraints"
+                           :back-url="backUrl">
+    </edit-venues-container>
 
-  <edit-venues-container :initial-debates="debates"
-                         :initial-unallocated-items="unallocatedItems"
-                         :venue-constraints="venueConstraints">
-  </edit-venues-container>
-
-</div>
-
+  </div>
 {% endblock content %}
 
 {% block js %}
@@ -38,7 +25,9 @@
     window.vueData = {
       debates: {{ vueDebates|safe }},
       unallocatedItems: {{ vueUnusedVenues|safe }},
-      venueConstraints: {{ vueVenueConstraints|safe }}
+      venueConstraints: {{ vueVenueConstraints|safe }},
+      backUrl: "{% roundurl 'draw' %}",
+      autoURL: "{% roundurl 'venues-auto-allocate' %}",
     }
   </script>
   {{ block.super }}

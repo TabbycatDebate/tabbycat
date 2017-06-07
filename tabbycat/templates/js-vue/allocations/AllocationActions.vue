@@ -5,14 +5,11 @@
 
         <div class="btn-toolbar">
           <div class="btn-group btn-group-sm">
-            <a href="TODO" class="btn btn-default btn-sm" data-toggle="tooltip"
+            <a :href="backUrl" class="btn btn-default btn-sm" data-toggle="tooltip"
                data-placement="bottom" title="Return to Draw">
               <span class="glyphicon glyphicon-chevron-left"></span>Back
             </a>
-            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom"
-                    title="Changes allocation are saved whenever an adjudicator's position is changed. Do not edit/change allocations across multiple browsers/computers!">
-              <span id="saveTime">No changes</span>
-            </button>
+            <auto-save-counter :css="'btn-sm'"></auto-save-counter>
             <a class="btn btn-success btn-sm" @click="showAutoAllocationModal">
               Auto Allocate
             </a>
@@ -76,10 +73,11 @@
 
 <script>
 import AllocationModal from '../allocations/AllocationModal.vue'
+import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 
 export default {
-  props: { roundInfo: Object },
-  components: { AllocationModal },
+  props: { roundInfo: Object, backUrl: String },
+  components: { AllocationModal, AutoSaveCounter },
   data: function() {
     // Internal state storing the status of which diversity highlight is being toggled
     return { highlights: { region: false, gender: false, category: false },

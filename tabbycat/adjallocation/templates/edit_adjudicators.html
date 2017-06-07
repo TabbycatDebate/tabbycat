@@ -16,7 +16,8 @@
 
   <edit-adjudicators-container :initial-debates="debates"
                                :initial-unallocated-items="unallocatedItems"
-                               :round-info="roundInfo">
+                               :round-info="roundInfo"
+                               :back-url="backUrl">
   </edit-adjudicators-container>
 
 </div>
@@ -42,7 +43,6 @@
         'roundName' : '{{ round.abbreviation }}',
         'roundIsPrelim' : {% if round.is_break_round %}false{% else %}true{% endif %},
         'createAutoAllocationURL': '{% roundurl 'create_auto_allocation' %}',
-        'backToDrawURL': '{% roundurl 'draw' %}',
         'updateImportanceURL': '{% roundurl 'save_debate_importance' %}',
         'updatePanelURL': '{% roundurl 'save_debate_panel' %}',
         'scoreMin': {{ pref.adj_min_score }},
@@ -52,6 +52,7 @@
         'regions': {{ vueRegions|safe }},
         'categories': {{ vueCategories|safe }},
       },
+      backUrl: "{% roundurl 'draw' %}",
     }
   </script>
   {{ block.super }}

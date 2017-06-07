@@ -12,7 +12,7 @@ export default {
       unallocatedItems: this.initialUnallocatedItems
     }
   },
-  props: ['initialDebates', 'initialUnallocatedItems'],
+  props: ['initialDebates', 'initialUnallocatedItems', 'backUrl'],
   computed: {
     teams: function() {
       // Return all teams as a single array

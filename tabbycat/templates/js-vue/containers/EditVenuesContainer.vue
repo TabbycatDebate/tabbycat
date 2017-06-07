@@ -1,6 +1,16 @@
 <template>
   <div class="col-md-12 draw-container">
 
+    <div class="row nav-pills">
+      <a class="btn btn-default submit-disable" :href="backUrl">
+        <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
+      </a>
+      <button class="btn btn-primary submit-disable" type="submit">
+        Auto Allocate
+      </button>
+      <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
+    </div>
+
     <div class="vertical-spacing" id="messages-container"></div>
 
     <slide-over-item :subject="slideOverItem"></slide-over-item>
@@ -35,6 +45,7 @@ import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
+import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableVenue from '../draganddrops/DraggableVenue.vue'
 import SlideOverItem from '../infoovers/SlideOverItem.vue'
@@ -44,11 +55,9 @@ export default {
   mixins: [DrawContainerMixin],
   components: {
     UnallocatedItemsContainer, DrawHeader, Debate, DroppableGeneric,
-    DraggableVenue, SlideOverItem
+    DraggableVenue, SlideOverItem, AutoSaveCounter
   },
-  props: {
-    venueConstraints: Array,
-  },
+  props: { venueConstraints: Array },
   computed: {
   },
   methods: {

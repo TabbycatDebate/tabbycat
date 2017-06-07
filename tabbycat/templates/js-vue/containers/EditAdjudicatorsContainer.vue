@@ -1,7 +1,8 @@
 <template>
   <div class="col-md-12 draw-container allocation-container">
 
-    <allocation-actions-container :round-info="roundInfo"></allocation-actions-container>
+    <allocation-actions-container
+      :round-info="roundInfo" :back-url="backUrl"></allocation-actions-container>
 
     <div class="vertical-spacing" id="messages-container"></div>
 
@@ -71,13 +72,14 @@ import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.v
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import DebateImportance from '../draw/DebateImportance.vue'
+import AjaxMixin from '../draganddrops/DroppableGeneric.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 import SlideOverItem from '../infoovers/SlideOverItem.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [DrawContainerMixin],
+  mixins: [DrawContainerMixin, AjaxMixin],
   components: {
     AllocationActionsContainer, UnallocatedItemsContainer, DrawHeader, Debate,
     DebateImportance, DroppableGeneric, DraggableAdjudicator, SlideOverItem
@@ -100,15 +102,18 @@ export default {
     },
     updateImportance: function(debateID, importance) {
       // This fires after autoAllocation; unclear why
-      var debateToUpdateImportance = _.find(this.debates, { 'id': debateID })
-      if (!_.isUndefined(debateToUpdateImportance)) {
-        debateToUpdateImportance.importance = importance
+      var debate = _.find(this.debates, { 'id': debateID })
+      if (!_.isUndefined(debate)) {
+        var url = this.roundInfo.updateImportanceURL
+        var payload = { debate_id: debateID, importance: importance }
+        var message = 'debate ' + debate.id + '\'s importance'
+        this.ajaxSave(url, payload, message, function() {
+          debate.importance = importance // Update model data
+          console.log('Updated data: importance for ' + debate.id + ' to ' + importance)
+        })
+      } else {
+        this.ajaxError(resourceType, "", "Couldnt find debate to update")
       }
-      // var ajaxData = {
-      //   debate_id: debateID,
-      //   importance: importance
-      // }
-      //this.update(this.url, ajaxData, 'debate ' + this.id + '\'s importance')
     },
     updateAllocation: function(updatedDebates) {
       this.debates = updatedDebates

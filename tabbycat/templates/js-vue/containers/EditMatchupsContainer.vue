@@ -1,6 +1,13 @@
 <template>
   <div class="col-md-12 draw-container">
 
+    <div class="row nav-pills">
+      <a class="btn btn-default submit-disable" :href="backUrl">
+        <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
+      </a>
+      <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
+    </div>
+
     <div class="vertical-spacing" id="messages-container"></div>
 
     <slide-over-item :subject="slideOverItem"></slide-over-item>
@@ -38,6 +45,7 @@ import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
+import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableTeam from '../draganddrops/DraggableTeam.vue'
 import SlideOverItem from '../infoovers/SlideOverItem.vue'
@@ -46,7 +54,7 @@ import _ from 'lodash'
 export default {
   mixins: [DrawContainerMixin],
   components: {
-    DrawHeader, UnallocatedItemsContainer, Debate, DroppableGeneric,
+    DrawHeader, AutoSaveCounter, UnallocatedItemsContainer, Debate, DroppableGeneric,
     DraggableTeam, SlideOverItem
   }
 }

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import AjaxMixin from '../AjaxMixin.vue'
+import AjaxMixin from '../draganddrops/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],
@@ -27,7 +27,6 @@ export default {
     // We initially sync the internalValue with the value passed in by the parent
     this.internalImportance = this.importance;
     this.initiallySet = true
-    console.log('created')
   },
   computed: {
     importanceDescription: function() {
@@ -48,7 +47,6 @@ export default {
     'internalImportance': function() {
       if (this.internalImportance !== this.importance) {
         // Only update if an actual change has occured
-        console.log('saving importance to parent')
         this.$eventHub.$emit('update-importance', this.id, this.internalImportance)
       }
     }

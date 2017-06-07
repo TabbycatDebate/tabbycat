@@ -90,7 +90,7 @@
 
 <script>
 import DraggableMixin from '../draganddrops/DraggableMixin.vue'
-import AjaxMixin from '../AjaxMixin.vue'
+import AjaxMixin from '../draganddrops/AjaxMixin.vue'
 import DiversityHighlightsMixin from '../mixins/DiversityHighlightsMixin.vue'
 import ConflictsHighlightsMixin from '../mixins/ConflictsHighlightsMixin.vue'
 

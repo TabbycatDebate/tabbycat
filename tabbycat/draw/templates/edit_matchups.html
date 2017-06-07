@@ -5,22 +5,15 @@
 {% block head-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
 {% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
 
-{% block page-subnav-sections %}
-
-  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
-  </a>
-
-{% endblock %}
-
 {% block content %}
-
   <div id="vueMount">
-    <edit-matchups-container :initial-debates="debates"
-                             :initial-Unallocated-items="unallocatedItems">
-    </edit-matchups-container>
-  </div>
 
+    <edit-matchups-container :initial-debates="debates"
+                             :initial-Unallocated-items="unallocatedItems"
+                             :back-url="backUrl">
+    </edit-matchups-container>
+
+  </div>
 {% endblock content %}
 
 {% block js %}
@@ -28,7 +21,8 @@
   <script>
     window.vueData = {
       debates: {{ vueDebates|safe }},
-      unallocatedItems: {{ vueUnusedTeams|safe }}
+      unallocatedItems: {{ vueUnusedTeams|safe }},
+      backUrl: "{% roundurl 'draw' %}",
     }
   </script>
   {{ block.super }}
