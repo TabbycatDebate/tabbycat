@@ -36,7 +36,7 @@ def reverse_round(to, round, *args, **kwargs):
 
 
 class SquashedWhitenoiseStorage(CompressedManifestStaticFilesStorage):
-    '''Hack to get around dependencies throwing collectstatic errors'''
+    """ Hack to get around dependencies throwing collectstatic errors """
 
     def url(self, name, **kwargs):
         try:

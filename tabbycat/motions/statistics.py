@@ -28,7 +28,7 @@ def statistics(tournament, rounds):
         motion.neg_wins = wins[DebateTeam.POSITION_NEGATIVE][motion]
         motion.chosen_in = motion.aff_wins + motion.neg_wins
 
-        '''
+        """
         motion.c1, motion.p_value = chisquare([motion.aff_wins, motion.neg_wins], f_exp=[motion.chosen_in / 2, motion.chosen_in / 2])
         # Culling out the NaN errors
         try:
@@ -36,7 +36,7 @@ def statistics(tournament, rounds):
         except ValueError:
             motion.c1, motion.p_value = None, None
         TODO: temporarily disabled
-        '''
+        """
 
         motion.c1, motion.p_value = None, None
 
