@@ -317,7 +317,8 @@ class DrawForDragAndDropMixin(RoundMixin):
     def get_draw(self):
         round = self.get_round()
         draw = round.debate_set_with_prefetches(ordering=('-importance', 'room_rank',),
-                                                speakers=False, divisions=False)
+                                                speakers=True, divisions=False,
+                                                institutions=True, wins=True)
         serialised_draw = [d.serialize() for d in draw]
         draw = self.annotate_draw(draw, serialised_draw)
         return json.dumps(serialised_draw)

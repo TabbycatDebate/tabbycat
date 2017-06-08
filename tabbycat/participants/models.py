@@ -412,9 +412,9 @@ class Adjudicator(Person):
             d = d.filter(debate__round__seq__lt=before_round.seq)
         return d.count()
 
-    def serialize(self):
+    def serialize(self, round):
         adj = {'id': self.id, 'name': self.name, 'gender': self.gender}
-        adj['score'] = "{0:0.1f}".format(self.score) # Fix to get round / move to annotator
+        adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
         adj['region'] = self.region.serialize if self.region else None
         adj['institution'] = self.institution.serialize if self.institution else None
         adj['conflicts'] = None # Populate later if needed?

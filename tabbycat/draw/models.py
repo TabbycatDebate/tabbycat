@@ -214,7 +214,7 @@ class Debate(models.Model):
             'position': dt.position
         } for dt in self.debateteam_set.all()]
         debate['panel'] = [{
-            'adjudicator': adj.serialize(),
+            'adjudicator': adj.serialize(round=self.round),
             'position': position,
         } for adj, position in self.adjudicators.with_debateadj_types()]
         return debate
