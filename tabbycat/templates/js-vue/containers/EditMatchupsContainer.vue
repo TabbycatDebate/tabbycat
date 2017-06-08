@@ -8,9 +8,9 @@
       <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
     </div>
 
-    <div class="vertical-spacing" id="messages-container"></div>
-
-    <slide-over-item :subject="slideOverItem"></slide-over-item>
+    <div class="row">
+      <div class="vertical-spacing" id="messages-container"></div>
+    </div>
 
     <draw-header :positions="positions">
       <template slot="hteams">
@@ -37,6 +37,8 @@
       </div>
     </unallocated-items-container>
 
+    <slide-over-item :subject="slideOverItem"></slide-over-item>
+
   </div>
 </template>
 
@@ -56,7 +58,12 @@ export default {
   components: {
     DrawHeader, AutoSaveCounter, UnallocatedItemsContainer, Debate, DroppableGeneric,
     DraggableTeam, SlideOverItem
-  }
+  },
+  methods: {
+    moveToUnused() {
+      console.log('moveTeamToUnused')
+    }
+  },
 }
 
 </script>

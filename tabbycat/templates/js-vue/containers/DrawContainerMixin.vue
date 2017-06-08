@@ -37,6 +37,7 @@ export default {
     // Watch for events on the global event hub
     this.$eventHub.$on('set-slideover', this.setSlideover)
     this.$eventHub.$on('unset-slideover', this.unsetSlideover)
+    this.$eventHub.$on('unassign-draggable', this.moveToUnused)
   },
   methods: {
     setSlideover: function(object) {

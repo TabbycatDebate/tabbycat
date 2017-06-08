@@ -18,6 +18,12 @@
 import DroppableMixin from '../draganddrops/DroppableMixin.vue'
 
 export default {
-  mixins: [DroppableMixin]
+  mixins: [DroppableMixin],
+  methods: {
+    handleDrop: function(event) {
+      console.log(event)
+      this.$eventHub.$emit('unassign-draggable')
+    }
+  }
 }
 </script>

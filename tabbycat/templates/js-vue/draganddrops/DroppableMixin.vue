@@ -8,10 +8,8 @@
 // Subclasses can implement a handleDragEnter() handleDragLeave() handleDrop()
 
 export default {
-  props: {
-    'isDroppable': { default: false },
-    'dragCounter': { default: 0 },
-  },
+  data: function() { return { dragCounter: 0, isDroppable: false }},
+  props: {  },
   methods: {
     dragEnter: function(event) {
       this.dragCounter++;

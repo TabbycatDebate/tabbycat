@@ -11,9 +11,9 @@
       <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
     </div>
 
-    <div class="vertical-spacing" id="messages-container"></div>
-
-    <slide-over-item :subject="slideOverItem"></slide-over-item>
+    <div class="row">
+      <div class="vertical-spacing" id="messages-container"></div>
+    </div>
 
     <draw-header :positions="positions">
       <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
@@ -37,6 +37,8 @@
       </div>
     </unallocated-items-container>
 
+    <slide-over-item :subject="slideOverItem"></slide-over-item>
+
   </div>
 </template>
 
@@ -58,8 +60,7 @@ export default {
     DraggableVenue, SlideOverItem, AutoSaveCounter
   },
   props: { venueConstraints: Array },
-  computed: {
-  },
+  computed: { },
   methods: {
     annotateSlideInfo(venue) {
       // Build array of this venue's categories as IDs
@@ -72,6 +73,9 @@ export default {
       } else {
         return null
       }
+    },
+    moveToUnused() {
+      console.log('moveVenueToUnused')
     }
   },
   events: {

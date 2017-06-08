@@ -1,12 +1,11 @@
 <template>
   <div class="col-md-12 draw-container allocation-container">
 
-    <allocation-actions-container
-      :round-info="roundInfo" :back-url="backUrl"></allocation-actions-container>
+    <allocation-actions-container :round-info="roundInfo" :back-url="backUrl"></allocation-actions-container>
 
-    <div class="vertical-spacing" id="messages-container"></div>
-
-    <slide-over-item :subject="slideOverItem"></slide-over-item>
+    <div class="row">
+      <div class="vertical-spacing" id="messages-container"></div>
+    </div>
 
     <draw-header :positions="positions">
       <div class="thead flex-cell flex-4 text-center" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
@@ -62,11 +61,14 @@
       </div>
     </unallocated-items-container>
 
+    <slide-over-item :subject="slideOverItem"></slide-over-item>
+
   </div>
 </template>
 
 <script>
 import AllocationActionsContainer from '../allocations/AllocationActions.vue'
+import HighlightableContainerMixin from '../allocations/HighlightableContainerMixin.vue'
 import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
@@ -79,17 +81,20 @@ import SlideOverItem from '../infoovers/SlideOverItem.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [DrawContainerMixin, AjaxMixin],
+  mixins: [DrawContainerMixin, AjaxMixin, HighlightableContainerMixin],
   components: {
     AllocationActionsContainer, UnallocatedItemsContainer, DrawHeader, Debate,
     DebateImportance, DroppableGeneric, DraggableAdjudicator, SlideOverItem
   },
   props: { roundInfo: Object },
   created: function() {
-    this.$eventHub.$on('update-allocation', this.updateAllocation)
-    this.$eventHub.$on('update-unallocated', this.updateUnallocated)
+    this.$eventHub.$on('update-allocation', function(updatedDebates) {
+      this.debates = updatedDebates // Match internal data to json response
+    })
+    this.$eventHub.$on('update-unallocated', function(updatedUnallocatedAdjudicators) {
+      this.unallocatedItems = updatedUnallocatedAdjudicators // As above
+    })
     this.$eventHub.$on('update-importance', this.updateImportance)
-    this.$eventHub.$on('set-highlights', this.setHighlights)
   },
   computed: {
     unallocatedAdjsByScore: function() {
@@ -100,38 +105,26 @@ export default {
     getAdjudicatorsByPosition: function(debate, position) {
       return _.filter(debate.panel, { 'position': position })
     },
+    moveToUnused() {
+      console.log('moveAdjudicatorToUnused')
+    },
     updateImportance: function(debateID, importance) {
-      // This fires after autoAllocation; unclear why
       var debate = _.find(this.debates, { 'id': debateID })
-      if (!_.isUndefined(debate)) {
-        var url = this.roundInfo.updateImportanceURL
-        var payload = { debate_id: debateID, importance: importance }
-        var message = 'debate ' + debate.id + '\'s importance'
-        this.ajaxSave(url, payload, message, function() {
-          debate.importance = importance // Update model data
-          console.log('Updated data: importance for ' + debate.id + ' to ' + importance)
-        })
-      } else {
-        this.ajaxError(resourceType, "", "Couldnt find debate to update")
+      if (_.isUndefined(importance)) {
+        // This block fires after autoAllocation but with a blank importance value; unclear why
+        return
       }
-    },
-    updateAllocation: function(updatedDebates) {
-      this.debates = updatedDebates
-    },
-    updateUnallocated(updatedUnallocatedAdjudicators) {
-      this.unallocatedItems = updatedUnallocatedAdjudicators
-    },
-    setHighlights(highlights) {
-      _.forEach(this.teams, function(item) {
-        item.highlights = highlights
+      if (_.isUndefined(debate)) {
+        this.ajaxError("Debate\'s importance", "", "Couldnt find debate to update")
+      }
+      var url = this.roundInfo.updateImportanceURL
+      var message = 'debate ' + debate.id + '\'s importance'
+      var payload = { debate_id: debate.id, importance: importance }
+      this.ajaxSave(url, payload, message, function() {
+        debate.importance = importance // Update model data
+        console.log('Updated data: importance for ' + debate.id + ' to ' + importance)
       })
-      _.forEach(this.adjudicators, function(item) {
-        item.highlights = highlights
-      })
-      _.forEach(this.unallocatedItems, function(item) {
-        item.highlights = highlights
-      })
-    }
+    },
   }
 }
 </script>
