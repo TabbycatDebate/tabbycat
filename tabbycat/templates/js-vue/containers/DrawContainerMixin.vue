@@ -25,6 +25,14 @@ export default {
     }
   },
   props: ['initialDebates', 'initialUnallocatedItems', 'roundInfo'],
+  created: function () {
+    // Watch for events on the global event hub
+    this.$eventHub.$on('set-slideover', this.setSlideover)
+    this.$eventHub.$on('unset-slideover', this.unsetSlideover)
+    this.$eventHub.$on('unassign-draggable', this.moveToUnused)
+    this.$eventHub.$on('update-allocation', this.updateDebates)
+    this.$eventHub.$on('update-unallocated', this.updateUnallocatedItems)
+  },
   computed: {
     teams: function() {
       // Return all teams as a single array
@@ -56,18 +64,18 @@ export default {
       return this.debates[0].positions // Shortcut function
     }
   },
-  created: function () {
-    // Watch for events on the global event hub
-    this.$eventHub.$on('set-slideover', this.setSlideover)
-    this.$eventHub.$on('unset-slideover', this.unsetSlideover)
-    this.$eventHub.$on('unassign-draggable', this.moveToUnused)
-  },
   methods: {
     setSlideover: function(object) {
       this.slideOverItem = object
     },
     unsetSlideover: function() {
       this.slideOverItem = null
+    },
+    updateDebates: function(updatedDebates) {
+      this.debates = updatedDebates // Match internal data to json response
+    },
+    updateUnallocatedItems: function(updatedUnallocatedItems) {
+      this.unallocatedItems = updatedUnallocatedItems // As above
     },
   }
 }

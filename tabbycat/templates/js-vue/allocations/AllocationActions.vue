@@ -17,40 +17,46 @@
         </div>
 
         <div class="btn-toolbar">
-          <div v-if="!highlights.region && !highlights.gender && !highlights.category" class="btn-group btn-group-sm">
-            <button disabled class="btn conflictable conflicts-toolbar conflict-hover-2-ago">
-              Seen Before
-            </button>
-            <button disabled class="btn conflictable conflicts-toolbar conflict-hover-institutional-conflict">
-              Institutional Clash
-            </button>
-            <button disabled class="btn conflictable conflicts-toolbar conflict-hover-personal-conflict">
-              Personal Clash
-            </button>
-            <button disabled class="btn panel-incomplete">
-              Unbalanced
-            </button>
-          </div>
-          <div v-if="highlights.gender" class="btn-group btn-group-sm">
-            <button disabled class="btn gender-display gender-male">Male</button>
-            <button disabled class="btn gender-display gender-f">Female</button>
-            <button disabled class="btn gender-display gender-o">Other</button>
-            <button disabled class="btn btn-default">Unknown</button>
-          </div>
-          <div v-if="highlights.region" class="btn-group btn-group-sm">
-            <button v-for="region in roundInfo.regions" disabled
-                    :class="['btn btn-default region-display', 'region-' + region.class]">
-              {{ region.name }}
-            </button>
-          </div>
-          <div v-if="highlights.category" class="btn-group btn-group-sm">
-            <button v-for="category in roundInfo.categories" disabled
-                    :class="['btn btn-default category-display', 'category-' + category.class]">
-              {{ category.name }} Break
-            </button>
-            <button disabled class="btn btn-default">
-              No Category Assigned
-            </button>
+          <div class="btn-group btn-group-sm">
+            <template v-if="!highlights.region && !highlights.gender && !highlights.category">
+              <button class="visible-lg-block btn btn-default">Conflicts Key</button>
+              <button disabled class="btn conflictable conflicts-toolbar conflict-hover-2-ago">
+                Seen Before
+              </button>
+              <button disabled class="btn conflictable conflicts-toolbar conflict-hover-institutional-conflict">
+                Institutional Clash
+              </button>
+              <button disabled class="btn conflictable conflicts-toolbar conflict-hover-personal-conflict">
+                Personal Clash
+              </button>
+              <button disabled class="btn panel-incomplete">
+                Unbalanced
+              </button>
+            </template>
+            <template v-if="highlights.gender">
+              <button class="visible-lg-block btn btn-default">Gender Key</button>
+              <button disabled class="btn gender-display gender-male">Male</button>
+              <button disabled class="btn gender-display gender-f">Female</button>
+              <button disabled class="btn gender-display gender-o">Other</button>
+              <button disabled class="btn btn-default">Unknown</button>
+            </template>
+            <template v-if="highlights.region">
+              <button class="visible-lg-block btn btn-default">Region Key</button>
+              <button v-for="region in roundInfo.regions" disabled
+                      :class="['btn btn-default region-display', 'region-' + region.class]">
+                {{ region.name }}
+              </button>
+            </template>
+            <template v-if="highlights.category">
+              <button class="visible-lg-block btn btn-default">Category Key</button>
+              <button v-for="category in roundInfo.categories" disabled
+                      :class="['btn btn-default category-display', 'category-' + category.class]">
+                {{ category.name }} Break
+              </button>
+              <button disabled class="btn btn-default">
+                No Category Assigned
+              </button>
+            </template>
           </div>
         </div>
         <div class="btn-toolbar">
@@ -58,6 +64,7 @@
             <button v-for="label in highlightLabels" @click="toggleHighlight(label)"
                     :class="['btn btn-default nav-link hoverable', highlights[label] ? 'active' : '']">
               <span :class="['glyphicon', highlights[label] ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
+              <span class="visible-lg-inline">Show </span>
               {{ titleCase(label) }}
             </button>
           </div>

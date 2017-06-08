@@ -105,7 +105,6 @@
 .glyphicon.spinning {
   animation: spin 1s infinite linear;
 }
-
 @keyframes spin {
   from { transform: scale(1) rotate(0deg); }
   to { transform: scale(1) rotate(360deg); }
@@ -117,4 +116,14 @@
 }
 .slide-over-enter, .slide-over-leave-to {
   opacity: 0;
+}
+
+.save-flash {
+  animation-name: flash-animation;
+  animation-duration: 5s;
+  animation-timing-function: ease-out;
+}
+@keyframes flash-animation {
+    from { background: $brand-success; color: #fff }
+    to   { background: default; color: default }
 }

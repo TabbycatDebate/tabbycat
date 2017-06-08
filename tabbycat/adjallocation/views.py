@@ -23,7 +23,7 @@ from utils.misc import reverse_round
 logger = logging.getLogger(__name__)
 
 
-class AllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
+class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
 
     def get_unallocated_adjudicators(self):
         round = self.get_round()
@@ -32,7 +32,7 @@ class AllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
         return json.dumps(unused_adjs)
 
 
-class EditAdjudicatorAllocationView(AllocationViewBase, TemplateView):
+class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):
 
     template_name = 'edit_adjudicators.html'
 
@@ -74,7 +74,7 @@ class EditAdjudicatorAllocationView(AllocationViewBase, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, AllocationViewBase, JsonDataResponsePostView):
+class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 

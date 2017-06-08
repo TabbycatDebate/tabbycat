@@ -5,7 +5,7 @@
       <a class="btn btn-default submit-disable" :href="roundInfo.backUrl">
         <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
       </a>
-      <button class="btn btn-primary submit-disable" type="submit">
+      <button class="btn btn-primary submit-disable" @click="createAutoAllocation">
         Auto Allocate
       </button>
       <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
@@ -65,7 +65,7 @@ export default {
       if (category_ids.length > 0) {
         // Match IDs to venue constraint categories
         return _.filter(this.venueConstraints, function(vc) {
-          return _.includes(category_ids, vc.id);
+          return _.includes(category_ids, vc.id)
         });
       } else {
         return null
@@ -78,7 +78,25 @@ export default {
       var venue = this.debatesById[payload.debate].venue
       this.debatesById[payload.debate].venue = null
       this.unallocatedItems.push(venue) // Need to push; not append
-    }
+    },
+    createAutoAllocation: function(event) {
+      var self = this
+      $(event.target).button('loading')
+      $.post({
+        url: this.roundInfo.autoUrl,
+        success: function(data, textStatus, jqXHR) {
+          $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
+          self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
+          self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedVenues))
+          self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
+          $(event.target).button('reset')
+        },
+        error: function(data, textStatus, jqXHR) {
+          $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
+        },
+        dataType: "json"
+      });
+    },
   }
 }
 </script>

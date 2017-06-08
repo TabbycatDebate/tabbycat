@@ -83,12 +83,6 @@ export default {
   components: { AllocationActions, DebateImportance, DraggableAdjudicator },
   props: { roundInfo: Object },
   created: function() {
-    this.$eventHub.$on('update-allocation', function(updatedDebates) {
-      this.debates = updatedDebates // Match internal data to json response
-    })
-    this.$eventHub.$on('update-unallocated', function(updatedUnallocatedAdjudicators) {
-      this.unallocatedItems = updatedUnallocatedAdjudicators // As above
-    })
     this.$eventHub.$on('update-importance', this.updateImportance)
   },
   computed: {
@@ -111,6 +105,8 @@ export default {
         return da.adjudicator !== draggedAdjudicator
       })
       this.unallocatedItems.push(draggedAdjudicator) // Need to push; not append
+      // AJAX
+      this.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
     },
     updateImportance: function(debateID, importance) {
       var debate = _.find(this.debates, { 'id': debateID })

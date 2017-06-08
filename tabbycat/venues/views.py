@@ -2,22 +2,29 @@ import json
 
 from django.contrib import messages
 from django.forms import Select, SelectMultiple, TextInput
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView, View
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from draw.models import Debate
 from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, TournamentMixin
+from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import JsonDataResponsePostView, ModelFormSetView, SuperuserRequiredMixin
 
 from .allocator import allocate_venues
-from .models import Venue, VenueCategory, VenueConstraint
+from .models import VenueCategory, VenueConstraint
 
 
-class EditVenuesView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
+class VenueAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
+
+    def get_unallocated_venues(self):
+        unused_venues = self.get_round().unused_venues()
+        return json.dumps([v.serialize() for v in unused_venues])
+
+
+class EditVenuesView(VenueAllocationViewBase, TemplateView):
 
     template_name = "edit_venues.html"
 
@@ -26,30 +33,30 @@ class EditVenuesView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateVi
         return round_info
 
     def get_context_data(self, **kwargs):
-        unused_venues = self.get_round().unused_venues()
         vcs = VenueConstraint.objects.all()
-
         kwargs['vueVenueConstraints'] = json.dumps([vc.serialize() for vc in vcs])
-        kwargs['vueUnusedVenues'] = json.dumps([v.serialize() for v in unused_venues])
+        kwargs['vueUnusedVenues'] = self.get_unallocated_venues()
         return super().get_context_data(**kwargs)
 
 
-class EditVenuesOld(SuperuserRequiredMixin, RoundMixin, TemplateView):
-
-    template_name = "venues_edit_old.html"
-
-    def get_context_data(self, **kwargs):
-        kwargs['draw'] = self.get_round().debate_set_with_prefetches(speakers=False)
-        return super().get_context_data(**kwargs)
-
-
-class AutoAllocateVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
+class AutoAllocateVenuesView(VenueAllocationViewBase, LogActionMixin, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE
     round_redirect_pattern_name = 'venues-edit'
 
-    def post(self, request, *args, **kwargs):
+    def post_data(self):
         allocate_venues(self.get_round())
+        return {
+            'debates': self.get_draw(),
+            'unallocatedVenues': self.get_unallocated_venues()
+        }
+
+    def post(self, request, *args, **kwargs):
+        round = self.get_round()
+        if round.draw_status == Round.STATUS_RELEASED:
+            return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
+        if round.draw_status != Round.STATUS_CONFIRMED:
+            return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
         self.log_action()
         return super().post(request, *args, **kwargs)
 
@@ -58,24 +65,24 @@ class SaveVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, View):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
-    def post(self, request, *args, **kwargs):
+    # def post(self, request, *args, **kwargs):
 
-        def v_id(a):
-            try:
-                return int(request.POST[a].split('_')[1])
-            except IndexError:
-                return None
+    #     def v_id(a):
+    #         try:
+    #             return int(request.POST[a].split('_')[1])
+    #         except IndexError:
+    #             return None
 
-        data = [(int(a.split('_')[1]), v_id(a)) for a in list(request.POST.keys())]
+    #     data = [(int(a.split('_')[1]), v_id(a)) for a in list(request.POST.keys())]
 
-        debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
-        venues = Venue.objects.in_bulk([v_id for _, v_id in data])
-        for debate_id, venue_id in data:
-            debates[debate_id].venue = venues[venue_id] if venue_id is not None else None
-            debates[debate_id].save()
+    #     debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
+    #     venues = Venue.objects.in_bulk([v_id for _, v_id in data])
+    #     for debate_id, venue_id in data:
+    #         debates[debate_id].venue = venues[venue_id] if venue_id is not None else None
+    #         debates[debate_id].save()
 
-        self.log_action()
-        return HttpResponse("ok")
+    #     self.log_action()
+    #     return HttpResponse("ok")
 
 
 class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
