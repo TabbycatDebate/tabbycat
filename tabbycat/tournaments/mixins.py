@@ -274,11 +274,12 @@ class DrawForDragAndDropMixin(RoundMixin):
     def annotate_break_classes(self, serialised_team):
         """We can't style break categories in CSS because we need a defined range;
         this normalises IDs of the break categories so the CSS classes can work"""
-        breaks_seq = {}
-        for i, r in enumerate(self.break_categories):
-            breaks_seq[r.id] = i
-        for bc in serialised_team['break_categories']:
-            bc['class'] = breaks_seq[bc['id']]
+        if serialised_team['break_categories']:
+            breaks_seq = {}
+            for i, r in enumerate(self.break_categories):
+                breaks_seq[r.id] = i
+            for bc in serialised_team['break_categories']:
+                bc['class'] = breaks_seq[bc['id']]
 
         return serialised_team
 

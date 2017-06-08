@@ -17,7 +17,7 @@
 
     <div class="vertical-spacing">
       <draw-header :positions="roundInfo.positions">
-        <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
+        <div class="thead flex-cell flex-12 vue-droppable-container" slot="hvenue">
           <span>Venue</span>
         </div>
       </draw-header>

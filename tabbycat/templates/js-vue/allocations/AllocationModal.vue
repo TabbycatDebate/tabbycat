@@ -49,13 +49,8 @@ export default {
           self.resetAutoAllocationModal(event.target)
           $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
           self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
-          self.$eventHub.$emit('update-importance', JSON.parse(data.unallocatedAdjudicators))
-          // self.$dispatch('set-debate-panels', JSON.parse(data))
-          // Update the save counter (this normally goes through AjaxMixin.vue)
-          // var savedAt = new Date()
-          // var hours = savedAt.getHours()
-          // var minutes = ('0'+ savedAt.getMinutes()).slice(-2); // ":09" not ":9"
-          // $('#saveTime').text("Saved at " + hours + ":" + minutes)
+          self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedAdjudicators))
+          self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
         },
         error: function(data, textStatus, jqXHR) {
           self.resetAutoAllocationModal(event.target)

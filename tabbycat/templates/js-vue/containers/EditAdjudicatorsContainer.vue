@@ -114,9 +114,6 @@ export default {
     },
     updateImportance: function(debateID, importance) {
       var debate = _.find(this.debates, { 'id': debateID })
-      if (_.isUndefined(importance)) {
-        return // This block fires after autoAllocation but with a blank importance value; unclear why
-      }
       if (_.isUndefined(debate)) {
         this.ajaxError("Debate\'s importance", "", "Couldnt find debate to update")
       }

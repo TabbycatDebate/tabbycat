@@ -11,15 +11,14 @@
 
 <script>
 export default {
-  data: function() { return { lastSaved: false, lastSavedInfo: false } },
+  data: function() { return { lastSaved: false } },
   props: { css: String },
   created: function() {
     this.$eventHub.$on('update-saved-counter', this.updateLastSaved)
   },
   methods: {
-    updateLastSaved: function(savedInfo) {
+    updateLastSaved: function() {
       this.lastSaved = new Date()
-      this.lastSavedInfo = savedInfo
     }
   },
   computed: {
