@@ -17,8 +17,8 @@ from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import DebateAdjudicator
-# from .utils import adjs_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
 
+from utils.misc import reverse_round
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class AllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
     def get_unallocated_adjudicators(self):
         round = self.get_round()
         unused_adjs = [t.serialize() for t in round.unused_adjudicators()]
-        unused_adjs = self.annotate_region_classes(unused_adjs)
+        unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
 
         return json.dumps(unused_adjs)
 
@@ -37,25 +37,41 @@ class EditAdjudicatorAllocationView(AllocationViewBase, TemplateView):
 
     template_name = 'edit_adjudicators.html'
 
+    def annotate_round_info(self, round_info):
+        t = self.get_tournament()
+        r = self.get_round()
+        round_info['autoURL'] = reverse_round('adjudicators-auto-allocate', r)
+        round_info['updateImportanceURL'] = reverse_round('save-debate-importance', r)
+        round_info['updatePanelURL'] = reverse_round('save-debate-panel', r)
+        round_info['scoreMin'] = t.pref('adj_min_score')
+        round_info['scoreMax'] = t.pref('adj_max_score')
+        round_info['scoreForVote'] = t.pref('adj_min_voting_score')
+        round_info['allowDuplicateAllocations'] = t.pref('duplicate_adjs')
+        round_info['regions'] = self.get_regions_info()
+        round_info['categories'] = self.get_categories_info()
+        return round_info
+
+    def get_regions_info(self):
+        # Need to extract and annotate regions for the allcoation actions key
+        all_regions = [r.serialize for r in Region.objects.order_by('id')]
+        for i, r in enumerate(all_regions):
+            r['class'] = i
+        return all_regions
+
+    def get_categories_info(self):
+        # Need to extract and annotate categories for the allcoation actions key
+        all_bcs = [c.serialize for c in BreakCategory.objects.filter(
+            tournament=self.get_tournament()).order_by('id')]
+        for i, bc in enumerate(all_bcs):
+            bc['class'] = i
+        return all_bcs
+
     def get_context_data(self, **kwargs):
         # regions = regions_ordered(t)
         # categories = categories_ordered(t)
         # adjs, teams = populate_conflicts(adjs, teams)
         # adjs, teams = populate_histories(adjs, teams, t, r)
         kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
-
-        # Need to extract and annotate regions for the allcoation actions key
-        all_regions = [r.serialize for r in Region.objects.order_by('id')]
-        for i, r in enumerate(all_regions):
-            r['class'] = i
-        kwargs['vueRegions'] = json.dumps(all_regions)
-
-        # Need to extract and annotate categories for the allcoation actions key
-        all_bcs = [c.serialize for c in BreakCategory.objects.filter(
-            tournament=self.get_tournament()).order_by('id')]
-        for i, bc in enumerate(all_bcs):
-            bc['class'] = i
-        kwargs['vueCategories'] = json.dumps(all_bcs)
         return super().get_context_data(**kwargs)
 
 

@@ -23,10 +23,10 @@
       </div>
     </slot>
 
-    <template v-for="(team, index) in debate.teams">
+    <template v-for="(position, index) in roundInfo.positions">
       <slot :name="'sposition' + index">
         <div class="draw-cell flex-6 draw-team-cell">
-          <draw-team :team="team"></draw-team>
+          <draw-team :team="debate.teams[index].team"></draw-team>
         </div>
       </slot>
     </template>
@@ -55,8 +55,6 @@ import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
 export default {
   components: {DrawTeam, DrawVenue, DrawAdjudicator},
   mixins: [SlideOverSubjectMixin],
-  props: {
-    debate: Object,
-  },
+  props: { debate: Object, roundInfo: Object },
 }
 </script>

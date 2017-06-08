@@ -44,7 +44,7 @@ export default {
       var self = this
       $(event.target).button('loading')
       $.post({
-        url: this.roundInfo.createAutoAllocationURL,
+        url: this.roundInfo.autoUrl,
         success: function(data, textStatus, jqXHR) {
           self.resetAutoAllocationModal(event.target)
           $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)

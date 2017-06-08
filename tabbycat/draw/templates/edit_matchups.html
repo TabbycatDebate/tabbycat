@@ -9,8 +9,8 @@
   <div id="vueMount">
 
     <edit-matchups-container :initial-debates="debates"
-                             :initial-Unallocated-items="unallocatedItems"
-                             :back-url="backUrl">
+                             :round-info="roundInfo"
+                             :initial-Unallocated-items="unallocatedItems">
     </edit-matchups-container>
 
   </div>
@@ -21,8 +21,8 @@
   <script>
     window.vueData = {
       debates: {{ vueDebates|safe }},
+      roundInfo: {{ vueRoundInfo|safe }},
       unallocatedItems: {{ vueUnusedTeams|safe }},
-      backUrl: "{% roundurl 'draw' %}",
     }
   </script>
   {{ block.super }}

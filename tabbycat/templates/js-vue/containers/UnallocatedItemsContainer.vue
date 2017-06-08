@@ -21,8 +21,7 @@ export default {
   mixins: [DroppableMixin],
   methods: {
     handleDrop: function(event) {
-      console.log(event)
-      this.$eventHub.$emit('unassign-draggable')
+      this.$eventHub.$emit('unassign-draggable', event)
     }
   }
 }

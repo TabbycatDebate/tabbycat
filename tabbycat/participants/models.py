@@ -281,7 +281,7 @@ class Team(models.Model):
         super().save(*args, **kwargs)
 
     def serialize(self):
-        team = {'short_name': self.short_name, 'long_name': self.long_name}
+        team = {'id': self.id, 'short_name': self.short_name, 'long_name': self.long_name}
         team['institution'] = self.institution.serialize
         team['region'] = self.region.serialize if self.region else None
         speakers = list(self.speakers.order_by('name'))
@@ -413,7 +413,7 @@ class Adjudicator(Person):
         return d.count()
 
     def serialize(self):
-        adj = {'name': self.name, 'gender': self.gender}
+        adj = {'id': self.id, 'name': self.name, 'gender': self.gender}
         adj['score'] = "{0:0.1f}".format(self.score) # Fix to get round / move to annotator
         adj['region'] = self.region.serialize if self.region else None
         adj['institution'] = self.institution.serialize if self.institution else None

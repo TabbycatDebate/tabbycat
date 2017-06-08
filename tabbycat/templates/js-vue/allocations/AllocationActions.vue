@@ -5,7 +5,7 @@
 
         <div class="btn-toolbar">
           <div class="btn-group btn-group-sm">
-            <a :href="backUrl" class="btn btn-default btn-sm" data-toggle="tooltip"
+            <a :href="roundInfo.backUrl" class="btn btn-default btn-sm" data-toggle="tooltip"
                data-placement="bottom" title="Return to Draw">
               <span class="glyphicon glyphicon-chevron-left"></span>Back
             </a>
@@ -76,7 +76,7 @@ import AllocationModal from '../allocations/AllocationModal.vue'
 import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 
 export default {
-  props: { roundInfo: Object, backUrl: String },
+  props: { roundInfo: Object },
   components: { AllocationModal, AutoSaveCounter },
   data: function() {
     // Internal state storing the status of which diversity highlight is being toggled

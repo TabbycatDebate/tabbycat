@@ -528,7 +528,7 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
     def annotate_draw(self, draw, serialised_draw):
         for debate, serialized_debate in zip(draw, serialised_draw):
             for t, serialt in zip(debate.teams, serialized_debate['teams']):
-                self.add_team_points(t, serialt)
+                self.add_team_points(t, serialt['team'])
 
         return super().annotate_draw(draw, serialised_draw)
 
@@ -537,9 +537,9 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
         serialized_unused = [t.serialize() for t in unused]
         for t, serialt in zip(unused, serialized_unused):
             serialt = self.add_team_points(t, serialt)
+            serialt = self.annotate_break_classes(serialt)
+            serialt = self.annotate_region_classes(serialt)
 
-        serialized_unused = self.annotate_break_classes(serialized_unused)
-        serialized_unused = self.annotate_region_classes(serialized_unused)
         kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
         return super().get_context_data(**kwargs)
 

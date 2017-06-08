@@ -24,12 +24,14 @@ export default {
       unallocatedItems: this.initialUnallocatedItems
     }
   },
-  props: ['initialDebates', 'initialUnallocatedItems', 'backUrl'],
+  props: ['initialDebates', 'initialUnallocatedItems', 'roundInfo'],
   computed: {
     teams: function() {
       // Return all teams as a single array
       var allTeams = _.map(this.debates, function(debate) {
-        return debate.teams
+        return _.map(debate.teams, function(team) {
+          return team.team
+        })
       })
       return _.flattenDeep(allTeams)
     },
@@ -40,6 +42,15 @@ export default {
         })
       })
       return _.flattenDeep(allPanellists)
+    },
+    debatesById: function() {
+      return _.keyBy(this.debates, 'id')
+    },
+    teamsById: function() {
+      return _.keyBy(this.teams, 'id')
+    },
+    adjudicatorsById: function() {
+      return _.keyBy(this.adjudicators, 'id')
     },
     positions: function() {
       return this.debates[0].positions // Shortcut function

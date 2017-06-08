@@ -2,7 +2,7 @@
   <div class="col-md-12 draw-container">
 
     <div class="row nav-pills">
-      <a class="btn btn-default submit-disable" :href="backUrl">
+      <a class="btn btn-default submit-disable" :href="roundInfo.backUrl">
         <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
       </a>
       <button class="btn btn-primary submit-disable" type="submit">
@@ -11,25 +11,27 @@
       <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
     </div>
 
-    <div class="row">
-      <div class="vertical-spacing" id="messages-container"></div>
+    <div class="row vertical-spacing">
+      <div id="messages-container"></div>
     </div>
 
-    <draw-header :positions="positions">
-      <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
-        <span>Venue</span>
-      </div>
-    </draw-header>
-
-    <debate v-for="debate in debates" :debate="debate" :key="debate.id">
-      <div class="draw-cell flex-12 vue-droppable-container" slot="svenue">
-        <droppable-generic>
-          <slot name="svenue">
-            <draggable-venue v-if="debate.venue !== null" :venue="debate.venue"></draggable-venue>
-          </slot>
-        </droppable-generic>
-      </div>
-    </debate>
+    <div class="vertical-spacing">
+      <draw-header :positions="roundInfo.positions">
+        <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test" slot="hvenue">
+          <span>Venue</span>
+        </div>
+      </draw-header>
+      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
+        <div class="draw-cell flex-12 vue-droppable-container" slot="svenue">
+          <droppable-generic>
+            <slot name="svenue">
+              <draggable-venue v-if="debate.venue !== null"
+               :venue="debate.venue" :debate-id="debate.id"></draggable-venue>
+            </slot>
+          </droppable-generic>
+        </div>
+      </debate>
+    </div>
 
     <unallocated-items-container>
       <div v-for="unallocatedVenue in unallocatedItems">
@@ -65,8 +67,13 @@ export default {
         return null
       }
     },
-    moveToUnused() {
-      console.log('moveVenueToUnused')
+    moveToUnused(payload) {
+      if (_.isUndefined(payload.debate)) {
+        return // Moving to unused from unused; do nothing
+      }
+      var venue = this.debatesById[payload.debate].venue
+      this.debatesById[payload.debate].venue = null
+      this.unallocatedItems.push(venue) // Need to push; not append
     }
   }
 }

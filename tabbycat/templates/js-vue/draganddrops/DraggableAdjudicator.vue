@@ -1,9 +1,8 @@
 <template>
   <div draggable=true
-       :class="[draggableClasses, highlightsIdentity, highlightsStatus,
-                isDragging ? vue-is-dragging : '']"
-       @dragstart="handleDragStart"
-       @dragend="handleDragEnd"
+       :class="[draggableClasses, highlightsIdentity, highlightsStatus]"
+       @dragstart="dragStart"
+       @dragend="dragEnd"
        @mouseenter="showSlideOver(adjudicator)"
        @mouseleave="hideSlideOver"><!--
        @mouseenter="show = true"
@@ -30,10 +29,7 @@ import HighlightableMixin from '../allocations/HighlightableMixin.vue'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin, HighlightableMixin],
-  props: {
-    'adjudicator': Object,
-    'show': { default: false }
-  },
+  props: { 'adjudicator': Object, 'debateId': null},
   computed: {
     initialledName: function() {
       // Translate Joe Blogs into Joe B.
@@ -45,6 +41,9 @@ export default {
     },
     highlightableObject: function() {
       return this.adjudicator
+    },
+    draggablePayload: function() {
+      return JSON.stringify({ adjudicator: this.adjudicator.id, debate: this.debateId })
     }
   },
   methods: {

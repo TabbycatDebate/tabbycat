@@ -15,6 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic.detail import SingleObjectMixin
 
 from participants.models import Region
+from tournaments.utils import get_position_name
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import TabbycatPageTitlesMixin
@@ -270,28 +271,26 @@ class DrawForDragAndDropMixin(RoundMixin):
     drag and drop table used for editing matchups/adjs/venues with a
     drag and drop interface. Subclass annotate method to add extra view data """
 
-    def annotate_break_classes(self, serialised_teams):
+    def annotate_break_classes(self, serialised_team):
         """We can't style break categories in CSS because we need a defined range;
         this normalises IDs of the break categories so the CSS classes can work"""
         breaks_seq = {}
         for i, r in enumerate(self.break_categories):
             breaks_seq[r.id] = i
-        for team in serialised_teams:
-            for bc in team['break_categories']:
-                bc['class'] = breaks_seq[bc['id']]
+        for bc in serialised_team['break_categories']:
+            bc['class'] = breaks_seq[bc['id']]
 
-        return serialised_teams
+        return serialised_team
 
-    def annotate_region_classes(self, adj_or_teams):
+    def annotate_region_classes(self, adj_or_team):
         """Same as above, but for regions"""
         regions_seq = {}
         for i, r in enumerate(self.regions):
             regions_seq[r.id] = i
-        for a_or_t in adj_or_teams:
-            if a_or_t['region']:
-                a_or_t['region']['class'] = regions_seq[a_or_t['region']['id']]
+        if adj_or_team['region']:
+            adj_or_team['region']['class'] = regions_seq[adj_or_team['region']['id']]
 
-        return adj_or_teams
+        return adj_or_team
 
     @cached_property
     def break_categories(self):
@@ -303,13 +302,17 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
-        for d in serialised_draw:
-            d['teams'] = self.annotate_break_classes(d['teams'])
-            d['teams'] = self.annotate_region_classes(d['teams'])
-            for panellist in d['panel']:
-                panellist['adjudicator'] = self.annotate_region_classes([panellist['adjudicator']])[0]
+        for debate in serialised_draw:
+            for team in debate['teams']:
+                team['team'] = self.annotate_break_classes(team['team'])
+                team['team'] = self.annotate_region_classes(team['team'])
+            for panellist in debate['panel']:
+                panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
 
         return serialised_draw
+
+    def annotate_round_info(self, round_info):
+        return round_info
 
     def get_draw(self):
         round = self.get_round()
@@ -319,6 +322,19 @@ class DrawForDragAndDropMixin(RoundMixin):
         draw = self.annotate_draw(draw, serialised_draw)
         return json.dumps(serialised_draw)
 
+    def get_round_info(self):
+        round = self.get_round()
+        round_info = {
+            'positions': [get_position_name(round.tournament, "aff", "full").title(),
+                          get_position_name(round.tournament, "neg", "full").title()],
+            'backUrl': "TODO",
+            'roundName' : round.abbreviation,
+            'roundIsPrelim' : round.is_break_round,
+        }
+        round_info = self.annotate_round_info(round_info)
+        return json.dumps(round_info)
+
     def get_context_data(self, **kwargs):
         kwargs['vueDebates'] = self.get_draw()
+        kwargs['vueRoundInfo'] = self.get_round_info()
         return super().get_context_data(**kwargs)

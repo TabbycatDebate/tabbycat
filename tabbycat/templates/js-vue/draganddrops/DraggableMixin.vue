@@ -7,39 +7,37 @@
 // :class="[componentClasses, isDragging ? vue-is-dragging : '']"
 //
 // Subclass can provide handleDragStart() and handleDragEnd()
+// Subclasses should also provide a data payload
 // Any :hover CSS rules on the subclass should instead be computed from isDragging
 // else they wont be remove upon a drop
 
 export default {
-  props: {
-    'isDragging': { default: false },
-    'isHovering': { default: false },
+  data: function() {
+    return { isDragging: false, isHovering: false }
   },
-  start: 'parent-start',
-  end: 'parent-end',
   computed: {
     draggableClasses: function() {
-      return "vue-draggable btn btn-sm"
+      if (this.isDragging) {
+        return "vue-draggable vue-is-dragging btn btn-sm"
+      } else {
+        return "vue-draggable btn btn-sm"
+      }
     },
   },
   methods: {
     dragStart: function(event) {
       this.isDragging = true;
       this.isHovering = true;
-      this.$dispatch('dragging-team', this);
-      // For dragging to work in FF we need to do some kind of setData
-      event.dataTransfer.setData('ID', this.id);
-      if (typeof this.handleDragStart === 'function') {
-        this.handleDragStart(event);
-      }
+      // Set data on the drag event to uniquely record what is being dragged
+      // Must have a setData handler here for Firefox to allow dragging;
+      // see http://mereskin.github.io/dnd/
+      event.dataTransfer.setData("text", this.draggablePayload);
+      this.handleDragStart(event);
     },
     dragEnd: function(event) {
       this.isDragging = false;
       this.isHovering = false;
-      this.$dispatch('stopped-dragging');
-      if (typeof this.handledragEnd === 'function') {
-        this.handledragEnd(event);
-      }
+      this.handleDragEnd(event);
     },
   }
 }

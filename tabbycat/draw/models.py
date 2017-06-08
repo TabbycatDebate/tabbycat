@@ -209,8 +209,10 @@ class Debate(models.Model):
     def serialize(self):
         debate = model_to_dict(self)
         debate['venue'] = self.venue.serialize() if self.venue else None
-        debate['teams'] = [team.serialize() for team in self.teams]
-        debate['positions'] = ['Aff', 'Neg']
+        debate['teams'] = [{
+            'team': dt.team.serialize(),
+            'position': dt.position
+        } for dt in self.debateteam_set.all()]
         debate['panel'] = [{
             'adjudicator': adj.serialize(),
             'position': position,

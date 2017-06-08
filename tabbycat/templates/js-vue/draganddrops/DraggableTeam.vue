@@ -1,8 +1,8 @@
 <template>
   <div draggable=true
-       :class="[draggableClasses, isDragging ? vue-is-dragging : '']"
-       @dragstart="handleDragStart"
-       @dragend="handleDragEnd"
+       :class="[draggableClasses]"
+       @dragstart="dragStart"
+       @dragend="dragEnd"
        @mouseenter="showSlideOver(team)"
        @mouseleave="hideSlideOver"><!--
        @mouseenter="show = true"
@@ -28,7 +28,12 @@ import SlideOverTeamMixin from '../infoovers/SlideOverTeamMixin.vue'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverTeamMixin],
-  props: { 'team': Object },
+  props: { 'team': Object, 'debateId': null },
+  computed: {
+    draggablePayload: function() {
+      return JSON.stringify({ team: this.team.id, debate: this.debateId })
+    }
+  },
   methods: {
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-team', this);

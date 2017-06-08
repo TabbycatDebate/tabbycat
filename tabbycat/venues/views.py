@@ -10,7 +10,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, TournamentMixin
-from utils.misc import redirect_tournament, reverse_tournament
+from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
 
 from .allocator import allocate_venues
@@ -20,6 +20,10 @@ from .models import Venue, VenueCategory, VenueConstraint
 class EditVenuesView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
 
     template_name = "edit_venues.html"
+
+    def annotate_round_info(self, round_info):
+        round_info['autoURL'] = reverse_round('venues-auto-allocate', self.get_round())
+        return round_info
 
     def get_context_data(self, **kwargs):
         unused_venues = self.get_round().unused_venues()

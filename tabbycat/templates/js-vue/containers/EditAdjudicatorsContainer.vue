@@ -1,59 +1,63 @@
 <template>
   <div class="col-md-12 draw-container allocation-container">
 
-    <allocation-actions :round-info="roundInfo" :back-url="backUrl"></allocation-actions>
+    <allocation-actions :round-info="roundInfo"></allocation-actions>
 
     <div class="row">
       <div class="vertical-spacing" id="messages-container"></div>
     </div>
 
-    <draw-header :positions="positions">
-      <div class="thead flex-cell flex-4 text-center" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
-        <span>Priority</span>
-      </div>
-      <template slot="hvenue"><!-- Hide Venues --></template>
-      <template slot="hpanel">
-        <div class="thead flex-cell flex-12 vue-droppable-container">
-          <span>Chair</span>
+    <div class="vertical-spacing">
+      <draw-header :positions="roundInfo.positions">
+        <div class="thead flex-cell flex-4 text-center" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
+          <span>Priority</span>
         </div>
-        <div class="thead flex-cell flex-12 vue-droppable-container">
-          <span>Panel</span>
+        <template slot="hvenue"><!-- Hide Venues --></template>
+        <template slot="hpanel">
+          <div class="thead flex-cell flex-12 vue-droppable-container">
+            <span>Chair</span>
+          </div>
+          <div class="thead flex-cell flex-12 vue-droppable-container">
+            <span>Panel</span>
+          </div>
+          <div class="thead flex-cell flex-12 vue-droppable-container">
+            <span>Trainees</span>
+          </div>
+        </template>
+      </draw-header>
+      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
+        <div class="draw-cell flex-4" slot="simportance">
+          <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>
-        <div class="thead flex-cell flex-12 vue-droppable-container">
-          <span>Trainees</span>
-        </div>
-      </template>
-    </draw-header>
-
-    <debate v-for="debate in debates" :debate="debate" :key="debate.id">
-      <div class="draw-cell flex-4" slot="simportance">
-        <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
-      </div>
-      <template slot="svenue"><!-- Hide Venues --></template>
-      <template slot="spanel">
-        <div class="draw-cell flex-12 vue-droppable-container">
-          <droppable-generic>
-            <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'C')"
-              :adjudicator="debateAdjudicator.adjudicator"
-              :key="debateAdjudicator.adjudicator.id"></draggable-adjudicator>
-          </droppable-generic>
-        </div>
-        <div class="draw-cell flex-12 vue-droppable-container">
-          <droppable-generic>
-            <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'P')"
-              :adjudicator="debateAdjudicator.adjudicator"
-              :key="debateAdjudicator.adjudicator.id"></draggable-adjudicator>
-          </droppable-generic>
-        </div>
-        <div class="draw-cell flex-12 vue-droppable-container">
-          <droppable-generic>
-            <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'T')"
-              :adjudicator="debateAdjudicator.adjudicator"
-              :key="debateAdjudicator.adjudicator.id"></draggable-adjudicator>
-          </droppable-generic>
-        </div>
-      </template>
-    </debate>
+        <template slot="svenue"><!-- Hide Venues --></template>
+        <template slot="spanel">
+          <div class="draw-cell flex-12 vue-droppable-container">
+            <droppable-generic>
+              <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'C')"
+                :adjudicator="debateAdjudicator.adjudicator"
+                :key="debateAdjudicator.adjudicator.id"
+                :debate-id="debate.id"></draggable-adjudicator>
+            </droppable-generic>
+          </div>
+          <div class="draw-cell flex-12 vue-droppable-container">
+            <droppable-generic>
+              <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'P')"
+                :adjudicator="debateAdjudicator.adjudicator"
+                :key="debateAdjudicator.adjudicator.id"
+                :debate-id="debate.id"></draggable-adjudicator>
+            </droppable-generic>
+          </div>
+          <div class="draw-cell flex-12 vue-droppable-container">
+            <droppable-generic>
+              <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'T')"
+                :adjudicator="debateAdjudicator.adjudicator"
+                :key="debateAdjudicator.adjudicator.id"
+                :debate-id="debate.id"></draggable-adjudicator>
+            </droppable-generic>
+          </div>
+        </template>
+      </debate>
+    </div>
 
     <unallocated-items-container>
       <div v-for="unallocatedAdj in unallocatedAdjsByScore">
@@ -96,14 +100,22 @@ export default {
     getAdjudicatorsByPosition: function(debate, position) {
       return _.filter(debate.panel, { 'position': position })
     },
-    moveToUnused() {
-      console.log('moveAdjudicatorToUnused')
+    moveToUnused(payload) {
+      if (_.isUndefined(payload.debate)) {
+        return // Moving to unused from unused; do nothing
+      }
+      var draggedAdjudicator = this.adjudicatorsById[payload.adjudicator]
+      var panel = this.debatesById[payload.debate].panel // Convenience var
+      // Make changes to the reactive property
+      this.debatesById[payload.debate].panel = _.filter(panel, function(da) {
+        return da.adjudicator !== draggedAdjudicator
+      })
+      this.unallocatedItems.push(draggedAdjudicator) // Need to push; not append
     },
     updateImportance: function(debateID, importance) {
       var debate = _.find(this.debates, { 'id': debateID })
       if (_.isUndefined(importance)) {
-        // This block fires after autoAllocation but with a blank importance value; unclear why
-        return
+        return // This block fires after autoAllocation but with a blank importance value; unclear why
       }
       if (_.isUndefined(debate)) {
         this.ajaxError("Debate\'s importance", "", "Couldnt find debate to update")

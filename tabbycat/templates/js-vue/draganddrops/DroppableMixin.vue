@@ -31,7 +31,8 @@ export default {
       this.dragCounter = 0;
       this.isDroppable = false;
       if (typeof this.handleDrop === 'function') {
-        this.handleDrop(event);
+        var payloadData = event.dataTransfer.getData("text");
+        this.handleDrop(JSON.parse(payloadData));
       }
     },
   }

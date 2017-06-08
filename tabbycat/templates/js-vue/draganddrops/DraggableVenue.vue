@@ -1,8 +1,8 @@
 <template>
   <div draggable=true
-       :class="[draggableClasses, isDragging ? vue-is-dragging : '']"
-       @dragstart="handleDragStart"
-       @dragend="handleDragEnd"
+       :class="[draggableClasses]"
+       @dragstart="dragStart"
+       @dragend="dragEnd"
        @mouseenter="showSlideOver(venue)"
        @mouseleave="hideSlideOver">
 
@@ -30,8 +30,12 @@ import SlideOverVenueMixin from '../infoovers/SlideOverVenueMixin.vue'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverVenueMixin],
-  props: { 'venue': Object },
-  computed: { },
+  props: { 'venue': Object, 'debateId': null },
+  computed: {
+    draggablePayload: function() {
+      return JSON.stringify({ venue: this.venue.id, debate: this.debateId })
+    }
+  },
   methods: {
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-venue', this);
