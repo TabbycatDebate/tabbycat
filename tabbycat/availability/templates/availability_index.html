@@ -43,7 +43,7 @@
           {% csrf_token %}
           <button class="btn btn-primary submit-disable" type="submit">
             {% blocktrans trimmed with prev_round=round.prev.abbreviation %}
-              Check In Active in {{ prev_round }}
+              Copy from {{ prev_round }}
             {% endblocktrans %}
           </button>
         </form>

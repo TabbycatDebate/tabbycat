@@ -2,9 +2,13 @@
 // Checkins
 //------------------------------------------------------------------------------
 
-.round-progresses .progress {
-  margin-bottom: 0; // Progress bars have bottom margins; need to offset
-
+.round-progresses {
+  .row:first-child {
+    margin-bottom: 10px; // Space out the bars slightly
+  }
+  .progress {
+    margin-bottom: 0; // Progress bars have bottom margins; need to offset
+  }
   .progress-empty span {
     color: #000; // If its showing 0/x make the text visible and not flush
     margin-left: 10px;

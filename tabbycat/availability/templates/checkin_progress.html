@@ -6,12 +6,10 @@
     <h4 class="panel-title">{{ ct.type }} Check-Ins</h4>
   </div>
   <div class="panel-body round-progresses">
-    <div class="row">
 
-      <div class="col-sm-1">
-        {{ round.abbreviation }}
-      </div>
-      <div class="{% if round.prev %}col-md-5{% else %}col-sm-10{% endif %}">
+    <div class="row">
+      <div class="col-md-1 col-sm-1">{{ round.abbreviation }}</div>
+      <div class="col-md-11 col-sm-11">
         <div class="progress">
           <div class="progress-bar progress-bar-success
                       {% if ct.in_now == 0 %}progress-empty{% endif %}"
@@ -22,12 +20,12 @@
           </div>
         </div>
       </div>
+    </div>
 
+    <div class="row">
       {% if ct.in_before %}
-        <div class="col-md-1">
-          {{ round.prev.abbreviation }}
-        </div>
-        <div class="col-md-5">
+        <div class="col-md-1 col-sm-1">{{ round.prev.abbreviation }}</div>
+        <div class="col-md-11 col-sm-11">
           <div class="progress">
             <div class="progress-bar progress-bar-info
                         {% if ct.in_before == 0 %}progress-empty{% endif %}"
@@ -39,13 +37,13 @@
           </div>
         </div>
       {% endif %}
-
-      {% if ct.message %}
-        <div class="col-md-5">
-        {{ ct.message }}
-        </div>
-      {% endif %}
-
     </div>
+
+    {% if ct.message %}
+      <div class="col-md-5">
+      {{ ct.message }}
+      </div>
+    {% endif %}
+
   </div>
 </div>
