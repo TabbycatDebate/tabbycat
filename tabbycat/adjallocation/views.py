@@ -40,7 +40,7 @@ class EditAdjudicatorAllocationView(AllocationViewBase, TemplateView):
     def annotate_round_info(self, round_info):
         t = self.get_tournament()
         r = self.get_round()
-        round_info['autoURL'] = reverse_round('adjudicators-auto-allocate', r)
+        round_info['autoUrl'] = reverse_round('adjudicators-auto-allocate', r)
         round_info['updateImportanceURL'] = reverse_round('save-debate-importance', r)
         round_info['updatePanelURL'] = reverse_round('save-debate-panel', r)
         round_info['scoreMin'] = t.pref('adj_min_score')

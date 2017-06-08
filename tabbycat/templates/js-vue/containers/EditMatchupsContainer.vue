@@ -34,7 +34,7 @@
     </div>
 
     <unallocated-items-container>
-      <div v-for="unallocatedTeam in unallocatedItems">
+      <div v-for="unallocatedTeam in unallocatedTeamsByWins">
         <draggable-team :team="unallocatedTeam"> </draggable-team>
       </div>
     </unallocated-items-container>
@@ -52,6 +52,11 @@ import _ from 'lodash'
 export default {
   mixins: [DrawContainerMixin],
   components: { DraggableTeam },
+  computed: {
+    unallocatedTeamsByWins: function() {
+      return _.reverse(_.sortBy(this.unallocatedItems, ['wins']))
+    }
+  },
   methods: {
     moveToUnused(payload) {
       if (_.isUndefined(payload.debate)) {

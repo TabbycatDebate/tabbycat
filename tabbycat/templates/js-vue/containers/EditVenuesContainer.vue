@@ -34,7 +34,7 @@
     </div>
 
     <unallocated-items-container>
-      <div v-for="unallocatedVenue in unallocatedItems">
+      <div v-for="unallocatedVenue in unallocatedVenuesByPriority">
         <draggable-venue :venue="unallocatedVenue"></draggable-venue>
       </div>
     </unallocated-items-container>
@@ -53,7 +53,11 @@ export default {
   mixins: [DrawContainerMixin],
   components: { DraggableVenue },
   props: { venueConstraints: Array },
-  computed: { },
+  computed: {
+    unallocatedVenuesByPriority: function() {
+      return _.reverse(_.sortBy(this.unallocatedItems, ['priority']))
+    }
+  },
   methods: {
     annotateSlideInfo(venue) {
       // Build array of this venue's categories as IDs

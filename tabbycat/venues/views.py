@@ -22,7 +22,7 @@ class EditVenuesView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateVi
     template_name = "edit_venues.html"
 
     def annotate_round_info(self, round_info):
-        round_info['autoURL'] = reverse_round('venues-auto-allocate', self.get_round())
+        round_info['autoUrl'] = reverse_round('venues-auto-allocate', self.get_round())
         return round_info
 
     def get_context_data(self, **kwargs):
