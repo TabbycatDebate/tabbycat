@@ -2,9 +2,21 @@
 // Note the data/props/computed setup as per https://vuejs.org/v2/guide/components.html
 // Props are passed down from root; but we need to cast them into data
 // so that it can then mutate them here in response to children
+import AjaxMixin from '../draganddrops/AjaxMixin.vue'
+import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
+import DrawHeader from '../draw/DrawHeader.vue'
+import Debate from '../draw/Debate.vue'
+import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
+import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
+import SlideOverItem from '../infoovers/SlideOverItem.vue'
 import _ from 'lodash'
 
 export default {
+  mixins: [AjaxMixin],
+  components: {
+    DrawHeader, AutoSaveCounter, Debate,
+    DroppableGeneric, UnallocatedItemsContainer, SlideOverItem
+  },
   data: function () {
     return {
       slideOverItem: null,

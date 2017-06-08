@@ -44,21 +44,12 @@
 
 <script>
 import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
-import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
-import DrawHeader from '../draw/DrawHeader.vue'
-import Debate from '../draw/Debate.vue'
-import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
-import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableVenue from '../draganddrops/DraggableVenue.vue'
-import SlideOverItem from '../infoovers/SlideOverItem.vue'
 import _ from 'lodash'
 
 export default {
   mixins: [DrawContainerMixin],
-  components: {
-    UnallocatedItemsContainer, DrawHeader, Debate, DroppableGeneric,
-    DraggableVenue, SlideOverItem, AutoSaveCounter
-  },
+  components: { DraggableVenue },
   props: { venueConstraints: Array },
   computed: { },
   methods: {
@@ -77,8 +68,6 @@ export default {
     moveToUnused() {
       console.log('moveVenueToUnused')
     }
-  },
-  events: {
   }
 }
 </script>

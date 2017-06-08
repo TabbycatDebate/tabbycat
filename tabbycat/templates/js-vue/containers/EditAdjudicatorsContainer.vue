@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-12 draw-container allocation-container">
 
-    <allocation-actions-container :round-info="roundInfo" :back-url="backUrl"></allocation-actions-container>
+    <allocation-actions :round-info="roundInfo" :back-url="backUrl"></allocation-actions>
 
     <div class="row">
       <div class="vertical-spacing" id="messages-container"></div>
@@ -67,25 +67,16 @@
 </template>
 
 <script>
-import AllocationActionsContainer from '../allocations/AllocationActions.vue'
-import HighlightableContainerMixin from '../allocations/HighlightableContainerMixin.vue'
 import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
-import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
-import DrawHeader from '../draw/DrawHeader.vue'
-import Debate from '../draw/Debate.vue'
-import DebateImportance from '../draw/DebateImportance.vue'
-import AjaxMixin from '../draganddrops/DroppableGeneric.vue'
-import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
+import HighlightableContainerMixin from '../allocations/HighlightableContainerMixin.vue'
+import AllocationActions from '../allocations/AllocationActions.vue'
+import DebateImportance from '../allocations/DebateImportance.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
-import SlideOverItem from '../infoovers/SlideOverItem.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [DrawContainerMixin, AjaxMixin, HighlightableContainerMixin],
-  components: {
-    AllocationActionsContainer, UnallocatedItemsContainer, DrawHeader, Debate,
-    DebateImportance, DroppableGeneric, DraggableAdjudicator, SlideOverItem
-  },
+  mixins: [DrawContainerMixin, HighlightableContainerMixin],
+  components: { AllocationActions, DebateImportance, DraggableAdjudicator },
   props: { roundInfo: Object },
   created: function() {
     this.$eventHub.$on('update-allocation', function(updatedDebates) {
