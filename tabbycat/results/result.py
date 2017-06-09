@@ -524,5 +524,3 @@ class VotingDebateResult(BaseDebateResult):
 
     def teamscorefield_votes_possible(self, side):
         return len(self.scoresheets)
-
-    # CONTINUE HERE with methods for UI display

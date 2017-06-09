@@ -9,7 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 
-from .result_old import BallotSet, ForfeitBallotSet
+from .result_old import ForfeitBallotSet
+from .result import VotingDebateResult
 
 logger = logging.getLogger(__name__)
 
@@ -281,10 +282,10 @@ class BallotSetForm(forms.Form):
     def _initial_data(self):
         """Generates dictionary of initial form data."""
 
-        ballotset = BallotSet(self.ballotsub)
+        result = VotingDebateResult(self.ballotsub)
         initial = {'debate_result_status': self.debate.result_status,
-                   'confirmed': ballotset.confirmed,
-                   'discarded': ballotset.discarded}
+                   'confirmed': self.ballotsub.confirmed,
+                   'discarded': self.ballotsub.discarded}
 
         # When bypassing confirmations we just pre-check
         if self.bypassing_checks:
@@ -307,22 +308,24 @@ class BallotSetForm(forms.Form):
         # But if there is only one motion and no motion is currently stored in
         # the database for this round, then default to the only motion there is.
         if self.using_motions:
-            if not ballotset.motion and self.motions.count() == 1:
+            if not self.debate.motion and self.motions.count() == 1:
                 initial['motion'] = self.motions.get()
             else:
-                initial['motion'] = ballotset.motion
+                initial['motion'] = self.debate.motion
             for side in self.SIDES:
-                initial[self._fieldname_motion_veto(side)] = ballotset.get_motion_veto(side)
+                initial[self._fieldname_motion_veto(side)] = self.ballotsub.debateteammotionpreference_set.filter(
+                        debate_team__position=VotingDebateResult.SIDE_KEY_MAP_REVERSE[side],
+                        preference=3).first()
 
         for side, pos in self.SIDES_AND_POSITIONS:
-            speaker = ballotset.get_speaker(side, pos)
-            is_ghost = ballotset.get_ghost(side, pos)
+            speaker = result.get_speaker(side, pos)
+            is_ghost = result.get_ghost(side, pos)
             if speaker:
                 initial[self._fieldname_speaker(side, pos)] = speaker.pk
                 initial[self._fieldname_ghost(side, pos)] = is_ghost
 
                 for adj in self.adjudicators:
-                    score = ballotset.get_score(adj, side, pos)
+                    score = result.get_score(adj, side, pos)
                     coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
                     initial[self._fieldname_score(adj, side, pos)] = coerce_for_ui(score)
 
@@ -374,7 +377,7 @@ class BallotSetForm(forms.Form):
     # --------------------------------------------------------------------------
 
     def clean(self):
-        cleaned_data = super(BallotSetForm, self).clean()
+        cleaned_data = super().clean()
 
         if cleaned_data.get('forfeits') in ["aff_forfeit", "neg_forfeit"]:
             self.forfeit_declared = True
@@ -484,37 +487,43 @@ class BallotSetForm(forms.Form):
             if self.cleaned_data['forfeits'] == "neg_forfeit":
                 forfeiter = self.debate.neg_dt
             ballotset = ForfeitBallotSet(self.ballotsub, forfeiter)
+            # TODO forfeits currently broken, need to fix
+
         else:
-            ballotset = BallotSet(self.ballotsub)
+            result = VotingDebateResult(self.ballotsub)
 
         # 3. Save the sides
         if self.choosing_sides:
-            ballotset.set_sides(*self.cleaned_data['choose_sides'])
+            result.set_sides(*self.cleaned_data['choose_sides'])
 
         # 4. Save motions
         if self.using_motions:
-            ballotset.motion = self.cleaned_data['motion']
+            self.debate.motion = self.cleaned_data['motion']
 
         if self.using_vetoes:
             for side in self.SIDES:
                 motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
-                ballotset.set_motion_veto(side, motion_veto)
+                self.ballotsub.debateteammotionpreference_set.update_or_create(
+                        debate_team__position=VotingDebateResult.SIDE_KEY_MAP_REVERSE[side],
+                        preference=3, defaults=dict(motion=motion_veto))
 
         # 5. Save speaker fields
         if not self.forfeit_declared:
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
-                ballotset.set_speaker(side, pos, speaker)
+                result.set_speaker(side, pos, speaker)
                 is_ghost = self.cleaned_data[self._fieldname_ghost(side, pos)]
-                ballotset.set_ghost(side, pos, is_ghost)
+                result.set_ghost(side, pos, is_ghost)
                 for adj in self.adjudicators:
                     score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
-                    ballotset.set_score(adj, side, pos, score)
+                    result.set_score(adj, side, pos, score)
 
         # 6. Save status fields
-        ballotset.discarded = self.cleaned_data['discarded']
-        ballotset.confirmed = self.cleaned_data['confirmed']
-        ballotset.save()
+        self.ballotsub.discarded = self.cleaned_data['discarded']
+        self.ballotsub.confirmed = self.cleaned_data['confirmed']
+        self.ballotsub.save()
+
+        result.save()
 
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
