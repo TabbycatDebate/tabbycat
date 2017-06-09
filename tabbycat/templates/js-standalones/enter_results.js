@@ -159,14 +159,14 @@ $("#hasIron").change(function() {
     $("#ballot_set").find(".scoresheet input").attr("disabled", true);
   }
 
-  $("#id_forfeits_0").click(function() {
+  $("#id_forfeit_0").click(function() {
     disable_required();
   });
-  $("#id_forfeits_1").click(function() {
+  $("#id_forfeit_1").click(function() {
     disable_required();
   });
 
-  if ($("#id_forfeits_0").is(':checked') || $("#id_forfeits_1").is(':checked')) {
+  if ($("#id_forfeit_0").is(':checked') || $("#id_forfeit_1").is(':checked')) {
     // For when reloading initial form data
     disable_required();
   }

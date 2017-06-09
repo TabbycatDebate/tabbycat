@@ -9,8 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 
-from .result_old import ForfeitBallotSet
-from .result import VotingDebateResult
+from .result import ForfeitDebateResult, VotingDebateResult
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +117,7 @@ class ReplyScoreField(BaseScoreField):
 # Result/ballot forms
 # ==============================================================================
 
-class BallotSetForm(forms.Form):
+class ResultSubmissionForm(forms.Form):
     """Form for data entry for a single ballot set. Responsible for presenting
     the part that looks like a ballot, i.e. speaker names and scores for each
     adjudicator. Not responsible for controls that submit the form or anything
@@ -149,11 +148,9 @@ class BallotSetForm(forms.Form):
         self.score_step = self.tournament.pref('score_step')
         self.reply_score_step = self.tournament.pref('reply_score_step')
 
-        self.forfeit_declared = False
-
         self.has_tournament_password = kwargs.pop('password', False) and self.tournament.pref('public_use_password')
 
-        super(BallotSetForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.POSITIONS = self.tournament.POSITIONS
         self.LAST_SUBSTANTIVE_POSITION = self.tournament.LAST_SUBSTANTIVE_POSITION  # also used in template
@@ -265,19 +262,9 @@ class BallotSetForm(forms.Form):
                     self.fields[self._fieldname_score(adj, side, pos)].required = False
             if self.using_motions:
                 self.fields['motion'].required = False
-            if self.ballotsub.forfeit is not None:
-                self.forfeit_declared = True
-                if self.ballotsub.forfeit == self.debate.aff_dt:
-                    forfeiter = "aff_forfeit"
-                elif self.ballotsub.forfeit == self.debate.neg_dt:
-                    forfeiter = "neg_forfeit"
-                else:
-                    raise ValueError('Forfeit was declared but was neither set as the aff or neg team')
-            else:
-                forfeiter = None
 
-            choices = (('aff_forfeit', 'Forfeit by the Affirmative',), ('neg_forfeit', 'Forfeit by the Negative',))
-            self.fields['forfeits'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, initial=forfeiter, required=False)
+            choices = [(side, "Forfeit by the {}".format(self._LONG_NAME[side])) for side in self.SIDES]
+            self.fields['forfeit'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, required=False)
 
     def _initial_data(self):
         """Generates dictionary of initial form data."""
@@ -308,10 +295,10 @@ class BallotSetForm(forms.Form):
         # But if there is only one motion and no motion is currently stored in
         # the database for this round, then default to the only motion there is.
         if self.using_motions:
-            if not self.debate.motion and self.motions.count() == 1:
+            if not self.ballotsub.motion and self.motions.count() == 1:
                 initial['motion'] = self.motions.get()
             else:
-                initial['motion'] = self.debate.motion
+                initial['motion'] = self.ballotsub.motion
             for side in self.SIDES:
                 initial[self._fieldname_motion_veto(side)] = self.ballotsub.debateteammotionpreference_set.filter(
                         debate_team__position=VotingDebateResult.SIDE_KEY_MAP_REVERSE[side],
@@ -328,6 +315,11 @@ class BallotSetForm(forms.Form):
                     score = result.get_score(adj, side, pos)
                     coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
                     initial[self._fieldname_score(adj, side, pos)] = coerce_for_ui(score)
+
+        if self.using_forfeits:
+            forfeiter = self.ballotsub.teamscore_set.filter(forfeit=True, win=False).first()
+            if forfeiter:
+                initial['forfeit'] = VotingDebateResult.SIDE_KEY_MAP[forfeiter.debate_team.position]
 
         return initial
 
@@ -354,8 +346,8 @@ class BallotSetForm(forms.Form):
 
         if 'password' in self.fields:
             order.append('password')
-        if 'forfeits' in self.fields:
-            order.append('forfeits')
+        if 'forfeit' in self.fields:
+            order.append('forfeit')
 
         order.extend(['discarded', 'confirmed', 'debate_result_status'])
 
@@ -379,9 +371,6 @@ class BallotSetForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
 
-        if cleaned_data.get('forfeits') in ["aff_forfeit", "neg_forfeit"]:
-            self.forfeit_declared = True
-
         if cleaned_data.get('discarded') and cleaned_data.get('confirmed'):
             for field in ('discarded', 'confirmed'):
                 self.add_error(field, forms.ValidationError(
@@ -395,7 +384,7 @@ class BallotSetForm(forms.Form):
                 code='status_confirm'
             ))
 
-        if not self.forfeit_declared:
+        if cleaned_data.get('forfeit') is None:
             for adj in self.adjudicators:
                 # Check that it was not a draw.
                 try:
@@ -480,35 +469,36 @@ class BallotSetForm(forms.Form):
                 self.debate.confirmed_ballot.confirmed = False
                 self.debate.confirmed_ballot.save()
 
-        # 2. Check if there was a forfeit
-        if self.using_forfeits and self.forfeit_declared:
-            if self.cleaned_data['forfeits'] == "aff_forfeit":
-                forfeiter = self.debate.aff_dt
-            if self.cleaned_data['forfeits'] == "neg_forfeit":
-                forfeiter = self.debate.neg_dt
-            ballotset = ForfeitBallotSet(self.ballotsub, forfeiter)
-            # TODO forfeits currently broken, need to fix
+        # 2. Save ballot submission
+        self.ballotsub.discarded = self.cleaned_data['discarded']
+        self.ballotsub.confirmed = self.cleaned_data['confirmed']
+        self.ballotsub.save()
 
+        # 3. Check if there was a forfeit
+        if self.using_forfeits and self.cleaned_data['forfeit'] is not None:
+            result = ForfeitDebateResult(self.ballotsub, self.cleaned_data['forfeit'])
         else:
             result = VotingDebateResult(self.ballotsub)
 
-        # 3. Save the sides
+        # 4. Save the sides
         if self.choosing_sides:
             result.set_sides(*self.cleaned_data['choose_sides'])
 
-        # 4. Save motions
+        # 5. Save motions
         if self.using_motions:
-            self.debate.motion = self.cleaned_data['motion']
+            self.ballotsub.motion = self.cleaned_data['motion']
 
         if self.using_vetoes:
             for side in self.SIDES:
                 motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
-                self.ballotsub.debateteammotionpreference_set.update_or_create(
-                        debate_team__position=VotingDebateResult.SIDE_KEY_MAP_REVERSE[side],
-                        preference=3, defaults=dict(motion=motion_veto))
+                if motion_veto:
+                    debate_team = result.debateteams[side]
+                    self.ballotsub.debateteammotionpreference_set.update_or_create(
+                        debate_team=debate_team, preference=3,
+                        defaults=dict(motion=motion_veto))
 
-        # 5. Save speaker fields
-        if not self.forfeit_declared:
+        # 6. Save speaker fields
+        if self.cleaned_data['forfeit'] is None:
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 result.set_speaker(side, pos, speaker)
@@ -517,11 +507,6 @@ class BallotSetForm(forms.Form):
                 for adj in self.adjudicators:
                     score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
                     result.set_score(adj, side, pos, score)
-
-        # 6. Save status fields
-        self.ballotsub.discarded = self.cleaned_data['discarded']
-        self.ballotsub.confirmed = self.cleaned_data['confirmed']
-        self.ballotsub.save()
 
         result.save()
 

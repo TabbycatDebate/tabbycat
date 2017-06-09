@@ -6,8 +6,8 @@ given in the debate. They do not deal with metadata (like motions), only scores
 and results. These classes track team and speaker identities, so that they can
 save them to the database.
 
-These classes never read TeamScore objects. When loading existing results, they
-rely on scoresheets, which in turn rely on SpeakerScoreByAdj (for voting
+These classes never read TeamScore instances. When loading existing results,
+they rely on scoresheets, which in turn rely on SpeakerScoreByAdj (for voting
 decisions) or SpeakerScore (for consensus decisions) to calculate results.
 However, these classes do *save* TeamScore objects, overwriting existing objects
 if necessary, so that other parts of Tabbycat (e.g., standings) don't have to
@@ -16,7 +16,9 @@ recalculate them.
 A debate result class is associated with a ballot submission, not a debate. This
 allows multiple versions of the result to be retained for a single debate, which
 helps avoid data loss when multiple results are (presumably erroneously)
-submitted.
+submitted. However, these classes do not edit or save the BallotSubmission
+instances; the instance passed to it is used only for looking up related
+objects.
 
 Notes on terminology:
  - "Position" in this file always means speaker position as a number. Replies
@@ -68,6 +70,13 @@ class BaseDebateResult:
         buffers are of the correct form, and raises an `AssertionError` if they
         are not. (It does not check for completeness, only form.)
 
+    Debate result classes don't edit BallotSubmission instances themselves, only
+    objects related to them. Therefore, when saving, this class does NOT call
+    `self.ballotsub.save()`. It is the responsibility of the caller to save the
+    BallotSubmission. Because this class saves related objects, new
+    BallotSubmission instances must have been saved to the database before the
+    debate result is saved.
+
     Subclasses should extend these functions as necessary to accommodate the
     additional buffers they add to the class.
 
@@ -89,7 +98,7 @@ class BaseDebateResult:
         # exclude POSITION_UNALLOCATED: you can't assign scores until sides are allocated
     }
     SIDE_KEY_MAP_REVERSE = {v: k for k, v in SIDE_KEY_MAP.items()}
-    TEAMSCORE_FIELDS = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible']
+    TEAMSCORE_FIELDS = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible', 'forfeit']
 
     def __init__(self, ballotsub, load=True):
         """Constructor.
@@ -186,7 +195,6 @@ class BaseDebateResult:
         """Populates the buffer from the database. Subclasses should extend this
         method as necessary."""
         self.load_debateteams()
-        self.load_speakers()
 
     def load_debateteams(self):
         debateteams = self.debate.debateteam_set.filter(
@@ -541,10 +549,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
 
     @_requires_decision(None)
     def teamscorefield_points(self, side):
-        if side == self._winner:
-            return 1
-        else:
-            return 0
+        return int(side == self._winner)
 
     @_requires_decision(None)
     def teamscorefield_win(self, side):
@@ -575,3 +580,22 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
 
     def teamscorefield_votes_possible(self, side):
         return len(self.scoresheets)
+
+
+class ForfeitDebateResult(BaseDebateResult):
+    # This is WADL-specific for now
+
+    def __init__(self, ballotsub, forfeiter, load=True):
+        super().__init__(ballotsub, load=False) # never load from database
+        self.forfeiter = forfeiter
+        if load:
+            self.full_load()
+
+    def teamscorefield_points(self, side):
+        return int(side != self.forfeiter)
+
+    def teamscorefield_win(self, side):
+        return side != self.forfeiter
+
+    def teamscorefield_forfeit(self, side):
+        return True

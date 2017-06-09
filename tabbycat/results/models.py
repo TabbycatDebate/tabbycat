@@ -128,8 +128,12 @@ class BallotSubmission(Submission):
                     'round': self.debate.round,
                     'motion': self.motion.reference,
                     'motion_round': self.motion.round})
+
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
+
+        if self.forfeit is not None and self.forfeit.debate != self.debate:
+            raise ValidationError(_("The forfeiter must be a team in the debate."))
 
 
 class SpeakerScoreByAdj(models.Model):
