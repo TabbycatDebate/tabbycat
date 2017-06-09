@@ -547,69 +547,11 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
 class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
-    # def post(self, request, *args, **kwargs):
-    #     existing_debate_ids = [int(a.replace('debate_', ''))
-    #                            for a in list(request.POST.keys())
-    #                            if a.startswith('debate_')]
+    def post(self, request, *args, **kwargs):
 
-    #     for debate_id in existing_debate_ids:
-    #         try:
-    #             debate = Debate.objects.get(id=debate_id)
-    #         except Debate.DoesNotExist:
-    #             # When trying to save a blank debate (ie with no aff/neg)
-    #             # multiple times there is no corresponding object
-    #             continue
-
-    #         new_aff_id = request.POST.get(
-    #             'aff_%s' % debate_id).replace('team_', '')
-    #         new_neg_id = request.POST.get(
-    #             'neg_%s' % debate_id).replace('team_', '')
-
-    #         if new_aff_id and new_neg_id:
-    #             DebateTeam.objects.filter(debate=debate).delete()
-    #             debate.save()
-
-    #             new_aff_team = Team.objects.get(id=int(new_aff_id))
-    #             new_aff_dt = DebateTeam(debate=debate,
-    #                                     team=new_aff_team,
-    #                                     position=DebateTeam.POSITION_AFFIRMATIVE)
-    #             new_aff_dt.save()
-
-    #             new_aff_team = Team.objects.get(id=int(new_neg_id))
-    #             new_neg_dt = DebateTeam(debate=debate,
-    #                                     team=new_aff_team,
-    #                                     position=DebateTeam.POSITION_NEGATIVE)
-    #             new_neg_dt.save()
-    #         else:
-    #             # If there's blank debates we need to delete those
-    #             debate.delete()
-
-    #     new_debate_ids = [int(a.replace('new_debate_', ''))
-    #                       for a in list(request.POST.keys())
-    #                       if a.startswith('new_debate_')]
-
-    #     for debate_id in new_debate_ids:
-    #         new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_',
-    #                                                                     '')
-    #         new_neg_id = request.POST.get('neg_%s' % debate_id).replace('team_',
-    #                                                                     '')
-
-    #         if new_aff_id and new_neg_id:
-    #             debate = Debate(round=self.get_round(), venue=None)
-    #             debate.save()
-
-    #             aff_team = Team.objects.get(id=int(new_aff_id))
-    #             neg_team = Team.objects.get(id=int(new_neg_id))
-    #             new_aff_dt = DebateTeam(debate=debate,
-    #                                     team=aff_team,
-    #                                     position=DebateTeam.POSITION_AFFIRMATIVE)
-    #             new_neg_dt = DebateTeam(debate=debate,
-    #                                     team=neg_team,
-    #                                     position=DebateTeam.POSITION_NEGATIVE)
-    #             new_aff_dt.save()
-    #             new_neg_dt.save()
-
-    #     return HttpResponse("ok")
+        # TODO: refactor to do individual updates
+        self.log_action()
+        return HttpResponse("ok")
 
 
 # ==============================================================================

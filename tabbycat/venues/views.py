@@ -65,24 +65,11 @@ class SaveVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, View):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
-    # def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
 
-    #     def v_id(a):
-    #         try:
-    #             return int(request.POST[a].split('_')[1])
-    #         except IndexError:
-    #             return None
-
-    #     data = [(int(a.split('_')[1]), v_id(a)) for a in list(request.POST.keys())]
-
-    #     debates = Debate.objects.in_bulk([d_id for d_id, _ in data])
-    #     venues = Venue.objects.in_bulk([v_id for _, v_id in data])
-    #     for debate_id, venue_id in data:
-    #         debates[debate_id].venue = venues[venue_id] if venue_id is not None else None
-    #         debates[debate_id].save()
-
-    #     self.log_action()
-    #     return HttpResponse("ok")
+        # TODO: refactor to be incremental updates
+        self.log_action()
+        return HttpResponse("ok")
 
 
 class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
