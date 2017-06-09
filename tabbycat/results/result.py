@@ -53,10 +53,10 @@ class ResultError(RuntimeError):
 
 
 class BaseDebateResult:
-    """Base class for debate results.
+    """Base class for debate result.
 
-    The base class implements management of side allocations, speaker identities
-    and ghosts. Other functions are left to subclasses.
+    The base class implements management of debate teams, side allocations and
+    team score saving.
 
     The loading process calls three functions in turn:
       - First, it calls `self.init_blank_buffer()`, which should initialize
@@ -111,7 +111,6 @@ class BaseDebateResult:
         # side are to be extended to BP later
         self.sides = ['aff', 'neg']
         self.side_db_values = [self.SIDE_KEY_MAP_REVERSE[side] for side in self.sides]
-        self.positions = self.tournament.POSITIONS
 
         if load:
             self.full_load()
@@ -133,16 +132,13 @@ class BaseDebateResult:
         """Initialises the data attributes. External initialisers might find
         this helpful. The `self.sides` and `self.positions` attributes must be
         set prior to calling this function. Subclasses should extend this
-        method as necessary."""
-
+        method as necessary.
+        """
         try:
             self.debateteams = dict.fromkeys(self.sides, None)
-            self.speakers = {side: dict.fromkeys(self.positions, None) for side in self.sides}
-            self.ghosts = {side: dict.fromkeys(self.positions, False) for side in self.sides}
-
         except AttributeError:
-            if not hasattr(self, 'sides') or not hasattr(self, 'positions'):
-                raise AttributeError("The DebateResult instance must have sides and positions attributes before init_blank_buffer() is called.")
+            if not hasattr(self, 'sides'):
+                raise AttributeError("The DebateResult instance must have a sides attribute before init_blank_buffer() is called.")
             else:
                 raise
 
@@ -150,13 +146,7 @@ class BaseDebateResult:
         """Raise an AssertionError if there is some problem with the data
         structure. External initialisers might find this helpful. Subclasses
         should extend this method as necessary."""
-
         assert set(self.debateteams) == set(self.sides)
-        assert set(self.speakers) == set(self.sides)
-        assert set(self.ghosts) == set(self.sides)
-        for side in self.sides:
-            assert set(self.speakers[side]) == set(self.positions)
-            assert set(self.ghosts[side]) == set(self.positions)
 
     def is_complete(self):
         """Returns True if all elements of the results have been populated;
@@ -172,8 +162,6 @@ class BaseDebateResult:
 
         if any(self.debateteams[side] is None for side in self.sides):
             return False
-        if any(self.speakers[s][p] is None for s in self.sides for p in self.positions):
-            return False
 
         return True
 
@@ -187,10 +175,6 @@ class BaseDebateResult:
     def identical(self, other):
         """Returns True of all fields are the same as those in `other`."""
         if self.debateteams != other.debateteams:
-            return False
-        if self.speakers != other.speakers:
-            return False
-        if self.ghosts != other.ghosts:
             return False
         return True
 
@@ -212,20 +196,6 @@ class BaseDebateResult:
             side = self.SIDE_KEY_MAP[dt.position]
             self.debateteams[side] = dt
 
-    def load_speakers(self):
-        """Loads team and speaker identities from the database into the buffer."""
-
-        speakerscores = self.ballotsub.speakerscore_set.filter(
-            debate_team__debate=self.debate,
-            debate_team__position__in=self.side_db_values,
-            position__in=self.positions,
-        ).select_related('speaker')
-
-        for ss in speakerscores:
-            side = self.SIDE_KEY_MAP[ss.debate_team.position]
-            self.speakers[side][ss.position] = ss.speaker
-            self.ghosts[side][ss.position] = ss.ghost
-
     def save(self):
         """Saves to the database."""
 
@@ -239,15 +209,9 @@ class BaseDebateResult:
                 get_field = getattr(self, 'teamscorefield_%s' % field, None)
                 if get_field is not None:
                     teamscorefields[field] = get_field(side)
+
             self.ballotsub.teamscore_set.update_or_create(debate_team=dt,
                     defaults=teamscorefields)
-
-            for pos in self.positions:
-                speaker = self.speakers[side][pos]
-                is_ghost = self.ghosts[side][pos]
-                score = self.get_speaker_score(side, pos)
-                self.ballotsub.speakerscore_set.update_or_create(debate_team=dt,
-                    position=pos, defaults=dict(speaker=speaker, score=score, ghost=is_ghost))
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval
@@ -271,6 +235,93 @@ class BaseDebateResult:
         self.debate._populate_teams()  # refresh
         self.load_debateteams()  # refresh
 
+
+class BaseDebateResultWithSpeakers(BaseDebateResult):
+    """Adds management of speaker identities, ghosts and scores."""
+
+    def __init__(self, ballotsub, load=True):
+        super().__init__(ballotsub, load=False)
+        self.positions = self.tournament.POSITIONS
+        if load:
+            self.full_load()
+
+    # --------------------------------------------------------------------------
+    # Management methods
+    # --------------------------------------------------------------------------
+
+    def init_blank_buffer(self):
+        super().init_blank_buffer()
+        try:
+            self.speakers = {side: dict.fromkeys(self.positions, None) for side in self.sides}
+            self.ghosts = {side: dict.fromkeys(self.positions, False) for side in self.sides}
+        except AttributeError:
+            if not hasattr(self, 'positions'):
+                raise AttributeError("The DebateResult instance must a positions attribute before init_blank_buffer() is called.")
+            else:
+                raise
+
+    def assert_loaded(self):
+        super().assert_loaded()
+        assert set(self.speakers) == set(self.sides)
+        assert set(self.ghosts) == set(self.sides)
+        for side in self.sides:
+            assert set(self.speakers[side]) == set(self.positions)
+            assert set(self.ghosts[side]) == set(self.positions)
+
+    def is_complete(self):
+        if not super().is_complete():
+            return False
+        if any(self.speakers[s][p] is None for s in self.sides for p in self.positions):
+            return False
+        return True
+
+    def identical(self, other):
+        if not super().identical(other):
+            return False
+        if self.speakers != other.speakers:
+            return False
+        if self.ghosts != other.ghosts:
+            return False
+        return True
+
+    # --------------------------------------------------------------------------
+    # Load and save methods
+    # --------------------------------------------------------------------------
+
+    def load_from_db(self):
+        super().load_from_db()
+        self.load_speakers()
+
+    def load_speakers(self):
+        """Loads team and speaker identities from the database into the buffer."""
+
+        speakerscores = self.ballotsub.speakerscore_set.filter(
+            debate_team__debate=self.debate,
+            debate_team__position__in=self.side_db_values,
+            position__in=self.positions,
+        ).select_related('speaker')
+
+        for ss in speakerscores:
+            side = self.SIDE_KEY_MAP[ss.debate_team.position]
+            self.speakers[side][ss.position] = ss.speaker
+            self.ghosts[side][ss.position] = ss.ghost
+
+    def save(self):
+        super().save()
+
+        for side in self.sides:
+            dt = self.debateteams[side]
+            for pos in self.positions:
+                speaker = self.speakers[side][pos]
+                is_ghost = self.ghosts[side][pos]
+                score = self.get_speaker_score(side, pos)
+                self.ballotsub.speakerscore_set.update_or_create(debate_team=dt,
+                    position=pos, defaults=dict(speaker=speaker, score=score, ghost=is_ghost))
+
+    # --------------------------------------------------------------------------
+    # Data setting and retrieval
+    # --------------------------------------------------------------------------
+
     def get_speaker(self, side, position):
         return self.speakers[side].get(position)
 
@@ -293,7 +344,7 @@ class BaseDebateResult:
         raise NotImplementedError
 
 
-class VotingDebateResult(BaseDebateResult):
+class VotingDebateResult(BaseDebateResultWithSpeakers):
 
     def __init__(self, ballotsub, load=True):
 
