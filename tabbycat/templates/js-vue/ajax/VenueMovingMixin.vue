@@ -51,8 +51,7 @@ export default {
     },
     processMoveToDebateFromUnused(venue, toDebate) {
       // If moving from unused needed to remove the venue from unallcoated items
-      var index = this.unallocatedItems.indexOf(venue)
-      this.unallocatedItems.splice(index, 1)
+      this.unallocatedItems.splice(this.unallocatedItems.indexOf(venue), 1)
       toDebate.venue = venue
     },
     processMoveToDebateWithoutVenueFromDebate(venue, fromDebate, toDebate) {

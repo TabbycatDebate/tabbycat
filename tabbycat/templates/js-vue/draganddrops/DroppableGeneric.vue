@@ -1,5 +1,5 @@
 <template>
-  <div :class="['vue-droppable', extraCss, { isDroppable: 'vue-is-drag-enter' }]"
+  <div :class="['vue-droppable', extraCss, isDroppable ? 'vue-is-drag-enter' : '']"
        @dragover.prevent @drop="drop"
        @dragenter="dragEnter" @dragleave="dragLeave">
 

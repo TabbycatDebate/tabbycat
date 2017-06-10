@@ -95,7 +95,15 @@ export default {
     },
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
-        return // Moving to debate from that same debate; do nothing
+        // Check that it isn't an in-panel move
+        var thisDebate = this.debatesById[payload.debate]
+        var fromPanellist = _.find(thisDebate.panel, function(panellist) {
+          return panellist.adjudicator.id === payload.adjudicator;
+        })
+        if (assignedPosition === fromPanellist.position) {
+          console.log('move to same position')
+          return // Moving to same debate/position; do nothing
+        }
       }
       this.saveMove(payload.adjudicator, payload.debate, assignedId, assignedPosition)
     },

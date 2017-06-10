@@ -13,8 +13,13 @@ export default {
         return potentialChair.adjudicator
       }
     },
+    getPanellist(debate, adjudicator) {
+      var potentialPanellist = _.find(debate.panel, function(panellist) {
+        return panellist.adjudicator.id === adjudicator.id;
+      })
+      return potentialPanellist
+    },
     saveMove(adjudicatorId, fromDebateId, toDebateId, toPosition=null, dontPushToUnused=false, isSwap=false) {
-      console.log(adjudicatorId, fromDebateId, toDebateId, toPosition)
       var adjudicator = this.allAdjudicatorsById[adjudicatorId]
       var toDebate = this.debatesById[toDebateId]
       var fromDebate = this.debatesById[fromDebateId]
@@ -51,8 +56,7 @@ export default {
               self.processMoveToPanelFromPanel(adjudicator, fromDebate, toDebate, toPosition)
             } else {
               // If being moved to a filled chair we always swap with the previous position
-              console.log('chair to chair')
-              // self.processMoveToCurrentlyFilledChair(adjudicator, fromDebate, toDebate, isSwap)
+              self.processMoveToCurrentlyFilledChair(adjudicator, fromDebate, toDebate, isSwap)
             }
           }
         }
@@ -64,6 +68,7 @@ export default {
         return panellist.adjudicator !== adjudicator
       })
       if (!dontPushToUnused) {
+        // SET STATE: move adjudicator to unused
         this.unallocatedItems.push(adjudicator) // Need to push; not append
       }
     },
@@ -71,21 +76,41 @@ export default {
       // If moving from unused needed to remove the adjudicator from unallcoated items
       var index = this.unallocatedItems.indexOf(adjudicator)
       this.unallocatedItems.splice(index, 1)
+      // SET STATE: add current panellist
       toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
     },
     processMoveToPanelFromPanel(adjudicator, fromDebate, toDebate, toPosition) {
       // And trigger a save to remove them from their old position
-      this.saveMove(adjudicator.id, fromDebate.id, 'unused', 'U', true)
-      // If moving from an existing debate panel add the adj
-      toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
+      if (fromDebate !== toDebate) {
+        // If moving within a debate no need to move to unused; queries will do it for us
+        this.saveMove(adjudicator.id, fromDebate.id, 'unused', 'U', true)
+        // SET STATE: If moving from an existing debate panel add the adj
+        toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
+      } else {
+        // SET STATE: If moving within an existing debate panel just change the position
+        var fromPanellist = this.getPanellist(toDebate, adjudicator)
+        fromPanellist.position = toPosition
+      }
     },
     processMoveToCurrentlyFilledChair(adjudicator, fromDebate, toDebate, isSwap) {
       // If moving from one chair position to another chair position; swap them
       // The isSwap override is here to prevent never ending recursive recalls
       // If moving from an existing debate into a debate with a venue; do a swap
+      var toDebateChair = this.getDebateChair(toDebate);
       if (!isSwap) {
-        this.saveMove(toDebate.venue.id, toDebate.id, fromDebate.id, false, true)
+        var fromPanellist = this.getPanellist(fromDebate, adjudicator)
+        if (fromDebate !== toDebate) {
+          // Remove existing chair them from their old position
+          this.saveMove(adjudicator.id, fromDebate.id, 'unused', 'U', true)
+        } else {
+          // If moving within a debate shouldn't issue another request; id will overrwrite
+          // Just remove it from the data
+          toDebate.panel.splice(toDebate.panel.indexOf(fromPanellist), 1)
+        }
+        // Move current chair to the old position
+        this.saveMove(toDebateChair.id, toDebate.id, fromDebate.id, fromPanellist.position, false, true)
       }
+      // SET STATE: cadd current chair
       toDebate.panel.push({ 'adjudicator': adjudicator, 'position': 'C' })
     },
   }
