@@ -33,7 +33,7 @@ urlpatterns = [
         name='draw-matchups-edit'),
     url(r'^round/(?P<round_seq>\d+)/matchups/save/$',
         views.SaveDrawMatchups.as_view(),
-        name='draw-matchups-save'),
+        name='save-debate-teams'),
 
     # Display
     url(r'^round/(?P<round_seq>\d+)/display/$',

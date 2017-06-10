@@ -520,6 +520,7 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
 
 class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'edit_matchups.html'
+    save_url = "save-debate-teams"
 
     def add_team_points(self, team, serialized_team):
         serialized_team['wins'] = team.wins_count

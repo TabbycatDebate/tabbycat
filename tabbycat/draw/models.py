@@ -211,7 +211,7 @@ class Debate(models.Model):
         debate['venue'] = self.venue.serialize() if self.venue else None
         debate['teams'] = [{
             'team': dt.team.serialize(),
-            'position': dt.position
+            'position': dt.get_position_name(self.round.tournament)
         } for dt in self.debateteam_set.all()]
         debate['panel'] = [{
             'adjudicator': adj.serialize(round=self.round),

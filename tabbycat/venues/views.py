@@ -8,13 +8,14 @@ from django.views.generic import TemplateView, View
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from draw.models import Debate
 from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import redirect_tournament, reverse_round, reverse_tournament
+from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import JsonDataResponsePostView, ModelFormSetView, SuperuserRequiredMixin
 
 from .allocator import allocate_venues
-from .models import VenueCategory, VenueConstraint
+from .models import Venue, VenueCategory, VenueConstraint
 
 
 class VenueAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
@@ -27,10 +28,8 @@ class VenueAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
 class EditVenuesView(VenueAllocationViewBase, TemplateView):
 
     template_name = "edit_venues.html"
-
-    def annotate_round_info(self, round_info):
-        round_info['autoUrl'] = reverse_round('venues-auto-allocate', self.get_round())
-        return round_info
+    auto_url = "venues-auto-allocate"
+    save_url = "save-debate-venues"
 
     def get_context_data(self, **kwargs):
         vcs = VenueConstraint.objects.all()
@@ -66,8 +65,20 @@ class SaveVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
     def post(self, request, *args, **kwargs):
+        venue = Venue.objects.get(pk=request.POST.get('venue'))
+        debate_from = Debate.objects.get(pk=request.POST.get('debate_from'))
+        debate_to = Debate.objects.get(pk=request.POST.get('debate_to'))
 
-        # TODO: refactor to be incremental updates
+        if debate_from.venue.id is not venue.id:
+            return HttpResponseBadRequest("Error: venue was not on that debate")
+
+        debate_from.venue = None
+        debate_from.save()
+
+        if debate_to is not 'unused':
+            debate_to.venue = venue
+            debate_to.save()
+
         self.log_action()
         return HttpResponse("ok")
 

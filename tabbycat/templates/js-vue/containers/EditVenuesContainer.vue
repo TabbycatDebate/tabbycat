@@ -46,11 +46,12 @@
 
 <script>
 import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
+import AjaxMixin from '../draganddrops/AjaxMixin.vue'
 import DraggableVenue from '../draganddrops/DraggableVenue.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [DrawContainerMixin],
+  mixins: [AjaxMixin, DrawContainerMixin],
   components: { DraggableVenue },
   props: { venueConstraints: Array },
   computed: {
@@ -76,8 +77,14 @@ export default {
         return // Moving to unused from unused; do nothing
       }
       var venue = this.debatesById[payload.debate].venue
-      this.debatesById[payload.debate].venue = null
-      this.unallocatedItems.push(venue) // Need to push; not append
+      var debate = this.debatesById[payload.debate]
+      var message = 'moved venue ' + venue.name + ' to unused'
+      var payload = { venue: venue.id, debate_from: debate.id, debate_to: 'unused' }
+      this.ajaxSave(this.roundInfo.savedUrl, payload, message, function() {
+        debate.venue = null // Update modal data
+        this.unallocatedItems.push(venue) // Need to push; not append
+        console.log('Updated data: importance for ' + debate.id + ' to ' + importance)
+      })
     },
     createAutoAllocation: function(event) {
       var self = this

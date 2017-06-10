@@ -35,13 +35,13 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
 class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):
 
     template_name = 'edit_adjudicators.html'
+    auto_url = "adjudicators-auto-allocate"
+    save_url = "save-debate-panels"
 
     def annotate_round_info(self, round_info):
         t = self.get_tournament()
         r = self.get_round()
-        round_info['autoUrl'] = reverse_round('adjudicators-auto-allocate', r)
         round_info['updateImportanceURL'] = reverse_round('save-debate-importance', r)
-        round_info['updatePanelURL'] = reverse_round('save-debate-panel', r)
         round_info['scoreMin'] = t.pref('adj_min_score')
         round_info['scoreMax'] = t.pref('adj_max_score')
         round_info['scoreForVote'] = t.pref('adj_min_voting_score')
@@ -105,11 +105,10 @@ class SaveDebateImportance(SaveDebateInfo):
     def post(self, request, *args, **kwargs):
         debate_id = request.POST.get('debate_id')
         debate_importance = request.POST.get('importance')
-
         debate = Debate.objects.get(pk=debate_id)
         debate.importance = debate_importance
         debate.save()
-
+        self.log_action()
         return HttpResponse()
 
 
@@ -131,4 +130,5 @@ class SaveDebatePanel(SaveDebateInfo):
                     adjudicator_id=da['id'], defaults={'type': da['position']})
             logger.info("%s %s" % ("created" if created else "updated", debateadj))
 
+        self.log_action()
         return HttpResponse()

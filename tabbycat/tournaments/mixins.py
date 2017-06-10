@@ -329,7 +329,9 @@ class DrawForDragAndDropMixin(RoundMixin):
         round_info = {
             'positions': [get_position_name(round.tournament, "aff", "full").title(),
                           get_position_name(round.tournament, "neg", "full").title()],
-            'backUrl': "TODO",
+            'backUrl': reverse_round('draw', round),
+            'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
+            'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,
             'roundName' : round.abbreviation,
             'roundIsPrelim' : round.is_break_round,
         }
