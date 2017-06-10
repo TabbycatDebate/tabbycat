@@ -32,7 +32,7 @@
         <template slot="svenue"><!-- Hide Venues --></template>
         <template slot="spanel">
           <div class="draw-cell flex-12 vue-droppable-container">
-            <droppable-generic>
+            <droppable-generic :assignment-id="debate.id" assignment-position="C">
               <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'C')"
                 :adjudicator="debateAdjudicator.adjudicator"
                 :key="debateAdjudicator.adjudicator.id"
@@ -40,7 +40,7 @@
             </droppable-generic>
           </div>
           <div class="draw-cell flex-12 vue-droppable-container">
-            <droppable-generic>
+            <droppable-generic :assignment-id="debate.id" assignment-position="P">
               <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'P')"
                 :adjudicator="debateAdjudicator.adjudicator"
                 :key="debateAdjudicator.adjudicator.id"
@@ -48,7 +48,7 @@
             </droppable-generic>
           </div>
           <div class="draw-cell flex-12 vue-droppable-container">
-            <droppable-generic>
+            <droppable-generic :assignment-id="debate.id" assignment-position="T">
               <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'T')"
                 :adjudicator="debateAdjudicator.adjudicator"
                 :key="debateAdjudicator.adjudicator.id"

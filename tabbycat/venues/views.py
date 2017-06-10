@@ -65,17 +65,16 @@ class SaveVenuesView(SaveDragAndDropActionMixin):
     def get_moved_item(self, id):
         return Venue.objects.get(pk=id)
 
-    def check_item(self, debate_from, debate_to, moved_item):
-        if debate_from.venue.id is not moved_item.id:
-            return "Error: venue was not on that debate"
-        return True
-
-    def move_item(self, debate_from, debate_to, moved_venue):
-        debate_from.venue = None
-        debate_from.save() # Delete from moved location
-        if debate_to:
-            debate_to.venue = moved_venue
-            debate_to.save() # Move to new location
+    def move_item(self, moved_to, moved_from, moved_venue):
+        if moved_to:
+            print('moving to')
+            # Move to new location; update it's venue
+            moved_to.venue = moved_venue
+            moved_to.save()
+        else:
+            # Only delete old debate's venue when moving to unused; swaps done in seperate requeest
+            moved_from.venue = None
+            moved_from.save()
         return
 
 

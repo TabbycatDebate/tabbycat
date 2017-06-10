@@ -1,5 +1,4 @@
 <template>
-
   <nav
     @dragover.prevent
     @dragenter="dragEnter"
@@ -11,7 +10,6 @@
     <slot><!-- Container sets unallocated items here --></slot>
 
   </nav>
-
 </template>
 
 <script>

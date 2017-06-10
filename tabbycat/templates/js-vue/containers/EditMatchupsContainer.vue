@@ -24,7 +24,7 @@
       <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
         <template v-for="(position, index) in roundInfo.positions">
           <div class="draw-cell flex-8 vue-droppable-container" :slot="'sposition' + index">
-            <droppable-generic>
+            <droppable-generic :assignment-id="debate.id" assignment-position="position">
               <draggable-team v-if="debate.teams[index].team"
                 :team="debate.teams[index].team" :debate-id="debate.id"></draggable-team>
             </droppable-generic>

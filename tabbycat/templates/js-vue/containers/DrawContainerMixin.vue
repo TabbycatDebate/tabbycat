@@ -30,6 +30,7 @@ export default {
     this.$eventHub.$on('set-slideover', this.setSlideover)
     this.$eventHub.$on('unset-slideover', this.unsetSlideover)
     this.$eventHub.$on('unassign-draggable', this.moveToUnused)
+    this.$eventHub.$on('assign-draggable', this.moveToDebate)
     this.$eventHub.$on('update-allocation', this.updateDebates)
     this.$eventHub.$on('update-unallocated', this.updateUnallocatedItems)
   },

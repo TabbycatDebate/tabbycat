@@ -352,18 +352,25 @@ class SaveDragAndDropActionMixin(SuperuserRequiredMixin, RoundMixin, LogActionMi
     from a given debate; ie venues, teams, or adjudicators. Children must
      implement get_moved_item, check_item, and move_item"""
 
+    def check_item(self, moved_to, moved_from, moved_item):
+        return True
+
+    def get_debate(self, key, request):
+        debate = request.POST.get(key)
+        if debate == 'unused':
+            return None
+        else:
+            return Debate.objects.get(pk=debate)
+
     def post(self, request, *args, **kwargs):
         moved_item = self.get_moved_item(request.POST.get('moved_item'))
-        debate_from = Debate.objects.get(pk=request.POST.get('debate_from'))
-        if request.POST.get('debate_to') == 'unused':
-            debate_to = None
-        else:
-            debate_to = Debate.objects.get(pk=request.POST.get('debate_to'))
+        moved_to = self.get_debate('moved_to', request)
+        moved_from = self.get_debate('moved_from', request)
 
-        check_message = self.check_item(debate_from, debate_to, moved_item)
+        check_message = self.check_item(moved_to, moved_from, moved_item)
         if check_message is not True:
             HttpResponseBadRequest(check_message)
 
-        self.move_item(debate_from, debate_to, moved_item) # Save changes
+        self.move_item(moved_to, moved_from, moved_item) # Save changes
         self.log_action()
         return HttpResponse()

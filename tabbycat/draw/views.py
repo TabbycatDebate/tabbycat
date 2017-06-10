@@ -549,28 +549,28 @@ class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View)
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
     def post(self, request, *args, **kwargs):
-    #     team = Team.objects.get(pk=request.POST.get('team'))
-    #     debate_from = Debate.objects.get(pk=request.POST.get('debate_from'))
-    #     if request.POST.get('debate_to') == 'unused':
-    #         debate_to = None
-    #     else:
-    #         debate_to = Debate.objects.get(pk=request.POST.get('debate_to'))
+        #     team = Team.objects.get(pk=request.POST.get('team'))
+        #     debate_from = Debate.objects.get(pk=request.POST.get('debate_from'))
+        #     if request.POST.get('debate_to') == 'unused':
+        #         debate_to = None
+        #     else:
+        #         debate_to = Debate.objects.get(pk=request.POST.get('debate_to'))
 
-    #     from_allocation = DebateTeam.objects.get(
-    #             debate=debate_from, team=team)
-    #     if not from_allocation:
-    #         return HttpResponseBadRequest("Error: team was not on that debate")
+        #     from_allocation = DebateTeam.objects.get(
+        #             debate=debate_from, team=team)
+        #     if not from_allocation:
+        #         return HttpResponseBadRequest("Error: team was not on that debate")
 
-    #     # Delete from moved location
-    #     from_allocation.delete()
-    #     # Move to new location
-    #     if debate_to:
-    #         new_allocation = DebateTeam.objects.create(
-    #                 debate=debate_to, team=team)
-    #         new_allocation.save()
+        #     # Delete from moved location
+        #     from_allocation.delete()
+        #     # Move to new location
+        #     if debate_to:
+        #         new_allocation = DebateTeam.objects.create(
+        #                 debate=debate_to, team=team)
+        #         new_allocation.save()
 
-    #     # TODO: refactor to do individual updates
-    #     self.log_action()
+        #     # TODO: refactor to do individual updates
+        #     self.log_action()
         return HttpResponse("ok")
 
 
