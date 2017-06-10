@@ -116,19 +116,14 @@ class SaveDebatePanel(SaveDragAndDropActionMixin):
     def get_moved_item(self, id):
         return Adjudicator.objects.get(pk=id)
 
-    def check_item(self, debate_from, debate_to, moved_adjudicator):
-        from_allocation = DebateAdjudicator.objects.get(
-                debate=debate_from, adjudicator=moved_adjudicator)
-        if not from_allocation:
-            return "Error: adjudicator was not on that debate"
-        return True
-
-    def move_item(self, debate_from, debate_to, moved_adjudicator):
-        from_allocation = DebateAdjudicator.objects.get(
-            debate=debate_from, adjudicator=moved_adjudicator)
-        from_allocation.delete() # Delete from moved location
-        if debate_to:
+    def move_item(self, moved_to, moved_from, moved_adjudicator, request):
+        if moved_to:
+            # Move to new location; update it's venue
+            position = request.POST.get('position')
             new_allocation = DebateAdjudicator.objects.create(
-                debate=debate_to, adjudicator=moved_adjudicator)
+                debate=moved_to, adjudicator=moved_adjudicator, type=position)
             new_allocation.save() # Move to new location
+        else:
+            # Only delete old debate's venue when moving to unused; swaps done in seperate requeest
+            DebateAdjudicator.objects.get(debate=moved_from, adjudicator=moved_adjudicator).delete()
         return

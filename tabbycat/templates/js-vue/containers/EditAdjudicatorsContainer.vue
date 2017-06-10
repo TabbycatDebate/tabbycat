@@ -31,29 +31,19 @@
         </div>
         <template slot="svenue"><!-- Hide Venues --></template>
         <template slot="spanel">
-          <div class="draw-cell flex-12 vue-droppable-container">
-            <droppable-generic :assignment-id="debate.id" assignment-position="C">
-              <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'C')"
-                :adjudicator="debateAdjudicator.adjudicator"
-                :key="debateAdjudicator.adjudicator.id"
-                :debate-id="debate.id"></draggable-adjudicator>
-            </droppable-generic>
-          </div>
-          <div class="draw-cell flex-12 vue-droppable-container">
-            <droppable-generic :assignment-id="debate.id" assignment-position="P">
-              <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'P')"
-                :adjudicator="debateAdjudicator.adjudicator"
-                :key="debateAdjudicator.adjudicator.id"
-                :debate-id="debate.id"></draggable-adjudicator>
-            </droppable-generic>
-          </div>
-          <div class="draw-cell flex-12 vue-droppable-container">
-            <droppable-generic :assignment-id="debate.id" assignment-position="T">
-              <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, 'T')"
-                :adjudicator="debateAdjudicator.adjudicator"
-                :key="debateAdjudicator.adjudicator.id"
-                :debate-id="debate.id"></draggable-adjudicator>
-            </droppable-generic>
+          <div class="draw-cell panel-container flex-36 flex-horizontal">
+            <template v-for="position in adjPositions">
+              <div :class="['vue-droppable-container', position === 'P' ? 'flex-5' : 'flex-3']">
+                <droppable-generic :assignment-id="debate.id"
+                                   :assignment-position="position"
+                                   :extra-css="'flex-horizontal'">
+                  <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, position)"
+                    :adjudicator="debateAdjudicator.adjudicator"
+                    :key="debateAdjudicator.adjudicator.id"
+                    :debate-id="debate.id"></draggable-adjudicator>
+                </droppable-generic>
+              </div>
+            </template>
           </div>
         </template>
       </debate>
@@ -72,6 +62,7 @@
 
 <script>
 import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
+import AdjudicatorMovingMixin from '../ajax/AdjudicatorMovingMixin.vue'
 import HighlightableContainerMixin from '../allocations/HighlightableContainerMixin.vue'
 import AllocationActions from '../allocations/AllocationActions.vue'
 import DebateImportance from '../allocations/DebateImportance.vue'
@@ -79,7 +70,7 @@ import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [DrawContainerMixin, HighlightableContainerMixin],
+  mixins: [AdjudicatorMovingMixin, DrawContainerMixin, HighlightableContainerMixin],
   components: { AllocationActions, DebateImportance, DraggableAdjudicator },
   props: { roundInfo: Object },
   created: function() {
@@ -88,29 +79,31 @@ export default {
   computed: {
     unallocatedAdjsByScore: function() {
       return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
-    }
+    },
+    allAdjudicatorsById: function() {
+      var allDebateAdjudicators = _.flatMap(this.debates, function(debate) {
+        return _.map(debate.panel, function(panellist) {
+          return panellist.adjudicator
+        })
+      })
+      return _.keyBy(allDebateAdjudicators.concat(this.unallocatedItems), 'id')
+    },
   },
   methods: {
     getAdjudicatorsByPosition: function(debate, position) {
       return _.filter(debate.panel, { 'position': position })
     },
+    moveToDebate(payload, assignedId, assignedPosition) {
+      if (payload.debate === assignedId) {
+        return // Moving to debate from that same debate; do nothing
+      }
+      this.saveMove(payload.adjudicator, payload.debate, assignedId, assignedPosition)
+    },
     moveToUnused(payload) {
       if (_.isUndefined(payload.debate)) {
         return // Moving to unused from unused; do nothing
       }
-      var adjudicator = this.adjudicatorsById[payload.adjudicator]
-      var debate = this.debatesById[payload.debate]
-      var message = 'moved adjudicator ' + adjudicator.name + ' to unused'
-      var payload = { moved_item: adjudicator.id, debate_from: debate.id, debate_to: 'unused' }
-      var self = this
-      this.ajaxSave(this.roundInfo.saveUrl, payload, message, function() {
-        var panel = self.debatesById[debate.id].panel // Convenience var
-        // Make changes to the reactive property
-        self.debatesById[debate.id].panel = _.filter(panel, function(da) {
-          return da.adjudicator !== adjudicator
-        })
-        self.unallocatedItems.push(adjudicator) // Need to push; not append
-      })
+      this.saveMove(payload.adjudicator, payload.debate)
     },
     updateImportance: function(debateID, importance) {
       var debate = _.find(this.debates, { 'id': debateID })

@@ -2,7 +2,7 @@
 // Note the data/props/computed setup as per https://vuejs.org/v2/guide/components.html
 // Props are passed down from root; but we need to cast them into data
 // so that it can then mutate them here in response to children
-import AjaxMixin from '../draganddrops/AjaxMixin.vue'
+import AjaxMixin from '../ajax/AjaxMixin.vue'
 import UnallocatedItemsContainer from '../containers/UnallocatedItemsContainer.vue'
 import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
@@ -21,7 +21,8 @@ export default {
     return {
       slideOverItem: null,
       debates: this.initialDebates,
-      unallocatedItems: this.initialUnallocatedItems
+      unallocatedItems: this.initialUnallocatedItems,
+      adjPositions: ["C", "P", "T"] // Used to iterate in templates
     }
   },
   props: ['initialDebates', 'initialUnallocatedItems', 'roundInfo'],

@@ -371,6 +371,6 @@ class SaveDragAndDropActionMixin(SuperuserRequiredMixin, RoundMixin, LogActionMi
         if check_message is not True:
             HttpResponseBadRequest(check_message)
 
-        self.move_item(moved_to, moved_from, moved_item) # Save changes
+        self.move_item(moved_to, moved_from, moved_item, request) # Save changes
         self.log_action()
         return HttpResponse()

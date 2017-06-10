@@ -65,7 +65,7 @@ class SaveVenuesView(SaveDragAndDropActionMixin):
     def get_moved_item(self, id):
         return Venue.objects.get(pk=id)
 
-    def move_item(self, moved_to, moved_from, moved_venue):
+    def move_item(self, moved_to, moved_from, moved_venue, request):
         if moved_to:
             print('moving to')
             # Move to new location; update it's venue

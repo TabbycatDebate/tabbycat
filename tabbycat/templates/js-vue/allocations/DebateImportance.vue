@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import AjaxMixin from '../draganddrops/AjaxMixin.vue'
+import AjaxMixin from '../ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],

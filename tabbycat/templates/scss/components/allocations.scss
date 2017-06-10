@@ -88,6 +88,20 @@
   width: 100px;
 }
 
+.panel-container {
+  .vue-droppable-container {
+    border-right: 2px solid $table-border-color;
+    height: 100%;
+    .vue-droppable {
+      overflow: hidden; // Fix margins issue
+      padding-right: 20px; // Ensure space to drop
+    }
+  }
+  .vue-droppable-container:last-child {
+    border-right: 0;
+  }
+}
+
 //------------------------------------------------------------------------------
 // History tooltip elements
 //------------------------------------------------------------------------------
