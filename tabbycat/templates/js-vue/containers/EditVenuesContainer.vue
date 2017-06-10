@@ -79,11 +79,11 @@ export default {
       var venue = this.debatesById[payload.debate].venue
       var debate = this.debatesById[payload.debate]
       var message = 'moved venue ' + venue.name + ' to unused'
-      var payload = { venue: venue.id, debate_from: debate.id, debate_to: 'unused' }
-      this.ajaxSave(this.roundInfo.savedUrl, payload, message, function() {
+      var payload = { moved_item: venue.id, debate_from: debate.id, debate_to: 'unused' }
+      var self = this
+      this.ajaxSave(this.roundInfo.saveUrl, payload, message, function() {
         debate.venue = null // Update modal data
-        this.unallocatedItems.push(venue) // Need to push; not append
-        console.log('Updated data: importance for ' + debate.id + ' to ' + importance)
+        self.unallocatedItems.push(venue) // Need to push; not append
       })
     },
     createAutoAllocation: function(event) {

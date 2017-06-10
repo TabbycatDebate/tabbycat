@@ -8,17 +8,20 @@ from django.core.urlresolvers import NoReverseMatch
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
-from django.http import HttpResponseRedirect, QueryDict
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 
+from actionlog.mixins import LogActionMixin
+from draw.models import Debate
 from participants.models import Region
 from tournaments.utils import get_position_name
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import TabbycatPageTitlesMixin
+from utils.mixins import SuperuserRequiredMixin, TabbycatPageTitlesMixin
 
 
 from .models import Round, Tournament
@@ -342,3 +345,25 @@ class DrawForDragAndDropMixin(RoundMixin):
         kwargs['vueDebates'] = self.get_draw()
         kwargs['vueRoundInfo'] = self.get_round_info()
         return super().get_context_data(**kwargs)
+
+
+class SaveDragAndDropActionMixin(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
+    """For AJAX issued updates relating to moving a particular object to and
+    from a given debate; ie venues, teams, or adjudicators. Children must
+     implement get_moved_item, check_item, and move_item"""
+
+    def post(self, request, *args, **kwargs):
+        moved_item = self.get_moved_item(request.POST.get('moved_item'))
+        debate_from = Debate.objects.get(pk=request.POST.get('debate_from'))
+        if request.POST.get('debate_to') == 'unused':
+            debate_to = None
+        else:
+            debate_to = Debate.objects.get(pk=request.POST.get('debate_to'))
+
+        check_message = self.check_item(debate_from, debate_to, moved_item)
+        if check_message is not True:
+            HttpResponseBadRequest(check_message)
+
+        self.move_item(debate_from, debate_to, moved_item) # Save changes
+        self.log_action()
+        return HttpResponse()

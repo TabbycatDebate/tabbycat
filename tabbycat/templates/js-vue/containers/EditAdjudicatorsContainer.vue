@@ -98,15 +98,19 @@ export default {
       if (_.isUndefined(payload.debate)) {
         return // Moving to unused from unused; do nothing
       }
-      var draggedAdjudicator = this.adjudicatorsById[payload.adjudicator]
-      var panel = this.debatesById[payload.debate].panel // Convenience var
-      // Make changes to the reactive property
-      this.debatesById[payload.debate].panel = _.filter(panel, function(da) {
-        return da.adjudicator !== draggedAdjudicator
+      var adjudicator = this.adjudicatorsById[payload.adjudicator]
+      var debate = this.debatesById[payload.debate]
+      var message = 'moved adjudicator ' + adjudicator.name + ' to unused'
+      var payload = { moved_item: adjudicator.id, debate_from: debate.id, debate_to: 'unused' }
+      var self = this
+      this.ajaxSave(this.roundInfo.saveUrl, payload, message, function() {
+        var panel = self.debatesById[debate.id].panel // Convenience var
+        // Make changes to the reactive property
+        self.debatesById[debate.id].panel = _.filter(panel, function(da) {
+          return da.adjudicator !== adjudicator
+        })
+        self.unallocatedItems.push(adjudicator) // Need to push; not append
       })
-      this.unallocatedItems.push(draggedAdjudicator) // Need to push; not append
-      // AJAX
-      this.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
     },
     updateImportance: function(debateID, importance) {
       var debate = _.find(this.debates, { 'id': debateID })
@@ -118,7 +122,6 @@ export default {
       var payload = { debate_id: debate.id, importance: importance }
       this.ajaxSave(url, payload, message, function() {
         debate.importance = importance // Update model data
-        console.log('Updated data: importance for ' + debate.id + ' to ' + importance)
       })
     },
   }

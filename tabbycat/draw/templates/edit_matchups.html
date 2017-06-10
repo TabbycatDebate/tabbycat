@@ -5,6 +5,14 @@
 {% block head-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
 {% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
 
+{% block page-alerts %}
+  <div class="alert alert-warning">
+    A debate must always have <strong>all of it's teams slots filled</strong>;
+     changes to matchups here will only save once a debate has <em>all</em> of
+     the teams it needs filled.
+  </div>
+{% endblock %}
+
 {% block content %}
   <div id="vueMount">
 

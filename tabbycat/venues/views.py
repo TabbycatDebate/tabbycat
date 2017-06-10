@@ -2,14 +2,13 @@ import json
 
 from django.contrib import messages
 from django.forms import Select, SelectMultiple, TextInput
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from django.utils.translation import ugettext as _
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from draw.models import Debate
-from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import DrawForDragAndDropMixin, SaveDragAndDropActionMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import JsonDataResponsePostView, ModelFormSetView, SuperuserRequiredMixin
@@ -60,27 +59,24 @@ class AutoAllocateVenuesView(VenueAllocationViewBase, LogActionMixin, JsonDataRe
         return super().post(request, *args, **kwargs)
 
 
-class SaveVenuesView(LogActionMixin, SuperuserRequiredMixin, RoundMixin, View):
-
+class SaveVenuesView(SaveDragAndDropActionMixin):
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
-    def post(self, request, *args, **kwargs):
-        venue = Venue.objects.get(pk=request.POST.get('venue'))
-        debate_from = Debate.objects.get(pk=request.POST.get('debate_from'))
-        debate_to = Debate.objects.get(pk=request.POST.get('debate_to'))
+    def get_moved_item(self, id):
+        return Venue.objects.get(pk=id)
 
-        if debate_from.venue.id is not venue.id:
-            return HttpResponseBadRequest("Error: venue was not on that debate")
+    def check_item(self, debate_from, debate_to, moved_item):
+        if debate_from.venue.id is not moved_item.id:
+            return "Error: venue was not on that debate"
+        return True
 
+    def move_item(self, debate_from, debate_to, moved_venue):
         debate_from.venue = None
-        debate_from.save()
-
-        if debate_to is not 'unused':
-            debate_to.venue = venue
-            debate_to.save()
-
-        self.log_action()
-        return HttpResponse("ok")
+        debate_from.save() # Delete from moved location
+        if debate_to:
+            debate_to.venue = moved_venue
+            debate_to.save() # Move to new location
+        return
 
 
 class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):

@@ -8,10 +8,10 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from breakqual.models import BreakCategory
 from draw.models import Debate
-from participants.models import Region
+from participants.models import Adjudicator, Region
 # from participants.utils import regions_ordered
 from tournaments.models import Round
-from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin
+from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, SaveDragAndDropActionMixin
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
 
 from .allocator import allocate_adjudicators
@@ -36,7 +36,7 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
 
     template_name = 'edit_adjudicators.html'
     auto_url = "adjudicators-auto-allocate"
-    save_url = "save-debate-panels"
+    save_url = "save-debate-panel"
 
     def annotate_round_info(self, round_info):
         t = self.get_tournament()
@@ -103,32 +103,32 @@ class SaveDebateImportance(SaveDebateInfo):
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
     def post(self, request, *args, **kwargs):
-        debate_id = request.POST.get('debate_id')
-        debate_importance = request.POST.get('importance')
-        debate = Debate.objects.get(pk=debate_id)
-        debate.importance = debate_importance
+        debate = Debate.objects.get(pk=request.POST.get('debate_id'))
+        debate.importance = request.POST.get('importance')
         debate.save()
         self.log_action()
         return HttpResponse()
 
 
-class SaveDebatePanel(SaveDebateInfo):
+class SaveDebatePanel(SaveDragAndDropActionMixin):
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
-    def post(self, request, *args, **kwargs):
-        debate_id = request.POST.get('debate_id')
-        debate_panel = json.loads(request.POST.get('panel'))
+    def get_moved_item(self, id):
+        return Adjudicator.objects.get(pk=id)
 
-        to_delete = DebateAdjudicator.objects.filter(debate_id=debate_id).exclude(
-                adjudicator_id__in=[da['id'] for da in debate_panel])
-        for debateadj in to_delete:
-            logger.info("deleted %s" % debateadj)
-        to_delete.delete()
+    def check_item(self, debate_from, debate_to, moved_adjudicator):
+        from_allocation = DebateAdjudicator.objects.get(
+                debate=debate_from, adjudicator=moved_adjudicator)
+        if not from_allocation:
+            return "Error: adjudicator was not on that debate"
+        return True
 
-        for da in debate_panel:
-            debateadj, created = DebateAdjudicator.objects.update_or_create(debate_id=debate_id,
-                    adjudicator_id=da['id'], defaults={'type': da['position']})
-            logger.info("%s %s" % ("created" if created else "updated", debateadj))
-
-        self.log_action()
-        return HttpResponse()
+    def move_item(self, debate_from, debate_to, moved_adjudicator):
+        from_allocation = DebateAdjudicator.objects.get(
+            debate=debate_from, adjudicator=moved_adjudicator)
+        from_allocation.delete() # Delete from moved location
+        if debate_to:
+            new_allocation = DebateAdjudicator.objects.create(
+                debate=debate_to, adjudicator=moved_adjudicator)
+            new_allocation.save() # Move to new location
+        return
