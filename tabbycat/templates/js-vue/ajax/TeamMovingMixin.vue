@@ -1,39 +1,32 @@
 <script>
 import AjaxMixin from '../ajax/AjaxMixin.vue'
+import MovingMixin from '../ajax/MovingMixin.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [AjaxMixin],
+  mixins: [AjaxMixin, MovingMixin],
   methods: {
-    saveMove(teamId, fromDebateId, toDebateId, toPosition=null, dontPushToUnused=false, isSwap=false) {
+    debateCheckIfShouldSave(debate) {
+      var expectedTeams = this.roundInfo.positions.length
+      var hasEnoughTeams = _.keys(debate.teams).length === expectedTeams
+      return hasEnoughTeams
+    },
+    saveMoveForType(teamId, fromDebate, toDebate, toPosition) {
       var team = this.allTeamsById[teamId]
-      var toDebate = this.debatesById[toDebateId]
-      var fromDebate = this.debatesById[fromDebateId]
-
-      if (_.isUndefined(fromDebate)) { // Undefined if coming from unused
-        var from = 'unused'
-      } else {
-        var from = fromDebate.id
-      }
-      if (_.isUndefined(toDebate)) { // Undefined if going to unused
-        var to = 'unused'
-      } else {
-        var to = toDebate.id
-      }
-
-      if (to === 'unused') {
+      // Data Logic
+      if (toDebate === 'unused') {
         var fromPosition = _.findKey(fromDebate.teams, team);
         delete fromDebate.teams[fromPosition]
         this.unallocatedItems.push(team) // Need to push; not append
       }
-      if (from === 'unused') {
+      if (fromDebate === 'unused') {
         if (toDebate.teams[toPosition]) { // If replacing a team
           this.unallocatedItems.push(toDebate.teams[toPosition])
         }
         toDebate.teams[toPosition] = team
         this.unallocatedItems.splice(this.unallocatedItems.indexOf(team), 1)
       }
-      if (to !== 'unused' && from !== 'unused') {
+      if (toDebate !== 'unused' && fromDebate !== 'unused') {
         var fromPosition = _.findKey(fromDebate.teams, team);
         if (toDebate.teams[toPosition]) { // If replacing a team
           fromDebate.teams[fromPosition] = toDebate.teams[toPosition]
@@ -42,28 +35,9 @@ export default {
         }
         toDebate.teams[toPosition] = team
       }
-
-      var expectedTeams = this.roundInfo.positions.length
-      var debatesToSave = []
-      if (to !== 'unused' && _.keys(toDebate.teams).length === expectedTeams) {
-        debatesToSave.push(toDebate)
-      }
-      if (from !== 'unused' && _.keys(fromDebate.teams).length === expectedTeams) {
-        if (fromDebate !== toDebate) {
-          debatesToSave.push(fromDebate)
-        }
-      }
-      var self = this
-      _.forEach(debatesToSave, function(debateToSave) {
-        var message = 'debate teams of ' + self.niceNameForDebate(debateToSave.id)
-        debateToSave.locked = true
-        self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message, function(dataResponse) {
-          // Replace old debate object with new one
-          var oldDebateIndex = self.debates.indexOf(debateToSave)
-          self.debates.splice(oldDebateIndex, 1, dataResponse)
-          console.log("    VUE: Loaded new debate for " + self.niceNameForDebate(dataResponse.id))
-        })
-      })
+      // Saving
+      var debatesToSave = this.determinedDebatesToSave(fromDebate, toDebate)
+      this.postModifiedDebates(debatesToSave, 'debate teams of ')
     },
   }
 }
