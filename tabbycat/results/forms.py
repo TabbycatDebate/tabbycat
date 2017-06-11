@@ -117,7 +117,7 @@ class ReplyScoreField(BaseScoreField):
 # Result/ballot forms
 # ==============================================================================
 
-class ResultSubmissionForm(forms.Form):
+class BallotSetForm(forms.Form):
     """Form for data entry for a single ballot set. Responsible for presenting
     the part that looks like a ballot, i.e. speaker names and scores for each
     adjudicator. Not responsible for controls that submit the form or anything

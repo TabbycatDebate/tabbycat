@@ -25,7 +25,7 @@ from utils.mixins import (CacheMixin, JsonDataResponsePostView, JsonDataResponse
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
-from .forms import ResultSubmissionForm
+from .forms import BallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
@@ -213,7 +213,7 @@ class UnpostponeDebateView(BaseUpdateDebateStatusView):
 class BaseBallotSetView(LogActionMixin, FormView):
     """Base class for views displaying ballot set entry forms."""
 
-    form_class = ResultSubmissionForm
+    form_class = BallotSetForm
     action_log_content_object_attr = 'ballotsub'
 
     def get_context_data(self, **kwargs):
