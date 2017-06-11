@@ -24,10 +24,11 @@
       <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
         <template v-for="position in roundInfo.positions">
           <div class="draw-cell flex-8 vue-droppable-container" :slot="'s-' + position">
-            <droppable-generic :assignment-id="debate.id" :assignment-position="position">
+            <droppable-generic :assignment-id="debate.id"
+                               :assignment-position="position" :locked="debate.locked">
               <draggable-team v-if="debate.teams[position]"
                               :team="debate.teams[position]"
-                              :debate-id="debate.id"></draggable-team>
+                              :debate-id="debate.id" :locked="debate.locked"></draggable-team>
             </droppable-generic>
           </div>
         </template>

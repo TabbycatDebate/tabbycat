@@ -51,6 +51,11 @@
   opacity: .5 !important;
 }
 
+.vue-draggable.locked {
+  cursor: no-drop;
+  opacity: 0.33;
+}
+
 //------------------------------------------------------------------------------
 // Droppables
 //------------------------------------------------------------------------------
@@ -58,7 +63,27 @@
 .vue-droppable {
   background: $gray-lighter;
   min-height: 50px;
-  padding: 0 0 4px 4px; // Draggable items only have top/left padding
+  padding: 0 10px 4px 14px; // Draggable items only have top/left padding
+}
+.vue-droppable.locked {
+  background: #fff;
+  position: relative; // For the spinner
+}
+.vue-droppable-lock-spinner { // Container for a loading spinner
+  position: absolute;
+  z-index: 11;
+  font-size: 25px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: $brand-success;
+  @extend .flex-vertical-center;
+  @extend .flex-horizontal-center;
+  .spinning {
+    width: 25px; // Need a set height/width to it rotates around a central axis
+    height: 24px;
+  }
 }
 
 .draw-cell .vue-droppable {
@@ -78,6 +103,6 @@
 }
 
 .vue-is-drag-enter {
-  background: $state-success-bg;
+  background: $brand-success;
 }
 

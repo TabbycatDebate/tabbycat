@@ -14,7 +14,7 @@ export default {
         },
         success: function(data, textStatus, xhr) {
           self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-          console.log("AJAX: Successful save for " + message)
+          console.log("AJAX: Saved " + message)
           var dataResponse = JSON.parse(data)
           completeFunction(dataResponse)
         },

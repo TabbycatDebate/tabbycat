@@ -9,7 +9,19 @@
 
 export default {
   data: function() { return { dragCounter: 0, isDroppable: false }},
-  props: {  },
+  props: { locked: false },
+  computed: {
+    droppableClasses: function() {
+      if (this.isDroppable && !this.locked) {
+        return "vue-droppable vue-is-drag-enter"
+      }
+      if (this.locked) {
+        return "vue-droppable locked"
+      } else {
+        return "vue-droppable"
+      }
+    },
+  },
   methods: {
     dragEnter: function(event) {
       this.dragCounter++;
@@ -29,6 +41,9 @@ export default {
     },
     drop: function(event) {
       this.dragCounter = 0;
+      if (this.locked) {
+        return
+      }
       this.isDroppable = false;
       if (typeof this.handleDrop === 'function') {
         var payloadData = event.dataTransfer.getData("text");

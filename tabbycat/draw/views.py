@@ -339,11 +339,13 @@ class ConfirmDrawCreationView(DrawStatusEdit):
 
 class DrawRegenerateView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_REGENERATE
+    round_redirect_pattern_name = 'availability-index'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
         delete_round_draw(round)
         self.log_action()
+        messages.success(request, "Deleted the draw. You can now recreate it as normal.")
         return super().post(request, *args, **kwargs)
 
 
@@ -571,21 +573,22 @@ class SaveDrawMatchups(JsonDataResponsePostView, SuperuserRequiredMixin, RoundMi
             debate = Debate.objects.create(round=self.get_round())
             debate.save()
 
+        print("Processing change for ", debate.id)
         for d_position, d_team in posted_debate['teams'].items():
             position = self.identify_position(d_position)
             team = Team.objects.get(pk=d_team['id'])
-            print("Saving change for ", team.short_name)
+            print("\tSaving change for ", team.short_name)
             if DebateTeam.objects.filter(debate=debate, team=team, position=position).exists():
-                print("\tSkipping %s as not changed" % team.short_name)
+                print("\t\tSkipping %s as not changed" % team.short_name)
                 continue # Skip the rest of the loop; no edit needed
 
             # Delete whatever team currently exists in that spot
             if DebateTeam.objects.filter(debate=debate, position=position).exists():
                 existing = DebateTeam.objects.get(debate=debate, position=position)
-                print('\tDeleting %s as %s' % (existing.team.short_name, existing.position))
+                print('\t\tDeleting %s as %s' % (existing.team.short_name, existing.position))
                 existing.delete()
 
-            print("\tSaving %s as %s" % (team.short_name, position))
+            print("\t\tSaving %s as %s" % (team.short_name, position))
             new_allocation = DebateTeam.objects.create(debate=debate, team=team,
                                                        position=position)
             new_allocation.save()

@@ -53,18 +53,20 @@ export default {
       }
       if (from !== 'unused' && _.keys(fromDebate.teams).length === expectedTeams) {
         if (fromDebate !== toDebate) {
-          debatesToSave.push(toDebate)
+          debatesToSave.push(fromDebate)
         }
       }
       var self = this
       _.forEach(debatesToSave, function(debateToSave) {
         var message = 'debate teams of ' + self.niceNameForDebate(debateToSave.id)
+        debateToSave.locked = true
         self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message, function(dataResponse) {
           // Replace old debate object with new one
-          self.debates[self.debates.indexOf(debateToSave)] = dataResponse
+          var oldDebateIndex = self.debates.indexOf(debateToSave)
+          self.debates.splice(oldDebateIndex, 1, dataResponse)
+          console.log("    VUE: Loaded new debate for " + self.niceNameForDebate(dataResponse.id))
         })
-      });
-
+      })
     },
   }
 }

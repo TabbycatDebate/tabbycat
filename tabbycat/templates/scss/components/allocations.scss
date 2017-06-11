@@ -94,7 +94,6 @@
     height: 100%;
     .vue-droppable {
       overflow: hidden; // Fix margins issue
-      padding-right: 20px; // Ensure space to drop
     }
   }
   .vue-droppable-container:last-child {

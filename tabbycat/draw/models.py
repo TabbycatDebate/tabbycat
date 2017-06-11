@@ -207,7 +207,8 @@ class Debate(models.Model):
 
     def serialize(self):
         round = self.round
-        debate = {'id': self.id, 'bracket': self.bracket, 'importance': self.importance}
+        debate = {'id': self.id, 'bracket': self.bracket,
+                  'importance': self.importance, 'locked': False}
         debate['venue'] = self.venue.serialize() if self.venue else None
         debate['teams'] = {
             dt.get_position_name(round.tournament):dt.team.serialize() for dt in self.debateteam_set.all()}
