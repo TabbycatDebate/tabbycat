@@ -20,6 +20,7 @@ export default {
       return niceName
     },
     saveMove(movedItemId, fromDebateId, toDebateId, toPosition=null) {
+      // We clone each object so we can roll back to the originals if it fails
       var toDebate = this.debatesById[toDebateId]
       var fromDebate = this.debatesById[fromDebateId]
       if (_.isUndefined(fromDebate)) { // Undefined if coming from unused
@@ -28,13 +29,17 @@ export default {
       if (_.isUndefined(toDebate)) { // Undefined if going to unused
         toDebate = 'unused'
       }
-      this.saveMoveForType(movedItemId, fromDebate, toDebate, toPosition)
+      // We clone each object so we can roll back to the originals if it fails
+      var clonedToDebate = _.cloneDeep(toDebate)
+      var clonedFromDebate = _.cloneDeep(fromDebate)
+      clonedToDebate.importance = 99
+      this.saveMoveForType(movedItemId, clonedFromDebate, clonedToDebate, toPosition)
     },
     debateCheckIfShouldSave(debate) {
       return true
     },
     determineDebatesToSave(fromDebate, toDebate) {
-      if (fromDebate === toDebate) {
+      if (fromDebate.id === toDebate.id) {
         return [toDebate]
       }
       var debatesToSave = []
@@ -46,21 +51,50 @@ export default {
       }
       return debatesToSave
     },
-    postModifiedDebates(debatesToSave, messageStart) {
+    setLocked(item, itemDictionary, lockStatus) {
+      // When locking we need to lock the original debate; not the cloned
+      itemDictionary[item.id].locked = lockStatus
+    },
+    postModifiedDebates(debatesToSave, addToUnused, removeFromUnused, messageStart) {
       var self = this
+      // Lock the debate and unused items to prevent edits
+      _.forEach(debatesToSave, function(debateToSave) {
+        self.setLocked(debateToSave, self.debatesById, true)
+      })
+      _.forEach(removeFromUnused, function(itemToUse) {
+        self.setLocked(itemToUse, self.unallocatedById, true)
+      })
+      // Issue an AJAX request for each debate
       _.forEach(debatesToSave, function(debateToSave) {
         var message = messageStart + self.niceNameForDebate(debateToSave.id)
-        debateToSave.locked = true
-        self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message, function(dataResponse) {
-          // Replace old debate object with new one
-          var oldDebateIndex = self.debates.indexOf(debateToSave)
-          if (oldDebateIndex !== -1) {
-            self.debates.splice(oldDebateIndex, 1, dataResponse)
-            console.log("    VUE: Loaded new debate for " + self.niceNameForDebate(dataResponse.id))
-          } else {
-            console.log("Shouldn't happen; couldnt find old debates position")
-          }
-        })
+        self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message,
+                      self.processSaveSuccess, self.processSaveFailure,
+                      { 'addToUnused': addToUnused, 'removeFromUnused': removeFromUnused })
+      })
+    },
+    processSaveSuccess: function(dataResponse, savedDebate, returnPayload) {
+      // Replace old debate object with new one
+      var oldDebateIndex = _.findIndex(this.debates, { 'id': savedDebate.id})
+      if (oldDebateIndex !== -1) {
+        this.debates.splice(oldDebateIndex, 1, dataResponse)
+        console.log("    VUE: Loaded new debate for " + this.niceNameForDebate(dataResponse.id))
+      } else {
+        console.log("    VUE: Shouldn't happen; couldnt find old debates position")
+      }
+      // Remove/add relevant items to unused area
+      var self = this
+      _.forEach(returnPayload.addToUnused, function(unusedItem) {
+        self.unallocatedItems.push(unusedItem)
+      })
+      _.forEach(returnPayload.removeFromUnused, function(usedItem) {
+        self.unallocatedItems.splice(self.unallocatedItems.indexOf(usedItem), 1)
+      })
+    },
+    processSaveFailure: function(unsavedDebate, returnPayload) {
+      this.setLocked(unsavedDebate, this.debatesById, false)
+      var self = this
+      _.forEach(returnPayload.removeFromUnused, function(itemToUse) {
+        self.setLocked(itemToUse, self.unallocatedById, false)
       })
     }
   }

@@ -68,6 +68,9 @@ export default {
     adjudicatorsById: function() {
       return _.keyBy(this.adjudicators, 'id')
     },
+    unallocatedById: function() {
+      return _.keyBy(this.unallocatedItems, 'id')
+    },
     positions: function() {
       return this.debates[0].positions // Shortcut function
     }

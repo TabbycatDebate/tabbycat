@@ -24,18 +24,20 @@ export default {
     saveMoveForType(adjudicatorId, fromDebate, toDebate, toPosition=null) {
       var adjudicator = this.allAdjudicatorsById[adjudicatorId]
       var currentChair = this.getPanellist(toDebate, false, "C").adjudicator
+      var addToUnused = []
+      var removeFromUnused = []
       // Data Logic
       if (toDebate === 'unused') {
         this.removefromPanel(fromDebate, adjudicator)
-        this.unallocatedItems.push(adjudicator) // Need to push; not append
+        addToUnused.push(adjudicator)
       }
       if (fromDebate === 'unused') {
-        this.unallocatedItems.splice(this.unallocatedItems.indexOf(adjudicator), 1)
+        removeFromUnused.push(adjudicator)
         toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
         // If being dropped into an occupied chair position move old chair to unused
         if (toPosition === 'C' && currentChair) {
           this.removefromPanel(toDebate, currentChair)
-          this.unallocatedItems.push(currentChair)
+          addToUnused.push(currentChair)
         }
       }
       if (toDebate !== 'unused' && fromDebate !== 'unused') {
@@ -52,7 +54,8 @@ export default {
       // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
       var message = ' move of adj ' + adjudicator.name + ' to ' + toPosition + ' '
-      this.postModifiedDebates(debatesToSave, message)
+      this.postModifiedDebates(debatesToSave, addToUnused, removeFromUnused,
+                               message)
     }
   }
 }

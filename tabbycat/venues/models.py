@@ -46,7 +46,7 @@ class Venue(models.Model):
         return display_name
 
     def serialize(self):
-        venue = {'id': self.id, 'name': self.name, 'priority': self.priority}
+        venue = {'id': self.id, 'name': self.name, 'priority': self.priority, 'locked': False}
         venue['categories'] = [{
             'id': vc.id, 'name': vc.name, 'description': vc.description
         } for vc in self.venuecategory_set.all()]

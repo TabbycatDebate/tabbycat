@@ -414,7 +414,7 @@ class Adjudicator(Person):
         return d.count()
 
     def serialize(self, round):
-        adj = {'id': self.id, 'name': self.name, 'gender': self.gender}
+        adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
         adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
         adj['region'] = self.region.serialize if self.region else None
         adj['institution'] = self.institution.serialize if self.institution else None

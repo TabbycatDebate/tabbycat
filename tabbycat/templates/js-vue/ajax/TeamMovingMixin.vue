@@ -27,16 +27,20 @@ export default {
       }
       if (toDebate !== 'unused' && fromDebate !== 'unused') {
         var fromPosition = _.findKey(fromDebate.teams, team);
-        if (toDebate.teams[toPosition]) { // If replacing a team
+        if (toDebate.teams[toPosition]) {
+          // If replacing a team
           fromDebate.teams[fromPosition] = toDebate.teams[toPosition]
-        } else { // If not replacing a team
+        } else {
+          // If not replacing a team
           delete fromDebate.teams[fromPosition]
         }
         toDebate.teams[toPosition] = team
       }
-      // Saving
+      // // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
-      this.postModifiedDebates(debatesToSave, 'debate teams of ')
+      // Note: Don't care about locking/restoring state for debate teams
+      // saving or not saving; so addToUnused/removeFromUnused are blank here
+      this.postModifiedDebates(debatesToSave, [], [], 'debate teams of ')
     },
   }
 }

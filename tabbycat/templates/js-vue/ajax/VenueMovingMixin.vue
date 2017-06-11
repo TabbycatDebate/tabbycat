@@ -7,18 +7,20 @@ export default {
   methods: {
     saveMoveForType(venueId, fromDebate, toDebate) {
       var venue = this.allVenuesById[venueId]
+      var addToUnused = []
+      var removeFromUnused = []
       // Data Logic
       if (toDebate === 'unused') {
         fromDebate.venue = null
-        this.unallocatedItems.push(venue)
+        addToUnused.push(venue)
       }
       if (fromDebate === 'unused') {
         if (toDebate.venue !== null) {
           // If replacing an in-place venue
-          this.unallocatedItems.push(toDebate.venue)
+          addToUnused.push(toDebate.venue)
         }
         toDebate.venue = venue
-        this.unallocatedItems.splice(this.unallocatedItems.indexOf(venue), 1)
+        removeFromUnused.push(venue)
       }
       if (toDebate !== 'unused' && fromDebate !== 'unused') {
         if (toDebate.venue !== null) {
@@ -31,7 +33,8 @@ export default {
       }
       // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
-      this.postModifiedDebates(debatesToSave, 'debate venues of ')
+      this.postModifiedDebates(debatesToSave, addToUnused, removeFromUnused,
+                               'debate venues of ')
     },
   }
 }

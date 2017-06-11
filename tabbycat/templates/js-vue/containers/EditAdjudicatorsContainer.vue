@@ -53,7 +53,8 @@
 
     <unallocated-items-container>
       <div v-for="unallocatedAdj in unallocatedAdjsByScore">
-        <draggable-adjudicator :adjudicator="unallocatedAdj"></draggable-adjudicator>
+        <draggable-adjudicator :adjudicator="unallocatedAdj"
+                               :locked="unallocatedAdj.locked"></draggable-adjudicator>
       </div>
     </unallocated-items-container>
 
