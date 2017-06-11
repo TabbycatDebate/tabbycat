@@ -35,7 +35,14 @@ export default {
       // Translate Joe Blogs into Joe B.
       var names = this.adjudicator.name.split(" ")
       if (names.length > 1) {
-        names[names.length - 1] = names[names.length - 1][0] + "."
+        var lastname = names[names.length - 1]
+        var lastInitial = lastname[0]
+        var firstNames = this.adjudicator.name.split(" " + lastname).join("")
+        var limit = 10
+        if (firstNames.length > limit + 2) {
+          firstNames = firstNames.substring(0, limit) + "…"
+        }
+        return firstNames + " " + lastInitial
       }
       return names.join(" ")
     },

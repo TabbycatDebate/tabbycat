@@ -116,18 +116,34 @@ class SaveDebatePanel(SaveDragAndDropDebateMixin):
     def get_moved_item(self, id):
         return Adjudicator.objects.get(pk=id)
 
-    def move_item(self, moved_to, moved_from, moved_adjudicator, request):
-        if moved_to:
-            position = request.POST.get('position')
-            # Check it doesn't already exist in that same panel (will trigger a duplicate)
-            if DebateAdjudicator.objects.filter(debate=moved_to, adjudicator=moved_adjudicator).exists():
-                print('deleting existing allocation to prevent clash')
-                DebateAdjudicator.objects.filter(debate=moved_to, adjudicator=moved_adjudicator).delete()
-            # Save new allocation
-            new_allocation = DebateAdjudicator.objects.create(
-                debate=moved_to, adjudicator=moved_adjudicator, type=position)
-            new_allocation.save() # Move to new location
-        else:
-            # Delete old adjudicator's position when moving to unused
-            DebateAdjudicator.objects.get(debate=moved_from, adjudicator=moved_adjudicator).delete()
-        return
+    def modify_debate(self, debate, posted_debate):
+        panellists = posted_debate['panel']
+        print("Processing change for ", debate.id)
+        for panellist in panellists:
+            id = panellist['adjudicator']['id']
+            position = panellist['position']
+            print("\tSaving change for ", panellist['adjudicator']['name'])
+            if DebateAdjudicator.objects.filter(
+                    debate=debate, adjudicator=id, type=position).exists():
+                print("\t\tSkipping as not changed")
+                continue # No move necessary
+            if DebateAdjudicator.objects.filter(debate=debate, adjudicator=id).exists():
+                # Modify in place
+                current_allocation = DebateAdjudicator.objects.get(
+                    debate=debate, adjudicator=id)
+                current_allocation.type = position
+                current_allocation.save()
+                print("\t\tUpdating existing allocation")
+            else:
+                adjudicator = Adjudicator.objects.get(pk=id)
+                new_allocation = DebateAdjudicator.objects.create(debate=debate,
+                    adjudicator=adjudicator, type=position)
+                new_allocation.save() # Move to new location
+                print("\t\tCreating new allocation")
+
+        # Cleanup any left over adjudicators who have been remove
+        panellists_ids = [p['adjudicator']['id'] for p in panellists]
+        DebateAdjudicator.objects.filter(debate=debate).exclude(
+            adjudicator_id__in=panellists_ids).delete()
+
+        return debate

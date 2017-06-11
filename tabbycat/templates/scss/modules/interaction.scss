@@ -124,6 +124,6 @@
   animation-timing-function: ease-out;
 }
 @keyframes flash-animation {
-    from { background: $brand-success; color: #fff }
-    to   { background: default; color: default }
+    from { color: $brand-success; }
+    to   { color: default; }
 }

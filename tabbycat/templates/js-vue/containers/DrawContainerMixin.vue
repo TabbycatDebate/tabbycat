@@ -73,20 +73,6 @@ export default {
     }
   },
   methods: {
-    niceNameForDebate: function(debateId) {
-      if (debateId === 'unused') {
-        return 'unused'
-      }
-      var debate = this.debatesById[debateId]
-      // Used for debugging
-      var niceName = "debate " + debate.id + " ("
-      _.forEach(debate.teams, function(team) {
-        niceName += team.short_name + ", "
-      })
-      niceName = niceName.substring(0, niceName.length - 2)
-      niceName += ")"
-      return niceName
-    },
     setSlideover: function(object) {
       this.slideOverItem = object
     },

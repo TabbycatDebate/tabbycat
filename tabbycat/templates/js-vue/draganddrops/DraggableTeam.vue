@@ -12,7 +12,7 @@
       <h4>{{ team.wins }}</h4>
     </div>
     <div class="draggable-title">
-      <h5 class="no-top-margin no-bottom-margin">{{ team.short_name }}</h5>
+      <h5 class="no-top-margin no-bottom-margin">{{ titleWithLimit }}</h5>
       <span class="small text-muted subtitle">
         {{ team.institution.code }}
       </span>
@@ -30,6 +30,14 @@ export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverTeamMixin],
   props: { 'team': Object, 'debateId': null },
   computed: {
+    titleWithLimit: function() {
+      var limit = 15
+      if (this.team.short_name.length > limit + 2) {
+        return this.team.short_name.substring(0, limit) + "…"
+      } else {
+        return this.team.short_name
+      }
+    },
     draggablePayload: function() {
       return JSON.stringify({ team: this.team.id, debate: this.debateId })
     }

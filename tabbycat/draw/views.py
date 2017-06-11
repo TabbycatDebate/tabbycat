@@ -551,6 +551,7 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
 
 class SaveDrawMatchups(SaveDragAndDropDebateMixin):
     action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
+    allows_creation = True
 
     def identify_position(self, translated_position):
         # Positions are sent over in their labelled/translate form; need to lookup

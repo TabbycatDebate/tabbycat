@@ -355,11 +355,12 @@ class SaveDragAndDropDebateMixin(JsonDataResponsePostView, SuperuserRequiredMixi
         # Children must modify the debate object and return it
         raise NotImplementedError
 
-    def get_debate(self, id, allow_creation):
+    def get_debate(self, id):
         if Debate.objects.filter(pk=id).exists():
             debate = Debate.objects.get(pk=id)
             return debate
-        elif allow_creation:
+        elif self.allow_creation:
+            print('Creating debate')
             debate = Debate.objects.create(round=self.get_round())
             debate.save()
             return debate
@@ -368,7 +369,7 @@ class SaveDragAndDropDebateMixin(JsonDataResponsePostView, SuperuserRequiredMixi
 
     def post_data(self):
         posted_debate = json.loads(self.request.body)
-        debate = self.get_debate(posted_debate['id'], self.allows_creation)
+        debate = self.get_debate(posted_debate['id'])
         debate = self.modify_debate(debate, posted_debate)
         debate.save()
         self.log_action()

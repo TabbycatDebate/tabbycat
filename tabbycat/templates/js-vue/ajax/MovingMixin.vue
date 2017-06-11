@@ -5,6 +5,20 @@ import _ from 'lodash'
 export default {
   mixins: [AjaxMixin],
   methods: {
+    niceNameForDebate: function(debateId) {
+      if (debateId === 'unused') {
+        return 'unused'
+      }
+      var debate = this.debatesById[debateId]
+      // Used for debugging
+      var niceName = "debate " + debate.id + " ("
+      _.forEach(debate.teams, function(team) {
+        niceName += team.short_name + ", "
+      })
+      niceName = niceName.substring(0, niceName.length - 2)
+      niceName += ")"
+      return niceName
+    },
     saveMove(movedItemId, fromDebateId, toDebateId, toPosition=null) {
       var toDebate = this.debatesById[toDebateId]
       var fromDebate = this.debatesById[fromDebateId]
@@ -19,9 +33,12 @@ export default {
     debateCheckIfShouldSave(debate) {
       return true
     },
-    determinedDebatesToSave(fromDebate, toDebate) {
+    determineDebatesToSave(fromDebate, toDebate) {
+      if (fromDebate === toDebate) {
+        return [toDebate]
+      }
       var debatesToSave = []
-      if (toDebate !== 'unused' && this.debateCheckIfShouldSave(toDebate) {
+      if (toDebate !== 'unused' && this.debateCheckIfShouldSave(toDebate)) {
         debatesToSave.push(toDebate)
       }
       if (fromDebate !== 'unused' && this.debateCheckIfShouldSave(fromDebate)) {
@@ -37,8 +54,12 @@ export default {
         self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message, function(dataResponse) {
           // Replace old debate object with new one
           var oldDebateIndex = self.debates.indexOf(debateToSave)
-          self.debates.splice(oldDebateIndex, 1, dataResponse)
-          console.log("    VUE: Loaded new debate for " + self.niceNameForDebate(dataResponse.id))
+          if (oldDebateIndex !== -1) {
+            self.debates.splice(oldDebateIndex, 1, dataResponse)
+            console.log("    VUE: Loaded new debate for " + self.niceNameForDebate(dataResponse.id))
+          } else {
+            console.log("Shouldn't happen; couldnt find old debates position")
+          }
         })
       })
     }

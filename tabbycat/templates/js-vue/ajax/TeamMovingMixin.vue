@@ -1,10 +1,9 @@
 <script>
-import AjaxMixin from '../ajax/AjaxMixin.vue'
 import MovingMixin from '../ajax/MovingMixin.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [AjaxMixin, MovingMixin],
+  mixins: [MovingMixin],
   methods: {
     debateCheckIfShouldSave(debate) {
       var expectedTeams = this.roundInfo.positions.length
@@ -36,7 +35,7 @@ export default {
         toDebate.teams[toPosition] = team
       }
       // Saving
-      var debatesToSave = this.determinedDebatesToSave(fromDebate, toDebate)
+      var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
       this.postModifiedDebates(debatesToSave, 'debate teams of ')
     },
   }

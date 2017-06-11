@@ -11,7 +11,7 @@
     </div>
 
     <div class="draggable-title">
-      <h5 class="no-top-margin no-bottom-margin">{{ venue.name }}</h5>
+      <h5 class="no-top-margin no-bottom-margin">{{ titleWithLimit }}</h5>
       <span class="small text-muted subtitle" v-for="c in venue.categories">
         {{ c.name }}
       </span>
@@ -32,6 +32,14 @@ export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverVenueMixin],
   props: { 'venue': Object, 'debateId': null },
   computed: {
+    titleWithLimit: function() {
+      var limit = 18
+      if (this.venue.name.length > limit + 2) {
+        return this.venue.name.substring(0, limit) + "…"
+      } else {
+        return this.venue.name
+      }
+    },
     draggablePayload: function() {
       return JSON.stringify({ venue: this.venue.id, debate: this.debateId })
     }

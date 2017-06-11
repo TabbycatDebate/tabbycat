@@ -30,7 +30,7 @@ export default {
         toDebate.venue = venue
       }
       // Saving
-      var debatesToSave = this.determinedDebatesToSave(fromDebate, toDebate)
+      var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
       this.postModifiedDebates(debatesToSave, 'debate venues of ')
     },
   }
