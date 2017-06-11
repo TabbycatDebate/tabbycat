@@ -32,7 +32,6 @@ export default {
       // We clone each object so we can roll back to the originals if it fails
       var clonedToDebate = _.cloneDeep(toDebate)
       var clonedFromDebate = _.cloneDeep(fromDebate)
-      clonedToDebate.importance = 99
       this.saveMoveForType(movedItemId, clonedFromDebate, clonedToDebate, toPosition)
     },
     debateCheckIfShouldSave(debate) {

@@ -93,12 +93,22 @@
     border-right: 2px solid $table-border-color;
     height: 100%;
     .vue-droppable {
-      overflow: hidden; // Fix margins issue
+      flex-wrap: wrap; // Ensure content can wrap if needed
+      display: flex;
     }
   }
   .vue-droppable-container:last-child {
     border-right: 0;
   }
+}
+.position-container-C {
+  flex: 0 0 160px; // Always be 170px
+}
+.position-container-P {
+  flex: 1; // Grow into remaining space
+}
+.position-container-T {
+  flex: 0 0 160px; // Always be 170px
 }
 
 //------------------------------------------------------------------------------
