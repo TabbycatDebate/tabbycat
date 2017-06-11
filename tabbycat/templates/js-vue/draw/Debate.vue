@@ -23,10 +23,10 @@
       </div>
     </slot>
 
-    <template v-for="(position, index) in roundInfo.positions">
-      <slot :name="'sposition' + index">
+    <template v-for="position in roundInfo.positions">
+      <slot :name="'s-' + position">
         <div class="draw-cell flex-6 draw-team-cell">
-          <draw-team :team="debate.teams[index].team"></draw-team>
+          <draw-team v-if="debate.teams[position]" :team="debate.teams[position]"></draw-team>
         </div>
       </slot>
     </template>

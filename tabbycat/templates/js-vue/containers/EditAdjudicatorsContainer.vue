@@ -101,7 +101,6 @@ export default {
           return panellist.adjudicator.id === payload.adjudicator;
         })
         if (assignedPosition === fromPanellist.position) {
-          console.log('move to same position')
           return // Moving to same debate/position; do nothing
         }
       }

@@ -307,9 +307,9 @@ class DrawForDragAndDropMixin(RoundMixin):
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
         for debate in serialised_draw:
-            for team in debate['teams']:
-                team['team'] = self.annotate_break_classes(team['team'])
-                team['team'] = self.annotate_region_classes(team['team'])
+            for (position, team) in debate['teams'].items():
+                team = self.annotate_break_classes(team)
+                team = self.annotate_region_classes(team)
             for panellist in debate['panel']:
                 panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
 
@@ -330,8 +330,8 @@ class DrawForDragAndDropMixin(RoundMixin):
     def get_round_info(self):
         round = self.get_round()
         round_info = {
-            'positions': [get_position_name(round.tournament, "aff", "full").title(),
-                          get_position_name(round.tournament, "neg", "full").title()],
+            'positions': [get_position_name(round.tournament, "aff", "full"),
+                          get_position_name(round.tournament, "neg", "full")],
             'backUrl': reverse_round('draw', round),
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
             'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,

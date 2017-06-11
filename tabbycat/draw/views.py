@@ -2,6 +2,8 @@ import json
 import datetime
 import logging
 
+from math import ceil
+
 from django.views.generic.base import TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -528,8 +530,17 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
 
     def annotate_draw(self, draw, serialised_draw):
         for debate, serialized_debate in zip(draw, serialised_draw):
-            for t, serialt in zip(debate.teams, serialized_debate['teams']):
-                self.add_team_points(t, serialt['team'])
+            for t, (position, serialt) in zip(debate.teams, serialized_debate['teams'].items()):
+                self.add_team_points(t, serialt)
+
+        round = self.get_round()
+        extra_debates = ceil(round.active_teams.count() / 2 - len(serialised_draw))
+        for i in range(0, extra_debates):
+            # Make 'fake' debates as placeholders
+            serialised_draw.append({
+                'id': None, 'teams': {}, 'panel': [], 'bracket': 0,
+                'importance': 0, 'venue': None
+            })
 
         return super().annotate_draw(draw, serialised_draw)
 
