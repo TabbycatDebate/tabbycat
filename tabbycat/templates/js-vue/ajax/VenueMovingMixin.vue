@@ -21,7 +21,8 @@ export default {
         var to = toDebate.id
       }
 
-      var message = 'moved venue ' + venue.name + ' from ' + from + ' to ' + to
+      var message = 'moved venue ' + venue.name + ' from ' + this.niceNameForDebate(from)
+      message += ' to ' + this.niceNameForDebate(to)
       var payload = { moved_item: venue.id, moved_from: from, moved_to: to }
       var self = this
       this.ajaxSave(this.roundInfo.saveUrl, payload, message, function() {

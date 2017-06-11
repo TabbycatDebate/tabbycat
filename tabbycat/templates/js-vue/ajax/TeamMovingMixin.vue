@@ -22,40 +22,49 @@ export default {
       }
 
       if (to === 'unused') {
-        console.log(fromDebate.teams)
-        fromDebate.teams = _.filter(fromDebate.teams, function(debateTeam) {
-          return debateTeam.team !== team
-        })
+        var fromPosition = _.findKey(fromDebate.teams, team);
+        delete fromDebate.teams[fromPosition]
         this.unallocatedItems.push(team) // Need to push; not append
       }
+      if (from === 'unused') {
+        if (toDebate.teams[toPosition]) {
+          // If replacing a team
+          this.unallocatedItems.push(toDebate.teams[toPosition])
+        }
+        toDebate.teams[toPosition] = team
+        this.unallocatedItems.splice(this.unallocatedItems.indexOf(team), 1)
+      }
+      if (to !== 'unused' && from !== 'unused') {
+        var fromPosition = _.findKey(fromDebate.teams, team);
+        if (toDebate.teams[toPosition]) {
+          // If replacing a team
+          fromDebate.teams[fromPosition] = toDebate.teams[toPosition]
+        } else {
+          // If not replacing a team
+          delete fromDebate.teams[fromPosition]
+        }
+        toDebate.teams[toPosition] = team
+      }
 
-      var message = 'moved team ' + team.short_name + ' from ' + from + ' to ' + to + ' as ' + toPosition
-      var payload = { moved_item: team.id, moved_from: from, moved_to: to }
-      payload['position'] = toPosition
+      var expectedTeams = this.roundInfo.positions.length
+      var debatesToSave = []
+      if (to !== 'unused' && _.keys(toDebate.teams).length === expectedTeams) {
+        debatesToSave.push(toDebate)
+      }
+      if (from !== 'unused' && _.keys(fromDebate.teams).length === expectedTeams) {
+        if (fromDebate !== toDebate) {
+          debatesToSave.push(toDebate)
+        }
+      }
+      var self = this
+      _.forEach(debatesToSave, function(debateToSave) {
+        var message = 'debate teams of ' + self.niceNameForDebate(debateToSave.id)
+        self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message, function(dataResponse) {
+          // Replace old debate object with new one
+          self.debates[self.debates.indexOf(debateToSave)] = dataResponse
+        })
+      });
 
-      // var self = this
-      // this.ajaxSave(this.roundInfo.saveUrl, payload, message, function() {
-      //   if (to === 'unused') {
-      //     self.processMoveToUnusedFromPanel(adjudicator, fromDebate, dontPushToUnused)
-      //   } else {
-      //     // var toDebateChair = self.getDebateChair(toDebate).id;
-      //     // if (from === 'unused') {
-      //     //   self.processMoveToPanelFromUnused(adjudicator, toDebate, toPosition)
-      //     //   // If being dropped into an occupied chair position move old chair to unused
-      //     //   if (toPosition === 'C' && toDebateChair) {
-      //     //     self.saveMove(toDebateChair, toDebate.id, 'unused')
-      //     //   }
-      //     // } else {
-      //     //   if (toPosition !== 'C' || !toDebateChair) {
-      //     //     // If not being dropped into the chair position; or if the chair position is empty
-      //     //     self.processMoveToPanelFromPanel(adjudicator, fromDebate, toDebate, toPosition)
-      //     //   } else {
-      //     //     // If being moved to a filled chair we always swap with the previous position
-      //     //     self.processMoveToCurrentlyFilledChair(adjudicator, fromDebate, toDebate, isSwap)
-      //     //   }
-      //     // }
-      //   }
-      // })
     },
   }
 }

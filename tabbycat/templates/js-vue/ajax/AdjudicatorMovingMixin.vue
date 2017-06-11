@@ -35,8 +35,11 @@ export default {
         var to = toDebate.id
       }
 
-      var message = 'moved adjudicator ' + adjudicator.name + ' from ' + from + ' to ' + to + ' as ' + toPosition
+
+      var message = 'moved adjudicator ' + adjudicator.name + ' from ' + this.niceNameForDebate(from)
+      message += ' to ' + this.niceNameForDebate(to)
       var payload = { moved_item: adjudicator.id, moved_from: from, moved_to: to }
+
       payload['position'] = toPosition
       var self = this
       this.ajaxSave(this.roundInfo.saveUrl, payload, message, function() {
@@ -74,8 +77,7 @@ export default {
     },
     processMoveToPanelFromUnused(adjudicator, toDebate, toPosition) {
       // If moving from unused needed to remove the adjudicator from unallcoated items
-      var index = this.unallocatedItems.indexOf(adjudicator)
-      this.unallocatedItems.splice(index, 1)
+      this.unallocatedItems.splice(this.unallocatedItems.indexOf(adjudicator), 1)
       // SET STATE: add current panellist
       toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
     },

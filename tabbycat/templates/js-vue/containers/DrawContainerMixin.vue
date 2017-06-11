@@ -37,21 +37,27 @@ export default {
   },
   computed: {
     teams: function() {
-      // Return all teams as a single array
+      // Return all teams (in debates) as a single array
       var allTeams = _.map(this.debates, function(debate) {
-        return _.map(debate.teams, function(team) {
-          return team.team
-        })
+        return _.values(debate.teams)
       })
       return _.flattenDeep(allTeams)
     },
     adjudicators: function() {
+      // Return all adjs (in debates) as a single array
       var allPanellists = _.map(this.debates, function(debate) {
         return _.map(debate.panel, function(panel) {
           return panel.adjudicator
         })
       })
       return _.flattenDeep(allPanellists)
+    },
+    venues: function() {
+      // Return all teams as a single array
+      var allVenues = _.map(this.debates, function(debate) {
+        return debate.venue
+      })
+      return allVenues
     },
     debatesById: function() {
       return _.keyBy(this.debates, 'id')
@@ -67,6 +73,20 @@ export default {
     }
   },
   methods: {
+    niceNameForDebate: function(debateId) {
+      if (debateId === 'unused') {
+        return 'unused'
+      }
+      var debate = this.debatesById[debateId]
+      // Used for debugging
+      var niceName = "debate " + debate.id + " ("
+      _.forEach(debate.teams, function(team) {
+        niceName += team.short_name + ", "
+      })
+      niceName = niceName.substring(0, niceName.length - 2)
+      niceName += ")"
+      return niceName
+    },
     setSlideover: function(object) {
       this.slideOverItem = object
     },

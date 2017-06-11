@@ -6,14 +6,17 @@ export default {
       $.ajax({
         type: "POST",
         url: url,
-        data: payload,
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-          self.ajaxError(message, XMLHttpRequest.responseText, textStatus, errorThrown)
+        data: JSON.stringify(payload),
+        contentType: "application/json",
+        dataType: "json",
+        error: function(hxr, textStatus, errorThrown) {
+          self.ajaxError(message, hxr.responseText, textStatus, errorThrown)
         },
-        success: function() {
+        success: function(data, textStatus, xhr) {
           self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-          console.log("AJAX: Successful save change for " + message)
-          completeFunction()
+          console.log("AJAX: Successful save for " + message)
+          var dataResponse = JSON.parse(data)
+          completeFunction(dataResponse)
         },
       });
     },

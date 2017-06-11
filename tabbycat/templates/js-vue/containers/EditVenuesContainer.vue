@@ -59,13 +59,7 @@ export default {
       return _.reverse(_.sortBy(this.unallocatedItems, ['priority']))
     },
     allVenuesById: function() {
-      var allDebateVenues = _.map(this.debates, function(debate) {
-        return debate.venue
-      })
-      var validDebateVenues = _.filter(allDebateVenues, function(venue) {
-        return venue !== null
-      })
-      return _.keyBy(validDebateVenues.concat(this.unallocatedItems), 'id')
+      return _.keyBy(this.venues.concat(this.unallocatedItems), 'id')
     },
   },
   methods: {

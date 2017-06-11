@@ -2,16 +2,22 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
-{% block page-title %}Edit Matchups for {{ round.abbreviation }}{% endblock %}
+{% block head-title %}Edit Sides or Matchups for {{ round.abbreviation }}{% endblock %}
+{% block page-title %}Edit Sides or Matchups for {{ round.abbreviation }}{% endblock %}
 
 {% block page-alerts %}
   <div class="alert alert-warning">
-    A debate must always have <strong>all of it's teams slots filled</strong>;
-     changes to matchups here will only save once a debate has <em>all</em> of
-     the teams it needs filled. Note also that if you are using this at a serious
-      tournament it is almost always better to regenerate the draw in response to
-       problems (ie a team dropping out) rather than trying to manually fix it.
+    <p>This interface is intended to easily swap the positions of teams within
+    a debate, such as for final rounds where these are not known in advance.
+    However it can also be used to create new debates and edit existing matchups.
+    This should be done with caution; edits to matchups will <em>remove any round
+    results for the teams that are moved</em>. In general you should only ever
+    edit draws this way before they are released; and only then if you don't
+    want a 'correct' draw.</p>
+    <p>Note that changes to matchups will only save once a debate has <em>all of
+     it's team slots filled</em>. You can create new debates by dragging into the
+     blank rows at the bottom, but note that debates cannot be deleted here —
+     you will need to go into the Edit Database area for that.</p>
   </div>
 {% endblock %}
 

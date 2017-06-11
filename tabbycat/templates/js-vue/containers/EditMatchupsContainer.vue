@@ -24,7 +24,7 @@
       <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
         <template v-for="position in roundInfo.positions">
           <div class="draw-cell flex-8 vue-droppable-container" :slot="'s-' + position">
-            <droppable-generic :assignment-id="debate.id" assignment-position="position">
+            <droppable-generic :assignment-id="debate.id" :assignment-position="position">
               <draggable-team v-if="debate.teams[position]"
                               :team="debate.teams[position]"
                               :debate-id="debate.id"></draggable-team>
@@ -59,18 +59,17 @@ export default {
       return _.reverse(_.sortBy(this.unallocatedItems, ['wins']))
     },
     allTeamsById: function() {
-      var allDebateTeams = _.flatMap(this.debates, function(debate) {
-        return _.map(debate.teams, function(team) {
-          return team.team
-        })
-      })
-      return _.keyBy(allDebateTeams.concat(this.unallocatedItems), 'id')
+      return _.keyBy(this.teams.concat(this.unallocatedItems), 'id')
     },
   },
   methods: {
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
-        return // Moving to debate from that same debate; do nothing
+        var fromPosition = _.findKey(this.debatesById[payload.debate].teams,
+                                     this.allTeamsById[payload.team])
+        if (assignedPosition === fromPosition) {
+          return // Moving to same debate/position; do nothing
+        }
       }
       this.saveMove(payload.team, payload.debate, assignedId, assignedPosition)
     },
@@ -79,15 +78,6 @@ export default {
         return // Moving to unused from unused; do nothing
       }
       this.saveMove(payload.team, payload.debate)
-      // var draggedTeam = this.teamsById[payload.team]
-      // var dts = this.debatesById[payload.debate].teams // Convenience var
-      // // Make changes to the reactive property
-      // this.debatesById[payload.debate].teams = _.forEach(dts, function(dt) {
-      //   // For each debate's debateTeams set the team to null if it matches
-      //   if (dt.team === draggedTeam) { dt.team = null }
-      //   return dt
-      // })
-      // this.unallocatedItems.push(draggedTeam) // Need to push; not append
     }
   },
 }

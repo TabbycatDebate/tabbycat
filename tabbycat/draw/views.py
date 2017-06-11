@@ -2,12 +2,12 @@ import json
 import datetime
 import logging
 
-from math import ceil
+from math import floor
 
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 
 from actionlog.mixins import LogActionMixin
@@ -20,7 +20,7 @@ from tournaments.mixins import CrossTournamentPageMixin, DrawForDragAndDropMixin
 from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.utils import aff_name, get_position_name, neg_name
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import CacheMixin, JsonDataResponsePostView, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
@@ -524,21 +524,13 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
     template_name = 'edit_matchups.html'
     save_url = "save-debate-teams"
 
-    def add_team_points(self, team, serialized_team):
-        serialized_team['wins'] = team.wins_count
-        return serialized_team
-
     def annotate_draw(self, draw, serialised_draw):
-        for debate, serialized_debate in zip(draw, serialised_draw):
-            for t, (position, serialt) in zip(debate.teams, serialized_debate['teams'].items()):
-                self.add_team_points(t, serialt)
-
         round = self.get_round()
-        extra_debates = ceil(round.active_teams.count() / 2 - len(serialised_draw))
+        extra_debates = floor(round.active_teams.count() / 2 - len(serialised_draw))
         for i in range(0, extra_debates):
-            # Make 'fake' debates as placeholders
+            # Make 'fake' debates as placeholders; need a unique ID (hence 9999)
             serialised_draw.append({
-                'id': None, 'teams': {}, 'panel': [], 'bracket': 0,
+                'id': 999999 + i, 'teams': {}, 'panel': [], 'bracket': 0,
                 'importance': 0, 'venue': None
             })
 
@@ -548,7 +540,6 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
         unused = [t for t in self.get_round().unused_teams()]
         serialized_unused = [t.serialize() for t in unused]
         for t, serialt in zip(unused, serialized_unused):
-            serialt = self.add_team_points(t, serialt)
             serialt = self.annotate_break_classes(serialt)
             serialt = self.annotate_region_classes(serialt)
 
@@ -556,33 +547,50 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
         return super().get_context_data(**kwargs)
 
 
-class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
-    action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
+class SaveDrawMatchups(JsonDataResponsePostView, SuperuserRequiredMixin, RoundMixin, LogActionMixin):
+    action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
 
-    def post(self, request, *args, **kwargs):
-        #     team = Team.objects.get(pk=request.POST.get('team'))
-        #     debate_from = Debate.objects.get(pk=request.POST.get('debate_from'))
-        #     if request.POST.get('debate_to') == 'unused':
-        #         debate_to = None
-        #     else:
-        #         debate_to = Debate.objects.get(pk=request.POST.get('debate_to'))
+    def identify_position(self, translated_position):
+        # Positions are sent over in their labelled/translate form; need to lookup
+        # This is hardcoded to aff/neg; will need to refactor when positions update
+        translated_positions = {
+            get_position_name(self.get_tournament(), name, 'full'): name for name in ['aff', 'neg']}
+        position_short = translated_positions[translated_position]
+        if position_short is 'aff':
+            position = DebateTeam.POSITION_AFFIRMATIVE
+        if position_short is 'neg':
+            position = DebateTeam.POSITION_NEGATIVE
+        return position
 
-        #     from_allocation = DebateTeam.objects.get(
-        #             debate=debate_from, team=team)
-        #     if not from_allocation:
-        #         return HttpResponseBadRequest("Error: team was not on that debate")
+    def post_data(self):
+        posted_debate = json.loads(self.request.body)
 
-        #     # Delete from moved location
-        #     from_allocation.delete()
-        #     # Move to new location
-        #     if debate_to:
-        #         new_allocation = DebateTeam.objects.create(
-        #                 debate=debate_to, team=team)
-        #         new_allocation.save()
+        if Debate.objects.filter(pk=posted_debate['id']).exists():
+            debate = Debate.objects.get(pk=posted_debate['id'])
+        else:
+            debate = Debate.objects.create(round=self.get_round())
+            debate.save()
 
-        #     # TODO: refactor to do individual updates
-        #     self.log_action()
-        return HttpResponse("ok")
+        for d_position, d_team in posted_debate['teams'].items():
+            position = self.identify_position(d_position)
+            team = Team.objects.get(pk=d_team['id'])
+            print("Saving change for ", team.short_name)
+            if DebateTeam.objects.filter(debate=debate, team=team, position=position).exists():
+                print("\tSkipping %s as not changed" % team.short_name)
+                continue # Skip the rest of the loop; no edit needed
+
+            # Delete whatever team currently exists in that spot
+            if DebateTeam.objects.filter(debate=debate, position=position).exists():
+                existing = DebateTeam.objects.get(debate=debate, position=position)
+                print('\tDeleting %s as %s' % (existing.team.short_name, existing.position))
+                existing.delete()
+
+            print("\tSaving %s as %s" % (team.short_name, position))
+            new_allocation = DebateTeam.objects.create(debate=debate, team=team,
+                                                       position=position)
+            new_allocation.save()
+
+        return json.dumps(debate.serialize())
 
 
 # ==============================================================================

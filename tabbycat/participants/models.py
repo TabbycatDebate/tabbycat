@@ -289,6 +289,7 @@ class Team(models.Model):
         break_categories = self.break_categories.all()
         team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
         team['highlights'] = {'region': False, 'gender': False, 'category': False}
+        team['wins'] = self.wins_count
         return team
 
 

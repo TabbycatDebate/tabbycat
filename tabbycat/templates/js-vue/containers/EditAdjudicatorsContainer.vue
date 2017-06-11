@@ -81,12 +81,7 @@ export default {
       return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
     },
     allAdjudicatorsById: function() {
-      var allDebateAdjudicators = _.flatMap(this.debates, function(debate) {
-        return _.map(debate.panel, function(panellist) {
-          return panellist.adjudicator
-        })
-      })
-      return _.keyBy(allDebateAdjudicators.concat(this.unallocatedItems), 'id')
+      return _.keyBy(this.adjudicators.concat(this.unallocatedItems), 'id')
     },
   },
   methods: {

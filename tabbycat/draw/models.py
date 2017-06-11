@@ -2,7 +2,6 @@ import logging
 
 from django.db import models
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from django.forms.models import model_to_dict
 
 from tournaments.utils import get_position_name
 
@@ -207,8 +206,8 @@ class Debate(models.Model):
             return Motion(text='-', reference='-')
 
     def serialize(self):
-        debate = model_to_dict(self)
         round = self.round
+        debate = {'id': self.id, 'bracket': self.bracket, 'importance': self.importance}
         debate['venue'] = self.venue.serialize() if self.venue else None
         debate['teams'] = {
             dt.get_position_name(round.tournament):dt.team.serialize() for dt in self.debateteam_set.all()}
