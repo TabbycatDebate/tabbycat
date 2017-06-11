@@ -27,8 +27,7 @@ export default {
         this.unallocatedItems.push(team) // Need to push; not append
       }
       if (from === 'unused') {
-        if (toDebate.teams[toPosition]) {
-          // If replacing a team
+        if (toDebate.teams[toPosition]) { // If replacing a team
           this.unallocatedItems.push(toDebate.teams[toPosition])
         }
         toDebate.teams[toPosition] = team
@@ -36,11 +35,9 @@ export default {
       }
       if (to !== 'unused' && from !== 'unused') {
         var fromPosition = _.findKey(fromDebate.teams, team);
-        if (toDebate.teams[toPosition]) {
-          // If replacing a team
+        if (toDebate.teams[toPosition]) { // If replacing a team
           fromDebate.teams[fromPosition] = toDebate.teams[toPosition]
-        } else {
-          // If not replacing a team
+        } else { // If not replacing a team
           delete fromDebate.teams[fromPosition]
         }
         toDebate.teams[toPosition] = team

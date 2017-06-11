@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from tournaments.mixins import DrawForDragAndDropMixin, SaveDragAndDropActionMixin, TournamentMixin
+from tournaments.mixins import DrawForDragAndDropMixin, SaveDragAndDropDebateMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import JsonDataResponsePostView, ModelFormSetView, SuperuserRequiredMixin
@@ -59,23 +59,18 @@ class AutoAllocateVenuesView(VenueAllocationViewBase, LogActionMixin, JsonDataRe
         return super().post(request, *args, **kwargs)
 
 
-class SaveVenuesView(SaveDragAndDropActionMixin):
+class SaveVenuesView(SaveDragAndDropDebateMixin):
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
     def get_moved_item(self, id):
         return Venue.objects.get(pk=id)
 
-    def move_item(self, moved_to, moved_from, moved_venue, request):
-        if moved_to:
-            print('moving to')
-            # Move to new location; update it's venue
-            moved_to.venue = moved_venue
-            moved_to.save()
+    def modify_debate(self, debate, posted_debate):
+        if posted_debate['venue']:
+            debate.venue = Venue.objects.get(pk=posted_debate['venue']['id'])
         else:
-            # Only delete old debate's venue when moving to unused; swaps done in seperate requeest
-            moved_from.venue = None
-            moved_from.save()
-        return
+            debate.venue = None
+        return debate
 
 
 class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):

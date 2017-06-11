@@ -8,11 +8,10 @@ from django.core.urlresolvers import NoReverseMatch
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, QueryDict
+from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 
 from actionlog.mixins import LogActionMixin
@@ -21,7 +20,7 @@ from participants.models import Region
 from tournaments.utils import get_position_name
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import SuperuserRequiredMixin, TabbycatPageTitlesMixin
+from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
 
 
 from .models import Round, Tournament
@@ -347,30 +346,30 @@ class DrawForDragAndDropMixin(RoundMixin):
         return super().get_context_data(**kwargs)
 
 
-class SaveDragAndDropActionMixin(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
-    """For AJAX issued updates relating to moving a particular object to and
-    from a given debate; ie venues, teams, or adjudicators. Children must
-     implement get_moved_item, check_item, and move_item"""
+class SaveDragAndDropDebateMixin(JsonDataResponsePostView, SuperuserRequiredMixin, RoundMixin, LogActionMixin):
+    """For AJAX issued updates which post a Debate dictionary; which is then
+    modified and return back via a JSON response"""
+    allows_creation = False
 
-    def check_item(self, moved_to, moved_from, moved_item):
-        return True
+    def modify_debate(self):
+        # Children must modify the debate object and return it
+        raise NotImplementedError
 
-    def get_debate(self, key, request):
-        debate = request.POST.get(key)
-        if debate == 'unused':
-            return None
+    def get_debate(self, id, allow_creation):
+        if Debate.objects.filter(pk=id).exists():
+            debate = Debate.objects.get(pk=id)
+            return debate
+        elif allow_creation:
+            debate = Debate.objects.create(round=self.get_round())
+            debate.save()
+            return debate
         else:
-            return Debate.objects.get(pk=debate)
+            raise ValueError('SaveDragAndDropDebateMixin posted a debate ID that doesnt exist')
 
-    def post(self, request, *args, **kwargs):
-        moved_item = self.get_moved_item(request.POST.get('moved_item'))
-        moved_to = self.get_debate('moved_to', request)
-        moved_from = self.get_debate('moved_from', request)
-
-        check_message = self.check_item(moved_to, moved_from, moved_item)
-        if check_message is not True:
-            HttpResponseBadRequest(check_message)
-
-        self.move_item(moved_to, moved_from, moved_item, request) # Save changes
+    def post_data(self):
+        posted_debate = json.loads(self.request.body)
+        debate = self.get_debate(posted_debate['id'], self.allows_creation)
+        debate = self.modify_debate(debate, posted_debate)
+        debate.save()
         self.log_action()
-        return HttpResponse()
+        return json.dumps(debate.serialize())

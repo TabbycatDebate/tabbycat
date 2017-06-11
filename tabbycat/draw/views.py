@@ -17,10 +17,10 @@ from divisions.models import Division
 from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, DrawForDragAndDropMixin
-from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, SaveDragAndDropDebateMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.utils import aff_name, get_position_name, neg_name
-from utils.mixins import CacheMixin, JsonDataResponsePostView, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
@@ -549,7 +549,7 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
         return super().get_context_data(**kwargs)
 
 
-class SaveDrawMatchups(JsonDataResponsePostView, SuperuserRequiredMixin, RoundMixin, LogActionMixin):
+class SaveDrawMatchups(SaveDragAndDropDebateMixin):
     action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
 
     def identify_position(self, translated_position):
@@ -564,24 +564,16 @@ class SaveDrawMatchups(JsonDataResponsePostView, SuperuserRequiredMixin, RoundMi
             position = DebateTeam.POSITION_NEGATIVE
         return position
 
-    def post_data(self):
-        posted_debate = json.loads(self.request.body)
-
-        if Debate.objects.filter(pk=posted_debate['id']).exists():
-            debate = Debate.objects.get(pk=posted_debate['id'])
-        else:
-            debate = Debate.objects.create(round=self.get_round())
-            debate.save()
-
+    def modify_debate(self, debate, posted_debate):
+        teams = posted_debate['teams'].items()
         print("Processing change for ", debate.id)
-        for d_position, d_team in posted_debate['teams'].items():
+        for d_position, d_team in teams:
             position = self.identify_position(d_position)
             team = Team.objects.get(pk=d_team['id'])
             print("\tSaving change for ", team.short_name)
             if DebateTeam.objects.filter(debate=debate, team=team, position=position).exists():
                 print("\t\tSkipping %s as not changed" % team.short_name)
                 continue # Skip the rest of the loop; no edit needed
-
             # Delete whatever team currently exists in that spot
             if DebateTeam.objects.filter(debate=debate, position=position).exists():
                 existing = DebateTeam.objects.get(debate=debate, position=position)
@@ -593,7 +585,7 @@ class SaveDrawMatchups(JsonDataResponsePostView, SuperuserRequiredMixin, RoundMi
                                                        position=position)
             new_allocation.save()
 
-        return json.dumps(debate.serialize())
+        return debate
 
 
 # ==============================================================================

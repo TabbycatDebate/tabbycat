@@ -23,10 +23,11 @@
       </draw-header>
       <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
         <div class="draw-cell flex-12 vue-droppable-container" slot="svenue">
-          <droppable-generic :assignment-id="debate.id">
+          <droppable-generic :assignment-id="debate.id" :locked="debate.locked">
             <slot name="svenue">
               <draggable-venue v-if="debate.venue !== null"
-               :venue="debate.venue" :debate-id="debate.id"></draggable-venue>
+               :venue="debate.venue" :debate-id="debate.id"
+               :locked="debate.locked"></draggable-venue>
           </slot>
           </droppable-generic>
         </div>

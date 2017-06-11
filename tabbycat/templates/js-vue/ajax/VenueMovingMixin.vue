@@ -21,54 +21,43 @@ export default {
         var to = toDebate.id
       }
 
-      var message = 'moved venue ' + venue.name + ' from ' + this.niceNameForDebate(from)
-      message += ' to ' + this.niceNameForDebate(to)
-      var payload = { moved_item: venue.id, moved_from: from, moved_to: to }
-      var self = this
-      this.ajaxSave(this.roundInfo.saveUrl, payload, message, function() {
-        if (to === 'unused') {
-          self.processMoveToUnusedFromDebate(venue, fromDebate, dontPushToUnused)
-        } else {
-          if (from === 'unused') {
-            self.processMoveToDebateFromUnused(venue, toDebate)
-          } else {
-            if (toDebate.venue === null) {
-              self.processMoveToDebateWithoutVenueFromDebate(venue, fromDebate, toDebate)
-            } else {
-              self.processMoveToDebateWithVenueFromDebate(venue, fromDebate, toDebate, isSwap)
-            }
-          }
+      if (to === 'unused') {
+        fromDebate.venue = null
+        this.unallocatedItems.push(venue)
+      }
+      if (from === 'unused') {
+        if (toDebate.venue !== null) { // If replacing a venue
+          this.unallocatedItems.push(toDebate.venue)
         }
+        toDebate.venue = venue
+        this.unallocatedItems.splice(this.unallocatedItems.indexOf(venue), 1)
+      }
+      if (to !== 'unused' && from !== 'unused') {
+        if (toDebate.venue !== null) { // If replacing a venue
+          fromDebate.venue = toDebate.venue
+        } else {
+          fromDebate.venue = null
+        }
+        toDebate.venue = venue
+      }
+      var debatesToSave = []
+      if (to !== 'unused') {
+        debatesToSave.push(toDebate)
+      }
+      if (from !== 'unused') {
+        debatesToSave.push(fromDebate)
+      }
+      var self = this
+      _.forEach(debatesToSave, function(debateToSave) {
+        var message = 'debate venues of ' + self.niceNameForDebate(debateToSave.id)
+        debateToSave.locked = true
+        self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message, function(dataResponse) {
+          // Replace old debate object with new one
+          var oldDebateIndex = self.debates.indexOf(debateToSave)
+          self.debates.splice(oldDebateIndex, 1, dataResponse)
+          console.log("    VUE: Loaded new debate for " + self.niceNameForDebate(dataResponse.id))
+        })
       })
-    },
-    processMoveToUnusedFromDebate(venue, fromDebate, dontPushToUnused) {
-      // Moving to Unused from a debate
-      if (!dontPushToUnused) {
-        // We don't push to unused when this venue is being removed from an
-        // existing debate; ie via processMoveToDebateWithoutVenueFromDebate()
-        this.unallocatedItems.push(venue) // Need to push; not append
-      }
-      fromDebate.venue = null
-    },
-    processMoveToDebateFromUnused(venue, toDebate) {
-      // If moving from unused needed to remove the venue from unallcoated items
-      this.unallocatedItems.splice(this.unallocatedItems.indexOf(venue), 1)
-      toDebate.venue = venue
-    },
-    processMoveToDebateWithoutVenueFromDebate(venue, fromDebate, toDebate) {
-      // If moving from an existing debate without a venue then retrigger a save
-      // as if we were moving to unused but override adding it back to the js data
-      toDebate.venue = venue
-      this.saveMove(venue.id, fromDebate.id, 'unused', true)
-    },
-    processMoveToDebateWithVenueFromDebate(venue, fromDebate, toDebate, isSwap) {
-      // If moving from one debate to another where both have venues
-      // The isSwap override is here to prevent never ending recursive recalls
-      // If moving from an existing debate into a debate with a venue; do a swap
-      if (!isSwap) {
-        this.saveMove(toDebate.venue.id, toDebate.id, fromDebate.id, false, true)
-      }
-      toDebate.venue = venue
     },
   }
 }

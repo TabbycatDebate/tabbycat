@@ -36,11 +36,13 @@
               <div :class="['vue-droppable-container', position === 'P' ? 'flex-5' : 'flex-3']">
                 <droppable-generic :assignment-id="debate.id"
                                    :assignment-position="position"
-                                   :extra-css="'flex-horizontal'">
+                                   :extra-css="'flex-horizontal'"
+                                   :locked="debate.locked">
                   <draggable-adjudicator v-for="debateAdjudicator in getAdjudicatorsByPosition(debate, position)"
                     :adjudicator="debateAdjudicator.adjudicator"
                     :key="debateAdjudicator.adjudicator.id"
-                    :debate-id="debate.id"></draggable-adjudicator>
+                    :debate-id="debate.id"
+                    :locked="debate.locked"></draggable-adjudicator>
                 </droppable-generic>
               </div>
             </template>
