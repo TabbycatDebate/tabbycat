@@ -3,7 +3,7 @@
        :class="[draggableClasses, conflictsStatus, highlightsIdentity, highlightsStatus]"
        @dragstart="dragStart"
        @dragend="dragEnd"
-       @mouseenter="handleHoverOn(adjudicator)"
+       @mouseenter="handleHoverOn"
        @mouseleave="handleHoverOff">
 
     <div class="draggable-prefix">

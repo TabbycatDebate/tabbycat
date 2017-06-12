@@ -1,8 +1,8 @@
 <template>
   <div :class="['slideover-target', conflictsStatus,
                 highlightsIdentity, highlightsStatus]"
-       @mouseenter="showSlideOver(team)"
-       @mouseleave="hideSlideOver">
+       @mouseenter="handleHoverOn"
+       @mouseleave="handleHoverOff">
 
     <div><span>{{ team.short_name }}</span></div>
 
@@ -24,5 +24,15 @@ export default {
       return this.team
     }
   },
+  methods: {
+    handleHoverOn: function(event) {
+      this.showSlideOver()
+      this.showConflicts()
+    },
+    handleHoverOff: function(event) {
+      this.hideSlideOver()
+      this.hideConflicts()
+    },
+  }
 }
 </script>
