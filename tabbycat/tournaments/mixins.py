@@ -371,6 +371,5 @@ class SaveDragAndDropDebateMixin(JsonDataResponsePostView, SuperuserRequiredMixi
         posted_debate = json.loads(self.request.body)
         debate = self.get_debate(posted_debate['id'])
         debate = self.modify_debate(debate, posted_debate)
-        debate.save()
         self.log_action()
         return json.dumps(debate.serialize())

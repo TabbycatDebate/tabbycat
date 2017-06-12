@@ -29,6 +29,14 @@
       </div>
     {% endif %}
   {% endwith %}
+  {% with duplicates=round.duplicate_panellists %}
+    {% if duplicates %}
+      <div class="alert alert-danger" >
+        Adjudicator{{ duplicates|pluralize }} <strong>{{ duplicates|join:", " }}</strong>
+        {{ duplicates|pluralize:"has, have" }} been allocated twice.
+      </div>
+    {% endif %}
+  {% endwith %}
   {% if active_adjs.count < draw.count %}
     <div class="alert alert-danger" id="">
       There are currently fewer checked-in adjudicators than there are rooms.

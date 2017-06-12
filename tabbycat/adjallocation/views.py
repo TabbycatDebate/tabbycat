@@ -118,32 +118,38 @@ class SaveDebatePanel(SaveDragAndDropDebateMixin):
 
     def modify_debate(self, debate, posted_debate):
         panellists = posted_debate['panel']
-        print("Processing change for ", debate.id)
+        message = "Processing change for %s" % debate.id
+
+        # below are DEBUG
+        for da in DebateAdjudicator.objects.filter(debate=debate).order_by('type'):
+            message += "\nExisting: %s" % da
         for panellist in panellists:
-            id = panellist['adjudicator']['id']
-            position = panellist['position']
-            print("\tSaving change for ", panellist['adjudicator']['name'])
-            if DebateAdjudicator.objects.filter(
-                    debate=debate, adjudicator=id, type=position).exists():
-                print("\t\tSkipping as not changed")
-                continue # No move necessary
-            if DebateAdjudicator.objects.filter(debate=debate, adjudicator=id).exists():
-                # Modify in place
-                current_allocation = DebateAdjudicator.objects.get(
-                    debate=debate, adjudicator=id)
-                current_allocation.type = position
-                current_allocation.save()
-                print("\t\tUpdating existing allocation")
+            message += "\nNew: %s %s" % (panellist['adjudicator']['name'], panellist['position'])
+
+        for da in DebateAdjudicator.objects.filter(debate=debate):
+            message += "\n\tChecking %s" % da
+            match = next((p for p in panellists if p["adjudicator"]["id"] == da.adjudicator.id), None)
+            if match:
+                message += "\n\t\tExists in panel already %s" % da
+                if match['position'] == da.type:
+                    message += "\n\t\t\tPASS — Is in same position %s" % da
+                else:
+                    da.type = match['position']
+                    da.save()
+                    message += "\n\t\t\tUPDATE — Changed position to %s" % da
+                # Updated or not needed to be touched; remove from consideration for adding
+                panellists.remove(match)
             else:
-                adjudicator = Adjudicator.objects.get(pk=id)
-                new_allocation = DebateAdjudicator.objects.create(debate=debate,
-                    adjudicator=adjudicator, type=position)
-                new_allocation.save() # Move to new location
-                print("\t\tCreating new allocation")
+                message += "\n\tDELETE — No longer needed; deleting %s" % da
+                da.delete()
 
-        # Cleanup any left over adjudicators who have been remove
-        panellists_ids = [p['adjudicator']['id'] for p in panellists]
-        DebateAdjudicator.objects.filter(debate=debate).exclude(
-            adjudicator_id__in=panellists_ids).delete()
+        for p in panellists:
+            adjudicator = Adjudicator.objects.get(pk=p["adjudicator"]["id"])
+            new_allocation = DebateAdjudicator.objects.create(debate=debate,
+                adjudicator=adjudicator, type=p["position"])
+            new_allocation.save() # Move to new location
+            message += "\n\tNEW — Creating new allocation %s" % new_allocation
 
+        message += "\n---"
+        print(message)
         return debate

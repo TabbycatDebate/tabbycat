@@ -15,41 +15,46 @@ export default {
       }
     },
     removefromPanel(debate, adjudicator) {
-      // console.log('Removing ' + adjudicator.name + ' from ' + this.niceNameForDebate(debate.id))
+      console.log('Removing ' + adjudicator.name + ' from ' + this.niceNameForDebate(debate.id))
       var adjIndex = _.findIndex(debate.panel, function(panellist) {
-        return panellist.adjudicator == adjudicator;
+        return panellist.adjudicator.id == adjudicator.id;
       });
+      console.log('\t' + adjIndex)
       debate.panel.splice(adjIndex, 1)
     },
     saveMoveForType(adjudicatorId, fromDebate, toDebate, toPosition=null) {
       var adjudicator = this.allAdjudicatorsById[adjudicatorId]
       var currentChair = this.getPanellist(toDebate, false, "C").adjudicator
+      var oldPosition = this.getPanellist(fromDebate, adjudicator, false).position
       var addToUnused = []
       var removeFromUnused = []
       // Data Logic
       if (toDebate === 'unused') {
+        // Moving to unsed from panel
         this.removefromPanel(fromDebate, adjudicator)
         addToUnused.push(adjudicator)
-      }
-      if (fromDebate === 'unused') {
-        removeFromUnused.push(adjudicator)
+      } else if (fromDebate === 'unused') {
+        // Moving from unsued to a panel
         toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
+        removeFromUnused.push(adjudicator)
         // If being dropped into an occupied chair position move old chair to unused
         if (toPosition === 'C' && currentChair) {
           this.removefromPanel(toDebate, currentChair)
           addToUnused.push(currentChair)
         }
-      }
-      if (toDebate !== 'unused' && fromDebate !== 'unused') {
-        var oldPosition = this.getPanellist(fromDebate, adjudicator, false).position
-        // Moving to a panel from a panel
+      } else if (toDebate !== 'unused' && fromDebate !== 'unused') {
+        // If moving from panel to panel
         if (toPosition === 'C' && currentChair) {
-          // Moving to a currently-occupied chair position from anywhere
+          // Moving to a currently-occupied chair position from anywhere; ie a swap
           this.removefromPanel(toDebate, currentChair)
+          this.removefromPanel(fromDebate, adjudicator)
+          toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
           fromDebate.panel.push({ 'adjudicator': currentChair, 'position': oldPosition })
+        } else {
+          // Remove them from their current panel; add to new panel
+          this.removefromPanel(fromDebate, adjudicator)
+          toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
         }
-        this.removefromPanel(fromDebate, adjudicator)
-        toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
       }
       // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)

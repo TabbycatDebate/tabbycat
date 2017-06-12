@@ -31,7 +31,12 @@ export default {
       }
       // We clone each object so we can roll back to the originals if it fails
       var clonedToDebate = _.cloneDeep(toDebate)
-      var clonedFromDebate = _.cloneDeep(fromDebate)
+      if (toDebate.id === fromDebate.id) {
+        // For in-panel swaps we want them referring to the same variable
+        var clonedFromDebate = clonedToDebate
+      } else {
+        var clonedFromDebate = _.cloneDeep(fromDebate)
+      }
       this.saveMoveForType(movedItemId, clonedFromDebate, clonedToDebate, toPosition)
     },
     debateCheckIfShouldSave(debate) {

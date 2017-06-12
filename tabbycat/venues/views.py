@@ -70,6 +70,7 @@ class SaveVenuesView(SaveDragAndDropDebateMixin):
             debate.venue = Venue.objects.get(pk=posted_debate['venue']['id'])
         else:
             debate.venue = None
+        debate.save()
         return debate
 
 
