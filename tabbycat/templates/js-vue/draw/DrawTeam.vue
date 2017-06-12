@@ -1,5 +1,6 @@
 <template>
-  <div :class="['slideover-target', highlightsIdentity, highlightsStatus]"
+  <div :class="['slideover-target', conflictsStatus,
+                highlightsIdentity, highlightsStatus]"
        @mouseenter="showSlideOver(team)"
        @mouseleave="hideSlideOver">
 
@@ -12,9 +13,11 @@
 import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
 import SlideOverTeamMixin from '../infoovers/SlideOverTeamMixin.vue'
 import HighlightableMixin from '../allocations/HighlightableMixin.vue'
+import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
-  mixins: [SlideOverSubjectMixin, SlideOverTeamMixin, HighlightableMixin],
+  mixins: [SlideOverSubjectMixin, SlideOverTeamMixin,
+           HighlightableMixin, ConflictableMixin],
   props: { 'team': Object },
   computed: {
     highlightableObject: function() {

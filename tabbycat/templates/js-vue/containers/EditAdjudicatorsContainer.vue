@@ -69,13 +69,14 @@ import AdjudicatorMovingMixin from '../ajax/AdjudicatorMovingMixin.vue'
 import HighlightableContainerMixin from '../allocations/HighlightableContainerMixin.vue'
 import AllocationActions from '../allocations/AllocationActions.vue'
 import DebateImportance from '../allocations/DebateImportance.vue'
+import ConflictsCoordinatorMixin from '../allocations/ConflictsCoordinatorMixin.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [AdjudicatorMovingMixin, DrawContainerMixin, HighlightableContainerMixin],
+  mixins: [AdjudicatorMovingMixin, DrawContainerMixin,
+           HighlightableContainerMixin, ConflictsCoordinatorMixin],
   components: { AllocationActions, DebateImportance, DraggableAdjudicator },
-  props: { conflicts: conflicts, histories: histories },
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)
   },

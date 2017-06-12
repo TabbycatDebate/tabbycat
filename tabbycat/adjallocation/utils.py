@@ -84,7 +84,7 @@ def populate_conflicts(conflicts, conflict, type):
     adj_id = conflict[0]
     # Make the base dictionary structure for each adj if it doesn't exist already
     if adj_id not in conflicts:
-        conflicts[adj_id] = {'teams': [], 'institutions': [], 'adjudicators': []}
+        conflicts[adj_id] = {'team': [], 'institution': [], 'adjudicator': []}
     conflictee_id = conflict[1]
     conflicts[adj_id][type].append(conflictee_id)
     return conflicts
@@ -105,13 +105,13 @@ def get_conflicts(t, r):
 
     conflicts = {} # Make a dictionary of conflicts with adj ID as key
     for conflict in team_conflicts:
-        conflicts = populate_conflicts(conflicts, conflict, 'teams')
+        conflicts = populate_conflicts(conflicts, conflict, 'team')
     for conflict in institution_conflicts:
-        conflicts = populate_conflicts(conflicts, conflict, 'institutions')
+        conflicts = populate_conflicts(conflicts, conflict, 'institution')
     for conflict in adj_conflicts_a:
-        conflicts = populate_conflicts(conflicts, conflict, 'adjudicators')
+        conflicts = populate_conflicts(conflicts, conflict, 'adjudicator')
     for conflict in adj_conflicts_b:
-        conflicts = populate_conflicts(conflicts, conflict, 'adjudicators')
+        conflicts = populate_conflicts(conflicts, conflict, 'adjudicator')
 
     return json.dumps(conflicts)
 
@@ -120,7 +120,7 @@ def populate_histories(histories, seen, all_histories, type, current_round):
     adj_id = seen[0]
     # Make the base dictionary structure for each adj if it doesn't exist already
     if adj_id not in histories:
-        histories[adj_id] = {'teams': [], 'adjudicators': []}
+        histories[adj_id] = {'team': [], 'adjudicator': []}
 
     seen_round_debate_id = seen[1]
     seen_round_seq = seen[2]
@@ -147,9 +147,9 @@ def get_histories(t, r):
 
     histories = {} # Make a dictionary of conflicts with adj ID as key
     for seen in seen_adjudicators:
-        histories = populate_histories(histories, seen, seen_adjudicators, 'adjudicators', r)
+        histories = populate_histories(histories, seen, seen_adjudicators, 'adjudicator', r)
     for seen in seen_teams:
-        histories = populate_histories(histories, seen, seen_teams, 'teams', r)
+        histories = populate_histories(histories, seen, seen_teams, 'team', r)
 
     return json.dumps(histories)
 

@@ -1,12 +1,10 @@
 <template>
   <div draggable=true
-       :class="[draggableClasses, highlightsIdentity, highlightsStatus]"
+       :class="[draggableClasses, conflictsStatus, highlightsIdentity, highlightsStatus]"
        @dragstart="dragStart"
        @dragend="dragEnd"
-       @mouseenter="showSlideOver(adjudicator)"
-       @mouseleave="hideSlideOver"><!--
-       @mouseenter="show = true"
-       @mouseleave="show = false" -->
+       @mouseenter="handleHoverOn(adjudicator)"
+       @mouseleave="handleHoverOff">
 
     <div class="draggable-prefix">
       <h4>{{ adjudicator.score }}</h4>
@@ -26,9 +24,11 @@ import DraggableMixin from '../draganddrops/DraggableMixin.vue'
 import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
 import SlideOverAdjudicatorMixin from '../infoovers/SlideOverAdjudicatorMixin.vue'
 import HighlightableMixin from '../allocations/HighlightableMixin.vue'
+import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin, HighlightableMixin],
+  mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin,
+           HighlightableMixin, ConflictableMixin],
   props: { 'adjudicator': Object, 'debateId': null},
   computed: {
     initialledName: function() {
@@ -54,6 +54,14 @@ export default {
     }
   },
   methods: {
+    handleHoverOn: function(event) {
+      this.showSlideOver()
+      this.showConflicts()
+    },
+    handleHoverOff: function(event) {
+      this.hideSlideOver()
+      this.hideConflicts()
+    },
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-team', this);
     },
