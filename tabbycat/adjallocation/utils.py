@@ -2,12 +2,14 @@ import json
 import math
 from itertools import permutations
 
+from django.db.models import Q
+
 from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
 
-from breakqual.utils import calculate_live_thresholds, determine_liveness
+# from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import DebateTeam
-from participants.models import Adjudicator, Team
-from participants.prefetch import populate_feedback_scores, populate_win_counts
+# from participants.models import Adjudicator, Team
+# from participants.prefetch import populate_feedback_scores, populate_win_counts
 
 
 def adjudicator_conflicts_display(debates):
@@ -78,212 +80,79 @@ def percentile(n, percent, key=lambda x:x):
     return d0+d1
 
 
-def get_adjs(r):
-
-    active = [(a, None) for a in r.active_adjudicators]
-
-    allocated_adjs = DebateAdjudicator.objects.select_related(
-        'debate__round', 'adjudicator').filter(
-        debate__round=r).values_list(
-        'adjudicator', 'debate')
-    allocated_ids = [a[0] for a in allocated_adjs]
-
-    # Remove active adjs that have been assigned to debates
-    unallocated_adjs = [a for a in active if a[0] not in allocated_ids]
-    all_ids = list(allocated_adjs) + list(unallocated_adjs)
-
-    # Grab all the actual adjudicator objects
-    active_adjs = Adjudicator.objects.select_related(
-        'institution', 'tournament', 'tournament__current_round').in_bulk(
-        [a[0] for a in all_ids])
-
-    # Build a list of adjudicator objects (after setting their debate property)
-    round_adjs = []
-    for round_id, round_adj in zip(all_ids, list(active_adjs.values())):
-        round_adj.debate = round_id[1]
-        round_adjs.append(round_adj)
-
-    return round_adjs
+def populate_conflicts(conflicts, conflict, type):
+    adj_id = conflict[0]
+    # Make the base dictionary structure for each adj if it doesn't exist already
+    if adj_id not in conflicts:
+        conflicts[adj_id] = {'teams': [], 'institutions': [], 'adjudicators': []}
+    conflictee_id = conflict[1]
+    conflicts[adj_id][type].append(conflictee_id)
+    return conflicts
 
 
-def populate_conflicts(adjs, teams):
-    # Grab all conflicts data and assign it
-    teamconflicts = AdjudicatorConflict.objects.filter(
-        adjudicator__in=adjs).values_list(
-        'adjudicator', 'team')
-    institutionconflicts = AdjudicatorInstitutionConflict.objects.filter(
-        adjudicator__in=adjs).values_list(
-        'adjudicator', 'institution')
-    adjconflicts = AdjudicatorAdjudicatorConflict.objects.filter(
-        adjudicator__in=adjs).values_list(
-        'adjudicator', 'conflict_adjudicator')
+def get_conflicts(t, r):
+    # Grab all conflicts data as value lists of conflict-er and conflict-ee
+    filter = Q(adjudicator__tournament=t) | Q(adjudicator__tournament=None)
+    team_conflicts = AdjudicatorConflict.objects.filter(
+        filter).values_list('adjudicator', 'team')
+    institution_conflicts = AdjudicatorInstitutionConflict.objects.filter(
+        filter).values_list('adjudicator', 'institution')
+    adj_conflicts_a = AdjudicatorAdjudicatorConflict.objects.filter(
+        filter).values_list('adjudicator', 'conflict_adjudicator')
+    # Adj-adj conflicts need to be symmetric; so reverse the order
+    adj_conflicts_b = AdjudicatorAdjudicatorConflict.objects.filter(
+        filter).values_list('conflict_adjudicator', 'adjudicator')
 
-    for a in adjs:
-        a.personal_teams = [c[1] for c in teamconflicts if c[0] == a.id]
-        a.institutional_institutions = [a.institution.id]
-        a.institutional_institutions.extend(
-            [c[1] for c in institutionconflicts if c[0] == a.id and c[1] != a.institution.id])
+    conflicts = {} # Make a dictionary of conflicts with adj ID as key
+    for conflict in team_conflicts:
+        conflicts = populate_conflicts(conflicts, conflict, 'teams')
+    for conflict in institution_conflicts:
+        conflicts = populate_conflicts(conflicts, conflict, 'institutions')
+    for conflict in adj_conflicts_a:
+        conflicts = populate_conflicts(conflicts, conflict, 'adjudicators')
+    for conflict in adj_conflicts_b:
+        conflicts = populate_conflicts(conflicts, conflict, 'adjudicators')
 
-        # Adj-adj conflicts should be symmetric
-        a.personal_adjudicators = [c[1] for c in adjconflicts if c[0] == a.id]
-        a.personal_adjudicators += [c[0] for c in adjconflicts if c[1] == a.id]
-
-    for t in teams:
-        t.personal_adjudicators = [c[0] for c in teamconflicts if c[1] == t.id]
-        # For teams conflicted_institutions is a list of adjs due to the asymetric
-        # nature of adjs having multiple instutitonal conflicts
-        t.institutional_institutions = [t.institution_id]
-
-    return adjs, teams
+    return json.dumps(conflicts)
 
 
-def populate_histories(adjs, teams, t, r):
+def populate_histories(histories, seen, all_histories, type, current_round):
+    adj_id = seen[0]
+    # Make the base dictionary structure for each adj if it doesn't exist already
+    if adj_id not in histories:
+        histories[adj_id] = {'teams': [], 'adjudicators': []}
 
-    da_histories = DebateAdjudicator.objects.filter(
+    seen_round_debate_id = seen[1]
+    seen_round_seq = seen[2]
+    # We don't know who they saw just based on a DebateAdjudicator; so we need
+    # to match things upagainst the other objcects
+    for history in all_histories:
+        check_debate_id = history[1]
+        check_adj_id = history[0]
+        if seen_round_debate_id == check_debate_id and adj_id != check_adj_id:
+            histories[adj_id][type].append(
+                {'ago': current_round.seq - seen_round_seq, type: history[0]})
+
+    return histories
+
+
+def get_histories(t, r):
+
+    seen_adjudicators = DebateAdjudicator.objects.filter(
         debate__round__tournament=t, debate__round__seq__lt=r.seq).select_related(
-        'debate__round').values_list(
-        'adjudicator', 'debate', 'debate__round__seq').order_by('-debate__round__seq')
-    dt_histories = DebateTeam.objects.filter(
+            'debate__round').values_list('adjudicator', 'debate', 'debate__round__seq')
+    seen_teams = DebateTeam.objects.filter(
         debate__round__tournament=t, debate__round__seq__lt=r.seq).select_related(
-        'debate__round').values_list(
-        'team', 'debate', 'debate__round__seq').order_by('-debate__round__seq')
+            'debate__round').values_list('team', 'debate', 'debate__round__seq')
 
-    for a in adjs:
-        hists = []
-        # Iterate over all DebateAdjudications from this adj
-        for dah in [dah for dah in da_histories if dah[0] == a.id]:
-            # Find the relevant DebateTeams from the matching debates
-            hists.extend([{
-                'team': dat[0],
-                'debate': dah[1],
-                'ago': r.seq - dah[2],
-            } for dat in dt_histories if dat[1] == dah[1]])
-            # From these DebateAdjudications find panellists from the same debates
-            hists.extend([{
-                'adjudicator': dah2[0],
-                'debate': dah2[1],
-                'ago': r.seq - dah2[2],
-            } for dah2 in da_histories if dah2[1] == dah[1] and dah2 != dah])
-        a.histories = hists
+    histories = {} # Make a dictionary of conflicts with adj ID as key
+    for seen in seen_adjudicators:
+        histories = populate_histories(histories, seen, seen_adjudicators, 'adjudicators', r)
+    for seen in seen_teams:
+        histories = populate_histories(histories, seen, seen_teams, 'teams', r)
 
-    for t in teams:
-        hists = []
-        # Iterate over the DebateTeams and match to teams
-        for dat in [dat for dat in dt_histories if dat[0] == t.id]:
-            # Once matched, find all DebateAdjudicators from that debate and
-            # add them as conflicts for this team
-            hists.extend([{
-                'adjudicator': dah[0],
-                'debate': dah[1],
-                'ago': r.seq - dah[2],
-            } for dah in da_histories if dah[1] == dat[1]])
-        t.histories = hists
+    return json.dumps(histories)
 
-    return adjs, teams
-
-
-def adjs_to_json(adjs, regions, t):
-    """Converts to a standard JSON object for Vue components to use"""
-
-    populate_feedback_scores(adjs)
-    fw = t.current_round.feedback_weight
-    for adj in adjs:
-        adj.abs_score = adj.weighted_score(fw)
-
-    absolute_scores = [adj.abs_score for adj in adjs]
-    absolute_scores.sort()
-    percentile_cutoffs = [(100 - i, percentile(absolute_scores, i/100)) for i in range(0,100,10)]
-    percentile_cutoffs.reverse()
-
-    data = {}
-    for adj in adjs:
-        data[adj.id] = {
-            'type': 'adjudicator',
-            'id': adj.id,
-            'name': adj.name,
-            'gender': adj.gender,
-            'gender_show': False,
-            'region': [r for r in regions if r['id'] is adj.institution.region_id][0] if adj.institution.region_id is not None else '',
-            'region_show': False,
-            'institution': {
-                'id': adj.institution.id,
-                'name': adj.institution.code,
-                'code' : adj.institution.code,
-                'abbreviation' : adj.institution.abbreviation
-            },
-            'score': "%.1f" % adj.abs_score,
-            'ranking': next(pc[0] for pc in percentile_cutoffs if pc[1] <= adj.abs_score),
-            'histories': adj.histories,
-            'conflicts': {
-                'teams': adj.personal_teams,
-                'institutions': adj.institutional_institutions,
-                'adjudicators': adj.personal_adjudicators,
-            },
-            'conflicted': {
-                'hover': {'personal': False, 'institutional': False, 'history': False, 'history_ago': 99},
-                'panel': {'personal': False, 'institutional': False, 'history': False, 'history_ago': 99}
-            }
-        }
-
-    return json.dumps(data)
-
-
-def teams_to_json(teams, regions, categories, t, r):
-    thresholds = {bc['id']: calculate_live_thresholds(bc, t, r) for bc in categories}
-
-    # populate team categories
-    tbcs = Team.break_categories.through.objects.filter(team__in=teams)
-    break_category_ids_by_team = {team.id: [] for team in teams}
-    for tbc in tbcs:
-        break_category_ids_by_team[tbc.team_id].append(tbc.breakcategory_id)
-
-    populate_win_counts(teams)
-
-    data = {}
-    for team in teams:
-        team_categories = break_category_ids_by_team[team.id]
-        break_categories = [{
-            'id': bc['id'],
-            'name': bc['name'],
-            'seq': bc['seq'],
-            'will_break': determine_liveness(thresholds[bc['id']], team.wins_count)
-        } for bc in categories if bc['id'] in team_categories]
-
-        data[team.id] = {
-            'type': 'team',
-            'id': team.id,
-            'name': team.short_name,
-            'long_name': team.long_name,
-            'uses_prefix': team.use_institution_prefix,
-            'speakers': [{
-                'name': s.name,
-                'gender': s.gender
-            } for s in team.speakers],
-            'gender_show': False,
-            'wins': team.wins_count,
-            'region': [r for r in regions if r['id'] is team.institution.region_id][0] if team.institution.region_id else '',
-            'region_show': False,
-            # TODO: Searching for break cats here incurs extra queries; should be done earlier
-            'categories': break_categories,
-            'category_show': False,
-            'institution': {
-                'id': team.institution.id,
-                'name': team.institution.code,
-                'code' : team.institution.code,
-                'abbreviation' : team.institution.abbreviation
-            },
-            'histories': team.histories,
-            'conflicts': {
-                'teams': [], # No team-team conflicts
-                'institutions': team.institutional_institutions,
-                'adjudicators': team.personal_adjudicators
-            },
-            'conflicted': {
-                'hover': {'personal': False, 'institutional': False, 'history': False, 'history_ago': 99},
-                'panel': {'personal': False, 'institutional': False, 'history': False, 'history_ago': 99}
-            }
-        }
-    return json.dumps(data)
 
 # REDUNDANT; although parts worth translating
 # class AllocationTableBuilder(TabbycatTableBuilder):

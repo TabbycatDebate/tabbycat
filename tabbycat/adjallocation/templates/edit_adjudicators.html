@@ -16,7 +16,9 @@
 
   <edit-adjudicators-container :initial-debates="debates"
                                :round-info="roundInfo"
-                               :initial-unallocated-items="unallocatedItems">
+                               :initial-unallocated-items="unallocatedItems"
+                               :conflicts="conflicts"
+                               :histories="histories">
   </edit-adjudicators-container>
 
 </div>
@@ -28,6 +30,8 @@
       debates: {{ vueDebates|safe }},
       roundInfo: {{ vueRoundInfo|safe }},
       unallocatedItems: {{ vueUnusedAdjudicators|safe }},
+      conflicts: {{ vueAdjudicatorConflicts|safe }},
+      histories: {{ vueAdjudicatorHistories|safe }},
     }
   </script>
   {{ block.super }}

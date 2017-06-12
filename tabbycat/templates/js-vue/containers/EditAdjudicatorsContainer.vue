@@ -75,7 +75,7 @@ import _ from 'lodash'
 export default {
   mixins: [AdjudicatorMovingMixin, DrawContainerMixin, HighlightableContainerMixin],
   components: { AllocationActions, DebateImportance, DraggableAdjudicator },
-  props: { roundInfo: Object },
+  props: { conflicts: conflicts, histories: histories },
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)
   },

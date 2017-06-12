@@ -17,6 +17,7 @@ from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import DebateAdjudicator
+from .utils import get_histories, get_conflicts
 
 from utils.misc import reverse_round
 
@@ -66,11 +67,11 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
         return all_bcs
 
     def get_context_data(self, **kwargs):
-        # regions = regions_ordered(t)
-        # categories = categories_ordered(t)
-        # adjs, teams = populate_conflicts(adjs, teams)
-        # adjs, teams = populate_histories(adjs, teams, t, r)
         kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
+        kwargs['vueAdjudicatorConflicts'] = get_conflicts(
+            self.get_tournament(), self.get_round())
+        kwargs['vueAdjudicatorHistories'] = get_histories(
+            self.get_tournament(), self.get_round())
         return super().get_context_data(**kwargs)
 
 
