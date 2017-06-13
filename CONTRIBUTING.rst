@@ -19,6 +19,7 @@ Getting started
 - To easily test your changes to Tabbycat you probably want a working :ref:`local install <install-local>` (without using Docker)
 - Generally we prefer that features and bug fixes are submitted as pull requests on their own branch (as described in the  `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_). Submitting against `develop` (but not `master`) is fine for small fixes and changes.
 - We use Django's testing tools — it would be great if new features came with unit tests
+- By default the development server's build process will broadcast livereload events; installing one of their `browser plugins <http://livereload.com/extensions/>`_ can make testing front-end changes easier.
 
 Style guide
 ===========
