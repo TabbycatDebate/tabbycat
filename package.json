@@ -42,7 +42,7 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "stylelint": "stylelint tabbycat/templates/**/*.scss || true",
+    "stylelint": "stylelint tabbycat/**/*.scss || true",
     "eslint": "eslint --ext .js,.html,.vue --ignore-pattern tabbycat/static/ --cache tabbycat/ || true"
   },
   "repository": "https://github.com/czlee/tabbycat",
