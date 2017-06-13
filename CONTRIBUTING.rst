@@ -27,9 +27,13 @@ For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a 
 
     $ flake8 .
 
-For stylesheets, we use `stylelint <https://stylelint.io>`_ to enforce the `AirBnB styleguide <https://github.com/airbnb/css>`_. The entire codebase can be checked by using::
+For stylesheets, we use `stylelint <https://stylelint.io>`_ to enforce the `AirBnB styleguide <https://github.com/airbnb/css>`_. The relevant code can be checked by using::
 
     $ npm run stylelint
+
+For javascript, we use `eslint <http://eslint.org/>` to enforce the `AirBnB styleguide <https://github.com/airbnb/javascript>`_. The relevant code can be checked by using::
+
+    $ npm run eslint
 
 Versioning convention
 =====================
