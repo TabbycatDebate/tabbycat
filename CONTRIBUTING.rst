@@ -23,11 +23,13 @@ Getting started
 Style guide
 ===========
 
-We use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a Travis CI build to fail. The entire codebase can be checked by using::
+For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a Travis CI build to fail. The entire codebase can be checked by using::
 
     $ flake8 .
 
-While in the base directory
+For stylesheets, we use `stylelint <https://stylelint.io>`_ to enforce the `AirBnB styleguide <https://github.com/airbnb/css>`_. The entire codebase can be checked by using::
+
+    $ npm run stylelint
 
 Versioning convention
 =====================
