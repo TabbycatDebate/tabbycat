@@ -49,14 +49,12 @@ export default {
       }
     },
     setConflicts: function(conflictingItem, conflictingItemType) {
-      console.log('Setting conflicts for ', conflictingItemType, conflictingItem.id)
       var conflicts = this.getClashes(conflictingItem, conflictingItemType)
       var histories = this.getHistories(conflictingItem, conflictingItemType)
       this.$eventHub.$emit('set-conflicts-for', conflictingItem,
                            conflicts, histories, true)
     },
     unsetConflicts: function(conflictingItem, conflictingItemType) {
-      console.log('Setting conflicts for ', conflictingItemType, conflictingItem.id)
       var conflicts = this.getClashes(conflictingItem, conflictingItemType)
       var histories = this.getHistories(conflictingItem, conflictingItemType)
       this.$eventHub.$emit('set-conflicts-for', conflictingItem,

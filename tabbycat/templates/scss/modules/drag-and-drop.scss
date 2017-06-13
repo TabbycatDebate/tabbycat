@@ -15,10 +15,6 @@
   &:active {
     top: 2px;
   }
-  &:hover {
-    cursor: move;
-    background: #fff; // Need to override default :hover bg state that gets stuck
-  }
 
   background: #fff; // Need to override default :hover bg state that gets stuck
   margin: 4px 4px 0 0; // Need spacing offsets so they don't bunch
@@ -46,8 +42,15 @@
 
 }
 
-.vue-is-dragging {
+.vue-draggable:hover,
+.vue-is-hovering:active {
+  background: #000;
+  border-color: $gray;
   cursor: move;
+  color: #fff;
+}
+
+.vue-is-dragging {
   opacity: .5 !important;
 }
 
@@ -105,4 +108,3 @@
 .vue-is-drag-enter {
   background: $brand-success;
 }
-

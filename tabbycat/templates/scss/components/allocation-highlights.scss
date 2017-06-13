@@ -76,22 +76,7 @@
   }
 }
 
-// Custom hover state to override button default
-.conflictable.vue-is-hovering,
-.conflictable.vue-is-dragging,
-.conflictable.vue-is-hovering:active {
-  background: #000;
-  border-color: $gray;
-
-  .text-muted {
-    opacity: 1;
-  }
-}
-
 // Ensure text is treated nicely when a conflict state is active
-.conflictable.vue-is-hovering,
-.conflictable.vue-is-dragging,
-.conflictable.vue-is-hovering:active,
 .conflict-personal,
 .conflict-institutional,
 .conflict-history-1-ago,
