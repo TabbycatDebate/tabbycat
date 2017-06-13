@@ -17,7 +17,7 @@ from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import DebateAdjudicator
-from .utils import get_histories, get_conflicts
+from .utils import get_conflicts, get_histories
 
 from utils.misc import reverse_round
 
