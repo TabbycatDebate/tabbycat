@@ -42,17 +42,19 @@ export default {
     hideConflicts: function() {
       this.$eventHub.$emit('hide-conflicts-for', this.conflictable, this.conflictableType)
     },
-    setConflicts: function(conflictingItem, conflicts, histories, setState) {
+    checkClashes: function(conflictingItem, conflicts, setState) {
       // Check the given list of conflicts to see if this item's id is there
-      if (conflictingItem === this.conflictable) {
-        return // Don't show self conflicts
+      if (conflictingItem !== this.conflictable) {
+        if (_.includes(conflicts[this.conflictableType], this.conflictable.id)) {
+          this.conflicted[this.conflictableType] = setState
+        }
+        if (_.includes(conflicts['institution'], this.conflictable.institution.id)) {
+          this.conflicted['institution'] = setState
+        }
       }
-      if (_.includes(conflicts[this.conflictableType], this.conflictable.id)) {
-        this.conflicted[this.conflictableType] = setState
-      }
-      if (_.includes(conflicts['institution'], this.conflictable.institution.id)) {
-        this.conflicted['institution'] = setState
-      }
+    },
+    checkHistories: function(histories, setState) {
+      // Histories
       if (!setState) {
         this.seen = false
       } else if (histories && !_.isUndefined(histories[this.conflictableType])) {
@@ -66,6 +68,10 @@ export default {
           this.seen = lastSeen
         }
       }
+    },
+    setConflicts: function(conflictingItem, conflicts, histories, setState) {
+      this.checkClashes(conflictingItem, conflicts, setState)
+      this.checkHistories(histories, setState)
     },
   }
 }

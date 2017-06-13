@@ -12,7 +12,7 @@ export default {
 
   },
   methods: {
-    getConflicts(conflictingItem, conflictingItemType) {
+    getClashes(conflictingItem, conflictingItemType) {
       if (conflictingItemType === 'adjudicator') {
         return this.conflicts[conflictingItem.id]
       } else if (conflictingItemType === 'team') {
@@ -33,31 +33,31 @@ export default {
       }
     },
     getHistories(conflictingItem, conflictingItemType) {
-      var histories = false
       if (conflictingItemType === 'adjudicator') {
-        histories = this.histories[conflictingItem.id]
-      }
-      // } else if (conflictingItemType === 'team') {
-      //   var reversedHistories = _.filter(this.histories, function(h) {
-      //     return h[self.conflictableType] === conflictingItem.id
-      //   })
-      // }
-      if (!_.isUndefined(histories)) {
-        return histories
-      } else {
-        return false
+        return this.histories[conflictingItem.id]
+      } else if (conflictingItemType === 'team') {
+        var reversedHistories = {'adjudicator': []}
+        _.forEach(this.histories, function(adjHistories, adjId) {
+          _.forEach(adjHistories['team'], function(ah) {
+            if (ah.id === conflictingItem.id) {
+              reversedHistories['adjudicator'].push({
+                'ago': ah.ago, 'id': parseInt(adjId)})
+            }
+          })
+        })
+        return reversedHistories
       }
     },
     setConflicts: function(conflictingItem, conflictingItemType) {
       console.log('Setting conflicts for ', conflictingItemType, conflictingItem.id)
-      var conflicts = this.getConflicts(conflictingItem, conflictingItemType)
+      var conflicts = this.getClashes(conflictingItem, conflictingItemType)
       var histories = this.getHistories(conflictingItem, conflictingItemType)
       this.$eventHub.$emit('set-conflicts-for', conflictingItem,
                            conflicts, histories, true)
     },
     unsetConflicts: function(conflictingItem, conflictingItemType) {
       console.log('Setting conflicts for ', conflictingItemType, conflictingItem.id)
-      var conflicts = this.getConflicts(conflictingItem, conflictingItemType)
+      var conflicts = this.getClashes(conflictingItem, conflictingItemType)
       var histories = this.getHistories(conflictingItem, conflictingItemType)
       this.$eventHub.$emit('set-conflicts-for', conflictingItem,
                            conflicts, histories, false)
