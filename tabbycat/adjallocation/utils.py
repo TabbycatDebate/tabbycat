@@ -116,40 +116,49 @@ def get_conflicts(t, r):
     return json.dumps(conflicts)
 
 
-def populate_histories(histories, seen, all_histories, type, current_round):
-    adj_id = seen[0]
+def populate_histories(histories, seen_adj, seen_adj_or_team_histories,
+                       type, current_round):
+    adj_id = seen_adj[0]
+
     # Make the base dictionary structure for each adj if it doesn't exist already
     if adj_id not in histories:
         histories[adj_id] = {'team': [], 'adjudicator': []}
 
-    seen_round_debate_id = seen[1]
-    seen_round_seq = seen[2]
-    # We don't know who they saw just based on a DebateAdjudicator; so we need
-    # to match things upagainst the other objcects
-    for history in all_histories:
-        check_debate_id = history[1]
-        check_adj_id = history[0]
-        if seen_round_debate_id == check_debate_id and adj_id != check_adj_id:
+    seen_round_debate_id = seen_adj[1]
+    seen_round_seq = seen_adj[2]
+
+    # We don't know who they saw just based on a DebateAdjudicator/Team; so we need
+    # to match things upagainst the other objects
+    for history in seen_adj_or_team_histories:
+        debate_id = history[1]
+        check_team_or_adj_id = history[0]
+
+        if type is 'adjudicator' and adj_id == check_team_or_adj_id:
+            # Don't match conflicts to self
+            continue
+        if seen_round_debate_id == debate_id:
+            # If the root DA/DT saw this DT/DA
             histories[adj_id][type].append(
-                {'ago': current_round.seq - seen_round_seq, type: history[0]})
+                {'ago': current_round.seq - seen_round_seq, 'id': history[0]})
 
     return histories
 
 
 def get_histories(t, r):
 
-    seen_adjudicators = DebateAdjudicator.objects.filter(
+    adj_histories = DebateAdjudicator.objects.filter(
         debate__round__tournament=t, debate__round__seq__lt=r.seq).select_related(
             'debate__round').values_list('adjudicator', 'debate', 'debate__round__seq')
-    seen_teams = DebateTeam.objects.filter(
+    team_histories = DebateTeam.objects.filter(
         debate__round__tournament=t, debate__round__seq__lt=r.seq).select_related(
             'debate__round').values_list('team', 'debate', 'debate__round__seq')
 
     histories = {} # Make a dictionary of conflicts with adj ID as key
-    for seen in seen_adjudicators:
-        histories = populate_histories(histories, seen, seen_adjudicators, 'adjudicator', r)
-    for seen in seen_teams:
-        histories = populate_histories(histories, seen, seen_teams, 'team', r)
+    for seen_adj in adj_histories:
+        histories = populate_histories(histories, seen_adj,
+                                       adj_histories, 'adjudicator', r)
+        histories = populate_histories(histories, seen_adj,
+                                       team_histories, 'team', r)
 
     return json.dumps(histories)
 

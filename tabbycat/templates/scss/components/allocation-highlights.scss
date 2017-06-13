@@ -7,45 +7,45 @@
   // Teams we want to have no border to reduce clutter; adjs we want so they
   // appear like draggable buttons/elements
  // For hover states
-  &.conflict-hover-personal-conflict {
+  &.conflict-personal {
     background: $brand-danger;
   }
-  &.conflict-hover-institutional-conflict {
+  &.conflict-institutional {
     background: $brand-warning;
   }
-  &.conflict-hover-1-ago {
-    background: darken($brand-primary, 20%);
-  }
-  &.conflict-hover-2-ago {
-    background: lighten($brand-primary, 0%);
-  }
-  &.conflict-hover-3-ago {
-    background: lighten($brand-primary, 15%);
-  }
-  &.conflict-hover-4-ago {
-    background: lighten($brand-primary, 30%);
-  }
-  &.conflict-hover-5-ago {
-    background: lighten($brand-primary, 34%);
-  }
-  &.conflict-hover-6-ago {
-    background: lighten($brand-primary, 36%);
-  }
-  &.conflict-hover-7-ago {
-    background: lighten($brand-primary, 40%);
-  }
-  &.conflict-hover-8-ago {
-    background: lighten($brand-primary, 44%);
-  }
-  &.conflict-hover-9-ago {
-    background: lighten($brand-primary, 48%);
-  }
   // For in panel states
-  &.conflict-panel-personal-conflict {
+  &.panel-personal {
     border-color: darken($brand-danger, 10%);
   }
-  &.conflict-panel-institutional-conflict {
+  &.panel-institutional {
     border-color: darken($brand-warning, 10%);
+  }
+  &.conflict-history-1-ago {
+    background: darken($brand-primary, 20%);
+  }
+  &.conflict-history-2-ago {
+    background: lighten($brand-primary, 0%);
+  }
+  &.conflict-history-3-ago {
+    background: lighten($brand-primary, 15%);
+  }
+  &.conflict-history-4-ago {
+    background: lighten($brand-primary, 30%);
+  }
+  &.conflict-history-5-ago {
+    background: lighten($brand-primary, 34%);
+  }
+  &.conflict-history-6-ago {
+    background: lighten($brand-primary, 36%);
+  }
+  &.conflict-history-7-ago {
+    background: lighten($brand-primary, 40%);
+  }
+  &.conflict-history-8-ago {
+    background: lighten($brand-primary, 44%);
+  }
+  &.conflict-history-9-ago {
+    background: lighten($brand-primary, 48%);
   }
   &.conflict-panel-1-ago {
     border-color: darken($brand-primary, 20%);
@@ -92,11 +92,11 @@
 .conflictable.vue-is-hovering,
 .conflictable.vue-is-dragging,
 .conflictable.vue-is-hovering:active,
-.conflict-hover-personal-conflict,
-.conflict-hover-institutional-conflict,
-.conflict-hover-1-ago,
-.conflict-hover-2-ago,
-.conflict-hover-3-ago {
+.conflict-personal,
+.conflict-institutional,
+.conflict-history-1-ago,
+.conflict-history-2-ago,
+.conflict-history-3-ago {
   color: #fff;
 
   span,

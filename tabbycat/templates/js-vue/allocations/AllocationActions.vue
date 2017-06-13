@@ -20,13 +20,13 @@
           <div class="btn-group btn-group-sm">
             <template v-if="!highlights.region && !highlights.gender && !highlights.category">
               <button class="visible-lg-block btn btn-default">Conflicts Key</button>
-              <button disabled class="btn conflictable conflicts-toolbar conflict-hover-2-ago">
+              <button disabled class="btn conflictable conflicts-toolbar conflict-history-2-ago">
                 Seen Before
               </button>
-              <button disabled class="btn conflictable conflicts-toolbar conflict-hover-institutional-conflict">
+              <button disabled class="btn conflictable conflicts-toolbar conflict-institutional">
                 Institutional Clash
               </button>
-              <button disabled class="btn conflictable conflicts-toolbar conflict-hover-personal-conflict">
+              <button disabled class="btn conflictable conflicts-toolbar conflict-personal">
                 Personal Clash
               </button>
               <button disabled class="btn panel-incomplete">

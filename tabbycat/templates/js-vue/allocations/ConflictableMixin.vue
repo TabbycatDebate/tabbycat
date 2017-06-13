@@ -4,7 +4,8 @@ import _ from 'lodash'
 export default {
   data: function () {
     return {
-      conflicted: { team: false, adjudicator: false, institution: false }
+      conflicted: { team: false, adjudicator: false, institution: false },
+      seen: false
     }
   },
   created: function () {
@@ -23,10 +24,13 @@ export default {
     conflictsStatus: function() {
       var conflictsCSS = 'conflictable '
       if (this.conflicted[this.conflictableType]) {
-        conflictsCSS += 'conflict-hover-personal-conflict '
+        conflictsCSS += 'conflict-personal '
       }
       if (this.conflicted['institution']) {
-        conflictsCSS += 'conflict-hover-institutional-conflict '
+        conflictsCSS += 'conflict-institutional '
+      }
+      if (this.seen) {
+        conflictsCSS += 'conflict-history-' + this.seen + '-ago'
       }
       return conflictsCSS
     }
@@ -38,7 +42,7 @@ export default {
     hideConflicts: function() {
       this.$eventHub.$emit('hide-conflicts-for', this.conflictable, this.conflictableType)
     },
-    setConflicts: function(conflictingItem, conflicts, setState) {
+    setConflicts: function(conflictingItem, conflicts, histories, setState) {
       // Check the given list of conflicts to see if this item's id is there
       if (conflictingItem === this.conflictable) {
         return // Don't show self conflicts
@@ -48,6 +52,19 @@ export default {
       }
       if (_.includes(conflicts['institution'], this.conflictable.institution.id)) {
         this.conflicted['institution'] = setState
+      }
+      if (!setState) {
+        this.seen = false
+      } else if (histories && !_.isUndefined(histories[this.conflictableType])) {
+        var self = this
+        var timesSeen = _.filter(histories[this.conflictableType], function(h) {
+          return h.id === self.conflictable.id
+        })
+        if (timesSeen.length > 0) {
+          var sortedByAgo = _.sortBy(timesSeen, [function(s) { return s.ago }])
+          var lastSeen = sortedByAgo[0].ago
+          this.seen = lastSeen
+        }
       }
     },
   }
