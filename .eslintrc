@@ -1,3 +1,13 @@
 {
-  "extends": "airbnb-base"
+  "extends": "airbnb-base",
+  "plugins": [
+    "html"
+  ],
+  "env": {
+    "browser": true, // Browser window global variables
+    "jquery": true // jQuery global variable
+  },
+  "rules": {
+    "semi": 0 // Disallow semi colons for now
+  }
 }

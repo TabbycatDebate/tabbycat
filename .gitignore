@@ -42,6 +42,7 @@ venv-*/
 *.db
 .DS_Store
 .debug
+.eslintcache
 
 # C extensions
 *.so
