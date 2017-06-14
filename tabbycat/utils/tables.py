@@ -432,6 +432,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': "Institution",
             }, [team.institution.code if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams])
 
+        if show_divisions:
+            self.add_column({
+                'key': 'Division',
+                'icon': 'glyphicon-th-list',
+                'tooltip': 'Division'
+            }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
+
     def add_speaker_columns(self, speakers, key="Name"):
         self.add_column(key, [speaker.name if not hasattr(speaker, 'anonymise') else "<em>Redacted</em>"
                               for speaker in speakers])
