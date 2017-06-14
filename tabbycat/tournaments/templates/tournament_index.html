@@ -80,8 +80,10 @@
 
 {% block js %}
   <script>
-    var updateActionsURL = '{% tournamenturl 'actionlog-latest-json' %}';
-    var updateResultsURL = '{% tournamenturl 'results-latest-json' %}';
+    window.vueData = {
+      updateActionsURL: '{% tournamenturl 'actionlog-latest-json' %}',
+      updateResultsURL: '{% tournamenturl 'results-latest-json' %}',
+    }
   </script>
   {{ block.super }}
 {% endblock %}

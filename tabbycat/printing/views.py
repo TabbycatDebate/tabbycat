@@ -85,15 +85,15 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
             'text': question.text,
             'seq': question.seq,
             'type': question.answer_type,
-            'required': json.dumps(question.answer_type),
-            'from_team': json.dumps(question.from_team),
-            'from_adj': json.dumps(question.from_adj),
+            'required': question.answer_type,
+            'from_team': question.from_team,
+            'from_adj': question.from_adj,
         }
         if question.choices:
             qdict['choice_options'] = question.choices.split(AdjudicatorFeedbackQuestion.CHOICE_SEPARATOR)
         elif question.min_value is not None and question.max_value is not None:
             qdict['choice_options'] = question.choices_for_number_scale
-        return qdict
+        return json.dumps(qdict)
 
     def add_defaults(self):
         t = self.get_tournament()

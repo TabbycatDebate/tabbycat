@@ -75,12 +75,8 @@ Vue.prototype.$eventHub = eventHub
 // // Printables
 // //------------------------------------------------------------------------------
 
-// import Ballot from  '../js-vue/printables/PrintableBallot.vue'
-
-// if (typeof printableBaseData !== 'undefined' && printableBaseData !== null) {
-//   vueData = printableBaseData; // From Template
-//   vueComponents['Ballot'] = Ballot;
-// }
+import PrintableBallot from  '../js-vue/printables/PrintableBallot.vue'
+vueComponents['PrintableBallot'] = PrintableBallot
 
 // //------------------------------------------------------------------------------
 // // Divisons Allocator

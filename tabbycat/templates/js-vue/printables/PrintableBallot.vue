@@ -1,32 +1,33 @@
 <template>
   <section class="db-score-sheet db-flex-item db-flex-column">
 
-    <ballot-header :data="data" :ballot="ballot">
-    </ballot-header>
+    <printable-ballot-header :data="data" :ballot="ballot">
+    </printable-ballot-header>
 
-    <scoresheet v-if="data.kind === 'Scoresheet'"
-                :data="data" :ballot="ballot"
-                :motions="motions" :positions="positions">
-    </scoresheet>
+    <printable-scoresheet v-if="data.kind === 'Scoresheet'"
+                          :data="data" :ballot="ballot"
+                          :motions="motions" :positions="positions">
+    </printable-scoresheet>
 
-    <feedback :data="data" :ballot="ballot" v-if="data.kind === 'Feedback'">
-    </feedback>
+    <printable-feedback :data="data" :ballot="ballot"
+                        v-if="data.kind === 'Feedback'">
+    </printable-feedback>
 
-    <ballot-footer v-if="data.showTabRoomRow"
-                   :return-location="data.returnLocation">
-    </ballot-footer>
+    <printable-ballot-footer v-if="data.showTabRoomRow"
+                             :return-location="data.returnLocation">
+    </printable-ballot-footer>
 
   </section>
 </template>
 
 <script>
-import PrintableBallotHeader from './PrintableBallotHeader.vue'
-import PrintableBallotFooter from './PrintableBallotFooter.vue'
-import PrintableFeedback from './PrintableFeedback.vue'
-import PrintableScoresheet from './PrintableScoresheet.vue'
+import PrintableBallotHeader from '../printables/PrintableBallotHeader.vue'
+import PrintableBallotFooter from '../printables/PrintableBallotFooter.vue'
+import PrintableFeedback from '../printables/PrintableFeedback.vue'
+import PrintableScoresheet from '../printables/PrintableScoresheet.vue'
 
 export default {
-  props: ['data', 'ballot', 'motions', 'positions'],
+  props: ['ballot', 'motions', 'positions'],
   components: {
     PrintableBallotHeader, PrintableBallotFooter,
     PrintableFeedback, PrintableScoresheet

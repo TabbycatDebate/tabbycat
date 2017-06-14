@@ -7,38 +7,41 @@
 
 {% block content %}
 
-  <template v-for="ballot in ballots">
-    <div class="db-page-holder">
-		  <main role="main" class="db-page db-flex-column db-page-landscape">
-        <ballot :data="$data" :ballot="ballot" :motions="motions" :positions="positions"></ballot>
-      </main>
-    </div>
-  </template>
+  <div id="vueMount">
+    <template v-for="ballot in ballots[0]">
+      <div class="db-page-holder">
+  		  <main role="main" class="db-page db-flex-column db-page-landscape">
+          <printable-ballot :ballot="ballot" :motions="motions"
+                            :positions="positions"></printable-ballot>
+        </main>
+      </div>
+    </template>
+  </div>
 
 {% endblock content %}
 
 {% block js %}
   <script>
-    var printableBaseData = {
+    window.vueData = {
       // Strings to Fill In
-      tournamentName: "{{ tournament }}",
-      returnLocation: "{{ pref.score_return_location }}",
+      tournamentName: '{{ tournament }}',
+      returnLocation: '{{ pref.score_return_location }}',
       // Rules
       hasReplies: {% if pref.reply_scores_enabled %}true{% else %}false{% endif %},
       speakersCount: {{ pref.substantive_speakers }},
-      infoText: "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication.",
+      infoText: 'Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication.',
       hasMotions: {% if pref.enable_motions %}true{% else %}false{% endif %},
       hasVetoes: {% if pref.motion_vetoes_enabled %}true{% else %}false{% endif %},
       // Formatting
       showTabRoomRow: true,
       showInfoRow: false,
       showPronouns: true,
-      kind: "Scoresheet",
+      kind: 'Scoresheet',
       // From Django
-      round: "{{ round.abbreviation }}",
-      ballots: {{ ballots|safe }},
-      motions: {{ motions|safe }},
-      positions: {{ positions|safe }},
+      round: '{{ round.abbreviation }}',
+      ballots: '{{ ballots|safe }}',
+      motions: '{{ motions|safe }}',
+      positions: '{{ positions|safe }}',
     }
   </script>
   {{ block.super }}
