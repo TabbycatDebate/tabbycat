@@ -605,7 +605,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_metric_columns(self, standings, subset=None, side=None):
         standings_list = standings.get_standings(subset) if subset is not None else standings
         headers = self._standings_headers(standings.metrics_info(), side)
-        data = [list(map(metricformat, s.itermetrics())) for s in standings_list]
+        data = []
+        for standing in standings_list:
+            standings_raw = [s for s in standing.itermetrics()]
+            standings_metric = [s for s in map(metricformat, standings_raw)]
+            data.append([{'text': metric, 'sort': float(raw)}
+                for raw, metric in zip(standings_raw, standings_metric)])
         self.add_columns(headers, data)
 
     def add_debate_metric_columns(self, draw, standings):
