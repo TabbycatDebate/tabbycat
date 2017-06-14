@@ -3,8 +3,6 @@ import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import send_mail
-from django.conf import settings
 from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -13,7 +11,7 @@ from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from participants.models import Adjudicator, Speaker, Team
+from participants.models import Adjudicator, Team
 from participants.prefetch import populate_feedback_scores
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
@@ -24,7 +22,6 @@ from utils.mixins import (CacheMixin, JsonDataResponseView, PostOnlyRedirectView
                           SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin,
                           VueTableTemplateView)
 from utils.tables import TabbycatTableBuilder
-from utils.urlkeys import populate_url_keys
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
@@ -77,6 +74,7 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView
         t = self.get_tournament()
         adjudicators = self.get_adjudicators()
         populate_feedback_scores(adjudicators)
+        # Gather stats necessary to construct the graphs
         adjudicators = get_feedback_overview(t, adjudicators)
         table = FeedbackTableBuilder(view=self, sort_key='Overall Score',
                                      sort_order='desc')
@@ -366,6 +364,7 @@ class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, B
         'confirm_on_submit': True,
         'enforce_required': False,
         'include_unreleased_draws': True,
+        'use_tournament_password': False,
     }
 
     def form_valid(self, form):
@@ -386,6 +385,7 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
         'confirm_on_submit': True,
         'enforce_required': True,
         'include_unreleased_draws': False,
+        'use_tournament_password': True,
     }
 
     def form_valid(self, form):
@@ -394,18 +394,37 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
             self.source_name, self.adj_feedback.adjudicator.name))
         return result
 
-    def get_success_url(self):
-        return reverse_tournament('tournament-public-index', self.get_tournament())
-
 
 class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is a randomised one."""
     public_page_preference = 'public_feedback_randomised'
 
+    def get_success_url(self):
+        # Redirect to non-cached page: their original private URL
+        if isinstance(self.object, Adjudicator):
+            return reverse_tournament('adjfeedback-public-add-from-adjudicator-randomised',
+                self.get_tournament(), kwargs={'url_key': self.object.url_key})
+        elif isinstance(self.object, Team):
+            return reverse_tournament('adjfeedback-public-add-from-team-randomised',
+                self.get_tournament(), kwargs={'url_key': self.object.url_key})
+        else:
+            raise ValueError("Private feedback source is not of a valid type")
+
 
 class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is by object ID."""
     public_page_preference = 'public_feedback'
+
+    def get_success_url(self):
+        # Redirect to non-cached page: the public feedback form
+        if isinstance(self.object, Adjudicator):
+            return reverse_tournament('adjfeedback-public-add-from-adjudicator-pk',
+                self.get_tournament(), kwargs={'source_id': self.object.id})
+        elif isinstance(self.object, Team):
+            return reverse_tournament('adjfeedback-public-add-from-team-pk',
+                self.get_tournament(), kwargs={'source_id': self.object.id})
+        else:
+            raise ValueError("Public feedback source is not of a valid type")
 
 
 class AdjudicatorActionError(RuntimeError):
@@ -524,119 +543,3 @@ class FeedbackProgress(SuperuserRequiredMixin, BaseFeedbackProgressView):
 
 class PublicFeedbackProgress(PublicTournamentPageMixin, CacheMixin, BaseFeedbackProgressView):
     public_page_preference = 'feedback_progress'
-
-
-class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
-
-    template_name = 'randomised_urls.html'
-    show_emails = False
-
-    def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        kwargs['teams'] = tournament.team_set.all()
-        if not tournament.pref('share_adjs'):
-            kwargs['adjs'] = tournament.adjudicator_set.all()
-        else:
-            kwargs['adjs'] = Adjudicator.objects.all()
-        kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
-            tournament.team_set.filter(url_key__isnull=False).exists()
-        kwargs['tournament_slug'] = tournament.slug
-        return super().get_context_data(**kwargs)
-
-
-class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
-
-    tournament_redirect_pattern_name = 'randomised-urls-view'
-
-    def post(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
-
-        # Only works if there are no randomised URLs now
-        if tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
-                tournament.team_set.filter(url_key__isnull=False).exists():
-            messages.error(
-                self.request, "There are already randomised URLs. " +
-                "You must use the Django management commands to populate or " +
-                "delete randomised URLs.")
-        else:
-            populate_url_keys(tournament.adjudicator_set.all())
-            populate_url_keys(tournament.team_set.all())
-            messages.success(self.request, "Randomised URLs were generated for all teams and adjudicators.")
-
-        return super().post(request, *args, **kwargs)
-
-
-class EmailRandomisedUrlsView(RandomisedUrlsView):
-
-    show_emails = True
-    template_name = 'randomised_urls_email_list.html'
-
-
-class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
-
-    tournament_redirect_pattern_name = 'randomised-urls-view'
-
-    def post(self, request, *args, **kwargs):
-        messages.success(self.request, "Emails were sent for all teams and adjudicators.")
-
-        tournament = self.get_tournament()
-        speakers = Speaker.objects.filter(team__tournament=tournament,
-            team__url_key__isnull=False, email__isnull=False)
-        adjudicators = tournament.adjudicator_set.filter(
-            url_key__isnull=False, email__isnull=False)
-
-        for speaker in speakers:
-            if speaker.email is None:
-                continue
-
-            team_path = reverse_tournament(
-                'adjfeedback-public-add-from-team-randomised',
-                tournament, kwargs={'url_key': speaker.team.url_key})
-            team_link = self.request.build_absolute_uri(team_path)
-            message = (''
-                'Hi %s, \n'
-                '\n'
-                'At %s we are using an online feedback system. Feedback for \n'
-                'your team (%s) can be submitted at the following URL. This URL \n'
-                'is unique to your team — do not share it as anyone with this \n'
-                'link can submit feedback on your behalf. It will not \n'
-                'change so we suggest bookmarking it. The URL is: \n'
-                '\n'
-                '%s' % (speaker.name, tournament.short_name, speaker.team.short_name, team_link))
-
-            try:
-                send_mail("Your Feedback URL for %s" % tournament.short_name,
-                    message, settings.DEFAULT_FROM_EMAIL, [speaker.email],
-                    fail_silently=False)
-                logger.info("Sent email with key to %s (%s)" % (speaker.email, speaker.name))
-            except:
-                logger.info("Failed to send email to %s speaker.email")
-
-        for adjudicator in adjudicators:
-            if adjudicator.email is None:
-                continue
-
-            adj_path = reverse_tournament(
-                'adjfeedback-public-add-from-adjudicator-randomised',
-                tournament, kwargs={'url_key': adjudicator.url_key})
-            adj_link = self.request.build_absolute_uri(adj_path)
-            message = (''
-                'Hi %s, \n'
-                '\n'
-                'At %s we are using an online feedback system. Your feedback \n'
-                'can be submitted at the following URL. This URL \n'
-                'is unique to you — do not share it as anyone with this \n'
-                'link can submit feedback on your behalf. It will not \n'
-                'change so we suggest bookmarking it. The URL is: \n'
-                '\n'
-                '%s' % (adjudicator.name, tournament.short_name, adj_link))
-
-            try:
-                send_mail("Your Feedback URL for %s" % tournament.short_name,
-                    message, settings.DEFAULT_FROM_EMAIL, [adjudicator.email],
-                    fail_silently=False)
-                logger.info("Sent email with key to %s (%s)" % (adjudicator.email, adjudicator.name))
-            except:
-                logger.info("Failed to send email %s" % adjudicator.email)
-
-        return super().post(request, *args, **kwargs)

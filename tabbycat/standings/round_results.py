@@ -71,7 +71,7 @@ def add_speaker_round_results(standings, rounds, tournament, replies=False):
     speaker_scores = SpeakerScore.objects.select_related('speaker',
         'ballot_submission', 'debate_team__debate__round').filter(
         ballot_submission__confirmed=True, debate_team__debate__round__in=rounds,
-        speaker_id__in=speaker_ids)
+        speaker_id__in=speaker_ids, ghost=False)
 
     if replies:
         speaker_scores = speaker_scores.filter(position=tournament.REPLY_POSITION)

@@ -46,7 +46,7 @@ class Tournament(models.Model):
     slug = models.SlugField(unique=True, validators=[validate_tournament_slug],
         verbose_name=_("slug"),
         help_text=_("The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""))
-    current_round = models.ForeignKey('Round', models.SET_NULL, null=True, blank=True, related_name='tournament_',
+    current_round = models.ForeignKey('Round', models.SET_NULL, null=True, blank=True, related_name='current_tournament',
         verbose_name=_("current round"),
         help_text=_("Must be set for the tournament to start! (Set after rounds are inputted)"))
     welcome_msg = models.TextField(blank=True, null=True, default="",
@@ -328,12 +328,12 @@ class Round(models.Model):
         warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=2)
         related = ('venue',)
         if self.tournament.pref('enable_divisions'):
-            related += ('division', 'division__venue_group')
+            related += ('division', 'division__venue_category')
         return self.debate_set.order_by(*ordering).select_related(*related)
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, divisions=True, ballotsubs=False,
-            wins=False, ballotsets=False, venues=True, institutions=False, venueconstraints=False):
+            wins=False, ballotsets=False, venues=True, institutions=False):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
@@ -352,11 +352,9 @@ class Round(models.Model):
                     queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             )
         if divisions and self.tournament.pref('enable_divisions'):
-            debates = debates.select_related('division', 'division__venue_group')
+            debates = debates.select_related('division', 'division__venue_category')
         if venues:
-            debates = debates.select_related('venue', 'venue__group')
-        if venueconstraints:
-            debates = debates.prefetch_related('venue__venueconstraintcategory_set')
+            debates = debates.select_related('venue').prefetch_related('venue__venuecategory_set')
         if teams or wins or institutions or speakers:
             debates = debates.prefetch_related(
                 Prefetch('debateteam_set',

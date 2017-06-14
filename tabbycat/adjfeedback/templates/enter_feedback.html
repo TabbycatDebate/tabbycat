@@ -6,8 +6,16 @@
 {% block head-title %}
   <span class="emoji">🙅</span>Add Feedback {% if source_name %}from {{ source_name }}{% endif %}
 {% endblock %}
+{% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
 {% block content %}
+
+  {% if tournament.current_round.seq == 1 and tournament.current_round.draw_status != tournament.current_round.STATUS_RELEASED %}
+    <div class="alert alert-warning">
+      There are no feedback options because no rounds have been released to the
+      public yet. Check back when they have!
+    </div>
+  {% endif %}
 
   {% if form.errors %}
   <div class="alert alert-danger">

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load add_field_css i18n %}
+
+{% block page-title %}Set Current Round{% endblock %}
+{% block head-title %}
+  <span class="emoji">🙏</span>Set Current Round
+{% endblock %}
+
+{% block nav %}
+  {# Don't show the nav pane if there's no current round, because it'll crash. #}
+  {% if current_round %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if next %}
+  <div class="alert alert-warning">
+    {% blocktrans trimmed with tournament_name=tournament.name %}
+      No round is currently set. In order for Tabbycat to work, please set the
+      <strong>current round</strong> of the tournament
+      <strong>{{ tournament_name }}</strong>.
+    {% endblocktrans %}
+  </div>
+{% else %}
+  <div class="alert alert-info">
+    {% blocktrans trimmed with tournament_name=tournament.name %}
+      On this page, you can set the <strong>current round</strong> of the tournament
+      <strong>{{ tournament_name }}</strong>.
+    {% endblocktrans %}
+  </div>
+{% endif %}
+
+{% if not object.round_set.exists %}
+  <div class="alert alert-danger">
+    {% url 'admin:tournaments_round_changelist' as round_changelist_url %}
+    {% blocktrans trimmed with tournament_name=tournament.name %}
+      The tournament <strong>{{ tournament_name }}</strong> has no rounds.
+      You'll need to <a href="{{ round_changelist_url }}">add rounds and
+      associate them with this tournament</a> before you can set the current
+      round.
+    {% endblocktrans %}
+  </div>
+{% endif %}
+
+<div class="panel panel-default">
+  <div class="panel-body">
+
+    <form action="." method="POST" class="">
+
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          {% trans "Whoops! There was an error with one or more fields." %}
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="form-group">
+        <div class="form-horizontal row">
+          <label for="{{ form.current_round.id_for_label }}" class="col-sm-3 control-label">
+            {{ form.current_round.label }}
+          </label>
+          <div class="col-sm-6">
+            {{ form.current_round|addcss:"form-control" }}
+            {{ form.current_round.errors }}
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" name="next" value="{{ next }}" />
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-block btn-success form-control">
+          {% trans "Set Current Round" %}
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+
+{% endblock %}

@@ -54,9 +54,9 @@ class DebateAdmin(admin.ModelAdmin):
         return super().get_queryset(request).select_related(
             'round__tournament',
             'division__tournament',
-            'venue__group',
         ).prefetch_related(
             Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team__tournament')),
+            'venue__venuecategory_set',
         )
 
     def get_aff_team(self, obj):

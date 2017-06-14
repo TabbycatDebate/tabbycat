@@ -7,7 +7,7 @@
 dj-database-url==0.4.2
 
 # Mem-Caching
-pylibmc==1.5.1
+pylibmc==1.5.2
 django-pylibmc==0.6.1
 
 # Monitoring (note the required heroku add-on is not added by default)

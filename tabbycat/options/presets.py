@@ -215,11 +215,10 @@ class WADLPreferences(PreferencesPreset):
         # League Options
         self.league_options__enable_flagged_motions     = True
         self.league_options__enable_adj_notes           = True
-        self.league_options__enable_venue_groups        = True
         self.league_options__enable_debate_scheduling   = True
-        self.league_options__enable_venue_overlaps      = True
         self.league_options__share_adjs                 = True
         self.league_options__share_venues               = True
+        self.league_options__division_venues            = True
         self.league_options__duplicate_adjs             = True
         self.league_options__public_divisions           = True
         self.league_options__enable_divisions           = True

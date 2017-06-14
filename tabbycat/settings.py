@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'en'
 USE_I18N = True
 
-TABBYCAT_VERSION = '1.2.2'
-TABBYCAT_CODENAME = 'Foldex'
-READTHEDOCS_VERSION = 'v1.2.2'
+TABBYCAT_VERSION = '1.4.0a'
+TABBYCAT_CODENAME = 'Havana Brown'
+READTHEDOCS_VERSION = 'v1.4.0'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
@@ -80,7 +80,8 @@ INSTALLED_APPS = (
     'dynamic_preferences',
     'dynamic_preferences.users.apps.UserPreferencesConfig',
     'django_extensions',  # For Secret Generation Command
-    'gfklookupwidget')
+    'gfklookupwidget',
+    'formtools')
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -132,7 +133,7 @@ CACHES = {
 }
 
 # Use the cache for sessions rather than the db
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
 # Static Files and Compilation
@@ -155,9 +156,12 @@ STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
 GULP_PRODUCTION_COMMAND = "npm run gulp build -- --production"
 GULP_DEVELOP_COMMAND = "npm run gulp build -- --development"
 
+
 # ==============================================================================
 # Logging
 # ==============================================================================
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 if os.environ.get('SENDGRID_USERNAME', ''):
     SERVER_EMAIL = os.environ['SENDGRID_USERNAME']

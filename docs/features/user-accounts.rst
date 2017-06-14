@@ -6,17 +6,17 @@ User Accounts
 
 For obvious reasons, user logins are required to data entry and administrative functions. There are (conceptually) four levels of access:
 
-+-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-|   Access  | Should be used by  |                Grants access to                |                                            Is capable of                                            |
-+===========+====================+================================================+=====================================================================================================+
-| Public    | The public         | Publicly available information.                | Viewing things, and submitting new ballots/feedback if that function is enabled.                    |
-+-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-| Assistant | Data entry helpers | Specialised data entry (ballots and feedback). | Entering and confirming ballots and feedback.                                                       |
-+-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-| Superuser | Adjudication core  | The Tabbycat admin interface.                  | Generating draws, editing ballots, feedback and adjudicator scores, checking in ballots and people. |
-+-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-| Staff     | Tab director       | The Tabbycat and edit database interfaces.     | Editing the database directly.                                                                      |
-+-----------+--------------------+------------------------------------------------+-----------------------------------------------------------------------------------------------------+
++-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+|   Access  | Should be used by  |                Grants access to                  |                                            Is capable of                                            |
++===========+====================+==================================================+=====================================================================================================+
+| Public    | The public         | Publicly available information.                  | Viewing things, and submitting new ballots/feedback if that function is enabled.                    |
++-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Assistant | Data entry helpers | Specialised data entry (ballots and feedback).   | Entering and confirming ballots and feedback.                                                       |
++-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Superuser | Adjudication core  | The Tabbycat admin interface.                    | Generating draws, editing ballots, feedback and adjudicator scores, checking in ballots and people. |
++-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Staff     | Tab director       | The Tabbycat admin and edit database interfaces. | Editing the database directly.                                                                      |
++-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 
 Account roles
 =============

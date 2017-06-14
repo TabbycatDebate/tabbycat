@@ -6,7 +6,7 @@
 {% block page-title %}Assign Motions for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
     <span class="glyphicon glyphicon-chevron-left"></span> Back to Display
   </a>
 {% endblock %}
@@ -21,7 +21,7 @@
       {% for form in formset %}
         {{ form.id }}
         <ul class="list-group assign-motions-lists col-sm-3">
-          <li class="list-group-item">
+          <li class="list-group-item" style="min-height: 135px;">
             <h4 class="list-group-item-heading">{{ form.instance.reference }}</h4>
             <p class="list-group-item-text">{{ form.instance.text }}</p>
           </li>

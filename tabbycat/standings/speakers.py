@@ -44,7 +44,8 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
             WHERE results_ballotsubmission.confirmed = TRUE
             AND results_speakerscore.speaker_id = participants_speaker.person_ptr_id
             AND tournaments_round.stage = '""" + str(Round.STAGE_PRELIMINARY) + """'
-            AND tournaments_round.seq <= {round:d}"""
+            AND tournaments_round.seq <= {round:d}
+            AND ghost = FALSE"""
 
         if replies:
             query += """

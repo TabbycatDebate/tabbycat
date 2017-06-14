@@ -14,12 +14,16 @@ urlpatterns = [
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
 
-    url(r'^admin/round/(?P<round_seq>\d+)/round_increment_check/$',
-        views.RoundIncrementConfirmView.as_view(),
-        name='round_increment_check'),
-    url(r'^admin/round/(?P<round_seq>\d+)/round_increment/$',
-        views.RoundIncrementView.as_view(),
-        name='round_increment'),
+    # Round Progression
+    url(r'^admin/round/(?P<round_seq>\d+)/advance/check/$',
+        views.RoundAdvanceConfirmView.as_view(),
+        name='tournament-advance-round-check'),
+    url(r'^admin/round/(?P<round_seq>\d+)/advance/$',
+        views.RoundAdvanceView.as_view(),
+        name='tournament-advance-round'),
+    url(r'^admin/set-current-round/$',
+        views.SetCurrentRoundView.as_view(),
+        name='tournament-set-current-round'),
 
     # Action Logs App
     url(r'^admin/action_log/',

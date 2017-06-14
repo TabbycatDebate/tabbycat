@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.utils.translation import ugettext_lazy as _
 
 
 class OptionalChoiceField(forms.ChoiceField):
@@ -10,6 +11,10 @@ class OptionalChoiceField(forms.ChoiceField):
 
 class SuperuserCreationForm(UserCreationForm):
     """A form that creates a superuser from the given username and password."""
+
+    class Meta(UserCreationForm.Meta):
+        fields = ("username", "email")
+        labels = {"email": _("E-mail address")}
 
     def save(self, commit=True):
         user = super(SuperuserCreationForm, self).save(commit=False)

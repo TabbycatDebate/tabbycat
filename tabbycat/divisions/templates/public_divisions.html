@@ -6,12 +6,12 @@
 {% block page-title %}All Divisions{% endblock %}
 
 {% block content %}
-  {% for venue_group in venue_groups %}
+  {% for venue_category in venue_categories %}
   <div class="col-sm-12">
 
-    <h2 class="page-header">At {{ venue_group.name }}</h2>
-    {% if venue_group.divisions %}
-      {% for division in venue_group.divisions %}
+    <h3 class="page-header">At {{ venue_category.name }}</h3>
+    {% if venue_category.divisions %}
+      {% for division in venue_category.divisions %}
         <ul class="list-group col-sm-2">
           <li class="list-group-item">
             <span class="badge">{{ division.time_slot|time:'h:i A' }}</span>

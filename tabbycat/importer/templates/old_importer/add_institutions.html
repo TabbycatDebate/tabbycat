@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">🏫</span>Bulk Add Institutions{% endblock %}
+{% block page-title %}🏫 Bulk Add Institutions{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info">
+  <p>
+    Paste a list of institutions with one institution per line and following the format of:
+    <em>Full Name,Nickname</em>. For example:<br><br>
+    <em>Victoria University of Wellington,VIC<br>
+    University of Melbourne,MUDS<br>
+    Universiti Teknologi MARA,UTMARA</em><br><br>
+    Note that teams that use an institutional prefix will use the Nickname for this purpose, ie "MUDS 1".
+  </p>
+</div>
+
+<form action="{% tournamenturl 'edit_institutions' %}" method="POST">
+
+  <div class="form-group">
+    <textarea class="form-control" name="institutions_raw" id="insts" rows="20"></textarea>
+  </div>
+  <input type="submit" class="btn btn-primary btn-block" value="Submit Institutions List">
+
+</form>
+
+{% endblock content %}

@@ -19,14 +19,6 @@
   }
 }
 
-// Body class override to disable hovers; mostly for draw display pages
-.override-table-hovers .panel-body .table > tbody > tr:hover td {
-  background-color: transparent;
-  .hide-underline {
-    border-bottom-color: #ccc;
-  }
-}
-
 // For the quick search; needs to fit within the row
 .table-search {
   height: 41px;
@@ -55,6 +47,9 @@ thead, .thead {
   &:hover, &:hover .glyphicon {
     color: $brand-success;
     cursor: pointer;
+  }
+  .vue-sort-key {
+    margin-left: -2px; // There is always a space after the key; reduce this gap
   }
 }
 
@@ -86,7 +81,7 @@ thead, .thead {
 
 // For Phones
 @media (max-width: $screen-sm-min) {
-  .table-continer {
+  .table-container {
     margin-right: -15px;
     margin-left: -15px;
     border-left: 0;
@@ -104,5 +99,8 @@ thead, .thead {
   .table > tbody > tr > td {
     padding-left: 4px;
     padding-right: 4px;
+  }
+  .table > tbody > tr > td:first-child {
+    padding-left: 10px; // Compensate for reduced left margins on phones
   }
 }

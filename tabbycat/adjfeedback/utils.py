@@ -1,6 +1,7 @@
 import logging
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
@@ -56,10 +57,13 @@ def get_feedback_overview(t, adjudicators):
     rounds = list(t.prelim_rounds(until=t.current_round))
     debate_adjudicators = DebateAdjudicator.objects.filter(debate__round__tournament=t)
     all_feedbacks = AdjudicatorFeedback.objects.filter(
-                        confirmed=True,
-                        source_adjudicator__debate__round__in=rounds).select_related(
-                        'adjudicator', 'source_adjudicator', 'source_team', 'source_adjudicator__debate__round', 'source_team__debate__round').exclude(
+                        Q(source_adjudicator__debate__round__in=rounds) |
+                        Q(source_team__debate__round__in=rounds), confirmed=True).select_related(
+                        'adjudicator', 'source_adjudicator', 'source_team',
+                        'source_adjudicator__debate__round',
+                        'source_team__debate__round').exclude(
                         source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
+
     all_scores = SpeakerScoreByAdj.objects.filter(
                         ballot_submission__confirmed=True,
                         debate_adjudicator__debate__round__in=rounds).select_related(

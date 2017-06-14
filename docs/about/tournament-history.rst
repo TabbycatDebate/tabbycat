@@ -4,6 +4,12 @@ Tournament History
 
 A list of tournaments (that we know of) which have used Tabbycat.
 
+2017
+----
+
+- `Australian Easters <https://easters2017.herokuapp.com>`_
+- `New Zealand Easters <https://nzeasters2017.herokuapp.com>`_
+
 2016
 ----
 

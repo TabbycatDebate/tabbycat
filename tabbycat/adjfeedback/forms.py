@@ -30,19 +30,13 @@ ADJUDICATOR_POSITION_NAMES = {
 # General, but only used here
 # ==============================================================================
 
-class IntegerRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
-    """Used by IntegerRadioSelect."""
-    outer_html = '<div{id_attr} class="flex-horizontal">{content}</div>'
-    inner_html = '<div class="flex-1 text-center">{choice_value}{sub_widgets}</div>'
-
-
-class IntegerRadioSelect(forms.RadioSelect):
-    renderer = IntegerRadioFieldRenderer
+class SpacedRadioWidget(forms.RadioSelect):
+    template_name = 'spaced_choice_widget.html'
 
 
 class IntegerScaleField(forms.IntegerField):
     """Class to do integer scale fields."""
-    widget = IntegerRadioSelect
+    widget = SpacedRadioWidget()
 
     def __init__(self, *args, **kwargs):
         super(IntegerScaleField, self).__init__(*args, **kwargs)
@@ -90,20 +84,14 @@ class RequiredTypedChoiceField(forms.TypedChoiceField):
 # Feedback Fields
 # ==============================================================================
 
-class AdjudicatorFeedbackCheckboxFieldRenderer(forms.widgets.CheckboxFieldRenderer):
-    """Used by AdjudicatorFeedbackCheckboxSelectMultiple."""
-    outer_html = '<div{id_attr} class="feedback-multiple-select">{content}</div>'
-    inner_html = '<div class="feedback-option">{choice_value}{sub_widgets}</div>'
-
-
-class AdjudicatorFeedbackCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
-    renderer = AdjudicatorFeedbackCheckboxFieldRenderer
+class BlockChecboxWidget(forms.CheckboxSelectMultiple):
+    template_name = 'spaced_choice_widget.html'
 
 
 class AdjudicatorFeedbackCheckboxSelectMultipleField(forms.MultipleChoiceField):
     """Class to do multiple choice fields following our conventions.
     Specifically, converts to a string rather than a list."""
-    widget = AdjudicatorFeedbackCheckboxSelectMultiple
+    widget = BlockChecboxWidget()
 
     def clean(self, value):
         value = super(AdjudicatorFeedbackCheckboxSelectMultipleField, self).clean(value)
@@ -228,7 +216,8 @@ def make_feedback_form_class(source, tournament, *args, **kwargs):
 
 
 def make_feedback_form_class_for_adj(source, tournament, submission_fields, confirm_on_submit=False,
-                                     enforce_required=True, include_unreleased_draws=False):
+                                     enforce_required=True, include_unreleased_draws=False,
+                                     use_tournament_password=False):
     """Constructs a FeedbackForm class specific to the given source adjudicator.
     Parameters are as for make_feedback_form_class."""
 
@@ -258,7 +247,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
 
     class FeedbackForm(BaseFeedbackForm):
         _tournament = tournament  # BaseFeedbackForm setting
-        _use_tournament_password = True  # BaseFeedbackForm setting
+        _use_tournament_password = use_tournament_password  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
         question_filter = dict(from_adj=True)
@@ -277,7 +266,8 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
 
 
 def make_feedback_form_class_for_team(source, tournament, submission_fields, confirm_on_submit=False,
-                                      enforce_required=True, include_unreleased_draws=False):
+                                      enforce_required=True, include_unreleased_draws=False,
+                                      use_tournament_password=False):
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
 
@@ -322,7 +312,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
 
     class FeedbackForm(BaseFeedbackForm):
         _tournament = tournament  # BaseFeedbackForm setting
-        _use_tournament_password = True  # BaseFeedbackForm setting
+        _use_tournament_password = use_tournament_password  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
         question_filter = dict(from_team=True)

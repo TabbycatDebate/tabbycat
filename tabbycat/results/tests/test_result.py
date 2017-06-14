@@ -123,7 +123,9 @@ class BaseTestResult(TestCase):
             speakers = self._get_team(team).speaker_set.all()
             for pos, speaker in enumerate(speakers, start=1):
                 ballotset.set_speaker(team, pos, speaker)
+                ballotset.set_ghost(team, pos, False)
             ballotset.set_speaker(team, 4, speakers[0])
+            ballotset.set_ghost(team, 4, False)
 
         for adj, sheet in zip(self.adjs, scores):
             for team, teamscores in zip(teams, sheet):

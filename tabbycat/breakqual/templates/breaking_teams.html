@@ -13,7 +13,7 @@
 
 {% block page-subnav-actions %}
   {% if generated %}
-    <form action="{% tournament_url breakqual-generate-all category.slug %}" class="form-inline" method="POST">
+    <form action="{% tournamenturl 'breakqual-generate-all' category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
         <span class="glyphicon glyphicon-repeat"></span> Delete and Regenerate All Breaks
@@ -21,7 +21,7 @@
     </form>
   {% else %}
     <div class="forms-block-inline">
-      <form action="{% tournament_url breakqual-generate-all category.slug %}" method="POST">
+      <form action="{% tournamenturl 'breakqual-generate-all' category.slug %}" method="POST">
         {% csrf_token %}
         <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
           Generate the Break for All Categories
@@ -36,7 +36,7 @@
   {% if category.team_set.count == 0 %}
     <div class="alert alert-warning">
       There are <strong>0 teams marked as eligible</strong> for this category — you will need to
-       <a href="{% tournament_url breakqual-edit-eligibility %}" class="alert-link">
+       <a href="{% tournamenturl 'breakqual-edit-eligibility' %}" class="alert-link">
       add some eligible teams</a> for this break to generate correctly.
     </div>
   {% endif %}
@@ -75,7 +75,7 @@
         enabled. As soon as you click the button, the breaking teams list will
         be visible on the public site, before you have a chance to
         double-check it! It is strongly recommended that you disable this
-        setting on the <a href="{% tournament_url options-tournament-index %}">
+        setting on the <a href="{% tournamenturl 'options-tournament-index' %}">
         tournament configuration page</a> before generating the team
         breaks.
       </div>

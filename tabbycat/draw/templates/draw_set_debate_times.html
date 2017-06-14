@@ -6,13 +6,13 @@
 {% block sub-title %}for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
     <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
   </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a href="{% round_url draw-schedule-apply %}" class="btn btn-success submit-disable" id="assignTimes">
+  <a href="{% roundurl 'draw-schedule-apply' %}" class="btn btn-success submit-disable" id="assignTimes">
     <span class="glyphicon glyphicon-floppy-disk"></span> Apply Times to Debates
   </a>
 {% endblock %}
@@ -20,25 +20,25 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-md-5">
+  <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title">Assign Dates to Venue Groups</h4>
+        <h4 class="panel-title">Assign Dates to Venue Catgories</h4>
       </div>
-      <form id="assignForm" method="POST" action="{% round_url draw-schedule-apply %}">
+      <form id="assignForm" method="POST" action="{% roundurl 'draw-schedule-apply' %}">
         {% csrf_token %}
         <ul class="list-group">
-          {% for vg in venue_groups %}
+          {% for vc in venue_categories %}
             <li class="list-group-item">
               <div class="row">
                 <div class="col-md-5">
-                  <h5>{{ vg.short_name }}</h5>
+                  <h5>{{ vc.name }}</h5>
                 </div>
                 <div class="col-md-7">
-                {% if vg.placeholder_date %}
-                  <input type="date" class="form-control" name="{{ vg.id }}" value='{{ vg.placeholder_date|date:"Y" }}-{{ vg.placeholder_date|date:"m" }}-{{ vg.placeholder_date|date:"d" }}'>
+                {% if vc.placeholder_date %}
+                  <input type="date" class="form-control" name="{{ vc.id }}" value='{{ vc.placeholder_date|date:"Y" }}-{{ vc.placeholder_date|date:"m" }}-{{ vc.placeholder_date|date:"d" }}'>
                 {% else %}
-                  <input type="date" class="form-control" name="{{ vg.id }}" value="">
+                  <input type="date" class="form-control" name="{{ vc.id }}" value="">
                 {% endif %}
                 </div>
               </div>
@@ -48,7 +48,7 @@
       </form>
     </div>
   </div>
-  <div class="col-md-7">
+  <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">Assign Times to Divisions</h4>
@@ -60,10 +60,10 @@
           {% endif %}
           <div class="col-md-6">
             <div class="row">
-              <div class="col-md-5">
-                <h5>{{ d.name }} <small>{{ d.venue_group.short_name }}</small></h5>
+              <div class="col-md-4">
+                <h5>{{ d.name }} <small>{{ d.venue_category.name }}</small></h5>
               </div>
-              <div class="col-md-7">
+              <div class="col-md-8">
                 <input type="time" class="form-control jquery-division-time" name="{{ d.id }}" value="{{ d.time_slot|time:'H:i' }}">
               </div>
             </div>
@@ -86,7 +86,7 @@
       $(".jquery-division-time").on("change",function() {
         $.ajax({
           type: "POST",
-          url: "{% tournament_url set_division_time %}",
+          url: "{% tournamenturl 'set_division_time' %}",
           data: {
             'division': parseInt($(this).attr('name')),
             'time': $(this).val(),

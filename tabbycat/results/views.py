@@ -72,7 +72,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
             admin=self.request.user.is_superuser, sort_key="Status")
         table.add_ballot_status_columns(draw)
         table.add_ballot_entry_columns(draw)
-        table.add_debate_venue_columns(draw)
+        table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw)
         table.add_debate_adjudicators_column(draw, show_splits=True)
         return table
@@ -333,12 +333,17 @@ class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
     relates_to_new_ballotsub = True
     action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT
 
-    def get_success_url(self):
-        return reverse_tournament('tournament-public-index', self.get_tournament())
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['password'] = True
+        return kwargs
 
     def add_success_message(self):
         messages.success(self.request, "Thanks, %s! Your ballot for %s has been recorded." % (
                 self.object.name, self.debate.matchup))
+
+    def get_success_url(self):
+        return reverse_tournament('post-results-public-ballotset-new', self.get_tournament())
 
     def populate_objects(self):
         self.object = self.get_object() # must be populated before self.error_page() called
@@ -387,6 +392,19 @@ class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Ba
     model = Adjudicator
     allow_null_tournament = True
     public_page_preference = 'public_ballots_randomised'
+
+    def get_context_data(self, **kwargs):
+        # Add the message about this being a private URL here (so not on public)
+        messages.info(self.request, "This page is specific to you, %s. The URL doesn't change, so if you bookmark it, you can easily return here after each debate." % self.object.name)
+        return super().get_context_data(**kwargs)
+
+
+class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
+    """This exists as a non-cached placeholder page that users are sent to
+    after submitting a random ballot. Added because sending them back to their
+    private URL brings up the same form again with a double-submission error"""
+
+    template_name = 'base.html'
 
 
 # ==============================================================================
@@ -486,13 +504,9 @@ class BallotCheckinView(LoginRequiredMixin, RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['ballots_left'] = ballot_checkin_number_left(self.get_round())
-
-        if self.get_tournament().pref('enable_venue_groups'):
-            ordering = ('group__short_name', 'name')
-        else:
-            ordering = ('name',)
-        kwargs['venue_options'] = Venue.objects.filter(debate__round=self.get_round(),
-                debate__ballot_in=False).order_by(*ordering)
+        venues = Venue.objects.filter(debate__round=self.get_round(),
+                debate__ballot_in=False)
+        kwargs['venue_options'] = venues
 
         return super().get_context_data(**kwargs)
 

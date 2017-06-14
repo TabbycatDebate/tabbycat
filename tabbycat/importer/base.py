@@ -3,14 +3,10 @@
 import csv
 import re
 import logging
-import itertools
-import random
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError, FieldError
 from collections import Counter
 from types import GeneratorType
 
-from participants.models import Team
-from participants.emoji import EMOJI_LIST
 
 NON_FIELD_ERRORS = '__all__'
 DUPLICATE_INFO = 19  # Logging level just below INFO
@@ -190,6 +186,7 @@ class BaseTournamentDataImporter(object):
             counts = Counter()
         if errors is None:
             errors = TournamentDataImporterError()
+        _errors = TournamentDataImporterError() # keep this run's errors separate
         if expect_unique is None:
             expect_unique = self.expect_unique
         skipped_because_existing = 0
@@ -208,7 +205,7 @@ class BaseTournamentDataImporter(object):
             except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
                     TypeError, IndexError) as e:
                 message = "Couldn't parse line: " + str(e)
-                errors.add(lineno, model, message)
+                _errors.add(lineno, model, message)
                 continue
 
             if kwargs_list is None:
@@ -224,7 +221,7 @@ class BaseTournamentDataImporter(object):
                 if kwargs_expect_unique in kwargs_seen:
                     if expect_unique:
                         message = "Duplicate " + description
-                        errors.add(lineno, model, message)
+                        _errors.add(lineno, model, message)
                     else:
                         self.logger.log(DUPLICATE_INFO, "Skipping duplicate " + description)
                     continue
@@ -241,7 +238,7 @@ class BaseTournamentDataImporter(object):
                     inst = model(**kwargs)
                 except MultipleObjectsReturned as e:
                     if expect_unique:
-                        errors.add(lineno, model, str(e))
+                        _errors.add(lineno, model, str(e))
                     continue
                 except FieldError as e:
                     match = re.match("Cannot resolve keyword '(\w+)' into field.", str(e))
@@ -257,16 +254,16 @@ class BaseTournamentDataImporter(object):
                     else:
                         raise
                 except ValueError as e:
-                    errors.add(lineno, model, str(e))
+                    _errors.add(lineno, model, str(e))
                     continue
                 except ValidationError as e:
-                    errors.update_with_validation_error(lineno, model, e)
+                    _errors.update_with_validation_error(lineno, model, e)
                     continue
                 else:
                     skipped_because_existing += 1
                     if expect_unique:
                         message = description + " already exists"
-                        errors.add(lineno, model, message)
+                        _errors.add(lineno, model, message)
                     else:
                         self.logger.log(DUPLICATE_INFO, "Skipping %s, already exists", description)
                     continue
@@ -274,20 +271,21 @@ class BaseTournamentDataImporter(object):
                 try:
                     inst.full_clean()
                 except ValidationError as e:
-                    errors.update_with_validation_error(lineno, model, e)
+                    _errors.update_with_validation_error(lineno, model, e)
                     continue
 
                 self.logger.debug("Listing to create: " + description)
                 insts.append(inst)
 
-        if errors:
+        if _errors:
             if self.strict:
-                for message in errors.itermessages():
+                for message in _errors.itermessages():
                     self.logger.error(message)
-                raise errors
+                raise _errors
             else:
-                for message in errors.itermessages():
+                for message in _errors.itermessages():
                     self.logger.warning(message)
+                errors.update(_errors)
 
         for inst in insts:
             self.logger.debug("Made %s: %r", model._meta.verbose_name, inst)
@@ -299,30 +297,3 @@ class BaseTournamentDataImporter(object):
 
         counts.update({model: len(insts)})
         return counts, errors
-
-    def initialise_emoji_options(self):
-        """Initialises a list of permissible emoji. Should be called before
-        self.get_emoji()."""
-
-        # Get list of all emoji already in use. Teams without emoji are assigned by team ID.
-        assigned_emoji_teams = Team.objects.filter(emoji__isnull=False).values_list('emoji', flat=True)
-        unassigned_emoji_teams = Team.objects.filter(emoji__isnull=True).values_list('id', flat=True)
-
-        # Start with a list of all emoji...
-        self.emoji_options = list(range(0, len(EMOJI_LIST) - 1))
-
-        # Then remove the ones that are already in use
-        for index in itertools.chain(assigned_emoji_teams, unassigned_emoji_teams):
-            if index in self.emoji_options:
-                self.emoji_options.remove(index)
-
-    def get_emoji(self):
-        """Retrieves an emoji. If there are any not currently in returns one of
-        those. Otherwise, returns any one at random."""
-        try:
-            emoji_id = random.choice(self.emoji_options)
-        except IndexError:
-            self.logger.error("No more choices left for emoji, choosing at random")
-            return EMOJI_LIST[random.randint(0, len(EMOJI_LIST) - 1)][0]
-        self.emoji_options.remove(emoji_id)
-        return EMOJI_LIST[emoji_id][0]

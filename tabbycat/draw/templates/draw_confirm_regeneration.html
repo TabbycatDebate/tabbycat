@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% round_url draw %}">
+  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
     <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
   </a>
 {% endblock %}
@@ -24,7 +24,7 @@
     You probably don't want to do this if any results have been entered!</p>
   </div>
 
-  <form class="" method="POST" action="{% round_url draw-regenerate %}">
+  <form class="" method="POST" action="{% roundurl 'draw-regenerate' %}">
     {% csrf_token %}
     <button class="btn btn-block btn-danger submit-disable" type="submit">
       Yes, I want to delete the current draw for {{ round.name }}

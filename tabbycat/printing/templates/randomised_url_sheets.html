@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block page-title %}Printable {{ sheet_type|title }} URLs{% endblock %}
+
+{% block header %}{% endblock %}
+{% block nav %}{% endblock %}
+{% block footer %}{% endblock footer %}
+{% block body-class %}override-sidebar-offset{% endblock %}
+
+{% block page-alerts %}
+  <div class="alert alert-info hidden-print">
+    This page is designed to be printed as double sided A4 sheets, with the
+    outside facing side showing the team/adj name and the inside facing side
+    showing the URL. Use CTRL-P to print.
+  </div>
+{% endblock %}
+
+{% block content %}
+
+  {% for adj in adjs %}
+    <div class="h1 text-center printable-page-break">
+      <br>
+      {{ sheet_type|title }} URL for {{ adj.name }} ({{ adj.institution.code }})
+    </div>
+    <div class="h4 text-center printable-page-break">
+      <br><br><br>
+      Please bookmark the following URL, you will use it to submit {{ sheet_type }}s
+      throughout the tournament:
+      <br><br>
+      {% if sheet_type == 'feedback' %}
+        {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
+      {% elif sheet_type == 'ballot' %}
+        {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  {% for team in teams %}
+    <div class="h1 text-center printable-page-break">
+      <br>
+      {{ sheet_type|title }} URL for {{ team.short_name }}
+    </div>
+    <div class="h4 text-center printable-page-break">
+      <br><br><br>
+      Please bookmark the following URL, you will use it to submit {{ sheet_type }}s
+      throughout the tournament:
+      <br><br>
+      {% tournament_absurl 'adjfeedback-public-add-from-team-randomised' team.url_key %}
+    </div>
+  {% endfor %}
+
+{% endblock content %}

@@ -1,16 +1,18 @@
 {% load debate_tags %}
 
   <a class="btn btn-default"
-     href="{% tournament_url breakqual-index %}">
-    Overview
+     href="{% tournamenturl 'breakqual-index' %}">
+    Breaks Overview
   </a>
+  <div class="btn-group">
   {% for category in tournament.breakcategory_set.all %}
     <a class="btn btn-default"
-       href="{% tournament_url breakqual-teams category.slug %}">
-      View {{ category.name }} Break
+       href="{% tournamenturl 'breakqual-teams' category.slug %}">
+      {{ category.name }} Break
     </a>
   {% endfor %}
+  </div>
   <a class="btn btn-default"
-     href="{% tournament_url breakqual-adjudicators %}">
-    View Adjudicators Break
+     href="{% tournamenturl 'breakqual-adjudicators' %}">
+    Adjudicators' Break
   </a>

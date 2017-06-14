@@ -9,6 +9,7 @@ import participants.models as pm
 import tournaments.models as tm
 import tournaments.utils
 import venues.models as vm
+from participants.emoji import pick_unused_emoji
 
 from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
 
@@ -51,6 +52,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
         ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
         ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
+    })
+
+    lookup_venue_category_display = make_lookup("venue category display", {
+        (""): vm.VenueCategory.DISPLAY_SUFFIX,
+        ("suffix"): vm.VenueCategory.DISPLAY_SUFFIX,
+        ("prefix"): vm.VenueCategory.DISPLAY_PREFIX
     })
 
     def import_rounds(self, f):
@@ -109,41 +116,57 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return counts, errors
 
-    def import_venue_groups(self, f):
-        """Imports venue groups from a file.
-        Each line has:
-            name, short_name
-        """
-        return self._import(f, vm.VenueGroup)
-
-    def import_venues(self, f, auto_create_groups=True):
-        """Imports venues from a file, also creating venue groups as needed
-        (unless 'auto_create_groups' is False).
+    def import_venues(self, f, auto_create_categories=True):
+        """Imports venues from a file, also creating venue categories as needed
+        (unless 'auto_create_categories' is False). This function only adds one
+        category per venue; use `import_venue_categories` to create further
+        categories.
 
         Each line has:
-            name, priority, venue_group.name
+            name, priority, category
         """
-
-        if auto_create_groups:
-            def venue_group_interpreter(line):
-                if not line.get('group'):
-                    return None
-                return {
-                    'name'       : line['group'],
-                    'short_name' : line['group'][:25],
-                }
-            counts, errors = self._import(
-                f, vm.VenueGroup, venue_group_interpreter, expect_unique=False)
-        else:
-            counts = None
-            errors = None
 
         venue_interpreter = make_interpreter(
             tournament=self.tournament,
-            group=lambda x: vm.VenueGroup.objects.get(name=x),
+            DELETE=['category'],
+            category=lambda x: vm.VenueCategory.objects.get(name=x),
         )
-        counts, errors = self._import(f, vm.Venue, venue_interpreter,
-                                      counts=counts, errors=errors)
+        counts, errors = self._import(f, vm.Venue, venue_interpreter)
+
+        if auto_create_categories:
+            def venue_category_interpreter(line):
+                if not line.get('category'):
+                    return None
+                return {'name': line['category']}
+            counts, errors = self._import(
+                    f, vm.VenueCategory, venue_category_interpreter,
+                    expect_unique=False, counts=counts, errors=errors)
+
+        def venue_category_venue_interpreter(line):
+            if not line.get('category'):
+                return None
+            return {
+                'venuecategory': vm.VenueCategory.objects.get(name=line['category']),
+                'venue': vm.Venue.objects.get(name=line['name'])
+            }
+
+        counts, errors = self._import(f, vm.VenueCategory.venues.through,
+                venue_category_venue_interpreter, counts=counts, errors=errors)
+
+        return counts, errors
+
+    def import_venue_categories(self, f):
+        """Imports venue categories from a file.
+        Each line has:
+            name,display_in_venue_name
+        """
+
+        venue_category_interpreter = make_interpreter(
+            display_in_venue_name=self.lookup_venue_category_display,
+        )
+
+        counts, errors = self._import(f, vm.VenueCategory,
+                venue_category_interpreter, expect_unique=False)
 
         return counts, errors
 
@@ -160,10 +183,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         return self._import(f, bm.BreakCategory, break_category_interpreter)
 
     def import_teams(self, f, create_dummy_speakers=False):
-        """Imports teams from a file, assigning emoji as needed.
-        If 'create_dummy_speakers' is True, also creates dummy speakers."""
+        """Imports teams from a file. If 'create_dummy_speakers' is True,
+        it also creates dummy speakers."""
 
-        self.initialise_emoji_options()
         team_interpreter_part = make_interpreter(
             tournament=self.tournament,
             institution=pm.Institution.objects.lookup
@@ -174,8 +196,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             line['short_reference'] = line['reference'][:34]
             return line
 
+        used_emoji = []
         counts, errors = self._import(f, pm.Team, team_interpreter,
-            generated_fields={'emoji': self.get_emoji})
+                generated_fields={'emoji': (lambda: pick_unused_emoji(used=used_emoji))})
 
         if create_dummy_speakers:
             def speakers_interpreter(line):
@@ -197,7 +220,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """
 
         if auto_create_teams:
-            self.initialise_emoji_options()
 
             def team_interpreter(line):
                 interpreted = {
@@ -209,9 +231,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 if line.get('use_institution_prefix'):
                     interpreted['use_institution_prefix'] = line['use_institution_prefix']
                 return interpreted
-            counts, errors = self._import(f, pm.Team, team_interpreter,
-                                          expect_unique=False,
-                                          generated_fields={'emoji': self.get_emoji})
+
+            used_emoji = []
+            counts, errors = self._import(f, pm.Team, team_interpreter, expect_unique=False,
+                    generated_fields={'emoji': (lambda: pick_unused_emoji(used=used_emoji))})
+
         else:
             counts = None
             errors = None
@@ -365,33 +389,14 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         return self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
 
-    def import_venue_constraint_categories(self, f):
-        """Imports venue constraint categories from a file.
-        Each line has:
-            venueconstraintcategory, venue
-        """
-        def venue_constraint_category_interpreter(line):
-            return {'name': line['venueconstraintcategory']}
-
-        counts, errors = self._import(f, vm.VenueConstraintCategory,
-                venue_constraint_category_interpreter, expect_unique=False)
-
-        venue_constraint_category_venue_interpreter = make_interpreter(
-            venueconstraintcategory=lambda x: vm.VenueConstraintCategory.objects.get(name=x),
-            venue=lambda x: vm.Venue.objects.get(name=x),
-        )
-
-        return self._import(f, vm.VenueConstraintCategory.venues.through,
-                venue_constraint_category_venue_interpreter, counts=counts, errors=errors)
-
     def import_adj_venue_constraints(self, f):
         """Imports venue constraints from a file.
         Each line has:
-            adjudicator, group, priority
+            adjudicator, category, priority
         """
         adj_venue_constraints_interpreter_part = make_interpreter(
             adjudicator=lambda x: pm.Adjudicator.objects.get(name=x),
-            category=lambda x: vm.VenueConstraintCategory.objects.get(name=x),
+            category=lambda x: vm.VenueCategory.objects.get(name=x),
         )
 
         def adj_venue_constraints_interpreter(line):
@@ -406,11 +411,11 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     def import_team_venue_constraints(self, f):
         """Imports venue constraints from a file.
         Each line has:
-            team, group, priority
+            team, category, priority
         """
         team_venue_constraints_interpreter_part = make_interpreter(
             team=pm.Team.objects.lookup,
-            category=lambda x: vm.VenueConstraintCategory.objects.get(name=x),
+            category=lambda x: vm.VenueCategory.objects.get(name=x),
         )
 
         def team_venue_constraints_interpreter(line):

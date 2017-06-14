@@ -417,7 +417,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
     choices = TeamStandingsGenerator.get_metric_choices()
     nfields = 8
     allow_empty = True
-    default = ['points', 'speaks_avg']
+    default = ['wins', 'speaks_avg']
 
 
 @tournament_preferences_registry.register
@@ -446,12 +446,30 @@ class TeamTabReleased(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class TeamTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X teams in the public tab (set to 0 to show all teams)."
+    verbose_name = "Top teams cutoff"
+    section = tab_release
+    name = "team_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
 class SpeakerTabReleased(BooleanPreference):
     help_text = "Enables public display of the speaker tab. Intended for use after the tournament."
     verbose_name = "Release speaker tab to public"
     section = tab_release
     name = "speaker_tab_released"
     default = False
+
+
+@tournament_preferences_registry.register
+class SpeakerTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X speakers in the public tab (set to 0 to show all speakers)."
+    verbose_name = "Top speakers cutoff"
+    section = tab_release
+    name = "speaker_tab_limit"
+    default = 0
 
 
 @tournament_preferences_registry.register
@@ -464,6 +482,15 @@ class ProsTabReleased(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class ProsTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X pro speakers in the public tab (set to 0 to show all pro speakers)."
+    verbose_name = "Top pros cutoff"
+    section = tab_release
+    name = "pros_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
 class NovicesTabReleased(BooleanPreference):
     help_text = "Enables public display of a novice-speakers only tab. Intended for use after the tournament."
     verbose_name = "Release novices tab to public"
@@ -473,12 +500,30 @@ class NovicesTabReleased(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class NovicesTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X novices in the public tab (set to 0 to show all novices)."
+    verbose_name = "Top novices cutoff"
+    section = tab_release
+    name = "novices_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
 class RepliesTabReleased(BooleanPreference):
     help_text = "Enables public display of the replies tab. Intended for use after the tournament."
     verbose_name = "Release replies tab to public"
     section = tab_release
     name = "replies_tab_released"
     default = False
+
+
+@tournament_preferences_registry.register
+class RepliesTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X repliers in the public tab (set to 0 to show all repliers)."
+    verbose_name = "Top replies cutoff"
+    section = tab_release
+    name = "replies_tab_limit"
+    default = 0
 
 
 @tournament_preferences_registry.register
@@ -526,8 +571,8 @@ class PublicBallots(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicBallotsRandomised(BooleanPreference):
-    help_text = "Enables public interface to add ballots using randomised URLs"
-    verbose_name = "Enable public ballots with randomised URLs"
+    help_text = "Enables public interface to add ballots using private (randomised, per-person) URLs"
+    verbose_name = "Enable public ballots with private URLs"
     section = data_entry
     name = "public_ballots_randomised"
     default = False
@@ -544,8 +589,8 @@ class PublicFeedback(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicFeedbackRandomised(BooleanPreference):
-    help_text = "Enables public interface to add feedback using randomised URLs"
-    verbose_name = "Enable public feedback with randomised URLs"
+    help_text = "Enables public interface to add feedback using private (randomised, per-person) URLs"
+    verbose_name = "Enable public feedback with private URLs"
     section = data_entry
     name = "public_feedback_randomised"
     default = False
@@ -585,6 +630,23 @@ class EnableMotions(BooleanPreference):
     section = data_entry
     name = "enable_motions"
     default = True
+
+
+@tournament_preferences_registry.register
+class AssistantAccess(ChoicePreference):
+    help_text = ("Whether assistants can access pages that can reveal matchups "
+        "and motions ahead of public release (these pages are useful for "
+        "displaying draws/motions to the public and for printing ballots).")
+    verbose_name = "Assistant user access"
+    section = data_entry
+    name = 'assistant_access'
+    default = 'all_areas'
+    choices = (
+        ('all_areas', 'All areas (results entry, draw display, and motions)'),
+        ('results_draw', 'Just results entry and draw display'),
+        ('results_only', 'Only results entry'),
+    )
+
 
 # ==============================================================================
 public_features = Section('public_features')
@@ -697,6 +759,7 @@ class FeedbackProgress(BooleanPreference):
     section = public_features
     name = 'feedback_progress'
     default = False
+
 
 # ==============================================================================
 ui_options = Section('ui_options')
@@ -883,29 +946,11 @@ class EnableAdjNotes(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class EnableVenueGroups(BooleanPreference):
-    help_text = "Enables the display of venue groups"
-    verbose_name = "Enable venue groups"
-    section = league_options
-    name = "enable_venue_groups"
-    default = False
-
-
-@tournament_preferences_registry.register
 class EnableVenueTimes(BooleanPreference):
     help_text = "Enables specific dates and times to be set for debates"
     verbose_name = "Enable debate scheduling"
     section = league_options
     name = "enable_debate_scheduling"
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableVenueOverlaps(BooleanPreference):
-    help_text = "Allow and automatically debates to be placed in the first room"
-    verbose_name = "Enable venue overlaps"
-    section = league_options
-    name = "enable_venue_overlaps"
     default = False
 
 
@@ -924,6 +969,15 @@ class ShareVenues(BooleanPreference):
     verbose_name = "Share venues"
     section = league_options
     name = "share_venues"
+    default = False
+
+
+@tournament_preferences_registry.register
+class DeriveVenueFromDivison(BooleanPreference):
+    help_text = 'Don\'t show individual venue names in public draws; instead show the division\'s Venue Category'
+    verbose_name = "Use division venue categories"
+    section = league_options
+    name = "division_venues"
     default = False
 
 

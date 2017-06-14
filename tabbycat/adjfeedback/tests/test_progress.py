@@ -92,7 +92,9 @@ class TestFeedbackProgress(TestCase):
             speakers = team.speaker_set.all()
             for pos, speaker in enumerate(speakers, start=1):
                 ballotset.set_speaker(team, pos, speaker)
+                ballotset.set_ghost(team, pos, False)
             ballotset.set_speaker(team, 4, speakers[0])
+            ballotset.set_ghost(team, 4, False)
 
         for a, vote in zip(adjs, votes):
             adj = self._adj(a)

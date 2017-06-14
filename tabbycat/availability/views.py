@@ -176,12 +176,16 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
     update_view = 'availability-update-venues'
 
     def get_queryset(self):
-        return super().get_queryset().select_related('group')
+        return super().get_queryset().prefetch_related('venuecategory_set')
 
     @staticmethod
     def add_description_columns(table, venues):
+        for v in venues:
+            v.cats = ", ".join([vc.name for vc in v.venuecategory_set.all()])
+
         table.add_column("Venue", [v.name for v in venues])
-        table.add_column("Group", [v.group.name if v.group else '' for v in venues])
+        table.add_column("Display Name (for the draw)", [v.display_name for v in venues])
+        table.add_column("Categories", [v.cats for v in venues])
         table.add_column("Priority", [v.priority for v in venues])
 
 

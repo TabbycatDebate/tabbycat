@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}<span class="emoji">📑</span>Bulk Add Data (Old Importer){% endblock %}
+{% block page-title %}📑 Bulk Add Data (Old Importer){% endblock %}
+
+{% block content %}
+
+<div class="alert alert-info">
+  <p>There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">a few ways of
+  getting data into Tabbycat</a> with different levels of convenience depending on the size of the tournament and your
+   technical background. The below tools are the easiest to use and work well for small and medium sized tournaments.</p>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="emoji">🏫</span>
+        <a href="{% tournamenturl 'add_institutions' %}">
+          Add Institutions
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">👯</span>
+        <a href="{% tournamenturl 'add_teams' %}">
+          Add Teams
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">👂</span>
+        <a href="{% tournamenturl 'add_adjudicators' %}">
+          Add Adjudicators
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🎪</span>
+        <a href="{% tournamenturl 'add_venues' %}">
+          Add Venues
+        </a>
+      </li>
+    </ul>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="emoji">🏩</span>
+        <a href="{% tournamenturl 'add_institution_constraints' %}">
+          Add Venue Constraints for Institutions
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🏩</span>
+        <a href="{% tournamenturl 'add_team_constraints' %}">
+          Add Venue Constraints for Teams
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🏩</span>
+        <a href="{% tournamenturl 'add_adjudicator_constraints' %}">
+          Add Venue Constraints for Adjudicators
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endblock content %}

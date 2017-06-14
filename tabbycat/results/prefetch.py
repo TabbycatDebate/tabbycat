@@ -83,7 +83,7 @@ def populate_ballotsets(ballotsubs, prefetched_debates=[]):
         return
 
     POSITIONS = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0]).POSITIONS  # noqa: N806
-    ballotsubs = list(ballotsubs)
+    ballotsubs = list(ballotsubs)  # set ballotsubs in stone to avoid race conditions in later queries
 
     prefetched_debates_by_id = {debate.id: debate for debate in prefetched_debates}
     debateteams_by_debate_id = {}
@@ -111,11 +111,12 @@ def populate_ballotsets(ballotsubs, prefetched_debates=[]):
         ballotsets_by_ballotsub_id[ballotsub.id] = ballotset
 
     # Populate speaker positions
-    speakerscores = SpeakerScore.objects.filter(
-            ballot_submission__in=ballotsubs).select_related('debate_team')
+    speakerscores = SpeakerScore.objects.filter(ballot_submission__in=ballotsubs,
+            position__in=POSITIONS).select_related('debate_team')
     for ss in speakerscores:
         ballotset = ballotsets_by_ballotsub_id[ss.ballot_submission_id]
         ballotset.speakers[ss.debate_team][ss.position] = ss.speaker
+        ballotset.ghosts[ss.debate_team][ss.position] = ss.ghost
 
     # Populate teamscores
     teamscores = TeamScore.objects.filter(
@@ -149,7 +150,8 @@ def populate_ballotsets(ballotsubs, prefetched_debates=[]):
             ballotset._adjudicator_sheets[da.adjudicator] = scoresheet
             scoresheets_by_ballotsub_and_debateadj_id[(ballotset.ballotsub.id, da.id)] = scoresheet
 
-    ssbas = SpeakerScoreByAdj.objects.filter(ballot_submission__in=ballotsubs).select_related('debate_team')
+    ssbas = SpeakerScoreByAdj.objects.filter(ballot_submission__in=ballotsubs,
+            position__in=POSITIONS).select_related('debate_team')
     for ssba in ssbas:
         scoresheet = scoresheets_by_ballotsub_and_debateadj_id[(ssba.ballot_submission_id, ssba.debate_adjudicator_id)]
         scoresheet._set_score(ssba.debate_team, ssba.position, ssba.score)

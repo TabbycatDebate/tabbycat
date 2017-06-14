@@ -6,23 +6,26 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import management
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import Http404, HttpResponse
-from django.shortcuts import redirect
+from django.core.urlresolvers import reverse_lazy
+from django.http import Http404
+from django.shortcuts import redirect, resolve_url
+from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import RedirectView, TemplateView
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, FormView, UpdateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from importer.management.commands import importtournament
 from importer.base import TournamentDataImporterError
+from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
-from utils.misc import redirect_round, redirect_tournament
+from utils.misc import redirect_round, redirect_tournament, reverse_tournament
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
 
-from .forms import TournamentForm
+from .forms import SetCurrentRoundForm, TournamentForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
 
@@ -35,6 +38,8 @@ class PublicSiteIndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         tournaments = Tournament.objects.all()
+        if request.GET.get('redirect', '') == 'false':
+            return super().get(request, *args, **kwargs)
         if tournaments.count() == 1 and not request.user.is_authenticated:
             logger.debug('One tournament only, user is: %s, redirecting to tournament-public-index', request.user)
             return redirect_tournament('tournament-public-index', tournaments.first())
@@ -59,35 +64,14 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
-        round = tournament.current_round
-        assert(round is not None)
-        kwargs["round"] = round
+        kwargs["round"] = tournament.current_round
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
         kwargs["blank"] = not (tournament.team_set.exists() or tournament.adjudicator_set.exists() or tournament.venue_set.exists())
         return super().get_context_data(**kwargs)
 
-    def get(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
-        if tournament.current_round is None:
-            if self.request.user.is_superuser:
-                tournament.current_round = tournament.round_set.order_by('seq').first()
-                if tournament.current_round is None:
-                    return HttpResponse('<p>Error: This tournament has no rounds; '
-                                        ' you\'ll need to add some in the '
-                                        '<a href="' + reverse('admin:tournaments_round_changelist') +
-                                        '">Edit Database</a> area.</p>')
-                messages.warning(self.request, "The current round wasn't set, "
-                                 "so it's been automatically set to the first round.")
-                logger.warning("Automatically set current round to {}".format(tournament.current_round))
-                tournament.save()
-                self.request.tournament = tournament  # Update for context processors
-            else:
-                raise Http404()
-        return super().get(self, request, *args, **kwargs)
 
-
-class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):
-    template_name = 'round_increment_check.html'
+class RoundAdvanceConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+    template_name = 'round_advance_check.html'
 
     def get(self, request, *args, **kwargs):
         round = self.get_round()
@@ -107,7 +91,7 @@ class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView
         return super().get_context_data(**kwargs)
 
 
-class RoundIncrementView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, PostOnlyRedirectView):
+class RoundAdvanceView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_ADVANCE
     round_redirect_pattern_name = 'results-round-list' # standard redirect is only on error
@@ -122,14 +106,22 @@ class RoundIncrementView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, Pos
         if next_round:
             tournament.current_round = next_round
             tournament.save()
-            messages.success(request, "Advanced the current round. The current round is now %s. "
-                "Woohoo! Keep it up!" % next_round.name)
             self.log_action(round=next_round, content_object=next_round)
-            return redirect_round('availability-index', next_round)
+
+            if (next_round.stage == Round.STAGE_ELIMINATION and
+                    self.get_round().stage == Round.STAGE_PRELIMINARY):
+                messages.success(request, _("The current round has been advanced to %(round)s. "
+                        "You've made it to the end of the preliminary rounds! Congratulations! "
+                        "The next step is to generate the break.") % {'round': next_round.name})
+                return redirect_tournament('breakqual-index', tournament)
+            else:
+                messages.success(request, _("The current round has been advanced to %(round)s. "
+                    "Woohoo! Keep it up!") % {'round': next_round.name})
+                return redirect_round('availability-index', next_round)
 
         else:
-            messages.error(request, "Whoops! Could not advance round, because there's no round "
-                "after this round!")
+            messages.error(request, _("Whoops! Could not advance round, because there's no round "
+                "after this round!"))
             return super().post(request, *args, **kwargs)
 
 
@@ -201,6 +193,43 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
                 "can access it below.")
 
         return redirect('tabbycat-index')
+
+
+class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
+    model = Tournament
+    form_class = SetCurrentRoundForm
+    template_name = 'set_current_round.html'
+    slug_url_kwarg = 'tournament_slug'
+    redirect_field_name = 'next'
+
+    def get_redirect_to(self, use_default=True):
+        redirect_to = self.request.POST.get(
+            self.redirect_field_name,
+            self.request.GET.get(self.redirect_field_name, '')
+        )
+        if not redirect_to and use_default:
+            return reverse_tournament('tournament-admin-home', tournament=self.object)
+        else:
+            return redirect_to
+
+    def get_success_url(self):
+        # Copied from django.contrib.auth.views.LoginView.get_success_url
+        redirect_to = self.get_redirect_to(use_default=True)
+        url_is_safe = is_safe_url(
+            url=redirect_to,
+            allowed_hosts={self.request.get_host()},
+            require_https=self.request.is_secure(),
+        )
+        if not url_is_safe:
+            return resolve_url(settings.LOGIN_REDIRECT_URL)
+        return redirect_to
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            self.redirect_field_name: self.get_redirect_to(use_default=False),
+        })
+        return context
 
 
 class TournamentPermanentRedirectView(RedirectView):

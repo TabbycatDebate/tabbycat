@@ -116,8 +116,27 @@ $('.score input').change(function() {
 
 $('.js-team-speakers select').change(update_speakers).each(update_speaker);
 
-// Fill in the reply speaker if there is only one option
+// Show/hide on initial input
+$( ".iron-person input" ).each(function(index) {
+  if ($(this).attr('checked') === 'checked') {
+    $("#hasIron").val('1');
+    $(".iron-person").show()
+  }
+});
+
+// Show/hide on toggle
+$("#hasIron").change(function() {
+  var enabled = $("#hasIron option:selected").val()
+  if (enabled === "1") {
+    $(".iron-person").show()
+  } else if (enabled === "0") {
+    $(".iron-person").attr('checked', false);
+    $(".iron-person input")
+  }
+});
+
 {% if form.using_replies and form.LAST_SUBSTANTIVE_POSITION == 2 %}
+// Fill in the reply speaker if there is only one option
 
   $('#id_aff_speaker_s1').change(function() {
     $('#id_aff_speaker_s{{ form.REPLY_POSITION }}').val($(this).val());

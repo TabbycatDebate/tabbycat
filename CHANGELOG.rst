@@ -2,10 +2,35 @@
 Change Log
 ==========
 
+
+1.4.0 (Havana Brown)
+--------------------
+
+
+1.3.0 (Genetta)
+---------------
+*Release date: 9 May 2017*
+
+- Added the ability to mark speeches as duplicates when entering ballots so that they will not show in speaker tabs, intended for use with 'iron-man' speeches and swing speakers
+- Reworked venue constraints and venue display options by streamlining "venue groups" and "venue constraint categories" into a single "venue category" type, with options for how they are used and displayed
+- Relocated the Random (now renamed 'Private') URL pages to the Setup section and added pages for printing/emailing out the ballot submission URLs
+- Reworked the simple data importer (formerly the visual importer) to improve its robustness
+- Improved guards against having no current round set, and added a new page for manually overriding the current round (under Configuration).
+- Added a preference for controlling whether assistant users have access to pages that can reveal draw or motions information ahead of their public release
+- Added the ability to limit tab releases to a given number of ranks (*i.e.* only show the top 10 speakers)
+- Added the ability to redact individual person's identifying details from speaker tabs
+- Added the ability for user passwords to be easily reset
+- Added a minimal set of default feedback questions to newly created Tournaments.
+- When a tournament's current round is set, redirect to a page where it can be set, rather than crashing
+- A number of other minor bug fixes and enhancements
+
+
 1.2.3
 -----
+*Release date: 17 March 2017*
 
 - Improved the display of the admin ballot entry form on mobile devices
+- A number of other minor bug fixes
 
 
 1.2.2
@@ -14,6 +39,7 @@ Change Log
 
 - Protected debate-team objects from cascaded deletion, and added warning messages with guidance when users would otherwise do this
 - A number of other minor bug fixes
+
 
 1.2.1
 -----

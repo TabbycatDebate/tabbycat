@@ -11,10 +11,8 @@
     </div>
 
     <div class="row">
-      <div v-for="(tableIndex, tableData) in tablesData"
-           v-bind:class="{'col-md-6': tablesData.length === 2,
-                          'col-md-12': tablesData.length === 1}">
-        <div class="panel panel-default table-continer" id="tableContainer{{ table_index }}">
+      <div v-for="(tableIndex, tableData) in tablesData" v-bind:class="tableClass">
+        <div class="panel panel-default table-container" id="tableContainer{{ table_index }}">
           <div class="panel-heading" v-if="tableData['title']">
             <h4 class="panel-title">{{ tableData['title'] }}</h4>
           </div>
@@ -42,8 +40,24 @@ export default {
   components: {
     SmartTable
   },
+  computed: {
+    tableClass: function () {
+      if (this.tablesData.length === 1) {
+        return 'col-md-12';
+      } else {
+        if (this.orientation === "rows") {
+          return 'col-md-12';
+        }
+        if (this.orientation === "columns") {
+          return 'col-md-6';
+        }
+      }
+      return 'col-md-12'; // Fallback; should be redundant
+    }
+  },
   props: {
     tablesData: Array, // Passed down from main.js
+    orientation: String, // Passed down from template
     filterKey: { default: '' }
   },
   ready: function() {

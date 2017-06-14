@@ -33,8 +33,8 @@ class RoundAdmin(admin.ModelAdmin):
     def mark_as_silent(self, request, queryset):
         updated = queryset.update(silent=True)
         message = ungettext(
-            _("%(count)d round object was marked as silent."),
-            _("%(count)d round objects were marked as silent."),
+            "%(count)d round object was marked as silent.",
+            "%(count)d round objects were marked as silent.",
             updated
         ) % {'count': updated}
         self.message_user(request, message)
@@ -42,8 +42,8 @@ class RoundAdmin(admin.ModelAdmin):
     def mark_as_not_silent(self, request, queryset):
         updated = queryset.update(silent=False)
         message = ungettext(
-            _("%(count)d round object was marked as not silent."),
-            _("%(count)d round objects were marked as not silent."),
+            "%(count)d round object was marked as not silent.",
+            "%(count)d round objects were marked as not silent.",
             updated
         ) % {'count': updated}
         self.message_user(request, message)
@@ -51,8 +51,8 @@ class RoundAdmin(admin.ModelAdmin):
     def release_motions(self, request, queryset):
         updated = queryset.update(motions_released=True)
         message = ungettext(
-            _("%(count)d round object was marked as motions released."),
-            _("%(count)d round objects were marked as motions released."),
+            "%(count)d round object was marked as motions released.",
+            "%(count)d round objects were marked as motions released.",
             updated
         ) % {'count': updated}
         self.message_user(request, message)
@@ -60,8 +60,8 @@ class RoundAdmin(admin.ModelAdmin):
     def unrelease_motions(self, request, queryset):
         updated = queryset.update(motions_released=False)
         message = ungettext(
-            _("%(count)d round object was marked as motions not released."),
-            _("%(count)d round objects were marked as motions not released."),
+            "%(count)d round object was marked as motions not released.",
+            "%(count)d round objects were marked as motions not released.",
             updated
         ) % {'count': updated}
         self.message_user(request, message)

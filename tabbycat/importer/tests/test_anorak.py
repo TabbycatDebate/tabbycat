@@ -67,7 +67,8 @@ class TestImporterAnorak(TestCase):
     def test_venues(self):
         f = self._open_csv_file(self.TESTDIR, "venues")
         counts, errors = self.importer.import_venues(f)
-        self.assertCountsDictEqual(counts, {vm.VenueGroup: 7, vm.Venue: 23})
+        self.assertCountsDictEqual(counts, {vm.VenueCategory: 8, vm.Venue: 23,
+                vm.VenueCategory.venues.through: 22})
         self.assertFalse(errors)
 
     def test_institutions(self):
@@ -116,24 +117,23 @@ class TestImporterAnorak(TestCase):
         self.assertCountsDictEqual(counts, {fm.AdjudicatorFeedbackQuestion: 11})
         self.assertFalse(errors)
 
-    def test_venue_constraint_categories(self):
-        self.test_venues()
-        f = self._open_csv_file(self.TESTDIR, "venue_constraint_categories")
-        counts, errors = self.importer.import_venue_constraint_categories(f)
-        self.assertCountsDictEqual(counts, {vm.VenueConstraintCategory: 2, vm.VenueConstraintCategory.venues.through: 7})
+    def test_venue_categories(self):
+        f = self._open_csv_file(self.TESTDIR, "venue_categories")
+        counts, errors = self.importer.import_venue_categories(f)
+        self.assertCountsDictEqual(counts, {vm.VenueCategory: 8})
         self.assertFalse(errors)
 
     def test_adj_venue_constraints(self):
+        self.test_venue_categories()
         self.test_adjudicators()
-        self.test_venue_constraint_categories()
         f = self._open_csv_file(self.TESTDIR, "adj_venue_constraints")
         counts, errors = self.importer.import_adj_venue_constraints(f)
         self.assertCountsDictEqual(counts, {vm.VenueConstraint: 3})
         self.assertFalse(errors)
 
     def test_team_venue_constraints(self):
+        self.test_venue_categories()
         self.test_speakers()
-        self.test_venue_constraint_categories()
         f = self._open_csv_file(self.TESTDIR, "team_venue_constraints")
         counts, errors = self.importer.import_team_venue_constraints(f)
         self.assertCountsDictEqual(counts, {vm.VenueConstraint: 2})
@@ -165,6 +165,9 @@ class TestImporterAnorak(TestCase):
         f = self._open_csv_file(self.TESTDIR_ERRORS, "venues")
         with self.assertRaises(TournamentDataImporterError) as raisescm, self.assertLogs(self.logger, logging.ERROR) as logscm:
             self.importer.import_venues(f)
+        # There are three bad lines in the CSV file, and because this raises
+        # the exception straight after the Venue creation loop, it bad line
+        # generates one error (not two, as in the non-strict version below).
         self.assertEqual(len(raisescm.exception), 3)
         self.assertCountEqual([e.lineno for e in raisescm.exception.entries], (9, 17, 21))
         self.assertEqual(len(logscm.records), 3)
@@ -174,7 +177,11 @@ class TestImporterAnorak(TestCase):
         self.importer.strict = False
         with self.assertLogs(self.logger, logging.WARNING) as logscm:
             counts, errors = self.importer.import_venues(f)
-        self.assertCountsDictEqual(counts, {vm.Venue: 20, vm.VenueGroup: 7})
-        self.assertEqual(len(errors), 3)
-        self.assertEqual(len(logscm.records), 3)
+        self.assertCountsDictEqual(counts, {vm.VenueCategory: 7, vm.Venue: 20,
+                vm.VenueCategory.venues.through: 20})
+        # There are three bad lines in the CSV file, but each one generates
+        # two errors: one creating the venue itself, and one creating the
+        # venuecategory-venue relationship (because the venue doesn't exist).
+        self.assertEqual(len(errors), 6)
+        self.assertEqual(len(logscm.records), 6)
         self.importer.strict = True

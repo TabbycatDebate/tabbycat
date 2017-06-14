@@ -61,7 +61,6 @@ gulp.task('styles-compile', function() {
 gulp.task("js-vendor-compile", function() {
   gulp.src([
     'node_modules/jquery/dist/jquery.js', // For Debug Toolbar
-    'node_modules/datatables.net/js/jquery.dataTables.js', // Deprecate,
     'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
     'tabbycat/templates/js-vendor/jquery-ui.min.js' // Deprecate,
     ])

@@ -13,7 +13,7 @@
 }
 
 //------------------------------------------------------------------------------
-// Inputs
+// Inputs (in general)
 //------------------------------------------------------------------------------
 
 // Give buttons more padding
@@ -52,4 +52,42 @@ input[type="checkbox"].form-control {
 
 .text-area-limited {
   max-height: 75px;
+}
+
+// Inline form errors from django
+.errorlist, label.error {
+  color: $state-danger-text;
+  padding: 10px 0 0 5px;
+  font-weight: bold;
+}
+
+//------------------------------------------------------------------------------
+// Custom Widgets
+//------------------------------------------------------------------------------
+
+// Forfeits spacing is (by default) off; needs correcting
+.forfeits-group {
+  list-style-type: none;
+  padding-left: 0;
+  li {
+    float: left;
+    width: 46%;
+  }
+}
+
+// IE Horizontal choice/radio options; align form elements & text horizontally
+.form-spaced-choice {
+  flex-wrap: wrap;
+
+  .choice {
+    padding: 0 10px;
+    flex: 1;
+  }
+  label {
+    display: block;
+    text-align: center;
+  }
+  input {
+    margin: 0 auto;
+  }
 }

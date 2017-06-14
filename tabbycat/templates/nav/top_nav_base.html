@@ -19,7 +19,8 @@
               {% if user.is_authenticated %}
                 <li>
                   <a href="{{ tournament.get_absolute_url  }}">
-                    Admin area for <strong>{{ tournament }}</strong>
+                    {% if user.is_superuser %}Admin{% else %}Assistant{% endif %}
+                    area for <strong>{{ tournament }}</strong>
                   </a>
                 </li>
                 <li>
@@ -38,7 +39,7 @@
             <li role="separator" class="divider"></li>
             <li>
               <a class="" href="/">
-                Tournaments Overview
+                Site Home
               </a>
             </li>
           </ul>
