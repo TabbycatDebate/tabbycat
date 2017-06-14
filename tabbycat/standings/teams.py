@@ -92,7 +92,18 @@ class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         sql = RawSQL(query, ())
         logger.info("Running query: " + query)
         queryset = queryset.annotate(metric=sql).distinct()
-        self.annotate_with_queryset(queryset, standings, round)
+
+        # Calculate bye debates
+        bye_points = 2 # Byes worth 2 points for WADL
+        from draw.models import Debate
+        from participants.models import Team
+        debates_with_byes = Debate.objects.filter(debateteam__team__type=Team.TYPE_BYE,
+                                                  round__stage=Round.STAGE_PRELIMINARY)
+        for item in queryset:
+            byes = debates_with_byes.filter(debateteam__team=item).count()
+            wins_including_byes = item.metric + byes * bye_points
+            # Manually implement annotate_with_queryset()
+            standings.add_metric(item, self.key, wins_including_byes)
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
