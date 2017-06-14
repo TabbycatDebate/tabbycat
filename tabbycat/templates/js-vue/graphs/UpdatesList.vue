@@ -3,9 +3,10 @@
 
   <li class='list-group-item'>
     <span class='badge'>
-      {{ timestamp }}
+      {{ item.timestamp }}
     </span>
-    <strong>{{ user }}</strong> {{ type }} <em>{{ param }}</em>
+    <strong>{{ item.user }}</strong> {{ item.type }}
+    <em>{{ item.param }}</em>
   </li>
 
 </template>
@@ -13,10 +14,7 @@
 <script>
 export default {
   props: {
-    timestamp: String,
-    user: String,
-    type: String,
-    param: String,
+    item: Object,
   },
 }
 </script>

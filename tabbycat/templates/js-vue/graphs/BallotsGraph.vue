@@ -1,8 +1,10 @@
 <template id="ballots-graph">
+  <div>
 
-  <svg id="ballotsStatusGraph" class="d3-graph" style="margin-top: -15px; margin-bottom: -15px;" width="100%"></svg>
-  <div v-if="graphData.length === 0" class="text-center">No ballots in for this round yet</div>
+    <svg id="ballotsStatusGraph" class="d3-graph" style="margin-top: -15px; margin-bottom: -15px;" width="100%"></svg>
+    <div v-if="graphData" class="text-center">No ballots in for this round yet</div>
 
+  </div>
 </template>
 
 <script>
@@ -14,13 +16,17 @@ export default {
     height: { type: Number, default: 200 },
     padding: { type: Number, default: 30 },
     pollFrequency: { type: Number, default: 30000 }, // 30s
-    graphData: { type: Number,  default: function () { return [] } }
+  },
+  data: function() {
+    return {
+      graphData: { type: Object,  default: false }
+    }
   },
   methods: {
     fetchData: function () {
       var xhr = new XMLHttpRequest()
+      xhr.open('GET', this.pollUrl)
       var self = this
-      xhr.open('GET', self.pollUrl)
       xhr.onload = function () {
         self.graphData = JSON.parse(xhr.responseText)
         if (self.graphData.length > 0) {

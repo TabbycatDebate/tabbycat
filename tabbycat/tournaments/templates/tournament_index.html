@@ -32,48 +32,12 @@
     </div>
   {% endif %}
 
-  <div class="row">
-    <div class="col-sm-12">
-      <h4 class="text-center">
-        {% trans "Number of Ballots In"%}
-      </h4>
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <ballots-graph poll-url="{% tournamenturl 'results-ballots-graph-data' %}"></ballots-graph>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="vueMount">
+    <tournament-overview-container :actions-url="updateActionsURL"
+                                   :results-url="updateResultsURL"
+                                   :ballots-url="updateBallotsURL">
+    </tournament-overview-container>
 
-  <div class="row">
-    <div class="col-md-6">
-      <h4 class="text-center">{% trans "Latest Actions" %}</h4>
-      <ul class="list-group">
-        <updates-list v-for="action in latestActions"
-        :timestamp="action.timestamp" :user="action.user" :type="action.type"
-        :param="action.param"></updates-list>
-        <li class="list-group-item" v-if="latestActions === 'loading'">
-          {% trans "Loading..." %}
-        </li>
-        <li class="list-group-item" v-if="latestActions.length === 0">
-          {% trans "No Actions In" %}
-        </li>
-      </ul>
-    </div>
-    <div class="col-md-6">
-      <h4 class="text-center">{% trans "Latest Results" %}</h4>
-      <ul class="list-group">
-        <updates-list v-for="result in latestResults"
-        :timestamp="result.timestamp" :user="result.user" :type="result.type"
-        :param="result.param"></updates-list>
-        <li class="list-group-item" v-if="latestResults === 'loading'">
-          {% trans "Loading..." %}
-        </li>
-        <li class="list-group-item" v-if="latestResults.length === 0">
-          {% trans "No Results In" %}
-        </li>
-      </ul>
-    </div>
   </div>
 
 {% endblock content %}
@@ -81,6 +45,7 @@
 {% block js %}
   <script>
     window.vueData = {
+      updateBallotsURL: '{% tournamenturl 'results-ballots-graph-data' %}',
       updateActionsURL: '{% tournamenturl 'actionlog-latest-json' %}',
       updateResultsURL: '{% tournamenturl 'results-latest-json' %}',
     }

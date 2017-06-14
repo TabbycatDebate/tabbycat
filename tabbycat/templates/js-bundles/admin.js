@@ -27,53 +27,16 @@ Vue.prototype.$eventHub = eventHub
 //   vueData['roundInfo'] = roundInfo;
 // }
 
-// //------------------------------------------------------------------------------
-// // Tournament Homepage
-// //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Tournament Homepage
+//------------------------------------------------------------------------------
 
-// import UpdatesList from  '../js-vue/graphs/UpdatesList.vue'
-// import BallotsGraph from '../js-vue/graphs/BallotsGraph.vue'
+import TournamentOverviewContainer from  '../js-vue/containers/TournamentOverviewContainer.vue'
+vueComponents['TournamentOverviewContainer'] = TournamentOverviewContainer
 
-// if (typeof updateActionsURL !== 'undefined' && updateResultsURL !== 'undefined') {
-//   vueComponents['UpdatesList'] = UpdatesList;
-//   vueComponents['BallotsGraph'] = BallotsGraph;
-//   vueData = {
-//       latestActions: 'loading',
-//       latestResults: 'loading',
-//       pollFrequency: 30000, // 30 seconds
-//       updateActionsURL: updateActionsURL, // From template
-//       updateResultsURL: updateResultsURL  // From template
-//   };
-//   vueMethods['updateActions'] = function() {
-//     this.fetchData(updateActionsURL, 'actions');
-//   };
-//   vueMethods['updateResults'] = function() {
-//     this.fetchData(updateResultsURL, 'results');
-//   };
-//   vueMethods['fetchData'] = function (apiURL, resource) {
-//     var xhr = new XMLHttpRequest()
-//     var self = this
-//     xhr.open('GET', apiURL)
-//     xhr.onload = function () {
-//       if (resource === 'actions') {
-//         self.latestActions = JSON.parse(xhr.responseText);
-//         setTimeout(self.updateActions, self.pollFrequency);
-//       } else {
-//         self.latestResults = JSON.parse(xhr.responseText);
-//         setTimeout(self.updateResults, self.pollFrequency);
-//       }
-//     }
-//     xhr.send()
-//   }
-//   vueCreated = function () {
-//     this.updateActions()
-//     this.updateResults()
-//   };
-// }
-
-// //------------------------------------------------------------------------------
-// // Printables
-// //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Printables
+//------------------------------------------------------------------------------
 
 import PrintableBallot from  '../js-vue/printables/PrintableBallot.vue'
 vueComponents['PrintableBallot'] = PrintableBallot
