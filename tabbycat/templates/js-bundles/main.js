@@ -60,12 +60,12 @@ var vueData = window.vueData // We need to mount props from the window itself
 import TablesContainer from '../js-vue/containers/TablesContainer.vue'
 vueComponents['TablesContainer'] = TablesContainer
 
-// Graph-based Views
-import TextDisplay from '../js-vue/graphs/TextDisplay.vue'
-vueComponents['TextDisplay'] = TextDisplay
+//------------------------------------------------------------------------------
+// Diversity Standings
+//------------------------------------------------------------------------------
 
-import DonutChart from  '../js-vue/graphs/DonutChart.vue'
-vueComponents['DonutChart'] = DonutChart
+import DiversityContainer from  '../js-vue/containers/DiversityContainer.vue'
+vueComponents['DiversityContainer'] = DiversityContainer
 
 //------------------------------------------------------------------------------
 // Expose data for admin/public.js to import

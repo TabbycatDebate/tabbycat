@@ -1,0 +1,55 @@
+{% extends "standings_base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block page-title %}🗃Diversity Overview{% endblock %}
+{% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
+{% block diversity_active %}active{% endblock %}
+{% if for_public %}{% block page-subnav-sections %}{% endblock %}{% endif %}
+
+{% block page-alerts %}
+
+  <div class="alert alert-info">
+    The speaker and adjudicator results data displayed here is presented
+    without tests for statistical significance. Correlations should not be
+    automatically considered reliable; particularly at small tournaments.
+  </div>
+
+  <div class="nav nav-pills navbar-left btn-group vertical-spacing">
+    <button disabled class="btn btn-default gender-display gender-male h6">
+      Male identifying
+    </button>
+    <button disabled class="btn btn-default gender-display gender-nm h6">
+      Female identifying or non-binary
+    </button>
+    <button disabled class="btn btn-default gender-display gender-unknown h6">
+      Unknown
+    </button>
+  </div>
+
+  <div class="nav nav-pills pull-right btn-group vertical-spacing">
+    {% for r in regions %}
+      <button disabled class="btn btn-default region-display region-{{ r.seq }} h6">
+        {{ r.name }}
+      </button>
+    {% endfor %}
+  </div>
+
+{% endblock %}
+
+{% block content %}
+
+  <div id="vueMount">
+    <diversity-container :graphsData="graphsData"></diversity-container>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    window.vueData = {
+      graphsData: '{{ data_sets|safe }}'
+    }
+  </script>
+  {{ block.super }}
+{% endblock js %}

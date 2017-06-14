@@ -23,7 +23,7 @@ from .templatetags.standingsformat import metricformat
 
 class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
-    template_name = 'standings_index.html'
+    template_name = 'standings_base.html'
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
@@ -453,7 +453,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
 class BaseDiversityStandingsView(TournamentMixin, TemplateView):
 
-    template_name = 'diversity.html'
+    template_name = 'standings_diversity.html'
     for_public = False
 
     def get_context_data(self, **kwargs):
