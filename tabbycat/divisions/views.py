@@ -23,8 +23,8 @@ logger = logging.getLogger(__name__)
 class PublicDivisionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
     public_page_preference = 'public_divisions'
     template_name = "public_divisions.html"
-    def get_context_data(self, **kwargs):
 
+    def get_context_data(self, **kwargs):
         t = self.get_tournament()
         divisions = Division.objects.filter(tournament=t).all().select_related('venue_category')
         divisions = sorted(divisions, key=lambda x: x.name)
