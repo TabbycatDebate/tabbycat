@@ -1,6 +1,5 @@
 import logging
 from threading import Lock
-from warnings import warn
 
 from django.db import models
 from django.conf import settings
@@ -8,7 +7,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from .result import VotingDebateResult
-from .result_old import BallotSet
 
 logger = logging.getLogger(__name__)
 
@@ -117,10 +115,8 @@ class BallotSubmission(Submission):
 
     @property
     def ballot_set(self):
-        warn("Debate.ballot_set is deprecated, use Debate.result instead.", stacklevel=2)
-        if not hasattr(self, "_ballot_set"):
-            self._ballot_set = BallotSet(self)
-        return self._ballot_set
+        # Remove after 15/7/2017
+        raise RuntimeError("Debate.ballot_set is deprecated, use Debate.result instead.")
 
     @property
     def result(self):
@@ -228,7 +224,7 @@ class SpeakerScore(models.Model):
 
     The 'speaker' field is canonical. The 'score' field, however, is a
     performance enhancement; raw scores are stored in SpeakerScoreByAdj. The
-    BallotSet class in result.py calculates this when it saves a ballot set.
+    result classes in result.py calculates this when it saves a result.
     """
     ballot_submission = models.ForeignKey(BallotSubmission, models.CASCADE,
         verbose_name=_("ballot submission"))
