@@ -47,6 +47,7 @@ from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 
 from .scoresheet import SCORESHEET_CLASSES
+from .utils import side_and_position_names
 
 logger = logging.getLogger(__name__)
 
@@ -109,7 +110,7 @@ class BaseDebateResult:
         database (at all). It is then the responsibility of the caller to do so;
         the instance will crash otherwise, as the relevant attributes will not
         be created. (For example, in prefetch.py, `populate_results()` uses this
-        to load BallotSets in bulk.) Callers can use `.init_blank_buffer()` to
+        to load results in bulk.) Callers can use `.init_blank_buffer()` to
         initialize the correct buffers and `.assert_loaded()` to check that data
         was loaded correctly.
         """
@@ -537,6 +538,9 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             return self.majority_adjudicators()
 
     @property
+    def winning_side(self):
+        return self._winner
+
     @_requires_decision(None)
     def winning_team(self):
         return self.debateteams[self._winner].team
@@ -605,6 +609,32 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             for adj, adjtype in self.debate.adjudicators.with_positions():
                 split = adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE
                 yield adj, adjtype, split
+
+    def as_dicts(self):
+        """Generates a sequence of dicts, each being a scoresheet from an
+        adjudicator. This is used in PublicBallotScoresheetsView, which uses
+        template public_ballot_set.html."""
+
+        for adj in self.debate.adjudicators.voting():
+            sheet = self.scoresheets[adj]
+            sheet_dict = {"adjudicator": adj, "teams": []}
+            for side, (side_name, pos_names) in zip(self.sides, side_and_position_names(self.tournament)):
+                side_dict = {
+                    "side": side_name,
+                    "team": self.debateteams[side].team,
+                    "total": sheet.get_total(side),
+                    "win": sheet.winner() == side,
+                    "speakers": [],
+                }
+                for pos, pos_name in zip(self.positions, pos_names):
+                    side_dict["speakers"].append({
+                        "pos": pos,
+                        "name": pos_name,
+                        "speaker": self.get_speaker(side, pos),
+                        "score": sheet.get_score(side, pos),
+                    })
+                sheet_dict["teams"].append(side_dict)
+            yield sheet_dict
 
 
 class ForfeitDebateResult(BaseDebateResult):

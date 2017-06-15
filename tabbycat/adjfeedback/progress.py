@@ -72,7 +72,7 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         chair."""
 
         if self.enforce_orallist and self.source.debate.confirmed_ballot:
-            majority = self.source.debate.confirmed_ballot.result.majority_adjudicators
+            majority = self.source.debate.confirmed_ballot.result.majority_adjudicators()
             chair = self.source.debate.adjudicators.chair
             if chair in majority:
                 return [chair]
@@ -266,7 +266,7 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
             debate__round__stage=Round.STAGE_PRELIMINARY
         ).select_related('debate', 'debate__round').prefetch_related(
             'debate__debateadjudicator_set__adjudicator')
-        populate_confirmed_ballots([dt.debate for dt in debateteams], ballotsets=True)
+        populate_confirmed_ballots([dt.debate for dt in debateteams], results=True)
         return debateteams
 
     def _get_debateteams(self):

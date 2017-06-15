@@ -53,7 +53,7 @@ class Pairing(object):
         room_rank = debate.room_rank
         flags = debate.flags.split(",")
         division = debate.division
-        winner = debate.confirmed_ballot.result.winning_team
+        winner = debate.confirmed_ballot.result.winning_team()
         return cls(teams, bracket, room_rank, flags, winner, division)
 
     def __repr__(self):

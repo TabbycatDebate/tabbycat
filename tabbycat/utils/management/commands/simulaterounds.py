@@ -5,7 +5,7 @@ from adjallocation.hungarian import HungarianAllocator
 from availability.utils import activate_all
 from draw.models import Debate
 from draw.manager import DrawManager
-from results.dbutils import add_ballotsets_to_round
+from results.dbutils import add_results_to_round
 from results.management.commands.generateresults import GenerateResultsCommandMixin
 from tournaments.models import Round
 from utils.management.base import RoundCommand
@@ -38,7 +38,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         allocate_adjudicators(round, HungarianAllocator)
 
         self.stdout.write("Generating results for round '{}'...".format(round.name))
-        add_ballotsets_to_round(round, **self.ballotset_kwargs(options))
+        add_results_to_round(round, **self.result_kwargs(options))
 
         round.tournament.current_round = round
         round.tournament.save()

@@ -1,10 +1,10 @@
 from itertools import combinations
 
 from django.db.models import Count
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 
 from draw.models import Debate
-
-from .prefetch import populate_results
 
 
 def set_float_or_int(number, step_value):
@@ -49,6 +49,7 @@ def populate_identical_ballotsub_lists(ballotsubs):
     Two ballot submissions are identical if they share the same debate, motion,
     speakers and all speaker scores."""
 
+    from .prefetch import populate_results
     populate_results(ballotsubs)
 
     for ballotsub in ballotsubs:
@@ -65,3 +66,28 @@ def populate_identical_ballotsub_lists(ballotsubs):
 
 def ballot_checkin_number_left(round):
     return Debate.objects.filter(round=round, ballot_in=False).count()
+
+
+_ORDINALS = {
+    1: ugettext_lazy("1st"),
+    2: ugettext_lazy("2nd"),
+    3: ugettext_lazy("3rd"),
+    4: ugettext_lazy("4th"),
+    5: ugettext_lazy("5th"),
+    6: ugettext_lazy("6th"),
+    7: ugettext_lazy("7th"),
+    8: ugettext_lazy("8th"),
+}
+
+
+def side_and_position_names(tournament):
+    """Yields 2-tuples (side, positions), where position is a list of position
+    names, all being translated human-readable names. This should eventually
+    be extended to return an appropriate list for the tournament configuration.
+    """
+    sides = [_("Affirmative"), _("Negative")]
+    for side in sides:
+        positions = [_("Reply") if pos == tournament.REPLY_POSITION
+            else _ORDINALS[pos]
+            for pos in tournament.POSITIONS]
+        yield side, positions

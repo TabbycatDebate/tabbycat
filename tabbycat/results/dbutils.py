@@ -11,36 +11,36 @@ from django.contrib.auth import get_user_model
 
 from draw.models import Debate
 from results.models import BallotSubmission
-from results.result import BallotSet
+from results.result import VotingDebateResult
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
-def add_ballotsets_to_round(round, **kwargs):
-    """Calls add_ballotset() for every debate in the given round."""
+def add_results_to_round(round, **kwargs):
+    """Calls add_result() for every debate in the given round."""
     for debate in round.debate_set.all():
-        add_ballotset(debate, **kwargs)
+        add_result(debate, **kwargs)
 
 
-def add_ballotsets_to_round_partial(round, num, **kwargs):
-    """Calls ``add_ballotset()`` on ``num`` randomly-chosen debates in the given round."""
+def add_results_to_round_partial(round, num, **kwargs):
+    """Calls ``add_result()`` on ``num`` randomly-chosen debates in the given round."""
     debates = random.sample(list(round.debate_set.all()), num)
     for debate in debates:
-        add_ballotset(debate, **kwargs)
+        add_result(debate, **kwargs)
 
 
-def delete_all_ballotsets_for_round(round):
+def delete_all_ballotsubs_for_round(round):
     """Deletes all ballot sets from the given round."""
     BallotSubmission.objects.filter(debate__round=round).delete()
 
 
-def delete_ballotset(debate):
+def delete_ballotsub(debate):
     """Deletes all ballot sets from the given debate."""
     debate.ballotsubmission_set.all().delete()
 
 
-def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False,
+def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
                   min_score=72, max_score=78, reply_random=False):
     """Adds a ballot set to a debate.
 
@@ -80,32 +80,34 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
         rr[adj] = gen_results()
 
     # Create relevant scores
-    bset = BallotSet(bsub)
+    result = VotingDebateResult(bsub)
 
     for side in ('aff', 'neg'):
         speakers = getattr(debate, '%s_team' % side).speakers
         for i in range(1, last_substantive_position+1):
-            bset.set_speaker(team=side, position=i, speaker=speakers[i - 1])
-            bset.set_ghost(side, i, False)
+            result.set_speaker(side, i, speakers[i-1])
+            result.set_ghost(side, i, False)
 
         reply_speaker = random.randint(0, last_substantive_position-1) if reply_random else 0
-        bset.set_speaker(team=side, position=reply_position, speaker=speakers[reply_speaker])
-        bset.set_ghost(side, reply_position, False)
+        result.set_speaker(side, reply_position, speakers[reply_speaker])
+        result.set_ghost(side, reply_position, False)
 
         for adj in debate.adjudicators.voting():
             for pos in debate.round.tournament.POSITIONS:
-                bset.set_score(adj, side, pos, rr[adj][side][pos-1])
+                result.set_score(adj, side, pos, rr[adj][side][pos-1])
+
+    result.save()
 
     # Pick a motion
     motions = debate.round.motion_set.all()
     if motions:
         motion = random.choice(motions)
-        bset.motion = motion
+        bsub.motion = motion
 
-    bset.discarded = discarded
-    bset.confirmed = confirmed
+    bsub.discarded = discarded
+    bsub.confirmed = confirmed
 
-    bset.save()
+    bsub.save()
 
     # Update result status (only takes into account marginal effect, does not "fix")
     if confirmed:
@@ -115,7 +117,7 @@ def add_ballotset(debate, submitter_type, user, discarded=False, confirmed=False
     debate.save()
 
     logger.info("{debate} won by {team} on {motion}".format(
-        debate=debate.matchup, team=bset.aff_win and "affirmative" or "negative",
-        motion=bset.motion and bset.motion.reference or "<No motion>"))
+        debate=debate.matchup, team=result.winning_side,
+        motion=bsub.motion and bsub.motion.reference or "<No motion>"))
 
-    return bset
+    return result

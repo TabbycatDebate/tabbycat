@@ -7,7 +7,7 @@ from adjfeedback.models import AdjudicatorFeedback
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission
-from results.result_old import BallotSet
+from results.result import VotingDebateResult
 from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
 from venues.models import Venue
@@ -86,32 +86,33 @@ class TestFeedbackProgress(TestCase):
                     type=DebateAdjudicator.TYPE_TRAINEE)
 
         ballotsub = BallotSubmission(debate=debate, submitter_type=BallotSubmission.SUBMITTER_TABROOM)
-        ballotset = BallotSet(ballotsub)
+        result = VotingDebateResult(ballotsub)
 
-        for t in teams:
+        for t, side in zip(teams, ('aff', 'neg')):
             team = self._team(t)
             speakers = team.speaker_set.all()
             for pos, speaker in enumerate(speakers, start=1):
-                ballotset.set_speaker(team, pos, speaker)
-                ballotset.set_ghost(team, pos, False)
-            ballotset.set_speaker(team, 4, speakers[0])
-            ballotset.set_ghost(team, 4, False)
+                result.set_speaker(side, pos, speaker)
+                result.set_ghost(side, pos, False)
+            result.set_speaker(side, 4, speakers[0])
+            result.set_ghost(side, 4, False)
 
         for a, vote in zip(adjs, votes):
             adj = self._adj(a)
             if vote == 'a':
-                teams = [aff_team, neg_team]
+                sides = ('aff', 'neg')
             elif vote == 'n':
-                teams = [neg_team, aff_team]
+                sides = ('neg', 'aff')
             else:
                 raise ValueError
-            for team, score in zip(teams, (76, 74)):
+            for side, score in zip(sides, (76, 74)):
                 for pos in range(1, 4):
-                    ballotset.set_score(adj, team, pos, score)
-                ballotset.set_score(adj, team, 4, score / 2)
+                    result.set_score(adj, side, pos, score)
+                result.set_score(adj, side, 4, score / 2)
 
-        ballotset.confirmed = True
-        ballotset.save()
+        ballotsub.confirmed = True
+        ballotsub.save()
+        result.save()
 
         return debate
 

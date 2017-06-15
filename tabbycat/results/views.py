@@ -112,7 +112,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     def get_table_by_debate(self):
         round = self.get_round()
         tournament = self.get_tournament()
-        debates = round.debate_set_with_prefetches(ballotsets=True, wins=True)
+        debates = round.debate_set_with_prefetches(results=True, wins=True)
 
         table = TabbycatTableBuilder(view=self, sort_key="Venue")
         table.add_debate_venue_columns(debates)
@@ -623,7 +623,8 @@ class PublicBallotScoresheetsView(CacheMixin, PublicTournamentPageMixin, SingleO
         return debate
 
     def get_context_data(self, **kwargs):
-        kwargs['ballot_set'] = self.object.confirmed_ballot.ballot_set
+        kwargs['motion'] = self.object.confirmed_ballot.motion
+        kwargs['result'] = self.object.confirmed_ballot.result
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):

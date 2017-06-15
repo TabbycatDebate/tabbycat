@@ -1,11 +1,13 @@
 import logging
 from threading import Lock
+from warnings import warn
 
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from .result import VotingDebateResult
 from .result_old import BallotSet
 
 logger = logging.getLogger(__name__)
