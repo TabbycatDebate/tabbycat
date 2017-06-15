@@ -499,7 +499,7 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
         table.add_team_columns(teams)
 
         headers = [round.abbreviation for round in rounds]
-        data = [[tsas.get((team.id, round.id), "—") for round in rounds] for team in teams]
+        data = [[tsas.get((team.id, round.seq), "—") for round in rounds] for team in teams]
         table.add_columns(headers, data)
 
         return table
