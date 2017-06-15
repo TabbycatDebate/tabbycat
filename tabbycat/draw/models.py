@@ -270,10 +270,8 @@ class DebateTeam(models.Model):
     def get_side_name(self, tournament=None):
         """Should be used instead of get_side_display() on views.
         `tournament` can be passed in if known, for performance."""
-        if self.side == DebateTeam.SIDE_AFFIRMATIVE:
-            return get_side_name(tournament or self.debate.round.tournament, 'aff', 'full')
-        elif self.side == DebateTeam.SIDE_NEGATIVE:
-            return get_side_name(tournament or self.debate.round.tournament, 'neg', 'full')
+        if self.side in [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]:
+            return get_side_name(tournament or self.debate.round.tournament, self.side, 'full')
         else:
             return self.get_side_display()
 

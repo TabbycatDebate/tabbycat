@@ -3,7 +3,7 @@ from operator import attrgetter
 
 from utils.management.base import CommandError, RoundCommand
 
-from ...models import DebateTeam, TeamSideAllocation
+from ...models import DebateTeam
 
 
 class Command(RoundCommand):
