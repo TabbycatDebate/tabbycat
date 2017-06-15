@@ -1,8 +1,13 @@
 """Utilities to compute which feedback has been submitted and not submitted
 by participants of the tournament.
 
-There are a few possibilities for how to characterise a feedback submission:
-"""
+The calculations are based around individual "trackers", each one representing
+one expected piece of feedback, or an unexpected piece of feedback if there is
+one. Each tracker reports whether is expected, submitted and fulfilled. Then,
+instances of aggregation classes (subclasses of BaseFeedbackProgress)
+instantiate a collection of trackers for a particular source (team or
+adjudicator).
+ """
 
 import logging
 from operator import attrgetter
@@ -352,7 +357,7 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         return trackers
 
 
-def get_feedback_progress(t):
+def get_feedback_progress(tournament):
     """Returns a list of FeedbackProgressForTeam objects and a list of
     FeedbackProgressForAdjudicator objects.
 
@@ -364,7 +369,7 @@ def get_feedback_progress(t):
     teams_progress = []
     adjs_progress = []
 
-    teams = t.team_set.prefetch_related('speaker_set').all()
+    teams = tournament.team_set.prefetch_related('speaker_set').all()
 
     submitted_feedback_by_team_id = {team.id: [] for team in teams}
     submitted_feedback_teams = AdjudicatorFeedback.objects.filter(
@@ -385,7 +390,7 @@ def get_feedback_progress(t):
         progress._debateteams = debateteams_by_team_id[team.id]
         teams_progress.append(progress)
 
-    adjudicators = t.adjudicator_set.all()
+    adjudicators = tournament.adjudicator_set.all()
 
     submitted_feedback_by_adj_id = {adj.id: [] for adj in adjudicators}
     submitted_feedback_adjs = AdjudicatorFeedback.objects.filter(

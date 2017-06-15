@@ -351,6 +351,8 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
         scoresheet_type = self.tournament.pref('scoresheet_type')
         self.scoresheet_class = SCORESHEET_CLASSES[scoresheet_type]
 
+        # Note: declared winners aren't currently used, and it's not yet clear
+        # to me what the best way is to pass these through to/from Scoresheet.
         self.takes_scores = hasattr(self.scoresheet_class, 'set_score')
         self.takes_declared_winners = hasattr(self.scoresheet_class, 'set_declared_winner')
 
