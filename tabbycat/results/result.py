@@ -43,6 +43,7 @@ from functools import wraps
 from statistics import mean
 
 from draw.models import DebateTeam
+from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 
 from .scoresheet import SCORESHEET_CLASSES
@@ -107,10 +108,10 @@ class BaseDebateResult:
         If `load` is False, the constructor will not load any data from the
         database (at all). It is then the responsibility of the caller to do so;
         the instance will crash otherwise, as the relevant attributes will not
-        be created. (For example, in prefetch.py, `populate_ballotsets()` uses
-        this to load BallotSets in bulk.) Callers can use `.init_blank_buffer()`
-        to initialize the correct buffers and `.assert_loaded()` to check that
-        data was loaded correctly.
+        be created. (For example, in prefetch.py, `populate_results()` uses this
+        to load BallotSets in bulk.) Callers can use `.init_blank_buffer()` to
+        initialize the correct buffers and `.assert_loaded()` to check that data
+        was loaded correctly.
         """
 
         self.ballotsub = ballotsub
@@ -304,7 +305,6 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
         """Loads team and speaker identities from the database into the buffer."""
 
         speakerscores = self.ballotsub.speakerscore_set.filter(
-            debate_team__debate=self.debate,
             debate_team__position__in=self.side_db_values,
             position__in=self.positions,
         ).select_related('speaker')
@@ -375,11 +375,13 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
 
     def init_blank_buffer(self):
         super().init_blank_buffer()
-        self.scoresheets = {}  # don't load adjudicators, it's a database hit
+        self.debateadjs = {}   # don't load adjudicators, it's a database hit
+        self.scoresheets = {}
 
     def assert_loaded(self):
         super().assert_loaded()
         assert set(self.debate.adjudicators.voting()) == set(self.scoresheets)
+        assert set(self.debateadjs) == set(self.scoresheets)
         assert self.sides == ['aff', 'neg'], "VotingDebateResult can only be used for two-team formats."
 
     def is_complete(self):
@@ -421,7 +423,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             debate_adjudicator__in=debateadjs,
             debate_team__position__in=self.side_db_values,
             position__in=self.positions,
-        )
+        ).select_related('debate_adjudicator__adjudicator')
 
         for ssba in speakerscorebyadjs:
             side = self.SIDE_KEY_MAP[ssba.debate_team.position]
@@ -534,10 +536,10 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
         else:
             return self.majority_adjudicators()
 
-    # @property
-    # @_requires_decision(None)
-    # def winning_team(self):
-    #     return self.debateteams[self._winner].team
+    @property
+    @_requires_decision(None)
+    def winning_team(self):
+        return self.debateteams[self._winner].team
 
     @_requires_decision(None)
     def get_speaker_score(self, side, position):
@@ -580,6 +582,29 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
 
     def teamscorefield_votes_possible(self, side):
         return len(self.scoresheets)
+
+    # --------------------------------------------------------------------------
+    # Method for UI display
+    # --------------------------------------------------------------------------
+
+    def adjudicators_with_splits(self):
+        """Iterator. Each iteration is a 3-tuple (adj, adjtype, split), where
+        adjtype is a AdjudicatorAllocation.POSITION_* constant, adj is an
+        Adjudicator object, and split is True if the adjudicator was in the
+        minority and not a trainee, False if the adjudicator was in the majority
+        or is a trainee. If there is no available result, split is always
+        False."""
+
+        try:
+            self._calc_decision()
+        except (ResultError, AssertionError):
+            for adj, adjtype in self.debate.adjudicators.with_positions():
+                yield adj, adjtype, False
+        else:
+            majority = self.majority_adjudicators()
+            for adj, adjtype in self.debate.adjudicators.with_positions():
+                split = adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE
+                yield adj, adjtype, split
 
 
 class ForfeitDebateResult(BaseDebateResult):

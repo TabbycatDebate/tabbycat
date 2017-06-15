@@ -6,6 +6,7 @@ from motions.models import DebateTeamMotionPreference
 from tournaments.models import Tournament
 
 from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
+from .result import VotingDebateResult
 from .result_old import BallotSet, Scoresheet
 
 
@@ -35,7 +36,7 @@ def populate_wins(debates):
             debateteam._win = None
 
 
-def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
+def populate_confirmed_ballots(debates, motions=False, ballotsets=False, results=False):
     """Sets an attribute `_confirmed_ballot` on each Debate, each being the
     BallotSubmission instance for that debate.
 
@@ -51,8 +52,10 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
     confirmed_ballots = BallotSubmission.objects.filter(debate__in=debates, confirmed=True)
     if motions:
         confirmed_ballots = confirmed_ballots.select_related('motion')
-    if ballotsets:
-        confirmed_ballots = confirmed_ballots.select_related('debate') # BallotSet fetches the debate
+    if ballotsets or results:
+        confirmed_ballots = confirmed_ballots.select_related(
+            'debate__round__tournament').prefetch_related(
+            'debate__debateadjudicator_set__adjudicator')
 
     for ballotsub in confirmed_ballots:
         debate = debates_by_id[ballotsub.debate_id]
@@ -65,6 +68,9 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
 
     if ballotsets:
         populate_ballotsets(confirmed_ballots, debates)
+
+    if results:
+        populate_results(confirmed_ballots)
 
 
 def populate_ballotsets(ballotsubs, prefetched_debates=[]):
@@ -160,3 +166,84 @@ def populate_ballotsets(ballotsubs, prefetched_debates=[]):
     # ------------------------------------------
     for ballotsub in ballotsubs:
         ballotsub.ballot_set.assert_loaded()
+
+
+def populate_results(ballotsubs):
+    """Populates the `_result` attribute of each BallotSubmission in
+    `ballotsubs` with a populated VotingDebateResult instance.
+
+    For best performance, the ballot submissions should already have their
+    debates prefetched (using select_related).
+    """
+
+    if not ballotsubs:
+        return
+
+    positions = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0]).POSITIONS
+    side_db_values = [VotingDebateResult.SIDE_KEY_MAP_REVERSE[side] for side in ['aff', 'neg']]
+    ballotsubs = list(ballotsubs)  # set ballotsubs in stone to avoid race conditions in later queries
+
+    debateteams_by_debate_id = {}
+    results_by_debate_id = {}
+    results_by_ballotsub_id = {}
+
+    # Create the VotingDebateResults
+    for ballotsub in ballotsubs:
+        result = VotingDebateResult(ballotsub, load=False)
+        result.init_blank_buffer()
+
+        ballotsub._result = result
+        results_by_debate_id.setdefault(ballotsub.debate_id, []).append(result)
+        results_by_ballotsub_id[ballotsub.id] = result
+
+    # Populate debateteams (load_debateteams)
+    debateteams = DebateTeam.objects.filter(
+            debate__ballotsubmission__in=ballotsubs,
+            position__in=side_db_values
+        ).select_related('team').distinct()
+
+    for dt in debateteams:
+        side = VotingDebateResult.SIDE_KEY_MAP[dt.position]
+        for result in results_by_debate_id[dt.debate_id]:
+            result.debateteams[side] = dt
+
+    # Populate speaker positions (load_speakers)
+    speakerscores = SpeakerScore.objects.filter(
+            ballot_submission__in=ballotsubs,
+            debate_team__position__in=side_db_values,
+            position__in=positions
+        ).select_related('debate_team')
+
+    for ss in speakerscores:
+        side = VotingDebateResult.SIDE_KEY_MAP[ss.debate_team.position]
+        result = results_by_ballotsub_id[ss.ballot_submission_id]
+        result.speakers[side][ss.position] = ss.speaker
+        result.ghosts[side][ss.position] = ss.ghost
+
+    # Populate scoresheets (load_scoresheets)
+
+    debateadjs = DebateAdjudicator.objects.filter(
+            debate__ballotsubmission__in=ballotsubs
+        ).exclude(
+            type=DebateAdjudicator.TYPE_TRAINEE
+        ).select_related('adjudicator').distinct()
+
+    for da in debateadjs:
+        for result in results_by_debate_id[da.debate_id]:
+            result.debateadjs[da.adjudicator] = da
+            result.scoresheets[da.adjudicator] = result.scoresheet_class(positions)
+
+    ssbas = SpeakerScoreByAdj.objects.filter(
+            ballot_submission__in=ballotsubs,
+            debate_team__position__in=side_db_values,
+            position__in=positions
+        ).select_related('debate_adjudicator__adjudicator')
+
+    for ssba in ssbas:
+        result = results_by_ballotsub_id[ssba.ballot_submission_id]
+        result.set_score(ssba.debate_adjudicator.adjudicator, side, ssba.position, ssba.score)
+
+    # Finally, check that everything is in order
+
+    for ballotsub in ballotsubs:
+        ballotsub.result.assert_loaded()

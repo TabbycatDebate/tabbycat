@@ -72,7 +72,7 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         chair."""
 
         if self.enforce_orallist and self.source.debate.confirmed_ballot:
-            majority = self.source.debate.confirmed_ballot.ballot_set.majority_adj
+            majority = self.source.debate.confirmed_ballot.result.majority_adjudicators
             chair = self.source.debate.adjudicators.chair
             if chair in majority:
                 return [chair]

@@ -115,9 +115,16 @@ class BallotSubmission(Submission):
 
     @property
     def ballot_set(self):
+        warn("Debate.ballot_set is deprecated, use Debate.result instead.", stacklevel=2)
         if not hasattr(self, "_ballot_set"):
             self._ballot_set = BallotSet(self)
         return self._ballot_set
+
+    @property
+    def result(self):
+        if not hasattr(self, "_result"):
+            self._result = VotingDebateResult(self)
+        return self._result
 
     def clean(self):
         # The motion must be from the relevant round

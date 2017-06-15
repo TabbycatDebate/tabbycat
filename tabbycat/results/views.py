@@ -62,7 +62,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
             else:
                 filter_kwargs = dict(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT])
             self._draw = self.get_round().debate_set_with_prefetches(
-                    ordering=('room_rank',), ballotsets=True, wins=True,
+                    ordering=('room_rank',), results=True, wins=True,
                     filter_kwargs=filter_kwargs)
         return self._draw
 

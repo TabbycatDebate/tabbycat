@@ -4,7 +4,7 @@ from django.db.models import Count
 
 from draw.models import Debate
 
-from .prefetch import populate_ballotsets
+from .prefetch import populate_results
 
 
 def set_float_or_int(number, step_value):
@@ -49,13 +49,13 @@ def populate_identical_ballotsub_lists(ballotsubs):
     Two ballot submissions are identical if they share the same debate, motion,
     speakers and all speaker scores."""
 
-    populate_ballotsets(ballotsubs)
+    populate_results(ballotsubs)
 
     for ballotsub in ballotsubs:
         ballotsub.identical_ballotsub_versions = []
 
     for ballotsub1, ballotsub2 in combinations(ballotsubs, 2):
-        if ballotsub1.ballot_set.identical(ballotsub2.ballot_set):
+        if ballotsub1.result.identical(ballotsub2.result):
             ballotsub1.identical_ballotsub_versions.append(ballotsub2.version)
             ballotsub2.identical_ballotsub_versions.append(ballotsub1.version)
 

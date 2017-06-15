@@ -381,7 +381,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for debate in debates:
             adjs_data = []
             if show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')) and debate.confirmed_ballot:
-                for adj, position, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
+                for adj, position, split in debate.confirmed_ballot.result.adjudicators_with_splits():
                     adjs_data.append(
                         {'adj': adj, 'position': position, 'split': bool(split)})
             else:

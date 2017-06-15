@@ -62,12 +62,10 @@
                     Bye
                   {% elif debate.result_status == "P" %}
                     Postponed
-                  {% elif debate.confirmed_ballot.forfeit %}
-                    {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
-                      Forfeit by Aff
-                    {% else %}
-                      Forfeit by Neg
-                    {% endif %}
+                  {% elif debate.confirmed_ballot.forfeit.position == "A" %}
+                    Forfeit by Aff
+                  {% elif debate.confirmed_ballot.forfeit.position == "N" %}
+                    Forfeit by Neg
                   {% endif %}
                 </td>
                 <td></td>
