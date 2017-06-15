@@ -10,7 +10,7 @@ from draw.models import Debate, DebateTeam
 from participants.models import Team
 from participants.utils import get_side_counts
 from standings.templatetags.standingsformat import metricformat, rankingformat
-from tournaments.utils import aff_abbr, aff_name, aff_team, get_position_name, neg_name
+from tournaments.utils import aff_abbr, aff_name, aff_team, get_side_name, neg_name
 from utils.misc import reverse_tournament
 from venues.utils import venue_conflicts_display
 
@@ -567,8 +567,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(conflicts_header, conflicts_data)
 
     def _standings_headers(self, info_list, side=None):
-        side_abbr = get_position_name(self.tournament, side, 'initial') if side else ''
-        side_possessive = get_position_name(self.tournament, side, 'possessive') if side else ''
+        side_abbr = get_side_name(self.tournament, side, 'initial') if side else ''
+        side_possessive = get_side_name(self.tournament, side, 'possessive') if side else ''
         headers = []
         for info in info_list:
             # Translators: Put these in the right order,
@@ -634,13 +634,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['class'] = cell.get('class', '') + ' highlight-row'
 
     def add_sides_count(self, teams, round, team_type):
-        sides_counts = get_side_counts(teams, DebateTeam.POSITION_AFFIRMATIVE, round.seq)
+        sides_counts = get_side_counts(teams, DebateTeam.SIDE_AFFIRMATIVE, round.seq)
 
         # Translators: e.g. team would be "negative team" or "affirmative team",
         # affirmative would be "affirmative team".
         side_label = _("Number of times this %(team)s has been the "
             "%(affirmative)s before") % {
-            'team': get_position_name(self.tournament, team_type, "team"),
+            'team': get_side_name(self.tournament, team_type, "team"),
             'affirmative': aff_team(self.tournament),
         }
 
@@ -649,7 +649,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         # aff_abbr is "Aff"/"Gov" for affirmative/government, so "NAff" is the number of times
         # the negative team has affirmed, or equivalently "OGov".
         side_key = _("%(side_abbr)s%(aff_abbr)ss") % {
-            'side_abbr': get_position_name(self.tournament, team_type, 'initial'),
+            'side_abbr': get_side_name(self.tournament, team_type, 'initial'),
             'aff_abbr': aff_abbr(self.tournament),
         }
 
@@ -694,7 +694,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         results_data = [self._result_cell(ts) for ts in teamscores]
         self.add_column("Result", results_data)
-        self.add_column("Side", [ts.debate_team.get_position_name().capitalize() for ts in teamscores])
+        self.add_column("Side", [ts.debate_team.get_side_name().capitalize() for ts in teamscores])
 
     def add_team_results_columns(self, teams, rounds):
         """ Takes an iterable of Teams, assumes their round_results match rounds"""

@@ -136,9 +136,9 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 
         populate_opponents([ts.debate_team for ts in teamscores])
 
-        for pos in [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]:
-            debates_for_pos = [ts.debate_team.debate for ts in teamscores if ts.debate_team.position == pos]
-            populate_confirmed_ballots(debates_for_pos, motions=True)
+        for side in [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]:
+            debates_for_side = [ts.debate_team.debate for ts in teamscores if ts.debate_team.side == side]
+            populate_confirmed_ballots(debates_for_side, motions=True)
 
         table = TabbycatTableBuilder(view=self, sort_key="Team")
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
@@ -473,7 +473,7 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
             loser = '?'
             for teamscore in ballotsub.teamscore_set.all():
                 team_str = "{:s} ({:s})".format(teamscore.debate_team.team.short_name,
-                        teamscore.debate_team.get_position_name(self.get_tournament()))
+                        teamscore.debate_team.get_side_name(self.get_tournament()))
                 if teamscore.win:
                     winner = team_str
                 else:

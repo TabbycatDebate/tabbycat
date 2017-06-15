@@ -33,12 +33,9 @@
               <em>{{ debate.division_motion.text }}</em>
             </li>
             <li class="list-group-item">
-              {% if debate.confirmed_ballot.forfeit.position == "A" %}
+              {% if debate.confirmed_ballot.forfeit %}
                 <del>{{ debate.time|time:"H:i" }}</del>
-                (Forfeit by Aff)
-              {% elif debate.confirmed_ballot.forfeit.position == "N" %}
-                <del>{{ debate.time|time:"H:i" }}</del>
-                (Forfeit by Neg)
+                (Forfeit by {{ debate.confirmed_ballot.forfeit.get_side_name|capfirst }})
               {% elif debate.time %}
                 {{ debate.time|time:"H:i" }}
               {% else %}

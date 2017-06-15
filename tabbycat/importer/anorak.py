@@ -38,8 +38,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     })
 
     lookup_team_position = make_lookup("team position", {
-        ("affirmative", "aff", "a"): dm.TeamPositionAllocation.POSITION_AFFIRMATIVE,
-        ("negative", "neg", "n"): dm.TeamPositionAllocation.POSITION_NEGATIVE,
+        ("affirmative", "aff", "a"): dm.DebateTeam.SIDE_AFFIRMATIVE,
+        ("negative", "neg", "n"): dm.DebateTeam.SIDE_NEGATIVE,
     })
 
     lookup_feedback_answer_type = make_lookup("feedback answer type", {
@@ -336,7 +336,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'team'     : team,
                     'position' : self.lookup_team_position(side),
                 }
-        self._import(f, dm.TeamPositionAllocation, side_interpreter)
+        self._import(f, dm.TeamSideAllocation, side_interpreter)
 
     def import_adj_feedback_questions(self, f):
         """Imports adjudicator feedback questions from a file.

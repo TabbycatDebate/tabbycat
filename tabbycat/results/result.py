@@ -30,7 +30,7 @@ Notes on terminology:
 A few notes on error checking:
  - In general, the validity of 'side' and 'position' arguments aren't checked.
    It is the responsibility of the caller to comply with valid values.
- - When loading from the database, it filters for `self.side_db_values` and
+ - When loading from the database, it filters for `self.sides` and
    `self.positions` to prevent queries from returning instances with invalid
    side and position arguments.
  - When scores aren't being used, `self.positions` should be set to an empty
@@ -92,14 +92,6 @@ class BaseDebateResult:
     field, which normally means that the field will be left as null.
     """
 
-    # These are exhaustive lists/dicts of all possible values that these are
-    # allowed to take, in any format.
-    SIDE_KEY_MAP = {
-        DebateTeam.POSITION_AFFIRMATIVE: 'aff',
-        DebateTeam.POSITION_NEGATIVE: 'neg',
-        # exclude POSITION_UNALLOCATED: you can't assign scores until sides are allocated
-    }
-    SIDE_KEY_MAP_REVERSE = {v: k for k, v in SIDE_KEY_MAP.items()}
     TEAMSCORE_FIELDS = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible', 'forfeit']
 
     def __init__(self, ballotsub, load=True):
@@ -121,7 +113,6 @@ class BaseDebateResult:
 
         # side are to be extended to BP later
         self.sides = ['aff', 'neg']
-        self.side_db_values = [self.SIDE_KEY_MAP_REVERSE[side] for side in self.sides]
 
         if load:
             self.full_load()
@@ -200,11 +191,10 @@ class BaseDebateResult:
 
     def load_debateteams(self):
         debateteams = self.debate.debateteam_set.filter(
-                position__in=self.side_db_values).select_related('team')
+                side__in=self.sides).select_related('team')
 
         for dt in debateteams:
-            side = self.SIDE_KEY_MAP[dt.position]
-            self.debateteams[side] = dt
+            self.debateteams[dt.side] = dt
 
     def save(self):
         """Saves to the database."""
@@ -239,7 +229,7 @@ class BaseDebateResult:
                 debateteam = debateteams_by_team[team]
             except KeyError:
                 raise ValueError("Team %s is not in debate %s" % (team, self.debate))
-            debateteam.position = self.SIDE_KEY_MAP_REVERSE[side]
+            debateteam.side = side
             debateteam.save()
 
         self.debate._populate_teams()  # refresh
@@ -306,14 +296,13 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
         """Loads team and speaker identities from the database into the buffer."""
 
         speakerscores = self.ballotsub.speakerscore_set.filter(
-            debate_team__position__in=self.side_db_values,
+            debate_team__side__in=self.sides,
             position__in=self.positions,
         ).select_related('speaker')
 
         for ss in speakerscores:
-            side = self.SIDE_KEY_MAP[ss.debate_team.position]
-            self.speakers[side][ss.position] = ss.speaker
-            self.ghosts[side][ss.position] = ss.ghost
+            self.speakers[ss.debate_team.side][ss.position] = ss.speaker
+            self.ghosts[ss.debate_team.side][ss.position] = ss.ghost
 
     def save(self):
         super().save()
@@ -422,13 +411,13 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
 
         speakerscorebyadjs = self.ballotsub.speakerscorebyadj_set.filter(
             debate_adjudicator__in=debateadjs,
-            debate_team__position__in=self.side_db_values,
+            debate_team__side__in=self.sides,
             position__in=self.positions,
         ).select_related('debate_adjudicator__adjudicator')
 
         for ssba in speakerscorebyadjs:
-            side = self.SIDE_KEY_MAP[ssba.debate_team.position]
-            self.set_score(ssba.debate_adjudicator.adjudicator, side, ssba.position, ssba.score)
+            self.set_score(ssba.debate_adjudicator.adjudicator,
+                    ssba.debate_team.side, ssba.position, ssba.score)
 
     def save(self):
         super().save()

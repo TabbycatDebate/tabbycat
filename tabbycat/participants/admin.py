@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from draw.models import TeamPositionAllocation
+from draw.models import TeamSideAllocation
 from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict
 from adjfeedback.models import AdjudicatorTestScoreHistory
 from venues.admin import VenueConstraintInline
@@ -57,8 +57,8 @@ class SpeakerInline(admin.TabularInline):
     fields = ('name', 'novice', 'gender')
 
 
-class TeamPositionAllocationInline(admin.TabularInline):
-    model = TeamPositionAllocation
+class TeamSideAllocationInline(admin.TabularInline):
+    model = TeamSideAllocation
 
 
 class TeamForm(forms.ModelForm):
@@ -78,7 +78,7 @@ class TeamAdmin(admin.ModelAdmin):
     search_fields = ('reference', 'short_name', 'institution__name',
                      'institution__code', 'tournament__name')
     list_filter = ('tournament', 'division', 'institution', 'break_categories')
-    inlines = (SpeakerInline, TeamPositionAllocationInline, VenueConstraintInline)
+    inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline)
     raw_id_fields = ('division', )
 
     def get_queryset(self, request):

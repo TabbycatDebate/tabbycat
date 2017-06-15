@@ -1,4 +1,4 @@
-from tournaments.utils import get_position_name_choices
+from tournaments.utils import get_side_name_choices
 
 
 class PreferencesPreset:
@@ -175,8 +175,7 @@ class WSDCPreferences(AustralsPreferences):
         # UI Options
         self.ui_options__show_team_institutions         = False
         self.ui_options__show_adjudicator_institutions  = False
-        position_names = get_position_name_choices()
-        self.debate_rules__position_names               = position_names[2][0]
+        self.debate_rules__side_names                   = get_side_name_choices()[2][0]
 
 
 class WADLPreferences(PreferencesPreset):

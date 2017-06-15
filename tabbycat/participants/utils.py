@@ -19,9 +19,9 @@ def regions_ordered(t):
     return data
 
 
-def get_side_counts(teams, position, seq):
+def get_side_counts(teams, side, seq):
     """Returns a dict where keys are the team IDs in `teams`, and values are
-    the number of debates the team has had in position `position` in preliminary
+    the number of debates the team has had in side `side` in preliminary
     rounds."""
 
     team_ids = [team.id for team in teams]
@@ -32,9 +32,9 @@ def get_side_counts(teams, position, seq):
         JOIN draw_debate ON draw_debateteam.debate_id = draw_debate.id
         JOIN tournaments_round ON draw_debate.round_id = tournaments_round.id
         WHERE participants_team.id = draw_debateteam.team_id
-        AND draw_debateteam.position = '{pos:s}'
+        AND draw_debateteam.side = '{side:s}'
         AND tournaments_round.stage = '{stage:s}'""".format(
-            pos=position, stage=Round.STAGE_PRELIMINARY)
+            side=side, stage=Round.STAGE_PRELIMINARY)
     if seq is not None:
         query += """
         AND tournaments_round.seq <= '{round:d}'""".format(round=seq)

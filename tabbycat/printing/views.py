@@ -9,7 +9,7 @@ from draw.models import Debate
 from participants.models import Adjudicator
 from tournaments.mixins import OptionalAssistantTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Tournament
-from tournaments.utils import get_position_name
+from tournaments.utils import get_side_name
 from utils.mixins import LoginRequiredMixin, SuperuserRequiredMixin
 from venues.models import VenueCategory
 
@@ -202,8 +202,8 @@ class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
         tournament = self.get_tournament()
 
         kwargs['motions'] = [{'seq': m.seq, 'text': m.text} for m in motions]
-        kwargs['positions'] = [get_position_name(tournament, "aff", "full").title(),
-                               get_position_name(tournament, "neg", "full").title()]
+        kwargs['positions'] = [get_side_name(tournament, "aff", "full").title(),
+                               get_side_name(tournament, "neg", "full").title()]
         kwargs['ballots'] = []
 
         draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))

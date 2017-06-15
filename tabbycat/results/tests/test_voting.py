@@ -234,10 +234,6 @@ class TestVotingDebateResult(TestCase):
     }
 
     SIDES = ['aff', 'neg']
-    SIDE_KEY_MAP_REVERSE = {
-        'aff': DebateTeam.POSITION_AFFIRMATIVE,
-        'neg': DebateTeam.POSITION_NEGATIVE,
-    }
 
     def setUp(self):
         self.t = Tournament.objects.create(slug="resulttest", name="ResultTest")
@@ -254,9 +250,9 @@ class TestVotingDebateResult(TestCase):
         rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
         self.debate = Debate.objects.create(round=rd, venue=venue)
 
-        sides = [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]
+        sides = [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]
         for team, side in zip(Team.objects.all(), sides):
-            DebateTeam.objects.create(debate=self.debate, team=team, position=side)
+            DebateTeam.objects.create(debate=self.debate, team=team, side=side)
 
         inst = Institution.objects.create(code="Adjs", name="Adjudicators")
         self.adjs = [Adjudicator.objects.create(tournament=self.t, institution=inst,
@@ -387,7 +383,7 @@ class TestVotingDebateResult(TestCase):
                     score_in_db = SpeakerScoreByAdj.objects.get(
                         ballot_submission__debate=self.debate,
                         ballot_submission__confirmed=True,
-                        debate_team__position=self.SIDE_KEY_MAP_REVERSE[side],
+                        debate_team__side=side,
                         debate_adjudicator__adjudicator=adj,
                         position=pos).score
                     self.assertEqual(score, score_in_db)
@@ -406,7 +402,7 @@ class TestVotingDebateResult(TestCase):
         return SpeakerScore.objects.get(
             ballot_submission__debate=self.debate,
             ballot_submission__confirmed=True,
-            debate_team__position=self.SIDE_KEY_MAP_REVERSE[side],
+            debate_team__side=side,
             position=pos
         )
 
@@ -436,7 +432,7 @@ class TestVotingDebateResult(TestCase):
         return TeamScore.objects.get(
             ballot_submission__debate=self.debate,
             ballot_submission__confirmed=True,
-            debate_team__position=self.SIDE_KEY_MAP_REVERSE[side]
+            debate_team__side=side
         )
 
     @standard_test
@@ -507,7 +503,7 @@ class TestVotingDebateResult(TestCase):
 
     def _unset_sides(self):
         for dt in self.debate.debateteam_set.all():
-            dt.position = DebateTeam.POSITION_UNALLOCATED
+            dt.side = DebateTeam.SIDE_UNALLOCATED
             dt.save()
 
     def test_save_speaker_with_unknown_sides(self):

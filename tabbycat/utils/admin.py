@@ -30,9 +30,9 @@ class TabbycatModelAdminFieldsMixin:
 
     get_tournament.short_description = 'Tournament'
 
-    def get_team_position(self, obj):
-        return obj.debate_team.position
-    get_team_position.short_description = 'Position'
+    def get_team_side(self, obj):
+        return obj.debate_team.side
+    get_team_side.short_description = 'Side'
 
     def get_motion_ref(self, obj):
         return obj.motion.reference

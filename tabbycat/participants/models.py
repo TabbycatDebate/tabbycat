@@ -188,15 +188,14 @@ class Team(models.Model):
 
     def get_aff_count(self, seq=None):
         from draw.models import DebateTeam
-        return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)
+        return self._get_count(DebateTeam.SIDE_AFFIRMATIVE, seq)
 
     def get_neg_count(self, seq=None):
         from draw.models import DebateTeam
-        return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
+        return self._get_count(DebateTeam.SIDE_NEGATIVE, seq)
 
-    def _get_count(self, position, seq):
-        dts = self.debateteam_set.filter(
-            position=position,
+    def _get_count(self, side, seq):
+        dts = self.debateteam_set.filter(side=side,
             debate__round__stage=Round.STAGE_PRELIMINARY)
         if seq is not None:
             dts = dts.filter(debate__round__seq__lte=seq)

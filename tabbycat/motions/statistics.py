@@ -17,15 +17,15 @@ def statistics(tournament, rounds):
         'debate_team', 'ballot_submission__motion')
 
     wins = dict()
-    for pos, _ in DebateTeam.POSITION_CHOICES:
+    for pos, _ in DebateTeam.SIDE_CHOICES:
         wins[pos] = dict.fromkeys(motions, 0)
     for winner in winners:
         if winner.ballot_submission.motion:
-            wins[winner.debate_team.position][winner.ballot_submission.motion] += 1
+            wins[winner.debate_team.side][winner.ballot_submission.motion] += 1
 
     for motion in motions:
-        motion.aff_wins = wins[DebateTeam.POSITION_AFFIRMATIVE][motion]
-        motion.neg_wins = wins[DebateTeam.POSITION_NEGATIVE][motion]
+        motion.aff_wins = wins[DebateTeam.SIDE_AFFIRMATIVE][motion]
+        motion.neg_wins = wins[DebateTeam.SIDE_NEGATIVE][motion]
         motion.chosen_in = motion.aff_wins + motion.neg_wins
 
         """
@@ -47,13 +47,13 @@ def statistics(tournament, rounds):
             ballot_submission__debate__round__in=rounds).select_related(
             'debate_team', 'ballot_submission__motion')
         vetoes = dict()
-        for pos, _ in DebateTeam.POSITION_CHOICES:
+        for pos, _ in DebateTeam.SIDE_CHOICES:
             vetoes[pos] = dict.fromkeys(motions, 0)
         for veto in veto_objs:
-            vetoes[veto.debate_team.position][veto.motion] += 1
+            vetoes[veto.debate_team.side][veto.motion] += 1
 
         for motion in motions:
-            motion.aff_vetoes = vetoes[DebateTeam.POSITION_AFFIRMATIVE][motion]
-            motion.neg_vetoes = vetoes[DebateTeam.POSITION_NEGATIVE][motion]
+            motion.aff_vetoes = vetoes[DebateTeam.SIDE_AFFIRMATIVE][motion]
+            motion.neg_vetoes = vetoes[DebateTeam.SIDE_NEGATIVE][motion]
 
     return motions

@@ -301,8 +301,7 @@ class BallotSetForm(forms.Form):
                 initial['motion'] = self.ballotsub.motion
             for side in self.SIDES:
                 initial[self._fieldname_motion_veto(side)] = self.ballotsub.debateteammotionpreference_set.filter(
-                        debate_team__position=VotingDebateResult.SIDE_KEY_MAP_REVERSE[side],
-                        preference=3).first()
+                        debate_team__side=side, preference=3).first()
 
         for side, pos in self.SIDES_AND_POSITIONS:
             speaker = result.get_speaker(side, pos)
@@ -319,7 +318,7 @@ class BallotSetForm(forms.Form):
         if self.using_forfeits:
             forfeiter = self.ballotsub.teamscore_set.filter(forfeit=True, win=False).first()
             if forfeiter:
-                initial['forfeit'] = VotingDebateResult.SIDE_KEY_MAP[forfeiter.debate_team.position]
+                initial['forfeit'] = forfeiter.debate_team.side
 
         return initial
 
@@ -477,6 +476,7 @@ class BallotSetForm(forms.Form):
         # 3. Check if there was a forfeit
         if self.using_forfeits and self.cleaned_data['forfeit'] is not None:
             result = ForfeitDebateResult(self.ballotsub, self.cleaned_data['forfeit'])
+            self.ballotsub.forfeit = result.debateteams[self.cleaned_data['forfeit']]
         else:
             result = VotingDebateResult(self.ballotsub)
 
@@ -509,6 +509,7 @@ class BallotSetForm(forms.Form):
                     result.set_score(adj, side, pos, score)
 
         result.save()
+        self.ballotsub.save()
 
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()

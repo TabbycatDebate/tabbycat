@@ -57,8 +57,8 @@ def populate_history(debates):
             JOIN draw_debateteam AS past_aff_dt ON past_aff_dt.debate_id = past_debate.id
             JOIN draw_debateteam AS past_neg_dt ON past_neg_dt.debate_id = past_debate.id
             JOIN tournaments_round AS past_round ON past_debate.round_id = past_round.id
-            WHERE this_aff_dt.position = 'A'
-            AND   this_neg_dt.position = 'N'
+            WHERE this_aff_dt.side = 'aff'
+            AND   this_neg_dt.side = 'neg'
             AND   past_aff_dt.team_id = this_aff_dt.team_id
             AND   past_neg_dt.team_id = this_neg_dt.team_id
             AND   past_round.seq < this_round.seq""",

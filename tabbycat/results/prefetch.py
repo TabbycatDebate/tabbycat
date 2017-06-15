@@ -80,7 +80,7 @@ def populate_results(ballotsubs):
         return
 
     positions = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0]).POSITIONS
-    side_db_values = [VotingDebateResult.SIDE_KEY_MAP_REVERSE[side] for side in ['aff', 'neg']]
+    sides = ['aff', 'neg']
     ballotsubs = list(ballotsubs)  # set ballotsubs in stone to avoid race conditions in later queries
 
     results_by_debate_id = {}
@@ -98,26 +98,24 @@ def populate_results(ballotsubs):
     # Populate debateteams (load_debateteams)
     debateteams = DebateTeam.objects.filter(
         debate__ballotsubmission__in=ballotsubs,
-        position__in=side_db_values
+        side__in=sides
     ).select_related('team').distinct()
 
     for dt in debateteams:
-        side = VotingDebateResult.SIDE_KEY_MAP[dt.position]
         for result in results_by_debate_id[dt.debate_id]:
-            result.debateteams[side] = dt
+            result.debateteams[dt.side] = dt
 
     # Populate speaker positions (load_speakers)
     speakerscores = SpeakerScore.objects.filter(
         ballot_submission__in=ballotsubs,
-        debate_team__position__in=side_db_values,
+        debate_team__side__in=sides,
         position__in=positions
     ).select_related('debate_team')
 
     for ss in speakerscores:
-        side = VotingDebateResult.SIDE_KEY_MAP[ss.debate_team.position]
         result = results_by_ballotsub_id[ss.ballot_submission_id]
-        result.speakers[side][ss.position] = ss.speaker
-        result.ghosts[side][ss.position] = ss.ghost
+        result.speakers[ss.debate_team.side][ss.position] = ss.speaker
+        result.ghosts[ss.debate_team.side][ss.position] = ss.ghost
 
     # Populate scoresheets (load_scoresheets)
 
@@ -134,14 +132,14 @@ def populate_results(ballotsubs):
 
     ssbas = SpeakerScoreByAdj.objects.filter(
         ballot_submission__in=ballotsubs,
-        debate_team__position__in=side_db_values,
+        debate_team__side__in=sides,
         position__in=positions
     ).select_related('debate_adjudicator__adjudicator')
 
     for ssba in ssbas:
-        side = VotingDebateResult.SIDE_KEY_MAP[ssba.debate_team.position]
         result = results_by_ballotsub_id[ssba.ballot_submission_id]
-        result.set_score(ssba.debate_adjudicator.adjudicator, side, ssba.position, ssba.score)
+        result.set_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side,
+            ssba.position, ssba.score)
 
     # Finally, check that everything is in order
 

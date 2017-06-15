@@ -27,8 +27,8 @@
                 {# Position, opponent and venue #}
                 <li class="list-group-item lead {% if draw_released %}active{% endif %}">
                   {{ team.short_name }} is debating
-                  {% if debateteam.position != debateteam.POSITION_UNALLOCATED %}
-                    as the <strong>{{ debateteam.get_position_name }}</strong> team
+                  {% if debateteam.side != debateteam.SIDE_UNALLOCATED %}
+                    as the <strong>{{ debateteam.get_side_name }}</strong> team
                   {% endif %}
                   against
                   <strong><a href="{% if admin_page %}{% tournamenturl 'participants-team-record' debateteam.opponent.team.pk %}{% else %}{% tournamenturl 'participants-public-team-record' debateteam.opponent.team.pk %}{% endif %}" class="list-group-item-text">
