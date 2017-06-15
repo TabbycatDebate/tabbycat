@@ -38,46 +38,46 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         self.add_column(status_header, status_cell)
 
     def get_ballot_text(self, debate):
-        ballotsets_info = " "
+        ballotsubs_info = " "
 
         # These are prefetched, so sort using Python rather than generating an SQL query
         ballotsubmissions = sorted(debate.ballotsubmission_set.all(), key=lambda x: x.version)
 
-        for ballotset in ballotsubmissions:
-            if not self.admin and ballotset.discarded:
+        for ballotsub in ballotsubmissions:
+            if not self.admin and ballotsub.discarded:
                 continue
 
             link = reverse_tournament('results-ballotset-edit',
                                       self.tournament,
-                                      kwargs={'pk': ballotset.id})
-            ballotsets_info += "<a href=" + link + ">"
+                                      kwargs={'pk': ballotsub.id})
+            ballotsubs_info += "<a href=" + link + ">"
 
-            if ballotset.confirmed:
-                edit_status = "Re-edit v" + str(ballotset.version)
+            if ballotsub.confirmed:
+                edit_status = "Re-edit v" + str(ballotsub.version)
             elif self.admin:
-                edit_status = "Edit v" + str(ballotset.version)
+                edit_status = "Edit v" + str(ballotsub.version)
             else:
-                edit_status = "Review v" + str(ballotset.version)
+                edit_status = "Review v" + str(ballotsub.version)
 
-            if ballotset.discarded:
-                ballotsets_info += "<strike class='text-muted'>" + edit_status + "</strike></a><small> discarded; "
+            if ballotsub.discarded:
+                ballotsubs_info += "<strike class='text-muted'>" + edit_status + "</strike></a><small> discarded; "
             else:
-                ballotsets_info += edit_status + "</a><small>"
+                ballotsubs_info += edit_status + "</a><small>"
 
-            if ballotset.submitter_type == ballotset.SUBMITTER_TABROOM:
-                ballotsets_info += " <em>entered by " + ballotset.submitter.username + "</em>"
-            elif ballotset.submitter_type == ballotset.SUBMITTER_PUBLIC:
-                ballotsets_info += " <em>a public submission by " + ballotset.ip_address + "</em>"
+            if ballotsub.submitter_type == ballotsub.SUBMITTER_TABROOM:
+                ballotsubs_info += " <em>entered by " + ballotsub.submitter.username + "</em>"
+            elif ballotsub.submitter_type == ballotsub.SUBMITTER_PUBLIC:
+                ballotsubs_info += " <em>a public submission by " + ballotsub.ip_address + "</em>"
 
-            ballotsets_info += "</small><br />"
+            ballotsubs_info += "</small><br />"
 
         if all(x.discarded for x in ballotsubmissions):
             link = reverse_tournament('results-ballotset-new',
                                       self.tournament,
                                       kwargs={'debate_id': debate.id})
-            ballotsets_info += "<a href=" + link + ">Enter Ballot</a>"
+            ballotsubs_info += "<a href=" + link + ">Enter Ballot</a>"
 
-        return ballotsets_info
+        return ballotsubs_info
 
     def add_ballot_entry_columns(self, debates):
 
