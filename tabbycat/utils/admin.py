@@ -1,4 +1,4 @@
-''' General utilities for extending filters/lists in the admin area'''
+""" General utilities for extending filters/lists in the admin area """
 
 # ==============================================================================
 # Utilities

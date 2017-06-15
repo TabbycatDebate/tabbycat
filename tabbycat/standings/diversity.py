@@ -9,7 +9,7 @@ from tournaments.models import Round
 
 
 def compile_data(title, queryset, filter_source, filters, datum=False, **kwargs):
-    ''' Filter the queryset given filters and return a dictionary of results '''
+    """ Filter the queryset given filters and return a dictionary of results """
 
     data_set = []
     for item in filters:

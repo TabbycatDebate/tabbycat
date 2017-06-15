@@ -432,6 +432,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': "Institution",
             }, [team.institution.code if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams])
 
+        if show_divisions:
+            self.add_column({
+                'key': 'Division',
+                'icon': 'glyphicon-th-list',
+                'tooltip': 'Division'
+            }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
+
     def add_speaker_columns(self, speakers, key="Name"):
         self.add_column(key, [speaker.name if not hasattr(speaker, 'anonymise') else "<em>Redacted</em>"
                               for speaker in speakers])
@@ -605,7 +612,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_metric_columns(self, standings, subset=None, side=None):
         standings_list = standings.get_standings(subset) if subset is not None else standings
         headers = self._standings_headers(standings.metrics_info(), side)
-        data = [list(map(metricformat, s.itermetrics())) for s in standings_list]
+        data = []
+        for standing in standings_list:
+            standings_raw = [s for s in standing.itermetrics()]
+            standings_metric = [s for s in map(metricformat, standings_raw)]
+            data.append([{'text': metric, 'sort': float(raw)}
+                for raw, metric in zip(standings_raw, standings_metric)])
         self.add_columns(headers, data)
 
     def add_debate_metric_columns(self, draw, standings):
