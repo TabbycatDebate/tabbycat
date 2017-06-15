@@ -40,7 +40,7 @@
 {% block content %}
 
   <div id="vueMount">
-    <diversity-container :graphsData="graphsData"></diversity-container>
+    <diversity-container :graphs-data="graphsData"></diversity-container>
   </div>
 
 {% endblock content %}
@@ -48,7 +48,7 @@
 {% block js %}
   <script>
     window.vueData = {
-      graphsData: '{{ data_sets|safe }}'
+      graphsData: {{ data_sets|safe }}
     }
   </script>
   {{ block.super }}

@@ -23,7 +23,7 @@ from .templatetags.standingsformat import metricformat
 
 class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 
-    template_name = 'standings_base.html'
+    template_name = 'standings_index.html'
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
@@ -60,6 +60,8 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 # ==============================================================================
 
 class BaseStandingsView(RoundMixin, VueTableTemplateView):
+
+    template_name = 'standings_table.html'
 
     def get_rounds(self):
         """Returns all of the rounds that should be included in the tab."""
@@ -201,7 +203,7 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
 
 
 class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsView):
-    template_name = 'standings_base.html'
+    pass
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
@@ -218,7 +220,7 @@ class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):
 
 
 class NoviceStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
-    template_name = 'standings_base.html'
+    pass
 
 
 class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
@@ -236,7 +238,7 @@ class BaseProStandingsView(BaseStandardSpeakerStandingsView):
 
 
 class ProStandingsView(SuperuserRequiredMixin, BaseProStandingsView):
-    template_name = 'standings_base.html'
+    pass
 
 
 class PublicProTabView(PublicTabMixin, BaseProStandingsView):
@@ -274,7 +276,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
 
 class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
-    template_name = 'standings_base.html'
+    pass
 
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
@@ -337,7 +339,6 @@ class BaseTeamStandingsView(BaseStandingsView):
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """The standard team standings view."""
     rankings = ('rank',)
-    template_name = 'standings_base.html'
 
 
 class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
@@ -345,7 +346,6 @@ class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     rankings = ('rank', 'division')
     page_title = 'Division Standings'
     page_emoji = '👯'
-    template_name = 'standings_base.html'
 
 
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):

@@ -1,11 +1,11 @@
 <template>
   <div class="row">
 
-    <template v-for="(d, index) in graphData">
+    <template v-for="(data, index) in graphData">
 
       <div class="col-md-4 text-center">
-        <h4 :class="'no-bottom-margin text-body gender-text gender-' + d.label.toLowerCase()">
-          {{ offset(d.count) }}
+        <h4 :class="'no-bottom-margin text-body gender-text gender-' + data.label.toLowerCase()">
+          {{ offset(data.count) }}
         </h4>
       </div>
 
@@ -19,12 +19,11 @@
 
     </template>
 
-  </div>
+    <div class="row">
+     <h5 class="text-center vertical-spacing">{{ title }}</h5>
+    </div>
 
-  <div class="row">
-   <h5 class="text-center vertical-spacing">{{ title }}</h5>
   </div>
-
 </template>
 
 <script>
