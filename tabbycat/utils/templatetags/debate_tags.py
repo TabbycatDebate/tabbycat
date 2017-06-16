@@ -1,10 +1,8 @@
 import os
 import re
-from warnings import warn
 
 from django import template
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.template.base import kwarg_re, TemplateSyntaxError, Variable
 from django.template.defaulttags import URLNode
 from tournaments.utils import get_position_name
