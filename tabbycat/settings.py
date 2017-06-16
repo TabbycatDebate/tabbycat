@@ -178,22 +178,20 @@ LOGGING = {
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse',  # disables e-mails to admins when DEBUG on
-        }
+        },
+        'except_importer_base': {
+            '()': 'utils.logging.ExceptFilter',
+            'name': 'importer.base',
+        },
     },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
         },
-        'email_on_error': {  # errors and above are e-mailed to admins
+        'mail_admins': {  # errors and above are e-mailed to admins
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
-        },
-        'email_on_critical': {
-            'level': 'CRITICAL',
-            'filters': ['require_debug_false'],
+            'filters': ['require_debug_false', 'except_importer_base'],
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
         },
@@ -204,7 +202,7 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'django.request': {
-            'handlers': ['email_on_error'],
+            'handlers': ['mail_admins'],
             'level': 'ERROR',
         },
     },
@@ -217,7 +215,7 @@ LOGGING = {
 
 for app in TABBYCAT_APPS:
     LOGGING['loggers'][app] = {
-        'handlers': ['console', 'email_on_critical'],
+        'handlers': ['console', 'mail_admins'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
 

@@ -42,7 +42,7 @@ class VenueAllocator:
         # this set is only non-empty if there were too few venues overall
         debates_without_venues = [d for d in debates if d not in debate_venues]
         if len(debates_without_venues) != self._venue_shortage:
-            logger.critical("Expected venue shortage %d, but %d debates without venues",
+            logger.error("Expected venue shortage %d, but %d debates without venues",
                 self._venue_shortage, len(debates_without_venues))
         debate_venues.update({debate: None for debate in debates_without_venues})
 
@@ -158,7 +158,7 @@ class VenueAllocator:
         preferred venues."""
 
         if len(debates) - len(self._preferred_venues) != self._venue_shortage:
-            logger.critical("preferred venues to unconstrained debates mismatch: "
+            logger.error("preferred venues to unconstrained debates mismatch: "
                 "%s preferred venues, %d debates", len(self._preferred_venues), len(debates))
             # we'll still keep going, since zip() stops at the end of the shorter list
         elif len(debates) != len(self._preferred_venues):
