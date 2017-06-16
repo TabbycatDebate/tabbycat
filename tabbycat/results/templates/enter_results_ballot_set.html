@@ -97,7 +97,7 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              {% blocktrans with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code %}
+              {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code %}
                   Ballot from {{ name }} ({{ institution }})
               {% endblocktrans %}
             </h4>
