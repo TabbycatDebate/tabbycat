@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
+from tournaments.utils import get_side_name
 
 from .result import ForfeitDebateResult, VotingDebateResult
 
@@ -130,7 +131,6 @@ class BallotSetForm(forms.Form):
     debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
     SIDES = ['aff', 'neg']
-    _LONG_NAME = {'aff': 'affirmative', 'neg': 'negative'}
 
     def __init__(self, ballotsub, *args, **kwargs):
         self.ballotsub = ballotsub
@@ -167,6 +167,9 @@ class BallotSetForm(forms.Form):
     # --------------------------------------------------------------------------
     # Field names and field convenience functions
     # --------------------------------------------------------------------------
+
+    def _side_name(self, side):
+        return get_side_name(self.tournament, side, 'full')
 
     @staticmethod
     def _fieldname_motion_veto(side):
@@ -263,7 +266,7 @@ class BallotSetForm(forms.Form):
             if self.using_motions:
                 self.fields['motion'].required = False
 
-            choices = [(side, "Forfeit by the {}".format(self._LONG_NAME[side])) for side in self.SIDES]
+            choices = [(side, "Forfeit by the {}".format(self._side_name(side))) for side in self.SIDES]
             self.fields['forfeit'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, required=False)
 
     def _initial_data(self):
@@ -383,7 +386,7 @@ class BallotSetForm(forms.Form):
                 code='status_confirm'
             ))
 
-        if cleaned_data.get('forfeit') is None:
+        if not cleaned_data.get('forfeit'):
             for adj in self.adjudicators:
                 # Check that it was not a draw.
                 try:
@@ -437,7 +440,7 @@ class BallotSetForm(forms.Form):
                     if count > 1:
                         self.add_error(None, forms.ValidationError(
                             _("The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team."),
-                            params={'speaker': speaker.name, 'side': self._LONG_NAME[side], 'count': count}, code='speaker_repeat'
+                            params={'speaker': speaker.name, 'side': self._side_name(side), 'count': count}, code='speaker_repeat'
                         ))
 
                 if self.using_replies:
@@ -448,14 +451,14 @@ class BallotSetForm(forms.Form):
                     if reply_speaker == last_speaker and reply_speaker is not None:
                         self.add_error(self._fieldname_speaker(side, self.REPLY_POSITION), forms.ValidationError(
                             _("The last substantive speaker and reply speaker for the %(side)s team can't be the same."),
-                            params={'side': self._LONG_NAME[side]}, code='reply_speaker_consecutive'
+                            params={'side': self._side_name(side)}, code='reply_speaker_consecutive'
                         ))
 
                     # The reply speaker must have given a substantive speech.
                     if speaker_counts[reply_speaker] == 0:
                         self.add_error(self._fieldname_speaker(side, self.REPLY_POSITION), forms.ValidationError(
                             _("The reply speaker for the %(side)s team did not give a substantive speech."),
-                            params={'side': self._LONG_NAME[side]}, code='reply_speaker_not_repeat'
+                            params={'side': self._side_name(side)}, code='reply_speaker_not_repeat'
                         ))
 
         return cleaned_data
@@ -474,7 +477,7 @@ class BallotSetForm(forms.Form):
         self.ballotsub.save()
 
         # 3. Check if there was a forfeit
-        if self.using_forfeits and self.cleaned_data['forfeit'] is not None:
+        if self.using_forfeits and self.cleaned_data['forfeit']:
             result = ForfeitDebateResult(self.ballotsub, self.cleaned_data['forfeit'])
             self.ballotsub.forfeit = result.debateteams[self.cleaned_data['forfeit']]
         else:
@@ -498,7 +501,7 @@ class BallotSetForm(forms.Form):
                         defaults=dict(motion=motion_veto))
 
         # 6. Save speaker fields
-        if self.cleaned_data['forfeit'] is None:
+        if not self.cleaned_data['forfeit']:
             for side, pos in self.SIDES_AND_POSITIONS:
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 result.set_speaker(side, pos, speaker)
