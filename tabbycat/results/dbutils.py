@@ -117,7 +117,7 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
     debate.save()
 
     logger.info("{debate} won by {team} on {motion}".format(
-        debate=debate.matchup, team=result.winning_side,
+        debate=debate.matchup, team=result.winning_side(),
         motion=bsub.motion and bsub.motion.reference or "<No motion>"))
 
     return result
