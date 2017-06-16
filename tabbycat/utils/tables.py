@@ -479,22 +479,31 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 return {}
 
             cell = {'text': venue.display_name}
-            if for_admin:
-                categories = venue.venuecategory_set.all()
-            else:
-                categories = venue.venuecategory_set.filter(display_in_public_tooltip=True)
+
+            categories = venue.venuecategory_set.all()
+            if not for_admin:
+                # filter in Python, not SQL, because venuecategory_set should have been prefetched
+                categories = [c for c in categories if c.display_in_public_tooltip]
 
             if len(categories) == 0:
                 return cell
 
-            cat_sentence = "This venue "
-            for i, category in enumerate(categories):
-                cat_sentence += "<strong>%s</strong>, " % category.description.strip()
-                if i == len(categories) - 2:
-                    cat_sentence += "and "
+            descriptions = [category.description.strip() for category in categories]
+            descriptions = ["<strong>" + description + "</strong>"
+                    for description in descriptions if len(description) > 0]
 
-            cell['popover'] = {'title': venue.display_name,
-                               'content': [{'text': cat_sentence[:-2] + "."}]}
+            if len(descriptions) > 0:
+                if len(descriptions) == 1:
+                    categories_sentence = _("This venue %(predicate)s.") % {'predicate': descriptions[0]}
+                else:
+                    categories_sentence = _("This venue %(predicates)s, and %(last_predicate)s.") % {
+                        'predicates': ", ".join(descriptions[:-1]),
+                        'last_predicate': descriptions[-1]}
+
+                cell['popover'] = {
+                    'title': venue.display_name,
+                    'content': [{'text': categories_sentence}]}
+
             return cell
 
         if self.tournament.pref('enable_divisions') and len(debates) > 0:
