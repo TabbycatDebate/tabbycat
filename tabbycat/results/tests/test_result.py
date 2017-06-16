@@ -2,7 +2,6 @@ import logging
 
 from django.test import TestCase
 
-from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
@@ -11,6 +10,81 @@ from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
 from venues.models import Venue
 
+
+# ==============================================================================
+# Test decorators
+# ==============================================================================
+
+def standard_test(test_fn):
+    """Decorator. Tests on all dataset in self.testdata, and all scoresheet
+    types listed in the arguments. Tests should take four arguments: self,
+    result, testdata and scoresheet_type, where
+    `result` is a DebateResult object,
+    `testdata` is a value in `BaseTestDebateResult.testdata`, and
+    `scoresheet_type` is one of the scoresheet_types.
+    """
+    def wrapped(self):
+      for scoresheet_type in ['high-required']:  # noqa: E111
+        with self.subTest(scoresheet_type=scoresheet_type):
+          self.set_tournament_preference('scoring', 'scoresheet_type', scoresheet_type)  # noqa: E111
+          for key, testdata in self.testdata.items():  # noqa: E111
+            with self.subTest(testdata=key):
+              if not testdata[scoresheet_type]['valid']:  # noqa: E111
+                self.assertRaises(ResultError, self.save_complete_result, testdata)
+              else:  # noqa: E111
+                self.save_complete_result(testdata)
+                result = self.get_result()
+                test_fn(self, result, testdata, scoresheet_type)
+    return wrapped
+
+
+def with_preference(section, name, value):
+    """Decorator. Sets a tournament preference before it begins the wrapped
+    function. The main purpose of this decorator is to be used with other
+    decorators, otherwise it could obviously just be achieved with a single
+    line at the beginning of the function. This decorator should normally be
+    placed first in the decorator chain, so that it is the outermost
+    wrapper."""
+    def wrap(test_fn):
+        def wrapped(self):
+            self.set_tournament_preference(section, name, value)
+            test_fn(self)
+        return wrapped
+    return wrap
+
+
+def incomplete_test(test_fn):
+    """Decorator. The test function should somehow make `result` incomplete.
+    This then wraps the function to assert that the result does indeed think
+    itself to be incomplete."""
+    def wrap(self):
+        testdata = self.testdata['high']
+        if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
+            self.save_complete_result(testdata)
+        result = self.get_result()
+        test_fn(self, result)
+        self.assertFalse(result.is_complete())
+        self.assertFalse(result.is_valid())
+    return wrap
+
+
+def bad_load_assertion_test(test_fn):
+    """Decorator. The test function should somehow make `result` incorrectly
+    loaded. This then wraps the function to assert that the result does indeed
+    think itself to be incorrectly loaded."""
+    def wrap(self):
+        testdata = self.testdata['high']
+        if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
+            self.save_complete_result(testdata)
+        result = self.get_result()
+        test_fn(self, result)
+        self.assertRaises(AssertionError, result.assert_loaded)
+    return wrap
+
+
+# ==============================================================================
+# Base class and mixins
+# ==============================================================================
 
 class BaseTestDebateResult(TestCase):
 
@@ -48,20 +122,6 @@ class BaseTestDebateResult(TestCase):
         self.t.preferences[section + '__' + name] = value
         if name in self.t._prefs:    # clear model-level cache
             del self.t._prefs[name]
-
-    def with_preference(section, name, value):  # flake8: noqa
-        """Decorator. Sets a tournament preference before it begins the wrapped
-        function. The main purpose of this decorator is to be used with other
-        decorators, otherwise it could obviously just be achieved with a single
-        line at the beginning of the function. This decorator should normally be
-        placed first in the decorator chain, so that it is the outermost
-        wrapper."""
-        def wrap(test_fn):
-            def wrapped(self):
-                self.set_tournament_preference(section, name, value)
-                test_fn(self)
-            return wrapped
-        return wrap
 
     def get_result(self):
         ballotsub = BallotSubmission.objects.get(debate=self.debate, confirmed=True)
@@ -105,28 +165,6 @@ class BaseTestDebateResult(TestCase):
         with suppress_logs('results.result', logging.WARNING):
             result.save()
 
-    def standard_test(test_fn):
-        """Decorator. Tests on all dataset in self.testdata, and all scoresheet
-        types listed in the arguments. Tests should take four arguments: self,
-        result, testdata and scoresheet_type, where
-        `result` is a VotingDebateResult object,
-        `testdata` is a value in `BaseTestDebateResult.testdata`, and
-        `scoresheet_type` is one of the scoresheet_types.
-        """
-        def wrapped(self):
-          for scoresheet_type in ['high-required']:
-            with self.subTest(scoresheet_type=scoresheet_type):
-              self.set_tournament_preference('scoring', 'scoresheet_type', scoresheet_type)
-              for key, testdata in self.testdata.items():
-                with self.subTest(testdata=key):
-                  if not testdata[scoresheet_type]['valid']:
-                    self.assertRaises(ResultError, self.save_complete_result, testdata)
-                  else:
-                    self.save_complete_result(testdata)
-                    result = self.get_result()
-                    test_fn(self, result, testdata, scoresheet_type)
-        return wrapped
-
     def _get_speakerscore_in_db(self, side, pos):
         return SpeakerScore.objects.get(
             ballot_submission__debate=self.debate,
@@ -142,16 +180,71 @@ class BaseTestDebateResult(TestCase):
             debate_team__side=side
         )
 
+    def _unset_sides(self):
+        for dt in self.debate.debateteam_set.all():
+            dt.side = DebateTeam.SIDE_UNALLOCATED
+            dt.save()
 
-class TestVotingDebateResult(BaseTestDebateResult):
+
+class GeneralSpeakerTestsMixin:
+
+    @standard_test
+    def test_save(self, result, testdata, scoresheet_type):
+        # Run self.save_complete_result and check completeness
+        self.assertTrue(result.is_complete())
+
+    def test_unknown_speaker(self):
+        self.save_complete_result(self.testdata['high'])
+        result = self.get_result()
+        neg_speaker = self.teams[1].speaker_set.first()
+        with self.assertLogs('results.result', level=logging.ERROR):
+            result.set_speaker('aff', 1, neg_speaker)
+
+    def test_save_speaker_with_unknown_sides(self):
+        self._unset_sides()
+        result = self.save_blank_result()
+        self.assertRaises(TypeError, result.set_speaker, 'aff', 1, None)
+
+    @incomplete_test
+    def test_unfilled_debateteam(self, result):
+        result.debateteams["aff"] = None
+
+    @incomplete_test
+    def test_unfilled_speaker(self, result):
+        result.speakers["neg"][1] = None
+
+    @bad_load_assertion_test
+    def test_extraneous_debateteam(self, result):
+        result.debateteams["test"] = None
+
+    @bad_load_assertion_test
+    def test_extraneous_team_in_speakers(self, result):
+        result.speakers["test"] = None
+
+    @bad_load_assertion_test
+    def test_extraneous_team_in_ghosts(self, result):
+        result.ghosts["test"] = True
+
+    @bad_load_assertion_test
+    def test_extraneous_speaker(self, result):
+        result.speakers["aff"][5] = None
+
+    @bad_load_assertion_test
+    def test_extraneous_ghost(self, result):
+        result.ghosts["aff"][5] = None
+
+
+# ==============================================================================
+# Actual test case classes
+# ==============================================================================
+
+class TestVotingDebateResult(GeneralSpeakerTestsMixin, BaseTestDebateResult):
 
     # Currently, the low-allowed and tie-allowed data aren't actually used, but
     # they are in place for future use, for when declared winners get fully
     # implemented.
 
     debate_result_class = VotingDebateResult
-    with_preference = BaseTestDebateResult.with_preference
-    standard_test = BaseTestDebateResult.standard_test
     testdata = dict()
 
     testdata['high'] = { # standard high-point win
@@ -383,11 +476,6 @@ class TestVotingDebateResult(BaseTestDebateResult):
     # ==========================================================================
 
     @standard_test
-    def test_save(self, result, testdata, scoresheet_type):
-        # Run self.save_complete_result and check completeness
-        self.assertTrue(result.is_complete())
-
-    @standard_test
     def test_totals_by_adj(self, result, testdata, scoresheet_type):
         for adj, totals in zip(self.adjs, testdata['common']['totals_by_adj']):
             for side, total in zip(self.SIDES, totals):
@@ -507,25 +595,8 @@ class TestVotingDebateResult(BaseTestDebateResult):
             self.assertEqual(nadjs, result.teamscorefield_votes_possible(side))
 
     # ==========================================================================
-    # Unknown sides
+    # Irregular operation
     # ==========================================================================
-
-    def _unset_sides(self):
-        for dt in self.debate.debateteam_set.all():
-            dt.side = DebateTeam.SIDE_UNALLOCATED
-            dt.save()
-
-    def test_save_speaker_with_unknown_sides(self):
-        self._unset_sides()
-        result = self.save_blank_result()
-        self.assertRaises(TypeError, result.set_speaker, 'aff', 1, None)
-
-    def test_unknown_speaker(self):
-        self.save_complete_result(self.testdata['high'])
-        result = self.get_result()
-        neg_speaker = self.teams[1].speaker_set.first()
-        with self.assertLogs('results.result', level=logging.ERROR) as cm:
-            result.set_speaker('aff', 1, neg_speaker)
 
     @with_preference('scoring', 'margin_includes_dissenters', False)
     @with_preference('scoring', 'scoresheet_type', 'high-required')
@@ -537,85 +608,26 @@ class TestVotingDebateResult(BaseTestDebateResult):
         result = self.get_result()
 
         # Just check a couple of fields
+        winner = testdata['high-required']['winner']
         for side, margin in zip(self.SIDES, testdata['high-required']['majority_margins']):
-            winner = testdata['high-required']['winner']
             with suppress_logs('results.result', logging.WARNING):
                 self.assertEqual(self._get_teamscore_in_db(side).win, side == winner)
                 self.assertEqual(result.teamscorefield_win(side), side == winner)
                 self.assertAlmostEqual(self._get_teamscore_in_db(side).margin, margin)
                 self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
 
-    # ==========================================================================
-    # Not complete
-    # ==========================================================================
-
-    def incomplete_test(test_fn):  # flake8: noqa
-        def wrap(self):
-            testdata = self.testdata['high']
-            if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
-                self.save_complete_result(testdata)
-            result = self.get_result()
-            test_fn(self, result)
-            self.assertFalse(result.is_complete())
-            self.assertFalse(result.is_valid())
-        return wrap
-
-    @incomplete_test
-    def test_unfilled_debateteam(self, result):
-        result.debateteams["aff"] = None
-
-    @incomplete_test
-    def test_unfilled_speaker(self, result):
-        result.speakers["neg"][1] = None
-
     @incomplete_test
     def test_unfilled_scoresheet_score(self, result):
         result.scoresheets[self.adjs[0]].scores["aff"][1] = None
-
-    # ==========================================================================
-    # Not properly loaded
-    # ==========================================================================
-
-    def bad_load_assertion_test(test_fn):  # flake8: noqa
-        def wrap(self):
-            testdata = self.testdata['high']
-            if not BallotSubmission.objects.filter(debate=self.debate, confirmed=True).exists():
-                self.save_complete_result(testdata)
-            result = self.get_result()
-            test_fn(self, result)
-            self.assertRaises(AssertionError, result.assert_loaded)
-        return wrap
-
-    @bad_load_assertion_test
-    def test_extraneous_debateteam(self, result):
-        result.debateteams["test"] = None
-
-    @bad_load_assertion_test
-    def test_extraneous_team_in_speakers(self, result):
-        result.speakers["test"] = None
-
-    @bad_load_assertion_test
-    def test_extraneous_team_in_ghosts(self, result):
-        result.ghosts["test"] = True
-
-    @bad_load_assertion_test
-    def test_extraneous_speaker(self, result):
-        result.speakers["aff"][5] = None
-
-    @bad_load_assertion_test
-    def test_extraneous_ghost(self, result):
-        result.ghosts["aff"][5] = None
 
     @bad_load_assertion_test
     def test_extraneous_scoresheet(self, result):
         result.scoresheets["not-an-adj"] = None
 
 
-class TestConsensusDebateResult(BaseTestDebateResult):
+class TestConsensusDebateResult(GeneralSpeakerTestsMixin, BaseTestDebateResult):
 
     debate_result_class = ConsensusDebateResult
-    with_preference = BaseTestDebateResult.with_preference
-    standard_test = BaseTestDebateResult.standard_test
     testdata = dict()
 
     testdata['high'] = {
@@ -676,7 +688,7 @@ class TestConsensusDebateResult(BaseTestDebateResult):
                     result.set_score(side, pos, score)
 
         if result.takes_declared_winners:
-            result.set_declared_winner(adj, testdata['declared_winner'])
+            result.set_declared_winner(testdata['declared_winner'])
 
     # ==========================================================================
     # Normal operation
@@ -725,3 +737,27 @@ class TestConsensusDebateResult(BaseTestDebateResult):
         for side in self.SIDES:
             self.assertIsNone(self._get_teamscore_in_db(side).votes_given)
             self.assertIsNone(self._get_teamscore_in_db(side).votes_possible)
+
+    # ==========================================================================
+    # Irregular operation
+    # ==========================================================================
+
+    @with_preference('scoring', 'scoresheet_type', 'high-required')
+    def test_initially_unknown_sides(self):
+        self._unset_sides()
+        testdata = self.testdata['high']
+        self.save_complete_result(testdata,
+                post_create=lambda result: result.set_sides(*self.teams))
+        result = self.get_result()
+
+        # Just check a couple of fields
+        winner = testdata['high-required']['winner']
+        for side, margin in zip(self.SIDES, testdata['margins']):
+            self.assertEqual(self._get_teamscore_in_db(side).win, side == winner)
+            self.assertEqual(result.teamscorefield_win(side), side == winner)
+            self.assertAlmostEqual(self._get_teamscore_in_db(side).margin, margin)
+            self.assertAlmostEqual(result.teamscorefield_margin(side), margin)
+
+    @incomplete_test
+    def test_unfilled_scoresheet_score(self, result):
+        result.scoresheet.scores["aff"][1] = None
