@@ -36,6 +36,7 @@ class TestImporterAnorak(TestCase):
         self.t = tm.Tournament(slug="import-test")
         self.t.save()
         self.logger = logging.getLogger(__name__)
+        self.logger.propagate = False  # keep logs contained for tests
         self.logger.setLevel(logging.INFO)
         self.importer = AnorakTournamentDataImporter(self.t, logger=self.logger)
 

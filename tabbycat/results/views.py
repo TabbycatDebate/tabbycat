@@ -171,7 +171,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
             try:
                 request.session.save()
             except ProgrammingError as e:
-                logger.error("Could not save session: " + str(e))
+                logger.warning("Could not save session: " + str(e))
                 request.session.modified = False
 
         return super().get(request, *args, **kwargs)

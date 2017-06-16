@@ -52,7 +52,7 @@ class Debate(models.Model):
         try:
             description += self.matchup
         except:
-            logger.critical("Error rendering Debate.matchup in Debate.__str__", exc_info=True)
+            logger.exception("Error rendering Debate.matchup in Debate.__str__")
             description += "<error showing teams>"
         return description
 

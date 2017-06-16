@@ -252,7 +252,7 @@ class BaseAvailabilityUpdateView(RoundMixin, SuperuserRequiredMixin, LogActionMi
             return HttpResponse('ok')
 
         except:
-            logger.critical("Error handling availability updates", exc_info=True)
+            logger.exception("Error handling availability updates")
             return HttpResponseBadRequest()
 
 
