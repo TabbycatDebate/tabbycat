@@ -203,50 +203,16 @@ def roundurl(parser, token):
     return RoundURLNode(*args)
 
 
-class OldRoundURLNode(template.Node):
-    def __init__(self, view_name, round=None, args=[]):
-        self.view_name = view_name
-        self.round = round
-        self.args = args
-
-    def render(self, context):
-        round = self.round.resolve(context) if self.round else context['round']
-        args = [round.tournament.slug, round.seq]
-        args.extend(a.resolve(context) for a in self.args)
-        return reverse(self.view_name, args=args)
-
-
-class OldTournamentURLNode(template.Node):
-    def __init__(self, view_name, args):
-        self.view_name = view_name
-        self.args = args
-
-    def render(self, context):
-        args = [context['tournament'].slug]
-        args.extend(a.resolve(context) for a in self.args)
-        args = tuple(args)
-        return reverse(self.view_name, args=args)
-
-
 @register.tag
 def round_url(parser, token):
-    warn("Then {% round_url %} tag is deprecated, use the new {% roundurl %} instead.", stacklevel=2)
-    bits = token.split_contents()
-    if len(bits) >= 3:
-        round = parser.compile_filter(bits[2])
-        args = [parser.compile_filter(b) for b in bits[3:]]
-    else:
-        round = None
-        args = []
-    return OldRoundURLNode(bits[1], round, args)
+    # Deprecated 16/6/2017, remove after 16/7/2017
+    raise RuntimeError("Then {% round_url %} tag is deprecated, use the new {% roundurl %} instead.")
 
 
 @register.tag
 def tournament_url(parser, token):
-    warn("Then {% tournament_url %} tag is deprecated, use the new {% tournamenturl %} instead.", stacklevel=2)
-    bits = token.split_contents()
-    args = [parser.compile_filter(b) for b in bits[2:]]
-    return OldTournamentURLNode(bits[1], args)
+    # Deprecated 16/6/2017, remove after 16/7/2017
+    raise RuntimeError("Then {% tournament_url %} tag is deprecated, use the new {% tournamenturl %} instead.")
 
 
 @register.filter
