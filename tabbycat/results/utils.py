@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 
 from draw.models import Debate
+from tournaments.utils import get_side_name
 
 
 def set_float_or_int(number, step_value):
@@ -85,7 +86,7 @@ def side_and_position_names(tournament):
     names, all being translated human-readable names. This should eventually
     be extended to return an appropriate list for the tournament configuration.
     """
-    sides = [_("Affirmative"), _("Negative")]
+    sides = [get_side_name(tournament, side, 'full').title() for side in ('aff', 'neg')]
     for side in sides:
         positions = [_("Reply") if pos == tournament.REPLY_POSITION
             else _ORDINALS[pos]

@@ -11,6 +11,7 @@ from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
 from .result import ForfeitDebateResult, VotingDebateResult
+from .utils import side_and_position_names
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +119,7 @@ class ReplyScoreField(BaseScoreField):
 # Result/ballot forms
 # ==============================================================================
 
-class BallotSetForm(forms.Form):
+class BaseBallotSetForm(forms.Form):
     """Form for data entry for a single ballot set. Responsible for presenting
     the part that looks like a ballot, i.e. speaker names and scores for each
     adjudicator. Not responsible for controls that submit the form or anything
@@ -495,7 +496,7 @@ class BallotSetForm(forms.Form):
             for side in self.SIDES:
                 motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
                 if motion_veto:
-                    debate_team = result.debateteams[side]
+                    debate_team = self.debate.get_dt(side)
                     self.ballotsub.debateteammotionpreference_set.update_or_create(
                         debate_team=debate_team, preference=3,
                         defaults=dict(motion=motion_veto))
@@ -527,56 +528,40 @@ class BallotSetForm(forms.Form):
         for team in self.debate.teams:
             yield self['team_%d' % team.id]
 
-    def adj_iter(self):
-        form = self  # provide access in inner classes
-
-        class Position(object):
-            def __init__(self, adj, pos):
-                self.adj = adj
-                self.pos = pos
-
-            @property
-            def name(self):
-                return (self.pos == form.REPLY_POSITION) and "Reply" or str(self.pos)
-
-            def __str__(self):
-                return str(self.name)
-
-            def aff_speaker(self):
-                return form[form._fieldname_speaker('aff', self.pos)]
-
-            def neg_speaker(self):
-                return form[form._fieldname_speaker('neg', self.pos)]
-
-            def aff_ghost(self):
-                return form[form._fieldname_ghost('aff', self.pos)]
-
-            def neg_ghost(self):
-                return form[form._fieldname_ghost('neg', self.pos)]
-
-            def _scores(self, side):
-                for adj in form.adjudicators:
-                    yield form.score_field(adj, side, self.pos)
-
-            def aff_score(self):
-                return str(form.score_field(self.adj, 'aff', self.pos))
-
-            def aff_score_errors(self):
-                return str(form.score_field(self.adj, 'aff', self.pos).errors)
-
-            def neg_score(self):
-                return str(form.score_field(self.adj, 'neg', self.pos))
-
-            def neg_score_errors(self):
-                return str(form.score_field(self.adj, 'neg', self.pos).errors)
-
-        class AdjudicatorWrapper(object):
-            def __init__(self, adj):
-                self.adj = adj
-
-            def position_iter(self):
-                for i in form.POSITIONS:
-                    yield Position(self.adj, i)
+    def scoresheets(self):
+        """Generates a sequence of nested dicts that allows for easy iteration
+        through the form. Used in the enter_results_ballot_set.html template."""
 
         for adj in self.adjudicators:
-            yield AdjudicatorWrapper(adj)
+            sheet_dict = {
+                "adjudicator": adj,
+                "teams": [],
+            }
+            for side, (side_name, pos_names) in zip(self.SIDES, side_and_position_names(self.tournament)):
+                side_dict = {
+                    "side_code": side,
+                    "side_name": side_name,
+                    "team": self.debate.get_team(side),
+                    "speakers": [],
+                }
+                for pos, pos_name in zip(self.POSITIONS, pos_names):
+                    side_dict["speakers"].append({
+                        "pos": pos,
+                        "name": pos_name,
+                        "speaker": self[self._fieldname_speaker(side, pos)],
+                        "ghost": self[self._fieldname_ghost(side, pos)],
+                        "score": self[self._fieldname_score(adj, side, pos)],
+                    })
+                sheet_dict["teams"].append(side_dict)
+            yield sheet_dict
+
+
+class SingleBallotSetForm(BaseBallotSetForm):
+    """Presents one ballot for the debate. Used for consensus adjudications."""
+    pass
+
+
+class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
+    """Presents one ballot per voting adjudicator. Used for voting
+    adjudications."""
+    pass
