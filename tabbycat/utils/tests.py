@@ -122,7 +122,7 @@ class ConditionalTableViewTest(BaseTableViewTest):
         # Check a page is not resolving when the preference is not set
         self.t.preferences[self.view_toggle] = False
 
-        with self.assertLogs('tournaments.mixins', logging.ERROR):
+        with self.assertLogs('tournaments.mixins', logging.WARNING):
             response = self.get_response()
 
         # 302 redirect should be issued if setting is not enabled
