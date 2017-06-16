@@ -197,9 +197,11 @@ class BaseDebateResult:
             self.debateteams[dt.side] = dt
 
     def save(self):
-        """Saves to the database."""
+        """Saves to the database.
+        Raises ResultError if the ballot set is incomplete or invalid."""
 
-        assert self.is_complete(), "Tried to save an incomplete result"
+        if not self.is_valid():
+            raise ResultError("Tried to save an invalid result.")
 
         for side in self.sides:
             dt = self.debateteams[side]
@@ -520,16 +522,17 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
         If the panel is evenly split, it awards the debate to the team for which
         the chair voted.
 
-        Raises AssertionError if scores are incomplete.
-        Raises ResultError any scoresheet doesn't have a winner.
+        Raises ResultError if the ballot set is incomplete or invalid, or if
+        any scoresheet doesn't have a winner.
         """
 
-        assert self.is_complete(), "Tried to calculate decision on an incomplete ballot set."
+        if not self.is_valid():
+            raise ResultError("Tried to calculate decision on an invalid ballot set.")
 
         self._adjs_by_side = {side: [] for side in self.sides} # group adjs by vote
         for adj, sheet in self.scoresheets.items():
             winner = sheet.winner()
-            if winner is None:
+            if winner is None:  # should never happen
                 raise ResultError("The scoresheet for %s does not have a winner." % adj.name)
             self._adjs_by_side[winner].append(adj)
 
@@ -621,7 +624,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
 
         try:
             self._calculate_decision()
-        except (ResultError, AssertionError):
+        except ResultError:
             for adj, adjtype in self.debate.adjudicators.with_positions():
                 yield adj, adjtype, False
         else:
@@ -687,7 +690,7 @@ class ConsensusDebateResult(BaseDebateResultWithSpeakers):
     def save(self):
         super().save()
 
-        for side in sides:
+        for side in self.sides:
             dt = self.debateteams[side]
             for pos in self.positions:
                 self.ballotsub.speakerscore_set.update_or_create(
@@ -705,6 +708,8 @@ class ConsensusDebateResult(BaseDebateResultWithSpeakers):
             logger.exception("Tried to get score, but scoresheet doesn't do scores. "
                     "self.takes_scores is %s", self.takes_scores)
             return None
+
+    get_speaker_score = get_score  # for BaseDebateResult.save()
 
     def set_score(self, side, position, score):
         try:

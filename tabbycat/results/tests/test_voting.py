@@ -6,18 +6,152 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
-from results.result import ResultError, VotingDebateResult    # absolute import to keep logger's name consistent
+from results.result import ConsensusDebateResult, ResultError, VotingDebateResult    # absolute import to keep logger's name consistent
 from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
 from venues.models import Venue
 
 
-class TestVotingDebateResult(TestCase):
+class BaseTestDebateResult(TestCase):
+
+    SIDES = ['aff', 'neg']
+
+    def setUp(self):
+        self.t = Tournament.objects.create(slug="resulttest", name="ResultTest")
+        self.teams = []
+        for i in range(2):
+            inst = Institution.objects.create(code="Inst{:d}".format(i), name="Institution {:d}".format(i))
+            team = Team.objects.create(tournament=self.t, institution=inst, reference="Team {:d}".format(i), use_institution_prefix=False)
+            self.teams.append(team)
+            for j in range(3):
+                Speaker.objects.create(team=team, name="Speaker {:d}-{:d}".format(i, j))
+
+        venue = Venue.objects.create(name="Venue", priority=10)
+
+        rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
+        self.debate = Debate.objects.create(round=rd, venue=venue)
+
+        sides = [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]
+        for team, side in zip(Team.objects.all(), sides):
+            DebateTeam.objects.create(debate=self.debate, team=team, side=side)
+
+        inst = Institution.objects.create(code="Adjs", name="Adjudicators")
+        self.adjs = [Adjudicator.objects.create(tournament=self.t, institution=inst,
+                name="Adjudicator {:d}".format(i), test_score=5) for i in range(3)]
+
+    def tearDown(self):
+        DebateTeam.objects.all().delete()
+        Institution.objects.all().delete()
+        self.t.delete()
+
+    def set_tournament_preference(self, section, name, value):
+        self.t.preferences[section + '__' + name] = value
+        if name in self.t._prefs:    # clear model-level cache
+            del self.t._prefs[name]
+
+    def with_preference(section, name, value):  # flake8: noqa
+        """Decorator. Sets a tournament preference before it begins the wrapped
+        function. The main purpose of this decorator is to be used with other
+        decorators, otherwise it could obviously just be achieved with a single
+        line at the beginning of the function. This decorator should normally be
+        placed first in the decorator chain, so that it is the outermost
+        wrapper."""
+        def wrap(test_fn):
+            def wrapped(self):
+                self.set_tournament_preference(section, name, value)
+                test_fn(self)
+            return wrapped
+        return wrap
+
+    def get_result(self):
+        ballotsub = BallotSubmission.objects.get(debate=self.debate, confirmed=True)
+        return self.debate_result_class(ballotsub)
+
+    def save_blank_result(self, nadjs=3, nspeakers=3):
+
+        self.set_tournament_preference('debate_rules', 'substantive_speakers', nspeakers)
+
+        # set debate adjudicators (depends on how many adjs there are, so can't do in setUp())
+        self.debate.adjudicators.chair = self.adjs[0]
+        self.debate.adjudicators.panellists = self.adjs[1:nadjs]
+        with suppress_logs('adjallocation.allocation', logging.INFO):
+            self.debate.adjudicators.save()
+
+        # unconfirm existing ballots
+        self.debate.ballotsubmission_set.update(confirmed=False)
+
+        ballotsub = BallotSubmission.objects.create(debate=self.debate, confirmed=True,
+                submitter_type=BallotSubmission.SUBMITTER_TABROOM)
+
+        return self.debate_result_class(ballotsub)
+
+    def save_complete_result(self, testdata, post_create=None):
+
+        nspeakers = testdata['num_speakers_per_team']
+
+        result = self.save_blank_result(nadjs=testdata['num_adjs'], nspeakers=nspeakers)
+        if post_create:
+            post_create(result)
+
+        for side, team in zip(self.SIDES, self.teams):
+            speakers = team.speaker_set.all()[0:nspeakers]
+            for pos, speaker in enumerate(speakers, start=1):
+                result.set_speaker(side, pos, speaker)
+            result.set_speaker(side, nspeakers+1, speakers[0])
+            # ghost fields should be False by default
+
+        self.save_scores_to_result(testdata, result)
+
+        with suppress_logs('results.result', logging.WARNING):
+            result.save()
+
+    def standard_test(test_fn):
+        """Decorator. Tests on all dataset in self.testdata, and all scoresheet
+        types listed in the arguments. Tests should take four arguments: self,
+        result, testdata and scoresheet_type, where
+        `result` is a VotingDebateResult object,
+        `testdata` is a value in `BaseTestDebateResult.testdata`, and
+        `scoresheet_type` is one of the scoresheet_types.
+        """
+        def wrapped(self):
+          for scoresheet_type in ['high-required']:
+            with self.subTest(scoresheet_type=scoresheet_type):
+              self.set_tournament_preference('scoring', 'scoresheet_type', scoresheet_type)
+              for key, testdata in self.testdata.items():
+                with self.subTest(testdata=key):
+                  if not testdata[scoresheet_type]['valid']:
+                    self.assertRaises(ResultError, self.save_complete_result, testdata)
+                  else:
+                    self.save_complete_result(testdata)
+                    result = self.get_result()
+                    test_fn(self, result, testdata, scoresheet_type)
+        return wrapped
+
+    def _get_speakerscore_in_db(self, side, pos):
+        return SpeakerScore.objects.get(
+            ballot_submission__debate=self.debate,
+            ballot_submission__confirmed=True,
+            debate_team__side=side,
+            position=pos
+        )
+
+    def _get_teamscore_in_db(self, side):
+        return TeamScore.objects.get(
+            ballot_submission__debate=self.debate,
+            ballot_submission__confirmed=True,
+            debate_team__side=side
+        )
+
+
+class TestVotingDebateResult(BaseTestDebateResult):
 
     # Currently, the low-allowed and tie-allowed data aren't actually used, but
     # they are in place for future use, for when declared winners get fully
     # implemented.
 
+    debate_result_class = VotingDebateResult
+    with_preference = BaseTestDebateResult.with_preference
+    standard_test = BaseTestDebateResult.standard_test
     testdata = dict()
 
     testdata['high'] = { # standard high-point win
@@ -116,7 +250,7 @@ class TestVotingDebateResult(TestCase):
         'num_adjs': 3,
         'num_speakers_per_team': 3,
         'common': {
-            'everyone_margins': [-0.0, 0.0],
+            'everyone_margins': [0.0, 0.0],
             'everyone_scores': [[75.66666666666667, 74.33333333333333, 77.33333333333333, 39.166666666666664],
                                 [74.66666666666667, 76.0, 76.66666666666667, 39.166666666666664]],
             'everyone_totals': [266.5, 266.50000000000006],
@@ -127,7 +261,7 @@ class TestVotingDebateResult(TestCase):
             'winner_by_adj': [None, None, None]},
         'low-allowed': {
             'majority_adjs': [0, 2],
-            'majority_margins': [0.0, -0.0],
+            'majority_margins': [0.0, 0.0],
             'majority_scores': [[74.0, 75.0, 77.5, 39.0], [72.5, 76.5, 77.5, 39.0]],
             'majority_totals': [265.5, 265.5],
             'num_adjs_for_team': [1, 2],
@@ -137,7 +271,7 @@ class TestVotingDebateResult(TestCase):
             'winner_by_adj': ['neg', 'aff', 'neg']},
         'tied-allowed': {
             'majority_adjs': [0, 2],
-            'majority_margins': [0.0, -0.0],
+            'majority_margins': [0.0, 0.0],
             'majority_scores': [[74.0, 75.0, 77.5, 39.0], [72.5, 76.5, 77.5, 39.0]],
             'majority_totals': [265.5, 265.5],
             'num_adjs_for_team': [1, 2],
@@ -233,92 +367,7 @@ class TestVotingDebateResult(TestCase):
             'winner_by_adj': ['neg', 'aff']},
     }
 
-    SIDES = ['aff', 'neg']
-
-    def setUp(self):
-        self.t = Tournament.objects.create(slug="resulttest", name="ResultTest")
-        self.teams = []
-        for i in range(2):
-            inst = Institution.objects.create(code="Inst{:d}".format(i), name="Institution {:d}".format(i))
-            team = Team.objects.create(tournament=self.t, institution=inst, reference="Team {:d}".format(i), use_institution_prefix=False)
-            self.teams.append(team)
-            for j in range(3):
-                Speaker.objects.create(team=team, name="Speaker {:d}-{:d}".format(i, j))
-
-        venue = Venue.objects.create(name="Venue", priority=10)
-
-        rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
-        self.debate = Debate.objects.create(round=rd, venue=venue)
-
-        sides = [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]
-        for team, side in zip(Team.objects.all(), sides):
-            DebateTeam.objects.create(debate=self.debate, team=team, side=side)
-
-        inst = Institution.objects.create(code="Adjs", name="Adjudicators")
-        self.adjs = [Adjudicator.objects.create(tournament=self.t, institution=inst,
-                name="Adjudicator {:d}".format(i), test_score=5) for i in range(3)]
-
-    def tearDown(self):
-        DebateTeam.objects.all().delete()
-        Institution.objects.all().delete()
-        self.t.delete()
-
-    def set_tournament_preference(self, section, name, value):
-        self.t.preferences[section + '__' + name] = value
-        if name in self.t._prefs:    # clear model-level cache
-            del self.t._prefs[name]
-
-    def with_preference(section, name, value):  # flake8: noqa
-        """Decorator. Sets a tournament preference before it begins the wrapped
-        function. The main purpose of this decorator is to be used with other
-        decorators, otherwise it could obviously just be achieved with a single
-        line at the beginning of the function. This decorator should normally be
-        placed first in the decorator chain, so that it is the outermost
-        wrapper."""
-        def wrap(test_fn):
-            def wrapped(self):
-                self.set_tournament_preference(section, name, value)
-                test_fn(self)
-            return wrapped
-        return wrap
-
-    def get_result(self):
-        ballotsub = BallotSubmission.objects.get(debate=self.debate, confirmed=True)
-        return VotingDebateResult(ballotsub)
-
-    def save_blank_result(self, nadjs=3, nspeakers=3):
-
-        self.set_tournament_preference('debate_rules', 'substantive_speakers', nspeakers)
-
-        # set debate adjudicators (depends on how many adjs there are, so can't do in setUp())
-        self.debate.adjudicators.chair = self.adjs[0]
-        self.debate.adjudicators.panellists = self.adjs[1:nadjs]
-        with suppress_logs('adjallocation.allocation', logging.INFO):
-            self.debate.adjudicators.save()
-
-        # unconfirm existing ballots
-        self.debate.ballotsubmission_set.update(confirmed=False)
-
-        ballotsub = BallotSubmission.objects.create(debate=self.debate, confirmed=True,
-                submitter_type=BallotSubmission.SUBMITTER_TABROOM)
-
-        return VotingDebateResult(ballotsub)
-
-    def save_complete_result(self, testdata, post_create=None):
-
-        nspeakers = testdata['num_speakers_per_team']
-
-        result = self.save_blank_result(nadjs=testdata['num_adjs'], nspeakers=nspeakers)
-        if post_create:
-            post_create(result)
-
-        for side, team in zip(self.SIDES, self.teams):
-            speakers = team.speaker_set.all()[0:nspeakers]
-            for pos, speaker in enumerate(speakers, start=1):
-                result.set_speaker(side, pos, speaker)
-            result.set_speaker(side, nspeakers+1, speakers[0])
-            # ghost fields should be False by default
-
+    def save_scores_to_result(self, testdata, result):
         if result.takes_scores:
             for adj, sheet in zip(self.adjs, testdata['input']['scores']):
                 for side, teamscores in zip(self.SIDES, sheet):
@@ -329,34 +378,9 @@ class TestVotingDebateResult(TestCase):
             for adj, declared_winner in zip(self.adjs, testdata['input']['declared_winners']):
                 result.set_declared_winner(adj, declared_winner)
 
-        with suppress_logs('results.result', logging.WARNING):
-            result.save()
-
     # ==========================================================================
     # Normal operation
     # ==========================================================================
-
-    def standard_test(test_fn):
-        """Decorator. Tests on all dataset in self.testdata, and all scoresheet
-        types listed in the arguments. Tests should take four arguments: self,
-        result, testdata and scoresheet_type, where
-        `result` is a VotingDebateResult object,
-        `testdata` is a value in `BaseTestResult.testdata`, and
-        `scoresheet_type` is one of the scoresheet_types.
-        """
-        def wrapped(self):
-          for scoresheet_type in ['high-required']:
-            with self.subTest(scoresheet_type=scoresheet_type):
-              self.set_tournament_preference('scoring', 'scoresheet_type', scoresheet_type)
-              for key, testdata in self.testdata.items():
-                with self.subTest(testdata=key):
-                  if not testdata[scoresheet_type]['valid']:
-                    self.assertRaises(ResultError, self.save_complete_result, testdata)
-                  else:
-                    self.save_complete_result(testdata)
-                    result = self.get_result()
-                    test_fn(self, result, testdata, scoresheet_type)
-        return wrapped
 
     @standard_test
     def test_save(self, result, testdata, scoresheet_type):
@@ -398,14 +422,6 @@ class TestVotingDebateResult(TestCase):
     # Speaker scores
     # --------------------------------------------------------------------------
 
-    def _get_speakerscore_in_db(self, side, pos):
-        return SpeakerScore.objects.get(
-            ballot_submission__debate=self.debate,
-            ballot_submission__confirmed=True,
-            debate_team__side=side,
-            position=pos
-        )
-
     @with_preference('scoring', 'margin_includes_dissenters', False)
     @standard_test
     def test_speaker_scores_majority(self, result, testdata, scoresheet_type):
@@ -427,13 +443,6 @@ class TestVotingDebateResult(TestCase):
     # --------------------------------------------------------------------------
     # Team scores
     # --------------------------------------------------------------------------
-
-    def _get_teamscore_in_db(self, side):
-        return TeamScore.objects.get(
-            ballot_submission__debate=self.debate,
-            ballot_submission__confirmed=True,
-            debate_team__side=side
-        )
 
     @standard_test
     def test_teamscorefield_points(self, result, testdata, scoresheet_type):
@@ -600,3 +609,119 @@ class TestVotingDebateResult(TestCase):
     @bad_load_assertion_test
     def test_extraneous_scoresheet(self, result):
         result.scoresheets["not-an-adj"] = None
+
+
+class TestConsensusDebateResult(BaseTestDebateResult):
+
+    debate_result_class = ConsensusDebateResult
+    with_preference = BaseTestDebateResult.with_preference
+    standard_test = BaseTestDebateResult.standard_test
+    testdata = dict()
+
+    testdata['high'] = {
+        'declared_winner': 'aff',
+        'scores': [[75.0, 76.0, 74.0, 38.0], [76.0, 73.0, 75.0, 37.5]],
+        'num_adjs': 3,
+        'num_speakers_per_team': 3,
+        'totals': [263.0, 261.5],
+        'margins': [1.5, -1.5],
+        'high-required': {'valid': True, 'winner': 'aff'},
+        'low-allowed': {'valid': True, 'winner': 'aff'},
+        'tied-allowed': {'valid': True, 'winner': 'aff'},
+    }
+
+    testdata['low'] = { # contains low-point wins that reverse the result
+        'declared_winners': 'aff',
+        'scores': [[73.0, 76.0, 79.0, 37.5], [77.0, 77.0, 78.0, 39.0]],
+        'num_adjs': 3,
+        'num_speakers_per_team': 3,
+        'totals': [265.5, 271.0],
+        'margins': [-5.5, 5.5],
+        'high-required': {'valid': True, 'winner': 'neg'},
+        'low-allowed': {'valid': True, 'winner': 'aff'},
+        'tied-allowed': {'valid': False, 'winner': None},
+    }
+
+    testdata['tie'] = { # contains low-point wins that reverse the result
+        'declared_winners': 'neg',
+        'scores': [[73.0, 72.0, 78.0, 40.0], [73.0, 75.0, 75.0, 40.0]],
+        'num_adjs': 3,
+        'num_speakers_per_team': 3,
+        'totals': [263.0, 263.0],
+        'margins': [0.0, 0.0],
+        'high-required': {'valid': False, 'winner': None},
+        'low-allowed': {'valid': True, 'winner': 'neg'},
+        'tied-allowed': {'valid': True, 'winner': 'neg'},
+    }
+
+    testdata['two-speakers'] = {  # two speakers per team
+        'declared_winners': 'neg',
+        'scores': [[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]],
+        'num_adjs': 1,
+        'num_speakers_per_team': 2,
+        'totals': [187.5, 188.0],
+        'margins': [-0.5, 0.5],
+        'common': {
+            'scores': [[74.0, 76.0, 37.5], [74.0, 77.0, 37.0]],
+            'totals_by_adj': [[187.5, 188.0]]},
+        'high-required': {'valid': True, 'winner': 'neg'},
+        'low-allowed': {'valid': True, 'winner': 'neg'},
+        'tied-allowed': {'valid': True, 'winner': 'neg'},
+    }
+
+    def save_scores_to_result(self, testdata, result):
+        if result.takes_scores:
+            for side, teamscores in zip(self.SIDES, testdata['scores']):
+                for pos, score in enumerate(teamscores, start=1):
+                    result.set_score(side, pos, score)
+
+        if result.takes_declared_winners:
+            result.set_declared_winner(adj, testdata['declared_winner'])
+
+    # ==========================================================================
+    # Normal operation
+    # ==========================================================================
+
+    @standard_test
+    def test_save(self, result, testdata, scoresheet_type):
+        # Run self.save_complete_result and check completeness
+        self.assertTrue(result.is_complete())
+
+    @standard_test
+    def test_speaker_scores(self, result, testdata, scoresheet_type):
+        for side, totals in zip(self.SIDES, testdata['scores']):
+            for pos, score in enumerate(totals, start=1):
+                self.assertAlmostEqual(score, self._get_speakerscore_in_db(side, pos).score)
+                self.assertAlmostEqual(score, result.get_speaker_score(side, pos))
+
+    @standard_test
+    def test_teamscorefield_points(self, result, testdata, scoresheet_type):
+        for side in self.SIDES:
+            points = 1 if side == testdata[scoresheet_type]['winner'] else 0
+            self.assertEqual(points, self._get_teamscore_in_db(side).points)
+            self.assertEqual(points, result.teamscorefield_points(side))
+
+    @standard_test
+    def test_teamscorefield_win(self, result, testdata, scoresheet_type):
+        for side in self.SIDES:
+            win = side == testdata[scoresheet_type]['winner']
+            self.assertEqual(win, self._get_teamscore_in_db(side).win)
+            self.assertEqual(win, result.teamscorefield_win(side))
+
+    @standard_test
+    def test_teamscorefield_score(self, result, testdata, scoresheet_type):
+        for side, total in zip(self.SIDES, testdata['totals']):
+            self.assertAlmostEqual(total, self._get_teamscore_in_db(side).score)
+            self.assertAlmostEqual(total, result.teamscorefield_score(side))
+
+    @standard_test
+    def test_teamscorefield_margin(self, result, testdata, scoresheet_type):
+        for side, margin in zip(self.SIDES, testdata['margins']):
+            self.assertAlmostEqual(margin, self._get_teamscore_in_db(side).margin)
+            self.assertAlmostEqual(margin, result.teamscorefield_margin(side))
+
+    @standard_test
+    def test_teamscorefield_blank_fields(self, result, testdata, scoresheet_type):
+        for side in self.SIDES:
+            self.assertIsNone(self._get_teamscore_in_db(side).votes_given)
+            self.assertIsNone(self._get_teamscore_in_db(side).votes_possible)
