@@ -205,10 +205,10 @@ class BaseBallotSetForm(forms.Form):
          - password
          - choose_sides,         if sides need to be chosen by the user
          - motion,               if there is more than one motion
-         - <side>_motion_veto,  if motion vetoes are being noted, one for each team
-         - <side>_speaker_s#,   one for each speaker
-         - <side>_ghost_s#,     whether score should be a duplicate
-         - <side>_score_a#_s#,  one for each score
+         - <side>_motion_veto,   if motion vetoes are being noted, one for each team
+         - <side>_speaker_s#,    one for each speaker
+         - <side>_ghost_s#,      whether score should be a duplicate
+         - <side>_score_a#_s#,   one for each score
         """
 
         dts = self.debate.debateteam_set.all()
@@ -220,14 +220,14 @@ class BaseBallotSetForm(forms.Form):
         # 2. Choose sides field
         if self.choosing_sides:
             if len(dts) != 2:
-                raise FormConstructionError('Whoops! There are %d teams in this debate, was expecting 2.' % len(dts))
+                raise FormConstructionError("Whoops! There are %d teams in this debate, was expecting 2." % len(dts))
             teams = self.debate.teams
             side_choices = [
                 (None, _("---------")),
                 (str(teams[0].id) + "," + str(teams[1].id),
-                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {"aff_team": teams[0].short_name, "neg_team": teams[1].short_name}),
+                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {'aff_team': teams[0].short_name, 'neg_team': teams[1].short_name}),
                 (str(teams[1].id) + "," + str(teams[0].id),
-                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {"aff_team": teams[1].short_name, "neg_team": teams[0].short_name})
+                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {'aff_team': teams[1].short_name, 'neg_team': teams[0].short_name})
             ]
             self.fields['choose_sides'] = forms.TypedChoiceField(
                 choices=side_choices,
@@ -242,7 +242,10 @@ class BaseBallotSetForm(forms.Form):
 
         if self.using_vetoes:
             for side in self.SIDES:
-                self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(queryset=self.motions, required=False)
+                self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(
+                    label=_("%(side_abbr)s's motion veto") % {'side_abbr': get_side_name(self.tournament, side, 'abbr')},
+                    queryset=self.motions, required=False
+                )
 
         # 4. Speaker fields
         for side, pos in self.SIDES_AND_POSITIONS:
@@ -312,7 +315,7 @@ class BaseBallotSetForm(forms.Form):
                 initial['motion'] = self.ballotsub.motion
             for side in self.SIDES:
                 initial[self._fieldname_motion_veto(side)] = self.ballotsub.debateteammotionpreference_set.filter(
-                        debate_team__side=side, preference=3).first()
+                        debate_team__side=side, preference=3).first().motion
 
         for side, pos in self.SIDES_AND_POSITIONS:
             speaker = result.get_speaker(side, pos)
@@ -536,6 +539,11 @@ class BaseBallotSetForm(forms.Form):
     def fake_speaker_selects(self):
         for team in self.debate.teams:
             yield self['team_%d' % team.id]
+
+    def motion_veto_fields(self):
+        """Generator to allow easy iteration through the motion veto fields."""
+        for side in self.SIDES:
+            yield self[self._fieldname_motion_veto(side)]
 
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
