@@ -1,5 +1,6 @@
 import logging
 
+
 class ExceptFilter(logging.Filter):
     """The negative of the base Python filter: Only allows records *not* below
     a certain point in the logger hierarchy.
