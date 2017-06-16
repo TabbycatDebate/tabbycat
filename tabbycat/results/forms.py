@@ -44,8 +44,8 @@ class TournamentPasswordField(forms.CharField):
 
 class BaseScoreField(forms.FloatField):
     def __init__(self, *args, **kwargs):
-        """Takes an additional optional keyword argument: preferences,
-        the Preferences register for the Tournament."""
+        """Takes an additional optional keyword argument: tournament,
+        the Tournament used to configure the field."""
 
         tournament = kwargs.pop('tournament')
         if tournament:
@@ -70,12 +70,10 @@ class BaseScoreField(forms.FloatField):
     def check_value(self, value):
         if value and self.step_value and value % self.step_value != 0:
             if self.step_value == 1:
-                msg = 'Please enter a whole number.'
+                msg = _("Please enter a whole number.")
             else:
-                msg = 'Please enter a multiple of %s.' % self.step_value
-            raise forms.ValidationError(
-                _(msg), code='decimal'
-            )
+                msg = _("Please enter a multiple of %s.") % self.step_value
+            raise forms.ValidationError(msg, code='decimal')
 
     def widget_attrs(self, widget):
         attrs = super(BaseScoreField, self).widget_attrs(widget)
@@ -124,6 +122,12 @@ class BaseBallotSetForm(forms.Form):
     the part that looks like a ballot, i.e. speaker names and scores for each
     adjudicator. Not responsible for controls that submit the form or anything
     like that.
+
+    There are lots of fields that are conditionally displayed according to user
+    preference. Most of these (for example, motions) are simply the presence or
+    absence thereof, and it is easiest to govern these using if-else switches.
+    For more involved customisations, like there is a ballot per adjudicator
+    (voting) or a single ballot for the debate (consensus), we use subclasses.
     """
 
     confirmed = forms.BooleanField(required=False)
@@ -139,6 +143,7 @@ class BaseBallotSetForm(forms.Form):
         self.adjudicators = list(self.debate.adjudicators.voting())
         self.motions = self.debate.round.motion_set
         self.tournament = self.debate.round.tournament
+
         self.using_motions = self.tournament.pref('enable_motions')
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
         self.using_forfeits = self.tournament.pref('enable_forfeits')
@@ -157,9 +162,9 @@ class BaseBallotSetForm(forms.Form):
         self.LAST_SUBSTANTIVE_POSITION = self.tournament.LAST_SUBSTANTIVE_POSITION  # also used in template
         self.REPLY_POSITION = self.tournament.REPLY_POSITION  # also used in template
 
-        self._create_fields()
-        self._set_tab_indices()
-        self.initial = self._initial_data()
+        self.create_fields()
+        self.set_tab_indices()
+        self.initial = self.initial_data()
 
     @property
     def SIDES_AND_POSITIONS(self):  # flake8: noqa
@@ -195,15 +200,15 @@ class BaseBallotSetForm(forms.Form):
     # Form set-up
     # --------------------------------------------------------------------------
 
-    def _create_fields(self):
+    def create_fields(self):
         """Dynamically generate fields for this ballot:
          - password
          - choose_sides,         if sides need to be chosen by the user
          - motion,               if there is more than one motion
-         - aff/neg_motion_veto,  if motion vetoes are being noted, one for each team
-         - aff/neg_speaker_s#,   one for each speaker
-         - aff/neg_ghost_s#,     whether score should be a duplicate
-         - aff/neg_score_a#_s#,  one for each score
+         - <side>_motion_veto,  if motion vetoes are being noted, one for each team
+         - <side>_speaker_s#,   one for each speaker
+         - <side>_ghost_s#,     whether score should be a duplicate
+         - <side>_score_a#_s#,  one for each score
         """
 
         dts = self.debate.debateteam_set.all()
@@ -218,9 +223,11 @@ class BaseBallotSetForm(forms.Form):
                 raise FormConstructionError('Whoops! There are %d teams in this debate, was expecting 2.' % len(dts))
             teams = self.debate.teams
             side_choices = [
-                (None, "---------"),
-                (str(teams[0].id) + "," + str(teams[1].id), "%s affirmed, %s negated" % (teams[0].short_name, teams[1].short_name)),
-                (str(teams[1].id) + "," + str(teams[0].id), "%s affirmed, %s negated" % (teams[1].short_name, teams[0].short_name))
+                (None, _("---------")),
+                (str(teams[0].id) + "," + str(teams[1].id),
+                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {"aff_team": teams[0].short_name, "neg_team": teams[1].short_name}),
+                (str(teams[1].id) + "," + str(teams[0].id),
+                    _("%(aff_team)s affirmed, %(neg_team)s negated") % {"aff_team": teams[1].short_name, "neg_team": teams[0].short_name})
             ]
             self.fields['choose_sides'] = forms.TypedChoiceField(
                 choices=side_choices,
@@ -267,10 +274,10 @@ class BaseBallotSetForm(forms.Form):
             if self.using_motions:
                 self.fields['motion'].required = False
 
-            choices = [(side, "Forfeit by the {}".format(self._side_name(side))) for side in self.SIDES]
+            choices = [(side, _("Forfeit by the %(side)s") % {'side': self._side_name(side)}) for side in self.SIDES]
             self.fields['forfeit'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, required=False)
 
-    def _initial_data(self):
+    def initial_data(self):
         """Generates dictionary of initial form data."""
 
         result = VotingDebateResult(self.ballotsub)
@@ -326,7 +333,7 @@ class BaseBallotSetForm(forms.Form):
 
         return initial
 
-    def _set_tab_indices(self):
+    def set_tab_indices(self):
         """Sets all the tab indices in the form."""
         # make a list for field names, then set them all at the end
         order = list()
