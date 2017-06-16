@@ -472,10 +472,9 @@ class BaseBallotSetForm(forms.Form):
                 self.debate.confirmed_ballot.confirmed = False
                 self.debate.confirmed_ballot.save()
 
-        # 2. Save ballot submission
-        self.ballotsub.discarded = self.cleaned_data['discarded']
-        self.ballotsub.confirmed = self.cleaned_data['confirmed']
-        self.ballotsub.save()
+        # 2. Save ballot submission so that we can create related objects
+        if self.ballotsub.pk is None:
+            self.ballotsub.save()
 
         # 3. Check if there was a forfeit
         if self.using_forfeits and self.cleaned_data['forfeit']:
@@ -513,6 +512,9 @@ class BaseBallotSetForm(forms.Form):
                     result.set_score(adj, side, pos, score)
 
         result.save()
+
+        self.ballotsub.discarded = self.cleaned_data['discarded']
+        self.ballotsub.confirmed = self.cleaned_data['confirmed']
         self.ballotsub.save()
 
         self.debate.result_status = self.cleaned_data['debate_result_status']
