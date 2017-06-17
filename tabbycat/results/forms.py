@@ -10,7 +10,7 @@ from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
-from .result import ForfeitDebateResult, VotingDebateResult
+from .result import ForfeitDebateResult, ConsensusDebateResult, VotingDebateResult
 from .utils import side_and_position_names
 
 logger = logging.getLogger(__name__)
@@ -132,9 +132,9 @@ class BaseBallotSetForm(forms.Form):
 
     confirmed = forms.BooleanField(required=False)
     discarded = forms.BooleanField(required=False)
-
     debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
+    result_class = None
     SIDES = ['aff', 'neg']
 
     def __init__(self, ballotsub, *args, **kwargs):
@@ -258,6 +258,8 @@ class BaseBallotSetForm(forms.Form):
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
                 label="Mark this as a duplicate speech")
 
+        self.create_score_fields()
+
         # 5. Forfeit field
         if self.using_forfeits:
             choices = [(side, _("Forfeit by the %(side)s") % {'side': self._side_name(side)}) for side in self.SIDES]
@@ -306,7 +308,7 @@ class BaseBallotSetForm(forms.Form):
             if forfeiter:
                 initial['forfeit'] = forfeiter.debate_team.side
 
-        result = VotingDebateResult(self.ballotsub)
+        result = self.result_class(self.ballotsub)
         initial.update(self.initial_from_result(result))
 
         return initial
@@ -480,7 +482,7 @@ class BaseBallotSetForm(forms.Form):
             result = ForfeitDebateResult(self.ballotsub, self.cleaned_data['forfeit'])
             self.ballotsub.forfeit = result.debateteams[self.cleaned_data['forfeit']]
         else:
-            result = VotingDebateResult(self.ballotsub)
+            result = self.result_class(self.ballotsub)
 
         # 4. Save the sides
         if self.choosing_sides:
@@ -544,23 +546,128 @@ class BaseBallotSetForm(forms.Form):
 
 class SingleBallotSetForm(BaseBallotSetForm):
     """Presents one ballot for the debate. Used for consensus adjudications."""
-    pass
+
+    result_class = ConsensusDebateResult
+
+    @staticmethod
+    def _fieldname_score(side, pos):
+        return '%(side)s_score_s%(pos)d' % {'side': side, 'pos': pos}
+
+    def create_score_fields(self):
+        """Adds the speaker score fields:
+         - <side>_score_s#,  one for each score
+        """
+        for side, pos in self.SIDES_AND_POSITIONS:
+            scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
+            self.fields[self._fieldname_score(side, pos)] = scorefield(
+                widget=forms.NumberInput(attrs={'class': 'required number'}),
+                tournament=self.tournament,
+                required=not self.using_forfeits,
+            )
+
+    def initial_from_result(self, result):
+        initial = super().initial_from_result(result)
+
+        for side, pos in self.SIDES_AND_POSITIONS:
+            score = result.get_score(side, pos)
+            coerce_for_ui = self.fields[self._fieldname_score(side, pos)].coerce_for_ui
+            initial[self._fieldname_score(side, pos)] = coerce_for_ui(score)
+
+        return initial
+
+    def list_score_fields(self):
+        """Lists all the score fields. Called by super().set_tab_indices()."""
+        order = []
+        for side, pos in self.SIDES_AND_POSITIONS:
+            order.append(self._fieldname_score(side, pos))
+        return order
+
+    # --------------------------------------------------------------------------
+    # Validation and save methods
+    # --------------------------------------------------------------------------
+
+    def clean_scoresheet(self, cleaned_data):
+        try:
+            totals = [sum(cleaned_data[self._fieldname_score(side, pos)]
+                       for pos in self.POSITIONS) for side in self.SIDES]
+
+        except KeyError as e:
+            logger.warning("Field %s not found", str(e))
+
+        else:
+            # Check that no teams had the same total.
+            if len(totals) == 2 and totals[0] == totals[1]:
+                self.add_error(None, forms.ValidationError(
+                    _("The total scores for the teams are the same (i.e. a draw)."),
+                    params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
+                ))
+
+            elif len(totals) > 2:
+                for total in set(totals):
+                    sides = [s for s, t in zip(self.SIDES, totals) if t == total]
+                    if len(sides) > 1:
+                        self.add_error(None, form.ValidationError(
+                            _("The total scores for the following teams are the same: %(teams)s"),
+                            params = {'teams': ", ".join(self._side_name(side) for side in sides)},
+                            code='tied_score'
+                        ))
+
+            # Check that the margin did not exceed the maximum permissible.
+            if len(totals) == 2 and self.max_margin:
+                margin = abs(totals[0] - totals[1])
+                if margin > self.max_margin:
+                    self.add_error(None, forms.ValidationError(
+                        _("The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)"),
+                        params={'margin': margin, 'max_margin': self.max_margin}, code='max_margin'
+                    ))
+
+    def populate_result_with_scores(self, result):
+        for side, pos in self.SIDES_AND_POSITIONS:
+            score = self.cleaned_data[self._fieldname_score(side, pos)]
+            result.set_score(side, pos, score)
+
+    # --------------------------------------------------------------------------
+    # Template access methods
+    # --------------------------------------------------------------------------
+
+    def scoresheets(self):
+        """Generates a sequence of nested dicts that allows for easy iteration
+        through the form. Used in the enter_results_ballot_set.html template."""
+
+        sheet_dict = {"teams": []}
+        for side, (side_name, pos_names) in zip(self.SIDES, side_and_position_names(self.tournament)):
+            side_dict = {
+                "side_code": side,
+                "side_name": side_name,
+                "team": self.debate.get_team(side),
+                "speakers": [],
+            }
+            for pos, pos_name in zip(self.POSITIONS, pos_names):
+                side_dict["speakers"].append({
+                    "pos": pos,
+                    "name": pos_name,
+                    "speaker": self[self._fieldname_speaker(side, pos)],
+                    "ghost": self[self._fieldname_ghost(side, pos)],
+                    "score": self[self._fieldname_score(side, pos)],
+                })
+            sheet_dict["teams"].append(side_dict)
+        return [sheet_dict]
 
 
 class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
     """Presents one ballot per voting adjudicator. Used for voting
     adjudications."""
 
+    result_class = VotingDebateResult
+
     @staticmethod
     def _fieldname_score(adj, side, pos):
         return '%(side)s_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
 
-    def create_fields(self):
+    def create_score_fields(self):
         """Adds the speaker score fields:
          - <side>_score_a#_s#,  one for each score
         """
-        super().create_fields()
-
         for side, pos in self.SIDES_AND_POSITIONS:
             scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
             for adj in self.adjudicators:
@@ -594,7 +701,6 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
 
     def clean_scoresheet(self, cleaned_data):
         for adj in self.adjudicators:
-            # Check that it was not a draw.
             try:
                 totals = [sum(cleaned_data[self._fieldname_score(adj, side, pos)]
                            for pos in self.POSITIONS) for side in self.SIDES]
@@ -603,16 +709,18 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                 logger.warning("Field %s not found", str(e))
 
             else:
+                # Check that it was not a draw.
                 if totals[0] == totals[1]:
                     self.add_error(None, forms.ValidationError(
-                        _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)"),
+                        _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)."),
                         params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
                     ))
 
+                # Check that the margin did not exceed the maximum permissible.
                 margin = abs(totals[0] - totals[1])
                 if self.max_margin and margin > self.max_margin:
                     self.add_error(None, forms.ValidationError(
-                        _("The margin (%(margin).1f) in the ballot of adjudicator %(adj)s (%(adj_ins)s) exceeds the maximum allowable margin (%(max_margin).1f)"),
+                        _("The margin (%(margin).1f) in the ballot of adjudicator %(adj)s (%(adj_ins)s) exceeds the maximum allowable margin (%(max_margin).1f)."),
                         params={'adj': adj.name, 'adj_ins': adj.institution.code, 'margin': margin, 'max_margin': self.max_margin}, code='max_margin'
                     ))
 
