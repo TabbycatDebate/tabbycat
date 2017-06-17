@@ -310,7 +310,7 @@ class DrawForDragAndDropMixin(RoundMixin):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
         t = self.get_tournament()
         r = self.get_round()
-        break_thresholds = { bc.id: calculate_live_thresholds(bc, t, r)
+        break_thresholds = {bc.id: calculate_live_thresholds(bc, t, r)
             for bc in self.break_categories}
         for debate in serialised_draw:
             for (position, team) in debate['teams'].items():
