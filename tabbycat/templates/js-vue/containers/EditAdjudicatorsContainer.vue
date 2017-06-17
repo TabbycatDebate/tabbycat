@@ -1,7 +1,8 @@
 <template>
   <div class="col-md-12 draw-container allocation-container">
 
-    <allocation-actions :round-info="roundInfo"></allocation-actions>
+    <allocation-actions :round-info="roundInfo"
+                        :percentiles="percentileThresholds"></allocation-actions>
 
     <div class="row">
       <div class="vertical-spacing" id="messages-container"></div>
@@ -40,8 +41,9 @@
                                    :locked="debate.locked">
                   <draggable-adjudicator
                     v-for="da in getAdjudicatorsByPosition(debate, position)"
-                    :adjudicator="da.adjudicator" :key="da.adjudicator.id"
-                    :debate-id="debate.id" :locked="debate.locked">
+                    :adjudicator="da.adjudicator" :debate-id="debate.id"
+                    :percentiles="percentileThresholds" :key="da.adjudicator.id"
+                    :locked="debate.locked">
                   </draggable-adjudicator>
                 </droppable-generic>
               </div>
@@ -54,6 +56,7 @@
     <unallocated-items-container>
       <div v-for="unallocatedAdj in unallocatedAdjsByScore">
         <draggable-adjudicator :adjudicator="unallocatedAdj"
+                               :percentiles="percentileThresholds"
                                :locked="unallocatedAdj.locked"></draggable-adjudicator>
       </div>
     </unallocated-items-container>
@@ -71,6 +74,8 @@ import AllocationActions from '../allocations/AllocationActions.vue'
 import DebateImportance from '../allocations/DebateImportance.vue'
 import ConflictsCoordinatorMixin from '../allocations/ConflictsCoordinatorMixin.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
+
+import percentile from 'stats-percentile';
 import _ from 'lodash'
 
 export default {
@@ -87,6 +92,22 @@ export default {
     allAdjudicatorsById: function() {
       return _.keyBy(this.adjudicators.concat(this.unallocatedItems), 'id')
     },
+    percentileThresholds: function() {
+      // For determining feedback rankings
+      var allScores = _.map(this.allAdjudicatorsById, function(adj) {
+        return parseFloat(adj.score)
+      }).sort()
+      var thresholds = []
+      var letterGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C"]
+      for (var i = 90; i > 10; i -= 10) {
+        thresholds.push({
+          'grade': letterGrades[0], 'cutoff': percentile(allScores, i), 'percentile': i
+        })
+        letterGrades.shift()
+      }
+      thresholds.push({'grade': "F", 'cutoff': 0, 'percentile': 10})
+      return thresholds
+    }
   },
   methods: {
     getAdjudicatorsByPosition: function(debate, position) {

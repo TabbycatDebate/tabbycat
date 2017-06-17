@@ -13,7 +13,7 @@
     </div>
     <div class="draggable-title">
       <h5 class="no-top-margin no-bottom-margin">{{ titleWithLimit }}</h5>
-      <span class="small text-muted subtitle">
+      <span class="small subtitle">
         {{ team.institution.code }}
       </span>
     </div>

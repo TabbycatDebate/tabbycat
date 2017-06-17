@@ -33,6 +33,9 @@ export default {
       if (highlights.category === true) {
         classString += " category-display"
       }
+      if (highlights.ranking === true) {
+        classString += " ranking-display"
+      }
       return classString
     },
   },

@@ -9,7 +9,7 @@ export default {
     ratingsFeature: function() {
       var ratings = [
         { 'title': this.adjudicator.score + ' Feedback', 'icon': 'glyphicon-signal' },
-        { 'title': 'A+ Percentile (X%)', 'icon': 'glyphicon-ok' }
+        { 'title': this.percentileRanking.grade + this.percentileRanking.text }
       ]
       return ratings
     },
@@ -33,7 +33,7 @@ export default {
           ]
         }]
       }
-    }
+    },
   }
 }
 </script>

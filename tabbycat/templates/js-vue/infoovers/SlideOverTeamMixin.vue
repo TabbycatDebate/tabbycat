@@ -32,7 +32,7 @@ export default {
   methods: {
     titleForBC: function(bc, wins) {
       var status = bc.will_break.toUpperCase()
-      return status + ' for ' + bc.name + ' Break (' + wins + ' wins)'
+      return status + ' for ' + bc.name + ' Break (on ' + wins + ')'
     },
     iconForBC: function(bc) {
       if (bc.will_break === 'dead') { return 'glyphicon-remove' } else

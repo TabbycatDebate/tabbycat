@@ -44,7 +44,7 @@
 
 .vue-draggable:hover,
 .vue-is-hovering:active {
-  background: #000;
+  background: #000 !important;
   border-color: $gray;
   cursor: move;
   color: #fff;

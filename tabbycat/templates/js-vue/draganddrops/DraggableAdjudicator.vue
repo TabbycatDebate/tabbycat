@@ -1,6 +1,7 @@
 <template>
   <div draggable=true
-       :class="[draggableClasses, conflictsStatus, highlightsIdentity, highlightsStatus]"
+       :class="[draggableClasses, conflictsStatus, highlightsIdentity,
+                highlightsStatus, 'ranking-' + percentileRanking.percentile]"
        @dragstart="dragStart"
        @dragend="dragEnd"
        @mouseenter="handleHoverOn"
@@ -11,7 +12,7 @@
     </div>
     <div class="draggable-title">
       <h5 class="no-top-margin no-bottom-margin">{{ initialledName }}</h5>
-      <span class="small text-muted subtitle" v-if="adjudicator.institution">
+      <span class="small subtitle" v-if="adjudicator.institution">
         {{ adjudicator.institution.code }}
       </span>
     </div>
@@ -25,11 +26,12 @@ import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
 import SlideOverAdjudicatorMixin from '../infoovers/SlideOverAdjudicatorMixin.vue'
 import HighlightableMixin from '../allocations/HighlightableMixin.vue'
 import ConflictableMixin from '../allocations/ConflictableMixin.vue'
+import _ from 'lodash'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin,
            HighlightableMixin, ConflictableMixin],
-  props: { 'adjudicator': Object, 'debateId': null},
+  props: { 'adjudicator': Object, 'debateId': null, 'percentiles': Array },
   computed: {
     initialledName: function() {
       // Translate Joe Blogs into Joe B.
@@ -51,6 +53,21 @@ export default {
     },
     draggablePayload: function() {
       return JSON.stringify({ adjudicator: this.adjudicator.id, debate: this.debateId })
+    },
+    percentileRanking: function() {
+      var rating = parseFloat(this.adjudicator.score)
+      var rank =  _.find(this.percentiles, function(threshold) {
+        return rating >= threshold.cutoff
+      })
+      if (_.isUndefined(rank)) {
+        console.log(rating)
+      }
+      if (rank.percentile > 50) {
+        var percentileText = ' Ranking (Top ' + (100 - rank.percentile) + '%)'
+      } else {
+        var percentileText = ' Ranking (Bottom ' + rank.percentile + '%)'
+      }
+      return { 'grade': rank.grade, 'percentile': rank.percentile, 'text': percentileText}
     }
   },
   methods: {
