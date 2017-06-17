@@ -577,7 +577,7 @@ class BallotSet(ResultBuffer):
             self._adjs_by_dt[winner].append(adj)
 
         if len(self.dts) != 2:
-            logger.critical("There weren't exactly two teams in this debate (there were %d).", len(self.dts))
+            logger.error("There weren't exactly two teams in this debate (there were %d).", len(self.dts))
 
         dt0, dt1 = self.dts
         count0 = len(self._adjs_by_dt[dt0])

@@ -138,7 +138,7 @@ class BlankSiteStartView(FormView):
 
     def get(self, request):
         if User.objects.exists():
-            logger.error("Tried to get the blank-site-start view when a user account already exists.")
+            logger.warning("Tried to get the blank-site-start view when a user account already exists.")
             return redirect('tabbycat-index')
 
         return super().get(request)
@@ -146,7 +146,7 @@ class BlankSiteStartView(FormView):
     def post(self, request):
         with self.lock:
             if User.objects.exists():
-                logger.error("Tried to post the blank-site-start view when a user account already exists.")
+                logger.warning("Tried to post the blank-site-start view when a user account already exists.")
                 messages.error(request, "Whoops! It looks like someone's already created the first user account. Please log in.")
                 return redirect('login')
 
@@ -187,7 +187,7 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
                 "Before retrying, please delete the existing demo tournament <strong>and</strong> "
                 "the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:"
                 "<ul>" + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"))
-            logger.critical("Error importing demo tournament: " + str(e))
+            logger.error("Error importing demo tournament: " + str(e))
         else:
             messages.success(self.request, "Created new demo tournament. You "
                 "can access it below.")
@@ -241,7 +241,7 @@ class TournamentPermanentRedirectView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         slug = kwargs['slug']
         if not Tournament.objects.filter(slug=slug).exists():
-            logger.error("Tried to redirect non-existent tournament slug '%s'" % slug)
+            logger.warning("Tried to redirect non-existent tournament slug '%s'" % slug)
             raise Http404("There isn't a tournament with slug '%s'." % slug)
         return super().get_redirect_url(*args, **kwargs)
 

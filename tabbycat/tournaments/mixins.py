@@ -83,12 +83,12 @@ class TournamentMixin(TabbycatPageTitlesMixin):
         if tournament.current_round_id is None:
             full_path = self.request.get_full_path()
             if hasattr(self.request, 'user') and self.request.user.is_authenticated:
-                logger.critical("Current round wasn't set, redirecting to set-current-round page, was looking for %s" % full_path)
+                logger.error("Current round wasn't set, redirecting to set-current-round page, was looking for %s" % full_path)
                 set_current_round_url = reverse_tournament('tournament-set-current-round', self.get_tournament())
                 redirect_url = add_query_parameter(set_current_round_url, 'next', full_path)
                 return HttpResponseRedirect(redirect_url)
             else:
-                logger.critical("Current round wasn't set, redirecting to site index, was looking for %s" % full_path)
+                logger.error("Current round wasn't set, redirecting to site index, was looking for %s" % full_path)
                 messages.error(request, _("There's a problem with the data for the tournament "
                     "%(tournament_name)s. Please contact a tab director and ask them to set its "
                     "current round.") % {'tournament_name': tournament.name})
@@ -180,7 +180,7 @@ class PublicTournamentPageMixin(TournamentMixin):
         if tournament.pref(self.public_page_preference):
             return super().dispatch(request, *args, **kwargs)
         else:
-            logger.error("Tried to access a disabled public page")
+            logger.warning("Tried to access a disabled public page")
             messages.error(self.request, self.get_disabled_message())
             return redirect_tournament('tournament-public-index', tournament)
 

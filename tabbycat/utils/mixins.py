@@ -75,7 +75,7 @@ class PostOnlyRedirectView(View):
         return self.redirect_url % kwargs
 
     def get(self, request, *args, **kwargs):
-        logger.error("Tried to access a POST-only view with a GET request")
+        logger.warning("Tried to access a POST-only view with a GET request")
         messages.error(self.request, self.not_post_message)
         return HttpResponseRedirect(self.get_redirect_url(*args, **kwargs))
 

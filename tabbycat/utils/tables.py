@@ -38,7 +38,6 @@ class BaseTableBuilder:
         self.table_class = kwargs.get('table_class', "")
         self.sort_key = kwargs.get('sort_key', '')
         self.sort_order = kwargs.get('sort_order', '')
-        self.popovers = kwargs.get('popovers', True)
 
     @staticmethod
     def _convert_header(header):
@@ -127,8 +126,6 @@ class BaseTableBuilder:
 
     def jsondict(self):
         """Returns the JSON dict for the table."""
-        if self.popovers is False:
-            self._strip_popovers()
         return {
             'head': self.headers,
             'data': self.data,
@@ -137,15 +134,6 @@ class BaseTableBuilder:
             'sort_key': self.sort_key,
             'sort_order': self.sort_order
         }
-
-    def _strip_popovers(self):
-        """Strips all popovers from the table. Used as an override in views
-        where popovers make no sense, like those intended for the projector
-        in general assembly."""
-        for row in self.data:
-            for cell in row:
-                if 'popover' in cell:
-                    del cell['popover']
 
 
 class TabbycatTableBuilder(BaseTableBuilder):
@@ -432,6 +420,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': "Institution",
             }, [team.institution.code if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams])
 
+        if show_divisions:
+            self.add_column({
+                'key': 'Division',
+                'icon': 'glyphicon-th-list',
+                'tooltip': 'Division'
+            }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
+
     def add_speaker_columns(self, speakers, key="Name"):
         self.add_column(key, [speaker.name if not hasattr(speaker, 'anonymise') else "<em>Redacted</em>"
                               for speaker in speakers])
@@ -472,22 +467,31 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 return {'text': ''}
 
             cell = {'text': venue.display_name}
-            if for_admin:
-                categories = venue.venuecategory_set.all()
-            else:
-                categories = venue.venuecategory_set.filter(display_in_public_tooltip=True)
+
+            categories = venue.venuecategory_set.all()
+            if not for_admin:
+                # filter in Python, not SQL, because venuecategory_set should have been prefetched
+                categories = [c for c in categories if c.display_in_public_tooltip]
 
             if len(categories) == 0:
                 return cell
 
-            cat_sentence = "This venue "
-            for i, category in enumerate(categories):
-                cat_sentence += "<strong>%s</strong>, " % category.description.strip()
-                if i == len(categories) - 2:
-                    cat_sentence += "and "
+            descriptions = [category.description.strip() for category in categories]
+            descriptions = ["<strong>" + description + "</strong>"
+                    for description in descriptions if len(description) > 0]
 
-            cell['popover'] = {'title': venue.display_name,
-                               'content': [{'text': cat_sentence[:-2] + "."}]}
+            if len(descriptions) > 0:
+                if len(descriptions) == 1:
+                    categories_sentence = _("This venue %(predicate)s.") % {'predicate': descriptions[0]}
+                else:
+                    categories_sentence = _("This venue %(predicates)s, and %(last_predicate)s.") % {
+                        'predicates': ", ".join(descriptions[:-1]),
+                        'last_predicate': descriptions[-1]}
+
+                cell['popover'] = {
+                    'title': venue.display_name,
+                    'content': [{'text': categories_sentence}]}
+
             return cell
 
         if self.tournament.pref('enable_divisions') and len(debates) > 0:
@@ -605,7 +609,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_metric_columns(self, standings, subset=None, side=None):
         standings_list = standings.get_standings(subset) if subset is not None else standings
         headers = self._standings_headers(standings.metrics_info(), side)
-        data = [list(map(metricformat, s.itermetrics())) for s in standings_list]
+        data = []
+        for standing in standings_list:
+            standings_raw = [s for s in standing.itermetrics()]
+            standings_metric = [s for s in map(metricformat, standings_raw)]
+            data.append([{'text': metric, 'sort': float(raw)}
+                for raw, metric in zip(standings_raw, standings_metric)])
         self.add_columns(headers, data)
 
     def add_debate_metric_columns(self, draw, standings):

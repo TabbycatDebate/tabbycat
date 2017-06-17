@@ -1,5 +1,7 @@
 """Functions that prefetch data for efficiency."""
 
+import logging
+
 from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 from motions.models import DebateTeamMotionPreference
@@ -7,6 +9,8 @@ from tournaments.models import Tournament
 
 from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
 from .result import BallotSet, Scoresheet
+
+logger = logging.getLogger(__name__)
 
 
 def populate_wins(debates):
@@ -153,7 +157,11 @@ def populate_ballotsets(ballotsubs, prefetched_debates=[]):
     ssbas = SpeakerScoreByAdj.objects.filter(ballot_submission__in=ballotsubs,
             position__in=POSITIONS).select_related('debate_team')
     for ssba in ssbas:
-        scoresheet = scoresheets_by_ballotsub_and_debateadj_id[(ssba.ballot_submission_id, ssba.debate_adjudicator_id)]
+        try:
+            scoresheet = scoresheets_by_ballotsub_and_debateadj_id[(ssba.ballot_submission_id, ssba.debate_adjudicator_id)]
+        except KeyError as e:
+            logger.exception("Inconsistency in database: No scoresheet for %s in %s", ssba.debate_adjudicator, ssba.ballot_submission)
+            continue
         scoresheet._set_score(ssba.debate_team, ssba.position, ssba.score)
 
     # Finally, check that everything is in order

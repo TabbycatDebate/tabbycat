@@ -43,7 +43,7 @@ def set_availability_by_id(model, ids, round):
     those being ids of the model (e.g. Adjudicator)."""
 
     if model not in [Adjudicator, Team, Venue]:
-        logger.critical("Bad model in set_availability_by_id: %s", model.__class__.__name__, stack_info=True)
+        logger.error("Bad model in set_availability_by_id: %s", model.__class__.__name__, stack_info=True)
         return  # do nothing
 
     contenttype = ContentType.objects.get_for_model(model)

@@ -73,7 +73,7 @@ class HungarianAllocator(Allocator):
 
         # Remove trainees
         self.adjudicators = [a for a in self.adjudicators if a._hungarian_score >= self.MIN_VOTING_SCORE]
-        logger.info("There are %s non-trainee adjudidcators", len(self.adjudicators))
+        logger.info("There are %s non-trainee adjudicators", len(self.adjudicators))
 
         # Sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
@@ -86,7 +86,7 @@ class HungarianAllocator(Allocator):
         n_debates = len(self.debates)
         logger.info("There are %s debates", n_debates)
         if n_adjudicators < n_debates:
-            logger.error("There are %d debates but only %d adjudicators", n_debates, n_adjudicators)
+            logger.warning("There are %d debates but only %d adjudicators", n_debates, n_adjudicators)
 
         # If not setting panellists allocate all debates a solo chair
         if self.NO_PANELLISTS is True:
@@ -108,7 +108,7 @@ class HungarianAllocator(Allocator):
         # For tournaments with duplicate allocations there are typically not
         # enough adjudicators to form full panels, so don't crash in that case
         if not self.DUPLICATE_ALLOCATIONS and len(panellists) < len(panel_debates) * 3:
-            logger.error("There are %d panel debates but only %d available panellists (less than %d)",
+            logger.warning("There are %d panel debates but only %d available panellists (less than %d)",
                     len(panel_debates), len(panellists), len(panel_debates) * 3)
 
         m = Munkres()
