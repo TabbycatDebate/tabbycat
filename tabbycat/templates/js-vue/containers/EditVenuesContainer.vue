@@ -35,9 +35,8 @@
     </div>
 
     <unallocated-items-container>
-      <div v-for="unallocatedVenue in unallocatedVenuesByPriority">
-        <draggable-venue :venue="unallocatedVenue"
-                         :locked="unallocatedVenue.locked"></draggable-venue>
+      <div v-for="venue in unallocatedVenuesByPriority">
+        <draggable-venue :venue="venue" :locked="venue.locked"></draggable-venue>
       </div>
     </unallocated-items-container>
 
