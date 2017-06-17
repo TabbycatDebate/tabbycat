@@ -8,15 +8,16 @@
         </div>
         <div class="panel-body text-center no-side-padding">
           <donut-chart v-for="set in graphsData.speakers_gender"
-                       :graph-data="set.data" :title="set.title">
-          </donut-chart>
+                       :graph-data="set.data" :title="set.title"
+                       :key="set.title"></donut-chart>
           <p v-if="graphsData.speakers_gender.length === 0">
             No Gender Information
           </p>
           <hr>
           <donut-chart v-for="set in graphsData.speakers_region"
-                       :graph-data="set.data" :title="set.title" :regions="graphsData.regions">
-          </donut-chart>
+                       :graph-data="set.data" :title="set.title"
+                       :regions="graphsData.regions"
+                       :key="set.title"></donut-chart>
           <p v-if="graphsData.speakers_region.length === 0">
             No Regions Information
           </p>
@@ -30,16 +31,17 @@
           <h4 class="panel-title">Adjudicator Demographics</h4>
         </div>
         <div class="panel-body text-center no-side-padding">
-          <template v-for="set in graphsData.adjudicators_gender">
-            <donut-chart :graph-data="set.data" :title="set.title"></donut-chart>
-          </template>
+          <donut-chart v-for="set in graphsData.adjudicators_gender"
+                       :graph-data="set.data" :title="set.title"
+                       :key="set.title"></donut-chart>
           <p v-if="graphsData.adjudicators_gender.length === 0">
             No Gender Information
           </p>
           <hr>
-          <template v-for="set in graphsData.adjudicators_region">
-            <donut-chart :graph-data="set.data" :title="set.title" :regions="graphsData.regions"></donut-chart>
-          </template>
+          <donut-chart v-for="set in graphsData.adjudicators_region"
+                       :graph-data="set.data" :title="set.title"
+                       :regions="graphsData.regions"
+                       :key="set.title"></donut-chart>
           <p v-if="graphsData.adjudicators_region.length === 0">
             No Region Information
           </p>
@@ -54,15 +56,13 @@
         </div>
         <div class="panel-body text-center">
           <text-display v-for="set in graphsData.speakers_results"
-                        :graph-data="set.data.reverse()" :title="set.title"
-                        :datum="set.datum"></text-display>
+                        :set="set" :key="set.title"></text-display>
           <p v-if="graphsData.speakers_results.length === 0">
             No Gender Information
           </p>
           <hr>
           <text-display v-for="set in graphsData.detailed_speakers_results"
-                        :graph-data="set.data.reverse()" :title="set.title"
-                        :datum="set.datum"></text-display>
+                        :set="set" :key="set.title"></text-display>
           <p v-if="graphsData.detailed_speakers_results.length === 0">
             No Region Information
           </p>
@@ -77,15 +77,13 @@
         </div>
         <div class="panel-body text-center">
           <text-display v-for="set in graphsData.adjudicators_results"
-                        :graph-data="set.data.reverse()" :title="set.title"
-                        :datum="set.datum"></donut-chart>
+                        :set="set" :key="set.title"></text-display>
           <p v-if="graphsData.adjudicators_results.length === 0">
             No Adjudicator Ratings Yet
           </p>
           <hr>
           <text-display v-for="set in graphsData.detailed_adjudicators_results"
-                        :graph-data="set.data.reverse()" :title="set.title"
-                        :datum="set.datum"></donut-chart>
+                        :set="set" :key="set.title"></text-display>
           <p v-if="graphsData.detailed_adjudicators_results.length === 0">
             No Adjudicator-Adjudicator Feedback
           </p>
@@ -103,5 +101,6 @@ import TextDisplay from '../graphs/TextDisplay.vue'
 export default {
   components: { DonutChart, TextDisplay },
   props: [ 'graphsData' ],
+
 }
 </script>
