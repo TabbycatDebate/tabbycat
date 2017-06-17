@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="db-flex-column db-flex-item-1">
 
     <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
              v-if="ballot.panel && ballot.panel.length > 1">
@@ -17,7 +17,8 @@
       </div>
     </section>
 
-    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="data.hasMotions && !data.hasVetoes">
+    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
+             v-if="roundInfo.hasMotions && !roundInfo.hasVetoes">
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
         <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
           Motion:
@@ -28,8 +29,8 @@
       </div>
     </section>
 
-    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="data.hasMotions && data.hasVetoes">
-
+    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
+             v-if="roundInfo.hasMotions && roundInfo.hasVetoes">
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
         <div v-for="choice_type in ['Chosen Motion', 'Aff Veto', 'Neg Veto']" class="db-flex-item-1 db-flex-column">
 
@@ -37,7 +38,7 @@
           <div class="db-flex-item-1 "></div>
           <div class="db-flex-item-2 db-flex-row">
             <div class="db-item-gutter"></div>
-            <div v-for="motion in motions" class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text">
+            <div v-for="motion in roundInfo.motions" class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text">
               <span class="db-fill-in">{{ motion.seq }}</span>
             </div>
             <div class="db-item-gutter"></div>
@@ -48,28 +49,25 @@
 
       <div class="db-item-gutter"></div>
       <div class="db-flex-item-2 db-flex-row db-align-vertical-center">
-        <template v-for="(motion, index) in motions">
+        <template v-for="(motion, index) in roundInfo.motions">
           {{ motion.seq }}: {{ motion.text }}<br>
         </template>
       </div>
 
     </section>
 
-    <section class="db-flex-row db-flex-item-7 db-margins-m">
-      <div class="db-flex-column db-bordered db-flex-item-half">
-        <printable-team-scores :position="positions[0]" :speakers="ballot.affSpeakers"
-                               :name="ballot.aff" :emoji="ballot.affEmoji" :data="data">
-        </printable-team-scores>
-      </div>
+    <section class="db-margins-m db-flex-row db-flex-item-7">
+      <printable-team-scores :position="roundInfo.positions[0]" :speakers="ballot.affSpeakers"
+                             :name="ballot.aff" :emoji="ballot.affEmoji" :round-info="roundInfo">
+      </printable-team-scores>
       <div class="db-item-gutter"></div>
-      <div class="db-flex-column db-bordered db-flex-item-half">
-        <printable-team-scores :position="positions[1]" :speakers="ballot.negSpeakers"
-                               :name="ballot.neg" :emoji="ballot.negEmoji" :data="data">
-        </printable-team-scores>
-      </div>
+      <printable-team-scores :position="roundInfo.positions[1]" :speakers="ballot.negSpeakers"
+                             :name="ballot.neg" :emoji="ballot.negEmoji" :round-info="roundInfo">
+      </printable-team-scores>
     </section>
 
-    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1 db-flex-item-1" v-if="!isBP">
+    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
+             v-if="roundInfo.positions.length < 3">
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row"><!-- Aff holder -->
         <div class="db-flex-item db-align-vertical-center db-flex-static db-vertical-center-text">
           Which team won the debate:
@@ -87,10 +85,10 @@
       </div>
     </section>
 
-    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1 db-flex-item-1" v-if="showInfo">
+    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="roundInfo.showInfo">
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row"><!-- Aff holder -->
         <div class="db-flex-item db-align-vertical-center db-flex-static db-vertical-center-text">
-          {{ infoText }}
+          {{ roundInfo.infoText }}
         </div>
       </div>
     </section>
@@ -102,7 +100,7 @@
 import PrintableTeamScores from '../printables/PrintableTeamScores.vue'
 
 export default {
-  props: ['ballot', 'motions', 'positions'],
+  props: ['ballot', 'roundInfo'],
   components: {PrintableTeamScores},
   computed: {
     ballotsExcludingSelf: function() {

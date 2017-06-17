@@ -1,4 +1,3 @@
-<!-- Table Template -->
 <template>
   <th class="vue-sortable" @click="resort()">
 

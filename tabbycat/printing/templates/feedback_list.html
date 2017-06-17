@@ -1,7 +1,7 @@
 {% extends "printables_list.html" %}
 
 {% block head-title %}
-  {{ ballots|length }} Feedback Forms for {{ round.abbreviation }}<small>
+  Feedback Forms for {{ round.abbreviation }}<small>
 {% endblock %}
 {% block page-title %}Printable Feedback Forms for {{ round.name }}{% endblock %}
 
@@ -11,7 +11,8 @@
     <template v-for="ballot in ballots">
       <div class="db-page-holder">
         <main role="main" class="db-page db-flex-column db-page-portrait">
-          <printable-ballot :ballot="ballot"></printable-ballot>
+          <printable-ballot :ballot="ballot" :kind="'Feedback'"
+                            :round-info="roundInfo"></printable-ballot>
         </main>
       </div>
     </template>
@@ -23,15 +24,16 @@
   <script>
     window.vueData = {
       // Strings to Fill In
-      tournamentName: '{{ tournament }}',
-      returnLocation: '{{ pref.feedback_return_location }}',
-      kind: "Feedback",
-      // Formatting
-      showTabRoomRow: true,
-      // From Django
-      round: '{{ round.abbreviation }}',
-      ballots: '{{ ballots|safe }}',
-      questions: '{{ questions|safe }}',
+      roundInfo: {
+        tournamentName: '{{ tournament.short_name }}',
+        returnLocation: '{{ pref.feedback_return_location }}',
+        // Formatting
+        showTabRoomRow: true,
+        // From Django
+        round: '{{ round.abbreviation }}',
+        questions: {{ questions|safe }},
+      },
+      ballots: {{ ballots|safe }},
     }
   </script>
   {{ block.super }}

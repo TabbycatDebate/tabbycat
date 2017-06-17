@@ -1,4 +1,3 @@
-<!-- Feedback Cards -->
 <template>
 
   <div class="modal fade" id="modalFeedbacks" tabindex="-1" role="dialog" aria-hidden="true">

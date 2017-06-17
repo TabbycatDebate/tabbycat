@@ -1,4 +1,3 @@
-<!-- Streaming Item Updates for TournamentOverview -->
 <template>
 
   <li class='list-group-item'>

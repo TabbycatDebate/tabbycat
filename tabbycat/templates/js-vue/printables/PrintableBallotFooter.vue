@@ -1,5 +1,5 @@
 <template>
-  <section class="db-margins-m db-bordered db-flex-row db-flex-item-1">
+  <section class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static">
 
     <div class="db-padding-horizontal db-align-vertical-center db-flex-item-1 db-vertical-center-text">
       <em><span v-if="returnLocation !== ''">Return Ballots to {{ returnLocation }}</span></em>

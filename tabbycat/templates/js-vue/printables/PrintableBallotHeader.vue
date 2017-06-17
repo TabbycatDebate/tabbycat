@@ -1,9 +1,9 @@
 <template>
-  <header class="db-margins-m db-flex-row db-flex-item-1">
+  <header class="db-margins-m db-flex-row db-flex-static db-flex-item-fhs">
 
     <div class="db-align-vertical-end db-flex-item-3">
       <h2>
-        {{ data.tournamentName }} {{ data.kind }} from {{ ballot.author }}
+        {{ roundInfo.tournamentName }} {{ roundInfo.kind }} from {{ ballot.author }}
         <span v-if="ballot.authorPosition === 'o'">(Solo Chair)</span>
         <span v-if="ballot.authorPosition === 'c'">(Chair of Panel)</span>
         <span v-if="ballot.authorPosition === 'p'">(Panellist)</span>
@@ -24,7 +24,10 @@
       </div>
     </template>
     <div class="db-flex-static db-align-vertical-end">
-      <h2><span v-if="ballot.room !== ''">{{ ballot.room }}</span> {{ data.round }}</h2>
+      <h2>
+        <span v-if="ballot.room !== ''">{{ ballot.room }}</span>
+        {{ roundInfo.round }}
+      </h2>
     </div>
 
   </header>
@@ -32,6 +35,6 @@
 
 <script>
 export default {
-  props: ['data', 'ballot'],
+  props: ['ballot', "roundInfo"],
 }
 </script>

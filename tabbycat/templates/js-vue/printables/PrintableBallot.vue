@@ -1,21 +1,17 @@
 <template>
   <section class="db-score-sheet db-flex-item db-flex-column">
 
-    <printable-ballot-header :data="data" :ballot="ballot">
-    </printable-ballot-header>
+    <printable-ballot-header
+      :ballot="ballot" :round-info="roundInfo"></printable-ballot-header>
 
-    <printable-scoresheet v-if="data.kind === 'Scoresheet'"
-                          :data="data" :ballot="ballot"
-                          :motions="motions" :positions="positions">
-    </printable-scoresheet>
+    <printable-scoresheet v-if="kind === 'Scoresheet'"
+      :ballot="ballot" :round-info="roundInfo"></printable-scoresheet>
 
-    <printable-feedback :data="data" :ballot="ballot"
-                        v-if="data.kind === 'Feedback'">
-    </printable-feedback>
+    <printable-feedback v-if="kind === 'Feedback'"
+      :ballot="ballot" :round-info="roundInfo"></printable-feedback>
 
-    <printable-ballot-footer v-if="data.showTabRoomRow"
-                             :return-location="data.returnLocation">
-    </printable-ballot-footer>
+    <printable-ballot-footer v-if="roundInfo.showTabRoomRow"
+      :return-location="roundInfo.returnLocation"></printable-ballot-footer>
 
   </section>
 </template>
@@ -27,7 +23,7 @@ import PrintableFeedback from '../printables/PrintableFeedback.vue'
 import PrintableScoresheet from '../printables/PrintableScoresheet.vue'
 
 export default {
-  props: ['ballot', 'motions', 'positions'],
+  props: ['ballot', 'motions', 'positions', 'kind', 'roundInfo'],
   components: {
     PrintableBallotHeader, PrintableBallotFooter,
     PrintableFeedback, PrintableScoresheet
