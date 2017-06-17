@@ -48,7 +48,6 @@ class BreakCategory(models.Model):
     def serialize(self):
         return {
             'id': self.id, 'name': self.name, 'seq': self.seq, 'class': None
-            # 'will_break': determine_liveness(thresholds[bc['id']], team.wins_count)
         }
 
 

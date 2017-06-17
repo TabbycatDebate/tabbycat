@@ -15,6 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic.detail import SingleObjectMixin
 
 from actionlog.mixins import LogActionMixin
+from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import Debate
 from participants.models import Region
 from tournaments.utils import get_position_name
@@ -273,7 +274,7 @@ class DrawForDragAndDropMixin(RoundMixin):
     drag and drop table used for editing matchups/adjs/venues with a
     drag and drop interface. Subclass annotate method to add extra view data """
 
-    def annotate_break_classes(self, serialised_team):
+    def annotate_break_classes(self, serialised_team, thresholds):
         """We can't style break categories in CSS because we need a defined range;
         this normalises IDs of the break categories so the CSS classes can work"""
         if serialised_team['break_categories']:
@@ -282,6 +283,8 @@ class DrawForDragAndDropMixin(RoundMixin):
                 breaks_seq[r.id] = i
             for bc in serialised_team['break_categories']:
                 bc['class'] = breaks_seq[bc['id']]
+                wins = serialised_team['wins']
+                bc['will_break'] = determine_liveness(thresholds[bc['id']], wins)
 
         return serialised_team
 
@@ -297,7 +300,7 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     @cached_property
     def break_categories(self):
-        return self.get_tournament().breakcategory_set.order_by('id')
+        return self.get_tournament().breakcategory_set.order_by('-is_general', 'name')
 
     @cached_property
     def regions(self):
@@ -305,9 +308,13 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
+        t = self.get_tournament()
+        r = self.get_round()
+        break_thresholds = { bc.id: calculate_live_thresholds(bc, t, r)
+            for bc in self.break_categories}
         for debate in serialised_draw:
             for (position, team) in debate['teams'].items():
-                team = self.annotate_break_classes(team)
+                team = self.annotate_break_classes(team, break_thresholds)
                 team = self.annotate_region_classes(team)
             for panellist in debate['panel']:
                 panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])

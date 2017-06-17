@@ -7,14 +7,14 @@ export default {
   mixins: [SlideOverDiversityMixin],
   computed: {
     breakCategoriesFeature: function() {
-      var categories = _.map(this.team.break_categories, function(bc) {
+      var self = this
+      return _.map(this.team.break_categories, function(bc) {
         return {
-          'title': bc.name + ' Break',
+          'title': self.titleForBC(bc, self.team.wins),
           'class': 'category-display category-' + bc.class,
-          'icon': 'glyphicon-ok'
+          'icon': self.iconForBC(bc)
         }
       })
-      return categories
     },
     teamInfoFeature: function() {
       var self = this
@@ -30,13 +30,22 @@ export default {
     }
   },
   methods: {
+    titleForBC: function(bc, wins) {
+      var status = bc.will_break.toUpperCase()
+      return status + ' for ' + bc.name + ' Break (' + wins + ' wins)'
+    },
+    iconForBC: function(bc) {
+      if (bc.will_break === 'dead') { return 'glyphicon-remove' } else
+      if (bc.will_break === 'safe') { return 'glyphicon-ok' } else
+      if (bc.will_break === 'live') { return 'glyphicon-star' }
+    },
     formatForSlideOver: function(subject) {
       return {
         'tiers': [{
           'features': [
             this.teamInfoFeature,
-            this.institutionDetailForSlideOver(this.team),
-            this.breakCategoriesFeature
+            null,
+            this.breakCategoriesFeature,
           ]
         }]
       }

@@ -1,14 +1,12 @@
 <template>
   <div class="draw-row">
 
-    <div class="draw-cell flex-1 flex-horizontal-center" data-toggle="tooltip"
-         :title="'Debate is in the ' + debate.bracket + ' bracket'">
+    <div class="draw-cell flex-1 flex-horizontal-center">
       {{ debate.bracket }}
     </div>
 
     <div class="draw-cell flex-1 flex-horizontal-center">
-      <!-- :title="liveness + ' break categories are live'" -->
-      ?
+      {{ liveness }}
     </div>
 
     <slot name="simportance">
@@ -51,10 +49,24 @@ import DrawTeam from '../draw/DrawTeam.vue'
 import DrawVenue from '../draw/DrawVenue.vue'
 import DrawAdjudicator from '../draw/DrawAdjudicator.vue'
 import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
+import _ from 'lodash'
 
 export default {
   components: {DrawTeam, DrawVenue, DrawAdjudicator},
   mixins: [SlideOverSubjectMixin],
   props: { debate: Object, roundInfo: Object },
+  computed: {
+    liveness: function() {
+      var live_categories = 0
+      _.map(this.debate.teams, function(team) {
+        _.map(team.break_categories, function(bc) {
+          if (bc.will_break === 'live') {
+            live_categories += 1
+          }
+        })
+      });
+      return live_categories
+    }
+  }
 }
 </script>

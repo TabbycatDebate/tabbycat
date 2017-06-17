@@ -6,8 +6,6 @@ from django.db.models.expressions import RawSQL
 
 from standings.teams import TeamStandingsGenerator
 
-from .models import BreakCategory
-
 logger = logging.getLogger(__name__)
 
 
@@ -48,22 +46,6 @@ def get_scores(bc):
     return scores
 
 
-def categories_ordered(t):
-    categories = BreakCategory.objects.filter(
-        tournament=t).order_by('-is_general', 'name')
-    data = [{
-        'seq': count + 1,
-        'open': bc.is_general,
-        'name': bc.name,
-        'id': bc.id,
-        'size': bc.break_size,
-        'teams': bc.team_set.count(),
-        'scores': get_scores(bc) if not bc.is_general else None
-    } for count, bc in enumerate(categories)]
-
-    return data
-
-
 def breakcategories_with_counts(tournament):
     breaking = RawSQL("""
         SELECT DISTINCT COUNT(breakqual_breakingteam.id) FROM breakqual_breakingteam
@@ -85,18 +67,51 @@ def breakcategories_with_counts(tournament):
     return categories
 
 
+def liveness(self, team, teams_count, prelims, current_round):
+    live_info = {'text': team.wins_count, 'tooltip': ''}
+
+    # The actual calculation should be shifed to be a cached method on
+    # the relevant break category
+    # print("teams count", teams_count)
+    # print("prelims", prelims)
+    # print("current_round", current_round)
+
+    highest_liveness = 3
+    for bc in team.break_categories.all():
+        # print(bc.name, bc.break_size)
+        import random
+        status = random.choice([1,2,3])
+        highest_liveness = 3
+        if status is 1:
+            live_info['tooltip'] += 'Definitely in for the %s break<br>test' % bc.name
+            if highest_liveness != 2:
+                highest_liveness = 1  # Live not ins are the most important highlight
+        elif status is 2:
+            live_info['tooltip'] += 'Still live for the %s break<br>test' % bc.name
+            highest_liveness = 2
+        elif status is 3:
+            live_info['tooltip'] += 'Cannot break in %s break<br>test' % bc.name
+
+    if highest_liveness is 1:
+        live_info['class'] = 'bg-success'
+    elif highest_liveness is 2:
+        live_info['class'] = 'bg-warning'
+
+    return live_info
+
+
 def determine_liveness(thresholds, wins):
-    """thresholds should be calculated using calculate_live_thresholds."""
+    """ Thresholds should be calculated using calculate_live_thresholds."""
     safe, dead = thresholds
     if wins >= safe:
-        return True
+        return 'safe'
     elif wins <= dead:
-        return False
+        return 'dead'
     else:
-        return None
+        return 'live'
 
 
-def calculate_live_thresholds(break_category, tournament, round):
+def calculate_live_thresholds(bc, tournament, round):
     """ Create array of binomial coefficients, then create arrays of raw decimal
     data, upper bounds, and lower bounds. Contributed by Thevesh Theva and
     his work on the debatebreaker.blogspot.com.au blog and app"""
@@ -108,10 +123,10 @@ def calculate_live_thresholds(break_category, tournament, round):
             return n * factorial(n-1)
 
     current_round = round.seq
-    break_spots = break_category['size']
-    total_teams = break_category['teams']
+    break_spots = bc.break_size
+    total_teams = bc.team_set.count()
     total_rounds = tournament.prelim_rounds(until=round).count()
-    break_cat_scores = break_category['scores']
+    break_cat_scores = get_scores(bc) if not bc.is_general else None
 
     # Create array of binomial coefficients, then create arrays of raw
     # decimal data, upper bounds, and lower bounds
@@ -146,7 +161,7 @@ def calculate_live_thresholds(break_category, tournament, round):
 
     # We now have complete data sets, and can compute the safe score and dead
     # scores for any category we want.
-    if break_category['open']:
+    if bc.is_general:
         high_bound = 0
         for i in range(0, total_rounds + 1):
             if sum_u[i] <= break_spots:
