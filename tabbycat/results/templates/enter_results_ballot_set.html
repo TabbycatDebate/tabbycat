@@ -121,6 +121,7 @@
                       </label>
                       <div class="col-md-7 col-xs-9 {{ position.speaker.errors|yesno:'error,' }}">
                         {% if forloop.parentloop.parentloop.first %}
+                          {# On the first form, display the speaker selection dropdown. #}
                           {{ position.speaker|addcss:"form-control js-speaker required" }}
                           {{ position.speaker.errors }}
                           <div class="iron-person form-label" style="display: none">
@@ -130,6 +131,7 @@
                             {{ position.ghost }}
                           </div>
                         {% else %}
+                          {# On every other form, display a disabled field that JavaScript will populate when the selection in the first form changes. #}
                           <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
                         {% endif %}
                       </div>
