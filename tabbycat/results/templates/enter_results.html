@@ -1,21 +1,32 @@
 {% extends "base.html" %}
-{% load add_field_css %}
-{% load debate_tags %}
-{% load static %}
+{% load add_field_css debate_tags static i18n %}
 
 {% block head-title %}
-    {% if new %}New Ballot Set for{% else %}Edit Ballot Set for{% endif %}
-    {{ debate.matchup }} <small> {{ debate.round.name }} @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}</small>
+    {% if new %}
+      {% blocktrans trimmed with matchup=debate.matchup %}
+        New Ballot Set for {{ matchup }}
+      {% endblocktrans %}
+    {% else %}
+      {% blocktrans trimmed with matchup=debate.matchup %}
+        Edit Ballot Set for {{ matchup }}
+      {% endblocktrans %}
+    {% endif %}
+    <small>
+      {% blocktrans trimmed with round=debate.round.name venue_category=debate.division.venue_category.name venue=debate.venue.display_name %}
+        {{ round }} @ {{ venue_category }} {{ venue }}
+      {% endblocktrans %}
+    </small>
 {% endblock %}
 
 {% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}{% endblock %}
 {% block page-subnav-sections %}
   <a class="btn btn-default" href="{% roundurl 'results-round-list' debate.round %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to All Results
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    {% trans "Back to All Results" %}
   </a>
   {% if not new %}
     <a class="btn btn-default" href="{% tournamenturl 'results-ballotset-new' debate.id %}">
-      Create a new ballot set for this debate
+      {% trans "Create a new ballot set for this debate" %}
     </a>
   {% endif %}
 {% endblock %}
@@ -23,9 +34,11 @@
 {% block page-alerts %}
   {% if debate.adjudicators.is_even %}
     <div class="alert alert-warning">
-      This debate has a panel with an even number of voting adjudicators.
-      If the adjudicators split evenly, the debate will be awarded to the team
-      for which the chair voted.
+      {% blocktrans trimmed %}
+        This debate has a panel with an even number of voting adjudicators.
+        If the adjudicators split evenly, the debate will be awarded to the team
+        for which the chair voted.
+      {% endblocktrans %}
     </div>
   {% endif %}
 
@@ -40,19 +53,21 @@
         <div class="col-sm-12">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4 class="panel-title">Ballot Status</h4>
+              <h4 class="panel-title">{% trans "Ballot Status" %}</h4>
             </div>
             <div class="panel-body form-panel">
               <div class="form-group col-md-6">
+                {{ form.discarded }}
+                {{ form.discarded.errors }}
                 <label>
-                  {{ form.discarded }}
-                  {{ form.discarded.errors }} This ballot is discarded
+                  {% trans "This ballot is discarded" %}
                 </label>
               </div>
               <div class="form-group col-md-6">
+                {{ form.confirmed }}
+                {{ form.confirmed.errors }}
                 <label>
-                  {{ form.confirmed }}
-                  {{ form.confirmed.errors }} This is the confirmed ballot
+                  {% trans "This is the confirmed ballot" %}
                 </label>
               </div>
             </div>
@@ -64,8 +79,10 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               <h4 class="panel-title">
-                Debate Status <small>(for the debate itself, not just this
-                particular ballot set)</small>
+                {% blocktrans trimmed %}
+                  Debate Status <small>(for the debate itself, not just this
+                  particular ballot set)</small>
+                {% endblocktrans %}
               </h4>
             </div>
             <div class="panel-body form-panel">
@@ -75,10 +92,10 @@
                   {{ form.debate_result_status.errors }}
                 </div>
                 <div class="col-sm-4 col-xs-9">
-                  <input id="submit" class="save btn btn-success btn-block submit-disable" type="submit" value="Save Ballot" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
+                  <input id="submit" class="save btn btn-success btn-block submit-disable" type="submit" value="{% trans "Save Ballot" %}" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
                 </div>
                 <div class="col-sm-4 col-xs-9">
-                  <a class="btn btn-default btn-block btn-danger" href="{% roundurl 'results-round-list' debate.round %}" tabindex="{{ form.nexttabindex|add:1 }}">Cancel Entry</a>
+                  <a class="btn btn-default btn-block btn-danger" href="{% roundurl 'results-round-list' debate.round %}" tabindex="{{ form.nexttabindex|add:1 }}">{% trans "Cancel Entry" %}</a>
                 </div>
               </div>
             </div>

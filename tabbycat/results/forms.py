@@ -197,7 +197,6 @@ class BaseBallotSetForm(forms.Form):
          - <side>_motion_veto,   if motion vetoes are being noted, one for each team
          - <side>_speaker_s#,    one for each speaker
          - <side>_ghost_s#,      whether score should be a duplicate
-         - <side>_score_a#_s#,   one for each score
 
         Most fields are required, unless forfeits are enabled.
         """
