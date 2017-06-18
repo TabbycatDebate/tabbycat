@@ -32,7 +32,7 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         speaks = SpeakerScore.objects.filter(
                     ballot_submission__confirmed=True, ghost=False,
                     speaker__team__tournament=t).exclude(
-                    position=t.REPLY_POSITION).select_related(
+                    position=t.reply_position).select_related(
                     'debate_team__debate__round')
         kwargs["top_speaks"] = speaks.order_by('-score')[:10]
         kwargs["bottom_speaks"] = speaks.order_by('score')[:10]
@@ -253,7 +253,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
         tournament = self.get_tournament()
         return Speaker.objects.filter(
             team__tournament=tournament,
-            speakerscore__position=tournament.REPLY_POSITION).select_related(
+            speakerscore__position=tournament.reply_position).select_related(
             'team', 'team__institution', 'team__tournament').prefetch_related(
             'team__speaker_set').distinct()
 

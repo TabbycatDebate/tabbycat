@@ -25,7 +25,7 @@ from utils.mixins import (CacheMixin, JsonDataResponsePostView, JsonDataResponse
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
-from .forms import PerAdjudicatorBallotSetForm
+from .forms import PerAdjudicatorBallotSetForm, SingleBallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots

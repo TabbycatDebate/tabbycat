@@ -244,7 +244,7 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
     def __init__(self, ballotsub, load=True):
         super().__init__(ballotsub, load=False)
 
-        self.positions = self.tournament.POSITIONS
+        self.positions = self.tournament.positions
         scoresheet_type = self.tournament.pref('scoresheet_type')
         self.scoresheet_class = SCORESHEET_CLASSES[scoresheet_type]
 

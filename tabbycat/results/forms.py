@@ -1,5 +1,5 @@
-import itertools
 import logging
+from itertools import product
 
 from collections import Counter
 
@@ -135,7 +135,7 @@ class BaseBallotSetForm(forms.Form):
     debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
     result_class = None
-    SIDES = ['aff', 'neg']
+    sides = ['aff', 'neg']
 
     def __init__(self, ballotsub, *args, **kwargs):
         self.ballotsub = ballotsub
@@ -158,17 +158,13 @@ class BaseBallotSetForm(forms.Form):
 
         super().__init__(*args, **kwargs)
 
-        self.POSITIONS = self.tournament.POSITIONS
-        self.LAST_SUBSTANTIVE_POSITION = self.tournament.LAST_SUBSTANTIVE_POSITION  # also used in template
-        self.REPLY_POSITION = self.tournament.REPLY_POSITION  # also used in template
+        self.positions = self.tournament.positions
+        self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
+        self.reply_position = self.tournament.reply_position  # also used in template
 
         self.create_fields()
         self.set_tab_indices()
         self.initial = self.initial_data()
-
-    @property
-    def SIDES_AND_POSITIONS(self):  # flake8: noqa
-        return itertools.product(self.SIDES, self.POSITIONS)
 
     # --------------------------------------------------------------------------
     # Field names and field convenience functions
@@ -237,14 +233,14 @@ class BaseBallotSetForm(forms.Form):
                 required=not self.using_forfeits)
 
         if self.using_vetoes:
-            for side in self.SIDES:
+            for side in self.sides:
                 self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(
                     label=_("%(side_abbr)s's motion veto") % {'side_abbr': get_side_name(self.tournament, side, 'abbr')},
                     queryset=self.motions, required=False
                 )
 
         # 4. Speaker fields
-        for side, pos in self.SIDES_AND_POSITIONS:
+        for side, pos in product(self.sides, self.positions):
 
             # 4(a). Speaker identity
             if self.choosing_sides:
@@ -262,7 +258,7 @@ class BaseBallotSetForm(forms.Form):
 
         # 5. Forfeit field
         if self.using_forfeits:
-            choices = [(side, _("Forfeit by the %(side)s") % {'side': self._side_name(side)}) for side in self.SIDES]
+            choices = [(side, _("Forfeit by the %(side)s") % {'side': self._side_name(side)}) for side in self.sides]
             self.fields['forfeit'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, required=False)
 
     def initial_data(self):
@@ -297,7 +293,7 @@ class BaseBallotSetForm(forms.Form):
                 initial['motion'] = self.motions.get()
             else:
                 initial['motion'] = self.ballotsub.motion
-            for side in self.SIDES:
+            for side in self.sides:
                 dtmp = self.ballotsub.debateteammotionpreference_set.filter(
                         debate_team__side=side, preference=3).first()
                 if dtmp:
@@ -319,7 +315,7 @@ class BaseBallotSetForm(forms.Form):
         that it can use the same DebateResult as the super class."""
         initial = {}
 
-        for side, pos in self.SIDES_AND_POSITIONS:
+        for side, pos in product(self.sides, self.positions):
             speaker = result.get_speaker(side, pos)
             is_ghost = result.get_ghost(side, pos)
             if speaker:
@@ -338,12 +334,12 @@ class BaseBallotSetForm(forms.Form):
 
         if self.motions.count() > 1:
             order.append('motion')
-            order.extend(self._fieldname_motion_veto(side) for side in self.SIDES)
+            order.extend(self._fieldname_motion_veto(side) for side in self.sides)
 
         order.append('ghost') # Dummy item; as input is created on the front end
         self.irontabindex = len(order) # Set the tab index it would have had
 
-        for side, pos in self.SIDES_AND_POSITIONS:
+        for side, pos in product(self.sides, self.positions):
             order.append(self._fieldname_speaker(side, pos))
 
         order.extend(self.list_score_fields())
@@ -357,7 +353,7 @@ class BaseBallotSetForm(forms.Form):
 
         if self.motions.count() <= 1:
             order.append('motion')
-            order.extend(self._fieldname_motion_veto(side) for side in self.SIDES)
+            order.extend(self._fieldname_motion_veto(side) for side in self.sides)
 
         # now, set
         for i, name in enumerate(order, start=1):
@@ -404,16 +400,16 @@ class BaseBallotSetForm(forms.Form):
 
         # Pull team info again, in case it's changed since the form was loaded.
         if self.choosing_sides:
-            teams = cleaned_data.get('choose_sides', [None] * len(self.SIDES))
+            teams = cleaned_data.get('choose_sides', [None] * len(self.sides))
         else:
-            teams = [self.debate.get_team(side) for side in self.SIDES]
+            teams = [self.debate.get_team(side) for side in self.sides]
         if None in teams:
             logger.warning("Team identities not found")
 
-        for side, team in zip(self.SIDES, teams):
+        for side, team in zip(self.sides, teams):
 
             speaker_counts = Counter()
-            for pos in range(1, self.LAST_SUBSTANTIVE_POSITION + 1):
+            for pos in range(1, self.last_substantive_position + 1):
                 speaker = self.cleaned_data.get(self._fieldname_speaker(side, pos))
                 if speaker is None:
                     logger.warning("Field '%s' not found", self._fieldname_speaker(side, pos))
@@ -439,19 +435,19 @@ class BaseBallotSetForm(forms.Form):
                     ))
 
             if self.using_replies:
-                reply_speaker = cleaned_data.get(self._fieldname_speaker(side, self.REPLY_POSITION))
-                last_speaker = cleaned_data.get(self._fieldname_speaker(side, self.LAST_SUBSTANTIVE_POSITION))
+                reply_speaker = cleaned_data.get(self._fieldname_speaker(side, self.reply_position))
+                last_speaker = cleaned_data.get(self._fieldname_speaker(side, self.last_substantive_position))
 
                 # The last speaker can't give the reply.
                 if reply_speaker == last_speaker and reply_speaker is not None:
-                    self.add_error(self._fieldname_speaker(side, self.REPLY_POSITION), forms.ValidationError(
+                    self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
                         _("The last substantive speaker and reply speaker for the %(side)s team can't be the same."),
                         params={'side': self._side_name(side)}, code='reply_speaker_consecutive'
                     ))
 
                 # The reply speaker must have given a substantive speech.
                 if speaker_counts[reply_speaker] == 0:
-                    self.add_error(self._fieldname_speaker(side, self.REPLY_POSITION), forms.ValidationError(
+                    self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
                         _("The reply speaker for the %(side)s team did not give a substantive speech."),
                         params={'side': self._side_name(side)}, code='reply_speaker_not_repeat'
                     ))
@@ -493,7 +489,7 @@ class BaseBallotSetForm(forms.Form):
             self.ballotsub.motion = self.cleaned_data['motion']
 
         if self.using_vetoes:
-            for side in self.SIDES:
+            for side in self.sides:
                 motion_veto = self.cleaned_data[self._fieldname_motion_veto(side)]
                 debate_team = self.debate.get_dt(side)
                 if motion_veto:
@@ -506,7 +502,7 @@ class BaseBallotSetForm(forms.Form):
 
         # 6. Save speaker fields
         if not self.cleaned_data['forfeit']:
-            for side, pos in self.SIDES_AND_POSITIONS:
+            for side, pos in product(self.sides, self.positions):
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 result.set_speaker(side, pos, speaker)
                 is_ghost = self.cleaned_data[self._fieldname_ghost(side, pos)]
@@ -540,7 +536,7 @@ class BaseBallotSetForm(forms.Form):
 
     def motion_veto_fields(self):
         """Generator to allow easy iteration through the motion veto fields."""
-        for side in self.SIDES:
+        for side in self.sides:
             yield self[self._fieldname_motion_veto(side)]
 
     def scoresheet(self, fieldname_score_func):
@@ -549,14 +545,14 @@ class BaseBallotSetForm(forms.Form):
         take two arguments `(side, pos)`. This function is called by the
         `.scoresheets()` methods of both subclasses."""
         teams = []
-        for side, (side_name, pos_names) in zip(self.SIDES, side_and_position_names(self.tournament)):
+        for side, (side_name, pos_names) in zip(self.sides, side_and_position_names(self.tournament)):
             side_dict = {
                 "side_code": side,
                 "side_name": side_name,
                 "team": self.debate.get_team(side),
                 "speakers": [],
             }
-            for pos, pos_name in zip(self.POSITIONS, pos_names):
+            for pos, pos_name in zip(self.positions, pos_names):
                 side_dict["speakers"].append({
                     "pos": pos,
                     "name": pos_name,
@@ -581,8 +577,8 @@ class SingleBallotSetForm(BaseBallotSetForm):
         """Adds the speaker score fields:
          - <side>_score_s#,  one for each score
         """
-        for side, pos in self.SIDES_AND_POSITIONS:
-            scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
+        for side, pos in product(self.sides, self.positions):
+            scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             self.fields[self._fieldname_score(side, pos)] = scorefield(
                 widget=forms.NumberInput(attrs={'class': 'required number'}),
                 tournament=self.tournament,
@@ -592,7 +588,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
 
-        for side, pos in self.SIDES_AND_POSITIONS:
+        for side, pos in product(self.sides, self.positions):
             score = result.get_score(side, pos)
             coerce_for_ui = self.fields[self._fieldname_score(side, pos)].coerce_for_ui
             initial[self._fieldname_score(side, pos)] = coerce_for_ui(score)
@@ -602,7 +598,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
     def list_score_fields(self):
         """Lists all the score fields. Called by super().set_tab_indices()."""
         order = []
-        for side, pos in self.SIDES_AND_POSITIONS:
+        for side, pos in product(self.sides, self.positions):
             order.append(self._fieldname_score(side, pos))
         return order
 
@@ -613,7 +609,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
     def clean_scoresheet(self, cleaned_data):
         try:
             totals = [sum(cleaned_data[self._fieldname_score(side, pos)]
-                       for pos in self.POSITIONS) for side in self.SIDES]
+                       for pos in self.positions) for side in self.sides]
 
         except KeyError as e:
             logger.warning("Field %s not found", str(e))
@@ -628,7 +624,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
 
             elif len(totals) > 2:
                 for total in set(totals):
-                    sides = [s for s, t in zip(self.SIDES, totals) if t == total]
+                    sides = [s for s, t in zip(self.sides, totals) if t == total]
                     if len(sides) > 1:
                         self.add_error(None, form.ValidationError(
                             _("The total scores for the following teams are the same: %(teams)s"),
@@ -646,7 +642,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
                     ))
 
     def populate_result_with_scores(self, result):
-        for side, pos in self.SIDES_AND_POSITIONS:
+        for side, pos in product(self.sides, self.positions):
             score = self.cleaned_data[self._fieldname_score(side, pos)]
             result.set_score(side, pos, score)
 
@@ -674,8 +670,8 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
         """Adds the speaker score fields:
          - <side>_score_a#_s#,  one for each score
         """
-        for side, pos in self.SIDES_AND_POSITIONS:
-            scorefield = ReplyScoreField if (pos == self.REPLY_POSITION) else SubstantiveScoreField
+        for side, pos in product(self.sides, self.positions):
+            scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             for adj in self.adjudicators:
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
                     widget=forms.NumberInput(attrs={'class': 'required number'}),
@@ -686,18 +682,17 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
 
-        for side, pos in self.SIDES_AND_POSITIONS:
-            for adj in self.adjudicators:
-                score = result.get_score(adj, side, pos)
-                coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
-                initial[self._fieldname_score(adj, side, pos)] = coerce_for_ui(score)
+        for adj, side, pos in product(self.adjudicators, self.sides, self.positions):
+            score = result.get_score(adj, side, pos)
+            coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
+            initial[self._fieldname_score(adj, side, pos)] = coerce_for_ui(score)
 
         return initial
 
     def list_score_fields(self):
         """Lists all the score fields. Called by super().set_tab_indices()."""
         order = []
-        for adj, side, pos in itertools.product(self.adjudicators, self.SIDES, self.POSITIONS):
+        for adj, side, pos in product(self.adjudicators, self.sides, self.positions):
             order.append(self._fieldname_score(adj, side, pos))
         return order
 
@@ -709,7 +704,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
         for adj in self.adjudicators:
             try:
                 totals = [sum(cleaned_data[self._fieldname_score(adj, side, pos)]
-                           for pos in self.POSITIONS) for side in self.SIDES]
+                           for pos in self.positions) for side in self.sides]
 
             except KeyError as e:
                 logger.warning("Field %s not found", str(e))
@@ -731,7 +726,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                     ))
 
     def populate_result_with_scores(self, result):
-        for adj, side, pos in itertools.product(self.adjudicators, self.SIDES, self.POSITIONS):
+        for adj, side, pos in product(self.adjudicators, self.sides, self.positions):
                 score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
                 result.set_score(adj, side, pos, score)
 

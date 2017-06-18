@@ -81,12 +81,12 @@ class Tournament(models.Model):
             return self._prefs[name]
 
     @property
-    def LAST_SUBSTANTIVE_POSITION(self):  # flake8: noqa
+    def last_substantive_position(self):
         """Returns the number of substantive speakers."""
         return self.pref('substantive_speakers')
 
     @property
-    def REPLY_POSITION(self):  # flake8: noqa
+    def reply_position(self):
         """If there is a reply position, returns one more than the number of
         substantive speakers. If there is no reply position, returns None."""
         if self.pref('reply_scores_enabled'):
@@ -95,7 +95,7 @@ class Tournament(models.Model):
             return None
 
     @property
-    def POSITIONS(self):  # flake8: noqa
+    def positions(self):
         """Guaranteed to be consecutive numbers starting at one. Includes the
         reply speaker."""
         speaker_positions = 1 + self.pref('substantive_speakers')

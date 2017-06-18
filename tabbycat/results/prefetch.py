@@ -79,7 +79,7 @@ def populate_results(ballotsubs):
     if not ballotsubs:
         return
 
-    positions = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0]).POSITIONS
+    positions = Tournament.objects.get(round__debate__ballotsubmission=ballotsubs[0]).positions
     sides = ['aff', 'neg']
     ballotsubs = list(ballotsubs)  # set ballotsubs in stone to avoid race conditions in later queries
 

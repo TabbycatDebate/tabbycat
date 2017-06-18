@@ -88,7 +88,7 @@ def side_and_position_names(tournament):
     """
     sides = [get_side_name(tournament, side, 'full').title() for side in ('aff', 'neg')]
     for side in sides:
-        positions = [_("Reply") if pos == tournament.REPLY_POSITION
+        positions = [_("Reply") if pos == tournament.reply_position
             else _ORDINALS[pos]
-            for pos in tournament.POSITIONS]
+            for pos in tournament.positions]
         yield side, positions

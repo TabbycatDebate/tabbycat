@@ -54,8 +54,8 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
     if discarded and confirmed:
         raise ValueError("Ballot can't be both discarded and confirmed!")
 
-    last_substantive_position = debate.round.tournament.LAST_SUBSTANTIVE_POSITION
-    reply_position = debate.round.tournament.REPLY_POSITION
+    last_substantive_position = debate.round.tournament.last_substantive_position
+    reply_position = debate.round.tournament.reply_position
 
     # Create a new BallotSubmission
     bsub = BallotSubmission(submitter_type=submitter_type, debate=debate)
@@ -93,7 +93,7 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
         result.set_ghost(side, reply_position, False)
 
         for adj in debate.adjudicators.voting():
-            for pos in debate.round.tournament.POSITIONS:
+            for pos in debate.round.tournament.positions:
                 result.set_score(adj, side, pos, rr[adj][side][pos-1])
 
     result.save()

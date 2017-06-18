@@ -71,15 +71,15 @@ function update_speaker() {
   var posno = parseInt(pos.charAt(1));
 
   {% if form.using_replies %}
-    if (posno != {{ form.REPLY_POSITION }})
-      for (var i = 1; i <= {{ form.LAST_SUBSTANTIVE_POSITION }}; i++)
+    if (posno != {{ form.reply_position }})
+      for (var i = 1; i <= {{ form.last_substantive_position }}; i++)
         if (i != posno) others.push(i);
-    if (posno == {{ form.LAST_SUBSTANTIVE_POSITION }})
-      others.push({{ form.REPLY_POSITION }});
-    if (posno == {{ form.REPLY_POSITION }})
-      others.push({{ form.LAST_SUBSTANTIVE_POSITION }});
-  {% elif form.LAST_SUBSTANTIVE_POSITION %}
-    for (var i = 1; i <= {{ form.LAST_SUBSTANTIVE_POSITION }}; i++)
+    if (posno == {{ form.last_substantive_position }})
+      others.push({{ form.reply_position }});
+    if (posno == {{ form.reply_position }})
+      others.push({{ form.last_substantive_position }});
+  {% elif form.last_substantive_position %}
+    for (var i = 1; i <= {{ form.last_substantive_position }}; i++)
       if (i != posno) others.push(i);
   {% else %}
     // If there's no form (ie adj has no debate for this round) do nothing
@@ -135,15 +135,15 @@ $("#hasIron").change(function() {
   }
 });
 
-{% if form.using_replies and form.LAST_SUBSTANTIVE_POSITION == 2 %}
+{% if form.using_replies and form.last_substantive_position == 2 %}
 // Fill in the reply speaker if there is only one option
 
   $('#id_aff_speaker_s1').change(function() {
-    $('#id_aff_speaker_s{{ form.REPLY_POSITION }}').val($(this).val());
+    $('#id_aff_speaker_s{{ form.reply_position }}').val($(this).val());
     update_speakers();
   });
   $('#id_neg_speaker_s1').change(function() {
-    $('#id_neg_speaker_s{{ form.REPLY_POSITION }}').val($(this).val());
+    $('#id_neg_speaker_s{{ form.reply_position }}').val($(this).val());
     update_speakers();
   });
 

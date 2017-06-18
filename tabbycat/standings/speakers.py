@@ -49,10 +49,10 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 
         if replies:
             query += """
-            AND results_speakerscore.position = {position:d}""".format(position=round.tournament.REPLY_POSITION)
+            AND results_speakerscore.position = {position:d}""".format(position=round.tournament.reply_position)
         else:
             query += """
-            AND results_speakerscore.position <= {position:d}""".format(position=round.tournament.LAST_SUBSTANTIVE_POSITION)
+            AND results_speakerscore.position <= {position:d}""".format(position=round.tournament.last_substantive_position)
 
         return query.format(function=function, round=round.seq)
 

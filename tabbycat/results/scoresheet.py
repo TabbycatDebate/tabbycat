@@ -37,12 +37,12 @@ class ScoresMixin:
 
     def __init__(self, positions, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.POSITIONS = positions
-        self.scores = {side: dict.fromkeys(self.POSITIONS, None) for side in self.SIDES}
+        self.positions = positions
+        self.scores = {side: dict.fromkeys(self.positions, None) for side in self.SIDES}
 
     def is_complete(self):
         scores_complete = all(self.scores[s][p] is not None for s in self.SIDES
-                for p in self.POSITIONS)
+                for p in self.positions)
         return super().is_complete() and scores_complete
 
     def set_score(self, side, position, score):
@@ -52,7 +52,7 @@ class ScoresMixin:
         return self.scores[side][position]
 
     def get_total(self, side):
-        scores = [self.scores[side][p] for p in self.POSITIONS]
+        scores = [self.scores[side][p] for p in self.positions]
         if None in scores:
             return None
         return sum(scores)
