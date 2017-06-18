@@ -140,7 +140,7 @@ class BaseTestResult(TestCase):
 
 class CommonTests(object):
 
-    def on_all_datasets(test_fn):  # flake8: noqa
+    def on_all_datasets(test_fn):  # noqa: N805
         """Decorator.
         Tests should be written to take three arguments: self, ballotset and
         testdata. 'ballotset' is a BallotSet object. 'testdata' is a value of

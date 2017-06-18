@@ -136,7 +136,7 @@ class Pairing(object):
         return self.teams[self._winner_index]
 
 
-def DrawGenerator(draw_type, teams, results=None, rrseq=None, **kwargs):
+def DrawGenerator(draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
     'draw_type' is mandatory and can be any of 'random', 'power_paired',
@@ -234,7 +234,6 @@ class BaseDrawGenerator(object):
             raise TypeError(
                 "'round robin sequence' is required for draw of type {0:s}".format(
                     self.__class__.__name__))
-
 
         # Compute the full dictionary of default options
         self.options = self.BASE_DEFAULT_OPTIONS.copy()
@@ -717,10 +716,8 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
         for bracket in pairings.values():
             pairs = [tuple(p.teams) for p in bracket]
             pairs_orig = list(pairs)  # Keep a copy for comparison
-            OPTIONS = [
-                "avoid_history", "avoid_institution", "history_penalty",
-                "institution_penalty"]
-            options = dict((key, self.options[key]) for key in OPTIONS)  # flake8: noqa
+            option_names = ["avoid_history", "avoid_institution", "history_penalty", "institution_penalty"]
+            options = dict((key, self.options[key]) for key in option_names)
             swapper = OneUpOneDownSwapper(**options)
             pairs_new = swapper.run(pairs)
             swaps = swapper.swaps

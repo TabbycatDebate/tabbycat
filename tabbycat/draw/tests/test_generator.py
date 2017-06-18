@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 from .. import DrawError, DrawGenerator, Pairing
 from ..utils import partial_break_round_split
-from .utils import TestTeam, TestDivision
+from .utils import TestDivision, TestTeam
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 
@@ -46,15 +46,12 @@ class TestRoundRobinDrawGenerator(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def rr_permutation(self, teams, rounds, expected_matches):
-        #print("----\nPermutation with teams:", len(teams), rounds)
         pairings = []
         for i in range(0, rounds):
             rd = DrawGenerator("round_robin", teams, results=None, rrseq=i+1)
             _draw = rd.generate()
             for pairing in _draw:
                 pairings.append(pairing)
-
-        #print("made %s pairings" % len(pairings))
 
         # Calculate how many pairings have identical matchups over the rounds
         matches = 0
@@ -63,10 +60,9 @@ class TestRoundRobinDrawGenerator(unittest.TestCase):
             search_pairings.remove(pair)
             for i in range(0, len(search_pairings)):
                 if pair.teams == search_pairings[i].teams or \
-                    pair.teams == search_pairings[i].teams.reverse():
+                        pair.teams == search_pairings[i].teams.reverse():
                     matches = matches + 1
 
-        #print("matches:", matches, " expected:", expected_matches)
         self.assertEqual(matches, expected_matches)
 
     def test_draw(self):
@@ -534,8 +530,8 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
     ])
     brackets[4] = OrderedDict([
         (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": []}),
-        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1", "Caltech 3"]}),  # flake8: noqa
-        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),  # flake8: noqa
+        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1", "Caltech 3"]}),  # noqa: E501
+        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),  # noqa: E501
         (0, {"aff": [], "neg": ["Pennsylvania 2", "Harvard 1", "Harvard 2"]}),
     ])
     brackets[99] = OrderedDict([
@@ -579,8 +575,8 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
     ])
     expecteds["pullup_top"][4] = OrderedDict([
         (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["MIT 2", "Columbia 1", "Caltech 1"]}),
-        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Caltech 3", "Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),  # flake8: noqa
-        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Princeton 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),  # flake8: noqa
+        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["Caltech 3", "Chicago 2", "Chicago 1", "Pennsylvania 1", "Chicago 3"]}),  # noqa: E501
+        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Princeton 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),  # noqa: E501
         (0, {"aff": [], "neg": []}),
     ])
 
@@ -611,8 +607,8 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
     ])
     expecteds["pullup_bottom"][4] = OrderedDict([
         (3, {"aff": ["Yale 2", "Stanford 2", "Yale 1"], "neg": ["Columbia 1", "Caltech 1", "Caltech 3"]}),
-        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),  # flake8: noqa
-        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),  # flake8: noqa
+        (2, {"aff": ["John Hopkins 1", "Stanford 1", "MIT 1", "Stanford 3", "Berkeley 1"], "neg": ["MIT 2", "Chicago 1", "Pennsylvania 1", "Chicago 3", "Princeton 2"]}),  # noqa: E501
+        (1, {"aff": ["Caltech 2", "Cornell 1", "Yale 3", "Princeton 1"], "neg": ["Chicago 2", "Pennsylvania 2", "Harvard 1", "Harvard 2"]}),  # noqa: E501
         (0, {"aff": [], "neg": []}),
     ])
 
@@ -783,7 +779,7 @@ class BaseTestEliminationDrawGenerator(unittest.TestCase):
     team_data = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
-    def assertPairingsEqual(self, actual, expected):
+    def assertPairingsEqual(self, actual, expected):  # noqa: N802
         """Checks pairings without regard to sides."""
         for a, p in zip(actual, expected):
             self.assertCountEqual((a.aff_team.id, a.neg_team.id), p)

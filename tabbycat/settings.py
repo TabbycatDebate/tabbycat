@@ -330,6 +330,6 @@ else:
         LOCAL_SETTINGS
     except NameError:
         try:
-            from local_settings import *   # flake8: noqa
+            from local_settings import *   # noqa: F401, F403
         except ImportError:
             pass

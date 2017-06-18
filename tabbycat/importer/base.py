@@ -3,17 +3,17 @@
 import csv
 import re
 import logging
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError, FieldError
 from collections import Counter
 from types import GeneratorType
 
+from django.core.exceptions import FieldError, MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
 
 NON_FIELD_ERRORS = '__all__'
 DUPLICATE_INFO = 19  # Logging level just below INFO
 logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
 
 
-def make_interpreter(DELETE=[], **kwargs):  # flake8: noqa
+def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
     """Convenience function for building an interpreter."""
     def interpreter(line):
         # remove blank and unwanted values

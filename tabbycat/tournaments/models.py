@@ -1,10 +1,9 @@
 from warnings import warn
 
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 from django.utils.encoding import force_text
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
@@ -21,6 +20,7 @@ PROHIBITED_TOURNAMENT_SLUGS = [
     'start', 'create', 'donations', 'load_demo', # Setup Wizards
     'draw', 'participants', 'favicon.ico',  # Cross-Tournament app's view roots
     't', '__debug__', 'static']  # Misc
+
 
 def validate_tournament_slug(value):
     if value in PROHIBITED_TOURNAMENT_SLUGS:
@@ -81,12 +81,12 @@ class Tournament(models.Model):
             return self._prefs[name]
 
     @property
-    def LAST_SUBSTANTIVE_POSITION(self):  # flake8: noqa
+    def LAST_SUBSTANTIVE_POSITION(self):  # noqa: N802
         """Returns the number of substantive speakers."""
         return self.pref('substantive_speakers')
 
     @property
-    def REPLY_POSITION(self):  # flake8: noqa
+    def REPLY_POSITION(self):  # noqa: N802
         """If there is a reply position, returns one more than the number of
         substantive speakers. If there is no reply position, returns None."""
         if self.pref('reply_scores_enabled'):
@@ -95,7 +95,7 @@ class Tournament(models.Model):
             return None
 
     @property
-    def POSITIONS(self):  # flake8: noqa
+    def POSITIONS(self):  # noqa: N802
         """Guaranteed to be consecutive numbers starting at one. Includes the
         reply speaker."""
         speaker_positions = 1 + self.pref('substantive_speakers')
@@ -278,8 +278,7 @@ class Round(models.Model):
             errors['draw_type'] = ValidationError(_("A round in the %(stage)s stage must have a "
                 "draw type that is one of: %(valid)s"), params={
                     'stage': self.get_stage_display().lower(),
-                    'valid': ", ".join(display_names)
-                })
+                    'valid': ", ".join(display_names)})
 
         # Break rounds must have a break category
         if self.stage == Round.STAGE_ELIMINATION and self.break_category is None:
@@ -304,10 +303,10 @@ class Round(models.Model):
         from adjallocation.models import DebateAdjudicator
         debates_with_even_panel = self.debate_set.exclude(
                 debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE
-            ).annotate(
-                panellists=Count('debateadjudicator'),
-                odd_panellists=Count('debateadjudicator') % 2
-            ).filter(panellists__gt=0, odd_panellists=0).count()
+        ).annotate(
+            panellists=Count('debateadjudicator'),
+            odd_panellists=Count('debateadjudicator') % 2
+        ).filter(panellists__gt=0, odd_panellists=0).count()
         logger.debug("%d debates with even panel", debates_with_even_panel)
         return debates_with_even_panel
 

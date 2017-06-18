@@ -593,7 +593,7 @@ class BallotSet(ResultBuffer):
 
         self._decision_calculated = True
 
-    def _requires_decision(default): # flake8: noqa
+    def _requires_decision(default): # noqa: N805
         def wrap(func):
             @wraps(func)
             def wrapped(self, *args, **kwargs):

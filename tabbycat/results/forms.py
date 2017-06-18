@@ -163,7 +163,7 @@ class BallotSetForm(forms.Form):
         self.initial = self._initial_data()
 
     @property
-    def SIDES_AND_POSITIONS(self):  # flake8: noqa
+    def SIDES_AND_POSITIONS(self):  # noqa: N802
         return itertools.product(self.SIDES, self.POSITIONS)
 
     # --------------------------------------------------------------------------

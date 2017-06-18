@@ -4,15 +4,17 @@ to adjudicator feedback.
 These are mainly used in management commands, but in principle could be used
 by a front-end interface as well."""
 
-from . import models as fm
-from draw.models import DebateTeam
-from participants.models import Team, Adjudicator
-from django.contrib.auth import get_user_model
-from adjallocation.models import DebateAdjudicator
-
 import random
 import itertools
 import logging
+
+from draw.models import DebateTeam
+from participants.models import Adjudicator, Team
+from django.contrib.auth import get_user_model
+from adjallocation.models import DebateAdjudicator
+
+from . import models as fm
+
 logger = logging.getLogger(__name__)
 User = get_user_model()
 
@@ -25,11 +27,11 @@ WORDS = {
 }
 
 COMMENTS = {
-    5: ["Amazeballs.", "Saw it exactly how we did.", "Couldn't have been better.", "Really insightful feedback."],  # flake8: noqa
-    4: ["Great adjudication but parts were unclear.", "Clear but a bit long. Should break.", "Understood debate but missed a couple of nuances.", "Agreed with adjudication but feedback wasn't super helpful."],  # flake8: noqa
-    3: ["Identified all main issues, didn't see interactions between them.", "Solid, would trust to get right, but couldn't articulate some points.", "Pretty good for a novice adjudicator.", "Know what (s)he's doing but reasoning a bit convoluted."],  # flake8: noqa
-    2: ["Missed some crucial points in the debate.", "Stepped into debate, but not too significantly.", "Didn't give the other team enough credit for decent points.", "Had some awareness of the debate but couldn't identify main points."],  # flake8: noqa
-    1: ["It's as if (s)he was listening to a different debate.", "Worst adjudication I've ever seen.", "Give his/her own analysis to rebut our arguments.", "Should not be adjudicating at this tournament."]  # flake8: noqa
+    5: ["Amazeballs.", "Saw it exactly how we did.", "Couldn't have been better.", "Really insightful feedback."],  # noqa: E501
+    4: ["Great adjudication but parts were unclear.", "Clear but a bit long. Should break.", "Understood debate but missed a couple of nuances.", "Agreed with adjudication but feedback wasn't super helpful."],  # noqa: E501
+    3: ["Identified all main issues, didn't see interactions between them.", "Solid, would trust to get right, but couldn't articulate some points.", "Pretty good for a novice adjudicator.", "Know what (s)he's doing but reasoning a bit convoluted."],  # noqa: E501
+    2: ["Missed some crucial points in the debate.", "Stepped into debate, but not too significantly.", "Didn't give the other team enough credit for decent points.", "Had some awareness of the debate but couldn't identify main points."],  # noqa: E501
+    1: ["It's as if (s)he was listening to a different debate.", "Worst adjudication I've ever seen.", "Give his/her own analysis to rebut our arguments.", "Should not be adjudicating at this tournament."]  # noqa: E501
 }
 
 
