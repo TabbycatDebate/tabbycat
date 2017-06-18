@@ -473,7 +473,7 @@ class BaseBallotSetForm(forms.Form):
             self.ballotsub.save()
 
         # 3. Check if there was a forfeit
-        if self.using_forfeits and self.cleaned_data['forfeit']:
+        if self.using_forfeits and self.cleaned_data.get('forfeit'):
             result = ForfeitDebateResult(self.ballotsub, self.cleaned_data['forfeit'])
             self.ballotsub.forfeit = result.debateteams[self.cleaned_data['forfeit']]
         else:
@@ -500,7 +500,7 @@ class BaseBallotSetForm(forms.Form):
                         debate_team=debate_team, preference=3).delete()
 
         # 6. Save speaker fields
-        if not self.cleaned_data['forfeit']:
+        if not self.using_forfeits or not self.cleaned_data.get('forfeit'):
             for side, pos in product(self.sides, self.positions):
                 speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
                 result.set_speaker(side, pos, speaker)
