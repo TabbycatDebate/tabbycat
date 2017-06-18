@@ -2,16 +2,6 @@
 {% load static %}
 {% load debate_tags %}
 
-{% block head-title %}
-  <a class="btn btn-default" href="{% roundurl 'results-round-list' debate.round %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Results
-  </a>
-  {% if new %}New Ballot Set for{% else %}Edit Ballot Set for{% endif %}
-  {{ debate.matchup }} <small>Round {{ debate.round }}
-  @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}
-  {{ debate.venue.display_name }}</small>
-{% endblock %}
-
 {% block content %}
   <form id="resultsForm" action="." method="POST" class="form-horizontal">
     {% csrf_token %}
