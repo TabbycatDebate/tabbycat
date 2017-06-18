@@ -402,9 +402,6 @@ class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
         self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
 
     def _make_initial_pairings(self):
-        if not all(hasattr(t, 'allocated_side') for t in self.teams):
-            raise DrawError("To use allocated sides, all teams must have an 'allocated_side' attribute, which must be 'aff' or 'neg'.")
-
         aff_teams = [t for t in self.teams if t.allocated_side == "aff"]
         neg_teams = [t for t in self.teams if t.allocated_side == "neg"]
 
