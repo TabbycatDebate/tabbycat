@@ -636,7 +636,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
                 margin = abs(totals[0] - totals[1])
                 if margin > self.max_margin:
                     self.add_error(None, forms.ValidationError(
-                        _("The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)"),
+                        _("The margin (%(margin).1f) exceeds the maximum allowable margin (%(max_margin).1f)."),
                         params={'margin': margin, 'max_margin': self.max_margin}, code='max_margin'
                     ))
 

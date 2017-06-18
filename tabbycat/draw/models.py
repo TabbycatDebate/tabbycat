@@ -2,6 +2,8 @@ import logging
 
 from django.db import models
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 
 from tournaments.utils import get_side_name
 
@@ -22,30 +24,43 @@ class Debate(models.Model):
     STATUS_POSTPONED = 'P'
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
-    STATUS_CHOICES = ((STATUS_NONE, 'None'),
-                      (STATUS_POSTPONED, 'Postponed'),
-                      (STATUS_DRAFT, 'Draft'),
-                      (STATUS_CONFIRMED, 'Confirmed'), )
+    STATUS_CHOICES = ((STATUS_NONE, _("None")),
+                      (STATUS_POSTPONED, _("Postponed")),
+                      (STATUS_DRAFT, _("Draft")),
+                      (STATUS_CONFIRMED, _("Confirmed")), )
 
     objects = DebateManager()
 
-    round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True)
-    venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True)
+    round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True,
+        verbose_name=_("round"))
+    venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True,
+        verbose_name=_("venue"))
     # cascade to keep draws clean in event of division deletion
-    division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True)
+    division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True,
+        verbose_name=_("division"))
 
-    bracket = models.FloatField(default=0)
-    room_rank = models.IntegerField(default=0)
+    bracket = models.FloatField(default=0,
+        verbose_name=_("bracket"))
+    room_rank = models.IntegerField(default=0,
+        verbose_name=_("room rank"))
 
     time = models.DateTimeField(blank=True, null=True,
-        help_text="The time/date of a debate if it is specifically scheduled")
+        verbose_name=_("time"),
+        help_text=_("The time/date of a debate if it is specifically scheduled"))
 
     # comma-separated list of strings
     flags = models.CharField(max_length=100, blank=True)
 
-    importance = models.IntegerField(default=0, choices=[(i, i) for i in range(-2, 3)])
-    result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    ballot_in = models.BooleanField(default=False)
+    importance = models.IntegerField(default=0, choices=[(i, i) for i in range(-2, 3)],
+        verbose_name=_("importance"))
+    result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
+        verbose_name=_("result status"))
+    ballot_in = models.BooleanField(default=False,
+        verbose_name=_("ballot in"))
+
+    class Meta:
+        verbose_name = _("debate")
+        verbose_name_plural = _("debates")
 
     def __str__(self):
         description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
@@ -217,15 +232,22 @@ class DebateTeam(models.Model):
     SIDE_AFFIRMATIVE = 'aff'
     SIDE_NEGATIVE = 'neg'
     SIDE_UNALLOCATED = '-'
-    SIDE_CHOICES = ((SIDE_AFFIRMATIVE, 'affirmative'),
-                    (SIDE_NEGATIVE, 'negative'),
-                    (SIDE_UNALLOCATED, 'unallocated'), )
+    SIDE_CHOICES = ((SIDE_AFFIRMATIVE, _("affirmative")),
+                    (SIDE_NEGATIVE, _("negative")),
+                    (SIDE_UNALLOCATED, _("unallocated")), )
 
     objects = DebateTeamManager()
 
-    debate = models.ForeignKey(Debate, models.CASCADE, db_index=True)
-    team = models.ForeignKey('participants.Team', models.PROTECT)
-    side = models.CharField(max_length=3, choices=SIDE_CHOICES)
+    debate = models.ForeignKey(Debate, models.CASCADE, db_index=True,
+        verbose_name=_("debate"))
+    team = models.ForeignKey('participants.Team', models.PROTECT,
+        verbose_name=_("team"))
+    side = models.CharField(max_length=3, choices=SIDE_CHOICES,
+        verbose_name=_("side"))
+
+    class Meta:
+        verbose_name = _("debate team")
+        verbose_name_plural = _("debate teams")
 
     def __str__(self):
         return '{} in {}'.format(self.team.short_name, self.debate)
@@ -245,11 +267,11 @@ class DebateTeam(models.Model):
 
     def get_result_display(self):
         if self.win is True:
-            return 'won'
+            return ugettext("won")
         elif self.win is False:
-            return 'lost'
+            return ugettext("lost")
         else:
-            return 'result unknown'
+            return ugettext("result unknown")
 
     @property
     def win(self):
@@ -282,9 +304,14 @@ class TeamSideAllocation(models.Model):
     In tournaments without team side allocations, just don't use this
     model."""
 
-    round = models.ForeignKey('tournaments.Round', models.CASCADE)
-    team = models.ForeignKey('participants.Team', models.CASCADE)
-    side = models.CharField(max_length=3, choices=DebateTeam.SIDE_CHOICES)
+    round = models.ForeignKey('tournaments.Round', models.CASCADE,
+        verbose_name=_("round"))
+    team = models.ForeignKey('participants.Team', models.CASCADE,
+        verbose_name=_("team"))
+    side = models.CharField(max_length=3, choices=DebateTeam.SIDE_CHOICES,
+        verbose_name=_("side"))
 
     class Meta:
         unique_together = [('round', 'team')]
+        verbose_name = _("team side allocation")
+        verbose_name_plural = _("team side allocations")

@@ -3,20 +3,474 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-23 13:56-0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2017-06-18 19:02+1000\n"
+"PO-Revision-Date: 2017-06-18 21:03+1200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.2\n"
+
+#: availability/templates/availability_index.html:9
+#: availability/templates/availability_index.html:14
+msgid "Check In Teams"
+msgstr ""
+
+#: availability/templates/availability_index.html:19
+msgid "Check In Adjs"
+msgstr ""
+
+#: availability/templates/availability_index.html:23
+msgid "Check In Venues"
+msgstr ""
+
+#: availability/templates/availability_index.html:31
+msgid "Check In All Breaking Adjs"
+msgstr ""
+
+#: availability/templates/availability_index.html:38
+msgid "Check In Everything"
+msgstr ""
+
+#: availability/templates/availability_index.html:45
+#, python-format
+msgid "Check In Active in %(prev_round)s"
+msgstr ""
+
+#: availability/templates/availability_index.html:59
+msgid "View Draw"
+msgstr ""
+
+#: availability/templates/availability_index.html:67
+#: availability/templates/availability_index.html:73
+#: availability/templates/availability_index.html:79
+#: availability/templates/availability_index.html:85
+#: availability/templates/availability_index.html:91
+#: availability/templates/availability_index.html:97
+#: availability/templates/availability_index.html:103
+#: availability/templates/availability_index.html:107
+msgid "Generate Draw"
+msgstr ""
+
+#: availability/templates/availability_index.html:118
+#, python-format
+msgid ""
+"Note: %(previous_unconfirmed)s debates from <strong>%(prev_round)s do not "
+"have a completed ballot</strong> — this may lead to a draw that fails or is "
+"incorrect <em>depending</em> on your draw rules."
+msgstr ""
+
+#: availability/templates/availability_index.html:128
+msgid "There is an uneven number of teams checked in for this round."
+msgstr ""
+
+#: availability/templates/availability_index.html:134
+#, python-format
+msgid ""
+"There need to be at least %(min_adjudicators)s adjudicators checked in given "
+"the number of debates."
+msgstr ""
+
+#: availability/templates/availability_index.html:143
+#, python-format
+msgid ""
+"There need to be at least %(min_venues)s venues checked in given the number "
+"of debates."
+msgstr ""
+
+#: availability/templates/availability_index.html:153
+#, python-format
+msgid ""
+"This is a page for <strong>%(round_name)s</strong>, however the current "
+"round is still set to <strong>%(current_round_name)s</strong>. Did you "
+"forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance to "
+"the next round?</a>"
+msgstr ""
+
+#: availability/templates/availability_index.html:167
+#, python-format
+msgid ""
+"This is the first round, but its draw type is <strong>%(draw_type)s</"
+"strong>. Did you intend for it to be <strong>Random</strong> instead? You "
+"can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
+"draw type in the Edit Database area.</a>"
+msgstr ""
+
+#: availability/templates/availability_index.html:179
+#, python-format
+msgid ""
+"There don't appear to be any teams breaking in the %(break_category)s Break. "
+"Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated "
+"the break for the %(break_category)s Break</a> yet?"
+msgstr ""
+
+#: availability/templates/availability_index.html:190
+#, python-format
+msgid ""
+"There's only one team breaking in the %(break_category)s Break. You can't "
+"generate an elimination round draw with only one team — you might like to <a "
+"href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for "
+"the %(break_category)s Break</a>."
+msgstr ""
+
+#: availability/templates/availability_index.html:202
+#, python-format
+msgid ""
+"This is a subsequent elimination round, but there aren't any elimination "
+"rounds in the same break category (%(break_category)s) before it. Is this "
+"round meant to be a <strong>first elimination</strong> round instead? You "
+"can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
+"draw type in the Edit Database area.</a>"
+msgstr ""
+
+#: availability/templates/availability_index.html:215
+#, python-format
+msgid ""
+"This is an elimination round, but its draw type is <strong>%(draw_type)s</"
+"strong>. This combination isn't allowed — the draw type of elimination "
+"rounds must be either <strong>first elimination</strong> (if it's the first "
+"elimination round in its break category) or <strong>subsequent elimination</"
+"strong>. Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> "
+"change this round's draw type in the Edit Database area.</a>"
+msgstr ""
+
+#: breakqual/views.py:78
+#, python-format
+msgid ""
+"There was an error generating the break for category %(category)s: "
+"%(message)s"
+msgstr ""
+
+#: breakqual/views.py:135
+#, python-format
+msgid ""
+"Changes to breaking team remarks saved and teams break updated for the "
+"following break categories: %(categories)s."
+msgstr ""
+
+#: breakqual/views.py:142
+#, python-format
+msgid ""
+"Changes to breaking team remarks saved and teams break updated for break "
+"category %(category)s."
+msgstr ""
+
+#: breakqual/views.py:171
+#, python-format
+msgid ""
+"Teams break generated for the following break categories: %(categories)s."
+msgstr ""
+
+#: importer/forms.py:18
+#, python-format
+msgid "line %(lineno)d: %(message)s"
+msgstr ""
+
+#: importer/forms.py:43
+#, python-format
+msgid "%(name)s (%(code)s)"
+msgstr ""
+
+#: importer/forms.py:65
+#, python-format
+msgid "This line (for %(institution)s) didn't have a code"
+msgstr ""
+
+#: importer/forms.py:70
+#, python-format
+msgid "This line (for %(institution)s) had too many columns"
+msgstr ""
+
+#: importer/forms.py:80
+msgid "There were no institutions to import."
+msgstr ""
+
+#: importer/forms.py:106
+msgid "There were no venues to import."
+msgstr ""
+
+#: importer/forms.py:201
+msgid "Name (excluding institution name)"
+msgstr ""
+
+#: importer/forms.py:202
+msgid "Prefix team name with institution name?"
+msgstr ""
+
+#: importer/forms.py:211
+msgid "One speaker's name per line"
+msgstr ""
+
+#: importer/forms.py:213
+#, python-format
+msgid "Speaker %d"
+msgstr ""
+
+#: importer/forms.py:221
+msgid "There must be at least one speaker."
+msgstr ""
+
+#: importer/forms.py:264
+msgid "Rating"
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_details.html:4
+#: importer/templates/simple_import_adjudicators_details.html:6
+#: importer/templates/simple_import_adjudicators_numbers.html:4
+#: importer/templates/simple_import_adjudicators_numbers.html:6
+msgctxt "page title"
+msgid "Add Adjudicators"
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_details.html:5
+#: importer/templates/simple_import_adjudicators_numbers.html:5
+#: importer/templates/simple_import_institutions_details.html:5
+#: importer/templates/simple_import_institutions_raw.html:5
+#: importer/templates/simple_import_teams_details.html:5
+#: importer/templates/simple_import_teams_numbers.html:5
+#: importer/templates/simple_import_venues_details.html:5
+#: importer/templates/simple_import_venues_raw.html:5
+#, python-format
+msgid "(Step %(step)s of %(count)s)"
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_details.html:13
+#, python-format
+msgid ""
+"As per this tournament's configuration, an adjudicator's rating must be "
+"between %(min_score)s and %(max_score)s. Adjudicators marked as 'shared' "
+"will not be associated with any particular tournament but will be available "
+"to any tournament which has the <a href=\"%(options_league_url)s\" class="
+"\"alert-link\">\"Share Adjudicators\" setting</a> enabled."
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_details.html:31
+#: importer/templates/simple_import_institutions_details.html:18
+#: importer/templates/simple_import_teams_details.html:17
+#: importer/templates/simple_import_venues_details.html:37
+msgid "Previous Step"
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_details.html:37
+#: importer/templates/simple_import_adjudicators_numbers.html:36
+#: importer/templates/simple_import_institutions_details.html:24
+#: importer/templates/simple_import_institutions_raw.html:27
+#: importer/templates/simple_import_teams_details.html:23
+#: importer/templates/simple_import_teams_numbers.html:36
+#: importer/templates/simple_import_venues_details.html:43
+#: importer/templates/simple_import_venues_raw.html:27
+#: motions/templates/edit.html:65 venues/templates/categories_edit.html:22
+#: venues/templates/venue_constraints_edit.html:24
+msgid "There are some problems with the data on this form:"
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_details.html:52
+#, python-format
+msgid "Adjudicators for %(institution_name)s"
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_details.html:114
+msgid "Save All Adjudicators"
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_numbers.html:14
+#, python-format
+msgid ""
+"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add "
+"institutions</a> before adding adjudicators."
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_numbers.html:24
+msgid ""
+"Specify the number of new adjudicators to add per institution. In the next "
+"step you can specify their names and ratings."
+msgstr ""
+
+#: importer/templates/simple_import_adjudicators_numbers.html:59
+#: importer/templates/simple_import_institutions_raw.html:35
+#: importer/templates/simple_import_teams_numbers.html:59
+#: importer/templates/simple_import_venues_raw.html:35
+msgid "Next Step"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:11
+msgid ""
+"There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-"
+"data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. "
+"Which one is best depends on the size of your tournament and your technical "
+"background. This <strong>simple importer</strong> is the easiest to use and "
+"works well for small- and medium-sized tournaments."
+msgstr ""
+
+#: importer/templates/simple_import_index.html:17
+#, python-format
+msgid ""
+"If you are having problems with this importer, you can use the <a href="
+"\"%(oldimporterurl)s\">older version</a>."
+msgstr ""
+
+#: importer/templates/simple_import_index.html:29
+msgid "Add Institutions"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:35
+msgid "Add Teams"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:41
+msgid "Add Adjudicators"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:47
+msgid "Add Venues"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:53
+msgid "Add/Edit Venue Categories"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:59
+msgid "Add/Edit Venue Constraints"
+msgstr ""
+
+#: importer/templates/simple_import_institutions_details.html:4
+#: importer/templates/simple_import_institutions_details.html:6
+#: importer/templates/simple_import_institutions_raw.html:4
+#: importer/templates/simple_import_institutions_raw.html:6
+msgctxt "page title"
+msgid "Add Institutions"
+msgstr ""
+
+#: importer/templates/simple_import_institutions_details.html:66
+msgid "Save All Institutions"
+msgstr ""
+
+#: importer/templates/simple_import_teams_details.html:4
+#: importer/templates/simple_import_teams_details.html:6
+#: importer/templates/simple_import_teams_numbers.html:4
+#: importer/templates/simple_import_teams_numbers.html:6
+msgctxt "page title"
+msgid "Add Teams"
+msgstr ""
+
+#: importer/templates/simple_import_teams_details.html:38
+#, python-format
+msgid "Teams for %(institution_name)s"
+msgstr ""
+
+#: importer/templates/simple_import_teams_details.html:85
+msgid "Save All Teams"
+msgstr ""
+
+#: importer/templates/simple_import_teams_numbers.html:14
+#, python-format
+msgid ""
+"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add "
+"institutions</a> before adding teams."
+msgstr ""
+
+#: importer/templates/simple_import_teams_numbers.html:24
+msgid ""
+"Specify the number of new teams to add per institution. In the next step you "
+"can specify team and speaker names."
+msgstr ""
+
+#: importer/templates/simple_import_venues_details.html:4
+#: importer/templates/simple_import_venues_details.html:6
+#: importer/templates/simple_import_venues_raw.html:4
+#: importer/templates/simple_import_venues_raw.html:6
+msgctxt "page title"
+msgid "Add Venues"
+msgstr ""
+
+#: importer/templates/simple_import_venues_details.html:12
+msgid ""
+"Venues with lower priorities are allocated in the draw last. If you have "
+"more venues than you need you can mark the worst venues with a lower "
+"priority number."
+msgstr ""
+
+#: importer/templates/simple_import_venues_details.html:21
+#, python-format
+msgid ""
+"Venues marked as 'shared' will not be associated with any particular "
+"tournament but will be available to any tournament which has the <a href="
+"\"%(options_league_url)s\" class=\"alert-link\">\"Share Venues\" setting</a> "
+"enabled."
+msgstr ""
+
+#: importer/templates/simple_import_venues_details.html:96
+msgid "Save All Venues"
+msgstr ""
+
+#: importer/views.py:77
+#, python-format
+msgid "Added %(count)d %(model_plural)s."
+msgstr ""
+
+#: importer/views.py:161
+#, python-format
+msgid "Adjudicator %(number)d"
+msgstr ""
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:7
+#, python-format
+msgid ""
+"<strong>Warning:</strong> If there are “debate team” objects in the above "
+"list, <strong>you probably shouldn't delete this %(object_name)s</strong>."
+msgstr ""
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:13
+#, python-format
+msgid ""
+"<strong>Warning:</strong> If there are “debate team” objects in the above "
+"list, <strong>you probably shouldn't delete these %(objects_name)s</strong>."
+msgstr ""
+
+#. Translators: This follows the above sentence in the same paragraph.
+#: participants/templates/admin/participants/delete_debateteam_warning.html:20
+msgid ""
+"This is especially the case if any team that would be deleted has already "
+"participated in a debate. If a team already has a result entered for it, "
+"deleting the team also deletes those results, <strong>which normally breaks "
+"the tab</strong>, even if you think you don't need those results anymore. If "
+"a team has debated and is withdrawing from the tournament, you should "
+"<strong>not</strong> delete it. Just mark the team inactive under the “Check-"
+"Ins” section of the Tabbycat admin area."
+msgstr ""
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:32
+msgid ""
+"Note that deleting an institution also deletes all teams from that "
+"institution."
+msgstr ""
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:40
+#, python-format
+msgid ""
+"If you're very sure about deleting this %(object_name)s, please delete the "
+"above objects first, and be sure to heed the warning that you will see on "
+"the “debate team” objects page before proceeding."
+msgstr ""
+
+#: participants/templates/admin/participants/delete_debateteam_warning.html:46
+#, python-format
+msgid ""
+"If you're very sure about deleting these %(objects_name)s, please delete the "
+"above objects first, and be sure to heed the warning that you will see on "
+"the “debate team” objects page before proceeding."
+msgstr ""
+
+#: templates/admin/delete_protected_message.html:4
+msgid "You need to delete the above objects first."
+msgstr ""
 
 #: templates/footer.html:12
 #, python-format
@@ -36,11 +490,33 @@ msgstr ""
 "l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
 "collecter des fonds."
 
+#: templates/footer.html:24
+#, python-format
+msgid ""
+"For a tournament of this size, we suggest a donation of <strong>$%(amount)s</"
+"strong>."
+msgstr ""
+"Pour un tournoi de cette taille, nous suggérons une donation de <strong>"
+"%(amount)s $</strong>."
+
+#: templates/footer.html:28
+msgid "Learn more about donating."
+msgstr "En savoir plus à propos des donations."
+
 #: templates/footer.html:32
+#, python-format
+msgid ""
+"<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or "
+"organisations</a> are much appreciated."
+msgstr ""
+"<a href=\"%(donations_link)s\">Donations à Tabbycat des individuels ou des "
+"organisations</a> sont très appréciées."
+
+#: templates/footer.html:39
 msgid "Still timing debates with the stopwatch app?"
 msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
 
-#: templates/footer.html:34
+#: templates/footer.html:41
 #, python-format
 msgid ""
 "Using a real debating app makes speaking and adjudicating easier! Check out "
@@ -57,11 +533,11 @@ msgstr ""
 "debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
 "\">Debatekeeper (Android)</a>."
 
-#: templates/footer.html:42
+#: templates/footer.html:49
 msgid "Need ballots?"
 msgstr "Avez-vous besoin des bulletins&nbsp;?"
 
-#: templates/footer.html:44
+#: templates/footer.html:51
 msgid ""
 "Use <a href=\"http://debatingballot.com\" target=\"_blank\">debatingBallot."
 "com</a> to design and print great ballots online."
@@ -70,36 +546,41 @@ msgstr ""
 "\">DebatingBallot.com</a> pour dessiner et d'imprimer des bulletins beaux en "
 "ligne."
 
-#: templates/footer.html:55
+#: templates/footer.html:62
 msgid "GitHub"
 msgstr "GitHub"
 
-#: templates/footer.html:58
+#: templates/footer.html:65
 msgid "Documentation"
 msgstr "Documentation"
 
-#: templates/footer.html:61
+#: templates/footer.html:68
 msgid "Support"
 msgstr "Aide"
 
-#: templates/footer.html:64
+#: templates/footer.html:71
 msgid "Facebook Group"
 msgstr "Groupe sur Facebook"
 
-#: templates/footer.html:67
+#: templates/footer.html:74
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
 
-#: templates/registration/login.html:4 templates/registration/login.html:5
+#: templates/registration/login.html:4
 msgctxt "page title"
 msgid "Login"
 msgstr "Connexion"
 
 #: templates/registration/login.html:30
+msgctxt "page title"
+msgid "Log in to Tabbycat"
+msgstr ""
+
+#: templates/registration/login.html:37
 msgid "Your username and password didn't match."
 msgstr "Votre nom d'utilisateur et votre mot de passe n'ont pas correspondu."
 
-#: templates/registration/login.html:36
+#: templates/registration/login.html:42
 msgid ""
 "Your account doesn't have access to this page. To proceed, please log in "
 "with an account that has access."
@@ -107,32 +588,198 @@ msgstr ""
 "Votre compte ne vous permet pas d'accéder cette page. Pour continuer, "
 "veuillez vous connecter."
 
-#: templates/registration/login.html:38
+#: templates/registration/login.html:44
 msgid "Please log in to see this page."
 msgstr "Veuillez vous connecter afin de voir ce page."
 
-#: templates/registration/login.html:60
+#: templates/registration/login.html:57
 msgctxt "button"
-msgid "Login"
-msgstr "Connexion"
+msgid "Log In"
+msgstr ""
+
+#: templates/registration/login.html:61
+msgid "I forgot my password"
+msgstr ""
+
+#: templates/registration/password_change_done.html:4
+#: templates/registration/password_change_done.html:5
+msgctxt "page title"
+msgid "Password changed"
+msgstr ""
+
+#: templates/registration/password_change_done.html:15
+msgid "Your password has been changed."
+msgstr ""
+
+#: templates/registration/password_change_done.html:21
+msgid "Go to the home page"
+msgstr ""
+
+#: templates/registration/password_change_form.html:4
+#: templates/registration/password_change_form.html:14
+msgctxt "page title"
+msgid "Password Change"
+msgstr ""
+
+#: templates/registration/password_change_form.html:20
+#: templates/registration/password_reset_confirm.html:21
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/registration/password_change_form.html:29
+msgid "Please enter your old password, then enter a new one (twice):"
+msgstr ""
+
+#: templates/registration/password_change_form.html:45
+#: templates/registration/password_reset_confirm.html:46
+msgctxt "button"
+msgid "Change my password"
+msgstr ""
+
+#: templates/registration/password_change_form.html:50
+msgid "Cancel and go back to the site home page"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:4
+#: templates/registration/password_reset_complete.html:5
+msgctxt "page title"
+msgid "Password reset complete"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:15
+msgid "Your password has been reset."
+msgstr ""
+
+#. Translators: This text appears on a button that takes the user to the login page after a password reset.
+#: templates/registration/password_reset_complete.html:22
+msgid "Go to the login page"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:4
+#: templates/registration/password_reset_confirm.html:14
+msgctxt "page title"
+msgid "Password Reset Confirmation"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:30
+msgid "Please enter a new password (twice):"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:52
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: templates/registration/password_reset_done.html:4
+#: templates/registration/password_reset_done.html:5
+msgctxt "page title"
+msgid "Password reset e-mail sent"
+msgstr ""
+
+#: templates/registration/password_reset_done.html:15
+msgid ""
+"We've e-mailed you instructions for setting your password, if an account "
+"exists with the e-mail address you entered. You should receive them shortly."
+msgstr ""
+
+#: templates/registration/password_reset_done.html:18
+msgid ""
+"If you don't receive an e-mail, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr ""
+
+#. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
+#: templates/registration/password_reset_done.html:25
+msgid "Return to the login page"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:2
+#, python-format
+msgid "Hi, %(username)s!"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:6
+#, python-format
+msgid ""
+"Someone asked for password reset for the e-mail address %(email)s on the "
+"Tabbycat site at %(protocol)s://%(domain)s."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:10
+msgid "If this was you, follow the link below to reset your password:"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:13
+#, python-format
+msgid ""
+"If this wasn't you, that probably means someone else typed your e-mail "
+"address into the password reset form on the Tabbycat site at %(protocol)s://"
+"%(domain)s."
+msgstr ""
+
+#: templates/registration/password_reset_form.html:4
+#: templates/registration/password_reset_form.html:24
+msgctxt "page title"
+msgid "Password Reset"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:15
+msgid "Please enter a valid e-mail address."
+msgstr ""
+
+#: templates/registration/password_reset_form.html:28
+msgid ""
+"Enter your e-mail address below, and we'll e-mail you a password reset link."
+msgstr ""
+
+#: templates/registration/password_reset_form.html:36 utils/forms.py:17
+msgid "E-mail address"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:44
+msgctxt "button"
+msgid "Reset my password"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:49
+msgid "Back to the login page"
+msgstr ""
+
+#: templates/registration/password_reset_subject.txt:2
+#, python-format
+msgid "Password reset on Tabbycat site at %(domain)s"
+msgstr ""
+
+#: utils/tables.py:486
+#, python-format
+msgid "This venue %(predicate)s."
+msgstr ""
+
+#: utils/tables.py:488
+#, python-format
+msgid "This venue %(predicates)s, and %(last_predicate)s."
+msgstr ""
 
 #. Translators: Put these in the right order,
 #. e.g. side_abbr = "A", metric_abbr = "TSS" -> "ATSS" for "Affirmative's Total Speaker Score"
-#: utils/tables.py:541
+#: utils/tables.py:574
 #, python-format
 msgid "%(side_abbr)s%(metric_abbr)s"
 msgstr "%(metric_abbr)s%(side_abbr)s"
 
 #. Translators: Put these in the right order,
 #. e.g. side_possessive = "affirmative's", metric_name = "total speaker score" -> "affirmative's total speaker score"
-#: utils/tables.py:548
+#: utils/tables.py:581
 #, python-format
 msgid "%(side_possessive)s %(metric_name)s"
 msgstr "%(metric_name)s %(side_possessive)s"
 
 #. Translators: e.g. team would be "negative team" or "affirmative team",
 #. affirmative would be "affirmative team".
-#: utils/tables.py:601
+#: utils/tables.py:639
 #, python-format
 msgid "Number of times this %(team)s has been the %(affirmative)s before"
 msgstr "Nombre de fois que cette %(team)s a déjà été l'%(affirmative)s"
@@ -141,7 +788,169 @@ msgstr "Nombre de fois que cette %(team)s a déjà été l'%(affirmative)s"
 #. side_abbr is e.g. "A"/"N"/"G"/"O" for affirmative/negative/government/opposition,
 #. aff_abbr is "Aff"/"Gov" for affirmative/government, so "NAff" is the number of times
 #. the negative team has affirmed, or equivalently "OGov".
-#: utils/tables.py:611
+#: utils/tables.py:649
 #, python-format
 msgid "%(side_abbr)s%(aff_abbr)ss"
 msgstr "%(side_abbr)s%(aff_abbr)ss"
+
+#: venues/models.py:9 venues/models.py:66
+msgid "name"
+msgstr ""
+
+#: venues/models.py:12 venues/models.py:120
+msgid "priority"
+msgstr ""
+
+#: venues/models.py:13
+msgid ""
+"Venues with a higher priority number will be preferred when allocating "
+"venues to debates"
+msgstr ""
+
+#: venues/models.py:16
+msgid "tournament"
+msgstr "tournoi"
+
+#: venues/models.py:17
+msgid "Venues not assigned to any tournament can be shared between tournaments"
+msgstr ""
+
+#: venues/models.py:24
+msgid "venue"
+msgstr ""
+
+#: venues/models.py:25 venues/models.py:76
+msgid "venues"
+msgstr ""
+
+#: venues/models.py:61
+msgid "Don't display in venue name"
+msgstr ""
+
+#: venues/models.py:62
+msgid "Display as prefix"
+msgstr ""
+
+#: venues/models.py:63
+msgid "Display as suffix"
+msgstr ""
+
+#: venues/models.py:67
+msgid ""
+"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room"
+"\". This name is shown when the category is prefixed or suffixed to a venue "
+"name in the draw, e.g., \"Purple – G05\"."
+msgstr ""
+
+#: venues/models.py:71
+msgid "description"
+msgstr ""
+
+#: venues/models.py:72
+msgid ""
+"Description, as the predicate of a sentence, e.g. \"has step-free access\", "
+"\"is close to the briefing hall\". This description follows \"This venue\" "
+"when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
+msgstr ""
+
+#: venues/models.py:80
+msgid "display in venue name"
+msgstr ""
+
+#: venues/models.py:81
+msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
+msgstr ""
+
+#: venues/models.py:83
+msgid "display in public tooltip"
+msgstr ""
+
+#: venues/models.py:84
+msgid ""
+"Displays the description in the tooltip for the venue on public pages. The "
+"description, if not blank, will always show on admin pages."
+msgstr ""
+
+#: venues/models.py:88
+msgid "venue category"
+msgstr ""
+
+#: venues/models.py:89
+msgid "venue categories"
+msgstr ""
+
+#: venues/models.py:119
+msgid "category"
+msgstr ""
+
+#: venues/models.py:123
+msgid "subject content type"
+msgstr ""
+
+#: venues/models.py:126
+msgid "subject ID"
+msgstr ""
+
+#: venues/models.py:132
+msgid "venue constraint"
+msgstr ""
+
+#: venues/models.py:133
+msgid "venue constraints"
+msgstr ""
+
+#: venues/templates/categories_edit.html:5
+#: venues/templates/categories_edit.html:6
+msgid "Venue Categories"
+msgstr ""
+
+#: venues/templates/categories_edit.html:11
+msgid ""
+"Venue categories allow you to <ul> <li>group venues together into \"zones\" "
+"to display in the draw and make navigation easier for participants, and/or</"
+"li> <li>specify constraints on venue allocation that require teams, "
+"adjudicators or institutions to be put in a venue in a particular category.</"
+"li> </ul>"
+msgstr ""
+
+#: venues/templates/categories_edit.html:68
+msgid "Save Venue Categories"
+msgstr ""
+
+#: venues/templates/categories_edit.html:71
+#: venues/templates/venue_constraints_edit.html:73
+msgid "Save and Add More"
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html:5
+#: venues/templates/venue_constraints_edit.html:6
+msgid "Venue Constraints"
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html:11
+msgid ""
+"Venue constraints tell the venue allocator to try to keep the specified team "
+"or adjudicator, or all teams (but not adjudicators) from the specified "
+"institution, in a venue in the given category. The \"priority\" field "
+"resolves conflicting constraints: the higher priority takes precedence. You "
+"can also use the priority field to specify \"lower-preference\" constraints, "
+"which are taken if a higher-priority constraint couldn't be met."
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html:70
+msgid "Save Venue Constraints"
+msgstr ""
+
+#: venues/views.py:77
+#, python-format
+msgid "Saved venue categories: %(list)s"
+msgstr ""
+
+#: venues/views.py:148
+#, python-format
+msgid "Saved %(count)d venue constraints."
+msgstr ""
+
+#~ msgctxt "button"
+#~ msgid "Login"
+#~ msgstr "Connexion"
