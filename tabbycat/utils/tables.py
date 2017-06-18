@@ -631,33 +631,21 @@ class TabbycatTableBuilder(BaseTableBuilder):
             for cell in self.data[i]:
                 cell['class'] = cell.get('class', '') + ' highlight-row'
 
-    def add_sides_count(self, teams, round, team_type):
-        sides_counts = get_side_counts(teams, DebateTeam.SIDE_AFFIRMATIVE, round.seq)
+    def add_side_counts(self, teams, round, team_type):
+        side_counts = get_side_counts(teams, ['aff', 'neg'], round.seq)
 
-        # Translators: e.g. team would be "negative team" or "affirmative team",
-        # affirmative would be "affirmative team".
-        side_label = _("Number of times this %(team)s has been the "
-            "%(affirmative)s before") % {
+        # Translators: e.g. team would be "negative team" or "affirmative team".
+        side_label = _("Number of times this %(team)s has been on each side (aff, neg)") % {
             'team': get_side_name(self.tournament, team_type, "team"),
-            'affirmative': aff_team(self.tournament),
         }
 
-        # Translators: Abbreviation for "affirmative number of affirmatives".
-        # side_abbr is e.g. "A"/"N"/"G"/"O" for affirmative/negative/government/opposition,
-        # aff_abbr is "Aff"/"Gov" for affirmative/government, so "NAff" is the number of times
-        # the negative team has affirmed, or equivalently "OGov".
-        side_key = _("%(side_abbr)s%(aff_abbr)ss") % {
+        # Translators: "SC" stands for "side count"
+        side_key = _("%(side_abbr)sSC") % {
             'side_abbr': get_side_name(self.tournament, team_type, 'initial'),
-            'aff_abbr': aff_abbr(self.tournament),
         }
 
-        sides_header = {
-            'key':  side_key,
-            'tooltip': side_label,
-        }
-        sides_data = [{
-            'text': str(sides_counts[t.id]),
-        } for t in teams]
+        sides_header = {'key':  side_key, 'tooltip': side_label}
+        sides_data = [{'text': " / ".join(map(str, side_counts[t.id]))} for t in teams]
         self.add_column(sides_header, sides_data)
 
     def add_checkbox_columns(self, states, references, key):
