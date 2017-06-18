@@ -11,6 +11,7 @@ from .models import tournament_preferences_registry
 scoring = Section('scoring')
 # ==============================================================================
 
+
 @tournament_preferences_registry.register
 class MinimumSpeakerScore(FloatPreference):
     help_text = "Minimum allowed score for substantive speeches"
@@ -341,6 +342,7 @@ class ShowUnexpectedFeedback(BooleanPreference):
 # ==============================================================================
 debate_rules = Section('debate_rules')
 # ==============================================================================
+
 
 @tournament_preferences_registry.register
 class BallotsPerDebate(ChoicePreference):

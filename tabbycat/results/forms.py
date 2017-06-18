@@ -10,7 +10,7 @@ from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
-from .result import ForfeitDebateResult, ConsensusDebateResult, VotingDebateResult
+from .result import ConsensusDebateResult, ForfeitDebateResult, VotingDebateResult
 from .utils import side_and_position_names
 
 logger = logging.getLogger(__name__)
@@ -626,9 +626,9 @@ class SingleBallotSetForm(BaseBallotSetForm):
                 for total in set(totals):
                     sides = [s for s, t in zip(self.sides, totals) if t == total]
                     if len(sides) > 1:
-                        self.add_error(None, form.ValidationError(
+                        self.add_error(None, forms.ValidationError(
                             _("The total scores for the following teams are the same: %(teams)s"),
-                            params = {'teams': ", ".join(self._side_name(side) for side in sides)},
+                            params={'teams': ", ".join(self._side_name(side) for side in sides)},
                             code='tied_score'
                         ))
 
