@@ -38,7 +38,6 @@ class BaseTableBuilder:
         self.table_class = kwargs.get('table_class', "")
         self.sort_key = kwargs.get('sort_key', '')
         self.sort_order = kwargs.get('sort_order', '')
-        self.popovers = kwargs.get('popovers', True)
 
     @staticmethod
     def _convert_header(header):
@@ -127,8 +126,6 @@ class BaseTableBuilder:
 
     def jsondict(self):
         """Returns the JSON dict for the table."""
-        if self.popovers is False:
-            self._strip_popovers()
         return {
             'head': self.headers,
             'data': self.data,
@@ -137,15 +134,6 @@ class BaseTableBuilder:
             'sort_key': self.sort_key,
             'sort_order': self.sort_order
         }
-
-    def _strip_popovers(self):
-        """Strips all popovers from the table. Used as an override in views
-        where popovers make no sense, like those intended for the projector
-        in general assembly."""
-        for row in self.data:
-            for cell in row:
-                if 'popover' in cell:
-                    del cell['popover']
 
 
 class TabbycatTableBuilder(BaseTableBuilder):

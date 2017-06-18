@@ -18,7 +18,7 @@ OPTIONS_TO_CONFIG_MAPPING = {
 }
 
 
-def DrawManager(round, active_only=True):  # flake8: noqa
+def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
     klass = DRAW_MANAGER_CLASSES[round.draw_type]
     return klass(round, active_only)
 

@@ -118,7 +118,7 @@ $('.js-team-speakers select').change(update_speakers).each(update_speaker);
 
 // Show/hide on initial input
 $( ".iron-person input" ).each(function(index) {
-  if ($(this).attr('checked') === 'checked') {
+  if ($(this).prop('checked') === true) {
     $("#hasIron").val('1');
     $(".iron-person").show()
   }
@@ -130,8 +130,8 @@ $("#hasIron").change(function() {
   if (enabled === "1") {
     $(".iron-person").show()
   } else if (enabled === "0") {
-    $(".iron-person").attr('checked', false);
-    $(".iron-person input")
+    $(".iron-person input").prop('checked', false);
+    $(".iron-person").hide()
   }
 });
 

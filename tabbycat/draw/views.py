@@ -35,7 +35,6 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
     template_name = 'draw_display_by.html'
     sort_key = 'Venue'
-    popovers = True
 
     def get_page_title(self):
         return 'Draw for %s' % self.get_round().name
@@ -85,7 +84,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         tournament = self.get_tournament()
         round = self.get_round()
         draw = self.get_draw()
-        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key, popovers=self.popovers)
+        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
         self.populate_table(draw, table, round, tournament)
         return table
 
@@ -153,14 +152,12 @@ class AdminDrawDisplay(LoginRequiredMixin, BaseDrawTableView):
 class AdminDrawDisplayForRoundByVenueView(OptionalAssistantTournamentPageMixin, BaseDrawTableView):
 
     assistant_page_permissions = ['all_areas', 'results_draw']
-    popovers = True
 
 
 class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, BaseDrawTableView):
 
     assistant_page_permissions = ['all_areas', 'results_draw']
     sort_key = 'Team'
-    popovers = True
 
     def populate_table(self, draw, table, round, tournament):
         draw = list(draw) + list(draw) # Double up the draw
