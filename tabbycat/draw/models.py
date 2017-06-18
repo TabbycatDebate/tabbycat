@@ -205,6 +205,18 @@ class Debate(models.Model):
             # return a fake one if it is not
             return Motion(text='-', reference='-')
 
+    def serialize(self):
+        round = self.round
+        debate = {'id': self.id, 'bracket': self.bracket,
+                  'importance': self.importance, 'locked': False}
+        debate['venue'] = self.venue.serialize() if self.venue else None
+        debate['teams'] = {
+            dt.get_position_name(round.tournament):dt.team.serialize() for dt in self.debateteam_set.all()}
+        debate['panel'] = [{
+            'adjudicator': adj.serialize(round=round), 'position': position,
+        } for adj, position in self.adjudicators.with_debateadj_types()]
+        return debate
+
 
 class DebateTeamManager(models.Manager):
     use_for_related_fields = True

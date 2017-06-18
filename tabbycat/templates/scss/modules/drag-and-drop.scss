@@ -7,25 +7,56 @@
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
-  user-select: none;
-  /* Required to make elements draggable in old WebKit */
+  user-select: none; // Text should be unselectable or highlights go crazy
+  // Required to make elements draggable in old WebKit
   -khtml-user-drag: element;
   -webkit-user-drag: element;
-  user-select: none; // Text should be unselectable or highlights go crazy
+
   &:active {
     top: 2px;
   }
-  &:hover {
-    cursor: move;
-    background: #fff; // Need to override default :hover bg state that gets stuck
+
+  background: #fff; // Need to override default :hover bg state that gets stuck
+  margin: 4px 4px 0 0; // Need spacing offsets so they don't bunch
+  padding: 5px 6px;
+  border: 4px solid $btn-default-border;
+  height: 42px;
+  text-align: left;
+  @extend .flex-horizontal;
+
+  // Adj scores; Team/Venue names
+  .draggable-prefix {
+    @extend .flex-vertical-center; // Vertically center score
+    padding-right: 6px;
   }
-  margin: 0 4px 4px 0;
-  padding: 6px;
+
+  .draggable-title {
+    overflow: auto;
+    line-height: 8px; // Compress text/sub-text spacing
+
+    .subtitle {
+      font-size: 11px; // Extra small subtext
+    }
+    // @extend .flex-inline;
+    // @extend .flex-vertical-center;
+  }
+}
+
+.vue-draggable:hover,
+.vue-is-hovering:active {
+  background: #000 !important;
+  border-color: $gray;
+  cursor: move;
+  color: #fff;
 }
 
 .vue-is-dragging {
-  cursor: move;
-  opacity: .5 !important;
+  opacity: 0.5 !important;
+}
+
+.vue-draggable.locked {
+  cursor: no-drop;
+  opacity: 0.33;
 }
 
 //------------------------------------------------------------------------------
@@ -34,8 +65,45 @@
 
 .vue-droppable {
   background: $gray-lighter;
-  min-height: 40px;
-  padding: 4px 0 0 4px;
+  min-height: 50px;
+  padding: 0 0 4px 4px; // Draggable items only have top/left padding
+}
+
+.vue-droppable.locked {
+  background: #fff;
+  position: relative; // For the spinner
+}
+
+.vue-droppable-lock-spinner { // Container for a loading spinner
+  position: absolute;
+  z-index: 11;
+  font-size: 25px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: $brand-success;
+  @extend .flex-vertical-center;
+  @extend .flex-horizontal-center;
+
+  .spinning {
+    width: 25px; // Need a set height/width to it rotates around a central axis
+    height: 24px;
+  }
+}
+
+.draw-cell .vue-droppable {
+  width: 100%;
+  height: 100%;
+}
+
+.flex-cell.vue-droppable-container {
+  padding: 0; // Suppress padding for larger drop area
+}
+
+.thead.vue-droppable-container span {
+  margin-left: 8px; // Compensate for suppressed padding
+  display: inline-block;
 }
 
 .division-droppable {
@@ -43,6 +111,5 @@
 }
 
 .vue-is-drag-enter {
-  background: $state-success-bg;
+  background: $brand-success;
 }
-

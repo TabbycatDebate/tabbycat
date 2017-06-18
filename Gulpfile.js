@@ -62,7 +62,6 @@ gulp.task("js-vendor-compile", function() {
   gulp.src([
     'node_modules/jquery/dist/jquery.js', // For Debug Toolbar
     'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
-    'tabbycat/templates/js-vendor/jquery-ui.min.js' // Deprecate,
     ])
     .pipe(isProduction ? uglify() : gutil.noop()) // Doesnt crash
     .pipe(gulp.dest(outputDir + '/js/vendor/'));
@@ -135,7 +134,7 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
   gulp.watch('tabbycat/templates/js-standalones/*.js', ['js-compile']);
   gulp.watch('tabbycat/templates/js-bundles/*.js', ['js-browserify']);
-  gulp.watch('tabbycat/templates/**/*.vue', ['js-browserify']);
+  gulp.watch('tabbycat/**/*.vue', ['js-browserify']);
   gulp.watch('tabbycat/**/*.html', ['html-reload']);
   console.log('---------------------------\n');
   console.log('Finished building Tabbycat!\n');

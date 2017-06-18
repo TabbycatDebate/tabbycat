@@ -29,6 +29,16 @@
       </div>
     {% endif %}
   {% endwith %}
+  {% if not pref.duplicate_adjs %}
+    {% with duplicates=round.duplicate_panellists %}
+      {% if duplicates %}
+        <div class="alert alert-danger" >
+          Adjudicator{{ duplicates|pluralize }} <strong>{{ duplicates|join:", " }}</strong>
+          {{ duplicates|pluralize:"has, have" }} been allocated twice.
+        </div>
+      {% endif %}
+    {% endwith %}
+  {% endif %}
   {% if active_adjs.count < draw.count %}
     <div class="alert alert-danger" id="">
       There are currently fewer checked-in adjudicators than there are rooms.
@@ -46,7 +56,7 @@
           {% if even_panel > 0 %}
             {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of adjudicators.
           {% endif %}
-          <a href="{% roundurl 'edit_adj_allocation' %}" class="alert-link">
+          <a href="{% roundurl 'edit-adj-allocation' %}" class="alert-link">
             Allocate adjudicators.
           </a>
         </div>

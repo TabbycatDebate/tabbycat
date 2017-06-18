@@ -3,106 +3,107 @@
 //------------------------------------------------------------------------------
 
 // The parent element needed to override team/adj specific default borders
+// Teams we want to have no border to reduce clutter; adjs we want so they
+// appear like draggable buttons/elements
 .conflictable {
-  // Teams we want to have no border to reduce clutter; adjs we want so they
-  // appear like draggable buttons/elements
-  &.adj-draggable {
-    border: 4px solid $btn-default-border;
-  }
-  &.debate-team {
-    border: 4px solid rgba(255,255,255, 0);
-  }
+
   // For hover states
-  &.conflict-hover-personal-conflict {
+  &.hover-personal {
     background: $brand-danger;
   }
-  &.conflict-hover-institutional-conflict {
+
+  &.hover-institutional {
     background: $brand-warning;
   }
-  &.conflict-hover-1-ago {
+
+  &.hover-history-1-ago {
     background: darken($brand-primary, 20%);
   }
-  &.conflict-hover-2-ago {
+
+  &.hover-history-2-ago {
     background: lighten($brand-primary, 0%);
   }
-  &.conflict-hover-3-ago {
+
+  &.hover-history-3-ago {
     background: lighten($brand-primary, 15%);
   }
-  &.conflict-hover-4-ago {
+
+  &.hover-history-4-ago {
     background: lighten($brand-primary, 30%);
   }
-  &.conflict-hover-5-ago {
+
+  &.hover-history-5-ago {
     background: lighten($brand-primary, 34%);
   }
-  &.conflict-hover-6-ago {
+
+  &.hover-history-6-ago {
     background: lighten($brand-primary, 36%);
   }
-  &.conflict-hover-7-ago {
+
+  &.hover-history-7-ago {
     background: lighten($brand-primary, 40%);
   }
-  &.conflict-hover-8-ago {
+
+  &.hover-history-8-ago {
     background: lighten($brand-primary, 44%);
   }
-  &.conflict-hover-9-ago {
+
+  &.hover-history-9-ago {
     background: lighten($brand-primary, 48%);
   }
+
   // For in panel states
-  &.conflict-panel-personal-conflict {
+  &.panel-personal {
     border-color: darken($brand-danger, 10%);
   }
-  &.conflict-panel-institutional-conflict {
+
+  &.panel-institutional {
     border-color: darken($brand-warning, 10%);
   }
-  &.conflict-panel-1-ago {
+
+  &.panel-1-ago {
     border-color: darken($brand-primary, 20%);
   }
-  &.conflict-panel-2-ago {
+
+  &.panel-2-ago {
     border-color: lighten($brand-primary, 0%);
   }
-  &.conflict-panel-3-ago {
+
+  &.panel-3-ago {
     border-color: lighten($brand-primary, 15%);
   }
-  &.conflict-panel-4-ago {
+
+  &.panel-4-ago {
     border-color: lighten($brand-primary, 30%);
   }
-  &.conflict-panel-5-ago {
+
+  &.panel-5-ago {
     border-color: lighten($brand-primary, 34%);
   }
-  &.conflict-panel-6-ago {
+
+  &.panel-6-ago {
     border-color: lighten($brand-primary, 36%);
   }
-  &.conflict-panel-7-ago {
+
+  &.panel-7-ago {
     border-color: lighten($brand-primary, 40%);
   }
-  &.conflict-panel-8-ago {
+
+  &.panel-8-ago {
     border-color: lighten($brand-primary, 44%);
   }
-  &.conflict-panel-9-ago {
+
+  &.panel-9-ago {
     border-color: lighten($brand-primary, 48%);
   }
 }
 
-// Custom hover state to override button default
-.conflictable.vue-is-hovering,
-.conflictable.vue-is-dragging,
-.conflictable.vue-is-hovering:active {
-  background: #000;
-  border-color: $gray;
-
-  .text-muted {
-    opacity: 1;
-  }
-}
-
 // Ensure text is treated nicely when a conflict state is active
-.conflictable.vue-is-hovering,
-.conflictable.vue-is-dragging,
-.conflictable.vue-is-hovering:active,
-.conflict-hover-personal-conflict,
-.conflict-hover-institutional-conflict,
-.conflict-hover-1-ago,
-.conflict-hover-2-ago,
-.conflict-hover-3-ago {
+.hover-personal,
+.hover-institutional,
+.hover-history-1-ago,
+.hover-history-2-ago,
+.hover-history-3-ago {
   color: #fff;
 
   span,

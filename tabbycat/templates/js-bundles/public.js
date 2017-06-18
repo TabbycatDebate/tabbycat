@@ -2,18 +2,29 @@
 var Vue = require('vue');
 import vueBases from './main.js';
 
-// Redefine so they can be edited
-var vueComponents = vueBases.baseComponents;
-var vueData = vueBases.baseData;
+// Redefine variables from import so that they can be edited
+var vueComponents = vueBases.baseComponents
+var vueData = vueBases.baseData
+
+// This is an coordinating instance used for inter-component pub/sub interfaces
+var eventHub = new Vue()
+Vue.prototype.$eventHub = eventHub
 
 //------------------------------------------------------------------------------
 // Main Vue Instance
 //------------------------------------------------------------------------------
 
-if (typeof bypassMainVue === 'undefined') {
+// Only instantiate Vue if there is set vueData; otherwise the mount is missing
+if (typeof vueData !== 'undefined') {
+
   new Vue({
-    el: 'body',
+    el: '#vueMount',
     components: vueComponents,
-    data: vueData
+    // created: vueCreated,
+    data: vueData,
+    // events: vueEvents,
+    // filters: vueFilters,
+    // methods: vueMethods
   });
+
 }

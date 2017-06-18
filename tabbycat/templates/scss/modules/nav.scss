@@ -5,10 +5,12 @@
 .navbar-toggle {
   margin-right: 0; // Too much padding
 }
+
 .navbar-brand {
   height: auto;
 }
-#nav_brand.navbar-nav {
+
+.navbar-brand-primary.navbar-nav {
   margin-bottom: 0; // Mobile spacing fix
 }
 
@@ -20,7 +22,9 @@
 .nav-sidebar-offset {
   padding-left: $sidebar-width;
 }
+
 .override-sidebar-offset { // For fullscreen pages
+
   .nav-sidebar-offset {
     padding-left: 0;
   }
@@ -42,23 +46,28 @@
   }
 
   // Title Element
-  #tournament_select {
-    padding: 16px 16px 16px 16px;
+  .tournament-select {
+    padding: 16px;
     margin-left: 0;
     border-radius: 0;
     text-transform: uppercase;
     color: $sidebar-muted-text;
+
     .caret {
       margin-top: 5px;
     }
+
     .emoji {
       margin-right: 7px; // Align the the other icons
     }
-    &:hover, &.active {
+
+    &:hover,
+    &.active {
       background: none;
       color: #fff;
     }
   }
+
   .dropdown-menu {
     width: 100%;
   }
@@ -69,13 +78,15 @@
 //------------------------------------------------------------------------------
 
 // Tournament Nav
-#tournament_select_menu {
+.tournament-select-menu {
   width: $sidebar-width - 7px;
   margin-left: 3px;
   margin-top: 3px;
   min-width: auto;
+
   > li > a {
     padding: 3px 5px 3px 8px;
+
     .badge {
       font-size: 10px;
     }

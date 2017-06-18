@@ -149,6 +149,22 @@ class AdjudicatorFeedbackQuestion(models.Model):
         options = list(range(int(min_value), int(max_value + 1), int(step)))
         return options
 
+    def serialize(self):
+        question = {
+            'text': self.text.replace("'", ""), # Escaping ' characters
+            'seq': self.seq,
+            'type': self.answer_type,
+            'required': self.answer_type,
+            'from_team': self.from_team,
+            'from_adj': self.from_adj,
+        }
+        if self.choices:
+            choices = self.choices.replace("'", "").split(self.CHOICE_SEPARATOR)
+            question['choice_options'] = choices
+        elif self.min_value is not None and self.max_value is not None:
+            question['choice_options'] = self.choices_for_number_scale
+        return question
+
 
 class AdjudicatorFeedback(Submission):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, db_index=True)

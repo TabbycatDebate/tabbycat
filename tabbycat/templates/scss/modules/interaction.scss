@@ -3,7 +3,9 @@
 //------------------------------------------------------------------------------
 
 [data-toggle='tooltip'],
-[data-toggle="popover"] {
+[data-toggle="popover"],
+.slideover-target {
+
   &:hover {
     cursor: help; // for tooltips
     span {
@@ -49,33 +51,35 @@
   top: 0;
 }
 
+.tooltip-vue {
+  // Sometimes we use the Bootstrap CSS to show/hide tooltips but do so via vue
+  opacity: 1; // So override the default hidden opacity
+}
+
 //------------------------------------------------------------------------------
 // For Division Drag and Drops
 //------------------------------------------------------------------------------
 
 .slideover-info {
-  bottom: 0;
-  height: auto;
+  top: 0;
   left: 0;
-  position: fixed;
   right: 0;
+  height: auto;
+  position: fixed;
   width: auto;
+  margin: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   z-index: $z_2;
+  border: 0;
 
-  .list-group {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    margin-bottom: 0; // override default
-  }
-
-  .list-group-item:last-child {
+  .list-group-item {
+    padding: 7px 3px; // Tighten up spacing of the sub elements
     border-radius: 0;
   }
-}
 
-.slideover-top {
-  bottom: auto;
-  top: 0;
-  z-index: $z_2;
+  .list-group-item:first-child {
+    border-top: 0;
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -100,24 +104,43 @@
 // Animated Items
 //------------------------------------------------------------------------------
 
-.glyphicon.spinning {
+.spinning {
   animation: spin 1s infinite linear;
 }
-
 @keyframes spin {
-  from { transform: scale(1) rotate(0deg); }
-  to { transform: scale(1) rotate(360deg); }
+
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+
+  to {
+    transform: scale(1) rotate(360deg);
+  }
 }
 
-// Used in the divisions allocations page for the slide-in-bottom element
-.expand-transition {
-  height: default;
-  transition: all .3s ease;
+// Used by slideover panel
+.slide-over-enter-active,
+.slide-over-leave-active {
+  transition: opacity 0.35s ease;
 }
 
-.expand-enter,
-.expand-leave {
-  height: 0;
+.slide-over-enter,
+.slide-over-leave-to {
   opacity: 0;
-  display: none;
+}
+
+.save-flash {
+  animation-name: flash-animation;
+  animation-duration: 5s;
+  animation-timing-function: ease-out;
+}
+@keyframes flash-animation {
+
+  from {
+    color: $brand-success;
+  }
+
+  to {
+    color: default;
+  }
 }

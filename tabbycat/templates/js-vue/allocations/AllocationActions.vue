@@ -1,168 +1,119 @@
 <template>
-  <div class="container-fluid">
-
+  <div class="container-fluid allocation-actions">
     <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="navbar-form flex-horizontal flex-justify">
 
-      <div class="navbar-form navbar-left btn-group btn-group-sm">
-        <a href="{{ roundInfo.backToDrawURL }}" class="btn btn-default btn-sm"
-           data-toggle="tooltip" data-placement="bottom"
-           title="Return to {{ roundInfo.roundName }}'s Draw">
-          <span class="glyphicon glyphicon-chevron-left"></span> Back
-        </a>
-        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Changes allocation are saved whenever an adjudicator's position is changed. Do not edit/change allocations across multiple browsers/computers!">
-          <span id="saveTime">Unsaved (no changes)</span>
-        </button>
-        <a class="btn btn-success btn-sm" v-on:click="confirmAutoAllocation">
-          Auto Allocate
-        </a>
+        <div class="btn-toolbar">
+          <div class="btn-group btn-group-sm">
+            <a :href="roundInfo.backUrl" class="btn btn-default btn-sm" data-toggle="tooltip"
+               data-placement="bottom" title="Return to Draw">
+              <span class="glyphicon glyphicon-chevron-left"></span>Back
+            </a>
+            <auto-save-counter :css="'btn-sm'"></auto-save-counter>
+            <a class="btn btn-success btn-sm" @click="showAutoAllocationModal">
+              Auto Allocate
+            </a>
+          </div>
+        </div>
+
+        <div class="btn-toolbar">
+          <div class="btn-group btn-group-sm">
+            <template v-if="!highlights.region && !highlights.gender &&
+                            !highlights.category && !highlights.ranking">
+              <button class="visible-lg-block btn btn-default">Conflicts Key</button>
+              <button class="btn conflictable conflicts-toolbar hover-history-2-ago">
+                Seen Before
+              </button>
+              <button class="btn conflictable conflicts-toolbar hover-institutional">
+                Institutional <span class="visible-lg-inline">Clash</span>
+              </button>
+              <button class="btn conflictable conflicts-toolbar hover-personal">
+                Personal <span class="visible-lg-inline">Clash</span>
+              </button>
+              <button class="btn panel-incomplete">
+                Unbalanced
+              </button>
+            </template>
+            <template v-if="highlights.gender">
+              <button class="visible-lg-block btn btn-default">Gender Key</button>
+              <button class="btn gender-display gender-male">Male</button>
+              <button class="btn gender-display gender-f">Female</button>
+              <button class="btn gender-display gender-o">Other</button>
+              <button class="btn gender-display gender-">Unknown</button>
+            </template>
+            <template v-if="highlights.region">
+              <button class="visible-lg-block btn btn-default">Region Key</button>
+              <button v-for="region in roundInfo.regions"
+                      :class="['btn btn-default region-display', 'region-' + region.class]">
+                {{ region.name }}
+              </button>
+            </template>
+            <template v-if="highlights.category">
+              <button class="visible-lg-block btn btn-default">Category Key</button>
+              <button v-for="category in roundInfo.categories"
+                      :class="['btn btn-default category-display', 'category-' + category.class]">
+                {{ category.name }} Break
+              </button>
+              <button  class="btn btn-default">
+                None Assigned
+              </button>
+            </template>
+            <template v-if="highlights.ranking">
+              <button class="visible-lg-block btn btn-default">Ranking Key</button>
+              <button v-for="threshold in percentiles"
+                      :class="['btn ranking-display', 'ranking-' + threshold.percentile]">
+                {{ threshold.grade }}</button>
+            </template>
+          </div>
+        </div>
+        <div class="btn-toolbar">
+          <div class="btn-group btn-group-sm">
+            <button v-for="label in highlightLabels" @click="toggleHighlight(label)"
+                    :class="['btn btn-default nav-link hoverable', highlights[label] ? 'active' : '']">
+              <span :class="['glyphicon', highlights[label] ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
+              {{ titleCase(label) }}
+            </button>
+          </div>
+        </div>
+
       </div>
-
-      <div class="navbar-form pull-right">
-        <div v-if="!showingGender && !showingCategory && !showingRegion" class="btn-group btn-group-sm">
-          <button disabled class="btn conflictable conflicts-toolbar conflict-hover-2-ago">
-            Seen Before
-          </button>
-          <button disabled class="btn conflictable conflicts-toolbar conflict-hover-institutional-conflict">
-            Institutional Clash
-          </button>
-          <button disabled class="btn conflictable conflicts-toolbar conflict-hover-personal-conflict">
-            Personal Clash
-          </button>
-          <button disabled class="btn panel-incomplete">
-            Unbalanced
-          </button>
-        </div>
-        <div v-if="showingGender" class="btn-group btn-group-sm">
-          <button disabled class="btn gender-display gender-male">Male</button>
-          <button disabled class="btn gender-display gender-f">Female</button>
-          <button disabled class="btn gender-display gender-o">Other</button>
-          <button disabled class="btn btn-default">Unknown</button>
-        </div>
-        <div v-if="showingRegion" class="btn-group btn-group-sm">
-          <button disabled v-for="region in regions"
-            class="btn btn-default region-display region-{{ region.seq }}">
-            {{ region.name }}
-          </button>
-        </div>
-        <div v-if="showingCategory" class="btn-group btn-group-sm">
-          <button disabled v-for="category in categories"
-            class="btn btn-default category-display category-{{ category.seq }}">
-            {{ category.name }} Break
-          </button>
-          <button disabled class="btn btn-default">
-            No Category Assigned
-          </button>
-        </div>
-        <div class="btn-group btn-group-sm">
-          <button class="btn btn-default nav-link hoverable" v-on:click="showRegion" v-bind:class="showingRegion ? 'active' : ''">
-            <span class="glyphicon" v-bind:class="showingRegion ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
-            Region
-          </button>
-          <button class="btn btn-default nav-link hoverable" v-on:click="showGender" v-bind:class="showingGender ? 'active' : ''">
-            <span class="glyphicon" v-bind:class="showingGender ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
-            Gender
-          </button>
-          <button class="btn btn-default nav-link hoverable" v-on:click="showCategory" v-bind:class="showingCategory ? 'active' : ''">
-            <span class="glyphicon" v-bind:class="showingCategory ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></span>
-            Category
-          </button>
-        </div>
-      </div>
-
     </nav>
-  </div>
 
-  <div class="modal fade" id="confirmAutoAlert" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body">
-          <p class="lead">Using auto-allocate will <strong>remove all existing adjudicator allocations</strong> and
-          create new panels for all debates.</p>
-          <p class="">The allocator forms stronger panels for debates that have been assigned higher importances.
-          If importances have not been set, or are equivalent, it will give stronger panels to
-          debates of a higher bracket.</p>
-          <p class="">Adjudicators must have a feedback score over <strong>{{ roundInfo.scoreForVote }}</strong> to panel.
-          You can change this in the <em>Draw Rules</em> section of Configuration if needed. Try modifying this value
-          if you are seeing too few or too many panellists being allocated.</p>
-          <div v-if="roundInfo.scoreForVote > roundInfo.scoreMax" class="alert alert-warning">
-            The score required to panel ({{ roundInfo.scoreForVote }}) is higher than the maximum adjudicator score ({{ roundInfo.scoreMax }}).
-            You should probably lower the score required to panel in settings.
-          </div>
-          <div v-if="roundInfo.scoreForVote < roundInfo.scoreMin" class="alert alert-warning">
-            The score required to panel ({{ roundInfo.scoreForVote }}) is lower than the minimum adjudicator score ({{ roundInfo.scoreMin }}).
-            You should probably raise the score required to panel in settings.
-          </div>
-          <button type="submit" class="btn btn-block btn-success"
-                  v-on:click="createAutoAllocation"
-                  data-loading-text="Loading Auto Allocation...">
-            Create Automatic Allocation
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+    <allocation-modal :round-info="roundInfo"></allocation-modal>
 
+  </div>
 </template>
 
 <script>
+import AllocationModal from '../allocations/AllocationModal.vue'
+import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
+
 export default {
-  props: {
-    regions: Array,
-    categories: Array,
-    roundInfo: Object,
-    showingVenue: { default: false },
-    showingRegion: { default: false },
-    showingGender: { default: false },
-    showingCategory: { default: false }
+  props: { roundInfo: Object, percentiles: Array },
+  components: { AllocationModal, AutoSaveCounter },
+  data: function() {
+    // Internal state storing the status of which diversity highlight is being toggled
+    return {
+      highlights: { region: false, gender: false, category: false, ranking: false },
+      highlightLabels: { region: 'region', gender: 'gender', category: 'category', ranking: 'ranking' }
+    }
   },
   methods: {
-    confirmAutoAllocation: function() {
+    showAutoAllocationModal: function() {
       $('#confirmAutoAlert').modal('show');
     },
-    resetAutoAllocationModal: function(button) {
-      $(button).button('reset');
-      $('#confirmAutoAlert').modal('hide');
+    titleCase: function(title) {
+      return title.charAt(0).toUpperCase() + title.substr(1)
     },
-    createAutoAllocation: function(event) {
-      var self = this
-      $(event.target).button('loading')
-      $.post({
-        url: this.roundInfo.createAutoAllocationURL,
-        success: function(data, textStatus, jqXHR) {
-          self.resetAutoAllocationModal(event.target)
-          $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
-          self.$dispatch('set-debate-panels', JSON.parse(data))
-          // Update the save counter (this normally goes through AjaxMixin.vue)
-          var savedAt = new Date()
-          var hours = savedAt.getHours()
-          var minutes = ('0'+ savedAt.getMinutes()).slice(-2); // ":09" not ":9"
-          $('#saveTime').text("Saved at " + hours + ":" + minutes)
-        },
-        error: function(data, textStatus, jqXHR) {
-          self.resetAutoAllocationModal(event.target)
-          $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
-        },
-        dataType: "json"
-      });
-    },
-    showRegion: function() {
-      this.showingRegion = !this.showingRegion;
-      this.showingGender = false;
-      this.showingCategory = false;
-      this.$dispatch('set_diversity_highlights', this.showingRegion, 'region_show')
-    },
-    showGender: function() {
-      this.showingGender = !this.showingGender;
-      this.showingRegion = false;
-      this.showingCategory = false;
-      this.$dispatch('set_diversity_highlights', this.showingGender, 'gender_show')
-    },
-    showCategory: function() {
-      this.showingCategory = !this.showingCategory;
-      this.showingGender = false;
-      this.showingRegion = false;
-      this.$dispatch('set_diversity_highlights', this.showingCategory, 'category_show')
+    toggleHighlight: function(label) {
+      // Turn off all highlights; toggle the one just clicked
+      this.highlights.region = label === 'region' ? !this.highlights[label]: false
+      this.highlights.gender = label === 'gender' ? !this.highlights[label]: false
+      this.highlights.category = label === 'category' ? !this.highlights[label]: false
+      this.highlights.ranking = label === 'ranking' ? !this.highlights[label]: false
+      this.$eventHub.$emit('set-highlights', this.highlights)
     }
   }
 }
+
 </script>

@@ -2,22 +2,69 @@
 // General Layout
 //------------------------------------------------------------------------------
 
+.allocation-actions {
+
+  .navbar {
+    min-height: auto;
+  }
+
+  .navbar-form {
+    margin: 0;
+    padding: 7px 4px; // Tweak to match slideovers
+  }
+}
+
 .allocation-container {
+  padding-top: 75px; // Need to offset the hidden elements from slideover
   padding-bottom: 500px; // Need to offset the adjs panel max height
-  padding-top: 85px; // Need to compensate for the fixed header
+}
+
+.draw-container {
+
+  .draw-row:last-of-type {
+    border-radius: 0 0 4px 4px;
+  }
+}
+
+.draw-header {
+  @extend .draw-row;
+
+  border-top: 1px solid $btn-default-border;
+  border-radius: 4px 4px 0 0;
+  padding-top: 8px;
+}
+
+.draw-row {
+  @extend .row;
+  @extend .flex-horizontal;
+
+  background: #fff; // Need to compensate for lack of table background
+  border-left: 1px solid $btn-default-border;
+  border-right: 1px solid $btn-default-border;
+}
+
+.draw-cell {
+  @extend .flex-cell;
+  @extend .flex-vertical-center;
+  @extend .bordered-bottom;
 }
 
 .allocations { // For fullscreen pages
+
   .accommodate-footer {
-    padding-left: 0;
+    padding-left: 4px;
+    padding-right: 4px;
     background: $alt-bg;
   }
 }
 
-.unallocated-adjs {
+.unallocated-items {
   max-height: 450px;
   min-height: 54px;
   z-index: $z_3; // Need to hover abovve underlying .tooltips
+  > div {
+    display: inline-flex;
+  }
 }
 
 .thead {
@@ -30,9 +77,13 @@
 }
 
 .flex-cell {
-  min-width: 40px;
-  padding-left: $table-cell-padding;
-  padding-right: $table-cell-padding;
+  min-width: 30px;
+  padding-left: $table-cell-padding - 2;
+  padding-right: $table-cell-padding - 2;
+}
+
+.cell-padding-helper {
+  padding: 6px 0;
 }
 
 .bordered-bottom {
@@ -41,6 +92,43 @@
 
 .importance-container {
   width: 100px;
+}
+
+.panel-container {
+
+  .vue-droppable-container {
+    border-right: 2px solid $table-border-color;
+    height: 100%;
+
+    .vue-droppable {
+      flex-wrap: wrap; // Ensure content can wrap if needed
+      display: flex;
+    }
+  }
+
+  .vue-droppable-container:last-child {
+    border-right: 0;
+  }
+}
+
+.position-container-C {
+  flex: 0 0 170px; // Always be 170px
+
+  &.positions-limited-1 {
+    flex: 0 0 100%; // When trainees/panellists are turned off
+  }
+}
+
+.position-container-P {
+  flex: 1; // Grow into remaining space
+}
+
+.position-container-T {
+  flex: 0 0 170px; // Always be 170px
+
+  &.positions-limited-2 {
+    flex: 0 0 100%; // When trainees/panellists are turned off
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -61,6 +149,7 @@
     padding: 3px;
   }
 }
+
 // Parent element to keep the tooltips abs positioning in line
 .tooltip-holder {
   position: relative;
@@ -80,6 +169,24 @@
 // Debate Layout
 //------------------------------------------------------------------------------
 
+.draw-team-cell {
+
+  > div {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    padding: 0 5px;
+  }
+
+  > div.conflictable {
+    // Team cells need some border state for in panel conflicts
+    border-color: #fff;
+    border-width: 4px;
+    border-style: solid;
+  }
+}
+
 .panel-debate {
   // Overwrite .panel defaults
   box-shadow: 0;
@@ -91,58 +198,5 @@
   min-height: 50px; // Dont let it collapse when no adjs are present
   &:first-child {
     border-left: 0;
-  }
-}
-
-//------------------------------------------------------------------------------
-// Debate Teams
-//------------------------------------------------------------------------------
-
-.debate-team {
-  width: 120px;
-
-  &:hover {
-    background-color: darken($btn-default-bg, 10%);
-    cursor: help;
-  }
-  // Truncate Long Team Names
-  .debate-team-title {
-    max-height: 40px;
-    overflow-y: hidden;
-  }
-}
-
-//------------------------------------------------------------------------------
-// Adjudicators
-//------------------------------------------------------------------------------
-
-.adj-draggable {
-  height: 42px;
-  padding-top: 4px; // Center the Score
-  text-align: left;
-
-  // Allow the rating and title to set the box size dynamically
-  display: flex;
-  flex-direction: row;
-  .adj-info,
-  .adj-score {
-    display: inline-flex;
-  }
-
-  .h4 {
-    margin: 0;
-    min-width: 30px;
-    padding-top: 4px; // Center the Score
-  }
-
-  span {
-    border-bottom: 0;
-  }
-
-  .small {
-    display: block;
-    font-size: 70%;
-    font-weight: bold;
-    line-height: 3px;
   }
 }

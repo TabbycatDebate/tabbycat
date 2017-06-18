@@ -73,7 +73,6 @@
       var references = [], btn = $(this);
       $(":checkbox.vue-table-checkbox").each(function(){
         if ($(this).prop('checked')) {
-          console.log(this);
           references.push(parseInt($(this).attr('data-target')));
         }
       });

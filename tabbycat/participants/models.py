@@ -21,6 +21,10 @@ class Region(models.Model):
     def __str__(self):
         return '%s' % (self.name)
 
+    @property
+    def serialize(self):
+        return {'name': self.name, 'id': self.id, 'class': None}
+
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['code', 'name', 'abbreviation']
@@ -53,6 +57,10 @@ class Institution(models.Model):
             return self.abbreviation
         else:
             return self.code[:5]
+
+    @property
+    def serialize(self):
+        return {'name': self.name, 'id': self.id, 'code': self.code}
 
 
 class Person(models.Model):
@@ -272,6 +280,18 @@ class Team(models.Model):
         self.long_name = self._construct_long_name()
         super().save(*args, **kwargs)
 
+    def serialize(self):
+        team = {'id': self.id, 'short_name': self.short_name, 'long_name': self.long_name}
+        team['institution'] = self.institution.serialize
+        team['region'] = self.region.serialize if self.region else None
+        speakers = list(self.speakers.order_by('name'))
+        team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in speakers]
+        break_categories = self.break_categories.all()
+        team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
+        team['highlights'] = {'region': False, 'gender': False, 'category': False}
+        team['wins'] = self.wins_count
+        return team
+
 
 class Speaker(Person):
     team = models.ForeignKey(Team, models.CASCADE)
@@ -392,3 +412,11 @@ class Adjudicator(Person):
         if before_round is not None:
             d = d.filter(debate__round__seq__lt=before_round.seq)
         return d.count()
+
+    def serialize(self, round):
+        adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
+        adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
+        adj['region'] = self.region.serialize if self.region else None
+        adj['institution'] = self.institution.serialize if self.institution else None
+        adj['highlights'] = {'region': False, 'gender': False, 'category': False}
+        return adj

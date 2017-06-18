@@ -9,8 +9,9 @@
     background: none; // override
     border: 0;
     box-shadow: none;
-    margin: 0 0 0 0; // override
+    margin: 0; // override
     z-index: 10; // sit above the progress line
+
     // All Buttons
     a {
       color: $sidebar-muted-text;
@@ -18,6 +19,7 @@
       font-family: $font-family-sans-serif;
       font-size: $font-size-h6;
       padding: 6px 16px 6px 19px;
+
       .glyphicon {
         margin-right: 11px; // Top categories for left hand menu
         font-size: 11px;
@@ -45,6 +47,7 @@
   // EXPANDED
   li.panel div[role="tab"] a[aria-expanded="true"] {
     background: $sidebar-bg-highlight;
+
     .caret {
       margin-top: 7px;
       transform: rotate(0deg);
@@ -52,6 +55,7 @@
   }
   // NOT EXPANDED
   li.panel div[role="tab"] a[aria-expanded="false"] {
+
     .caret {
       margin-top: 7px;
       transform: rotate(90deg);
@@ -112,6 +116,7 @@
 }
 
 .nav-stacked .nav-stacked {
+
   .progress-line {
     border-color: $gray;
     margin: -3px 0 0 21px;
@@ -136,6 +141,7 @@
 }
 
 .sub-nav {
+
   .circle-icon {
     height: 18px;
     margin: -2px 12px -3px -6px;

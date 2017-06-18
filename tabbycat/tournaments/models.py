@@ -287,6 +287,18 @@ class Round(models.Model):
         if errors:
             raise ValidationError(errors)
 
+    def duplicate_panellists(self):
+        """ Checks if there any duplicate allocations """
+        from adjallocation.models import DebateAdjudicator
+        from participants.models import Adjudicator
+        das = list(DebateAdjudicator.objects.filter(
+            debate__round=self).select_related('round', 'adjudicator').values_list('adjudicator_id', flat=True))
+        double_allocated_das = list(set([x for x in das if das.count(x) > 1]))
+        if len(double_allocated_das) > 0:
+            return Adjudicator.objects.filter(id__in=double_allocated_das)
+        else:
+            return None
+
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
         more than one chair."""

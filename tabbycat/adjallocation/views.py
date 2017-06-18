@@ -6,58 +6,85 @@ from django.http import HttpResponse, HttpResponseBadRequest
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from breakqual.utils import categories_ordered
+from breakqual.models import BreakCategory
 from draw.models import Debate
-from participants.models import Team
-from participants.utils import regions_ordered
+from participants.models import Adjudicator, Region
+# from participants.utils import regions_ordered
 from tournaments.models import Round
-from tournaments.mixins import RoundMixin
+from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, SaveDragAndDropDebateMixin
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import DebateAdjudicator
-from .utils import adjs_to_json, debates_to_json, get_adjs, populate_conflicts, populate_histories, teams_to_json
+from .utils import get_conflicts, get_histories
 
+from utils.misc import reverse_round
 
 logger = logging.getLogger(__name__)
 
 
-class EditAdjudicatorAllocationView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
 
-    template_name = 'edit_adj_allocation.html'
+    def get_unallocated_adjudicators(self):
+        round = self.get_round()
+        unused_adjs = [a.serialize(round) for a in round.unused_adjudicators()]
+        unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
+        return json.dumps(unused_adjs)
 
-    def get_context_data(self, **kwargs):
+
+class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):
+
+    template_name = 'edit_adjudicators.html'
+    auto_url = "adjudicators-auto-allocate"
+    save_url = "save-debate-panel"
+
+    def annotate_round_info(self, round_info):
         t = self.get_tournament()
         r = self.get_round()
+        round_info['updateImportanceURL'] = reverse_round('save-debate-importance', r)
+        round_info['scoreMin'] = t.pref('adj_min_score')
+        round_info['scoreMax'] = t.pref('adj_max_score')
+        round_info['scoreForVote'] = t.pref('adj_min_voting_score')
+        round_info['allowDuplicateAllocations'] = t.pref('duplicate_adjs')
+        round_info['regions'] = self.get_regions_info()
+        round_info['categories'] = self.get_categories_info()
+        return round_info
 
-        draw = r.debate_set_with_prefetches(ordering=('room_rank',), speakers=False, divisions=False)
+    def get_regions_info(self):
+        # Need to extract and annotate regions for the allcoation actions key
+        all_regions = [r.serialize for r in Region.objects.order_by('id')]
+        for i, r in enumerate(all_regions):
+            r['class'] = i
+        return all_regions
 
-        teams = Team.objects.filter(debateteam__debate__round=r).prefetch_related('speaker_set')
-        adjs = get_adjs(self.get_round())
+    def get_categories_info(self):
+        # Need to extract and annotate categories for the allcoation actions key
+        all_bcs = [c.serialize for c in BreakCategory.objects.filter(
+            tournament=self.get_tournament()).order_by('id')]
+        for i, bc in enumerate(all_bcs):
+            bc['class'] = i
+        return all_bcs
 
-        regions = regions_ordered(t)
-        categories = categories_ordered(t)
-        adjs, teams = populate_conflicts(adjs, teams)
-        adjs, teams = populate_histories(adjs, teams, t, r)
-
-        kwargs['allRegions'] = json.dumps(regions)
-        kwargs['allCategories'] = json.dumps(categories)
-        kwargs['allDebates'] = debates_to_json(draw, t, r)
-        kwargs['allTeams'] = teams_to_json(teams, regions, categories, t, r)
-        kwargs['allAdjudicators'] = adjs_to_json(adjs, regions, t)
-
+    def get_context_data(self, **kwargs):
+        kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
+        kwargs['vueAdjudicatorConflicts'] = get_conflicts(
+            self.get_tournament(), self.get_round())
+        kwargs['vueAdjudicatorHistories'] = get_histories(
+            self.get_tournament(), self.get_round())
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, RoundMixin, SuperuserRequiredMixin, JsonDataResponsePostView):
+class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
     def post_data(self):
-        round = self.get_round()
-        allocate_adjudicators(round, HungarianAllocator)
-        return debates_to_json(round.debate_set_with_prefetches(), self.get_tournament(), round)
+        allocate_adjudicators(self.get_round(), HungarianAllocator)
+        return {
+            'debates': self.get_draw(),
+            'unallocatedAdjudicators': self.get_unallocated_adjudicators()
+        }
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
@@ -77,32 +104,53 @@ class SaveDebateImportance(SaveDebateInfo):
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
     def post(self, request, *args, **kwargs):
-        debate_id = request.POST.get('debate_id')
-        debate_importance = request.POST.get('importance')
-
-        debate = Debate.objects.get(pk=debate_id)
-        debate.importance = debate_importance
+        debate = Debate.objects.get(pk=request.POST.get('debate_id'))
+        debate.importance = request.POST.get('importance')
         debate.save()
-
+        self.log_action()
         return HttpResponse()
 
 
-class SaveDebatePanel(SaveDebateInfo):
+class SaveDebatePanel(SaveDragAndDropDebateMixin):
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
-    def post(self, request, *args, **kwargs):
-        debate_id = request.POST.get('debate_id')
-        debate_panel = json.loads(request.POST.get('panel'))
+    def get_moved_item(self, id):
+        return Adjudicator.objects.get(pk=id)
 
-        to_delete = DebateAdjudicator.objects.filter(debate_id=debate_id).exclude(
-                adjudicator_id__in=[da['id'] for da in debate_panel])
-        for debateadj in to_delete:
-            logger.info("deleted %s" % debateadj)
-        to_delete.delete()
+    def modify_debate(self, debate, posted_debate):
+        panellists = posted_debate['panel']
+        message = "Processing change for %s" % debate.id
 
-        for da in debate_panel:
-            debateadj, created = DebateAdjudicator.objects.update_or_create(debate_id=debate_id,
-                    adjudicator_id=da['id'], defaults={'type': da['position']})
-            logger.info("%s %s" % ("created" if created else "updated", debateadj))
+        # below are DEBUG
+        for da in DebateAdjudicator.objects.filter(debate=debate).order_by('type'):
+            message += "\nExisting: %s" % da
+        for panellist in panellists:
+            message += "\nNew: %s %s" % (panellist['adjudicator']['name'], panellist['position'])
 
-        return HttpResponse()
+        for da in DebateAdjudicator.objects.filter(debate=debate):
+            message += "\n\tChecking %s" % da
+            match = next((p for p in panellists if p["adjudicator"]["id"] == da.adjudicator.id), None)
+            if match:
+                message += "\n\t\tExists in panel already %s" % da
+                if match['position'] == da.type:
+                    message += "\n\t\t\tPASS — Is in same position %s" % da
+                else:
+                    da.type = match['position']
+                    da.save()
+                    message += "\n\t\t\tUPDATE — Changed position to %s" % da
+                # Updated or not needed to be touched; remove from consideration for adding
+                panellists.remove(match)
+            else:
+                message += "\n\tDELETE — No longer needed; deleting %s" % da
+                da.delete()
+
+        for p in panellists:
+            adjudicator = Adjudicator.objects.get(pk=p["adjudicator"]["id"])
+            new_allocation = DebateAdjudicator.objects.create(debate=debate,
+                adjudicator=adjudicator, type=p["position"])
+            new_allocation.save() # Move to new location
+            message += "\n\tNEW — Creating new allocation %s" % new_allocation
+
+        message += "\n---"
+        # print(message)
+        return debate

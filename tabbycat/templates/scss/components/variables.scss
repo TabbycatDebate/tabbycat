@@ -17,7 +17,7 @@ $icon-font-path: '/static/fonts/';
 //------------------------------------------------------------------------------
 
 $brand-primary:           #3498db;
-$text-primary:            #333333;
+$text-primary:            #333;
 
 $brand-success:           #43ca75;
 $state-success-text:      #3c763d;
@@ -27,7 +27,7 @@ $brand-info:              #3b9ad8;
 $state-info-text:         #31708f;
 $state-info-bg:           #d9edf7;
 
-$brand-warning:           #f0c230;
+$brand-warning:           #f8bd30;
 $state-warning-text:      #8a6d3b;
 $state-warning-bg:        #fcf8e3;
 
@@ -42,7 +42,7 @@ $body-bg:                 #f3f4f9;
 $alt-bg:                  #fff; // For tables etc
 $table-bg-hover:          #e3e3e3;
 $sidebar-bg:              #30404f;
-$sidebar-bg-highlight:    rgba(0,0,0,0.3);
+$sidebar-bg-highlight:    rgba(0, 0, 0, 0.3);
 $sidebar-muted-text:      #adb6bf;
 
 //------------------------------------------------------------------------------
@@ -51,14 +51,46 @@ $sidebar-muted-text:      #adb6bf;
 
 // Gender Highlights
 $male:                    #36b6c0;
-$female:                  #ff9451;
-$other:                   #e7d40e;
+$female:                  #ed6b19;
+$other:                   #dbd302;
 $unknown:                 #ccc;
 
 // Break Category Highlights
 $break-cat-1:             #57e2ff;
 $break-cat-2:             #c70062;
 $break-cat-3:             #00c79b;
+$break-cat-4:             #90f;
+
+// Region Category Highlights
+$region-cat-0:#c70062;
+$region-cat-1:#00c79b;
+$region-cat-2:#b1e001;
+$region-cat-3:#476c5e;
+$region-cat-4:#ff2983;
+$region-cat-5:#6a268c;
+$region-cat-6:#00c0cf;
+$region-cat-7:#0051cf;
+$region-cat-8:#777;
+
+// $adj-ranking-0: darken(#43bc3c, 10%);
+// $adj-ranking-1: #43bc3c;
+// $adj-ranking-2: darken(#7ee8c0, 10%);
+// $adj-ranking-3: #7ee8c0;
+// $adj-ranking-4: #e89112;
+// $adj-ranking-5: #d7301f;
+// $adj-ranking-6: #d7301f;
+// $adj-ranking-7: #666;
+// $adj-ranking-8: #666;
+
+$adj-ranking-0: hsla(175, 90%, 40%, 1); // A+
+$adj-ranking-1: hsla(140, 90%, 42%, 1); // A
+$adj-ranking-2: hsla(90, 90%, 38%, 1); // A-
+$adj-ranking-3: hsla(55, 90%, 45%, 1); // B+
+$adj-ranking-4: hsla(30, 95%, 60%, 1); // B
+$adj-ranking-5: hsla(0, 95%, 48%, 1); // B-
+$adj-ranking-6: hsla(0, 100%, 34%, 1); // C+
+$adj-ranking-7: hsla(0, 0%, 60%, 1);
+$adj-ranking-8: hsla(0, 0%, 50%, 1);
 
 //------------------------------------------------------------------------------
 // Custom Layout

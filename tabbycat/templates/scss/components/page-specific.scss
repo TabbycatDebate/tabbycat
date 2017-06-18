@@ -2,8 +2,15 @@
 // Checkins
 //------------------------------------------------------------------------------
 
-.round-progresses .progress {
-  margin-bottom: 0; // Progress bars have bottom margins; need to offset
+.round-progresses {
+
+  .row:first-child {
+    margin-bottom: 10px; // Space out the bars slightly
+  }
+
+  .progress {
+    margin-bottom: 0; // Progress bars have bottom margins; need to offset
+  }
 
   .progress-empty span {
     color: #000; // If its showing 0/x make the text visible and not flush
@@ -23,6 +30,7 @@
   .col-md-3 {
     display: flex;
   }
+
   // Set the panel body to fill all the available height
   .panel {
     display: flex;
@@ -42,6 +50,7 @@
 .division-footer {
   // Create a compact <select> element for the bottom of divison boxes
   padding: 5px 4px;
+
   select {
     height: auto;
     padding: 2px 0;
@@ -56,7 +65,7 @@
   margin-left: 3px; // Fix for buttons on edit draw page
 }
 
-#stop_scrolling {
+.btn-stop-scrolling {
   position: fixed;
   top: 15px;
   right: 15px;
@@ -90,8 +99,10 @@
 .speaker-name {
   text-align: left;
 }
+
 .iron-person {
-  padding: 10px 0 5px 0;
+  padding: 10px 0 5px;
+
   input {
     float: right;
     width: 21px;
