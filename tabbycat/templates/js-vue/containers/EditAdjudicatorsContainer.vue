@@ -15,13 +15,13 @@
         </div>
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
-          <div class="thead flex-cell flex-12 vue-droppable-container">
+          <div class="thead flex-cell flex-10 text-center vue-droppable-container">
             <span>Chair</span>
           </div>
-          <div class="thead flex-cell flex-12 vue-droppable-container">
+          <div class="thead flex-cell flex-16 text-center vue-droppable-container">
             <span>Panel</span>
           </div>
-          <div class="thead flex-cell flex-12 vue-droppable-container">
+          <div class="thead flex-cell flex-10 text-center vue-droppable-container">
             <span>Trainees</span>
           </div>
         </template>
@@ -32,23 +32,9 @@
         </div>
         <template slot="svenue"><!-- Hide Venues --></template>
         <template slot="spanel">
-          <div class="draw-cell panel-container flex-36 flex-horizontal">
-            <template v-for="position in adjPositions">
-              <div :class="['vue-droppable-container', 'position-container-' + position]">
-                <droppable-generic :assignment-id="debate.id"
-                                   :assignment-position="position"
-                                   :extra-css="'flex-horizontal'"
-                                   :locked="debate.locked">
-                  <draggable-adjudicator
-                    v-for="da in getAdjudicatorsByPosition(debate, position)"
-                    :adjudicator="da.adjudicator" :debate-id="debate.id"
-                    :percentiles="percentileThresholds" :key="da.adjudicator.id"
-                    :locked="debate.locked">
-                  </draggable-adjudicator>
-                </droppable-generic>
-              </div>
-            </template>
-          </div>
+          <debate-panel :panel="debate.panel" :debate-id="debate.id"
+                        :percentiles="percentileThresholds"
+                        :locked="debate.locked"></debate-panel>
         </template>
       </debate>
     </div>
@@ -72,6 +58,7 @@ import AdjudicatorMovingMixin from '../ajax/AdjudicatorMovingMixin.vue'
 import HighlightableContainerMixin from '../allocations/HighlightableContainerMixin.vue'
 import AllocationActions from '../allocations/AllocationActions.vue'
 import DebateImportance from '../allocations/DebateImportance.vue'
+import DebatePanel from '../allocations/DebatePanel.vue'
 import ConflictsCoordinatorMixin from '../allocations/ConflictsCoordinatorMixin.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 
@@ -81,7 +68,7 @@ import _ from 'lodash'
 export default {
   mixins: [AdjudicatorMovingMixin, DrawContainerMixin,
            HighlightableContainerMixin, ConflictsCoordinatorMixin],
-  components: { AllocationActions, DebateImportance, DraggableAdjudicator },
+  components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)
   },
@@ -110,9 +97,6 @@ export default {
     }
   },
   methods: {
-    getAdjudicatorsByPosition: function(debate, position) {
-      return _.filter(debate.panel, { 'position': position })
-    },
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move

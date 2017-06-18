@@ -8,13 +8,15 @@ export default {
   computed: {
     breakCategoriesFeature: function() {
       var self = this
-      return _.map(this.team.break_categories, function(bc) {
+      var winInfo = [{ 'title': self.team.wins + ' wins' }]
+      var bcInfo = _.map(this.team.break_categories, function(bc) {
         return {
-          'title': self.titleForBC(bc, self.team.wins),
+          'title': self.titleForBC(bc),
           'class': 'category-display category-' + bc.class,
           'icon': self.iconForBC(bc)
         }
       })
+      return winInfo.concat(bcInfo)
     },
     teamInfoFeature: function() {
       var self = this
@@ -31,8 +33,7 @@ export default {
   },
   methods: {
     titleForBC: function(bc, wins) {
-      var status = bc.will_break.toUpperCase()
-      return status + ' for ' + bc.name + ' Break (on ' + wins + ')'
+      return bc.will_break.toUpperCase() + ' for ' + bc.name + ' Break'
     },
     iconForBC: function(bc) {
       if (bc.will_break === 'dead') { return 'glyphicon-remove' } else

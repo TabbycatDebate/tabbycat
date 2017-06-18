@@ -22,7 +22,6 @@ export default {
       slideOverItem: null,
       debates: this.initialDebates,
       unallocatedItems: this.initialUnallocatedItems,
-      adjPositions: ["C", "P", "T"] // Used to iterate in templates
     }
   },
   props: ['initialDebates', 'initialUnallocatedItems', 'roundInfo'],
