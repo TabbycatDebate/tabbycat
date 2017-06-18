@@ -43,12 +43,8 @@ export default {
     }
   },
   methods: {
-    handleDragStart: function(event) {
-      // this.$dispatch('started-dragging-team', this);
-    },
-    handleDragEnd: function(event) {
-      // this.$dispatch('stopped-dragging-team');
-    },
+    handleDragStart: function(event) {},
+    handleDragEnd: function(event) {},
   }
 }
 </script>

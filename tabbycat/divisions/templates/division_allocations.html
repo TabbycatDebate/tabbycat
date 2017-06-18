@@ -38,73 +38,31 @@
 {% endblock %}
 
 {% block content %}
+<div id="vueMount">
 
-  <div class="row divisions-holder">
-    <template v-for="division in divisions | orderBy 'parseInt(name)'" track-by="id">
+  <allocate-divisions-container :teams="teams" :divisions="divisions"
+                                :venue-categories="venueCategories"
+                                :save-divisions-url="saveDivisionsUrl"
+                                :save-venue-category-url="saveVenueCategoryUrl">
+  </allocate-divisions-container>
 
-      <div class="col-sm-4 col-md-4 col-lg-3">
-        <division-droppable
-          save-vc-at="{% tournamenturl 'set_division_venue_category' %}"
-          save-division-at="{% tournamenturl 'set_team_division' %}"
-          :division="division"
-          :teams="teams | filterBy division.id in 'division'"
-          :vcs="venueCategories">
-        </division-droppable>
-      </div>
-
-    </template>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12" class="row">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">Teams Without Divisions</h4>
-        </div>
-        <unallocated-division-teams
-          :teams="teams"
-          save-division-at="{% tournamenturl 'set_team_division' %}">
-        </unallocated-division-teams>
-      </div>
-    </div>
-  </div>
-
-
+</div>
 {% endblock content %}
 
 {% block js %}
   <script>
+    window.vueData = {
+      draggedComponent: null,
+      teams: {{ teams | safe }},
+      divisions: {{ divisions | safe }},
+      venueCategories: {{ venue_categories | safe }},
+      saveDivisionsUrl: '{% tournamenturl 'set_team_division' %}',
+      saveVenueCategoryUrl: '{% tournamenturl 'set_division_venue_category' %}'
+    }
 
-  var divisionsBaseData = {
-    draggedComponent: null,
-    teams: {{ teams | safe }},
-    divisions: {{ divisions | safe }},
-    venueCategories: {{ venue_categories | safe }}
-  }
   // Todo: create a DivisionsContainer; move these methods there
-  var divisionsMethods = {
-    handleDrop: function(ev) {
-      this.draggedComponent.team.division = null;
-      this.draggedComponent.saveDivision();
-    }
-  }
-  var divisionsEvents = {
-    // Set a global record of what is being dragged
-    'started-dragging-team': function (component) {
-      this.draggedComponent = component;
-    },
-    'stopped-dragging-team': function () {
-      this.draggedComponent = null;
-    },
-    'assign-team-to-division': function (droppedDivision) {
-      this.draggedComponent.team.division = droppedDivision.id;
-      this.draggedComponent.saveDivision();
-    },
-    'unassign-team-division': function () {
-      this.draggedComponent.team.division = null;
-      this.draggedComponent.saveDivision();
-    }
-  }
+
+
   </script>
   {{ block.super }}
 {% endblock js %}

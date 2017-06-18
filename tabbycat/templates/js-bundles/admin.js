@@ -41,12 +41,13 @@ vueComponents['TournamentOverviewContainer'] = TournamentOverviewContainer
 import PrintableBallot from  '../../printing/templates/PrintableBallot.vue'
 vueComponents['PrintableBallot'] = PrintableBallot
 
-// //------------------------------------------------------------------------------
-// // Divisons Allocator
-// //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Divisons Allocator
+//------------------------------------------------------------------------------
 
-// import DivisionDroppable from  '../js-vue/draganddrops/DivisionDroppable.vue'
-// import UnallocatedDivisionTeams from  '../js-vue/allocations/UnallocatedDivisionTeams.vue'
+import AllocateDivisionsContainer from  '../../divisions/templates/AllocateDivisionsContainer.vue'
+vueComponents['AllocateDivisionsContainer'] = AllocateDivisionsContainer
+
 // import DraggableTeam from  '../js-vue/draganddrops/DraggableTeam.vue'
 
 // if (typeof divisionsBaseData !== 'undefined' && divisionsBaseData !== null) {

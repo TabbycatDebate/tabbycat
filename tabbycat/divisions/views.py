@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic.base import TemplateView, View
 
 from participants.models import Institution, Team
@@ -46,8 +46,11 @@ class DivisionsAllocatorView(SuperuserRequiredMixin, TournamentMixin, TemplateVi
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
         teams = Team.objects.filter(tournament=t).all()
-        teams_json = list(teams.values('id', 'short_reference', 'division',
-            'use_institution_prefix', 'institution__code', 'institution__id'))
+        teams_json = []
+        for team in teams:
+            team_dict = team.serialize()
+            team_dict['division'] = team.division.id if team.division else None
+            teams_json.append(team_dict)
 
         # Build a per-team list of all the relevant institutional/team constraints
         for team, team_dict in zip(teams, teams_json):
@@ -136,30 +139,31 @@ class CreateDivisionAllocationView(SuperuserRequiredMixin, TournamentMixin, Post
 class SetDivisionVenueCategoryView(TournamentMixin, SuperuserRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        division = Division.objects.get(pk=int(self.request.POST['division']))
-        if self.request.POST['venueCategory'] == '':
+        posted_data = json.loads(self.request.body)
+        division = Division.objects.get(pk=int(posted_data['division']))
+        vc = posted_data['venueCategory']
+        if vc == '':
             division.venue_category = None
         else:
-            division.venue_category = VenueCategory.objects.get(pk=int(self.request.POST['venueCategory']))
+            division.venue_category = VenueCategory.objects.get(pk=int(vc))
 
-        print("saved venue cat for for", division.name)
         division.save()
-        return HttpResponse()
+        return JsonResponse(json.dumps(posted_data), safe=False)
 
 
 class SetTeamDivisionView(TournamentMixin, SuperuserRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        team = Team.objects.get(pk=int(self.request.POST['team']))
-        if self.request.POST['division'] == '':
+        posted_data = json.loads(self.request.body)
+        print(posted_data)
+        team = Team.objects.get(pk=int(posted_data['team']))
+        if posted_data['division'] is None:
             team.division = None
-            print("set division to none for", team.short_name)
         else:
-            team.division = Division.objects.get(pk=int(self.request.POST['division']))
-            print("saved divison for ", team.short_name)
+            team.division = Division.objects.get(pk=int(posted_data['division']))
 
         team.save()
-        return HttpResponse()
+        return JsonResponse(json.dumps(posted_data), safe=False)
 
 
 class SetDivisionTimeView(TournamentMixin, SuperuserRequiredMixin, View):

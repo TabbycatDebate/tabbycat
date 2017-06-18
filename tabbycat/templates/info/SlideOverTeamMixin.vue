@@ -33,7 +33,9 @@ export default {
   },
   methods: {
     titleForBC: function(bc, wins) {
-      return bc.will_break.toUpperCase() + ' for ' + bc.name + ' Break'
+      if (!_.isUndefined(bc.will_break)) {
+        return bc.will_break.toUpperCase() + ' for ' + bc.name + ' Break'
+      }
     },
     iconForBC: function(bc) {
       if (bc.will_break === 'dead') { return 'glyphicon-remove' } else

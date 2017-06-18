@@ -12,13 +12,17 @@ export default {
         dataType: "json",
         error: function(hxr, textStatus, errorThrown) {
           self.ajaxError(message, hxr.responseText, textStatus, errorThrown)
-          failFunction(payload, returnPayload)
+          if (failFunction !== null) {
+            failFunction(payload, returnPayload)
+          }
         },
         success: function(data, textStatus, xhr) {
           self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
           console.log("AJAX: Saved " + message)
           var dataResponse = JSON.parse(data)
-          completeFunction(dataResponse, payload, returnPayload)
+          if (completeFunction !== null) {
+            completeFunction(dataResponse, payload, returnPayload)
+          }
         },
         timeout: 15000 // sets timeout to 15 seconds
       });

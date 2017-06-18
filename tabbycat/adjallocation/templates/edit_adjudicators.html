@@ -11,7 +11,6 @@
 {% block page-title %}Edit Adjudicators for {{ round.abbreviation }}{% endblock %}
 
 {% block content %}
-
 <div id="vueMount">
 
   <edit-adjudicators-container :initial-debates="debates"
@@ -22,8 +21,8 @@
   </edit-adjudicators-container>
 
 </div>
-
 {% endblock content %}
+
 {% block js %}
   <script>
     window.vueData = {
