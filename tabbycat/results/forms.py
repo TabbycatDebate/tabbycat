@@ -543,6 +543,30 @@ class BaseBallotSetForm(forms.Form):
         for side in self.SIDES:
             yield self[self._fieldname_motion_veto(side)]
 
+    def scoresheet(self, fieldname_score_func):
+        """Returns a list of dictionaries for a single scoresheet, to allow for
+        easy iteration of the form. The function `fieldname_score_func` should
+        take two arguments `(side, pos)`. This function is called by the
+        `.scoresheets()` methods of both subclasses."""
+        teams = []
+        for side, (side_name, pos_names) in zip(self.SIDES, side_and_position_names(self.tournament)):
+            side_dict = {
+                "side_code": side,
+                "side_name": side_name,
+                "team": self.debate.get_team(side),
+                "speakers": [],
+            }
+            for pos, pos_name in zip(self.POSITIONS, pos_names):
+                side_dict["speakers"].append({
+                    "pos": pos,
+                    "name": pos_name,
+                    "speaker": self[self._fieldname_speaker(side, pos)],
+                    "ghost": self[self._fieldname_ghost(side, pos)],
+                    "score": self[fieldname_score_func(side, pos)],
+                })
+            teams.append(side_dict)
+        return teams
+
 
 class SingleBallotSetForm(BaseBallotSetForm):
     """Presents one ballot for the debate. Used for consensus adjudications."""
@@ -599,7 +623,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
             if len(totals) == 2 and totals[0] == totals[1]:
                 self.add_error(None, forms.ValidationError(
                     _("The total scores for the teams are the same (i.e. a draw)."),
-                    params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
+                    code='draw'
                 ))
 
             elif len(totals) > 2:
@@ -633,25 +657,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
         through the form. Used in the enter_results_ballot_set.html template."""
-
-        sheet_dict = {"teams": []}
-        for side, (side_name, pos_names) in zip(self.SIDES, side_and_position_names(self.tournament)):
-            side_dict = {
-                "side_code": side,
-                "side_name": side_name,
-                "team": self.debate.get_team(side),
-                "speakers": [],
-            }
-            for pos, pos_name in zip(self.POSITIONS, pos_names):
-                side_dict["speakers"].append({
-                    "pos": pos,
-                    "name": pos_name,
-                    "speaker": self[self._fieldname_speaker(side, pos)],
-                    "ghost": self[self._fieldname_ghost(side, pos)],
-                    "score": self[self._fieldname_score(side, pos)],
-                })
-            sheet_dict["teams"].append(side_dict)
-        return [sheet_dict]
+        return [{"teams": self.scoresheet(self._fieldname_score)}]
 
 
 class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
@@ -740,22 +746,8 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
         for adj in self.adjudicators:
             sheet_dict = {
                 "adjudicator": adj,
-                "teams": [],
+                "teams": self.scoresheet(
+                    lambda side, pos: self._fieldname_score(adj, side, pos)
+                ),
             }
-            for side, (side_name, pos_names) in zip(self.SIDES, side_and_position_names(self.tournament)):
-                side_dict = {
-                    "side_code": side,
-                    "side_name": side_name,
-                    "team": self.debate.get_team(side),
-                    "speakers": [],
-                }
-                for pos, pos_name in zip(self.POSITIONS, pos_names):
-                    side_dict["speakers"].append({
-                        "pos": pos,
-                        "name": pos_name,
-                        "speaker": self[self._fieldname_speaker(side, pos)],
-                        "ghost": self[self._fieldname_ghost(side, pos)],
-                        "score": self[self._fieldname_score(adj, side, pos)],
-                    })
-                sheet_dict["teams"].append(side_dict)
             yield sheet_dict
