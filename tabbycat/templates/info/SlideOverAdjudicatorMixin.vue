@@ -1,6 +1,6 @@
 <script>
 // Mainly just handles formatting the object for the slideover
-import SlideOverDiversityMixin from '../infoovers/SlideOverDiversityMixin.vue'
+import SlideOverDiversityMixin from './SlideOverDiversityMixin.vue'
 import _ from 'lodash'
 
 export default {

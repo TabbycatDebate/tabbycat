@@ -22,8 +22,8 @@
 
 <script>
 import DraggableMixin from '../draganddrops/DraggableMixin.vue'
-import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
-import SlideOverAdjudicatorMixin from '../infoovers/SlideOverAdjudicatorMixin.vue'
+import SlideOverSubjectMixin from '../../info/SlideOverSubjectMixin.vue'
+import SlideOverAdjudicatorMixin from '../../info/SlideOverAdjudicatorMixin.vue'
 import HighlightableMixin from '../allocations/HighlightableMixin.vue'
 import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 import _ from 'lodash'

@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
-import SlideOverVenueMixin from '../infoovers/SlideOverVenueMixin.vue'
+import SlideOverSubjectMixin from '../../info/SlideOverSubjectMixin.vue'
+import SlideOverVenueMixin from '../../info/SlideOverVenueMixin.vue'
 
 export default {
   mixins: [SlideOverSubjectMixin, SlideOverVenueMixin],

@@ -30,7 +30,7 @@
 <script>
 import SmartHeader from './SmartHeader.vue'
 import SmartCell from './SmartCell.vue'
-import FeedbackTrend from '../js-vue/graphs/FeedbackTrend.vue'
+import FeedbackTrend from '../graphs/FeedbackTrend.vue'
 import _ from 'lodash'
 
 export default {

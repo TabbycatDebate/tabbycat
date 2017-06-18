@@ -8,7 +8,7 @@ import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
-import SlideOverItem from '../infoovers/SlideOverItem.vue'
+import SlideOverItem from '../../info/SlideOverItem.vue'
 import _ from 'lodash'
 
 export default {
