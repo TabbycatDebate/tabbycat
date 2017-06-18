@@ -64,13 +64,14 @@ export default {
     },
     checkClashes: function(conflictingItem, conflicts, setState, hoverOrPanel) {
       // Check the given list of conflicts to see if this item's id is there
-      if (conflictingItem !== this.conflictable) {
-        if (_.includes(conflicts[this.conflictableType], this.conflictable.id)) {
-          this.conflicts[hoverOrPanel][this.conflictableType] = setState
-        }
-        if (_.includes(conflicts['institution'], this.conflictable.institution.id)) {
-          this.conflicts[hoverOrPanel]['institution'] = setState
-        }
+      if (conflictingItem === this.conflictable || _.isUndefined(conflicts)) {
+        return
+      }
+      if (_.includes(conflicts[this.conflictableType], this.conflictable.id)) {
+        this.conflicts[hoverOrPanel][this.conflictableType] = setState
+      }
+      if (_.includes(conflicts['institution'], this.conflictable.institution.id)) {
+        this.conflicts[hoverOrPanel]['institution'] = setState
       }
     },
     checkHistories: function(histories, setState, hoverOrPanel) {

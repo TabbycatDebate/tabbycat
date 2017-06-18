@@ -346,6 +346,7 @@ class DrawForDragAndDropMixin(RoundMixin):
             'positions': [get_position_name(tournament, "aff", "full"),
                           get_position_name(tournament, "neg", "full")],
             'adjudicatorPositions': adjudicator_positions,
+            'adjudicatorDoubling': tournament.pref('duplicate_adjs'),
             'backUrl': reverse_round('draw', round),
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
             'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,

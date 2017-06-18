@@ -34,7 +34,10 @@ export default {
       } else if (fromDebate === 'unused') {
         // Moving from unsued to a panel
         toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
-        removeFromUnused.push(adjudicator)
+        if (!this.roundInfo.adjudicatorDoubling) {
+          // Only remove if the tournament has set double allocations
+          removeFromUnused.push(adjudicator)
+        }
         // If being dropped into an occupied chair position move old chair to unused
         if (toPosition === 'C' && currentChair) {
           this.removefromPanel(toDebate, currentChair)
