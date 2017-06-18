@@ -420,7 +420,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': "Institution",
             }, [team.institution.code if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams])
 
-        if show_divisions:
+        if show_divisions and self.tournament.pref('enable_divisions'):
             self.add_column({
                 'key': 'Division',
                 'icon': 'glyphicon-th-list',
