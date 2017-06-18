@@ -207,7 +207,6 @@ class BaseDrawGenerator(object):
     def __init__(self, teams, results=None, rrseq=None, **kwargs):
         self.teams = teams
         self.team_flags = dict()
-        self.round = round
         self.results = results
         self.rrseq = rrseq
 
