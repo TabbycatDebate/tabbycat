@@ -26,7 +26,9 @@
           </div>
         </template>
       </draw-header>
-      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
+      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo"
+              :histories="getDebateConflictables(debate, 'histories')"
+              :conflicts="getDebateConflictables(debate, 'conflicts')">
         <div class="draw-cell flex-4" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>
@@ -62,7 +64,7 @@ import DebatePanel from '../allocations/DebatePanel.vue'
 import ConflictsCoordinatorMixin from '../allocations/ConflictsCoordinatorMixin.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 
-import percentile from 'stats-percentile';
+import percentile from 'stats-percentile'
 import _ from 'lodash'
 
 export default {
@@ -71,6 +73,9 @@ export default {
   components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)
+    // Watch for global conflict highlights
+    this.$eventHub.$on('show-conflicts-for', this.setConflicts)
+    this.$eventHub.$on('hide-conflicts-for', this.unsetConflicts)
   },
   computed: {
     unallocatedAdjsByScore: function() {
@@ -97,6 +102,14 @@ export default {
     }
   },
   methods: {
+    getDebateConflictables(debate, type) {
+      // Creates a per-debate subset of conflicts/histories for DebateConflictsMixin
+      // to determine in-panel conflicts using ConflictsCoordinator
+      var panellistIds = _.map(debate.panel, function(panellist) {
+        return panellist.adjudicator.id
+      })
+      return _.pick(this[type], panellistIds)
+    },
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move

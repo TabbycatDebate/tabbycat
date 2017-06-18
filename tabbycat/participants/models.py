@@ -418,8 +418,5 @@ class Adjudicator(Person):
         adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
         adj['region'] = self.region.serialize if self.region else None
         adj['institution'] = self.institution.serialize if self.institution else None
-        adj['conflicts'] = None # Populate later if needed?
-        adj['institutional_conflicts'] = None # Populate later if needed?
-        adj['institution_conflicts'] = None # Populate later if needed?
         adj['highlights'] = {'region': False, 'gender': False, 'category': False}
         return adj

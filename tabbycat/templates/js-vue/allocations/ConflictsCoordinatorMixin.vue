@@ -2,15 +2,11 @@
 import _ from 'lodash'
 
 export default {
-  props: ['conflicts', 'histories'],
-  created: function () {
-    // Watch for events on the global event hub
-    this.$eventHub.$on('show-conflicts-for', this.setConflicts)
-    this.$eventHub.$on('hide-conflicts-for', this.unsetConflicts)
-  },
-  computed: {
+  // An item that contains a list of conflicts and histories; and manages
+  // the task of figuring out which things conflict with the nominated
+  // conflictable item according to those conflicts/histories
 
-  },
+  props: ['conflicts', 'histories'],
   methods: {
     getClashes(conflictingItem, conflictingItemType) {
       if (conflictingItemType === 'adjudicator') {
@@ -52,13 +48,13 @@ export default {
       var conflicts = this.getClashes(conflictingItem, conflictingItemType)
       var histories = this.getHistories(conflictingItem, conflictingItemType)
       this.$eventHub.$emit('set-conflicts-for', conflictingItem,
-                           conflicts, histories, true)
+                           conflicts, histories, true, 'hover')
     },
     unsetConflicts: function(conflictingItem, conflictingItemType) {
       var conflicts = this.getClashes(conflictingItem, conflictingItemType)
       var histories = this.getHistories(conflictingItem, conflictingItemType)
       this.$eventHub.$emit('set-conflicts-for', conflictingItem,
-                           conflicts, histories, false)
+                           conflicts, histories, false, 'hover')
     }
   }
 }

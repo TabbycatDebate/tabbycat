@@ -21,13 +21,13 @@
             <template v-if="!highlights.region && !highlights.gender &&
                             !highlights.category && !highlights.ranking">
               <button class="visible-lg-block btn btn-default">Conflicts Key</button>
-              <button class="btn conflictable conflicts-toolbar conflict-history-2-ago">
+              <button class="btn conflictable conflicts-toolbar hover-history-2-ago">
                 Seen Before
               </button>
-              <button class="btn conflictable conflicts-toolbar conflict-institutional">
+              <button class="btn conflictable conflicts-toolbar hover-institutional">
                 Institutional <span class="visible-lg-inline">Clash</span>
               </button>
-              <button class="btn conflictable conflicts-toolbar conflict-personal">
+              <button class="btn conflictable conflicts-toolbar hover-personal">
                 Personal <span class="visible-lg-inline">Clash</span>
               </button>
               <button class="btn panel-incomplete">

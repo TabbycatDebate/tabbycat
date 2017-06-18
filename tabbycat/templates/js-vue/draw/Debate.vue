@@ -49,12 +49,13 @@ import DrawTeam from '../draw/DrawTeam.vue'
 import DrawVenue from '../draw/DrawVenue.vue'
 import DrawAdjudicator from '../draw/DrawAdjudicator.vue'
 import SlideOverSubjectMixin from '../infoovers/SlideOverSubjectMixin.vue'
+import DebateConflictsMixin from '../allocations/DebateConflictsMixin.vue'
 import _ from 'lodash'
 
 export default {
   components: {DrawTeam, DrawVenue, DrawAdjudicator},
-  mixins: [SlideOverSubjectMixin],
-  props: { debate: Object, roundInfo: Object },
+  mixins: [SlideOverSubjectMixin, DebateConflictsMixin],
+  props: { debate: Object, roundInfo: Object},
   computed: {
     liveness: function() {
       var live_categories = 0
@@ -66,7 +67,7 @@ export default {
         })
       });
       return live_categories
-    }
+    },
   },
 }
 </script>

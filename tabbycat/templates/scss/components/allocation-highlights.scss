@@ -6,13 +6,41 @@
 .conflictable {
   // Teams we want to have no border to reduce clutter; adjs we want so they
   // appear like draggable buttons/elements
- // For hover states
-  &.conflict-personal {
+  // For hover states
+  &.hover-personal {
     background: $brand-danger;
   }
-  &.conflict-institutional {
+  &.hover-institutional {
     background: $brand-warning;
   }
+  &.hover-history-1-ago {
+    background: darken($brand-primary, 20%);
+  }
+  &.hover-history-2-ago {
+    background: lighten($brand-primary, 0%);
+  }
+  &.hover-history-3-ago {
+    background: lighten($brand-primary, 15%);
+  }
+  &.hover-history-4-ago {
+    background: lighten($brand-primary, 30%);
+  }
+  &.hover-history-5-ago {
+    background: lighten($brand-primary, 34%);
+  }
+  &.hover-history-6-ago {
+    background: lighten($brand-primary, 36%);
+  }
+  &.hover-history-7-ago {
+    background: lighten($brand-primary, 40%);
+  }
+  &.hover-history-8-ago {
+    background: lighten($brand-primary, 44%);
+  }
+  &.hover-history-9-ago {
+    background: lighten($brand-primary, 48%);
+  }
+
   // For in panel states
   &.panel-personal {
     border-color: darken($brand-danger, 10%);
@@ -20,68 +48,41 @@
   &.panel-institutional {
     border-color: darken($brand-warning, 10%);
   }
-  &.conflict-history-1-ago {
-    background: darken($brand-primary, 20%);
-  }
-  &.conflict-history-2-ago {
-    background: lighten($brand-primary, 0%);
-  }
-  &.conflict-history-3-ago {
-    background: lighten($brand-primary, 15%);
-  }
-  &.conflict-history-4-ago {
-    background: lighten($brand-primary, 30%);
-  }
-  &.conflict-history-5-ago {
-    background: lighten($brand-primary, 34%);
-  }
-  &.conflict-history-6-ago {
-    background: lighten($brand-primary, 36%);
-  }
-  &.conflict-history-7-ago {
-    background: lighten($brand-primary, 40%);
-  }
-  &.conflict-history-8-ago {
-    background: lighten($brand-primary, 44%);
-  }
-  &.conflict-history-9-ago {
-    background: lighten($brand-primary, 48%);
-  }
-  &.conflict-panel-1-ago {
+  &.panel-1-ago {
     border-color: darken($brand-primary, 20%);
   }
-  &.conflict-panel-2-ago {
+  &.panel-2-ago {
     border-color: lighten($brand-primary, 0%);
   }
-  &.conflict-panel-3-ago {
+  &.panel-3-ago {
     border-color: lighten($brand-primary, 15%);
   }
-  &.conflict-panel-4-ago {
+  &.panel-4-ago {
     border-color: lighten($brand-primary, 30%);
   }
-  &.conflict-panel-5-ago {
+  &.panel-5-ago {
     border-color: lighten($brand-primary, 34%);
   }
-  &.conflict-panel-6-ago {
+  &.panel-6-ago {
     border-color: lighten($brand-primary, 36%);
   }
-  &.conflict-panel-7-ago {
+  &.panel-7-ago {
     border-color: lighten($brand-primary, 40%);
   }
-  &.conflict-panel-8-ago {
+  &.panel-8-ago {
     border-color: lighten($brand-primary, 44%);
   }
-  &.conflict-panel-9-ago {
+  &.panel-9-ago {
     border-color: lighten($brand-primary, 48%);
   }
 }
 
 // Ensure text is treated nicely when a conflict state is active
-.conflict-personal,
-.conflict-institutional,
-.conflict-history-1-ago,
-.conflict-history-2-ago,
-.conflict-history-3-ago {
+.hover-personal,
+.hover-institutional,
+.hover-history-1-ago,
+.hover-history-2-ago,
+.hover-history-3-ago {
   color: #fff;
 
   span,

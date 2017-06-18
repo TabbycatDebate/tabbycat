@@ -152,5 +152,5 @@ class SaveDebatePanel(SaveDragAndDropDebateMixin):
             message += "\n\tNEW — Creating new allocation %s" % new_allocation
 
         message += "\n---"
-        print(message)
+        # print(message)
         return debate
