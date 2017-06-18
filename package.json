@@ -43,7 +43,7 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "stylelint": "stylelint tabbycat/**/*.scss || true",
+    "stylelint": "stylelint tabbycat/templates/scss/**/*.scss --cache || true",
     "eslint": "eslint --ext .js,.html,.vue --ignore-pattern tabbycat/static/ --cache tabbycat/ || true"
   },
   "repository": "https://github.com/czlee/tabbycat",

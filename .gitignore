@@ -80,3 +80,4 @@ nosetests.xml
 
 # Python 2to3 backup files
 *.bak
+/.stylelintcache

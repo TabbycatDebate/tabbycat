@@ -8,7 +8,7 @@
   -khtml-user-select: none;
   -webkit-user-select: none;
   user-select: none; // Text should be unselectable or highlights go crazy
-  /* Required to make elements draggable in old WebKit */
+  // Required to make elements draggable in old WebKit
   -khtml-user-drag: element;
   -webkit-user-drag: element;
 
@@ -22,7 +22,6 @@
   border: 4px solid $btn-default-border;
   height: 42px;
   text-align: left;
-
   @extend .flex-horizontal;
 
   // Adj scores; Team/Venue names
@@ -30,16 +29,17 @@
     @extend .flex-vertical-center; // Vertically center score
     padding-right: 6px;
   }
+
   .draggable-title {
     overflow: auto;
     line-height: 8px; // Compress text/sub-text spacing
+
     .subtitle {
       font-size: 11px; // Extra small subtext
     }
     // @extend .flex-inline;
     // @extend .flex-vertical-center;
   }
-
 }
 
 .vue-draggable:hover,
@@ -51,7 +51,7 @@
 }
 
 .vue-is-dragging {
-  opacity: .5 !important;
+  opacity: 0.5 !important;
 }
 
 .vue-draggable.locked {
@@ -68,10 +68,12 @@
   min-height: 50px;
   padding: 0 0 4px 4px; // Draggable items only have top/left padding
 }
+
 .vue-droppable.locked {
   background: #fff;
   position: relative; // For the spinner
 }
+
 .vue-droppable-lock-spinner { // Container for a loading spinner
   position: absolute;
   z-index: 11;
@@ -83,6 +85,7 @@
   color: $brand-success;
   @extend .flex-vertical-center;
   @extend .flex-horizontal-center;
+
   .spinning {
     width: 25px; // Need a set height/width to it rotates around a central axis
     height: 24px;
@@ -93,9 +96,11 @@
   width: 100%;
   height: 100%;
 }
+
 .flex-cell.vue-droppable-container {
   padding: 0; // Suppress padding for larger drop area
 }
+
 .thead.vue-droppable-container span {
   margin-left: 8px; // Compensate for suppressed padding
   display: inline-block;

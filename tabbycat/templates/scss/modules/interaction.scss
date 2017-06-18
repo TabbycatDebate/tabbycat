@@ -5,6 +5,7 @@
 [data-toggle='tooltip'],
 [data-toggle="popover"],
 .slideover-target {
+
   &:hover {
     cursor: help; // for tooltips
     span {
@@ -75,6 +76,7 @@
     padding: 7px 3px; // Tighten up spacing of the sub elements
     border-radius: 0;
   }
+
   .list-group-item:first-child {
     border-top: 0;
   }
@@ -106,15 +108,24 @@
   animation: spin 1s infinite linear;
 }
 @keyframes spin {
-  from { transform: scale(1) rotate(0deg); }
-  to { transform: scale(1) rotate(360deg); }
+
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+
+  to {
+    transform: scale(1) rotate(360deg);
+  }
 }
 
 // Used by slideover panel
-.slide-over-enter-active, .slide-over-leave-active {
-  transition: opacity .35s ease;
+.slide-over-enter-active,
+.slide-over-leave-active {
+  transition: opacity 0.35s ease;
 }
-.slide-over-enter, .slide-over-leave-to {
+
+.slide-over-enter,
+.slide-over-leave-to {
   opacity: 0;
 }
 
@@ -124,6 +135,12 @@
   animation-timing-function: ease-out;
 }
 @keyframes flash-animation {
-    from { color: $brand-success; }
-    to   { color: default; }
+
+  from {
+    color: $brand-success;
+  }
+
+  to {
+    color: default;
+  }
 }

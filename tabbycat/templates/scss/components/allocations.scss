@@ -3,11 +3,13 @@
 //------------------------------------------------------------------------------
 
 .allocation-actions {
+
   .navbar {
     min-height: auto;
   }
+
   .navbar-form {
-    margin: 0 0;
+    margin: 0;
     padding: 7px 4px; // Tweak to match slideovers
   }
 }
@@ -18,6 +20,7 @@
 }
 
 .draw-container {
+
   .draw-row:last-of-type {
     border-radius: 0 0 4px 4px;
   }
@@ -25,6 +28,7 @@
 
 .draw-header {
   @extend .draw-row;
+
   border-top: 1px solid $btn-default-border;
   border-radius: 4px 4px 0 0;
   padding-top: 8px;
@@ -33,6 +37,7 @@
 .draw-row {
   @extend .row;
   @extend .flex-horizontal;
+
   background: #fff; // Need to compensate for lack of table background
   border-left: 1px solid $btn-default-border;
   border-right: 1px solid $btn-default-border;
@@ -45,6 +50,7 @@
 }
 
 .allocations { // For fullscreen pages
+
   .accommodate-footer {
     padding-left: 4px;
     padding-right: 4px;
@@ -89,18 +95,22 @@
 }
 
 .panel-container {
+
   .vue-droppable-container {
     border-right: 2px solid $table-border-color;
     height: 100%;
+
     .vue-droppable {
       flex-wrap: wrap; // Ensure content can wrap if needed
       display: flex;
     }
   }
+
   .vue-droppable-container:last-child {
     border-right: 0;
   }
 }
+
 .position-container-C {
   flex: 0 0 170px; // Always be 170px
 
@@ -108,9 +118,11 @@
     flex: 0 0 100%; // When trainees/panellists are turned off
   }
 }
+
 .position-container-P {
   flex: 1; // Grow into remaining space
 }
+
 .position-container-T {
   flex: 0 0 170px; // Always be 170px
 
@@ -137,6 +149,7 @@
     padding: 3px;
   }
 }
+
 // Parent element to keep the tooltips abs positioning in line
 .tooltip-holder {
   position: relative;
@@ -163,8 +176,9 @@
     height: 100%;
     align-items: center;
     display: flex;
-    padding: 0px 5px;
+    padding: 0 5px;
   }
+
   > div.conflictable {
     // Team cells need some border state for in panel conflicts
     border-color: #fff;

@@ -7,18 +7,22 @@
 }
 
 .category-display {
+
   &.category-0 {
     background-color: $break-cat-1;
     color: #fff;
   }
+
   &.category-1 {
     background-color: $break-cat-2;
     color: #fff;
   }
+
   &.category-2 {
     background-color: $break-cat-3;
     color: #fff;
   }
+
   &.category-3 {
     background-color: $break-cat-4;
     color: #fff;
@@ -26,19 +30,33 @@
 }
 
 .gender-display {
-  &.gender-male, &.gender-m, &.gender-M  {
+
+  &.gender-male,
+  &.gender-m,
+  &.gender-M {
     background-color: $male;
     color: #fff;
   }
-  &.gender-female, &.gender-f, &.gender-F, &.gender-nm {
+
+  &.gender-female,
+  &.gender-f,
+  &.gender-F,
+  &.gender-nm {
     background-color: $female;
     color: #fff;
   }
-  &.gender-other, &.gender-o, &.gender-O {
+
+  &.gender-other,
+  &.gender-o,
+  &.gender-O {
     background-color: $other;
     color: #fff;
   }
-  &.gender-unknown, &.gender-u, &.gender-U, &.gender- {
+
+  &.gender-unknown,
+  &.gender-u,
+  &.gender-U,
+  &.gender- {
     background-color: $unknown;
   }
   // For Teams
@@ -46,30 +64,40 @@
     background-color: $male;
     color: #fff;
   }
+
   &.gender-notmen-2 {
     background-color: $female;
     color: #fff;
   }
-  &.gender-men-3, &.gender-men-4 {
+
+  &.gender-men-3,
+  &.gender-men-4 {
     background-color: darken($male, 20%);
     color: #fff;
   }
-  &.gender-notmen-3, &.gender-notmen-4 {
+
+  &.gender-notmen-3,
+  &.gender-notmen-4 {
     background-color: darken($female, 20%);
     color: #fff;
   }
 }
 
 .gender-text {
+
   &.gender-male {
     color: $male;
   }
-  &.gender-female, &.gender-nm {
+
+  &.gender-female,
+  &.gender-nm {
     color: $female;
   }
+
   &.gender-other {
     color: $other;
   }
+
   &.gender-unknown {
     color: $unknown;
   }
@@ -77,38 +105,47 @@
 
 // For diversity graphs and allocation
 .region-display {
+
   &.region-0 {
     background-color: $region-cat-0;
     color: #fff;
   }
+
   &.region-1 {
     background-color: $region-cat-1;
     color: #fff;
   }
+
   &.region-2 {
     background-color: $region-cat-2;
     color: #fff;
   }
+
   &.region-3 {
     background-color: $region-cat-3;
     color: #fff;
   }
+
   &.region-4 {
     background-color: $region-cat-4;
     color: #fff;
   }
+
   &.region-5 {
     background-color: $region-cat-5;
     color: #fff;
   }
+
   &.region-6 {
     background-color: $region-cat-6;
     color: #fff;
   }
+
   &.region-7 {
     background-color: $region-cat-7;
     color: #fff;
   }
+
   &.region-8 {
     background-color: $region-cat-8;
     color: #fff;
@@ -117,38 +154,47 @@
 
 // Ranking Display
 .ranking-display {
+
   &.ranking-90 {
     background-color: $adj-ranking-0;
     color: #fff;
   }
+
   &.ranking-80 {
     background-color: $adj-ranking-1;
     color: #fff;
   }
+
   &.ranking-70 {
     background-color: $adj-ranking-2;
     color: #fff;
   }
+
   &.ranking-60 {
     background-color: $adj-ranking-3;
     color: #fff;
   }
+
   &.ranking-50 {
     background-color: $adj-ranking-4;
     color: #fff;
   }
+
   &.ranking-40 {
     background-color: $adj-ranking-5;
     color: #fff;
   }
+
   &.ranking-30 {
     background-color: $adj-ranking-6;
     color: #fff;
   }
+
   &.ranking-20 {
     background-color: $adj-ranking-7;
     color: #fff;
   }
+
   &.ranking-10 {
     background-color: $adj-ranking-8;
     color: #fff;

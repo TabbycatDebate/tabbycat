@@ -2,19 +2,15 @@
 
 <ul class="nav nav-stacked" role="tablist">
   <li role="presentation" class="dropdown">
-    <a id="tournament_select"
-       href="#"
+    <a id="tournament_select" class="tournament-select" href="#"
        class="dropdown-toggle {% if overview_nav %}active{% endif %}"
        data-toggle="dropdown"
-       role="button"
-       aria-haspopup="true"
-       aria-expanded="false">
+       role="button" aria-haspopup="true" aria-expanded="false">
       <h5>
         {{ tournament }}<span class="caret pull-right"></span>
       </h5>
     </a>
-    <ul id="tournament_select_menu"
-        class="dropdown-menu"
+    <ul id="tournament-select-menu" class="dropdown-menu"
         aria-labelledby="tournament_select">
       {% for t in all_tournaments %}
         <li>
