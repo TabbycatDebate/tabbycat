@@ -345,6 +345,19 @@ debate_rules = Section('debate_rules')
 
 
 @tournament_preferences_registry.register
+class TeamsInDebate(ChoicePreference):
+    help_text = "Two-team format (e.g. Australs, WSDC) or British Parliamentary"
+    verbose_name = "Teams in debate"
+    section = debate_rules
+    name = 'teams_in_debate'
+    choices = [
+        ('two-team', "Two-team format"),
+        ('bp', "British Parliamentary (four teams)"),
+    ]
+    default = 'two-team'
+
+
+@tournament_preferences_registry.register
 class BallotsPerDebate(ChoicePreference):
     help_text = "Whether panels submit a ballot each or a single ballot for the debate. Note: BP must use one per debate."
     verbose_name = "Ballots per debate"

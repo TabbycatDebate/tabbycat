@@ -196,11 +196,11 @@ class Team(models.Model):
 
     def get_aff_count(self, seq=None):
         from draw.models import DebateTeam
-        return self._get_count(DebateTeam.SIDE_AFFIRMATIVE, seq)
+        return self._get_count(DebateTeam.SIDE_AFF, seq)
 
     def get_neg_count(self, seq=None):
         from draw.models import DebateTeam
-        return self._get_count(DebateTeam.SIDE_NEGATIVE, seq)
+        return self._get_count(DebateTeam.SIDE_NEG, seq)
 
     def _get_count(self, side, seq):
         dts = self.debateteam_set.filter(side=side,

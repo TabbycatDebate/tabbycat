@@ -136,7 +136,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 
         populate_opponents([ts.debate_team for ts in teamscores])
 
-        for side in [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]:
+        for side in [DebateTeam.SIDE_AFF, DebateTeam.SIDE_NEG]:
             debates_for_side = [ts.debate_team.debate for ts in teamscores if ts.debate_team.side == side]
             populate_confirmed_ballots(debates_for_side, motions=True)
 

@@ -24,8 +24,8 @@ def statistics(tournament, rounds):
             wins[winner.debate_team.side][winner.ballot_submission.motion] += 1
 
     for motion in motions:
-        motion.aff_wins = wins[DebateTeam.SIDE_AFFIRMATIVE][motion]
-        motion.neg_wins = wins[DebateTeam.SIDE_NEGATIVE][motion]
+        motion.aff_wins = wins[DebateTeam.SIDE_AFF][motion]
+        motion.neg_wins = wins[DebateTeam.SIDE_NEG][motion]
         motion.chosen_in = motion.aff_wins + motion.neg_wins
 
         """
@@ -53,7 +53,7 @@ def statistics(tournament, rounds):
             vetoes[veto.debate_team.side][veto.motion] += 1
 
         for motion in motions:
-            motion.aff_vetoes = vetoes[DebateTeam.SIDE_AFFIRMATIVE][motion]
-            motion.neg_vetoes = vetoes[DebateTeam.SIDE_NEGATIVE][motion]
+            motion.aff_vetoes = vetoes[DebateTeam.SIDE_AFF][motion]
+            motion.neg_vetoes = vetoes[DebateTeam.SIDE_NEG][motion]
 
     return motions

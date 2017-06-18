@@ -119,16 +119,12 @@ class Debate(models.Model):
 
         for dt in dts:
             self._teams.append(dt.team)
-            if dt.side == DebateTeam.SIDE_AFFIRMATIVE:
-                if 'aff_team' in self._team_properties:
-                    self._multiple_found.extend(['aff_team', 'aff_dt'])
-                self._team_properties['aff_team'] = dt.team
-                self._team_properties['aff_dt'] = dt
-            elif dt.side == DebateTeam.SIDE_NEGATIVE:
-                if 'neg_team' in self._team_properties:
-                    self._multiple_found.extend(['neg_team', 'neg_dt'])
-                self._team_properties['neg_team'] = dt.team
-                self._team_properties['neg_dt'] = dt
+            team_key = '%s_team' % dt.side
+            dt_key = '%s_dt' % dt.side
+            if team_key in self._team_properties:
+                self._multiple_found.extend([team_key, dt_key])
+            self._team_properties[team_key] = dt.team
+            self._team_properties[dt_key] = dt
 
     def _team_property(attr):  # noqa: N805
         """Used to construct properties that rely on self._populate_teams()."""
@@ -156,8 +152,16 @@ class Debate(models.Model):
 
     aff_team = _team_property('aff_team')
     neg_team = _team_property('neg_team')
+    og_team = _team_property('og_team')
+    oo_team = _team_property('oo_team')
+    cg_team = _team_property('cg_team')
+    co_team = _team_property('co_team')
     aff_dt = _team_property('aff_dt')
     neg_dt = _team_property('neg_dt')
+    og_dt = _team_property('og_dt')
+    oo_dt = _team_property('oo_dt')
+    cg_dt = _team_property('cg_dt')
+    co_dt = _team_property('co_dt')
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
@@ -241,11 +245,19 @@ class DebateTeamManager(models.Manager):
 
 
 class DebateTeam(models.Model):
-    SIDE_AFFIRMATIVE = 'aff'
-    SIDE_NEGATIVE = 'neg'
+    SIDE_AFF = 'aff'
+    SIDE_NEG = 'neg'
+    SIDE_OG = 'og'
+    SIDE_OO = 'oo'
+    SIDE_CG = 'cg'
+    SIDE_CO = 'co'
     SIDE_UNALLOCATED = '-'
-    SIDE_CHOICES = ((SIDE_AFFIRMATIVE, _("affirmative")),
-                    (SIDE_NEGATIVE, _("negative")),
+    SIDE_CHOICES = ((SIDE_AFF, _("affirmative")),
+                    (SIDE_NEG, _("negative")),
+                    (SIDE_OG, _("opening government")),
+                    (SIDE_OO, _("opening opposition")),
+                    (SIDE_CG, _("closing government")),
+                    (SIDE_CO, _("closing opposition")),
                     (SIDE_UNALLOCATED, _("unallocated")), )
 
     objects = DebateTeamManager()
@@ -304,7 +316,7 @@ class DebateTeam(models.Model):
     def get_side_name(self, tournament=None):
         """Should be used instead of get_side_display() on views.
         `tournament` can be passed in if known, for performance."""
-        if self.side in [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]:
+        if self.side in [DebateTeam.SIDE_AFF, DebateTeam.SIDE_NEG]:
             return get_side_name(tournament or self.debate.round.tournament, self.side, 'full')
         else:
             return self.get_side_display()

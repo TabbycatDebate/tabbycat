@@ -105,7 +105,7 @@ class BaseTestDebateResult(TestCase):
         rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
         self.debate = Debate.objects.create(round=rd, venue=venue)
 
-        sides = [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]
+        sides = [DebateTeam.SIDE_AFF, DebateTeam.SIDE_NEG]
         for team, side in zip(Team.objects.all(), sides):
             DebateTeam.objects.create(debate=self.debate, team=team, side=side)
 

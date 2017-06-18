@@ -135,7 +135,6 @@ class BaseBallotSetForm(forms.Form):
     debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
     result_class = None
-    sides = ['aff', 'neg']
 
     def __init__(self, ballotsub, *args, **kwargs):
         self.ballotsub = ballotsub
@@ -148,16 +147,16 @@ class BaseBallotSetForm(forms.Form):
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
         self.using_forfeits = self.tournament.pref('enable_forfeits')
         self.using_replies = self.tournament.pref('reply_scores_enabled')
-        self.choosing_sides = self.tournament.pref('draw_side_allocations') == 'manual-ballot'
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
         self.max_margin = self.tournament.pref('maximum_margin')
-        self.score_step = self.tournament.pref('score_step')
-        self.reply_score_step = self.tournament.pref('reply_score_step')
+        self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot'
+                               and self.tournament.pref('teams_in_debate') == 'two-team')
 
         self.has_tournament_password = kwargs.pop('password', False) and self.tournament.pref('public_use_password')
 
         super().__init__(*args, **kwargs)
 
+        self.sides = self.tournament.sides
         self.positions = self.tournament.positions
         self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
         self.reply_position = self.tournament.reply_position  # also used in template
@@ -208,10 +207,9 @@ class BaseBallotSetForm(forms.Form):
             self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
 
         # 2. Choose sides field
-        if self.choosing_sides:
-            if len(dts) != 2:
-                raise FormConstructionError("Whoops! There are %d teams in this debate, was expecting 2." % len(dts))
+        if self.choosing_sides:  # false in BP regardless of choosing sides setting
             teams = self.debate.teams
+            assert len(teams) == 2
             side_choices = [
                 (None, _("---------")),
                 (str(teams[0].id) + "," + str(teams[1].id),

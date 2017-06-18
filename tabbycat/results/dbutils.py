@@ -82,7 +82,7 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
     # Create relevant scores
     result = DebateResult(bsub)
 
-    for side in ['aff', 'neg']:
+    for side in t.sides:
         speakers = getattr(debate, '%s_team' % side).speakers
         for i in range(1, t.last_substantive_position+1):
             result.set_speaker(side, i, speakers[i-1])

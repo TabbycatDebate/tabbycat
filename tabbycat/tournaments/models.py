@@ -81,6 +81,18 @@ class Tournament(models.Model):
             return self._prefs[name]
 
     @property
+    def sides(self):
+        """Returns a list of side codes."""
+        option = self.pref('teams_in_debate')
+        if option == 'two-team':
+            return ['aff', 'neg']
+        elif option == 'bp':
+            return ['og', 'oo', 'cg', 'co']
+        else:
+            logger.error("Invalid sides option: %s", option)
+            return ['aff', 'neg']  # return default, just to keep it going
+
+    @property
     def last_substantive_position(self):
         """Returns the number of substantive speakers."""
         return self.pref('substantive_speakers')

@@ -86,9 +86,18 @@ def side_and_position_names(tournament):
     names, all being translated human-readable names. This should eventually
     be extended to return an appropriate list for the tournament configuration.
     """
-    sides = [get_side_name(tournament, side, 'full').title() for side in ('aff', 'neg')]
-    for side in sides:
-        positions = [_("Reply") if pos == tournament.reply_position
-            else _ORDINALS[pos]
-            for pos in tournament.positions]
-        yield side, positions
+    if tournament.pref('teams_in_debate') == 'bp' \
+            and tournament.last_substantive_position == 2 \
+            and tournament.reply_position is None:
+        yield (_("OG"), [_("PM"), _("DPM")])
+        yield (_("OO"), [_("LO"), _("DLO")])
+        yield (_("CG"), [_("MG"), _("GW")])
+        yield (_("CO"), [_("MO"), _("OW")])
+
+    else:
+        sides = [get_side_name(tournament, side, 'full').title() for side in tournament.sides]
+        for side in sides:
+            positions = [_("Reply") if pos == tournament.reply_position
+                else _ORDINALS[pos]
+                for pos in tournament.positions]
+            yield side, positions

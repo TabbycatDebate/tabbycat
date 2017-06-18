@@ -135,9 +135,7 @@ class BaseDebateResult:
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
         self.tournament = self.debate.round.tournament
-
-        # side are to be extended to BP later
-        self.sides = ['aff', 'neg']
+        self.sides = self.tournament.sides
 
         if load:
             self.full_load()

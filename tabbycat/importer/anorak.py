@@ -38,8 +38,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     })
 
     lookup_team_position = make_lookup("team position", {
-        ("affirmative", "aff", "a"): dm.DebateTeam.SIDE_AFFIRMATIVE,
-        ("negative", "neg", "n"): dm.DebateTeam.SIDE_NEGATIVE,
+        ("affirmative", "aff", "a"): dm.DebateTeam.SIDE_AFF,
+        ("negative", "neg", "n"): dm.DebateTeam.SIDE_NEG,
     })
 
     lookup_feedback_answer_type = make_lookup("feedback answer type", {

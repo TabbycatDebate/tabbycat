@@ -77,6 +77,29 @@ SIDE_NAMES = {
     },
 }
 
+BP_SIDE_NAMES = {  # stop-gap before this system gets refactored
+    "og_full": ugettext_lazy("opening government"),
+    "oo_full": ugettext_lazy("opening opposition"),
+    "cg_full": ugettext_lazy("closing government"),
+    "co_full": ugettext_lazy("closing opposition"),
+    "og_possessive": ugettext_lazy("opening government's"),
+    "oo_possessive": ugettext_lazy("opening opposition's"),
+    "cg_possessive": ugettext_lazy("closing government's"),
+    "co_possessive": ugettext_lazy("closing opposition's"),
+    "og_team": ugettext_lazy("opening government team"),
+    "oo_team": ugettext_lazy("opening opposition team"),
+    "cg_team": ugettext_lazy("closing government team"),
+    "co_team": ugettext_lazy("closing opposition team"),
+    "og_abbr": pgettext_lazy("team name", "OG"),
+    "oo_abbr": pgettext_lazy("team name", "OO"),
+    "cg_abbr": pgettext_lazy("team name", "CG"),
+    "co_abbr": pgettext_lazy("team name", "CO"),
+    "og_initial": pgettext_lazy("team name", "OG"),
+    "oo_initial": pgettext_lazy("team name", "OO"),
+    "cg_initial": pgettext_lazy("team name", "CG"),
+    "co_initial": pgettext_lazy("team name", "CO"),
+}
+
 
 def auto_make_rounds(tournament, num_rounds):
     """Makes the number of rounds specified. The first one is random and the
@@ -134,10 +157,13 @@ def get_side_name(tournament, side, name_type):
     will return something like "Affirmative" or "Proposition" or "Gobierno",
     depending on the side name option and language setting.
     """
-    names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
-    if side not in ('aff', 'neg'):
-        raise ValueError("get_side_name() side must be 'aff' or 'neg', not: %r" % side)
-    return force_text(names["%s_%s" % (side, name_type)])
+    if side in ('aff', 'neg'):
+        names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
+        return force_text(names["%s_%s" % (side, name_type)])
+    elif side in ('og', 'oo', 'cg', 'co'):
+        return force_text(BP_SIDE_NAMES["%s_%s" % (side, name_type)])
+    else:
+        raise ValueError("get_side_name() side must be one of: 'aff', 'neg', 'og', 'oo', 'cg', 'co', not: %r" % side)
 
 
 def _get_side_name(name_type):
