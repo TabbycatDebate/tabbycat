@@ -6,6 +6,7 @@ from django.utils.translation import pgettext_lazy, ugettext_lazy
 
 from .models import Round
 
+
 BREAK_ROUND_NAMES = [
     ('Grand Final', 'GF'),
     ('Semifinals', 'SF'),
@@ -14,7 +15,6 @@ BREAK_ROUND_NAMES = [
     ('Double-Octofinals', 'DOF'),
     ('Triple-Octofinals', 'TOF'),
 ]
-
 
 SIDE_NAMES = {
     'aff-neg': {

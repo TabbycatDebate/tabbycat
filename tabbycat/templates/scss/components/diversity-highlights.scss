@@ -2,82 +2,102 @@
 // Highlights for Allocation Pages
 //------------------------------------------------------------------------------
 
-.region-display.has-region,
-.gender-display.has-gender,
-.category-display.has-category {
-  span a,
-  .text-muted {
-    color: #fff;
-  }
-}
-
 .conflicts-toolbar:hover {
   color: #fff; // Needed to keep consistent with other bars
 }
 
 .category-display {
+
+  &.category-0 {
+    background-color: $break-cat-1;
+    color: #fff;
+  }
+
   &.category-1 {
-    @include button-variant(#fff, $break-cat-1, darken($break-cat-1, 10%));
+    background-color: $break-cat-2;
+    color: #fff;
   }
+
   &.category-2 {
-    @include button-variant(#fff, $break-cat-2, darken($break-cat-2, 10%));
+    background-color: $break-cat-3;
+    color: #fff;
   }
+
   &.category-3 {
-    @include button-variant(#fff, $break-cat-3, darken($break-cat-3, 10%));
+    background-color: $break-cat-4;
+    color: #fff;
   }
 }
 
 .gender-display {
+
   &.gender-male,
   &.gender-m,
-  &.gender-M  {
-    @include button-variant(#fff, $male, darken($male, 10%));
-    fill: $male;
+  &.gender-M {
+    background-color: $male;
+    color: #fff;
   }
+
   &.gender-female,
   &.gender-f,
   &.gender-F,
   &.gender-nm {
-    @include button-variant(#fff, $female, darken($female, 10%));
-    fill: $female;
+    background-color: $female;
+    color: #fff;
   }
+
   &.gender-other,
   &.gender-o,
   &.gender-O {
-    @include button-variant(#fff, $other, darken($other, 10%));
-    fill: $other;
+    background-color: $other;
+    color: #fff;
   }
+
   &.gender-unknown,
   &.gender-u,
-  &.gender-U {
-    @include button-variant(#fff, $unknown, darken($unknown, 10%));
-    fill: $unknown;
+  &.gender-U,
+  &.gender- {
+    background-color: $unknown;
   }
   // For Teams
   &.gender-men-2 {
-    @include button-variant(#fff, lighten($male, 5%), $male);
+    background-color: $male;
+    color: #fff;
   }
+
   &.gender-notmen-2 {
-    @include button-variant(#fff, lighten($female, 5%), $female);
+    background-color: $female;
+    color: #fff;
   }
-  &.gender-men-3 {
-    @include button-variant(#fff, darken($male, 15%), darken($male, 25%));
+
+  &.gender-men-3,
+  &.gender-men-4 {
+    background-color: darken($male, 20%);
+    color: #fff;
   }
-  &.gender-notmen-3 {
-    @include button-variant(#fff, darken($female, 15%), darken($female, 25%));
+
+  &.gender-notmen-3,
+  &.gender-notmen-4 {
+    background-color: darken($female, 20%);
+    color: #fff;
   }
 }
 
 .gender-text {
+
   &.gender-male {
     color: $male;
   }
-  &.gender-female, &.gender-nm {
+
+  &.gender-female,
+  &.gender-nm {
     color: $female;
   }
+
   &.gender-other {
     color: $other;
   }
+
   &.gender-unknown {
     color: $unknown;
   }
@@ -86,40 +106,97 @@
 // For diversity graphs and allocation
 .region-display {
 
+  &.region-0 {
+    background-color: $region-cat-0;
+    color: #fff;
+  }
+
   &.region-1 {
-    @include button-variant(#fff, #C70062, darken(#C70062, 10%));
-    fill: #C70062;
+    background-color: $region-cat-1;
+    color: #fff;
   }
+
   &.region-2 {
-    @include button-variant(#fff, #00C79B, darken(#00C79B, 10%));
-    fill: #00C79B;
+    background-color: $region-cat-2;
+    color: #fff;
   }
+
   &.region-3 {
-    @include button-variant(#fff, #B1E001, darken(#B1E001, 10%));
-    fill: #B1E001;
+    background-color: $region-cat-3;
+    color: #fff;
   }
+
   &.region-4 {
-    @include button-variant(#fff, #476C5E, darken(#476C5E, 10%));
-    fill: #476C5E;
+    background-color: $region-cat-4;
+    color: #fff;
   }
+
   &.region-5 {
-    @include button-variant(#fff, #FF2983, darken(#FF2983, 10%));
-    fill: #FF2983;
+    background-color: $region-cat-5;
+    color: #fff;
   }
+
   &.region-6 {
-    @include button-variant(#fff, #6A268C, darken(#6A268C, 10%));
-    fill: #6A268C;
+    background-color: $region-cat-6;
+    color: #fff;
   }
+
   &.region-7 {
-    @include button-variant(#fff, #00C0CF, darken(#00C0CF, 10%));
-    fill: #00C0CF;
+    background-color: $region-cat-7;
+    color: #fff;
   }
+
   &.region-8 {
-    @include button-variant(#fff, #0051CF, darken(#0051CF, 10%));
-    fill: #0051CF;
+    background-color: $region-cat-8;
+    color: #fff;
   }
-  &.region-9 {
-    @include button-variant(#fff, #777, darken(#777, 10%));
-    fill: #777;
+}
+
+// Ranking Display
+.ranking-display {
+
+  &.ranking-90 {
+    background-color: $adj-ranking-0;
+    color: #fff;
+  }
+
+  &.ranking-80 {
+    background-color: $adj-ranking-1;
+    color: #fff;
+  }
+
+  &.ranking-70 {
+    background-color: $adj-ranking-2;
+    color: #fff;
+  }
+
+  &.ranking-60 {
+    background-color: $adj-ranking-3;
+    color: #fff;
+  }
+
+  &.ranking-50 {
+    background-color: $adj-ranking-4;
+    color: #fff;
+  }
+
+  &.ranking-40 {
+    background-color: $adj-ranking-5;
+    color: #fff;
+  }
+
+  &.ranking-30 {
+    background-color: $adj-ranking-6;
+    color: #fff;
+  }
+
+  &.ranking-20 {
+    background-color: $adj-ranking-7;
+    color: #fff;
+  }
+
+  &.ranking-10 {
+    background-color: $adj-ranking-8;
+    color: #fff;
   }
 }

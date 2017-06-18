@@ -8,8 +8,9 @@
   font-weight: $headings-font-weight;
   padding: 10px 12px;
 }
+
 .btn[data-toggle='tooltip'] span {
-  border-bottom: none; // Need to prevent dashed lines in glyphicons in btns
+  border-bottom: 0; // Need to prevent dashed lines in glyphicons in btns
 }
 
 //------------------------------------------------------------------------------
@@ -20,6 +21,7 @@
 .form-control,
 .form-control-parent input {
   @extend .form-control;
+
   border-radius: 6px;
   border-width: 2px;
   height: 39px;
@@ -55,7 +57,8 @@ input[type="checkbox"].form-control {
 }
 
 // Inline form errors from django
-.errorlist, label.error {
+.errorlist,
+label.error {
   color: $state-danger-text;
   padding: 10px 0 0 5px;
   font-weight: bold;
@@ -69,6 +72,7 @@ input[type="checkbox"].form-control {
 .forfeits-group {
   list-style-type: none;
   padding-left: 0;
+
   li {
     float: left;
     width: 46%;
@@ -83,10 +87,12 @@ input[type="checkbox"].form-control {
     padding: 0 10px;
     flex: 1;
   }
+
   label {
     display: block;
     text-align: center;
   }
+
   input {
     margin: 0 auto;
   }

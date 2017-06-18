@@ -9,16 +9,18 @@
     margin-bottom: 0;
   }
 
-  a, a.nav-link {
+  a,
+  a.nav-link {
     color: $text-primary;
     opacity: 1;
-    border-bottom: 1px solid #CCC;
+    border-bottom: 1px solid #ccc;
 
     &:hover {
       color: $navbar-default-link-hover-color;
       text-decoration: none;
     }
   }
+
   a.nav-link {
     line-height: 16px;
     margin: 5px 20px 15px 0;
@@ -31,33 +33,39 @@
 
 // For Desktops
 @media (min-width: $screen-sm-min) {
+
   .tabbycat-footer {
     bottom: 0;
     position: absolute;
     width: 100%;
+
     a.nav-link {
       padding: 0; // Override bootstrap defaults for spacing
     }
   }
+
   .accommodate-footer {
     min-height: 100vh; // Push the footer down
     padding-bottom: 220px; // Leave room for the footer
   }
+
   .override-accommodate-footer .accommodate-footer {
-    padding-bottom: 0px;
+    padding-bottom: 0;
   }
 }
 
 // For Phones
 @media (max-width: $screen-sm-min) {
+
   .tabbycat-footer {
     position: relative;
     margin-top: 20px;
   }
+
   .nav-item {
     margin-left: 15px; // Override bootstrap defaults for spacing
     a.nav-link {
-      padding-left: 0px;
+      padding-left: 0;
     }
   }
 }

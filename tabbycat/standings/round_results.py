@@ -22,7 +22,7 @@ def add_team_round_results(standings, rounds, lookup=None, id_attr='instance_id'
 
     if lookup is None:
         def lookup(standings, x):
-            standings.get_standing(x)
+            return standings.get_standing(x)
 
     teams = [getattr(info, id_attr) for info in standings]
     teamscores = TeamScore.objects.select_related(

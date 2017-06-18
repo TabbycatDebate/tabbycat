@@ -44,6 +44,12 @@ class BreakCategory(models.Model):
         will actually compete in the elimination round series."""
         return self.breakingteam_set.filter(break_rank__isnull=False)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id, 'name': self.name, 'seq': self.seq, 'class': None
+        }
+
 
 class BreakingTeam(models.Model):
     break_category = models.ForeignKey(BreakCategory, models.CASCADE)

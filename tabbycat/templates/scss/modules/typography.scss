@@ -1,13 +1,11 @@
 //------------------------------------------------------------------------------
 // Web Fonts
 //------------------------------------------------------------------------------
-
+// Primary Typeface
 @font-face {
   font-family: 'LatoLatinWeb';
   src: url('/static/fonts/lato-normal.eot');
-  src:  url('/static/fonts/lato-normal.eot?#iefix') format('embedded-opentype'),
-        url('/static/fonts/lato-normal.woff') format('woff'),
-        url('/static/fonts/lato-normal.ttf') format('truetype');
+  src: url('/static/fonts/lato-normal.eot?#iefix') format('embedded-opentype'), url('/static/fonts/lato-normal.woff') format('woff'), url('/static/fonts/lato-normal.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
@@ -16,10 +14,6 @@
 //------------------------------------------------------------------------------
 // Text Utilities
 //------------------------------------------------------------------------------
-
-.text-muted {
-  opacity: 0.8; // We use opacity so we can change the color
-}
 
 // Override option for headings
 .text-body {

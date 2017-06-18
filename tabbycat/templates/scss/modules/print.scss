@@ -10,10 +10,8 @@
     page-break-inside: avoid;
   }
 
-  .page-header {
-    .col-md-12 {
-      padding-left: 0;
-    }
+  .page-header .col-md-12 {
+    padding-left: 0;
   }
 
   // Don't split a table across multiple pages
@@ -26,9 +24,4 @@
       page-break-after: auto;
     }
   }
-
-  #djDebug {
-    display: none !important;
-  }
-
 }

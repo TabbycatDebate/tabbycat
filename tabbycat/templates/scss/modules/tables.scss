@@ -7,12 +7,15 @@
   margin-bottom: 0; // Panel body has its own bottom padding
   > tbody > tr:hover td {
     background-color: $table-bg-hover;
+
     .hide-underline {
       border-bottom-color: $table-bg-hover;
     }
   }
+
   &.hide-hover > tbody > tr:hover td {
     background-color: transparent;
+
     .hide-underline {
       border-bottom-color: #ccc;
     }
@@ -33,10 +36,13 @@
 // HEADER STYLES
 //------------------------------------------------------------------------------
 
-thead, .thead {
+thead,
+.thead {
   @extend .subtitle;
+
   background: $alt-bg; // Fixed header needs a background while scrolling
   line-height: 18px; // Otherwise the border is too clone to the text
+
   .glyphicon {
     line-height: 18px; // Otherwise the border is too clone to the text
   }
@@ -44,10 +50,13 @@ thead, .thead {
 
 .vue-sortable {
   white-space: nowrap; // Stop a toggle being pushed into 2 rows
-  &:hover, &:hover .glyphicon {
+
+  &:hover,
+  &:hover .glyphicon {
     color: $brand-success;
     cursor: pointer;
   }
+
   .vue-sort-key {
     margin-left: -2px; // There is always a space after the key; reduce this gap
   }
@@ -60,17 +69,22 @@ thead, .thead {
 .table > tbody > tr > th,
 .table > tbody > tr > td {
   vertical-align: middle;
+
   &.empty-cell {
-    border: none;
+    border: 0;
   }
+
   &.unpadded-cell {
     padding: 0;
   }
+
   // For highlighting bracket boundaries
   &.highlight-row {
     border-top: 3px solid $brand-info;
   }
-  &.checkbox-target:hover, &.checkbox-target input:hover {
+
+  &.checkbox-target:hover,
+  &.checkbox-target input:hover {
     cursor: pointer;
   }
 }
@@ -81,25 +95,30 @@ thead, .thead {
 
 // For Phones
 @media (max-width: $screen-sm-min) {
+
   .table-container {
     margin-right: -15px;
     margin-left: -15px;
     border-left: 0;
     border-right: 0;
     border-radius: 0;
+
     .panel-body {
-      padding-left: 0px;
-      padding-right: 0px;
+      padding-left: 0;
+      padding-right: 0;
     }
   }
+
   .team-name .emoji {
     display: block; // Fix ugly wrapping and make names easier to identify
   }
+
   .table > tbody > tr > th,
   .table > tbody > tr > td {
     padding-left: 4px;
     padding-right: 4px;
   }
+
   .table > tbody > tr > td:first-child {
     padding-left: 10px; // Compensate for reduced left margins on phones
   }

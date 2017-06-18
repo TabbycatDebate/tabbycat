@@ -1,10 +1,13 @@
+import json
 import datetime
 import logging
 
-from django.views.generic.base import TemplateView, View
+from math import floor
+
+from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 
 from actionlog.mixins import LogActionMixin
@@ -13,7 +16,8 @@ from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
 from participants.models import Adjudicator, Institution, Team
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import CrossTournamentPageMixin, OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import CrossTournamentPageMixin, DrawForDragAndDropMixin
+from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, SaveDragAndDropDebateMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.utils import aff_name, get_side_name, neg_name
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
@@ -174,6 +178,8 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
 
 class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     detailed = False
+    sort_key = 'Bracket'
+    sort_order = 'desc'
 
     def get_page_title(self):
         round = self.get_round()
@@ -196,7 +202,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     def get_table(self):
         r = self.get_round()
         tournament = self.get_tournament()
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key, sort_order=self.sort_order)
         if r.draw_status == r.STATUS_NONE:
             return table # Return Blank
 
@@ -330,11 +336,13 @@ class ConfirmDrawCreationView(DrawStatusEdit):
 
 class DrawRegenerateView(DrawStatusEdit):
     action_log_type = ActionLogEntry.ACTION_TYPE_DRAW_REGENERATE
+    round_redirect_pattern_name = 'availability-index'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()
         delete_round_draw(round)
         self.log_action()
+        messages.success(request, "Deleted the draw. You can now recreate it as normal.")
         return super().post(request, *args, **kwargs)
 
 
@@ -510,83 +518,71 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
     public_page_preference = 'public_side_allocations'
 
 
-class DrawMatchupsEditView(SuperuserRequiredMixin, RoundMixin, TemplateView):
-    template_name = 'draw_matchups_edit.html'
+class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
+    template_name = 'edit_matchups.html'
+    save_url = "save-debate-teams"
+
+    def annotate_draw(self, draw, serialised_draw):
+        round = self.get_round()
+        extra_debates = floor(round.active_teams.count() / 2 - len(serialised_draw))
+        for i in range(0, extra_debates):
+            # Make 'fake' debates as placeholders; need a unique ID (hence 9999)
+            serialised_draw.append({
+                'id': 999999 + i, 'teams': {}, 'panel': [], 'bracket': 0,
+                'importance': 0, 'venue': None
+            })
+
+        return super().annotate_draw(draw, serialised_draw)
 
     def get_context_data(self, **kwargs):
-        round = self.get_round()
-        kwargs['unused_teams'] = round.unused_teams()
-        kwargs['draw'] = round.debate_set_with_prefetches(ordering=('room_rank',))
-        possible_debates = len(kwargs['unused_teams']) // 2 + 1
-        kwargs['possible_debates'] = [None] * possible_debates
+        unused = [t for t in self.get_round().unused_teams()]
+        serialized_unused = [t.serialize() for t in unused]
+        for t, serialt in zip(unused, serialized_unused):
+            serialt = self.annotate_break_classes(serialt)
+            serialt = self.annotate_region_classes(serialt)
+
+        kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
         return super().get_context_data(**kwargs)
 
 
-class SaveDrawMatchups(SuperuserRequiredMixin, RoundMixin, View):
+class SaveDrawMatchups(SaveDragAndDropDebateMixin):
+    action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
+    allows_creation = True
 
-    def post(self, request, *args, **kwargs):
-        existing_debate_ids = [int(a.replace('debate_', ''))
-                               for a in list(request.POST.keys())
-                               if a.startswith('debate_')]
+    def identify_position(self, translated_position):
+        # Positions are sent over in their labelled/translate form; need to lookup
+        # This is hardcoded to aff/neg; will need to refactor when positions update
+        translated_positions = {
+            get_position_name(self.get_tournament(), name, 'full'): name for name in ['aff', 'neg']}
+        position_short = translated_positions[translated_position]
+        if position_short is 'aff':
+            position = DebateTeam.POSITION_AFFIRMATIVE
+        if position_short is 'neg':
+            position = DebateTeam.POSITION_NEGATIVE
+        return position
 
-        for debate_id in existing_debate_ids:
-            try:
-                debate = Debate.objects.get(id=debate_id)
-            except Debate.DoesNotExist:
-                # When trying to save a blank debate (ie with no aff/neg)
-                # multiple times there is no corresponding object
-                continue
+    def modify_debate(self, debate, posted_debate):
+        teams = posted_debate['teams'].items()
+        print("Processing change for ", debate.id)
+        for d_position, d_team in teams:
+            position = self.identify_position(d_position)
+            team = Team.objects.get(pk=d_team['id'])
+            print("\tSaving change for ", team.short_name)
+            if DebateTeam.objects.filter(debate=debate, team=team, position=position).exists():
+                print("\t\tSkipping %s as not changed" % team.short_name)
+                continue # Skip the rest of the loop; no edit needed
+            # Delete whatever team currently exists in that spot
+            if DebateTeam.objects.filter(debate=debate, position=position).exists():
+                existing = DebateTeam.objects.get(debate=debate, position=position)
+                print('\t\tDeleting %s as %s' % (existing.team.short_name, existing.position))
+                existing.delete()
 
-            new_aff_id = request.POST.get(
-                'aff_%s' % debate_id).replace('team_', '')
-            new_neg_id = request.POST.get(
-                'neg_%s' % debate_id).replace('team_', '')
+            print("\t\tSaving %s as %s" % (team.short_name, position))
+            new_allocation = DebateTeam.objects.create(debate=debate, team=team,
+                                                       position=position)
+            new_allocation.save()
 
-            if new_aff_id and new_neg_id:
-                DebateTeam.objects.filter(debate=debate).delete()
-                debate.save()
-
-                new_aff_team = Team.objects.get(id=int(new_aff_id))
-                new_aff_dt = DebateTeam(debate=debate,
-                                        team=new_aff_team,
-                                        side=DebateTeam.SIDE_AFFIRMATIVE)
-                new_aff_dt.save()
-
-                new_aff_team = Team.objects.get(id=int(new_neg_id))
-                new_neg_dt = DebateTeam(debate=debate,
-                                        team=new_aff_team,
-                                        side=DebateTeam.SIDE_NEGATIVE)
-                new_neg_dt.save()
-            else:
-                # If there's blank debates we need to delete those
-                debate.delete()
-
-        new_debate_ids = [int(a.replace('new_debate_', ''))
-                          for a in list(request.POST.keys())
-                          if a.startswith('new_debate_')]
-
-        for debate_id in new_debate_ids:
-            new_aff_id = request.POST.get('aff_%s' % debate_id).replace('team_',
-                                                                        '')
-            new_neg_id = request.POST.get('neg_%s' % debate_id).replace('team_',
-                                                                        '')
-
-            if new_aff_id and new_neg_id:
-                debate = Debate(round=self.get_round(), venue=None)
-                debate.save()
-
-                aff_team = Team.objects.get(id=int(new_aff_id))
-                neg_team = Team.objects.get(id=int(new_neg_id))
-                new_aff_dt = DebateTeam(debate=debate,
-                                        team=aff_team,
-                                        side=DebateTeam.SIDE_AFFIRMATIVE)
-                new_neg_dt = DebateTeam(debate=debate,
-                                        team=neg_team,
-                                        side=DebateTeam.SIDE_NEGATIVE)
-                new_aff_dt.save()
-                new_neg_dt.save()
-
-        return HttpResponse("ok")
+        return debate
 
 
 # ==============================================================================

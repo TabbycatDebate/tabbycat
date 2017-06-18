@@ -19,15 +19,22 @@ Getting started
 - To easily test your changes to Tabbycat you probably want a working :ref:`local install <install-local>` (without using Docker)
 - Generally we prefer that features and bug fixes are submitted as pull requests on their own branch (as described in the  `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_). Submitting against `develop` (but not `master`) is fine for small fixes and changes.
 - We use Django's testing tools — it would be great if new features came with unit tests
+- By default the development server's build process will broadcast livereload events; installing one of their `browser plugins <http://livereload.com/extensions/>`_ can make testing front-end changes easier.
 
 Style guide
 ===========
 
-We use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a Travis CI build to fail. The entire codebase can be checked by using::
+For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a Travis CI build to fail. The entire codebase can be checked by using::
 
     $ flake8 .
 
-While in the base directory
+For stylesheets, we use `stylelint <https://stylelint.io>`_ to enforce the `AirBnB styleguide <https://github.com/airbnb/css>`_. The relevant code can be checked by using::
+
+    $ npm run stylelint
+
+For javascript, we use `eslint <http://eslint.org/>` to enforce the `AirBnB styleguide <https://github.com/airbnb/javascript>`_. The relevant code can be checked by using::
+
+    $ npm run eslint
 
 Versioning convention
 =====================

@@ -29,11 +29,11 @@ urlpatterns = [
         views.SideAllocationsView.as_view(),
         name='draw-side-allocations'),
     url(r'^round/(?P<round_seq>\d+)/matchups/edit/$',
-        views.DrawMatchupsEditView.as_view(),
+        views.EditMatchupsView.as_view(),
         name='draw-matchups-edit'),
     url(r'^round/(?P<round_seq>\d+)/matchups/save/$',
         views.SaveDrawMatchups.as_view(),
-        name='draw-matchups-save'),
+        name='save-debate-teams'),
 
     # Display
     url(r'^round/(?P<round_seq>\d+)/display/$',

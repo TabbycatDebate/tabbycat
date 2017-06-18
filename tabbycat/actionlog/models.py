@@ -33,6 +33,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_ADJUDICATORS_AUTO       = 'aa.auto'
     ACTION_TYPE_VENUES_SAVE             = 've.save'
     ACTION_TYPE_VENUES_AUTOALLOCATE     = 've.auto'
+    ACTION_TYPE_MATCHUP_SAVE            = 'mu.save'
     ACTION_TYPE_DRAW_RELEASE            = 'dr.rele'
     ACTION_TYPE_DRAW_UNRELEASE          = 'dr.unre'
     ACTION_TYPE_DIVISIONS_SAVE          = 'dv.save'
@@ -66,13 +67,14 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_ADJUDICATOR_NOTE_SET    , 'Set adjudicator note'),
         (ACTION_TYPE_ADJUDICATORS_SAVE       , 'Saved adjudicator allocation'),
         (ACTION_TYPE_ADJUDICATORS_AUTO       , 'Auto-allocated adjudicators'),
-        (ACTION_TYPE_VENUES_SAVE             , 'Saved venues'),
+        (ACTION_TYPE_VENUES_SAVE             , 'Saved a venue manual edit'),
         (ACTION_TYPE_VENUES_AUTOALLOCATE     , 'Auto-allocated venues'),
         (ACTION_TYPE_DRAW_CREATE             , 'Created draw'),
         (ACTION_TYPE_DRAW_CONFIRM            , 'Confirmed draw'),
         (ACTION_TYPE_DRAW_REGENERATE         , 'Regenerated draw'),
         (ACTION_TYPE_DRAW_RELEASE            , 'Released draw'),
         (ACTION_TYPE_DRAW_UNRELEASE          , 'Unreleased draw'),
+        (ACTION_TYPE_MATCHUP_SAVE            , 'Saved a matchup manual edit'),
         (ACTION_TYPE_DIVISIONS_SAVE          , 'Saved divisions'),
         (ACTION_TYPE_MOTION_EDIT             , 'Added/edited motion'),
         (ACTION_TYPE_MOTIONS_RELEASE         , 'Released motions'),

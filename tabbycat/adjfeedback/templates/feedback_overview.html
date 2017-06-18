@@ -77,10 +77,12 @@
 
 {% block js %}
 
-  {{ block.super }}
   <script>
-    var setBreakingURL = '{% tournamenturl 'adjfeedback-set-adj-breaking-status' %}';
+    window.vueData = {
+      setBreakingURL: '{% tournamenturl 'adjfeedback-set-adj-breaking-status' %}'
+    }
   </script>
+  {{ block.super }}
   <script>
     // Actions for the table elements
     $(document).ready(function(){

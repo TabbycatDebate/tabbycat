@@ -1,5 +1,8 @@
 {
   "name": "tabby-cat",
+  "browser": {
+    "vue": "vue/dist/vue.common.js"
+  },
   "description": "Debating tabulation software for two-team parliamentary formats",
   "engines": {
     "node": "6.5.0"
@@ -15,7 +18,7 @@
     "bootstrap-sass": "3.3.7",
     "browserify": "14.3.0",
     "d3": "3.5.17",
-    "eslint": "3.19.0",
+    "eslint": "^3.19.0",
     "event-stream": "3.3.4",
     "gulp": "3.9.1",
     "gulp-clean-css": "3.2.0",
@@ -31,15 +34,26 @@
     "jquery-validation": "1.16.0",
     "lato-font": "2.0.0",
     "live-reload": "1.1.0",
+    "lodash": "4.17.4",
+    "stats-percentile": "^2.0.0",
     "vinyl-source-stream": "1.1.0",
-    "vue": "1.0.26",
+    "vue": "2.3.3",
     "vue-hot-reload-api": "2.0.5",
     "vueify": "8.7.0"
   },
   "scripts": {
     "gulp": "gulp",
-    "lint": "eslint --ext .js,.vue tabbycat/templates/js-bundles tabbycat/templates/js-vue"
+    "stylelint": "stylelint tabbycat/templates/scss/**/*.scss --cache || true",
+    "eslint": "eslint --ext .js,.html,.vue --ignore-pattern tabbycat/static/ --cache tabbycat/ || true"
   },
   "repository": "https://github.com/czlee/tabbycat",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-html": "^2.0.3",
+    "eslint-plugin-import": "^2.3.0",
+    "stylelint": "^7.11.0",
+    "stylelint-config-standard": "^16.0.0",
+    "stylelint-scss": "^1.4.4"
+  }
 }
