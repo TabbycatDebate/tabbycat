@@ -6,11 +6,11 @@ from django.utils.translation import ugettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.utils import adjudicator_conflicts_display
-from draw.models import Debate, DebateTeam
+from draw.models import Debate
 from participants.models import Team
 from participants.utils import get_side_counts
 from standings.templatetags.standingsformat import metricformat, rankingformat
-from tournaments.utils import aff_abbr, aff_name, aff_team, get_side_name, neg_name
+from tournaments.utils import aff_name, get_side_name, neg_name
 from utils.misc import reverse_tournament
 from venues.utils import venue_conflicts_display
 
