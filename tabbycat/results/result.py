@@ -245,8 +245,9 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
         super().__init__(ballotsub, load=False)
 
         self.positions = self.tournament.positions
-        scoresheet_type = self.tournament.pref('scoresheet_type')
-        self.scoresheet_class = SCORESHEET_CLASSES[scoresheet_type]
+
+        # Hard-coded until low-point wins etc. implemented at form and model level
+        self.scoresheet_class = SCORESHEET_CLASSES['high-required']
 
         # Note: declared winners aren't currently used, and it's not yet clear
         # to me what the best way is to pass these through to/from Scoresheet.
