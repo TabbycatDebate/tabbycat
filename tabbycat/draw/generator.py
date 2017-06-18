@@ -2,6 +2,8 @@ import random
 import logging
 from collections import OrderedDict
 
+from django.utils.translation import ugettext_lazy as _
+
 from .one_up_one_down import OneUpOneDownSwapper
 from .utils import partial_break_round_split
 
@@ -9,18 +11,18 @@ logger = logging.getLogger(__name__)
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
 DRAW_FLAG_DESCRIPTIONS = {
-    "max_swapped":  "Too many swaps",
-    "1u1d_hist":    "One-up-one-down (history)",
-    "1u1d_inst":    "One-up-one-down (institution)",
-    "1u1d_other":   "One-up-one-down (to accommodate)",
-    "bub_up_hist":  "Bubble up (history)",
-    "bub_dn_hist":  "Bubble down (history)",
-    "bub_up_inst":  "Bubble up (institution)",
-    "bub_dn_inst":  "Bubble down (institution)",
-    "bub_up_accom": "Bubble up (to accommodate)",
-    "bub_dn_accom": "Bubble down (to accommodate)",
-    "no_bub_updn":  "Can't bubble up/down",
-    "pullup":       "Pull-up team",
+    "max_swapped":  _("Too many swaps"),
+    "1u1d_hist":    _("One-up-one-down (history)"),
+    "1u1d_inst":    _("One-up-one-down (institution)"),
+    "1u1d_other":   _("One-up-one-down (to accommodate)"),
+    "bub_up_hist":  _("Bubble up (history)"),
+    "bub_dn_hist":  _("Bubble down (history)"),
+    "bub_up_inst":  _("Bubble up (institution)"),
+    "bub_dn_inst":  _("Bubble down (institution)"),
+    "bub_up_accom": _("Bubble up (to accommodate)"),
+    "bub_dn_accom": _("Bubble down (to accommodate)"),
+    "no_bub_updn":  _("Can't bubble up/down"),
+    "pullup":       _("Pull-up team"),
 }
 
 
@@ -217,21 +219,18 @@ class BaseDrawGenerator(object):
                 raise DrawError("There were no teams for the draw.")
 
         if results is None and self.requires_prev_results:
-            raise TypeError(
-                "'results' is required for draw of type {0:s}".format(
+            raise TypeError("'results' is required for draw of type {0:s}".format(
                     self.__class__.__name__))
 
         if results is not None and not self.requires_prev_results:
-            logger.warning(
-                "'results' not required for draw of type {0:s}, will probably be ignored".format(
-                    self.__class__.__name__))
+            logger.warning("'results' not required for draw of type %s, will probably be ignored",
+                    self.__class__.__name__)
 
         if results is not None:
             self.results = results
 
         if rrseq is None and self.requires_rrseq:
-            raise TypeError(
-                "'round robin sequence' is required for draw of type {0:s}".format(
+            raise TypeError("'round robin sequence' is required for draw of type {0:s}".format(
                     self.__class__.__name__))
 
         # Compute the full dictionary of default options
