@@ -226,8 +226,8 @@ class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
         kwargs['motions'] = json.dumps([
             {'seq': m.seq, 'text': m.text} for m in motions])
         kwargs['positions'] = json.dumps([
-            get_position_name(tournament, "aff", "full").title(),
-            get_position_name(tournament, "neg", "full").title()])
+            get_side_name(tournament, "aff", "full").title(),
+            get_side_name(tournament, "neg", "full").title()])
         return super().get_context_data(**kwargs)
 
 

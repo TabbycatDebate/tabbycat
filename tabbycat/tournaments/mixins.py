@@ -18,7 +18,7 @@ from actionlog.mixins import LogActionMixin
 from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import Debate
 from participants.models import Region
-from tournaments.utils import get_position_name
+from tournaments.utils import get_side_name
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
@@ -343,8 +343,8 @@ class DrawForDragAndDropMixin(RoundMixin):
             adjudicator_positions += "T"
 
         round_info = {
-            'positions': [get_position_name(tournament, "aff", "full"),
-                          get_position_name(tournament, "neg", "full")],
+            'positions': [get_side_name(tournament, "aff", "full"),
+                          get_side_name(tournament, "neg", "full")],
             'adjudicatorPositions': adjudicator_positions,
             'adjudicatorDoubling': tournament.pref('duplicate_adjs'),
             'backUrl': reverse_round('draw', round),

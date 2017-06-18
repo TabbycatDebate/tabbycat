@@ -553,7 +553,7 @@ class SaveDrawMatchups(SaveDragAndDropDebateMixin):
         # Positions are sent over in their labelled/translate form; need to lookup
         # This is hardcoded to aff/neg; will need to refactor when positions update
         translated_positions = {
-            get_position_name(self.get_tournament(), name, 'full'): name for name in ['aff', 'neg']}
+            get_side_name(self.get_tournament(), name, 'full'): name for name in ['aff', 'neg']}
         position_short = translated_positions[translated_position]
         if position_short is 'aff':
             position = DebateTeam.POSITION_AFFIRMATIVE
