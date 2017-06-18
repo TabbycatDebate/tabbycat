@@ -74,7 +74,12 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         """For a team, this must be the adjudicator who delivered the oral
         adjudication. If the chair was rolled, then it is one of the majority
         adjudicators; if the chair was in the majority, then it must be the
-        chair."""
+        chair.
+
+        For consensus adjudications and where information about splitting
+        adjudicators is not shown publicly, the above-described rule can't be
+        enforced, so instead we just expect it to be on any adjudicator on the
+        panel."""
 
         if self.enforce_orallist and self.source.debate.confirmed_ballot:
             majority = self.source.debate.confirmed_ballot.result.majority_adjudicators()
@@ -247,7 +252,8 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         self.team = team
         if tournament is None:
             tournament = team.tournament
-        self.enforce_orallist = tournament.pref("show_splitting_adjudicators")
+        self.enforce_orallist = (tournament.pref("show_splitting_adjudicators") and
+                                 tournament.pref("ballots_per_debate") == 'per-adj')
         self.expect_all_adjs = tournament.pref("feedback_from_teams") == 'all-adjs'
         super().__init__(tournament)
 

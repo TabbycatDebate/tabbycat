@@ -3,7 +3,7 @@ import random
 from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
-from .models import Debate, DebateTeam, TeamSideAllocation
+from .models import Debate, DebateTeam
 from .generator import DrawGenerator, Pairing
 
 OPTIONS_TO_CONFIG_MAPPING = {

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from .result import VotingDebateResult
+from .result import DebateResult
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +121,7 @@ class BallotSubmission(Submission):
     @property
     def result(self):
         if not hasattr(self, "_result"):
-            self._result = VotingDebateResult(self)
+            self._result = DebateResult(self)
         return self._result
 
     def clean(self):

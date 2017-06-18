@@ -35,9 +35,19 @@
   {% for sheet in result.as_dicts %}
 
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">From {{ sheet.adjudicator }}</h4>
-      </div>
+
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            {% if sheet.adjudicator %}
+              {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code %}
+                  From {{ name }} ({{ institution }})
+              {% endblocktrans %}
+            {% else %}
+              {% trans "Scoresheet" %}
+            {% endif %}
+          </h4>
+        </div>
+
       <div class="panel-body">
 
         {% for team in sheet.teams %}

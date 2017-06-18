@@ -368,14 +368,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         for debate in debates:
             adjs_data = []
-            if show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')) and debate.confirmed_ballot:
+            if show_splits and debate.confirmed_ballot \
+                    and debate.confirmed_ballot.result.is_voting \
+                    and debate.confirmed_ballot.result.is_valid() \
+                    and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
                 for adj, position, split in debate.confirmed_ballot.result.adjudicators_with_splits():
-                    adjs_data.append(
-                        {'adj': adj, 'position': position, 'split': bool(split)})
+                    adjs_data.append({'adj': adj, 'position': position, 'split': bool(split)})
             else:
                 for adj, position in debate.adjudicators.with_positions():
-                    adjs_data.append(
-                        {'adj': adj, 'position': position})
+                    adjs_data.append({'adj': adj, 'position': position})
 
             if not debate.adjudicators.has_chair and debate.adjudicators.is_panel:
                 adjs_data[0]['type'] = 'O'

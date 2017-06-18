@@ -38,10 +38,10 @@ class ScoresMixin:
     def __init__(self, positions, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.positions = positions
-        self.scores = {side: dict.fromkeys(self.positions, None) for side in self.SIDES}
+        self.scores = {side: dict.fromkeys(self.positions, None) for side in self.sides}
 
     def is_complete(self):
-        scores_complete = all(self.scores[s][p] is not None for s in self.SIDES
+        scores_complete = all(self.scores[s][p] is not None for s in self.sides
                 for p in self.positions)
         return super().is_complete() and scores_complete
 
@@ -70,10 +70,10 @@ class DeclaredWinnerMixin:
         self.declared_winner = None
 
     def is_complete(self):
-        return super().is_complete() and (self.declared_winner in self.SIDES)
+        return super().is_complete() and (self.declared_winner in self.sides)
 
     def set_declared_winner(self, winner):
-        assert winner in self.SIDES or winner is None, "Declared winner must be one of " + ", ".join(map(repr, self.SIDES))
+        assert winner in self.sides or winner is None, "Declared winner must be one of " + ", ".join(map(repr, self.sides))
         self.declared_winner = winner
 
     def get_declared_winner(self):
@@ -85,7 +85,7 @@ class DeclaredWinnerMixin:
 
 class BaseTwoTeamScoresheet(BaseScoresheet):
 
-    SIDES = ['aff', 'neg']
+    sides = ['aff', 'neg']
 
     def winner(self):
         """Returns 'aff' is the affirmative team won, and 'neg' if the negative
@@ -95,7 +95,7 @@ class BaseTwoTeamScoresheet(BaseScoresheet):
         return self._get_winner()
 
     def is_valid(self):
-        return super().is_complete() and self._get_winner() is not None
+        return super().is_complete() and self.winner() is not None
 
 
 class ResultOnlyScoresheet(DeclaredWinnerMixin, BaseTwoTeamScoresheet):

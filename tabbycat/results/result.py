@@ -42,7 +42,6 @@ import logging
 from functools import wraps
 from statistics import mean
 
-from draw.models import DebateTeam
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 
@@ -54,6 +53,32 @@ logger = logging.getLogger(__name__)
 
 class ResultError(RuntimeError):
     pass
+
+
+def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
+    """Factory function. Returns an instance of a subclass of BaseDebateResult
+    appropriate for the ballot submission's tournament's settings.
+
+    If `tournament` is provided as a keyword argument, the function wil use this
+    to determine which subclass it should instantiate, rather than fetching
+    `ballotsub.debate.round.tournament`. Callers can use this on repeated calls
+    to avoid a deluge of repeated SQL queries.
+
+    The different subclasses have different method signatures. It is the
+    responsibility of the caller to ensure that it conforms with the signatures
+    of the returned instance. The caller can do so by checking the `.is_voting`
+    attribute of the returned instance.
+    """
+    tournament = kwargs.pop('tournament', None)
+    if tournament is None:
+        tournament = ballotsub.debate.round.tournament
+    ballots_per_debate = tournament.pref('ballots_per_debate')
+    if ballots_per_debate == 'per-adj':
+        return VotingDebateResult(ballotsub, *args, **kwargs)
+    elif ballots_per_debate == 'per-debate':
+        return ConsensusDebateResult(ballotsub, *args, **kwargs)
+    else:
+        raise ValueError("Invalid choice for 'ballots_per_debate' preference: " + str(ballots_per_debate))
 
 
 class BaseDebateResult:
@@ -400,6 +425,8 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
     """Instantiates a scoresheet for each voting adjudicator, and calculates
     the decision according to a majority vote among them."""
 
+    is_voting = True
+
     def __init__(self, ballotsub, load=True):
         super().__init__(ballotsub, load)
         self._decision_calculated = False
@@ -572,7 +599,6 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
         else:
             return self.majority_adjudicators()
 
-    @property
     def winning_side(self):
         return self._winner
 
@@ -621,18 +647,15 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
         Adjudicator object, and split is True if the adjudicator was in the
         minority and not a trainee, False if the adjudicator was in the majority
         or is a trainee. If there is no available result, split is always
-        False."""
+        False.
 
-        try:
-            self._calculate_decision()
-        except ResultError:
-            for adj, adjtype in self.debate.adjudicators.with_positions():
-                yield adj, adjtype, False
-        else:
-            majority = self.majority_adjudicators()
-            for adj, adjtype in self.debate.adjudicators.with_positions():
-                split = adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE
-                yield adj, adjtype, split
+        Raises a ResultError if the scoresheet is invalid."""
+
+        self._calculate_decision()
+        majority = self.majority_adjudicators()
+        for adj, adjtype in self.debate.adjudicators.with_positions():
+            split = adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE
+            yield adj, adjtype, split
 
     def as_dicts(self):
         """Generates a sequence of dicts, each being a scoresheet from an
@@ -651,6 +674,8 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
 class ConsensusDebateResult(BaseDebateResultWithSpeakers):
     """Basically a wrapper for a single scoresheet. Knows nothing about
     adjudicators."""
+
+    is_voting = False
 
     def __init__(self, ballotsub, load=True):
         super().__init__(ballotsub, load=False)

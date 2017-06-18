@@ -6,12 +6,13 @@ by a front-end interface as well."""
 
 import random
 import logging
+from itertools import product
 
 from django.contrib.auth import get_user_model
 
 from draw.models import Debate
 from results.models import BallotSubmission
-from results.result import VotingDebateResult
+from results.result import DebateResult
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -40,6 +41,22 @@ def delete_ballotsub(debate):
     debate.ballotsubmission_set.all().delete()
 
 
+def fill_scoresheet_randomly(scoresheet, tournament):
+    """Fills a scoresheet randomly. Operates in-place."""
+    while not scoresheet.is_valid():
+        for side, pos in product(scoresheet.sides, scoresheet.positions):
+            if pos == tournament.reply_position:
+                step = tournament.pref('reply_score_step')
+                start = tournament.pref('reply_score_min') / step
+                stop = tournament.pref('reply_score_max') / step
+            else:
+                step = tournament.pref('score_step')
+                start = tournament.pref('score_min') / step
+                stop = tournament.pref('score_max') / step
+            score = random.randint(start, stop) * step
+            scoresheet.set_score(side, pos, score)
+
+
 def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
                   min_score=72, max_score=78, reply_random=False):
     """Adds a ballot set to a debate.
@@ -54,8 +71,7 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
     if discarded and confirmed:
         raise ValueError("Ballot can't be both discarded and confirmed!")
 
-    last_substantive_position = debate.round.tournament.last_substantive_position
-    reply_position = debate.round.tournament.reply_position
+    t = debate.round.tournament
 
     # Create a new BallotSubmission
     bsub = BallotSubmission(submitter_type=submitter_type, debate=debate)
@@ -63,38 +79,24 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
         bsub.submitter = user
     bsub.save()
 
-    def gen_results():
-        r = {'aff': (0,), 'neg': (0,)}
-
-        def do():
-            s = [random.randint(min_score, max_score) for i in range(last_substantive_position)]
-            s.append(random.randint(min_score, max_score)/2)
-            return s
-        while sum(r['aff']) == sum(r['neg']):
-            r['aff'] = do()
-            r['neg'] = do()
-        return r
-
-    rr = dict()
-    for adj in debate.adjudicators.voting():
-        rr[adj] = gen_results()
-
     # Create relevant scores
-    result = VotingDebateResult(bsub)
+    result = DebateResult(bsub)
 
-    for side in ('aff', 'neg'):
+    for side in ['aff', 'neg']:
         speakers = getattr(debate, '%s_team' % side).speakers
-        for i in range(1, last_substantive_position+1):
+        for i in range(1, t.last_substantive_position+1):
             result.set_speaker(side, i, speakers[i-1])
             result.set_ghost(side, i, False)
 
-        reply_speaker = random.randint(0, last_substantive_position-1) if reply_random else 0
-        result.set_speaker(side, reply_position, speakers[reply_speaker])
-        result.set_ghost(side, reply_position, False)
+        reply_speaker = random.randint(0, t.last_substantive_position-1) if reply_random else 0
+        result.set_speaker(side, t.reply_position, speakers[reply_speaker])
+        result.set_ghost(side, t.reply_position, False)
 
-        for adj in debate.adjudicators.voting():
-            for pos in debate.round.tournament.positions:
-                result.set_score(adj, side, pos, rr[adj][side][pos-1])
+        if result.is_voting:
+            for scoresheet in result.scoresheets.values():
+                fill_scoresheet_randomly(scoresheet, t)
+        else:
+            fill_scoresheet_randomly(result.scoresheet, t)
 
     result.save()
 

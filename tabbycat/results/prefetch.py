@@ -5,7 +5,7 @@ from draw.models import DebateTeam
 from tournaments.models import Tournament
 
 from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
-from .result import VotingDebateResult
+from .result import DebateResult
 
 
 def populate_wins(debates):
@@ -88,7 +88,7 @@ def populate_results(ballotsubs):
 
     # Create the VotingDebateResults
     for ballotsub in ballotsubs:
-        result = VotingDebateResult(ballotsub, load=False)
+        result = DebateResult(ballotsub, load=False)
         result.init_blank_buffer()
 
         ballotsub._result = result
@@ -117,29 +117,34 @@ def populate_results(ballotsubs):
         result.speakers[ss.debate_team.side][ss.position] = ss.speaker
         result.ghosts[ss.debate_team.side][ss.position] = ss.ghost
 
+        if not result.is_voting:
+            result.set_score(ss.debate_team.side, ss.position, ss.score)
+
     # Populate scoresheets (load_scoresheets)
 
-    debateadjs = DebateAdjudicator.objects.filter(
-        debate__ballotsubmission__in=ballotsubs
-    ).exclude(
-        type=DebateAdjudicator.TYPE_TRAINEE
-    ).select_related('adjudicator').distinct()
+    if result.is_voting:
 
-    for da in debateadjs:
-        for result in results_by_debate_id[da.debate_id]:
-            result.debateadjs[da.adjudicator] = da
-            result.scoresheets[da.adjudicator] = result.scoresheet_class(positions)
+        debateadjs = DebateAdjudicator.objects.filter(
+            debate__ballotsubmission__in=ballotsubs
+        ).exclude(
+            type=DebateAdjudicator.TYPE_TRAINEE
+        ).select_related('adjudicator').distinct()
 
-    ssbas = SpeakerScoreByAdj.objects.filter(
-        ballot_submission__in=ballotsubs,
-        debate_team__side__in=sides,
-        position__in=positions
-    ).select_related('debate_adjudicator__adjudicator')
+        for da in debateadjs:
+            for result in results_by_debate_id[da.debate_id]:
+                result.debateadjs[da.adjudicator] = da
+                result.scoresheets[da.adjudicator] = result.scoresheet_class(positions)
 
-    for ssba in ssbas:
-        result = results_by_ballotsub_id[ssba.ballot_submission_id]
-        result.set_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side,
-            ssba.position, ssba.score)
+        ssbas = SpeakerScoreByAdj.objects.filter(
+            ballot_submission__in=ballotsubs,
+            debate_team__side__in=sides,
+            position__in=positions
+        ).select_related('debate_adjudicator__adjudicator')
+
+        for ssba in ssbas:
+            result = results_by_ballotsub_id[ssba.ballot_submission_id]
+            result.set_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side,
+                ssba.position, ssba.score)
 
     # Finally, check that everything is in order
 
