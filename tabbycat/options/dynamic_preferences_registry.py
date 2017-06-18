@@ -342,6 +342,18 @@ class ShowUnexpectedFeedback(BooleanPreference):
 debate_rules = Section('debate_rules')
 # ==============================================================================
 
+@tournament_preferences_registry.register
+class BallotsPerDebate(ChoicePreference):
+    help_text = "Whether panels submit a ballot each or a single ballot for the debate. Note: BP must use one per debate."
+    verbose_name = "Ballots per debate"
+    section = debate_rules
+    name = 'ballots_per_debate'
+    choices = [
+        ('per-adj', "One ballot per voting adjudicator"),
+        ('per-debate', "Consensus ballot (one ballot per debate)"),
+    ]
+    default = 'per-adj'
+
 
 @tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):

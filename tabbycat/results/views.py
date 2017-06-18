@@ -210,10 +210,9 @@ class UnpostponeDebateView(BaseUpdateDebateStatusView):
 # Ballot entry form views
 # ==============================================================================
 
-class BaseBallotSetView(LogActionMixin, FormView):
+class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
     """Base class for views displaying ballot set entry forms."""
 
-    form_class = PerAdjudicatorBallotSetForm
     action_log_content_object_attr = 'ballotsub'
 
     def get_context_data(self, **kwargs):
@@ -229,6 +228,12 @@ class BaseBallotSetView(LogActionMixin, FormView):
             all_ballotsubs = all_ballotsubs.exclude(discarded=True)
         populate_identical_ballotsub_lists(all_ballotsubs)
         return all_ballotsubs
+
+    def get_form_class(self):
+        if self.get_tournament().pref('ballots_per_debate') == 'per-adj':
+            return PerAdjudicatorBallotSetForm
+        else:
+            return SingleBallotSetForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
