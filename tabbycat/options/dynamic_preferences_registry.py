@@ -11,7 +11,6 @@ from .models import tournament_preferences_registry
 scoring = Section('scoring')
 # ==============================================================================
 
-
 @tournament_preferences_registry.register
 class MinimumSpeakerScore(FloatPreference):
     help_text = "Minimum allowed score for substantive speeches"
