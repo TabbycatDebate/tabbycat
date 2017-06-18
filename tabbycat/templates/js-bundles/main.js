@@ -57,7 +57,7 @@ var vueData = window.vueData // We need to mount props from the window itself
 //------------------------------------------------------------------------------
 
 // Table-based Views
-import TablesContainer from '../js-vue/containers/TablesContainer.vue'
+import TablesContainer from '../tables/TablesContainer.vue'
 vueComponents['TablesContainer'] = TablesContainer
 
 //------------------------------------------------------------------------------

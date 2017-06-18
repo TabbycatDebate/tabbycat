@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import PrintableBallotHeader from '../printables/PrintableBallotHeader.vue'
-import PrintableBallotFooter from '../printables/PrintableBallotFooter.vue'
-import PrintableFeedback from '../printables/PrintableFeedback.vue'
-import PrintableScoresheet from '../printables/PrintableScoresheet.vue'
+import PrintableBallotHeader from './PrintableBallotHeader.vue'
+import PrintableBallotFooter from './PrintableBallotFooter.vue'
+import PrintableFeedback from './PrintableFeedback.vue'
+import PrintableScoresheet from './PrintableScoresheet.vue'
 
 export default {
   props: ['ballot', 'motions', 'positions', 'kind', 'roundInfo'],

@@ -38,7 +38,7 @@ vueComponents['TournamentOverviewContainer'] = TournamentOverviewContainer
 // Printables
 //------------------------------------------------------------------------------
 
-import PrintableBallot from  '../js-vue/printables/PrintableBallot.vue'
+import PrintableBallot from  '../../printing/templates/PrintableBallot.vue'
 vueComponents['PrintableBallot'] = PrintableBallot
 
 // //------------------------------------------------------------------------------

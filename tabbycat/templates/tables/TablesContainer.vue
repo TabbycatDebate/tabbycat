@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import SmartTable from '../tables/SmartTable.vue'
+import SmartTable from './SmartTable.vue'
 
 export default {
   components: {SmartTable},

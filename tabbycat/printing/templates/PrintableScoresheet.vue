@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import PrintableTeamScores from '../printables/PrintableTeamScores.vue'
+import PrintableTeamScores from './PrintableTeamScores.vue'
 
 export default {
   props: ['ballot', 'roundInfo'],
