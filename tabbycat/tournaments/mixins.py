@@ -335,9 +335,17 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     def get_round_info(self):
         round = self.get_round()
+        tournament = self.get_tournament()
+        adjudicator_positions = ["C"]
+        if not tournament.pref('no_panellist_position'):
+            adjudicator_positions += "P"
+        if not tournament.pref('no_trainee_position'):
+            adjudicator_positions += "T"
+
         round_info = {
-            'positions': [get_position_name(round.tournament, "aff", "full"),
-                          get_position_name(round.tournament, "neg", "full")],
+            'positions': [get_position_name(tournament, "aff", "full"),
+                          get_position_name(tournament, "neg", "full")],
+            'adjudicatorPositions': adjudicator_positions,
             'backUrl': reverse_round('draw', round),
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
             'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,

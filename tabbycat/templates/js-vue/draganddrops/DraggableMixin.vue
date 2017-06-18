@@ -30,7 +30,7 @@ export default {
     dragStart: function(event) {
       if (this.locked) {
         console.log('locked')
-        event.preventDefault()
+        event.preventDefault() // Firefox needs this
         return
       } else {
         this.isDragging = true;

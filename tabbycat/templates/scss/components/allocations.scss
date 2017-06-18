@@ -103,12 +103,20 @@
 }
 .position-container-C {
   flex: 0 0 170px; // Always be 170px
+
+  &.positions-limited-1 {
+    flex: 0 0 100%; // When trainees/panellists are turned off
+  }
 }
 .position-container-P {
   flex: 1; // Grow into remaining space
 }
 .position-container-T {
   flex: 0 0 170px; // Always be 170px
+
+  &.positions-limited-2 {
+    flex: 0 0 100%; // When trainees/panellists are turned off
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -149,12 +157,19 @@
 //------------------------------------------------------------------------------
 
 .draw-team-cell {
+
   > div {
     width: 100%;
     height: 100%;
     align-items: center;
     display: flex;
     padding: 0px 5px;
+  }
+  > div.conflictable {
+    // Team cells need some border state for in panel conflicts
+    border-color: #fff;
+    border-width: 4px;
+    border-style: solid;
   }
 }
 

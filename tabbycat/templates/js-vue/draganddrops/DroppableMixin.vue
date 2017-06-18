@@ -32,7 +32,8 @@ export default {
     },
     dragLeave: function(event) {
       this.dragCounter--;
-      if (this.dragCounter == 0) {
+      if (this.dragCounter === 0) {
+        console.log(this.dragCounter)
         this.isDroppable = false;
       }
       if (typeof this.handleDragLeave === 'function') {
@@ -40,6 +41,9 @@ export default {
       }
     },
     drop: function(event) {
+      // Firefox needs to prevent original actions
+      if(event.preventDefault) { event.preventDefault() }
+      if(event.stopPropagation) { event.stopPropagation() }
       this.dragCounter = 0;
       if (this.locked) {
         return

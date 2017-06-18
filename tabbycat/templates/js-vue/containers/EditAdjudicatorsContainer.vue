@@ -10,19 +10,24 @@
 
     <div class="vertical-spacing">
       <draw-header :positions="roundInfo.positions">
-        <div class="thead flex-cell flex-4 text-center" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
+        <div class="thead flex-cell flex-4" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
           <span>Priority</span>
         </div>
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
-          <div class="thead flex-cell flex-10 text-center vue-droppable-container">
+          <div :class="['thead flex-cell text-center vue-droppable-container',
+                        'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
             <span>Chair</span>
           </div>
-          <div class="thead flex-cell flex-16 text-center vue-droppable-container">
-            <span>Panel</span>
+          <div v-if="adjPositions.indexOf('P') !== -1"
+               :class="['thead flex-cell text-center vue-droppable-container',
+                        'flex-' + (adjPositions.length > 2 ? 16: 16)]">
+            <span >Panel</span>
           </div>
-          <div class="thead flex-cell flex-10 text-center vue-droppable-container">
-            <span>Trainees</span>
+          <div v-if="adjPositions.indexOf('T') !== -1"
+               :class="['thead flex-cell text-center vue-droppable-container',
+                        'flex-' + (adjPositions.length > 2 ? 10: 16)]">
+            <span >Trainees</span>
           </div>
         </template>
       </draw-header>
@@ -36,7 +41,8 @@
         <template slot="spanel">
           <debate-panel :panel="debate.panel" :debate-id="debate.id"
                         :percentiles="percentileThresholds"
-                        :locked="debate.locked"></debate-panel>
+                        :locked="debate.locked"
+                        :adj-positions="adjPositions"></debate-panel>
         </template>
       </debate>
     </div>
@@ -99,6 +105,9 @@ export default {
       }
       thresholds.push({'grade': "F", 'cutoff': 0, 'percentile': 10})
       return thresholds
+    },
+    adjPositions: function() {
+      return this.roundInfo.adjudicatorPositions // Convenience
     }
   },
   methods: {

@@ -15,11 +15,9 @@ export default {
       }
     },
     removefromPanel(debate, adjudicator) {
-      console.log('Removing ' + adjudicator.name + ' from ' + this.niceNameForDebate(debate.id))
       var adjIndex = _.findIndex(debate.panel, function(panellist) {
         return panellist.adjudicator.id == adjudicator.id;
       });
-      console.log('\t' + adjIndex)
       debate.panel.splice(adjIndex, 1)
     },
     saveMoveForType(adjudicatorId, fromDebate, toDebate, toPosition=null) {

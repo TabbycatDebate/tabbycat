@@ -39,7 +39,7 @@
               <button class="btn gender-display gender-male">Male</button>
               <button class="btn gender-display gender-f">Female</button>
               <button class="btn gender-display gender-o">Other</button>
-              <button class="btn btn-default">Unknown</button>
+              <button class="btn gender-display gender-">Unknown</button>
             </template>
             <template v-if="highlights.region">
               <button class="visible-lg-block btn btn-default">Region Key</button>

@@ -30,6 +30,9 @@ export default {
     checkForPanelClashes() {
       var self = this
       if (self.debate.id === 131) {
+      // REDUX;
+
+
       //   _.forEach(this.panel, function(panellist) {
       //     // Get all the conflicts for a given pannellist from the inherited debate-relevant list
       //     var panellistId = panellist.adjudicator.id

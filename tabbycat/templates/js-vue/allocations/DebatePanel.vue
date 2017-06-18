@@ -1,8 +1,10 @@
 <template>
-  <div class="draw-cell panel-container flex-36 flex-horizontal">
+  <div :class="['draw-cell panel-container flex-horizontal',
+                'flex-' + (12 * adjPositions.length)]">
 
     <div v-for="position in adjPositions"
-         :class="['vue-droppable-container', 'position-container-' + position]">
+         :class="['vue-droppable-container', 'position-container-' + position,
+                  'positions-limited-' + adjPositions.length]">
       <droppable-generic :assignment-id="debateId"
                          :assignment-position="position"
                          :extra-css="'flex-horizontal'"
@@ -29,12 +31,7 @@ import _ from 'lodash'
 export default {
   mixins: [],
   components: { DroppableGeneric, DraggableAdjudicator },
-  data: function () {
-    return {
-      adjPositions: ["C", "P", "T"] // Used to iterate in templates
-    }
-  },
-  props: ['panel', 'debateId', 'percentiles', 'locked'],
+  props: ['panel', 'debateId', 'percentiles', 'locked', 'adjPositions'],
   methods: {
     getAdjudicatorsByPosition: function(panel, position) {
       return _.filter(panel, { 'position': position })
