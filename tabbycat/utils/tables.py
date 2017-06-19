@@ -558,9 +558,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         conflicts_header = {'key': "Conflicts/Flags"}
         conflicts_data = [{
-            'text': "".join(["<div class=\"text-{0}\">{1}</div>".format(*conflict) for conflict in conflicts]),
+            'text': "".join(["<div class=\"text-{0}\">{1}</div>".format(*conflict) for conflict in debate_conflicts]),
             'class': 'small'
-        } for conflicts in conflicts_by_debate]
+        } for debate_conflicts in conflicts_by_debate]
         self.add_column(conflicts_header, conflicts_data)
 
     def _standings_headers(self, info_list, side=None):
