@@ -12,6 +12,8 @@ class TestTeam(object):
             self.hist = list(hist)
         except TypeError:
             self.hist = (hist,)
+        if 'aff_count' in kwargs:
+            self.side_counts = {'aff': kwargs['aff_count']}
         for key, value in kwargs.items():
             setattr(self, key, value)
 
