@@ -4,6 +4,7 @@ from .common import BaseDrawGenerator, DrawError, ManualDrawGenerator, Pairing
 from .elimination import FirstEliminationDrawGenerator, EliminationDrawGenerator
 from .powerpair import PowerPairedDrawGenerator, PowerPairedWithAllocatedSidesDrawGenerator
 from .random import RandomDrawGenerator, RandomWithAllocatedSidesDrawGenerator
+from .roundrobin import RoundRobinDrawGenerator
 
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
