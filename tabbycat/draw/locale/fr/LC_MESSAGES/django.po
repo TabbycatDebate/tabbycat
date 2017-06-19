@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-18 19:02+1000\n"
-"PO-Revision-Date: 2017-06-18 20:19+1200\n"
+"POT-Creation-Date: 2017-06-19 10:43+1000\n"
+"PO-Revision-Date: 2017-06-19 12:52+1200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -21,6 +21,81 @@ msgstr ""
 #: draw/apps.py:7
 msgid "Draw"
 msgstr "Tirage au sort"
+
+#: draw/generator/__init__.py:11
+msgid "Too many swaps"
+msgstr "Trop d'échanges"
+
+#: draw/generator/__init__.py:12
+msgid "One-up-one-down (history)"
+msgstr ""
+
+#: draw/generator/__init__.py:13
+msgid "One-up-one-down (institution)"
+msgstr ""
+
+#: draw/generator/__init__.py:14
+msgid "One-up-one-down (to accommodate)"
+msgstr ""
+
+#: draw/generator/__init__.py:15
+msgid "Bubble up (history)"
+msgstr ""
+
+#: draw/generator/__init__.py:16
+msgid "Bubble down (history)"
+msgstr ""
+
+#: draw/generator/__init__.py:17
+msgid "Bubble up (institution)"
+msgstr ""
+
+#: draw/generator/__init__.py:18
+msgid "Bubble down (institution)"
+msgstr ""
+
+#: draw/generator/__init__.py:19
+msgid "Bubble up (to accommodate)"
+msgstr ""
+
+#: draw/generator/__init__.py:20
+msgid "Bubble down (to accommodate)"
+msgstr ""
+
+#: draw/generator/__init__.py:21
+msgid "Can't bubble up/down"
+msgstr ""
+
+#: draw/generator/__init__.py:22
+msgid "Pull-up team"
+msgstr ""
+
+#: draw/generator/common.py:181
+msgid "There was not an even number of active teams."
+msgstr "Le nombre d'équipes actives n'est pas pair."
+
+#: draw/generator/common.py:183
+msgid "There were no teams for the draw."
+msgstr "Il n’y a pas d’équipes pour le tirage au sort."
+
+#: draw/generator/elimination.py:51
+#, python-format
+msgid ""
+"There are only %d teams breaking in this category; there need to be at least "
+"two to generate an elimination round draw."
+msgstr ""
+"Il n'y a que %d équipes « breaking » dans cette catégorie ; il faut au moins "
+"deux pour générer un tirage au sort pour un tour d'éliminatoire."
+
+#: draw/generator/elimination.py:76
+#, python-format
+msgid "%d debates in the previous round don't have a result."
+msgstr "%d débats au tour précédent n'ont pas un résultat."
+
+#: draw/generator/elimination.py:83
+#, python-format
+msgid "The number of teams (%d) in this round is not a power of two"
+msgstr "Le nombre d’équipes (%d) dans ce tour n’est pas une puissance de deux"
 
 #: draw/models.py:27
 msgid "None"
@@ -38,7 +113,7 @@ msgstr "Brouillon"
 msgid "Confirmed"
 msgstr "Confirmé"
 
-#: draw/models.py:35 draw/models.py:308
+#: draw/models.py:35 draw/models.py:320
 msgid "round"
 msgstr "tour"
 
@@ -78,7 +153,7 @@ msgstr "état de résultat"
 msgid "ballot in"
 msgstr "bulletin reçu"
 
-#: draw/models.py:62 draw/models.py:242
+#: draw/models.py:62 draw/models.py:254
 msgid "debate"
 msgstr "débat"
 
@@ -86,51 +161,51 @@ msgstr "débat"
 msgid "debates"
 msgstr "débats"
 
-#: draw/models.py:235
+#: draw/models.py:247
 msgid "affirmative"
 msgstr "affirmatif"
 
-#: draw/models.py:236
+#: draw/models.py:248
 msgid "negative"
 msgstr "négatif"
 
-#: draw/models.py:237
+#: draw/models.py:249
 msgid "unallocated"
 msgstr "pas attributé"
 
-#: draw/models.py:244 draw/models.py:310
+#: draw/models.py:256 draw/models.py:322
 msgid "team"
 msgstr "équipe"
 
-#: draw/models.py:246 draw/models.py:312
+#: draw/models.py:258 draw/models.py:324
 msgid "side"
 msgstr "côté"
 
-#: draw/models.py:249
+#: draw/models.py:261
 msgid "debate team"
 msgstr "débat-équipe"
 
-#: draw/models.py:250
+#: draw/models.py:262
 msgid "debate teams"
 msgstr "débat-équipes"
 
-#: draw/models.py:270
+#: draw/models.py:282
 msgid "won"
 msgstr "a gagné"
 
-#: draw/models.py:272
+#: draw/models.py:284
 msgid "lost"
 msgstr "a perdu"
 
-#: draw/models.py:274
+#: draw/models.py:286
 msgid "result unknown"
 msgstr "résultat inconnu"
 
-#: draw/models.py:316
+#: draw/models.py:328
 msgid "team side allocation"
 msgstr "attribution de côté à une équipe"
 
-#: draw/models.py:317
+#: draw/models.py:329
 msgid "team side allocations"
 msgstr "attributions de côté à une équipe"
 
@@ -188,12 +263,12 @@ msgstr ""
 "<strong>planteront certainement</strong>."
 
 #. Translators: e.g. possessive might be "affirmative's" to get "affirmative's break rank"
-#: draw/views.py:242
+#: draw/views.py:248
 #, python-format
 msgid "%(possessive)s break rank"
 msgstr "rang de break %(possessive)s"
 
-#: draw/views.py:245
+#: draw/views.py:251
 #, python-format
 msgid "%(initial)sBR"
 msgstr "RB%(initial)s"

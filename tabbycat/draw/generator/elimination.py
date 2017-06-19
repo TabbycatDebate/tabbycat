@@ -1,5 +1,7 @@
 import logging
 
+from django.utils.translation import ugettext as _
+
 from .common import BaseDrawGenerator, DrawError, Pairing
 from .utils import partial_break_round_split
 
@@ -46,8 +48,8 @@ class FirstEliminationDrawGenerator(BaseEliminationDrawGenerator):
 
     def make_pairings(self):
         if len(self.teams) < 2:
-            raise DrawError("There are only %d teams breaking in this category; "
-                    "there need to be at least two to generate an elimination round draw." % len(self.teams))
+            raise DrawError(_("There are only %d teams breaking in this category; "
+                    "there need to be at least two to generate an elimination round draw.") % len(self.teams))
 
         try:
             debates, bypassing = partial_break_round_split(len(self.teams))
@@ -71,13 +73,13 @@ class EliminationDrawGenerator(BaseEliminationDrawGenerator):
         self.results.sort(key=lambda x: x.room_rank)
         winners = [p.winner for p in self.results]
         if winners.count(None) > 0:
-            raise DrawError("%d debates in the previous round don't have a result." % winners.count(None))
+            raise DrawError(_("%d debates in the previous round don't have a result.") % winners.count(None))
 
         bypassing = self.results[0].room_rank - 1  # e.g. if lowest room rank was 7, then 6 teams should bypass
         teams = self.teams[:bypassing] + winners
         logger.info("%d teams bypassed the previous round and %d teams won the last round" % (bypassing, len(winners)))
 
         if len(teams) & (len(teams) - 1) != 0:
-            raise DrawError("The number of teams (%s) in this round is not a power of two" % len(teams))
+            raise DrawError(_("The number of teams (%d) in this round is not a power of two") % len(teams))
 
         return self._make_pairings(teams, 0)

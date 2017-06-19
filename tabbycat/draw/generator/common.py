@@ -1,10 +1,27 @@
 import logging
 import random
 
+from django.utils.translation import ugettext as _
+
 logger = logging.getLogger(__name__)
 
 
 class DrawError(Exception):
+    """DrawError is raised by any DrawGenerator class when a problem prevents
+    a draw from being produced. DrawErrors are caught by the view class, and
+    shown to the user as an error message.
+
+    Some DrawErrors are user errors, for example, not having any teams. Others
+    are error conditions in the algorithm that are never supposed to happen.
+    Theoretically, user errors shouldn't happen either: The user interface is
+    meant to prevent the user from trying to generate a draw if it would lead to
+    a user error.
+
+    However, because a user error is rectifiable, our convention is to
+    internationalise (translate) strings that a user could take action to
+    rectify, before passing them to the DrawError() constructor. On the other
+    hand, algorithm errors are not translated, since that just creates
+    unnecessary work for translators."""
     pass
 
 
@@ -161,9 +178,9 @@ class BaseDrawGenerator:
 
         if self.requires_even_teams:
             if not len(self.teams) % 2 == 0:
-                raise DrawError("There was not an even number of active teams.")
+                raise DrawError(_("There was not an even number of active teams."))
             if not self.teams:
-                raise DrawError("There were no teams for the draw.")
+                raise DrawError(_("There were no teams for the draw."))
 
         if results is None and self.requires_prev_results:
             raise TypeError("'results' is required for draw of type {0:s}".format(
