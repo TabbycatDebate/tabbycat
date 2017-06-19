@@ -9,8 +9,8 @@ from . import utils
 
 from availability.models import RoundAvailability
 from actionlog.mixins import LogActionMixin
+from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
-from draw.utils import partial_break_round_split
 from participants.models import Adjudicator, Team
 from actionlog.models import ActionLogEntry
 from tournaments.models import Round
