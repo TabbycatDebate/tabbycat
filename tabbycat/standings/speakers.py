@@ -1,6 +1,6 @@
 """Standings generator for speakers."""
 
-from participants.models import Round
+from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
 from .metrics import QuerySetMetricAnnotator

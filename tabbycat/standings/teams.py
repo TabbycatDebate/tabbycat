@@ -7,7 +7,7 @@ from django.db.models.expressions import RawSQL
 
 from draw.models import DebateTeam
 from draw.prefetch import populate_opponents
-from participants.models import Round
+from tournaments.models import Round
 from results.models import TeamScore
 
 from .base import BaseStandingsGenerator
