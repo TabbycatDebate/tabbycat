@@ -1,8 +1,9 @@
-import inspect
+import logging
 
 from django.contrib import messages
 from django.http import Http404
 from django.utils.text import slugify
+from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView
 from dynamic_preferences.views import PreferenceFormView
 
@@ -12,28 +13,31 @@ from tournaments.mixins import TournamentMixin
 from utils.mixins import SuperuserRequiredMixin
 from utils.misc import reverse_tournament
 
-from . import presets
+from .presets import all_presets
 from .forms import tournament_preference_form_builder
 from .dynamic_preferences_registry import tournament_preferences_registry
+
+logger = logging.getLogger(__name__)
 
 
 class TournamentConfigIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
     template_name = "preferences_index.html"
 
-    def get_context_data(self, **kwargs):
+    def get_preset_options(self):
+        """Returns a list of all preset classes."""
         preset_options = []
 
-        # Get a list of classes from presets
-        for name, obj in inspect.getmembers(presets):
-            if inspect.isclass(obj):
-                test = obj()
-                # Check if each object should be shown
-                if test.show_in_list:
-                    obj.slugified_name = slugify(name)
-                    obj.description = inspect.getdoc(test)
-                    preset_options.append(obj)
+        for preset_class in all_presets():
+            test = preset_class()
+            if test.show_in_list:
+                preset_class.slugified_name = slugify(preset_class.__name__)
+                preset_options.append(preset_class)
 
-        kwargs["presets"] = preset_options
+        preset_options.sort(key=lambda x: x.name)
+        return preset_options
+
+    def get_context_data(self, **kwargs):
+        kwargs["presets"] = self.get_preset_options()
         return super().get_context_data(**kwargs)
 
 
@@ -58,70 +62,69 @@ class TournamentPreferenceFormView(SuperuserRequiredMixin, LogActionMixin, Tourn
         return form_class
 
 
-class TournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
-
-    def pname(self):
-        return self.kwargs["preset_name"]
+class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+    template_name = "preferences_presets_confirm.html"
 
     def get_selected_preset(self):
         preset_name = self.kwargs["preset_name"]
-        # Get a list of classes from presets
-        preset_classes = inspect.getmembers(presets)
         # Retrieve the class that matches the name
-        selected_preset = [item for item in preset_classes if slugify(item[0]) == preset_name]
-        return selected_preset
+        selected_presets = [x for x in all_presets() if slugify(x.__name__) == preset_name]
+        if len(selected_presets) == 0:
+            logger.warning("Could not find preset: %s", preset_name)
+            raise Http404("Preset {!r} no found.".format(preset_name))
+        elif len(selected_presets) > 1:
+            logger.warning("Found more than one preset for %s", preset_name)
+        return selected_presets[0]
 
     def get_preferences_data(self, selected_preset):
         # Grab the registry of the preferences
         registry = tournament_preferences_registry
         preset_preferences = []
         # Create an instance of the class and iterate over its properties for the UI
-        for key, value in selected_preset[0][1]().__dict__.items():
-            if key is not 'name' and key is not 'show_in_list':
+        for key, value in selected_preset.__dict__.items():
+            if '__' in key and not key.startswith('__'):
                 # Lookup the base object
                 preset_object = registry[key.split('__')[0]][key.split('__')[1]]
+                current_value = self.request.tournament.preferences[key]
                 preset_preferences.append({
+                    'key': key,
                     'name': preset_object.verbose_name,
-                    'current_value': self.request.tournament.preferences[key],
+                    'current_value': current_value,
                     'new_value': value,
-                    'help_text': preset_object.help_text
+                    'help_text': preset_object.help_text,
+                    'changed': current_value != value,
                 })
-                self.get_tournament().preferences[key] = value
+        preset_preferences.sort(key=lambda x: x['key'])
         return preset_preferences
-
-
-class ConfirmTournamentPreferencesView(TournamentPreferencesView):
-    template_name = "preferences_presets_confirm.html"
 
     def get_context_data(self, **kwargs):
         selected_preset = self.get_selected_preset()
-        if len(selected_preset) == 0:
-            raise Http404("Preset {!r} not found.".format(self.pname()))
-
         preset_preferences = self.get_preferences_data(selected_preset)
-
-        kwargs["preset_title"] = selected_preset[0][1]().name
-        kwargs["preset_name"] = self.pname()
+        kwargs["preset_title"] = selected_preset.name
+        kwargs["preset_name"] = self.kwargs["preset_name"]
         kwargs["preset_preferences"] = preset_preferences
         return super().get_context_data(**kwargs)
 
+    def get_template_names(self):
+        if self.request.method == 'GET':
+            return ["preferences_presets_confirm.html"]
+        else:
+            return ["preferences_presets_complete.html"]
 
-class ApplyTournamentPreferencesView(TournamentPreferencesView):
-
-    template_name = "preferences_presets_apply.html"
-
-    def get_context_data(self, **kwargs):
+    def save_presets(self):
         selected_preset = self.get_selected_preset()
-        if len(selected_preset) == 0:
-            raise Http404("Preset {!r} not found.".format(self.pname()))
-
         preset_preferences = self.get_preferences_data(selected_preset)
-
         t = self.get_tournament()
+
+        for pref in preset_preferences:
+            t.preferences[pref['key']] = pref['new_value']
+
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT,
                 user=self.request.user, tournament=t, content_object=t)
-        messages.success(self.request, "Tournament option saved.")
+        messages.success(self.request, _("Tournament options saved according to preset "
+                "%(name)s.") % {'name': selected_preset.name})
 
-        kwargs["preset_title"] = selected_preset[0][1]().name
-        kwargs["preferences"] = preset_preferences
-        return super().get_context_data(**kwargs)
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        self.save_presets()
+        return self.render_to_response(context)
