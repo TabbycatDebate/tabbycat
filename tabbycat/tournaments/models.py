@@ -84,7 +84,7 @@ class Tournament(models.Model):
     def sides(self):
         """Returns a list of side codes."""
         option = self.pref('teams_in_debate')
-        if option == 'two-team':
+        if option == 'two':
             return ['aff', 'neg']
         elif option == 'bp':
             return ['og', 'oo', 'cg', 'co']

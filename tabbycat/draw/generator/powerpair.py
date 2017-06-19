@@ -36,7 +36,6 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
     can_be_first_round = False
     requires_even_teams = True
     requires_prev_results = False
-    draw_type = "preliminary"
 
     DEFAULT_OPTIONS = {
         "odd_bracket"    : "intermediate_bubble_up_down",

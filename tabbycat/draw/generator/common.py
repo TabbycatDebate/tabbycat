@@ -92,9 +92,12 @@ class Pairing(BasePairing):
     def balance_sides(self):
         """Puts whoever has affirmed less on the affirmative side,
         or chooses randomly if they've done it equally."""
-        if self.teams[0].aff_count < self.teams[1].aff_count:
+
+        aff_affs = self.teams[0].side_counts['aff']
+        neg_affs = self.teams[1].side_counts['aff']
+        if aff_affs < neg_affs:
             pass
-        elif self.teams[0].aff_count > self.teams[1].aff_count:
+        elif aff_affs > neg_affs:
             self.teams.reverse()
         else:
             random.shuffle(self.teams)
@@ -154,11 +157,12 @@ class BaseDrawGenerator:
     """Base class for generators for all draw types, for both two-team and BP.
     """
 
+    # Subclasses must define BASE_DEFAULT_OPTIONS
+
     can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
     requires_rrseq = False
-    draw_type = None  # Must be set by subclasses
 
     def __init__(self, teams, results=None, rrseq=None, **kwargs):
         self.teams = teams
@@ -167,7 +171,7 @@ class BaseDrawGenerator:
         self.rrseq = rrseq
 
         if self.requires_even_teams:
-            if not len(self.teams) % self.teams_per_debate == 0:
+            if not len(self.teams) % self.TEAMS_PER_DEBATE == 0:
                 raise DrawError(_("The number of teams presented for the draw was not "
                         "a multiple of %(num)d.") % {'num': self.teams_per_debate})
             if not self.teams:
@@ -283,7 +287,7 @@ class BasePairDrawGenerator(BaseDrawGenerator):
         "institution_penalty": 1
     }
 
-    teams_per_debate = 2
+    TEAMS_PER_DEBATE = 2
 
     can_be_first_round = True
     requires_even_teams = True
@@ -311,6 +315,11 @@ class BasePairDrawGenerator(BaseDrawGenerator):
                 pairing.shuffle_sides()
         elif self.options["side_allocations"] not in ["none", "preallocated"]:
             raise ValueError("side_allocations setting not recognized: {0!r}".format(self.options["side_allocations"]))
+
+
+class BaseBPDrawGenerator(BaseDrawGenerator):
+    BASE_DEFAULT_OPTIONS = {}
+    TEAMS_PER_DEBATE = 4
 
 
 class ManualDrawGenerator(BaseDrawGenerator):

@@ -75,8 +75,10 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
             table.add_round_column(d.round for d in draw) # For mass draws
 
         table.add_debate_venue_columns(draw)
-        table.add_team_columns([d.aff_team for d in draw], hide_institution=True, key=aff_name(tournament))
-        table.add_team_columns([d.neg_team for d in draw], hide_institution=True, key=neg_name(tournament))
+
+        for side in tournament.sides:
+            table.add_team_columns([d.get_team(side) for d in draw], hide_institution=True,
+                key=get_side_name(tournament, side, 'full'))
 
         if tournament.pref('enable_division_motions'):
             table.add_motion_column(d.division_motion for d in draw)
@@ -214,10 +216,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             table.add_debate_bracket_columns(draw)
 
         table.add_debate_venue_columns(draw, for_admin=True)
-        table.add_team_columns([d.aff_team for d in draw], key=aff_name(tournament).capitalize(),
-            hide_institution=True)
-        table.add_team_columns([d.neg_team for d in draw], key=neg_name(tournament).capitalize(),
-            hide_institution=True)
+        for side in tournament.sides:
+            table.add_team_columns([d.get_team(side) for d in draw], hide_institution=True,
+                key=get_side_name(tournament, side, 'full'))
 
         # For draw details and draw draft pages
         if (r.draw_status == r.STATUS_DRAFT or self.detailed) and r.prev:

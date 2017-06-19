@@ -12,7 +12,6 @@ class BaseEliminationDrawGenerator(BasePairDrawGenerator):
 
     can_be_first_round = False
     requires_even_teams = False
-    draw_type = "elimination"
 
     DEFAULT_OPTIONS = {"side_allocations": "random"}
 

@@ -45,10 +45,11 @@ def annotate_side_count_kwargs(sides, seq):
 
 def get_side_counts(teams, sides, seq):
     """Returns a dict where keys are the team IDs in `teams`, and values are
-    lists of the number of debates the team has had on each side in `sides`, in
-    preliminary rounds, up to and including the given seq (of a round)."""
+    dicts mapping a side to the number of debates the team has had on that side
+    in preliminary rounds, for each side in `sides`, up to and including the
+    given seq (of a round)."""
 
     team_ids = [team.id for team in teams]
     queryset = Team.objects.filter(id__in=team_ids).annotate(
         **annotate_side_count_kwargs(sides, seq))
-    return {team.id: [getattr(team, '%s_count' % side) for side in sides] for team in queryset}
+    return {team.id: {side: getattr(team, '%s_count' % side) for side in sides} for team in queryset}

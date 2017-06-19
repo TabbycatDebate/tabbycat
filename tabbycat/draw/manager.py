@@ -5,7 +5,7 @@ from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
 from .models import Debate, DebateTeam
-from .generator import DrawGenerator, Pairing
+from .generator import DrawGenerator, Pairing, DrawError
 
 OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_institution"     : "draw_rules__avoid_same_institution",
@@ -20,18 +20,23 @@ OPTIONS_TO_CONFIG_MAPPING = {
 
 
 def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
-    klass = DRAW_MANAGER_CLASSES[round.draw_type]
+    klass = DRAW_MANAGER_CLASSES[(round.tournament.pref('teams_in_debate'), round.draw_type)]
     return klass(round, active_only)
 
 
 class BaseDrawManager:
     """Creates, modifies and retrieves relevant Debate objects relating to a draw."""
 
-    relevant_options = ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty"]
-
     def __init__(self, round, active_only=True):
         self.round = round
+        self.teams_in_debate = self.round.tournament.pref('teams_in_debate')
         self.active_only = active_only
+
+    def get_relevant_options(self):
+        if self.teams_in_debate == 'two':
+            return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty"]
+        else:
+            return []
 
     def get_teams(self):
         if self.active_only:
@@ -47,15 +52,17 @@ class BaseDrawManager:
         # Only needed for RoundRobinDrawManager
         return None
 
-    def _populate_aff_counts(self, teams):
+    def _populate_side_counts(self, teams):
+        sides = self.round.tournament.sides
+
         if self.round.prev:
             prev_seq = self.round.prev.seq
-            side_counts = get_side_counts(teams, ['aff'], prev_seq)
+            side_counts = get_side_counts(teams, sides, prev_seq)
             for team in teams:
-                team.aff_count = side_counts[team.id]
+                team.side_counts = side_counts[team.id]
         else:
             for team in teams:
-                team.aff_count = 0
+                team.side_counts = {side: 0 for side in sides}
 
     def _populate_team_side_allocations(self, teams):
         tsas = dict()
@@ -76,8 +83,9 @@ class BaseDrawManager:
             debate.flags = ",".join(pairing.flags)  # comma-separated list
             debate.save()
 
-            DebateTeam(debate=debate, team=pairing.teams[0], side=DebateTeam.SIDE_AFF).save()
-            DebateTeam(debate=debate, team=pairing.teams[1], side=DebateTeam.SIDE_NEG).save()
+            for team, side in zip(pairing.teams, self.round.tournament.sides):
+                DebateTeam.objects.create(debate=debate, team=team, side=side)
+
 
     def delete(self):
         self.round.debate_set.all().delete()
@@ -93,16 +101,17 @@ class BaseDrawManager:
         teams = self.get_teams()
         results = self.get_results()
         rrseq = self.get_rrseq()
-        self._populate_aff_counts(teams)
+        self._populate_side_counts(teams)
         self._populate_team_side_allocations(teams)
 
         options = dict()
-        for key in self.relevant_options:
+        for key in self.get_relevant_options():
             options[key] = self.round.tournament.preferences[OPTIONS_TO_CONFIG_MAPPING[key]]
         if options.get("side_allocations") == "manual-ballot":
             options["side_allocations"] = "balance"
 
-        drawer = DrawGenerator(self.draw_type, teams, results=results, rrseq=rrseq, **options)
+        drawer = DrawGenerator(self.teams_in_debate, self.draw_type, teams,
+                results=results, rrseq=rrseq, **options)
         pairings = drawer.generate()
         self._make_debates(pairings)
         self.round.draw_status = Round.STATUS_DRAFT
@@ -111,7 +120,12 @@ class BaseDrawManager:
 
 class RandomDrawManager(BaseDrawManager):
     draw_type = "random"
-    relevant_options = BaseDrawManager.relevant_options + ["avoid_conflicts", "side_allocations"]
+
+    def get_relevant_options(self):
+        options = super().get_relevant_options()
+        if self.teams_in_debate == 'two':
+            options.extend(["avoid_conflicts", "side_allocations"])
+        return options
 
 
 class ManualDrawManager(BaseDrawManager):
@@ -120,7 +134,11 @@ class ManualDrawManager(BaseDrawManager):
 
 class PowerPairedDrawManager(BaseDrawManager):
     draw_type = "power_paired"
-    relevant_options = BaseDrawManager.relevant_options + ["avoid_conflicts", "odd_bracket", "pairing_method", "side_allocations"]
+
+    def get_relevant_options(self):
+        options = super().get_relevant_options()
+        options.extend(["avoid_conflicts", "odd_bracket", "pairing_method", "side_allocations"])
+        return options
 
     def get_teams(self):
         metrics = self.round.tournament.pref('team_standings_precedence')
@@ -171,10 +189,11 @@ class EliminationDrawManager(BaseEliminationDrawManager):
 
 
 DRAW_MANAGER_CLASSES = {
-    Round.DRAW_RANDOM: RandomDrawManager,
-    Round.DRAW_POWERPAIRED: PowerPairedDrawManager,
-    Round.DRAW_ROUNDROBIN: RoundRobinDrawManager,
-    Round.DRAW_MANUAL: ManualDrawManager,
-    Round.DRAW_FIRSTBREAK: FirstEliminationDrawManager,
-    Round.DRAW_BREAK: EliminationDrawManager,
+    ('bp', Round.DRAW_RANDOM): RandomDrawManager,
+    ('two', Round.DRAW_RANDOM): RandomDrawManager,
+    ('two', Round.DRAW_POWERPAIRED): PowerPairedDrawManager,
+    ('two', Round.DRAW_ROUNDROBIN): RoundRobinDrawManager,
+    ('two', Round.DRAW_MANUAL): ManualDrawManager,
+    ('two', Round.DRAW_FIRSTBREAK): FirstEliminationDrawManager,
+    ('two', Round.DRAW_BREAK): EliminationDrawManager,
 }

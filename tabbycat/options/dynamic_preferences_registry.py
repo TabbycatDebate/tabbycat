@@ -351,10 +351,10 @@ class TeamsInDebate(ChoicePreference):
     section = debate_rules
     name = 'teams_in_debate'
     choices = [
-        ('two-team', "Two-team format"),
+        ('two', "Two-team format"),
         ('bp', "British Parliamentary (four teams)"),
     ]
-    default = 'two-team'
+    default = 'two'
 
 
 @tournament_preferences_registry.register

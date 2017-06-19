@@ -150,7 +150,7 @@ class BaseBallotSetForm(forms.Form):
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
-                               self.tournament.pref('teams_in_debate') == 'two-team')
+                               self.tournament.pref('teams_in_debate') == 'two')
 
         self.has_tournament_password = kwargs.pop('password', False) and self.tournament.pref('public_use_password')
 

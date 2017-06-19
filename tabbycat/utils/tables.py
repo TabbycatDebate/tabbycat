@@ -551,7 +551,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if history > 0:
                 conflicts.append(("warning", "Teams have met " +
                     ("once" if history == 1 else "twice" if history == 2 else "%d times" % history)))
-            if debate.aff_team.institution_id == debate.neg_team.institution_id:
+            if len(set(t.institution_id for t in debate.teams)) != len(debate.teams):
                 conflicts.append(("warning", "Teams are from the same institution"))
             conflicts.extend(adjudicator_conflicts_by_debate[debate])
             conflicts.extend(venue_conflicts_by_debate[debate])
@@ -632,8 +632,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['class'] = cell.get('class', '') + ' highlight-row'
 
     def add_side_counts(self, teams, round, team_type):
-        side_counts = get_side_counts(teams, ['aff', 'neg'], round.seq)
-
         # Translators: e.g. team would be "negative team" or "affirmative team".
         side_label = _("Number of times this %(team)s has been on each side (aff, neg)") % {
             'team': get_side_name(self.tournament, team_type, "team"),
@@ -643,9 +641,16 @@ class TabbycatTableBuilder(BaseTableBuilder):
         side_key = _("%(side_abbr)sSC") % {
             'side_abbr': get_side_name(self.tournament, team_type, 'initial'),
         }
-
         sides_header = {'key':  side_key, 'tooltip': side_label}
-        sides_data = [{'text': " / ".join(map(str, side_counts[t.id]))} for t in teams]
+
+        sides = round.tournament.sides
+        side_counts = get_side_counts(teams, sides, round.seq)
+        sides_data = []
+        for team in teams:
+            counts = side_counts[team.id]
+            text = " / ".join(str(counts[side]) for side in sides)
+            sides_data.append({'text': text})
+
         self.add_column(sides_header, sides_data)
 
     def add_checkbox_columns(self, states, references, key):

@@ -12,7 +12,6 @@ class RoundRobinDrawGenerator(BasePairDrawGenerator):
     can_be_first_round = True
     requires_rrseq = True
     requires_even_teams = False
-    draw_type = "preliminary"
 
     PAIRING_FUNCTIONS = {
         "random": "_pairings_random"
