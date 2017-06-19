@@ -30,9 +30,9 @@ class TestRandomDrawGenerator(unittest.TestCase):
             self.rd = DrawGenerator("random", teams, None, avoid_conflicts="on")
             _draw = self.rd.generate()
             for pairing in _draw:
-                if pairing.aff_team.seen(pairing.neg_team) or \
-                        pairing.neg_team.seen(pairing.aff_team) or \
-                        pairing.aff_team.institution == pairing.neg_team.institution:
+                aff = pairing.teams[0]
+                neg = pairing.teams[1]
+                if aff.seen(neg) or neg.seen(aff) or aff.institution == neg.institution:
                     print(pairing)
                     self.assertEqual(pairing.flags, ["max_swapped"])
                 else:
@@ -489,7 +489,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                 kwargs, expected = self.expected[expected_key]
                 draw = self.do_draw(standings, kwargs)
                 for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, expected):
-                    actual_teams = (actual.aff_team.id, actual.neg_team.id)
+                    actual_teams = tuple([t.id for t in actual.teams])
                     expected_teams = (exp_aff, exp_neg)
                     if same_affs:
                         self.assertCountEqual(actual_teams, expected_teams)
@@ -782,7 +782,7 @@ class BaseTestEliminationDrawGenerator(unittest.TestCase):
     def assertPairingsEqual(self, actual, expected):  # noqa: N802
         """Checks pairings without regard to sides."""
         for a, p in zip(actual, expected):
-            self.assertCountEqual((a.aff_team.id, a.neg_team.id), p)
+            self.assertCountEqual([team.id for team in a.teams], p)
 
 
 class TestPartialEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
