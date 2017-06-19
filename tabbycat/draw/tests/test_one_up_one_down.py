@@ -1,7 +1,7 @@
 import unittest
 
 from .utils import TestTeam
-from ..one_up_one_down import OneUpOneDownSwapper
+from ..generator.one_up_one_down import OneUpOneDownSwapper
 
 
 class TestOneUpOneDown(unittest.TestCase):

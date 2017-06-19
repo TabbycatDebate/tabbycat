@@ -1,8 +1,9 @@
 from django.utils.translation import ugettext_lazy as _
 
 from .common import BaseDrawGenerator, DrawError, ManualDrawGenerator, Pairing
-from .powerpair import PowerPairedDrawGenerator, PowerPairedWithAllocatedSidesDrawGenerator
 from .elimination import FirstEliminationDrawGenerator, EliminationDrawGenerator
+from .powerpair import PowerPairedDrawGenerator, PowerPairedWithAllocatedSidesDrawGenerator
+from .random import RandomDrawGenerator, RandomWithAllocatedSidesDrawGenerator
 
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
