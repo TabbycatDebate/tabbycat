@@ -156,12 +156,6 @@ class Debate(models.Model):
     oo_team = _team_property('oo_team')
     cg_team = _team_property('cg_team')
     co_team = _team_property('co_team')
-    aff_dt = _team_property('aff_dt')
-    neg_dt = _team_property('neg_dt')
-    og_dt = _team_property('og_dt')
-    oo_dt = _team_property('oo_dt')
-    cg_dt = _team_property('cg_dt')
-    co_dt = _team_property('co_dt')
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
