@@ -149,8 +149,8 @@ class BaseBallotSetForm(forms.Form):
         self.using_replies = self.tournament.pref('reply_scores_enabled')
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
         self.max_margin = self.tournament.pref('maximum_margin')
-        self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot'
-                               and self.tournament.pref('teams_in_debate') == 'two-team')
+        self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
+                               self.tournament.pref('teams_in_debate') == 'two-team')
 
         self.has_tournament_password = kwargs.pop('password', False) and self.tournament.pref('public_use_password')
 
@@ -199,8 +199,6 @@ class BaseBallotSetForm(forms.Form):
 
         Most fields are required, unless forfeits are enabled.
         """
-
-        dts = self.debate.debateteam_set.all()
 
         # 1. Tournament password field
         if self.has_tournament_password:

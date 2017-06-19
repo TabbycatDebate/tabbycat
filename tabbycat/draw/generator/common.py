@@ -25,37 +25,34 @@ class DrawError(Exception):
     pass
 
 
-class Pairing:
-    """Simple data structure for communicating information about pairings.
-    Draws always return a list of these."""
+class BasePairing:
+    """Base class for functionality common to both two-team pairings and
+    BP pairings."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], winner=None, division=None):
-        """'teams' must be a list of two teams.
+    def __init__(self, teams, bracket, room_rank, flags=[], division=None):
+        """'teams' must be a list of two teams, or four teams if it's for BP.
         'bracket' and 'room_rank' are both integers.
         'flags' is a list of strings."""
-        self.teams         = list(teams)
-        self.bracket       = bracket
-        self.room_rank     = room_rank
-        self.flags         = list(flags)
-        self.division      = division
-        if winner is None:
-            self._winner_index = None
-        else:
-            self._winner_index = self.teams.index(winner)
+        self.teams = list(teams)
+        self.bracket = bracket
+        self.room_rank = room_rank
+        self.flags = list(flags)
+        self.division = division
 
     @classmethod
     def from_debate(cls, debate):
-        teams = [debate.aff_team, debate.neg_team] # order matters
+        teams = [debate.get_team(side) for side in cls.sides] # order matters
         bracket = debate.bracket
         room_rank = debate.room_rank
         flags = debate.flags.split(",")
         division = debate.division
-        winner = debate.confirmed_ballot.result.winning_team()
-        return cls(teams, bracket, room_rank, flags, winner, division)
+        return cls(teams, bracket, room_rank, flags, division)
 
-    def __repr__(self):
-        return "<Pairing object: {0} vs {1} ({2}/{3})>".format(
-            self.teams[0], self.teams[1], self.bracket, self.room_rank)
+    def add_flag(self, flag):
+        self.flags.append(flag)
+
+    def add_flags(self, flags):
+        self.flags.extend(flags)
 
     @property
     def venue_category(self):
@@ -63,20 +60,31 @@ class Pairing:
         e.g. accessibility."""
         return self.division.venue_category if self.division else None
 
-    @property
-    def aff_team(self):
-        return self.teams[0]
+    def shuffle_sides(self):
+        """Randomly allocate sides."""
+        random.shuffle(self.teams)
 
-    @property
-    def neg_team(self):
-        return self.teams[1]
 
-    def get_team(self, side):
-        try:
-            index = {"aff": 0, "neg": 1}[side]
-        except KeyError:
-            raise ValueError("side must be 'aff' or 'neg'")
-        return self.teams[index]
+class Pairing(BasePairing):
+    """Data structure for communicating information about pairings.
+    Draws always return a list of these."""
+
+    sides = ['aff', 'neg']
+
+    def __init__(self, teams, bracket, room_rank, flags=[], winner=None, division=None):
+        super().__init__(teams, bracket, room_rank, flags, division)
+        assert len(self.teams) == 2, "There must be two teams in a Pairing"
+        self.set_winner(winner)
+
+    @classmethod
+    def from_debate(cls, debate):
+        instance = super().from_debate(debate)
+        instance.set_winner(debate.confirmed_ballot.result.winning_team())
+        return instance
+
+    def __repr__(self):
+        return "<Pairing object: {0} vs {1} ({2}/{3})>".format(
+            self.teams[0], self.teams[1], self.bracket, self.room_rank)
 
     def balance_sides(self):
         """Puts whoever has affirmed less on the affirmative side,
@@ -87,10 +95,6 @@ class Pairing:
             self.teams.reverse()
         else:
             random.shuffle(self.teams)
-
-    def shuffle_sides(self):
-        """Randomly allocate sides."""
-        random.shuffle(self.teams)
 
     @property
     def conflict_inst(self):
@@ -114,17 +118,13 @@ class Pairing:
             # to check for this.
             raise DrawError("For conflict avoidance, teams must have an attribute 'seen'.")
 
-    def add_flag(self, flag):
-        self.flags.append(flag)
-
-    def add_flags(self, flags):
-        self.flags.extend(flags)
-
     def set_winner(self, team):
-        try:
+        """Sets the winner of the Pairing. Raises ValueError if the team isn't
+        in the pairing."""
+        if team is None:
+            self._winner_index = None
+        else:
             self._winner_index = self.teams.index(team)
-        except ValueError:
-            raise ValueError('Team {0!r} not found in teams for this pairing'.format(team))
 
     @property
     def winner(self):

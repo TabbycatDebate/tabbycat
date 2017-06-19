@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
 
-from tournaments.models import Round
 from utils.managers import LookupByNameFieldsMixin
 
 from .emoji import EMOJI_LIST
@@ -193,21 +192,6 @@ class Team(models.Model):
         except BreakingTeam.DoesNotExist:
             return None
         return bt.break_rank
-
-    def get_aff_count(self, seq=None):
-        from draw.models import DebateTeam
-        return self._get_count(DebateTeam.SIDE_AFF, seq)
-
-    def get_neg_count(self, seq=None):
-        from draw.models import DebateTeam
-        return self._get_count(DebateTeam.SIDE_NEG, seq)
-
-    def _get_count(self, side, seq):
-        dts = self.debateteam_set.filter(side=side,
-            debate__round__stage=Round.STAGE_PRELIMINARY)
-        if seq is not None:
-            dts = dts.filter(debate__round__seq__lte=seq)
-        return dts.count()
 
     def get_debates(self, before_round):
         dts = self.debateteam_set.select_related('debate').order_by(

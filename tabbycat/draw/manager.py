@@ -1,5 +1,6 @@
 import random
 
+from participants.utils import get_side_counts
 from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
@@ -49,8 +50,9 @@ class BaseDrawManager:
     def _populate_aff_counts(self, teams):
         if self.round.prev:
             prev_seq = self.round.prev.seq
+            side_counts = get_side_counts(teams, ['aff'], prev_seq)
             for team in teams:
-                team.aff_count = team.get_aff_count(prev_seq)
+                team.aff_count = side_counts[team.id]
         else:
             for team in teams:
                 team.aff_count = 0
