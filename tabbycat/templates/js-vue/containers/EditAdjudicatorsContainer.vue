@@ -69,12 +69,13 @@ import DebateImportance from '../allocations/DebateImportance.vue'
 import DebatePanel from '../allocations/DebatePanel.vue'
 import ConflictsCoordinatorMixin from '../allocations/ConflictsCoordinatorMixin.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
+import AjaxMixin from '../ajax/AjaxMixin.vue'
 
 import percentile from 'stats-percentile'
 import _ from 'lodash'
 
 export default {
-  mixins: [AdjudicatorMovingMixin, DrawContainerMixin,
+  mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
            HighlightableContainerMixin, ConflictsCoordinatorMixin],
   components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
   created: function() {
@@ -146,10 +147,14 @@ export default {
       var url = this.roundInfo.updateImportanceURL
       var message = 'debate ' + debate.id + '\'s importance'
       var payload = { debate_id: debate.id, importance: importance }
-      this.ajaxSave(url, payload, message, function() {
-        debate.importance = importance // Update model data
-      })
+      this.ajaxSave(url, payload, message, this.processImportanceSaveSuccess, null, null)
     },
+    processImportanceSaveSuccess: function(dataResponse, payload, returnPayload) {
+      var debateIndex = _.findIndex(this.debates, { 'id': payload.debate_id})
+      if (debateIndex !== -1) {
+        this.debates[debateIndex].importance = payload.importance
+      }
+    }
   }
 }
 </script>

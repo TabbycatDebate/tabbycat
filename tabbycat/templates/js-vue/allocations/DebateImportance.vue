@@ -2,7 +2,7 @@
   <div @mouseover="showTooltip = true" @mouseleave="showTooltip = false">
 
     <input max="2" min="-2" step="1" type="range"
-           v-model.number="internalImportance">
+           v-model.number.lazy="internalImportance">
 
     <div class="tooltip bottom tooltip-vue" role="tooltip" v-if="showTooltip">
       <div class="tooltip-arrow"></div>

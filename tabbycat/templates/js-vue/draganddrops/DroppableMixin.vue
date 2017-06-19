@@ -33,7 +33,6 @@ export default {
     dragLeave: function(event) {
       this.dragCounter--;
       if (this.dragCounter === 0) {
-        console.log(this.dragCounter)
         this.isDroppable = false;
       }
       if (typeof this.handleDragLeave === 'function') {
