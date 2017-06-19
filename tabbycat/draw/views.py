@@ -8,6 +8,7 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext as _
 
 from actionlog.mixins import LogActionMixin
@@ -19,7 +20,7 @@ from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, DrawForDragAndDropMixin
 from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, SaveDragAndDropDebateMixin, TournamentMixin
 from tournaments.models import Round
-from tournaments.utils import aff_name, get_side_name, neg_name
+from tournaments.utils import get_side_name
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
@@ -106,8 +107,8 @@ class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTabl
     def get_template_names(self):
         round = self.get_round()
         if round.draw_status != round.STATUS_RELEASED:
-            messages.info(self.request, 'The draw for ' + round.name +
-                ' has yet to be released')
+            messages.info(self.request, _("The draw for %(round)s "
+                "has yet to be released") % {'round': round.name})
             return ["base.html"]
         else:
             return super().get_template_names()
@@ -187,19 +188,20 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         round = self.get_round()
         self.page_emoji = '👀'
         if self.detailed:
-            return 'Draw with Details for %s' % round.name
-        if round.draw_status == round.STATUS_NONE:
-            return 'No draw for %s' % round.name
-        elif round.draw_status == round.STATUS_DRAFT:
-            return 'Draft draw for %s' % round.name
-        elif round.draw_status == round.STATUS_CONFIRMED:
+            title = _("Draw with details for %(round)s")
+        if round.draw_status == Round.STATUS_NONE:
+            title = _("No draw for %(round)s")
+        elif round.draw_status == Round.STATUS_DRAFT:
+            title = _("Draft draw for %(round)s")
+        elif round.draw_status == Round.STATUS_CONFIRMED:
             self.page_emoji = '👏'
-            return 'Confirmed Draw for %s' % round.name
-        elif round.draw_status == round.STATUS_RELEASED:
+            title = _("Confirmed draw for %(round)s")
+        elif round.draw_status == Round.STATUS_RELEASED:
             self.page_emoji = '👏'
-            return 'Released draw for %s' % round.name
+            title = _("Released draw for %(round)s")
         else:
-            raise
+            raise ValueError("Unrecognised draw status: " + str(round.draw_status))
+        return title % {'round': round.name}
 
     def get_table(self):
         r = self.get_round()
@@ -260,8 +262,8 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         if self.detailed:
             return ["draw_details.html"]
         if round.draw_status == round.STATUS_NONE:
-            messages.warning(self.request, 'No draw exists yet — go to the ' +
-                'check-ins section for this round to generate a draw.')
+            messages.warning(self.request, _("No draw exists yet — go to the "
+                "check-ins section for this round to generate a draw."))
             return ["base.html"]
         elif round.draw_status == round.STATUS_DRAFT:
             return ["draw_status_draft.html"]
@@ -277,8 +279,7 @@ class AdminDrawWithDetailsView(AdminDrawView):
     detailed = True
 
     def get_page_title(self):
-        rd = self.get_round()
-        return 'Draw for %s with Details' % rd.name
+        return _("Draw with details for %(round)s") % {'round': self.get_round().name}
 
 
 # ==============================================================================
@@ -297,15 +298,17 @@ class CreateDrawView(DrawStatusEdit):
         round = self.get_round()
 
         if round.draw_status != round.STATUS_NONE:
-            messages.error(request, "Could not create draw for {}, there was already a draw!".format(round.name))
+            messages.error(request, _("Could not create draw for %(round)s, there was already a draw!") % {'round': round.name})
             return super().post(request, *args, **kwargs)
 
-        manager = DrawManager(round)
         try:
+            manager = DrawManager(round)
             manager.create()
         except DrawError as e:
-            messages.error(request, "There was a problem creating the draw: " + str(e) + " If this "
-                " issue persists and you're not sure how to resolve it, please contact the developers.")
+            messages.error(request, mark_safe(_("<p>There was a problem creating the draw: "
+                "<em>%(error)s</em></p>\n"
+                "<p>If this issue persists and you're not sure how to resolve it, "
+                "please contact the developers.</p>") % {'error': str(e)}))
             logger.exception("Problem creating draw: " + str(e))
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
@@ -314,8 +317,8 @@ class CreateDrawView(DrawStatusEdit):
         if not relevant_adj_venue_constraints.exists():
             allocate_venues(round)
         else:
-            messages.warning(request, "Venues were not auto-allocated because there are one or more adjudicator venue constraints. "
-                "You should run venue allocations after allocating adjudicators.")
+            messages.warning(request, _("Venues were not auto-allocated because there are one or more adjudicator venue constraints. "
+                "You should run venue allocations after allocating adjudicators."))
 
         self.log_action()
         return super().post(request, *args, **kwargs)
@@ -343,7 +346,7 @@ class DrawRegenerateView(DrawStatusEdit):
         round = self.get_round()
         delete_round_draw(round)
         self.log_action()
-        messages.success(request, "Deleted the draw. You can now recreate it as normal.")
+        messages.success(request, _("Deleted the draw. You can now recreate it as normal."))
         return super().post(request, *args, **kwargs)
 
 
@@ -363,7 +366,7 @@ class DrawReleaseView(DrawStatusEdit):
         round.draw_status = round.STATUS_RELEASED
         round.save()
         self.log_action()
-        messages.success(request, "Released the draw. It will now show on the public-facing pages of this website.")
+        messages.success(request, _("Released the draw. It will now show on the public-facing pages of this website."))
         return super().post(request, *args, **kwargs)
 
 
@@ -379,7 +382,7 @@ class DrawUnreleaseView(DrawStatusEdit):
         round.draw_status = round.STATUS_CONFIRMED
         round.save()
         self.log_action()
-        messages.success(request, "Unreleased the draw. It will no longer show on the public-facing pages of this website.")
+        messages.success(request, _("Unreleased the draw. It will no longer show on the public-facing pages of this website."))
         return super().post(request, *args, **kwargs)
 
 
@@ -392,9 +395,9 @@ class SetRoundStartTimeView(DrawStatusEdit):
         try:
             time = datetime.datetime.strptime(time_text, "%H:%M").time()
         except ValueError:
-            messages.error(request, "Sorry, \"{}\" isn't a valid time. It must "
+            messages.error(request, _("Sorry, \"%(input)s\" isn't a valid time. It must "
                            "be in 24-hour format, with a colon, for "
-                           "example: \"13:57\".".format(time_text))
+                           "example: \"13:57\".") % {'input': time_text})
             return super().post(request, *args, **kwargs)
 
         round = self.get_round()

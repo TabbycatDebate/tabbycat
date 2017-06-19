@@ -1,11 +1,13 @@
 import random
 
+from django.utils.translation import ugettext as _
+
 from participants.utils import get_side_counts
 from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
 from .models import Debate, DebateTeam
-from .generator import DrawGenerator, Pairing, DrawError
+from .generator import DrawError, DrawGenerator, Pairing
 
 OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_institution"     : "draw_rules__avoid_same_institution",
@@ -20,7 +22,14 @@ OPTIONS_TO_CONFIG_MAPPING = {
 
 
 def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
-    klass = DRAW_MANAGER_CLASSES[(round.tournament.pref('teams_in_debate'), round.draw_type)]
+    teams_in_debate = round.tournament.pref('teams_in_debate')
+    try:
+        klass = DRAW_MANAGER_CLASSES[(teams_in_debate, round.draw_type)]
+    except KeyError:
+        if teams_in_debate == 'two':
+            raise DrawError(_("The draw type %(type)s can't be used with two-team formats.") % {'type': round.get_draw_type_display()})
+        elif teams_in_debate == 'bp':
+            raise DrawError(_("The draw type %(type)s can't be used with British Parliamentary.") % {'type': round.get_draw_type_display()})
     return klass(round, active_only)
 
 
@@ -85,7 +94,6 @@ class BaseDrawManager:
 
             for team, side in zip(pairing.teams, self.round.tournament.sides):
                 DebateTeam.objects.create(debate=debate, team=team, side=side)
-
 
     def delete(self):
         self.round.debate_set.all().delete()
@@ -189,11 +197,12 @@ class EliminationDrawManager(BaseEliminationDrawManager):
 
 
 DRAW_MANAGER_CLASSES = {
-    ('bp', Round.DRAW_RANDOM): RandomDrawManager,
     ('two', Round.DRAW_RANDOM): RandomDrawManager,
     ('two', Round.DRAW_POWERPAIRED): PowerPairedDrawManager,
     ('two', Round.DRAW_ROUNDROBIN): RoundRobinDrawManager,
     ('two', Round.DRAW_MANUAL): ManualDrawManager,
     ('two', Round.DRAW_FIRSTBREAK): FirstEliminationDrawManager,
     ('two', Round.DRAW_BREAK): EliminationDrawManager,
+    ('bp', Round.DRAW_RANDOM): RandomDrawManager,
+    ('bp', Round.DRAW_MANUAL): ManualDrawManager,
 }

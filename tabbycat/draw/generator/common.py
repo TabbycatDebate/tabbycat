@@ -173,7 +173,7 @@ class BaseDrawGenerator:
         if self.requires_even_teams:
             if not len(self.teams) % self.TEAMS_PER_DEBATE == 0:
                 raise DrawError(_("The number of teams presented for the draw was not "
-                        "a multiple of %(num)d.") % {'num': self.teams_per_debate})
+                        "a multiple of %(num)d.") % {'num': self.TEAMS_PER_DEBATE})
             if not self.teams:
                 raise DrawError(_("There were no teams for the draw."))
 

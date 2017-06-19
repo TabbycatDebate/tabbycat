@@ -68,38 +68,37 @@
       </button>
     {% elif checkin_types.0.in_now == 0 %}
       <button class="btn btn-danger submit-disable disabled"
-        data-toggle="tooltip" title="The draw cannot be generated until some
-        teams have been checked in">
+        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some teams have been checked in" %}">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
     {% elif checkin_types.1.in_now == 0 %}
       <button class="btn btn-danger submit-disable disabled"
-        data-toggle="tooltip" title="The draw cannot be generated until some
-        adjudicators have been checked in">
+        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some adjudicators have been checked in" %}">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
     {% elif checkin_types.2.in_now == 0 %}
       <button class="btn btn-danger submit-disable disabled"
-        data-toggle="tooltip" title="The draw cannot be generated until some
-        venues have been checked in">
+        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some venues have been checked in" %}">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
     {% elif min_venues > checkin_types.2.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="There are too few venue checked in
-         for the number of debates — the draw may not generate properly">
+        data-toggle="tooltip" title="{% trans "There are too few venue checked in for the number of debates — the draw may not generate properly" %}">
          {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
        </button>
     {% elif min_adjudicators > checkin_types.1.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="There are too few adjudicators checked in
-        for the number of debates — the draw may not generate properly">
+        data-toggle="tooltip" title="{% trans "There are too few adjudicators checked in for the number of debates — the draw may not generate properly" %}">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
-    {% elif not checkin_types.0.in_now|divisibleby:2  %}
+    {% elif pref.teams_in_debate == 'two' and not checkin_types.0.in_now|divisibleby:2  %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="There is an uneven number of teams checked in
-         for this round — the draw may not generate properly">
+        data-toggle="tooltip" title="{% trans "There is an uneven number of teams checked in — the draw may not generate properly" %}">
+        {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    {% elif pref.teams_in_debate == 'bp' and not checkin_types.0.in_now|divisibleby:4  %}
+      <button class="btn btn-warning" id="createDraw"
+        data-toggle="tooltip" title="{% trans "The number of teams checked in is not a multiple of 4 — the draw may not generate properly" %}">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
     {% else %}
@@ -123,9 +122,15 @@
     </div>
   {% endif %}
 
-  {% if not checkin_types.0.in_now|divisibleby:2  %}
+  {% if pref.teams_in_debate == 'two' and not checkin_types.0.in_now|divisibleby:2  %}
     <div class="alert alert-danger">
       {% trans "There is an uneven number of teams checked in for this round." %}
+    </div>
+  {% endif %}
+
+  {% if pref.teams_in_debate == 'bp' and not checkin_types.0.in_now|divisibleby:4  %}
+    <div class="alert alert-danger">
+      {% trans "The number of teams checked in for this round is not a multiple of 4." %}
     </div>
   {% endif %}
 
