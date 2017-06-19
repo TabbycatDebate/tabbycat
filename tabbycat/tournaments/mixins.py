@@ -303,16 +303,19 @@ class DrawForDragAndDropMixin(RoundMixin):
         return self.get_tournament().breakcategory_set.order_by('-is_general', 'name')
 
     @cached_property
+    def break_thresholds(self):
+        t = self.get_tournament()
+        r = self.get_round()
+        return {bc.id: calculate_live_thresholds(bc, t, r) for bc in self.break_categories}
+
+    @cached_property
     def regions(self):
         return Region.objects.order_by('id')
 
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
-        t = self.get_tournament()
-        r = self.get_round()
-        break_thresholds = {bc.id: calculate_live_thresholds(bc, t, r)
-            for bc in self.break_categories}
         for debate in serialised_draw:
+            break_thresholds = self.break_thresholds
             for (position, team) in debate['teams'].items():
                 team = self.annotate_break_classes(team, break_thresholds)
                 team = self.annotate_region_classes(team)

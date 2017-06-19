@@ -538,8 +538,9 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
     def get_context_data(self, **kwargs):
         unused = [t for t in self.get_round().unused_teams()]
         serialized_unused = [t.serialize() for t in unused]
+        break_thresholds = self.break_thresholds
         for t, serialt in zip(unused, serialized_unused):
-            serialt = self.annotate_break_classes(serialt)
+            serialt = self.annotate_break_classes(serialt, break_thresholds)
             serialt = self.annotate_region_classes(serialt)
 
         kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)

@@ -23,7 +23,7 @@ export default {
       var teamInfo = { 'title': this.team.long_name }
       var speakersInfo = _.map(this.team.speakers, function(s) {
         return {
-          'title': s.name + self.genderNameForSlideOver(s),
+          'title': s.name,
           'class': 'gender-display gender-' + s.gender,
           'icon': 'glyphicon-user'
         }
@@ -34,7 +34,7 @@ export default {
   methods: {
     titleForBC: function(bc, wins) {
       if (!_.isUndefined(bc.will_break)) {
-        return bc.will_break.toUpperCase() + ' for ' + bc.name + ' Break'
+        return bc.will_break.toUpperCase() + ' for ' + bc.name
       }
     },
     iconForBC: function(bc) {

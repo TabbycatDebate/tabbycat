@@ -13,13 +13,6 @@ export default {
       }
       return [{ 'title': title, 'icon': 'glyphicon-globe', 'class': css }]
     },
-    genderNameForSlideOver: function(adjorteam) {
-      if (adjorteam.gender === "") {
-        return ' (?)'
-      } else {
-        return ' (' + adjorteam.gender + ')'
-      }
-    }
   }
 }
 </script>
