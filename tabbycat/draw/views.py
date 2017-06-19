@@ -257,7 +257,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     def get_template_names(self):
         round = self.get_round()
         if self.detailed:
-            return ["draw_base.html"]
+            return ["draw_details.html"]
         if round.draw_status == round.STATUS_NONE:
             messages.warning(self.request, 'No draw exists yet — go to the ' +
                 'check-ins section for this round to generate a draw.')

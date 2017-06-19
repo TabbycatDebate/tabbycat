@@ -2,6 +2,10 @@
 {% load debate_tags %}
 
 {% block page-subnav-sections %}
+  <a class="btn btn-default submit-disable" href="{% roundurl 'availability-index' %}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Back to Check-Ins
+  </a>
+
   <div class="btn-group">
     <a class="btn btn-default submit-disable" href="{% roundurl 'edit-adj-allocation' %}" class="btn btn-default submit-disable">
       Allocate Adjudicators
