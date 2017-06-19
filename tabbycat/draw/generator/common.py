@@ -26,7 +26,11 @@ class DrawError(Exception):
 
 
 class BasePairing:
-    """Base class for functionality common to both two-team pairings and
+    """The Pairing classes hold basic information about pairings for
+    communication with other modules. Draw generators always return a list of
+    them.
+
+    This is a base class for functionality common to both two-team pairings and
     BP pairings."""
 
     def __init__(self, teams, bracket, room_rank, flags=[], division=None):
@@ -66,8 +70,7 @@ class BasePairing:
 
 
 class Pairing(BasePairing):
-    """Data structure for communicating information about pairings.
-    Draws always return a list of these."""
+    """Pairing class for two-team formats."""
 
     sides = ['aff', 'neg']
 
@@ -83,7 +86,7 @@ class Pairing(BasePairing):
         return instance
 
     def __repr__(self):
-        return "<Pairing object: {0} vs {1} ({2}/{3})>".format(
+        return "<Pairing: {0} vs {1} ({2}/{3})>".format(
             self.teams[0], self.teams[1], self.bracket, self.room_rank)
 
     def balance_sides(self):
@@ -133,42 +136,29 @@ class Pairing(BasePairing):
         return self.teams[self._winner_index]
 
 
-class BaseDrawGenerator:
-    """Base class for generators for all draw types.
-    Options:
-        "side_allocations" - Side allocation method, one of:
-            "balance" - the team that has affirmed less in prior rounds affirms,
-                or randomly if both teams have affirmed the same number of times.
-                If used, team objects must have an 'aff_count' attribute.
-            "preallocated" - teams were pre-allocated sides. If used, teams must
-                have an 'allocated_side' attribute.
-            "none" - leave sides as they were when the pairings were drawn.
-                (This is almost never desirable.)
-            "random" - allocate randomly.
-        "avoid_history" - if True, draw tries to avoid pairing teams that have
-            seen each other before, and tries harder if they've seen each other
-            multiple times.
-        "history_penalty" -
-        "avoid_institution" - if True, draw tries to avoid pairing teams that
-            are from the same institution.
-        """
+class BPPairing(BasePairing):
+    """Pairing class for British Parliamentary."""
 
-    BASE_DEFAULT_OPTIONS = {
-        "side_allocations"   : "balance",
-        "avoid_history"      : True,
-        "avoid_institution"  : True,
-        "history_penalty"    : 1e3,
-        "institution_penalty": 1
-    }
+    sides = ['og', 'oo', 'cg', 'co']
+
+    def __init__(self, teams, bracket, room_rank, flags=[], division=None):
+        super().__init__(teams, bracket, room_rank, flags, division)
+        assert len(self.teams) == 4, "There must be four teams in a BPPairing"
+
+    def __repr__(self):
+        return "<BPPairing: {teams} ({p.bracket}/{p.room_rank})>".format(
+            teams=", ".join(map(str, self.teams)), p=self)
+
+
+class BaseDrawGenerator:
+    """Base class for generators for all draw types, for both two-team and BP.
+    """
 
     can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
     requires_rrseq = False
     draw_type = None  # Must be set by subclasses
-
-    # All subclasses must define this with any options that may exist.
-    DEFAULT_OPTIONS = {}
 
     def __init__(self, teams, results=None, rrseq=None, **kwargs):
         self.teams = teams
@@ -177,8 +167,9 @@ class BaseDrawGenerator:
         self.rrseq = rrseq
 
         if self.requires_even_teams:
-            if not len(self.teams) % 2 == 0:
-                raise DrawError(_("There was not an even number of active teams."))
+            if not len(self.teams) % self.teams_per_debate == 0:
+                raise DrawError(_("The number of teams presented for the draw was not "
+                        "a multiple of %(num)d.") % {'num': self.teams_per_debate})
             if not self.teams:
                 raise DrawError(_("There were no teams for the draw."))
 
@@ -190,31 +181,21 @@ class BaseDrawGenerator:
             logger.warning("'results' not required for draw of type %s, will probably be ignored",
                     self.__class__.__name__)
 
-        if results is not None:
-            self.results = results
-
         if rrseq is None and self.requires_rrseq:
-            raise TypeError("'round robin sequence' is required for draw of type {0:s}".format(
+            raise TypeError("'rrseq' (round robin sequence) is required for draw of type {0:s}".format(
                     self.__class__.__name__))
 
         # Compute the full dictionary of default options
         self.options = self.BASE_DEFAULT_OPTIONS.copy()
         self.options.update(self.DEFAULT_OPTIONS)
-
-        # Check that all options actually exist
-        for key in kwargs:
-            if key not in self.options:
-                raise ValueError("Unrecognized option: {0}".format(key))
-
-        # Update
+        unrecognised = [key for key in kwargs if key not in self.options]
+        if unrecognised:
+            raise ValueError("Unrecognised options: " + ", ".join(unrecognised))
         self.options.update(kwargs)
 
-        # Check for required team attributes.
-        # Subclasses might do more.
-        if self.options["avoid_history"]:
-            self.check_teams_for_attribute("seen", checkfunc=callable)
-        if self.options["avoid_institution"]:
-            self.check_teams_for_attribute("institution")
+    def generate(self):
+        """Abstract method."""
+        raise NotImplementedError
 
     def get_option_function(self, option_name, option_dict):
         option = self.options[option_name]
@@ -241,24 +222,10 @@ class BaseDrawGenerator:
                 if team in self.team_flags:
                     pairing.add_flags(self.team_flags[team])
 
-    def allocate_sides(self, pairings):
-        if self.options["side_allocations"] == "balance":
-            for pairing in pairings:
-                pairing.balance_sides()
-        elif self.options["side_allocations"] == "random":
-            for pairing in pairings:
-                pairing.shuffle_sides()
-        elif self.options["side_allocations"] not in ["none", "preallocated"]:
-            raise ValueError("side_allocations setting not recognized: {0!r}".format(self.options["side_allocations"]))
-
-    def generate(self):
-        """Abstract method."""
-        raise NotImplementedError
-
     @classmethod
     def available_options(cls):
         keys = set(cls.BASE_DEFAULT_OPTIONS.keys())
-        keys |= list(cls.DEFAULT_OPTIONS.keys())
+        keys |= set(cls.DEFAULT_OPTIONS.keys())
         return sorted(list(keys))
 
     def check_teams_for_attribute(self, name, choices=None, checkfunc=None):
@@ -288,6 +255,64 @@ class BaseDrawGenerator:
                 offending_teams, len(self.teams), name=name) + ", ".join(map(repr, choices)))
 
 
+class BasePairDrawGenerator(BaseDrawGenerator):
+    """Base class for generators for all draw types.
+    Options:
+        "side_allocations" - Side allocation method, one of:
+            "balance" - the team that has affirmed less in prior rounds affirms,
+                or randomly if both teams have affirmed the same number of times.
+                If used, team objects must have an 'aff_count' attribute.
+            "preallocated" - teams were pre-allocated sides. If used, teams must
+                have an 'allocated_side' attribute.
+            "none" - leave sides as they were when the pairings were drawn.
+                (This is almost never desirable.)
+            "random" - allocate randomly.
+        "avoid_history" - if True, draw tries to avoid pairing teams that have
+            seen each other before, and tries harder if they've seen each other
+            multiple times.
+        "history_penalty" -
+        "avoid_institution" - if True, draw tries to avoid pairing teams that
+            are from the same institution.
+        """
+
+    BASE_DEFAULT_OPTIONS = {
+        "side_allocations"   : "balance",
+        "avoid_history"      : True,
+        "avoid_institution"  : True,
+        "history_penalty"    : 1e3,
+        "institution_penalty": 1
+    }
+
+    teams_per_debate = 2
+
+    can_be_first_round = True
+    requires_even_teams = True
+    requires_prev_results = False
+    requires_rrseq = False
+
+    # All subclasses must define this with any options that may exist.
+    DEFAULT_OPTIONS = {}
+
+    def __init__(self, teams, results=None, rrseq=None, **kwargs):
+        super().__init__(teams, results, rrseq, **kwargs)
+
+        # Check for required team attributes. Subclasses might do more.
+        if self.options["avoid_history"]:
+            self.check_teams_for_attribute("seen", checkfunc=callable)
+        if self.options["avoid_institution"]:
+            self.check_teams_for_attribute("institution")
+
+    def allocate_sides(self, pairings):
+        if self.options["side_allocations"] == "balance":
+            for pairing in pairings:
+                pairing.balance_sides()
+        elif self.options["side_allocations"] == "random":
+            for pairing in pairings:
+                pairing.shuffle_sides()
+        elif self.options["side_allocations"] not in ["none", "preallocated"]:
+            raise ValueError("side_allocations setting not recognized: {0!r}".format(self.options["side_allocations"]))
+
+
 class ManualDrawGenerator(BaseDrawGenerator):
     """Returns an empty draw."""
 
@@ -296,5 +321,4 @@ class ManualDrawGenerator(BaseDrawGenerator):
     requires_prev_results = False
 
     def generate(self):
-        self._draw = list()
-        return self._draw
+        return []

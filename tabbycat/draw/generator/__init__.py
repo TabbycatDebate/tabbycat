@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 
-from .common import BaseDrawGenerator, DrawError, ManualDrawGenerator, Pairing
+from .common import BasePairDrawGenerator, DrawError, ManualDrawGenerator, Pairing
 from .elimination import FirstEliminationDrawGenerator, EliminationDrawGenerator
 from .powerpair import PowerPairedDrawGenerator, PowerPairedWithAllocatedSidesDrawGenerator
 from .random import RandomDrawGenerator, RandomWithAllocatedSidesDrawGenerator
@@ -31,7 +31,7 @@ def DrawGenerator(draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa
         'first_elimination' and 'elimination'.
     """
 
-    default_side_allocations = BaseDrawGenerator.BASE_DEFAULT_OPTIONS['side_allocations']
+    default_side_allocations = BasePairDrawGenerator.BASE_DEFAULT_OPTIONS['side_allocations']
 
     if draw_type == "random":
         if kwargs.get('side_allocations', default_side_allocations) == "preallocated":

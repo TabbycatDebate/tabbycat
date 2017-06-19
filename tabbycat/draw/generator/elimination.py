@@ -2,13 +2,13 @@ import logging
 
 from django.utils.translation import ugettext as _
 
-from .common import BaseDrawGenerator, DrawError, Pairing
+from .common import BasePairDrawGenerator, DrawError, Pairing
 from .utils import partial_break_round_split
 
 logger = logging.getLogger(__name__)
 
 
-class BaseEliminationDrawGenerator(BaseDrawGenerator):
+class BaseEliminationDrawGenerator(BasePairDrawGenerator):
 
     can_be_first_round = False
     requires_even_teams = False

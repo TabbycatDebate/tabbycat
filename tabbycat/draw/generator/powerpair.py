@@ -1,11 +1,11 @@
 import random
 from collections import OrderedDict
 
-from .common import BaseDrawGenerator, DrawError, Pairing
+from .common import BasePairDrawGenerator, DrawError, Pairing
 from .one_up_one_down import OneUpOneDownSwapper
 
 
-class PowerPairedDrawGenerator(BaseDrawGenerator):
+class PowerPairedDrawGenerator(BasePairDrawGenerator):
     """Power-paired draw.
     If there are allocated sides, use PowerPairedWithAllocatedSidesDrawGenerator instead.
     Options:
@@ -78,10 +78,10 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     # Odd bracket resolutions
 
     ODD_BRACKET_FUNCTIONS = {
-        "pullup_top"                  : "_pullup_top",
-        "pullup_bottom"               : "_pullup_bottom",
-        "pullup_random"               : "_pullup_random",
-        "intermediate"                : "_intermediate_bubbles",
+        "pullup_top"                 : "_pullup_top",
+        "pullup_bottom"              : "_pullup_bottom",
+        "pullup_random"              : "_pullup_random",
+        "intermediate"               : "_intermediate_bubbles",
         "intermediate_bubble_up_down": "_intermediate_bubbles_with_up_down"
     }
 

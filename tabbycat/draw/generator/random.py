@@ -1,9 +1,9 @@
 import random
 
-from .common import BaseDrawGenerator, DrawError, Pairing
+from .common import BasePairDrawGenerator, DrawError, Pairing
 
 
-class RandomDrawGenerator(BaseDrawGenerator):
+class RandomDrawGenerator(BasePairDrawGenerator):
     """Random draw.
     If there are allocated sides, use RandomDrawWithSideConstraints instead.
     Options:
