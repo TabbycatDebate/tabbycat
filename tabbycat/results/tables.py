@@ -1,4 +1,5 @@
 from draw.models import Debate
+from participants.models import Team
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
 
@@ -8,7 +9,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
     a cell has multiple links; hence the creating HTML directly"""
 
     def get_status_meta(self, debate):
-        if debate.aff_team.type == 'B' or debate.neg_team.type == 'B':
+        if any(team.type == Team.TYPE_BYE for team in debate.teams):
             return "glyphicon-fast-forward", 5, "Bye Debate"
         elif debate.result_status == Debate.STATUS_NONE and not debate.ballot_in:
             return "glyphicon-remove text-danger", 0, "No Ballot"

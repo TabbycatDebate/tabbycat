@@ -1,7 +1,7 @@
 import json
 import datetime
 import logging
-
+from itertools import product
 from math import floor
 
 from django.views.generic.base import TemplateView
@@ -167,11 +167,8 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
     sort_key = 'Team'
 
     def populate_table(self, draw, table, round, tournament):
-        draw = list(draw) + list(draw) # Double up the draw
-        draw_slice = len(draw) // 2 # Top half gets affs; bottom negs
-        table.add_team_columns(
-            [d.aff_team for d in draw[:draw_slice]] + [d.neg_team for d in draw[draw_slice:]],
-            hide_institution=True, key="Team")
+        draw, teams = zip(*[(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)])
+        table.add_team_columns(teams, hide_institution=True, key="Team")
         super().populate_table(draw, table, round, tournament)
 
 

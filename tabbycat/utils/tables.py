@@ -10,7 +10,7 @@ from draw.models import Debate
 from participants.models import Team
 from participants.utils import get_side_counts
 from standings.templatetags.standingsformat import metricformat, rankingformat
-from tournaments.utils import aff_name, get_side_name, neg_name
+from tournaments.utils import get_side_name
 from utils.misc import reverse_tournament
 from venues.utils import venue_conflicts_display
 
@@ -698,7 +698,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         results_data = []
         for debate in debates:
             row = []
-            for pos in ('aff', 'neg'):
+            for pos in self.tournament.sides:
                 try:
                     debateteam = debate.get_dt(pos)
                     team = debate.get_team(pos)
@@ -724,7 +724,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 row.append(cell)
             results_data.append(row)
 
-        self.add_columns([aff_name(self.tournament).capitalize(), neg_name(self.tournament).capitalize()], results_data)
+        results_header = [get_side_name(self.tournament, side, 'full').capitalize()
+                for side in self.tournament.sides]
+        self.add_columns(results_header, results_data)
 
     def add_standings_results_columns(self, standings, rounds, show_ballots):
 
