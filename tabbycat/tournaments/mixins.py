@@ -384,7 +384,8 @@ class SaveDragAndDropDebateMixin(JsonDataResponsePostView, SuperuserRequiredMixi
             raise ValueError('SaveDragAndDropDebateMixin posted a debate ID that doesnt exist')
 
     def post_data(self):
-        posted_debate = json.loads(self.request.body)
+        body = self.request.body.decode('utf-8')
+        posted_debate = json.loads(body)
         debate = self.get_debate(posted_debate['id'])
         debate = self.modify_debate(debate, posted_debate)
         self.log_action()
