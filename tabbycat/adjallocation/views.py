@@ -2,7 +2,7 @@ import json
 import logging
 
 from django.views.generic.base import TemplateView, View
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, JsonResponse
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -96,19 +96,17 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDa
         return super().post(request, *args, **kwargs)
 
 
-class SaveDebateInfo(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
-    pass
-
-
-class SaveDebateImportance(SaveDebateInfo):
+class SaveDebateImportance(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
     def post(self, request, *args, **kwargs):
-        debate = Debate.objects.get(pk=request.POST.get('debate_id'))
-        debate.importance = request.POST.get('importance')
+        body = self.request.body.decode('utf-8')
+        posted_info = json.loads(body)
+        debate = Debate.objects.get(pk=posted_info['debate_id'])
+        debate.importance = posted_info['importance']
         debate.save()
         self.log_action()
-        return HttpResponse()
+        return JsonResponse(json.dumps(posted_info), safe=False)
 
 
 class SaveDebatePanel(SaveDragAndDropDebateMixin):

@@ -31,7 +31,7 @@
   }
 
   .draggable-title {
-    overflow: auto;
+    overflow: hidden; // Needed for Windows/IE
     line-height: 8px; // Compress text/sub-text spacing
 
     .subtitle {

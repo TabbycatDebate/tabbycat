@@ -10,16 +10,21 @@
 {% block content %}
 
 <ul class="list-group">
-{% for preference in preferences %}
+{% for preference in preset_preferences %}
 
   <li class="list-group-item ">
       <span class="{% if preference.current_value != preference.new_value %}text-success{% else %}text-muted{% endif %}">
       {{ preference.name }}
       </span>
       <span class="pull-right">
-        <span class="label label-danger">{{ preference.current_value }}</span>
-        <span class="label label-default"><span class="glyphicon glyphicon-chevron-right"></span></span>
-        <span class="label label-success">{{ preference.new_value }}</span>
+        {% if preference.changed %}
+          <span class="label label-danger">{{ preference.current_value }}</span>
+          <span class="label label-default"><span class="glyphicon glyphicon-chevron-right"></span></span>
+          <span class="label label-success">{{ preference.new_value }}</span>
+        {% else %}
+          <span class="label label-primary">{{ preference.new_value }}</span>
+          <span class="label label-default">no change</span></span>
+        {% endif %}
       </span>
   </li>
 

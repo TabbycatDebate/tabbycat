@@ -41,7 +41,7 @@ def adjudicator_conflicts_display(debates):
 
         for adj1, adj2 in permutations(debate.adjudicators.all(), 2):
             if adj2.id in adjadjconflicts.get(adj1.id, []):
-                conflict_messages[debate].append(("danger"
+                conflict_messages[debate].append(("danger",
                     "Conflict between <strong>{adj}</strong> & <strong>{other}</strong>".format(
                         adj=adj1.name, other=adj2.name)
                 ))

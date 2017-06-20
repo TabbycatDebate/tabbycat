@@ -41,10 +41,7 @@ urlpatterns = [
         name="options-tournament-public-features"),
 
     # Presets
-    url(r'^presets/confirm/(?P<preset_name>\w+)/$',
+    url(r'^presets/(?P<preset_name>\w+)/confirm/$',
         views.ConfirmTournamentPreferencesView.as_view(),
-        name="tournament_preference_confirm"),
-    url(r'^presets/apply/(?P<preset_name>\w+)/$',
-        views.ApplyTournamentPreferencesView.as_view(),
-        name="tournament_preference_apply"),
+        name="options-presets-confirm"),
 ]

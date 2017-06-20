@@ -30,9 +30,8 @@ export default {
           'features': [
             [{ 'title': this.venue.name + ' (Priority of ' + this.venue.priority + ')',
                'icon': 'glyphicon-map-marker' }],
+            null,
             this.venueCategoriesFeature,
-            // this.institutionDetailForSlideOver(this.team),
-            // this.categoriesFeature()
           ]
         }]
       }
