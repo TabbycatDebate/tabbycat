@@ -186,6 +186,7 @@ class BaseDebateResult:
             self.assert_loaded()
         except AssertionError:
             logger.exception("When checking for completeness, DebateResult.assert_loaded() failed.")
+            return False
 
         if any(self.debateteams[side] is None for side in self.sides):
             return False
