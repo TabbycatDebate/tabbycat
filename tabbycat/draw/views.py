@@ -232,7 +232,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             table.add_debate_metric_columns(draw, standings)
             table.add_sides_count([d.aff_team for d in draw], r.prev, 'aff')
             table.add_sides_count([d.neg_team for d in draw], r.prev, 'neg')
-        else:
+        elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
         table.add_draw_conflicts_columns(draw)
