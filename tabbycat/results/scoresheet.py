@@ -11,6 +11,17 @@ should not appear in any of them.
 """
 
 
+def get_scoresheet_class(tournament):
+    """Returns the correct scoresheet class for the given tournament's options."""
+    teams_in_debate = tournament.pref('teams_in_debate')
+    if teams_in_debate == 'two':
+        return HighPointWinsRequiredScoresheet
+    elif teams_in_debate == 'bp':
+        return BPScoresheet
+    else:
+        raise ValueError("Unrecognised teams_in_debate option: {}".format(teams_in_debate))
+
+
 class BaseScoresheet:
 
     def __init__(self, *args, **kwargs):
@@ -95,7 +106,7 @@ class BaseTwoTeamScoresheet(BaseScoresheet):
         return self._get_winner()
 
     def is_valid(self):
-        return super().is_complete() and self.winner() is not None
+        return self.is_complete() and self.winner() is not None
 
 
 class ResultOnlyScoresheet(DeclaredWinnerMixin, BaseTwoTeamScoresheet):
@@ -144,9 +155,20 @@ class LowPointWinsAllowedScoresheet(ScoresMixin, ResultOnlyScoresheet):
     pass
 
 
-SCORESHEET_CLASSES = {
-    'winner-only': ResultOnlyScoresheet,
-    'high-required': HighPointWinsRequiredScoresheet,
-    'tied-allowed': TiedPointWinsAllowedScoresheet,
-    'low-allowed': LowPointWinsAllowedScoresheet,
-}
+class BPScoresheet(ScoresMixin, BaseScoresheet):
+
+    sides = ['og', 'oo', 'cg', 'co']
+
+    def ranking(self):
+        if not self.is_complete():
+            return None
+        return self._get_ranking()
+
+    def is_valid(self):
+        return self.is_complete() and self.ranking() is not None
+
+    def _get_ranking(self):
+        totals = [self.get_total(side) for side in self.sides]
+        if len(set(totals)) != len(totals):
+            return None
+        return [side for total, side in sorted(zip(totals, self.sides), reverse=True)]

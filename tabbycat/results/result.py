@@ -45,7 +45,7 @@ from statistics import mean
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 
-from .scoresheet import SCORESHEET_CLASSES
+from .scoresheet import get_scoresheet_class
 from .utils import side_and_position_names
 
 logger = logging.getLogger(__name__)
@@ -271,7 +271,7 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
         self.positions = self.tournament.positions
 
         # Hard-coded until low-point wins etc. implemented at form and model level
-        self.scoresheet_class = SCORESHEET_CLASSES['high-required']
+        self.scoresheet_class = get_scoresheet_class(self.tournament)
 
         # Note: declared winners aren't currently used, and it's not yet clear
         # to me what the best way is to pass these through to/from Scoresheet.

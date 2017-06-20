@@ -7,7 +7,7 @@ from .common import BaseBPDrawGenerator, BasePairDrawGenerator, BPPairing, DrawE
 
 class RandomPairingsMixin:
     """Provides actual random part of it, generic to pair and BP draws.
-    Classes using this mixin must define self.teams and self.TEAMS_PER_DEBATE.
+    Classes using this mixin must define self.TEAMS_PER_DEBATE.
     """
 
     def make_random_pairings(self, teams):
