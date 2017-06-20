@@ -84,7 +84,10 @@ gulp.task("js-browserify", function() {
   ];
   // map them to our stream function
   var tasks = files.map(function(entry) {
-    return browserify({ entries: [entry] })
+    return browserify({ entries: [entry],
+                        noparse: ['jquery', 'lodash'], // Skip big libs
+                        fast: false, // Skip detecting/inserting global vars
+      })
       .transform(vueify)
         .on('error', gutil.log)
       .transform([babelify, {

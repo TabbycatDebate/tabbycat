@@ -7,15 +7,16 @@ export default {
   mixins: [SlideOverDiversityMixin],
   computed: {
     ratingsFeature: function() {
-      var ratings = [
-        { 'title': this.adjudicator.score + ' Feedback', 'icon': 'glyphicon-signal' },
-        { 'title': this.percentileRanking.grade + this.percentileRanking.text }
-      ]
+      var ratings = [{ 'title': this.adjudicator.score + ' Feedback', 'icon': 'glyphicon-signal' }]
+      // Percentile rankings only on Edit Adjudicators page
+      if (!_.isUndefined(this.percentileRanking)) {
+        ratings.push({'title': this.percentileRanking.grade + this.percentileRanking.text})
+      }
       return ratings
     },
     genderFeature: function() {
       var gender = [
-        { 'title': this.adjudicator.name + this.genderNameForSlideOver(this.adjudicator),
+        { 'title': this.adjudicator.name,
           'class': 'gender-display gender-' + this.adjudicator.gender,
           'icon': 'glyphicon-user' }
       ]
