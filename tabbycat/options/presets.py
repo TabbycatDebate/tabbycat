@@ -33,6 +33,8 @@ class AustralsPreferences(PreferencesPreset):
     draw_rules__draw_pairing_method            = 'slide'
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
     # Debate Rules
+    debate_rules__teams_in_debate              = 'two'
+    debate_rules__ballots_per_debate           = 'per-adj'
     debate_rules__substantive_speakers         = 3
     debate_rules__reply_scores_enabled         = True
     debate_rules__motion_vetoes_enabled        = True
@@ -184,6 +186,33 @@ class WSDCPreferences(AustralsPreferences):
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = False
+
+
+class WUDCPreferences(PreferencesPreset):
+    name         = "WUDC Rules"
+    show_in_list = True
+    description  = "British Parliamentary."
+
+    # Scoring
+    scoring__score_min                         = 50.0
+    scoring__score_max                         = 100.0
+    scoring__score_step                        = 1.0
+    scoring__maximum_margin                    = 0.0
+    # Debate Rules
+    debate_rules__teams_in_debate              = 'bp'
+    debate_rules__ballots_per_debate           = 'per-debate'
+    debate_rules__substantive_speakers         = 2
+    debate_rules__reply_scores_enabled         = False
+    debate_rules__motion_vetoes_enabled        = False
+    debate_rules__side_names                   = 'gov-opp'
+    data_entry__enable_motions                 = True
+    # Standings Rules
+    standings__standings_missed_debates        = 2  # TODO check this?
+    standings__team_standings_precedence       = ['points', 'speaks_sum']
+    standings__rank_speakers_by                = 'total'
+    # UI Options
+    ui_options__show_team_institutions         = False
+    ui_options__show_adjudicator_institutions  = True
 
 
 class WADLPreferences(PreferencesPreset):
