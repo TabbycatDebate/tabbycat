@@ -75,7 +75,7 @@ class Debate(models.Model):
     def matchup(self):
         # This method is used by __str__, so it's not allowed to crash (ever)
         try:
-            return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
+            return " vs ".join(self.get_team(side).short_name for side in self.round.tournament.sides)
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             dts = self.debateteam_set.all()
             if all(dt.side == DebateTeam.SIDE_UNALLOCATED for dt in dts):

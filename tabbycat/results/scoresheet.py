@@ -106,7 +106,7 @@ class BaseTwoTeamScoresheet(BaseScoresheet):
         return self._get_winner()
 
     def is_valid(self):
-        return self.is_complete() and self.winner() is not None
+        return super().is_valid() and self.winner() is not None
 
 
 class ResultOnlyScoresheet(DeclaredWinnerMixin, BaseTwoTeamScoresheet):
@@ -159,16 +159,23 @@ class BPScoresheet(ScoresMixin, BaseScoresheet):
 
     sides = ['og', 'oo', 'cg', 'co']
 
-    def ranking(self):
-        if not self.is_complete():
-            return None
-        return self._get_ranking()
-
     def is_valid(self):
-        return self.is_complete() and self.ranking() is not None
-
-    def _get_ranking(self):
+        if not super().is_valid():
+            return False
         totals = [self.get_total(side) for side in self.sides]
-        if len(set(totals)) != len(totals):
+        return len(set(totals)) == len(totals)
+
+    def rank(self, side):
+        if not self.is_valid():
             return None
-        return [side for total, side in sorted(zip(totals, self.sides), reverse=True)]
+        totals = [self.get_total(side) for side in self.sides]
+        totals.sort(reverse=True)
+        side_total = self.get_total(side)
+        return totals.index(side_total) + 1
+
+    def ranked_teams(self):
+        if not self.is_valid():
+            return None
+        total_by_side = [(self.get_total(side), side) for side in self.sides]
+        total_by_side.sort(reverse=True)
+        return [side for total, side in total_by_side]

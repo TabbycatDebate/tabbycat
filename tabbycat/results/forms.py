@@ -10,7 +10,7 @@ from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
-from .result import ConsensusDebateResult, ForfeitDebateResult, VotingDebateResult
+from .result import BPDebateResult, ConsensusDebateResult, ForfeitDebateResult, VotingDebateResult
 from .utils import side_and_position_names
 
 logger = logging.getLogger(__name__)
@@ -299,7 +299,8 @@ class BaseBallotSetForm(forms.Form):
             if forfeiter:
                 initial['forfeit'] = forfeiter.debate_team.side
 
-        result = self.result_class(self.ballotsub)
+        result_class = self.get_result_class()
+        result = result_class(self.ballotsub)
         initial.update(self.initial_from_result(result))
 
         return initial
@@ -473,7 +474,8 @@ class BaseBallotSetForm(forms.Form):
             result = ForfeitDebateResult(self.ballotsub, self.cleaned_data['forfeit'])
             self.ballotsub.forfeit = result.debateteams[self.cleaned_data['forfeit']]
         else:
-            result = self.result_class(self.ballotsub)
+            result_class = self.get_result_class()
+            result = result_class(self.ballotsub)
 
         # 4. Save the sides
         if self.choosing_sides:
@@ -562,11 +564,18 @@ class BaseBallotSetForm(forms.Form):
 class SingleBallotSetForm(BaseBallotSetForm):
     """Presents one ballot for the debate. Used for consensus adjudications."""
 
-    result_class = ConsensusDebateResult
-
     @staticmethod
     def _fieldname_score(side, pos):
         return '%(side)s_score_s%(pos)d' % {'side': side, 'pos': pos}
+
+    def get_result_class(self):
+        teams_in_debate = self.tournament.pref('teams_in_debate')
+        if teams_in_debate == 'two':
+            return ConsensusDebateResult
+        elif teams_in_debate == 'bp':
+            return BPDebateResult
+        else:
+            raise ValueError("Unrecognised teams_in_debate option: {}".format(teams_in_debate))
 
     def create_score_fields(self):
         """Adds the speaker score fields:
@@ -655,11 +664,12 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
     """Presents one ballot per voting adjudicator. Used for voting
     adjudications."""
 
-    result_class = VotingDebateResult
-
     @staticmethod
     def _fieldname_score(adj, side, pos):
         return '%(side)s_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
+
+    def get_result_class(self):
+        return VotingDebateResult
 
     def create_score_fields(self):
         """Adds the speaker score fields:

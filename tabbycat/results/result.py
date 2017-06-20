@@ -670,7 +670,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             yield sheet_dict
 
 
-class ConsensusDebateResult(BaseDebateResultWithSpeakers):
+class BaseConsensusDebateResult(BaseDebateResultWithSpeakers):
     """Basically a wrapper for a single scoresheet. Knows nothing about
     adjudicators."""
 
@@ -744,18 +744,23 @@ class ConsensusDebateResult(BaseDebateResultWithSpeakers):
                     "self.takes_scores is %s", self.takes_scores)
 
     # --------------------------------------------------------------------------
-    # Decision calculation
+    # Method for UI display
     # --------------------------------------------------------------------------
+
+    def as_dicts(self):
+        """Generates a sequence of dicts, each being a scoresheet from an
+        adjudicator. This is used in PublicBallotScoresheetsView, which uses
+        template public_ballot_set.html."""
+        return [{"teams": self.sheet_as_dicts(self.scoresheet)}]
+
+
+class ConsensusDebateResult(BaseConsensusDebateResult):
 
     def winning_side(self):
         return self.scoresheet.winner()
 
     def winning_team(self):
         return self.debateteams[self.scoresheet.winner()].team
-
-    # --------------------------------------------------------------------------
-    # Team score fields
-    # --------------------------------------------------------------------------
 
     def teamscorefield_points(self, side):
         return int(side == self.winning_side())
@@ -769,15 +774,14 @@ class ConsensusDebateResult(BaseDebateResultWithSpeakers):
     def teamscorefield_margin(self, side):
         return self.calculate_margin(side)
 
-    # --------------------------------------------------------------------------
-    # Method for UI display
-    # --------------------------------------------------------------------------
 
-    def as_dicts(self):
-        """Generates a sequence of dicts, each being a scoresheet from an
-        adjudicator. This is used in PublicBallotScoresheetsView, which uses
-        template public_ballot_set.html."""
-        return [{"teams": self.sheet_as_dicts(self.scoresheet)}]
+class BPDebateResult(BaseConsensusDebateResult):
+
+    def teamscorefield_points(self, side):
+        return 4 - self.scoresheet.rank(side)
+
+    def teamscorefield_score(self, side):
+        return self.scoresheet.get_total(side)
 
 
 class ForfeitDebateResult(BaseDebateResult):
