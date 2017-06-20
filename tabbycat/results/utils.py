@@ -80,22 +80,25 @@ _ORDINALS = {
     8: ugettext_lazy("8th"),
 }
 
+_BP_POSITION_NAMES = [[_("PM"), _("DPM")], [_("LO"), _("DLO")],
+                      [_("MG"), _("GW")],  [_("MO"), _("OW")]]
+
 
 def side_and_position_names(tournament):
     """Yields 2-tuples (side, positions), where position is a list of position
     names, all being translated human-readable names. This should eventually
     be extended to return an appropriate list for the tournament configuration.
     """
+    sides = [get_side_name(tournament, side, 'full').title() for side in tournament.sides]
+
     if tournament.pref('teams_in_debate') == 'bp' \
             and tournament.last_substantive_position == 2 \
             and tournament.reply_position is None:
-        yield (_("OG"), [_("PM"), _("DPM")])
-        yield (_("OO"), [_("LO"), _("DLO")])
-        yield (_("CG"), [_("MG"), _("GW")])
-        yield (_("CO"), [_("MO"), _("OW")])
+
+        for side, positions in zip(sides, _BP_POSITION_NAMES):
+            yield side, positions
 
     else:
-        sides = [get_side_name(tournament, side, 'full').title() for side in tournament.sides]
         for side in sides:
             positions = [_("Reply") if pos == tournament.reply_position
                 else _ORDINALS[pos]
