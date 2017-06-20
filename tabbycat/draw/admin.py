@@ -44,8 +44,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 @admin.register(Debate)
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'round', 'bracket', 'get_aff_team', 'get_neg_team',
-                    'result_status')
+    list_display = ('id', 'round', 'bracket', 'matchup', 'result_status')
     list_filter = ('round__tournament', 'round', 'division')
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
     raw_id_fields = ('venue', 'division')
@@ -58,20 +57,6 @@ class DebateAdmin(admin.ModelAdmin):
             Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team__tournament')),
             'venue__venuecategory_set',
         )
-
-    def get_aff_team(self, obj):
-        try:
-            return obj.aff_team
-        except MultipleObjectsReturned:
-            return "<multiple affirmative teams>"
-    get_aff_team.short_description = "Affirmative team"
-
-    def get_neg_team(self, obj):
-        try:
-            return obj.neg_team
-        except MultipleObjectsReturned:
-            return "<multiple negative teams>"
-    get_neg_team.short_description = "Negative team"
 
     actions = list()
     for value, verbose_name in Debate.STATUS_CHOICES:
