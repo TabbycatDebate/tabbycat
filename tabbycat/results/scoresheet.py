@@ -173,7 +173,7 @@ class BPScoresheet(ScoresMixin, BaseScoresheet):
         side_total = self.get_total(side)
         return totals.index(side_total) + 1
 
-    def ranked_teams(self):
+    def ranked_sides(self):
         if not self.is_valid():
             return None
         total_by_side = [(self.get_total(side), side) for side in self.sides]

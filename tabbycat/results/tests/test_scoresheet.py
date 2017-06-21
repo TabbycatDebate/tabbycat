@@ -1,10 +1,25 @@
 import unittest
 
-from ..scoresheet import HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet, ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet
+from ..scoresheet import (BPScoresheet, HighPointWinsRequiredScoresheet,
+    LowPointWinsAllowedScoresheet, ResultOnlyScoresheet,
+    TiedPointWinsAllowedScoresheet)
+
+
+def on_all_testdata(test_fn):
+    """Decorator. Tests should be written to take two arguments: self,
+     testdata. 'scoresheet' is a Scoresheet object. 'testdata'
+    is a value of BaseTestScoresheet.testdata. This decorator then sets up
+    the scoresheet and runs the test once for each test dataset in
+    BaseTestScoresheet.testdata."""
+    def foo(self):
+        for testdata in self.testdata.values():
+            test_fn(self, testdata)
+    return foo
+
 
 class TestTwoTeamScoresheets(unittest.TestCase):
 
-    SIDES = ['aff', 'neg']
+    sides = ['aff', 'neg']
 
     testdata = dict()
     testdata[1] = {  # normal
@@ -53,21 +68,17 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         'calculated_winner': 'neg',
     }
 
-    def on_all_testdata(test_fn):  # flake8: noqa
-        """Decorator. Tests should be written to take two arguments: self,
-         testdata. 'scoresheet' is a Scoresheet object. 'testdata'
-        is a value of BaseTestScoresheet.testdata. This decorator then sets up
-        the scoresheet and runs the test once for each test dataset in
-        BaseTestScoresheet.testdata."""
-        def foo(self):
-            for testdata in self.testdata.values():
-                test_fn(self, testdata)
-        return foo
-
     def load_scores(self, scoresheet, testdata):
-        for side, scores_for_side in zip(self.SIDES, testdata['scores']):
+        for side, scores_for_side in zip(self.sides, testdata['scores']):
             for position, score in zip(testdata['positions'], scores_for_side):
                 scoresheet.set_score(side, position, score)
+
+    def assert_scores(self, scoresheet, testdata):
+        for side, total in zip(self.sides, testdata['totals']):
+            self.assertEqual(scoresheet.get_total(side), total)
+        for side, scores_for_side in zip(self.sides, testdata['scores']):
+            for position, score in zip(testdata['positions'], scores_for_side):
+                self.assertEqual(scoresheet.get_score(side, position), score)
 
     @on_all_testdata
     def test_result_only(self, testdata):
@@ -82,8 +93,8 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         self.load_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'])
         self.assertEqual(scoresheet.winner(), testdata['calculated_winner'])
-        for side, total in zip(self.SIDES, testdata['totals']):
-            self.assertEqual(scoresheet.get_total(side), total)
+        self.assert_scores(scoresheet, testdata)
+        self.assertEqual(scoresheet.is_valid(), testdata['calculated_winner'] is not None)
 
     @on_all_testdata
     def test_low_point_win(self, testdata):
@@ -92,8 +103,8 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         self.load_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'] and testdata['complete_declared'])
         self.assertEqual(scoresheet.winner(), testdata['declared_winner'] if scoresheet.is_complete() else None)
-        for side, total in zip(self.SIDES, testdata['totals']):
-            self.assertEqual(scoresheet.get_total(side), total)
+        self.assert_scores(scoresheet, testdata)
+        self.assertEqual(scoresheet.is_valid(), testdata['complete_scores'] and testdata['complete_declared'])
 
     @on_all_testdata
     def test_tie_point_win(self, testdata):
@@ -106,9 +117,66 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         else:
             winner = None
         self.assertEqual(scoresheet.winner(), winner)
-        for side, total in zip(self.SIDES, testdata['totals']):
-            self.assertEqual(scoresheet.get_total(side), total)
+        self.assert_scores(scoresheet, testdata)
+        self.assertEqual(scoresheet.is_valid(), winner is not None)
 
     def test_declared_winner_error(self):
         scoresheet = ResultOnlyScoresheet()
         self.assertRaises(AssertionError, scoresheet.set_declared_winner, 'hello')
+
+
+class TestBPScoresheets(unittest.TestCase):
+
+    sides = ['og', 'oo', 'cg', 'co']
+    positions = [1, 2]
+
+    testdata = {}
+
+    testdata[1] = {  # normal
+        'scores': [[76, 69], [76, 70], [72, 85], [69, 85]],
+        'complete': True,
+        'ranks': ['cg', 'co', 'oo', 'og'],
+        'totals': [145, 146, 157, 154],
+    }
+    testdata[1] = {  # normal
+        'scores': [[75, 75], [75, 74], [75, 76], [76, 76]],
+        'complete': True,
+        'ranks': ['co', 'cg', 'og', 'oo'],
+        'totals': [150, 149, 151, 152],
+    }
+    testdata[1] = {  # tie-point
+        'scores': [[84, 81], [80, 69], [81, 68], [85, 68]],
+        'complete': True,
+        'ranks': None,
+        'totals': [165, 149, 149, 153],
+    }
+    testdata[2] = { # incomplete
+        'scores': [[84, None], [80, 69], [None, 68], [85, 68]],
+        'complete': False,
+        'ranks': None,
+        'totals': [None, 149, None, 153],
+    }
+
+    def load_scores(self, scoresheet, testdata):
+        for side, scores_for_side in zip(self.sides, testdata['scores']):
+            for position, score in zip(self.positions, scores_for_side):
+                scoresheet.set_score(side, position, score)
+
+    @on_all_testdata
+    def test_bp_scoresheet(self, testdata):
+        scoresheet = BPScoresheet(self.positions)
+        self.load_scores(scoresheet, testdata)
+        self.assertEqual(scoresheet.is_complete(), testdata['complete'])
+        self.assertEqual(scoresheet.ranked_sides(), testdata['ranks'])
+        if testdata['ranks'] is not None:
+            for side, rank in zip(self.sides, testdata['ranks']):
+                self.assertEqual(scoresheet.rank(side), testdata['ranks'].index(side))
+        else:
+            for side in self.sides:
+                self.assertEqual(scoresheet.rank(side), None)
+        for side, total in zip(self.sides, testdata['totals']):
+            self.assertEqual(scoresheet.get_total(side), total)
+        for side, scores_for_side in zip(self.sides, testdata['scores']):
+            for position, score in zip(self.positions, scores_for_side):
+                self.assertEqual(scoresheet.get_score(side, position), score)
+        self.assertEqual(scoresheet.is_valid(), testdata['ranks'] is not None)
