@@ -150,6 +150,10 @@ class Debate(models.Model):
             self._populate_teams()
         return self._teams
 
+    def debateteams_ordered(self):
+        for side in self.round.tournament.sides:
+            yield self.get_dt(side)
+
     aff_team = _team_property('aff_team')
     neg_team = _team_property('neg_team')
     og_team = _team_property('og_team')

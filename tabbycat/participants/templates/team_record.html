@@ -1,5 +1,5 @@
 {% extends "base_vue_table.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block page-subnav-sections %}{% endblock %}<!-- No need for searching -->
 
@@ -12,10 +12,11 @@
         <div class="panel {% if debateteam and draw_released %}panel-primary{% else %}panel-default{% endif %}">
           <div class="panel-heading">
             <h4 class="panel-title">
-              In This Round
-              ({{ current_round.name }})
+              {% blocktrans trimmed with round_name=current_round.name %}
+                In This Round ({{ round_name }})
+              {% endblocktrans %}
               {% if admin_page and not draw_released %}
-                <em>(Not Released to Public)</em>
+                <em>{% trans "(Not Released to Public)" %}</em>
               {% endif %}
             </h4>
           </div>
@@ -26,37 +27,77 @@
 
                 {# Position, opponent and venue #}
                 <li class="list-group-item lead {% if draw_released %}active{% endif %}">
-                  {{ team.short_name }} is debating
-                  {% if debateteam.side != debateteam.SIDE_UNALLOCATED %}
-                    as the <strong>{{ debateteam.get_side_name }}</strong> team
+
+                  {% if pref.teams_in_debate == 'two' %}
+                    {% if admin_page %}
+                      {% tournamenturl 'participants-team-record' debateteam.opponent.team.pk as opponent_url %}
+                    {% else %}
+                      {% tournamenturl 'participants-public-team-record' debateteam.opponent.team.pk as opponent_url %}
+                    {% endif %}
+                    {% if debateteam.side == debateteam.SIDE_UNALLOCATED %}
+                      {% blocktrans trimmed with team_name=team.short_name opponent_name=debateteam.opponent.team.short_name venue=debateteam.debate.venue|default:"Venue TBA" %}
+                        {{ team_name }} is debating against <strong><a href="{{ opponent_url }}" class="list-group-item-text">{{ opponent_name }}</a></strong> in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
+                    {% else %}
+                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name opponent_name=debateteam.opponent.team.short_name venue=debateteam.debate.venue|default:"Venue TBA" %}
+                        {{ team_name }} is debating as the <strong>{{ side }}</strong> team against <strong><a href="{{ opponent_url }}" class="list-group-item-text">{{ opponent_name }}</a></strong> in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
+                    {% endif %}
+                  {% elif pref.teams_in_debate == 'bp' %}
+                    {% if debateteam.side == debateteam.SIDE_UNALLOCATED %}
+                      {% blocktrans trimmed with team_name=team.short_name venue=debateteam.debate.venue|default:"Venue TBA" %}
+                        {{ team_name }} is debating in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
+                    {% else %}
+                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name venue=debateteam.debate.venue|default:"Venue TBA" %}
+                        {{ team_name }} is debating as the <strong>{{ side }}</strong> team in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
+                    {% endif %}
                   {% endif %}
-                  against
-                  <strong><a href="{% if admin_page %}{% tournamenturl 'participants-team-record' debateteam.opponent.team.pk %}{% else %}{% tournamenturl 'participants-public-team-record' debateteam.opponent.team.pk %}{% endif %}" class="list-group-item-text">
-                    {{ debateteam.opponent.team.short_name }}</a></strong>
-                  in
-                  <strong>
-                  {% if debateteam.debate.venue %}
-                    {{ debateteam.debate.venue.display_name }}
-                  {% else %}
-                    Venue TBA
-                  {% endif %}
-                  </strong>.
-                </strong></li>
+                </li>
 
                 {# Round start time #}
                 {% if current_round.starts_at %}
                   <li class="list-group-item">
-                    The round begins at {{ current_round.starts_at }}
+                    {% blocktrans trimmed with start_time=current_round.starts_at %}
+                      The round begins at {{ start_time }}
+                    {% endblocktrans %}
                   </li>
                 {% endif %} {# current_round.starts_at #}
+
+                {# Teams (only in BP -- in two-team, it's displayed above) #}
+                {% if pref.teams_in_debate == 'bp' %}
+                  <li class="list-group-item">
+                    <strong>{% trans "Teams:" %}</strong>
+                    {% for dt in debateteam.debate.debateteams_ordered %}
+                      {% if dt != debateteam %}
+                        {% if admin_page %}
+                          {% tournamenturl 'participants-team-record' dt.team.pk as opponent_url %}
+                        {% else %}
+                          {% tournamenturl 'participants-public-team-record' dt.team.pk as opponent_url %}
+                        {% endif %} {# admin_page #}
+                          <a href="{{ opponent_url }}" class="list-group-item-text">{{ dt.team.short_name }}</a>
+                       {% else %} {# elif dt == debateteam #}
+                          {{ dt.team.short_name }}
+                       {% endif %} {# dt != debateteam #}
+                       ({{ dt.get_side_name }}){% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                  </li>
+                {% endif %} {# pref.teams_in_debate == 'bp' #}
 
                 {# Adjudicators #}
                 <li class="list-group-item">
                   {% with adjudicators=debateteam.debate.adjudicators %}
-                    <strong>Adjudicator{{ adjudicators|length|pluralize }}:</strong>
+                    <strong>
+                      {% blocktrans trimmed count counter=adjudicators|length %}
+                        Adjudicator:
+                      {% plural %}
+                        Adjudicators:
+                      {% endblocktrans %}
+                    </strong>
                     {% for adj, adjtype in adjudicators.with_positions %}
                       <a href="{% if admin_page %}{% tournamenturl 'participants-adjudicator-record' adj.pk %}{% else %}{% tournamenturl 'participants-public-adjudicator-record' adj.pk %}{% endif %}">
-                        {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                        {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} {% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %} {% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
                     {% endfor %}
                   {% endwith %}
                 </li>
@@ -66,17 +107,22 @@
                   <li class="list-group-item">
                     {% if current_round.motions_released or admin_page %}
                       {% if not current_round.motions_released %}
-                        <em>Motions are not released to public.</em><br />
+                        <em>{% trans "Motions are not released to public." %}</em><br />
                       {% endif %}
                       {% if debateteam.debate.round.motion_set.all|length == 1 %}
-                        <strong>Motion:</strong> {{ debateteam.debate.round.motion_set.first.text }}
+                        <strong>{% trans "Motion:" %}</strong> {{ debateteam.debate.round.motion_set.first.text }}
                       {% else %}
                         {% for motion in debateteam.debate.round.motion_set.all %}
-                          <strong>Motion {{ motion.seq }}:</strong> {{ motion.text }}<br />
+                          <strong>
+                            {% blocktrans trimmed with seq=motion.seq %}
+                              Motion {{ seq }}:
+                            {% endblocktrans %}
+                          </strong>
+                          {{ motion.text }}<br />
                         {% endfor %}
                       {% endif %}
                     {% else %} {# elif not (current_round.motions_released or admin_page) #}
-                      <em>The motion(s) for this round haven't yet been released.</em>
+                      <em>{% trans "The motion(s) for this round haven't yet been released." %}</em>
                     {% endif %} {# current_round.motions_released or admin_page #}
                   </li>
                 {% endif %} {# pref.public_motions or admin_page #}
@@ -84,13 +130,17 @@
 
             {% else %} {# elif not debateteam #}
               <div class="panel-body">
-                <em>{{ team.short_name }} does not have a debate this round.</em>
+                <em>
+                  {% blocktrans trimmed with team_name=team.short_name %}
+                    {{ team_name }} does not have a debate this round.
+                  {% endblocktrans %}
+                </em>
               </div>
             {% endif %} {# debateteam #}
 
           {% else %} {# elif not (draw_released or admin_page) #}
             <div class="panel-body">
-              <em>The draw for this round hasn't yet been released.</em>
+              <em>{% trans "The draw for this round hasn't yet been released." %}</em>
             </div>
           {% endif %} {# draw_released or admin_page #}
         </div>

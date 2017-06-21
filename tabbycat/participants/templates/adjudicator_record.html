@@ -12,10 +12,11 @@
         <div class="panel {% if debateadjudicator and draw_released %}panel-primary{% else %}panel-default{% endif %}">
           <div class="panel-heading">
             <h4 class="panel-title">
-              In This Round
-              ({{ current_round.name }})
+              {% blocktrans trimmed with round_name=current_round.name %}
+                In This Round ({{ round_name }})
+              {% endblocktrans %}
               {% if admin_page and not draw_released %}
-                <em>(Not Released to Public)</em>
+                <em>{% trans "(Not Released to Public)" %}</em>
               {% endif %}
             </h4>
           </div>
