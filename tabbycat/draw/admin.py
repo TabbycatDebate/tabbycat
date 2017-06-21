@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.core.exceptions import MultipleObjectsReturned
 from django.db.models import Prefetch
 
 from adjallocation.models import DebateAdjudicator
