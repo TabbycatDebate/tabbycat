@@ -8,54 +8,67 @@ export default {
 
   props: ['conflicts', 'histories'],
   methods: {
-    getClashes(conflictingItem, conflictingItemType) {
+    setOrUnsetConflicts: function(conflictingItem, conflictingItemType,
+                                  hoverOrPanel, conflictState) {
+      // Load up the conflicting items clash lists/histories
+      // Not in the case of debates this will limit just to the team/adjs
       if (conflictingItemType === 'adjudicator') {
-        return this.conflicts[conflictingItem.id]
+        var clashes = this.getAdjClashes(conflictingItem, conflictingItemType)
+        var seens = this.getAdjSeens(conflictingItem, conflictingItemType)
       } else if (conflictingItemType === 'team') {
-        // Because conflicts are organised by adj-id as key we need to search
-        // through them & identify those applicable from the team's perspective
-        var reversedConflicts = {'adjudicator': [], 'institution': [] }
-        _.forEach(this.conflicts, function(adjConflicts, adjId) {
-          var teamsInstitutionId = conflictingItem.institution.id
-          if (_.includes(adjConflicts['institution'], teamsInstitutionId)) {
-            reversedConflicts.institution.push(teamsInstitutionId)
-          }
-          var teamsId = conflictingItem.id
-          if (_.includes(adjConflicts['team'], teamsId)) {
-            reversedConflicts.adjudicator.push(parseInt(adjId)) // Keys=strings
-          }
-        });
-        return reversedConflicts
+        var clashes = this.getTeamClashes(conflictingItem, conflictingItemType)
+        var seens = this.getTeamSeens(conflictingItem, conflictingItemType)
       }
-    },
-    getHistories(conflictingItem, conflictingItemType) {
-      if (conflictingItemType === 'adjudicator') {
-        return this.histories[conflictingItem.id]
-      } else if (conflictingItemType === 'team') {
-        var reversedHistories = {'adjudicator': []}
-        _.forEach(this.histories, function(adjHistories, adjId) {
-          _.forEach(adjHistories['team'], function(ah) {
-            if (ah.id === conflictingItem.id) {
-              reversedHistories['adjudicator'].push({
-                'ago': ah.ago, 'id': parseInt(adjId)})
-            }
-          })
+      var self = this
+      // For each of these clashes/histories emit events to turn them on
+      _.forEach(clashes, function(clashList, clashType) {
+        _.forEach(clashList, function(clashedId) {
+          var eventCode = 'set-clashes-for-' + clashType + '-' + clashedId
+          self.$eventHub.$emit(eventCode, hoverOrPanel, conflictState, clashType)
         })
-        return reversedHistories
-      }
+      })
+      _.forEach(seens, function(seenList, seenType) {
+        _.forEach(seenList, function(seenItem) {
+          var eventCode = 'set-seens-for-' + seenType + '-' + seenItem.id
+          var seenState = conflictState === false ? false : seenItem.ago
+          self.$eventHub.$emit(eventCode, hoverOrPanel, seenState, seenType)
+        })
+      })
     },
-    setConflicts: function(conflictingItem, conflictingItemType) {
-      var conflicts = this.getClashes(conflictingItem, conflictingItemType)
-      var histories = this.getHistories(conflictingItem, conflictingItemType)
-      this.$eventHub.$emit('set-conflicts-for', conflictingItem,
-                           conflicts, histories, true, 'hover')
+    getAdjClashes(conflictingItem) {
+      return this.conflicts[conflictingItem.id]
     },
-    unsetConflicts: function(conflictingItem, conflictingItemType) {
-      var conflicts = this.getClashes(conflictingItem, conflictingItemType)
-      var histories = this.getHistories(conflictingItem, conflictingItemType)
-      this.$eventHub.$emit('set-conflicts-for', conflictingItem,
-                           conflicts, histories, false, 'hover')
-    }
+    getTeamClashes(conflictingItem) {
+      // Because conflicts are organised by adj-id as key we need to search
+      // through them & identify those applicable from the team's perspective
+      var reversedConflicts = {'adjudicator': [], 'institution': [] }
+      _.forEach(this.conflicts, function(adjConflicts, adjId) {
+        var teamsInstitutionId = conflictingItem.institution.id
+        if (_.includes(adjConflicts['institution'], teamsInstitutionId)) {
+          reversedConflicts.institution.push(teamsInstitutionId)
+        }
+        var teamsId = conflictingItem.id
+        if (_.includes(adjConflicts['team'], teamsId)) {
+          reversedConflicts.adjudicator.push(parseInt(adjId)) // Keys=strings
+        }
+      });
+      return reversedConflicts
+    },
+    getAdjSeens(conflictingItem) {
+      return this.histories[conflictingItem.id]
+    },
+    getTeamSeens(conflictingItem) {
+      var reversedHistories = {'adjudicator': []}
+      _.forEach(this.histories, function(adjHistories, adjId) {
+        _.forEach(adjHistories['team'], function(ah) {
+          if (ah.id === conflictingItem.id) {
+            reversedHistories['adjudicator'].push({
+              'ago': ah.ago, 'id': parseInt(adjId)})
+          }
+        })
+      })
+      return reversedHistories
+    },
   }
 }
 </script>
