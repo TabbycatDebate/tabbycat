@@ -80,8 +80,25 @@ _ORDINALS = {
     8: ugettext_lazy("8th"),
 }
 
-_BP_POSITION_NAMES = [[_("PM"), _("DPM")], [_("LO"), _("DLO")],
-                      [_("MG"), _("GW")],  [_("MO"), _("OW")]]
+
+_BP_POSITION_NAMES = [
+    # Translators: Abbreviation for Prime Minister
+    [ugettext_lazy("PM"),
+    # Translators: Abbreviation for Deputy Prime Minister
+     ugettext_lazy("DPM")],
+    # Translators: Abbreviation for Leader of the Opposition
+    [ugettext_lazy("LO"),
+    # Translators: Abbreviation for Deputy Leader of the Opposition
+     ugettext_lazy("DLO")],
+    # Translators: Abbreviation for Member for the Government
+    [ugettext_lazy("MG"),
+    # Translators: Abbreviation for Government Whip
+     ugettext_lazy("GW")],
+    # Translators: Abbreviation for Member for the Opposition
+    [ugettext_lazy("MO"),
+    # Translators: Abbreviation for Opposition Whip
+     ugettext_lazy("OW")]
+]
 
 
 def side_and_position_names(tournament):

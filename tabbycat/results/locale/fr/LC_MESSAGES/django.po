@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-18 19:02+1000\n"
-"PO-Revision-Date: 2017-06-18 20:52+1200\n"
+"POT-Creation-Date: 2017-06-22 15:31+1000\n"
+"PO-Revision-Date: 2017-06-22 17:39+1200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -35,30 +35,30 @@ msgstr "Veuillez saisir un nombre entier."
 msgid "Please enter a multiple of %s."
 msgstr "Veuillez saisir un multiple de %s."
 
-#: results/forms.py:216
+#: results/forms.py:212
 msgid "---------"
 msgstr "---------"
 
-#: results/forms.py:218 results/forms.py:220
+#: results/forms.py:214 results/forms.py:216
 #, python-format
 msgid "%(aff_team)s affirmed, %(neg_team)s negated"
 msgstr "%(aff_team)s était affirmatif, %(neg_team)s était négatif"
 
-#: results/forms.py:237
+#: results/forms.py:233
 #, python-format
 msgid "%(side_abbr)s's motion veto"
 msgstr "Veto de motion de %(side_abbr)s"
 
-#: results/forms.py:260
+#: results/forms.py:256
 #, python-format
 msgid "Forfeit by the %(side)s"
 msgstr "Forfait déclaré par l'équipe %(side)s"
 
-#: results/forms.py:381
+#: results/forms.py:378
 msgid "The ballot set can't be both discarded and confirmed."
 msgstr "L'ensemble de bulletins ne peut pas être réjeté et confirmé."
 
-#: results/forms.py:387
+#: results/forms.py:384
 msgid ""
 "The debate status can't be confirmed unless one of the ballot sets is "
 "confirmed."
@@ -66,12 +66,12 @@ msgstr ""
 "Le statut du débat ne peut pas être confirmé sauf qu'une des ensembles de "
 "bulletins est confirmé."
 
-#: results/forms.py:420
+#: results/forms.py:417
 #, python-format
 msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
 msgstr "Il semble que l'orateur %(speaker)s ne soit pas sur l'équipe %(team)s."
 
-#: results/forms.py:432
+#: results/forms.py:429
 #, python-format
 msgid ""
 "The speaker %(speaker)s appears to have given multiple (%(count)d) "
@@ -80,7 +80,7 @@ msgstr ""
 "Il semble que l'orateur %(speaker)s ait fait plusieurs (%(count)d) discours "
 "substantif pour l'équipe %(side)s."
 
-#: results/forms.py:443
+#: results/forms.py:440
 #, python-format
 msgid ""
 "The last substantive speaker and reply speaker for the %(side)s team can't "
@@ -89,7 +89,7 @@ msgstr ""
 "Le dernier orateur et l'orateur de réponse pour l'équipe %(side)s ne peuvent "
 "pas être la même personne."
 
-#: results/forms.py:450
+#: results/forms.py:447
 #, python-format
 msgid ""
 "The reply speaker for the %(side)s team did not give a substantive speech."
@@ -97,17 +97,17 @@ msgstr ""
 "L'orateur de réponse pour l'équipe %(side)s n'a pas prononcé un discours "
 "substantif."
 
-#: results/forms.py:620
+#: results/forms.py:625
 msgid "The total scores for the teams are the same (i.e. a draw)."
 msgstr ""
 "Les scores totaux pour les deux équipes sont la même (c'est-à-dire, un nul)."
 
-#: results/forms.py:629
+#: results/forms.py:634
 #, python-format
 msgid "The total scores for the following teams are the same: %(teams)s"
 msgstr "Les scores totaux pours ces équipes sont la même : %(teams)s"
 
-#: results/forms.py:639
+#: results/forms.py:644
 #, python-format
 msgid ""
 "The margin (%(margin).1f) exceeds the maximum allowable margin "
@@ -116,7 +116,7 @@ msgstr ""
 "La marge (%(margin).1f) excède la marge maximale admissible "
 "(%(max_margin).1f)."
 
-#: results/forms.py:715
+#: results/forms.py:721
 #, python-format
 msgid ""
 "The total scores for the teams are the same (i.e. a draw) for adjudicator "
@@ -125,7 +125,7 @@ msgstr ""
 "Les scores totals pour les deux équipes sont la même (c'est-a-dire, un nul) "
 "pour l'adjudicateur %(adj)s (%(adj_ins)s)."
 
-#: results/forms.py:723
+#: results/forms.py:729
 #, python-format
 msgid ""
 "The margin (%(margin).1f) in the ballot of adjudicator %(adj)s (%(adj_ins)s) "
@@ -356,6 +356,7 @@ msgid "Edit Ballot Set for %(matchup)s"
 msgstr "Modifier l'ensemble de bulletins pour %(matchup)s"
 
 #: results/templates/enter_results.html:15
+#: results/templates/public_enter_results.html:14
 #, python-format
 msgid "%(round)s @ %(venue_category)s %(venue)s"
 msgstr "%(round)s @ %(venue_category)s %(venue)s"
@@ -547,6 +548,41 @@ msgstr "De %(name)s (%(institution)s)"
 msgid "Total"
 msgstr "Total"
 
+#: results/templates/public_enter_results.html:5
+#: results/templates/public_enter_results.html:8
+#, python-format
+msgid "Enter Results for %(matchup)s"
+msgstr "Modifier résultat pour %(matchup)s"
+
+#: results/templates/public_enter_results.html:23
+#, python-format
+msgid ""
+"%(adj_name)s, note that you must enter <strong>all of the ballots</strong> "
+"from your panel, not just your own!"
+msgstr ""
+"%(adj_name)s, notez que vous devez saisir <strong>tous les bulletins</"
+"strong> de votre jury, non seulement votre propre bulletin !"
+
+#: results/templates/public_enter_results.html:32
+#, python-format
+msgid ""
+"This form has already been submitted <strong>once</strong>. Please contact a "
+"tab official after submitting your form."
+msgid_plural ""
+"This form has already been submitted <strong>%(nsubmissions)s</strong> "
+"times. Please contact a tab official after submitting your form."
+msgstr[0] ""
+"Cette formulaire a été déjà soumise <strong>une</strong> fois. Veuillez "
+"contacter un officiel de tab après avoir soumis votre formulaire."
+msgstr[1] ""
+"Cette formulaire a déjà été soumise <strong>%(nsubmissions)s</strong> fois. "
+"Veuillez contacter un officiel de tab après avoir soumis votre formulaire."
+
+#: results/templates/public_enter_results.html:50
+msgctxt "box title"
+msgid "Submit"
+msgstr "Soumission"
+
 #: results/utils.py:73
 msgid "1st"
 msgstr "1er"
@@ -579,6 +615,46 @@ msgstr "7ème"
 msgid "8th"
 msgstr "8ème"
 
-#: results/utils.py:91
+#. Translators: Abbreviation for Prime Minister
+#: results/utils.py:86
+msgid "PM"
+msgstr "PM"
+
+#. Translators: Abbreviation for Deputy Prime Minister
+#: results/utils.py:88
+msgid "DPM"
+msgstr "VPM"
+
+#. Translators: Abbreviation for Leader of the Opposition
+#: results/utils.py:90
+msgid "LO"
+msgstr "CO"
+
+#. Translators: Abbreviation for Deputy Leader of the Opposition
+#: results/utils.py:92
+msgid "DLO"
+msgstr "VCO"
+
+#. Translators: Abbreviation for Member for the Government
+#: results/utils.py:94
+msgid "MG"
+msgstr "MG"
+
+#. Translators: Abbreviation for Government Whip
+#: results/utils.py:96
+msgid "GW"
+msgstr "WG"
+
+#. Translators: Abbreviation for Member for the Opposition
+#: results/utils.py:98
+msgid "MO"
+msgstr "MO"
+
+#. Translators: Abbreviation for Opposition Whip
+#: results/utils.py:100
+msgid "OW"
+msgstr "WO"
+
+#: results/utils.py:120
 msgid "Reply"
 msgstr "Sommaire"

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-19 10:43+1000\n"
-"PO-Revision-Date: 2017-06-19 12:52+1200\n"
+"POT-Creation-Date: 2017-06-22 15:44+1000\n"
+"PO-Revision-Date: 2017-06-22 17:54+1200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -22,63 +22,67 @@ msgstr ""
 msgid "Draw"
 msgstr "Tirage au sort"
 
-#: draw/generator/__init__.py:11
+#: draw/generator/__init__.py:12
 msgid "Too many swaps"
 msgstr "Trop d'échanges"
 
-#: draw/generator/__init__.py:12
+#: draw/generator/__init__.py:13
 msgid "One-up-one-down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:13
+#: draw/generator/__init__.py:14
 msgid "One-up-one-down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:14
+#: draw/generator/__init__.py:15
 msgid "One-up-one-down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:15
+#: draw/generator/__init__.py:16
 msgid "Bubble up (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:16
+#: draw/generator/__init__.py:17
 msgid "Bubble down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:17
+#: draw/generator/__init__.py:18
 msgid "Bubble up (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:18
+#: draw/generator/__init__.py:19
 msgid "Bubble down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:19
+#: draw/generator/__init__.py:20
 msgid "Bubble up (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:20
+#: draw/generator/__init__.py:21
 msgid "Bubble down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:21
+#: draw/generator/__init__.py:22
 msgid "Can't bubble up/down"
 msgstr ""
 
-#: draw/generator/__init__.py:22
+#: draw/generator/__init__.py:23
 msgid "Pull-up team"
 msgstr ""
 
-#: draw/generator/common.py:181
-msgid "There was not an even number of active teams."
-msgstr "Le nombre d'équipes actives n'est pas pair."
+#: draw/generator/common.py:175
+#, python-format
+msgid ""
+"The number of teams presented for the draw was not a multiple of %(num)d."
+msgstr ""
+"Le nombre d’équipes présenté pour le tirage au sort n'est pas un multiple de "
+"%(num)d."
 
-#: draw/generator/common.py:183
+#: draw/generator/common.py:178
 msgid "There were no teams for the draw."
 msgstr "Il n’y a pas d’équipes pour le tirage au sort."
 
-#: draw/generator/elimination.py:51
+#: draw/generator/elimination.py:50
 #, python-format
 msgid ""
 "There are only %d teams breaking in this category; there need to be at least "
@@ -87,15 +91,35 @@ msgstr ""
 "Il n'y a que %d équipes « breaking » dans cette catégorie ; il faut au moins "
 "deux pour générer un tirage au sort pour un tour d'éliminatoire."
 
-#: draw/generator/elimination.py:76
+#: draw/generator/elimination.py:75
 #, python-format
 msgid "%d debates in the previous round don't have a result."
 msgstr "%d débats au tour précédent n'ont pas un résultat."
 
-#: draw/generator/elimination.py:83
+#: draw/generator/elimination.py:82
 #, python-format
 msgid "The number of teams (%d) in this round is not a power of two"
 msgstr "Le nombre d’équipes (%d) dans ce tour n’est pas une puissance de deux"
+
+#: draw/generator/random.py:102
+#, python-format
+msgid "There were %(aff_num)d aff teams but %(neg_num)d neg teams."
+msgstr ""
+
+#: draw/generator/random.py:104
+msgid ""
+"One or more teams had an allocated side that wasn't affirmative or negative."
+msgstr ""
+
+#: draw/manager.py:30
+#, python-format
+msgid "The draw type %(type)s can't be used with two-team formats."
+msgstr ""
+
+#: draw/manager.py:32
+#, python-format
+msgid "The draw type %(type)s can't be used with British Parliamentary."
+msgstr ""
 
 #: draw/models.py:27
 msgid "None"
@@ -113,7 +137,7 @@ msgstr "Brouillon"
 msgid "Confirmed"
 msgstr "Confirmé"
 
-#: draw/models.py:35 draw/models.py:320
+#: draw/models.py:35 draw/models.py:336
 msgid "round"
 msgstr "tour"
 
@@ -153,7 +177,7 @@ msgstr "état de résultat"
 msgid "ballot in"
 msgstr "bulletin reçu"
 
-#: draw/models.py:62 draw/models.py:254
+#: draw/models.py:62 draw/models.py:270
 msgid "debate"
 msgstr "débat"
 
@@ -161,51 +185,67 @@ msgstr "débat"
 msgid "debates"
 msgstr "débats"
 
-#: draw/models.py:247
+#: draw/models.py:259
 msgid "affirmative"
 msgstr "affirmatif"
 
-#: draw/models.py:248
+#: draw/models.py:260
 msgid "negative"
 msgstr "négatif"
 
-#: draw/models.py:249
+#: draw/models.py:261
+msgid "opening government"
+msgstr ""
+
+#: draw/models.py:262
+msgid "opening opposition"
+msgstr ""
+
+#: draw/models.py:263
+msgid "closing government"
+msgstr ""
+
+#: draw/models.py:264
+msgid "closing opposition"
+msgstr ""
+
+#: draw/models.py:265
 msgid "unallocated"
 msgstr "pas attributé"
 
-#: draw/models.py:256 draw/models.py:322
+#: draw/models.py:272 draw/models.py:338
 msgid "team"
 msgstr "équipe"
 
-#: draw/models.py:258 draw/models.py:324
+#: draw/models.py:274 draw/models.py:340
 msgid "side"
 msgstr "côté"
 
-#: draw/models.py:261
+#: draw/models.py:277
 msgid "debate team"
 msgstr "débat-équipe"
 
-#: draw/models.py:262
+#: draw/models.py:278
 msgid "debate teams"
 msgstr "débat-équipes"
 
-#: draw/models.py:282
+#: draw/models.py:298
 msgid "won"
 msgstr "a gagné"
 
-#: draw/models.py:284
+#: draw/models.py:300
 msgid "lost"
 msgstr "a perdu"
 
-#: draw/models.py:286
+#: draw/models.py:302
 msgid "result unknown"
 msgstr "résultat inconnu"
 
-#: draw/models.py:328
+#: draw/models.py:344
 msgid "team side allocation"
 msgstr "attribution de côté à une équipe"
 
-#: draw/models.py:329
+#: draw/models.py:345
 msgid "team side allocations"
 msgstr "attributions de côté à une équipe"
 
@@ -219,18 +259,18 @@ msgstr ""
 
 #: draw/templates/admin/draw/debateteam/delete_warning.html:10
 msgid ""
-"Tabbycat requires that all debates have exactly one affirmative and exactly "
-"one negative debate team, and no other debate teams, at all times. If you "
-"delete any debate teams, you must then either replace each one with a new "
-"debate team in the same debate, or delete the associated debate objects. If "
-"you don't do this correctly, many pages <strong>will</strong> crash."
+"Tabbycat requires that all debates have <strong>exactly</strong> one debate "
+"team for each side, and no other debate teams, at all times. If you delete "
+"any debate teams, you must then either replace each one with a new debate "
+"team in the same debate, or delete the associated debate objects. If you "
+"don't do this correctly, many pages <strong>will</strong> crash."
 msgstr ""
-"Tabbycat exige que tous les débats aient exactement une débat-équipe "
-"affirmative et exactement une débat-équipe négative, et aucune autre débat-"
-"équipe, à tout moment. Si vous supprimez n’importe quelle débat-équipe, vous "
-"devez alors remplacer chacune d’elles avec une nouvelle débat-équipe dans le "
-"même débat, ou supprimer les objets associés de débat. Si vous ne le faites "
-"pas correctement, nombreux pages <strong>planteront certainement</strong>."
+"Tabbycat exige que tous les débats aient <strong>exactement</strong> une "
+"débat-équipe pour chaque côté, et aucune autre débat-équipe, à tout moment. "
+"Si vous supprimez n’importe quelle débat-équipe, vous devez alors remplacer "
+"chacune d’elles avec une nouvelle débat-équipe dans le même débat, ou "
+"supprimer les objets associés de débat. Si vous ne le faites pas "
+"correctement, nombreux pages <strong>planteront certainement</strong>."
 
 #: draw/templates/admin/draw/debateteam/delete_warning.html:15
 #: draw/templates/admin/draw/debateteam/edit_warning.html:15
@@ -251,16 +291,46 @@ msgstr ""
 
 #: draw/templates/admin/draw/debateteam/edit_warning.html:10
 msgid ""
-"Tabbycat requires that there be exactly one affirmative and one negative "
-"debate team, and no other debate teams, in each debate. If you edit debate "
+"Tabbycat requires that there be <strong>exactly</strong> one debate team for "
+"each side, and no other debate teams, in each debate. If you edit debate "
 "teams in the database, you must ensure that this remains the case. If you "
 "don't do this correctly, many pages <strong>will</strong> crash."
 msgstr ""
-"Tabbycat exige que chaque débat ait exactement une débat-équipe affirmative "
-"et une débat-équipe négative, et aucune autre débat-équipe. Si vous modifiez "
+"Tabbycat exige qu'il y ait <strong>exactement</strong> une débat-équipe pour "
+"chaque côté, et aucune autre débat-équipe, à chaque débat. Si vous modifiez "
 "les débat-équipes dans la base de données, vous devez vous assurer que cela "
 "reste le cas. Si vous ne le faites pas correctement, nombreux pages "
 "<strong>planteront certainement</strong>."
+
+#: draw/views.py:110
+#, python-format
+msgid "The draw for %(round)s has yet to be released."
+msgstr ""
+
+#: draw/views.py:188 draw/views.py:277
+#, python-format
+msgid "Draw with details for %(round)s"
+msgstr ""
+
+#: draw/views.py:190
+#, python-format
+msgid "No draw for %(round)s"
+msgstr ""
+
+#: draw/views.py:192
+#, python-format
+msgid "Draft draw for %(round)s"
+msgstr ""
+
+#: draw/views.py:195
+#, python-format
+msgid "Confirmed draw for %(round)s"
+msgstr ""
+
+#: draw/views.py:198
+#, python-format
+msgid "Released draw for %(round)s"
+msgstr ""
 
 #. Translators: e.g. possessive might be "affirmative's" to get "affirmative's break rank"
 #: draw/views.py:248
@@ -272,3 +342,55 @@ msgstr "rang de break %(possessive)s"
 #, python-format
 msgid "%(initial)sBR"
 msgstr "RB%(initial)s"
+
+#: draw/views.py:262
+msgid ""
+"No draw exists yet — go to the check-ins section for this round to generate "
+"a draw."
+msgstr ""
+
+#: draw/views.py:296
+#, python-format
+msgid "Could not create draw for %(round)s, there was already a draw!"
+msgstr ""
+
+#: draw/views.py:303
+#, python-format
+msgid ""
+"<p>There was a problem creating the draw: <em>%(error)s</em></p>\n"
+"<p>If this issue persists and you're not sure how to resolve it, please "
+"contact the developers.</p>"
+msgstr ""
+
+#: draw/views.py:315
+msgid ""
+"Venues were not auto-allocated because there are one or more adjudicator "
+"venue constraints. You should run venue allocations after allocating "
+"adjudicators."
+msgstr ""
+
+#: draw/views.py:344
+msgid "Deleted the draw. You can now recreate it as normal."
+msgstr ""
+
+#: draw/views.py:364
+msgid ""
+"Released the draw. It will now show on the public-facing pages of this "
+"website."
+msgstr ""
+
+#: draw/views.py:380
+msgid ""
+"Unreleased the draw. It will no longer show on the public-facing pages of "
+"this website."
+msgstr ""
+
+#: draw/views.py:393
+#, python-format
+msgid ""
+"Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with "
+"a colon, for example: \"13:57\"."
+msgstr ""
+
+#~ msgid "There was not an even number of active teams."
+#~ msgstr "Le nombre d'équipes actives n'est pas pair."
