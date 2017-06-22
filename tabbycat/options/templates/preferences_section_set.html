@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load debate_tags %}
 
 {% load add_field_css %}
 
@@ -6,6 +7,12 @@
 {% block head-title %}<span class="emoji">🔧</span>Edit Configuration{% endblock %}
 
 {% block page-subnav-sections %}
+
+  <a class="btn btn-default submit-disable"
+     href="{% tournamenturl 'options-tournament-index' %}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Back to Configuration
+  </a>
+
   {% if form.errors %}
     <div class="alert alert-danger">
       Please correct the errors below.
@@ -16,7 +23,6 @@
 
 {% block content %}
 
-<div class="col-md-12">
   <div class="panel panel-default">
     <form action="" enctype="multipart/form-data" method="post" class="panel-body form-horizontal">
       {% csrf_token %}
@@ -43,7 +49,5 @@
       </button>
     </form>
   </div>
-</div>
-
 
 {% endblock content %}

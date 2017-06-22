@@ -1,0 +1,20 @@
+<ul class="list-group">
+
+  <li class="list-group-item">
+    <span class="badge">{{ preferences.length }}</span>
+    <h4 class="text-success">{{ title }}</h4>
+  </li>
+  {% for preference in preferences %}
+    <li class="list-group-item">
+      <h4>
+        {{ preference.name }} <small>{{ preference.help_text }}</small>
+      </h4>
+      <h4 class="list-group-item-heading">
+        <span class="label label-danger">{{ preference.current_value }}</span>
+        <span class="label label-default"><span class="glyphicon glyphicon-chevron-right"></span></span>
+        <span class="label label-success">{{ preference.new_value }}</span>
+      </h4>
+    </li>
+  {% endfor %}
+
+</ul>
