@@ -102,7 +102,8 @@ class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, 
         preset_preferences = self.get_preferences_data(selected_preset)
         kwargs["preset_title"] = selected_preset.name
         kwargs["preset_name"] = self.kwargs["preset_name"]
-        kwargs["preset_preferences"] = preset_preferences
+        kwargs["changed_preferences"] = [p for p in preset_preferences if p['changed']]
+        kwargs["unchanged_preferences"] = [p for p in preset_preferences if not p['changed']]
         return super().get_context_data(**kwargs)
 
     def get_template_names(self):
