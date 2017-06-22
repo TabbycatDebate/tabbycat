@@ -128,30 +128,6 @@ It's a bit more complicated than that, for two reasons:
 * History conflicts are prioritised over (*i.e.*, "worse than") institution conflicts. So it's fine to resolve a history conflict by creating an institution conflict, but not the vice versa.
 * Each swap obviously affects the debates around it, so it's not legal to have two adjacent swaps. (Otherwise, in theory, a team could "one down" all the way to the bottom of the draw!) So there is an optimization algorithm that finds the best combination of swaps, *i.e.* the one that minimises conflict, and if there are two profiles that have the same least conflict, then it chooses the one with fewer swaps.
 
-Known tournaments draw options
-================================================================================
-The settings that should be used for some tournaments are as follows:
-
-+--------------+-----------------+-----------------------------------------------------------------+
-|  Tournament  |     Setting     |                         Suggested value                         |
-+==============+=================+=================================================================+
-| Australs     | Odd brackets    | `Intermediate with bubble-up-bubble-down` or `Pull up from top` |
-+--------------+-----------------+-----------------------------------------------------------------+
-|              | Side resolution | `Balance`                                                       |
-+--------------+-----------------+-----------------------------------------------------------------+
-|              | Pairing method  | `Slide`                                                         |
-+--------------+-----------------+-----------------------------------------------------------------+
-|              | Avoid conflicts | `One-up-one-down`                                               |
-+--------------+-----------------+-----------------------------------------------------------------+
-| Joynt Scroll | Odd brackets    | `Intermediate 1` or `Intermediate 2`                            |
-+--------------+-----------------+-----------------------------------------------------------------+
-|              | Side resolution | `Pre-allocated`                                                 |
-+--------------+-----------------+-----------------------------------------------------------------+
-|              | Pairing method  | `Fold`                                                          |
-+--------------+-----------------+-----------------------------------------------------------------+
-|              | Avoid conflicts | `Off`                                                           |
-+--------------+-----------------+-----------------------------------------------------------------+
-
 What do I do if the draw looks wrong?
 ================================================================================
 
