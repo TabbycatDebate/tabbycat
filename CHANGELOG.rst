@@ -8,6 +8,7 @@ Change Log
 - Developed the adjudicator allocation, venue allocation, and matchups editing pages
   - Bumped to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping
   - Improved displays of saved changes when dragging/dropping, including visible indicators of save progress and 'locking' of elements whose saves are in-progress
+  - Adding 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
 - Fixed issue where toggling iron speeches on and off wouldn't hide/unset the relevant checkboxes
 - Fixed issue where VenueCategories could not be edited if they did not have Venues set
 
