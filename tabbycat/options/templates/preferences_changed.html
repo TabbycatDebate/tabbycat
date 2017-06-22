@@ -15,6 +15,12 @@
         <span class="label label-success">{{ preference.new_value }}</span>
       </h4>
     </li>
+    {% empty %}
+    <li class="list-group-item">
+      <h4>
+        No preferences to change — they are all already in effect
+      </h4>
+    </li>
   {% endfor %}
 
 </ul>

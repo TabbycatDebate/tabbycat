@@ -14,7 +14,8 @@ class PreferencesPreset:
 
 class AustralsPreferences(PreferencesPreset):
     name         = "Australs Rules"
-    description  = "3 vs 3 with replies, chosen motions, intermediate bubbles, one-up-one-down. Compliant with AIDA rules."
+    description  = "3 vs 3 with replies, chosen motions, intermediate bubbles, \
+        one-up-one-down. Compliant with AIDA rules."
     show_in_list = True
 
     # Scoring
@@ -50,7 +51,8 @@ class AustralsPreferences(PreferencesPreset):
 class AustralianEastersPreferences(AustralsPreferences):
     name         = "Australian Easters Rules"
     show_in_list = True
-    description  = "3 vs 3 without replies, set motions, novices, intermediate bubbles, one-up-one-down. Compliant with AIDA rules."
+    description  = "3 vs 3 without replies, set motions, novices, intermediate \
+        bubbles, one-up-one-down. Compliant with AIDA rules."
 
     # Scoring
     scoring__score_min                         = 70.0
@@ -67,7 +69,8 @@ class AustralianEastersPreferences(AustralsPreferences):
 class NZEastersPreferences(AustralsPreferences):
     name         = "New Zealand Easters Rules"
     show_in_list = True
-    description  = "2 vs 2 with replies, chosen motions, chosen sides, and novice statuses."
+    description  = "2 vs 2 with replies, chosen motions, chosen sides, and \
+        novice statuses."
 
     # Scoring
     scoring__score_min                         = 60.0
@@ -95,7 +98,8 @@ class NZEastersPreferences(AustralsPreferences):
 class JoyntPreferences(AustralsPreferences):
     name         = "Joynt Scroll Rules"
     show_in_list = True
-    description  = "3 vs 3 with replies, set sides, publicly displayed sides and motions, and novice statuses."
+    description  = "3 vs 3 with replies, set sides, publicly displayed sides \
+        and motions, and novice statuses."
 
     # Scoring
     scoring__score_min                         = 60.0
@@ -125,7 +129,8 @@ class JoyntPreferences(AustralsPreferences):
 class UADCPreferences(AustralsPreferences):
     name         = "UADC Rules"
     show_in_list = True
-    description  = "3 vs 3 with replies, chosen motions, and all adjudicators can receive feedback from teams."
+    description  = "3 vs 3 with replies, chosen motions, and all adjudicators \
+        can receive feedback from teams."
 
     # Rules source = http://www.alcheringa.in/pdrules.pdf
     # Scoring
@@ -162,7 +167,8 @@ class UADCPreferences(AustralsPreferences):
 class WSDCPreferences(AustralsPreferences):
     name         = "WSDC Rules"
     show_in_list = True
-    description  = "3 vs 3 with replies, chosen motions, prop/opp side labels, and all adjudicators can receive feedback from teams."
+    description  = "3 vs 3 with replies, chosen motions, prop/opp side labels, \
+         and all adjudicators can receive feedback from teams."
 
     # Rules source = http://mkf2v40tlr04cjqkt2dtlqbr.wpengine.netdna-cdn.com/wp-content/uploads/2014/05/WSDC-Debate-Rules-U-2015.pdf
     # Score (strictly specified in the rules)
@@ -189,7 +195,8 @@ class WSDCPreferences(AustralsPreferences):
 class WADLPreferences(PreferencesPreset):
     name         = "WADL Options"
     show_in_list = True
-    description  = "Example high school league setup. Many features not supported in conjunction with other settings."
+    description  = "Example high school league setup. Many features not \
+        supported in conjunction with other settings."
 
     # Debate Rules= no replies; singular motions
     debate_rules__substantive_speakers         = 3
@@ -239,12 +246,29 @@ class WADLPreferences(PreferencesPreset):
 class PublicInformation(PreferencesPreset):
     name         = "Public Information Options"
     show_in_list = True
-    description  = "For tournaments hosted online: this sets it up so that people can access the draw and other information via the tab site."
+    description  = "For tournaments hosted online: this sets it up so that \
+        people can access the draw and other generally useful information \
+        via the tab site."
 
     public_features__public_draw               = True
     public_features__public_break_categories   = True
     public_features__public_results            = True
     public_features__public_motions            = True
     public_features__public_team_standings     = True
+
+class TabRelease(PreferencesPreset):
+    name         = "Tab Release Options"
+    show_in_list = True
+    description  = "For when a tab is ready to be released. This will publicly \
+        display the results of all rounds, the team tab, the speaker tab, etc"
+
+    tab_release__team_tab_released             = True
+    tab_release__speaker_tab_released          = True
+    tab_release__replies_tab_released          = True
+    tab_release__motion_tab_released           = True
+    tab_release__ballots_released              = True
+    tab_release__all_results_released          = True
+    public_features__public_diversity          = True
+    public_features__public_results            = True
     public_features__public_breaking_teams     = True
     public_features__public_breaking_adjs      = True
