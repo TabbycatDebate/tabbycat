@@ -256,6 +256,7 @@ class PublicInformation(PreferencesPreset):
     public_features__public_motions            = True
     public_features__public_team_standings     = True
 
+
 class TabRelease(PreferencesPreset):
     name         = "Tab Release Options"
     show_in_list = True
