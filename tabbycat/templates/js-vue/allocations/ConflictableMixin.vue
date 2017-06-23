@@ -9,7 +9,7 @@ export default {
 
   data: function () {
     return {
-      conflicts: {
+      clashes: {
         hover: { team: false, adjudicator: false, institution: false },
         panel: { team: false, adjudicator: false, institution: false },
       },
@@ -21,7 +21,13 @@ export default {
   },
   created: function () {
     // Watch for issues clash events on the global event hub
-    this.$eventHub.$on('set-conflicts-for', this.setConflicts)
+    // These looklike 'set-conflicts-for-team-99
+    var eventCode = this.conflictableType + '-' + this.conflictable.id
+    this.$eventHub.$on('set-clashes-for-' + eventCode, this.setOrUnsetClashes)
+    this.$eventHub.$on('set-seens-for-' + eventCode, this.setOrUnsetSeens)
+    // Institutions we need to do specially as they have a different ID
+    eventCode = 'institution-' + this.conflictable.institution.id
+    this.$eventHub.$on('set-clashes-for-' + eventCode, this.setOrUnsetClashes)
   },
   computed: {
     conflictableType: function() {
@@ -33,14 +39,14 @@ export default {
       if (!_.isUndefined(this.adjudicator)) { return this.adjudicator }
     },
     conflictsStatus: function() {
-      var conflictsCSS = 'conflictable '
       var self = this
-      _.forEach(_.keys(this.conflicts), function(hoverOrPanel) {
+      var conflictsCSS = 'conflictable '
+      _.forEach(_.keys(this.clashes), function(hoverOrPanel) {
         // Iterate over panel and hover states
-        if (self.conflicts[hoverOrPanel][self.conflictableType]) {
+        if (self.clashes[hoverOrPanel][self.conflictableType]) {
           conflictsCSS += hoverOrPanel + '-personal '
         }
-        if (self.conflicts[hoverOrPanel]['institution']) {
+        if (self.clashes[hoverOrPanel]['institution']) {
           conflictsCSS += hoverOrPanel + '-institutional '
         }
       })
@@ -55,47 +61,20 @@ export default {
   },
   methods: {
     showConflicts: function() {
-      // Issue conflict events; typically on hover on
-      this.$eventHub.$emit('show-conflicts-for', this.conflictable, this.conflictableType, 'hover')
+      // Issue conflict events; typically on beginning hover
+      this.$eventHub.$emit('show-conflicts-for', this.conflictable, this.conflictableType, 'hover', true)
     },
     hideConflicts: function() {
-      // Issue conflict events; typically on hover off
-      this.$eventHub.$emit('hide-conflicts-for', this.conflictable, this.conflictableType, 'hover')
+      // Issue conflict events; typically on ending hover
+      this.$eventHub.$emit('hide-conflicts-for', this.conflictable, this.conflictableType, 'hover', false)
     },
-    checkClashes: function(conflictingItem, conflicts, setState, hoverOrPanel) {
-      // Check the given list of conflicts to see if this item's id is there
-      if (conflictingItem === this.conflictable || _.isUndefined(conflicts)) {
-        return
-      }
-      if (_.includes(conflicts[this.conflictableType], this.conflictable.id)) {
-        this.conflicts[hoverOrPanel][this.conflictableType] = setState
-      }
-      if (_.includes(conflicts['institution'], this.conflictable.institution.id)) {
-        this.conflicts[hoverOrPanel]['institution'] = setState
-      }
+    setOrUnsetSeens: function(forHoverOrPanel, setState) {
+      // Receive clash events indicating this item should be highlighted
+      this.seens[forHoverOrPanel] = setState
     },
-    checkHistories: function(histories, setState, hoverOrPanel) {
-      // Check the given list of histories to see if this item's id is there
-      if (!setState) {
-        this.seens[hoverOrPanel] = false
-      } else if (histories && !_.isUndefined(histories[this.conflictableType])) {
-        var self = this
-        var timesSeen = _.filter(histories[this.conflictableType], function(h) {
-          return h.id === self.conflictable.id
-        })
-        if (timesSeen.length > 0) {
-          var sortedByAgo = _.sortBy(timesSeen, [function(s) { return s.ago }])
-          var lastSeen = sortedByAgo[0].ago
-          this.seens[hoverOrPanel] = lastSeen
-        }
-      }
-    },
-    setConflicts: function(conflictingItem, conflicts, histories, setState, hoverOrPanel) {
-      // if (this.conflictable.id === 77) {
-      //   console.log('checking for justin', conflicts)
-      // }
-      this.checkClashes(conflictingItem, conflicts, setState, hoverOrPanel)
-      this.checkHistories(histories, setState, hoverOrPanel)
+    setOrUnsetClashes: function(forHoverOrPanel, setState, clashType) {
+      // Receive seen events indicating this item should be highlighted
+      this.clashes[forHoverOrPanel][clashType] = setState
     },
   }
 }

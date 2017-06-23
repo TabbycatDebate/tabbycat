@@ -35,21 +35,21 @@
                       {% tournamenturl 'participants-public-team-record' debateteam.opponent.team.pk as opponent_url %}
                     {% endif %}
                     {% if debateteam.side == debateteam.SIDE_UNALLOCATED %}
-                      {% blocktrans trimmed with team_name=team.short_name opponent_name=debateteam.opponent.team.short_name venue=debateteam.debate.venue|default:"Venue TBA" %}
+                      {% blocktrans trimmed with team_name=team.short_name opponent_name=debateteam.opponent.team.short_name venue=debateteam.debate.venue.display_name|default:"Venue TBA" %}
                         {{ team_name }} is debating against <strong><a href="{{ opponent_url }}" class="list-group-item-text">{{ opponent_name }}</a></strong> in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% else %}
-                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name opponent_name=debateteam.opponent.team.short_name venue=debateteam.debate.venue|default:"Venue TBA" %}
+                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name opponent_name=debateteam.opponent.team.short_name venue=debateteam.debate.venue.display_name|default:"Venue TBA" %}
                         {{ team_name }} is debating as the <strong>{{ side }}</strong> team against <strong><a href="{{ opponent_url }}" class="list-group-item-text">{{ opponent_name }}</a></strong> in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% endif %}
                   {% elif pref.teams_in_debate == 'bp' %}
                     {% if debateteam.side == debateteam.SIDE_UNALLOCATED %}
-                      {% blocktrans trimmed with team_name=team.short_name venue=debateteam.debate.venue|default:"Venue TBA" %}
+                      {% blocktrans trimmed with team_name=team.short_name venue=debateteam.debate.venue.display_name|default:"Venue TBA" %}
                         {{ team_name }} is debating in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% else %}
-                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name venue=debateteam.debate.venue|default:"Venue TBA" %}
+                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name venue=debateteam.debate.venue.display_name|default:"Venue TBA" %}
                         {{ team_name }} is debating as the <strong>{{ side }}</strong> team in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% endif %}
