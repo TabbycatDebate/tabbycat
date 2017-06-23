@@ -30,6 +30,8 @@ def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
             raise DrawError(_("The draw type %(type)s can't be used with two-team formats.") % {'type': round.get_draw_type_display()})
         elif teams_in_debate == 'bp':
             raise DrawError(_("The draw type %(type)s can't be used with British Parliamentary.") % {'type': round.get_draw_type_display()})
+        else:
+            raise DrawError("Unrecognised teams in debate option: %s" % teams_in_debate)
     return klass(round, active_only)
 
 
