@@ -11,10 +11,13 @@ export default {
     setOrUnsetConflicts: function(conflictingItem, conflictingItemType,
                                   hoverOrPanel, conflictState) {
       // Load up the conflicting items clash lists/histories
-      // Not in the case of debates this will limit just to the team/adjs
+      // Not in the case of debates this will limit just to the team/adj
+      // if (conflictState && conflictingItem.id === 96) { console.log('Checking for Bennie') }
       if (conflictingItemType === 'adjudicator') {
         var clashes = this.getAdjClashes(conflictingItem, conflictingItemType)
         var seens = this.getAdjSeens(conflictingItem, conflictingItemType)
+        // if (conflictState && conflictingItem.id === 96) { console.log('  Bennie clashes', clashes) }
+        // if (conflictState && conflictingItem.id === 96) { console.log('  Bennie seens', seens) }
       } else if (conflictingItemType === 'team') {
         var clashes = this.getTeamClashes(conflictingItem, conflictingItemType)
         var seens = this.getTeamSeens(conflictingItem, conflictingItemType)

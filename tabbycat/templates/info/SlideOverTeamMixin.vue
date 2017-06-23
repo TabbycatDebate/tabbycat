@@ -20,7 +20,7 @@ export default {
     },
     teamInfoFeature: function() {
       var self = this
-      var teamInfo = { 'title': this.team.long_name }
+      var teamInfo = { 'title': this.team.short_name }
       var speakersInfo = _.map(this.team.speakers, function(s) {
         return {
           'title': s.name,
@@ -47,7 +47,7 @@ export default {
         'tiers': [{
           'features': [
             this.teamInfoFeature,
-            null,
+            this.institutionDetailForSlideOver(this.team),
             this.breakCategoriesFeature,
           ]
         }]
