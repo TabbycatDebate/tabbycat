@@ -110,7 +110,7 @@ def get_conflicts(t, r):
     for conflict in adj_conflicts_b:
         conflicts = populate_conflicts(conflicts, conflict, 'adjudicator')
 
-    return json.dumps(conflicts)
+    return conflicts
 
 
 def populate_histories(histories, seen_adj, seen_adj_or_team_histories,
@@ -157,4 +157,4 @@ def get_histories(t, r):
         histories = populate_histories(histories, seen_adj,
                                        team_histories, 'team', r)
 
-    return json.dumps(histories)
+    return histories

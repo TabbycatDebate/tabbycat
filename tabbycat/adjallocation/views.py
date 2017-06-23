@@ -3,6 +3,7 @@ import logging
 
 from django.views.generic.base import TemplateView, View
 from django.http import HttpResponseBadRequest, JsonResponse
+from django.utils.functional import cached_property
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -26,11 +27,33 @@ logger = logging.getLogger(__name__)
 
 class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
 
+    @cached_property
+    def get_clashes(self):
+        return get_conflicts(self.get_tournament(), self.get_round())
+
+    @cached_property
+    def get_histories(self):
+        return get_histories(self.get_tournament(), self.get_round())
+
     def get_unallocated_adjudicators(self):
         round = self.get_round()
         unused_adjs = [a.serialize(round) for a in round.unused_adjudicators()]
         unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
+        unused_adjs = [self.annotate_adj_conflicts(a) for a in unused_adjs]
         return json.dumps(unused_adjs)
+
+    def annotate_adj_conflicts(self, serialized_adjudicator):
+        adjId = serialized_adjudicator['id']
+        try:
+            serialized_adjudicator['clashes'] = self.get_clashes[adjId]
+        except KeyError:
+            serialized_adjudicator['clashes'] = None
+        try:
+            serialized_adjudicator['clashes'] = self.get_histories[adjId]
+        except KeyError:
+            serialized_adjudicator['clashes'] = None
+
+        return serialized_adjudicator
 
 
 class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):
@@ -38,18 +61,6 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
     template_name = 'edit_adjudicators.html'
     auto_url = "adjudicators-auto-allocate"
     save_url = "save-debate-panel"
-
-    def annotate_round_info(self, round_info):
-        t = self.get_tournament()
-        r = self.get_round()
-        round_info['updateImportanceURL'] = reverse_round('save-debate-importance', r)
-        round_info['scoreMin'] = t.pref('adj_min_score')
-        round_info['scoreMax'] = t.pref('adj_max_score')
-        round_info['scoreForVote'] = t.pref('adj_min_voting_score')
-        round_info['allowDuplicateAllocations'] = t.pref('duplicate_adjs')
-        round_info['regions'] = self.get_regions_info()
-        round_info['categories'] = self.get_categories_info()
-        return round_info
 
     def get_regions_info(self):
         # Need to extract and annotate regions for the allcoation actions key
@@ -66,12 +77,28 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
             bc['class'] = i
         return all_bcs
 
+    def annotate_round_info(self, round_info):
+        t = self.get_tournament()
+        r = self.get_round()
+        round_info['updateImportanceURL'] = reverse_round('save-debate-importance', r)
+        round_info['scoreMin'] = t.pref('adj_min_score')
+        round_info['scoreMax'] = t.pref('adj_max_score')
+        round_info['scoreForVote'] = t.pref('adj_min_voting_score')
+        round_info['allowDuplicateAllocations'] = t.pref('duplicate_adjs')
+        round_info['regions'] = self.get_regions_info()
+        round_info['categories'] = self.get_categories_info()
+        return round_info
+
+    def annotate_draw(self, draw, serialised_draw):
+        # Need to unique-ify/reorder break categories/regions for consistent CSS
+        for debate in serialised_draw:
+            for panellist in debate['panel']:
+                panellist['adjudicator'] = self.annotate_adj_conflicts(panellist['adjudicator'])
+
+        return serialised_draw
+
     def get_context_data(self, **kwargs):
         kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
-        kwargs['vueAdjudicatorConflicts'] = get_conflicts(
-            self.get_tournament(), self.get_round())
-        kwargs['vueAdjudicatorHistories'] = get_histories(
-            self.get_tournament(), self.get_round())
         return super().get_context_data(**kwargs)
 
 
