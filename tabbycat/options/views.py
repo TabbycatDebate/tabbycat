@@ -77,15 +77,19 @@ class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, 
         return selected_presets[0]
 
     def get_preferences_data(self, selected_preset):
-        # Grab the registry of the preferences
-        registry = tournament_preferences_registry
         preset_preferences = []
         # Create an instance of the class and iterate over its properties for the UI
-        for key, value in selected_preset.__dict__.items():
+        for key in dir(selected_preset):
+            value = getattr(selected_preset, key)
             if '__' in key and not key.startswith('__'):
                 # Lookup the base object
-                preset_object = registry[key.split('__')[0]][key.split('__')[1]]
-                current_value = self.request.tournament.preferences[key]
+                section, name = key.split('__', 1)
+                try:
+                    preset_object = tournament_preferences_registry[section][name]
+                    current_value = self.get_tournament().preferences[key]
+                except KeyError:
+                    logger.exception("Bad preference key: %s", key)
+                    continue
                 preset_preferences.append({
                     'key': key,
                     'name': preset_object.verbose_name,

@@ -2,8 +2,9 @@ import logging
 from math import exp
 from random import shuffle
 
+from munkres import Munkres
+
 from .allocator import Allocator
-from .munkres import Munkres
 
 logger = logging.getLogger(__name__)
 

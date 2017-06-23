@@ -1,34 +1,18 @@
 {% extends "base.html" %}
+{% load debate_tags %}
 
 {% block page-title %}✅{{ preset_title }} Presets Applied{% endblock %}
 {% block head-title %}<span class="emoji">✅</span>{{ preset_title }} Presets Applied{% endblock %}
 
 {% block page-subnav-sections %}
-
+  <a class="btn btn-default submit-disable"
+     href="{% tournamenturl 'options-tournament-index' %}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Back to Configuration
+  </a>
 {% endblock %}
 
 {% block content %}
 
-<ul class="list-group">
-{% for preference in preset_preferences %}
-
-  <li class="list-group-item ">
-      <span class="{% if preference.current_value != preference.new_value %}text-success{% else %}text-muted{% endif %}">
-      {{ preference.name }}
-      </span>
-      <span class="pull-right">
-        {% if preference.changed %}
-          <span class="label label-danger">{{ preference.current_value }}</span>
-          <span class="label label-default"><span class="glyphicon glyphicon-chevron-right"></span></span>
-          <span class="label label-success">{{ preference.new_value }}</span>
-        {% else %}
-          <span class="label label-primary">{{ preference.new_value }}</span>
-          <span class="label label-default">no change</span></span>
-        {% endif %}
-      </span>
-  </li>
-
-{% endfor %}
-</ul>
+  {% include "preferences_changed.html" with preferences=changed_preferences title="Preferences that were changed" %}
 
 {% endblock content %}

@@ -5,46 +5,37 @@
 {% block page-title %}❔ Confirm {{ preset_title }} Presets{% endblock %}
 
 {% block page-subnav-sections %}
-
+  <a class="btn btn-default submit-disable"
+     href="{% tournamenturl 'options-tournament-index' %}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Back to Configuration
+  </a>
 {% endblock %}
 
 {% block content %}
 
-  <ul class="list-group">
-    <li class="list-group-item">
-      <span class="badge">{{ changed_preferences.length }}</span>
-      <h4>Changed Preferences</h4>
-    </li>
-    {% for preference in changed_preferences %}
-      <li class="list-group-item">
-        <h4>
-          {{ preference.name }} <small>{{ preference.help_text }}</small>
-        </h4>
-        <h4 class="list-group-item-heading">
-          <span class="label label-danger">{{ preference.current_value }}</span>
-          <span class="label label-default"><span class="glyphicon glyphicon-chevron-right"></span></span>
-          <span class="label label-success">{{ preference.new_value }}</span>
-        </h4>
-      </li>
-    {% endfor %}
-  </ul>
+  {% include "preferences_changed.html" with preferences=changed_preferences title="Preferences that will change" %}
 
-  <ul class="list-group">
-    <li class="list-group-item">
-      <span class="badge">{{ unchanged_preferences.length }}</span>
-      <h4>Unchanged Preferences</h4>
-    </li>
-    {% for preference in unchanged_preferences %}
+  {% if unchanged_preferences.length > 0 %}
+    <ul class="list-group">
       <li class="list-group-item">
-        <span class="badge">{{ preference.new_value }}</span>
-        <span data-toggle="tooltip" title="{{ preference.help_text }}">
-          {{ preference.name }}
-        </span>
+        <span class="badge">{{ unchanged_preferences.length }}</span>
+        <h4>Preferences that will not change</h4>
       </li>
-    {% endfor %}
-  </ul>
+      {% for preference in unchanged_preferences %}
+        <li class="list-group-item">
+          <span class="badge">{{ preference.new_value }}</span>
+          <span data-toggle="tooltip" title="{{ preference.help_text }}">
+            {{ preference.name }}
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
-  <button id="applyPresets" class="btn btn-success btn-block submit-disable" data-loading-text="Saving...">Apply Presets</button>
+  <button id="applyPresets" class="btn btn-success btn-block submit-disable"
+          data-loading-text="Saving...">
+    Apply {{ preset_title }} Presets
+  </button>
 
   <form id="applyPresetsForm" method="POST">
     {% csrf_token %}
