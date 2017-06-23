@@ -60,7 +60,7 @@ export default {
     checkForPanelClashes() {
       var self = this
       _.forEach(this.panel, function(panellist) {
-        // Get all the conflicts for a given pannellist from the inherited debate-relevant list
+        // Get all the conflicts for a given panellist from the inherited debate-relevant list
         self.setOrUnsetConflicts(panellist.adjudicator, 'adjudicator', 'panel', false) // First unset to clear
         self.setOrUnsetConflicts(panellist.adjudicator, 'adjudicator', 'panel', true) // Then reset
       })
