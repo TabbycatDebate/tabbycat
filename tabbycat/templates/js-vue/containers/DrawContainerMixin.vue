@@ -8,18 +8,18 @@ import DrawHeader from '../draw/DrawHeader.vue'
 import Debate from '../draw/Debate.vue'
 import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
-import SlideOverItem from '../../info/SlideOverItem.vue'
+import SlideOverContainerMixin from '../../info/SlideOverContainerMixin.vue'
+import SlideOver from '../../info/SlideOver.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [AjaxMixin],
+  mixins: [AjaxMixin, SlideOverContainerMixin],
   components: {
     DrawHeader, AutoSaveCounter, Debate,
-    DroppableGeneric, UnallocatedItemsContainer, SlideOverItem
+    DroppableGeneric, UnallocatedItemsContainer, SlideOver
   },
   data: function () {
     return {
-      slideOverItem: null,
       debates: this.initialDebates,
       unallocatedItems: this.initialUnallocatedItems,
     }
@@ -27,8 +27,6 @@ export default {
   props: ['initialDebates', 'initialUnallocatedItems', 'roundInfo'],
   created: function () {
     // Watch for events on the global event hub
-    this.$eventHub.$on('set-slideover', this.setSlideover)
-    this.$eventHub.$on('unset-slideover', this.unsetSlideover)
     this.$eventHub.$on('unassign-draggable', this.moveToUnused)
     this.$eventHub.$on('assign-draggable', this.moveToDebate)
     this.$eventHub.$on('update-allocation', this.updateDebates)
@@ -75,12 +73,6 @@ export default {
     }
   },
   methods: {
-    setSlideover: function(object) {
-      this.slideOverItem = object
-    },
-    unsetSlideover: function() {
-      this.slideOverItem = null
-    },
     updateDebates: function(updatedDebates) {
       this.debates = updatedDebates // Match internal data to json response
     },

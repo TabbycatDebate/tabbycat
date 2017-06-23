@@ -35,6 +35,9 @@ export default {
         }]
       }
     },
+    annotateMethodForSlideOver: function() {
+      return 'addConflicts'
+    }
   }
 }
 </script>
