@@ -14,13 +14,13 @@ export default {
       // Not in the case of debates this will limit just to the team/adj
       // if (conflictState && conflictingItem.id === 96) { console.log('Checking for Bennie') }
       if (conflictingItemType === 'adjudicator') {
-        var clashes = this.getAdjClashes(conflictingItem, conflictingItemType)
-        var seens = this.getAdjSeens(conflictingItem, conflictingItemType)
+        var clashes = this.getAdjClashes(conflictingItem)
+        var seens = this.getAdjSeens(conflictingItem)
         // if (conflictState && conflictingItem.id === 96) { console.log('  Bennie clashes', clashes) }
         // if (conflictState && conflictingItem.id === 96) { console.log('  Bennie seens', seens) }
       } else if (conflictingItemType === 'team') {
-        var clashes = this.getTeamClashes(conflictingItem, conflictingItemType)
-        var seens = this.getTeamSeens(conflictingItem, conflictingItemType)
+        var clashes = this.getTeamClashes(conflictingItem)
+        var seens = this.getTeamSeens(conflictingItem)
       }
       var self = this
       // For each of these clashes/histories emit events to turn them on

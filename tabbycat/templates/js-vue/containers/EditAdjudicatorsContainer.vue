@@ -31,9 +31,7 @@
           </div>
         </template>
       </draw-header>
-      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo"
-              :histories="getDebateConflictables(debate, 'histories')"
-              :conflicts="getDebateConflictables(debate, 'conflicts')">
+      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
         <div class="draw-cell flex-4" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>
@@ -42,7 +40,9 @@
           <debate-panel :panel="debate.panel" :debate-id="debate.id"
                         :percentiles="percentileThresholds"
                         :locked="debate.locked"
-                        :adj-positions="adjPositions"></debate-panel>
+                        :adj-positions="adjPositions"
+                        :histories="getDebateConflictables(debate, 'histories')"
+                        :conflicts="getDebateConflictables(debate, 'conflicts')"></debate-panel>
         </template>
       </debate>
     </div>
@@ -82,7 +82,6 @@ export default {
     this.$eventHub.$on('update-importance', this.updateImportance)
     // Watch for global conflict highlights
     this.$eventHub.$on('show-conflicts-for', this.setOrUnsetConflicts)
-    this.$eventHub.$on('hide-conflicts-for', this.setOrUnsetConflicts)
   },
   computed: {
     unallocatedAdjsByScore: function() {

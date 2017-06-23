@@ -26,10 +26,11 @@
 <script>
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
+import DebateConflictsMixin from '../allocations/DebateConflictsMixin.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [],
+  mixins: [DebateConflictsMixin],
   components: { DroppableGeneric, DraggableAdjudicator },
   props: ['panel', 'debateId', 'percentiles', 'locked', 'adjPositions'],
   methods: {

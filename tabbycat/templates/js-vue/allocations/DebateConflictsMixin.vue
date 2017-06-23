@@ -3,21 +3,20 @@ import ConflictsCoordinatorMixin from '../allocations/ConflictsCoordinatorMixin.
 import _ from 'lodash'
 
 export default {
-  // Designed to be applied to a Debate component or in the EditAdjudicatorsContainer
+  // Designed to be applied to a Panel component as a bridge between ConflictsCoordinatorMixin
+  // acting across the entire adj/team pool (for hovers) and instead only
+  // focusing it on conflicts within a debate panel / debate teams
   // It relies on both components having a conflicts/histories dictionary;
   // which in the case of a Debate only lists the adjudicators present
   // This the same logic can be used to check for conflicts/histories
 
   mixins: [ConflictsCoordinatorMixin],
   computed: {
-    panel: function() {
-      return this.debate.panel
-    },
-    teamsById: function() {
-      return _.keyBy(this.debate.teams, 'id')
-    },
+    // teamsById: function() {
+    //   return _.keyBy(this.debate.teams, 'id')
+    // },
     adjudicatorsById: function() {
-      var adjudicators = _.map(this.debate.panel, function(panellist) {
+      var adjudicators = _.map(this.panel, function(panellist) {
         return panellist.adjudicator
       })
       return _.keyBy(adjudicators, 'id')
@@ -29,13 +28,13 @@ export default {
   methods: {
     checkForPanelClashes() {
       var self = this
-      if (self.debate.id === 131) {
-      // REDUX;
-
-
-      //   _.forEach(this.panel, function(panellist) {
-      //     // Get all the conflicts for a given pannellist from the inherited debate-relevant list
-      //     var panellistId = panellist.adjudicator.id
+      console.log('checking for panel conflicts')
+      if (this.debateId === 131) {
+        _.forEach(this.panel, function(panellist) {
+          // Get all the conflicts for a given pannellist from the inherited debate-relevant list
+          var panellistId = panellist.adjudicator.id
+          var clashes = this.getAdjClashes(panellistId)
+          var seens = this.getAdjSeens(panellistId)
 
       //     // Get the full list of conflicts they have; need to remove reactivity as we filter it
       //     var panellistsConflicts = _.cloneDeep(self.conflicts[panellistId])
@@ -58,12 +57,12 @@ export default {
       //     // Check their thing
       //     self.$eventHub.$emit('set-conflicts-for', panellist.adjudicator,
       //                          panellistsConflicts, panellistsHistories, true, 'panel')
-      //   })
+        })
       }
     }
   },
   watch: {
-    panel: function(panel) {
+    panel: function() {
       this.checkForPanelClashes()
     },
   }
