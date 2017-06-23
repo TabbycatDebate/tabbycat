@@ -14,8 +14,8 @@ export default {
       // Not in the case of debates this will limit just to the team/adj
       // if (conflictState && conflictingItem.id === 96) { console.log('Checking for Bennie') }
       if (conflictingItemType === 'adjudicator') {
-        var clashes = this.getAdjClashes(conflictingItem)
-        var seens = this.getAdjSeens(conflictingItem)
+        var clashes = this.conflicts[conflictingItem.id]
+        var seens = this.histories[conflictingItem.id]
         // if (conflictState && conflictingItem.id === 96) { console.log('  Bennie clashes', clashes) }
         // if (conflictState && conflictingItem.id === 96) { console.log('  Bennie seens', seens) }
       } else if (conflictingItemType === 'team') {
@@ -38,9 +38,6 @@ export default {
         })
       })
     },
-    getAdjClashes(conflictingItem) {
-      return this.conflicts[conflictingItem.id]
-    },
     getTeamClashes(conflictingItem) {
       // Because conflicts are organised by adj-id as key we need to search
       // through them & identify those applicable from the team's perspective
@@ -56,9 +53,6 @@ export default {
         }
       });
       return reversedConflicts
-    },
-    getAdjSeens(conflictingItem) {
-      return this.histories[conflictingItem.id]
     },
     getTeamSeens(conflictingItem) {
       var reversedHistories = {'adjudicator': []}

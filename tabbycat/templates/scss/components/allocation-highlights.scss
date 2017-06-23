@@ -53,16 +53,6 @@
     background: $brand-danger;
   }
 
-
-  // For in panel states
-  &.panel-personal {
-    border-color: darken($brand-danger, 10%);
-  }
-
-  &.panel-institutional {
-    border-color: darken($brand-warning, 10%);
-  }
-
   &.panel-1-ago {
     border-color: darken($brand-primary, 20%);
   }
@@ -97,6 +87,16 @@
 
   &.panel-9-ago {
     border-color: lighten($brand-primary, 48%);
+  }
+
+  // Must appear after seens
+  &.panel-institutional {
+    border-color: darken($brand-warning, 10%);
+  }
+
+  // Must appear after seens and after institutionals
+  &.panel-personal {
+    border-color: darken($brand-danger, 10%);
   }
 }
 

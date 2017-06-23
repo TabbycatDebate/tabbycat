@@ -20,6 +20,16 @@ export default {
         return panellist.adjudicator
       })
       return _.keyBy(adjudicators, 'id')
+    },
+    filteredConflicts: function() {
+      // TODO: for these conflicts need to go through and delete the ones that
+      // don't have teams/adjudicators who are also present in the debate
+      return this.conflicts
+    },
+    filteredHistories: function() {
+      // TODO: for these conflicts need to go through and delete the ones that
+      // don't have teams/adjudicators who are also present in the debate
+      return this.conflicts
     }
   },
   mounted: function () {
@@ -29,13 +39,14 @@ export default {
     checkForPanelClashes() {
       var self = this
       console.log('checking for panel conflicts')
-      if (this.debateId === 131) {
-        _.forEach(this.panel, function(panellist) {
-          // Get all the conflicts for a given pannellist from the inherited debate-relevant list
-          var panellistId = panellist.adjudicator.id
-          var clashes = this.getAdjClashes(panellistId)
-          var seens = this.getAdjSeens(panellistId)
-
+      _.forEach(this.panel, function(panellist) {
+        // Get all the conflicts for a given pannellist from the inherited debate-relevant list
+        var clashes = self.filteredConflicts[panellist.adjudicator.id]
+        // var seens = self.filteredHistories[panellist.adjudicator.id]
+        // self.setOrUnsetConflicts(panellist.adjudicator, 'adjudicator', 'panel', false) // First unset
+        // self.setOrUnsetConflicts(panellist.adjudicator, 'adjudicator', 'panel', true)
+        console.log('   panellistId', panellist.adjudicator.id)
+        console.log('      clashes', clashes)
       //     // Get the full list of conflicts they have; need to remove reactivity as we filter it
       //     var panellistsConflicts = _.cloneDeep(self.conflicts[panellistId])
 
@@ -57,8 +68,7 @@ export default {
       //     // Check their thing
       //     self.$eventHub.$emit('set-conflicts-for', panellist.adjudicator,
       //                          panellistsConflicts, panellistsHistories, true, 'panel')
-        })
-      }
+      })
     }
   },
   watch: {
