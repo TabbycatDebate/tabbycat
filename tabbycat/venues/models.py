@@ -81,7 +81,7 @@ class VenueCategory(models.Model):
             "\"is close to the briefing hall\". This description follows \"This venue\" when "
             "shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."))
 
-    venues = models.ManyToManyField(Venue, verbose_name=_("venues"))
+    venues = models.ManyToManyField(Venue, verbose_name=_("venues"), blank=True)
 
     display_in_venue_name = models.CharField(max_length=1, choices=DISPLAY_IN_VENUE_NAME_CHOICES,
         default=DISPLAY_NONE,

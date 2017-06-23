@@ -81,8 +81,8 @@ export default {
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)
     // Watch for global conflict highlights
-    this.$eventHub.$on('show-conflicts-for', this.setConflicts)
-    this.$eventHub.$on('hide-conflicts-for', this.unsetConflicts)
+    this.$eventHub.$on('show-conflicts-for', this.setOrUnsetConflicts)
+    this.$eventHub.$on('hide-conflicts-for', this.setOrUnsetConflicts)
   },
   computed: {
     unallocatedAdjsByScore: function() {

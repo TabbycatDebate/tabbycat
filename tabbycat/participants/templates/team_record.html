@@ -34,14 +34,12 @@
                   <strong><a href="{% if admin_page %}{% tournamenturl 'participants-team-record' debateteam.opponent.team.pk %}{% else %}{% tournamenturl 'participants-public-team-record' debateteam.opponent.team.pk %}{% endif %}" class="list-group-item-text">
                     {{ debateteam.opponent.team.short_name }}</a></strong>
                   in
-                  <strong>
                   {% if debateteam.debate.venue %}
-                    {{ debateteam.debate.venue.display_name }}
+                    <strong>{{ debateteam.debate.venue.display_name }}</strong>.
                   {% else %}
-                    Venue TBA
+                    <strong>Venue TBA</strong>.
                   {% endif %}
-                  </strong>.
-                </strong></li>
+                </li>
 
                 {# Round start time #}
                 {% if current_round.starts_at %}
