@@ -14,8 +14,8 @@ export default {
       // Not in the case of debates this will limit just to the team/adj
       // if (conflictState && conflictingItem.id === 96) { console.log('Checking for Bennie') }
       if (conflictingItemType === 'adjudicator') {
-        var clashes = this.conflicts[conflictingItem.id]
-        var seens = this.histories[conflictingItem.id]
+        var clashes = this.filteredClashes[conflictingItem.id]
+        var seens = this.filteredHistories[conflictingItem.id]
         // if (conflictState && conflictingItem.id === 96) { console.log('  Bennie clashes', clashes) }
         // if (conflictState && conflictingItem.id === 96) { console.log('  Bennie seens', seens) }
       } else if (conflictingItemType === 'team') {
@@ -27,12 +27,14 @@ export default {
       _.forEach(clashes, function(clashList, clashType) {
         _.forEach(clashList, function(clashedId) {
           var eventCode = 'set-clashes-for-' + clashType + '-' + clashedId
+          // console.log(eventCode)
           self.$eventHub.$emit(eventCode, hoverOrPanel, conflictState, clashType)
         })
       })
       _.forEach(seens, function(seenList, seenType) {
         _.forEach(seenList, function(seenItem) {
           var eventCode = 'set-seens-for-' + seenType + '-' + seenItem.id
+          // console.log(eventCode)
           var seenState = conflictState === false ? false : seenItem.ago
           self.$eventHub.$emit(eventCode, hoverOrPanel, seenState, seenType)
         })

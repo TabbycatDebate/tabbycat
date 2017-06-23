@@ -22,12 +22,12 @@
           <div v-if="adjPositions.indexOf('P') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
                         'flex-' + (adjPositions.length > 2 ? 16: 16)]">
-            <span >Panel</span>
+            <span>Panel</span>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
                         'flex-' + (adjPositions.length > 2 ? 10: 16)]">
-            <span >Trainees</span>
+            <span>Trainees</span>
           </div>
         </template>
       </draw-header>
@@ -38,6 +38,7 @@
         <template slot="svenue"><!-- Hide Venues --></template>
         <template slot="spanel">
           <debate-panel :panel="debate.panel" :debate-id="debate.id"
+                        :teams="debate.teams"
                         :percentiles="percentileThresholds"
                         :locked="debate.locked"
                         :adj-positions="adjPositions"
@@ -67,7 +68,7 @@ import HighlightableContainerMixin from '../allocations/HighlightableContainerMi
 import AllocationActions from '../allocations/AllocationActions.vue'
 import DebateImportance from '../allocations/DebateImportance.vue'
 import DebatePanel from '../allocations/DebatePanel.vue'
-import ConflictsCoordinatorMixin from '../allocations/ConflictsCoordinatorMixin.vue'
+import DrawConflictsMixin from '../allocations/DrawConflictsMixin.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 import AjaxMixin from '../ajax/AjaxMixin.vue'
 
@@ -76,7 +77,7 @@ import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
-           HighlightableContainerMixin, ConflictsCoordinatorMixin],
+           HighlightableContainerMixin, DrawConflictsMixin],
   components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)
@@ -108,17 +109,9 @@ export default {
     },
     adjPositions: function() {
       return this.roundInfo.adjudicatorPositions // Convenience
-    }
+    },
   },
   methods: {
-    getDebateConflictables(debate, type) {
-      // Creates a per-debate subset of conflicts/histories for DebateConflictsMixin
-      // to determine in-panel conflicts using ConflictsCoordinator
-      var panellistIds = _.map(debate.panel, function(panellist) {
-        return panellist.adjudicator.id
-      })
-      return _.pick(this[type], panellistIds)
-    },
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move
