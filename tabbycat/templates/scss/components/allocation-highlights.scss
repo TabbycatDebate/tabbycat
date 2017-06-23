@@ -7,15 +7,6 @@
 // appear like draggable buttons/elements
 .conflictable {
 
-  // For hover states
-  &.hover-personal {
-    background: $brand-danger;
-  }
-
-  &.hover-institutional {
-    background: $brand-warning;
-  }
-
   &.hover-history-1-ago {
     background: darken($brand-primary, 20%);
   }
@@ -51,6 +42,17 @@
   &.hover-history-9-ago {
     background: lighten($brand-primary, 48%);
   }
+
+  // Must be below histories (to take precedence)
+  &.hover-institutional {
+    background: $brand-warning;
+  }
+
+  // Must be below histories + institutions (ie to take precedence)
+  &.hover-personal {
+    background: $brand-danger;
+  }
+
 
   // For in panel states
   &.panel-personal {
