@@ -20,7 +20,10 @@ export default {
     setSlideover: function(object, annotateMethod) {
       var info = object
       if (annotateMethod) {
-        info['tiers'].push(this[annotateMethod]())
+        var extraFeatures = this[annotateMethod]()
+        if (extraFeatures) {
+          info['tiers'].push(extraFeatures)
+        }
       }
       console.log(info)
       this.slideOverSubject = info
