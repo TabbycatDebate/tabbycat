@@ -4,6 +4,9 @@ import SlideOverDiversityMixin from './SlideOverDiversityMixin.vue'
 import _ from 'lodash'
 
 export default {
+  data: function () {
+    return { annotationMethodName: 'addConflictsAnnotation' }
+  },
   mixins: [SlideOverDiversityMixin],
   computed: {
     ratingsFeature: function() {
@@ -22,6 +25,9 @@ export default {
       ]
       return gender
     },
+    annotateDataForSlideOver: function() {
+      return this.adjudicator
+    }
   },
   methods: {
     formatForSlideOver: function(subject) {
@@ -35,9 +41,6 @@ export default {
         }]
       }
     },
-    annotateMethodForSlideOver: function() {
-      return 'addConflicts'
-    }
   }
 }
 </script>

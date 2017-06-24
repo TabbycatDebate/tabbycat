@@ -6,6 +6,7 @@
 // They pass up an array of 'rows' and an optional annotate method
 // The annotate method allows the parent element to append data only it has
 // such as conflict lookups
+import _ from 'lodash'
 
 export default {
   data: function () {
@@ -17,26 +18,66 @@ export default {
     this.$eventHub.$on('unset-slideover', this.unsetSlideover)
   },
   methods: {
-    setSlideover: function(object, annotateMethod) {
+    setSlideover: function(object, annotateMethod, annotateObject) {
       var info = object
       if (annotateMethod) {
-        var extraFeatures = this[annotateMethod]()
+        var extraFeatures = this[annotateMethod](annotateObject)
         if (extraFeatures) {
           info['tiers'].push(extraFeatures)
         }
       }
-      console.log(info)
       this.slideOverSubject = info
     },
     unsetSlideover: function() {
       this.slideOverSubject = null
     },
-    addConflicts: function() {
+    addConflictsAnnotation: function(item) {
       return {
         'features': [
-          { 'title': 'Test', }
+          this.getClashesForSlideOver(item),
+          null,
+          this.getHistoriesForSlideOver(item)
         ]
       }
+    },
+    getClashesForSlideOver: function(item) {
+      var clashes = item.conflicts.clashes
+      if (_.isUndefined(clashes) || !clashes) { return [] }
+      var formattedClashes = []
+      var self = this
+      _.forEach(clashes, function(clashesList, clashesType) {
+        _.forEach(clashesList, function(clash) {
+          if (clashesType === 'team') {
+            var clashName = self.teamsById[clash].short_name
+          } else if (clashesType === 'adjudicator') {
+            var clashName = self.adjudicatorsById[clash].name
+          } else if (clashesType === 'institution') {
+            var clashName = self.institutionsById[clash].code
+          }
+          formattedClashes.push({
+            'title': clashName, 'class': 'conflictable hover-' + clashesType})
+        })
+      })
+      return formattedClashes
+    },
+    getHistoriesForSlideOver: function(item) {
+      var histories = item.conflicts.histories
+      if (_.isUndefined(histories) || !histories) { return [] }
+      var formattedHistories = []
+      var self = this
+      _.forEach(histories, function(historiesList, historiesType) {
+        _.forEach(historiesList, function(history) {
+          if (historiesType === 'team') {
+            var historyName = self.teamsById[history.id].short_name
+          } else if (historiesType === 'team') {
+            var historyName = self.adjudicatorsById[history.id].name
+          }
+          formattedHistories.push({
+            'title': historyName + ' ' + history.ago + ' ago',
+            'class': 'conflictable hover-history-' + history.ago + '-ago'})
+        })
+      })
+      return formattedHistories
     }
   }
 }

@@ -65,6 +65,15 @@ export default {
     adjudicatorsById: function() {
       return _.keyBy(this.adjudicators, 'id')
     },
+    institutionsById: function() {
+      var teamInstitutions = _.map(this.teams, function(team) {
+        return team.institution
+      })
+      var adjInstitutions = _.map(this.adjudicators, function(adjudicator) {
+        return adjudicator.institution
+      })
+      return _.uniq(teamInstitutions.concat(adjInstitutions))
+    },
     unallocatedById: function() {
       return _.keyBy(this.unallocatedItems, 'id')
     },

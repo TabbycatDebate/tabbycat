@@ -88,12 +88,13 @@ export default {
     unallocatedAdjsByScore: function() {
       return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
     },
-    allAdjudicatorsById: function() {
+    adjudicatorsById: function() {
+      // Override DrawContainer() method to include unallocated
       return _.keyBy(this.adjudicators.concat(this.unallocatedItems), 'id')
     },
     percentileThresholds: function() {
       // For determining feedback rankings
-      var allScores = _.map(this.allAdjudicatorsById, function(adj) {
+      var allScores = _.map(this.adjudicatorsById, function(adj) {
         return parseFloat(adj.score)
       }).sort()
       var thresholds = []

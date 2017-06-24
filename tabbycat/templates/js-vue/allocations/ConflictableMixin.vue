@@ -8,7 +8,7 @@ export default {
   // It then sets an internal record or the conflicted state
   data: function () {
     return {
-      conflicts: {
+      isConflicted: {
         hover: { team: false, adjudicator: false, institution: false, seens: false },
         panel: { team: false, adjudicator: false, institution: false, seens: false },
       }
@@ -41,7 +41,7 @@ export default {
       _.forEach(_.keys(this.clashes), function(hoverOrPanel) {
         // Iterate over panel and hover states
         if (self.clashes[hoverOrPanel][self.conflictableType]) {
-          conflictsCSS += hoverOrPanel + '-personal '
+          conflictsCSS += hoverOrPanel + '-' + self.conflictableType
         }
         if (self.clashes[hoverOrPanel]['institution']) {
           conflictsCSS += hoverOrPanel + '-institutional '

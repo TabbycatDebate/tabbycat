@@ -42,18 +42,19 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
         unused_adjs = [self.annotate_adj_conflicts(a) for a in unused_adjs]
         return json.dumps(unused_adjs)
 
-    def annotate_adj_conflicts(self, serialized_adjudicator):
-        adjId = serialized_adjudicator['id']
+    def annotate_adj_conflicts(self, serialized_adj):
+        adjId = serialized_adj['id']
+        serialized_adj['conflicts'] = { 'clashes': [], 'histories': [] }
         try:
-            serialized_adjudicator['clashes'] = self.get_clashes[adjId]
+            serialized_adj['conflicts']['clashes'] = self.get_clashes[adjId]
         except KeyError:
-            serialized_adjudicator['clashes'] = None
+            serialized_adj['conflicts']['clashes'] = None
         try:
-            serialized_adjudicator['clashes'] = self.get_histories[adjId]
+            serialized_adj['conflicts']['histories'] = self.get_histories[adjId]
         except KeyError:
-            serialized_adjudicator['clashes'] = None
+            serialized_adj['conflicts']['histories'] = None
 
-        return serialized_adjudicator
+        return serialized_adj
 
 
 class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):

@@ -44,12 +44,13 @@
   }
 
   // Must be below histories (to take precedence)
-  &.hover-institutional {
+  &.hover-institution {
     background: $brand-warning;
   }
 
   // Must be below histories + institutions (ie to take precedence)
-  &.hover-personal {
+  &.hover-adjudicator,
+  &.hover-team {
     background: $brand-danger;
   }
 
@@ -95,14 +96,16 @@
   }
 
   // Must appear after seens and after institutionals
-  &.panel-personal {
+  &.panel-adjudicator,
+  &.panel-team, {
     border-color: darken($brand-danger, 10%);
   }
 }
 
 // Ensure text is treated nicely when a conflict state is active
-.hover-personal,
-.hover-institutional,
+.hover-adjudicator,
+.hover-team,
+.hover-institution,
 .hover-history-1-ago,
 .hover-history-2-ago,
 .hover-history-3-ago {

@@ -21,7 +21,7 @@ export default {
       debate.panel.splice(adjIndex, 1)
     },
     saveMoveForType(adjudicatorId, fromDebate, toDebate, toPosition=null) {
-      var adjudicator = this.allAdjudicatorsById[adjudicatorId]
+      var adjudicator = this.adjudicatorsById[adjudicatorId]
       var currentChair = this.getPanellist(toDebate, false, "C").adjudicator
       var oldPosition = this.getPanellist(fromDebate, adjudicator, false).position
       var addToUnused = []
