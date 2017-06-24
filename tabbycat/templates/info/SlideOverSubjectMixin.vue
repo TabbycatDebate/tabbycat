@@ -17,7 +17,7 @@ export default {
       this.$eventHub.$emit('set-slideover', slide, annotationCall, annotationItem)
     },
     hideSlideOver: function(event) {
-      // this.$eventHub.$emit('unset-slideover')
+      this.$eventHub.$emit('unset-slideover')
     },
     formatForSlideOver: function(subject) {
       return subject // Children should override

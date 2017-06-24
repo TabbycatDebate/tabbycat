@@ -49,13 +49,15 @@ export default {
         _.forEach(clashesList, function(clash) {
           if (clashesType === 'team') {
             var clashName = self.teamsById[clash].short_name
+            var clashIcon = 'glyphicon-comment'
           } else if (clashesType === 'adjudicator') {
             var clashName = self.adjudicatorsById[clash].name
+            var clashIcon = 'glyphicon-user'
           } else if (clashesType === 'institution') {
             var clashName = self.institutionsById[clash].code
+            var clashIcon = 'glyphicon-globe'
           }
-          formattedClashes.push({
-            'title': clashName, 'class': 'conflictable hover-' + clashesType})
+          formattedClashes.push({'title': clashName, 'class': 'conflictable hover-' + clashesType, 'icon': clashIcon})
         })
       })
       return formattedClashes
@@ -69,12 +71,14 @@ export default {
         _.forEach(historiesList, function(history) {
           if (historiesType === 'team') {
             var historyName = self.teamsById[history.id].short_name
-          } else if (historiesType === 'team') {
+            var clashIcon = 'glyphicon-comment'
+          } else if (historiesType === 'adjudicator') {
             var historyName = self.adjudicatorsById[history.id].name
+            var clashIcon = 'glyphicon-user'
           }
           formattedHistories.push({
             'title': historyName + ' ' + history.ago + ' ago',
-            'class': 'conflictable hover-history-' + history.ago + '-ago'})
+            'class': 'conflictable hover-history-' + history.ago + '-ago', 'icon': clashIcon})
         })
       })
       return formattedHistories
