@@ -81,6 +81,7 @@ export default {
   methods: {
     debug: function() { return this.config.devtools },
     handleHoverOn: function(event) {
+      // Need to wait for DOM otherwise it will trigger during animations
       this.showSlideOver()
       this.showHoverConflicts()
     },
@@ -92,7 +93,8 @@ export default {
       // this.$dispatch('started-dragging-team', this);
     },
     handleDragEnd: function(event) {
-      // this.$dispatch('stopped-dragging-team');
+      this.hideHoverConflicts()
+      this.hideSlideOver()
     },
   }
 }

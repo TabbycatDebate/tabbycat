@@ -96,17 +96,14 @@ export default {
     },
     setConflicts: function(hoverOrPanel, conflictType, state) {
       if (hoverOrPanel !== 'hover') {
-        console.log('enabling', hoverOrPanel, conflictType, 'conflicts for',
+        console.info('Enabling', hoverOrPanel, conflictType, 'conflicts for',
           this.conflictableType, this.conflictable.id, this.isConflicted)
       }
       this.isConflicted[hoverOrPanel][conflictType] = state
-      if (hoverOrPanel !== 'hover' && this.conflictable.id === 87 && this.conflictableType === 'adjudicator') {
-        this.$set(this.isConflicted['panel'], 'adjudicator', true)
-      }
     },
     unsetConflicts: function(hoverOrPanel) {
       if (hoverOrPanel !== 'hover') {
-        console.log('unsetting panel conflicts for ',
+        console.info('unsetting panel conflicts for ',
           this.conflictableType, this.conflictable.id)
       }
       // When a unhovering over something it broadcasts to all objects

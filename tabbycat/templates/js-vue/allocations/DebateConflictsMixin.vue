@@ -27,9 +27,12 @@ export default {
       })
     },
   },
-  created: function () {
-    var eventCode = 'check-clashes-for-debate-' + this.debateId
-    this.$eventHub.$on(eventCode, this.checkForPanelClashes)
+  watch: {
+    panel: function() {
+      this.$nextTick(function () {
+        this.checkForPanelClashes() // NEED to wait for DOM updates to trigger
+      })
+    }
   },
   methods: {
     checkForPanelClashes: function(unset=true) {
@@ -59,8 +62,7 @@ export default {
     checkIfInPanel: function(conflict, conflictType, clashOrHistory) {
       if (clashOrHistory === 'clashes') {
         var conflictedId = conflict
-      }
-      if (clashOrHistory === 'histories') {
+      } else if (clashOrHistory === 'histories') {
         var conflictedId = conflict.id
       }
       if (conflictType === 'institution') {
@@ -81,7 +83,9 @@ export default {
     }
   },
   mounted: function () {
-    this.checkForPanelClashes(false)
+    this.$nextTick(function () {
+      this.checkForPanelClashes(false)  // Need to wait for DOM
+    })
   },
 }
 </script>

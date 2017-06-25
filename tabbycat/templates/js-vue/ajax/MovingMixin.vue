@@ -95,7 +95,7 @@ export default {
           if (_.has(self.teamsById, id)) {
             return self.teamsById[id]
           } else {
-            console.log('ERROR: Couldnt find team ', newDebateTeam.short_name)
+            console.error('ERROR: Couldnt find team ', newDebateTeam.short_name)
             return newDebateTeam
           }
         })
@@ -107,18 +107,16 @@ export default {
           if (_.has( originalAdjsById, id)) {
             return { adjudicator: originalAdjsById[id], position: newPanellist.position}
           } else {
-            console.log('ERROR: Couldnt find adj ', newPanellist.adjudicator.name)
+            console.error('ERROR: Couldnt find adj ', newPanellist.adjudicator.name)
             return { adjudicator: newPanellist.adjudicator, position: newPanellist.position}
           }
         })
 
         // Remove/replace old debate with new Debate object
         this.debates.splice(oldDebateIndex, 1, newDebate)
-        console.log("    VUE: Loaded new debate for " + this.niceNameForDebate(newDebate.id))
-        // Check for conflicts in the new panel
-        this.$eventHub.$emit('check-clashes-for-debate-' + newDebate.id)
+        console.info("    VUE: Loaded new debate for " + this.niceNameForDebate(newDebate.id))
       } else {
-        console.log("    VUE: Shouldn't happen; couldnt find old debates position")
+        console.warn("    VUE: Shouldn't happen; couldnt find old debates position")
       }
       // Remove/add relevant items to unused area
       _.forEach(returnPayload.addToUnused, function(unusedItem) {
