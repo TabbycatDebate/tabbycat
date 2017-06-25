@@ -1,4 +1,3 @@
-import json
 import math
 from itertools import permutations
 
@@ -77,13 +76,13 @@ def percentile(n, percent, key=lambda x:x):
     return d0+d1
 
 
-def populate_conflicts(conflicts, conflict, type):
+def populate_conflicts(conflicts, conflict, type, for_type):
     adj_id = conflict[0]
     # Make the base dictionary structure for each adj if it doesn't exist already
-    if adj_id not in conflicts:
-        conflicts[adj_id] = {'team': [], 'institution': [], 'adjudicator': []}
+    if adj_id not in conflicts[for_type]:
+        conflicts[for_type][adj_id] = {'team': [], 'institution': [], 'adjudicator': []}
     conflictee_id = conflict[1]
-    conflicts[adj_id][type].append(conflictee_id)
+    conflicts[for_type][adj_id][type].append(conflictee_id)
     return conflicts
 
 
@@ -100,26 +99,27 @@ def get_conflicts(t, r):
     adj_conflicts_b = AdjudicatorAdjudicatorConflict.objects.filter(
         filter).values_list('conflict_adjudicator', 'adjudicator')
 
-    conflicts = {} # Make a dictionary of conflicts with adj ID as key
+    # Make a dictionary of conflicts with team or adj ID as key
+    conflicts = {'for_teams': {}, 'for_adjs': {}}
     for conflict in team_conflicts:
-        conflicts = populate_conflicts(conflicts, conflict, 'team')
+        conflicts = populate_conflicts(conflicts, conflict, 'team', 'for_adjs')
     for conflict in institution_conflicts:
-        conflicts = populate_conflicts(conflicts, conflict, 'institution')
+        conflicts = populate_conflicts(conflicts, conflict, 'institution', 'for_adjs')
     for conflict in adj_conflicts_a:
-        conflicts = populate_conflicts(conflicts, conflict, 'adjudicator')
+        conflicts = populate_conflicts(conflicts, conflict, 'adjudicator', 'for_adjs')
     for conflict in adj_conflicts_b:
-        conflicts = populate_conflicts(conflicts, conflict, 'adjudicator')
+        conflicts = populate_conflicts(conflicts, conflict, 'adjudicator', 'for_adjs')
 
     return conflicts
 
 
 def populate_histories(histories, seen_adj, seen_adj_or_team_histories,
-                       type, current_round):
+                       type, for_type, current_round):
     adj_id = seen_adj[0]
 
     # Make the base dictionary structure for each adj if it doesn't exist already
-    if adj_id not in histories:
-        histories[adj_id] = {'team': [], 'adjudicator': []}
+    if adj_id not in histories[for_type]:
+        histories[for_type][adj_id] = {'team': [], 'adjudicator': []}
 
     seen_round_debate_id = seen_adj[1]
     seen_round_seq = seen_adj[2]
@@ -135,7 +135,7 @@ def populate_histories(histories, seen_adj, seen_adj_or_team_histories,
             continue
         if seen_round_debate_id == debate_id:
             # If the root DA/DT saw this DT/DA
-            histories[adj_id][type].append(
+            histories[for_type][adj_id][type].append(
                 {'ago': current_round.seq - seen_round_seq, 'id': history[0]})
 
     return histories
@@ -150,11 +150,12 @@ def get_histories(t, r):
         debate__round__tournament=t, debate__round__seq__lt=r.seq).select_related(
             'debate__round').values_list('team', 'debate', 'debate__round__seq')
 
-    histories = {} # Make a dictionary of conflicts with adj ID as key
+    # Make a dictionary of conflicts with adj or team ID as key
+    histories = {'for_teams': {}, 'for_adjs': {}}
     for seen_adj in adj_histories:
-        histories = populate_histories(histories, seen_adj,
-                                       adj_histories, 'adjudicator', r)
-        histories = populate_histories(histories, seen_adj,
-                                       team_histories, 'team', r)
+        histories = populate_histories(histories, seen_adj, adj_histories,
+                                       'adjudicator', 'for_adjs', r)
+        histories = populate_histories(histories, seen_adj, team_histories,
+                                       'team', 'for_adjs', r)
 
     return histories
