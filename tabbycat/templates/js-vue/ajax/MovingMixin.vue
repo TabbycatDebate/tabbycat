@@ -121,6 +121,7 @@ export default {
       // Remove/add relevant items to unused area
       _.forEach(returnPayload.addToUnused, function(unusedItem) {
         self.unallocatedItems.push(unusedItem)
+        unusedItem.locked = false
       })
       _.forEach(returnPayload.removeFromUnused, function(usedItem) {
         self.unallocatedItems.splice(self.unallocatedItems.indexOf(usedItem), 1)
