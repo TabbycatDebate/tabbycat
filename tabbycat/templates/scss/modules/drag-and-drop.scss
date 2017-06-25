@@ -43,8 +43,8 @@
   }
 }
 
-.vue-draggable:hover,
-.vue-is-hovering:active {
+.vue-draggable.vue-is-hovering,
+.vue-draggable:active {
   background: #000 !important;
   border-color: $gray;
   cursor: move;

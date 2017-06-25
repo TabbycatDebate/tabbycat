@@ -81,11 +81,12 @@ export default {
   methods: {
     debug: function() { return this.config.devtools },
     handleHoverOn: function(event) {
-      // Need to wait for DOM otherwise it will trigger during animations
+      this.isHovering = true
       this.showSlideOver()
       this.showHoverConflicts()
     },
     handleHoverOff: function(event) {
+      this.isHovering = false
       this.hideSlideOver()
       this.hideHoverConflicts()
     },
