@@ -34,7 +34,7 @@ export default {
       // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
       this.postModifiedDebates(debatesToSave, addToUnused, removeFromUnused,
-                               'debate venues of ')
+                               null, 'debate venues of ')
     },
   }
 }

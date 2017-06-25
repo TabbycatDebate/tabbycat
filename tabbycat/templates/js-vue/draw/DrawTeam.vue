@@ -4,7 +4,16 @@
        @mouseenter="handleHoverOn"
        @mouseleave="handleHoverOff">
 
-    <div><span>{{ team.short_name }}</span></div>
+    <div>
+      <span v-if="debug">{{ team.id }} </span>
+      <span>{{ team.short_name }}</span>
+    </div>
+
+    <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
+      <div class="tooltip-inner conflictable hover-histories-1-ago">
+        {{ hasHistoryConflict }} ago
+      </div>
+    </div>
 
   </div>
 </template>
@@ -25,13 +34,14 @@ export default {
     }
   },
   methods: {
+    debug: function() { return this.config.devtools },
     handleHoverOn: function(event) {
       this.showSlideOver()
-      this.showConflicts()
+      this.showHoverConflicts()
     },
     handleHoverOff: function(event) {
       this.hideSlideOver()
-      this.hideConflicts()
+      this.hideHoverConflicts()
     },
   }
 }

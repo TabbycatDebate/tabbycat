@@ -11,10 +11,18 @@
       <h4>{{ adjudicator.score }}</h4>
     </div>
     <div class="draggable-title">
-      <h5 class="no-top-margin no-bottom-margin">{{ initialledName }}</h5>
+      <h5 class="no-top-margin no-bottom-margin">
+        <span v-if="debug">{{ adjudicator.id }} </span>{{ initialledName }}
+      </h5>
       <span class="small subtitle" v-if="adjudicator.institution">
         {{ adjudicator.institution.code }}
       </span>
+    </div>
+
+    <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
+      <div class="tooltip-inner conflictable hover-histories-1-ago">
+        {{ hasHistoryConflict }} ago
+      </div>
     </div>
 
   </div>
@@ -71,19 +79,22 @@ export default {
     }
   },
   methods: {
+    debug: function() { return this.config.devtools },
     handleHoverOn: function(event) {
+      // Need to wait for DOM otherwise it will trigger during animations
       this.showSlideOver()
-      this.showConflicts()
+      this.showHoverConflicts()
     },
     handleHoverOff: function(event) {
       this.hideSlideOver()
-      this.hideConflicts()
+      this.hideHoverConflicts()
     },
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-team', this);
     },
     handleDragEnd: function(event) {
-      // this.$dispatch('stopped-dragging-team');
+      this.hideHoverConflicts()
+      this.hideSlideOver()
     },
   }
 }

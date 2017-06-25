@@ -41,9 +41,7 @@
                         :teams="debate.teams"
                         :percentiles="percentileThresholds"
                         :locked="debate.locked"
-                        :adj-positions="adjPositions"
-                        :histories="getDebateConflictables(debate, 'histories')"
-                        :conflicts="getDebateConflictables(debate, 'conflicts')"></debate-panel>
+                        :adj-positions="adjPositions"></debate-panel>
         </template>
       </debate>
     </div>
@@ -56,7 +54,7 @@
       </div>
     </unallocated-items-container>
 
-    <slide-over-item :subject="slideOverItem"></slide-over-item>
+    <slide-over :subject="slideOverSubject"></slide-over>
 
   </div>
 </template>
@@ -68,7 +66,6 @@ import HighlightableContainerMixin from '../allocations/HighlightableContainerMi
 import AllocationActions from '../allocations/AllocationActions.vue'
 import DebateImportance from '../allocations/DebateImportance.vue'
 import DebatePanel from '../allocations/DebatePanel.vue'
-import DrawConflictsMixin from '../allocations/DrawConflictsMixin.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 import AjaxMixin from '../ajax/AjaxMixin.vue'
 
@@ -77,7 +74,7 @@ import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
-           HighlightableContainerMixin, DrawConflictsMixin],
+           HighlightableContainerMixin],
   components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)
@@ -88,12 +85,13 @@ export default {
     unallocatedAdjsByScore: function() {
       return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
     },
-    allAdjudicatorsById: function() {
+    adjudicatorsById: function() {
+      // Override DrawContainer() method to include unallocated
       return _.keyBy(this.adjudicators.concat(this.unallocatedItems), 'id')
     },
     percentileThresholds: function() {
       // For determining feedback rankings
-      var allScores = _.map(this.allAdjudicatorsById, function(adj) {
+      var allScores = _.map(this.adjudicatorsById, function(adj) {
         return parseFloat(adj.score)
       }).sort()
       var thresholds = []

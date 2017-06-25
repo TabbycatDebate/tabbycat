@@ -43,9 +43,11 @@ export default {
       }
     },
     dragEnd: function(event) {
-      this.isDragging = false;
-      this.isHovering = false;
-      this.handleDragEnd(event);
+      this.$nextTick(function () {
+        this.isDragging = false;
+        this.isHovering = false;
+        this.handleDragEnd(event)
+      })
     },
   }
 }

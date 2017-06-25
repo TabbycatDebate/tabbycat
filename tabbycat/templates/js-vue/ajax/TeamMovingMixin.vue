@@ -44,7 +44,7 @@ export default {
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
       // Note: Don't care about locking/restoring state for debate teams
       // saving or not saving; so addToUnused/removeFromUnused are blank here
-      this.postModifiedDebates(debatesToSave, [], [], 'debate teams of ')
+      this.postModifiedDebates(debatesToSave, null, null, null, 'debate teams of ')
     },
   }
 }

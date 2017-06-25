@@ -7,105 +7,108 @@
 // appear like draggable buttons/elements
 .conflictable {
 
-  &.hover-history-1-ago {
+  &.hover-histories-1-ago {
     background: darken($brand-primary, 20%);
   }
 
-  &.hover-history-2-ago {
+  &.hover-histories-2-ago {
     background: lighten($brand-primary, 0%);
   }
 
-  &.hover-history-3-ago {
+  &.hover-histories-3-ago {
     background: lighten($brand-primary, 15%);
   }
 
-  &.hover-history-4-ago {
+  &.hover-histories-4-ago {
     background: lighten($brand-primary, 30%);
   }
 
-  &.hover-history-5-ago {
+  &.hover-histories-5-ago {
     background: lighten($brand-primary, 34%);
   }
 
-  &.hover-history-6-ago {
+  &.hover-histories-6-ago {
     background: lighten($brand-primary, 36%);
   }
 
-  &.hover-history-7-ago {
+  &.hover-histories-7-ago {
     background: lighten($brand-primary, 40%);
   }
 
-  &.hover-history-8-ago {
+  &.hover-histories-8-ago {
     background: lighten($brand-primary, 44%);
   }
 
-  &.hover-history-9-ago {
+  &.hover-histories-9-ago {
     background: lighten($brand-primary, 48%);
   }
 
   // Must be below histories (to take precedence)
-  &.hover-institutional {
+  &.hover-institution {
     background: $brand-warning;
   }
 
   // Must be below histories + institutions (ie to take precedence)
-  &.hover-personal {
+  &.hover-adjudicator,
+  &.hover-team {
     background: $brand-danger;
   }
 
-  &.panel-1-ago {
+  &.panel-histories-1-ago {
     border-color: darken($brand-primary, 20%);
   }
 
-  &.panel-2-ago {
+  &.panel-histories-2-ago {
     border-color: lighten($brand-primary, 0%);
   }
 
-  &.panel-3-ago {
+  &.panel-histories-3-ago {
     border-color: lighten($brand-primary, 15%);
   }
 
-  &.panel-4-ago {
+  &.panel-histories-4-ago {
     border-color: lighten($brand-primary, 30%);
   }
 
-  &.panel-5-ago {
+  &.panel-histories-5-ago {
     border-color: lighten($brand-primary, 34%);
   }
 
-  &.panel-6-ago {
+  &.panel-histories-6-ago {
     border-color: lighten($brand-primary, 36%);
   }
 
-  &.panel-7-ago {
+  &.panel-histories-7-ago {
     border-color: lighten($brand-primary, 40%);
   }
 
-  &.panel-8-ago {
+  &.panel-histories-8-ago {
     border-color: lighten($brand-primary, 44%);
   }
 
-  &.panel-9-ago {
+  &.panel-histories-9-ago {
     border-color: lighten($brand-primary, 48%);
   }
 
   // Must appear after seens
-  &.panel-institutional {
+  &.panel-institution {
     border-color: darken($brand-warning, 10%);
   }
 
   // Must appear after seens and after institutionals
-  &.panel-personal {
+  &.panel-adjudicator,
+  &.panel-team, {
     border-color: darken($brand-danger, 10%);
   }
 }
 
 // Ensure text is treated nicely when a conflict state is active
-.hover-personal,
-.hover-institutional,
-.hover-history-1-ago,
-.hover-history-2-ago,
-.hover-history-3-ago {
+.hover-adjudicator,
+.hover-team,
+.hover-institution,
+.hover-histories-1-ago,
+.hover-histories-2-ago,
+.hover-histories-3-ago {
   color: #fff;
 
   span,

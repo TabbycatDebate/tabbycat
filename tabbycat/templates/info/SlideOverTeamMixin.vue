@@ -4,6 +4,9 @@ import SlideOverDiversityMixin from './SlideOverDiversityMixin.vue'
 import _ from 'lodash'
 
 export default {
+  data: function () {
+    return { annotationMethodName: 'addConflictsAnnotation' }
+  },
   mixins: [SlideOverDiversityMixin],
   computed: {
     breakCategoriesFeature: function() {
@@ -23,12 +26,15 @@ export default {
       var teamInfo = { 'title': this.team.short_name }
       var speakersInfo = _.map(this.team.speakers, function(s) {
         return {
-          'title': s.name,
+          'title': s.name + ' (' + s.gender + ')',
           'class': 'gender-display gender-' + s.gender,
           'icon': 'glyphicon-user'
         }
       })
       return _.concat(teamInfo, speakersInfo)
+    },
+    annotateDataForSlideOver: function() {
+      return this.team
     }
   },
   methods: {
@@ -52,7 +58,7 @@ export default {
           ]
         }]
       }
-    }
+    },
   }
 }
 </script>
