@@ -19,6 +19,12 @@
       </span>
     </div>
 
+    <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
+      <div class="tooltip-inner conflictable hover-histories-1-ago">
+        {{ hasHistoryConflict }} ago
+      </div>
+    </div>
+
   </div>
 </template>
 

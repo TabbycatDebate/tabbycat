@@ -25,6 +25,16 @@ export default {
     this.$eventHub.$on('unset-conflicts', this.unsetConflicts)
   },
   computed: {
+    hasHistoryConflict: function() {
+      // Used for the inline template element showing how long ago the seen was
+      if (this.isConflicted.hover.histories) {
+        return this.isConflicted.hover.histories
+      }
+      if (this.isConflicted.panel.histories) {
+        return this.isConflicted.panel.histories
+      }
+      return false
+    },
     conflictableType: function() {
       if (!_.isUndefined(this.team)) { return 'team' }
       if (!_.isUndefined(this.adjudicator)) { return 'adjudicator' }

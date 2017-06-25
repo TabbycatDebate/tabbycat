@@ -7,7 +7,8 @@ Change Log
 
 - Developed the adjudicator allocation, venue allocation, and matchups editing pages
   - Bumped to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping
-  - Improved displays of saved changes when dragging/dropping, including visible indicators of save progress and 'locking' of elements whose saves are in-progress
+  - When dragging/dropping the changed elements now 'lock' in place and indicate that their saving is in-progress
+  - Added conflicts and recent histories to the top slideover of teams/adjudicators
   - Adding 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
 - Added a 'Tab Release' preset for easily releasing all standings/results pages after a tournament is finished
 - Fixed issue where toggling iron speeches on and off wouldn't hide/unset the relevant checkboxes

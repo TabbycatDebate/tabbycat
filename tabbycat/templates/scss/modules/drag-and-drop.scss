@@ -19,6 +19,7 @@
   background: #fff; // Need to override default :hover bg state that gets stuck
   margin: 4px 4px 0 0; // Need spacing offsets so they don't bunch
   padding: 5px 6px;
+  position: relative; // Needs this so the "seen ago" hover tooltip will show
   border: 4px solid $btn-default-border;
   height: 42px;
   text-align: left;
