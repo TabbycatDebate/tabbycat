@@ -102,10 +102,9 @@ export default {
       this.isConflicted[hoverOrPanel][conflictType] = state
     },
     unsetConflicts: function(hoverOrPanel) {
-      if (hoverOrPanel !== 'hover') {
-        console.info('unsetting panel conflicts for ',
-          this.conflictableType, this.conflictable.id)
-      }
+      // if (hoverOrPanel !== 'hover') {
+      //   console.info('unsetting panel conflicts for ', this.conflictableType, this.conflictable.id)
+      // }
       // When a unhovering over something it broadcasts to all objects
       // This is not very efficient but prevents state errors from drag/drops
       this.isConflicted[hoverOrPanel].team = false

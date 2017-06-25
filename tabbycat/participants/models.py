@@ -282,6 +282,7 @@ class Team(models.Model):
 
     def serialize(self):
         team = {'id': self.id, 'short_name': self.short_name, 'long_name': self.long_name}
+        team['conflicts'] = {'clashes': [], 'histories': []}
         team['institution'] = self.institution.serialize
         team['region'] = self.region.serialize if self.region else None
         speakers = list(self.speakers.order_by('name'))
@@ -415,6 +416,7 @@ class Adjudicator(Person):
 
     def serialize(self, round):
         adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
+        adj['conflicts'] = {'clashes': [], 'histories': []}
         adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
         adj['region'] = self.region.serialize if self.region else None
         adj['institution'] = self.institution.serialize if self.institution else None

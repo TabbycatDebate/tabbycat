@@ -44,7 +44,6 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
 
     def annotate_conflicts(self, serialized_adj_or_team, for_type):
         adj_or_team_id = serialized_adj_or_team['id']
-        serialized_adj_or_team['conflicts'] = {'clashes': [], 'histories': []}
         try:
             serialized_adj_or_team['conflicts']['clashes'] = self.get_clashes[for_type][adj_or_team_id]
         except KeyError:

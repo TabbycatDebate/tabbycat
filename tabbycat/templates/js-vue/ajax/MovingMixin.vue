@@ -89,28 +89,30 @@ export default {
         // stored before they were sent over; as they come back without the
         // initial annotations and thus don't have conflicts, regions, etc
 
-        // For teams they dont change so we can use the global variable
-        newDebate.teams = _.mapValues(newDebate.teams, function(newDebateTeam) {
-          var id = newDebateTeam.id
-          if (_.has(self.teamsById, id)) {
-            return self.teamsById[id]
-          } else {
-            console.error('ERROR: Couldnt find team ', newDebateTeam.short_name)
-            return newDebateTeam
-          }
-        })
-
-        // For adjudicators we saved/stored a list of all adjs when saving
-        var originalAdjsById = returnPayload.reallocateToPanel
-        newDebate.panel = _.map(newDebate.panel, function(newPanellist) {
-          var id = newPanellist.adjudicator.id
-          if (_.has( originalAdjsById, id)) {
-            return { adjudicator: originalAdjsById[id], position: newPanellist.position}
-          } else {
-            console.error('ERROR: Couldnt find adj ', newPanellist.adjudicator.name)
-            return { adjudicator: newPanellist.adjudicator, position: newPanellist.position}
-          }
-        })
+         // Only swap out on the edit adjs page
+        if (returnPayload.reallocateToPanel) {
+          // For teams they dont change so we can use the global variable
+          newDebate.teams = _.mapValues(newDebate.teams, function(newDebateTeam) {
+            var id = newDebateTeam.id
+            if (_.has(self.teamsById, id)) {
+              return self.teamsById[id]
+            } else {
+              console.error('ERROR: Couldnt find team ', newDebateTeam.short_name)
+              return newDebateTeam
+            }
+          })
+          // For adjudicators we saved/stored a list of all adjs when saving and need to restore
+          var originalAdjsById = returnPayload.reallocateToPanel
+          newDebate.panel = _.map(newDebate.panel, function(newPanellist) {
+            var id = newPanellist.adjudicator.id
+            if (_.has( originalAdjsById, id)) {
+              return { adjudicator: originalAdjsById[id], position: newPanellist.position}
+            } else {
+              console.error('ERROR: Couldnt find adj ', newPanellist.adjudicator.name)
+              return { adjudicator: newPanellist.adjudicator, position: newPanellist.position}
+            }
+          })
+        }
 
         // Remove/replace old debate with new Debate object
         this.debates.splice(oldDebateIndex, 1, newDebate)

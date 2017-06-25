@@ -53,7 +53,7 @@ export default {
             if (conflictsList) {
               _.forEach(conflictsList, function(conflict) {
                 if (conflictType === 'institution') {
-                  self.checkIfInPanelWithInstitution(conflict)
+                  self.checkIfInPanelWithInstitution(conflict, conflictable)
                 } else {
                   self.checkIfInPanel(conflict, conflictType, clashOrHistory)
                 }
@@ -69,11 +69,9 @@ export default {
       } else if (clashOrHistory === 'histories') {
         var conflictedId = conflict.id
       }
-      if (conflictType === 'team' && !_.includes(this.teamIds, conflictedId)) {
-        return // team not present
-      }
-      if (conflictType === 'adjudicator' && !_.includes(this.adjudicatorIds, conflictedId)) {
-        return // adj not present
+      if ( (conflictType === 'team' && !_.includes(this.teamIds, conflictedId)) ||
+           (conflictType === 'adjudicator' && !_.includes(this.adjudicatorIds, conflictedId)) ) {
+        return // team or adj not present
       }
       var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflictedId
       if (clashOrHistory === 'clashes') {
@@ -82,16 +80,29 @@ export default {
         this.$eventHub.$emit(eventCode, 'panel', 'histories', conflict.ago)
       }
     },
-    checkIfInPanelWithInstitution: function(conflict) {
-      // var self = this
-      // _.forEach(this.teams, function(team) {
-      //   if (team.institution.id === conflict) {
-      //     self.$eventHub.$emit('set-conflicts-for-team-' + team.id, 'panel', 'institution', true)
-      //   }
-      // })
-      // _.forEach(this.panel, function(panellist) {
-      //   self.$eventHub.$emit('set-conflicts-for-team-' + panellist.adjudicator.id, 'panel')
-      // })
+    checkIfInPanelWithInstitution: function(conflict, conflictingItem) {
+      var self = this
+      _.forEach(this.teams, function(team) {
+        if ( (team.institution.id === conflict && team !== conflictingItem) &&
+             (_.has(conflictingItem, 'score')) ) {
+          // Don't self-conflict and don't allow team-team institution conflicts
+          var eventCode = 'set-conflicts-for-team-' + team.id
+          self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
+          // Reverse the conflict (incase conflicting not own institution)
+          var eventCode = 'set-conflicts-for-adjudicator-' + conflictingItem.id
+          self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
+        }
+      })
+      _.forEach(this.panel, function(panellist) {
+        var adj = panellist.adjudicator
+        if (adj.institution.id === conflict && adj !== conflictingItem) {
+          var eventCode = 'set-conflicts-for-adjudicator-' + adj.id
+          self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
+          // Reverse the conflict (incase conflicting not own institution)
+          var eventCode = 'set-conflicts-for-adjudicator-' + conflictingItem.id
+          self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
+        }
+      })
     }
   },
   mounted: function () {
