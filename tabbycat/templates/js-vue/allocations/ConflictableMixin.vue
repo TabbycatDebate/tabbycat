@@ -15,12 +15,17 @@ export default {
     }
   },
   created: function () {
-    // Watch for issues clash events on the global event hub
+    // Watch for issues conflect events issued on the global event hub
     // These looklike 'set-conflicts-for-team-99 (histories, teams, true)
     var conflictCode = this.conflictableType + '-' + this.conflictable.id
     this.$eventHub.$on('set-conflicts-for-' + conflictCode, this.setConflicts)
-    var conflictCode = 'institution' + '-' + this.conflictable.institution.id
-    this.$eventHub.$on('set-conflicts-for-' + conflictCode, this.setConflicts)
+    // Institutional conflicts are many to many; need to subscribe to all
+    var self = this
+    var institutionConflicts = this.conflictable.conflicts.clashes.institution
+    _.forEach(institutionConflicts, function(institutionConflict) {
+      var conflictCode = 'institution' + '-' + institutionConflict
+      self.$eventHub.$on('set-conflicts-for-' + conflictCode, self.setConflicts)
+    })
     // Turning off all hovers
     this.$eventHub.$on('unset-conflicts', this.unsetConflicts)
   },
