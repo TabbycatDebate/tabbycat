@@ -1,7 +1,7 @@
 import json
 
 from django.contrib import messages
-from django.forms import Select, SelectMultiple, TextInput
+from django.forms import Select, TextInput
 from django.http import HttpResponseBadRequest
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView
@@ -14,6 +14,7 @@ from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import JsonDataResponsePostView, ModelFormSetView, SuperuserRequiredMixin
 
 from .allocator import allocate_venues
+from .forms import venuecategoryform_factory
 from .models import Venue, VenueCategory, VenueConstraint
 
 
@@ -77,14 +78,13 @@ class SaveVenuesView(SaveDragAndDropDebateMixin):
 class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
     template_name = 'categories_edit.html'
     formset_model = VenueCategory
-    formset_factory_kwargs = {
-        'fields': ('name', 'description', 'display_in_venue_name',
-                   'display_in_public_tooltip', 'venues'),
-        'widgets': {
-            'venues': SelectMultiple(attrs={'size': 10})
-        },
-        'extra': 3
-    }
+
+    def get_formset_factory_kwargs(self):
+        formset_factory_kwargs = {
+            'form': venuecategoryform_factory(self.get_tournament()),
+            'extra': 3
+        }
+        return formset_factory_kwargs
 
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
@@ -131,7 +131,7 @@ class VenueConstraintsView(SuperuserRequiredMixin, TournamentMixin, ModelFormSet
             },
             'extra': 3
         }
-        return formset_factory_kwargs.copy()
+        return formset_factory_kwargs
 
     def subject_choices(self):
         from participants.models import Adjudicator, Team, Institution
