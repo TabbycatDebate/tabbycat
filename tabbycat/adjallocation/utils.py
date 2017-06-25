@@ -152,10 +152,10 @@ def get_histories(t, r):
 
     adj_histories = DebateAdjudicator.objects.filter(
         debate__round__tournament=t, debate__round__seq__lt=r.seq).select_related(
-            'debate__round').values_list('adjudicator', 'debate', 'debate__round__seq')
+            'debate__round').values_list('adjudicator', 'debate', 'debate__round__seq').order_by('-debate__round__seq')
     team_histories = DebateTeam.objects.filter(
         debate__round__tournament=t, debate__round__seq__lt=r.seq).select_related(
-            'debate__round').values_list('team', 'debate', 'debate__round__seq')
+            'debate__round').values_list('team', 'debate', 'debate__round__seq').order_by('-debate__round__seq')
 
     # Make a dictionary of conflicts with adj or team ID as key
     histories = {'for_teams': {}, 'for_adjs': {}}

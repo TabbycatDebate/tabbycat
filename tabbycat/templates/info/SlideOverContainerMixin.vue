@@ -40,6 +40,15 @@ export default {
         ]
       }
     },
+    adjShortName(name) {
+      var names = name.split(" ")
+      if (names.length > 1) {
+        var lastname = names[names.length - 1]
+        var firstNames = name.split(" " + lastname).join("")
+        return firstNames + " " + lastname[0]
+      }
+      return names.join(" ")
+    },
     getClashesForSlideOver: function(item) {
       var clashes = item.conflicts.clashes
       if (_.isUndefined(clashes) || !clashes) { return [] }
@@ -51,7 +60,7 @@ export default {
             var clashName = self.teamsById[clash].short_name
             var clashIcon = 'glyphicon-comment'
           } else if (clashesType === 'adjudicator') {
-            var clashName = self.adjudicatorsById[clash].name
+            var clashName = self.adjShortName(self.adjudicatorsById[clash].name)
             var clashIcon = 'glyphicon-user'
           } else if (clashesType === 'institution') {
             var clashName = self.institutionsById[clash].code
@@ -71,16 +80,29 @@ export default {
         _.forEach(historiesList, function(history) {
           if (historiesType === 'team') {
             var historyName = self.teamsById[history.id].short_name
-            var clashIcon = 'glyphicon-comment'
           } else if (historiesType === 'adjudicator') {
-            var historyName = self.adjudicatorsById[history.id].name
-            var clashIcon = 'glyphicon-user'
+            var historyName = self.adjShortName(self.adjudicatorsById[history.id].name)
           }
-          formattedHistories.push({
-            'title': historyName + ' ' + history.ago + ' ago',
-            'class': 'conflictable hover-history-' + history.ago + '-ago', 'icon': clashIcon})
+          var css = 'conflictable hover-history-' + history.ago + '-ago'
+          // Only show last 2 rounds for small screens
+          if (history.ago > 2) { css += ' visible-lg-block' }
+          formattedHistories.push({'title': historyName, 'ago': history.ago, 'class': css})
         })
       })
+      // Order by rounds;
+      formattedHistories = _.sortBy(formattedHistories, [function(h) { return h.ago }])
+      // Add round counter
+      var countedRounds = []
+      _.forEach(formattedHistories, function(history, index) {
+        if (!_.includes(countedRounds, history.ago)) {
+          formattedHistories.splice(index, 0, {
+            'title': '-' + history.ago, 'icon': 'glyphicon-time',
+            'class': history.ago > 2 ? ' visible-lg-block' : ' '
+          })
+          countedRounds.push(history.ago)
+        }
+      })
+      formattedHistories = formattedHistories.slice(0,15)
       return formattedHistories
     }
   }

@@ -56,6 +56,17 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
 
         return serialized_adj_or_team
 
+    def annotate_draw(self, draw, serialised_draw):
+        # Need to unique-ify/reorder break categories/regions for consistent CSS
+        for debate in serialised_draw:
+            for panellist in debate['panel']:
+                panellist['adjudicator'] = self.annotate_conflicts(panellist['adjudicator'], 'for_adjs')
+                panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
+            for (position, team) in debate['teams'].items():
+                team = self.annotate_conflicts(team, 'for_teams')
+
+        return super().annotate_draw(draw, serialised_draw)
+
 
 class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):
 
@@ -89,16 +100,6 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
         round_info['regions'] = self.get_regions_info()
         round_info['categories'] = self.get_categories_info()
         return round_info
-
-    def annotate_draw(self, draw, serialised_draw):
-        # Need to unique-ify/reorder break categories/regions for consistent CSS
-        for debate in serialised_draw:
-            for panellist in debate['panel']:
-                panellist['adjudicator'] = self.annotate_conflicts(panellist['adjudicator'], 'for_adjs')
-            for (position, team) in debate['teams'].items():
-                team = self.annotate_conflicts(team, 'for_teams')
-
-        return serialised_draw
 
     def get_context_data(self, **kwargs):
         kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
