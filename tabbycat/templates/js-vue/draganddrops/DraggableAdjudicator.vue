@@ -11,7 +11,9 @@
       <h4>{{ adjudicator.score }}</h4>
     </div>
     <div class="draggable-title">
-      <h5 class="no-top-margin no-bottom-margin">{{ initialledName }}</h5>
+      <h5 class="no-top-margin no-bottom-margin">
+        <span v-if="debug">{{ adjudicator.id }} </span>{{ initialledName }}
+      </h5>
       <span class="small subtitle" v-if="adjudicator.institution">
         {{ adjudicator.institution.code }}
       </span>
@@ -71,6 +73,7 @@ export default {
     }
   },
   methods: {
+    debug: function() { return this.config.devtools },
     handleHoverOn: function(event) {
       this.showSlideOver()
       this.showConflicts()

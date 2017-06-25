@@ -18,7 +18,7 @@ from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import DebateAdjudicator
-from .utils import get_conflicts, get_histories
+from .utils import get_clashes, get_histories
 
 from utils.misc import reverse_round
 
@@ -29,7 +29,7 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
 
     @cached_property
     def get_clashes(self):
-        return get_conflicts(self.get_tournament(), self.get_round())
+        return get_clashes(self.get_tournament(), self.get_round())
 
     @cached_property
     def get_histories(self):
@@ -39,22 +39,22 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
         round = self.get_round()
         unused_adjs = [a.serialize(round) for a in round.unused_adjudicators()]
         unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
-        unused_adjs = [self.annotate_adj_conflicts(a) for a in unused_adjs]
+        unused_adjs = [self.annotate_conflicts(a, 'for_adjs') for a in unused_adjs]
         return json.dumps(unused_adjs)
 
-    def annotate_adj_conflicts(self, serialized_adj):
-        adj_id = serialized_adj['id']
-        serialized_adj['conflicts'] = {'clashes': [], 'histories': []}
+    def annotate_conflicts(self, serialized_adj_or_team, for_type):
+        adj_or_team_id = serialized_adj_or_team['id']
+        serialized_adj_or_team['conflicts'] = {'clashes': [], 'histories': []}
         try:
-            serialized_adj['conflicts']['clashes'] = self.get_clashes['for_adjs'][adj_id]
+            serialized_adj_or_team['conflicts']['clashes'] = self.get_clashes[for_type][adj_or_team_id]
         except KeyError:
-            serialized_adj['conflicts']['clashes'] = None
+            serialized_adj_or_team['conflicts']['clashes'] = None
         try:
-            serialized_adj['conflicts']['histories'] = self.get_histories['for_adjs'][adj_id]
+            serialized_adj_or_team['conflicts']['histories'] = self.get_histories[for_type][adj_or_team_id]
         except KeyError:
-            serialized_adj['conflicts']['histories'] = None
+            serialized_adj_or_team['conflicts']['histories'] = None
 
-        return serialized_adj
+        return serialized_adj_or_team
 
 
 class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):
@@ -94,7 +94,9 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
         # Need to unique-ify/reorder break categories/regions for consistent CSS
         for debate in serialised_draw:
             for panellist in debate['panel']:
-                panellist['adjudicator'] = self.annotate_adj_conflicts(panellist['adjudicator'])
+                panellist['adjudicator'] = self.annotate_conflicts(panellist['adjudicator'], 'for_adjs')
+            for (position, team) in debate['teams'].items():
+                team = self.annotate_conflicts(team, 'for_teams')
 
         return serialised_draw
 

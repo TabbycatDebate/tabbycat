@@ -4,7 +4,10 @@
        @mouseenter="handleHoverOn"
        @mouseleave="handleHoverOff">
 
-    <div><span>{{ team.short_name }}</span></div>
+    <div>
+      <span v-if="debug">{{ team.id }} </span>
+      <span>{{ team.short_name }}</span>
+    </div>
 
   </div>
 </template>
@@ -25,6 +28,7 @@ export default {
     }
   },
   methods: {
+    debug: function() { return this.config.devtools },
     handleHoverOn: function(event) {
       this.showSlideOver()
       this.showConflicts()

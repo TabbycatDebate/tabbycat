@@ -76,53 +76,60 @@ def percentile(n, percent, key=lambda x:x):
     return d0+d1
 
 
-def populate_conflicts(conflicts, conflict, type, for_type):
-    adj_id = conflict[0]
+def populate_clashes(conflicts, conflict, type, for_type):
+    if for_type == 'for_adjs':
+        adj_or_team_id = conflict[0]
+        conflictee_id = conflict[1]
+    else:
+        adj_or_team_id = conflict[1]
+        conflictee_id = conflict[0]
+
     # Make the base dictionary structure for each adj if it doesn't exist already
-    if adj_id not in conflicts[for_type]:
-        conflicts[for_type][adj_id] = {'team': [], 'institution': [], 'adjudicator': []}
-    conflictee_id = conflict[1]
-    conflicts[for_type][adj_id][type].append(conflictee_id)
+    if adj_or_team_id not in conflicts[for_type]:
+        conflicts[for_type][adj_or_team_id] = {'team': [], 'institution': [], 'adjudicator': []}
+        conflicts[for_type][adj_or_team_id][type].append(conflictee_id)
     return conflicts
 
 
-def get_conflicts(t, r):
-    # Grab all conflicts data as value lists of conflict-er and conflict-ee
+def get_clashes(t, r):
+    # Grab all clashes data as value lists of conflict-er and conflict-ee
     filter = Q(adjudicator__tournament=t) | Q(adjudicator__tournament=None)
-    team_conflicts = AdjudicatorConflict.objects.filter(
+    team_clashes = AdjudicatorConflict.objects.filter(
         filter).values_list('adjudicator', 'team')
-    institution_conflicts = AdjudicatorInstitutionConflict.objects.filter(
+    institution_clashes = AdjudicatorInstitutionConflict.objects.filter(
         filter).values_list('adjudicator', 'institution')
-    adj_conflicts_a = AdjudicatorAdjudicatorConflict.objects.filter(
+    adj_clashes_a = AdjudicatorAdjudicatorConflict.objects.filter(
         filter).values_list('adjudicator', 'conflict_adjudicator')
-    # Adj-adj conflicts need to be symmetric; so reverse the order
-    adj_conflicts_b = AdjudicatorAdjudicatorConflict.objects.filter(
+    # Adj-adj clashes need to be symmetric; so reverse the order
+    adj_clashes_b = AdjudicatorAdjudicatorConflict.objects.filter(
         filter).values_list('conflict_adjudicator', 'adjudicator')
 
-    # Make a dictionary of conflicts with team or adj ID as key
-    conflicts = {'for_teams': {}, 'for_adjs': {}}
-    for conflict in team_conflicts:
-        conflicts = populate_conflicts(conflicts, conflict, 'team', 'for_adjs')
-    for conflict in institution_conflicts:
-        conflicts = populate_conflicts(conflicts, conflict, 'institution', 'for_adjs')
-    for conflict in adj_conflicts_a:
-        conflicts = populate_conflicts(conflicts, conflict, 'adjudicator', 'for_adjs')
-    for conflict in adj_conflicts_b:
-        conflicts = populate_conflicts(conflicts, conflict, 'adjudicator', 'for_adjs')
+    # Make a dictionary of clashes with team or adj ID as key
+    clashes = {'for_teams': {}, 'for_adjs': {}}
+    for clash in team_clashes:
+        clashes = populate_clashes(clashes, clash, 'team', 'for_adjs')
+    for clash in institution_clashes:
+        clashes = populate_clashes(clashes, clash, 'institution', 'for_adjs')
+    for clash in adj_clashes_a:
+        clashes = populate_clashes(clashes, clash, 'adjudicator', 'for_adjs')
+    for clash in adj_clashes_b:
+        clashes = populate_clashes(clashes, clash, 'adjudicator', 'for_adjs')
+    for clash in team_clashes:
+        clashes = populate_clashes(clashes, clash, 'adjudicator', 'for_teams')
 
-    return conflicts
+    return clashes
 
 
-def populate_histories(histories, seen_adj, seen_adj_or_team_histories,
+def populate_histories(histories, seen_adj_or_team, seen_adj_or_team_histories,
                        type, for_type, current_round):
-    adj_id = seen_adj[0]
+    adj_or_team_id = seen_adj_or_team[0]
 
     # Make the base dictionary structure for each adj if it doesn't exist already
-    if adj_id not in histories[for_type]:
-        histories[for_type][adj_id] = {'team': [], 'adjudicator': []}
+    if adj_or_team_id not in histories[for_type]:
+        histories[for_type][adj_or_team_id] = {'team': [], 'adjudicator': []}
 
-    seen_round_debate_id = seen_adj[1]
-    seen_round_seq = seen_adj[2]
+    seen_round_debate_id = seen_adj_or_team[1]
+    seen_round_seq = seen_adj_or_team[2]
 
     # We don't know who they saw just based on a DebateAdjudicator/Team; so we need
     # to match things upagainst the other objects
@@ -130,12 +137,12 @@ def populate_histories(histories, seen_adj, seen_adj_or_team_histories,
         debate_id = history[1]
         check_team_or_adj_id = history[0]
 
-        if type is 'adjudicator' and adj_id == check_team_or_adj_id:
+        if type is 'adjudicator' and adj_or_team_id == check_team_or_adj_id:
             # Don't match conflicts to self
             continue
         if seen_round_debate_id == debate_id:
             # If the root DA/DT saw this DT/DA
-            histories[for_type][adj_id][type].append(
+            histories[for_type][adj_or_team_id][type].append(
                 {'ago': current_round.seq - seen_round_seq, 'id': history[0]})
 
     return histories
@@ -157,5 +164,8 @@ def get_histories(t, r):
                                        'adjudicator', 'for_adjs', r)
         histories = populate_histories(histories, seen_adj, team_histories,
                                        'team', 'for_adjs', r)
+    for seen_team in team_histories:
+        histories = populate_histories(histories, seen_team, adj_histories,
+                                       'adjudicator', 'for_teams', r)
 
     return histories
