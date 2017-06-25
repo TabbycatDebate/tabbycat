@@ -21,7 +21,7 @@
             <template v-if="!highlights.region && !highlights.gender &&
                             !highlights.category && !highlights.ranking">
               <button class="visible-lg-block btn btn-default">Conflicts Key</button>
-              <button class="btn conflictable conflicts-toolbar hover-history-2-ago">
+              <button class="btn conflictable conflicts-toolbar hover-histories-2-ago">
                 Seen Before
               </button>
               <button class="btn conflictable conflicts-toolbar hover-institution">

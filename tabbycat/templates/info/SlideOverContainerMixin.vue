@@ -83,7 +83,7 @@ export default {
           } else if (historiesType === 'adjudicator') {
             var historyName = self.adjShortName(self.adjudicatorsById[history.id].name)
           }
-          var css = 'conflictable hover-history-' + history.ago + '-ago'
+          var css = 'conflictable hover-histories-' + history.ago + '-ago'
           // Only show last 2 rounds for small screens
           if (history.ago > 2) { css += ' visible-lg-block' }
           formattedHistories.push({'title': historyName, 'ago': history.ago, 'class': css})

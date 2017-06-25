@@ -76,11 +76,11 @@ export default {
     debug: function() { return this.config.devtools },
     handleHoverOn: function(event) {
       this.showSlideOver()
-      this.showConflicts()
+      this.showHoverConflicts()
     },
     handleHoverOff: function(event) {
       this.hideSlideOver()
-      this.hideConflicts()
+      this.hideHoverConflicts()
     },
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-team', this);

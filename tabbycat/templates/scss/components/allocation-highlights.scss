@@ -7,39 +7,39 @@
 // appear like draggable buttons/elements
 .conflictable {
 
-  &.hover-history-1-ago {
+  &.hover-histories-1-ago {
     background: darken($brand-primary, 20%);
   }
 
-  &.hover-history-2-ago {
+  &.hover-histories-2-ago {
     background: lighten($brand-primary, 0%);
   }
 
-  &.hover-history-3-ago {
+  &.hover-histories-3-ago {
     background: lighten($brand-primary, 15%);
   }
 
-  &.hover-history-4-ago {
+  &.hover-histories-4-ago {
     background: lighten($brand-primary, 30%);
   }
 
-  &.hover-history-5-ago {
+  &.hover-histories-5-ago {
     background: lighten($brand-primary, 34%);
   }
 
-  &.hover-history-6-ago {
+  &.hover-histories-6-ago {
     background: lighten($brand-primary, 36%);
   }
 
-  &.hover-history-7-ago {
+  &.hover-histories-7-ago {
     background: lighten($brand-primary, 40%);
   }
 
-  &.hover-history-8-ago {
+  &.hover-histories-8-ago {
     background: lighten($brand-primary, 44%);
   }
 
-  &.hover-history-9-ago {
+  &.hover-histories-9-ago {
     background: lighten($brand-primary, 48%);
   }
 
@@ -106,9 +106,9 @@
 .hover-adjudicator,
 .hover-team,
 .hover-institution,
-.hover-history-1-ago,
-.hover-history-2-ago,
-.hover-history-3-ago {
+.hover-histories-1-ago,
+.hover-histories-2-ago,
+.hover-histories-3-ago {
   color: #fff;
 
   span,

@@ -9,78 +9,81 @@ export default {
   data: function () {
     return {
       isConflicted: {
-        hover: { team: false, adjudicator: false, institution: false, seens: false },
-        panel: { team: false, adjudicator: false, institution: false, seens: false },
+        hover: { team: false, adjudicator: false, institution: false, histories: false },
+        panel: { team: false, adjudicator: false, institution: false, histories: false },
       }
     }
   },
   created: function () {
     // Watch for issues clash events on the global event hub
-    // These looklike 'set-conflicts-for-team-99
-    // var eventCode = this.conflictableType + '-' + this.conflictable.id
-    // this.$eventHub.$on('set-clashes-for-' + eventCode, this.setClashes)
-    // this.$eventHub.$on('set-seens-for-' + eventCode, this.setSeens)
-    // Institutions we need to do specially as they have a different ID
-    // eventCode = 'institution-' + this.conflictable.institution.id
-    // this.$eventHub.$on('set-clashes-for-' + eventCode, this.setClashes)
+    // These looklike 'set-conflicts-for-team-99 (histories, teams, true)
+    var conflictCode = this.conflictableType + '-' + this.conflictable.id
+    this.$eventHub.$on('set-conflicts-for-' + conflictCode, this.setConflicts)
+    var conflictCode = 'institution' + '-' + this.conflictable.institution.id
+    this.$eventHub.$on('set-conflicts-for-' + conflictCode, this.setConflicts)
     // Turning off all hovers
-    // this.$eventHub.$on('hide-all-hover-conflicts', this.unsetHoverConflicts)
+    this.$eventHub.$on('unset-conflicts', this.unsetConflicts)
   },
   computed: {
-    // conflictableType: function() {
-    //   if (!_.isUndefined(this.team)) { return 'team' }
-    //   if (!_.isUndefined(this.adjudicator)) { return 'adjudicator' }
-    // },
-    // conflictable: function() {
-    //   if (!_.isUndefined(this.team)) { return this.team }
-    //   if (!_.isUndefined(this.adjudicator)) { return this.adjudicator }
-    // },
+    conflictableType: function() {
+      if (!_.isUndefined(this.team)) { return 'team' }
+      if (!_.isUndefined(this.adjudicator)) { return 'adjudicator' }
+    },
+    conflictable: function() {
+      if (!_.isUndefined(this.team)) { return this.team }
+      if (!_.isUndefined(this.adjudicator)) { return this.adjudicator }
+    },
     conflictsStatus: function() {
       var self = this
-      var conflictsCSS = 'conflictable '
-      _.forEach(_.keys(this.clashes), function(hoverOrPanel) {
-        // Iterate over panel and hover states
-        if (self.clashes[hoverOrPanel][self.conflictableType]) {
-          conflictsCSS += hoverOrPanel + '-' + self.conflictableType
-        }
-        if (self.clashes[hoverOrPanel]['institution']) {
-          conflictsCSS += hoverOrPanel + '-institutional '
-        }
-      })
-      _.forEach(_.keys(this.seens), function(hoverOrPanel) {
-        // Iterate over panel and hover states
-        if (self.seens[hoverOrPanel]) {
-          conflictsCSS += hoverOrPanel + '-history-' + self.seens[hoverOrPanel] + '-ago'
-        }
+      var conflictsCSS = 'conflictable'
+      _.forEach(this.isConflicted, function(conflictsCategories, hoverOrPanel) {
+        _.forEach(conflictsCategories, function(conflictStatus, conflictType) {
+          // Iterate over panel and hover states
+          if (conflictStatus !== false) {
+            conflictsCSS += ' ' + hoverOrPanel + '-' + conflictType
+            if (conflictType === 'histories') {
+              conflictsCSS += '-' + conflictStatus + '-ago'
+            }
+          }
+        })
       })
       return conflictsCSS
     }
   },
   methods: {
-    showConflicts: function() {
+    showHoverConflicts: function() {
       // Issue conflict events; typically on beginning hover
-      // this.$eventHub.$emit('show-conflicts-for', this.conflictable, this.conflictableType, 'hover', true)
+      var self = this
+      _.forEach(this.conflictable.conflicts, function(conflictsCategories, clashOrHistory) {
+        _.forEach(conflictsCategories, function(conflictsList, conflictType) {
+          _.forEach(conflictsList, function(conflict) {
+            if (clashOrHistory === 'clashes') {
+              var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict
+              self.$eventHub.$emit(eventCode, 'hover', conflictType, true)
+            } else if (clashOrHistory === 'histories') {
+              var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict.id
+              self.$eventHub.$emit(eventCode, 'hover', 'histories', conflict.ago)
+            }
+          })
+        })
+      })
     },
-    hideConflicts: function() {
-      // Issue conflict events; typically on ending hover
-      // this.$eventHub.$emit('hide-all-hover-conflicts')
+    hideHoverConflicts: function() {
+      // Issue hide conflict events; typically on ending hover
+      this.$eventHub.$emit('unset-conflicts', 'hover')
     },
-    // setSeens: function(forHoverOrPanel, setState) {
-    //   // Receive clash events indicating this item should be highlighted
-    //   this.seens[forHoverOrPanel] = setState
-    // },
-    // setClashes: function(forHoverOrPanel, setState, clashType) {
-    //   // Receive seen events indicating this item should be highlighted
-    //   this.clashes[forHoverOrPanel][clashType] = setState
-    // },
-    // unsetHoverConflicts: function() {
-    //   // When a unhovering over something it broadcasts to all objects
-    //   // This is not very efficient but prevents state errors from drag/drops
-    //   this.clashes.hover.team = false
-    //   this.clashes.hover.adjudicator = false
-    //   this.clashes.hover.institution = false
-    //   this.seens.hover = false
-    // }
+    setConflicts: function(hoverOrPanel, conflictType, state) {
+      // console.log('setConflicts: ', hoverOrPanel, conflictType, state)
+      this.isConflicted[hoverOrPanel][conflictType] = state
+    },
+    unsetConflicts: function(hoverOrPanel) {
+      // When a unhovering over something it broadcasts to all objects
+      // This is not very efficient but prevents state errors from drag/drops
+      this.isConflicted[hoverOrPanel].team = false
+      this.isConflicted[hoverOrPanel].adjudicator = false
+      this.isConflicted[hoverOrPanel].institution = false
+      this.isConflicted[hoverOrPanel].histories = false
+    }
   }
 }
 </script>

@@ -41,9 +41,7 @@
                         :teams="debate.teams"
                         :percentiles="percentileThresholds"
                         :locked="debate.locked"
-                        :adj-positions="adjPositions"
-                        :histories="getDebateConflictables(debate, 'histories')"
-                        :conflicts="getDebateConflictables(debate, 'conflicts')"></debate-panel>
+                        :adj-positions="adjPositions"></debate-panel>
         </template>
       </debate>
     </div>
@@ -68,7 +66,6 @@ import HighlightableContainerMixin from '../allocations/HighlightableContainerMi
 import AllocationActions from '../allocations/AllocationActions.vue'
 import DebateImportance from '../allocations/DebateImportance.vue'
 import DebatePanel from '../allocations/DebatePanel.vue'
-import DrawConflictsMixin from '../allocations/DrawConflictsMixin.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 import AjaxMixin from '../ajax/AjaxMixin.vue'
 
@@ -77,7 +74,7 @@ import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
-           HighlightableContainerMixin, DrawConflictsMixin],
+           HighlightableContainerMixin],
   components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)

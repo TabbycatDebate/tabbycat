@@ -1,16 +1,15 @@
 <script>
-import ConflictsCoordinatorMixin from '../allocations/ConflictsCoordinatorMixin.vue'
 import _ from 'lodash'
 
 export default {
-  // Designed to be applied to a Panel component as a bridge between ConflictsCoordinatorMixin
+  // Designed to be applied to a Panel component as a bridge between
   // acting across the entire adj/team pool (for hovers) and instead only
   // focusing it on conflicts within a debate panel / debate teams
   // It relies on both components having a conflicts/histories dictionary;
   // which in the case of a Debate only lists the adjudicators present
   // This the same logic can be used to check for conflicts/histories
 
-  mixins: [ConflictsCoordinatorMixin],
+  mixins: [],
   computed: {
     adjudicatorIds: function() {
       return _.map(this.panel, function(panellist) {
