@@ -72,7 +72,8 @@ export default {
       var adjInstitutions = _.map(this.adjudicators, function(adjudicator) {
         return adjudicator.institution
       })
-      return _.uniq(teamInstitutions.concat(adjInstitutions))
+      var uniqueInstitutions = _.uniq(teamInstitutions.concat(adjInstitutions))
+      return _.keyBy(uniqueInstitutions, 'id')
     },
     unallocatedById: function() {
       return _.keyBy(this.unallocatedItems, 'id')

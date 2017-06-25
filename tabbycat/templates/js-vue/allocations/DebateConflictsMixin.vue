@@ -5,12 +5,17 @@ export default {
   // Designed to be applied to a Panel component as a bridge between
   // acting across the entire adj/team pool (for hovers) and instead only
   // focusing it on conflicts within a debate panel / debate teams
-  // It relies on both components having a conflicts/histories dictionary;
-  // which in the case of a Debate only lists the adjudicators present
-  // This the same logic can be used to check for conflicts/histories
 
-  mixins: [],
   computed: {
+    conflictsToSearch: function() {
+      var a = _.map(this.panel, function(panellist) {
+        return panellist.adjudicator.conflicts
+      })
+      var b = _.map(this.teams, function(team) {
+        return team.conflicts
+      })
+      return a.concat(b)
+    },
     adjudicatorIds: function() {
       return _.map(this.panel, function(panellist) {
         return panellist.adjudicator.id
@@ -21,54 +26,56 @@ export default {
         return team.id
       })
     },
-    // filteredClashes: function() {
-    //   // For the received conflicts (which are given per-adjudicator and contain
-    //   // all of their possible histories/conflicts we need to go through and
-    //   // delete the ones do not match to teams/adjs present in the debate
-    //   var self = this
-    //   var filteredConflicts = _.forEach(this.conflicts, function(conflictsByAdj) {
-    //     conflictsByAdj.team = _.filter(conflictsByAdj.team, function(conflict) {
-    //       return _.includes(self.teamIds, conflict)
-    //     })
-    //     conflictsByAdj.institution = null // TODO: figure out to do in panels
-    //     conflictsByAdj.adjudicator = _.filter(conflictsByAdj.adjudicator, function(conflict) {
-    //       return _.includes(self.adjudicatorIds, conflict)
-    //     })
-    //   })
-    //   return filteredConflicts
-    // },
-    // filteredHistories: function() {
-    //   // TODO: for these conflicts need to go through and delete the ones that
-    //   // don't have teams/adjudicators who are also present in the debate
-    //   var self = this
-    //   var filteredConflicts = _.forEach(this.seens, function(seensByAdj) {
-    //     seensByAdj.team = _.filter(seensByAdj.team, function(seen) {
-    //       return _.includes(self.teamIds, seen)
-    //     })
-    //     seensByAdj.adjudicator = _.filter(seensByAdj.adjudicator, function(seen) {
-    //       return _.includes(self.adjudicatorIds, seen)
-    //     })
-    //   })
-    //   return this.conflicts
-    // }
-  },
-  mounted: function () {
-    this.checkForPanelClashes()
   },
   methods: {
-    checkForPanelClashes() {
-      // var self = this
-      // _.forEach(this.panel, function(panellist) {
-      //   // Get all the conflicts for a given panellist from the inherited debate-relevant list
-      //   self.setOrUnsetConflicts(panellist.adjudicator, 'adjudicator', 'panel', false) // First unset to clear
-      //   self.setOrUnsetConflicts(panellist.adjudicator, 'adjudicator', 'panel', true) // Then reset
-      // })
+    checkForPanelClashes: function() {
+      var self = this
+      _.forEach(this.conflictsToSearch, function(conflictable) {
+        _.forEach(conflictable, function(conflictsCategories, clashOrHistory) {
+          _.forEach(conflictsCategories, function(conflictsList, conflictType) {
+            if (conflictsList && conflictsList.length > 0) {
+              _.forEach(conflictsList, function(conflict) {
+                self.checkIfInPanel(conflict, conflictType, clashOrHistory)
+              })
+            }
+          })
+        })
+      })
+    },
+    checkIfInPanel: function(conflict, conflictType, clashOrHistory) {
+      if (clashOrHistory === 'clashes') {
+        var conflictedId = conflict
+      }
+      if (clashOrHistory === 'histories') {
+        var conflictedId = conflict.id
+      }
+
+      if (conflictType === 'institution') {
+        return // TODO
+      }
+      if (conflictType === 'team' && !_.includes(this.teamIds, conflictedId)) {
+        return // team not present
+      }
+      if (conflictType === 'adjudicator' && !_.includes(this.adjudicatorIds, conflictedId)) {
+        return // adj not present
+      }
+      console.log(conflict, conflictType, clashOrHistory)
+
+      var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflictedId
+      if (clashOrHistory === 'clashes') {
+        this.$eventHub.$emit(eventCode, 'panel', conflictType, true)
+      } else if (clashOrHistory === 'histories') {
+        this.$eventHub.$emit(eventCode, 'panel', 'histories', conflict.ago)
+      }
     }
   },
   watch: {
     panel: function() {
       this.checkForPanelClashes()
     },
-  }
+  },
+  mounted: function () {
+    this.checkForPanelClashes()
+  },
 }
 </script>

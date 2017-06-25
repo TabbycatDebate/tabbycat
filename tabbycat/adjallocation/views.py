@@ -48,11 +48,17 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
         try:
             serialized_adj_or_team['conflicts']['clashes'] = self.get_clashes[for_type][adj_or_team_id]
         except KeyError:
-            serialized_adj_or_team['conflicts']['clashes'] = None
+            serialized_adj_or_team['conflicts']['clashes'] = {}
         try:
             serialized_adj_or_team['conflicts']['histories'] = self.get_histories[for_type][adj_or_team_id]
         except KeyError:
-            serialized_adj_or_team['conflicts']['histories'] = None
+            serialized_adj_or_team['conflicts']['histories'] = {}
+
+        if for_type == 'for_teams':
+            # Teams don't show in AdjudicatorInstitutionConflict; need to
+            # add own institution manually to reverse things
+            institution = serialized_adj_or_team['institution']['id']
+            serialized_adj_or_team['conflicts']['clashes']['institution'] = [institution]
 
         return serialized_adj_or_team
 

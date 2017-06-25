@@ -54,44 +54,44 @@
     background: $brand-danger;
   }
 
-  &.panel-1-ago {
+  &.panel-histories-1-ago {
     border-color: darken($brand-primary, 20%);
   }
 
-  &.panel-2-ago {
+  &.panel-histories-2-ago {
     border-color: lighten($brand-primary, 0%);
   }
 
-  &.panel-3-ago {
+  &.panel-histories-3-ago {
     border-color: lighten($brand-primary, 15%);
   }
 
-  &.panel-4-ago {
+  &.panel-histories-4-ago {
     border-color: lighten($brand-primary, 30%);
   }
 
-  &.panel-5-ago {
+  &.panel-histories-5-ago {
     border-color: lighten($brand-primary, 34%);
   }
 
-  &.panel-6-ago {
+  &.panel-histories-6-ago {
     border-color: lighten($brand-primary, 36%);
   }
 
-  &.panel-7-ago {
+  &.panel-histories-7-ago {
     border-color: lighten($brand-primary, 40%);
   }
 
-  &.panel-8-ago {
+  &.panel-histories-8-ago {
     border-color: lighten($brand-primary, 44%);
   }
 
-  &.panel-9-ago {
+  &.panel-histories-9-ago {
     border-color: lighten($brand-primary, 48%);
   }
 
   // Must appear after seens
-  &.panel-institutional {
+  &.panel-institution {
     border-color: darken($brand-warning, 10%);
   }
 

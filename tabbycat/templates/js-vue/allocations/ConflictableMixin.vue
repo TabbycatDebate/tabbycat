@@ -66,17 +66,22 @@ export default {
       var self = this
       _.forEach(this.conflictable.conflicts, function(conflictsCategories, clashOrHistory) {
         _.forEach(conflictsCategories, function(conflictsList, conflictType) {
-          _.forEach(conflictsList, function(conflict) {
-            if (clashOrHistory === 'clashes') {
-              var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict
-              self.$eventHub.$emit(eventCode, 'hover', conflictType, true)
-            } else if (clashOrHistory === 'histories') {
-              var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict.id
-              self.$eventHub.$emit(eventCode, 'hover', 'histories', conflict.ago)
-            }
-          })
+          if (conflictsList && conflictsList.length > 0) {
+            _.forEach(conflictsList, function(conflict) {
+              self.issueConflict(conflict, conflictType, clashOrHistory)
+            })
+          }
         })
       })
+    },
+    issueConflict: function(conflict, conflictType, clashOrHistory) {
+      if (clashOrHistory === 'clashes') {
+        var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict
+        this.$eventHub.$emit(eventCode, 'hover', conflictType, true)
+      } else if (clashOrHistory === 'histories') {
+        var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict.id
+        this.$eventHub.$emit(eventCode, 'hover', 'histories', conflict.ago)
+      }
     },
     hideHoverConflicts: function() {
       // Issue hide conflict events; typically on ending hover
