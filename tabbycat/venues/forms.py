@@ -7,7 +7,7 @@ from .models import Venue, VenueCategory
 def venuecategoryform_factory(tournament):
 
     venue_queryset = Venue.objects.filter(Q(tournament=tournament) |
-            Q(tournament__isnull=True))
+            Q(tournament__isnull=True)).order_by('name')
 
     class VenueCategoryForm(ModelForm):
 
