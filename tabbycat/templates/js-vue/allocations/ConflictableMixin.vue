@@ -28,6 +28,8 @@ export default {
     })
     // Turning off all hovers
     this.$eventHub.$on('unset-conflicts', this.unsetConflicts)
+    // Turning off all panel conflicts
+    this.$eventHub.$on('unset-conflicts-for-' + conflictCode, this.unsetConflicts)
   },
   computed: {
     hasHistoryConflict: function() {
@@ -93,10 +95,20 @@ export default {
       this.$eventHub.$emit('unset-conflicts', 'hover')
     },
     setConflicts: function(hoverOrPanel, conflictType, state) {
-      // console.log('setConflicts: ', hoverOrPanel, conflictType, state)
+      if (hoverOrPanel !== 'hover') {
+        console.log('enabling', hoverOrPanel, conflictType, 'conflicts for',
+          this.conflictableType, this.conflictable.id, this.isConflicted)
+      }
       this.isConflicted[hoverOrPanel][conflictType] = state
+      if (hoverOrPanel !== 'hover' && this.conflictable.id === 87 && this.conflictableType === 'adjudicator') {
+        this.$set(this.isConflicted['panel'], 'adjudicator', true)
+      }
     },
     unsetConflicts: function(hoverOrPanel) {
+      if (hoverOrPanel !== 'hover') {
+        console.log('unsetting panel conflicts for ',
+          this.conflictableType, this.conflictable.id)
+      }
       // When a unhovering over something it broadcasts to all objects
       // This is not very efficient but prevents state errors from drag/drops
       this.isConflicted[hoverOrPanel].team = false

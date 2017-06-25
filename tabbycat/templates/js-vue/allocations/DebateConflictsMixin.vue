@@ -27,13 +27,27 @@ export default {
       })
     },
   },
+  created: function () {
+    var eventCode = 'check-clashes-for-debate-' + this.debateId
+    this.$eventHub.$on(eventCode, this.checkForPanelClashes)
+  },
   methods: {
-    checkForPanelClashes: function() {
+    checkForPanelClashes: function(unset=true) {
       var self = this
+      // Turn off all conflicts that might remain from beforehand
+      if (unset) {
+        _.forEach(this.teams, function(team) {
+          self.$eventHub.$emit('unset-conflicts-for-team-' + team.id, 'panel')
+        })
+        _.forEach(this.panel, function(panellist) {
+          self.$eventHub.$emit('unset-conflicts-for-team-' + panellist.adjudicator.id, 'panel')
+        })
+      }
+      // Then search through the list of given conflicts across teams/adjs
       _.forEach(this.conflictsToSearch, function(conflictable) {
         _.forEach(conflictable, function(conflictsCategories, clashOrHistory) {
           _.forEach(conflictsCategories, function(conflictsList, conflictType) {
-            if (conflictsList && conflictsList.length > 0) {
+            if (conflictsList) {
               _.forEach(conflictsList, function(conflict) {
                 self.checkIfInPanel(conflict, conflictType, clashOrHistory)
               })
@@ -49,7 +63,6 @@ export default {
       if (clashOrHistory === 'histories') {
         var conflictedId = conflict.id
       }
-
       if (conflictType === 'institution') {
         return // TODO
       }
@@ -59,8 +72,6 @@ export default {
       if (conflictType === 'adjudicator' && !_.includes(this.adjudicatorIds, conflictedId)) {
         return // adj not present
       }
-      console.log(conflict, conflictType, clashOrHistory)
-
       var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflictedId
       if (clashOrHistory === 'clashes') {
         this.$eventHub.$emit(eventCode, 'panel', conflictType, true)
@@ -69,13 +80,8 @@ export default {
       }
     }
   },
-  watch: {
-    panel: function() {
-      this.checkForPanelClashes()
-    },
-  },
   mounted: function () {
-    this.checkForPanelClashes()
+    this.checkForPanelClashes(false)
   },
 }
 </script>

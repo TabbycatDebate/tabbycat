@@ -59,7 +59,7 @@ export default {
       // When locking we need to lock the original debate; not the cloned
       itemDictionary[item.id].locked = lockStatus
     },
-    postModifiedDebates(debatesToSave, addToUnused, removeFromUnused, messageStart) {
+    postModifiedDebates(debatesToSave, addToUnused, removeFromUnused, reallocateToPanel, messageStart) {
       var self = this
       // Lock the debate and unused items to prevent edits
       _.forEach(debatesToSave, function(debateToSave) {
@@ -73,20 +73,54 @@ export default {
         var message = messageStart + self.niceNameForDebate(debateToSave.id)
         self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message,
                       self.processSaveSuccess, self.processSaveFailure,
-                      { 'addToUnused': addToUnused, 'removeFromUnused': removeFromUnused })
+                      { 'addToUnused': addToUnused,
+                        'removeFromUnused': removeFromUnused,
+                        'reallocateToPanel': reallocateToPanel })
       })
     },
     processSaveSuccess: function(dataResponse, savedDebate, returnPayload) {
       // Replace old debate object with new one
       var oldDebateIndex = _.findIndex(this.debates, { 'id': savedDebate.id})
       if (oldDebateIndex !== -1) {
-        this.debates.splice(oldDebateIndex, 1, dataResponse)
-        console.log("    VUE: Loaded new debate for " + this.niceNameForDebate(dataResponse.id))
+        var self = this
+        var newDebate = dataResponse
+        // For the teams and adjudidcators teams in the new debate object
+        // we need to swap them out for the representations of them that were
+        // stored before they were sent over; as they come back without the
+        // initial annotations and thus don't have conflicts, regions, etc
+
+        // For teams they dont change so we can use the global variable
+        newDebate.teams = _.mapValues(newDebate.teams, function(newDebateTeam) {
+          var id = newDebateTeam.id
+          if (_.has(self.teamsById, id)) {
+            return self.teamsById[id]
+          } else {
+            console.log('ERROR: Couldnt find team ', newDebateTeam.short_name)
+            return newDebateTeam
+          }
+        })
+
+        // For adjudicators we saved/stored a list of all adjs when saving
+        var originalAdjsById = returnPayload.reallocateToPanel
+        newDebate.panel = _.map(newDebate.panel, function(newPanellist) {
+          var id = newPanellist.adjudicator.id
+          if (_.has( originalAdjsById, id)) {
+            return { adjudicator: originalAdjsById[id], position: newPanellist.position}
+          } else {
+            console.log('ERROR: Couldnt find adj ', newPanellist.adjudicator.name)
+            return { adjudicator: newPanellist.adjudicator, position: newPanellist.position}
+          }
+        })
+
+        // Remove/replace old debate with new Debate object
+        this.debates.splice(oldDebateIndex, 1, newDebate)
+        console.log("    VUE: Loaded new debate for " + this.niceNameForDebate(newDebate.id))
+        // Check for conflicts in the new panel
+        this.$eventHub.$emit('check-clashes-for-debate-' + newDebate.id)
       } else {
         console.log("    VUE: Shouldn't happen; couldnt find old debates position")
       }
       // Remove/add relevant items to unused area
-      var self = this
       _.forEach(returnPayload.addToUnused, function(unusedItem) {
         self.unallocatedItems.push(unusedItem)
       })

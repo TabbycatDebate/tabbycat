@@ -56,17 +56,30 @@ export default {
       var self = this
       _.forEach(clashes, function(clashesList, clashesType) {
         _.forEach(clashesList, function(clash) {
+          var clashName = false
           if (clashesType === 'team') {
-            var clashName = self.teamsById[clash].short_name
-            var clashIcon = 'glyphicon-comment'
+            if (!_.isUndefined(self.teamsById[clash])) {
+              var clashName = self.teamsById[clash].short_name
+              var clashIcon = 'glyphicon-comment'
+            }
           } else if (clashesType === 'adjudicator') {
-            var clashName = self.adjShortName(self.adjudicatorsById[clash].name)
-            var clashIcon = 'glyphicon-user'
+            if (!_.isUndefined(self.teamsById[clash])) {
+              var clashName = self.adjShortName(self.adjudicatorsById[clash].name)
+              var clashIcon = 'glyphicon-user'
+            }
           } else if (clashesType === 'institution') {
-            var clashName = self.institutionsById[clash].code
-            var clashIcon = 'glyphicon-globe'
+            if (!_.isUndefined(self.institutionsById[clash])) {
+              var clashName = self.institutionsById[clash].code
+              var clashIcon = 'glyphicon-globe'
+            }
           }
-          formattedClashes.push({'title': clashName, 'class': 'conflictable hover-' + clashesType, 'icon': clashIcon})
+          // Institution/Teams/Adjs may be clashed but not present in this draw
+          if (clashName) {
+            formattedClashes.push({
+              'title': clashName, 'class': 'conflictable hover-' + clashesType,
+              'icon': clashIcon
+            })
+          }
         })
       })
       return formattedClashes
@@ -79,9 +92,17 @@ export default {
       _.forEach(histories, function(historiesList, historiesType) {
         _.forEach(historiesList, function(history) {
           if (historiesType === 'team') {
-            var historyName = self.teamsById[history.id].short_name
+            if (_.isUndefined(self.teamsById[history.id])) {
+              var historyName = 'Unknown' // Saw someone not in current draw
+            } else {
+              var historyName = self.teamsById[history.id].short_name
+            }
           } else if (historiesType === 'adjudicator') {
-            var historyName = self.adjShortName(self.adjudicatorsById[history.id].name)
+            if (_.isUndefined(self.adjudicatorsById[history.id])) {
+              var historyName = 'Unknown' // Saw someone not in current draw
+            } else {
+              var historyName = self.adjShortName(self.adjudicatorsById[history.id].name)
+            }
           }
           var css = 'conflictable hover-histories-' + history.ago + '-ago'
           // Only show last 2 rounds for small screens

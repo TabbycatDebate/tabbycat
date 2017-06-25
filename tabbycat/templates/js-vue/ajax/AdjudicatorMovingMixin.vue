@@ -57,11 +57,16 @@ export default {
           toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
         }
       }
+      // After saving the
+      var movedPanellists = _.concat(toDebate.panel, fromDebate.panel)
+      var movedAdjudicators = _.mapValues(movedPanellists, 'adjudicator')
+      var movedAdjsById = _.keyBy(movedAdjudicators, 'id')
+
       // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
       var message = ' move of adj ' + adjudicator.name + ' to ' + toPosition + ' '
       this.postModifiedDebates(debatesToSave, addToUnused, removeFromUnused,
-                               message)
+                               movedAdjsById, message)
     }
   }
 }
