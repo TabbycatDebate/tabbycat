@@ -63,7 +63,7 @@ export default {
               var clashIcon = 'glyphicon-comment'
             }
           } else if (clashesType === 'adjudicator') {
-            if (!_.isUndefined(self.teamsById[clash])) {
+            if (!_.isUndefined(self.adjudicatorsById[clash])) {
               var clashName = self.adjShortName(self.adjudicatorsById[clash].name)
               var clashIcon = 'glyphicon-user'
             }

@@ -7,12 +7,12 @@ export default {
   // focusing it on conflicts within a debate panel / debate teams
 
   computed: {
-    conflictsToSearch: function() {
+    conflictablesToSearch: function() {
       var a = _.map(this.panel, function(panellist) {
-        return panellist.adjudicator.conflicts
+        return panellist.adjudicator
       })
       var b = _.map(this.teams, function(team) {
-        return team.conflicts
+        return team
       })
       return a.concat(b)
     },
@@ -43,16 +43,20 @@ export default {
           self.$eventHub.$emit('unset-conflicts-for-team-' + team.id, 'panel')
         })
         _.forEach(this.panel, function(panellist) {
-          self.$eventHub.$emit('unset-conflicts-for-team-' + panellist.adjudicator.id, 'panel')
+          self.$eventHub.$emit('unset-conflicts-for-adjudicator-' + panellist.adjudicator.id, 'panel')
         })
       }
       // Then search through the list of given conflicts across teams/adjs
-      _.forEach(this.conflictsToSearch, function(conflictable) {
-        _.forEach(conflictable, function(conflictsCategories, clashOrHistory) {
+      _.forEach(this.conflictablesToSearch, function(conflictable) {
+        _.forEach(conflictable.conflicts, function(conflictsCategories, clashOrHistory) {
           _.forEach(conflictsCategories, function(conflictsList, conflictType) {
             if (conflictsList) {
               _.forEach(conflictsList, function(conflict) {
-                self.checkIfInPanel(conflict, conflictType, clashOrHistory)
+                if (conflictType === 'institution') {
+                  self.checkIfInPanelWithInstitution(conflict)
+                } else {
+                  self.checkIfInPanel(conflict, conflictType, clashOrHistory)
+                }
               })
             }
           })
@@ -64,9 +68,6 @@ export default {
         var conflictedId = conflict
       } else if (clashOrHistory === 'histories') {
         var conflictedId = conflict.id
-      }
-      if (conflictType === 'institution') {
-        return // TODO
       }
       if (conflictType === 'team' && !_.includes(this.teamIds, conflictedId)) {
         return // team not present
@@ -80,6 +81,17 @@ export default {
       } else if (clashOrHistory === 'histories') {
         this.$eventHub.$emit(eventCode, 'panel', 'histories', conflict.ago)
       }
+    },
+    checkIfInPanelWithInstitution: function(conflict) {
+      // var self = this
+      // _.forEach(this.teams, function(team) {
+      //   if (team.institution.id === conflict) {
+      //     self.$eventHub.$emit('set-conflicts-for-team-' + team.id, 'panel', 'institution', true)
+      //   }
+      // })
+      // _.forEach(this.panel, function(panellist) {
+      //   self.$eventHub.$emit('set-conflicts-for-team-' + panellist.adjudicator.id, 'panel')
+      // })
     }
   },
   mounted: function () {
