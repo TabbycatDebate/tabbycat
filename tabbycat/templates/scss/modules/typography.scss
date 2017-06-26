@@ -4,8 +4,8 @@
 // Primary Typeface
 @font-face {
   font-family: 'LatoLatinWeb';
-  src: url('/static/fonts/lato-normal.eot');
-  src: url('/static/fonts/lato-normal.eot?#iefix') format('embedded-opentype'), url('/static/fonts/lato-normal.woff') format('woff'), url('/static/fonts/lato-normal.ttf') format('truetype');
+  src: url('/static/fonts/lato-normal.woff2') format('woff2'),
+       url('/static/fonts/lato-normal.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
