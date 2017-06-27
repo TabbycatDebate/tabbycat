@@ -20,7 +20,11 @@ script:
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/
 before_script:
-  - "dj runserver"  # start the dev webserver server
-  - sleep 10 # give Web server some time to build, bind to sockets, etc
+  # GUI for real browsers.
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 3 # give xvfb some time to start
+  - "dj runserver" # start the webserver for chrome to test
+  - sleep 10 # give webserver some time to build, bind to sockets, etc
+  # Run google chrome in headless mode
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
-  ⋮
