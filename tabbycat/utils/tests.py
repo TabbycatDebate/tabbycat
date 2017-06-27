@@ -31,19 +31,7 @@ class BaseTournamentTest():
 
     def setUp(self):
         self.t = Tournament.objects.first()
-        if self.set_preferences:
-            for set_pref in self.set_preferences:
-                self.t.preferences[set_pref] = True
-        if self.unset_preferences:
-            for set_pref in self.unset_preferences:
-                self.t.preferences[set_pref] = False
-
         self.client = Client()
-
-    def get_view_url(self, view_name=None):
-        if not view_name:
-            view_name = self.view_name
-        return reverse(view_name, kwargs=self.get_url_kwargs())
 
     def get_url_kwargs(self):
         kwargs = {'tournament_slug': self.t.slug}
@@ -57,7 +45,6 @@ class BaseTableViewTest(BaseTournamentTest):
     methods for setting tournament/clients and validating data. If inheriting
     classes are validating data they should overwrite table_data methods"""
 
-    view_name = None
 
     @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
     def get_response(self):
@@ -69,7 +56,7 @@ class BaseTableViewTest(BaseTournamentTest):
                 ],
             }
         ):
-            return self.client.get(self.get_view_url(self.view_name))
+            return self.client.get(reverse(self.view_name, kwargs=self.get_url_kwargs()))
 
     def validate_table_data(self, r):
 
@@ -158,8 +145,6 @@ class BaseSeleniumTestCase(StaticLiveServerTestCase):
     rendered. Opens a Chrome window and checks for JS/DOM state on the fixture
     debate."""
 
-    fixtures = ['completed_demo.json'] # Should import; at least according to docs
-
     @classmethod
     def setUpClass(cls):
         super(BaseSeleniumTestCase, cls).setUpClass()
@@ -170,3 +155,32 @@ class BaseSeleniumTestCase(StaticLiveServerTestCase):
     def tearDownClass(cls):
         cls.selenium.quit()
         super(BaseSeleniumTestCase, cls).tearDownClass()
+
+
+class BaseSeleniumTournamentTestCase(BaseSeleniumTestCase):
+    """ Basically reimplementing BaseTournamentTest; but use cls not self """
+
+    fixtures = ['completed_demo.json']
+    round_seq = None
+    unset_preferences = None
+    set_preferences = None
+
+    def setUp(self):
+        self.t = Tournament.objects.first()
+        if self.set_preferences:
+            for set_pref in self.set_preferences:
+                self.t.preferences[set_pref] = True
+        if self.unset_preferences:
+            for set_pref in self.unset_preferences:
+                self.t.preferences[set_pref] = False
+
+        self.client = Client()
+
+    def get_view_url(self, provided_view_name):
+        return reverse(provided_view_name, kwargs=self.get_url_kwargs())
+
+    def get_url_kwargs(self):
+        kwargs = {'tournament_slug': self.t.slug}
+        if self.round_seq is not None:
+            kwargs['round_seq'] = self.round_seq
+        return kwargs

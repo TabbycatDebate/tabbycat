@@ -1,8 +1,8 @@
 from selenium.webdriver.support.ui import WebDriverWait
-from utils.tests import BaseSeleniumTestCase
+from utils.tests import BaseSeleniumTournamentTestCase
 
 
-class CoreFunctionsTests(BaseSeleniumTestCase):
+class CoreFunctionsTests(BaseSeleniumTournamentTestCase):
 
     def test_login(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
