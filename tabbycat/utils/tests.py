@@ -46,12 +46,6 @@ class BaseTournamentTest():
             kwargs['round_seq'] = self.round_seq
         return kwargs
 
-
-class BaseTableViewTest(BaseTournamentTest):
-    """Base class for testing table views; provides methods for validating data.
-    If inheriting classes are validating data they should overwrite
-    table_data methods"""
-
     @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
     def get_response(self):
         with self.modify_settings(
@@ -63,6 +57,11 @@ class BaseTableViewTest(BaseTournamentTest):
             }
         ):
             return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
+
+class BaseTableViewTest(BaseTournamentTest):
+    """Base class for testing table views; provides methods for validating data.
+    If inheriting classes are validating data they should overwrite
+    table_data methods"""
 
     def validate_table_data(self, r):
 
