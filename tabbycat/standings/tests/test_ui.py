@@ -1,3 +1,4 @@
+from django.test import tag
 from selenium.webdriver.support.ui import WebDriverWait
 
 from utils.tests import BaseSeleniumTournamentTestCase
@@ -10,6 +11,7 @@ class CoreStandingsTests(BaseSeleniumTournamentTestCase):
                        'tab_release__replies_tab_released',
                        'tab_release__motion_tab_released']
 
+    @tag('functional')
     def test_speaker_standings(self):
         test_url = self.get_view_url('standings-public-tab-speaker')
         self.selenium.get('%s%s' % (self.live_server_url, test_url))
@@ -21,10 +23,10 @@ class CoreStandingsTests(BaseSeleniumTournamentTestCase):
         rows = self.selenium.find_elements_by_css_selector(".table tbody tr")
 
         def assert_row_state(row, rank, name):
-            rankCellText = row.find_elements_by_tag_name("td")[0].text
-            self.assertTrue(rank in rankCellText)
-            nameCellText = row.find_elements_by_tag_name("td")[1].text
-            self.assertTrue(name in nameCellText)
+            rank_cell_text = row.find_elements_by_tag_name("td")[0].text
+            self.assertTrue(rank in rank_cell_text)
+            name_cell_text = row.find_elements_by_tag_name("td")[1].text
+            self.assertTrue(name in name_cell_text)
 
         assert_row_state(rows[0], str(1), "Earnest Becker")
         assert_row_state(rows[1], str(2), "Timmy Craig")

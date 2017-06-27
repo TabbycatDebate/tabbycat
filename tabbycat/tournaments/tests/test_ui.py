@@ -1,9 +1,11 @@
+from django.test import tag
 from selenium.webdriver.support.ui import WebDriverWait
 from utils.tests import BaseSeleniumTournamentTestCase
 
 
 class CoreFunctionsTests(BaseSeleniumTournamentTestCase):
 
+    @tag('functional')
     def test_login(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
         username_input = self.selenium.find_element_by_name("username")

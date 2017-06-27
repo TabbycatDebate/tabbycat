@@ -8,7 +8,7 @@ python:
   - "3.6"
 addons:
   postgresql: "9.6"
-  chrome: stable
+  # chrome: stable # Re-enable for functional tests
 services:
   - postgresql
 install:
@@ -17,15 +17,19 @@ install:
   - npm install
 script:
   - flake8 .
-  - cd tabbycat && coverage run manage.py test -v 2
+  - cd tabbycat && coverage run manage.py test -v 2 --exclude-tag=functional
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/
-before_install:
-  # Run google chrome in headless mode
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
-before_script:
-  # GUI for real browsers.
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 3 # give xvfb some time to start
-  - dj collectstatic
+# Currently it runs and loads the view; but doesn't seem to resolve the asserts
+# Either the Chrome instance isn't running; or the static files aren't serving
+# To rule out the former maybe disable tabbycat.standings.tests.test_ui.CoreStandingsTests
+# And just let it test the login page (that should work without staticfiles)
+# before_install:
+#   # Run google chrome in headless mode
+#   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+# before_script:
+#   # GUI for real browsers.
+#   - export DISPLAY=:99.0
+#   - sh -e /etc/init.d/xvfb start
+#   - sleep 3 # give xvfb some time to start
+#   - dj collectstatic
