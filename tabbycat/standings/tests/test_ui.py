@@ -20,14 +20,14 @@ class CoreStandingsTests(BaseSeleniumTournamentTestCase):
 
         rows = self.selenium.find_elements_by_css_selector(".table tbody tr")
 
-        def assertRowState(row, rank, name):
+        def assert_row_state(row, rank, name):
             rankCellText = row.find_elements_by_tag_name("td")[0].text
             self.assertTrue(rank in rankCellText)
             nameCellText = row.find_elements_by_tag_name("td")[1].text
             self.assertTrue(name in nameCellText)
 
-        assertRowState(rows[0], str(1), "Earnest Becker")
-        assertRowState(rows[1], str(2), "Timmy Craig")
-        assertRowState(rows[1], str(2), "Kyle Ruiz")
-        assertRowState(rows[51], str(51), "Phil Lyons")
-        assertRowState(rows[-1], str(72), "Willis Carson")
+        assert_row_state(rows[0], str(1), "Earnest Becker")
+        assert_row_state(rows[1], str(2), "Timmy Craig")
+        assert_row_state(rows[1], str(2), "Kyle Ruiz")
+        assert_row_state(rows[51], str(51), "Phil Lyons")
+        assert_row_state(rows[-1], str(72), "Willis Carson")

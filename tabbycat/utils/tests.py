@@ -58,6 +58,7 @@ class BaseTournamentTest():
         ):
             return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
+
 class BaseTableViewTest(BaseTournamentTest):
     """Base class for testing table views; provides methods for validating data.
     If inheriting classes are validating data they should overwrite
