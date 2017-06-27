@@ -156,9 +156,11 @@
 }
 
 .panel-incomplete {
-  background: $brand-danger-alt;
-  border: 1px solid darken($brand-danger-alt, 10%);
-  color: #fff;
+  background: $incomplete-panel;
+
+  &.btn {
+    color: #fff;
+  }
 }
 
 .panel-incomplete.vue-is-drag-enter {
