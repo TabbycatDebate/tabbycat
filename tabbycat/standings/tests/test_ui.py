@@ -19,7 +19,15 @@ class CoreStandingsTests(BaseSeleniumTournamentTestCase):
             lambda driver: driver.find_element_by_css_selector('.table'))
 
         rows = self.selenium.find_elements_by_css_selector(".table tbody tr")
-        for index, row in enumerate(rows):
-            rank_cell = row.find_elements_by_tag_name("td")[0]
-            name_cell = row.find_elements_by_tag_name("td")[1]
-            print(rank_cell.text, name_cell.text)
+
+        def assertRowState(row, rank, name):
+            rankCellText = row.find_elements_by_tag_name("td")[0].text
+            self.assertTrue(rank in rankCellText)
+            nameCellText = row.find_elements_by_tag_name("td")[1].text
+            self.assertTrue(name in nameCellText)
+
+        assertRowState(rows[0], str(1), "Earnest Becker")
+        assertRowState(rows[1], str(2), "Timmy Craig")
+        assertRowState(rows[1], str(2), "Kyle Ruiz")
+        assertRowState(rows[51], str(51), "Phil Lyons")
+        assertRowState(rows[-1], str(72), "Willis Carson")
