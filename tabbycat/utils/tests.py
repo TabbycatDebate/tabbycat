@@ -3,6 +3,8 @@ import logging
 
 from django.core.urlresolvers import reverse
 from django.test import Client, override_settings, TestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.webdriver.chrome.webdriver import WebDriver
 
 from draw.models import DebateTeam
 from tournaments.models import Tournament
@@ -132,3 +134,22 @@ class BaseDebateTestCase(TestCase):
         DebateTeam.objects.all().delete()
         Institution.objects.all().delete()
         self.t.delete()
+
+
+class BaseSeleniumTestCase(StaticLiveServerTestCase):
+    """Used to verify rendered html and javascript functionality on the site as
+    rendered. Opens a Chrome window and checks for JS/DOM state on the fixture
+    debate."""
+
+    fixtures = ['completed_demo.json']
+
+    @classmethod
+    def setUpClass(cls):
+        super(BaseSeleniumTestCase, cls).setUpClass()
+        cls.selenium = WebDriver()
+        cls.selenium.implicitly_wait(10)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(BaseSeleniumTestCase, cls).tearDownClass()
