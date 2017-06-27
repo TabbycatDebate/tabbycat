@@ -12,18 +12,52 @@ from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
 
 
-class BaseTableViewTest():
-    """Base class for testing table views; provides a default fixture and
-    methods for setting tournament/clients and validating data. If inheriting
-    classes are validating data they should overwrite table_data methods"""
+class BaseViewTest():
+    """For testing a view class that is always available. Inheriting classes
+    must also inherit from TestCase"""
+
+    def test(self):
+        response = self.get_response()
+        # 200 OK should be issued if setting is not enabled
+        self.assertEqual(response.status_code, 200)
+        self.validate_table_data(response)
+
+
+class BaseTournamentTest():
+    """For testing a populated view on a tournament with a given dataset"""
 
     fixtures = ['completed_demo.json']
-    view_name = None
     round_seq = None
 
     def setUp(self):
         self.t = Tournament.objects.first()
+        if self.set_preferences:
+            for set_pref in self.set_preferences:
+                self.t.preferences[set_pref] = True
+        if self.unset_preferences:
+            for set_pref in self.unset_preferences:
+                self.t.preferences[set_pref] = False
+
         self.client = Client()
+
+    def get_view_url(self, view_name=None):
+        if not view_name:
+            view_name = self.view_name
+        return reverse(view_name, kwargs=self.get_url_kwargs())
+
+    def get_url_kwargs(self):
+        kwargs = {'tournament_slug': self.t.slug}
+        if self.round_seq is not None:
+            kwargs['round_seq'] = self.round_seq
+        return kwargs
+
+
+class BaseTableViewTest(BaseTournamentTest):
+    """Base class for testing table views; provides a default fixture and
+    methods for setting tournament/clients and validating data. If inheriting
+    classes are validating data they should overwrite table_data methods"""
+
+    view_name = None
 
     @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
     def get_response(self):
@@ -35,13 +69,7 @@ class BaseTableViewTest():
                 ],
             }
         ):
-            return self.client.get(reverse(self.view_name, kwargs=self.get_url_kwargs()))
-
-    def get_url_kwargs(self):
-        kwargs = {'tournament_slug': self.t.slug}
-        if self.round_seq is not None:
-            kwargs['round_seq'] = self.round_seq
-        return kwargs
+            return self.client.get(self.get_view_url(self.view_name))
 
     def validate_table_data(self, r):
 
@@ -65,17 +93,6 @@ class BaseTableViewTest():
 
     def table_data_b(self):
         return False
-
-
-class TableViewTest(BaseTableViewTest):
-    """For testing a view class that is always available. Inheriting classes
-    must also inherit from TestCase"""
-
-    def test(self):
-        response = self.get_response()
-        # 200 OK should be issued if setting is not enabled
-        self.assertEqual(response.status_code, 200)
-        self.validate_table_data(response)
 
 
 class ConditionalTableViewTest(BaseTableViewTest):
@@ -141,7 +158,7 @@ class BaseSeleniumTestCase(StaticLiveServerTestCase):
     rendered. Opens a Chrome window and checks for JS/DOM state on the fixture
     debate."""
 
-    fixtures = ['completed_demo.json']
+    fixtures = ['completed_demo.json'] # Should import; at least according to docs
 
     @classmethod
     def setUpClass(cls):

@@ -1,7 +1,9 @@
 import logging
 
+from django.test import TestCase
+
 from breakqual.models import BreakingTeam
-from utils.tests import ConditionalTableViewTest, TestCase
+from utils.tests import ConditionalTableViewTest
 
 
 class BreakingTeamsViewTest(ConditionalTableViewTest):
