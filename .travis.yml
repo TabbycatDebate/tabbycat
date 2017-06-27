@@ -14,6 +14,7 @@ services:
 install:
   - pip install -r requirements_common.txt
   - pip install codeclimate-test-reporter
+  - npm install
 script:
   - flake8 .
   - cd tabbycat && coverage run manage.py test -v 2
