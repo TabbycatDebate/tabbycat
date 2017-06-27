@@ -29,3 +29,4 @@ before_script:
   - sleep 10 # give webserver some time to build, bind to sockets, etc
   # Run google chrome in headless mode
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  ⋮
