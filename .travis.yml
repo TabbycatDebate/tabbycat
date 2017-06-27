@@ -22,7 +22,8 @@ script:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/
 before_install:
   # Run google chrome in headless mode
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  - "/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --headless --disable-gpu --remote-debugging-port=9222 http://localhost &"
+  ⋮
 before_script:
   # GUI for real browsers.
   - export DISPLAY=:99.0
