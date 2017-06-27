@@ -8,6 +8,7 @@ python:
   - "3.6"
 addons:
   postgresql: "9.6"
+  chrome: stable
 services:
   - postgresql
 install:
@@ -16,3 +17,10 @@ install:
 script:
   - flake8 .
   - cd tabbycat && coverage run manage.py test -v 2
+# The below is used to enable selenium testing as per:
+# https://docs.travis-ci.com/user/gui-and-headless-browsers/
+before_script:
+  - "dj runserver"  # start the dev webserver server
+  - sleep 10 # give Web server some time to build, bind to sockets, etc
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  ⋮
