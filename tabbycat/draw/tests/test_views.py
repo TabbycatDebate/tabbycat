@@ -1,6 +1,7 @@
-from utils.tests import ConditionalTableViewTest, TestCase
+from django.test import TestCase
 
 from tournaments.models import Round
+from utils.tests import ConditionalTableViewTest
 
 
 class PublicDrawForRoundViewTest(ConditionalTableViewTest, TestCase):
