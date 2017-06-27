@@ -597,7 +597,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for standing in standings_list:
             data.append([{
                 'text': rankingformat(ranking),
-                'sort': ranking[0] or "99999",
+                'sort': ranking[0] or 99999,
             } for ranking in standing.iterrankings()])
         self.add_columns(headers, data)
 

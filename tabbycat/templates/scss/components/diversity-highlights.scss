@@ -59,6 +59,7 @@
   &.gender- {
     background-color: $unknown;
   }
+
   // For Teams
   &.gender-men-2 {
     background-color: $male;
@@ -101,6 +102,23 @@
   &.gender-unknown {
     color: $unknown;
   }
+}
+
+// For D3
+path.gender-nm {
+  fill: $female;
+}
+
+path.gender-male {
+  fill: $male;
+}
+
+path.gender-other {
+  fill: $unknown;
+}
+
+path.gender-other {
+  fill: $other;
 }
 
 // For diversity graphs and allocation
@@ -150,6 +168,43 @@
     background-color: $region-cat-8;
     color: #fff;
   }
+}
+
+// For D3
+path.region-0 {
+  fill: $region-cat-0;
+}
+
+path.region-1 {
+  fill: $region-cat-1;
+}
+
+path.region-2 {
+  fill: $region-cat-2;
+}
+
+path.region-3 {
+  fill: $region-cat-3;
+}
+
+path.region-4 {
+  fill: $region-cat-4;
+}
+
+path.region-5 {
+  fill: $region-cat-5;
+}
+
+path.region-6 {
+  fill: $region-cat-6;
+}
+
+path.region-7 {
+  fill: $region-cat-7;
+}
+
+path.region-8 {
+  fill: $region-cat-8;
 }
 
 // Ranking Display

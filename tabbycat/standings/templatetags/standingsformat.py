@@ -7,13 +7,14 @@ register = template.Library()
 def metricformat(value):
     if isinstance(value, float):
         value = "{0:.2f}".format(value).split('.')
-        return value[0] + '<small>' + '.' + value[1] + '</small>'
+        return value[0] + '<small class="text-muted">' + '.' + value[1] + '</small>'
     else:
         return str(value)
 
 
 @register.filter
 def rankingformat(value):
+    # Of the format (1, False); where true/false connotes a shared rank
     if value[0] is None:
         return ""
     string = str(value[0])

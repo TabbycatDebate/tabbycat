@@ -1,4 +1,6 @@
-from utils.tests import ConditionalTableViewTest, TestCase
+from django.test import TestCase
+
+from utils.tests import ConditionalTableViewTest
 from participants.models import Adjudicator, Speaker
 
 

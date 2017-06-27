@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <div v-if="question.type === 't'" class="db-padding-horizontal db-flex-item-1 db-flex-row" class="db-flex-item db-fill-in"></div>
+      <div v-if="question.type === 't'" class="db-padding-horizontal db-flex-item-1 db-flex-row db-flex-item db-fill-in"></div>
 
       <div v-if="question.type === 'tl'" class="db-flex-column db-flex-item">
         <div class="db-padding-horizontal db-flex-item db-flex-item-fhs db-align-vertical-center">

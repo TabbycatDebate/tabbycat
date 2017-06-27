@@ -397,7 +397,7 @@ class BaseMotionStandingsView(BaseStandingsView):
 
 
 class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
-    template_name = 'standings_base.html'
+    template_name = 'standings_table.html'
 
 
 class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
