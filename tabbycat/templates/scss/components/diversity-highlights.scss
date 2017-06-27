@@ -108,12 +108,15 @@
 path.gender-nm {
   fill: $female;
 }
+
 path.gender-male {
   fill: $male;
 }
+
 path.gender-other {
   fill: $unknown;
 }
+
 path.gender-other {
   fill: $other;
 }
@@ -166,7 +169,6 @@ path.gender-other {
     color: #fff;
   }
 }
-
 
 // For D3
 path.region-0 {
