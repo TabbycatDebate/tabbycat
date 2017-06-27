@@ -24,27 +24,33 @@ class BaseViewTest():
 
 
 class BaseTournamentTest():
-    """For testing a populated view on a tournament with a given dataset"""
+    """For testing a populated view on a tournament with a given set dataset"""
 
     fixtures = ['completed_demo.json']
     round_seq = None
 
+    def get_tournament(self):
+        return Tournament.objects.first()
+
     def setUp(self):
-        self.t = Tournament.objects.first()
+        self.t = self.get_tournament()
         self.client = Client()
 
+    def get_view_url(self, provided_view_name):
+        return reverse(provided_view_name, kwargs=self.get_url_kwargs())
+
     def get_url_kwargs(self):
-        kwargs = {'tournament_slug': self.t.slug}
+        t = self.get_tournament()
+        kwargs = {'tournament_slug': t.slug}
         if self.round_seq is not None:
             kwargs['round_seq'] = self.round_seq
         return kwargs
 
 
 class BaseTableViewTest(BaseTournamentTest):
-    """Base class for testing table views; provides a default fixture and
-    methods for setting tournament/clients and validating data. If inheriting
-    classes are validating data they should overwrite table_data methods"""
-
+    """Base class for testing table views; provides methods for validating data.
+    If inheriting classes are validating data they should overwrite
+    table_data methods"""
 
     @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
     def get_response(self):
@@ -56,7 +62,7 @@ class BaseTableViewTest(BaseTournamentTest):
                 ],
             }
         ):
-            return self.client.get(reverse(self.view_name, kwargs=self.get_url_kwargs()))
+            return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
     def validate_table_data(self, r):
 
@@ -157,30 +163,19 @@ class BaseSeleniumTestCase(StaticLiveServerTestCase):
         super(BaseSeleniumTestCase, cls).tearDownClass()
 
 
-class BaseSeleniumTournamentTestCase(BaseSeleniumTestCase):
+class BaseSeleniumTournamentTestCase(BaseSeleniumTestCase, BaseTournamentTest):
     """ Basically reimplementing BaseTournamentTest; but use cls not self """
 
-    fixtures = ['completed_demo.json']
-    round_seq = None
-    unset_preferences = None
+    fixtures = ['completed_demo.json'] # Must be set here; doesn't inheret
     set_preferences = None
+    unset_preferences = None
 
-    def setUp(self):
-        self.t = Tournament.objects.first()
+    def setUp(self): # Must override BaseTournamentTest for unknown reasons
+        t = self.get_tournament()
         if self.set_preferences:
             for set_pref in self.set_preferences:
-                self.t.preferences[set_pref] = True
+                t.preferences[set_pref] = True
         if self.unset_preferences:
             for set_pref in self.unset_preferences:
-                self.t.preferences[set_pref] = False
-
+                t.preferences[set_pref] = False
         self.client = Client()
-
-    def get_view_url(self, provided_view_name):
-        return reverse(provided_view_name, kwargs=self.get_url_kwargs())
-
-    def get_url_kwargs(self):
-        kwargs = {'tournament_slug': self.t.slug}
-        if self.round_seq is not None:
-            kwargs['round_seq'] = self.round_seq
-        return kwargs
