@@ -7,103 +7,108 @@
 // appear like draggable buttons/elements
 .conflictable {
 
-  // For hover states
-  &.hover-personal {
-    background: $brand-danger;
+  &.hover-histories-1-ago {
+    background: darken($conflict-history-base, 20%);
   }
 
-  &.hover-institutional {
-    background: $brand-warning;
+  &.hover-histories-2-ago {
+    background: lighten($conflict-history-base, 0%);
   }
 
-  &.hover-history-1-ago {
-    background: darken($brand-primary, 20%);
+  &.hover-histories-3-ago {
+    background: lighten($conflict-history-base, 15%);
   }
 
-  &.hover-history-2-ago {
-    background: lighten($brand-primary, 0%);
+  &.hover-histories-4-ago {
+    background: lighten($conflict-history-base, 30%);
   }
 
-  &.hover-history-3-ago {
-    background: lighten($brand-primary, 15%);
+  &.hover-histories-5-ago {
+    background: lighten($conflict-history-base, 34%);
   }
 
-  &.hover-history-4-ago {
-    background: lighten($brand-primary, 30%);
+  &.hover-histories-6-ago {
+    background: lighten($conflict-history-base, 36%);
   }
 
-  &.hover-history-5-ago {
-    background: lighten($brand-primary, 34%);
+  &.hover-histories-7-ago {
+    background: lighten($conflict-history-base, 40%);
   }
 
-  &.hover-history-6-ago {
-    background: lighten($brand-primary, 36%);
+  &.hover-histories-8-ago {
+    background: lighten($conflict-history-base, 44%);
   }
 
-  &.hover-history-7-ago {
-    background: lighten($brand-primary, 40%);
+  &.hover-histories-9-ago {
+    background: lighten($conflict-history-base, 48%);
   }
 
-  &.hover-history-8-ago {
-    background: lighten($brand-primary, 44%);
+  // Must be below histories (to take precedence)
+  &.hover-institution {
+    background: $conflict-institution;
   }
 
-  &.hover-history-9-ago {
-    background: lighten($brand-primary, 48%);
+  // Must be below histories + institutions (ie to take precedence)
+  &.hover-adjudicator,
+  &.hover-team {
+    background: $conflict-clash;
   }
 
-  // For in panel states
-  &.panel-personal {
-    border-color: darken($brand-danger, 10%);
+  &.panel-histories-1-ago {
+    border-color: darken($conflict-history-base, 20%);
   }
 
-  &.panel-institutional {
-    border-color: darken($brand-warning, 10%);
+  &.panel-histories-2-ago {
+    border-color: lighten($conflict-history-base, 0%);
   }
 
-  &.panel-1-ago {
-    border-color: darken($brand-primary, 20%);
+  &.panel-histories-3-ago {
+    border-color: lighten($conflict-history-base, 15%);
   }
 
-  &.panel-2-ago {
-    border-color: lighten($brand-primary, 0%);
+  &.panel-histories-4-ago {
+    border-color: lighten($conflict-history-base, 30%);
   }
 
-  &.panel-3-ago {
-    border-color: lighten($brand-primary, 15%);
+  &.panel-histories-5-ago {
+    border-color: lighten($conflict-history-base, 34%);
   }
 
-  &.panel-4-ago {
-    border-color: lighten($brand-primary, 30%);
+  &.panel-histories-6-ago {
+    border-color: lighten($conflict-history-base, 36%);
   }
 
-  &.panel-5-ago {
-    border-color: lighten($brand-primary, 34%);
+  &.panel-histories-7-ago {
+    border-color: lighten($conflict-history-base, 40%);
   }
 
-  &.panel-6-ago {
-    border-color: lighten($brand-primary, 36%);
+  &.panel-histories-8-ago {
+    border-color: lighten($conflict-history-base, 44%);
   }
 
-  &.panel-7-ago {
-    border-color: lighten($brand-primary, 40%);
+  &.panel-histories-9-ago {
+    border-color: lighten($conflict-history-base, 48%);
   }
 
-  &.panel-8-ago {
-    border-color: lighten($brand-primary, 44%);
+  // Must appear after seens
+  &.panel-institution {
+    border-color: darken($conflict-institution, 10%);
   }
 
-  &.panel-9-ago {
-    border-color: lighten($brand-primary, 48%);
+  // Must appear after seens and after institutionals
+  &.panel-adjudicator,
+  &.panel-team, {
+    border-color: darken($conflict-clash, 10%);
   }
 }
 
 // Ensure text is treated nicely when a conflict state is active
-.hover-personal,
-.hover-institutional,
-.hover-history-1-ago,
-.hover-history-2-ago,
-.hover-history-3-ago {
+.hover-adjudicator,
+.hover-team,
+.hover-institution,
+.hover-histories-1-ago,
+.hover-histories-2-ago,
+.hover-histories-3-ago {
   color: #fff;
 
   span,

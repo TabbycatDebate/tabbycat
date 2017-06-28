@@ -5,7 +5,7 @@ import _ from 'lodash'
 export default {
   methods: {
     institutionDetailForSlideOver: function(adjorteam) {
-      var title = adjorteam.institution.code
+      var title = adjorteam.institution.name
       var css = ''
       if (adjorteam.region !== null && !_.isUndefined(adjorteam.region)) {
         title += ' (' + adjorteam.region.name + ')'

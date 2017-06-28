@@ -49,12 +49,11 @@ import DrawTeam from '../draw/DrawTeam.vue'
 import DrawVenue from '../draw/DrawVenue.vue'
 import DrawAdjudicator from '../draw/DrawAdjudicator.vue'
 import SlideOverSubjectMixin from '../../info/SlideOverSubjectMixin.vue'
-import DebateConflictsMixin from '../allocations/DebateConflictsMixin.vue'
 import _ from 'lodash'
 
 export default {
   components: {DrawTeam, DrawVenue, DrawAdjudicator},
-  mixins: [SlideOverSubjectMixin, DebateConflictsMixin],
+  mixins: [SlideOverSubjectMixin],
   props: { debate: Object, roundInfo: Object},
   computed: {
     liveness: function() {

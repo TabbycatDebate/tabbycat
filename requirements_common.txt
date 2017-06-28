@@ -13,7 +13,7 @@ django-formtools==2.0                   # Form wizards
 django-ipware==1.1.6                    # IP Address logging
 django-jet==1.0.6                       # Admin Backend
 django-gfklookupwidget==1.0.5           # Replaces object_id field with a search link
-munkres==1.0.10                         # Algorithm for adjudicator allocation
+munkres==1.0.12                         # Algorithm for adjudicator allocation
 
 # Database
 
@@ -35,3 +35,5 @@ flake8==3.3.0                           # For testing/linting
 flake8-import-order==0.12               # Flake plugin for import order
 flake8-quotes==0.11.0                   # Flake plugin for quotes
 pep8-naming==0.4.1                      # Flake plugin for naming conventions
+selenium==3.4.3                         # Functional testing framework
+chromedriver_installer==0.0.6           # Functional testing Chrome interface

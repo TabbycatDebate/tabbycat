@@ -16,14 +16,17 @@ export default {
   props: { locked: false },
   computed: {
     draggableClasses: function() {
+      var draggableCSS = "vue-draggable btn btn-sm "
+      if (this.isHovering) {
+        draggableCSS += "vue-is-hovering"
+      }
       if (this.isDragging) {
-        return "vue-draggable vue-is-dragging btn btn-sm"
+        return draggableCSS += "vue-is-dragging"
       }
       if (this.locked) {
-        return "vue-draggable locked btn btn-sm"
-      } else {
-        return "vue-draggable btn btn-sm"
+        return draggableCSS += "locked"
       }
+      return draggableCSS
     },
   },
   methods: {
@@ -43,9 +46,11 @@ export default {
       }
     },
     dragEnd: function(event) {
-      this.isDragging = false;
-      this.isHovering = false;
-      this.handleDragEnd(event);
+      this.$nextTick(function () {
+        this.isDragging = false;
+        this.isHovering = false;
+        this.handleDragEnd(event)
+      })
     },
   }
 }
