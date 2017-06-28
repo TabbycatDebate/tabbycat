@@ -223,7 +223,10 @@ for app in TABBYCAT_APPS:
 # Sentry
 # ==============================================================================
 
-DISABLE_SENTRY = False # Pass JS errors on to Sentry
+DISABLE_SENTRY = True
+
+if 'DATABASE_URL' in os.environ and not DEBUG:
+    DISABLE_SENTRY = False  # Only log JS errors in production on heroku
 
 # ==============================================================================
 # Messages
