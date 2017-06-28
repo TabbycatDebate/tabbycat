@@ -28,6 +28,7 @@ class HungarianAllocator(Allocator):
         self.HISTORY_PENALTY = t.pref('adj_history_penalty')
 
         self.NO_PANELLISTS = t.pref('no_panellist_position')
+        self.NO_TRAINEES = t.pref('no_trainee_position')
 
         self.DUPLICATE_ALLOCATIONS = t.pref('duplicate_adjs')
 
@@ -72,16 +73,17 @@ class HungarianAllocator(Allocator):
 
         self.populate_adj_scores(self.adjudicators)
 
-        # Remove trainees
-        self.adjudicators = [a for a in self.adjudicators if a._hungarian_score >= self.MIN_VOTING_SCORE]
-        logger.info("There are %s non-trainee adjudicators", len(self.adjudicators))
-
         # Sort adjudicators and debates in descending score/importance
         self.adjudicators_sorted = list(self.adjudicators)
         shuffle(self.adjudicators_sorted)  # Randomize equally-ranked judges
         self.adjudicators_sorted.sort(key=lambda a: a._hungarian_score, reverse=True)
         self.debates_sorted = list(self.debates)
         self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)
+
+        # Remove trainees
+        trainees = [a for a in self.adjudicators_sorted if a._hungarian_score < self.MIN_VOTING_SCORE]
+        self.adjudicators = [a for a in self.adjudicators_sorted if a._hungarian_score >= self.MIN_VOTING_SCORE]
+        logger.info("There are %s non-trainee adjudicators", len(self.adjudicators))
 
         n_adjudicators = len(self.adjudicators)
         n_debates = len(self.debates)
@@ -201,6 +203,30 @@ class HungarianAllocator(Allocator):
 
         for a in alloc[len(chairs):]:
             logger.info("%s %s %s", a.debate, a.chair, a.panellists)
+
+        # Skip the next step if there is the trainee position is disabled
+        if self.NO_TRAINEES is True:
+            ntrain = False
+        else:
+            ntrain = len(trainees)
+
+        if ntrain:
+            logger.info("adding trainees")
+
+            for i, d in enumerate(self.debates_sorted):
+                a = next((a for a in alloc if a.debate == d), None)
+                if a is None or len(trainees) == 0:
+                    break
+
+                t = next((t for t in trainees if
+                    not t.conflict_with(d.aff_team) and
+                    not t.conflict_with(d.neg_team) and
+                    not t.institution == a.chair.institution), None)
+                if t:
+                    a.trainees.append(t)
+                    trainees.remove(t)
+                    print(t.conflict_with(d.aff_team))
+                    print(t.conflict_with(d.neg_team))
 
         return alloc
 
