@@ -219,6 +219,14 @@ for app in TABBYCAT_APPS:
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
 
+# ==============================================================================
+# Sentry
+# ==============================================================================
+
+DISABLE_SENTRY = True
+
+if 'DATABASE_URL' in os.environ and not DEBUG:
+    DISABLE_SENTRY = False  # Only log JS errors in production on heroku
 
 # ==============================================================================
 # Messages

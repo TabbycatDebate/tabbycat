@@ -15,8 +15,12 @@
 }
 
 .allocation-container {
-  padding-top: 75px; // Need to offset the hidden elements from slideover
+  padding-top: 65px; // Need to offset the hidden elements from slideover
   padding-bottom: 500px; // Need to offset the adjs panel max height
+}
+
+.allocation-messages {
+  min-height: 51px; // When the success msg goes away the page shouldn't jump
 }
 
 .draw-container {

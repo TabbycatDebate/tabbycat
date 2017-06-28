@@ -2,6 +2,15 @@
 var Vue = require('vue');
 import vueBases from './main.js';
 
+// Setup error logging (should happen before other imports)
+import Raven from 'raven-js';
+import RavenVue from 'raven-js/plugins/vue';
+if (window.buildData.sentry) {
+  Raven.config('https://c92d45be09124649af14b540c41991b8@sentry.io/184984', {
+    release: window.buildData.version
+  }).addPlugin(RavenVue, Vue).install();
+}
+
 // Redefine variables from import so that they can be edited
 var vueComponents = vueBases.baseComponents
 var vueData = vueBases.baseData

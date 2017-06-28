@@ -9,6 +9,7 @@ def debate_context(request):
         'tabbycat_version': settings.TABBYCAT_VERSION or "",
         'tabbycat_codename': settings.TABBYCAT_CODENAME or "no codename",
         'all_tournaments': Tournament.objects.filter(active=True),
+        'disable_sentry': settings.DISABLE_SENTRY or False
     }
 
     if hasattr(request, 'tournament'):

@@ -35,6 +35,7 @@
     "lato-font": "3.0.0",
     "live-reload": "1.1.0",
     "lodash": "4.17.4",
+    "raven-js": "^3.16.0",
     "stats-percentile": "^2.0.0",
     "vinyl-source-stream": "1.1.0",
     "vue": "2.3.4",

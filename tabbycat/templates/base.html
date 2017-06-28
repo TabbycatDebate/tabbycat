@@ -106,11 +106,17 @@
   {% endblock %}
 
   {% block js %}
-    {% if user.is_authenticated %}
-      <script src="{% static 'js/admin.bundle.js' %}"></script>
-    {% else %}
-      <script src="{% static 'js/public.bundle.js' %}"></script>
-    {% endif %}
+  {% if user.is_authenticated %}
+  <script>
+    window.buildData = { // Pass to Raven
+      version: '{% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %}',
+      sentry: '{% if disable_sentry %}false{% else %}true{% endif %}'
+    }
+  </script>
+  <script src="{% static 'js/admin.bundle.js' %}"></script>
+  {% else %}
+  <script src="{% static 'js/public.bundle.js' %}"></script>
+  {% endif %}
   {% endblock js %}
 
   <!-- Analytics -->
