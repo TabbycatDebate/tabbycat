@@ -214,6 +214,46 @@ class DrawAvoidConflicts(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class BPPullupDistribution(ChoicePreference):
+    help_text = "In BP, how pullups are distributed. Only \"Anywhere\" is WUDC-compliant."
+    verbose_name = "BP pullup distribution"
+    section = draw_rules
+    name = "bp_pullup_distribution"
+    choices = (
+        ('anywhere', "Anywhere in bracket"),
+        ('one_room', "All in the same room"),
+    )
+    default = 'anywhere'
+
+
+@tournament_preferences_registry.register
+class BPPositionCost(ChoicePreference):
+    help_text = "In BP, which position cost function to use (see documentation for details)"
+    verbose_name = "BP position cost"
+    section = draw_rules
+    name = "bp_position_cost"
+    choices = (
+        ('simple', "Simple"),
+        ('squared', "Squared"),
+    )
+    default = 'squared'
+
+
+@tournament_preferences_registry.register
+class BPAssignmentMethod(ChoicePreference):
+    help_text = ("In BP, which method to use to solve the assignment problem. "
+                 "Only Hungarian with preshuffling is WUDC-compliant.")
+    verbose_name = "BP assignment method"
+    section = draw_rules
+    name = "bp_assignment_method"
+    choices = (
+        ('hungarian', "Hungarian algorithm"),
+        ('hungarian_preshuffled', "Hungarian algorithm with preshuffling"),
+    )
+    default = 'hungarian_preshuffled'
+
+
+@tournament_preferences_registry.register
 class SkipAdjCheckins(BooleanPreference):
     help_text = "Automatically make all adjudicators available for all rounds"
     verbose_name = "Skip adjudicator check-ins"

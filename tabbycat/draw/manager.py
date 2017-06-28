@@ -18,6 +18,9 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_conflicts"       : "draw_rules__draw_avoid_conflicts",
     "odd_bracket"           : "draw_rules__draw_odd_bracket",
     "pairing_method"        : "draw_rules__draw_pairing_method",
+    "pullup"                : "draw_rules__bp_pullup_distribution",
+    "position_cost"         : "draw_rules__bp_position_cost",
+    "assignment_method"     : "draw_rules__bp_assignment_method",
 }
 
 
@@ -108,17 +111,19 @@ class BaseDrawManager:
 
         self.delete()
 
-        teams = self.get_teams()
-        results = self.get_results()
-        rrseq = self.get_rrseq()
-        self._populate_side_counts(teams)
-        self._populate_team_side_allocations(teams)
-
         options = dict()
         for key in self.get_relevant_options():
             options[key] = self.round.tournament.preferences[OPTIONS_TO_CONFIG_MAPPING[key]]
         if options.get("side_allocations") == "manual-ballot":
             options["side_allocations"] = "balance"
+
+        teams = self.get_teams()
+        results = self.get_results()
+        rrseq = self.get_rrseq()
+
+        self._populate_side_counts(teams)
+        if options.get("side_allocatons") == "preallocated":
+            self._populate_team_side_allocations(teams)
 
         drawer = DrawGenerator(self.teams_in_debate, self.draw_type, teams,
                 results=results, rrseq=rrseq, **options)
@@ -147,10 +152,14 @@ class PowerPairedDrawManager(BaseDrawManager):
 
     def get_relevant_options(self):
         options = super().get_relevant_options()
-        options.extend(["avoid_conflicts", "odd_bracket", "pairing_method", "side_allocations"])
+        if self.teams_in_debate == 'two':
+            options.extend(["avoid_conflicts", "odd_bracket", "pairing_method", "side_allocations"])
+        elif self.teams_in_debate == 'bp':
+            options.extend(["pullup", "position_cost", "assignment_method"])
         return options
 
     def get_teams(self):
+        """Get teams in ranked order."""
         metrics = self.round.tournament.pref('team_standings_precedence')
         generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random")
         standings = generator.generate(super().get_teams(), round=self.round.prev)
@@ -207,4 +216,5 @@ DRAW_MANAGER_CLASSES = {
     ('two', Round.DRAW_BREAK): EliminationDrawManager,
     ('bp', Round.DRAW_RANDOM): RandomDrawManager,
     ('bp', Round.DRAW_MANUAL): ManualDrawManager,
+    ('bp', Round.DRAW_POWERPAIRED): PowerPairedDrawManager,
 }

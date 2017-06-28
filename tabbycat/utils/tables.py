@@ -603,9 +603,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_columns(headers, data)
 
     def add_debate_ranking_columns(self, draw, standings):
-        # First half (ie all aff metrics) then second (ie all neg metrics)
-        self.add_ranking_columns(standings, subset=[d.aff_team for d in draw], side='aff')
-        self.add_ranking_columns(standings, subset=[d.neg_team for d in draw], side='neg')
+        for side in self.tournament.sides:
+            self.add_ranking_columns(standings, subset=[d.get_team(side) for d in draw], side=side)
 
     def add_metric_columns(self, standings, subset=None, side=None):
         standings_list = standings.get_standings(subset) if subset is not None else standings
@@ -619,9 +618,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_columns(headers, data)
 
     def add_debate_metric_columns(self, draw, standings):
-        # First half (ie all aff metrics) then second (ie all neg metrics)
-        self.add_metric_columns(standings, subset=[d.aff_team for d in draw], side='aff')
-        self.add_metric_columns(standings, subset=[d.neg_team for d in draw], side='neg')
+        for side in self.tournament.sides:
+            self.add_metric_columns(standings, subset=[d.get_team(side) for d in draw], side='aff')
 
     def highlight_rows_by_column_value(self, column):
         highlighted_rows = [i for i in range(1, len(self.data))
@@ -631,15 +629,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
             for cell in self.data[i]:
                 cell['class'] = cell.get('class', '') + ' highlight-row'
 
-    def add_side_counts(self, teams, round, team_type):
+    def add_side_counts(self, teams, round, side):
         # Translators: e.g. team would be "negative team" or "affirmative team".
         side_label = _("Number of times this %(team)s has been on each side (aff, neg)") % {
-            'team': get_side_name(self.tournament, team_type, "team"),
+            'team': get_side_name(self.tournament, side, "team"),
         }
 
         # Translators: "SC" stands for "side count"
         side_key = _("%(side_abbr)sSC") % {
-            'side_abbr': get_side_name(self.tournament, team_type, 'initial'),
+            'side_abbr': get_side_name(self.tournament, side, 'initial'),
         }
         sides_header = {'key':  side_key, 'tooltip': side_label}
 
@@ -647,6 +645,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
         side_counts = get_side_counts(teams, sides, round.seq)
         sides_data = [{'text': " / ".join(map(str, side_counts[team.id]))} for team in teams]
         self.add_column(sides_header, sides_data)
+
+    def add_debate_side_counts(self, draw, round):
+        for side in self.tournament.sides:
+            self.add_side_counts([d.get_team(side) for d in draw], round, side)
 
     def add_checkbox_columns(self, states, references, key):
         state_header = {'key': key}

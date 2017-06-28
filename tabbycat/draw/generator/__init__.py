@@ -5,6 +5,7 @@ from .elimination import FirstEliminationDrawGenerator, EliminationDrawGenerator
 from .powerpair import PowerPairedDrawGenerator, PowerPairedWithAllocatedSidesDrawGenerator
 from .random import RandomBPDrawGenerator, RandomDrawGenerator, RandomWithAllocatedSidesDrawGenerator
 from .roundrobin import RoundRobinDrawGenerator
+from .bphungarian import BPHungarianDrawGenerator
 
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
@@ -31,11 +32,9 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
         'first_elimination' and 'elimination'.
     """
 
-    default_side_allocations = BasePairDrawGenerator.BASE_DEFAULT_OPTIONS['side_allocations']
-
     if teams_per_debate == 'two':
         if draw_type == "random":
-            if kwargs.get('side_allocations', default_side_allocations) == "preallocated":
+            if kwargs.get('side_allocations') == "preallocated":
                 klass = RandomWithAllocatedSidesDrawGenerator
             else:
                 klass = RandomDrawGenerator
@@ -44,7 +43,7 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
         elif draw_type == "round_robin":
             klass = RoundRobinDrawGenerator
         elif draw_type == "power_paired":
-            if kwargs.get('side_allocations', default_side_allocations) == "preallocated":
+            if kwargs.get('side_allocations') == "preallocated":
                 klass = PowerPairedWithAllocatedSidesDrawGenerator
             else:
                 klass = PowerPairedDrawGenerator
@@ -58,6 +57,8 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
     elif teams_per_debate == 'bp':
         if draw_type == "random":
             klass = RandomBPDrawGenerator
+        elif draw_type == "power_paired":
+            klass = BPHungarianDrawGenerator
         else:
             raise ValueError("Unrecognised draw type for BP draw: {}".format(draw_type))
 
