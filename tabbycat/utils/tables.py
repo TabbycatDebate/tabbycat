@@ -645,12 +645,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         sides = round.tournament.sides
         side_counts = get_side_counts(teams, sides, round.seq)
-        sides_data = []
-        for team in teams:
-            counts = side_counts[team.id]
-            text = " / ".join(str(counts[side]) for side in sides)
-            sides_data.append({'text': text})
-
+        sides_data = [{'text': " / ".join(map(str, side_counts[team.id]))} for team in teams]
         self.add_column(sides_header, sides_data)
 
     def add_checkbox_columns(self, states, references, key):

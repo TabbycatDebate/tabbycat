@@ -73,7 +73,7 @@ class BaseDrawManager:
                 team.side_counts = side_counts[team.id]
         else:
             for team in teams:
-                team.side_counts = {side: 0 for side in sides}
+                team.side_counts = [0] * len(sides)
 
     def _populate_team_side_allocations(self, teams):
         tsas = dict()

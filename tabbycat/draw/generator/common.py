@@ -90,14 +90,17 @@ class Pairing(BasePairing):
             self.teams[0], self.teams[1], self.bracket, self.room_rank)
 
     def balance_sides(self):
-        """Puts whoever has affirmed less on the affirmative side,
-        or chooses randomly if they've done it equally."""
+        """Puts whoever has the biggest (aff - neg) difference on the negative
+        side, or chooses randomly if this is the same for both teams."""
 
-        aff_affs = self.teams[0].side_counts['aff']
-        neg_affs = self.teams[1].side_counts['aff']
-        if aff_affs < neg_affs:
+        aff_affs, aff_negs = self.teams[0].side_counts
+        neg_affs, neg_negs = self.teams[1].side_counts
+        aff_imbalance = aff_affs - aff_negs
+        neg_imbalance = neg_affs - neg_negs
+
+        if aff_imbalance < neg_imbalance:
             pass
-        elif aff_affs > neg_affs:
+        elif neg_imbalance < aff_imbalance:
             self.teams.reverse()
         else:
             random.shuffle(self.teams)
