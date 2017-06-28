@@ -5,7 +5,7 @@
                         :percentiles="percentileThresholds"></allocation-actions>
 
     <div class="row">
-      <div class="vertical-spacing" id="messages-container"></div>
+      <div class="vertical-spacing allocation-messages" id="messages-container"></div>
     </div>
 
     <div class="vertical-spacing">
