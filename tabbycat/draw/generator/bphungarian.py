@@ -191,9 +191,9 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
 
     def _assign_hungarian_preshuffled(self, costs):
         n = len(costs)
-        I = random.sample(range(n), n)
-        J = random.sample(range(n), n)
-        C = [[costs[i][j] for j in J] for i in I]
+        I = random.sample(range(n), n)             # noqa: N806
+        J = random.sample(range(n), n)             # noqa: N806
+        C = [[costs[i][j] for j in J] for i in I]  # noqa: N806
         indices = self.munkres.compute(C)
         return [(I[i], J[j]) for i, j in indices]
 
