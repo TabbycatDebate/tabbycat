@@ -73,12 +73,16 @@ def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     if tournament is None:
         tournament = ballotsub.debate.round.tournament
     ballots_per_debate = tournament.pref('ballots_per_debate')
-    if ballots_per_debate == 'per-adj':
+    teams_in_debate = tournament.pref('teams_in_debate')
+    if ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
         return VotingDebateResult(ballotsub, *args, **kwargs)
-    elif ballots_per_debate == 'per-debate':
+    elif ballots_per_debate == 'per-debate' and teams_in_debate == 'two':
         return ConsensusDebateResult(ballotsub, *args, **kwargs)
+    elif ballots_per_debate == 'per-debate' and teams_in_debate == 'bp':
+        return BPDebateResult(ballotsub, *args, **kwargs)
     else:
-        raise ValueError("Invalid choice for 'ballots_per_debate' preference: " + str(ballots_per_debate))
+        raise ValueError("Invalid combination for 'ballots_per_debate' and 'teams_in_debate' preferences: %s, %s" %
+                (ballots_per_debate, teams_in_debate))
 
 
 class BaseDebateResult:

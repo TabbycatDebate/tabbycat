@@ -179,9 +179,9 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         """
         function = self.get_option_function("assignment_method", self.ASSIGNMENT_ALGORITHM_FUNCTIONS)
         start = time.perf_counter()
-        logger.info("Running assignment algorithm...")
-        indices = function(self._costs)
-        total_cost = sum(self._costs[i][j] for i, j in indices)
+        logger.info("Running assignment algorithm for %d teams...", len(costs))
+        indices = function(costs)
+        total_cost = sum(costs[i][j] for i, j in indices)
         elapsed = time.perf_counter() - start
         logger.info("Assignment took %.2f seconds, total cost: %d", elapsed, total_cost)
         return indices
@@ -208,7 +208,8 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         pairings = []
         for i, ((level, allowed), teams) in enumerate(zip(rooms, teams_in_room), start=1):
             points_in_room = set(team.points for team in teams)
-            assert all([x in allowed for x in points_in_room])
+            if not all([x in allowed for x in points_in_room]):
+                logger.error("Teams with points %s in room that should only have %s", allowed, points_in_room)
             flags = ["pullup"] if len(points_in_room) > 1 else []
             pairing = BPPairing(teams=teams, bracket=level, room_rank=i, flags=flags)
             pairings.append(pairing)
