@@ -22,24 +22,23 @@
           <div v-if="adjPositions.indexOf('P') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
                         'flex-' + (adjPositions.length > 2 ? 16: 16)]">
-            <span >Panel</span>
+            <span>Panel</span>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
                         'flex-' + (adjPositions.length > 2 ? 10: 16)]">
-            <span >Trainees</span>
+            <span>Trainees</span>
           </div>
         </template>
       </draw-header>
-      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo"
-              :histories="getDebateConflictables(debate, 'histories')"
-              :conflicts="getDebateConflictables(debate, 'conflicts')">
+      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
         <div class="draw-cell flex-4" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>
         <template slot="svenue"><!-- Hide Venues --></template>
         <template slot="spanel">
           <debate-panel :panel="debate.panel" :debate-id="debate.id"
+                        :teams="debate.teams"
                         :percentiles="percentileThresholds"
                         :locked="debate.locked"
                         :adj-positions="adjPositions"></debate-panel>
@@ -55,7 +54,7 @@
       </div>
     </unallocated-items-container>
 
-    <slide-over-item :subject="slideOverItem"></slide-over-item>
+    <slide-over :subject="slideOverSubject"></slide-over>
 
   </div>
 </template>
@@ -67,7 +66,6 @@ import HighlightableContainerMixin from '../allocations/HighlightableContainerMi
 import AllocationActions from '../allocations/AllocationActions.vue'
 import DebateImportance from '../allocations/DebateImportance.vue'
 import DebatePanel from '../allocations/DebatePanel.vue'
-import ConflictsCoordinatorMixin from '../allocations/ConflictsCoordinatorMixin.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 import AjaxMixin from '../ajax/AjaxMixin.vue'
 
@@ -76,24 +74,24 @@ import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
-           HighlightableContainerMixin, ConflictsCoordinatorMixin],
+           HighlightableContainerMixin],
   components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)
     // Watch for global conflict highlights
     this.$eventHub.$on('show-conflicts-for', this.setOrUnsetConflicts)
-    this.$eventHub.$on('hide-conflicts-for', this.setOrUnsetConflicts)
   },
   computed: {
     unallocatedAdjsByScore: function() {
       return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
     },
-    allAdjudicatorsById: function() {
+    adjudicatorsById: function() {
+      // Override DrawContainer() method to include unallocated
       return _.keyBy(this.adjudicators.concat(this.unallocatedItems), 'id')
     },
     percentileThresholds: function() {
       // For determining feedback rankings
-      var allScores = _.map(this.allAdjudicatorsById, function(adj) {
+      var allScores = _.map(this.adjudicatorsById, function(adj) {
         return parseFloat(adj.score)
       }).sort()
       var thresholds = []
@@ -109,17 +107,9 @@ export default {
     },
     adjPositions: function() {
       return this.roundInfo.adjudicatorPositions // Convenience
-    }
+    },
   },
   methods: {
-    getDebateConflictables(debate, type) {
-      // Creates a per-debate subset of conflicts/histories for DebateConflictsMixin
-      // to determine in-panel conflicts using ConflictsCoordinator
-      var panellistIds = _.map(debate.panel, function(panellist) {
-        return panellist.adjudicator.id
-      })
-      return _.pick(this[type], panellistIds)
-    },
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move

@@ -21,7 +21,7 @@ export default {
       debate.panel.splice(adjIndex, 1)
     },
     saveMoveForType(adjudicatorId, fromDebate, toDebate, toPosition=null) {
-      var adjudicator = this.allAdjudicatorsById[adjudicatorId]
+      var adjudicator = this.adjudicatorsById[adjudicatorId]
       var currentChair = this.getPanellist(toDebate, false, "C").adjudicator
       var oldPosition = this.getPanellist(fromDebate, adjudicator, false).position
       var addToUnused = []
@@ -57,11 +57,16 @@ export default {
           toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
         }
       }
+      // After saving the
+      var movedPanellists = _.concat(toDebate.panel, fromDebate.panel)
+      var movedAdjudicators = _.mapValues(movedPanellists, 'adjudicator')
+      var movedAdjsById = _.keyBy(movedAdjudicators, 'id')
+
       // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
       var message = ' move of adj ' + adjudicator.name + ' to ' + toPosition + ' '
       this.postModifiedDebates(debatesToSave, addToUnused, removeFromUnused,
-                               message)
+                               movedAdjsById, message)
     }
   }
 }

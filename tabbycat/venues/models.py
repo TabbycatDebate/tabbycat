@@ -8,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 class Venue(models.Model):
     name = models.CharField(max_length=40,
         verbose_name=_("name"))
-    # group = models.ForeignKey(VenueGroup, models.SET_NULL, blank=True, null=True)
     priority = models.IntegerField(
         verbose_name=_("priority"),
         help_text=_("Venues with a higher priority number will be preferred when allocating venues to debates"))

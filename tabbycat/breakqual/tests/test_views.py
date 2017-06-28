@@ -1,7 +1,9 @@
 import logging
 
+from django.test import TestCase
+
 from breakqual.models import BreakingTeam
-from utils.tests import ConditionalTableViewTest, suppress_logs, TestCase
+from utils.tests import ConditionalTableViewTest, suppress_logs
 
 
 class BreakingTeamsViewTest(ConditionalTableViewTest):

@@ -110,7 +110,11 @@ export default {
       return _.orderBy(this.rows, function(row) {
         var cell = row[orderedHeaderIndex]
         var cellData = _.isUndefined(cell.sort) ? cell.text : cell.sort
-        return _.lowerCase(cellData)
+        if (_.isString(cellData)) {
+          return _.lowerCase(cellData)
+        } else {
+          return cellData
+        }
       }, this.sortOrder)
     },
     rowsFilteredByKey: function() {

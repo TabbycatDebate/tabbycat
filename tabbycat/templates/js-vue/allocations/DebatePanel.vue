@@ -7,7 +7,7 @@
                   'positions-limited-' + adjPositions.length]">
       <droppable-generic :assignment-id="debateId"
                          :assignment-position="position"
-                         :extra-css="'flex-horizontal'"
+                         :extra-css="getCSSForPosition(position)"
                          :locked="locked">
 
         <draggable-adjudicator
@@ -26,16 +26,26 @@
 <script>
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
+import DebateConflictsMixin from '../allocations/DebateConflictsMixin.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [],
+  mixins: [DebateConflictsMixin],
   components: { DroppableGeneric, DraggableAdjudicator },
-  props: ['panel', 'debateId', 'percentiles', 'locked', 'adjPositions'],
+  props: ['panel', 'teams', 'debateId', 'percentiles', 'locked', 'adjPositions'],
   methods: {
     getAdjudicatorsByPosition: function(panel, position) {
       return _.filter(panel, { 'position': position })
     },
+    getCSSForPosition: function(position) {
+      var css = 'flex-horizontal '
+      var adjs = this.getAdjudicatorsByPosition(this.panel, position).length
+      if ((position === "C" && adjs === 0) ||
+          (position === "P" && adjs % 2 != 0)) {
+        return css += 'panel-incomplete'
+      }
+      return css
+    }
   },
 }
 </script>

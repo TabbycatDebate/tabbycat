@@ -3,6 +3,7 @@ import logging
 
 from django.views.generic.base import TemplateView, View
 from django.http import HttpResponseBadRequest, JsonResponse
+from django.utils.functional import cached_property
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -17,7 +18,7 @@ from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
 from .models import DebateAdjudicator
-from .utils import get_conflicts, get_histories
+from .utils import get_clashes, get_histories
 
 from utils.misc import reverse_round
 
@@ -26,11 +27,50 @@ logger = logging.getLogger(__name__)
 
 class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
 
+    @cached_property
+    def get_clashes(self):
+        return get_clashes(self.get_tournament(), self.get_round())
+
+    @cached_property
+    def get_histories(self):
+        return get_histories(self.get_tournament(), self.get_round())
+
     def get_unallocated_adjudicators(self):
         round = self.get_round()
         unused_adjs = [a.serialize(round) for a in round.unused_adjudicators()]
         unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
+        unused_adjs = [self.annotate_conflicts(a, 'for_adjs') for a in unused_adjs]
         return json.dumps(unused_adjs)
+
+    def annotate_conflicts(self, serialized_adj_or_team, for_type):
+        adj_or_team_id = serialized_adj_or_team['id']
+        try:
+            serialized_adj_or_team['conflicts']['clashes'] = self.get_clashes[for_type][adj_or_team_id]
+        except KeyError:
+            serialized_adj_or_team['conflicts']['clashes'] = {}
+        try:
+            serialized_adj_or_team['conflicts']['histories'] = self.get_histories[for_type][adj_or_team_id]
+        except KeyError:
+            serialized_adj_or_team['conflicts']['histories'] = {}
+
+        if for_type == 'for_teams':
+            # Teams don't show in AdjudicatorInstitutionConflict; need to
+            # add own institution manually to reverse things
+            institution = serialized_adj_or_team['institution']['id']
+            serialized_adj_or_team['conflicts']['clashes']['institution'] = [institution]
+
+        return serialized_adj_or_team
+
+    def annotate_draw(self, draw, serialised_draw):
+        # Need to unique-ify/reorder break categories/regions for consistent CSS
+        for debate in serialised_draw:
+            for panellist in debate['panel']:
+                panellist['adjudicator'] = self.annotate_conflicts(panellist['adjudicator'], 'for_adjs')
+                panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
+            for (position, team) in debate['teams'].items():
+                team = self.annotate_conflicts(team, 'for_teams')
+
+        return super().annotate_draw(draw, serialised_draw)
 
 
 class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):
@@ -38,18 +78,6 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
     template_name = 'edit_adjudicators.html'
     auto_url = "adjudicators-auto-allocate"
     save_url = "save-debate-panel"
-
-    def annotate_round_info(self, round_info):
-        t = self.get_tournament()
-        r = self.get_round()
-        round_info['updateImportanceURL'] = reverse_round('save-debate-importance', r)
-        round_info['scoreMin'] = t.pref('adj_min_score')
-        round_info['scoreMax'] = t.pref('adj_max_score')
-        round_info['scoreForVote'] = t.pref('adj_min_voting_score')
-        round_info['allowDuplicateAllocations'] = t.pref('duplicate_adjs')
-        round_info['regions'] = self.get_regions_info()
-        round_info['categories'] = self.get_categories_info()
-        return round_info
 
     def get_regions_info(self):
         # Need to extract and annotate regions for the allcoation actions key
@@ -66,12 +94,20 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
             bc['class'] = i
         return all_bcs
 
+    def annotate_round_info(self, round_info):
+        t = self.get_tournament()
+        r = self.get_round()
+        round_info['updateImportanceURL'] = reverse_round('save-debate-importance', r)
+        round_info['scoreMin'] = t.pref('adj_min_score')
+        round_info['scoreMax'] = t.pref('adj_max_score')
+        round_info['scoreForVote'] = t.pref('adj_min_voting_score')
+        round_info['allowDuplicateAllocations'] = t.pref('duplicate_adjs')
+        round_info['regions'] = self.get_regions_info()
+        round_info['categories'] = self.get_categories_info()
+        return round_info
+
     def get_context_data(self, **kwargs):
         kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
-        kwargs['vueAdjudicatorConflicts'] = get_conflicts(
-            self.get_tournament(), self.get_round())
-        kwargs['vueAdjudicatorHistories'] = get_histories(
-            self.get_tournament(), self.get_round())
         return super().get_context_data(**kwargs)
 
 

@@ -142,8 +142,8 @@
   opacity: 1;
   z-index: $z_3; // Knock back from default so it doesnt clash with modals etc
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: -8px;
+  right: -8px;
 
   .tooltip-inner {
     padding: 3px;
@@ -156,9 +156,11 @@
 }
 
 .panel-incomplete {
-  background: $brand-danger-alt;
-  border: 1px solid darken($brand-danger-alt, 10%);
-  color: #fff;
+  background: $incomplete-panel;
+
+  &.btn {
+    color: #fff;
+  }
 }
 
 .panel-incomplete.vue-is-drag-enter {
@@ -177,9 +179,10 @@
     align-items: center;
     display: flex;
     padding: 0 5px;
+    position: relative; // Needs to be for the hover history tooltip
   }
 
-  > div.conflictable {
+  > .conflictable {
     // Team cells need some border state for in panel conflicts
     border-color: #fff;
     border-width: 4px;

@@ -4,24 +4,34 @@ import SlideOverDiversityMixin from './SlideOverDiversityMixin.vue'
 import _ from 'lodash'
 
 export default {
+  data: function () {
+    return { annotationMethodName: 'addConflictsAnnotation' }
+  },
   mixins: [SlideOverDiversityMixin],
   computed: {
     ratingsFeature: function() {
-      var ratings = [{ 'title': this.adjudicator.score + ' Feedback', 'icon': 'glyphicon-signal' }]
+      var ratings = [{ 'title': this.adjudicator.score + ' Feedback Score',
+                       'icon': 'glyphicon-signal' }]
       // Percentile rankings only on Edit Adjudicators page
       if (!_.isUndefined(this.percentileRanking)) {
-        ratings.push({'title': this.percentileRanking.grade + this.percentileRanking.text})
+        ratings.push({
+          'title': this.percentileRanking.grade + this.percentileRanking.text,
+          'class': 'ranking-display ranking-' + this.percentileRanking.percentile
+        })
       }
       return ratings
     },
     genderFeature: function() {
       var gender = [
-        { 'title': this.adjudicator.name,
+        { 'title': this.adjudicator.name + ' (' + this.adjudicator.gender + ')',
           'class': 'gender-display gender-' + this.adjudicator.gender,
           'icon': 'glyphicon-user' }
       ]
       return gender
     },
+    annotateDataForSlideOver: function() {
+      return this.adjudicator
+    }
   },
   methods: {
     formatForSlideOver: function(subject) {

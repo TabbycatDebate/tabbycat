@@ -40,7 +40,7 @@
       </div>
     </unallocated-items-container>
 
-    <slide-over-item :subject="slideOverItem"></slide-over-item>
+    <slide-over :subject="slideOverSubject"></slide-over>
 
   </div>
 </template>
