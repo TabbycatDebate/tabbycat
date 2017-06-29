@@ -19,23 +19,6 @@ var vueData = vueBases.baseData
 var eventHub = new Vue()
 Vue.prototype.$eventHub = eventHub
 
-// //------------------------------------------------------------------------------
-// // Adj Allocation
-// //------------------------------------------------------------------------------
-
-// import AllocationContainer from '../js-vue/allocations/AllocationContainer.vue'
-
-// if (typeof allAdjudicators !== 'undefined' && allAdjudicators !== null) {
-//   // All vue data table views must provide this base tablesData in the template
-//   vueComponents['AllocationContainer'] = AllocationContainer;
-//   vueData['allDebates'] = allDebates;
-//   vueData['allAdjudicators'] = allAdjudicators;
-//   vueData['allTeams'] = allTeams;
-//   vueData['allRegions'] = allRegions;
-//   vueData['allCategories'] = allCategories;
-//   vueData['roundInfo'] = roundInfo;
-// }
-
 //------------------------------------------------------------------------------
 // Tournament Homepage
 //------------------------------------------------------------------------------
@@ -51,26 +34,11 @@ import PrintableBallot from  '../../printing/templates/PrintableBallot.vue'
 vueComponents['PrintableBallot'] = PrintableBallot
 
 //------------------------------------------------------------------------------
-// Divisons Allocator
+// Draw Containers
 //------------------------------------------------------------------------------
 
 import AllocateDivisionsContainer from  '../../divisions/templates/AllocateDivisionsContainer.vue'
 vueComponents['AllocateDivisionsContainer'] = AllocateDivisionsContainer
-
-// import DraggableTeam from  '../js-vue/draganddrops/DraggableTeam.vue'
-
-// if (typeof divisionsBaseData !== 'undefined' && divisionsBaseData !== null) {
-//   vueData = divisionsBaseData; // From Template
-//   vueMethods = divisionsMethods; // From Template
-//   vueEvents = divisionsEvents; // From Template
-//   vueComponents['DivisionDroppable'] = DivisionDroppable;
-//   vueComponents['DraggableTeam'] = DraggableTeam;
-//   vueComponents['UnallocatedDivisionTeams'] = UnallocatedDivisionTeams;
-// }
-
-//------------------------------------------------------------------------------
-// New Generics
-//------------------------------------------------------------------------------
 
 import EditMatchupsContainer from  '../js-vue/containers/EditMatchupsContainer.vue'
 vueComponents['EditMatchupsContainer'] = EditMatchupsContainer
