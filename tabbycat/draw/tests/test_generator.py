@@ -18,7 +18,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def test_invalid_option(self):
-        teams = [TestTeam(*args, sides_count=[0, 0]) for args in self.teams]
+        teams = [TestTeam(*args, side_counts=[0, 0]) for args in self.teams]
 
         def go():
             self.rd = DrawGenerator("two", "random", teams, None, random=True)
@@ -26,7 +26,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
 
     def test_draw(self):
         for i in range(100):
-            teams = [TestTeam(*args, sides_count=[0, 0]) for args in self.teams]
+            teams = [TestTeam(*args, side_counts=[0, 0]) for args in self.teams]
             self.rd = DrawGenerator("two", "random", teams, None, avoid_conflicts="on")
             _draw = self.rd.generate()
             for pairing in _draw:
