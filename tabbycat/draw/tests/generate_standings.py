@@ -21,8 +21,8 @@ if draw_dir not in sys.path:
 print(draw_dir)
 del draw_dir
 
-from draw.tests.utils import TestTeam
-from draw.generator import DrawGenerator
+from draw.tests.utils import TestTeam     # noqa: E402 (has to come after path modification above)
+from draw.generator import DrawGenerator  # noqa: E402 (has to come after path modification above)
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("rounds", type=int, help="Number of rounds")
