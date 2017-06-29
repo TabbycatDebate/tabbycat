@@ -6,7 +6,7 @@ import vueBases from './main.js';
 import Raven from 'raven-js';
 import RavenVue from 'raven-js/plugins/vue';
 if (window.buildData.sentry) {
-  Raven.config('https://c92d45be09124649af14b540c41991b8@sentry.io/184984', {
+  Raven.config('https://88a028d7eb504d93a1e4c92e077d6ce5@sentry.io/184984', {
     release: window.buildData.version
   }).addPlugin(RavenVue, Vue).install();
 }
