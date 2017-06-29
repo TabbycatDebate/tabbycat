@@ -73,6 +73,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django_gulp',  # Asset compilation; must be before staticfiles
     'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
+    'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
@@ -195,6 +196,10 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
         },
+        'sentry': {
+            'level': 'WARNING',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
     },
     'loggers': {
         'django': {
@@ -202,8 +207,18 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['mail_admins', 'sentry'],
             'level': 'ERROR',
+        },
+        'raven': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
         },
     },
     'formatters': {
@@ -215,7 +230,7 @@ LOGGING = {
 
 for app in TABBYCAT_APPS:
     LOGGING['loggers'][app] = {
-        'handlers': ['console', 'mail_admins'],
+        'handlers': ['console', 'mail_admins', 'sentry'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
 
@@ -227,6 +242,11 @@ DISABLE_SENTRY = True
 
 if 'DATABASE_URL' in os.environ and not DEBUG:
     DISABLE_SENTRY = False  # Only log JS errors in production on heroku
+
+    RAVEN_CONFIG = {
+        'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
+        'release': TABBYCAT_VERSION,
+    }
 
 # ==============================================================================
 # Messages
