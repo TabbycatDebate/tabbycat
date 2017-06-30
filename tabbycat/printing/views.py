@@ -240,9 +240,6 @@ class PrintableRandomisedURLs(TournamentMixin, SuperuserRequiredMixin, TemplateV
         kwargs['sheet_type'] = self.sheet_type
         kwargs['tournament_slug'] = tournament.slug
 
-        if self.sheet_type is not 'ballot':
-            kwargs['teams'] = tournament.team_set.all().order_by('institution', 'reference')
-
         if not tournament.pref('share_adjs'):
             kwargs['adjs'] = tournament.adjudicator_set.all().order_by('name')
         else:
@@ -257,6 +254,11 @@ class PrintableRandomisedURLs(TournamentMixin, SuperuserRequiredMixin, TemplateV
 class PrintFeedbackURLsView(PrintableRandomisedURLs):
 
     sheet_type = 'feedback'
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['teams'] = tournament.team_set.all().order_by('institution', 'reference')
+        return super().get_context_data(**kwargs)
 
 
 class PrintBallotURLsView(PrintableRandomisedURLs):
