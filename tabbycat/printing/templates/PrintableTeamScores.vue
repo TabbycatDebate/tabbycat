@@ -30,7 +30,7 @@
 
     <div class="db-flex-item-2 db-flex-row" v-for="x in roundInfo.speakersCount"><!-- Speakers -->
       <div class="db-align-vertical-center db-right-text db-flex-item-fws">
-        {{ x + 1 }}
+        {{ x }}
       </div>
       <div v-if="roundInfo.showPronouns" class="db-fill-in db-flex-item-fwl"></div>
       <div class="db-padding-horizontal db-fill-in db-flex-item"></div>
