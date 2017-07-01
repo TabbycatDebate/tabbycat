@@ -95,10 +95,10 @@ export default {
       this.$eventHub.$emit('unset-conflicts', 'hover')
     },
     setConflicts: function(hoverOrPanel, conflictType, state) {
-      if (hoverOrPanel !== 'hover') {
-        console.info('Enabling', hoverOrPanel, conflictType, 'conflicts for',
-          this.conflictableType, this.conflictable.id, this.isConflicted)
-      }
+      // if (hoverOrPanel !== 'hover') {
+      //   console.info('Enabling', hoverOrPanel, conflictType, 'conflicts for',
+      //     this.conflictableType, this.conflictable.id, this.isConflicted)
+      // }
       this.isConflicted[hoverOrPanel][conflictType] = state
     },
     unsetConflicts: function(hoverOrPanel) {
