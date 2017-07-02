@@ -34,7 +34,7 @@ class HungarianAllocator(Allocator):
     def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
 
-        # Normalise debate importances back to the 0-5 (not +/-2) range expected
+        # Normalise debate importances back to the 0-5 (not ±2) range expected
         normalised_importance = debate.importance + 2
 
         # Similarly normalise adj scores to the 0-5 range expected
@@ -74,7 +74,7 @@ class HungarianAllocator(Allocator):
         n_voting = len(voting)
 
         if self.no_panellists:
-            solos = adjudicators_sorted[:n_debates]
+            solos = voting[:n_debates]
             panellists = []
         else:
             n_expected_solos = n_debates if self.no_panellists else n_debates - (n_voting - n_debates) // 2
@@ -174,7 +174,7 @@ class HungarianAllocator(Allocator):
             logger.info("costing trainees")
             cost_matrix = []
             for debate in solo_debates:
-                row = [self.calc_cost(debate, adj) for adj in trainees]
+                row = [self.calc_cost(debate, adj, adjustment=-2.0) for adj in trainees]
                 cost_matrix.append(row)
 
             logger.info("optimizing trainees (matrix size: %d positions by %d trainees)", len(cost_matrix), len(cost_matrix[0]))
