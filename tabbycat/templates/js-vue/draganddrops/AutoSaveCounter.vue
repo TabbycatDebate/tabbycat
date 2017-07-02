@@ -3,10 +3,7 @@
   <!-- ADD tooltip -->
   <button :class="['btn btn-default', customClasses, animationClass]" data-toggle="tooltip"
           data-placement="bottom" title="Changes are automatically saved; however do not edit/change allocations across multiple browsers/computers at the same time!">
-    <span v-if="!lastSaved">No saved changes</span>
-    <span v-if="lastSaved" :class="[animationClass]">
-      Saved at {{ hours }}:{{ minutes }}
-    </span>
+    <span :class="[animationClass]">{{ savedAgoDisplay }}</span>
   </button>
 
 </template>
@@ -23,9 +20,22 @@ export default {
       this.lastSaved = new Date()
       this.animationClass = "save-flash"
       setTimeout(function () { this.animationClass = "" }.bind(this), 5000)
+      setInterval(function(){
+        // Slightly increment to trigger savedAgoDisplay updates
+        this.lastSaved = new Date(this.lastSaved.getTime() + 0.001)
+      }.bind(this), 1000);
     }
   },
   computed: {
+    savedAgoDisplay: function() {
+      if (!this.lastSaved) { return "No saved changes" }
+      var savedAgo = Math.abs(new Date() - this.lastSaved) / 1000
+      if (savedAgo > 59) {
+        return "Saved at " + this.hours + ":" + this.minutes
+      } else {
+        return "Saved " + parseInt(savedAgo) + "s ago"
+      }
+    },
     customClasses: function() {
       return this.css
     },

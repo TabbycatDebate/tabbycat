@@ -16,12 +16,16 @@
     </div>
 
     <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions">
-        <div class="thead flex-cell flex-12 vue-droppable-container" slot="hvenue">
-          <span>Venue</span>
+      <draw-header :positions="roundInfo.positions" @resort="updateSorting"
+                   :sort-key="sortKey" :sort-order="sortOrder">
+        <div @click="updateSorting('venue')" slot="hvenue"
+             class="vue-sortable thead flex-cell flex-12 vue-droppable-container">
+          <span>Venue </span>
+          <span :class="sortClasses('venue')"></span>
         </div>
       </draw-header>
-      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
+      <debate v-for="debate in dataOrderedByKey"
+              :debate="debate" :key="debate.id" :round-info="roundInfo">
         <div class="draw-cell flex-12 vue-droppable-container" slot="svenue">
           <droppable-generic :assignment-id="debate.id" :locked="debate.locked">
             <slot name="svenue">

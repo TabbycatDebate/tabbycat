@@ -61,6 +61,9 @@ export default {
       }
       return 'col-md-12'; // Fallback; should be redundant
     },
+    sortableData: function() {
+      return this.rows // Enables SortableTableMixin
+    }
   },
   methods: {
     getTableId: function(i) {
@@ -68,7 +71,7 @@ export default {
     },
     updateTableFilters: function() {
       this.$eventHub.$emit('update-table-filters', this.filterKey)
-    }
+    },
   },
 }
 </script>

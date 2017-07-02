@@ -13,15 +13,18 @@
     </div>
 
     <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions">
+      <draw-header :positions="roundInfo.positions"  @resort="updateSorting"
+                   :sort-key="sortKey" :sort-order="sortOrder">
         <template slot="hteams">
-          <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test"
-            v-for="position in roundInfo.positions">
+          <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
+               v-for="position in roundInfo.positions" @click="updateSorting(position)">
             <span>{{ position }}</span>
+            <span :class="sortClasses(position)"></span>
           </div>
         </template>
       </draw-header>
-      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
+      <debate v-for="debate in dataOrderedByKey"
+              :debate="debate" :key="debate.id" :round-info="roundInfo">
         <template v-for="position in roundInfo.positions">
           <div class="draw-cell flex-12 vue-droppable-container" :slot="'s-' + position">
             <droppable-generic :assignment-id="debate.id"

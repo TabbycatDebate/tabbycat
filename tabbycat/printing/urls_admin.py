@@ -15,10 +15,10 @@ urlpatterns = [
     # Private URL distribution
     url(r'^feedback_urls_sheets/',
         views.PrintFeedbackURLsView.as_view(),
-        name='printing-ballot-urls'),
+        name='printing-feedback-urls'),
     url(r'^ballots_urls_sheets/',
         views.PrintBallotURLsView.as_view(),
-        name='printing-feedback-urls'),
+        name='printing-ballot-urls'),
 
     # WADL sheets
     url(r'^round/(?P<round_seq>\d+)/master_sheets/list/$',

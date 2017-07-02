@@ -28,6 +28,13 @@
   .draw-row:last-of-type {
     border-radius: 0 0 4px 4px;
   }
+
+  .vue-sort-key,
+  .thead.vue-droppable-container .vue-sort-key {
+    margin-left: 2px; // Fixes for the pretend table headers
+    border-bottom: 0;
+    margin-bottom: 3px;
+  }
 }
 
 .draw-header {
