@@ -12,7 +12,7 @@
     </div>
     <div class="draggable-title">
       <h5 class="no-top-margin no-bottom-margin">
-        <span v-if="debug">{{ adjudicator.id }} </span>{{ initialledName }}
+        {{ initialledName }}
       </h5>
       <span class="small subtitle" v-if="adjudicator.institution">
         {{ adjudicator.institution.code }}
@@ -79,7 +79,6 @@ export default {
     }
   },
   methods: {
-    debug: function() { return this.config.devtools },
     handleHoverOn: function(event) {
       this.isHovering = true
       this.showSlideOver()

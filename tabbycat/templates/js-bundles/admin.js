@@ -64,11 +64,7 @@ if (typeof vueData !== 'undefined') {
     new Vue({
       el: '#vueMount',
       components: vueComponents,
-      // created: vueCreated,
       data: vueData,
-      // events: vueEvents,
-      // filters: vueFilters,
-      // methods: vueMethods
     });
 
   }
