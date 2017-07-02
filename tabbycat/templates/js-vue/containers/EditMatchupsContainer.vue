@@ -18,10 +18,12 @@
           <div class="thead flex-cell flex-12 vue-droppable-container" data-toggle="tooltip" title="test"
             v-for="position in roundInfo.positions">
             <span>{{ position }}</span>
+            <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
           </div>
         </template>
       </draw-header>
-      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
+      <debate v-for="debate in debatesOrderedByKey"
+              :debate="debate" :key="debate.id" :round-info="roundInfo">
         <template v-for="position in roundInfo.positions">
           <div class="draw-cell flex-12 vue-droppable-container" :slot="'s-' + position">
             <droppable-generic :assignment-id="debate.id"

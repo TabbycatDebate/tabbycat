@@ -12,6 +12,7 @@
       <draw-header :positions="roundInfo.positions">
         <div class="thead flex-cell flex-4" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
           <span>Priority</span>
+          <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
         </div>
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
@@ -31,7 +32,8 @@
           </div>
         </template>
       </draw-header>
-      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
+      <debate v-for="debate in debatesOrderedByKey"
+              :debate="debate" :key="debate.id" :round-info="roundInfo">
         <div class="draw-cell flex-4" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>

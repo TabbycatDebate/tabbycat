@@ -19,9 +19,11 @@
       <draw-header :positions="roundInfo.positions">
         <div class="thead flex-cell flex-12 vue-droppable-container" slot="hvenue">
           <span>Venue</span>
+          <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
         </div>
       </draw-header>
-      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
+      <debate v-for="debate in debatesOrderedByKey"
+              :debate="debate" :key="debate.id" :round-info="roundInfo">
         <div class="draw-cell flex-12 vue-droppable-container" slot="svenue">
           <droppable-generic :assignment-id="debate.id" :locked="debate.locked">
             <slot name="svenue">

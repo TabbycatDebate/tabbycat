@@ -33,6 +33,9 @@ export default {
     this.$eventHub.$on('update-unallocated', this.updateUnallocatedItems)
   },
   computed: {
+    debatesOrderedByKey: function() {
+      return this.debates
+    },
     teams: function() {
       // Return all teams (in debates) as a single array
       var allTeams = _.map(this.debates, function(debate) {
