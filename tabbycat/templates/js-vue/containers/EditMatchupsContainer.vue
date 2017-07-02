@@ -16,8 +16,8 @@
       <draw-header :positions="roundInfo.positions"  @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
         <template slot="hteams">
-          <div class="thead flex-cell flex-12 vue-droppable-container"
-               v-for="position in roundInfo.positions">
+          <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
+               v-for="position in roundInfo.positions" @click="updateSorting(position)">
             <span>{{ position }}</span>
             <span :class="sortClasses(position)"></span>
           </div>

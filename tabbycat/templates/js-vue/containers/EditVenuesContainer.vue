@@ -19,8 +19,7 @@
       <draw-header :positions="roundInfo.positions" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
         <div @click="updateSorting('venue')" slot="hvenue"
-             class="thead flex-cell flex-12 vue-droppable-container"
-             data-toggle="tooltip">
+             class="vue-sortable thead flex-cell flex-12 vue-droppable-container">
           <span>Venue </span>
           <span :class="sortClasses('venue')"></span>
         </div>
