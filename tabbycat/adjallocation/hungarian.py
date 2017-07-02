@@ -1,9 +1,10 @@
 import logging
+import random
 from math import exp
-from random import shuffle
 
 from munkres import Munkres
 
+from .allocation import AdjudicatorAllocation
 from .allocator import Allocator
 
 logger = logging.getLogger(__name__)
@@ -61,164 +62,131 @@ class HungarianAllocator(Allocator):
         return cost
 
     def allocate(self):
-        from adjallocation.allocation import AdjudicatorAllocation
-
         self.populate_adj_scores(self.adjudicators)
 
-        # Sort adjudicators and debates in descending score/importance
-        self.adjudicators_sorted = list(self.adjudicators)
-        shuffle(self.adjudicators_sorted)  # Randomize equally-ranked judges
-        self.adjudicators_sorted.sort(key=lambda a: a._hungarian_score, reverse=True)
-        self.debates_sorted = list(self.debates)
-        self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)
+        # Sort voting adjudicators in descending order by score
+        voting = [a for a in self.adjudicators if a._hungarian_score >= self.min_voting_score and not a.novice]
+        random.shuffle(voting)
+        voting.sort(key=lambda a: a._hungarian_score, reverse=True)
 
-        # Remove trainees
-        trainees = [a for a in self.adjudicators_sorted if a._hungarian_score < self.min_voting_score]
-        self.adjudicators = [a for a in self.adjudicators_sorted if a._hungarian_score >= self.min_voting_score]
-        logger.info("There are %s non-trainee adjudicators", len(self.adjudicators))
-
-        n_adjudicators = len(self.adjudicators)
+        # Divide into solos, panellists and trainees
         n_debates = len(self.debates)
-        logger.info("There are %s debates", n_debates)
-        if n_adjudicators < n_debates:
-            logger.warning("There are %d debates but only %d adjudicators", n_debates, n_adjudicators)
+        n_voting = len(voting)
 
-        # If not setting panellists allocate all debates a solo chair
-        if self.no_panellists is True:
-            n_solos = n_debates
+        if self.no_panellists:
+            solos = adjudicators_sorted[:n_debates]
+            panellists = []
         else:
-            n_solos = n_debates - (n_adjudicators - n_debates)//2
+            n_expected_solos = n_debates if self.no_panellists else n_debates - (n_voting - n_debates) // 2
+            solos = voting[:n_expected_solos]
+            panellists = voting[n_expected_solos:]
 
-        # get adjudicators that can adjudicate solo
-        solos = self.adjudicators_sorted[:n_solos]
-        logger.info("There are %s solos", len(solos))
+        if self.no_trainees:
+            trainees = []
+        else:
+            trainees = [a for a in self.adjudicators if a not in voting]
+            trainees.sort(key=lambda a: a._hungarian_score, reverse=True)
 
-        # get debates that will be judged by solo adjudicators
-        chair_debates = self.debates_sorted[:len(solos)]
+        # Divide debates into solo-chaired debates and panel debates
+        debates_sorted = sorted(self.debates, key=lambda d: (-d.importance, d.room_rank))
+        solo_debates = debates_sorted[:len(solos)]
+        panel_debates = debates_sorted[len(solos):]
 
-        panel_debates = self.debates_sorted[len(solos):]
-        panellists = [a for a in self.adjudicators_sorted if a not in solos]
-        logger.info("There are %s panellists", len(panellists))
+        logger.info("There are %d debates (%d solo, %d panel), %d solos, %d panellists "
+                "(including chairs) and %d trainees", len(debates_sorted), len(solo_debates),
+                len(panel_debates), len(solos), len(panellists), len(trainees))
+        if n_voting < n_debates:
+            logger.warning("There are %d debates but only %d voting adjudicators", n_debates, n_voting)
 
         # For tournaments with duplicate allocations there are typically not
         # enough adjudicators to form full panels, so don't crash in that case
         if not self.duplicate_allocations and len(panellists) < len(panel_debates) * 3:
-            logger.warning("There are %d panel debates but only %d available panellists (less than %d)",
-                    len(panel_debates), len(panellists), len(panel_debates) * 3)
+            logger.warning("There are %d panel debates but only %d available panellists "
+                    "(less than %d)", len(panel_debates), len(panellists), len(panel_debates) * 3)
+
+        # Allocate solos
 
         m = Munkres()
 
         if len(solos) > 0:
-
             logger.info("costing solos")
+            cost_matrix = []
+            for debate in solo_debates:
+                row = [self.calc_cost(debate, adj) for adj in solos]
+                cost_matrix.append(row)
 
-            n = len(solos)
-
-            cost_matrix = [[0] * n for i in range(n)]
-
-            for i, debate in enumerate(chair_debates):
-                for j, adj in enumerate(solos):
-                    cost_matrix[i][j] = self.calc_cost(debate, adj)
-
-            logger.info("optimizing")
-
+            logger.info("optimizing solos (matrix size: %d positions by %d adjudicators)", len(cost_matrix), len(cost_matrix[0]))
             indexes = m.compute(cost_matrix)
+            total_cost = sum(cost_matrix[i][j] for i, j in indexes)
+            logger.info('total cost for %d solo debates: %f', len(solos), total_cost)
 
-            total_cost = 0
-            for r, c in indexes:
-                total_cost += cost_matrix[r][c]
-
-            logger.info('total cost for solos %f', total_cost)
-            logger.info('number of solo debates %d', n)
-
-            result = ((chair_debates[i], solos[j]) for i, j in indexes if i <
-                      len(chair_debates))
+            result = ((solo_debates[i], solos[j]) for i, j in indexes if i < len(solo_debates))
             alloc = [AdjudicatorAllocation(d, c) for d, c in result]
-
-            for a in alloc:
-                logger.info("%s %s", a.debate, a.chair)
+            for aa in alloc:
+                logger.info("allocating to %s: %s", aa.debate, aa.chair)
 
         else:
             logger.info("No solo adjudicators.")
             alloc = []
 
-        # Skip the next step if there is the panellist position is disabled
-        if self.no_panellists is True:
-            npan = False
-        else:
-            n = len(panel_debates)
-            npan = len(panellists)
+        # Allocate panellists
 
-        if npan:
+        if len(panellists) > 0:
             logger.info("costing panellists")
-
-            # matrix is square, dummy debates have cost 0
-            cost_matrix = [[0] * npan for i in range(npan)]
+            cost_matrix = []
             for i, debate in enumerate(panel_debates):
                 for j in range(3):
-
                     # for the top half of these debates, the final panellist
                     # can be of lower quality than the other 2
-                    if i < npan/2 and j == 2:
-                        adjustment = -1.0
-                    else:
-                        adjustment = 0
+                    adjustment = -1.0 if i < len(panel_debates)/2 and j == 2 else 0.0
+                    row = [self.calc_cost(debate, adj, adjustment) for adj in panellists]
+                    cost_matrix.append(row)
 
-                    for k, adj in enumerate(panellists):
-                        cost_matrix[3*i+j][k] = self.calc_cost(debate, adj,
-                                                               adjustment)
-
-            logger.info("optimizing")
-
+            logger.info("optimizing panellists (matrix size: %d positions by %d adjudicators)", len(cost_matrix), len(cost_matrix[0]))
             indexes = m.compute(cost_matrix)
-
-            cost = 0
-            for r, c in indexes:
-                cost += cost_matrix[r][c]
-
-            logger.info('total cost for panellists %f', cost)
+            total_cost = sum(cost_matrix[i][j] for i, j in indexes)
+            logger.info('total cost for %d panel debates: %f', len(panel_debates), total_cost)
 
             # transfer the indices to the debates
             # the debate corresponding to row r is floor(r/3) (i.e. r // 3)
-            p = [[] for i in range(n)]
+            n = len(panel_debates)
+            panels = [[] for i in range(n)]
             for r, c in indexes[:n*3]:
-                p[r // 3].append(panellists[c])
+                panels[r // 3].append(panellists[c])
 
-            # create the corresponding adjudicator allocations, making sure
-            # that the chair is the highest-ranked adjudicator in the panel
-            for i, d in enumerate(panel_debates):
-                a = AdjudicatorAllocation(d)
-                p[i].sort(key=lambda a: a._hungarian_score, reverse=True)
-                a.chair = p[i].pop(0)
-                a.panellists = p[i]
-                alloc.append(a)
+            # create the corresponding adjudicator allocations, making sure that
+            # the chair is the highest-ranked adjudicator in the panel
+            for i, debate in enumerate(panel_debates):
+                aa = AdjudicatorAllocation(debate)
+                panels[i].sort(key=lambda a: a._hungarian_score, reverse=True)
+                if not panels[i]:
+                    continue
+                aa.chair = panels[i].pop(0)
+                aa.panellists = panels[i]
+                alloc.append(aa)
 
-        for a in alloc[len(solos):]:
-            logger.info("%s %s %s", a.debate, a.chair, a.panellists)
+        for aa in alloc[len(solos):]:
+            logger.info("allocating to %s: %s (c), %s", aa.debate, aa.chair, ", ".join([str(p) for p in aa.panellists]))
 
-        # Skip the next step if there is the trainee position is disabled
-        if self.no_trainees is True:
-            ntrain = False
-        else:
-            ntrain = len(trainees)
+        # Allocate trainees, one per solo debate (leave the rest unallocated)
 
-        if ntrain:
-            logger.info("adding trainees")
+        if len(trainees) > 0:
+            logger.info("costing trainees")
+            cost_matrix = []
+            for debate in solo_debates:
+                row = [self.calc_cost(debate, adj) for adj in trainees]
+                cost_matrix.append(row)
 
-            for i, d in enumerate(self.debates_sorted):
-                a = next((a for a in alloc if a.debate == d), None)
-                if a is None or len(trainees) == 0:
-                    break
+            logger.info("optimizing trainees (matrix size: %d positions by %d trainees)", len(cost_matrix), len(cost_matrix[0]))
+            indexes = m.compute(cost_matrix)
+            total_cost = sum(cost_matrix[i][j] for i, j in indexes)
+            logger.info('total cost for %d trainees: %f', len(solos), total_cost)
 
-                t = next((t for t in trainees if
-                    not t.conflict_with(d.aff_team) and
-                    not t.conflict_with(d.neg_team) and
-                    not t.institution == a.chair.institution), None)
-                if t:
-                    a.trainees.append(t)
-                    trainees.remove(t)
-                    print(t.conflict_with(d.aff_team))
-                    print(t.conflict_with(d.neg_team))
+            result = ((solo_debates[i], trainees[j]) for i, j in indexes if i < len(solo_debates))
+            allocation_by_debate = {aa.debate: aa for aa in alloc}
+            for debate, trainee in result:
+                allocation_by_debate[debate].trainees.append(trainee)
+                logger.info("allocating to %s: %s (t)", debate, trainee)
 
         return alloc
 
