@@ -17,7 +17,7 @@
                    :sort-key="sortKey" :sort-order="sortOrder">
         <template slot="hteams">
           <div class="thead flex-cell flex-12 vue-droppable-container"
-               data-toggle="tooltip" title="test" v-for="position in roundInfo.positions">
+               v-for="position in roundInfo.positions">
             <span>{{ position }}</span>
             <span :class="sortClasses(position)"></span>
           </div>

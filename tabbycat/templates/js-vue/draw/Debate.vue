@@ -24,7 +24,8 @@
     <template v-for="position in roundInfo.positions">
       <slot :name="'s-' + position">
         <div class="draw-cell flex-6 draw-team-cell">
-          <draw-team v-if="debate.teams[position]" :team="debate.teams[position]"></draw-team>
+          <draw-team v-if="debate.teams[position]"
+                     :team="debate.teams[position]"></draw-team>
         </div>
       </slot>
     </template>

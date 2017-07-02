@@ -24,10 +24,10 @@ export default {
       debates: this.initialDebates,
       unallocatedItems: this.initialUnallocatedItems,
       headers: [
-        { 'key': 'bracket' },
-        { 'key': 'liveness', },
-        { 'key': 'importance', },
-        { 'key': 'venue', },
+        {'key':'bracket'},{'key':'liveness'},{'key':'importance'},
+        {'key':'venue'},
+        {'key':'affirmative'},{'key':'negative'},
+        {'key':'og'},{'key':'oo'},{'key':'cg'},{'key':'co'},
         // Team positions
       ]
     }
@@ -115,7 +115,15 @@ export default {
     getSortableProperty(row, orderedHeaderIndex) {
       // Rather than an array of cells (as in Table) row is a Debate
       // So just return the relevant property
-      return row[this.sortKey]
+      if (typeof row[this.sortKey] === 'string' ||
+          typeof row[this.sortKey] === 'number') {
+        return row[this.sortKey]
+      } else if (this.sortKey === 'venue') {
+        return row.venue.name
+      } else if (_.includes(["affirmative", "negative"], this.sortKey)) {
+        return row.teams[this.sortKey].short_name
+      }
+      console.log('Couldnt find sorting property')
     }
   }
 }

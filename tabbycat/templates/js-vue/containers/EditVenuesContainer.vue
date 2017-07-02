@@ -18,8 +18,11 @@
     <div class="vertical-spacing">
       <draw-header :positions="roundInfo.positions" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
-        <div class="thead flex-cell flex-12 vue-droppable-container" slot="hvenue">
-          <span>Venue</span>
+        <div @click="updateSorting('venue')" slot="hvenue"
+             class="thead flex-cell flex-12 vue-droppable-container"
+             data-toggle="tooltip">
+          <span>Venue </span>
+          <span :class="sortClasses('venue')"></span>
         </div>
       </draw-header>
       <debate v-for="debate in dataOrderedByKey"

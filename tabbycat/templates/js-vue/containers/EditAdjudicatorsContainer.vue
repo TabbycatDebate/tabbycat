@@ -12,7 +12,7 @@
       <draw-header :positions="roundInfo.positions" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
 
-        <div class="thead flex-cell flex-4" @click="resort('importance')"
+        <div class="thead flex-cell flex-4" @click="updateSorting('importance')"
              data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
           <span>Priority</span>
           <span :class="sortClasses('importance')"></span>
@@ -20,17 +20,17 @@
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
           <div :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
+                        'flex-' + (adjPositions.length > 2 ? 6 : adjPositions.length > 1 ? 8 : 12)]">
             <span>Chair</span>
           </div>
           <div v-if="adjPositions.indexOf('P') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 16: 16)]">
+                        'flex-' + (adjPositions.length > 2 ? 24: 16)]">
             <span>Panel</span>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 10: 16)]">
+                        'flex-' + (adjPositions.length > 2 ? 6: 16)]">
             <span>Trainees</span>
           </div>
         </template>
