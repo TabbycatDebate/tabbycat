@@ -6,7 +6,7 @@
     </div>
 
     <div class="draw-cell flex-1 flex-horizontal-center">
-      {{ liveness }}
+      {{ debate.liveness }}
     </div>
 
     <slot name="simportance">
@@ -56,18 +56,5 @@ export default {
   components: {DrawTeam, DrawVenue, DrawAdjudicator},
   mixins: [SlideOverSubjectMixin],
   props: { debate: Object, roundInfo: Object},
-  computed: {
-    liveness: function() {
-      var live_categories = 0
-      _.map(this.debate.teams, function(team) {
-        _.map(team.break_categories, function(bc) {
-          if (bc.will_break === 'live') {
-            live_categories += 1
-          }
-        })
-      });
-      return live_categories
-    },
-  },
 }
 </script>
