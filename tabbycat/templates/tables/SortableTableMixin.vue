@@ -1,4 +1,5 @@
 <script>
+// Inheritors should provide a computed property of sortableData
 import _ from 'lodash'
 
 export default {
@@ -34,17 +35,18 @@ export default {
     }
   },
   computed: {
-    rowsOrderedByKey: function() {
+    dataOrderedByKey: function() {
       // Find the index of the cell matching the sortKey within each row
       var orderedHeaderIndex = _.findIndex(this.headers, {'key': this.sortKey});
       if (orderedHeaderIndex === -1) {
         console.log("Couldn't locate sort key: ", this.sortKey, " in headers", this.headers)
-        return this.rows
+        return this.sortableData
       }
       // Sort the array of rows based on the value of the cell index
-      return _.orderBy(this.rows, function(row) {
-        var cell = row[orderedHeaderIndex]
-        var cellData = _.isUndefined(cell.sort) ? cell.text : cell.sort
+      // For DrawContainer row is the debate dictionary
+      var self = this
+      return _.orderBy(this.sortableData, function(row) {
+        var cellData = self.getSortableProperty(row, orderedHeaderIndex)
         if (_.isString(cellData)) {
           return _.lowerCase(cellData)
         } else {
@@ -52,12 +54,12 @@ export default {
         }
       }, this.sortOrder)
     },
-    rowsFilteredByKey: function() {
+    dataFilteredByKey: function() {
       if (this.filterKey === '') {
-        return this.rowsOrderedByKey
+        return this.dataOrderedByKey
       }
       var filterKey = this.filterKey
-      return _.filter(this.rowsOrderedByKey, function(row) {
+      return _.filter(this.dataOrderedByKey, function(row) {
         // Filter through all rows; within each row check...
         var rowContainsMatch = false
         _.forEach(row, function(cell) {

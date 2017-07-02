@@ -9,10 +9,13 @@
     </div>
 
     <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions">
-        <div class="thead flex-cell flex-4" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
+      <draw-header :positions="roundInfo.positions" @resort="updateSorting"
+                   :sort-key="sortKey" :sort-order="sortOrder">
+
+        <div class="thead flex-cell flex-4" @click="resort('importance')"
+             data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
           <span>Priority</span>
-          <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
+          <span :class="sortClasses('importance')"></span>
         </div>
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
@@ -31,9 +34,11 @@
             <span>Trainees</span>
           </div>
         </template>
+
       </draw-header>
-      <debate v-for="debate in debatesOrderedByKey"
+      <debate v-for="debate in dataOrderedByKey"
               :debate="debate" :key="debate.id" :round-info="roundInfo">
+
         <div class="draw-cell flex-4" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>
@@ -45,6 +50,7 @@
                         :locked="debate.locked"
                         :adj-positions="adjPositions"></debate-panel>
         </template>
+
       </debate>
     </div>
 

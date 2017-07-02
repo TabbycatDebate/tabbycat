@@ -41,8 +41,8 @@ export default {
     this.$eventHub.$on('update-unallocated', this.updateUnallocatedItems)
   },
   computed: {
-    debatesOrderedByKey: function() {
-      return this.debates
+    sortableData: function() {
+      return this.debates // Enables SortableTableMixin
     },
     teams: function() {
       // Return all teams (in debates) as a single array
@@ -100,6 +100,23 @@ export default {
     updateUnallocatedItems: function(updatedUnallocatedItems) {
       this.unallocatedItems = updatedUnallocatedItems // As above
     },
+    // Duplicating sortableHeaderMixin; but can't inheret in a slot
+    sortClasses: function(key) {
+      var baseCSS = "glyphicon vue-sort-key "
+      if (this.sortKey === key) {
+        if (this.sortOrder === "asc") {
+          return baseCSS + "text-success glyphicon-sort-by-attributes-alt"
+        } else {
+          return baseCSS + "text-success glyphicon-sort-by-attributes"
+        }
+      }
+      return baseCSS + "text-muted glyphicon-sort"
+    },
+    getSortableProperty(row, orderedHeaderIndex) {
+      // Rather than an array of cells (as in Table) row is a Debate
+      // So just return the relevant property
+      return row[this.sortKey]
+    }
   }
 }
 </script>

@@ -16,7 +16,7 @@
       <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
         <td class="empty-cell text-center text-muted">No Data Available</td>
       </tr>
-      <tr v-for="row in rowsFilteredByKey">
+      <tr v-for="row in dataFilteredByKey">
         <td v-for="(cellData, cellIndex) in row"
           :is="cellData['component'] ? cellData['component'] : 'SmartCell'"
           :cell-data="cellData">
@@ -61,6 +61,17 @@ export default {
       }
       return headers
     },
+    sortableData: function() {
+      return this.rows // Enables SortableTableMixin
+    },
+  },
+  methods: {
+    getSortableProperty(row, orderedHeaderIndex) {
+      var cell = row[orderedHeaderIndex]
+      var cellData = _.isUndefined(cell.sort) ? cell.text : cell.sort
+      return cellData
+    }
   }
+
 }
 </script>

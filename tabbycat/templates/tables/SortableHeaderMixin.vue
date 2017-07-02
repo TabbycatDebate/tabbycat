@@ -11,7 +11,7 @@ export default {
       this.$emit('resort', key)
     },
     sortClasses: function(key) {
-      var baseCSS = "glyphicon vue-sort-key"
+      var baseCSS = "glyphicon vue-sort-key "
       if (this.sortKey === key) {
         if (this.sortOrder === "asc") {
           return baseCSS + "text-success glyphicon-sort-by-attributes-alt"
