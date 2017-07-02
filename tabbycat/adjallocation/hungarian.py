@@ -90,14 +90,14 @@ class HungarianAllocator(Allocator):
             n_solos = n_debates - (n_adjudicators - n_debates)//2
 
         # get adjudicators that can adjudicate solo
-        chairs = self.adjudicators_sorted[:n_solos]
-        logger.info("There are %s chairs", len(chairs))
+        solos = self.adjudicators_sorted[:n_solos]
+        logger.info("There are %s solos", len(solos))
 
         # get debates that will be judged by solo adjudicators
-        chair_debates = self.debates_sorted[:len(chairs)]
+        chair_debates = self.debates_sorted[:len(solos)]
 
-        panel_debates = self.debates_sorted[len(chairs):]
-        panellists = [a for a in self.adjudicators_sorted if a not in chairs]
+        panel_debates = self.debates_sorted[len(solos):]
+        panellists = [a for a in self.adjudicators_sorted if a not in solos]
         logger.info("There are %s panellists", len(panellists))
 
         # For tournaments with duplicate allocations there are typically not
@@ -107,17 +107,17 @@ class HungarianAllocator(Allocator):
                     len(panel_debates), len(panellists), len(panel_debates) * 3)
 
         m = Munkres()
-        # TODO I think "chairs" actually means "solos", rename variables if correct
-        if len(chairs) > 0:
 
-            logger.info("costing chairs")
+        if len(solos) > 0:
 
-            n = len(chairs)
+            logger.info("costing solos")
+
+            n = len(solos)
 
             cost_matrix = [[0] * n for i in range(n)]
 
             for i, debate in enumerate(chair_debates):
-                for j, adj in enumerate(chairs):
+                for j, adj in enumerate(solos):
                     cost_matrix[i][j] = self.calc_cost(debate, adj)
 
             logger.info("optimizing")
@@ -131,7 +131,7 @@ class HungarianAllocator(Allocator):
             logger.info('total cost for solos %f', total_cost)
             logger.info('number of solo debates %d', n)
 
-            result = ((chair_debates[i], chairs[j]) for i, j in indexes if i <
+            result = ((chair_debates[i], solos[j]) for i, j in indexes if i <
                       len(chair_debates))
             alloc = [AdjudicatorAllocation(d, c) for d, c in result]
 
@@ -193,7 +193,7 @@ class HungarianAllocator(Allocator):
                 a.panellists = p[i]
                 alloc.append(a)
 
-        for a in alloc[len(chairs):]:
+        for a in alloc[len(solos):]:
             logger.info("%s %s %s", a.debate, a.chair, a.panellists)
 
         # Skip the next step if there is the trainee position is disabled
