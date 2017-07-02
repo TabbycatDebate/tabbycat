@@ -11,32 +11,24 @@ logger = logging.getLogger(__name__)
 
 class HungarianAllocator(Allocator):
 
-    MAX_SCORE = 5.0
-    MIN_SCORE = 0.0
-    MIN_VOTING_SCORE = 1.5
-
     DEFAULT_IMPORTANCE = 2
 
     def __init__(self, *args, **kwargs):
-        super(HungarianAllocator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         t = self.tournament
-        self.MIN_SCORE = t.pref('adj_min_score')
-        self.MAX_SCORE = t.pref('adj_max_score')
-        self.MIN_VOTING_SCORE = t.pref('adj_min_voting_score')
-
-        self.CONFLICT_PENALTY = t.pref('adj_conflict_penalty')
-        self.HISTORY_PENALTY = t.pref('adj_history_penalty')
-
-        self.NO_PANELLISTS = t.pref('no_panellist_position')
-        self.NO_TRAINEES = t.pref('no_trainee_position')
-
-        self.DUPLICATE_ALLOCATIONS = t.pref('duplicate_adjs')
-
-        self.FEEDBACK_WEIGHT = t.current_round.feedback_weight
+        self.min_score = t.pref('adj_min_score')
+        self.max_score = t.pref('adj_max_score')
+        self.min_voting_score = t.pref('adj_min_voting_score')
+        self.conflict_penalty = t.pref('adj_conflict_penalty')
+        self.history_penalty = t.pref('adj_history_penalty')
+        self.no_panellists = t.pref('no_panellist_position')
+        self.no_trainees = t.pref('no_trainee_position')
+        self.duplicate_allocations = t.pref('duplicate_adjs')
+        self.feedback_weight = t.current_round.feedback_weight
 
     def populate_adj_scores(self, adjudicators):
         for adj in adjudicators:
-            adj._hungarian_score = adj.weighted_score(self.FEEDBACK_WEIGHT)
+            adj._hungarian_score = adj.weighted_score(self.feedback_weight)
 
     def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
@@ -45,8 +37,8 @@ class HungarianAllocator(Allocator):
         normalised_importance = debate.importance + 2
 
         # Similarly normalise adj scores to the 0-5 range expected
-        score_min = self.MIN_SCORE
-        score_range = self.MAX_SCORE - score_min
+        score_min = self.min_score
+        score_range = self.max_score - score_min
         normalised_adj_score = (adj._hungarian_score - score_min) / score_range * 5 + 0
 
         if normalised_adj_score > 5.0:
@@ -54,17 +46,17 @@ class HungarianAllocator(Allocator):
         elif normalised_adj_score < 0.0:
             logger.warning("%s's score %s is smaller than the range" % (adj.name, adj._hungarian_score))
 
-        cost += self.CONFLICT_PENALTY * adj.conflict_with(debate.aff_team)
-        cost += self.CONFLICT_PENALTY * adj.conflict_with(debate.neg_team)
-        cost += self.HISTORY_PENALTY * adj.seen_team(debate.aff_team, debate.round)
-        cost += self.HISTORY_PENALTY * adj.seen_team(debate.neg_team, debate.round)
+        cost += self.conflict_penalty * adj.conflict_with(debate.aff_team)
+        cost += self.conflict_penalty * adj.conflict_with(debate.neg_team)
+        cost += self.history_penalty * adj.seen_team(debate.aff_team, debate.round)
+        cost += self.history_penalty * adj.seen_team(debate.neg_team, debate.round)
 
         impt = (normalised_importance or self.DEFAULT_IMPORTANCE) + adjustment
         diff = 5 + impt - adj._hungarian_score
         if diff > 0.25:
             cost += 100000 * exp(diff - 0.25)
 
-        cost += (self.MAX_SCORE - adj._hungarian_score) * 100
+        cost += (self.max_score - adj._hungarian_score) * 100
 
         return cost
 
@@ -81,8 +73,8 @@ class HungarianAllocator(Allocator):
         self.debates_sorted.sort(key=lambda a: a.importance, reverse=True)
 
         # Remove trainees
-        trainees = [a for a in self.adjudicators_sorted if a._hungarian_score < self.MIN_VOTING_SCORE]
-        self.adjudicators = [a for a in self.adjudicators_sorted if a._hungarian_score >= self.MIN_VOTING_SCORE]
+        trainees = [a for a in self.adjudicators_sorted if a._hungarian_score < self.min_voting_score]
+        self.adjudicators = [a for a in self.adjudicators_sorted if a._hungarian_score >= self.min_voting_score]
         logger.info("There are %s non-trainee adjudicators", len(self.adjudicators))
 
         n_adjudicators = len(self.adjudicators)
@@ -92,7 +84,7 @@ class HungarianAllocator(Allocator):
             logger.warning("There are %d debates but only %d adjudicators", n_debates, n_adjudicators)
 
         # If not setting panellists allocate all debates a solo chair
-        if self.NO_PANELLISTS is True:
+        if self.no_panellists is True:
             n_solos = n_debates
         else:
             n_solos = n_debates - (n_adjudicators - n_debates)//2
@@ -110,7 +102,7 @@ class HungarianAllocator(Allocator):
 
         # For tournaments with duplicate allocations there are typically not
         # enough adjudicators to form full panels, so don't crash in that case
-        if not self.DUPLICATE_ALLOCATIONS and len(panellists) < len(panel_debates) * 3:
+        if not self.duplicate_allocations and len(panellists) < len(panel_debates) * 3:
             logger.warning("There are %d panel debates but only %d available panellists (less than %d)",
                     len(panel_debates), len(panellists), len(panel_debates) * 3)
 
@@ -151,7 +143,7 @@ class HungarianAllocator(Allocator):
             alloc = []
 
         # Skip the next step if there is the panellist position is disabled
-        if self.NO_PANELLISTS is True:
+        if self.no_panellists is True:
             npan = False
         else:
             n = len(panel_debates)
@@ -205,7 +197,7 @@ class HungarianAllocator(Allocator):
             logger.info("%s %s %s", a.debate, a.chair, a.panellists)
 
         # Skip the next step if there is the trainee position is disabled
-        if self.NO_TRAINEES is True:
+        if self.no_trainees is True:
             ntrain = False
         else:
             ntrain = len(trainees)
