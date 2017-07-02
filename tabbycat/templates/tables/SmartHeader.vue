@@ -1,5 +1,5 @@
 <template>
-  <th class="vue-sortable" @click="resort()">
+  <th class="vue-sortable" @click="resort(header['key'])">
 
     <span :title="header['tooltip']"
           :data-toggle="header['tooltip'] ? 'tooltip' : null"
@@ -14,7 +14,7 @@
 
     </span>
 
-    <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
+    <span :class="sortClasses(header['key'])"></span>
 
   </th>
 </template>

@@ -10,10 +10,11 @@ import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import SlideOverContainerMixin from '../../info/SlideOverContainerMixin.vue'
 import SlideOver from '../../info/SlideOver.vue'
+import SortableTableMixin from '../../tables/SortableTableMixin.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [AjaxMixin, SlideOverContainerMixin],
+  mixins: [AjaxMixin, SlideOverContainerMixin, SortableTableMixin],
   components: {
     DrawHeader, AutoSaveCounter, Debate,
     DroppableGeneric, UnallocatedItemsContainer, SlideOver
@@ -22,6 +23,13 @@ export default {
     return {
       debates: this.initialDebates,
       unallocatedItems: this.initialUnallocatedItems,
+      headers: [
+        { 'key': 'bracket' },
+        { 'key': 'liveness', },
+        { 'key': 'importance', },
+        { 'key': 'venue', },
+        // Team positions
+      ]
     }
   },
   props: ['initialDebates', 'initialUnallocatedItems', 'roundInfo'],

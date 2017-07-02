@@ -5,22 +5,21 @@ export default {
     sortOrder: String,
     sortKey: String
   },
-  computed: {
-    sortClasses: function() {
-      if (this.sortKey === this.header.key) {
+  methods: {
+    resort: function(key) {
+      // Notify the parent table to all rows by this index
+      this.$emit('resort', key)
+    },
+    sortClasses: function(key) {
+      var baseCSS = "glyphicon vue-sort-key"
+      if (this.sortKey === key) {
         if (this.sortOrder === "asc") {
-          return "text-success glyphicon-sort-by-attributes-alt";
+          return baseCSS + "text-success glyphicon-sort-by-attributes-alt"
         } else {
-          return "text-success glyphicon-sort-by-attributes";
+          return baseCSS + "text-success glyphicon-sort-by-attributes"
         }
       }
-      return "text-muted glyphicon-sort";
-    }
-  },
-  methods: {
-    resort: function() {
-      // Notify the parent table to all rows by this index
-      this.$emit('resort', this.header['key'])
+      return baseCSS + "text-muted glyphicon-sort"
     }
   },
 }

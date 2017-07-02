@@ -4,28 +4,28 @@
     <slot name="hbacket">
       <div class="thead flex-cell flex-1 flex-horizontal-center" data-toggle="tooltip" title="Debate's Bracket">
         <span class="glyphicon glyphicon-stats"></span>
-        <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
+        <span :class="sortClasses('bracket')"></span>
       </div>
     </slot>
 
     <slot name="hcats">
       <div class="thead flex-cell flex-1 flex-horizontal-center" data-toggle="tooltip" title="How many break categories are live in this room">
         <span class="glyphicon glyphicon-heart"></span>
-        <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
+        <span :class="sortClasses('liveness')"></span>
       </div>
     </slot>
 
     <slot name="himportance">
       <div class="thead flex-cell flex-1 flex-horizontal-center" data-toggle="tooltip" title="The assigned priority value of this debate">
         <span class="glyphicon glyphicon-fire"></span>
-        <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
+        <span :class="sortClasses('importance')"></span>
       </div>
     </slot>
 
     <slot name="hvenue">
       <div class="thead flex-cell flex-6" data-toggle="tooltip" title="The venue of this debate">
         <span class="glyphicon glyphicon-map-marker"></span>
-        <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
+        <span :class="sortClasses('venue')"></span>
       </div>
     </slot>
 
@@ -34,7 +34,7 @@
         v-for="position in positions">
         <div class="cell-padding-helper">
           {{ position }}
-          <span class="glyphicon vue-sort-key" :class="sortClasses"></span>
+          <span :class="sortClasses('position')"></span>
         </div>
       </div>
     </slot>
