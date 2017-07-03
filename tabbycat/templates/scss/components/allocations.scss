@@ -70,9 +70,9 @@
 }
 
 .unallocated-items {
-  max-height: 450px;
-  min-height: 54px;
+  height: auto;
   z-index: $z_3; // Need to hover abovve underlying .tooltips
+  padding-right: 40px; // Leave space for dragging handles
   > div {
     display: inline-flex;
   }

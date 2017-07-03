@@ -114,3 +114,21 @@
 .vue-is-drag-enter {
   background: $brand-success;
 }
+
+//------------------------------------------------------------------------------
+// Resizeable
+//------------------------------------------------------------------------------
+
+.resize-handler {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 6px;
+  top: -2px;
+  font-size: 18px;
+
+  &:hover {
+    cursor: ns-resize;
+  }
+
+}
