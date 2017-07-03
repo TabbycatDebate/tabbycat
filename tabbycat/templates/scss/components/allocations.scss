@@ -57,7 +57,11 @@
 .draw-cell {
   @extend .flex-cell;
   @extend .flex-vertical-center;
-  @extend .bordered-bottom;
+  border-bottom: 2px solid $table-border-color;
+
+  &.droppable-cell {
+    border-bottom-color: #fff; // Have more contrast in drag/drop UIs
+  }
 }
 
 .allocations { // For fullscreen pages
@@ -97,10 +101,6 @@
   padding: 6px 0;
 }
 
-.bordered-bottom {
-  border-bottom: 1px solid $table-border-color;
-}
-
 .importance-container {
   width: 100px;
 }
@@ -108,7 +108,7 @@
 .panel-container {
 
   .vue-droppable-container {
-    border-right: 2px solid $table-border-color;
+    border-right: 2px solid #fff;
     height: 100%;
 
     .vue-droppable {

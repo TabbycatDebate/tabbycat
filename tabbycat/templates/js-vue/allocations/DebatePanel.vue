@@ -1,5 +1,5 @@
 <template>
-  <div :class="['draw-cell panel-container flex-horizontal',
+  <div :class="['draw-cell droppable-cell panel-container flex-horizontal',
                 'flex-' + (12 * adjPositions.length)]">
 
     <div v-for="position in adjPositions"
