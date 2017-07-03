@@ -2,10 +2,12 @@ import logging
 import time
 import random
 from collections import Counter
+from math import log2
+from statistics import pvariance
 
 import munkres
 
-from .common import BaseBPDrawGenerator, BPPairing
+from .common import BaseBPDrawGenerator, BPPairing, DrawError
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +21,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
 
             "anywhere" - Pull-up teams may be paired into any room in the entire
                          bracket.
+
             "one_room" - All pull-up teams must be paired into the same room.
                          This room is then the lowest room in the bracket, sort
                          of functioning as an intermediate bracket, except that
@@ -28,16 +31,33 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         "position_cost" - How position costs are assigned. Permitted values:
 
             "simple"  - Cost is the number of times the team has already been in
-                        that position, less the number of times the team has been
-                        in its least frequent position.
-            "squared" - As for "simple", but square the number, to more heavily
-                        penalize larger distortions.
+                        that position, less the number of times the team has
+                        been in its least frequent position.
+
+            "entropy" - Rényi entropy, C = n[2 - H_α(p)], where p is the
+                        empirical distribution associated with the position
+                        profile of the team, H_α(p) is the Rényi entropy of
+                        order α thereof, and n is the sum of the profile (i.e.
+                        number of rounds the team has competed in). See the
+                        "renyi_order" option below.
+
+            "variance" - The population variance of frequencies in the profile.
+
+        "exponent" - (float) The value returned by the cost function is raised
+                     to this power. Higher exponents place more weight on
+                     reducing larger problems, i.e., highly uneven profiles.
+                     Most tournaments should use a value between 2.0 and 5.0.
+
+        "renyi_order" - (float) The order of the Rényi entropy used, often
+                        denoted by α. The case α = 1.0 yields Shannon entropy;
+                        α = 0.0 Hartley entropy; α = 2.0 collision entropy.
 
         "assignment_method" - Algorithm used to solve the assignment problem.
                               Permitted values:
 
             "hungarian"             - Hungarian algorithm, with no randomness.
                                       Not WUDC-compliant.
+
             "hungarian_preshuffled" - Hungarian algorithm, with the rows and
                                       columns of the cost matrix permuted
                                       randomly beforehand.
@@ -49,7 +69,9 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
 
     DEFAULT_OPTIONS = {
         "pullup"           : "anywhere",
-        "position_cost"    : "squared",
+        "position_cost"    : "entropy",
+        "renyi_order"      : 1.0,
+        "exponent"         : 4.0,
         "assignment_method": "hungarian_preshuffled",
     }
 
@@ -129,14 +151,64 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
 
     POSITION_COST_FUNCTIONS = {
         "simple" : "_position_cost_simple",
-        "squared": "_position_cost_squared",
+        "variance": "_position_cost_variance",
     }
 
-    def _position_cost_simple(self, pos, profile):
+    def get_position_cost_function(self):
+        """Extension of self.get_option_function() that includes special
+        handling for the "entropy" option."""
+        if self.options["position_cost"] == "entropy":
+            α = self.options["renyi_order"]
+            if α == 1.0:
+                logger.info("Using Shannon entropy (α = 1)")
+                return self._position_cost_shannon_entropy
+            elif α == 0.0:
+                logger.info("Using min-entropy (α = 0)")
+                return self._position_cost_min_entropy
+            elif α > 0.0:
+                logger.info("Using Rényi entropy with α = %f", α)
+                return self._get_position_cost_renyi_entropy_function(α)
+            else:
+                raise DrawError("The Rényi order can't be negative (it's currently set to %f)", α)
+        else:  # fall back to general implementation
+            return self.get_option_function("position_cost", self.POSITION_COST_FUNCTIONS)
+
+    @staticmethod
+    def _update_profile(pos, profile):
+        new_profile = profile.copy()
+        new_profile[pos] += 1
+        return new_profile
+
+    @staticmethod
+    def _position_cost_simple(pos, profile):
         return profile[pos]
 
-    def _position_cost_squared(self, pos, profile):
-        return profile[pos] ** 2
+    @staticmethod
+    def _position_cost_variance(pos, profile):
+        profile = BPHungarianDrawGenerator._update_profile(pos, profile)
+        return pvariance(profile)
+
+    @staticmethod
+    def _position_cost_shannon_entropy(pos, profile):
+        profile = BPHungarianDrawGenerator._update_profile(pos, profile)
+        n = sum(profile)
+        probs = [p/n for p in profile]
+        selfinfo = [0 if p == 0 else -p*log2(p) for p in probs]
+        return (2 - sum(selfinfo)) * n
+
+    @staticmethod
+    def _position_cost_min_entropy(pos, profile):
+        profile = BPHungarianDrawGenerator._update_profile(pos, profile)
+        return sum(p > 0 for p in profile)
+
+    @staticmethod
+    def _get_position_cost_renyi_entropy_function(α):
+        def _position_cost_renyi_entropy(self, pos, profile):
+            profile = BPHungarianDrawGenerator._update_profile(pos, profile)
+            n = sum(profile)
+            probs = [p/n for p in profile]
+            return (2 - log2(sum([p ** α for p in probs])) / (1 - α)) * n
+        return _position_cost_renyi_entropy
 
     def generate_cost_matrix(self, rooms):
         """Returns a cost matrix for the tournament.
@@ -150,7 +222,8 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
            (for a team with that position history profile).
         """
         nteams = len(self.teams)
-        cost = self.get_option_function("position_cost", self.POSITION_COST_FUNCTIONS)
+        cost = self.get_position_cost_function()
+        exponent = self.options["exponent"]
 
         costs = []
         for team in self.teams:
@@ -159,7 +232,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
                 if team.points not in allowed:
                     row.extend([munkres.DISALLOWED] * 4)
                 else:
-                    row.extend([cost(pos, team.side_counts) for pos in range(4)])
+                    row.extend([cost(pos, team.side_counts) ** exponent for pos in range(4)])
             assert len(row) == nteams
             costs.append(row)
 
