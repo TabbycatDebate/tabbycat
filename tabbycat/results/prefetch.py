@@ -25,17 +25,15 @@ def populate_wins(debates):
     """
 
     debateteams = [dt for debate in debates for dt in [debate.aff_dt, debate.neg_dt]]
-    debateteams_by_id = {dt.id: dt for dt in debateteams}
 
     teamscores = TeamScore.objects.filter(debate_team__debate__in=debates, ballot_submission__confirmed=True)
+    teamscores_by_debateteam_id = {teamscore.debate_team_id: teamscore for teamscore in teamscores}
 
-    for teamscore in teamscores:
-        debateteam = debateteams_by_id[teamscore.debate_team_id]
-        debateteam._win = teamscore.win
-
-    # populate the attribute for DebateTeams that don't have a result
     for debateteam in debateteams:
-        if not hasattr(debateteam, "_win"):
+        teamscore = teamscores_by_debateteam_id.get(debateteam.id, None)
+        if teamscore is not None:
+            debateteam._win = teamscore.win
+        else:
             debateteam._win = None
 
 
