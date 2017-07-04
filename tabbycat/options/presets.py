@@ -212,6 +212,12 @@ class WUDCPreferences(PreferencesPreset):
     debate_rules__motion_vetoes_enabled        = False
     debate_rules__side_names                   = 'gov-opp'
     data_entry__enable_motions                 = True
+    # Draw Rules
+    draw_rules__bp_pullup_distribution         = 'anywhere'
+    draw_rules__bp_position_cost               = 'entropy'
+    draw_rules__bp_renyi_order                 = 1.0
+    draw_rules__bp_position_cost_exponent      = 4.0
+    draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
     # Standings Rules
     standings__standings_missed_debates        = 2  # TODO check this?
     standings__team_standings_precedence       = ['points', 'speaks_sum']
