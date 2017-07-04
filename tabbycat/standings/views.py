@@ -14,6 +14,7 @@ from tournaments.models import Round
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
+from .motions import MotionsStandingsTableBuilder
 from .diversity import get_diversity_data_sets
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
@@ -377,10 +378,11 @@ class BaseMotionStandingsView(BaseStandingsView):
 
     def get_motions_table(self, t, rounds):
         motions = motion_statistics.statistics(tournament=t, rounds=rounds)
-        table = TabbycatTableBuilder(view=self, sort_key="Order")
+        table = MotionsStandingsTableBuilder(view=self, sort_key="Order")
 
         table.add_round_column([motion.round for motion in motions])
         table.add_motion_column(motions, show_order=True)
+        table.add_balance_column(motions, is_bp=False)
         table.add_column("Selected", [motion.chosen_in for motion in motions])
         if self.get_tournament().pref('motion_vetoes_enabled'):
             table.add_column("Aff Vetoes", [motion.aff_vetoes for motion in motions])

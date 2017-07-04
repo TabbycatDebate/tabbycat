@@ -18,7 +18,7 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was use
 - Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts/clashes
 - A drag and drop interface for adjudicator allocation that displays conflicts alongside gender and regional balance
 - A fully responsive interface that adapts to suit large screens, laptops, tablets, and phones
-- Support for Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/team-standings-rules.html)
+- Support for Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/standings-rules.html)
 - Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html) with (optional) online submission
 
 ## Installation and User Guide

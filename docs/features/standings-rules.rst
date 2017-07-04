@@ -1,6 +1,9 @@
-.. _team-standings-rules:
+.. _standings-rules:
 
-====================
+===============
+Standings Rules
+===============
+
 Team Standings Rules
 ====================
 
@@ -84,3 +87,14 @@ same rank.
 +--------------------+---------------------------------------------------------+
 
 .. note:: Some debugging information is printed to the logs when some of these metrics are invoked.
+
+
+Motions Standings Test
+======================
+
+The motions tab and motions standings page applies a statistical test to estimate the degree to which a motion is imbalanced. This is calculated by first making an underlying assumption that a motion is generally fair. This will be our null hypothesis: that, for a given motion, affirmative teams won the same number of times as negative teams.
+
+Our chi-squared test will then be centred around disproving this hypothesis. If we disprove the hypothesis, we say that, in the context of this tournament and this draw, the motion ended up being unbalanced. However (technically speaking) if we fail to reject the null hypothesis, we would conclude that there is insufficient evidence to suggest that the motion was unbalanced in the context of this tournament.
+
+The test proceeds by calculating the chi-squared stat, then running a series of tests. The tests are where we go a little off-book with respect to statistical methodology. Normally we would test at a single "level of significance" (ie. with a certain degree of certainty), but that's insufficient in telling us how bad a motion ended up being. So, instead, we conduct a range of tests with a range of levels of significance, and calculate the minimum level of significance that causes our null hypothesis to be rejected. Using the minimum level of significance that rejects our null hypothesis, we can then grade the fairness of the motion on a scale. Motions whose tests fall below a certain threshold will be considered fair, while others will be graded based on the minimum.
+
