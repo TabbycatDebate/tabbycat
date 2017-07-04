@@ -153,7 +153,7 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
     def get_context_data(self, **kwargs):
         draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
         # Sort by venue categories to ensure it matches the draw
-        draw = sorted(draw, key=lambda debate: debate.venue.display_name)
+        draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
         message = ""
         ballots = []
         if not self.has_team_questions():
@@ -188,7 +188,7 @@ class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
         show_emoji = tournament.pref('show_emoji')
 
         # Sort by venue categories to ensure it matches the draw
-        draw = sorted(draw, key=lambda debate: debate.venue.display_name)
+        draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
 
         ballots = []
         for debate in draw:
