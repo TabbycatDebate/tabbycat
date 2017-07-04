@@ -342,7 +342,6 @@ class Adjudicator(Person):
     def _populate_conflict_cache(self):
         if not getattr(self, '_conflicts_populated', False):
             logger.debug("Populating conflict cache for %s", self)
-            from adjallocation.models import AdjudicatorConflict, AdjudicatorInstitutionConflict
             self._team_conflict_cache = [c.team_id
                     for c in self.adjudicatorconflict_set.all()]
             self._adjudicator_conflict_cache = [c.conflict_adjudicator_id
