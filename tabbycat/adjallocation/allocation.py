@@ -47,8 +47,8 @@ class AdjudicatorAllocation:
                     self.trainees.append(a.adjudicator)
 
             # Sort panellists/trainees names for more consistent ballots/prints
-            self.panellists = sorted(self.panellists, key=lambda p: p.name)
-            self.trainees = sorted(self.trainees, key=lambda t: t.name)
+            self.panellists.sort(key=lambda adj: adj.name)
+            self.trainees.sort(key=lambda adj: adj.name)
 
         else:
             self.chair = chair
