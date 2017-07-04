@@ -25,17 +25,15 @@ def populate_wins(debates):
     """
 
     debateteams = [dt for debate in debates for dt in [debate.aff_dt, debate.neg_dt]]
-    debateteams_by_id = {dt.id: dt for dt in debateteams}
 
     teamscores = TeamScore.objects.filter(debate_team__debate__in=debates, ballot_submission__confirmed=True)
+    teamscores_by_debateteam_id = {teamscore.debate_team_id: teamscore for teamscore in teamscores}
 
-    for teamscore in teamscores:
-        debateteam = debateteams_by_id[teamscore.debate_team_id]
-        debateteam._win = teamscore.win
-
-    # populate the attribute for DebateTeams that don't have a result
     for debateteam in debateteams:
-        if not hasattr(debateteam, "_win"):
+        teamscore = teamscores_by_debateteam_id.get(debateteam.id, None)
+        if teamscore is not None:
+            debateteam._win = teamscore.win
+        else:
             debateteam._win = None
 
 
@@ -51,21 +49,15 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
     For best performance, the debates should already have
     debateadjudicator_set__adjudicator prefetched.
     """
-    debates_by_id = {debate.id: debate for debate in debates}
     confirmed_ballots = BallotSubmission.objects.filter(debate__in=debates, confirmed=True)
     if motions:
         confirmed_ballots = confirmed_ballots.select_related('motion')
     if ballotsets:
         confirmed_ballots = confirmed_ballots.select_related('debate') # BallotSet fetches the debate
 
-    for ballotsub in confirmed_ballots:
-        debate = debates_by_id[ballotsub.debate_id]
-        debate._confirmed_ballot = ballotsub
-
-    # populate the attribute for Debates that don't have a confirmed ballot
+    ballotsubs_by_debate_id = {ballotsub.debate_id: ballotsub for ballotsub in confirmed_ballots}
     for debate in debates:
-        if not hasattr(debate, "_confirmed_ballot"):
-            debate._confirmed_ballot = None
+        debate._confirmed_ballot = ballotsubs_by_debate_id.get(debate.id, None)
 
     if ballotsets:
         populate_ballotsets(confirmed_ballots, debates)
