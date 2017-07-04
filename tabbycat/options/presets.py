@@ -220,7 +220,7 @@ class WUDCPreferences(PreferencesPreset):
     draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
     # Standings Rules
     standings__standings_missed_debates        = 2  # TODO check this?
-    standings__team_standings_precedence       = ['points', 'speaks_sum']
+    standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
     standings__rank_speakers_by                = 'total'
     # UI Options
     ui_options__show_team_institutions         = False

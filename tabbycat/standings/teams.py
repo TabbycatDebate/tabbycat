@@ -225,6 +225,26 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
                 tsi.metrics[self.key] = int(tsi.metrics[self.key])
 
 
+class NumberOfFirstsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    key = "firsts"
+    name = "number of firsts"
+    abbr = "1sts"
+
+    function = "COUNT"
+    field = "points"
+    where_value = 3
+
+
+class NumberOfSecondsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    key = "seconds"
+    name = "number of seconds"
+    abbr = "2nds"
+
+    function = "COUNT"
+    field = "points"
+    where_value = 2
+
+
 class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     """Metric annotator for who-beat-whom. Use once for every who-beat-whom in
     the precedence."""
@@ -326,6 +346,8 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "margin_sum"    : SumMarginMetricAnnotator,
         "margin_avg"    : AverageMarginMetricAnnotator,
         "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
+        "firsts"        : NumberOfFirstsMetricAnnotator,
+        "seconds"       : NumberOfSecondsMetricAnnotator,
         "wbw"           : WhoBeatWhomMetricAnnotator,
         "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
     }
