@@ -24,12 +24,12 @@ def add_team_round_results(standings, rounds, lookup=None, id_attr='instance_id'
         def lookup(standings, x):
             return standings.get_standing(x)
 
-    teams = [getattr(info, id_attr) for info in standings]
+    team_ids = [getattr(info, id_attr) for info in standings]
     teamscores = TeamScore.objects.select_related(
         'debate_team__team', 'debate_team__debate__round').filter(
         ballot_submission__confirmed=True,
         debate_team__debate__round__in=rounds,
-        debate_team__team_id__in=teams
+        debate_team__team_id__in=team_ids
     )
     populate_opponents([ts.debate_team for ts in teamscores])
 

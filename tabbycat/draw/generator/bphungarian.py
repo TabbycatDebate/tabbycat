@@ -158,7 +158,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         """Extension of self.get_option_function() that includes special
         handling for the "entropy" option."""
         if self.options["position_cost"] == "entropy":
-            α = self.options["renyi_order"]
+            α = self.options["renyi_order"]  # noqa: N806
             if α == 1.0:
                 logger.info("Using Shannon entropy (α = 1)")
                 return self._position_cost_shannon_entropy
@@ -199,11 +199,11 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
     @staticmethod
     def _position_cost_min_entropy(pos, profile):
         profile = BPHungarianDrawGenerator._update_profile(pos, profile)
-        return sum(p > 0 for p in profile)
+        return (2 - log2(sum(p > 0 for p in profile))) * sum(profile)
 
     @staticmethod
-    def _get_position_cost_renyi_entropy_function(α):
-        def _position_cost_renyi_entropy(self, pos, profile):
+    def _get_position_cost_renyi_entropy_function(α):  # noqa: N803
+        def _position_cost_renyi_entropy(pos, profile):
             profile = BPHungarianDrawGenerator._update_profile(pos, profile)
             n = sum(profile)
             probs = [p/n for p in profile]
@@ -256,7 +256,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         indices = function(costs)
         total_cost = sum(costs[i][j] for i, j in indices)
         elapsed = time.perf_counter() - start
-        logger.info("Assignment took %.2f seconds, total cost: %d", elapsed, total_cost)
+        logger.info("Assignment took %.2f seconds, total cost: %f", elapsed, total_cost)
         return indices
 
     def _assign_hungarian(self, costs):

@@ -619,7 +619,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_debate_metric_columns(self, draw, standings):
         for side in self.tournament.sides:
-            self.add_metric_columns(standings, subset=[d.get_team(side) for d in draw], side='aff')
+            self.add_metric_columns(standings, subset=[d.get_team(side) for d in draw], side=side)
 
     def highlight_rows_by_column_value(self, column):
         highlighted_rows = [i for i in range(1, len(self.data))

@@ -21,6 +21,8 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "pullup"                : "draw_rules__bp_pullup_distribution",
     "position_cost"         : "draw_rules__bp_position_cost",
     "assignment_method"     : "draw_rules__bp_assignment_method",
+    "renyi_order"           : "draw_rules__bp_renyi_order",
+    "exponent"              : "draw_rules__bp_position_cost_exponent",
 }
 
 
@@ -155,7 +157,7 @@ class PowerPairedDrawManager(BaseDrawManager):
         if self.teams_in_debate == 'two':
             options.extend(["avoid_conflicts", "odd_bracket", "pairing_method", "side_allocations"])
         elif self.teams_in_debate == 'bp':
-            options.extend(["pullup", "position_cost", "assignment_method"])
+            options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent"])
         return options
 
     def get_teams(self):

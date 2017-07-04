@@ -234,9 +234,32 @@ class BPPositionCost(ChoicePreference):
     name = "bp_position_cost"
     choices = (
         ('simple', "Simple"),
-        ('squared', "Squared"),
+        ('entropy', "Rényi entropy"),
+        ('variance', "Population variance"),
     )
     default = 'squared'
+
+
+@tournament_preferences_registry.register
+class BPRenyiOrder(FloatPreference):
+    help_text = ("Rényi order α, if BP position cost uses Rényi entropy. "
+                 "Shannon is α = 1, Hartley is α = 0, collision is α = 2. "
+                 "See documentation for details.")
+    verbose_name = "Rényi order (BP)"
+    section = draw_rules
+    name = "bp_renyi_order"
+    default = 1.0
+
+
+@tournament_preferences_registry.register
+class BPPositionCostExponent(FloatPreference):
+    help_text = ("The BP position cost is raised to this power; higher exponents "
+                 "bias towards resolving fewer large position imbalances over more "
+                 "small ones. See documentation for details.")
+    verbose_name = "Position cost exponent"
+    section = draw_rules
+    name = "bp_position_cost_exponent"
+    default = 4.0
 
 
 @tournament_preferences_registry.register
