@@ -339,18 +339,34 @@ class Adjudicator(Person):
     def __str__(self):
         return "%s (%s)" % (self.name, self.institution.code)
 
-    def conflict_with(self, team):
-        if not hasattr(self, '_conflict_cache'):
+    def _populate_conflict_cache(self):
+        if not getattr(self, '_conflicts_populated', False):
+            logger.debug("Populating conflict cache for %s", self)
             from adjallocation.models import AdjudicatorConflict, AdjudicatorInstitutionConflict
-            self._conflict_cache = set(
-                c['team_id']
-                for c in AdjudicatorConflict.objects.filter(
-                    adjudicator=self).values('team_id'))
-            self._institution_conflict_cache = set(
-                c['institution_id']
-                for c in AdjudicatorInstitutionConflict.objects.filter(
-                    adjudicator=self).values('institution_id'))
-        return team.id in self._conflict_cache or team.institution_id in self._institution_conflict_cache
+            self._team_conflict_cache = [c.team_id
+                    for c in self.adjudicatorconflict_set.all()]
+            self._adjudicator_conflict_cache = [c.conflict_adjudicator_id
+                    for c in self.adjudicatoradjudicatorconflict_source_set.all()]
+            self._institution_conflict_cache = [c.institution_id
+                    for c in self.adjudicatorinstitutionconflict_set.all()]
+            self._conflicts_populated = True
+
+    def conflicts_with_team(self, team):
+        self._populate_conflict_cache()
+        return team.id in self._team_conflict_cache or team.institution_id in self._institution_conflict_cache
+
+    def conflicts_with_adj(self, adj):
+        self._populate_conflict_cache()
+        adj._populate_conflict_cache()
+        if adj.id in self._adjudicator_conflict_cache:
+            return True
+        if adj.institution_id in self._institution_conflict_cache:
+            return True
+        if self.id in adj._adjudicator_conflict_cache:
+            return True
+        if self.institution_id in adj._institution_conflict_cache:
+            return True
+        return False
 
     @property
     def is_unaccredited(self):
@@ -395,24 +411,28 @@ class Adjudicator(Person):
 
     def seen_team(self, team, before_round=None):
         from draw.models import DebateTeam
-        if not hasattr(self, '_seen_cache'):
-            self._seen_cache = {}
-        if before_round not in self._seen_cache:
-            qs = DebateTeam.objects.filter(
-                debate__debateadjudicator__adjudicator=self)
+        if not hasattr(self, '_seen_team_cache'):
+            self._seen_team_cache = {}
+        if before_round not in self._seen_team_cache:
+            logger.debug("Populating seen team cache for %s", self)
+            qs = DebateTeam.objects.filter(debate__debateadjudicator__adjudicator=self)
             if before_round is not None:
                 qs = qs.filter(debate__round__seq__lt=before_round.seq)
-            self._seen_cache[before_round] = set(dt.team.id for dt in qs)
-        return team.id in self._seen_cache[before_round]
+            self._seen_team_cache[before_round] = [dt.team_id for dt in qs]
+        return self._seen_team_cache[before_round].count(team.id)
 
     def seen_adjudicator(self, adj, before_round=None):
         from adjallocation.models import DebateAdjudicator
-        d = DebateAdjudicator.objects.filter(
-            adjudicator=self,
-            debate__debateadjudicator__adjudicator=adj)
-        if before_round is not None:
-            d = d.filter(debate__round__seq__lt=before_round.seq)
-        return d.count()
+        if not hasattr(self, '_seen_adjudicator_cache'):
+            self._seen_adjudicator_cache = {}
+        if before_round not in self._seen_adjudicator_cache:
+            logger.debug("Populating seen adjudicator cache for %s", self)
+            qs = DebateAdjudicator.objects.filter(
+                debate__debateadjudicator__adjudicator=self).exclude(adjudicator=self)
+            if before_round is not None:
+                qs = qs.filter(debate__round__seq__lt=before_round.seq)
+            self._seen_adjudicator_cache[before_round] = [da.adjudicator_id for da in qs]
+        return self._seen_adjudicator_cache[before_round].count(adj.id)
 
     def serialize(self, round):
         adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}

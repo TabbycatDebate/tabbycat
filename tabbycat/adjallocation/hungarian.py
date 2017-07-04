@@ -45,11 +45,12 @@ class HungarianAllocator(Allocator):
         elif normalised_adj_score < 0.0:
             logger.warning("%s's score %s is smaller than the range" % (adj.name, adj._hungarian_score))
 
-        cost += self.conflict_penalty * adj.conflict_with(debate.aff_team)
-        cost += self.conflict_penalty * adj.conflict_with(debate.neg_team)
+        cost += self.conflict_penalty * adj.conflicts_with_team(debate.aff_team)
+        cost += self.conflict_penalty * adj.conflicts_with_team(debate.neg_team)
         cost += self.history_penalty * adj.seen_team(debate.aff_team, debate.round)
         cost += self.history_penalty * adj.seen_team(debate.neg_team, debate.round)
         if chair:
+            cost += self.conflict_penalty * adj.conflicts_with_adj(chair)
             cost += self.history_penalty * adj.seen_adjudicator(chair, debate.round)
 
         impt = normalised_importance + adjustment
