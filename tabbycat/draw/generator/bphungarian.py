@@ -169,7 +169,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
                 logger.info("Using Rényi entropy with α = %f", α)
                 return self._get_position_cost_renyi_entropy_function(α)
             else:
-                raise DrawError("The Rényi order can't be negative (it's currently set to %f)", α)
+                raise DrawError("The Rényi order can't be negative, and it's currently set to %f." % α)
         else:  # fall back to general implementation
             return self.get_option_function("position_cost", self.POSITION_COST_FUNCTIONS)
 
