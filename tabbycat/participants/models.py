@@ -409,7 +409,7 @@ class Adjudicator(Person):
         from adjallocation.models import DebateAdjudicator
         d = DebateAdjudicator.objects.filter(
             adjudicator=self,
-            allocations__debateadjudicator__adjudicator=adj, )
+            debate__debateadjudicator__adjudicator=adj)
         if before_round is not None:
             d = d.filter(debate__round__seq__lt=before_round.seq)
         return d.count()
