@@ -65,7 +65,7 @@
 //------------------------------------------------------------------------------
 
 .vue-droppable {
-  background: $gray-lighter;
+  background: $droppable-bg;
   min-height: 50px;
   padding: 0 0 4px 4px; // Draggable items only have top/left padding
 }
