@@ -12,8 +12,6 @@ logger = logging.getLogger(__name__)
 
 class HungarianAllocator(Allocator):
 
-    DEFAULT_IMPORTANCE = 2
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         t = self.tournament
@@ -31,11 +29,11 @@ class HungarianAllocator(Allocator):
         for adj in adjudicators:
             adj._hungarian_score = adj.weighted_score(self.feedback_weight)
 
-    def calc_cost(self, debate, adj, adjustment=0):
+    def calc_cost(self, debate, adj, adjustment=0, chair=None):
         cost = 0
 
-        # Normalise debate importances back to the 0-5 (not ±2) range expected
-        normalised_importance = debate.importance + 2
+        # Normalise debate importances back to the 1-5 (not ±2) range expected
+        normalised_importance = debate.importance + 3
 
         # Similarly normalise adj scores to the 0-5 range expected
         score_min = self.min_score
@@ -47,17 +45,20 @@ class HungarianAllocator(Allocator):
         elif normalised_adj_score < 0.0:
             logger.warning("%s's score %s is smaller than the range" % (adj.name, adj._hungarian_score))
 
-        cost += self.conflict_penalty * adj.conflict_with(debate.aff_team)
-        cost += self.conflict_penalty * adj.conflict_with(debate.neg_team)
+        cost += self.conflict_penalty * adj.conflicts_with_team(debate.aff_team)
+        cost += self.conflict_penalty * adj.conflicts_with_team(debate.neg_team)
         cost += self.history_penalty * adj.seen_team(debate.aff_team, debate.round)
         cost += self.history_penalty * adj.seen_team(debate.neg_team, debate.round)
+        if chair:
+            cost += self.conflict_penalty * adj.conflicts_with_adj(chair)
+            cost += self.history_penalty * adj.seen_adjudicator(chair, debate.round)
 
-        impt = (normalised_importance or self.DEFAULT_IMPORTANCE) + adjustment
+        impt = normalised_importance + adjustment
         diff = 5 + impt - adj._hungarian_score
         if diff > 0.25:
-            cost += 100000 * exp(diff - 0.25)
+            cost += 1000 * exp(diff - 0.25)
 
-        cost += (self.max_score - adj._hungarian_score) * 100
+        cost += self.max_score - adj._hungarian_score
 
         return cost
 
@@ -171,10 +172,13 @@ class HungarianAllocator(Allocator):
         # Allocate trainees, one per solo debate (leave the rest unallocated)
 
         if len(trainees) > 0:
+            allocation_by_debate = {aa.debate: aa for aa in alloc}
+
             logger.info("costing trainees")
             cost_matrix = []
             for debate in solo_debates:
-                row = [self.calc_cost(debate, adj, adjustment=-2.0) for adj in trainees]
+                chair = allocation_by_debate[debate].chair
+                row = [self.calc_cost(debate, adj, adjustment=-2.0, chair=chair) for adj in trainees]
                 cost_matrix.append(row)
 
             logger.info("optimizing trainees (matrix size: %d positions by %d trainees)", len(cost_matrix), len(cost_matrix[0]))
@@ -183,7 +187,6 @@ class HungarianAllocator(Allocator):
             logger.info('total cost for %d trainees: %f', len(solos), total_cost)
 
             result = ((solo_debates[i], trainees[j]) for i, j in indexes if i < len(solo_debates))
-            allocation_by_debate = {aa.debate: aa for aa in alloc}
             for debate, trainee in result:
                 allocation_by_debate[debate].trainees.append(trainee)
                 logger.info("allocating to %s: %s (t)", debate, trainee)

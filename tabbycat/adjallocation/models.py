@@ -42,8 +42,8 @@ class AdjudicatorConflict(models.Model):
 
 
 class AdjudicatorAdjudicatorConflict(models.Model):
-    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="source_adjudicator")
-    conflict_adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="target_adjudicator", verbose_name="Adjudicator")
+    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_source_set")
+    conflict_adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_target_set", verbose_name="Adjudicator")
 
     class Meta:
         verbose_name = "adjudicator-adjudicator conflict"
