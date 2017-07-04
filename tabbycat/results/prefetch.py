@@ -51,21 +51,15 @@ def populate_confirmed_ballots(debates, motions=False, ballotsets=False):
     For best performance, the debates should already have
     debateadjudicator_set__adjudicator prefetched.
     """
-    debates_by_id = {debate.id: debate for debate in debates}
     confirmed_ballots = BallotSubmission.objects.filter(debate__in=debates, confirmed=True)
     if motions:
         confirmed_ballots = confirmed_ballots.select_related('motion')
     if ballotsets:
         confirmed_ballots = confirmed_ballots.select_related('debate') # BallotSet fetches the debate
 
-    for ballotsub in confirmed_ballots:
-        debate = debates_by_id[ballotsub.debate_id]
-        debate._confirmed_ballot = ballotsub
-
-    # populate the attribute for Debates that don't have a confirmed ballot
+    ballotsubs_by_debate_id = {ballotsub.debate_id: ballotsub for ballotsub in confirmed_ballots}
     for debate in debates:
-        if not hasattr(debate, "_confirmed_ballot"):
-            debate._confirmed_ballot = None
+        debate._confirmed_ballot = ballotsubs_by_debate_id.get(debate.id, None)
 
     if ballotsets:
         populate_ballotsets(confirmed_ballots, debates)

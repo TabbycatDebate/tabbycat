@@ -382,7 +382,6 @@ def get_feedback_progress(t):
     for team in teams:
         progress = FeedbackProgressForTeam(team)
         progress._submitted_feedback = submitted_feedback_by_team_id[team.id]
-        progress.num_unsubmitted()
         progress._debateteams = debateteams_by_team_id[team.id]
         teams_progress.append(progress)
 
