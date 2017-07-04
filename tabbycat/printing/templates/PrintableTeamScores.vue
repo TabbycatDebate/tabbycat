@@ -8,9 +8,6 @@
           <span v-if="index !== 0">, </span>{{ speaker }}
         </em>
       </div>
-      <div class="db-padding-horizontal db-flex-static db-align-vertical-center db-flex-static text-muted">
-        {{ position }}
-      </div>
       <div class="db-padding-horizontal db-flex-static "></div>
     </div>
 
@@ -50,7 +47,7 @@
       <div class="db-align-vertical-center  db-left-text db-padding-horizontal db-flex-item-fws"></div>
       <div class="db-flex-item db-flex-row db-align-vertical-center"></div>
       <div class="db-padding-horizontal db-static db-align-vertical-center db-right-text">
-        Total Score:
+        {{ position }}'s Total Score:
       </div>
       <div class="db-fill-in db-flex-item-fwl"></div>
     </div>

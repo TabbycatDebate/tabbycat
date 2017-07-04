@@ -6,12 +6,12 @@
       <span>
         <span v-if="showScoring">
           Mark speeches
-          {{ Math.round(roundInfo.substantiveMin) }} to {{ Math.round(roundInfo.substantiveMax) }};
-          <strong>no ½ marks</strong>.</span>
+          {{ getDisplayNumber(roundInfo.substantiveMin) }} to {{ getDisplayNumber(roundInfo.substantiveMax) }};
+          <strong>{{ getDisplayStep(roundInfo.substantiveStep) }}</strong>.</span>
         <span v-if="showScoring && roundInfo.hasReplies">
           Mark replies
-          {{ Math.round(roundInfo.replyMin) }} to {{ Math.round(roundInfo.replyMax) }};
-          <strong>½ marks are allowed</strong>.</span>
+          {{ getDisplayNumber(roundInfo.replyMin) }} to {{ getDisplayNumber(roundInfo.replyMax) }};
+          <strong>{{ getDisplayStep(roundInfo.replyStep) }}</strong>.</span>
         <span v-if="returnLocation !== ''">Return ballots to {{ roundInfo.returnLocation }}.</span>
       </span>
     </div>
@@ -36,6 +36,24 @@
 
 <script>
 export default {
-  props: ['roundInfo', 'showScoring']
+  props: ['roundInfo', 'showScoring'],
+  methods: {
+    getDisplayNumber: function(number) {
+      if (number % 1 === 0) {
+        return Math.round(number)
+      } else {
+        return number
+      }
+    },
+    getDisplayStep: function(number) {
+      if (number % 1 === 0) {
+        return "no ½ marks"
+      } else if (number % 0.5 === 0) {
+        return "½ marks are allowed"
+      } else {
+        return "decimal marks are allowed"
+      }
+    }
+  }
 }
 </script>
