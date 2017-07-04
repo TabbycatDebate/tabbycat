@@ -11,7 +11,8 @@
       :ballot="ballot" :round-info="roundInfo"></printable-feedback>
 
     <printable-ballot-footer v-if="roundInfo.showTabRoomRow"
-      :return-location="roundInfo.returnLocation"></printable-ballot-footer>
+      :round-info="roundInfo"
+      :show-scoring="showScoring"></printable-ballot-footer>
 
   </section>
 </template>
@@ -28,5 +29,14 @@ export default {
     PrintableBallotHeader, PrintableBallotFooter,
     PrintableFeedback, PrintableScoresheet
   },
+  computed: {
+    showScoring: function() {
+      if (this.kind === 'Scoresheet') {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
 }
 </script>

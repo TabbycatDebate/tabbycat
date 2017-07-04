@@ -66,8 +66,12 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView
             return Adjudicator.objects.filter(tournament=t)
 
     def get_context_data(self, **kwargs):
-        kwargs['breaking_count'] = self.get_adjudicators().filter(
-            breaking=True).count()
+        t = self.get_tournament()
+        adjudicators = self.get_adjudicators()
+        kwargs['breaking_count'] = adjudicators.filter(breaking=True).count()
+        weight = t.current_round.feedback_weight
+        kwargs['c_trainees'] = len([a for a in adjudicators if
+            a.weighted_score(weight) < t.pref('adj_min_voting_score')])
         return super().get_context_data(**kwargs)
 
     def get_table(self):

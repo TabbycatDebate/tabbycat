@@ -110,7 +110,7 @@
          data-toggle="collapse"
          data-parent="#accordion"
          href="#collapseOne"
-         aria-expanded="{% if options_nav or import_nav %}true{% else %}false{% endif %}"
+         aria-expanded="{% if options_nav or import_nav or participants_nav %}true{% else %}false{% endif %}"
          aria-controls="collapseOne">
         <span class="circle-icon icon-container">
           <span class="glyphicon glyphicon-briefcase"></span>
@@ -119,7 +119,7 @@
       </a>
     </div>
     <div id="collapseOne"
-         class="panel-collapse collapse {% if options_nav or import_nav or import_random %}in{% endif %}"
+         class="panel-collapse collapse {% if options_nav or import_nav or import_random or participants_nav%}in{% endif %}"
          role="tabpanel"
          aria-labelledby="headingOne">
       <ul class="nav nav-pills nav-stacked">
@@ -139,6 +139,15 @@
               <span class="glyphicon glyphicon-download"></span>
             </span>
             Import Data
+          </a>
+        </li>
+        <li>
+          <a class="{% if participants_nav %}active{% endif %}"
+             href="{% tournamenturl 'participants-list' %}">
+            <span class="circle-icon icon-container">
+              <span class="glyphicon glyphicon-user"></span>
+            </span>
+            Participants
           </a>
         </li>
         <li>

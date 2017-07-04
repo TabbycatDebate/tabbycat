@@ -9,29 +9,36 @@
     </div>
 
     <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions">
-        <div class="thead flex-cell flex-4" data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
+      <draw-header :positions="roundInfo.positions" @resort="updateSorting"
+                   :sort-key="sortKey" :sort-order="sortOrder">
+
+        <div class="thead flex-cell flex-4" @click="updateSorting('importance')"
+             data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
           <span>Priority</span>
+          <span :class="sortClasses('importance')"></span>
         </div>
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
           <div :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
+                        'flex-' + (adjPositions.length > 2 ? 6 : adjPositions.length > 1 ? 8 : 12)]">
             <span>Chair</span>
           </div>
           <div v-if="adjPositions.indexOf('P') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 16: 16)]">
+                        'flex-' + (adjPositions.length > 2 ? 24: 16)]">
             <span>Panel</span>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 10: 16)]">
+                        'flex-' + (adjPositions.length > 2 ? 6: 16)]">
             <span>Trainees</span>
           </div>
         </template>
+
       </draw-header>
-      <debate v-for="debate in debates" :debate="debate" :key="debate.id" :round-info="roundInfo">
+      <debate v-for="debate in dataOrderedByKey"
+              :debate="debate" :key="debate.id" :round-info="roundInfo">
+
         <div class="draw-cell flex-4" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>
@@ -43,6 +50,7 @@
                         :locked="debate.locked"
                         :adj-positions="adjPositions"></debate-panel>
         </template>
+
       </debate>
     </div>
 

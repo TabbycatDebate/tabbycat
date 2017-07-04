@@ -46,6 +46,10 @@ class AdjudicatorAllocation:
                 elif a.type == DebateAdjudicator.TYPE_TRAINEE:
                     self.trainees.append(a.adjudicator)
 
+            # Sort panellists/trainees names for more consistent ballots/prints
+            self.panellists.sort(key=lambda adj: adj.name)
+            self.trainees.sort(key=lambda adj: adj.name)
+
         else:
             self.chair = chair
             self.panellists = panellists or []

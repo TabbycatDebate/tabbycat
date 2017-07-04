@@ -2,7 +2,10 @@
 {% load debate_tags %}
 {% load static %}
 
-{% block sub-title %}<span id="breaking_count">{{ breaking_count }}</span> marked as breaking{% endblock %}
+{% block sub-title %}
+  <span id="breaking_count">{{ breaking_count }}</span> marked as breaking;
+  {{ c_trainees }} will trainee (score is < {{ pref.adj_min_voting_score }})
+{% endblock %}
 
 {% block content %}
 

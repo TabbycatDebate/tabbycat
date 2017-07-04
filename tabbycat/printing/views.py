@@ -152,6 +152,8 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
 
     def get_context_data(self, **kwargs):
         draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
+        # Sort by venue categories to ensure it matches the draw
+        draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
         message = ""
         ballots = []
         if not self.has_team_questions():
@@ -184,6 +186,9 @@ class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
         tournament = self.get_tournament()
         draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
         show_emoji = tournament.pref('show_emoji')
+
+        # Sort by venue categories to ensure it matches the draw
+        draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
 
         ballots = []
         for debate in draw:
@@ -240,9 +245,6 @@ class PrintableRandomisedURLs(TournamentMixin, SuperuserRequiredMixin, TemplateV
         kwargs['sheet_type'] = self.sheet_type
         kwargs['tournament_slug'] = tournament.slug
 
-        if self.sheet_type is not 'ballot':
-            kwargs['teams'] = tournament.team_set.all().order_by('institution', 'reference')
-
         if not tournament.pref('share_adjs'):
             kwargs['adjs'] = tournament.adjudicator_set.all().order_by('name')
         else:
@@ -257,6 +259,11 @@ class PrintableRandomisedURLs(TournamentMixin, SuperuserRequiredMixin, TemplateV
 class PrintFeedbackURLsView(PrintableRandomisedURLs):
 
     sheet_type = 'feedback'
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['teams'] = tournament.team_set.all().order_by('institution', 'reference')
+        return super().get_context_data(**kwargs)
 
 
 class PrintBallotURLsView(PrintableRandomisedURLs):
