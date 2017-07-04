@@ -21,7 +21,7 @@
         <em>Pronoun</em>
       </div>
       <div class="db-align-vertical-center db-padding-horizontal db-align-horizontal-center db-flex-item">
-        <em>Full Name</em>
+        <em>First and Last Name</em>
       </div>
       <div class="db-align-vertical-center db-flex-item-fwl db-align-horizontal-center">
         <em>Score</em>
