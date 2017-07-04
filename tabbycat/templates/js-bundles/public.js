@@ -17,14 +17,16 @@ Vue.prototype.$eventHub = eventHub
 // Only instantiate Vue if there is set vueData; otherwise the mount is missing
 if (typeof vueData !== 'undefined') {
 
-  new Vue({
-    el: '#vueMount',
-    components: vueComponents,
-    // created: vueCreated,
-    data: vueData,
-    // events: vueEvents,
-    // filters: vueFilters,
-    // methods: vueMethods
-  });
+  // Many templates share the vueTable base but don't provide data
+  if ('tablesData' in vueData && vueData.tablesData === null) {
+    // Is an empty table; do not mount
+  } else {
 
+    new Vue({
+      el: '#vueMount',
+      components: vueComponents,
+      data: vueData,
+    });
+
+  }
 }

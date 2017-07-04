@@ -10,6 +10,8 @@ Change Log
   - When dragging/dropping the changed elements now 'lock' in place and indicate that their saving is in-progress
   - Added conflicts and recent histories to the top slideover of teams/adjudicators
   - Adding 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
+  - The adjudicator, venue, and matchup editing interfaces are now sortable
+- The Auto Allocate function for adjudicators now also allocates trainees to solo-chaired debates
 - Added a 'Tab Release' preset for easily releasing all standings/results pages after a tournament is finished
 - Fixed issue where toggling iron speeches on and off wouldn't hide/unset the relevant checkboxes
 - Fixed issue where VenueCategories could not be edited if they did not have Venues set

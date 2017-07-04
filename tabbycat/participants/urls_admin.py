@@ -3,6 +3,9 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+    url(r'^list/$',
+        views.ParticipantsListView.as_view(),
+        name='participants-list'),
     url(r'^records/$',
         views.ParticipantRecordsListView.as_view(),
         name='participants-records-list'),

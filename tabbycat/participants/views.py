@@ -33,9 +33,8 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class PublicParticipantsListView(PublicTournamentPageMixin, CacheMixin, VueTableTemplateView):
+class BaseParticipantsListView(VueTableTemplateView):
 
-    public_page_preference = 'public_participants'
     page_title = 'Participants'
     page_emoji = '🚌'
 
@@ -53,6 +52,15 @@ class PublicParticipantsListView(PublicTournamentPageMixin, CacheMixin, VueTable
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
         return [adjs_table, speakers_table]
+
+
+class ParticipantsListView(BaseParticipantsListView, SuperuserRequiredMixin, TournamentMixin):
+    pass
+
+
+class PublicParticipantsListView(BaseParticipantsListView, PublicTournamentPageMixin, CacheMixin):
+
+    public_page_preference = 'public_participants'
 
 
 # ==============================================================================

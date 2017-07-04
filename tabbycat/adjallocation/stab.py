@@ -183,7 +183,7 @@ class StabPanel(object):
     def conflicts(self, debate):
         for adj in self.panel:
             for team in (debate.aff_team, debate.neg_team):
-                if adj.conflict_with(team):
+                if adj.conflicts_with_team(team):
                     return True
         return False
 

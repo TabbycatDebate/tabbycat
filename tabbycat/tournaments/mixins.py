@@ -316,11 +316,17 @@ class DrawForDragAndDropMixin(RoundMixin):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
         for debate in serialised_draw:
             break_thresholds = self.break_thresholds
+            liveness = 0
             for (position, team) in debate['teams'].items():
                 team = self.annotate_break_classes(team, break_thresholds)
                 team = self.annotate_region_classes(team)
+                if team['break_categories'] is not None:
+                    liveness += len([bc for bc in team['break_categories'] if
+                                     bc['will_break'] == 'live'])
             for panellist in debate['panel']:
                 panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
+
+            debate['liveness'] = liveness
 
         return serialised_draw
 

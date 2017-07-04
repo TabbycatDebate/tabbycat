@@ -28,6 +28,13 @@
   .draw-row:last-of-type {
     border-radius: 0 0 4px 4px;
   }
+
+  .vue-sort-key,
+  .thead.vue-droppable-container .vue-sort-key {
+    margin-left: 2px; // Fixes for the pretend table headers
+    border-bottom: 0;
+    margin-bottom: 3px;
+  }
 }
 
 .draw-header {
@@ -50,7 +57,11 @@
 .draw-cell {
   @extend .flex-cell;
   @extend .flex-vertical-center;
-  @extend .bordered-bottom;
+  border-bottom: 2px solid $table-border-color;
+
+  &.droppable-cell {
+    border-bottom-color: #fff; // Have more contrast in drag/drop UIs
+  }
 }
 
 .allocations { // For fullscreen pages
@@ -63,9 +74,9 @@
 }
 
 .unallocated-items {
-  max-height: 450px;
-  min-height: 54px;
+  height: auto;
   z-index: $z_3; // Need to hover abovve underlying .tooltips
+  padding-right: 40px; // Leave space for dragging handles
   > div {
     display: inline-flex;
   }
@@ -90,10 +101,6 @@
   padding: 6px 0;
 }
 
-.bordered-bottom {
-  border-bottom: 1px solid $table-border-color;
-}
-
 .importance-container {
   width: 100px;
 }
@@ -101,7 +108,7 @@
 .panel-container {
 
   .vue-droppable-container {
-    border-right: 2px solid $table-border-color;
+    border-right: 2px solid #fff;
     height: 100%;
 
     .vue-droppable {

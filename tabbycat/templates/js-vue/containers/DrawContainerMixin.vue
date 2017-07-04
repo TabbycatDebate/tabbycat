@@ -10,10 +10,11 @@ import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import SlideOverContainerMixin from '../../info/SlideOverContainerMixin.vue'
 import SlideOver from '../../info/SlideOver.vue'
+import SortableTableMixin from '../../tables/SortableTableMixin.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [AjaxMixin, SlideOverContainerMixin],
+  mixins: [AjaxMixin, SlideOverContainerMixin, SortableTableMixin],
   components: {
     DrawHeader, AutoSaveCounter, Debate,
     DroppableGeneric, UnallocatedItemsContainer, SlideOver
@@ -22,6 +23,13 @@ export default {
     return {
       debates: this.initialDebates,
       unallocatedItems: this.initialUnallocatedItems,
+      headers: [
+        {'key':'bracket'},{'key':'liveness'},{'key':'importance'},
+        {'key':'venue'},
+        {'key':'affirmative'},{'key':'negative'},
+        {'key':'og'},{'key':'oo'},{'key':'cg'},{'key':'co'},
+        // Team positions
+      ]
     }
   },
   props: ['initialDebates', 'initialUnallocatedItems', 'roundInfo'],
@@ -33,6 +41,9 @@ export default {
     this.$eventHub.$on('update-unallocated', this.updateUnallocatedItems)
   },
   computed: {
+    sortableData: function() {
+      return this.debates // Enables SortableTableMixin
+    },
     teams: function() {
       // Return all teams (in debates) as a single array
       var allTeams = _.map(this.debates, function(debate) {
@@ -89,6 +100,31 @@ export default {
     updateUnallocatedItems: function(updatedUnallocatedItems) {
       this.unallocatedItems = updatedUnallocatedItems // As above
     },
+    // Duplicating sortableHeaderMixin; but can't inheret in a slot
+    sortClasses: function(key) {
+      var baseCSS = "glyphicon vue-sort-key "
+      if (this.sortKey === key) {
+        if (this.sortOrder === "asc") {
+          return baseCSS + "text-success glyphicon-sort-by-attributes-alt"
+        } else {
+          return baseCSS + "text-success glyphicon-sort-by-attributes"
+        }
+      }
+      return baseCSS + "text-muted glyphicon-sort"
+    },
+    getSortableProperty(row, orderedHeaderIndex) {
+      // Rather than an array of cells (as in Table) row is a Debate
+      // So just return the relevant property
+      if (typeof row[this.sortKey] === 'string' ||
+          typeof row[this.sortKey] === 'number') {
+        return row[this.sortKey]
+      } else if (this.sortKey === 'venue') {
+        return row.venue.name
+      } else if (_.includes(["affirmative", "negative"], this.sortKey)) {
+        return row.teams[this.sortKey].short_name
+      }
+      console.log('Couldnt find sorting property')
+    }
   }
 }
 </script>
