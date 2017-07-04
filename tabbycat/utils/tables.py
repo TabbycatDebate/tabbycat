@@ -173,6 +173,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             self.admin = kwargs.get('admin', False)
 
+        if self.tournament.pref('teams_in_debate') == 'bp':
+            self._result_cell = self._result_cell_bp
+        else:
+            self._result_cell = self._result_cell_two
+
         return super().__init__(**kwargs)
 
     @property
@@ -228,7 +233,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['popover']['content'].append(self._team_record_link(team))
         return cell
 
-    def _result_cell(self, ts, compress=False, show_score=False, show_ballots=False):
+    def _result_cell_two(self, ts, compress=False, show_score=False, show_ballots=False):
         if not hasattr(ts, 'debate_team') or not hasattr(ts.debate_team.opponent, 'team'):
             return {'text': self.BLANK_TEXT}
 
@@ -236,39 +241,79 @@ class TabbycatTableBuilder(BaseTableBuilder):
         opp_vshort = '<i class="emoji">' + opp.emoji + '</i>' if opp.emoji else "…"
 
         cell = {
-            'text': " vs " + (opp_vshort if compress else opp.short_name),
+            'text': _(" vs %(opposition)s") % {'opposition': opp_vshort if compress else opp.short_name},
             'popover': {'content': [{'text': ''}], 'title': ''}
         }
 
         if ts.win is True:
             cell['icon'] = "glyphicon-arrow-up text-success"
             cell['sort'] = 1
-            cell['popover']['title'] = "Won against " + opp.long_name
+            cell['popover']['title'] = _("Won against %(team)s") % {'team': opp.long_name}
         elif ts.win is False:
             cell['icon'] = "glyphicon-arrow-down text-danger"
             cell['sort'] = 2
-            cell['popover']['title'] = "Lost to " + opp.long_name
+            cell['popover']['title'] = _("Lost to %(team)s") % {'team': opp.long_name}
         else: # None
             cell['icon'] = ""
             cell['sort'] = 3
-            cell['popover']['title'] = "No result for debate against " + opp.long_name
+            cell['popover']['title'] = _("No result for debate against %(team)s") % {'team': opp.long_name}
 
         if show_score:
             cell['subtext'] = metricformat(ts.score)
             cell['popover']['content'].append(
-                {'text': 'Received <strong>%s</strong> team points' % metricformat(ts.score)})
+                {'text': _("Received <strong>%s</strong> team points") % metricformat(ts.score)})
 
         if show_ballots:
             cell['popover']['content'].append(
-                {'text': 'View Debate Ballot', 'link': reverse_tournament('results-public-scoresheet-view',
+                {'text': _("View debate ballot"), 'link': reverse_tournament('results-public-scoresheet-view',
                     self.tournament, kwargs={'pk': ts.debate_team.debate.id})})
 
         if self._show_speakers_in_draw:
-            cell['popover']['content'].append({'text': "Speakers in <strong>" + opp.short_name + "</strong>: " + ", ".join([s.name for s in opp.speakers])})
+            cell['popover']['content'].append({'text': _("Speakers in <strong>%(opp)s</strong>: %(speakers)s") % {
+                'opp': opp.short_name, 'speakers': ", ".join([s.name for s in opp.speakers])}})
 
         if self._show_record_links:
             cell['popover']['content'].append(
                 self._team_record_link(opp))
+
+        return cell
+
+    def _result_cell_bp(self, ts, compress=False, show_score=False, show_ballots=False):
+        if not hasattr(ts, 'debate_team'):
+            return {'text': self.BLANK_TEXT}
+
+        places = {0: _("4th"), 1: _("3rd"), 2: _("2nd"), 3: _("1st")}
+        other_teams = {dt.side: dt.team.short_name for dt in ts.debate_team.debate.debateteam_set.all()}
+        other_team_strs = []
+        for side in self.tournament.sides:
+            line = _("%(team)s (%(side)s)") % {
+                'team': other_teams.get(side, "??"),
+                'side': get_side_name(self.tournament, side, 'abbr')
+            }
+            if side == ts.debate_team.side:
+                line = "<strong>" + line + "</strong>"
+            other_team_strs.append(line)
+
+        cell = {'popover': {'content': [{'text': "<br />".join(other_team_strs)}]}}
+
+        if ts.points is not None:
+            place = places.get(ts.points, "??")
+            cell['text'] = place
+            cell['popover']['title'] = _("%(place)s from %(side)s") % {
+                    'place': place, 'side': ts.debate_team.get_side_name()},
+        else:
+            cell['text'] = "–"
+            cell['popover']['title'] = _("No result for debate from %(side)") % {'side': ts.debate_team.get_side_name()}
+
+        if show_score:
+            cell['subtext'] = metricformat(ts.score)
+            cell['popover']['content'].append(
+                {'text': _("Received <strong>%s</strong> team points") % metricformat(ts.score)})
+
+        if show_ballots:
+            cell['popover']['content'].append(
+                {'text': _("View debate ballot"), 'link': reverse_tournament('results-public-scoresheet-view',
+                    self.tournament, kwargs={'pk': ts.debate_team.debate.id})})
 
         return cell
 

@@ -306,7 +306,8 @@ class BaseTeamStandingsView(BaseStandingsView):
         self.limit_rank_display(standings)
 
         rounds = self.get_rounds()
-        add_team_round_results(standings, rounds)
+        opponents = tournament.pref('teams_in_debate') == 'two'
+        add_team_round_results(standings, rounds, opponents=opponents)
         self.populate_result_missing(standings)
 
         return standings, rounds
@@ -336,8 +337,11 @@ class BaseTeamStandingsView(BaseStandingsView):
 
 
 class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
-    """The standard team standings view."""
+    """Superuser team standings view."""
     rankings = ('rank',)
+
+    def show_ballots(self):
+        return True
 
 
 class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
