@@ -12,8 +12,6 @@ logger = logging.getLogger(__name__)
 
 class HungarianAllocator(Allocator):
 
-    DEFAULT_IMPORTANCE = 2
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         t = self.tournament
@@ -34,8 +32,8 @@ class HungarianAllocator(Allocator):
     def calc_cost(self, debate, adj, adjustment=0):
         cost = 0
 
-        # Normalise debate importances back to the 0-5 (not ±2) range expected
-        normalised_importance = debate.importance + 2
+        # Normalise debate importances back to the 1-5 (not ±2) range expected
+        normalised_importance = debate.importance + 3
 
         # Similarly normalise adj scores to the 0-5 range expected
         score_min = self.min_score
@@ -52,12 +50,12 @@ class HungarianAllocator(Allocator):
         cost += self.history_penalty * adj.seen_team(debate.aff_team, debate.round)
         cost += self.history_penalty * adj.seen_team(debate.neg_team, debate.round)
 
-        impt = (normalised_importance or self.DEFAULT_IMPORTANCE) + adjustment
+        impt = normalised_importance + adjustment
         diff = 5 + impt - adj._hungarian_score
         if diff > 0.25:
-            cost += 100000 * exp(diff - 0.25)
+            cost += 1000 * exp(diff - 0.25)
 
-        cost += (self.max_score - adj._hungarian_score) * 100
+        cost += self.max_score - adj._hungarian_score
 
         return cost
 
