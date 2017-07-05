@@ -39,7 +39,6 @@ def get_balance(motion, is_bp):
 
 def two_team_balance(motion):
     # Test and confidence levels contributed by Viran Weerasekera
-    # TODO: work in vetoes; better account for sample size
     n_2 = int(motion.chosen_in / 2)
     aff_wins = motion.aff_wins
     neg_wins = motion.neg_wins
