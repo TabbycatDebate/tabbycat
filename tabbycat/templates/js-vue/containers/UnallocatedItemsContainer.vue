@@ -48,7 +48,6 @@ export default {
       var moved = (pos - this.startPosition)
       var newSize = this.height - moved
       this.height = this.boundedHeight(newSize)
-      console.log('moved', moved, 'size', this.boundedHeight(newSize))
       if (this.height > this.maxHeight) {
         this.resizeEnd(event)
       }

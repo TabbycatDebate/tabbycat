@@ -2,12 +2,12 @@ from utils.tables import TabbycatTableBuilder
 
 # Critical Values / Determination
 BALANCES = [
-    {'critical': 0.455,  'label': 'Balanced', 'freedom': .5},
-    {'critical': 2.706,  'label': 'Slightly imbalanced', 'freedom': .1},
-    {'critical': 3.841,  'label': 'Somewhat imbalanced', 'freedom': .05},
-    {'critical': 5.412,  'label': 'Imbalanced', 'freedom': .02},
-    {'critical': 6.635,  'label': 'Very imbalanced', 'freedom': .01},
-    {'critical': 10.827, 'label': 'Badly imbalanced', 'freedom': .001},
+    {'critical': 0.455,  'label': 'balanced', 'freedom': .5},
+    {'critical': 2.706,  'label': 'marginally TEAM favoured', 'freedom': .1},
+    {'critical': 3.841,  'label': 'somewhat TEAM favoured', 'freedom': .05},
+    {'critical': 5.412,  'label': 'TEAM favoured', 'freedom': .02},
+    {'critical': 6.635,  'label': 'very TEAM favoured', 'freedom': .01},
+    {'critical': 10.827, 'label': 'badly TEAM favoured', 'freedom': .001},
 ]
 
 
@@ -30,7 +30,7 @@ class MotionsStandingsTableBuilder(TabbycatTableBuilder):
 
 def get_balance(motion, is_bp):
     if motion.chosen_in < 10:
-        return 0, 'Inconclusive', 'Too few debates to determine meaningful balance'
+        return 0, 'inconclusive', 'Too few debates to determine meaningful balance'
     if is_bp:
         return four_team_balance(motion)
     else:
@@ -46,8 +46,14 @@ def two_team_balance(motion):
     neg_c_stat = pow(neg_wins - n_2, 2) / n_2
     c_stat = round(aff_c_stat + neg_c_stat, 2)
     balance = next((ir for ir in BALANCES if c_stat <= ir['critical']), None)
-    info = "%s critical value; %s degrees of freedom" % (c_stat, balance['freedom'])
-    return c_stat, balance['label'], info
+    info = "%s critical value; %s level of signficance" % (c_stat, balance['freedom'])
+
+    if aff_wins > neg_wins:
+        return c_stat, balance['label'].replace('TEAM', 'aff'), info
+    elif aff_wins < neg_wins:
+        return c_stat, balance['label'].replace('TEAM', 'neg'), info
+    else:
+        return c_stat, balance['label'], info
 
 
 def four_team_balance(motion):
