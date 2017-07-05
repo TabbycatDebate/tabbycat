@@ -19,13 +19,13 @@ class AustralsPreferences(PreferencesPreset):
     show_in_list = True
 
     # Scoring
-    scoring__score_min                         = 68.0
-    scoring__score_max                         = 82.0
-    scoring__score_step                        = 1.0
-    scoring__reply_score_min                   = 34.0
+    scoring__score_min                         = 70.0 # Technically the speaks
+    scoring__score_max                         = 80.0 # range is at the adj
+    scoring__score_step                        = 1.0  # core's discretion (it's
+    scoring__reply_score_min                   = 34.0 # not in the constitution)
     scoring__reply_score_max                   = 41.0
     scoring__reply_score_step                  = 0.5
-    scoring__maximum_margin                    = 15.0  # TODO= check this
+    scoring__maximum_margin                    = 0.0  # Rob Confirmed
     # Draws
     draw_rules__avoid_same_institution         = True
     draw_rules__avoid_team_history             = True
