@@ -154,7 +154,7 @@ STATICFILES_FINDERS = (
 STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
 
 # When running server side always use build not watch
-GULP_PRODUCTION_COMMAND = "npm run gulp build -- --production"
+GULP_PRODUCTION_COMMAND = "export NODE_ENV=production && npm run gulp build -- --production"
 GULP_DEVELOP_COMMAND = "npm run gulp build -- --development"
 
 
