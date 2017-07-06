@@ -25,6 +25,12 @@
       Novices
     </a>
   {% endif %}
+  <a class="btn btn-default {% block replies_active %}{% endblock %}" href="{% roundurl 'standings-esl' current_round %}">
+    ESL Speakers
+  </a>
+  <a class="btn btn-default {% block replies_active %}{% endblock %}" href="{% roundurl 'standings-efl' current_round %}">
+    EFL Speakers
+  </a>
   {% if pref.reply_scores_enabled %}
     <a class="btn btn-default {% block replies_active %}{% endblock %}" href="{% roundurl 'standings-reply' current_round %}">
       Replies

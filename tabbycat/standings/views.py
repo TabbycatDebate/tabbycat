@@ -240,6 +240,40 @@ class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
     public_limit_preference = 'novices_tab_limit'
 
 
+class BaseESLStandingsView(BaseStandardSpeakerStandingsView):
+    """Speaker standings view for ESL speakers."""
+    page_title = 'ESL Speaker Standings'
+
+    def get_speakers(self):
+        return super().get_speakers().filter(esl=True)
+
+
+class ESLStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
+    pass
+
+
+class PublicESLTabView(PublicTabMixin, BaseNoviceStandingsView):
+    public_page_preference = 'esl_tab_released'
+    public_limit_preference = 'esl_tab_limit'
+
+
+class BaseEFLStandingsView(BaseStandardSpeakerStandingsView):
+    """Speaker standings view for EFL speakers."""
+    page_title = 'EFL Speaker Standings'
+
+    def get_speakers(self):
+        return super().get_speakers().filter(efl=True)
+
+
+class EFLStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
+    pass
+
+
+class PublicEFLTabView(PublicTabMixin, BaseNoviceStandingsView):
+    public_page_preference = 'efl_tab_released'
+    public_limit_preference = 'efl_tab_limit'
+
+
 class BaseProStandingsView(BaseStandardSpeakerStandingsView):
     """Speaker standings view for non-novices (pro, varsity)."""
 
