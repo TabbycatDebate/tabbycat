@@ -46,6 +46,8 @@ class AustralsPreferences(PreferencesPreset):
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
+    ui_options__show_esl                       = True
+    ui_options__show_efl                       = True
 
 
 class AustralianEastersPreferences(AustralsPreferences):
@@ -89,8 +91,8 @@ class NZEastersPreferences(AustralsPreferences):
     draw_rules__draw_odd_bracket               = 'intermediate'
     draw_rules__draw_pairing_method            = 'fold'
     draw_rules__draw_avoid_conflicts           = 'off'
-    draw_rules__avoid_same_institution         = False  # TODO: CHECK
-    draw_rules__avoid_team_history             = False  # TODO: CHECK
+    draw_rules__avoid_same_institution         = False # TODO: CHECK
+    draw_rules__avoid_team_history             = False # TODO: CHECK
     # UI Options
     ui_options__show_novices                   = True
 
@@ -157,11 +159,12 @@ class UADCPreferences(AustralsPreferences):
     # Standings Rules
     standings__team_standings_precedence       = ['wins', 'speaks_sum', 'margin_avg']
     # Feedback
-    feedback__adj_min_score                    = 1.0  # Explicit in the rules
+    feedback__adj_min_score                    = 1.0   # Explicit in the rules
     feedback__adj_max_score                    = 10.0  # Explicit in the rules
     feedback__feedback_from_teams              = 'all-adjs' # Kinda a big deal
     # UI Options
     public_features__feedback_progress         = True  # Feedback is compulsory
+    ui_options__show_efl                       = True  # Only EFL status shown
 
 
 class WSDCPreferences(AustralsPreferences):

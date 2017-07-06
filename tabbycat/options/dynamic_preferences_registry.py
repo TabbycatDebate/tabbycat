@@ -857,6 +857,24 @@ class ShowNovices(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class ShowESL(BooleanPreference):
+    help_text = "Indicates next to a speaker's name if they are an ESL speaker"
+    verbose_name = 'Show ESL'
+    section = ui_options
+    name = 'show_esl'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ShowEFL(BooleanPreference):
+    help_text = "Indicates next to a speaker's name if they are an EFL speaker"
+    verbose_name = 'Show EFL'
+    section = ui_options
+    name = 'show_efl'
+    default = False
+
+
+@tournament_preferences_registry.register
 class ShowSpeakersInDraw(BooleanPreference):
     help_text = "Enables a hover element on every team's name showing that team's speakers"
     verbose_name = 'Show speakers in draw'
