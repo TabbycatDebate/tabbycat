@@ -40,7 +40,7 @@
       <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading">
-          <h4 class="panel-title">Most Popular Motions</h4>
+          <h4 class="panel-title">Most and Least Popular Motions</h4>
         </div>
         <!-- List group -->
         <ul class="list-group">
@@ -50,6 +50,22 @@
                 {{ top_motion.reference }} in
                 {{ top_motion.round.abbreviation }}
                 <span class="badge pull-right">{{ top_motion.ballotsubmission__count }}</span>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-group-item">
+              No data yet
+            </li>
+          {% endif %}
+          <li class="list-group-item disabled">
+            ...
+          </li>
+          {% if bottom_motions %}
+            {% for bottom_motion in bottom_motions %}
+              <li class="list-group-item">
+                {{ bottom_motion.reference }} in
+                {{ bottom_motion.round.abbreviation }}
+                <span class="badge pull-right">{{ bottom_motion.ballotsubmission__count }}</span>
               </li>
             {% endfor %}
           {% else %}
@@ -114,21 +130,19 @@
         </ul>
       </div>
     </div>
-    {% if pref.motion_vetoes_enabled %}
-    <div class="col-md-4">
+    <div class="{% if pref.motion_vetoes_enabled %}col-md-4{% else %}col-md-6{% endif %}">
       <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading">
-          <h4 class="panel-title">Least Popular Motions</h4>
+          <h4 class="panel-title">Average Speaks by Round</h4>
         </div>
         <!-- List group -->
         <ul class="list-group">
-          {% if bottom_motions %}
-            {% for bottom_motion in bottom_motions %}
+          {% if round_speaks %}
+            {% for round_speak in round_speaks %}
               <li class="list-group-item">
-                {{ bottom_motion.reference }} in
-                {{ bottom_motion.round.abbreviation }}
-                <span class="badge pull-right">{{ bottom_motion.ballotsubmission__count }}</span>
+                {{ round_speak.round }}
+                <span class="badge pull-right">{{ round_speak.score|floatformat }}</span>
               </li>
             {% endfor %}
           {% else %}
@@ -139,7 +153,6 @@
         </ul>
       </div>
     </div>
-    {% endif %}
     <div class="{% if pref.motion_vetoes_enabled %}col-md-4{% else %}col-md-6{% endif %}">
       <div class="panel panel-default">
         <!-- Default panel contents -->

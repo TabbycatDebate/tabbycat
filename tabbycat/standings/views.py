@@ -3,7 +3,7 @@ import json
 from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Avg, Count
 
 import motions.statistics as motion_statistics
 from motions.models import Motion
@@ -35,8 +35,14 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
                     speaker__team__tournament=t).exclude(
                     position=t.REPLY_POSITION).select_related(
                     'debate_team__debate__round')
-        kwargs["top_speaks"] = speaks.order_by('-score')[:10]
-        kwargs["bottom_speaks"] = speaks.order_by('score')[:10]
+        kwargs["top_speaks"] = speaks.order_by('-score')[:9]
+        kwargs["bottom_speaks"] = speaks.order_by('score')[:9]
+        kwargs["round_speaks"] = []
+        for r in t.round_set.order_by('seq'):
+            avg = speaks.filter(debate_team__debate__round=r).aggregate(
+                Avg('score'))['score__avg']
+            if avg:
+                kwargs["round_speaks"].append({'round': r.name, 'score': avg})
 
         margins = TeamScore.objects.filter(
                     ballot_submission__confirmed=True,
@@ -44,14 +50,14 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
                     margin__gte=0).select_related(
                     'debate_team__team', 'debate_team__debate__round',
                     'debate_team__team__institution')
-        kwargs["top_margins"] = margins.order_by('-margin')[:10]
-        kwargs["bottom_margins"] = margins.order_by('margin')[:10]
+        kwargs["top_margins"] = margins.order_by('-margin')[:9]
+        kwargs["bottom_margins"] = margins.order_by('margin')[:9]
 
         motions = Motion.objects.filter(
                     round__seq__lte=round.seq, round__tournament=t).annotate(
                     Count('ballotsubmission'))
-        kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:10]
-        kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:10]
+        kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:4]
+        kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:4]
 
         return super().get_context_data(**kwargs)
 
