@@ -236,7 +236,11 @@ class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):
 
 
 class NoviceStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
-    pass
+
+    def get_context_data(self, **kwargs):
+        messages.info(self.request, "Novice status can be set on a per-speaker "
+            "basis in the Edit Database area.")
+        return super().get_context_data(**kwargs)
 
 
 class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
@@ -252,11 +256,15 @@ class BaseESLStandingsView(BaseStandardSpeakerStandingsView):
         return super().get_speakers().filter(esl=True)
 
 
-class ESLStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
-    pass
+class ESLStandingsView(SuperuserRequiredMixin, BaseESLStandingsView):
+
+    def get_context_data(self, **kwargs):
+        messages.info(self.request, "ESL status can be set on a per-speaker "
+            "basis in the Edit Database area.")
+        return super().get_context_data(**kwargs)
 
 
-class PublicESLTabView(PublicTabMixin, BaseNoviceStandingsView):
+class PublicESLTabView(PublicTabMixin, BaseESLStandingsView):
     public_page_preference = 'esl_tab_released'
     public_limit_preference = 'esl_tab_limit'
 
@@ -269,11 +277,15 @@ class BaseEFLStandingsView(BaseStandardSpeakerStandingsView):
         return super().get_speakers().filter(efl=True)
 
 
-class EFLStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
-    pass
+class EFLStandingsView(SuperuserRequiredMixin, BaseEFLStandingsView):
+
+    def get_context_data(self, **kwargs):
+        messages.info(self.request, "EFL status can be set on a per-speaker "
+            "basis in the Edit Database area.")
+        return super().get_context_data(**kwargs)
 
 
-class PublicEFLTabView(PublicTabMixin, BaseNoviceStandingsView):
+class PublicEFLTabView(PublicTabMixin, BaseEFLStandingsView):
     public_page_preference = 'efl_tab_released'
     public_limit_preference = 'efl_tab_limit'
 

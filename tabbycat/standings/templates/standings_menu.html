@@ -1,45 +1,62 @@
 {% load debate_tags %}
 
 <div class="btn-group">
-  <a class="btn btn-default {% block standings_active %}{% endblock %}" href="{% roundurl 'standings-index' current_round %}">
+  <a class="btn btn-default {% block standings_active %}{% endblock %}"
+     href="{% roundurl 'standings-index' current_round %}">
     Overview
   </a>
 </div>
+
 <div class="btn-group">
-  <a class="btn btn-default {% block team_active %}{% endblock %}" href="{% roundurl 'standings-team' current_round %}">
+  <a class="btn btn-default {% block team_active %}{% endblock %}"
+     href="{% roundurl 'standings-team' current_round %}">
     Teams
   </a>
   {% if pref.enable_divisions %}
-  <a class="btn btn-default {% block division_active %}{% endblock %}" href="{% roundurl 'standings-division' current_round %}">
+  <a class="btn btn-default {% block division_active %}{% endblock %}"
+     href="{% roundurl 'standings-division' current_round %}">
     Divisions
   </a>
   {% endif %}
-  <a class="btn btn-default {% block speaker_active %}{% endblock %}" href="{% roundurl 'standings-speaker' current_round %}">
+</div>
+
+<div class="btn-group">
+  <a class="btn btn-default {% block speaker_active %}{% endblock %}"
+     href="{% roundurl 'standings-speaker' current_round %}">
     Speakers
   </a>
-  {% if pref.show_novices %}
-    <a class="btn btn-default {% block pros_active %}{% endblock %}" href="{% roundurl 'standings-pro' current_round %}">
-      Pros
-    </a>
-    <a class="btn btn-default {% block novices_active %}{% endblock %}" href="{% roundurl 'standings-novice' current_round %}">
-      Novices
-    </a>
-  {% endif %}
-  <a class="btn btn-default {% block replies_active %}{% endblock %}" href="{% roundurl 'standings-esl' current_round %}">
-    ESL Speakers
-  </a>
-  <a class="btn btn-default {% block replies_active %}{% endblock %}" href="{% roundurl 'standings-efl' current_round %}">
-    EFL Speakers
-  </a>
   {% if pref.reply_scores_enabled %}
-    <a class="btn btn-default {% block replies_active %}{% endblock %}" href="{% roundurl 'standings-reply' current_round %}">
+    <a class="btn btn-default {% block replies_active %}{% endblock %}"
+       href="{% roundurl 'standings-reply' current_round %}">
       Replies
     </a>
   {% endif %}
+  {% if pref.show_novices %}
+    <a class="btn btn-default {% block pros_active %}{% endblock %}"
+       href="{% roundurl 'standings-pro' current_round %}">
+      Pro Speakers
+    </a>
+    <a class="btn btn-default {% block novices_active %}{% endblock %}"
+       href="{% roundurl 'standings-novice' current_round %}">
+      Novice Speakers
+    </a>
+  {% endif %}
+  <a class="btn btn-default {% block esl_active %}{% endblock %}"
+     href="{% roundurl 'standings-esl' current_round %}">
+    ESL Speakers
+  </a>
+  <a class="btn btn-default {% block efl_active %}{% endblock %}"
+     href="{% roundurl 'standings-efl' current_round %}">
+    EFL Speakers
+  </a>
 </div>
-<a class="btn btn-default {% block motion_active %}{% endblock %}" href="{% roundurl 'standings-motion' current_round %}">
+
+<a class="btn btn-default {% block motion_active %}{% endblock %}"
+   href="{% roundurl 'standings-motion' current_round %}">
   Motions Balance
 </a>
-<a class="btn btn-default {% block diversity_active %}{% endblock %}" href="{% roundurl 'standings-diversity' current_round %}">
+
+<a class="btn btn-default {% block diversity_active %}{% endblock %}"
+   href="{% roundurl 'standings-diversity' current_round %}">
   Diversity Overview
 </a>

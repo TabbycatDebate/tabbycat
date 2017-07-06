@@ -11,6 +11,7 @@ Change Log
   - Added conflicts and recent histories to the top slideover of teams/adjudicators
   - Adding 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
   - The adjudicator, venue, and matchup editing interfaces are now sortable
+- Added an ESL/EFL tab release option and status indicators
 - Added a chi-squared test to measure motion balance in the motion standings/balance. Thanks to Viran Weerasekera for contributing this!
 - The Auto Allocate function for adjudicators now also allocates trainees to solo-chaired debates
 - Added a 'Tab Release' preset for easily releasing all standings/results pages after a tournament is finished
