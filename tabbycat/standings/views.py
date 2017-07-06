@@ -38,8 +38,11 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         kwargs["top_speaks"] = speaks.order_by('-score')[:9]
         kwargs["bottom_speaks"] = speaks.order_by('score')[:9]
 
-        overall = speaks.aggregate(Avg('score'))['score__avg']
-        kwargs["round_speaks"] = [{'round': 'Overall', 'score': overall}]
+        overall = speaks.filter(
+            debate_team__debate__round__stage=Round.STAGE_PRELIMINARY).aggregate(
+            Avg('score'))['score__avg']
+        kwargs["round_speaks"] = [{'round': 'Overall (for in-rounds)',
+                                   'score': overall}]
         for r in t.round_set.order_by('seq'):
             avg = speaks.filter(debate_team__debate__round=r).aggregate(
                 Avg('score'))['score__avg']
