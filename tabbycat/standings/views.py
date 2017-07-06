@@ -123,6 +123,10 @@ class PublicTabMixin(PublicTournamentPageMixin):
 
         return self.page_title
 
+    def get_context_data(self, **kwargs):
+        kwargs['for_public'] = True
+        return super().get_context_data(**kwargs)
+
 
 # ==============================================================================
 # Speaker standings
