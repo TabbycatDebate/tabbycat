@@ -443,7 +443,8 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         messages.info(self.request, "This list is sorted by wins, and then by "
             "team name within each group — it does not indicate each team's "
-            "ranking within each group.")
+            "ranking within each group. It also excludes results from silent "
+            "rounds unless the full tab has been released.")
 
         return table
 
