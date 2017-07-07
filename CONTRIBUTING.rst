@@ -70,13 +70,13 @@ You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1
 Project Structure
 =================
 
-- ``bin`` contains a number of convenience scripts for starting/stopping Docker, and the webserver / asset pipeline.
+- ``bin`` contains a number of convenience scripts for starting/stopping Docker, and the webserver/asset pipeline.
 - ``data`` contains the sample data sets and fixtures used to setup demo tournaments and in automated tests respectively
 - ``docs`` contains our document source files and images (although some are linked from the root directory)
-- ``tabbycat`` is the main directly containing the Django project
-    - ``locale`` contains translation strings
+- ``tabbycat`` is the main directory containing the Django project
+    - ``locale`` contains translation strings for shared templates (others are in respective app directories)
     - ``templates`` contains shared html templates, stylesheets, javascript source files, and Vue.js components/mixins.
-    - ``utils`` contains shared utilies
+    - ``utils`` contains shared utilities
     - All other folders are the Django apps that contain specific views, models, and templates for functions such as ``draw`` generation/display, or recording ``results``. Each has sub-folders for tests and templates.
 - In the root directory there are a number of files defining our python and javascript dependencies, core configuration files, and key documents like the ``README``
 
