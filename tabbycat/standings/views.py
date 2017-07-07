@@ -443,13 +443,13 @@ class BaseMotionStandingsView(BaseStandingsView):
 
         table.add_round_column([motion.round for motion in motions])
         table.add_motion_column(motions, show_order=True)
-        table.add_balance_column(motions, is_bp=False)
-        table.add_column("Selected", [motion.chosen_in for motion in motions])
+        table.add_column("Aff Wins", [motion.aff_wins for motion in motions])
+        table.add_column("Neg Wins", [motion.neg_wins for motion in motions])
+        table.add_debate_balance_column(motions)
         if self.get_tournament().pref('motion_vetoes_enabled'):
             table.add_column("Aff Vetoes", [motion.aff_vetoes for motion in motions])
             table.add_column("Neg Vetoes", [motion.neg_vetoes for motion in motions])
-        table.add_column("Aff Wins", [motion.aff_wins for motion in motions])
-        table.add_column("Neg Wins", [motion.neg_wins for motion in motions])
+            table.add_veto_balance_column(motions)
         return table
 
     def get_tables(self):
