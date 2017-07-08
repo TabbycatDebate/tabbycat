@@ -45,8 +45,6 @@ class MotionsStandingsTableBuilder(TabbycatTableBuilder):
 
 def get_balance(motion, is_vetoes):
     if is_vetoes and (motion.aff_vetoes + motion.neg_vetoes) < 10:
-        print('veto ; inconclusive')
-        print('    %s %s - %s' % (motion.aff_vetoes, motion.neg_vetoes, motion.reference))
         return 0, 'inconclusive', 'Too few vetoes to determine meaningful balance'
     if not is_vetoes and motion.chosen_in < 10:
         return 0, 'inconclusive', 'Too few debates to determine meaningful balance'
