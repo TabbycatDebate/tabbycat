@@ -13,10 +13,8 @@
     </span>
 
     <!-- Tooltip/Popovers Hovers Wrapper -->
-    <span
-      :title="cellData['tooltip']"
-      :data-toggle="cellData['popover'] || cellData['tooltip'] ? 'tooltip' : ''"
-      @mouseover="checkForPopover">
+    <span @mouseover="checkForPopoverOrTooltip"
+      :class="[cellData['tooltip'] || cellData['popover'] ? 'hover-target' : '']">
 
       <!-- Links and modals -->
       <span v-if="cellData['link'] || cellData['modal']">
@@ -68,6 +66,12 @@ export default {
       }
       return false
     },
+    canSupportTooltip: function() {
+      if (typeof this.cellData['tooltip'] !== 'undefined') {
+        return true
+      }
+      return false
+    },
     popOverContent: function () {
       if (this.canSupportPopover === true) {
         return this.cellData['popover']['content'].filter(function(key){
@@ -79,12 +83,18 @@ export default {
   },
   methods: {
     getPopOverTitle: function() {
-      return this.cellData['popover']['title'];
+      return this.cellData['popover']['title']
     },
-    checkForPopover: function(event) {
+    checkForPopoverOrTooltip: function(event) {
       // Need to check the data exists for a popover before constructing it
       if (this.canSupportPopover === true) {
-        this.setupPopover(event);
+        var content = this.$el.getElementsByClassName('popover-raw')[0].innerHTML;
+        this.setupPopover(event, content)
+      } else if (this.canSupportTooltip === true) {
+        // Manually construct/show a tooltip; doing it via jQuery doesn't
+        // then update on table sorting as the DOM element is shifted
+        $(event.target).tooltip({'title': this.cellData['tooltip']})
+        $(event.target).tooltip('show')
       }
     }
   }
