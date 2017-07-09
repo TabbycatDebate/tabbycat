@@ -2,13 +2,13 @@ from utils.tables import TabbycatTableBuilder
 
 # Critical Values / Determination
 BALANCES = [
-    {'critical': 0.455,  'label': 'balanced', 'freedom': .5},
-    {'critical': 2.706,  'label': 'slightly TEAM favoured', 'freedom': .1},
-    {'critical': 3.841,  'label': 'somewhat TEAM favoured', 'freedom': .05},
-    {'critical': 5.412,  'label': 'TEAM favoured', 'freedom': .02},
-    {'critical': 6.635,  'label': 'very TEAM favoured', 'freedom': .01},
+    {'critical': 0.455,  'label': '50% (balanced)', 'freedom': .5},
+    {'critical': 2.706,  'label': '90% likely TEAM favoured ', 'freedom': .1},
+    {'critical': 3.841,  'label': '95% likely TEAM favoured', 'freedom': .05},
+    {'critical': 5.412,  'label': '98% likely TEAM favoured', 'freedom': .02},
+    {'critical': 6.635,  'label': '99% likely TEAM favoured', 'freedom': .01},
     # The last value is large enough to be a catch-all; ie over 99.9% confidence
-    {'critical': 1000.0, 'label': 'badly TEAM favoured', 'freedom': .001},
+    {'critical': 1000.0, 'label': '99.9% likely TEAM favoured', 'freedom': .001},
 ]
 
 
