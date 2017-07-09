@@ -21,4 +21,4 @@ Contributors
 Sponsors
 --------
 
-- Thanks to the Western Australian Debating League for sponsoring features related to the Divisions
+- Thanks to the Western Australian Debating League for sponsoring various features related to organising division-based tournaments and round-robin based draw methods.
