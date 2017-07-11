@@ -57,6 +57,7 @@
 .draw-cell {
   @extend .flex-cell;
   @extend .flex-vertical-center;
+
   border-bottom: 2px solid $table-border-color;
 
   &.droppable-cell {
