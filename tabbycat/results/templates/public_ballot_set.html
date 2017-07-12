@@ -41,51 +41,33 @@
       </div>
       <div class="panel-body">
 
-        <div class="col-md-6">
-          <div class="row">
-            <label class="h4 col-xs-offset-1 control-label" >{{ debate.aff_team.short_name }}</label>
-          </div>
+        <ul class="list-group col-md-6 no-bottom-margin">
           {% for position in sheet.affs %}
-          <div class="row aff speaker s{{ position.pos }}">
-            <label class="col-md-2 col-xs-3 control-label" >{{ position.name }}A</label>
-            <div class="col-md-4 col-xs-6">
+            <li class="list-group-item">
+              <div class="col-md-2 col-xs-3"><strong>{{ position.name }}A</strong></div>
               {{ position.speaker }}
-            </div>
-            <div class="col-md-6 col-xs-2 score">
-              {{ position.score }}
-            </div>
-          </div>
+              <span class="badge">{{ position.score }}</span>
+            </li>
           {% endfor %}
-          <div class="row">
-            <label class="col-md-2 col-xs-3 control-label total" >Total</label>
-            <div class="col-md-offset-4 col-xs-1 col-xs-offset-6 total score {{ sheet.aff_win|yesno:"btn-success,btn-danger" }}">
-              {{ sheet.aff_score }}
-            </div>
-          </div>
-        </div>
+          <li class="list-group-item {{ sheet.aff_win|yesno:"list-group-item-success,list-group-item-danger" }}">
+            <div class="col-md-2 col-xs-3 strong">Total</div>&nbsp;
+            <span class="badge">{{ sheet.aff_score }}</span>
+          </li>
+        </ul>
 
-        <div class="col-md-6">
-          <div class="row">
-            <label class="h4 col-xs-offset-1 control-label" >{{ debate.neg_team.short_name }}</label>
-          </div>
+        <ul class="list-group col-md-6 no-bottom-margin">
           {% for position in sheet.negs %}
-          <div class="row neg speaker s{{ position.pos }}">
-            <label class="col-md-2 col-xs-3 control-label" >{{ position.name }}N</label>
-            <div class="col-md-4 col-xs-6">
+            <li class="list-group-item">
+              <div class="col-md-2 col-xs-3"><strong>{{ position.name }}A</strong></div>
               {{ position.speaker }}
-            </div>
-            <div class="col-md-6 col-xs-2 score">
-              {{ position.score }}
-            </div>
-          </div>
+              <span class="badge">{{ position.score }}</span>
+            </li>
           {% endfor %}
-          <div class="row">
-            <label class="col-md-2 col-xs-3 control-label total" >Total</label>
-            <div class="col-md-offset-4 col-xs-1 col-xs-offset-6 total score {{ sheet.neg_win|yesno:"btn-success,btn-danger" }}">
-              {{ sheet.neg_score }}
-            </div>
-          </div>
-        </div>
+          <li class="list-group-item {{ sheet.neg_win|yesno:"list-group-item-success,list-group-item-danger" }}">
+            <div class="col-md-2 col-xs-3 strong">Total</div>&nbsp;
+            <span class="badge">{{ sheet.neg_score }}</span>
+          </li>
+        </ul>
 
       </div>
     </div>
