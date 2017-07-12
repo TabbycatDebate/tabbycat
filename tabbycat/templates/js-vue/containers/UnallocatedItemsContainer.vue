@@ -25,7 +25,7 @@ export default {
   mixins: [DroppableMixin],
   data: function () {
     return {
-      height: null, minHeight: 60, maxHeight: 400, // Defualt to null
+      height: null, minHeight: 51, maxHeight: 400, // Defualt to null
       startPosition: null,
     }
   },
@@ -45,7 +45,7 @@ export default {
     resizeMotion: function(event) {
       event.preventDefault()
       var pos = event.clientY
-      var moved = (pos - this.startPosition)
+      var moved = (pos - this.startPosition) * 0.03
       var newSize = this.height - moved
       this.height = this.boundedHeight(newSize)
       if (this.height > this.maxHeight) {
