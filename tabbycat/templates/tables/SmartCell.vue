@@ -1,10 +1,10 @@
 <template>
   <td :class="cellData['class'] ? cellData['class'] : null">
 
-    <!-- Sorting key -->
     <span v-if="cellData['sort']" class="hidden">
-      {{ cellData["sort"] }}
+      {{ cellData["sort"] }} <!-- Sorting key -->
     </span>
+
     <!-- Icons or Emoji -->
     <span v-if="cellData['icon']" class="glyphicon" :class="cellData['icon']">
     </span>
