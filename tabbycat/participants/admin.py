@@ -40,7 +40,7 @@ admin.site.register(Institution, InstitutionAdmin)
 
 class SpeakerAdmin(admin.ModelAdmin):
     list_filter = ('team__tournament',)
-    list_display = ('name', 'team', 'novice', 'gender')
+    list_display = ('name', 'team', 'novice', 'esl', 'efl', 'gender')
     search_fields = ('name', )
     raw_id_fields = ('team', )
 

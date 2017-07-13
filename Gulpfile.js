@@ -5,6 +5,7 @@ var gutil = require('gulp-util'); // Error logging + NoOop
 var sass = require('gulp-sass');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
+var envify = require('envify');
 
 // Compression
 var cleanCSS = require('gulp-clean-css');
@@ -21,7 +22,7 @@ var streamify = require('gulp-streamify');
 // Debug & Config
 var livereload = require('gulp-livereload');
 var outputDir = 'tabbycat/static/';
-var isProduction = (gutil.env.development === true) ? false: true;
+var isProduction = (gutil.env.production === true) ? true : false;
 if (isProduction === true) {
   console.log('GULP: Building for production');
 } else if (isProduction === false) {
@@ -90,7 +91,14 @@ gulp.task("js-browserify", function() {
       .transform([babelify, {
           presets: ["es2015"],
           plugins: ['transform-runtime']
-      }])
+        }])
+        .on('error', gutil.log)
+      .transform(envify, {
+          // Read from the gulp --production flag to determine whether Vue
+          // should be in development mode or not
+          global: true,
+          _: 'purge',
+        })
         .on('error', gutil.log)
       .bundle().on('error', gutil.log)
         .on('error', function() {

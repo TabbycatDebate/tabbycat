@@ -9,7 +9,7 @@ This page outlines some final steps to take after the conclusion of outrounds.
 Tab Release
 ===========
 
-Tabs can be released using the *Tab released* option under **Setup** > **Configuration**. Tabbycat offers a Team Tab, Speakers Tab, Pros Tab, Novices Tab, Replies Tab, and Motions Tab that can be each released independently. Additionally, you can limit each of these tabs to only show a set number of speakers, i.e. only release a "Top 10 Speakers" tab.
+Tabs can be released using the *Tab released* option under **Setup** > **Configuration**. Tabbycat offers a Team Tab, Speakers Tab, Pros Tab, Novices Tab, ESL Tab, EFL Tab, Replies Tab, and Motions Tab that can be each released independently. Additionally, you can limit each of these tabs to only show a set number of speakers, i.e. only release a "Top 10 Speakers" tab.
 
 There is also the option to redact individual speaker's identifying details (name, team, and institution) from the public individual tabs. You can do so by going into the **Edit Database** area, going to *Participants > Speakers*, finding the speaker and clicking the **Anonymous** box (and saving).
 

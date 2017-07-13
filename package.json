@@ -18,10 +18,11 @@
     "bootstrap-sass": "3.3.7",
     "browserify": "14.4.0",
     "d3": "3.5.17",
-    "eslint": "^3.19.0",
+    "envify": "^4.0.0",
+    "eslint": "^4.2.0",
     "event-stream": "3.3.4",
     "gulp": "3.9.1",
-    "gulp-clean-css": "3.4.2",
+    "gulp-clean-css": "3.6.0",
     "gulp-concat": "2.6.1",
     "gulp-gzip": "1.4.0",
     "gulp-livereload": "3.8.1",
@@ -53,8 +54,9 @@
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-html": "^2.0.3",
     "eslint-plugin-import": "^2.3.0",
+    "postcss-selector-parser": "^2.2.3",
     "stylelint": "^7.11.0",
     "stylelint-config-standard": "^16.0.0",
-    "stylelint-scss": "^1.4.4"
+    "stylelint-scss": "^1.5.1"
   }
 }

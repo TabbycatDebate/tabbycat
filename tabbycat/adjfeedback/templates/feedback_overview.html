@@ -81,9 +81,7 @@
 {% block js %}
 
   <script>
-    window.vueData = {
-      setBreakingURL: '{% tournamenturl 'adjfeedback-set-adj-breaking-status' %}'
-    }
+    var setBreakingURL = '{% tournamenturl 'adjfeedback-set-adj-breaking-status' %}';
   </script>
   {{ block.super }}
   <script>
@@ -120,12 +118,13 @@
         $.ajax({
           type: "POST",
           url: setBreakingURL,
-          data: {adj_id: adj_id, adj_breaking_status: breaking_status},
+          data: {
+            adj_id: adj_id, adj_breaking_status: breaking_status
+          },
           error: function(xhr, error, ex) {
             alert("error setting adj status");
           }
         });
-        return false;
       });
     });
   </script>

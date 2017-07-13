@@ -111,10 +111,11 @@ def get_diversity_data_sets(t, for_public):
             'All', Speaker.objects.filter(team__tournament=t),
             'gender', filters=gender_filters, count=True))
 
-    if Speaker.objects.filter(team__tournament=t).filter(team__breakingteam__isnull=False).count() > 0:
-        data_sets['speakers_gender'].append(compile_data(
-            'Breaking', Speaker.objects.filter(team__tournament=t, team__breakingteam__isnull=False),
-            'gender', filters=gender_filters, count=True))
+    if t.pref('public_breaking_teams') is True or for_public is False:
+        if Speaker.objects.filter(team__tournament=t).filter(team__breakingteam__isnull=False).count() > 0:
+            data_sets['speakers_gender'].append(compile_data(
+                'Breaking', Speaker.objects.filter(team__tournament=t, team__breakingteam__isnull=False),
+                'gender', filters=gender_filters, count=True))
 
     if Speaker.objects.filter(team__tournament=t).filter(novice=True).count() > 0:
         data_sets['speakers_gender'].append(compile_data(

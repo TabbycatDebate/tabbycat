@@ -1,5 +1,5 @@
 <template>
-  <div :class="['slideover-target', conflictsStatus,
+  <div :class="['hover-target', conflictsStatus,
                 highlightsIdentity, highlightsStatus]"
        @mouseenter="handleHoverOn"
        @mouseleave="handleHoverOff">

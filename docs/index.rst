@@ -45,7 +45,7 @@ supporting many custom variations of the above formats too.
    features/data-entry
    features/draw-generation
    features/printing
-   features/team-standings-rules
+   features/standings-rules
    features/data-importers
    features/user-accounts
    features/venue-constraints
