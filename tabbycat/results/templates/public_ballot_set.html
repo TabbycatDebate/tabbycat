@@ -4,24 +4,23 @@
 {% block page-title %}Ballot for {{ debate.matchup }} {{ debate.round.name }}{% endblock %}
 {% block head-title %}Ballot for {{ debate.matchup }}{% endblock %}
 {% block sub-title %}
-  <small>
     {{ debate.round.name }} @
     {% if debate.division.venue_category %}
       {{ debate.division.venue_category.short_name }}
     {% endif %}
     {{ debate.venue.display_name }}
-  </small>
 {% endblock %}
 
 {% block page-subnav-sections %}
 <div class="btn-group">
-  <a class="btn btn-default form-control" href="{% roundurl 'results-public-round' debate.round %}">Return to Results for {{ debate.round.name }}</a>
+  <a class="btn btn-default" href="{% roundurl 'results-public-round' debate.round %}">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    Return to Results for {{ debate.round.name }}
+  </a>
 </div>
 {% endblock %}
 
 {% block content %}
-
-<div class="scoresheet-view">
 
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -36,54 +35,39 @@
 
     <div class="panel panel-default">
 
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            {% if sheet.adjudicator %}
-              {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code %}
-                  From {{ name }} ({{ institution }})
-              {% endblocktrans %}
-            {% else %}
-              {% trans "Scoresheet" %}
-            {% endif %}
-          </h4>
-        </div>
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          {% if sheet.adjudicator %}
+            {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code %}
+              From {{ name }} ({{ institution }})
+            {% endblocktrans %}
+          {% else %}
+            {% trans "Scoresheet" %}
+          {% endif %}
+        </h4>
+      </div>
 
       <div class="panel-body">
-
         {% for team in sheet.teams %}
-          <div class="col-md-6">
-            <div class="row">
-              <label class="h4 col-xs-offset-1 control-label" >
-                {{ team.team.short_name }}
-              </label>
-              ({{ team.side }})
-            </div>
+          <ul class="list-group col-md-6 no-bottom-margin">
             {% for position in team.speakers %}
-            <div class="row aff speaker s{{ position.pos }}">
-              <label class="col-md-2 col-xs-3 control-label text-right" >
-                {{ position.name }}
-              </label>
-              <div class="col-md-4 col-xs-6">
+              <li class="list-group-item">
+                <div class="col-md-2 col-xs-3 strong">{{ position.name }}</div>
                 {{ position.speaker }}
-              </div>
-              <div class="col-md-6 col-xs-2 score">
-                {{ position.score }}
-              </div>
-            </div>
+                <span class="badge">{{ position.score }}</span>
+              </li>
             {% endfor %}
-            <div class="row">
-              <label class="col-md-2 col-xs-3 control-label total text-right" >{% trans "Total" %}</label>
-              <div class="col-md-offset-4 col-xs-1 col-xs-offset-6 total score {{ team.win|yesno:"btn-success,btn-danger" }}">
-                {{ team.total }}
-              </div>
-            </div>
-          </div>
+            <li class="list-group-item list-group-item-{{ team.win|yesno:"success,danger" }}">
+              <div class="col-md-2 col-xs-3"></div>
+              <em>Total for {{ team.team.short_name }} ({{ team.side }})</em>
+              <span class="badge">{{ team.total }}</span>
+            </li>
+          </ul>
         {% endfor %}
-
       </div>
+
     </div>
 
   {% endfor %}
-</div>
 
 {% endblock %}
