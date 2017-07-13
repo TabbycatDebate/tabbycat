@@ -50,6 +50,26 @@ class AustralsPreferences(PreferencesPreset):
     ui_options__show_efl                       = True
 
 
+class CanadianParliamentaryPreferences(PreferencesPreset):
+    name         = "Canadian Parliamentary Rules"
+    show_in_list = True
+    description  = ("2 vs 2 with replies (unscored) and POIs. May require "
+        "additional configuration depending on regional variations.")
+    # Scoring
+    scoring__score_min                         = 70.0 # TBC
+    scoring__score_max                         = 90.0 # TBC
+    # Debate Rules
+    debate_rules__reply_scores_enabled         = False # Not scored
+    debate_rules__substantive_speakers         = 2
+    debate_rules__side_names                   = 'prop-opp'
+    debate_rules__motion_vetoes_enabled        = False
+    debate_rules__ballots_per_debate           = 'per-debate'
+    data_entry__enable_motions                 = False
+    # Draws
+    draw_rules__avoid_same_institution         = False # TBC
+    draw_rules__avoid_team_history             = False # TBC
+
+
 class AustralianEastersPreferences(AustralsPreferences):
     name         = "Australian Easters Rules"
     show_in_list = True

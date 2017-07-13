@@ -368,7 +368,7 @@ class SubstantiveSpeakers(IntegerPreference):
 
 @tournament_preferences_registry.register
 class ReplyScores(BooleanPreference):
-    help_text = "Whether this style features reply speeches"
+    help_text = "Whether this style features scored reply speeches"
     verbose_name = 'Reply scores'
     section = debate_rules
     name = 'reply_scores_enabled'
