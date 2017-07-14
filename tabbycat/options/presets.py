@@ -56,18 +56,22 @@ class CanadianParliamentaryPreferences(PreferencesPreset):
     description  = ("2 vs 2 with replies (unscored) and POIs. May require "
         "additional configuration depending on regional variations.")
     # Scoring
-    scoring__score_min                         = 70.0 # TBC
-    scoring__score_max                         = 90.0 # TBC
+    scoring__score_min                         = 50.0
+    scoring__score_max                         = 100.0
     # Debate Rules
     debate_rules__reply_scores_enabled         = False # Not scored
     debate_rules__substantive_speakers         = 2
-    debate_rules__side_names                   = 'prop-opp'
+    debate_rules__side_names                   = 'gov-opp'
     debate_rules__motion_vetoes_enabled        = False
     debate_rules__ballots_per_debate           = 'per-debate'
     data_entry__enable_motions                 = False
     # Draws
     draw_rules__avoid_same_institution         = False # TBC
     draw_rules__avoid_team_history             = False # TBC
+    draw_rules__draw_odd_bracket               = 'pullup_top' # TBC
+    draw_rules__draw_side_allocations          = 'balance'
+    draw_rules__draw_pairing_method            = 'fold' # TBC
+    draw_rules__draw_avoid_conflicts           = 'off'
 
 
 class AustralianEastersPreferences(AustralsPreferences):
