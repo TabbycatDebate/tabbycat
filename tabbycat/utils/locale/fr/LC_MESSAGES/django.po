@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-22 15:44+1000\n"
+"POT-Creation-Date: 2017-07-16 06:49+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,42 +17,107 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
 #: utils/forms.py:17
 msgid "E-mail address"
 msgstr ""
 
-#: utils/tables.py:486
+#: utils/tables.py:244
+#, python-format
+msgid " vs %(opposition)s"
+msgstr ""
+
+#: utils/tables.py:251
+#, python-format
+msgid "Won against %(team)s"
+msgstr ""
+
+#: utils/tables.py:255
+#, python-format
+msgid "Lost to %(team)s"
+msgstr ""
+
+#: utils/tables.py:259
+#, python-format
+msgid "No result for debate against %(team)s"
+msgstr ""
+
+#: utils/tables.py:264 utils/tables.py:311
+#, python-format
+msgid "Received <strong>%s</strong> team points"
+msgstr ""
+
+#: utils/tables.py:268 utils/tables.py:315
+msgid "View debate ballot"
+msgstr ""
+
+#: utils/tables.py:272
+#, python-format
+msgid "Speakers in <strong>%(opp)s</strong>: %(speakers)s"
+msgstr ""
+
+#: utils/tables.py:285
+msgid "4th"
+msgstr ""
+
+#: utils/tables.py:285
+msgid "3rd"
+msgstr ""
+
+#: utils/tables.py:285
+msgid "2nd"
+msgstr ""
+
+#: utils/tables.py:285
+msgid "1st"
+msgstr ""
+
+#: utils/tables.py:289
+#, python-format
+msgid "%(team)s (%(side)s)"
+msgstr ""
+
+#: utils/tables.py:302
+#, python-format
+msgid "%(place)s from %(side)s"
+msgstr ""
+
+#: utils/tables.py:306
+msgid "No result for debate from %(side)"
+msgstr ""
+
+#: utils/tables.py:539
 #, python-format
 msgid "This venue %(predicate)s."
 msgstr ""
 
-#: utils/tables.py:488
+#: utils/tables.py:541
 #, python-format
 msgid "This venue %(predicates)s, and %(last_predicate)s."
 msgstr ""
 
 #. Translators: Put these in the right order,
 #. e.g. side_abbr = "A", metric_abbr = "TSS" -> "ATSS" for "Affirmative's Total Speaker Score"
-#: utils/tables.py:574
+#: utils/tables.py:627
 #, python-format
 msgid "%(side_abbr)s%(metric_abbr)s"
 msgstr ""
 
 #. Translators: Put these in the right order,
 #. e.g. side_possessive = "affirmative's", metric_name = "total speaker score" -> "affirmative's total speaker score"
-#: utils/tables.py:581
+#: utils/tables.py:634
 #, python-format
 msgid "%(side_possessive)s %(metric_name)s"
 msgstr ""
 
 #. Translators: e.g. team would be "negative team" or "affirmative team".
-#: utils/tables.py:636
+#: utils/tables.py:687
 #, python-format
 msgid "Number of times this %(team)s has been on each side (aff, neg)"
 msgstr ""
 
 #. Translators: "SC" stands for "side count"
-#: utils/tables.py:641
+#: utils/tables.py:692
 #, python-format
 msgid "%(side_abbr)sSC"
 msgstr ""
