@@ -100,9 +100,9 @@ class Person(models.Model):
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
     GENDER_OTHER = 'O'
-    GENDER_CHOICES = ((GENDER_MALE,     'Male'),
-                      (GENDER_FEMALE,   'Female'),
-                      (GENDER_OTHER,    'Other'))
+    GENDER_CHOICES = ((GENDER_MALE,   _("male")),
+                      (GENDER_FEMALE, _("female")),
+                      (GENDER_OTHER,  _("other")))
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True,
         verbose_name=_("gender"),
         help_text=_("Gender is displayed in the adjudicator allocation interface, and nowhere else"))
@@ -151,8 +151,8 @@ class Team(models.Model):
     division = models.ForeignKey('divisions.Division', models.SET_NULL, blank=True, null=True,
         verbose_name=_("division"))
     use_institution_prefix = models.BooleanField(default=False,
-        verbose_name="Uses institutional prefix",
-        help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
+        verbose_name=_("Uses institutional prefix"),
+        help_text=_("If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""))
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple teams to have no URL key
         verbose_name=_("URL key"))
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
@@ -166,10 +166,10 @@ class Team(models.Model):
     TYPE_SWING = 'S'
     TYPE_COMPOSITE = 'C'
     TYPE_BYE = 'B'
-    TYPE_CHOICES = ((TYPE_NONE, 'None'),
-                    (TYPE_SWING, 'Swing'),
-                    (TYPE_COMPOSITE, 'Composite'),
-                    (TYPE_BYE, 'Bye'), )
+    TYPE_CHOICES = ((TYPE_NONE, _("none")),
+                    (TYPE_SWING, _("swing")),
+                    (TYPE_COMPOSITE, _("composite")),
+                    (TYPE_BYE, _("bye")), )
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
         verbose_name=_("type"))
 
@@ -308,9 +308,9 @@ class Team(models.Model):
         # Require reference and short_reference if use_institution_prefix is False
         errors = {}
         if not self.use_institution_prefix and not self.reference:
-            errors['reference'] = "Teams must have a full name if they don't use the institutional prefix."
+            errors['reference'] = _("Teams must have a full name if they don't use the institutional prefix.")
         if not self.use_institution_prefix and not self.short_reference:
-            errors['short_reference'] = "Teams must have a short name if they don't use the institutional prefix."
+            errors['short_reference'] = _("Teams must have a short name if they don't use the institutional prefix.")
         if errors:
             raise ValidationError(errors)
 
@@ -375,11 +375,11 @@ class Adjudicator(Person):
         verbose_name=_("team conflicts"))
 
     breaking = models.BooleanField(default=False,
-        verbose_name=("breaking"))
+        verbose_name=_("breaking"))
     independent = models.BooleanField(default=False, blank=True,
-        verbose_name=("independent"))
+        verbose_name=_("independent"))
     adj_core = models.BooleanField(default=False, blank=True,
-        verbose_name=("adjudication core"))
+        verbose_name=_("adjudication core"))
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='adjudicator',
@@ -389,8 +389,8 @@ class Adjudicator(Person):
 
     class Meta:
         ordering = ['tournament', 'institution', 'name']
-        verbose_name = "adjudicator"
-        verbose_name_plural = "adjudicators"
+        verbose_name = _("adjudicator")
+        verbose_name_plural = _("adjudicators")
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.institution.code)
