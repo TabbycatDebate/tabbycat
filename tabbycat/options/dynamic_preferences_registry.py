@@ -238,7 +238,7 @@ class BPPositionCost(ChoicePreference):
         ('entropy', _("Rényi entropy")),
         ('variance', _("Population variance")),
     )
-    default = 'squared'
+    default = 'entropy'
 
 
 @tournament_preferences_registry.register
