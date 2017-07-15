@@ -519,7 +519,7 @@ msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
 #: templates/footer.html:41
 #, python-format
 msgid ""
-"Using a real debating app makes speaking and adjudicating easier! Check out "
+"Using a timekeeping app makes speaking and adjudicating easier! Check out "
 "<a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
 "pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a "
 "href=\"https://play.google.com/store/apps/details?id=net.czlee."
