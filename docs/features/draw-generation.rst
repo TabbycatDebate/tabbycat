@@ -4,15 +4,9 @@ Draw Generation
 
 The draw generator is quite flexible. You can specify a number of settings to suit different tournaments' rules.
 
-
-Options
-=======
-The options discussed here are set in the **Configuration** page as described in :ref:`starting a tournament <starting-a-tournament>`.
-
-.. caution:: The valid options for intermediate bubbles change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
-
-Summary
--------
+Summary of options
+==================
+Options are set in the **Configuration** page as described in :ref:`starting a tournament <starting-a-tournament>`.
 
 +---------------------------+---------------------+-------------------------------------------+
 |           Option          |     Description     |              Allowable values             |
@@ -45,6 +39,24 @@ Summary
 |                           | history/institution | - One-up-one-down                         |
 |                           | conflicts           |                                           |
 +---------------------------+---------------------+-------------------------------------------+
+
+.. caution:: The valid options for intermediate bubbles change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
+
+The big picture
+===============
+When generating a power-paired draw, Tabbycat goes through four steps:
+
+1. First, it divides teams into "raw brackets", grouping them by the number of wins.
+2. Second, it resolves odd brackets, applying the odd brackets rule to make sure there is an even number of teams in each bracket. This is often called "pulling up" teams.
+3. Third, within each bracket, it pairs teams into debates using the pairing method.
+4. Fourth, if enabled, it adjusts pairings to avoid history or institution conflicts.
+5. Finally, it assigns sides to teams in each debate.
+
+For each of these steps except the first, Tabbycat allows you to choose between
+a number of different methods.
+
+Explanations of options
+=======================
 
 Odd bracket resolution
 ----------------------
@@ -101,7 +113,7 @@ There isn't currently any way to edit side allocations from the front end. To do
 * You can also do this by writing a script that creates ``TeamPositionAllocation`` objects and saves them. Have a look at data/utils/add_random_side_allocations.py for an example.
 
 Pairing method
---------------------------------------------------------------------------------
+--------------
 It's easiest to describe these by example, using a ten-team bracket:
 
 * `Fold`: 1 vs 10, 2 vs 9, 3 vs 8, 4 vs 7, 5 vs 6. (Also known as high-low pairing.)
@@ -112,7 +124,7 @@ It's easiest to describe these by example, using a ten-team bracket:
 Teams are always paired within their brackets, after resolving odd brackets.
 
 Conflict avoidance method
---------------------------------------------------------------------------------
+-------------------------
 A **conflict** is when two teams would face each other that have seen each other before, or are from the same institutions. Some tournaments have a preference against allowing this if it's avoidable within certain limits. The **draw avoid conflicts** option allows you to specify how.
 
 You can turn this off by using `Off`. Other than this, there is currently one conflict avoidance method implemented.
@@ -129,12 +141,12 @@ It's a bit more complicated than that, for two reasons:
 * Each swap obviously affects the debates around it, so it's not legal to have two adjacent swaps. (Otherwise, in theory, a team could "one down" all the way to the bottom of the draw!) So there is an optimization algorithm that finds the best combination of swaps, *i.e.* the one that minimises conflict, and if there are two profiles that have the same least conflict, then it chooses the one with fewer swaps.
 
 What do I do if the draw looks wrong?
-================================================================================
+=====================================
 
-You can edit match-ups directly from the draw page. Technically, you can do anything you want. Of course, operationally, you should only edit the draw when you *know* that the draw algorithm got something wrong. If you need to do this, even just once, please file a bug report by creating a new issue on `our issues page on GitHub <https://github.com/czlee/tabbycat/issues>`_.
+You can edit match-ups directly from the draw page. Functionally, you can do anything you want. Of course, operationally, you should only edit the draw when you *know* that the draw algorithm got something wrong. If you need to do this, even just once, please file a bug report by creating a new issue on `our issues page on GitHub <https://github.com/czlee/tabbycat/issues>`_.
 
 Technical notes
-================================================================================
+===============
 
 .. note:: The information in this section should be read in conjunction with the source code documentation.
 
