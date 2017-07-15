@@ -38,12 +38,15 @@ class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
 class Institution(models.Model):
     name = models.CharField(max_length=100,
         verbose_name=_("name"),
+        # Translators: Change the examples to institutions native to your language; keep consistent between strings
         help_text=_("The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\""))
     code = models.CharField(max_length=20,
         verbose_name=_("code"),
+        # Translators: Change the examples to institutions native to your language; keep consistent between strings
         help_text=_("What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""))
     abbreviation = models.CharField(max_length=8, default="",
         verbose_name=_("abbreviation"),
+        # Translators: Change the examples to institutions native to your language; keep consistent between strings
         help_text=_("For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\""))
     region = models.ForeignKey(Region, models.SET_NULL, blank=True, null=True,
         verbose_name=_("region"))
@@ -79,7 +82,7 @@ class Person(models.Model):
         verbose_name=_("name"))
     barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True,
-        verbose_name=_("email"))
+        verbose_name=_("e-mail address"))
     phone = models.CharField(max_length=40, blank=True,
         verbose_name=_("phone"))
     novice = models.BooleanField(default=False,

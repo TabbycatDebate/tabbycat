@@ -2,12 +2,12 @@
 # Traductions (français) pour Tabbycat
 # Copyright (C) 2017 Chuan-Zheng Lee
 # This file is distributed under the same license as the Tabbycat package.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 06:49+1000\n"
+"POT-Creation-Date: 2017-07-16 08:08+1000\n"
 "PO-Revision-Date: 2017-06-22 17:39+1200\n"
 "Last-Translator: \n"
 "Language-Team: \n"

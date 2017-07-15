@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-22 15:44+1000\n"
+"POT-Creation-Date: 2017-07-16 08:08+1000\n"
 "PO-Revision-Date: 2017-06-22 17:54+1200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,55 +22,55 @@ msgstr ""
 msgid "Draw"
 msgstr "Tirage au sort"
 
-#: draw/generator/__init__.py:12
+#: draw/generator/__init__.py:13
 msgid "Too many swaps"
 msgstr "Trop d'échanges"
 
-#: draw/generator/__init__.py:13
+#: draw/generator/__init__.py:14
 msgid "One-up-one-down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:14
+#: draw/generator/__init__.py:15
 msgid "One-up-one-down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:15
+#: draw/generator/__init__.py:16
 msgid "One-up-one-down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:16
+#: draw/generator/__init__.py:17
 msgid "Bubble up (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:17
+#: draw/generator/__init__.py:18
 msgid "Bubble down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:18
+#: draw/generator/__init__.py:19
 msgid "Bubble up (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:19
+#: draw/generator/__init__.py:20
 msgid "Bubble down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:20
+#: draw/generator/__init__.py:21
 msgid "Bubble up (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:21
+#: draw/generator/__init__.py:22
 msgid "Bubble down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:22
+#: draw/generator/__init__.py:23
 msgid "Can't bubble up/down"
 msgstr ""
 
-#: draw/generator/__init__.py:23
+#: draw/generator/__init__.py:24
 msgid "Pull-up team"
 msgstr ""
 
-#: draw/generator/common.py:175
+#: draw/generator/common.py:178
 #, python-format
 msgid ""
 "The number of teams presented for the draw was not a multiple of %(num)d."
@@ -78,7 +78,7 @@ msgstr ""
 "Le nombre d’équipes présenté pour le tirage au sort n'est pas un multiple de "
 "%(num)d."
 
-#: draw/generator/common.py:178
+#: draw/generator/common.py:181
 msgid "There were no teams for the draw."
 msgstr "Il n’y a pas d’équipes pour le tirage au sort."
 
@@ -111,12 +111,12 @@ msgid ""
 "One or more teams had an allocated side that wasn't affirmative or negative."
 msgstr ""
 
-#: draw/manager.py:30
+#: draw/manager.py:35
 #, python-format
 msgid "The draw type %(type)s can't be used with two-team formats."
 msgstr ""
 
-#: draw/manager.py:32
+#: draw/manager.py:37
 #, python-format
 msgid "The draw type %(type)s can't be used with British Parliamentary."
 msgstr ""
@@ -307,7 +307,7 @@ msgstr ""
 msgid "The draw for %(round)s has yet to be released."
 msgstr ""
 
-#: draw/views.py:188 draw/views.py:277
+#: draw/views.py:188 draw/views.py:276
 #, python-format
 msgid "Draw with details for %(round)s"
 msgstr ""
@@ -333,28 +333,28 @@ msgid "Released draw for %(round)s"
 msgstr ""
 
 #. Translators: e.g. possessive might be "affirmative's" to get "affirmative's break rank"
-#: draw/views.py:248
+#: draw/views.py:247
 #, python-format
 msgid "%(possessive)s break rank"
 msgstr "rang de break %(possessive)s"
 
-#: draw/views.py:251
+#: draw/views.py:250
 #, python-format
 msgid "%(initial)sBR"
 msgstr "RB%(initial)s"
 
-#: draw/views.py:262
+#: draw/views.py:261
 msgid ""
 "No draw exists yet — go to the check-ins section for this round to generate "
 "a draw."
 msgstr ""
 
-#: draw/views.py:296
+#: draw/views.py:295
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
 msgstr ""
 
-#: draw/views.py:303
+#: draw/views.py:302
 #, python-format
 msgid ""
 "<p>There was a problem creating the draw: <em>%(error)s</em></p>\n"
@@ -362,30 +362,30 @@ msgid ""
 "contact the developers.</p>"
 msgstr ""
 
-#: draw/views.py:315
+#: draw/views.py:314
 msgid ""
 "Venues were not auto-allocated because there are one or more adjudicator "
 "venue constraints. You should run venue allocations after allocating "
 "adjudicators."
 msgstr ""
 
-#: draw/views.py:344
+#: draw/views.py:343
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
-#: draw/views.py:364
+#: draw/views.py:363
 msgid ""
 "Released the draw. It will now show on the public-facing pages of this "
 "website."
 msgstr ""
 
-#: draw/views.py:380
+#: draw/views.py:379
 msgid ""
 "Unreleased the draw. It will no longer show on the public-facing pages of "
 "this website."
 msgstr ""
 
-#: draw/views.py:393
+#: draw/views.py:392
 #, python-format
 msgid ""
 "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with "

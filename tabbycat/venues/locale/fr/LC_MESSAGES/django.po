@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-22 15:44+1000\n"
+"POT-Creation-Date: 2017-07-16 08:08+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,109 +17,110 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-#: venues/models.py:10 venues/models.py:74
+
+#: venues/models.py:10 venues/models.py:73
 msgid "name"
 msgstr ""
 
-#: venues/models.py:13 venues/models.py:128
+#: venues/models.py:12 venues/models.py:127
 msgid "priority"
 msgstr ""
 
-#: venues/models.py:14
+#: venues/models.py:13
 msgid ""
 "Venues with a higher priority number will be preferred when allocating "
 "venues to debates"
 msgstr ""
 
-#: venues/models.py:17
+#: venues/models.py:16
 msgid "tournament"
 msgstr ""
 
-#: venues/models.py:18
+#: venues/models.py:17
 msgid "Venues not assigned to any tournament can be shared between tournaments"
 msgstr ""
 
-#: venues/models.py:25
+#: venues/models.py:24
 msgid "venue"
 msgstr ""
 
-#: venues/models.py:26 venues/models.py:84
+#: venues/models.py:25 venues/models.py:83
 msgid "venues"
 msgstr ""
 
-#: venues/models.py:69
+#: venues/models.py:68
 msgid "Don't display in venue name"
 msgstr ""
 
-#: venues/models.py:70
+#: venues/models.py:69
 msgid "Display as prefix"
 msgstr ""
 
-#: venues/models.py:71
+#: venues/models.py:70
 msgid "Display as suffix"
 msgstr ""
 
-#: venues/models.py:75
+#: venues/models.py:74
 msgid ""
 "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room"
 "\". This name is shown when the category is prefixed or suffixed to a venue "
 "name in the draw, e.g., \"Purple – G05\"."
 msgstr ""
 
-#: venues/models.py:79
+#: venues/models.py:78
 msgid "description"
 msgstr ""
 
-#: venues/models.py:80
+#: venues/models.py:79
 msgid ""
 "Description, as the predicate of a sentence, e.g. \"has step-free access\", "
 "\"is close to the briefing hall\". This description follows \"This venue\" "
 "when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
 msgstr ""
 
-#: venues/models.py:88
+#: venues/models.py:87
 msgid "display in venue name"
 msgstr ""
 
-#: venues/models.py:89
+#: venues/models.py:88
 msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
 msgstr ""
 
-#: venues/models.py:91
+#: venues/models.py:90
 msgid "display in public tooltip"
 msgstr ""
 
-#: venues/models.py:92
+#: venues/models.py:91
 msgid ""
 "Displays the description in the tooltip for the venue on public pages. The "
 "description, if not blank, will always show on admin pages."
 msgstr ""
 
-#: venues/models.py:96
+#: venues/models.py:95
 msgid "venue category"
 msgstr ""
 
-#: venues/models.py:97
+#: venues/models.py:96
 msgid "venue categories"
 msgstr ""
 
-#: venues/models.py:127
+#: venues/models.py:126
 msgid "category"
 msgstr ""
 
-#: venues/models.py:131
+#: venues/models.py:130
 msgid "subject content type"
 msgstr ""
 
-#: venues/models.py:134
+#: venues/models.py:133
 msgid "subject ID"
 msgstr ""
 
-#: venues/models.py:140
+#: venues/models.py:139
 msgid "venue constraint"
 msgstr ""
 
-#: venues/models.py:141
+#: venues/models.py:140
 msgid "venue constraints"
 msgstr ""
 
