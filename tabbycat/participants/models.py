@@ -6,6 +6,7 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
+from django.utils.translation import ugettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
 
@@ -15,7 +16,12 @@ logger = logging.getLogger(__name__)
 
 
 class Region(models.Model):
-    name = models.CharField(db_index=True, max_length=100)
+    name = models.CharField(db_index=True, max_length=100,
+        verbose_name=_("name"))
+
+    class Meta:
+        verbose_name = _("region")
+        verbose_name_plural = _("regions")
 
     def __str__(self):
         return '%s' % (self.name)
@@ -31,12 +37,16 @@ class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
 
 class Institution(models.Model):
     name = models.CharField(max_length=100,
-        help_text="The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\"")
+        verbose_name=_("name"),
+        help_text=_("The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\""))
     code = models.CharField(max_length=20,
-        help_text="What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\"")
+        verbose_name=_("code"),
+        help_text=_("What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""))
     abbreviation = models.CharField(max_length=8, default="",
-        help_text="For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\"")
-    region = models.ForeignKey(Region, models.SET_NULL, blank=True, null=True)
+        verbose_name=_("abbreviation"),
+        help_text=_("For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\""))
+    region = models.ForeignKey(Region, models.SET_NULL, blank=True, null=True,
+        verbose_name=_("region"))
 
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='institution',
             content_type_field='subject_content_type', object_id_field='subject_id')
@@ -46,6 +56,8 @@ class Institution(models.Model):
     class Meta:
         unique_together = [('name', 'code')]
         ordering = ['name']
+        verbose_name = _("institution")
+        verbose_name_plural = _("institutions")
 
     def __str__(self):
         return str(self.name)
@@ -63,10 +75,13 @@ class Institution(models.Model):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=40, db_index=True)
+    name = models.CharField(max_length=40, db_index=True,
+        verbose_name=_("name"))
     barcode_id = models.IntegerField(blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    phone = models.CharField(max_length=40, blank=True)
+    email = models.EmailField(blank=True, null=True,
+        verbose_name=_("email"))
+    phone = models.CharField(max_length=40, blank=True,
+        verbose_name=_("phone"))
     novice = models.BooleanField(default=False,
         help_text="Novice status may be indicated on the tab, and may have its own Break Category or Top Speakers Tab")
     esl = models.BooleanField(default=False,
@@ -74,10 +89,12 @@ class Person(models.Model):
     efl = models.BooleanField(default=False,
         help_text="EFL language status may have its own Break Category or Top Speakers Tab")
     anonymous = models.BooleanField(default=False,
-        help_text="Anonymous persons will have their name and team redacted on public tab releases")
+        verbose_name=_("anonymous"),
+        help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
 
     checkin_message = models.TextField(blank=True)
-    notes = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True,
+        verbose_name=_("notes"))
 
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
@@ -86,9 +103,15 @@ class Person(models.Model):
                       (GENDER_FEMALE,   'Female'),
                       (GENDER_OTHER,    'Other'))
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True,
-        help_text="Gender is displayed in the adjudicator allocation interface, and nowhere else")
+        verbose_name=_("gender"),
+        help_text=_("Gender is displayed in the adjudicator allocation interface, and nowhere else"))
     pronoun = models.CharField(max_length=10, blank=True,
-        help_text="If printing ballots using Tabbycat there is the option to pre-print pronouns")
+        verbose_name=_("pronoun"),
+        help_text=_("If printing ballots using Tabbycat, there is the option to pre-print pronouns"))
+
+    class Meta:
+        verbose_name = _("person")
+        verbose_name_plural = _("persons")
 
     def __str__(self):
         return str(self.name)
@@ -106,23 +129,33 @@ class TeamManager(LookupByNameFieldsMixin, models.Manager):
 
 
 class Team(models.Model):
-    reference = models.CharField(blank=True, max_length=150, verbose_name="Full name/suffix",
-        help_text="Do not include institution name (see \"uses institutional prefix\" below)")
-    short_reference = models.CharField(blank=True, max_length=35, verbose_name="Short name/suffix",
-        help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
+    reference = models.CharField(blank=True, max_length=150,
+        verbose_name=_("full name/suffix"),
+        help_text=_("Do not include institution name (see \"uses institutional prefix\" below)"))
+    short_reference = models.CharField(blank=True, max_length=35,
+        verbose_name=_("short name/suffix"),
+        help_text=_("The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)"))
 
-    short_name = models.CharField(editable=False, max_length=50, verbose_name="Short name",
-        help_text="The name shown in the draw, including institution name. (This is autogenerated.)")
-    long_name = models.CharField(editable=False, max_length=200, verbose_name="Long name",
-        help_text="The full name of the team, including institution name. (This is autogenerated.)")
+    short_name = models.CharField(editable=False, max_length=50,
+        verbose_name=_("short name"),
+        help_text=_("The name shown in the draw, including institution name. (This is autogenerated.)"))
+    long_name = models.CharField(editable=False, max_length=200,
+        verbose_name=_("long name"),
+        help_text=_("The full name of the team, including institution name. (This is autogenerated.)"))
 
-    institution = models.ForeignKey(Institution, models.CASCADE)
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE)
-    division = models.ForeignKey('divisions.Division', models.SET_NULL, blank=True, null=True)
-    use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix",
+    institution = models.ForeignKey(Institution, models.CASCADE,
+        verbose_name=_("institution"))
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        verbose_name=_("tournament"))
+    division = models.ForeignKey('divisions.Division', models.SET_NULL, blank=True, null=True,
+        verbose_name=_("division"))
+    use_institution_prefix = models.BooleanField(default=False,
+        verbose_name="Uses institutional prefix",
         help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24) # uses null=True to allow multiple teams to have no URL key
-    break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True)
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple teams to have no URL key
+        verbose_name=_("URL key"))
+    break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
+        verbose_name=_("break categories"))
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='team',
@@ -136,9 +169,11 @@ class Team(models.Model):
                     (TYPE_SWING, 'Swing'),
                     (TYPE_COMPOSITE, 'Composite'),
                     (TYPE_BYE, 'Bye'), )
-    type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE)
+    type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
+        verbose_name=_("type"))
 
-    emoji = models.CharField(max_length=2, blank=True, null=True, default=None, choices=EMOJI_LIST) # uses null=True to allow multiple teams to have no emoji
+    emoji = models.CharField(max_length=2, blank=True, null=True, default=None, choices=EMOJI_LIST, # uses null=True to allow multiple teams to have no emoji
+        verbose_name=_("emoji"))
 
     construct_emoji = None # historical reference for migration 0026_auto_20170416_2332
 
@@ -149,6 +184,8 @@ class Team(models.Model):
         ]
         ordering = ['tournament', 'institution', 'short_reference']
         index_together = ['tournament', 'institution', 'short_reference']
+        verbose_name = _("team")
+        verbose_name_plural = _("teams")
 
     objects = TeamManager()
 
@@ -282,7 +319,12 @@ class Team(models.Model):
 
 
 class Speaker(Person):
-    team = models.ForeignKey(Team, models.CASCADE)
+    team = models.ForeignKey(Team, models.CASCADE,
+        verbose_name=_("team"))
+
+    class Meta:
+        verbose_name = _("speaker")
+        verbose_name_plural = _("speakers")
 
     def __str__(self):
         return str(self.name)
@@ -296,23 +338,32 @@ class AdjudicatorManager(models.Manager):
 
 
 class Adjudicator(Person):
-    institution = models.ForeignKey(Institution, models.CASCADE)
+    institution = models.ForeignKey(Institution, models.CASCADE,
+        verbose_name=_("institution"))
     # cascade to avoid unattached adjudicator pollution when deleting tournaments
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, blank=True, null=True,
-        help_text="Adjudicators not assigned to any tournament can be shared between tournaments")
-    test_score = models.FloatField(default=0)
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24) # uses null=True to allow multiple teams to have no URL key
+        verbose_name=_("tournament"),
+        help_text=_("Adjudicators not assigned to any tournament can be shared between tournaments"))
+    test_score = models.FloatField(default=0,
+        verbose_name=_("test score"))
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple teams to have no URL key
+        verbose_name=_("URL key"))
 
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.AdjudicatorInstitutionConflict',
-        related_name='adj_inst_conflicts')
+        related_name='adj_inst_conflicts',
+        verbose_name=_("institution conflicts"))
     conflicts = models.ManyToManyField('Team',
         through='adjallocation.AdjudicatorConflict',
-        related_name='adj_adj_conflicts')
+        related_name='adj_adj_conflicts',
+        verbose_name=_("team conflicts"))
 
-    breaking = models.BooleanField(default=False)
-    independent = models.BooleanField(default=False, blank=True)
-    adj_core = models.BooleanField(default=False, blank=True)
+    breaking = models.BooleanField(default=False,
+        verbose_name=("breaking"))
+    independent = models.BooleanField(default=False, blank=True,
+        verbose_name=("independent"))
+    adj_core = models.BooleanField(default=False, blank=True,
+        verbose_name=("adjudication core"))
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='adjudicator',
@@ -322,6 +373,8 @@ class Adjudicator(Person):
 
     class Meta:
         ordering = ['tournament', 'institution', 'name']
+        verbose_name = "adjudicator"
+        verbose_name_plural = "adjudicators"
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.institution.code)
