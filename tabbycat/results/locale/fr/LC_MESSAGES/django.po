@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-18 19:02+1000\n"
+"POT-Creation-Date: 2017-07-16 07:27+1000\n"
 "PO-Revision-Date: 2017-06-18 20:52+1200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -448,7 +448,7 @@ msgid "Ballot from %(name)s (%(institution)s)"
 msgstr "Bulletin de %(name)s (%(institution)s)"
 
 #: results/templates/enter_results_ballot_set.html:98
-#: results/templates/public_ballot_set.html:46
+#: results/templates/public_ballot_set.html:45
 msgid "Scoresheet"
 msgstr "Feuille de débat"
 
@@ -538,14 +538,10 @@ msgid_plural "<em>(identical to versions %(others)s)</em>"
 msgstr[0] "<em>(identique à version %(others)s)</em>"
 msgstr[1] "<em>(identique à versions %(others)s)</em>"
 
-#: results/templates/public_ballot_set.html:42
+#: results/templates/public_ballot_set.html:41
 #, python-format
 msgid "From %(name)s (%(institution)s)"
 msgstr "De %(name)s (%(institution)s)"
-
-#: results/templates/public_ballot_set.html:75
-msgid "Total"
-msgstr "Total"
 
 #: results/utils.py:73
 msgid "1st"
@@ -582,3 +578,6 @@ msgstr "8ème"
 #: results/utils.py:91
 msgid "Reply"
 msgstr "Sommaire"
+
+#~ msgid "Total"
+#~ msgstr "Total"

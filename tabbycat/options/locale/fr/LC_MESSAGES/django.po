@@ -18,17 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:53
-msgid "Yes"
-msgstr ""
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:55
-msgid "No"
-msgstr ""
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:70 adjfeedback/forms.py:79
-msgid "This field is required."
+#: options/views.py:129
+#, python-format
+msgid "Tournament options saved according to preset %(name)s."
 msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-18 19:02+1000\n"
+"POT-Creation-Date: 2017-07-16 07:27+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Open"
 msgstr "Open"
 
-#: tournaments/mixins.py:84
+#: tournaments/mixins.py:93
 #, python-format
 msgid ""
 "There's a problem with the data for the tournament %(tournament_name)s. "
@@ -380,7 +380,7 @@ msgstr ""
 
 #: tournaments/templates/blank_site_start.html:56
 #: tournaments/templates/create_tournament.html:34
-#: tournaments/templates/set_current_round.html:56
+#: tournaments/templates/set_current_round.html:64
 msgid "Whoops! There was an error with one or more fields."
 msgstr "Oups !  Il y avait une erreur dans un ou plusieurs champs."
 
@@ -440,7 +440,7 @@ msgstr "Charger les données démonstratives (tournoi avec 24 équipes)"
 msgid "Donate to Tabbycat"
 msgstr "Donations à Tabbycat"
 
-#: tournaments/templates/set_current_round.html:20
+#: tournaments/templates/set_current_round.html:28
 #, python-format
 msgid ""
 "No round is currently set. In order for Tabbycat to work, please set the "
@@ -448,14 +448,14 @@ msgid ""
 "%(tournament_name)s</strong>."
 msgstr ""
 
-#: tournaments/templates/set_current_round.html:28
+#: tournaments/templates/set_current_round.html:36
 #, python-format
 msgid ""
 "On this page, you can set the <strong>current round</strong> of the "
 "tournament <strong>%(tournament_name)s</strong>."
 msgstr ""
 
-#: tournaments/templates/set_current_round.html:38
+#: tournaments/templates/set_current_round.html:46
 #, python-format
 msgid ""
 "The tournament <strong>%(tournament_name)s</strong> has no rounds. You'll "
@@ -463,7 +463,7 @@ msgid ""
 "with this tournament</a> before you can set the current round."
 msgstr ""
 
-#: tournaments/templates/set_current_round.html:77
+#: tournaments/templates/set_current_round.html:85
 #, fuzzy
 #| msgid "current round"
 msgid "Set Current Round"
@@ -561,31 +561,6 @@ msgstr ""
 "\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use/importing-"
 "data.html\" class=\"alert-link\" target=\"_blank\">documentation sur "
 "importer les données initiales</a> (en anglais)."
-
-#: tournaments/templates/tournament_index.html:38
-msgid "Number of Ballots In"
-msgstr "Nombre des bulletins reçu"
-
-#: tournaments/templates/tournament_index.html:50
-msgid "Latest Actions"
-msgstr "Actions récentes"
-
-#: tournaments/templates/tournament_index.html:56
-#: tournaments/templates/tournament_index.html:70
-msgid "Loading..."
-msgstr "Chargement..."
-
-#: tournaments/templates/tournament_index.html:59
-msgid "No Actions In"
-msgstr "Aucune action"
-
-#: tournaments/templates/tournament_index.html:64
-msgid "Latest Results"
-msgstr "Résultats récents"
-
-#: tournaments/templates/tournament_index.html:73
-msgid "No Results In"
-msgstr "Aucun résultat"
 
 #: tournaments/utils.py:21
 msgid "affirmative"
@@ -755,3 +730,21 @@ msgstr ""
 msgid ""
 "Whoops! Could not advance round, because there's no round after this round!"
 msgstr ""
+
+#~ msgid "Number of Ballots In"
+#~ msgstr "Nombre des bulletins reçu"
+
+#~ msgid "Latest Actions"
+#~ msgstr "Actions récentes"
+
+#~ msgid "Loading..."
+#~ msgstr "Chargement..."
+
+#~ msgid "No Actions In"
+#~ msgstr "Aucune action"
+
+#~ msgid "Latest Results"
+#~ msgstr "Résultats récents"
+
+#~ msgid "No Results In"
+#~ msgstr "Aucun résultat"

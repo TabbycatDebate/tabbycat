@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-19 10:43+1000\n"
+"POT-Creation-Date: 2017-07-16 07:27+1000\n"
 "PO-Revision-Date: 2017-06-19 12:52+1200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,51 +22,51 @@ msgstr ""
 msgid "Draw"
 msgstr "Tirage au sort"
 
-#: draw/generator/__init__.py:11
+#: draw/generator/__init__.py:12
 msgid "Too many swaps"
 msgstr "Trop d'échanges"
 
-#: draw/generator/__init__.py:12
+#: draw/generator/__init__.py:13
 msgid "One-up-one-down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:13
+#: draw/generator/__init__.py:14
 msgid "One-up-one-down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:14
+#: draw/generator/__init__.py:15
 msgid "One-up-one-down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:15
+#: draw/generator/__init__.py:16
 msgid "Bubble up (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:16
+#: draw/generator/__init__.py:17
 msgid "Bubble down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:17
+#: draw/generator/__init__.py:18
 msgid "Bubble up (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:18
+#: draw/generator/__init__.py:19
 msgid "Bubble down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:19
+#: draw/generator/__init__.py:20
 msgid "Bubble up (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:20
+#: draw/generator/__init__.py:21
 msgid "Bubble down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:21
+#: draw/generator/__init__.py:22
 msgid "Can't bubble up/down"
 msgstr ""
 
-#: draw/generator/__init__.py:22
+#: draw/generator/__init__.py:23
 msgid "Pull-up team"
 msgstr ""
 
