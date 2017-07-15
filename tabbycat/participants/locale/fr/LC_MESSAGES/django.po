@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 08:08+1000\n"
-"PO-Revision-Date: 2017-07-15 15:23-0700\n"
+"POT-Creation-Date: 2017-07-16 08:27+1000\n"
+"PO-Revision-Date: 2017-07-15 15:32-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -99,6 +99,18 @@ msgstr ""
 msgid "notes"
 msgstr "notes"
 
+#: participants/models.py:105
+msgid "male"
+msgstr ""
+
+#: participants/models.py:106
+msgid "female"
+msgstr ""
+
+#: participants/models.py:107
+msgid "other"
+msgstr ""
+
 #: participants/models.py:109
 msgid "gender"
 msgstr ""
@@ -180,6 +192,17 @@ msgstr "tournoi"
 msgid "division"
 msgstr "division"
 
+#: participants/models.py:156
+msgid "Uses institutional prefix"
+msgstr "Utilise le préfixe institutionnel"
+
+#: participants/models.py:157
+msgid ""
+"If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""
+msgstr ""
+"Si cochée, une équipe appelée « 1 » de Victoria sera indiquée par « Victoria "
+"1 »"
+
 #: participants/models.py:159 participants/models.py:353
 msgid "URL key"
 msgstr "clé d'URL"
@@ -187,6 +210,22 @@ msgstr "clé d'URL"
 #: participants/models.py:161
 msgid "break categories"
 msgstr "catégories de break"
+
+#: participants/models.py:171
+msgid "none"
+msgstr "aucun"
+
+#: participants/models.py:172
+msgid "swing"
+msgstr ""
+
+#: participants/models.py:173
+msgid "composite"
+msgstr "composée"
+
+#: participants/models.py:174
+msgid "bye"
+msgstr ""
 
 #: participants/models.py:176
 msgid "type"
@@ -203,6 +242,19 @@ msgstr "équipe"
 #: participants/models.py:191
 msgid "teams"
 msgstr "équipes"
+
+#: participants/models.py:298
+msgid "Teams must have a full name if they don't use the institutional prefix."
+msgstr ""
+"Les équipes doivent avoir un nom complet si elles ne utilisent pas le "
+"préfixe institutionnel."
+
+#: participants/models.py:300
+msgid ""
+"Teams must have a short name if they don't use the institutional prefix."
+msgstr ""
+"Les équipes doivent avoir un nom court si elles ne utilisent pas le préfixe "
+"institutionnel."
 
 #: participants/models.py:329
 msgid "speaker"
@@ -230,6 +282,29 @@ msgstr "conflits avec institutions"
 #: participants/models.py:362
 msgid "team conflicts"
 msgstr "conflits avec équipes"
+
+#: participants/models.py:365
+msgid "breaking"
+msgstr ""
+
+#: participants/models.py:367
+msgid "independent"
+msgstr "indépendant"
+
+#: participants/models.py:369
+#, fuzzy
+#| msgid "Adjudicator:"
+#| msgid_plural "Adjudicators:"
+msgid "adjudication core"
+msgstr "Juge :"
+
+#: participants/models.py:379
+msgid "adjudicator"
+msgstr "juge"
+
+#: participants/models.py:380
+msgid "adjudicators"
+msgstr "juges"
 
 #: participants/templates/adjudicator_record.html:15
 #: participants/templates/team_record.html:15
