@@ -5,16 +5,22 @@ Change Log
 1.4.0 (Havana Brown)
 --------------------
 
-- Developed the adjudicator allocation, venue allocation, and matchups editing pages
-  - Bumped to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping
-  - When dragging/dropping the changed elements now 'lock' in place and indicate that their saving is in-progress
-  - Added conflicts and recent histories to the top slideover of teams/adjudicators
-  - Adding 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
-  - The adjudicator, venue, and matchup editing interfaces are now sortable
-- The Auto Allocate function for adjudicators now also allocates trainees to solo-chaired debates
+- Overhauled the adjudicator allocation, venue allocation, and matchups editing pages, including:
+    - Upgraded to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping.
+    - When dragging/dropping, the changed elements now 'lock' in place to indicate that their saving is in-progress
+    - Added conflicts and recent histories to the slideovers shown for teams/adjudicators
+    - Added 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
+    - Each interface's table is now sortable by a debate's importance, bracket, liveness, etc
+- Add (basic) support for the Canadian Parliamentary format by allowing for consensus ballots.
+- Added an ESL/EFL tab release option and status field
+- Added a chi-squared test to measure motion balance in the motion standings/balance. Thanks to Viran Weerasekera for contributing this
+- The Auto Allocate function for adjudicators will now also allocate trainees to solo-chaired debates
 - Added a 'Tab Release' preset for easily releasing all standings/results pages after a tournament is finished
-- Fixed issue where toggling iron speeches on and off wouldn't hide/unset the relevant checkboxes
+- Added 'Average Speaks by Round' to the standings overview page
+- Fixed issue where the Auto Allocator was forming panels of incorrect strengths in debates identified as less important
+- Fixed issue where toggling iron-person speeches on and off wouldn't hide/unset the relevant checkboxes
 - Fixed issue where VenueCategories could not be edited if they did not have Venues set
+- Various other small fixes and improvements
 
 1.3.1
 -----

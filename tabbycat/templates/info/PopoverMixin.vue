@@ -7,33 +7,33 @@
 
 export default {
   methods: {
-    setupPopover: function(event) {
-      var content = this.$el.getElementsByClassName('popover-raw')[0].innerHTML;
+    setupPopover: function(event, content) {
 
-      if (typeof this.popContainer === 'undefined') {
-        // Hide all other popover elements (seems to fix issues with them lingering)
-        $(".popover").hide();
+      // Hide all other popover elements (seems to fix issues with them lingering)
+      $(".popover").hide();
 
-        // Construct new popover
-        $(event.target).popover({
-          animation:false,
-          trigger: 'manual',
-          container: 'body',
-          placement: 'top',
-          html: true,
-          title: this.getPopOverTitle(),
-          content: function() {
-            return content;
-          }
-        })
+      // Destroy previous popovers attached to this element; so they don't stick
+      // around when a table is filtered or searched
+      $(event.target).popover('destroy')
 
-        // Show it
-        $(event.target).popover('show')
+      var self = this
+      // Construct new popover
+      $(event.target).popover({
+        animation: false,
+        trigger: 'manual',
+        container: 'body',
+        placement: 'top',
+        html: true,
+        title: self.getPopOverTitle(),
+        content: function() { return content }
+      })
+
+      // Show it
+      $(event.target).popover('show')
         .on("mouseenter", function () {
-          var _this = this;
           $(this).popover("show");
           $(".popover").on("mouseleave", function () {
-            $(_this).popover('hide');
+            $(self).popover('hide');
           });
         })
         .on("mouseleave", function () {
@@ -46,9 +46,8 @@ export default {
             if (!$(".popover:hover").length) {
               $(_this).popover("hide");
             }
-          }, 300);
-        });
-      }
+          }, 300)
+        })
     },
   }
 }

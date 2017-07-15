@@ -25,8 +25,8 @@ def standard_test(test_fn):
     """
     def wrapped(self):
       for scoresheet_type in ['high-required']:  # noqa: E111
-        with self.subTest(scoresheet_type=scoresheet_type):
-          self.set_tournament_preference('scoring', 'scoresheet_type', scoresheet_type)  # noqa: E111
+        # with self.subTest(scoresheet_type=scoresheet_type):
+          # noqa: E114 self.set_tournament_preference('scoring', 'scoresheet_type', scoresheet_type)  # noqa: E111
           for key, testdata in self.testdata.items():  # noqa: E111
             with self.subTest(testdata=key):
               if not testdata[scoresheet_type]['valid']:  # noqa: E111
@@ -599,7 +599,7 @@ class TestVotingDebateResult(GeneralSpeakerTestsMixin, BaseTestDebateResult):
     # ==========================================================================
 
     @with_preference('scoring', 'margin_includes_dissenters', False)
-    @with_preference('scoring', 'scoresheet_type', 'high-required')
+    # @with_preference('scoring', 'scoresheet_type', 'high-required')
     def test_initially_unknown_sides(self):
         self._unset_sides()
         testdata = self.testdata['high']
@@ -742,7 +742,7 @@ class TestConsensusDebateResult(GeneralSpeakerTestsMixin, BaseTestDebateResult):
     # Irregular operation
     # ==========================================================================
 
-    @with_preference('scoring', 'scoresheet_type', 'high-required')
+    # @with_preference('scoring', 'scoresheet_type', 'high-required')
     def test_initially_unknown_sides(self):
         self._unset_sides()
         testdata = self.testdata['high']

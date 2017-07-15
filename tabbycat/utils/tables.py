@@ -484,6 +484,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(novice_header, [speaker.novice for speaker in speakers])
 
+        if self.tournament.pref('show_esl'):
+            novice_header = {'key': "esl", 'text': "ESL"}
+            self.add_boolean_column(novice_header, [speaker.esl for speaker in speakers])
+
+        if self.tournament.pref('show_efl'):
+            novice_header = {'key': "efl", 'text': "EFL"}
+            self.add_boolean_column(novice_header, [speaker.efl for speaker in speakers])
+
     def add_room_rank_columns(self, debates):
         header = {
             'key': "Room rank",

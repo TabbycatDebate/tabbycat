@@ -127,5 +127,7 @@
       </div>
     </div>
   </form>
+{% else %}
+  <div id="vueMount"></div><!-- Prevent unfound item error for Vue -->
 {% endif %}
 {% endblock content %}

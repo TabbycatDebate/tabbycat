@@ -91,6 +91,8 @@ export default {
 
          // Only swap out on the edit adjs page
         if (returnPayload.reallocateToPanel) {
+          // Break categories aren't supplied by the server; set from old debate
+          newDebate.liveness = savedDebate.liveness
           // For teams they dont change so we can use the global variable
           newDebate.teams = _.mapValues(newDebate.teams, function(newDebateTeam) {
             var id = newDebateTeam.id

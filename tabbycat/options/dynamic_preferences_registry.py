@@ -444,7 +444,7 @@ class SubstantiveSpeakers(IntegerPreference):
 
 @tournament_preferences_registry.register
 class ReplyScores(BooleanPreference):
-    help_text = "Whether this style features reply speeches"
+    help_text = "Whether this style features scored reply speeches"
     verbose_name = 'Reply scores'
     section = debate_rules
     name = 'reply_scores_enabled'
@@ -612,6 +612,42 @@ class RepliesTabReleaseLimit(IntegerPreference):
     verbose_name = "Top replies cutoff"
     section = tab_release
     name = "replies_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
+class ESLTabReleased(BooleanPreference):
+    help_text = "Enables public display of the ESL speakers tab. Intended for use after the tournament."
+    verbose_name = "Release ESL speakers tab to public"
+    section = tab_release
+    name = "esl_tab_released"
+    default = False
+
+
+@tournament_preferences_registry.register
+class ESLTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X ESL speakers in the public tab (set to 0 to show all speakers)."
+    verbose_name = "Top ESL speakers cutoff"
+    section = tab_release
+    name = "esl_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
+class EFLTabReleased(BooleanPreference):
+    help_text = "Enables public display of the EFL speakers tab. Intended for use after the tournament."
+    verbose_name = "Release EFL speakers tab to public"
+    section = tab_release
+    name = "efl_tab_released"
+    default = False
+
+
+@tournament_preferences_registry.register
+class EFLTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X EFL speakers in the public tab (set to 0 to show all speakers)."
+    verbose_name = "Top EFL speakers cutoff"
+    section = tab_release
+    name = "efl_tab_limit"
     default = 0
 
 
@@ -906,6 +942,24 @@ class ShowNovices(BooleanPreference):
     verbose_name = 'Show novices'
     section = ui_options
     name = 'show_novices'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ShowESL(BooleanPreference):
+    help_text = "Indicates next to a speaker's name if they are an ESL speaker"
+    verbose_name = 'Show ESL'
+    section = ui_options
+    name = 'show_esl'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ShowEFL(BooleanPreference):
+    help_text = "Indicates next to a speaker's name if they are an EFL speaker"
+    verbose_name = 'Show EFL'
+    section = ui_options
+    name = 'show_efl'
     default = False
 
 

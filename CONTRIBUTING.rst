@@ -29,11 +29,11 @@ For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a 
 
     $ flake8 .
 
-For stylesheets, we use `stylelint <https://stylelint.io>`_ to enforce the `AirBnB styleguide <https://github.com/airbnb/css>`_. The relevant code can be checked by using::
+For stylesheets, we use `stylelint <https://stylelint.io>`_ to enforce the `AirBnB CSS styleguide <https://github.com/airbnb/css>`_. The relevant code can be checked by using::
 
     $ npm run stylelint
 
-For javascript, we use `eslint <http://eslint.org/>` to enforce the `AirBnB styleguide <https://github.com/airbnb/javascript>`_. The relevant code can be checked by using::
+For javascript, we use `eslint <http://eslint.org/>` to enforce the `AirBnB javascript  styleguide <https://github.com/airbnb/javascript>`_. The relevant code can be checked by using::
 
     $ npm run eslint
 
@@ -66,6 +66,19 @@ Then start the server::
     $ sphinx-autobuild docs docs/_build/html --port 7999
 
 You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1:7999>`_.
+
+Project Structure
+=================
+
+- ``bin`` contains a number of convenience scripts for starting/stopping Docker, and the webserver/asset pipeline.
+- ``data`` contains the sample data sets and fixtures used to setup demo tournaments and in automated tests respectively
+- ``docs`` contains our document source files and images (although some are linked from the root directory)
+- ``tabbycat`` is the main directory containing the Django project
+    - ``locale`` contains translation strings for shared templates (others are in respective app directories)
+    - ``templates`` contains shared html templates, stylesheets, javascript source files, and Vue.js components/mixins.
+    - ``utils`` contains shared utilities
+    - All other folders are the Django apps that contain specific views, models, and templates for functions such as ``draw`` generation/display, or recording ``results``. Each has sub-folders for tests and templates.
+- In the root directory there are a number of files defining our python and javascript dependencies, core configuration files, and key documents like the ``README``
 
 Release Checklist
 =================

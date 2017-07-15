@@ -33,7 +33,7 @@ export default {
   props: { 'venue': Object, 'debateId': null },
   computed: {
     titleWithLimit: function() {
-      var limit = 18
+      var limit = 30
       if (this.venue.name.length > limit + 2) {
         return this.venue.name.substring(0, limit) + "…"
       } else {

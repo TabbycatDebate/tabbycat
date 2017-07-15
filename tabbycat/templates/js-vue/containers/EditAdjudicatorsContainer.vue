@@ -55,7 +55,7 @@
     </div>
 
     <unallocated-items-container>
-      <div v-for="unallocatedAdj in unallocatedAdjsByScore">
+      <div v-for="unallocatedAdj in unallocatedAdjsByOrder">
         <draggable-adjudicator :adjudicator="unallocatedAdj"
                                :percentiles="percentileThresholds"
                                :locked="unallocatedAdj.locked"></draggable-adjudicator>
@@ -90,8 +90,12 @@ export default {
     this.$eventHub.$on('show-conflicts-for', this.setOrUnsetConflicts)
   },
   computed: {
-    unallocatedAdjsByScore: function() {
-      return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
+    unallocatedAdjsByOrder: function() {
+      if (this.roundInfo.roundIsPrelim === true) {
+        return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
+      } else {
+        return _.sortBy(this.unallocatedItems, ['name'])
+      }
     },
     adjudicatorsById: function() {
       // Override DrawContainer() method to include unallocated

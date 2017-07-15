@@ -43,6 +43,16 @@
             <a href="{% tournamenturl 'standings-public-tab-novices' %}">Novices Speaker Tab</a>
           </li>
         {% endif %}
+        {% if pref.esl_tab_released > 0 %}
+          <li class="list-group-item">
+            <a href="{% tournamenturl 'standings-public-tab-esl' %}">ESL Speaker Tab</a>
+          </li>
+        {% endif %}
+        {% if pref.efl_tab_released > 0 %}
+          <li class="list-group-item">
+            <a href="{% tournamenturl 'standings-public-tab-efl' %}">EFL Speaker Tab</a>
+          </li>
+        {% endif %}
         {% if pref.replies_tab_released > 0 %}
           <li class="list-group-item">
             <a href="{% tournamenturl 'standings-public-tab-replies' %}">Replies Tab</a>

@@ -1,7 +1,7 @@
 <template>
   <span @mouseenter="showSlideOver(adjudicator)"
         @mouseleave="hideSlideOver"
-        class="slideover-target">
+        class="hover-target">
 
     <span>{{ adjudicator.name }} ({{ position }})</span>,
 
