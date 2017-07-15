@@ -75,6 +75,31 @@ class Institution(models.Model):
         return {'name': self.name, 'id': self.id, 'code': self.code}
 
 
+class SpeakerCategory(models.Model):
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        verbose_name=_("tournament"))
+    name = models.CharField(max_length=50,
+        verbose_name=_("name"),
+        help_text=_("Name to be displayed, e.g., \"ESL\""))
+    slug = models.SlugField(
+        verbose_name=_("slug"),
+        help_text=_("Slug for URLs, e.g., \"esl\""))
+    seq = models.IntegerField(
+        verbose_name=_("sequence number"),
+        help_text=_("The order in which the categories are displayed"))
+    is_general = models.BooleanField(
+        verbose_name=_("is general"),
+        help_text=_("True if most teams eligible for this category, e.g. Open, False otherwise"))
+
+
+    class Meta:
+        unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
+        ordering = ['tournament', 'seq']
+        index_together = ['tournament', 'seq']
+        verbose_name = _("speaker category")
+        verbose_name_plural = _("speaker categories")
+
+
 class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True,
         verbose_name=_("name"))
