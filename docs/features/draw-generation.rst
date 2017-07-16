@@ -44,7 +44,7 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
 
 The big picture
 ===============
-When generating a power-paired draw, Tabbycat goes through four steps:
+When generating a power-paired draw, Tabbycat goes through five steps:
 
 1. First, it divides teams into "raw brackets", grouping them by the number of wins.
 2. Second, it resolves odd brackets, applying the odd brackets rule to make sure there is an even number of teams in each bracket. This is often called "pulling up" teams.
