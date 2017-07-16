@@ -10,11 +10,11 @@ Team Standings Rules
 In Tabbycat, you can choose how teams are ranked in the team standings. For
 example, at Australs, teams are ranked first on the number of wins, and second
 on their total speaker score. The setting that specifies how teams are ranked is
-called the *team standings precedence*. The team standings precedence is used
+called the *team standings precedence*. The team standings precedence is used:
 
-- when displaying the team tab,
-- whenever a power-paired draw is generated, and
-- when computing which teams are in the break.
+- When displaying the team tab,
+- Whenever a power-paired draw is generated, and
+- When computing which teams are in the break.
 
 When you choose the team standings precedence, you choose from a list of
 *metrics*. Then, in the standings, teams will be sorted first by the first

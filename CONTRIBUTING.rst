@@ -2,7 +2,14 @@
 Contributing
 ============
 
-Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. Feel free to `join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ if you have any questions about how to get started.
+Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. While at its core Tabbycat is a software project, you do not need to know how to code or use Git in order to help. We welcome feedback and ideas based on your tabbing experience and appreciate suggestions or proposals for how to improve the wording, translation, and design of our interface and documentation.
+
+Feel free to `join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ if you have any questions about how to get started.
+
+Feedback and ideas
+==================
+
+These can be added as issues in the `GitHub repository <https://github.com/czlee/tabbycat/issues>`_; posts in our `Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_; or as an :ref:`email to the developers <authors>`.
 
 Bug reports
 ===========
@@ -13,13 +20,15 @@ Please report bugs by opening a new issue in our `GitHub repository <https://git
 - Any details about your tournament and setup that might be helpful in troubleshooting
 - Detailed steps for how to reproduce the bug
 
-Getting started
-===============
+Getting started with development
+================================
 
 - To easily test your changes to Tabbycat you probably want a working :ref:`local install <install-local>` (without using Docker)
 - Generally we prefer that features and bug fixes are submitted as pull requests on their own branch (as described in the  `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_). Submitting against `develop` (but not `master`) is fine for small fixes and changes.
 - We use Django's testing tools — it would be great if new features came with unit tests
-    - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>` and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>` to simulate in-browser functionality. They will fail if you do not have the Chrome browser installed.
+
+    - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser installed.
+
 - By default the development server's build process will broadcast livereload events; installing one of their `browser plugins <http://livereload.com/extensions/>`_ can make testing front-end changes easier.
 
 Style guide
@@ -33,14 +42,14 @@ For stylesheets, we use `stylelint <https://stylelint.io>`_ to enforce the `AirB
 
     $ npm run stylelint
 
-For javascript, we use `eslint <http://eslint.org/>` to enforce the `AirBnB javascript  styleguide <https://github.com/airbnb/javascript>`_. The relevant code can be checked by using::
+For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `AirBnB javascript  styleguide <https://github.com/airbnb/javascript>`_. The relevant code can be checked by using::
 
     $ npm run eslint
 
 Versioning convention
 =====================
 
-Our convention is to increment the minor version whenever we add new functionality, and to increment the major version whenever
+Our convention is to increment the minor version whenever we add new functionality, and to increment the major version whenever:
 
 - the database can't be migrated forwards using ``python manage.py migrate --no-input``, or
 - there is a major change to how the tournament workflow goes, or
@@ -50,7 +59,7 @@ Most of the time, we write `data migrations <https://docs.djangoproject.com/en/1
 
 One day, we hope to have a public API in place to facilitate the integration with other debating tournament software, like registration or adjudicator feedback systems. If and when that happens, we'll probably revise this convention to be more in line with `Semantic Versioning <http://semver.org/>`_.
 
-Starting from version 0.7.0, we use code names for versions, being breeds of cats in alphabetical order.
+Starting from version 0.7.0, we use cat breeds as the code names for major versions.
 
 Documentation
 =============
