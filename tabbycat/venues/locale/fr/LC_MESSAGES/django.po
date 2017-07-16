@@ -1,0 +1,182 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-16 07:27+1000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: venues/models.py:10 venues/models.py:73
+msgid "name"
+msgstr ""
+
+#: venues/models.py:12 venues/models.py:127
+msgid "priority"
+msgstr ""
+
+#: venues/models.py:13
+msgid ""
+"Venues with a higher priority number will be preferred when allocating "
+"venues to debates"
+msgstr ""
+
+#: venues/models.py:16
+msgid "tournament"
+msgstr ""
+
+#: venues/models.py:17
+msgid "Venues not assigned to any tournament can be shared between tournaments"
+msgstr ""
+
+#: venues/models.py:24
+msgid "venue"
+msgstr ""
+
+#: venues/models.py:25 venues/models.py:83
+msgid "venues"
+msgstr ""
+
+#: venues/models.py:68
+msgid "Don't display in venue name"
+msgstr ""
+
+#: venues/models.py:69
+msgid "Display as prefix"
+msgstr ""
+
+#: venues/models.py:70
+msgid "Display as suffix"
+msgstr ""
+
+#: venues/models.py:74
+msgid ""
+"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room"
+"\". This name is shown when the category is prefixed or suffixed to a venue "
+"name in the draw, e.g., \"Purple – G05\"."
+msgstr ""
+
+#: venues/models.py:78
+msgid "description"
+msgstr ""
+
+#: venues/models.py:79
+msgid ""
+"Description, as the predicate of a sentence, e.g. \"has step-free access\", "
+"\"is close to the briefing hall\". This description follows \"This venue\" "
+"when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
+msgstr ""
+
+#: venues/models.py:87
+msgid "display in venue name"
+msgstr ""
+
+#: venues/models.py:88
+msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
+msgstr ""
+
+#: venues/models.py:90
+msgid "display in public tooltip"
+msgstr ""
+
+#: venues/models.py:91
+msgid ""
+"Displays the description in the tooltip for the venue on public pages. The "
+"description, if not blank, will always show on admin pages."
+msgstr ""
+
+#: venues/models.py:95
+msgid "venue category"
+msgstr ""
+
+#: venues/models.py:96
+msgid "venue categories"
+msgstr ""
+
+#: venues/models.py:126
+msgid "category"
+msgstr ""
+
+#: venues/models.py:130
+msgid "subject content type"
+msgstr ""
+
+#: venues/models.py:133
+msgid "subject ID"
+msgstr ""
+
+#: venues/models.py:139
+msgid "venue constraint"
+msgstr ""
+
+#: venues/models.py:140
+msgid "venue constraints"
+msgstr ""
+
+#: venues/templates/categories_edit.html:5
+#: venues/templates/categories_edit.html:6
+msgid "Venue Categories"
+msgstr ""
+
+#: venues/templates/categories_edit.html:11
+msgid ""
+"Venue categories allow you to <ul> <li>group venues together into \"zones\" "
+"to display in the draw and make navigation easier for participants, and/or</"
+"li> <li>specify constraints on venue allocation that require teams, "
+"adjudicators or institutions to be put in a venue in a particular category.</"
+"li> </ul>"
+msgstr ""
+
+#: venues/templates/categories_edit.html:22
+#: venues/templates/venue_constraints_edit.html:24
+msgid "There are some problems with the data on this form:"
+msgstr ""
+
+#: venues/templates/categories_edit.html:68
+msgid "Save Venue Categories"
+msgstr ""
+
+#: venues/templates/categories_edit.html:71
+#: venues/templates/venue_constraints_edit.html:73
+msgid "Save and Add More"
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html:5
+#: venues/templates/venue_constraints_edit.html:6
+msgid "Venue Constraints"
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html:11
+msgid ""
+"Venue constraints tell the venue allocator to try to keep the specified team "
+"or adjudicator, or all teams (but not adjudicators) from the specified "
+"institution, in a venue in the given category. The \"priority\" field "
+"resolves conflicting constraints: the higher priority takes precedence. You "
+"can also use the priority field to specify \"lower-preference\" constraints, "
+"which are taken if a higher-priority constraint couldn't be met."
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html:70
+msgid "Save Venue Constraints"
+msgstr ""
+
+#: venues/views.py:92
+#, python-format
+msgid "Saved venue categories: %(list)s"
+msgstr ""
+
+#: venues/views.py:163
+#, python-format
+msgid "Saved %(count)d venue constraints."
+msgstr ""

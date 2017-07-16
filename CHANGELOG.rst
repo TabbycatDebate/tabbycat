@@ -10,8 +10,8 @@ Change Log
     - When dragging/dropping, the changed elements now 'lock' in place to indicate that their saving is in-progress
     - Added conflicts and recent histories to the slideovers shown for teams/adjudicators
     - Added 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
-    - Each interface's table is now sortable by a debate's importance, bracket, liveness, etc
-- Add (basic) support for the Canadian Parliamentary format by allowing for consensus ballots.
+    - Each interface's table is now sortable by a debate's importance, bracket, liveness, etc.
+- Added support for consensus ballots, which means Tabbycat now (mostly) supports Canadian Parliamentary
 - Added an ESL/EFL tab release option and status field
 - Added a chi-squared test to measure motion balance in the motion standings/balance. Thanks to Viran Weerasekera for contributing this
 - The Auto Allocate function for adjudicators will now also allocate trainees to solo-chaired debates

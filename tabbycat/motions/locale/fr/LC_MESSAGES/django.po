@@ -18,17 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:53
-msgid "Yes"
-msgstr ""
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:55
-msgid "No"
-msgstr ""
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:70 adjfeedback/forms.py:79
-msgid "This field is required."
+#: motions/templates/edit.html:65
+msgid "There are some problems with the data on this form:"
 msgstr ""
