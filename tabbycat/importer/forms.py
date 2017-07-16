@@ -251,6 +251,7 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
             team.save()
             for name in self.cleaned_data['speakers']:
                 team.speaker_set.create(name=name)
+            team.break_categories.set(team.tournament.breakcategory_set.filter(is_general=True))
 
         return team
 
