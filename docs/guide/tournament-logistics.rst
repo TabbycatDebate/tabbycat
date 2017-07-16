@@ -112,59 +112,24 @@ Note also that in most circumstances it is almost always preferable to create a 
 
 Below is the time taken within each round at Australs 2017. For context, this was neither a particular efficiently or inefficiently tabbed tournament. Notable details:
 
-- The tournament was ~40 rooms each round and had access to 3-6 runners and data enterers. Paper ballots were pre-printed and distributed by runners to rooms prior to the debates starting, then collected some time after the 15 minutes deliberation period. Feedback was submitted online.
+- The tournament was ~40 rooms each round and had access to 3-6 runners and data enterers. Paper ballots were pre-printed and distributed by runners to rooms prior to the debates starting, then collected some time after the 15m deliberation period. Feedback was submitted online.
 - The adjudication core were neither particular slow or fast in allocating adjudicators compared to other adjudication cores in an Australs context where allocations are first automatically generated then extensively tweaked.
 - There were no serious issues that delayed the tabbing of any particular round beyond the expected issues of last-minute draw changes, adjudicators producing incomprehensible ballots, etc.
 - While the tab ran relatively quickly there were delays (or periods where allocations could take longer than typical) because of mismatches between the planned schedule and the optimal schedule from a tab perspective.
-- A round at Australs takes around 2 hours from a debater’s perspective: 30 minutes of prep, ~60 minutes for a debate, ~15 minutes for deliberation, and ~15 minutes for the oral adjudication and feedback.
+- A round at Australs takes around 2 hours from a debater’s perspective: 30m of prep, ~60m for a debate, ~15m for deliberation, and ~15m for the oral adjudication and feedback.
+- We didn’t note the timing of data-entry in Round 8 as there was no time pressure. After data entry was finished, finalising and double-checking the breaks took through to ~7-8pm.
 
-- **Round 1**
-- *Draw was generated the night before; intro briefings were minimal (~30 minutes)*
-- ``09:28                —`` Motions released
-- ``11:51 (+143 minutes) —`` First ballot received
-- ``12:38 (+47  minutes) —`` Last ballot confirmed
-- **Round 2**
-- ``12:43                —`` Draw generated
-- ``13:17 (+34  minutes) —`` Allocation finished
-- ``13:50 (+33  minutes) —`` Motions released.
-- ``15:46 (+116 minutes) —`` First ballot received
-- ``16:07 (+21  minutes) —`` Last ballot confirmed
-- **Round 3**
-- ``16:12                —`` Draw generated
-- ``16:36 (+24  minutes) —`` Allocation finished
-- ``16:47 (+11  minutes) —`` Motions released.
-- ``18:52 (+125 minutes) —`` First ballot received
-- ``19:15 (+23  minutes) —`` Last ballot confirmed
-- **Round 4**
-- ``19:17                —`` Draw generated
-- ``20:28 (+71  minutes) —`` Allocation finished
-- ``09:22                —`` Motions released.
-- ``11:18 (+116 minutes) —`` First ballot received
-- ``12:05 (+47  minutes) —`` Last ballot confirmed
-- **Round 5**
-- ``12:05                —`` Draw generated
-- ``12:58 (+53  minutes) —`` Allocation finished
-- ``13:14 (+16  minutes) —`` Motions released
-- ``15:13 (+119 minutes) —`` First ballot received
-- ``15:44 (+31  minutes) —`` Last ballot confirmed
-- **Round 6**
-- ``15:46                —`` Draw generated
-- ``16:24 (+38  minutes) —`` Allocation finished
-- ``16:40 (+16  minutes) —`` Motions released
-- ``18:40 (+120 minutes) —`` First ballot received
-- ``19:09 (+29  minutes) —`` Last ballot confirmed
-- **Round 7**
-- ``19:10                —`` Draw generated
-- ``21:30 (+140 minutes) —`` Allocation finished
-- ``11:35 (+125 minutes) —`` First ballot received
-- ``12:06 (+31  minutes) —`` Last ballot confirmed
-- **Round 8**
-- ``12:07               —`` Draw generated
-- ``13:25 (+78 minutes) —`` Allocation finished
-- ``14:18 (+53 minutes) —`` Motions released
-- *We didn’t note the timing of data-entry as there was no time pressure*
-- *After data entry was finished, finalising and double-checking the breaks took - through to 7-8pm.*
-
+======================  ===============  ===============  ===============  ===============  ===============  ===============  ================  ===============
+Day                     One                                                Two                                                Three
+----------------------  -------------------------------------------------  -------------------------------------------------  ---------------------------------
+Round                   1                2                3                4                5                6                7                 8
+======================  ===============  ===============  ===============  ===============  ===============  ===============  ================  ===============
+Draw generated          *Night prior**   12:43            16:12            19:17*           12:05            15:46            19:10*            12:07
+Allocation finished     *Night prior**   13:17 ``+34m``   16:36 ``+24m``   20:28* ``+71m``  12:58 ``+53m``   16:24 ``+38m``   21:30* ``+140m``  13:25 ``+78m``
+Motions released        09:28            13:50 ``+33m``   16:47 ``+11m``   09:22            13:14 ``+16m``   16:40 ``+16m``   9:30              14:18 ``+53m``
+First ballot received   11:51 ``+143m``  15:46 ``+116m``  18:52 ``+125m``  11:18 ``+116m``  15:13 ``+119m``  18:40 ``+120m``  11:35 ``+125m``   ?
+Last ballot confirmed   12:38 ``+47m``   16:07 ``+21m``   19:15 ``+23m``   12:05 ``+47m``   15:44 ``+31m``   19:09 ``+29m``   12:06 ``+31m``    ?
+======================  ===============  ===============  ===============  ===============  ===============  ===============  ================  ===============
 
 Tab Site Setup
 ==============
