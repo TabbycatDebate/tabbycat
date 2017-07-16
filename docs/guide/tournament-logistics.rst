@@ -128,7 +128,7 @@ Below is the time taken within each round at Australs 2017. For context, this wa
 - We didn’t note the timing of data-entry in Round 8 as there was no time pressure. After data entry was finished, finalising and double-checking the breaks took through to ~7-8pm.
 
 ======================  ===============  ===============  ===============  ===============  ===============  ===============  ================  ===============
-Day                     One                                                Tw    -                                              Three
+Day                     One                                                Two                                                Three
 ----------------------  -------------------------------------------------  -------------------------------------------------  ---------------------------------
 Round                   1                2                3                4                5                6                7                 8
 ======================  ===============  ===============  ===============  ===============  ===============  ===============  ================  ===============

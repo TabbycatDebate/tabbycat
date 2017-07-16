@@ -16,7 +16,8 @@ Contributors
 ------------
 
 - Thevesh Theva contributed the algorithm for calculating the liveness of teams within a particular break category.
-- Viran Weerasekera contributed the statistical tests used to estimate the degree to which a motion is balanced.
+- Viran Weerasekera contributed the statistical tests used to estimate the degree to which a motion's results and vetoes are balanced.
+- Viran Weerasekera, Valerie Tierney, and Vail Bromberger contributed to the "Tournament Logistics" section of our documentation.
 
 Sponsors
 --------

@@ -11,6 +11,7 @@ Change Log
     - Added conflicts and recent histories to the slideovers shown for teams/adjudicators
     - Added 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
     - Each interface's table is now sortable by a debate's importance, bracket, liveness, etc
+- Added a new "Tournament Logistics" guide to the documentation that outlines some general best practices for tabbing tournaments. Thanks to Viran Weerasekera, Valerie Tierney, and Vail Bromberger for contributing to this document.
 - Add (basic) support for the Canadian Parliamentary format by allowing for consensus ballots.
 - Added an ESL/EFL tab release option and status field
 - Added a chi-squared test to measure motion balance in the motion standings/balance. Thanks to Viran Weerasekera for contributing this
