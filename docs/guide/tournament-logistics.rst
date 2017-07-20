@@ -205,103 +205,112 @@ Pre-Rounds Setup
 Setting up the tab room
 -----------------------
 
-- Double-check with convenors if and whether things can be left in the tab room overnight.
-- Double-check internet access in the tab room
-- When setting up the tabroom ensure the projector system works and that your printing setup works. It's not a bad idea to print of a bunch of 'blank' ballots and feedback forms to have on hand if the need arises (i.e. a ballot is missing and needs to go out ASAP; or if someone can't do feedback online).
-- Critical to have items:
+This is typically the first order of business, as all future pre-round setup tasks (i.e. training the adjudication core, testing printing, etc) are better for being done in the same space that will be used throughout the rounds. Once you're in the space there are a couple of small checks to run through before the larger question of how to arrange and use the space should be tackled:
 
-    - Extension cord; a multi box. Ideally two of each
-    - Permanent markers, whiteboard markers (assuming there is a whiteboard; which ideally there would be)
-    - Boxes! Lots of boxes. Loose ballots are your enemy. You probably want at least three large boxes (for ballots to-enter, ballots to-check, and finished ballots) but more will be useful.
-    - Paper (~4 diff colors; ideally one per major round). Be sure to calculate how many sheets you will need per round and ensure you have spares
-    - Staplers
+- Check with convenors whether things can be left in the tab room overnight. If they can't you'll need to make plans for how to move any big items (printers; ballot stacks) to and from the tab room each day.
+- Check that the internet access in the tab room is reliable
+- Check that the projector system works, both with whatever wired-in computer is in the room and when connected to your laptop.
+- Check what items either yourself, or the organisers, have at hand and check if anything needs to be acquired before the next day. Critical items for tab rooms are typically:
 
-- Generally useful to have items:
+    - An extension cord with multi box; ideally a pair of each
+    - Whiteboard markers (assuming there is a whiteboard) otherwise permanent markers and large sheets of paper (i.e. A2) can suffice
+    - Boxes. Lots of boxes. Loose ballots are a source of confusion and error, so you want some way of temporarily storing ballots as they proceed through the entering and checking process. You probably want at least three large boxes (for ballots to-enter, ballots to-check, and finished ballots) but more will be useful.
+    - Spare printing ink/toner, and paper for the printer. Ideally your paper would be multi-coloured, with each colour being used for a different round. Pastel colours are ideal, and you ideally want at least three different colours so that you don't have to repeat a colour within the same day. Be sure to calculate how many sheets you will need per round and ensure you have a generous amount of spares.
+    - If tabbing a format that can produce multiple ballots per-debate, staplers are essential to keep those ballots organised. Buy at least two sturdy types.
 
-    - Whatever dongles/adapters you need to connect to common projectors
-    - Post-it notes aren't a bad idea for marking papers (i.e. ballots that need correcting)
-    - Sticky tape and blu tack (for marking signs to things; say a door)
-    - Spare pens for the people doing data entry
-    - Trash bags for collecting rubbish
-    - A Chrome Cast can occasionally be very useful if a projector or TV doesn't have accessible input cables, or if it forces you to use a set computer rather than your own laptop.
+- Non-essential, but often useful to have items:
 
-The question of how to arrange the space has many answers; but there should be *some* sort of system to it. The process of entering and checking ballots has a particular routine to it, and this routine should be reflected in the spatial arrangement if it is to be efficient.
+    - Whatever dongles/adapters you need to connect your laptop to the projectors, both in the tab room and in the briefing room.
+    - Post-it notes aren't a great way to temporarily mark ballots with information; typically used to indicate ballots that need correcting.
+    - You'll often need to make impromptu signs; sticky tape and/or blu-tack are good here
+    - Spare pens for the people doing data entry to use
+    - Trash bags for collecting rubbish as it accumulates
+    - A Chrome Cast can occasionally be very useful if a projector or screen doesn't have accessible input cables or so that you can use a projector without having your laptop tethered to a particular podium and desk.
 
-There should be a whiteboard or excel tally of who is running, and collecting ballots, from which location. this will likely change day to day so should be clear
+If you haven't already it's a good idea to check your printing setup by printing off a bunch of generic ballots and feedback forms to have on hand if the need arises (i.e. a ballot is missing and needs to go out ASAP; or if someone can't do feedback online and needs to do so on paper). At worst, the blank ballots you print can be used for the out-rounds. While printing these off time how long it takes the printer to print say 25 ballots and extrapolate from that to figure out how long it will take to print the entire round's worth of ballots. Note that if printing off a round's ballots is relatively quick it can be useful to delay it in order to better accommodate any last-minute changes to the draw that happen post-announcement. It's also worth thinking about how you (or at least who will) group up the printed ballots in order to distribute them to runners.
 
-Ascertain in advance the capacity/capabilities of the printers you're working with (How fast is it? Can it hold enough paper for a round's printing or does someone need to monitor/reload it?)
-    - This may influence the chronology of when ballots are printed (eg. If the printer is sufficiently fast you can print ballots closer to debates starting)
-    - I like to print ballots after any necessary room and clash swaps have been made so that the ballots are accurate and i don't have to correct them by hand.
-    - If the printer is slow I like to get a second one and print half the lot on each printer
+At this point you should also setup whatever process you need for managing runners and the ballot collection process. At a minimum this should probably be a table on a spreadsheet or a whiteboard listing the different groups of rooms, with space to mark in which runners are delivering/collecting ballots for each location. This will likely change from day to day and should be kept updated. It should also have some method for contacting each runner (i.e. a cellphone number).
 
-Training runners
-----------------
+The question of how to arrange the actual room is one with many answers, and is obviously shaped by the peculiarities of the space itself. However there needs to be some system behind it so that people know exactly where to go and what to do when there is time pressure.
 
-- Ensure they have login accounts
-- Show them how to do data entry
-- Including signing the ballots
-- They (and you) should know where all the rooms are. this is VIP
-- Train them how to deal with belligerent judges
-- Setup logins for them; show them how to login
-- Go through the checking/confirming process, ideally in the room and showing how the paper workflow operates
-- Go through common ballot errors. Emphasize any ambiguity needs to be resolved; don't just guess or go ahead and enter it. If you runners are sufficiently experienced (and are not super time pressured) have them check for and catch ballot issues while collecting ballots will avoid many sources of delay. When errors get back to you it often necessitates finding the adjudicator who may have gone to lunch, not had internet access, etc
-- Things to watch out for
-- When doing a panel, make sure you are entering the ballot for the right panellist
-- Check ambiguous numbers
-- Go through how to deal with iron person speeches
-- Get their contact details
-- Assign them to the rooms they are running. Make sure they actually know where to go (i.e. do an actual tour of the rooms with them prior to R1)
+The key consideration behind this system is typically the 'flow' of ballots: what happens after they are brought back from runners but before they are completely entered into the system. Think through how you want this process to operate and how the space can be arranged to make each step as smooth as possible. Considerations:
+
+- When runners initially return a big stack of ballots, what happens? They could be transferred directly to the data-enterers to start on, but it is often useful to have preliminary checks here in order to keep the job of the data-enterers as simple as possible. These checks could include:
+
+    - For formats with multiple ballots per-debate, you typically want to identify and staple together all the ballots from a given room.
+    - For tournaments where ballots are liable to go missing (or for when you have plenty of data-enterers and want peace of mind) it is worth using the ballot 'check-in' system of your tab software to mark off ballots as present in the tab room. This allows you to quickly identify which ballots are AWOL and begin tracking them down earlier than you would do otherwise if just waiting for the 'to enter' pile to be exhausted.
+    - Depending on your preferences and resources, ballots could at this stage be checked for errors. This could include a basic sweep for missing information (i.e. totals) or a comprehensive sweep that includes checking math errors, ambiguous handwriting, low-point wins, etc). While this will delay the time between ballots arriving and being entered, it will mean that you can start correcting ballots sooner, and lessens the burden on (potentially inexperienced) data-enterers to check and catch these.
+
+- Once this preliminary step has occurred the next task is actually entering the ballots. The number of steps here is dependent on your tab software and tab settings; you might have had the 'draft' ballot be submitted online by chairs or you might have the whole two step process of a 'draft' ballot entry and the 'confirmed' ballot entry taking place within the tab room. Considerations:
+
+    - Regardless of whether you are working with a one-step or a two-step process, you want to arrange the tables where data-enterers are sitting such that their need to move is minimised. That might mean either have a central inbox of ballots to enter in the center of the tables (such that everyone can reach it) or having multiple 'clusters' of enterers around boxes.
+    - If work with a two-step process you want those two steps to be an active part of the spatial arrangement. That is to say, typically there will be a grouping of enterers who are working on the initial ballot entry (clustered around a box or boxes) and then a separate 'downstream' grouping of enterers that work on confirming/validating those entries. Depending on the size of tournament and quantity of runners, you either want it so that individuals from the first group can easily pass their ballots to the box of the second group; i.e. by reaching across the table or walking a short distance. At large tournaments you might want a dedicated person to transfer ballots between boxes to prevent enterers having to get up.
+    - In a two-step process people may need to transfer roles, as generally you want to prioritise entry and then validation. Often this isn't necessarily much more efficient, but if 'rebalancing' the roles make sure that the spaces assigned to each role can accommodate extra people, and that people physically move to occupy each role.
+    - In general, you want to minimise the number of ballots that each enterer feels the need to 'hoard' to work through to keep the work evenly distributed. If people are taking a large amount of ballots to work, at the final stages of entering some people will have a bunch to work through while others will be finished. Making it easy to collect and pass on ballots in the space itself helps cut down on this while keeping entry efficient.
+    - While the exact spatial arrangement depends on your numbers and what furniture is available, a long rectangle is a good starting point as the ballot process is in general linear (check, enter, validate, finish). Typically this might look like a series of tables in a row with enterers sitting on either side and with the various ballot boxes in the middle.
+    - When ballots have finished being enter/validated there definitely should be some sort of final 'done' box. However take care how ballots are put here, a common source of error is people putting ballots there before they are fully finished.
+    - When ballots need to be corrected you generally want to 'extract' them from this process and hand them off to a tab-director or assistant to chase up and collect. There should be a forethought process for managing this; and ideally a dedicated space for it to prevent ballots being lost and to make it easy to identify ongoing issues. This might look like a process of sticking a post it note (outlining the error) to the ballot, and then pulling it from entry/validation and placing it on a desk.
+
+Training volunteers
+-------------------
+
+If it all feasible you want to train that volunteers acting as runners and/or data enterers they day before the tournament starts otherwise the first round will be rough. It's generally a good idea for this training session to generally mirror the process of running a round. Even if you have enough people for dedicated runner/enterer roles to train everyone so that they are familiar with each and can fill in if needed. This has a couple of stages:
+
+1. Introductions/details
+
+    - Volunteering is a pretty thankless and often stressful job. It's also quite a dull and mechanical process: deliver paper; collect paper; enter numbers; check numbers.
+    As much as possible you want your volunteers to feel welcome and a key part of a team. When meeting everyone for the first time try and run the introductions in a non-perfunctory manner and get to know people's background/interests and outline how valuable they are to the tournament.
+    - As part of this process you should, however, grab their cellphone number or whatever means you will use to coordinate communication.
+    - Figure out what will be happening during downtime. Would volunteers like to watch debates, work in the tab room, etc. Is there anything they would like during those down times (music, snacks, coffee, etc).
+
+2. Rooms and Running
+
+    - So if runners are unfamiliar with debating in general, outline the basics of what draws are, what ballots are actually for, and what this process looks like for participants.
+    - Outline how/when the printing process occurs, who will sort and assign the ballots.
+    - Now is a good time to assign different runners to different venue groups.
+    - Critically (and this may take some time) as a group actually go to everyone one of the venue groups and identify all of the venue rooms that are listed so that everyone knows exactly where to go. This is a good chance to both check those rooms actually exist and any problems that might occur finding them.
+    - Go through where to place ballots on desks
+    - Outline in general what happens during ballot collecting: when to do it, how to approach chairs, what do to if they are slow or delayed. You should raise the chance of chairs being belligerent and outline how you (and they) should deal with this.
+    - If you are having runners pre-check ballots it's a good idea to fill out a few ballots to demonstrate the kinds of checking. If you are using any communication systems (i.e. having them mark of buildings as 'done') go through that now also.
+
+3. Data entry and checking
+
+    - Again, run through this in the actual tab room, and illustrate examples with actual ballots.
+    - Before starting set up logins for everyone and show them how to login. Also get an idea of what devices they will be using, or can bring, for data entry purposes. Check/ensure that they will have internet access on those devices.
+    - Run through how the seating/table/box arrangement works and the types of roles at different positions.
+    - Emphasise that in general, any ambiguities should be raised with the tab directors/assistants; i.e. that you should never guess about ballots but instead always delegate resolving issues to someone else.
+    - Run through the different edge cases and things to check during entry. For example Iron Person speeches, mismatched totals, entering the wrong ballot for the wrong panellist, etc (see section below). Be sure to also go through what happens when the validation step fails; i.e. when a ballot needs to be re-entered.
 
 Training the adjudication core
 ------------------------------
 
-- Ensure that adjudication core members know to come to the tab room ASAP after adjudication s. Not swanning around and socialising. Draws will often be held up just by the fact that people are not present
-- There will be a tradeoff between quality of allocations and speed of tournament. Allocations taking too long will delay the rounds. Are they ok with this? Do they want to try and self-impose limits on the length of time on an allocation?
-- Depending on how many runners you have it may be necessary, or beneficial, if the adjudication core helps out with data entry. However if you go down this route the adjudication core need to be highly trained; they are often much more likely than runners (who are less certain and have done more entry) to make errors.
-- Doing the draw for round 1 you should talk through how the allocation interface works, etc.
+Typically making the first round draw and allocation is a good time to outline expectations and roles with the adjudication core. Generous amounts of time should be budgeted for this. Things to run through:
 
-Establishing communication
---------------------------
-
-- Between adj core and tab team (coordinating motion release)
-- Within the tab team (coordinating when printing should start)
-- Between tab team and runners
-
-Text, calls, facebook?
-Do you have everyone's numbers/messenger details?
-How will the rest of the tournament get in touch with you? Email?
-
+- Setting up logins for the adjudication core as necessary
+- Outlining (if you haven't already) how feedback will work, as well as the means by which the adjudication core can use the software to keep track of feedback. Ideally some sort of general strategy should be formed for this, so that particular people sit out rounds, or are delegate the task of catching up on feedback at other points.
+- Depending on how many runners you have it may be necessary, or beneficial, if the adjudication core helps out with data entry. However if you go down this route the adjudication core need to be highly trained; they are often much more likely than volunteers (who are less self-confident and have more experience) to make errors.
+- Ensure that adjudication core members know to come to the tab room ASAP after they have finished adjudications rather than swanning around socialising or going to lunch. Draws will often be held up just by the fact that not enough adjudication core members are present to start or finish an allocation.
+- The first round allocation is a chance to slowly walk the adjudication core through the allocation interface. They should know how to operate it themselves and what it's capabilities are. This includes key interface features (say those that assign a debate 'importance' or 'energy') as well as how the underpinning technology works (say how importance/energy matches up to panel strength). As much as possible you want to understand their priorities and ensure the software is configured to match them, and/or highlight interface features that help them match it.
+- How to approach diversity (typically in terms of region and gender) across an allocation in particular is something that some members of an adjudication core will not have had to considered in the context of a large tournament or in terms of explicit trade-offs. Again, you should make it clear how the software can accommodate this, and get the team to plan for how (in general) they want to approach this. Often it will form the final phase of the allocation process, and so can easily be forgotten or skipped over.
+- Outline that there will usually be a trade-off between the quality of each allocations and the speed at which the tournament runs. When time is not a factor, many adjudication cores will often take an hour or more in order to create a perfect allocation; they should know though that aiming for perfect during many rounds will break the schedule. You should try and get them to set some sort of time goal for allocations, and ensure that they are aware of when (during the rounds) they are going too fast or too slow.
+- How you will all communicate. Again, there should be a single medium for this so that everyone knows what is going on.
 
 Preparing a briefing
 --------------------
 
-- There should be some form of briefing, even if just quick
-- Liaise with other people doing briefings to ensure (a) they know you're doing one; and (b) you are not overlapping in terms of content.
+- At large tournaments there should be some form of briefing covering ballots and feedback process, even if it is just quick one. Usually you will want to be the person to design and deliver this; other people less-familiar with the system may miss details.
+- Liaise with convenors and the other people doing briefings to ensure (a) they know you're doing one; and (b) you are not overlapping in terms of content.
 - See the last section of this document for notes on what can be useful to include here
-
-Wayfinding and maps
--------------------
-
-- Make a map if one doesn't exist. Ensure it's clear. Possibly add it to the tab site as the tournament description.
-- Also check that convenors have some sort of wayfinding system in place, i.e. runners or color codes or signs.
-
-Planning for the worst
-----------------------
-
-- If internet goes out, or if the online service hosted has an outage
-- Need to know how to restore a backup onto a local copy and start working with that
-- i.e. have a local copy setup already
 
 Final checks
 ------------
 
-- Pre rounds check that draw types are correct in the edit database area
-- Check with adjudication core if/when there are secret rounds and that these are correct in the edit data base area
-- Check how the draw will be displayed and managed. Is the projector good; how big does the text size need to be? How fast the scroll?
-- If you will pre-print ballots check that you've set the "return ballots to" configuration setting; even if it just says "to runners"
-- Plan how long it takes to print ballots and distribute them. For context, and average inkjet printer takes 14 minutes to print 107 ballots; a laser would be less than half that.
-- Plan a process for dealing with problematic ballots. How are they remove from the standard entry process; who manages fixing the issue, etc.
-
+- Check if the convenors have made a map that clearly outlines where the rooms are. Ensure it's clear and post it to either the tab site (ideally) or somewhere like Facebook.
+- Check that convenors have some sort of way-finding system in place, i.e. chalked directions or colour-coded signs. Check these colour codes match the names of your venues.
+- Check that the draw types are correct for each round in the tab system.
+- Check with adjudication core if/when there are secret rounds and that these are correct in the edit data base area.
+- Check how the draw will be displayed and managed. Is the projector good; how big does the text size need to be? How fast is the scroll?
+- If you will pre-print ballots check that you've set the "return ballots to" configuration setting; even if it just says "to runners".
 
 Managing Rounds
 ===============
@@ -362,11 +371,19 @@ Ongoing processes/checks
 ------------------------
 
 - Language status will affect who can break in what categories and thus what priority teams should get regarding adjudicators. Thus liaise with a language committee so that as soon as determinations are made the eligibility can be entered into tabby cat. You definitely want this in by say round 5 when the algorithm can start determining which teams are live in a way that helps allocations.
-- If teams eligible for multiple breaks are only allowed to participate in one break (eg. if there are outrounds running concurrently, etc.), ensure the language committee is also recording those preferences
+- If teams eligible for multiple breaks are only allowed to participate in one break (eg. if there are out-rounds running concurrently, etc.), ensure the language committee is also recording those preferences
 - Try and ensure the room is not devolving into mess.
 - Keep an eye on feedback; ideally with an adjudication core member present
 - Heroku metrics. should be looking for the number of "timeout errors". up dynos as a response. these could be an issue during results release
 - Backups; how to take them. Don't just take them; download them. Ideally to a dropbox or something that will spread them across multiple computers
+
+Planning for the worst
+----------------------
+
+- If internet goes out, or if the online service hosted has an outage
+- Need to know how to restore a backup onto a local copy and start working with that
+- i.e. have a local copy setup already
+
 
 Breaks and Break Rounds
 =======================
@@ -431,7 +448,7 @@ How feedback works
 ------------------
 
 - Is it online, or offline? If online did people receive links? What do they do if they have lost it?
-- Is feedback mandatory? What accountability mechanisms are there? Will you publish the shame list online or raise it inbetween rounds?
+- Is feedback mandatory? What accountability mechanisms are there? Will you publish the shame list online or raise it in between rounds?
 - Who will be submitting feedback on who? Do trainees do so?
 - Remind teams that only one of their feedbacks count; they should coordinate who is doing it.
 - What is the feedback scale? What does it correspond to? Common sources of confusion:
@@ -452,7 +469,7 @@ You should highlight, ideally with illustrated examples:
 - Which parts of the ballot *must* be filled in; people will often overlook margins, or special fields such as motion vetoes.
 - That people must specify full names; not nicknames or just-first names. Often names will be written poorly or have ambiguities (i.e. two speakers on a team called James) and having full names removes these.
 - That people should **not draw arrows to swap the order of speakers** as these are impossible to decipher. Here, and in other areas, always *cross-out* information clearly and write it again rather than using arrows or drawing over what is there.
-- That people should try and write numbers in a manner that makes them crystal clear. Put cross-bars in  7s; bases on 1's. Make 8's actually look like two circles. If people know they have poor handwriting maybe consider writing the literal words — *seventy-one* below the numbers.
+- That people should try and write numbers in a manner that makes them crystal clear. Put cross-bars in 7s; bases on 1's. Make 8's actually look like two circles. If people know they have poor handwriting maybe consider writing the literal words — *seventy-one* below the numbers.
 - That for styles that do not have a single ballot for a panel, reiterate that everyone fills in their own ballots. At Australs, if this isn't made absolutely clear someone will average their panels ballots in order to try and 'help' you.
 - That runners do not fill out ballots. In BP, remind them that only chairs should fill out ballots (i.e. it cannot be deputised to a wing). In formats with individual ballots, remind chairs to make sure their wings have actually filled out a ballot, and get them to check for errors or ambiguities.
 - That everyone is bad at math. People who think they are good at math just haven't messed up their ballot *yet*. Emphasize that people should always use their phone's calculators to check totals. At typical tournaments math errors happen multiple times a round, almost every round.
@@ -471,5 +488,6 @@ Also clearly communicate the contact details of the tab directors and get people
 Misc
 ----
 
-- Given this is probably the most visible point of the tab team, outside of being angry at adjudicators or being thanked during the closing ceremony, now is a good time to encourage people in general to consider helping with tabbing and tab-development. Emphasize that both do not necessarily require technical skills and that tabbers are (or should be) open to feedback and ideas from the wider community. Tell people to come find you and chat and/or link to the `Facebook tabbing group <https://www.facebook.com/groups/1681761898801915/?ref=bookmarks>`_.
-- If you appreciated this guide or Tabbycat we'd appreciate any mentions of `Timekept <http://timekept.com>`_ and `Debatekeeper <https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&hl=en>`_. This would also be a good point to remind people that their timekeeping apps shouldn't be making noise *unless* the person has been assigned as the time keeper by the chair.
+Given this is probably the most visible point of the tab team, outside of being angry at adjudicators or being thanked during the closing ceremony, now is a good time to encourage people in general to consider helping with tabbing and tab-development. Emphasize that both do not necessarily require technical skills and that tabbers are (or should be) open to feedback and ideas from the wider community. Tell people to come find you and chat and/or link to the `Facebook tabbing group <https://www.facebook.com/groups/1681761898801915/?ref=bookmarks>`_.
+
+If you appreciated this guide or Tabbycat we'd appreciate a slide promoting `Timekept <http://timekept.com>`_ and `Debatekeeper <https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&hl=en>`_. This would also be a good point to remind people that their timekeeping apps shouldn't be making noise *unless* they have been explicitly assigned to keep time by the chair.
