@@ -315,75 +315,47 @@ Final checks
 Managing Rounds
 ===============
 
+Once everything has been setup and everyone knows what they should do, the actual process of running each round should go smoothly. It probably wont though. The earlier sections should have laid out what the ideal process for managing data entry and allocations, so this section will instead focus on what can go wrong and what to keep an eye out for.
 
-Incoming ballots
-----------------
+Disaster scenarios
+------------------
 
-At large tournaments important to know as soon as possible rooms that are late or ballots that are missing. This means:
+There are two broad classes of disaster scenario here. The first, and more rare case is when either internet access at the venue goes out or if a web service that your tab software depends on has an outage (i.e. if Amazon Web Services or Heroku goes down). The first can at least be solved temporarily if tethering is available, but if it is not (or the latter case occurs) you may need to switch to using an offline copy of that tab by restoring from a backup if the outage is non-transient.
 
-- Checking off ballots as they come in
-- Having an app to keep track of which rooms have been collected that runners use. IE
-    - Ballot delivered
-    - Debate begun
-    - Debate ended
-    - Adjudication ended/ ballot collected
-    - Ballot returned
-    - Ballot in tab room
+Obviously, for this to work, you should be taking regular backups using whatever mechanism your tab software allows. Key times to do so are critical events such as finishing entering a round's data or finalising an adjudication allocation as these  are especially difficult to recreate. Importantly, these backups are only useful to you if you have a downloaded copy of them; ideally download to a Dropbox or some other cloud service that will spread them across multiple computers and an online service.
 
-Placeholder: talk about the critical path; how it is disrupted. i.e. rarely is rare data entering power the key hold up, rather single ballots
+Having an outage of internet access or service to the point of having to switch to an offline tab is an exceedingly rare event; but one worth planning for at large tournaments. That is to say you should have ideally have an offline copy of your tabbing software setup on your local machine, and know how to restore a backup to it if necessary.
 
-Entering data
--------------
+Backups are also useful as guards against a much more common source of error: data loss caused by user error. It is not unheard of for even experienced tab directors (or inexperienced adjudication core members) to accidentally delete an entire allocation, delete a round, or some other form of destructive action that would require a lot of work to redo. Taking backups at key points, and knowing how to restore them (to the online copy of the tab) is a useful — and occasionally essential — skill.
 
-- By the time things are say roughly half done ensure the adj core is present or on their way back so they wont hold up allocations
+Everyday tragedies
+------------------
 
+Incorrect ballots are an inevitable tragedy. Many more optimistic tab directors will imagine that these can be prevented through sufficiently detailed briefings, recurring public shamings, or fool-proof ballot designs. While these might help in cutting down the number of errors, eliminating them entirely seems to be an unachievable goal.
 
-Bad ballots
------------
+The quantity of errors will likely be greater at international tournaments and/or at tournaments that draw participants from circuits which have more than one predominant format.
 
-- Really isn't a good way to stop this. Many have tried. At best it can be mitigated and managed.
-- This will be worse at international tournaments, and especially in circuits where there is more than one predominant format
-- Shaming and binning, while fun, probably isn't effective
-- Changing or adding middle names of adjudicators though is a good way to remind them, and other people (it shows on the draw/pre-printed ballots but will be truncated in the allocation UI).
+While debaters as a whole display astonishing levels of innovation in discovering new ways to mess up a ballot, there are a couple of broad cases that you should look out for an prepare people to deal with:
 
-    - i.e. John ‘Can't Add' Smith
-    - i.e. Jane ‘Bad Handwriting' Smith
-    - Alternately, an emoji code; John 😡 Smith
+1. Not adding up score correctly. Pretty much everyone who does this will note that this is the first time that it has ever happened to them.
+2. Not entering in some information. Most common are total scores, the nominating winner, or the margin. Not including an entire team's scores or speaker names are not uncommon.
+3. Scores that are outside the range
+4. Low-point wins, or tied-point wins. Typically occurs in conjunction with (1)
+5. Poor handwriting rendering numbers illegible. While one could 'guess' whether a number is infact a 6 or a 5 based on the score total, but doing so assumes that the person hasn't also committed (1).
+6. 'Correcting' information in an ambiguous way. For example using arrows to swap a speaker's order (which is typically circular/ambiguous) or drawing numbers over other numbers in a way that makes it unclear which is the original and which is the replacement.
+7. Ballots just going entirely missing because either a runner missed the room, the  chair forgot to return it, or the chair just left it in the room.
 
-- Australs mess-ups included:
-    - Incorrect math
-    - Just not adding properly
-    - Not including reply scores in the totals
-    - Changing individual scores but not updating the totals/margins
-    - Ti.e. ballots (ie. Their written margin indicated a winner but their speaker scores - summed to equal each other)
-    - Illegible speaker scores/scores that had numbers traced over them
-    - Forgetting motion vetoes (not a critical problem, but still annoying)
-    - Scoring outside the range (esp. For reply scores)
-    - Missing totals/winners/margins
+Ongoing checks
+--------------
 
+You will have a decent amount of downtime during rounds when debates are happening. A couple of things its worth keeping an eye on during that time:
 
-Allocating adjudicators
------------------------
-
-- Often need to remind adjs to check gender and region as they forget it can do it
-
-Ongoing processes/checks
-------------------------
-
-- Language status will affect who can break in what categories and thus what priority teams should get regarding adjudicators. Thus liaise with a language committee so that as soon as determinations are made the eligibility can be entered into tabby cat. You definitely want this in by say round 5 when the algorithm can start determining which teams are live in a way that helps allocations.
-- If teams eligible for multiple breaks are only allowed to participate in one break (eg. if there are out-rounds running concurrently, etc.), ensure the language committee is also recording those preferences
-- Try and ensure the room is not devolving into mess.
-- Keep an eye on feedback; ideally with an adjudication core member present
-- Heroku metrics. should be looking for the number of "timeout errors". up dynos as a response. these could be an issue during results release
-- Backups; how to take them. Don't just take them; download them. Ideally to a dropbox or something that will spread them across multiple computers
-
-Planning for the worst
-----------------------
-
-- If internet goes out, or if the online service hosted has an outage
-- Need to know how to restore a backup onto a local copy and start working with that
-- i.e. have a local copy setup already
-
+- Ensuring your backups have been taken and downloaded.
+- Ensuring the tab room isn't devolving into mess.
+- If hosting Tabbycat on Heroku keep an eye on the metrics section of the dashboard area, noting if there are 'timeout errors' and what the average response times are. Adding more dynos should help with both.
+- If you can be bothered (and if no adjudication core member is doing so) reviewing feedback for critical issues (i.e. comments highlighting severe issues, or chairs getting very low scores) is a good way to be useful.
+- Chasing up the language committee (if one exists for this tournament) to confirm which teams are in which category and what their break preferences are (if multiple breaks are not allowed). You want to have this information confirmed as soon as possible as it becomes of critical value to allocations once the draw starts segmenting into live/dead rooms.
+- Reviewing how efficiently things are running and whether there are any bottlenecks that can be better addressed in the next round. It's generally a good idea to (on a whiteboard or a spreadsheet) keep track of how long each stage of a round is taking (running, data-entry, allocation) and what (if anything) is causing delays.
 
 Breaks and Break Rounds
 =======================
