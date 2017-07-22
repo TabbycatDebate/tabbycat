@@ -104,9 +104,9 @@ export default {
       var baseCSS = "glyphicon vue-sort-key "
       if (this.sortKey === key) {
         if (this.sortOrder === "asc") {
-          return baseCSS + "text-success glyphicon-sort-by-attributes-alt"
+          return baseCSS + "vue-sort-active glyphicon-sort-by-attributes"
         } else {
-          return baseCSS + "text-success glyphicon-sort-by-attributes"
+          return baseCSS + "vue-sort-active glyphicon-sort-by-attributes-alt"
         }
       }
       return baseCSS + "text-muted glyphicon-sort"

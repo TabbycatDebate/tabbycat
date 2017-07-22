@@ -39,7 +39,7 @@
            data-toggle="tooltip" :title="'The ' + position.full + ' team'">
         <div class="cell-padding-helper">
           <span>{{ position.abbr }}</span>
-          <span :class="sortClasses('position')"></span>
+          <span :class="sortClasses(position.full)"></span>
         </div>
       </div>
     </slot>

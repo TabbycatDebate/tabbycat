@@ -53,12 +53,24 @@ thead,
 
   &:hover,
   &:hover .glyphicon {
-    color: $brand-success;
+    @extend .text-primary;
     cursor: pointer;
   }
 
   .vue-sort-key {
-    margin-left: -2px; // There is always a space after the key; reduce this gap
+    display: none;
+    margin-left: -1px;
+  }
+
+  &:hover {
+    .vue-sort-key {
+      display: inline-block; // Hide sorting elements except for hovers
+    }
+  }
+
+  .vue-sort-active.vue-sort-key {
+    display: inline-block; // Override hiding when active
+    @extend .text-primary;
   }
 }
 

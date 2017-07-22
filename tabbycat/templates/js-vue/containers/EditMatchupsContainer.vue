@@ -20,7 +20,7 @@
                v-for="position in roundInfo.positions" @click="updateSorting(position.full)"
                data-toggle="tooltip" :title="'The ' + position.full + ' team'">
             <span>{{ position.abbr }}</span>
-            <span :class="sortClasses(position)"></span>
+            <span :class="sortClasses(position.full)"></span>
           </div>
         </template>
       </draw-header>
