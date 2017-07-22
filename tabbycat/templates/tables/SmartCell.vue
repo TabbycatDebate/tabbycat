@@ -8,9 +8,7 @@
     <!-- Icons or Emoji -->
     <span v-if="cellData['icon']" class="glyphicon" :class="cellData['icon']">
     </span>
-    <span v-if="cellData['emoji']" class="emoji" >
-      {{ cellData["emoji"] }}
-    </span>
+    <span v-if="cellData['emoji']" class="emoji" >{{ cellData["emoji"] }}</span>
 
     <!-- Tooltip/Popovers Hovers Wrapper -->
     <span @mouseover="checkForPopoverOrTooltip"

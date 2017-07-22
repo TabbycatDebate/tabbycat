@@ -17,8 +17,9 @@
                    :sort-key="sortKey" :sort-order="sortOrder">
         <template slot="hteams">
           <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
-               v-for="position in roundInfo.positions" @click="updateSorting(position)">
-            <span>{{ position }}</span>
+               v-for="position in roundInfo.positions" @click="updateSorting(position)"
+               data-toggle="tooltip" :title="'The ' + position.full + ' team'">
+            <span>{{ position.abbr }}</span>
             <span :class="sortClasses(position)"></span>
           </div>
         </template>
@@ -27,11 +28,11 @@
               :debate="debate" :key="debate.id" :round-info="roundInfo">
         <template v-for="position in roundInfo.positions">
           <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
-               :slot="'s-' + position">
+               :slot="'s-' + position.full">
             <droppable-generic :assignment-id="debate.id"
-                               :assignment-position="position" :locked="debate.locked">
-              <draggable-team v-if="debate.teams[position]"
-                              :team="debate.teams[position]"
+                               :assignment-position="position.full" :locked="debate.locked">
+              <draggable-team v-if="debate.teams[position.full]"
+                              :team="debate.teams[position.full]"
                               :debate-id="debate.id" :locked="debate.locked"></draggable-team>
             </droppable-generic>
           </div>

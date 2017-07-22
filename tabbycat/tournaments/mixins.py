@@ -344,18 +344,25 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     def get_round_info(self):
         round = self.get_round()
-        tournament = self.get_tournament()
+        t = self.get_tournament()
         adjudicator_positions = ["C"]
-        if not tournament.pref('no_panellist_position'):
+        if not t.pref('no_panellist_position'):
             adjudicator_positions += "P"
-        if not tournament.pref('no_trainee_position'):
+        if not t.pref('no_trainee_position'):
             adjudicator_positions += "T"
 
+        if t.pref('teams_in_debate') == "bp":
+            codes = ['og', 'oo', 'cg', 'co']
+        else:
+            codes = ['aff', 'neg']
+
+        team_positions = [{'full': get_side_name(t, c, 'full'),
+                           'abbr': get_side_name(t, c, 'abbr')} for c in codes]
+
         round_info = {
-            'positions': [get_side_name(tournament, "aff", "full"),
-                          get_side_name(tournament, "neg", "full")],
+            'positions': team_positions,
             'adjudicatorPositions': adjudicator_positions,
-            'adjudicatorDoubling': tournament.pref('duplicate_adjs'),
+            'adjudicatorDoubling': t.pref('duplicate_adjs'),
             'backUrl': reverse_round('draw', round),
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
             'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,
