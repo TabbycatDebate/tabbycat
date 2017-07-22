@@ -6,13 +6,13 @@ Change Log
 --------------------
 
 - Overhauled the adjudicator allocation, venue allocation, and matchups editing pages, including:
-    - Upgraded to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping.
+    - Upgraded to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping
     - When dragging/dropping, the changed elements now 'lock' in place to indicate that their saving is in-progress
     - Added conflicts and recent histories to the slideovers shown for teams/adjudicators
-    - Added 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
+    - Added 'ranking' toggles to visibility highlight adjudicator strengths and more easily identify unbalanced panels
     - Each interface's table is now sortable by a debate's importance, bracket, liveness, etc
-- Added a new "Tournament Logistics" guide to the documentation that outlines some general best practices for tabbing tournaments. Thanks to Viran Weerasekera, Valerie Tierney, and Vail Bromberger for contributing to this document.
-- Add (basic) support for the Canadian Parliamentary format by allowing for consensus ballots.
+- Added a new "Tournament Logistics" guide to the documentation that outlines some general best practices for tabbing tournaments. Thanks to Viran Weerasekera, Valerie Tierney, Molly Dale, and Vail Bromberger for contributing to this document.
+- Add (basic) support for the Canadian Parliamentary format by allowing for consensus ballots and providing a preset. However note that only some of the common draw rules are supported (check our documentation for more information).
 - Added an ESL/EFL tab release option and status field
 - Added a chi-squared test to measure motion balance in the motion standings/balance. Thanks to Viran Weerasekera for contributing this
 - The Auto Allocate function for adjudicators will now also allocate trainees to solo-chaired debates
