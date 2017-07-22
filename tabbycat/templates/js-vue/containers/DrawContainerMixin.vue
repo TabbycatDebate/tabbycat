@@ -119,9 +119,17 @@ export default {
           typeof row[this.sortKey] === 'number') {
         return row[this.sortKey]
       } else if (this.sortKey === 'venue') {
-        return row.venue.name
+        if (!_.isNull(row.venue)) {
+          return row.venue.name
+        } else {
+          return "" // Venues can be null
+        }
       } else if (_.includes(["affirmative", "negative"], this.sortKey)) {
-        return row.teams[this.sortKey].short_name
+        if (!_.isUndefined(row.teams[this.sortKey])) {
+          return row.teams[this.sortKey].short_name
+        } else {
+          return ""  // Teams in a position can be null
+        }
       }
       console.log('Couldnt find sorting property')
     }
