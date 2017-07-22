@@ -52,6 +52,55 @@ class AustralsPreferences(PreferencesPreset):
     ui_options__show_efl                       = True
 
 
+class AustralianEastersPreferences(AustralsPreferences):
+    name         = "Australian Easters Rules"
+    show_in_list = True
+    description  = ("3 vs 3 without replies, set motions, novices, intermediate "
+        "bubbles, one-up-one-down. Compliant with AIDA rules.")
+
+    # Scoring
+    scoring__score_min                         = 70.0
+    scoring__score_max                         = 80.0
+    scoring__maximum_margin                    = 15.0
+    # Debate Rules
+    debate_rules__reply_scores_enabled         = False
+    debate_rules__motion_vetoes_enabled        = True
+    data_entry__enable_motions                 = True
+    # UI Options
+    ui_options__show_novices                   = True
+
+
+class BritishParliamentaryPreferences(PreferencesPreset):
+    name         = "British Parliamentary Rules"
+    description  = ("2 vs 2 vs 2 vs 2. Compliant with WUDC rules.")
+    show_in_list = True
+
+    scoring__score_min                         = 50.0
+    scoring__score_max                         = 100.0
+    scoring__maximum_margin                    = 0.0
+    # Debate Rules
+    debate_rules__teams_in_debate              = 'bp'
+    debate_rules__ballots_per_debate           = 'per-debate'
+    debate_rules__side_names                   = 'gov-opp'
+    debate_rules__reply_scores_enabled         = False
+    debate_rules__motion_vetoes_enabled        = False
+    data_entry__enable_motions                 = False
+    # Standings
+    standings__team_standings_precedence       = ['points', 'speaks_sum']
+    # Draws
+    draw_rules__avoid_same_institution         = False # Not needed?
+    draw_rules__avoid_team_history             = False  # Not needed?
+    draw_rules__draw_odd_bracket               = 'intermediate_bubble_up_down' # Not needed?
+    draw_rules__draw_side_allocations          = 'balance' # Not needed?
+    draw_rules__draw_pairing_method            = 'slide' # Not needed?
+    draw_rules__draw_avoid_conflicts           = 'off' # Not needed?
+    draw_rules__bp_pullup_distribution         = 'anywhere'
+    draw_rules__bp_position_cost               = 'entropy'
+    draw_rules__bp_renyi_order                 = 1.0
+    draw_rules__bp_position_cost_exponent      = 4.0
+    draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
+
+
 class CanadianParliamentaryPreferences(PreferencesPreset):
     name         = "Canadian Parliamentary Rules"
     show_in_list = True
@@ -74,24 +123,6 @@ class CanadianParliamentaryPreferences(PreferencesPreset):
     draw_rules__draw_side_allocations          = 'balance'
     draw_rules__draw_pairing_method            = 'fold' # TBC
     draw_rules__draw_avoid_conflicts           = 'off'
-
-
-class AustralianEastersPreferences(AustralsPreferences):
-    name         = "Australian Easters Rules"
-    show_in_list = True
-    description  = ("3 vs 3 without replies, set motions, novices, intermediate "
-        "bubbles, one-up-one-down. Compliant with AIDA rules.")
-
-    # Scoring
-    scoring__score_min                         = 70.0
-    scoring__score_max                         = 80.0
-    scoring__maximum_margin                    = 15.0
-    # Debate Rules
-    debate_rules__reply_scores_enabled         = False
-    debate_rules__motion_vetoes_enabled        = True
-    data_entry__enable_motions                 = True
-    # UI Options
-    ui_options__show_novices                   = True
 
 
 class NZEastersPreferences(AustralsPreferences):
