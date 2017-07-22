@@ -187,10 +187,9 @@ class BaseFeedbackForm(forms.Form):
         af.save()
 
         for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
-            if self.cleaned_data[question.reference] is not None:
-                answer = question.answer_type_class(
-                    feedback=af, question=question, answer=self.cleaned_data[question.reference])
-                answer.save()
+            response = self.cleaned_data[question.reference]
+            if response is not None and response != "":
+                question.answer_type_class(feedback=af, question=question, answer=response).save()
 
         return af
 

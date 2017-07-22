@@ -32,6 +32,12 @@ supporting many custom variations of the above formats too.
    use/running-a-tournament
    use/finishing-a-tournament
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Tabbing Guide
+
+   guide/tournament-logistics
+
 .. _feature-docs:
 
 .. toctree::

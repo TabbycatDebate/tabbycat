@@ -4,6 +4,8 @@ from django import forms
 from draw.models import TeamSideAllocation
 from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict
 from adjfeedback.models import AdjudicatorTestScoreHistory
+from breakqual.models import BreakCategory
+from tournaments.models import Tournament
 from venues.admin import VenueConstraintInline
 
 from .emoji import pick_unused_emoji
@@ -86,9 +88,15 @@ class TeamAdmin(admin.ModelAdmin):
             'institution', 'division')
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
-        if db_field.name == 'emoji' and kwargs.get("initial", None) is None:
+        if db_field.name == 'emoji' and kwargs.get("initial") is None:
             kwargs["initial"] = pick_unused_emoji()
         return super().formfield_for_choice_field(db_field, request, **kwargs)
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if (db_field.name == 'break_categories' and kwargs.get("initial") is None and
+                Tournament.objects.count() == 1):
+            kwargs["initial"] = BreakCategory.objects.filter(is_general=True)
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
 
 admin.site.register(Team, TeamAdmin)
 
