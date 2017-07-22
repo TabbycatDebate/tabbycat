@@ -25,10 +25,9 @@ export default {
       unallocatedItems: this.initialUnallocatedItems,
       headers: [
         {'key':'bracket'},{'key':'liveness'},{'key':'importance'},
-        {'key':'venue'},
-        {'key':'affirmative'},{'key':'negative'},
-        {'key':'og'},{'key':'oo'},{'key':'cg'},{'key':'co'},
-        // Team positions
+        {'key':'venue'},{'key':'affirmative'},{'key':'negative'},
+        {'key':'opening government'},{'key':'opening opposition'},
+        {'key':'closing government'},{'key':'closing opposition'},
       ]
     }
   },
@@ -90,7 +89,7 @@ export default {
       return _.keyBy(this.unallocatedItems, 'id')
     },
     positions: function() {
-      return this.debates[0].positions // Shortcut function
+      return _.map(this.roundInfo.positions, 'full') // Shortcut function
     }
   },
   methods: {
@@ -124,7 +123,7 @@ export default {
         } else {
           return "" // Venues can be null
         }
-      } else if (_.includes(["affirmative", "negative"], this.sortKey)) {
+      } else if (_.includes(this.positions, this.sortKey)) {
         if (!_.isUndefined(row.teams[this.sortKey])) {
           return row.teams[this.sortKey].short_name
         } else {

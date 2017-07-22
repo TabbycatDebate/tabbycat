@@ -17,7 +17,7 @@
                    :sort-key="sortKey" :sort-order="sortOrder">
         <template slot="hteams">
           <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
-               v-for="position in roundInfo.positions" @click="updateSorting(position)"
+               v-for="position in roundInfo.positions" @click="updateSorting(position.full)"
                data-toggle="tooltip" :title="'The ' + position.full + ' team'">
             <span>{{ position.abbr }}</span>
             <span :class="sortClasses(position)"></span>

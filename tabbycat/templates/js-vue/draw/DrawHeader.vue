@@ -35,7 +35,7 @@
 
     <slot name="hteams">
       <div class="vue-sortable thead flex-cell flex-6 draw-team-cell"
-           v-for="position in positions" @click="resort(position)"
+           v-for="position in positions" @click="resort(position.full)"
            data-toggle="tooltip" :title="'The ' + position.full + ' team'">
         <div class="cell-padding-helper">
           <span>{{ position.abbr }}</span>
