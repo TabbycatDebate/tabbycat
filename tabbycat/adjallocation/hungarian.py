@@ -170,8 +170,7 @@ class HungarianAllocator(Allocator):
             logger.info("allocating to %s: %s (c), %s", aa.debate, aa.chair, ", ".join([str(p) for p in aa.panellists]))
 
         # Allocate trainees, one per solo debate (leave the rest unallocated)
-
-        if len(trainees) > 0:
+        if len(trainees) > 0 and len(solo_debates) > 0:
             allocation_by_debate = {aa.debate: aa for aa in alloc}
 
             logger.info("costing trainees")
