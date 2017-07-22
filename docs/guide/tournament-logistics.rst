@@ -4,16 +4,16 @@
 Tournament Logistics
 ====================
 
-Unlike the rest of our documentation this section does not concern particular features or technical concerns with Tabbycat itself. Instead it is an attempt to outline the logistics of tab direction and aims to be of general relevance for people running medium and large tournaments. At present it is organised by the various ‘stages' of tabbing a tournament, and most of the content takes the form of check-lists or comments designed to highlight and provide guidance on common issues. To reduce clutter in the rest of the documentation it is formatted as a single page; using the sub-sections in the sidebar is recommended for navigating across sections.
+Unlike the rest of our documentation, this section does not deal with particular features or technical concerns with Tabbycat itself. Instead it is an attempt to outline the logistics of tab direction and aims to be of general relevance for people running medium and large tournaments. At present, it is organised by the various ‘stages' of tabbing a tournament, and most of the content takes the form of check-lists or comments designed to highlight and provide guidance on common issues. To reduce clutter in the rest of the documentation it is formatted as a single page; using the sub-sections in the sidebar is recommended for navigating across sections.
 
-While it aims for general relevance, we should note that it is relatively opinionated and mostly written from the perspective of people whose primary experience is tabbing at Australasian tournaments using Tabbycat. That said we welcome feedback and additions that can account for different format and regional considerations. In the future, if the guide becomes more general and more extensive, it could be spun off into a separate project.
+Whilst it aims for general relevance, we should note that it is relatively opinionated and mostly written from the perspective of people whose primary experience is tabbing at Australasian tournaments using Tabbycat. That said, we welcome feedback and additions that can account for different format and regional considerations. In the future, if the guide becomes more general and more extensive, it could be spun off into a separate project.
 
 .. note:: As with the rest of our documentation, this page is open-source and we welcome :ref:`feedback and contributions <contributing>`.
 
 Planning and Preparation
 ========================
 
-This section aims to outline concerns that occur in the months before the tournament: after you have agreed to help with tabbing and while the org-com and adj-core are deciding how they want to run key processes such as registration and feedback. It is organised in terms of who you should coordinate with to in order to plan for a well-tabbed tournament along with some general concerns.
+This section aims to outline concerns that occur in the months before the tournament: after you have agreed to help with tabbing and while the org-com and adj-core are deciding how they want to run key processes such as registration and feedback. It is organised in terms of who you should coordinate with in order to plan for a well-tabbed tournament along with some general concerns.
 
 General
 -------
@@ -29,7 +29,7 @@ It might sound obvious but it will pay to have a very thorough conversation abou
 - Whether internet access will be available and whether participants can be presumed to have smart phones. This has an obvious impact on how online feedback, ballots, and draw release is done. Note that Eduroam is not necessarily a reliable guarantee of access; many universities can't access it or set up is often something that is difficult or requires students do so while at their home institution.
 - What kind of room is the tab room going to be? Is it possible to optimize its placement when the bookings for rooms are made? Key details include: How large is it?  Does it have a sufficient amount of desk space (for data entry)? Does it have a good projector (for allocations)?
 - What kind of printers will be available? Can the tournament buy/borrow one? This is obviously a key consideration for pre-printed ballots. Also try and ensure there are back-up printing options if possible; clearly stipulate your need for ink and paper; and try and opt for a black/white laserjet, over an inkjet, if possible.
-- What kind of volunteers will be available? How many, and what is their experience level? As a very broad recommendation, you probably want around 1 volunteers for every 10 rooms, assuming volunteers are performing a dual role as data-enterers and ballot-collectors.
+- What kind of volunteers will be available? How many, and what is their experience level? As a very broad recommendation, you probably want around 1 volunteer for every 10 rooms, assuming volunteers are performing a dual role as data-enterers and ballot-collectors.
 - Will the tournament make a donation to Tabbycat or whoever maintains the tabbing software you are using? Note that this is required if the tournament is generating a profit for the host institution or it's organisers. Accounting officers should also be aware that there will be some costs associated with hosting the tab. You should also ensure that people helping with the tab are fairly compensated for their flights, registration, etc and that any volunteers are invited along to socials and/or given some other recompense.
 - Will Swing teams be available? You should plan to have one more than you need. For example, with 79 teams, you should have both an 80th swing team to fill in the draw, and the option to easily assemble an 81st swing team in case a team goes AWOL.
 - Ensure that food will be brought to tab room. Otherwise you will starve and the adjudication core will swan off to lunch.
@@ -57,7 +57,7 @@ Having effective registration systems and processes is one of the most important
 
 - Independent adjudicators and the adjudication core should follow normal registration procedures. Having them not go through the normal process makes it easy to overlook their data or not get a complete picture of it. For example adjudication core members might forget to nominate conflicts, or neglect to provide their previous institutions.
 - You should confirm how the registration team plans to manage check-in in particular. Check-in is when issues with registration data come to light and it is vital that these changes are noted and recorded. Some form of validation of registration data *must* occur at check-in — in particular all adjudicators should be (individually) verified as present and all members of a team should confirm their presence along with team name/number and their speakers.
-- After checkin you need to have a definitive list of who is physically present at the tournament so you can run a first-round draw with confidence. Registration must know this and have processes in place for recording people individually as they arrive, and for that data to filter back to you.
+- After check-in you need to have a definitive list of who is physically present at the tournament so you can run a first-round draw with confidence. Registration must know this and have processes in place for recording people individually as they arrive, and for that data to filter back to you.
 - If you are using Tabbycat's secret links for feedback or ballots these are best distributed at check-in. Rego should know about this, prepare for it, and be provided with the pdfs to print and distribute.
 
 Adjudication cores
@@ -66,7 +66,7 @@ Adjudication cores
 CA/DCA's will often leave tab-relevant decisions until the days prior to the first round or whenever it is that they can meet with the tab team in person. However this often wastes critical time and forces rushed decisions. Many considerations can instead be raised and discussed prior to the tournament.
 
 - If there is a group chat for the adjudication core you probably want to be part of it; even if you don't contribute much. There are lots of small things that end up being discussed without consideration of how they will affect tab issues. It is also a chance to get to know — ahead of time — the people you will be working with closely over the tournament.
-- How to managing the adjudicator feedback process is also something that benefits from foresight and pre-planning, rather than being decided on the ground. Key considerations are:
+- Managing the adjudicator feedback process is also something that benefits from foresight and pre-planning, rather than being decided on the ground. Key considerations are:
 
     - What is the score scale going to be? What do each of those numbers represent? How will this be communicated to participants?
     - How much weight does a test score have over the course of the tournament? By Round 3, or by Round 8, what proportion of an adjudicator's score is derived from their test? Etc.
@@ -76,7 +76,7 @@ CA/DCA's will often leave tab-relevant decisions until the days prior to the fir
     - How will feedback be monitored, and how will this information feed back into the scores and allocations? At large tournaments it is not unusual for an adjudication core member to sit off each round to review and process feedback — there isn't really a good stretch of time to do it otherwise. However there are communication issues to manage here (adj-core members each only have incomplete information of feedback). It's also worth considering whether adj-cores will manually raise/lower test marks in order to adjust adjudicator's ratings to where they think they should be.
 
 - It helps to have the adjudication core establish policies for somewhat common but niche problems. This way you know what to do when these cases arise and you can exclude/include a ballot quickly and get on with the next round. The most common issue here is what to do when an adjudicator can't give an adjudication because they are missing or incapacitated during the debate (i.e. drunk or visibly sleeping).
-- If possible it's nice to know in advance when the tab will be released (i.e. on the last night; the day after; etc) as this often gets left to the last minute to be dedicated. Also the possibility of whether people can redact themselves from tabs should be raised, as that might be useful to inform participants of during rego/briefings. Some adjudication cores might also want to limit speaker tabs to only a certain number of places.
+- If possible it's nice to know in advance when the tab will be released (i.e. on the last night; the day after; etc) as this often gets left to the last minute to be decided. Also the possibility of whether people can redact themselves from tabs should be raised, as that might be useful to inform participants of during rego/briefings. Some adjudication cores might also want to limit speaker tabs to only a certain number of places.
 - How to handle conflict collection; particularly if teams can specify conflicts (see below section).
 
 Conflicts (registration/equity/adjudication core)
@@ -89,7 +89,7 @@ Conflicts (registration/equity/adjudication core)
     - Not allow teams to nominate conflicts during registration; but allow them to approach equity teams before, or during, the tournament to identify the conflict. Equity can then raise the issue with the tab team and adjudication core and it can be added to the tab.
     - Allow teams to nominate conflicts during registration; but have the adjudication core review the data for 'tactical' conflicts. These are usually relatively easily identified, although can be overlooked if the adjudication core does not know the  participants and/or if a non-blatant quantity are added. The adjudication core can then override the conflict, discuss it with the teams, or raise it with equity. However, if going down this route, the tab team should discuss with the adjudication core how to manage this process well-ahead of the tournament, and ensure they actually do review the conflicts prior to the first round — otherwise it will become a derailing distraction during critical time periods such as allocations.
 
-- As mentioned in the previous section, the adjudication team (possibly with equity) should provide some degree of guidance about what kinds of debating-related conflicts should be provided. Obviously people should be able to self-define what constitutes a conflict, but there are circumstances where they are overly cautious and can be reassured that it is not necessary. The opposite problem may occur also, where many people may have a very high bar for what defines a conflict which could lead to perceptions of bias from other participants.
+- As mentioned in the previous section, the adjudication core (possibly with equity) should provide some degree of guidance about what kinds of debating-related conflicts should be provided. Obviously people should be able to self-define what constitutes a conflict, but there are circumstances where they are overly cautious and can be reassured that it is not necessary. The opposite problem may occur also, where many people may have a very high bar for what defines a conflict which could lead to perceptions of bias from other participants.
 - In poorly-structured conflict forms, identifying exactly who is doing the conflicting and who is being conflicted is a nightmare. You want to structure the questions to minimise this ambiguity. A form should definitely ask:
 
     - Are you (the conflict-specifier) a team or an adjudicator?
@@ -101,8 +101,7 @@ Conflicts (registration/equity/adjudication core)
     - For adjudicators: have previously attended any other institutions; or have other reasons to conflict entire institutions? If so, specify those institutions.
 
 - Generally, it is preferable that each form nominates a single conflict, and people are asked to re-submit for each conflict they are adding.
-- Adj-core members will often not nominate their own conflicts; presuming that they will notice and correct them during allocations. They often forget or overlook this. Their
-conflicts should be entered as per normal.
+- Adjudication core members will often not nominate their own conflicts; presuming that they will notice and correct them during allocations. They often forget or overlook this. Their conflicts should be entered as per normal.
 
 
 Online/offline ballots and feedback
@@ -116,14 +115,14 @@ Scheduling (convenors / venue organisers)
 
 One of the easiest ways to have things run late is to set an unrealistic schedule. As much as possible the round/lunch/etc timing should conform to an even distribution of how long it takes to process results and create a draw/allocation; you don't want to be in a position where particular rounds have much too much or too little time to spend on allocations and other crucial tasks. This is something that should definitely be working on in conjunction with convenors and other critical parties before they lock down timing details with food suppliers or the venue hosts.
 
-Note also that in most circumstances it is almost always preferable to create a draw and allocation for the first day of the next round at the night before. This time should be built in to the schedule of the previous day, and raised with the adjudication core so they don't expect to be able to immediately depart after the last day's rounds complete.
+Note also that in most circumstances it is preferable to create a draw and allocation for the first day of the next round at the night before. This time should be built in to the schedule of the previous day, and raised with the adjudication core so they don't expect to be able to immediately depart after the day's rounds complete.
 
 Below is the time taken within each round at Australs 2017. For context, this was neither a particular efficiently or inefficiently tabbed tournament. Notable details:
 
 - The tournament was ~40 rooms each round and had access to 3-6 runners and data enterers. Paper ballots were pre-printed and distributed by runners to rooms prior to the debates starting, then collected some time after the 15m deliberation period. Feedback was submitted online.
-- The adjudication core were neither particular slow or fast in allocating adjudicators compared to other adjudication cores in an Australs context where allocations are first automatically generated then extensively tweaked.
+- The adjudication core were neither particular slow nor fast in allocating adjudicators compared to other adjudication cores in an Australs context, where allocations are first automatically generated and then extensively tweaked.
 - There were no serious issues that delayed the tabbing of any particular round beyond the expected issues of last-minute draw changes, adjudicators producing incomprehensible ballots, etc.
-- While the tab ran relatively quickly there were delays (or periods where allocations could take longer than typical) because of mismatches between the planned schedule and the optimal schedule from a tab perspective.
+- Whilst the tab ran relatively quickly, there were delays (or periods where allocations could take longer than typical) because of mismatches between the planned schedule and the optimal schedule from a tab perspective.
 - A round at Australs takes around 2 hours from a debater's perspective: 30m of prep, ~60m for a debate, ~15m for deliberation, and ~15m for the oral adjudication and feedback.
 - We didn't note the timing of data-entry in Round 8 as there was no time pressure. After data entry was finished, finalising and double-checking the breaks took through to ~7-8pm.
 
@@ -156,21 +155,21 @@ Importing data: workflow
 - First check with registration people if their data is complete, and if not who is missing. If it's only a few people it's viable (for tab purposes) to use place-holders for them, as long as you remember to follow up and edit their data manually later.
 - Familiarise yourself with the different methods for importing data into Tabbycat. If using the spreadsheet importer, know how to operate it, and how to transfer data from a local to Heroku-hosted copy. That said, importing using the visual importer is viable for larger tournaments if you are not comfortable with the command line.
 
-    - Typically the process using the spreadsheet importer is to set-up the CSV files then try to import them into a local copy of Tabbycat database and verify it works.
+    - Typically, the process using the spreadsheet importer is to set-up the CSV files then try to import them into a local copy of Tabbycat database and verify it works.
     - It will likely take several tries for it to work due to minor mismatches in speaker/institution names etc. The importer usually will spit out errors when something is malformed/mis-formatted. Usually the process is to then reimport until everything passes without errors.
-    - Once the import has passed you can then push database to live. Generally from then on any changes will be done to the live tab unless there are huge amounts of problems requiring a re-import.
+    - Once the import has passed you can then push database to live. From then on any changes will generally be done to the live tab, unless there are huge amounts of problems requiring a re-import.
 
 Importing data: regions/societies
 ---------------------------------
 
-- Societies will often have special names that they like to use in draws (that are not the same as their institution's name or acronym. These can be gathered from institutional reps or from prior tabs. When in doubt err on the colloquial / most recognisable name; particularly for formats where teams need to find each other prior to the debate.
+- Societies will often have special names that they like to use in draws (that are not the same as their institution's name or acronym). These can be gathered from institutional reps or from prior tabs. When in doubt err on the colloquial / most recognisable name; particularly for formats where teams need to find each other prior to the debate.
 - Determine the types of regions that will be assigned to institutions with adjudication core. This has impacts for the kinds of representation/diversity the tab can show during allocations.
 
 Importing data: participants
 ----------------------------
 
 - Check you have emails/phone numbers included in the imported sheets; there are useful to have on hand later for either emailing out feedback links or following up errant adjudicators.
-- Often the easiest way to prepare the sheets to import is to create new tabs in the registration data sheet, and use referencing to automatically order and arrange their data into the format Tabbycat wants.
+- Often, the easiest way to prepare the sheets to import is to create new tabs in the registration data sheet, and use referencing to automatically order and arrange their data into the format Tabbycat wants.
 - Often some adjudicators, typically local independents, may not be available for all rounds. Try and find out who this affects and when; once data has been imported you can pre-check these adjudicators in and out of rounds.
 - Remember that the swing team(s) also need to be imported.
 
@@ -221,7 +220,7 @@ This is typically the first order of business, as all future pre-round setup tas
 - Non-essential, but often useful to have items:
 
     - Whatever dongles/adapters you need to connect your laptop to the projectors, both in the tab room and in the briefing room.
-    - Post-it notes aren't a great way to temporarily mark ballots with information; typically used to indicate ballots that need correcting.
+    - Post-it notes are a great way to temporarily mark ballots with information; typically used to indicate ballots that need correcting.
     - You'll often need to make impromptu signs; sticky tape and/or blu-tack are good here
     - Spare pens for the people doing data entry to use
     - Trash bags for collecting rubbish as it accumulates
