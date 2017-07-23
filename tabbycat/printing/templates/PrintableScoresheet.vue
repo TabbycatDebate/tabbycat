@@ -1,39 +1,41 @@
 <template>
   <div class="db-flex-column db-flex-item-1">
 
-    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
+    <section class="db-margins-m db-bordered db-flex-column db-flex-item-1"
              v-if="ballot.panel && ballot.panel.length > 1">
+
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
         <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
-          Your panellists are
-          <span v-for="(adj, i) in ballotsExcludingSelf">
-            <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ adj.name }}</strong>
-            <span v-if="adj.position === 'c'">(Chair, {{ adj.institution }})</span>
-            <span v-if="adj.position === 'o'">(Solo Chair, {{ adj.institution }})</span>
-            <span v-if="adj.position === 'p'">(Panellist, {{ adj.institution }})</span>
-            <span v-if="adj.position === 't'">(Trainee, {{ adj.institution }})</span>
+          The other adjudicators are
+          <span v-for="(da, i) in panellistsExcludingSelf">
+            <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ da.adjudicator.name }}</strong>
+            <span v-if="da.position === 'C'">
+              (Chair, {{ da.adjudicator.institution.code }})
+            </span>
+            <span v-if="da.position === 'O'">
+              (Solo Chair, {{ da.adjudicator.institution.code }})
+            </span>
+            <span v-if="da.position === 'P'">
+              (Panellist, {{ da.adjudicator.institution.code }})
+            </span>
+            <span v-if="da.position === 'T'">
+              (Trainee, {{ da.adjudicator.institution.code }})
+            </span>
+          </span>
+          <span v-if="!roundInfo.hasMotions">
+            . The motion is <em>{{ roundInfo.motions[0].text }}.</em>
           </span>
         </div>
       </div>
+
     </section>
 
     <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
-             v-if="roundInfo.hasMotions && !roundInfo.hasVetoes">
-      <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
-        <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
-          Motion:
-        </div>
-        <div class="db-flex-item db-align-vertical-center">
-          <em>{{ motions[0].text }}</em>
-        </div>
-      </div>
-    </section>
+             v-if="roundInfo.hasMotions">
 
-    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
-             v-if="roundInfo.hasMotions && roundInfo.hasVetoes">
-      <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
+      <div class="db-padding-horizontal db-flex-item-1 db-flex-row"
+           v-if="roundInfo.hasVetoes">
         <div v-for="choice_type in ['Chosen Motion', 'Aff Veto', 'Neg Veto']" class="db-flex-item-1 db-flex-column">
-
           <div class="db-flex-item-2 db-align-horizontal-center db-align-vertical-end" v-html="choice_type"></div>
           <div class="db-flex-item-1 "></div>
           <div class="db-flex-item-2 db-flex-row">
@@ -43,7 +45,6 @@
             </div>
             <div class="db-item-gutter"></div>
           </div>
-
         </div>
       </div>
 
@@ -57,17 +58,17 @@
     </section>
 
     <section class="db-margins-m db-flex-row db-flex-item-7">
-      <printable-team-scores :position="roundInfo.positions[0]" :speakers="ballot.affSpeakers"
-                             :name="ballot.aff" :emoji="ballot.affEmoji" :round-info="roundInfo">
-      </printable-team-scores>
+      <printable-team-scores :dt="orderedTeams[0]" :round-info="roundInfo"></printable-team-scores>
       <div class="db-item-gutter"></div>
-      <printable-team-scores :position="roundInfo.positions[1]" :speakers="ballot.negSpeakers"
-                             :name="ballot.neg" :emoji="ballot.negEmoji" :round-info="roundInfo">
-      </printable-team-scores>
+      <printable-team-scores :dt="orderedTeams[1]" :round-info="roundInfo"></printable-team-scores>
+    </section>
+    <section class="db-margins-m db-flex-row db-flex-item-7" v-if="roundInfo.isBP">
+      <printable-team-scores :dt="orderedTeams[2]" :round-info="roundInfo"></printable-team-scores>
+      <div class="db-item-gutter"></div>
+      <printable-team-scores :dt="orderedTeams[3]" :round-info="roundInfo"></printable-team-scores>
     </section>
 
-    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
-             v-if="roundInfo.positions.length < 3">
+    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="!roundInfo.isBP">
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row"><!-- Aff holder -->
         <div class="db-flex-item db-align-vertical-center db-flex-static db-vertical-center-text">
           Which team won the debate:
@@ -98,19 +99,28 @@
 
 <script>
 import PrintableTeamScores from './PrintableTeamScores.vue'
+import _ from 'lodash'
 
 export default {
   props: ['ballot', 'roundInfo'],
   components: {PrintableTeamScores},
   computed: {
-    ballotsExcludingSelf: function() {
-      var authorIndex = this.ballot.panel.indexOf(this.ballot.author);
-      if (authorIndex > -1) {
-        return this.ballot.panel.splice(authorIndex, 1);
+    orderedTeams: function() {
+      return _.map(this.ballot.teams, function(value, key) {
+        return { position: key, team: value }
+      })
+    },
+    panellistsExcludingSelf: function() {
+      var ballotSource = this.ballot.author
+      var authoringPanellist = _.find(this.ballot.panel, function(panellist) {
+        return panellist.adjudicator.name === ballotSource
+      });
+      if (!_.isUndefined(authoringPanellist)) {
+        return _.without(this.ballot.panel, authoringPanellist)
       } else {
         return this.ballot.panel
       }
-    }
+    },
   }
 }
 </script>

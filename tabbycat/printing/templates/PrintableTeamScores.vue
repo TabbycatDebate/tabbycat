@@ -3,16 +3,17 @@
 
     <div class="db-flex-item-2 db-flex-row db-bottom-border">
       <div class="db-padding-horizontal db-flex-item db-align-vertical-center">
-        <h6><span class="emoji" v-if="emoji">{{ emoji }}</span>&nbsp;{{ name }}&nbsp;</h6>
-        <em v-for="(speaker, index) in speakers">
-          <span v-if="index !== 0">, </span>{{ speaker }}
+        <h6><span class="emoji" v-if="roundInfo.showEmoji">{{ team.emoji }}</span>&nbsp;{{ team.short_name }}&nbsp;</h6>
+        <em v-for="(speaker, index) in team.speakers">
+          <span v-if="index !== 0">, </span>{{ speaker.name }}
         </em>
       </div>
       <div class="db-padding-horizontal db-flex-static "></div>
     </div>
 
     <div class="db-flex-item-2 db-flex-row db-bottom-border"><!-- Keys -->
-      <div class="db-align-vertical-center  db-left-text" :class="{ 'db-flex-item-fws': !roundInfo.positions.length > 2, 'db-flex-item-fwm': roundInfo.positions.length > 2 }">
+      <div class="db-align-vertical-center  db-left-text"
+           :class="{ 'db-flex-item-fws': !roundInfo.isBP, 'db-flex-item-fwm': roundInfo.isBP }">
       </div>
       <div v-if="roundInfo.showPronouns" class="db-align-vertical-center db-align-horizontal-center db-flex-item-fwl">
         <em>Pronoun</em>
@@ -47,7 +48,7 @@
       <div class="db-align-vertical-center  db-left-text db-padding-horizontal db-flex-item-fws"></div>
       <div class="db-flex-item db-flex-row db-align-vertical-center"></div>
       <div class="db-padding-horizontal db-static db-align-vertical-center db-right-text">
-        {{ position }}'s Total Score:
+        {{ titleCasePosition }}'s Total Score:
       </div>
       <div class="db-fill-in db-flex-item-fwl"></div>
     </div>
@@ -56,13 +57,23 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
   props: {
-    name: String,
-    emoji: String,
-    speakers: Array,
-    position: String,
+    dt: Object,
     roundInfo: Object
+  },
+  computed: {
+    team: function() {
+      return this.dt.team
+    },
+    titleCasePosition: function() {
+      var upperWords = _.map(_.words(this.dt.position), function(word) {
+        return _.upperFirst(word)
+      })
+      return _.join(upperWords, " ")
+    }
   },
 }
 </script>

@@ -79,6 +79,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     scoring__score_max                         = 100.0
     scoring__maximum_margin                    = 0.0
     # Debate Rules
+    debate_rules__substantive_speakers         = 2
     debate_rules__teams_in_debate              = 'bp'
     debate_rules__ballots_per_debate           = 'per-debate'
     debate_rules__side_names                   = 'gov-opp'

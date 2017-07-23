@@ -309,6 +309,7 @@ class Team(models.Model):
 
     def serialize(self):
         team = {'id': self.id, 'short_name': self.short_name, 'long_name': self.long_name}
+        team['emoji'] = self.emoji
         team['conflicts'] = {'clashes': [], 'histories': []}
         team['institution'] = self.institution.serialize
         team['region'] = self.region.serialize if self.region else None
