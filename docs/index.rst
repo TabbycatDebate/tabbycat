@@ -63,6 +63,7 @@ supporting many custom variations of the above formats too.
    :maxdepth: 1
    :caption: About
 
+   about/comparisons
    about/support
    about/authors
    about/changelog
