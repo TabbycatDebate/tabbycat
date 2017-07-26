@@ -19,12 +19,16 @@ def regions_ordered(t):
     return data
 
 
-def get_side_counts(teams, position, seq):
-    """Returns a dict where keys are the team IDs in `teams`, and values are
-    the number of debates the team has had in position `position` in preliminary
-    rounds."""
+def annotate_side_count_kwargs(sides, seq):
+    """Returns keyword arguments that can be passed into an annotate() call on a
+    Team queryset, that will provide side counts for each side given in `sides`.
 
-    team_ids = [team.id for team in teams]
+    Example usage:
+        kwargs = annotate_side_count_kwargs(tournament.sides, round.seq)
+        teams = tournament.team_set.annotate(**kwargs)
+        for team in teams:
+            print(team.aff_count, team.neg_count)
+    """
 
     query = """
         SELECT DISTINCT COUNT(draw_debateteam.id)
@@ -32,14 +36,19 @@ def get_side_counts(teams, position, seq):
         JOIN draw_debate ON draw_debateteam.debate_id = draw_debate.id
         JOIN tournaments_round ON draw_debate.round_id = tournaments_round.id
         WHERE participants_team.id = draw_debateteam.team_id
-        AND draw_debateteam.position = '{pos:s}'
-        AND tournaments_round.stage = '{stage:s}'""".format(
-            pos=position, stage=Round.STAGE_PRELIMINARY)
-    if seq is not None:
-        query += """
-        AND tournaments_round.seq <= '{round:d}'""".format(round=seq)
+        AND draw_debateteam.side = %s
+        AND tournaments_round.stage = %s
+        AND tournaments_round.seq <= %s"""
 
+    return {'%s_count' % side: RawSQL(query, (side, Round.STAGE_PRELIMINARY, seq)) for side in sides}
+
+
+def get_side_counts(teams, sides, seq):
+    """Returns a dict where keys are the team IDs in `teams`, and values are
+    lists of the number of debates the team has had on each side in `sides`, in
+    preliminary rounds, up to and including the given seq (of a round)."""
+
+    team_ids = [team.id for team in teams]
     queryset = Team.objects.filter(id__in=team_ids).annotate(
-            side_count=RawSQL(query, ()))
-
-    return {annotated_team.id: annotated_team.side_count for annotated_team in queryset}
+        **annotate_side_count_kwargs(sides, seq))
+    return {team.id: [getattr(team, '%s_count' % side) for side in sides] for team in queryset}

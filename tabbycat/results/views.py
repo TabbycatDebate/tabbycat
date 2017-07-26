@@ -25,7 +25,7 @@ from utils.mixins import (CacheMixin, JsonDataResponsePostView, JsonDataResponse
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
-from .forms import BallotSetForm
+from .forms import PerAdjudicatorBallotSetForm, SingleBallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
@@ -62,7 +62,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
             else:
                 filter_kwargs = dict(result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT])
             self._draw = self.get_round().debate_set_with_prefetches(
-                    ordering=('room_rank',), ballotsets=True, wins=True,
+                    ordering=('room_rank',), results=True, wins=True,
                     filter_kwargs=filter_kwargs)
         return self._draw
 
@@ -112,7 +112,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     def get_table_by_debate(self):
         round = self.get_round()
         tournament = self.get_tournament()
-        debates = round.debate_set_with_prefetches(ballotsets=True, wins=True)
+        debates = round.debate_set_with_prefetches(results=True, wins=True)
 
         table = TabbycatTableBuilder(view=self, sort_key="Venue")
         table.add_debate_venue_columns(debates)
@@ -136,9 +136,9 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 
         populate_opponents([ts.debate_team for ts in teamscores])
 
-        for pos in [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]:
-            debates_for_pos = [ts.debate_team.debate for ts in teamscores if ts.debate_team.position == pos]
-            populate_confirmed_ballots(debates_for_pos, motions=True)
+        for side in [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]:
+            debates_for_side = [ts.debate_team.debate for ts in teamscores if ts.debate_team.side == side]
+            populate_confirmed_ballots(debates_for_side, motions=True)
 
         table = TabbycatTableBuilder(view=self, sort_key="Team")
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
@@ -210,10 +210,9 @@ class UnpostponeDebateView(BaseUpdateDebateStatusView):
 # Ballot entry form views
 # ==============================================================================
 
-class BaseBallotSetView(LogActionMixin, FormView):
+class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
     """Base class for views displaying ballot set entry forms."""
 
-    form_class = BallotSetForm
     action_log_content_object_attr = 'ballotsub'
 
     def get_context_data(self, **kwargs):
@@ -229,6 +228,12 @@ class BaseBallotSetView(LogActionMixin, FormView):
             all_ballotsubs = all_ballotsubs.exclude(discarded=True)
         populate_identical_ballotsub_lists(all_ballotsubs)
         return all_ballotsubs
+
+    def get_form_class(self):
+        if self.get_tournament().pref('ballots_per_debate') == 'per-adj':
+            return PerAdjudicatorBallotSetForm
+        else:
+            return SingleBallotSetForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -473,7 +478,7 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
             loser = '?'
             for teamscore in ballotsub.teamscore_set.all():
                 team_str = "{:s} ({:s})".format(teamscore.debate_team.team.short_name,
-                        teamscore.debate_team.get_position_name(self.get_tournament()))
+                        teamscore.debate_team.get_side_name(self.get_tournament()))
                 if teamscore.win:
                     winner = team_str
                 else:
@@ -623,7 +628,8 @@ class PublicBallotScoresheetsView(CacheMixin, PublicTournamentPageMixin, SingleO
         return debate
 
     def get_context_data(self, **kwargs):
-        kwargs['ballot_set'] = self.object.confirmed_ballot.ballot_set
+        kwargs['motion'] = self.object.confirmed_ballot.motion
+        kwargs['result'] = self.object.confirmed_ballot.result
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):

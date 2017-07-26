@@ -4,7 +4,7 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from results.models import BallotSubmission
 from utils.management.base import CommandError, RoundCommand
-from results.dbutils import add_ballotset, add_ballotsets_to_round, add_ballotsets_to_round_partial, delete_all_ballotsets_for_round, delete_ballotset
+from results.dbutils import add_result, add_results_to_round, add_results_to_round_partial, delete_all_ballotsubs_for_round, delete_ballotsub
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {
@@ -55,7 +55,7 @@ class GenerateResultsCommandMixin:
                 raise CommandError("There is no user called {user!r}. Use the --create-user option to create it.".format(user=options["user"]))
 
     @classmethod
-    def ballotset_kwargs(cls, options):
+    def result_kwargs(cls, options):
         return {
             "submitter_type": SUBMITTER_TYPE_MAP[options["submitter_type"]],
             "user"          : cls._get_user(options),
@@ -103,18 +103,18 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
     def handle_round(self, round, **options):
         if options["clean"]:
             self.stdout.write(self.style.WARNING("Deleting all ballot sets for {}...".format(round.name)))
-            delete_all_ballotsets_for_round(round)
+            delete_all_ballotsubs_for_round(round)
 
         try:
             if options["num_ballots"] is not None:
                 self.stdout.write(self.style.MIGRATE_HEADING(
                     "Generating ballot sets for {:d} randomly-chosen debates "
                     "in {}...".format(options["num_ballots"], round.name)))
-                add_ballotsets_to_round_partial(round, options["num_ballots"], **self.ballotset_kwargs(options))
+                add_results_to_round_partial(round, options["num_ballots"], **self.result_kwargs(options))
             else:
                 self.stdout.write(self.style.MIGRATE_HEADING(
                     "Generating ballot sets for all debates in {}...".format(round.name)))
-                add_ballotsets_to_round(round, **self.ballotset_kwargs(options))
+                add_results_to_round(round, **self.result_kwargs(options))
 
         except ValueError as e:
             raise CommandError(e)
@@ -124,12 +124,12 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
     def handle_debate(self, debate, **options):
         if options["clean"]:
             self.stdout.write(self.style.WARNING("Deleting all ballot sets for debate {}...".format(debate.matchup)))
-            delete_ballotset(debate)
+            delete_ballotsub(debate)
 
         self.stdout.write(self.style.MIGRATE_HEADING("Generating ballot set for debate {}...".format(debate.matchup)))
         try:
             for i in range(options["num_ballots"] if options["num_ballots"] is not None else 1):
-                add_ballotset(debate, **self.ballotset_kwargs(options))
+                add_result(debate, **self.result_kwargs(options))
         except ValueError as e:
             raise CommandError(e)
         except DebateAdjudicator.DoesNotExist as e:

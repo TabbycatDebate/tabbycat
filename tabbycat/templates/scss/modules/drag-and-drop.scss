@@ -43,8 +43,8 @@
   }
 }
 
-.vue-draggable:hover,
-.vue-is-hovering:active {
+.vue-draggable.vue-is-hovering,
+.vue-draggable:active {
   background: #000 !important;
   border-color: $gray;
   cursor: move;
@@ -65,7 +65,7 @@
 //------------------------------------------------------------------------------
 
 .vue-droppable {
-  background: $gray-lighter;
+  background: $droppable-bg;
   min-height: 50px;
   padding: 0 0 4px 4px; // Draggable items only have top/left padding
 }
@@ -113,4 +113,21 @@
 
 .vue-is-drag-enter {
   background: $brand-success;
+}
+
+//------------------------------------------------------------------------------
+// Resizeable
+//------------------------------------------------------------------------------
+
+.resize-handler {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 6px;
+  top: -2px;
+  font-size: 18px;
+
+  &:hover {
+    cursor: ns-resize;
+  }
 }

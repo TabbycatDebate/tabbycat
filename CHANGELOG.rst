@@ -5,14 +5,23 @@ Change Log
 1.4.0 (Havana Brown)
 --------------------
 
-- Developed the adjudicator allocation, venue allocation, and matchups editing pages
-  - Bumped to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping
-  - When dragging/dropping the changed elements now 'lock' in place and indicate that their saving is in-progress
-  - Added conflicts and recent histories to the top slideover of teams/adjudicators
-  - Adding 'ranking' toggles to visibily highlight adjudicator strengths and more easily identify unbalanced panels
+- Overhauled the adjudicator allocation, venue allocation, and matchups editing pages, including:
+    - Upgraded to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping
+    - When dragging/dropping, the changed elements now 'lock' in place to indicate that their saving is in-progress
+    - Added conflicts and recent histories to the slideovers shown for teams/adjudicators
+    - Added 'ranking' toggles to visibly highlight adjudicator strengths and more easily identify unbalanced panels
+    - Each interface's table is now sortable by a debate's importance, bracket, liveness, etc.
+- Added a new "Tournament Logistics" guide to the documentation that outlines some general best practices for tabbing tournaments. Thanks to Viran Weerasekera, Valerie Tierney, Molly Dale, Madeline Schultz, and Vail Bromberger for contributing to this document
+- Add (basic) support for the Canadian Parliamentary format by allowing for consensus ballots and providing a preset. However note that only some of the common draw rules are supported (check our documentation for more information)
+- Added an ESL/EFL tab release option and status field
+- Added a chi-squared test to measure motion balance in the motion standings/balance. Thanks to Viran Weerasekera for contributing this
+- The Auto Allocate function for adjudicators will now also allocate trainees to solo-chaired debates
 - Added a 'Tab Release' preset for easily releasing all standings/results pages after a tournament is finished
-- Fixed issue where toggling iron speeches on and off wouldn't hide/unset the relevant checkboxes
+- Added 'Average Speaks by Round' to the standings overview page
+- Fixed issue where the Auto Allocator was forming panels of incorrect strengths in debates identified as less important
+- Fixed issue where toggling iron-person speeches on and off wouldn't hide/unset the relevant checkboxes
 - Fixed issue where VenueCategories could not be edited if they did not have Venues set
+- Various other small fixes and improvements
 
 1.3.1
 -----
@@ -29,12 +38,12 @@ Change Log
 - Reworked venue constraints and venue display options by streamlining "venue groups" and "venue constraint categories" into a single "venue category" type, with options for how they are used and displayed
 - Relocated the Random (now renamed 'Private') URL pages to the Setup section and added pages for printing/emailing out the ballot submission URLs
 - Reworked the simple data importer (formerly the visual importer) to improve its robustness
-- Improved guards against having no current round set, and added a new page for manually overriding the current round (under Configuration).
+- Improved guards against having no current round set, and added a new page for manually overriding the current round (under Configuration)
 - Added a preference for controlling whether assistant users have access to pages that can reveal draw or motions information ahead of their public release
 - Added the ability to limit tab releases to a given number of ranks (*i.e.* only show the top 10 speakers)
 - Added the ability to redact individual person's identifying details from speaker tabs
 - Added the ability for user passwords to be easily reset
-- Added a minimal set of default feedback questions to newly created Tournaments.
+- Added a minimal set of default feedback questions to newly created Tournaments
 - When a tournament's current round is set, redirect to a page where it can be set, rather than crashing
 - A number of other minor bug fixes and enhancements
 
@@ -107,7 +116,7 @@ Change Log
 *Release date: 25 November 2016*
 
 - Redesigned the footer area to better describe Tabbycat and to promote donations and related projects
-- Slight tweaks to the site homepage and main menus to better accomodate the login/log out links
+- Slight tweaks to the site homepage and main menus to better accommodate the login/log out links
 - A few minor bug fixes and improvements to error reporting
 
 

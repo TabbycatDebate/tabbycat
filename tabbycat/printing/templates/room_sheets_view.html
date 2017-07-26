@@ -35,11 +35,7 @@
             <li class="list-group-item">
               {% if debate.confirmed_ballot.forfeit %}
                 <del>{{ debate.time|time:"H:i" }}</del>
-                {% if debate.confirmed_ballot.ballot_set.neg_win == 1 %}
-                  (Forfeit by Aff)
-                {% else %}
-                  (Forfeit by Neg)
-                {% endif %}
+                (Forfeit by {{ debate.confirmed_ballot.forfeit.get_side_name|capfirst }})
               {% elif debate.time %}
                 {{ debate.time|time:"H:i" }}
               {% else %}

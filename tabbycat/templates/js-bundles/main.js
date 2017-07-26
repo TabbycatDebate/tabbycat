@@ -60,10 +60,7 @@ var vueData = window.vueData // We need to mount props from the window itself
 import TablesContainer from '../tables/TablesContainer.vue'
 vueComponents['TablesContainer'] = TablesContainer
 
-//------------------------------------------------------------------------------
 // Diversity Standings
-//------------------------------------------------------------------------------
-
 import DiversityContainer from  '../js-vue/containers/DiversityContainer.vue'
 vueComponents['DiversityContainer'] = DiversityContainer
 

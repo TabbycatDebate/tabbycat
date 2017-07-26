@@ -19,7 +19,7 @@ from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, DrawForDragAndDropMixin
 from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, SaveDragAndDropDebateMixin, TournamentMixin
 from tournaments.models import Round
-from tournaments.utils import aff_name, get_position_name, neg_name
+from tournaments.utils import aff_name, get_side_name, neg_name
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.misc import reverse_round
 from utils.tables import TabbycatTableBuilder
@@ -29,7 +29,7 @@ from venues.models import VenueCategory, VenueConstraint
 from .dbutils import delete_round_draw
 from .generator import DrawError
 from .manager import DrawManager
-from .models import Debate, DebateTeam, TeamPositionAllocation
+from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 
 logger = logging.getLogger(__name__)
@@ -230,8 +230,8 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             else:
                 self._add_break_rank_columns(table, draw, r.break_category)
             table.add_debate_metric_columns(draw, standings)
-            table.add_sides_count([d.aff_team for d in draw], r.prev, 'aff')
-            table.add_sides_count([d.neg_team for d in draw], r.prev, 'neg')
+            table.add_side_counts([d.aff_team for d in draw], r.prev, 'aff')
+            table.add_side_counts([d.neg_team for d in draw], r.prev, 'neg')
         elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
@@ -245,10 +245,10 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         tournament = self.get_tournament()
         for side in ('aff', 'neg'):
             # Translators: e.g. possessive might be "affirmative's" to get "affirmative's break rank"
-            tooltip = _("%(possessive)s break rank" % {'possessive': get_position_name(tournament, side, 'possessive')})
+            tooltip = _("%(possessive)s break rank" % {'possessive': get_side_name(tournament, side, 'possessive')})
             # Translators: e.g. initial might be "A" for affirmative to get "ABR"
             tooltip = tooltip.capitalize()
-            key = _("%(initial)sBR") % {'initial': get_position_name(tournament, side, 'initial')}
+            key = _("%(initial)sBR") % {'initial': get_side_name(tournament, side, 'initial')}
             table.add_column(
                 {'tooltip': tooltip, 'key': key},
                 [d.get_team(side).break_rank_for_category(category) for d in draw]
@@ -485,17 +485,16 @@ class ApplyDebateScheduleView(DrawStatusEdit):
 class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
     page_title = "Side Pre-Allocations"
-    TPA_MAP = {DebateTeam.POSITION_AFFIRMATIVE: 'aff', DebateTeam.POSITION_NEGATIVE: 'neg'}
 
     def get_table(self):
         tournament = self.get_tournament()
         teams = tournament.team_set.all()
         rounds = tournament.prelim_rounds()
 
-        tpas = dict()
-        for tpa in TeamPositionAllocation.objects.filter(round__in=rounds):
+        tsas = dict()
+        for tsa in TeamSideAllocation.objects.filter(round__in=rounds):
             try:
-                tpas[(tpa.team.id, tpa.round.seq)] = get_position_name(tournament, self.TPA_MAP[tpa.position], 'abbr')
+                tsas[(tsa.team.id, tsa.round.seq)] = get_side_name(tournament, tsa.side, 'abbr')
             except ValueError:
                 pass
 
@@ -503,7 +502,7 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
         table.add_team_columns(teams)
 
         headers = [round.abbreviation for round in rounds]
-        data = [[tpas.get((team.id, round.id), "—") for round in rounds] for team in teams]
+        data = [[tsas.get((team.id, round.seq), "—") for round in rounds] for team in teams]
         table.add_columns(headers, data)
 
         return table
@@ -553,7 +552,7 @@ class SaveDrawMatchups(SaveDragAndDropDebateMixin):
         # Positions are sent over in their labelled/translate form; need to lookup
         # This is hardcoded to aff/neg; will need to refactor when positions update
         translated_positions = {
-            get_position_name(self.get_tournament(), name, 'full'): name for name in ['aff', 'neg']}
+            get_side_name(self.get_tournament(), name, 'full'): name for name in ['aff', 'neg']}
         position_short = translated_positions[translated_position]
         if position_short is 'aff':
             position = DebateTeam.POSITION_AFFIRMATIVE

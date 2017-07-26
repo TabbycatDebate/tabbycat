@@ -3,7 +3,7 @@ import random
 from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
-from .models import Debate, DebateTeam, TeamPositionAllocation
+from .models import Debate, DebateTeam
 from .generator import DrawGenerator, Pairing
 
 OPTIONS_TO_CONFIG_MAPPING = {
@@ -16,9 +16,6 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "odd_bracket"           : "draw_rules__draw_odd_bracket",
     "pairing_method"        : "draw_rules__draw_pairing_method",
 }
-
-TPA_MAP = {TeamPositionAllocation.POSITION_AFFIRMATIVE: "aff",
-           TeamPositionAllocation.POSITION_NEGATIVE: "neg"}
 
 
 def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
@@ -58,13 +55,13 @@ class BaseDrawManager:
             for team in teams:
                 team.aff_count = 0
 
-    def _populate_team_position_allocations(self, teams):
-        tpas = dict()
-        for tpa in self.round.teampositionallocation_set.all():
-            tpas[tpa.team] = TPA_MAP[tpa.position]
+    def _populate_team_side_allocations(self, teams):
+        tsas = dict()
+        for tsa in self.round.teamsideallocation_set.all():
+            tsas[tsa.team] = tsa.side
         for team in teams:
-            if team in tpas:
-                team.allocated_side = tpas[team]
+            if team in tsas:
+                team.allocated_side = tsas[team]
 
     def _make_debates(self, pairings):
         random.shuffle(pairings)  # to avoid IDs indicating room ranks
@@ -77,8 +74,8 @@ class BaseDrawManager:
             debate.flags = ",".join(pairing.flags)  # comma-separated list
             debate.save()
 
-            DebateTeam(debate=debate, team=pairing.teams[0], position=DebateTeam.POSITION_AFFIRMATIVE).save()
-            DebateTeam(debate=debate, team=pairing.teams[1], position=DebateTeam.POSITION_NEGATIVE).save()
+            DebateTeam(debate=debate, team=pairing.teams[0], side=DebateTeam.SIDE_AFFIRMATIVE).save()
+            DebateTeam(debate=debate, team=pairing.teams[1], side=DebateTeam.SIDE_NEGATIVE).save()
 
     def delete(self):
         self.round.debate_set.all().delete()
@@ -95,7 +92,7 @@ class BaseDrawManager:
         results = self.get_results()
         rrseq = self.get_rrseq()
         self._populate_aff_counts(teams)
-        self._populate_team_position_allocations(teams)
+        self._populate_team_side_allocations(teams)
 
         options = dict()
         for key in self.relevant_options:

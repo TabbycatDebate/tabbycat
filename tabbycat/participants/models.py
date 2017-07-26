@@ -6,6 +6,7 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
+from django.utils.translation import ugettext_lazy as _
 
 from tournaments.models import Round
 from utils.managers import LookupByNameFieldsMixin
@@ -16,7 +17,12 @@ logger = logging.getLogger(__name__)
 
 
 class Region(models.Model):
-    name = models.CharField(db_index=True, max_length=100)
+    name = models.CharField(db_index=True, max_length=100,
+        verbose_name=_("name"))
+
+    class Meta:
+        verbose_name = _("region")
+        verbose_name_plural = _("regions")
 
     def __str__(self):
         return '%s' % (self.name)
@@ -32,12 +38,16 @@ class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
 
 class Institution(models.Model):
     name = models.CharField(max_length=100,
-        help_text="The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\"")
+        verbose_name=_("name"),
+        help_text=_("The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\""))
     code = models.CharField(max_length=20,
-        help_text="What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\"")
+        verbose_name=_("code"),
+        help_text=_("What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""))
     abbreviation = models.CharField(max_length=8, default="",
-        help_text="For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\"")
-    region = models.ForeignKey(Region, models.SET_NULL, blank=True, null=True)
+        verbose_name=_("abbreviation"),
+        help_text=_("For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\""))
+    region = models.ForeignKey(Region, models.SET_NULL, blank=True, null=True,
+        verbose_name=_("region"))
 
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='institution',
             content_type_field='subject_content_type', object_id_field='subject_id')
@@ -47,6 +57,8 @@ class Institution(models.Model):
     class Meta:
         unique_together = [('name', 'code')]
         ordering = ['name']
+        verbose_name = _("institution")
+        verbose_name_plural = _("institutions")
 
     def __str__(self):
         return str(self.name)
@@ -64,28 +76,43 @@ class Institution(models.Model):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=40, db_index=True)
+    name = models.CharField(max_length=40, db_index=True,
+        verbose_name=_("name"))
     barcode_id = models.IntegerField(blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    phone = models.CharField(max_length=40, blank=True)
+    email = models.EmailField(blank=True, null=True,
+        verbose_name=_("email"))
+    phone = models.CharField(max_length=40, blank=True,
+        verbose_name=_("phone"))
     novice = models.BooleanField(default=False,
-        help_text="Novice status is indicated on the tab, and may have its own Break Category or Top Speakers Tab")
+        help_text="Novice status may be indicated on the tab, and may have its own Break Category or Top Speakers Tab")
+    esl = models.BooleanField(default=False,
+        help_text="ESL language status may have its own Break Category or Top Speakers Tab")
+    efl = models.BooleanField(default=False,
+        help_text="EFL language status may have its own Break Category or Top Speakers Tab")
     anonymous = models.BooleanField(default=False,
-        help_text="Anonymous persons will have their name and team redacted on public tab releases")
+        verbose_name=_("anonymous"),
+        help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
 
     checkin_message = models.TextField(blank=True)
-    notes = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True,
+        verbose_name=_("notes"))
 
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
     GENDER_OTHER = 'O'
-    GENDER_CHOICES = ((GENDER_MALE,     'Male'),
-                      (GENDER_FEMALE,   'Female'),
-                      (GENDER_OTHER,    'Other'))
+    GENDER_CHOICES = ((GENDER_MALE,   _("male")),
+                      (GENDER_FEMALE, _("female")),
+                      (GENDER_OTHER,  _("other")))
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True,
-        help_text="Gender is displayed in the adjudicator allocation interface, and nowhere else")
+        verbose_name=_("gender"),
+        help_text=_("Gender is displayed in the adjudicator allocation interface, and nowhere else"))
     pronoun = models.CharField(max_length=10, blank=True,
-        help_text="If printing ballots using Tabbycat there is the option to pre-print pronouns")
+        verbose_name=_("pronoun"),
+        help_text=_("If printing ballots using Tabbycat, there is the option to pre-print pronouns"))
+
+    class Meta:
+        verbose_name = _("person")
+        verbose_name_plural = _("persons")
 
     def __str__(self):
         return str(self.name)
@@ -103,23 +130,33 @@ class TeamManager(LookupByNameFieldsMixin, models.Manager):
 
 
 class Team(models.Model):
-    reference = models.CharField(blank=True, max_length=150, verbose_name="Full name/suffix",
-        help_text="Do not include institution name (see \"uses institutional prefix\" below)")
-    short_reference = models.CharField(blank=True, max_length=35, verbose_name="Short name/suffix",
-        help_text="The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)")
+    reference = models.CharField(blank=True, max_length=150,
+        verbose_name=_("full name/suffix"),
+        help_text=_("Do not include institution name (see \"uses institutional prefix\" below)"))
+    short_reference = models.CharField(blank=True, max_length=35,
+        verbose_name=_("short name/suffix"),
+        help_text=_("The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)"))
 
-    short_name = models.CharField(editable=False, max_length=50, verbose_name="Short name",
-        help_text="The name shown in the draw, including institution name. (This is autogenerated.)")
-    long_name = models.CharField(editable=False, max_length=200, verbose_name="Long name",
-        help_text="The full name of the team, including institution name. (This is autogenerated.)")
+    short_name = models.CharField(editable=False, max_length=50,
+        verbose_name=_("short name"),
+        help_text=_("The name shown in the draw, including institution name. (This is autogenerated.)"))
+    long_name = models.CharField(editable=False, max_length=200,
+        verbose_name=_("long name"),
+        help_text=_("The full name of the team, including institution name. (This is autogenerated.)"))
 
-    institution = models.ForeignKey(Institution, models.CASCADE)
-    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE)
-    division = models.ForeignKey('divisions.Division', models.SET_NULL, blank=True, null=True)
-    use_institution_prefix = models.BooleanField(default=False, verbose_name="Uses institutional prefix",
-        help_text="If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\" ")
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24) # uses null=True to allow multiple teams to have no URL key
-    break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True)
+    institution = models.ForeignKey(Institution, models.CASCADE,
+        verbose_name=_("institution"))
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        verbose_name=_("tournament"))
+    division = models.ForeignKey('divisions.Division', models.SET_NULL, blank=True, null=True,
+        verbose_name=_("division"))
+    use_institution_prefix = models.BooleanField(default=False,
+        verbose_name=_("Uses institutional prefix"),
+        help_text=_("If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""))
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple teams to have no URL key
+        verbose_name=_("URL key"))
+    break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
+        verbose_name=_("break categories"))
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='team',
@@ -129,13 +166,15 @@ class Team(models.Model):
     TYPE_SWING = 'S'
     TYPE_COMPOSITE = 'C'
     TYPE_BYE = 'B'
-    TYPE_CHOICES = ((TYPE_NONE, 'None'),
-                    (TYPE_SWING, 'Swing'),
-                    (TYPE_COMPOSITE, 'Composite'),
-                    (TYPE_BYE, 'Bye'), )
-    type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE)
+    TYPE_CHOICES = ((TYPE_NONE, _("none")),
+                    (TYPE_SWING, _("swing")),
+                    (TYPE_COMPOSITE, _("composite")),
+                    (TYPE_BYE, _("bye")), )
+    type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
+        verbose_name=_("type"))
 
-    emoji = models.CharField(max_length=2, blank=True, null=True, default=None, choices=EMOJI_LIST) # uses null=True to allow multiple teams to have no emoji
+    emoji = models.CharField(max_length=2, blank=True, null=True, default=None, choices=EMOJI_LIST, # uses null=True to allow multiple teams to have no emoji
+        verbose_name=_("emoji"))
 
     construct_emoji = None # historical reference for migration 0026_auto_20170416_2332
 
@@ -146,6 +185,8 @@ class Team(models.Model):
         ]
         ordering = ['tournament', 'institution', 'short_reference']
         index_together = ['tournament', 'institution', 'short_reference']
+        verbose_name = _("team")
+        verbose_name_plural = _("teams")
 
     objects = TeamManager()
 
@@ -196,15 +237,14 @@ class Team(models.Model):
 
     def get_aff_count(self, seq=None):
         from draw.models import DebateTeam
-        return self._get_count(DebateTeam.POSITION_AFFIRMATIVE, seq)
+        return self._get_count(DebateTeam.SIDE_AFFIRMATIVE, seq)
 
     def get_neg_count(self, seq=None):
         from draw.models import DebateTeam
-        return self._get_count(DebateTeam.POSITION_NEGATIVE, seq)
+        return self._get_count(DebateTeam.SIDE_NEGATIVE, seq)
 
-    def _get_count(self, position, seq):
-        dts = self.debateteam_set.filter(
-            position=position,
+    def _get_count(self, side, seq):
+        dts = self.debateteam_set.filter(side=side,
             debate__round__stage=Round.STAGE_PRELIMINARY)
         if seq is not None:
             dts = dts.filter(debate__round__seq__lte=seq)
@@ -268,9 +308,9 @@ class Team(models.Model):
         # Require reference and short_reference if use_institution_prefix is False
         errors = {}
         if not self.use_institution_prefix and not self.reference:
-            errors['reference'] = "Teams must have a full name if they don't use the institutional prefix."
+            errors['reference'] = _("Teams must have a full name if they don't use the institutional prefix.")
         if not self.use_institution_prefix and not self.short_reference:
-            errors['short_reference'] = "Teams must have a short name if they don't use the institutional prefix."
+            errors['short_reference'] = _("Teams must have a short name if they don't use the institutional prefix.")
         if errors:
             raise ValidationError(errors)
 
@@ -295,7 +335,12 @@ class Team(models.Model):
 
 
 class Speaker(Person):
-    team = models.ForeignKey(Team, models.CASCADE)
+    team = models.ForeignKey(Team, models.CASCADE,
+        verbose_name=_("team"))
+
+    class Meta:
+        verbose_name = _("speaker")
+        verbose_name_plural = _("speakers")
 
     def __str__(self):
         return str(self.name)
@@ -309,23 +354,32 @@ class AdjudicatorManager(models.Manager):
 
 
 class Adjudicator(Person):
-    institution = models.ForeignKey(Institution, models.CASCADE)
+    institution = models.ForeignKey(Institution, models.CASCADE,
+        verbose_name=_("institution"))
     # cascade to avoid unattached adjudicator pollution when deleting tournaments
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, blank=True, null=True,
-        help_text="Adjudicators not assigned to any tournament can be shared between tournaments")
-    test_score = models.FloatField(default=0)
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24) # uses null=True to allow multiple teams to have no URL key
+        verbose_name=_("tournament"),
+        help_text=_("Adjudicators not assigned to any tournament can be shared between tournaments"))
+    test_score = models.FloatField(default=0,
+        verbose_name=_("test score"))
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple teams to have no URL key
+        verbose_name=_("URL key"))
 
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.AdjudicatorInstitutionConflict',
-        related_name='adj_inst_conflicts')
+        related_name='adj_inst_conflicts',
+        verbose_name=_("institution conflicts"))
     conflicts = models.ManyToManyField('Team',
         through='adjallocation.AdjudicatorConflict',
-        related_name='adj_adj_conflicts')
+        related_name='adj_adj_conflicts',
+        verbose_name=_("team conflicts"))
 
-    breaking = models.BooleanField(default=False)
-    independent = models.BooleanField(default=False, blank=True)
-    adj_core = models.BooleanField(default=False, blank=True)
+    breaking = models.BooleanField(default=False,
+        verbose_name=_("breaking"))
+    independent = models.BooleanField(default=False, blank=True,
+        verbose_name=_("independent"))
+    adj_core = models.BooleanField(default=False, blank=True,
+        verbose_name=_("adjudication core"))
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='adjudicator',
@@ -335,22 +389,39 @@ class Adjudicator(Person):
 
     class Meta:
         ordering = ['tournament', 'institution', 'name']
+        verbose_name = _("adjudicator")
+        verbose_name_plural = _("adjudicators")
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.institution.code)
 
-    def conflict_with(self, team):
-        if not hasattr(self, '_conflict_cache'):
-            from adjallocation.models import AdjudicatorConflict, AdjudicatorInstitutionConflict
-            self._conflict_cache = set(
-                c['team_id']
-                for c in AdjudicatorConflict.objects.filter(
-                    adjudicator=self).values('team_id'))
-            self._institution_conflict_cache = set(
-                c['institution_id']
-                for c in AdjudicatorInstitutionConflict.objects.filter(
-                    adjudicator=self).values('institution_id'))
-        return team.id in self._conflict_cache or team.institution_id in self._institution_conflict_cache
+    def _populate_conflict_cache(self):
+        if not getattr(self, '_conflicts_populated', False):
+            logger.debug("Populating conflict cache for %s", self)
+            self._team_conflict_cache = [c.team_id
+                    for c in self.adjudicatorconflict_set.all()]
+            self._adjudicator_conflict_cache = [c.conflict_adjudicator_id
+                    for c in self.adjudicatoradjudicatorconflict_source_set.all()]
+            self._institution_conflict_cache = [c.institution_id
+                    for c in self.adjudicatorinstitutionconflict_set.all()]
+            self._conflicts_populated = True
+
+    def conflicts_with_team(self, team):
+        self._populate_conflict_cache()
+        return team.id in self._team_conflict_cache or team.institution_id in self._institution_conflict_cache
+
+    def conflicts_with_adj(self, adj):
+        self._populate_conflict_cache()
+        adj._populate_conflict_cache()
+        if adj.id in self._adjudicator_conflict_cache:
+            return True
+        if adj.institution_id in self._institution_conflict_cache:
+            return True
+        if self.id in adj._adjudicator_conflict_cache:
+            return True
+        if self.institution_id in adj._institution_conflict_cache:
+            return True
+        return False
 
     @property
     def is_unaccredited(self):
@@ -395,24 +466,28 @@ class Adjudicator(Person):
 
     def seen_team(self, team, before_round=None):
         from draw.models import DebateTeam
-        if not hasattr(self, '_seen_cache'):
-            self._seen_cache = {}
-        if before_round not in self._seen_cache:
-            qs = DebateTeam.objects.filter(
-                debate__debateadjudicator__adjudicator=self)
+        if not hasattr(self, '_seen_team_cache'):
+            self._seen_team_cache = {}
+        if before_round not in self._seen_team_cache:
+            logger.debug("Populating seen team cache for %s", self)
+            qs = DebateTeam.objects.filter(debate__debateadjudicator__adjudicator=self)
             if before_round is not None:
                 qs = qs.filter(debate__round__seq__lt=before_round.seq)
-            self._seen_cache[before_round] = set(dt.team.id for dt in qs)
-        return team.id in self._seen_cache[before_round]
+            self._seen_team_cache[before_round] = [dt.team_id for dt in qs]
+        return self._seen_team_cache[before_round].count(team.id)
 
     def seen_adjudicator(self, adj, before_round=None):
         from adjallocation.models import DebateAdjudicator
-        d = DebateAdjudicator.objects.filter(
-            adjudicator=self,
-            allocations__debateadjudicator__adjudicator=adj, )
-        if before_round is not None:
-            d = d.filter(debate__round__seq__lt=before_round.seq)
-        return d.count()
+        if not hasattr(self, '_seen_adjudicator_cache'):
+            self._seen_adjudicator_cache = {}
+        if before_round not in self._seen_adjudicator_cache:
+            logger.debug("Populating seen adjudicator cache for %s", self)
+            qs = DebateAdjudicator.objects.filter(
+                debate__debateadjudicator__adjudicator=self).exclude(adjudicator=self)
+            if before_round is not None:
+                qs = qs.filter(debate__round__seq__lt=before_round.seq)
+            self._seen_adjudicator_cache[before_round] = [da.adjudicator_id for da in qs]
+        return self._seen_adjudicator_cache[before_round].count(adj.id)
 
     def serialize(self, round):
         adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}

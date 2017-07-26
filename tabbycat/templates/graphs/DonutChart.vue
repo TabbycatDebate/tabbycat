@@ -45,7 +45,7 @@ export default {
       if (label == "Male") {
         return "Male identifying";
       } else if (label == "NM") {
-        return "Female identifying or non-binary";
+        return "Non-cis male identifying";
       } else if (label == "Unknown") {
         return "Unspecified";
       } else {

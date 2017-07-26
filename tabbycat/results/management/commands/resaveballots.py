@@ -15,4 +15,4 @@ class Command(TournamentCommand):
 
         for bsub in ballotsubs:
             self.stdout.write("Saving: {}".format(bsub))
-            bsub.ballot_set.save()
+            bsub.result.save()

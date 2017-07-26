@@ -106,11 +106,17 @@
   {% endblock %}
 
   {% block js %}
-    {% if user.is_authenticated %}
-      <script src="{% static 'js/admin.bundle.js' %}"></script>
-    {% else %}
-      <script src="{% static 'js/public.bundle.js' %}"></script>
-    {% endif %}
+  {% if user.is_authenticated %}
+  <script>
+    window.buildData = { // Pass to Raven
+      version: '{% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %}',
+      sentry: {% if disable_sentry %}false{% else %}true{% endif %}
+    }
+  </script>
+  <script src="{% static 'js/admin.bundle.js' %}"></script>
+  {% else %}
+  <script src="{% static 'js/public.bundle.js' %}"></script>
+  {% endif %}
   {% endblock js %}
 
   <!-- Analytics -->
@@ -122,7 +128,7 @@
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
       ga('create', 'UA-314178-25', 'auto');
       ga('set', 'transport', 'beacon'); // Reduce HTTP requests
-      {% if tabbycat_version %}ga('set', 'tcversion', '{{ tabbycat_version }}',);{% endif %}
+      {% if tabbycat_version %}ga('set', 'tcversion', '{{ tabbycat_version }}');{% endif %}
       {% if tournament.short_name %}ga('set', 'tctournament', '{{ tournament.short_name }}');{% endif %}
       ga('send', 'pageview');
     </script>

@@ -16,7 +16,7 @@ BREAK_ROUND_NAMES = [
     ('Triple-Octofinals', 'TOF'),
 ]
 
-POSITION_NAMES = {
+SIDE_NAMES = {
     'aff-neg': {
         "aff_full": ugettext_lazy("affirmative"),
         "neg_full": ugettext_lazy("negative"),
@@ -118,37 +118,37 @@ def auto_make_break_rounds(tournament, num_break, break_category):
         ).save()
 
 
-def get_position_name_choices():
+def get_side_name_choices():
     """Returns a list of choices for position names suitable for presentation in
     a form."""
     return [
         (code, force_text(names["aff_full"]).capitalize() + ", " + force_text(names["neg_full"]).capitalize())
-        for code, names in POSITION_NAMES.items()
+        for code, names in SIDE_NAMES.items()
     ]
 
 
-def get_position_name(tournament, side, name_type):
+def get_side_name(tournament, side, name_type):
     """Like aff_name, neg_name, etc., but can be used when the side is not known
     at compile time. Example:
-        get_position_name(tournament, "aff", "full")
+        get_side_name(tournament, "aff", "full")
     will return something like "Affirmative" or "Proposition" or "Gobierno",
-    depending on the position name option and language setting.
+    depending on the side name option and language setting.
     """
-    names = POSITION_NAMES.get(tournament.pref('position_names'), POSITION_NAMES['aff-neg'])
+    names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
     if side not in ('aff', 'neg'):
-        raise ValueError("get_position_name() side must be 'aff' or 'neg', not: %r" % side)
+        raise ValueError("get_side_name() side must be 'aff' or 'neg', not: %r" % side)
     return force_text(names["%s_%s" % (side, name_type)])
 
 
-def _get_position_name(name_type):
+def _get_side_name(name_type):
     def _wrapped(tournament):
-        names = POSITION_NAMES.get(tournament.pref('position_names'), POSITION_NAMES['aff-neg'])
+        names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
         return force_text(names[name_type])
     return _wrapped
 
 
-# These functions are used to grab the chosen and translated position names,
-# appropriate for the tournament option for position names, and the language
+# These functions are used to grab the chosen and translated side names,
+# appropriate for the tournament option for side names, and the language
 # setting.
 #
 # For example:              aff-neg, en      prop-opp, en     gov-opp, es
@@ -159,13 +159,13 @@ def _get_position_name(name_type):
 # when the tournament is known, which is only ever true at runtime.
 # Example usage: "The %s team faces the %s team." % (aff_name(tournament), neg_name(tournament))
 
-aff_name = _get_position_name('aff_full')
-neg_name = _get_position_name('neg_full')
-aff_abbr = _get_position_name('aff_abbr')
-neg_abbr = _get_position_name('neg_abbr')
-aff_team = _get_position_name('aff_team')
-neg_team = _get_position_name('neg_team')
-aff_possessive = _get_position_name('aff_possessive')
-neg_possessive = _get_position_name('neg_possessive')
-aff_initial = _get_position_name('aff_initial')
-neg_initial = _get_position_name('neg_initial')
+aff_name = _get_side_name('aff_full')
+neg_name = _get_side_name('neg_full')
+aff_abbr = _get_side_name('aff_abbr')
+neg_abbr = _get_side_name('neg_abbr')
+aff_team = _get_side_name('aff_team')
+neg_team = _get_side_name('neg_team')
+aff_possessive = _get_side_name('aff_possessive')
+neg_possessive = _get_side_name('neg_possessive')
+aff_initial = _get_side_name('aff_initial')
+neg_initial = _get_side_name('neg_initial')

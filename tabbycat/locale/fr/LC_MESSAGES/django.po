@@ -3,20 +3,24 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-23 13:56-0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2017-07-16 07:27+1000\n"
+"PO-Revision-Date: 2017-06-18 21:03+1200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.2\n"
+
+#: templates/admin/delete_protected_message.html:4
+msgid "You need to delete the above objects first."
+msgstr ""
 
 #: templates/footer.html:12
 #, python-format
@@ -36,15 +40,37 @@ msgstr ""
 "l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
 "collecter des fonds."
 
+#: templates/footer.html:24
+#, python-format
+msgid ""
+"For a tournament of this size, we suggest a donation of <strong>$%(amount)s</"
+"strong>."
+msgstr ""
+"Pour un tournoi de cette taille, nous suggérons une donation de <strong>"
+"%(amount)s $</strong>."
+
+#: templates/footer.html:28
+msgid "Learn more about donating."
+msgstr "En savoir plus à propos des donations."
+
 #: templates/footer.html:32
+#, python-format
+msgid ""
+"<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or "
+"organisations</a> are much appreciated."
+msgstr ""
+"<a href=\"%(donations_link)s\">Donations à Tabbycat des individuels ou des "
+"organisations</a> sont très appréciées."
+
+#: templates/footer.html:39
 msgid "Still timing debates with the stopwatch app?"
 msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
 
-#: templates/footer.html:34
+#: templates/footer.html:41
 #, python-format
 msgid ""
-"Using a real debating app makes speaking and adjudicating easier! Check out "
-"<a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
+"Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a "
+"href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
 "pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a "
 "href=\"https://play.google.com/store/apps/details?id=net.czlee."
 "debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
@@ -57,11 +83,11 @@ msgstr ""
 "debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
 "\">Debatekeeper (Android)</a>."
 
-#: templates/footer.html:42
+#: templates/footer.html:49
 msgid "Need ballots?"
 msgstr "Avez-vous besoin des bulletins&nbsp;?"
 
-#: templates/footer.html:44
+#: templates/footer.html:51
 msgid ""
 "Use <a href=\"http://debatingballot.com\" target=\"_blank\">debatingBallot."
 "com</a> to design and print great ballots online."
@@ -70,36 +96,41 @@ msgstr ""
 "\">DebatingBallot.com</a> pour dessiner et d'imprimer des bulletins beaux en "
 "ligne."
 
-#: templates/footer.html:55
+#: templates/footer.html:62
 msgid "GitHub"
 msgstr "GitHub"
 
-#: templates/footer.html:58
+#: templates/footer.html:65
 msgid "Documentation"
 msgstr "Documentation"
 
-#: templates/footer.html:61
+#: templates/footer.html:68
 msgid "Support"
 msgstr "Aide"
 
-#: templates/footer.html:64
+#: templates/footer.html:71
 msgid "Facebook Group"
 msgstr "Groupe sur Facebook"
 
-#: templates/footer.html:67
+#: templates/footer.html:74
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
 
-#: templates/registration/login.html:4 templates/registration/login.html:5
+#: templates/registration/login.html:4
 msgctxt "page title"
 msgid "Login"
 msgstr "Connexion"
 
 #: templates/registration/login.html:30
+msgctxt "page title"
+msgid "Log in to Tabbycat"
+msgstr ""
+
+#: templates/registration/login.html:37
 msgid "Your username and password didn't match."
 msgstr "Votre nom d'utilisateur et votre mot de passe n'ont pas correspondu."
 
-#: templates/registration/login.html:36
+#: templates/registration/login.html:42
 msgid ""
 "Your account doesn't have access to this page. To proceed, please log in "
 "with an account that has access."
@@ -107,41 +138,190 @@ msgstr ""
 "Votre compte ne vous permet pas d'accéder cette page. Pour continuer, "
 "veuillez vous connecter."
 
-#: templates/registration/login.html:38
+#: templates/registration/login.html:44
 msgid "Please log in to see this page."
 msgstr "Veuillez vous connecter afin de voir ce page."
 
-#: templates/registration/login.html:60
+#: templates/registration/login.html:57
 msgctxt "button"
-msgid "Login"
-msgstr "Connexion"
+msgid "Log In"
+msgstr ""
 
-#. Translators: Put these in the right order,
-#. e.g. side_abbr = "A", metric_abbr = "TSS" -> "ATSS" for "Affirmative's Total Speaker Score"
-#: utils/tables.py:541
-#, python-format
-msgid "%(side_abbr)s%(metric_abbr)s"
-msgstr "%(metric_abbr)s%(side_abbr)s"
+#: templates/registration/login.html:61
+msgid "I forgot my password"
+msgstr ""
 
-#. Translators: Put these in the right order,
-#. e.g. side_possessive = "affirmative's", metric_name = "total speaker score" -> "affirmative's total speaker score"
-#: utils/tables.py:548
-#, python-format
-msgid "%(side_possessive)s %(metric_name)s"
-msgstr "%(metric_name)s %(side_possessive)s"
+#: templates/registration/password_change_done.html:4
+#: templates/registration/password_change_done.html:5
+msgctxt "page title"
+msgid "Password changed"
+msgstr ""
 
-#. Translators: e.g. team would be "negative team" or "affirmative team",
-#. affirmative would be "affirmative team".
-#: utils/tables.py:601
-#, python-format
-msgid "Number of times this %(team)s has been the %(affirmative)s before"
-msgstr "Nombre de fois que cette %(team)s a déjà été l'%(affirmative)s"
+#: templates/registration/password_change_done.html:15
+msgid "Your password has been changed."
+msgstr ""
 
-#. Translators: Abbreviation for "affirmative number of affirmatives".
-#. side_abbr is e.g. "A"/"N"/"G"/"O" for affirmative/negative/government/opposition,
-#. aff_abbr is "Aff"/"Gov" for affirmative/government, so "NAff" is the number of times
-#. the negative team has affirmed, or equivalently "OGov".
-#: utils/tables.py:611
+#: templates/registration/password_change_done.html:21
+msgid "Go to the home page"
+msgstr ""
+
+#: templates/registration/password_change_form.html:4
+#: templates/registration/password_change_form.html:14
+msgctxt "page title"
+msgid "Password Change"
+msgstr ""
+
+#: templates/registration/password_change_form.html:20
+#: templates/registration/password_reset_confirm.html:21
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/registration/password_change_form.html:29
+msgid "Please enter your old password, then enter a new one (twice):"
+msgstr ""
+
+#: templates/registration/password_change_form.html:45
+#: templates/registration/password_reset_confirm.html:46
+msgctxt "button"
+msgid "Change my password"
+msgstr ""
+
+#: templates/registration/password_change_form.html:50
+msgid "Cancel and go back to the site home page"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:4
+#: templates/registration/password_reset_complete.html:5
+msgctxt "page title"
+msgid "Password reset complete"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:15
+msgid "Your password has been reset."
+msgstr ""
+
+#. Translators: This text appears on a button that takes the user to the login page after a password reset.
+#: templates/registration/password_reset_complete.html:22
+msgid "Go to the login page"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:4
+#: templates/registration/password_reset_confirm.html:14
+msgctxt "page title"
+msgid "Password Reset Confirmation"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:30
+msgid "Please enter a new password (twice):"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:52
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: templates/registration/password_reset_done.html:4
+#: templates/registration/password_reset_done.html:5
+msgctxt "page title"
+msgid "Password reset e-mail sent"
+msgstr ""
+
+#: templates/registration/password_reset_done.html:15
+msgid ""
+"We've e-mailed you instructions for setting your password, if an account "
+"exists with the e-mail address you entered. You should receive them shortly."
+msgstr ""
+
+#: templates/registration/password_reset_done.html:18
+msgid ""
+"If you don't receive an e-mail, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr ""
+
+#. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
+#: templates/registration/password_reset_done.html:25
+msgid "Return to the login page"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:2
 #, python-format
-msgid "%(side_abbr)s%(aff_abbr)ss"
-msgstr "%(side_abbr)s%(aff_abbr)ss"
+msgid "Hi, %(username)s!"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:6
+#, python-format
+msgid ""
+"Someone asked for password reset for the e-mail address %(email)s on the "
+"Tabbycat site at %(protocol)s://%(domain)s."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:10
+msgid "If this was you, follow the link below to reset your password:"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:13
+#, python-format
+msgid ""
+"If this wasn't you, that probably means someone else typed your e-mail "
+"address into the password reset form on the Tabbycat site at %(protocol)s://"
+"%(domain)s."
+msgstr ""
+
+#: templates/registration/password_reset_form.html:4
+#: templates/registration/password_reset_form.html:24
+msgctxt "page title"
+msgid "Password Reset"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:15
+msgid "Please enter a valid e-mail address."
+msgstr ""
+
+#: templates/registration/password_reset_form.html:28
+msgid ""
+"Enter your e-mail address below, and we'll e-mail you a password reset link."
+msgstr ""
+
+#: templates/registration/password_reset_form.html:36
+msgid "E-mail address"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:44
+msgctxt "button"
+msgid "Reset my password"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:49
+msgid "Back to the login page"
+msgstr ""
+
+#: templates/registration/password_reset_subject.txt:2
+#, python-format
+msgid "Password reset on Tabbycat site at %(domain)s"
+msgstr ""
+
+#~ msgid "%(side_abbr)s%(metric_abbr)s"
+#~ msgstr "%(metric_abbr)s%(side_abbr)s"
+
+#~ msgid "%(side_possessive)s %(metric_name)s"
+#~ msgstr "%(metric_name)s %(side_possessive)s"
+
+#, fuzzy
+#~| msgid "Number of times this %(team)s has been the %(affirmative)s before"
+#~ msgid "Number of times this %(team)s has been on each side (aff, neg)"
+#~ msgstr "Nombre de fois que cette %(team)s a déjà été l'%(affirmative)s"
+
+#, fuzzy
+#~| msgid "%(side_abbr)s%(aff_abbr)ss"
+#~ msgid "%(side_abbr)sSC"
+#~ msgstr "%(side_abbr)s%(aff_abbr)ss"
+
+#~ msgid "tournament"
+#~ msgstr "tournoi"
+
+#~ msgctxt "button"
+#~ msgid "Login"
+#~ msgstr "Connexion"

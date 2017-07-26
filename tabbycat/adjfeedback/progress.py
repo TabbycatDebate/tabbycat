@@ -1,8 +1,13 @@
 """Utilities to compute which feedback has been submitted and not submitted
 by participants of the tournament.
 
-There are a few possibilities for how to characterise a feedback submission:
-"""
+The calculations are based around individual "trackers", each one representing
+one expected piece of feedback, or an unexpected piece of feedback if there is
+one. Each tracker reports whether is expected, submitted and fulfilled. Then,
+instances of aggregation classes (subclasses of BaseFeedbackProgress)
+instantiate a collection of trackers for a particular source (team or
+adjudicator).
+ """
 
 import logging
 from operator import attrgetter
@@ -69,10 +74,15 @@ class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTr
         """For a team, this must be the adjudicator who delivered the oral
         adjudication. If the chair was rolled, then it is one of the majority
         adjudicators; if the chair was in the majority, then it must be the
-        chair."""
+        chair.
+
+        For consensus adjudications and where information about splitting
+        adjudicators is not shown publicly, the above-described rule can't be
+        enforced, so instead we just expect it to be on any adjudicator on the
+        panel."""
 
         if self.enforce_orallist and self.source.debate.confirmed_ballot:
-            majority = self.source.debate.confirmed_ballot.ballot_set.majority_adj
+            majority = self.source.debate.confirmed_ballot.result.majority_adjudicators()
             chair = self.source.debate.adjudicators.chair
             if chair in majority:
                 return [chair]
@@ -242,7 +252,8 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         self.team = team
         if tournament is None:
             tournament = team.tournament
-        self.enforce_orallist = tournament.pref("show_splitting_adjudicators")
+        self.enforce_orallist = (tournament.pref("show_splitting_adjudicators") and
+                                 tournament.pref("ballots_per_debate") == 'per-adj')
         self.expect_all_adjs = tournament.pref("feedback_from_teams") == 'all-adjs'
         super().__init__(tournament)
 
@@ -266,7 +277,7 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
             debate__round__stage=Round.STAGE_PRELIMINARY
         ).select_related('debate', 'debate__round').prefetch_related(
             'debate__debateadjudicator_set__adjudicator')
-        populate_confirmed_ballots([dt.debate for dt in debateteams], ballotsets=True)
+        populate_confirmed_ballots([dt.debate for dt in debateteams], results=True)
         return debateteams
 
     def _get_debateteams(self):
@@ -352,7 +363,7 @@ class FeedbackProgressForAdjudicator(BaseFeedbackProgress):
         return trackers
 
 
-def get_feedback_progress(t):
+def get_feedback_progress(tournament):
     """Returns a list of FeedbackProgressForTeam objects and a list of
     FeedbackProgressForAdjudicator objects.
 
@@ -364,7 +375,7 @@ def get_feedback_progress(t):
     teams_progress = []
     adjs_progress = []
 
-    teams = t.team_set.prefetch_related('speaker_set').all()
+    teams = tournament.team_set.prefetch_related('speaker_set').all()
 
     submitted_feedback_by_team_id = {team.id: [] for team in teams}
     submitted_feedback_teams = AdjudicatorFeedback.objects.filter(
@@ -385,7 +396,7 @@ def get_feedback_progress(t):
         progress._debateteams = debateteams_by_team_id[team.id]
         teams_progress.append(progress)
 
-    adjudicators = t.adjudicator_set.all()
+    adjudicators = tournament.adjudicator_set.all()
 
     submitted_feedback_by_adj_id = {adj.id: [] for adj in adjudicators}
     submitted_feedback_adjs = AdjudicatorFeedback.objects.filter(

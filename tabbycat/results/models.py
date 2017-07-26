@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from .result import BallotSet
+from .result import DebateResult
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ class Submission(models.Model):
     ip_address = models.GenericIPAddressField(blank=True, null=True,
         verbose_name=_("IP address"))
 
-    version_lock = Lock()
+    save_lock = Lock()
 
     class Meta:
         abstract = True
@@ -59,29 +59,25 @@ class Submission(models.Model):
                     if arg != 'version')
 
     def save(self, *args, **kwargs):
-        # Check for uniqueness.
-        if self.confirmed:
-            try:
-                current = self.__class__.objects.get(confirmed=True, **self._unique_filter_args)
-            except self.DoesNotExist:
-                pass
-            else:
-                if current != self:
-                    logger.warning("{} confirmed while {} was already confirmed, setting latter "
-                            "to unconfirmed".format(self, current))
-                    current.confirmed = False
-                    current.save()
-
-        # Assign the version field to one more than the current maximum version.
         # Use a lock to protect against the possibility that two submissions do this
-        # at the same time and get the same version number.
-        with self.version_lock:
+        # at the same time and get the same version number or both be confirmed.
+        with self.save_lock:
+
+            # Assign the version field to one more than the current maximum version.
             if self.pk is None:
                 existing = self.__class__.objects.filter(**self._unique_filter_args)
                 if existing.exists():
                     self.version = existing.aggregate(models.Max('version'))['version__max'] + 1
                 else:
                     self.version = 1
+
+            # Check for uniqueness.
+            if self.confirmed:
+                unconfirmed = self.__class__.objects.filter(confirmed=True,
+                        **self._unique_filter_args).exclude(pk=self.pk).update(confirmed=False)
+                if unconfirmed > 0:
+                    logger.info("Unconfirmed %d %s so that %s could be confirmed", unconfirmed, self._meta.verbose_name_plural, self)
+
             super(Submission, self).save(*args, **kwargs)
 
     def clean(self):
@@ -119,9 +115,14 @@ class BallotSubmission(Submission):
 
     @property
     def ballot_set(self):
-        if not hasattr(self, "_ballot_set"):
-            self._ballot_set = BallotSet(self)
-        return self._ballot_set
+        # Remove after 15/7/2017
+        raise RuntimeError("Debate.ballot_set is deprecated, use Debate.result instead.")
+
+    @property
+    def result(self):
+        if not hasattr(self, "_result"):
+            self._result = DebateResult(self)
+        return self._result
 
     def clean(self):
         # The motion must be from the relevant round
@@ -132,8 +133,12 @@ class BallotSubmission(Submission):
                     'round': self.debate.round,
                     'motion': self.motion.reference,
                     'motion_round': self.motion.round})
+
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
+
+        if self.forfeit is not None and self.forfeit.debate != self.debate:
+            raise ValidationError(_("The forfeiter must be a team in the debate."))
 
 
 class SpeakerScoreByAdj(models.Model):
@@ -182,13 +187,18 @@ class TeamScore(models.Model):
         verbose_name=_("debate team"))
 
     points = models.PositiveSmallIntegerField(verbose_name=_("points"))
-    win = models.NullBooleanField(verbose_name=_("win"))
-    margin = ScoreField(verbose_name=_("margin"))
-    score = ScoreField(verbose_name=_("score"))
-    votes_given = models.PositiveSmallIntegerField(verbose_name=_("votes given"))
-    votes_possible = models.PositiveSmallIntegerField(verbose_name=_("votes possible"))
+    win = models.NullBooleanField(null=True, blank=True,
+        verbose_name=_("win"))
+    margin = ScoreField(null=True, blank=True,
+        verbose_name=_("margin"))
+    score = ScoreField(null=True, blank=True,
+        verbose_name=_("score"))
+    votes_given = models.PositiveSmallIntegerField(null=True, blank=True,
+        verbose_name=_("votes given"))
+    votes_possible = models.PositiveSmallIntegerField(null=True, blank=True,
+        verbose_name=_("votes possible"))
 
-    forfeit = models.BooleanField(default=False, blank=False, null=False,
+    forfeit = models.BooleanField(default=False,
         verbose_name=_("forfeit"),
         help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
@@ -214,7 +224,7 @@ class SpeakerScore(models.Model):
 
     The 'speaker' field is canonical. The 'score' field, however, is a
     performance enhancement; raw scores are stored in SpeakerScoreByAdj. The
-    BallotSet class in result.py calculates this when it saves a ballot set.
+    result classes in result.py calculates this when it saves a result.
     """
     ballot_submission = models.ForeignKey(BallotSubmission, models.CASCADE,
         verbose_name=_("ballot submission"))

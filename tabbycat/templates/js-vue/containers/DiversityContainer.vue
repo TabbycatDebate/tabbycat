@@ -73,7 +73,7 @@
     <div class="col-md-3">
       <div class="panel panel-default">
         <div class="panel-heading text-center">
-          <h4 class="panel-title">Adudicator Results</h4>
+          <h4 class="panel-title">Adjudicator Results</h4>
         </div>
         <div class="panel-body text-center">
           <text-display v-for="set in graphsData.adjudicators_results"

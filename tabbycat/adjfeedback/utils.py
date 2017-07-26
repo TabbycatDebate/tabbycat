@@ -68,7 +68,7 @@ def get_feedback_overview(t, adjudicators):
                         ballot_submission__confirmed=True,
                         debate_adjudicator__debate__round__in=rounds).select_related(
                         'debate_adjudicator__adjudicator', 'ballot_submission').exclude(
-                        position=t.REPLY_POSITION)
+                        position=t.reply_position)
 
     for adj in adjudicators:
         # Gather feedback scores for graphs

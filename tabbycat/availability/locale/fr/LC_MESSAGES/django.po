@@ -1,0 +1,142 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-16 07:27+1000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: availability/templates/availability_index.html:9
+#: availability/templates/availability_index.html:14
+msgid "Check In Teams"
+msgstr ""
+
+#: availability/templates/availability_index.html:19
+msgid "Check In Adjs"
+msgstr ""
+
+#: availability/templates/availability_index.html:23
+msgid "Check In Venues"
+msgstr ""
+
+#: availability/templates/availability_index.html:31
+msgid "Check In All Breaking Adjs"
+msgstr ""
+
+#: availability/templates/availability_index.html:38
+msgid "Check In Everything"
+msgstr ""
+
+#: availability/templates/availability_index.html:45
+#, python-format
+msgid "Copy from %(prev_round)s"
+msgstr ""
+
+#: availability/templates/availability_index.html:59
+msgid "View Draw"
+msgstr ""
+
+#: availability/templates/availability_index.html:67
+#: availability/templates/availability_index.html:73
+#: availability/templates/availability_index.html:79
+#: availability/templates/availability_index.html:85
+#: availability/templates/availability_index.html:91
+#: availability/templates/availability_index.html:97
+#: availability/templates/availability_index.html:103
+#: availability/templates/availability_index.html:107
+msgid "Generate Draw"
+msgstr ""
+
+#: availability/templates/availability_index.html:118
+#, python-format
+msgid ""
+"Note: %(previous_unconfirmed)s debates from <strong>%(prev_round)s do not "
+"have a completed ballot</strong> — this may lead to a draw that fails or is "
+"incorrect <em>depending</em> on your draw rules."
+msgstr ""
+
+#: availability/templates/availability_index.html:128
+msgid "There is an uneven number of teams checked in for this round."
+msgstr ""
+
+#: availability/templates/availability_index.html:134
+#, python-format
+msgid ""
+"There need to be at least %(min_adjudicators)s adjudicators checked in given "
+"the number of debates."
+msgstr ""
+
+#: availability/templates/availability_index.html:143
+#, python-format
+msgid ""
+"There need to be at least %(min_venues)s venues checked in given the number "
+"of debates."
+msgstr ""
+
+#: availability/templates/availability_index.html:153
+#, python-format
+msgid ""
+"This is a page for <strong>%(round_name)s</strong>, however the current "
+"round is still set to <strong>%(current_round_name)s</strong>. Did you "
+"forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance to "
+"the next round?</a>"
+msgstr ""
+
+#: availability/templates/availability_index.html:167
+#, python-format
+msgid ""
+"This is the first round, but its draw type is <strong>%(draw_type)s</"
+"strong>. Did you intend for it to be <strong>Random</strong> instead? You "
+"can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
+"draw type in the Edit Database area.</a>"
+msgstr ""
+
+#: availability/templates/availability_index.html:179
+#, python-format
+msgid ""
+"There don't appear to be any teams breaking in the %(break_category)s Break. "
+"Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated "
+"the break for the %(break_category)s Break</a> yet?"
+msgstr ""
+
+#: availability/templates/availability_index.html:190
+#, python-format
+msgid ""
+"There's only one team breaking in the %(break_category)s Break. You can't "
+"generate an elimination round draw with only one team — you might like to <a "
+"href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for "
+"the %(break_category)s Break</a>."
+msgstr ""
+
+#: availability/templates/availability_index.html:202
+#, python-format
+msgid ""
+"This is a subsequent elimination round, but there aren't any elimination "
+"rounds in the same break category (%(break_category)s) before it. Is this "
+"round meant to be a <strong>first elimination</strong> round instead? You "
+"can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
+"draw type in the Edit Database area.</a>"
+msgstr ""
+
+#: availability/templates/availability_index.html:215
+#, python-format
+msgid ""
+"This is an elimination round, but its draw type is <strong>%(draw_type)s</"
+"strong>. This combination isn't allowed — the draw type of elimination "
+"rounds must be either <strong>first elimination</strong> (if it's the first "
+"elimination round in its break category) or <strong>subsequent elimination</"
+"strong>. Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> "
+"change this round's draw type in the Edit Database area.</a>"
+msgstr ""

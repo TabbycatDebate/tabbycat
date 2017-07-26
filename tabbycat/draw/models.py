@@ -2,8 +2,10 @@ import logging
 
 from django.db import models
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 
-from tournaments.utils import get_position_name
+from tournaments.utils import get_side_name
 
 from .generator import DRAW_FLAG_DESCRIPTIONS
 
@@ -22,30 +24,43 @@ class Debate(models.Model):
     STATUS_POSTPONED = 'P'
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
-    STATUS_CHOICES = ((STATUS_NONE, 'None'),
-                      (STATUS_POSTPONED, 'Postponed'),
-                      (STATUS_DRAFT, 'Draft'),
-                      (STATUS_CONFIRMED, 'Confirmed'), )
+    STATUS_CHOICES = ((STATUS_NONE, _("None")),
+                      (STATUS_POSTPONED, _("Postponed")),
+                      (STATUS_DRAFT, _("Draft")),
+                      (STATUS_CONFIRMED, _("Confirmed")), )
 
     objects = DebateManager()
 
-    round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True)
-    venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True)
+    round = models.ForeignKey('tournaments.Round', models.CASCADE, db_index=True,
+        verbose_name=_("round"))
+    venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True,
+        verbose_name=_("venue"))
     # cascade to keep draws clean in event of division deletion
-    division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True)
+    division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True,
+        verbose_name=_("division"))
 
-    bracket = models.FloatField(default=0)
-    room_rank = models.IntegerField(default=0)
+    bracket = models.FloatField(default=0,
+        verbose_name=_("bracket"))
+    room_rank = models.IntegerField(default=0,
+        verbose_name=_("room rank"))
 
     time = models.DateTimeField(blank=True, null=True,
-        help_text="The time/date of a debate if it is specifically scheduled")
+        verbose_name=_("time"),
+        help_text=_("The time/date of a debate if it is specifically scheduled"))
 
     # comma-separated list of strings
     flags = models.CharField(max_length=100, blank=True)
 
-    importance = models.IntegerField(default=0, choices=[(i, i) for i in range(-2, 3)])
-    result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE)
-    ballot_in = models.BooleanField(default=False)
+    importance = models.IntegerField(default=0, choices=[(i, i) for i in range(-2, 3)],
+        verbose_name=_("importance"))
+    result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
+        verbose_name=_("result status"))
+    ballot_in = models.BooleanField(default=False,
+        verbose_name=_("ballot in"))
+
+    class Meta:
+        verbose_name = _("debate")
+        verbose_name_plural = _("debates")
 
     def __str__(self):
         description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
@@ -63,13 +78,13 @@ class Debate(models.Model):
             return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             dts = self.debateteam_set.all()
-            if all(dt.position == DebateTeam.POSITION_UNALLOCATED for dt in dts):
+            if all(dt.side == DebateTeam.SIDE_UNALLOCATED for dt in dts):
                 return ", ".join([dt.team.short_name for dt in dts])
             else:
-                return self._teams_and_positions_display()
+                return self._teams_and_sides_display()
 
-    def _teams_and_positions_display(self):
-        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_position_display())
+    def _teams_and_sides_display(self):
+        return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_display())
                 for dt in self.debateteam_set.all()])
 
     # --------------------------------------------------------------------------
@@ -104,12 +119,12 @@ class Debate(models.Model):
 
         for dt in dts:
             self._teams.append(dt.team)
-            if dt.position == DebateTeam.POSITION_AFFIRMATIVE:
+            if dt.side == DebateTeam.SIDE_AFFIRMATIVE:
                 if 'aff_team' in self._team_properties:
                     self._multiple_found.extend(['aff_team', 'aff_dt'])
                 self._team_properties['aff_team'] = dt.team
                 self._team_properties['aff_dt'] = dt
-            elif dt.position == DebateTeam.POSITION_NEGATIVE:
+            elif dt.side == DebateTeam.SIDE_NEGATIVE:
                 if 'neg_team' in self._team_properties:
                     self._multiple_found.extend(['neg_team', 'neg_dt'])
                 self._team_properties['neg_team'] = dt.team
@@ -123,12 +138,12 @@ class Debate(models.Model):
                 self._populate_teams()
             if attr in self._multiple_found:
                 raise MultipleObjectsReturned("Multiple objects found for attribute '%s' in debate ID %d. "
-                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_positions_display()))
+                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
             try:
                 return self._team_properties[attr]
             except KeyError:
                 raise ObjectDoesNotExist("No object found for attribute '%s' in debate ID %d. "
-                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_positions_display()))
+                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
         return _property
 
     @property
@@ -211,7 +226,7 @@ class Debate(models.Model):
                   'importance': self.importance, 'locked': False}
         debate['venue'] = self.venue.serialize() if self.venue else None
         debate['teams'] = {
-            dt.get_position_name(round.tournament):dt.team.serialize() for dt in self.debateteam_set.all()}
+            dt.get_side_name(round.tournament):dt.team.serialize() for dt in self.debateteam_set.all()}
         debate['panel'] = [{
             'adjudicator': adj.serialize(round=round), 'position': position,
         } for adj, position in self.adjudicators.with_debateadj_types()]
@@ -226,18 +241,25 @@ class DebateTeamManager(models.Manager):
 
 
 class DebateTeam(models.Model):
-    POSITION_AFFIRMATIVE = 'A'
-    POSITION_NEGATIVE = 'N'
-    POSITION_UNALLOCATED = 'u'
-    POSITION_CHOICES = ((POSITION_AFFIRMATIVE, 'affirmative'),
-                        (POSITION_NEGATIVE, 'negative'),
-                        (POSITION_UNALLOCATED, 'unallocated'), )
+    SIDE_AFFIRMATIVE = 'aff'
+    SIDE_NEGATIVE = 'neg'
+    SIDE_UNALLOCATED = '-'
+    SIDE_CHOICES = ((SIDE_AFFIRMATIVE, _("affirmative")),
+                    (SIDE_NEGATIVE, _("negative")),
+                    (SIDE_UNALLOCATED, _("unallocated")), )
 
     objects = DebateTeamManager()
 
-    debate = models.ForeignKey(Debate, models.CASCADE, db_index=True)
-    team = models.ForeignKey('participants.Team', models.PROTECT)
-    position = models.CharField(max_length=1, choices=POSITION_CHOICES)
+    debate = models.ForeignKey(Debate, models.CASCADE, db_index=True,
+        verbose_name=_("debate"))
+    team = models.ForeignKey('participants.Team', models.PROTECT,
+        verbose_name=_("team"))
+    side = models.CharField(max_length=3, choices=SIDE_CHOICES,
+        verbose_name=_("side"))
+
+    class Meta:
+        verbose_name = _("debate team")
+        verbose_name_plural = _("debate teams")
 
     def __str__(self):
         return '{} in {}'.format(self.team.short_name, self.debate)
@@ -248,7 +270,7 @@ class DebateTeam(models.Model):
             return self._opponent
         except AttributeError:
             try:
-                self._opponent = DebateTeam.objects.exclude(position=self.position).select_related(
+                self._opponent = DebateTeam.objects.exclude(side=self.side).select_related(
                         'team', 'team__institution').get(debate=self.debate)
             except (DebateTeam.DoesNotExist, DebateTeam.MultipleObjectsReturned):
                 logger.warning("No opponent found for %s", str(self))
@@ -257,11 +279,11 @@ class DebateTeam(models.Model):
 
     def get_result_display(self):
         if self.win is True:
-            return 'won'
+            return ugettext("won")
         elif self.win is False:
-            return 'lost'
+            return ugettext("lost")
         else:
-            return 'result unknown'
+            return ugettext("result unknown")
 
     @property
     def win(self):
@@ -279,31 +301,29 @@ class DebateTeam(models.Model):
                 self._win = None
             return self._win
 
-    def get_position_name(self, tournament=None):
-        """Should be used instead of get_position_display() on views.
+    def get_side_name(self, tournament=None):
+        """Should be used instead of get_side_display() on views.
         `tournament` can be passed in if known, for performance."""
-        if self.position == DebateTeam.POSITION_AFFIRMATIVE:
-            return get_position_name(tournament or self.debate.round.tournament, 'aff', 'full')
-        elif self.position == DebateTeam.POSITION_NEGATIVE:
-            return get_position_name(tournament or self.debate.round.tournament, 'neg', 'full')
+        if self.side in [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]:
+            return get_side_name(tournament or self.debate.round.tournament, self.side, 'full')
         else:
-            return self.get_position_display()
+            return self.get_side_display()
 
 
-class TeamPositionAllocation(models.Model):
-    """Model to store team position allocations for tournaments like Joynt
+class TeamSideAllocation(models.Model):
+    """Model to store team side allocations for tournaments like Joynt
     Scroll (New Zealand). Each team-round combination should have one of these.
-    In tournaments without team position allocations, just don't use this
+    In tournaments without team side allocations, just don't use this
     model."""
 
-    POSITION_AFFIRMATIVE = DebateTeam.POSITION_AFFIRMATIVE
-    POSITION_NEGATIVE = DebateTeam.POSITION_NEGATIVE
-    POSITION_UNALLOCATED = DebateTeam.POSITION_UNALLOCATED
-    POSITION_CHOICES = DebateTeam.POSITION_CHOICES
-
-    round = models.ForeignKey('tournaments.Round', models.CASCADE)
-    team = models.ForeignKey('participants.Team', models.CASCADE)
-    position = models.CharField(max_length=1, choices=POSITION_CHOICES)
+    round = models.ForeignKey('tournaments.Round', models.CASCADE,
+        verbose_name=_("round"))
+    team = models.ForeignKey('participants.Team', models.CASCADE,
+        verbose_name=_("team"))
+    side = models.CharField(max_length=3, choices=DebateTeam.SIDE_CHOICES,
+        verbose_name=_("side"))
 
     class Meta:
         unique_together = [('round', 'team')]
+        verbose_name = _("team side allocation")
+        verbose_name_plural = _("team side allocations")

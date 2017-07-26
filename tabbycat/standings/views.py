@@ -3,7 +3,7 @@ import json
 from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Avg, Count
 
 import motions.statistics as motion_statistics
 from motions.models import Motion
@@ -14,6 +14,7 @@ from tournaments.models import Round
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
+from .motions import MotionsStandingsTableBuilder
 from .diversity import get_diversity_data_sets
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
@@ -32,10 +33,21 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         speaks = SpeakerScore.objects.filter(
                     ballot_submission__confirmed=True, ghost=False,
                     speaker__team__tournament=t).exclude(
-                    position=t.REPLY_POSITION).select_related(
+                    position=t.reply_position).select_related(
                     'debate_team__debate__round')
-        kwargs["top_speaks"] = speaks.order_by('-score')[:10]
-        kwargs["bottom_speaks"] = speaks.order_by('score')[:10]
+        kwargs["top_speaks"] = speaks.order_by('-score')[:9]
+        kwargs["bottom_speaks"] = speaks.order_by('score')[:9]
+
+        overall = speaks.filter(
+            debate_team__debate__round__stage=Round.STAGE_PRELIMINARY).aggregate(
+            Avg('score'))['score__avg']
+        kwargs["round_speaks"] = [{'round': 'Overall (for in-rounds)',
+                                   'score': overall}]
+        for r in t.round_set.order_by('seq'):
+            avg = speaks.filter(debate_team__debate__round=r).aggregate(
+                Avg('score'))['score__avg']
+            if avg:
+                kwargs["round_speaks"].append({'round': r.name, 'score': avg})
 
         margins = TeamScore.objects.filter(
                     ballot_submission__confirmed=True,
@@ -43,14 +55,14 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
                     margin__gte=0).select_related(
                     'debate_team__team', 'debate_team__debate__round',
                     'debate_team__team__institution')
-        kwargs["top_margins"] = margins.order_by('-margin')[:10]
-        kwargs["bottom_margins"] = margins.order_by('margin')[:10]
+        kwargs["top_margins"] = margins.order_by('-margin')[:9]
+        kwargs["bottom_margins"] = margins.order_by('margin')[:9]
 
         motions = Motion.objects.filter(
                     round__seq__lte=round.seq, round__tournament=t).annotate(
                     Count('ballotsubmission'))
-        kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:10]
-        kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:10]
+        kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:4]
+        kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:4]
 
         return super().get_context_data(**kwargs)
 
@@ -110,6 +122,10 @@ class PublicTabMixin(PublicTournamentPageMixin):
                 return self.page_title + " (Top %s Only)" % ranks_limit
 
         return self.page_title
+
+    def get_context_data(self, **kwargs):
+        kwargs['for_public'] = True
+        return super().get_context_data(**kwargs)
 
 
 # ==============================================================================
@@ -220,12 +236,58 @@ class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):
 
 
 class NoviceStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
-    pass
+
+    def get_context_data(self, **kwargs):
+        messages.info(self.request, "Novice status can be set on a per-speaker "
+            "basis in the Edit Database area.")
+        return super().get_context_data(**kwargs)
 
 
 class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
     public_page_preference = 'novices_tab_released'
     public_limit_preference = 'novices_tab_limit'
+
+
+class BaseESLStandingsView(BaseStandardSpeakerStandingsView):
+    """Speaker standings view for ESL speakers."""
+    page_title = 'ESL Speaker Standings'
+
+    def get_speakers(self):
+        return super().get_speakers().filter(esl=True)
+
+
+class ESLStandingsView(SuperuserRequiredMixin, BaseESLStandingsView):
+
+    def get_context_data(self, **kwargs):
+        messages.info(self.request, "ESL status can be set on a per-speaker "
+            "basis in the Edit Database area.")
+        return super().get_context_data(**kwargs)
+
+
+class PublicESLTabView(PublicTabMixin, BaseESLStandingsView):
+    public_page_preference = 'esl_tab_released'
+    public_limit_preference = 'esl_tab_limit'
+
+
+class BaseEFLStandingsView(BaseStandardSpeakerStandingsView):
+    """Speaker standings view for EFL speakers."""
+    page_title = 'EFL Speaker Standings'
+
+    def get_speakers(self):
+        return super().get_speakers().filter(efl=True)
+
+
+class EFLStandingsView(SuperuserRequiredMixin, BaseEFLStandingsView):
+
+    def get_context_data(self, **kwargs):
+        messages.info(self.request, "EFL status can be set on a per-speaker "
+            "basis in the Edit Database area.")
+        return super().get_context_data(**kwargs)
+
+
+class PublicEFLTabView(PublicTabMixin, BaseEFLStandingsView):
+    public_page_preference = 'efl_tab_released'
+    public_limit_preference = 'efl_tab_limit'
 
 
 class BaseProStandingsView(BaseStandardSpeakerStandingsView):
@@ -255,7 +317,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
         tournament = self.get_tournament()
         return Speaker.objects.filter(
             team__tournament=tournament,
-            speakerscore__position=tournament.REPLY_POSITION).select_related(
+            speakerscore__position=tournament.reply_position).select_related(
             'team', 'team__institution', 'team__tournament').prefetch_related(
             'team__speaker_set').distinct()
 
@@ -377,16 +439,17 @@ class BaseMotionStandingsView(BaseStandingsView):
 
     def get_motions_table(self, t, rounds):
         motions = motion_statistics.statistics(tournament=t, rounds=rounds)
-        table = TabbycatTableBuilder(view=self, sort_key="Order")
+        table = MotionsStandingsTableBuilder(view=self, sort_key="Order")
 
         table.add_round_column([motion.round for motion in motions])
         table.add_motion_column(motions, show_order=True)
-        table.add_column("Selected", [motion.chosen_in for motion in motions])
+        table.add_column("Aff Wins", [motion.aff_wins for motion in motions])
+        table.add_column("Neg Wins", [motion.neg_wins for motion in motions])
+        table.add_debate_balance_column(motions)
         if self.get_tournament().pref('motion_vetoes_enabled'):
             table.add_column("Aff Vetoes", [motion.aff_vetoes for motion in motions])
             table.add_column("Neg Vetoes", [motion.neg_vetoes for motion in motions])
-        table.add_column("Aff Wins", [motion.aff_wins for motion in motions])
-        table.add_column("Neg Wins", [motion.neg_wins for motion in motions])
+            table.add_veto_balance_column(motions)
         return table
 
     def get_tables(self):
@@ -441,7 +504,8 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         messages.info(self.request, "This list is sorted by wins, and then by "
             "team name within each group — it does not indicate each team's "
-            "ranking within each group.")
+            "ranking within each group. It also excludes results from silent "
+            "rounds unless the full tab has been released.")
 
         return table
 

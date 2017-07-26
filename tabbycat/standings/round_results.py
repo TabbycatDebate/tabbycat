@@ -71,9 +71,9 @@ def add_speaker_round_results(standings, rounds, tournament, replies=False):
         speaker_id__in=speaker_ids, ghost=False)
 
     if replies:
-        speaker_scores = speaker_scores.filter(position=tournament.REPLY_POSITION)
+        speaker_scores = speaker_scores.filter(position=tournament.reply_position)
     else:
-        speaker_scores = speaker_scores.filter(position__lte=tournament.LAST_SUBSTANTIVE_POSITION)
+        speaker_scores = speaker_scores.filter(position__lte=tournament.last_substantive_position)
 
     for info in standings:
         info.scores = ['—'] * len(rounds)

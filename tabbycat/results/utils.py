@@ -1,14 +1,15 @@
 from itertools import combinations
 
 from django.db.models import Count
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 
 from draw.models import Debate
-
-from .prefetch import populate_ballotsets
+from tournaments.utils import get_side_name
 
 
 def set_float_or_int(number, step_value):
-    """Used to ensure the values sent through to the frontend <input≥ are
+    """Used to ensure the values sent through to the frontend <input> are
     either Ints or Floats such that the validation can handle them properly"""
     if step_value.is_integer():
         return int(number)
@@ -49,13 +50,14 @@ def populate_identical_ballotsub_lists(ballotsubs):
     Two ballot submissions are identical if they share the same debate, motion,
     speakers and all speaker scores."""
 
-    populate_ballotsets(ballotsubs)
+    from .prefetch import populate_results
+    populate_results(ballotsubs)
 
     for ballotsub in ballotsubs:
         ballotsub.identical_ballotsub_versions = []
 
     for ballotsub1, ballotsub2 in combinations(ballotsubs, 2):
-        if ballotsub1.ballot_set.identical(ballotsub2.ballot_set):
+        if ballotsub1.result.identical(ballotsub2.result):
             ballotsub1.identical_ballotsub_versions.append(ballotsub2.version)
             ballotsub2.identical_ballotsub_versions.append(ballotsub1.version)
 
@@ -65,3 +67,28 @@ def populate_identical_ballotsub_lists(ballotsubs):
 
 def ballot_checkin_number_left(round):
     return Debate.objects.filter(round=round, ballot_in=False).count()
+
+
+_ORDINALS = {
+    1: ugettext_lazy("1st"),
+    2: ugettext_lazy("2nd"),
+    3: ugettext_lazy("3rd"),
+    4: ugettext_lazy("4th"),
+    5: ugettext_lazy("5th"),
+    6: ugettext_lazy("6th"),
+    7: ugettext_lazy("7th"),
+    8: ugettext_lazy("8th"),
+}
+
+
+def side_and_position_names(tournament):
+    """Yields 2-tuples (side, positions), where position is a list of position
+    names, all being translated human-readable names. This should eventually
+    be extended to return an appropriate list for the tournament configuration.
+    """
+    sides = [get_side_name(tournament, side, 'full').title() for side in ('aff', 'neg')]
+    for side in sides:
+        positions = [_("Reply") if pos == tournament.reply_position
+            else _ORDINALS[pos]
+            for pos in tournament.positions]
+        yield side, positions

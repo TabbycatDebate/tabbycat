@@ -19,13 +19,13 @@ class AustralsPreferences(PreferencesPreset):
     show_in_list = True
 
     # Scoring
-    scoring__score_min                         = 68.0
-    scoring__score_max                         = 82.0
-    scoring__score_step                        = 1.0
-    scoring__reply_score_min                   = 34.0
-    scoring__reply_score_max                   = 41.0
+    scoring__score_min                         = 70.0 # Technically the speaks
+    scoring__score_max                         = 80.0 # range is at the adj
+    scoring__score_step                        = 1.0  # core's discretion (it's
+    scoring__reply_score_min                   = 35.0 # not in the constitution)
+    scoring__reply_score_max                   = 40.0
     scoring__reply_score_step                  = 0.5
-    scoring__maximum_margin                    = 15.0  # TODO= check this
+    scoring__maximum_margin                    = 0.0  # Rob Confirmed
     # Draws
     draw_rules__avoid_same_institution         = True
     draw_rules__avoid_team_history             = True
@@ -37,7 +37,7 @@ class AustralsPreferences(PreferencesPreset):
     debate_rules__substantive_speakers         = 3
     debate_rules__reply_scores_enabled         = True
     debate_rules__motion_vetoes_enabled        = True
-    debate_rules__position_names               = 'aff-neg'
+    debate_rules__side_names                   = 'aff-neg'
     data_entry__enable_motions                 = True
     # Standings Rules
     standings__standings_missed_debates        = 2  # TODO= check this
@@ -46,6 +46,32 @@ class AustralsPreferences(PreferencesPreset):
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
+    ui_options__show_esl                       = True
+    ui_options__show_efl                       = True
+
+
+class CanadianParliamentaryPreferences(PreferencesPreset):
+    name         = "Canadian Parliamentary Rules"
+    show_in_list = True
+    description  = ("2 vs 2 with replies (unscored) and POIs. May require "
+        "additional configuration depending on regional variations.")
+    # Scoring
+    scoring__score_min                         = 50.0
+    scoring__score_max                         = 100.0
+    # Debate Rules
+    debate_rules__reply_scores_enabled         = False # Not scored
+    debate_rules__substantive_speakers         = 2
+    debate_rules__side_names                   = 'gov-opp'
+    debate_rules__motion_vetoes_enabled        = False
+    debate_rules__ballots_per_debate           = 'per-debate'
+    data_entry__enable_motions                 = False
+    # Draws
+    draw_rules__avoid_same_institution         = False # TBC
+    draw_rules__avoid_team_history             = False # TBC
+    draw_rules__draw_odd_bracket               = 'pullup_top' # TBC
+    draw_rules__draw_side_allocations          = 'balance'
+    draw_rules__draw_pairing_method            = 'fold' # TBC
+    draw_rules__draw_avoid_conflicts           = 'off'
 
 
 class AustralianEastersPreferences(AustralsPreferences):
@@ -89,8 +115,8 @@ class NZEastersPreferences(AustralsPreferences):
     draw_rules__draw_odd_bracket               = 'intermediate'
     draw_rules__draw_pairing_method            = 'fold'
     draw_rules__draw_avoid_conflicts           = 'off'
-    draw_rules__avoid_same_institution         = False  # TODO: CHECK
-    draw_rules__avoid_team_history             = False  # TODO: CHECK
+    draw_rules__avoid_same_institution         = False # TODO: CHECK
+    draw_rules__avoid_team_history             = False # TODO: CHECK
     # UI Options
     ui_options__show_novices                   = True
 
@@ -153,15 +179,16 @@ class UADCPreferences(AustralsPreferences):
     debate_rules__substantive_speakers         = 3
     debate_rules__reply_scores_enabled         = True
     debate_rules__motion_vetoes_enabled        = True
-    debate_rules__position_names               = 'gov-opp'
+    debate_rules__side_names                   = 'gov-opp'
     # Standings Rules
     standings__team_standings_precedence       = ['wins', 'speaks_sum', 'margin_avg']
     # Feedback
-    feedback__adj_min_score                    = 1.0  # Explicit in the rules
+    feedback__adj_min_score                    = 1.0   # Explicit in the rules
     feedback__adj_max_score                    = 10.0  # Explicit in the rules
     feedback__feedback_from_teams              = 'all-adjs' # Kinda a big deal
     # UI Options
     public_features__feedback_progress         = True  # Feedback is compulsory
+    ui_options__show_efl                       = True  # Only EFL status shown
 
 
 class WSDCPreferences(AustralsPreferences):
@@ -182,7 +209,7 @@ class WSDCPreferences(AustralsPreferences):
     data_entry__enable_motions                 = False # Single motions per round
     # Debates
     debate_rules__motion_vetoes_enabled        = False # Single motions per round
-    debate_rules__position_names               = 'prop-opp'
+    debate_rules__side_names                   = 'prop-opp'
     # Draws (exact mechanism is up to the host)
     draw_rules__avoid_same_institution         = False
     # Standings

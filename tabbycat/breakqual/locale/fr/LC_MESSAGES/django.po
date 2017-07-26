@@ -1,0 +1,196 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-16 07:27+1000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: breakqual/models.py:8
+msgid "tournament"
+msgstr ""
+
+#: breakqual/models.py:10
+msgid "name"
+msgstr ""
+
+#: breakqual/models.py:11
+msgid "Name to be displayed, e.g., \"ESL\""
+msgstr ""
+
+#: breakqual/models.py:13
+msgid "slug"
+msgstr ""
+
+#: breakqual/models.py:14
+msgid "Slug for URLs, e.g., \"esl\""
+msgstr ""
+
+#: breakqual/models.py:16
+msgid "sequence number"
+msgstr ""
+
+#: breakqual/models.py:17
+msgid "The order in which the categories are displayed"
+msgstr ""
+
+#: breakqual/models.py:19
+msgid "break size"
+msgstr ""
+
+#: breakqual/models.py:20
+msgid "Number of breaking teams in this category"
+msgstr ""
+
+#: breakqual/models.py:22
+msgid "is general"
+msgstr ""
+
+#: breakqual/models.py:23
+msgid ""
+"True if most teams eligible for this category, e.g. Open, False otherwise"
+msgstr ""
+
+#: breakqual/models.py:25
+msgid "priority"
+msgstr ""
+
+#: breakqual/models.py:26
+msgid ""
+"If a team breaks in multiple categories, higher priority numbers take "
+"precedence; teams can break into multiple categories if and only if they all "
+"have the same priority"
+msgstr ""
+
+#: breakqual/models.py:31
+msgid "Standard"
+msgstr ""
+
+#: breakqual/models.py:32
+msgid "AIDA 1996"
+msgstr ""
+
+#: breakqual/models.py:33
+msgid "AIDA 2016 (Easters)"
+msgstr ""
+
+#: breakqual/models.py:34
+msgid "AIDA 2016 (Australs)"
+msgstr ""
+
+#: breakqual/models.py:35
+msgid "WADL division winners first"
+msgstr ""
+
+#: breakqual/models.py:36
+msgid "WADL division winners guaranteed"
+msgstr ""
+
+#: breakqual/models.py:40
+msgid "rule"
+msgstr ""
+
+#: breakqual/models.py:41
+msgid ""
+"Rule for how the break is calculated (most tournaments should use \"Standard"
+"\")"
+msgstr ""
+
+#: breakqual/models.py:44 breakqual/models.py:100
+msgid "breaking teams"
+msgstr ""
+
+#: breakqual/models.py:53 breakqual/models.py:71
+msgid "break category"
+msgstr ""
+
+#: breakqual/models.py:54
+msgid "break categories"
+msgstr ""
+
+#: breakqual/models.py:73
+msgid "team"
+msgstr ""
+
+#: breakqual/models.py:75
+msgid "rank"
+msgstr ""
+
+#: breakqual/models.py:77
+msgid "break rank"
+msgstr ""
+
+#: breakqual/models.py:86
+msgid "Capped"
+msgstr ""
+
+#: breakqual/models.py:87
+msgid "Ineligible"
+msgstr ""
+
+#: breakqual/models.py:88
+msgid "Different break"
+msgstr ""
+
+#: breakqual/models.py:89
+msgid "Disqualified"
+msgstr ""
+
+#: breakqual/models.py:90
+msgid "Lost coin toss"
+msgstr ""
+
+#: breakqual/models.py:91
+msgid "Withdrawn"
+msgstr ""
+
+#: breakqual/models.py:94
+msgid "remark"
+msgstr ""
+
+#: breakqual/models.py:95
+msgid "Used to explain why an otherwise-qualified team didn't break"
+msgstr ""
+
+#: breakqual/models.py:99
+msgid "breaking team"
+msgstr ""
+
+#: breakqual/views.py:78
+#, python-format
+msgid ""
+"There was an error generating the break for category %(category)s: "
+"%(message)s"
+msgstr ""
+
+#: breakqual/views.py:135
+#, python-format
+msgid ""
+"Changes to breaking team remarks saved and teams break updated for the "
+"following break categories: %(categories)s."
+msgstr ""
+
+#: breakqual/views.py:142
+#, python-format
+msgid ""
+"Changes to breaking team remarks saved and teams break updated for break "
+"category %(category)s."
+msgstr ""
+
+#: breakqual/views.py:171
+#, python-format
+msgid ""
+"Teams break generated for the following break categories: %(categories)s."
+msgstr ""

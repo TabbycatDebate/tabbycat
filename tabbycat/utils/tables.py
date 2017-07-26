@@ -6,11 +6,11 @@ from django.utils.translation import ugettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.utils import adjudicator_conflicts_display
-from draw.models import Debate, DebateTeam
+from draw.models import Debate
 from participants.models import Team
 from participants.utils import get_side_counts
 from standings.templatetags.standingsformat import metricformat, rankingformat
-from tournaments.utils import aff_abbr, aff_name, aff_team, get_position_name, neg_name
+from tournaments.utils import aff_name, get_side_name, neg_name
 from utils.misc import reverse_tournament
 from venues.utils import venue_conflicts_display
 
@@ -368,14 +368,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         for debate in debates:
             adjs_data = []
-            if show_splits and (self.admin or self.tournament.pref('show_splitting_adjudicators')) and debate.confirmed_ballot:
-                for adj, position, split in debate.confirmed_ballot.ballot_set.adjudicator_results:
-                    adjs_data.append(
-                        {'adj': adj, 'position': position, 'split': bool(split)})
+            if show_splits and debate.confirmed_ballot \
+                    and debate.confirmed_ballot.result.is_voting \
+                    and debate.confirmed_ballot.result.is_valid() \
+                    and (self.admin or self.tournament.pref('show_splitting_adjudicators')):
+                for adj, position, split in debate.confirmed_ballot.result.adjudicators_with_splits():
+                    adjs_data.append({'adj': adj, 'position': position, 'split': bool(split)})
             else:
                 for adj, position in debate.adjudicators.with_positions():
-                    adjs_data.append(
-                        {'adj': adj, 'position': position})
+                    adjs_data.append({'adj': adj, 'position': position})
 
             if not debate.adjudicators.has_chair and debate.adjudicators.is_panel:
                 adjs_data[0]['type'] = 'O'
@@ -437,6 +438,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': "Novice Status",
             }
             self.add_boolean_column(novice_header, [speaker.novice for speaker in speakers])
+
+        if self.tournament.pref('show_esl'):
+            novice_header = {'key': "esl", 'text': "ESL"}
+            self.add_boolean_column(novice_header, [speaker.esl for speaker in speakers])
+
+        if self.tournament.pref('show_efl'):
+            novice_header = {'key': "efl", 'text': "EFL"}
+            self.add_boolean_column(novice_header, [speaker.efl for speaker in speakers])
 
     def add_room_rank_columns(self, debates):
         header = {
@@ -545,7 +554,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         conflicts_by_debate = []
         for debate in debates:
             # conflicts is a list of (level, message) tuples
-            conflicts = [("warning", flag) for flag in debate.get_flags_display()]
+            conflicts = [("primary", flag) for flag in debate.get_flags_display()]
             history = debate.history
             if history > 0:
                 conflicts.append(("warning", "Teams have met " +
@@ -564,8 +573,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(conflicts_header, conflicts_data)
 
     def _standings_headers(self, info_list, side=None):
-        side_abbr = get_position_name(self.tournament, side, 'initial') if side else ''
-        side_possessive = get_position_name(self.tournament, side, 'possessive') if side else ''
+        side_abbr = get_side_name(self.tournament, side, 'initial') if side else ''
+        side_possessive = get_side_name(self.tournament, side, 'possessive') if side else ''
         headers = []
         for info in info_list:
             # Translators: Put these in the right order,
@@ -597,7 +606,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for standing in standings_list:
             data.append([{
                 'text': rankingformat(ranking),
-                'sort': ranking[0] or "99999",
+                'sort': ranking[0] or 99999,
             } for ranking in standing.iterrankings()])
         self.add_columns(headers, data)
 
@@ -630,33 +639,21 @@ class TabbycatTableBuilder(BaseTableBuilder):
             for cell in self.data[i]:
                 cell['class'] = cell.get('class', '') + ' highlight-row'
 
-    def add_sides_count(self, teams, round, team_type):
-        sides_counts = get_side_counts(teams, DebateTeam.POSITION_AFFIRMATIVE, round.seq)
+    def add_side_counts(self, teams, round, team_type):
+        side_counts = get_side_counts(teams, ['aff', 'neg'], round.seq)
 
-        # Translators: e.g. team would be "negative team" or "affirmative team",
-        # affirmative would be "affirmative team".
-        side_label = _("Number of times this %(team)s has been the "
-            "%(affirmative)s before") % {
-            'team': get_position_name(self.tournament, team_type, "team"),
-            'affirmative': aff_team(self.tournament),
+        # Translators: e.g. team would be "negative team" or "affirmative team".
+        side_label = _("Number of times this %(team)s has been on each side (aff, neg)") % {
+            'team': get_side_name(self.tournament, team_type, "team"),
         }
 
-        # Translators: Abbreviation for "affirmative number of affirmatives".
-        # side_abbr is e.g. "A"/"N"/"G"/"O" for affirmative/negative/government/opposition,
-        # aff_abbr is "Aff"/"Gov" for affirmative/government, so "NAff" is the number of times
-        # the negative team has affirmed, or equivalently "OGov".
-        side_key = _("%(side_abbr)s%(aff_abbr)ss") % {
-            'side_abbr': get_position_name(self.tournament, team_type, 'initial'),
-            'aff_abbr': aff_abbr(self.tournament),
+        # Translators: "SC" stands for "side count"
+        side_key = _("%(side_abbr)sSC") % {
+            'side_abbr': get_side_name(self.tournament, team_type, 'initial'),
         }
 
-        sides_header = {
-            'key':  side_key,
-            'tooltip': side_label,
-        }
-        sides_data = [{
-            'text': str(sides_counts[t.id]),
-        } for t in teams]
+        sides_header = {'key':  side_key, 'tooltip': side_label}
+        sides_data = [{'text': " / ".join(map(str, side_counts[t.id]))} for t in teams]
         self.add_column(sides_header, sides_data)
 
     def add_checkbox_columns(self, states, references, key):
@@ -691,7 +688,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         results_data = [self._result_cell(ts) for ts in teamscores]
         self.add_column("Result", results_data)
-        self.add_column("Side", [ts.debate_team.get_position_name().capitalize() for ts in teamscores])
+        self.add_column("Side", [ts.debate_team.get_side_name().capitalize() for ts in teamscores])
 
     def add_team_results_columns(self, teams, rounds):
         """ Takes an iterable of Teams, assumes their round_results match rounds"""

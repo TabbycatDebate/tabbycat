@@ -4,7 +4,7 @@ import copy
 from collections import OrderedDict
 
 from .. import DrawError, DrawGenerator, Pairing
-from ..utils import partial_break_round_split
+from ..generator.utils import partial_break_round_split
 from .utils import TestDivision, TestTeam
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]

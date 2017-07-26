@@ -1,17 +1,20 @@
-.. _team-standings-rules:
+.. _standings-rules:
 
-====================
+===============
+Standings Rules
+===============
+
 Team Standings Rules
 ====================
 
 In Tabbycat, you can choose how teams are ranked in the team standings. For
 example, at Australs, teams are ranked first on the number of wins, and second
 on their total speaker score. The setting that specifies how teams are ranked is
-called the *team standings precedence*. The team standings precedence is used
+called the *team standings precedence*. The team standings precedence is used:
 
-- when displaying the team tab,
-- whenever a power-paired draw is generated, and
-- when computing which teams are in the break.
+- When displaying the team tab,
+- Whenever a power-paired draw is generated, and
+- When computing which teams are in the break.
 
 When you choose the team standings precedence, you choose from a list of
 *metrics*. Then, in the standings, teams will be sorted first by the first
@@ -84,3 +87,15 @@ same rank.
 +--------------------+---------------------------------------------------------+
 
 .. note:: Some debugging information is printed to the logs when some of these metrics are invoked.
+
+
+Motions Standings Test
+======================
+
+The motions tab and motions standings page applies a statistical test to estimate the degree to which a motion is imbalanced. This is calculated by first making an underlying assumption that a motion is generally fair. This will be our null hypothesis: that, for a given motion, affirmative teams won the same number of times as negative teams.
+
+Our chi-squared test will then be centred around disproving this hypothesis. If we disprove the hypothesis, we say that, in the context of this tournament and this draw, the motion ended up being unbalanced. However (technically speaking) if we fail to reject the null hypothesis, we would conclude that there is insufficient evidence to suggest that the motion was unbalanced in the context of this tournament.
+
+The test proceeds by `calculating the chi-squared stat, then running a series of tests <https://github.com/czlee/tabbycat/blob/develop/tabbycat/standings/motions.py#L40>`_. The tests are where we go a little off-book with respect to statistical methodology. Normally we would test at a single "level of significance" (ie. with a certain degree of certainty), but that's insufficient in telling us how bad a motion ended up being. So, instead, we conduct a range of tests with a range of levels of significance, and calculate the minimum level of significance that causes our null hypothesis to be rejected. Using the minimum level of significance that rejects our null hypothesis, we can then grade the fairness of the motion on a scale. Motions whose tests fall below a certain threshold will be considered fair, while others will be graded based on the minimum.
+
+For formats with topic selection, the same test is applied using the number of affirmative and negative vetoes in place of wins. The assumption here is that, during the time allotted for motion selection, teams estimate how appealing a motion is from their position, and then veto the topic that they feel is least favourable. Thus, the null hypothesis is that a motion that is perceived of as fair would be vetoed by affirmative and negative teams to an equal degree.

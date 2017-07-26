@@ -1,7 +1,7 @@
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, Section, StringPreference
 
 from standings.teams import TeamStandingsGenerator
-from tournaments.utils import get_position_name_choices
+from tournaments.utils import get_side_name_choices
 
 from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
@@ -345,6 +345,19 @@ debate_rules = Section('debate_rules')
 
 
 @tournament_preferences_registry.register
+class BallotsPerDebate(ChoicePreference):
+    help_text = "Whether panels submit a ballot each or a single ballot for the debate. Note: BP must use one per debate."
+    verbose_name = "Ballots per debate"
+    section = debate_rules
+    name = 'ballots_per_debate'
+    choices = [
+        ('per-adj', "One ballot per voting adjudicator"),
+        ('per-debate', "Consensus ballot (one ballot per debate)"),
+    ]
+    default = 'per-adj'
+
+
+@tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):
     help_text = "How many substantive speakers on a team"
     verbose_name = 'Substantive speakers'
@@ -355,7 +368,7 @@ class SubstantiveSpeakers(IntegerPreference):
 
 @tournament_preferences_registry.register
 class ReplyScores(BooleanPreference):
-    help_text = "Whether this style features reply speeches"
+    help_text = "Whether this style features scored reply speeches"
     verbose_name = 'Reply scores'
     section = debate_rules
     name = 'reply_scores_enabled'
@@ -372,12 +385,12 @@ class MotionVetoes(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class PositionNames(ChoicePreference):
+class SideNames(ChoicePreference):
     help_text = "What to call the teams"
-    verbose_name = "Position names"
+    verbose_name = "Side names"
     section = debate_rules
-    name = 'position_names'
-    choices = get_position_name_choices()
+    name = 'side_names'
+    choices = get_side_name_choices()
     default = 'aff-neg'
 
 
@@ -523,6 +536,42 @@ class RepliesTabReleaseLimit(IntegerPreference):
     verbose_name = "Top replies cutoff"
     section = tab_release
     name = "replies_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
+class ESLTabReleased(BooleanPreference):
+    help_text = "Enables public display of the ESL speakers tab. Intended for use after the tournament."
+    verbose_name = "Release ESL speakers tab to public"
+    section = tab_release
+    name = "esl_tab_released"
+    default = False
+
+
+@tournament_preferences_registry.register
+class ESLTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X ESL speakers in the public tab (set to 0 to show all speakers)."
+    verbose_name = "Top ESL speakers cutoff"
+    section = tab_release
+    name = "esl_tab_limit"
+    default = 0
+
+
+@tournament_preferences_registry.register
+class EFLTabReleased(BooleanPreference):
+    help_text = "Enables public display of the EFL speakers tab. Intended for use after the tournament."
+    verbose_name = "Release EFL speakers tab to public"
+    section = tab_release
+    name = "efl_tab_released"
+    default = False
+
+
+@tournament_preferences_registry.register
+class EFLTabReleaseLimit(IntegerPreference):
+    help_text = "Only show scores for the top X EFL speakers in the public tab (set to 0 to show all speakers)."
+    verbose_name = "Top EFL speakers cutoff"
+    section = tab_release
+    name = "efl_tab_limit"
     default = 0
 
 
@@ -817,6 +866,24 @@ class ShowNovices(BooleanPreference):
     verbose_name = 'Show novices'
     section = ui_options
     name = 'show_novices'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ShowESL(BooleanPreference):
+    help_text = "Indicates next to a speaker's name if they are an ESL speaker"
+    verbose_name = 'Show ESL'
+    section = ui_options
+    name = 'show_esl'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ShowEFL(BooleanPreference):
+    help_text = "Indicates next to a speaker's name if they are an EFL speaker"
+    verbose_name = 'Show EFL'
+    section = ui_options
+    name = 'show_efl'
     default = False
 
 

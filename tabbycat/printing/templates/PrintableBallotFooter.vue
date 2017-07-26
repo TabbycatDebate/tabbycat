@@ -1,8 +1,19 @@
 <template>
   <section class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static">
 
-    <div class="db-padding-horizontal db-align-vertical-center db-flex-item-1 db-vertical-center-text">
-      <em><span v-if="returnLocation !== ''">Return Ballots to {{ returnLocation }}</span></em>
+    <div :class="['db-padding-horizontal db-align-vertical-center  db-vertical-center-text',
+                  showScoring ? 'db-flex-item-2' : 'db-flex-item-1']">
+      <span>
+        <span v-if="showScoring">
+          Mark speeches
+          {{ getDisplayNumber(roundInfo.substantiveMin) }} to {{ getDisplayNumber(roundInfo.substantiveMax) }};
+          <strong>{{ getDisplayStep(roundInfo.substantiveStep) }}</strong>.</span>
+        <span v-if="showScoring && roundInfo.hasReplies">
+          Mark replies
+          {{ getDisplayNumber(roundInfo.replyMin) }} to {{ getDisplayNumber(roundInfo.replyMax) }};
+          <strong>{{ getDisplayStep(roundInfo.replyStep) }}</strong>.</span>
+        <span v-if="returnLocation !== ''">Return ballots to {{ roundInfo.returnLocation }}.</span>
+      </span>
     </div>
 
     <div class="db-item-gutter"></div>
@@ -25,6 +36,24 @@
 
 <script>
 export default {
-  props: ['returnLocation']
+  props: ['roundInfo', 'showScoring'],
+  methods: {
+    getDisplayNumber: function(number) {
+      if (number % 1 === 0) {
+        return Math.round(number)
+      } else {
+        return number
+      }
+    },
+    getDisplayStep: function(number) {
+      if (number % 1 === 0) {
+        return "no ½ marks"
+      } else if (number % 0.5 === 0) {
+        return "½ marks are allowed"
+      } else {
+        return "decimal marks are allowed"
+      }
+    }
+  }
 }
 </script>

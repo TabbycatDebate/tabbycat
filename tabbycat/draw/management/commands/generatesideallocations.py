@@ -3,7 +3,7 @@ from operator import attrgetter
 
 from utils.management.base import CommandError, RoundCommand
 
-from ...models import TeamPositionAllocation
+from ...models import DebateTeam
 
 
 class Command(RoundCommand):
@@ -24,7 +24,7 @@ class Command(RoundCommand):
         affs = teams[:len(teams)//2]
         negs = teams[len(teams)//2:]
 
-        round.teampositionallocation_set.all().delete()
+        round.teamsideallocation_set.all().delete()
         if options["delete"]:
             return
 
@@ -35,6 +35,6 @@ class Command(RoundCommand):
                 self.stdout.write("{0:30} {1:30}".format(aff.short_name, neg.short_name))
 
         for team in affs:
-            team.teampositionallocation_set.create(round=round, position=TeamPositionAllocation.POSITION_AFFIRMATIVE)
+            team.teamsideallocation_set.create(round=round, side=DebateTeam.SIDE_AFFIRMATIVE)
         for team in negs:
-            team.teampositionallocation_set.create(round=round, position=TeamPositionAllocation.POSITION_NEGATIVE)
+            team.teamsideallocation_set.create(round=round, side=DebateTeam.SIDE_NEGATIVE)

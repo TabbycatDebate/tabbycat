@@ -73,14 +73,14 @@ class TestBasicStandings(TestCase):
             Venue.objects.create(name="Venue {:d}".format(i), priority=10)
         adjs = list(Adjudicator.objects.all())
         venues = list(Venue.objects.all())
-        positions = [DebateTeam.POSITION_AFFIRMATIVE, DebateTeam.POSITION_NEGATIVE]
+        sides = [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]
 
         for r, debatedict in enumerate(testdata["teamscores"]):
             rd = Round.objects.create(tournament=tournament, seq=r, abbreviation="R{:d}".format(r))
             for adj, venue, (teamnames, teamscores) in zip(adjs, venues, debatedict.items()):
                 debate = Debate.objects.create(round=rd, venue=venue)
-                for team, pos in zip(teamnames, positions):
-                    DebateTeam.objects.create(debate=debate, team=teams[team], position=pos)
+                for team, side in zip(teamnames, sides):
+                    DebateTeam.objects.create(debate=debate, team=teams[team], side=side)
                 DebateAdjudicator.objects.create(debate=debate, adjudicator=adj, type=DebateAdjudicator.TYPE_CHAIR)
                 ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True)
                 for team, teamscore_dict in teamscores.items():

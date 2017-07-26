@@ -81,12 +81,12 @@ class Tournament(models.Model):
             return self._prefs[name]
 
     @property
-    def LAST_SUBSTANTIVE_POSITION(self):  # noqa: N802
+    def last_substantive_position(self):
         """Returns the number of substantive speakers."""
         return self.pref('substantive_speakers')
 
     @property
-    def REPLY_POSITION(self):  # noqa: N802
+    def reply_position(self):
         """If there is a reply position, returns one more than the number of
         substantive speakers. If there is no reply position, returns None."""
         if self.pref('reply_scores_enabled'):
@@ -95,7 +95,7 @@ class Tournament(models.Model):
             return None
 
     @property
-    def POSITIONS(self):  # noqa: N802
+    def positions(self):
         """Guaranteed to be consecutive numbers starting at one. Includes the
         reply speaker."""
         speaker_positions = 1 + self.pref('substantive_speakers')
@@ -178,6 +178,10 @@ class Tournament(models.Model):
             return cache.get(cached_key)
         else:
             return None
+
+    @cached_property
+    def billable_teams(self):
+        return self.team_set.count()
 
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
@@ -314,7 +318,7 @@ class Round(models.Model):
         positive and even number of voting judges."""
         from adjallocation.models import DebateAdjudicator
         debates_with_even_panel = self.debate_set.exclude(
-                debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE
+            debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE
         ).annotate(
             panellists=Count('debateadjudicator'),
             odd_panellists=Count('debateadjudicator') % 2
@@ -344,7 +348,7 @@ class Round(models.Model):
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, divisions=True, ballotsubs=False,
-            wins=False, ballotsets=False, venues=True, institutions=False):
+            wins=False, results=False, venues=True, institutions=False):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
@@ -355,7 +359,7 @@ class Round(models.Model):
         debates = self.debate_set.all()
         if filter_kwargs:
             debates = debates.filter(**filter_kwargs)
-        if ballotsubs or ballotsets:
+        if ballotsubs or results:
             debates = debates.prefetch_related('ballotsubmission_set', 'ballotsubmission_set__submitter')
         if adjudicators:
             debates = debates.prefetch_related(
@@ -380,8 +384,8 @@ class Round(models.Model):
             debates = debates.order_by(*ordering)
 
         # These functions populate relevant attributes of each debate, operating in-place
-        if ballotsubs or ballotsets:
-            populate_confirmed_ballots(debates, motions=True, ballotsets=ballotsets)
+        if ballotsubs or results:
+            populate_confirmed_ballots(debates, motions=True, results=results)
         if wins:
             populate_wins(debates)
 
@@ -433,7 +437,3 @@ class Round(models.Model):
     @property
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
-
-    @cached_property
-    def billable_teams(self):
-        return self.tournament.team_set.count()

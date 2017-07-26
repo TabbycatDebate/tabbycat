@@ -8,10 +8,10 @@ You can set the questions that are used on adjudicator feedback forms. The only 
 
 Currently, there are two methods of setting questions:
 
-- through the :ref:`edit database area <user-accounts>`. Go to **Setup** >
+- Through the :ref:`edit database area <user-accounts>`. Go to **Setup** >
   **Edit Database**, then click **Change** next to *Adjudicator feedback
   questions*. You can add questions here.
-- using the :ref:`importtournament command <importtournament-command>`.
+- Using the :ref:`importtournament command <importtournament-command>`.
 
 Most of what you need to know is explained in help text in the edit database area. (Even if you're using ``importtournament``, you might find the field
 descriptions in the edit database area helpful.) Some more details are here.

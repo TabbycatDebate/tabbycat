@@ -1,12 +1,13 @@
+import json
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
@@ -66,8 +67,12 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView
             return Adjudicator.objects.filter(tournament=t)
 
     def get_context_data(self, **kwargs):
-        kwargs['breaking_count'] = self.get_adjudicators().filter(
-            breaking=True).count()
+        t = self.get_tournament()
+        adjudicators = self.get_adjudicators()
+        kwargs['breaking_count'] = adjudicators.filter(breaking=True).count()
+        weight = t.current_round.feedback_weight
+        kwargs['c_trainees'] = len([a for a in adjudicators if
+            a.weighted_score(weight) < t.pref('adj_min_voting_score')])
         return super().get_context_data(**kwargs)
 
     def get_table(self):
@@ -476,17 +481,17 @@ class SetAdjudicatorTestScoreView(BaseAdjudicatorActionView):
         self.atsh = atsh
 
 
-class SetAdjudicatorBreakingStatusView(BaseAdjudicatorActionView):
+class SetAdjudicatorBreakingStatusView(SuperuserRequiredMixin, TournamentMixin, LogActionMixin, View):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATOR_BREAK_SET
 
-    def modify_adjudicator(self, request, adjudicator):
-        adjudicator.breaking = (str(request.POST["adj_breaking_status"]) == "true")
-        adjudicator.save()
-
     def post(self, request, *args, **kwargs):
-        super().post(request, *args, **kwargs)  # Discard redirect
-        return HttpResponse("ok")
+        body = self.request.body.decode('utf-8')
+        posted_info = json.loads(body)
+        adjudicator = Adjudicator.objects.get(id=posted_info['id'])
+        adjudicator.breaking = posted_info['breaking']
+        adjudicator.save()
+        return JsonResponse(json.dumps(True), safe=False)
 
 
 class SetAdjudicatorNoteView(BaseAdjudicatorActionView):

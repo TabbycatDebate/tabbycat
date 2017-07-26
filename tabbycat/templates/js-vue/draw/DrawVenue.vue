@@ -1,5 +1,5 @@
 <template>
-  <div class="slideover-target"
+  <div class="hover-target"
        @mouseenter="showSlideOver(venue)"
        @mouseleave="hideSlideOver">
 

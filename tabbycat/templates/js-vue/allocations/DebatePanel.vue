@@ -1,5 +1,5 @@
 <template>
-  <div :class="['draw-cell panel-container flex-horizontal',
+  <div :class="['draw-cell droppable-cell panel-container flex-horizontal',
                 'flex-' + (12 * adjPositions.length)]">
 
     <div v-for="position in adjPositions"
@@ -7,7 +7,7 @@
                   'positions-limited-' + adjPositions.length]">
       <droppable-generic :assignment-id="debateId"
                          :assignment-position="position"
-                         :extra-css="'flex-horizontal'"
+                         :extra-css="getCSSForPosition(position)"
                          :locked="locked">
 
         <draggable-adjudicator
@@ -37,6 +37,15 @@ export default {
     getAdjudicatorsByPosition: function(panel, position) {
       return _.filter(panel, { 'position': position })
     },
+    getCSSForPosition: function(position) {
+      var css = 'flex-horizontal '
+      var adjs = this.getAdjudicatorsByPosition(this.panel, position).length
+      if ((position === "C" && adjs === 0) ||
+          (position === "P" && adjs % 2 != 0)) {
+        return css += 'panel-incomplete'
+      }
+      return css
+    }
   },
 }
 </script>

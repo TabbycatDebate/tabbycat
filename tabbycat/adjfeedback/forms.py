@@ -162,7 +162,7 @@ class BaseFeedbackForm(forms.Form):
         # Feedback questions defined for the tournament
         adj_min_score = self._tournament.pref('adj_min_score')
         adj_max_score = self._tournament.pref('adj_max_score')
-        score_label = mark_safe("Overall score<br />(%s=lowest, %s=highest)" % (adj_min_score, adj_max_score))
+        score_label = mark_safe("Overall score (%s=worst; %s=best)" % (int(adj_min_score), int(adj_max_score)))
         self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
 
         for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
@@ -187,10 +187,9 @@ class BaseFeedbackForm(forms.Form):
         af.save()
 
         for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
-            if self.cleaned_data[question.reference] is not None:
-                answer = question.answer_type_class(
-                    feedback=af, question=question, answer=self.cleaned_data[question.reference])
-                answer.save()
+            response = self.cleaned_data[question.reference]
+            if response is not None and response != "":
+                question.answer_type_class(feedback=af, question=question, answer=response).save()
 
         return af
 

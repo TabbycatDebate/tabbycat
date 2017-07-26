@@ -18,7 +18,7 @@ from actionlog.mixins import LogActionMixin
 from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import Debate
 from participants.models import Region
-from tournaments.utils import get_position_name
+from tournaments.utils import get_side_name
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
@@ -316,11 +316,17 @@ class DrawForDragAndDropMixin(RoundMixin):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
         for debate in serialised_draw:
             break_thresholds = self.break_thresholds
+            liveness = 0
             for (position, team) in debate['teams'].items():
                 team = self.annotate_break_classes(team, break_thresholds)
                 team = self.annotate_region_classes(team)
+                if team['break_categories'] is not None:
+                    liveness += len([bc for bc in team['break_categories'] if
+                                     bc['will_break'] == 'live'])
             for panellist in debate['panel']:
                 panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
+
+            debate['liveness'] = liveness
 
         return serialised_draw
 
@@ -346,15 +352,15 @@ class DrawForDragAndDropMixin(RoundMixin):
             adjudicator_positions += "T"
 
         round_info = {
-            'positions': [get_position_name(tournament, "aff", "full"),
-                          get_position_name(tournament, "neg", "full")],
+            'positions': [get_side_name(tournament, "aff", "full"),
+                          get_side_name(tournament, "neg", "full")],
             'adjudicatorPositions': adjudicator_positions,
             'adjudicatorDoubling': tournament.pref('duplicate_adjs'),
             'backUrl': reverse_round('draw', round),
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
             'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,
             'roundName' : round.abbreviation,
-            'roundIsPrelim' : round.is_break_round,
+            'roundIsPrelim' : not round.is_break_round,
         }
         round_info = self.annotate_round_info(round_info)
         return json.dumps(round_info)

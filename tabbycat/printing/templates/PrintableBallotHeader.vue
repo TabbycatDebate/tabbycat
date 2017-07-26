@@ -3,7 +3,7 @@
 
     <div class="db-align-vertical-end db-flex-item-3">
       <h2>
-        {{ roundInfo.tournamentName }} {{ roundInfo.kind }} from {{ ballot.author }}
+        {{ roundInfo.round }} {{ roundInfo.tournamentName }} {{ roundInfo.kind }} from {{ ballot.author }}
         <span v-if="ballot.authorPosition === 'o'">(Solo Chair)</span>
         <span v-if="ballot.authorPosition === 'c'">(Chair of Panel)</span>
         <span v-if="ballot.authorPosition === 'p'">(Panellist)</span>
@@ -23,11 +23,8 @@
         </span>
       </div>
     </template>
-    <div class="db-flex-static db-align-vertical-end">
-      <h2>
-        <span v-if="ballot.room !== ''">{{ ballot.room }}</span>
-        {{ roundInfo.round }}
-      </h2>
+    <div class="db-flex-static db-align-vertical-end" v-if="ballot.room !== ''">
+      <h2>{{ ballot.room }}</h2>
     </div>
 
   </header>
