@@ -17,7 +17,7 @@ munkres==1.0.12                         # Algorithm for adjudicator allocation
 
 # Database
 
-psycopg2==2.7.1                         # For Django to talk to postgres
+psycopg2==2.7.2                         # For Django to talk to postgres
 sqlparse==0.2.3                         # Parsing SQL statements
 
 # Pipeline
