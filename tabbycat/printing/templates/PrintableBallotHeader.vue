@@ -4,10 +4,7 @@
     <div class="db-align-vertical-end db-flex-item-3">
       <h2>
         {{ roundInfo.round }} {{ roundInfo.tournamentName }} {{ roundInfo.kind }} from {{ ballot.author }}
-        <span v-if="ballot.authorPosition === 'O'">(Solo Chair)</span>
-        <span v-if="ballot.authorPosition === 'C'">(Chair of Panel)</span>
-        <span v-if="ballot.authorPosition === 'P'">(Panellist)</span>
-        <span v-if="ballot.authorPosition === 'T'">(Trainee)</span>
+        ({{ authorPositionWithSoloCheck(ballot.authorPosition) }})
         <span v-if="ballot.target">on {{ ballot.target }}
           <span v-if="ballot.targetPosition === 'C' || ballot.targetPosition === 'o'">(Chair)</span>
           <span v-if="ballot.targetPosition === 'P'">(Panellist)</span>
@@ -15,23 +12,43 @@
         </span>
       </h2>
     </div>
-    <template v-if="ballot.room === ''">
+    <template v-if="ballot.venue === '' || ballot.venue === null">
       <div class="db-flex-static db-align-vertical-end">
         <h2>Venue:</h2>
         <span class="db-padding-horizontal db-fill-in"
-              style="width: 125px; margin: 0 15px 0 5px; display: inline-block">
+              style="width: 200px; margin: 0 3px 0 5px; display: inline-block">
         </span>
       </div>
     </template>
-    <div class="db-flex-static db-align-vertical-end" v-if="ballot.room !== ''">
-      <h2>{{ ballot.room }}</h2>
+    <div v-else class="db-flex-static db-align-vertical-end">
+      <h2>{{ ballot.venue.name }}</h2>
     </div>
 
   </header>
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
   props: ['ballot', "roundInfo"],
+  methods: {
+    authorPositionWithSoloCheck: function(position) {
+      if (position === 'C') {
+        var panellists = _.filter(this.ballot.panel, function(panellist) {
+          return panellist.position === "P";
+        })
+        if (!_.isUndefined(panellists) && panellists.length > 0) {
+          return "Chair of Panel"
+        } else {
+          return "Solo Chair"
+        }
+      } else if (position === 'P') {
+        return "Panellist"
+      } else if (position === 'T') {
+        return "Trainee"
+      }
+    }
+  }
 }
 </script>
