@@ -4,8 +4,7 @@
 Backups
 =======
 
-The backup utility isn't part of Tabbycat. Heroku provides a very good backup
-utility for all sites hosted on Heroku, and for Heroku-based Tabbycat sites,
+Tabbycat doesn't provide an in-built backup system; instead you should create copies of your database directly. Heroku provides a very good backup utility for all sites hosted on Heroku which makes this easy, and for Heroku-based Tabbycat sites,
 we strongly recommend it.
 
 You should **always** back up the database before deleting *any* data while in
@@ -17,6 +16,8 @@ database directly.
 You may, as a matter of standard practice at large tournaments, wish to back up
 the database twice per round: Once just after you've generated the draw and
 allocated adjudicators, and once just after you've finished entering results.
+
+If taking backups from an online copy of Tabbycat you should ensure you download the backup to your local machine. While completely loosing internet access or having an outage in a critical web service (i.e. Heroku) is exceedingly rare, having a local copy of your backups means you can restore your tab to a local/offline machine if this ever happens.
 
 Installations on Heroku
 =======================
@@ -32,6 +33,7 @@ You can capture backups from the Heroku Dashboard:
    on your app.
 2. Under *Installed add-ons*, go to **Heroku Postgres**.
 3. Scroll down, and click on the **Capture Backup** button.
+4. Once the capture has finished, a **Download** button will be available.
 
 You can't restore a backup without the Heroku Command Line Interface (CLI), so
 if you end up needing your backup, you'll need to install the
@@ -47,6 +49,10 @@ The best guide to backing up databases is the
 To capture a backup::
 
     $ heroku pg:backups:capture
+
+To download the most-recently captured backup::
+
+    $ heroku pg:backups:download
 
 To restore a backup::
 
