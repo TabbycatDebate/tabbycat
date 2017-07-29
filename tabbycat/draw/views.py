@@ -555,9 +555,9 @@ class SaveDrawMatchups(SaveDragAndDropDebateMixin):
             get_side_name(self.get_tournament(), name, 'full'): name for name in ['aff', 'neg']}
         position_short = translated_positions[translated_position]
         if position_short is 'aff':
-            position = DebateTeam.POSITION_AFFIRMATIVE
+            position = DebateTeam.SIDE_AFFIRMATIVE
         if position_short is 'neg':
-            position = DebateTeam.POSITION_NEGATIVE
+            position = DebateTeam.SIDE_NEGATIVE
         return position
 
     def modify_debate(self, debate, posted_debate):
