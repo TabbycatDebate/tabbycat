@@ -133,8 +133,11 @@ CACHES = {
     }
 }
 
-# Use the cache for sessions rather than the db
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+# Use a db backed cache for sessions unless the app is retired (no db writes)
+if 'RETIRED' in os.environ:
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+else:
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
 # Static Files and Compilation
