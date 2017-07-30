@@ -548,37 +548,37 @@ class SaveDrawMatchups(SaveDragAndDropDebateMixin):
     action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
     allows_creation = True
 
-    def identify_position(self, translated_position):
+    def identify_side(self, translated_side):
         # Positions are sent over in their labelled/translate form; need to lookup
-        # This is hardcoded to aff/neg; will need to refactor when positions update
-        translated_positions = {
+        # This is hardcoded to aff/neg; will need to refactor when sides update
+        translated_sides = {
             get_side_name(self.get_tournament(), name, 'full'): name for name in ['aff', 'neg']}
-        position_short = translated_positions[translated_position]
-        if position_short is 'aff':
-            position = DebateTeam.SIDE_AFFIRMATIVE
-        if position_short is 'neg':
-            position = DebateTeam.SIDE_NEGATIVE
-        return position
+        side_short = translated_sides[translated_side]
+        if side_short is 'aff':
+            side = DebateTeam.SIDE_AFFIRMATIVE
+        if side_short is 'neg':
+            side = DebateTeam.SIDE_NEGATIVE
+        return side
 
     def modify_debate(self, debate, posted_debate):
         teams = posted_debate['teams'].items()
-        print("Processing change for ", debate.id)
-        for d_position, d_team in teams:
-            position = self.identify_position(d_position)
+        logger.debug("Processing change for %r", debate)
+        for d_side, d_team in teams:
+            side = self.identify_side(d_side)
             team = Team.objects.get(pk=d_team['id'])
-            print("\tSaving change for ", team.short_name)
-            if DebateTeam.objects.filter(debate=debate, team=team, position=position).exists():
-                print("\t\tSkipping %s as not changed" % team.short_name)
+            logger.debug("  Saving change for %s", team.short_name)
+            if DebateTeam.objects.filter(debate=debate, team=team, side=side).exists():
+                logger.debug("    Skipping %s as not changed", team.short_name)
                 continue # Skip the rest of the loop; no edit needed
             # Delete whatever team currently exists in that spot
-            if DebateTeam.objects.filter(debate=debate, position=position).exists():
-                existing = DebateTeam.objects.get(debate=debate, position=position)
-                print('\t\tDeleting %s as %s' % (existing.team.short_name, existing.position))
+            if DebateTeam.objects.filter(debate=debate, side=side).exists():
+                existing = DebateTeam.objects.get(debate=debate, side=side)
+                logger.debug('    Deleting %s as %s', existing.team.short_name, existing.side)
                 existing.delete()
 
-            print("\t\tSaving %s as %s" % (team.short_name, position))
+            logger.debug("    Saving %s as %s", team.short_name, side)
             new_allocation = DebateTeam.objects.create(debate=debate, team=team,
-                                                       position=position)
+                                                       side=side)
             new_allocation.save()
 
         return debate
