@@ -16,6 +16,32 @@ def presets_for_form():
     return choices
 
 
+def get_preferences_data(selected_preset):
+    preset_preferences = []
+    # Create an instance of the class and iterate over its properties for the UI
+    for key in dir(selected_preset):
+        value = getattr(selected_preset, key)
+        if '__' in key and not key.startswith('__'):
+            # Lookup the base object
+            section, name = key.split('__', 1)
+            try:
+                preset_object = tournament_preferences_registry[section][name]
+                current_value = self.get_tournament().preferences[key]
+            except KeyError:
+                logger.exception("Bad preference key: %s", key)
+                continue
+            preset_preferences.append({
+                'key': key,
+                'name': preset_object.verbose_name,
+                'current_value': current_value,
+                'new_value': value,
+                'help_text': preset_object.help_text,
+                'changed': current_value != value,
+            })
+    preset_preferences.sort(key=lambda x: x['key'])
+    return preset_preferences
+
+
 class PreferencesPreset:
     show_in_list                               = False
 
