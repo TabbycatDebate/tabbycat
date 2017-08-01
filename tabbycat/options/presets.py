@@ -8,6 +8,14 @@ def all_presets():
     yield from _all_subclasses(PreferencesPreset)
 
 
+def presets_for_form():
+    presets = all_presets()
+    choices = []
+    for preset in presets:
+        choices.append((preset, preset.name))
+    return choices
+
+
 class PreferencesPreset:
     show_in_list                               = False
 

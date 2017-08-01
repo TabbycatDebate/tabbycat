@@ -1,11 +1,12 @@
 import math
 
 from django.forms.fields import IntegerField
-from django.forms import ModelChoiceField, ModelForm
+from django.forms import ChoiceField, ModelChoiceField, ModelForm
 from django.utils.translation import ugettext_lazy as _
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
+from options.presets import presets_for_form
 
 from .models import Round, Tournament
 from .utils import auto_make_break_rounds, auto_make_rounds
@@ -26,6 +27,12 @@ class TournamentForm(ModelForm):
         required=False,
         label=_("Number of teams in the open break"),
         help_text=_("Leave blank if there are no break rounds."))
+
+    preset_rules = ChoiceField(
+        choices=presets_for_form(),
+        label=_("Configuration"),
+        help_text=_("Configure the tournament to follow a standard format "
+                    "(settings can be customised later)."))
 
     def add_default_feedback_questions(self, tournament):
         agree = AdjudicatorFeedbackQuestion(
