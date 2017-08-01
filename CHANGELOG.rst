@@ -2,8 +2,16 @@
 Change Log
 ==========
 
+1.4.1
+-----
+*Release date: 2 August 2017*
+
+- Fixed bug that prevented edited matchups from being saved
+- Added flag to prevent retired sites from using the database for sessions
+
 1.4.0 (Havana Brown)
 --------------------
+*Release date: 26 July 2017*
 
 - Overhauled the adjudicator allocation, venue allocation, and matchups editing pages, including:
     - Upgraded to Vue 2.0 and refactored the code so that each page better shares methods for displaying the draw, showing additional information, and dragging/dropping
