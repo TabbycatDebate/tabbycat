@@ -1,3 +1,10 @@
+import logging
+
+from .dynamic_preferences_registry import tournament_preferences_registry
+
+logger = logging.getLogger(__name__)
+
+
 def _all_subclasses(cls):
     for subclass in cls.__subclasses__():
         yield from _all_subclasses(subclass)
@@ -16,7 +23,7 @@ def presets_for_form():
     return choices
 
 
-def get_preferences_data(selected_preset):
+def get_preferences_data(selected_preset, tournament):
     preset_preferences = []
     # Create an instance of the class and iterate over its properties for the UI
     for key in dir(selected_preset):
@@ -26,7 +33,7 @@ def get_preferences_data(selected_preset):
             section, name = key.split('__', 1)
             try:
                 preset_object = tournament_preferences_registry[section][name]
-                current_value = self.get_tournament().preferences[key]
+                current_value = tournament.preferences[key]
             except KeyError:
                 logger.exception("Bad preference key: %s", key)
                 continue

@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
-from options.presets import presets_for_form, get_preferences_data
+from options.presets import get_preferences_data, presets_for_form
 
 from .models import Round, Tournament
 from .utils import auto_make_break_rounds, auto_make_rounds
@@ -71,7 +71,7 @@ class TournamentForm(ModelForm):
             auto_make_break_rounds(tournament, num_break_rounds, open_break)
 
         preset_rule = self.cleaned_data["preset_rules"]
-        preset_preferences = get_preferences_data(preset_rule)
+        preset_preferences = get_preferences_data(preset_rule, tournament)
         for pref in preset_preferences:
             tournament.preferences[pref['key']] = pref['new_value']
 

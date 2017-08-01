@@ -77,8 +77,9 @@ class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, 
         return selected_presets[0]
 
     def get_context_data(self, **kwargs):
+        t = self.get_tournament()
         selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset)
+        preset_preferences = get_preferences_data(selected_preset, t)
         kwargs["preset_title"] = selected_preset.name
         kwargs["preset_name"] = self.kwargs["preset_name"]
         kwargs["changed_preferences"] = [p for p in preset_preferences if p['changed']]
@@ -92,9 +93,9 @@ class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, 
             return ["preferences_presets_complete.html"]
 
     def save_presets(self):
-        selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset)
         t = self.get_tournament()
+        selected_preset = self.get_selected_preset()
+        preset_preferences = get_preferences_data(selected_preset, t)
 
         for pref in preset_preferences:
             t.preferences[pref['key']] = pref['new_value']
