@@ -96,8 +96,13 @@ Release Checklist
 2. Bump version number in ``docs/conf.py``
 3. Bump version number and (if applicable) codename in ``tabbycat/settings.py``
 4. Update the main ``CHANGELOG.rst`` file
-5. Check that the last Travis CI build passed
-6. Check that ``deploy_heroku.py`` still works
+5. Check the major current deployment options, including:
+    1. The ``deploy_heroku.py`` script
+    2. The Tabbykitten version
+    3. Docker (OS X, Windows 10*) and Docker Toolbox (Windows 10 Home) methods
+    4. Using Bash and Powershell on Windows
+    5. Using Terminal on OS X (at least test out a fresh install of the npm/pip  dependencies)
+6. Check that the last Travis CI build passed
 7. Shift remaining issues from the Github Milestone
 8. Create and finish the release branch as per git-flow
 9. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub
