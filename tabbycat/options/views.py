@@ -13,7 +13,7 @@ from tournaments.mixins import TournamentMixin
 from utils.mixins import SuperuserRequiredMixin
 from utils.misc import reverse_tournament
 
-from .presets import all_presets
+from .presets import all_presets, get_preferences_data
 from .forms import tournament_preference_form_builder
 from .dynamic_preferences_registry import tournament_preferences_registry
 
@@ -28,10 +28,8 @@ class TournamentConfigIndexView(SuperuserRequiredMixin, TournamentMixin, Templat
         preset_options = []
 
         for preset_class in all_presets():
-            test = preset_class()
-            if test.show_in_list:
-                preset_class.slugified_name = slugify(preset_class.__name__)
-                preset_options.append(preset_class)
+            preset_class.slugified_name = slugify(preset_class.__name__)
+            preset_options.append(preset_class)
 
         preset_options.sort(key=lambda x: x.name)
         return preset_options
@@ -76,34 +74,10 @@ class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, 
             logger.warning("Found more than one preset for %s", preset_name)
         return selected_presets[0]
 
-    def get_preferences_data(self, selected_preset):
-        preset_preferences = []
-        # Create an instance of the class and iterate over its properties for the UI
-        for key in dir(selected_preset):
-            value = getattr(selected_preset, key)
-            if '__' in key and not key.startswith('__'):
-                # Lookup the base object
-                section, name = key.split('__', 1)
-                try:
-                    preset_object = tournament_preferences_registry[section][name]
-                    current_value = self.get_tournament().preferences[key]
-                except KeyError:
-                    logger.exception("Bad preference key: %s", key)
-                    continue
-                preset_preferences.append({
-                    'key': key,
-                    'name': preset_object.verbose_name,
-                    'current_value': current_value,
-                    'new_value': value,
-                    'help_text': preset_object.help_text,
-                    'changed': current_value != value,
-                })
-        preset_preferences.sort(key=lambda x: x['key'])
-        return preset_preferences
-
     def get_context_data(self, **kwargs):
+        t = self.get_tournament()
         selected_preset = self.get_selected_preset()
-        preset_preferences = self.get_preferences_data(selected_preset)
+        preset_preferences = get_preferences_data(selected_preset, t)
         kwargs["preset_title"] = selected_preset.name
         kwargs["preset_name"] = self.kwargs["preset_name"]
         kwargs["changed_preferences"] = [p for p in preset_preferences if p['changed']]
@@ -117,9 +91,9 @@ class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, 
             return ["preferences_presets_complete.html"]
 
     def save_presets(self):
-        selected_preset = self.get_selected_preset()
-        preset_preferences = self.get_preferences_data(selected_preset)
         t = self.get_tournament()
+        selected_preset = self.get_selected_preset()
+        preset_preferences = get_preferences_data(selected_preset, t)
 
         for pref in preset_preferences:
             t.preferences[pref['key']] = pref['new_value']
