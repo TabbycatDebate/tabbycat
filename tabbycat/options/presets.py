@@ -18,8 +18,11 @@ def all_presets():
 def presets_for_form():
     presets = all_presets()
     choices = []
-    for preset in presets:
-        choices.append((preset, preset.name))
+    for index, preset in enumerate(presets):
+        if preset.show_in_list:
+            choices.append((preset.name, preset.name))
+
+    choices.sort(key=lambda x: x[1]) # Sort by name
     return choices
 
 
@@ -118,6 +121,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
 
     scoring__score_min                         = 50.0
     scoring__score_max                         = 100.0
+    scoring__score_step                        = 1.0
     scoring__maximum_margin                    = 0.0
     # Debate Rules
     debate_rules__substantive_speakers         = 2
@@ -127,20 +131,19 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     debate_rules__reply_scores_enabled         = False
     debate_rules__motion_vetoes_enabled        = False
     data_entry__enable_motions                 = False
-    # Standings
-    standings__team_standings_precedence       = ['points', 'speaks_sum']
-    # Draws
-    draw_rules__avoid_same_institution         = False # Not needed?
-    draw_rules__avoid_team_history             = False  # Not needed?
-    draw_rules__draw_odd_bracket               = 'intermediate_bubble_up_down' # Not needed?
-    draw_rules__draw_side_allocations          = 'balance' # Not needed?
-    draw_rules__draw_pairing_method            = 'slide' # Not needed?
-    draw_rules__draw_avoid_conflicts           = 'off' # Not needed?
+    # Draw Rules
     draw_rules__bp_pullup_distribution         = 'anywhere'
     draw_rules__bp_position_cost               = 'entropy'
     draw_rules__bp_renyi_order                 = 1.0
     draw_rules__bp_position_cost_exponent      = 4.0
     draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
+    # Standings Rules
+    standings__standings_missed_debates        = 2  # TODO check this?
+    standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
+    standings__rank_speakers_by                = 'total'
+    # UI Options
+    ui_options__show_team_institutions         = False
+    ui_options__show_adjudicator_institutions  = True
 
 
 class CanadianParliamentaryPreferences(PreferencesPreset):
@@ -294,42 +297,9 @@ class WSDCPreferences(AustralsPreferences):
     ui_options__show_adjudicator_institutions  = False
 
 
-class WUDCPreferences(PreferencesPreset):
-    name         = "WUDC Rules"
-    show_in_list = True
-    description  = "British Parliamentary."
-
-    # Scoring
-    scoring__score_min                         = 50.0
-    scoring__score_max                         = 100.0
-    scoring__score_step                        = 1.0
-    scoring__maximum_margin                    = 0.0
-    # Debate Rules
-    debate_rules__teams_in_debate              = 'bp'
-    debate_rules__ballots_per_debate           = 'per-debate'
-    debate_rules__substantive_speakers         = 2
-    debate_rules__reply_scores_enabled         = False
-    debate_rules__motion_vetoes_enabled        = False
-    debate_rules__side_names                   = 'gov-opp'
-    data_entry__enable_motions                 = True
-    # Draw Rules
-    draw_rules__bp_pullup_distribution         = 'anywhere'
-    draw_rules__bp_position_cost               = 'entropy'
-    draw_rules__bp_renyi_order                 = 1.0
-    draw_rules__bp_position_cost_exponent      = 4.0
-    draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
-    # Standings Rules
-    standings__standings_missed_debates        = 2  # TODO check this?
-    standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
-    standings__rank_speakers_by                = 'total'
-    # UI Options
-    ui_options__show_team_institutions         = False
-    ui_options__show_adjudicator_institutions  = True
-
-
 class WADLPreferences(PreferencesPreset):
     name         = "WADL Options"
-    show_in_list = True
+    show_in_list = False
     description  = ("Example high school league setup. Many features not "
         "supported in conjunction with other settings.")
 
@@ -380,7 +350,7 @@ class WADLPreferences(PreferencesPreset):
 
 class PublicInformation(PreferencesPreset):
     name         = "Public Information Options"
-    show_in_list = True
+    show_in_list = False
     description  = ("For tournaments hosted online: this sets it up so that "
         "people can access the draw and other generally useful information "
         "via the tab site.")
@@ -394,7 +364,7 @@ class PublicInformation(PreferencesPreset):
 
 class TabRelease(PreferencesPreset):
     name         = "Tab Release Options"
-    show_in_list = True
+    show_in_list = False
     description  = ("For when a tab is ready to be released. This will publicly "
         "display the results of all rounds, the team tab, the speaker tab, etc")
 

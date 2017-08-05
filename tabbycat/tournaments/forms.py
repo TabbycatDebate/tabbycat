@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
-from options.presets import get_preferences_data, presets_for_form
+from options.presets import all_presets, get_preferences_data, presets_for_form
 
 from .models import Round, Tournament
 from .utils import auto_make_break_rounds, auto_make_rounds
@@ -29,10 +29,9 @@ class TournamentForm(ModelForm):
         help_text=_("Leave blank if there are no break rounds."))
 
     preset_rules = ChoiceField(
-        choices=presets_for_form(),
+        choices=presets_for_form(), # Tuple with (Present_Index, Preset_Name)
         label=_("Configuration"),
-        help_text=_("Configure the tournament to follow a standard format "
-                    "(settings can be customised later)."))
+        help_text=_("Pre-configure the tournament for a standard format "))
 
     def add_default_feedback_questions(self, tournament):
         agree = AdjudicatorFeedbackQuestion(
@@ -70,10 +69,13 @@ class TournamentForm(ModelForm):
             num_break_rounds = math.ceil(math.log2(break_size))
             auto_make_break_rounds(tournament, num_break_rounds, open_break)
 
-        preset_rule = self.cleaned_data["preset_rules"]
-        preset_preferences = get_preferences_data(preset_rule, tournament)
-        for pref in preset_preferences:
-            tournament.preferences[pref['key']] = pref['new_value']
+        # Identify + apply selected preset
+        selected_index = self.cleaned_data["preset_rules"]
+        presets = list(all_presets())
+        selected_preset = next(p for p in presets if p.name == selected_index)
+        selected_preferences = get_preferences_data(selected_preset, tournament)
+        for preference in selected_preferences:
+            tournament.preferences[preference['key']] = preference['new_value']
 
         self.add_default_feedback_questions(tournament)
         tournament.current_round = tournament.round_set.first()

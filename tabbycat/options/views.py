@@ -28,10 +28,8 @@ class TournamentConfigIndexView(SuperuserRequiredMixin, TournamentMixin, Templat
         preset_options = []
 
         for preset_class in all_presets():
-            test = preset_class()
-            if test.show_in_list:
-                preset_class.slugified_name = slugify(preset_class.__name__)
-                preset_options.append(preset_class)
+            preset_class.slugified_name = slugify(preset_class.__name__)
+            preset_options.append(preset_class)
 
         preset_options.sort(key=lambda x: x.name)
         return preset_options
