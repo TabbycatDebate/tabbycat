@@ -3,7 +3,7 @@
 
     <div class="db-align-vertical-end db-flex-item-3">
       <h2>
-        {{ roundInfo.round }} {{ roundInfo.tournamentName }} {{ roundInfo.kind }} from {{ ballot.author }}
+        {{ roundInfo.round }} {{ roundInfo.kind }} from {{ ballot.author }}
         ({{ authorPositionWithSoloCheck(ballot.authorPosition) }})
         <span v-if="ballot.target">on {{ ballot.target }}
           <span v-if="ballot.targetPosition === 'C' || ballot.targetPosition === 'o'">(Chair)</span>
@@ -43,10 +43,16 @@ export default {
         } else {
           return "Solo Chair"
         }
+      } else if (position === 'O') {
+        return "Solo Chair"
       } else if (position === 'P') {
         return "Panellist"
       } else if (position === 'T') {
         return "Trainee"
+      } else if (position === 'TEAM') {
+        return "Team"
+      } else {
+        return "?"
       }
     }
   }

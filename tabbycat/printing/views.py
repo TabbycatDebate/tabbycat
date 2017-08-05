@@ -112,10 +112,10 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
     def construct_info(self, venue, source, source_p, target, target_p):
         source_n = source.name if hasattr(source, 'name') else source.short_name
         return {
-            'room': venue.display_name if venue else '',
+            'venue': venue.serialize() if venue else '',
             'authorInstitution': source.institution.code,
-            'author': source_n, 'authorPosition': source_p,
-            'target': target.name, 'targetPosition': target_p
+            'author': source_n, 'authorPosition': source_p.upper(),
+            'target': target.name, 'targetPosition': target_p.upper()
         }
 
     def get_team_feedbacks(self, debate, team):

@@ -4,6 +4,7 @@
     <section class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static"
              v-if="ballot.panel && ballot.panel.length > 1">
       <div class="db-padding-horizontal db-align-vertical-center db-vertical-center-text">
+        The other adjudicators are
         <span v-for="(da, i) in panellistsExcludingSelf">
           <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ da.adjudicator.name }}</strong>
           <span v-if="da.position === 'C'">
@@ -22,9 +23,9 @@
       </div>
     </section>
 
-    <section v-if="roundInfo.hasMotions" class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static">
+    <section v-if="!roundInfo.hasMotions" class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static">
       <div class="db-padding-horizontal db-align-vertical-center db-vertical-center-text">
-        <span>The motion is <em>&nbsp;{{ roundInfo.motions[0].text }}.</em></span>
+        <span>The motion is <em>{{ roundInfo.motions[0].text }}.</em></span>
       </div>
     </section>
 
