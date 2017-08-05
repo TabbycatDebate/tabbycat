@@ -1,33 +1,44 @@
 <template>
   <div class="db-flex-column db-flex-item-1">
 
-    <section class="db-margins-m db-bordered db-flex-column db-flex-item-1"
+    <section class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static"
              v-if="ballot.panel && ballot.panel.length > 1">
+      <div class="db-padding-horizontal db-align-vertical-center db-vertical-center-text">
+        <span v-for="(da, i) in panellistsExcludingSelf">
+          <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ da.adjudicator.name }}</strong>
+          <span v-if="da.position === 'C'">
+            (Chair, {{ da.adjudicator.institution.code }})
+          </span>
+          <span v-if="da.position === 'O'">
+            (Solo Chair, {{ da.adjudicator.institution.code }})
+          </span>
+          <span v-if="da.position === 'P'">
+            (Panellist, {{ da.adjudicator.institution.code }})
+          </span>
+          <span v-if="da.position === 'T'">
+            (Trainee, {{ da.adjudicator.institution.code }})
+          </span>
+        </span>.
+      </div>
+    </section>
 
+    <section v-if="roundInfo.hasMotions" class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static">
+      <div class="db-padding-horizontal db-align-vertical-center db-vertical-center-text">
+        <span>The motion is <em>&nbsp;{{ roundInfo.motions[0].text }}.</em></span>
+      </div>
+    </section>
+
+    <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
+             v-if="roundInfo.hasMotions && !roundInfo.hasVetoes">
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
         <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
-          The other adjudicators are
-          <span v-for="(da, i) in panellistsExcludingSelf">
-            <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ da.adjudicator.name }}</strong>
-            <span v-if="da.position === 'C'">
-              (Chair, {{ da.adjudicator.institution.code }})
-            </span>
-            <span v-if="da.position === 'O'">
-              (Solo Chair, {{ da.adjudicator.institution.code }})
-            </span>
-            <span v-if="da.position === 'P'">
-              (Panellist, {{ da.adjudicator.institution.code }})
-            </span>
-            <span v-if="da.position === 'T'">
-              (Trainee, {{ da.adjudicator.institution.code }})
-            </span>
-          </span>
-          <span v-if="!roundInfo.hasMotions">
-            . The motion is <em>{{ roundInfo.motions[0].text }}.</em>
-          </span>
+          Motion:
         </div>
+        <div class="db-flex-item db-align-vertical-center" v-if="roundInfo.motions[0]">
+          <em>{{ motions[0].text }}</em>
+        </div>
+        <div v-else class="db-flex-item db-padding-horizontal db-fill-in"></div>
       </div>
-
     </section>
 
     <section class="db-margins-m db-bordered db-flex-row db-flex-item-1"
@@ -40,7 +51,8 @@
           <div class="db-flex-item-1 "></div>
           <div class="db-flex-item-2 db-flex-row">
             <div class="db-item-gutter"></div>
-            <div v-for="motion in roundInfo.motions" class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text">
+            <div v-for="motion in motionsAccountingForBlanks"
+                 class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text">
               <span class="db-fill-in">{{ motion.seq }}</span>
             </div>
             <div class="db-item-gutter"></div>
@@ -121,6 +133,13 @@ export default {
         return this.ballot.panel
       }
     },
+    motionsAccountingForBlanks: function() {
+      if (this.roundInfo.motions.length > 0) {
+        return this.roundInfo.motions
+      } else {
+        return [{'seq': 1}, {'seq': 2}, {'seq': 3}]
+      }
+    }
   }
 }
 </script>
