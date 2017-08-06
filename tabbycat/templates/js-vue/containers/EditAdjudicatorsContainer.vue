@@ -9,7 +9,7 @@
     </div>
 
     <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions" @resort="updateSorting"
+      <draw-header :positions="positions" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
 
         <div class="thead flex-cell flex-5 vue-sortable" @click="updateSorting('importance')"

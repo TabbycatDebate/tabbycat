@@ -13,11 +13,11 @@
     </div>
 
     <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions"  @resort="updateSorting"
+      <draw-header :positions="positions"  @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
         <template slot="hteams">
           <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
-               v-for="position in roundInfo.positions" @click="updateSorting(position.full)"
+               v-for="position in positions" @click="updateSorting(position.side)"
                data-toggle="tooltip" :title="'The ' + position.full + ' team'">
             <span>{{ position.abbr }}</span>
             <span :class="sortClasses(position.full)"></span>
