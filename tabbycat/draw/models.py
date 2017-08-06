@@ -233,10 +233,12 @@ class Debate(models.Model):
         debate = {'id': self.id, 'bracket': self.bracket,
                   'importance': self.importance, 'locked': False}
         debate['venue'] = self.venue.serialize() if self.venue else None
-        debate['teams'] = {
-            dt.get_side_name(round.tournament):dt.team.serialize() for dt in self.debateteam_set.all()}
-        debate['panel'] = [{
-            'adjudicator': adj.serialize(round=round), 'position': position,
+        debate['debateTeams'] = [{
+            'position': dt.get_side_name(round.tournament),
+            'team': dt.team.serialize()} for dt in self.debateteams_ordered()]
+        debate['debateAdjudicators'] = [{
+            'position': position,
+            'adjudicator': adj.serialize(round=round),
         } for adj, position in self.adjudicators.with_debateadj_types()]
         return debate
 
