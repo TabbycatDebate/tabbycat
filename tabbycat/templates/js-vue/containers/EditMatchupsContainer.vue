@@ -26,13 +26,12 @@
       </draw-header>
       <debate v-for="debate in dataOrderedByKey"
               :debate="debate" :key="debate.id" :round-info="roundInfo">
-        <template v-for="position in roundInfo.positions">
+        <template v-for="dt in debate.debateTeams">
           <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
-               :slot="'s-' + position.full">
+               :slot="'s-' + dt.side">
             <droppable-generic :assignment-id="debate.id"
-                               :assignment-position="position.full" :locked="debate.locked">
-              <draggable-team v-if="debate.teams[position.full]"
-                              :team="debate.teams[position.full]"
+                               :assignment-position="dt.side" :locked="debate.locked">
+              <draggable-team v-if="dt.team" :team="dt.team"
                               :debate-id="debate.id" :locked="debate.locked"></draggable-team>
             </droppable-generic>
           </div>
@@ -71,7 +70,7 @@ export default {
   methods: {
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
-        var fromPosition = _.findKey(this.debatesById[payload.debate].teams,
+        var fromPosition = _.findKey(this.debatesById[payload.debate].debateTeams,
                                      this.allTeamsById[payload.team])
         if (assignedPosition === fromPosition) {
           return // Moving to same debate/position; do nothing

@@ -8,22 +8,22 @@ export default {
 
   computed: {
     conflictablesToSearch: function() {
-      var a = _.map(this.panel, function(panellist) {
-        return panellist.adjudicator
+      var a = _.map(this.debateAdjudicators, function(da) {
+        return da.adjudicator
       })
-      var b = _.map(this.teams, function(team) {
-        return team
+      var b = _.map(this.debateTeams, function(dt) {
+        return dt.team
       })
       return a.concat(b)
     },
     adjudicatorIds: function() {
-      return _.map(this.panel, function(panellist) {
-        return panellist.adjudicator.id
+      return _.map(this.debateAdjudicators, function(da) {
+        return da.adjudicator.id
       })
     },
     teamIds: function() {
-      return _.map(this.teams, function(team) {
-        return team.id
+      return _.map(this.debateTeams, function(dt) {
+        return dt.team.id
       })
     },
   },
@@ -39,11 +39,11 @@ export default {
       var self = this
       // Turn off all conflicts that might remain from beforehand
       if (unset) {
-        _.forEach(this.teams, function(team) {
-          self.$eventHub.$emit('unset-conflicts-for-team-' + team.id, 'panel')
+        _.forEach(this.debateTeams, function(dt) {
+          self.$eventHub.$emit('unset-conflicts-for-team-' + dt.team.id, 'panel')
         })
-        _.forEach(this.panel, function(panellist) {
-          self.$eventHub.$emit('unset-conflicts-for-adjudicator-' + panellist.adjudicator.id, 'panel')
+        _.forEach(this.debateAdjudicators, function(da) {
+          self.$eventHub.$emit('unset-conflicts-for-adjudicator-' + da.adjudicator.id, 'panel')
         })
       }
       // Then search through the list of given conflicts across teams/adjs
@@ -82,7 +82,8 @@ export default {
     },
     checkIfInPanelWithInstitution: function(conflict, conflictingItem) {
       var self = this
-      _.forEach(this.teams, function(team) {
+      _.forEach(this.debateTeams, function(dt) {
+        var team = dt.team
         if ( (team.institution.id === conflict && team !== conflictingItem) &&
              (_.has(conflictingItem, 'score')) ) {
           // Don't self-conflict and don't allow team-team institution conflicts
@@ -93,8 +94,8 @@ export default {
           self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
         }
       })
-      _.forEach(this.panel, function(panellist) {
-        var adj = panellist.adjudicator
+      _.forEach(this.debateAdjudicators, function(da) {
+        var adj = da.adjudicator
         if (adj.institution.id === conflict && adj !== conflictingItem) {
           var eventCode = 'set-conflicts-for-adjudicator-' + adj.id
           self.$eventHub.$emit(eventCode, 'panel', 'institution', true)

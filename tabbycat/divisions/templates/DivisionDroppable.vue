@@ -37,7 +37,7 @@ export default {
   props: [ 'division', 'vcs', 'teams', 'saveVenueCategoryUrl'],
   computed: {
     hasEvenNumbers: function () {
-      return (this.teams.length % 2) == 1;
+      return (this.debateTeams.length % 2) == 1;
     },
     venueCategory: function() {
       return this.division.venue_category

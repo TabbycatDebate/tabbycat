@@ -6,39 +6,44 @@ export default {
   mixins: [MovingMixin],
   methods: {
     debateCheckIfShouldSave(debate) {
-      var expectedTeams = this.roundInfo.positions.length
-      var hasEnoughTeams = _.keys(debate.teams).length === expectedTeams
-      return hasEnoughTeams
+      var presentTeams = _.filter(debate.debateTeams, function(dt) {
+        return dt.team !== null;
+      })
+      if (debate.debateTeams.length === presentTeams.length) {
+        return true
+      } else {
+        return false
+      }
     },
     saveMoveForType(teamId, fromDebate, toDebate, toPosition) {
       var team = this.allTeamsById[teamId]
       // Data Logic
       if (toDebate === 'unused') {
-        var fromPosition = _.findKey(fromDebate.teams, team);
-        delete fromDebate.teams[fromPosition]
+        var fromPosition = _.findKey(fromDebate.debateTeams, team);
+        delete fromDebate.debateTeams[fromPosition]
         this.unallocatedItems.push(team) // Need to push; not append
         // Update front end otherwise teams wont appear removed
-        this.$set(this.debatesById[fromDebate.id], 'teams', fromDebate.teams)
+        this.$set(this.debatesById[fromDebate.id], 'teams', fromDebate.debateTeams)
       }
       if (fromDebate === 'unused') {
-        if (toDebate.teams[toPosition]) { // If replacing a team
-          this.unallocatedItems.push(toDebate.teams[toPosition])
+        if (toDebate.debateTeams[toPosition]) { // If replacing a team
+          this.unallocatedItems.push(toDebate.debateTeams[toPosition])
         }
-        toDebate.teams[toPosition] = team
+        toDebate.debateTeams[toPosition] = team
         this.unallocatedItems.splice(this.unallocatedItems.indexOf(team), 1)
       }
       if (toDebate !== 'unused' && fromDebate !== 'unused') {
-        var fromPosition = _.findKey(fromDebate.teams, team);
-        if (toDebate.teams[toPosition]) {
+        var fromPosition = _.findKey(fromDebate.debateTeams, team);
+        if (toDebate.debateTeams[toPosition]) {
           // If replacing a team
-          fromDebate.teams[fromPosition] = toDebate.teams[toPosition]
+          fromDebate.debateTeams[fromPosition] = toDebate.debateTeams[toPosition]
         } else {
           // If not replacing a team
-          delete fromDebate.teams[fromPosition]
+          delete fromDebate.debateTeams[fromPosition]
           // Update front end otherwise teams wont appear removed
-          this.$set(this.debatesById[fromDebate.id], 'teams', fromDebate.teams)
+          this.$set(this.debatesById[fromDebate.id], 'teams', fromDebate.debateTeams)
         }
-        toDebate.teams[toPosition] = team
+        toDebate.debateTeams[toPosition] = team
       }
       // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)

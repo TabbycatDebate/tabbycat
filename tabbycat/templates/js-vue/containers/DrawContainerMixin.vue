@@ -46,14 +46,16 @@ export default {
     teams: function() {
       // Return all teams (in debates) as a single array
       var allTeams = _.map(this.debates, function(debate) {
-        return _.values(debate.teams)
+        return _.map(debate.debateTeams, function(dt) {
+          return dt.team
+        })
       })
       return _.flattenDeep(allTeams)
     },
     adjudicators: function() {
       // Return all adjs (in debates) as a single array
       var allPanellists = _.map(this.debates, function(debate) {
-        return _.map(debate.panel, function(panel) {
+        return _.map(debate.debateAdjudicators, function(panel) {
           return panel.adjudicator
         })
       })

@@ -44,8 +44,8 @@
         </div>
         <template slot="svenue"><!-- Hide Venues --></template>
         <template slot="spanel">
-          <debate-panel :panel="debate.panel" :debate-id="debate.id"
-                        :teams="debate.teams"
+          <debate-panel :panel="debate.debateAdjudicators" :debate-id="debate.id"
+                        :teams="debate.debateTeams"
                         :percentiles="percentileThresholds"
                         :locked="debate.locked"
                         :adj-positions="adjPositions"></debate-panel>
@@ -126,8 +126,8 @@ export default {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move
         var thisDebate = this.debatesById[payload.debate]
-        var fromPanellist = _.find(thisDebate.panel, function(panellist) {
-          return panellist.adjudicator.id === payload.adjudicator;
+        var fromPanellist = _.find(thisDebate.debateAdjudicators, function(da) {
+          return da.adjudicator.id === payload.adjudicator;
         })
         if (assignedPosition === fromPanellist.position) {
           return // Moving to same debate/position; do nothing
