@@ -7,37 +7,34 @@ from adjfeedback.models import AdjudicatorTestScoreHistory
 from venues.admin import VenueConstraintInline
 
 from .emoji import pick_unused_emoji
-from .models import Adjudicator, Institution, Region, Speaker, Team
+from .models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 
 
 # ==============================================================================
 # Region
 # ==============================================================================
 
+@admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):
     pass
-
-
-admin.site.register(Region, RegionAdmin)
 
 
 # ==============================================================================
 # Institution
 # ==============================================================================
 
+@admin.register(Institution)
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'abbreviation', 'region')
     ordering = ('name', )
     search_fields = ('name', )
 
 
-admin.site.register(Institution, InstitutionAdmin)
-
-
 # ==============================================================================
 # Speaker
 # ==============================================================================
 
+@admin.register(Speaker)
 class SpeakerAdmin(admin.ModelAdmin):
     list_filter = ('team__tournament',)
     list_display = ('name', 'team', 'novice', 'esl', 'efl', 'gender')
@@ -45,7 +42,15 @@ class SpeakerAdmin(admin.ModelAdmin):
     raw_id_fields = ('team', )
 
 
-admin.site.register(Speaker, SpeakerAdmin)
+# ==============================================================================
+# Speaker
+# ==============================================================================
+
+@admin.register(SpeakerCategory)
+class SpeakerCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'seq', 'tournament', 'limit', 'public')
+    list_filter = ('tournament', )
+    ordering = ('tournament', 'seq')
 
 
 # ==============================================================================
@@ -71,6 +76,7 @@ class TeamForm(forms.ModelForm):
         return self.cleaned_data['url_key'] or None
 
 
+@admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     form = TeamForm
     list_display = ('long_name', 'short_name', 'emoji', 'institution',
@@ -89,8 +95,6 @@ class TeamAdmin(admin.ModelAdmin):
         if db_field.name == 'emoji' and kwargs.get("initial", None) is None:
             kwargs["initial"] = pick_unused_emoji()
         return super().formfield_for_choice_field(db_field, request, **kwargs)
-
-admin.site.register(Team, TeamAdmin)
 
 
 # ==============================================================================
@@ -130,6 +134,7 @@ class AdjudicatorForm(forms.ModelForm):
             'url_key'] or None  # So that the url key can be unique and be blank
 
 
+@admin.register(Adjudicator)
 class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'novice',
@@ -142,6 +147,3 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline,
                AdjudicatorTestScoreHistoryInline)
-
-
-admin.site.register(Adjudicator, AdjudicatorAdmin)

@@ -1,4 +1,4 @@
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 <!-- TAB RELEASES -->
 {% if pref.team_tab_released > 0 %}
@@ -11,25 +11,18 @@
     <a href="{% tournamenturl 'standings-public-tab-speaker' %}">Speaker Tab</a>
   </li>
 {% endif %}
-{% if pref.pros_tab_released > 0 %}
-  <li class="{% if tab_pros_nav %}active{% endif %}">
-    <a href="{% tournamenturl 'standings-public-tab-pros' %}">Pros Tab</a>
-  </li>
-{% endif %}
-{% if pref.novices_tab_released > 0 %}
-  <li class="{% if tab_novices_nav %}active{% endif %}">
-    <a href="{% tournamenturl 'standings-public-tab-novices' %}">Novices Tab</a>
-  </li>
-{% endif %}
-{% if pref.esl_tab_released > 0 %}
-  <li class="{% if tab_esl_nav %}active{% endif %}">
-    <a href="{% tournamenturl 'standings-public-tab-esl' %}">ESL Speaker Tab</a>
-  </li>
-{% endif %}
-{% if pref.efl_tab_released > 0 %}
-  <li class="{% if tab_efl_nav %}active{% endif %}">
-    <a href="{% tournamenturl 'standings-public-tab-efl' %}">EFL Speaker Tab</a>
-  </li>
+{% if pref.speaker_category_tabs_released > 0 %}
+  {% for category in tournament.speakercategory_set.all %}
+    {% if category.public %}
+      <li>
+        <a href="{% tournamenturl 'standings-public-tab-speaker-category' category=category.slug %}">
+          {% blocktrans with category_name=category.name %}
+            {{ category_name }} Speaker Tab
+          {% endblocktrans %}
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
 {% endif %}
 {% if pref.replies_tab_released > 0 %}
   <li class="{% if tab_replies_nav %}active{% endif %}">

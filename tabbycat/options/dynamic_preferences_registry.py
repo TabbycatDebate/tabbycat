@@ -486,6 +486,15 @@ class SpeakerTabReleaseLimit(IntegerPreference):
 
 
 @tournament_preferences_registry.register
+class SpeakerCategoryTabsReleased(BooleanPreference):
+    help_text = "Enables public display of those speaker category tabs that are marked to be public. Intended for use after the tournament."
+    verbose_name = "Release speaker category tabs to public"
+    section = tab_release
+    name = "speaker_category_tabs_released"
+    default = False
+
+
+@tournament_preferences_registry.register
 class ProsTabReleased(BooleanPreference):
     help_text = "Enables public display of a pro-speakers only tab. Intended for use after the tournament."
     verbose_name = "Release pros tab to public"

@@ -17,6 +17,10 @@ urlpatterns = [
     url(r'^speaker/$',
         views.SpeakerStandingsView.as_view(),
         name='standings-speaker'),
+    url(r'^speaker/(?P<category>\w+)/$',
+        views.SpeakerCategoryStandingsView.as_view(),
+        name='standings-speaker-category'),
+
     url(r'^novices/$',
         views.NoviceStandingsView.as_view(),
         name='standings-novice'),

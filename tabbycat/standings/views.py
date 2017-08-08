@@ -1,16 +1,20 @@
 import json
+import logging
 
-from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count
+from django.http import Http404
+from django.utils.translation import ugettext as _
+from django.views.generic.base import TemplateView
 
 import motions.statistics as motion_statistics
 from motions.models import Motion
-from participants.models import Speaker, Team
+from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
+from utils.misc import redirect_tournament
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -20,6 +24,9 @@ from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
 from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
 from .templatetags.standingsformat import metricformat
+
+
+logger = logging.getLogger(__name__)
 
 
 class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
@@ -101,13 +108,18 @@ class PublicTabMixin(PublicTournamentPageMixin):
             rounds = rounds.filter(silent=False)
         return rounds
 
-    def limit_rank_display(self, standings):
-        """Sets the rank limit on the generated standings."""
+    def get_tab_limit(self):
         if hasattr(self, 'public_limit_preference'):
             tournament = self.get_tournament()
-            rank_limit = tournament.pref(self.public_limit_preference)
-            if rank_limit > 0:
-                standings.set_rank_limit(rank_limit)
+            return tournament.pref(self.public_limit_preference)
+        else:
+            return None
+
+    def limit_rank_display(self, standings):
+        """Sets the rank limit on the generated standings."""
+        limit = self.get_tab_limit()
+        if limit:
+            standings.set_rank_limit(limit)
 
     def populate_result_missing(self, standings):
         # Never highlight missing results on public tab pages
@@ -115,13 +127,13 @@ class PublicTabMixin(PublicTournamentPageMixin):
 
     def get_page_title(self):
         # If set, make a note of any rank limitations in the title
-        if hasattr(self, 'public_limit_preference'):
-            tournament = self.get_tournament()
-            ranks_limit = tournament.pref(self.public_limit_preference)
-            if ranks_limit > 0:
-                return self.page_title + " (Top %s Only)" % ranks_limit
-
-        return self.page_title
+        title = super().get_page_title()
+        limit = self.get_tab_limit()
+        if limit:
+            # Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
+            return _("%(title)s (Top %(limit)d Only)") % {'title': title, 'limit': limit}
+        else:
+            return title
 
     def get_context_data(self, **kwargs):
         kwargs['for_public'] = True
@@ -224,7 +236,46 @@ class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsV
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
     public_page_preference = 'speaker_tab_released'
-    public_limit_preference = 'speaker_tab_limit'
+
+    def get_tab_limit(self):
+        return self.get_tournament().pref('speaker_tab_limit')
+
+
+class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseStandardSpeakerStandingsView):
+    """Speaker standings view for a category."""
+
+    model = SpeakerCategory
+    slug_url_kwarg = 'category'
+
+    def get_speakers(self):
+        return self.object.speaker_set.select_related(
+            'team', 'team__institution', 'team__tournament').prefetch_related('team__speaker_set')
+
+    def get_page_title(self):
+        return _("%(category)s Speaker Standings") % {'category': self.object.name,}
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+
+class SpeakerCategoryStandingsView(SuperuserRequiredMixin, BaseSpeakerCategoryStandingsView):
+    pass
+
+
+class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsView):
+    public_page_preference = 'speaker_category_tabs_released'
+
+    def get_tab_limit(self):
+        return self.object.limit
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not self.object.public:
+            logger.warning("Tried to access a non-public speaker category tab page: %s", self.object.slug)
+            messages.error(self.request, self.get_disabled_message())
+            return redirect_tournament('tournament-public-index', self.get_tournament())
+        return super().get(request, *args, **kwargs)
 
 
 class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):

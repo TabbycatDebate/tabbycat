@@ -31,24 +31,13 @@
       Replies
     </a>
   {% endif %}
-  {% if pref.show_novices %}
-    <a class="btn btn-default {% block pros_active %}{% endblock %}"
-       href="{% roundurl 'standings-pro' current_round %}">
-      Pro Speakers
+  {% for category in tournament.speakercategory_set.all %}
+    <a class="btn btn-default"
+       href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
+      {{ category.name }} Speakers
     </a>
-    <a class="btn btn-default {% block novices_active %}{% endblock %}"
-       href="{% roundurl 'standings-novice' current_round %}">
-      Novice Speakers
-    </a>
-  {% endif %}
-  <a class="btn btn-default {% block esl_active %}{% endblock %}"
-     href="{% roundurl 'standings-esl' current_round %}">
-    ESL Speakers
-  </a>
-  <a class="btn btn-default {% block efl_active %}{% endblock %}"
-     href="{% roundurl 'standings-efl' current_round %}">
-    EFL Speakers
-  </a>
+  {% endfor %}
+
 </div>
 
 <a class="btn btn-default {% block motion_active %}{% endblock %}"

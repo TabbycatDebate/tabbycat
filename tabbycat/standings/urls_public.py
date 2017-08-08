@@ -12,6 +12,10 @@ urlpatterns = [
     url(r'^speaker/$',
         views.PublicSpeakerTabView.as_view(),
         name='standings-public-tab-speaker'),
+    url(r'^speaker/(?P<category>\w+)/$',
+        views.PublicSpeakerCategoryTabView.as_view(),
+        name='standings-public-tab-speaker-category'),
+
     url(r'^pros/$',
         views.PublicProTabView.as_view(),
         name='standings-public-tab-pros'),

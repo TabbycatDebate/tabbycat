@@ -87,10 +87,12 @@ class SpeakerCategory(models.Model):
     seq = models.IntegerField(
         verbose_name=_("sequence number"),
         help_text=_("The order in which the categories are displayed"))
-    is_general = models.BooleanField(
-        verbose_name=_("is general"),
-        help_text=_("True if most teams eligible for this category, e.g. Open, False otherwise"))
-
+    limit = models.IntegerField(default=0,
+        verbose_name=_("limit"),
+        help_text=_("At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"))
+    public = models.BooleanField(default=True,
+        verbose_name=_("public"),
+        help_text=_("If checked, this category will be included in the speaker category tabs shown to the public"))
 
     class Meta:
         unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
@@ -98,6 +100,9 @@ class SpeakerCategory(models.Model):
         index_together = ['tournament', 'seq']
         verbose_name = _("speaker category")
         verbose_name_plural = _("speaker categories")
+
+    def __str__(self):
+        return "[{}] {}".format(self.tournament.slug, self.name)
 
 
 class Person(models.Model):
@@ -362,6 +367,8 @@ class Team(models.Model):
 class Speaker(Person):
     team = models.ForeignKey(Team, models.CASCADE,
         verbose_name=_("team"))
+    categories = models.ManyToManyField(SpeakerCategory, blank=True,
+        verbose_name=_("speaker categories"))
 
     class Meta:
         verbose_name = _("speaker")
