@@ -32,7 +32,8 @@ import _ from 'lodash'
 export default {
   mixins: [DebateConflictsMixin],
   components: { DroppableGeneric, DraggableAdjudicator },
-  props: ['debateAdjudicators', 'teams', 'debateId', 'percentiles', 'locked', 'adjPositions'],
+  props: ['panel', 'adjPositions', 'teams', 'debateId',
+          'percentiles', 'locked', ],
   methods: {
     getAdjudicatorsByPosition: function(panel, position) {
       return _.filter(panel, { 'position': position })
