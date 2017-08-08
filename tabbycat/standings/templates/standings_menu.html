@@ -1,21 +1,21 @@
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 <div class="btn-group">
   <a class="btn btn-default {% block standings_active %}{% endblock %}"
      href="{% roundurl 'standings-index' current_round %}">
-    Overview
+    {% trans "Overview" %}
   </a>
 </div>
 
 <div class="btn-group">
   <a class="btn btn-default {% block team_active %}{% endblock %}"
      href="{% roundurl 'standings-team' current_round %}">
-    Teams
+    {% trans "Teams" %}
   </a>
   {% if pref.enable_divisions %}
   <a class="btn btn-default {% block division_active %}{% endblock %}"
      href="{% roundurl 'standings-division' current_round %}">
-    Divisions
+    {% trans "Divisions" %}
   </a>
   {% endif %}
 </div>
@@ -23,18 +23,20 @@
 <div class="btn-group">
   <a class="btn btn-default {% block speaker_active %}{% endblock %}"
      href="{% roundurl 'standings-speaker' current_round %}">
-    Speakers
+    {% trans "Speakers" %}
   </a>
   {% if pref.reply_scores_enabled %}
     <a class="btn btn-default {% block replies_active %}{% endblock %}"
        href="{% roundurl 'standings-reply' current_round %}">
-      Replies
+      {% trans "Replies" %}
     </a>
   {% endif %}
   {% for category in tournament.speakercategory_set.all %}
     <a class="btn btn-default"
        href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
-      {{ category.name }} Speakers
+      {% blocktrans trimmed with category_name=category.name %}
+        {{ category_name }} Speakers
+      {% endblocktrans %}
     </a>
   {% endfor %}
 
@@ -42,10 +44,10 @@
 
 <a class="btn btn-default {% block motion_active %}{% endblock %}"
    href="{% roundurl 'standings-motion' current_round %}">
-  Motions Balance
+  {% trans "Motions Balance" %}
 </a>
 
 <a class="btn btn-default {% block diversity_active %}{% endblock %}"
    href="{% roundurl 'standings-diversity' current_round %}">
-  Diversity Overview
+  {% trans "Diversity Overview" %}
 </a>
