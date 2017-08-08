@@ -39,7 +39,7 @@
                 <th class="team-emoji"></th>
               {% endif %}
               <th>Institution</th>
-              {% for category in tournament.speakercategory_set.all %}
+              {% for category in form.get_category_queryset %}
                 <th>
                   {{ category.name }}
                   (<span id="count_{{ category.id }}"></span>)<br>
