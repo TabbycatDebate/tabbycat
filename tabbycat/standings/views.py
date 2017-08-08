@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count
 from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.views.generic.base import TemplateView
 
 import motions.statistics as motion_statistics
@@ -203,7 +204,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
 
 class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
     """The standard speaker standings view."""
-    page_title = 'Speaker Tab'
+    page_title = ugettext_lazy("Speaker Standings")
     page_emoji = '💯'
 
     def get_speakers(self):
@@ -234,6 +235,7 @@ class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsV
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
+    page_title = ugettext_lazy("Speaker Tab")
     public_page_preference = 'speaker_tab_released'
 
     def get_tab_limit(self):
@@ -268,6 +270,9 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
     def get_tab_limit(self):
         return self.object.limit
 
+    def get_page_title(self):
+        return _("%(category)s Speaker Tab") % {'category': self.object.name,}
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         if not self.object.public:
@@ -279,7 +284,7 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
 
 class BaseReplyStandingsView(BaseSpeakerStandingsView):
     """Speaker standings view for replies."""
-    page_title = 'Reply Speaker Standings'
+    page_title = ugettext_lazy("Reply Speaker Standings")
     page_emoji = '💁'
 
     def get_speakers(self):
@@ -311,6 +316,7 @@ class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
 
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
+    page_title = ugettext_lazy("Reply Speaker Tab")
     public_page_preference = 'replies_tab_released'
     public_limit_preference = 'replies_tab_limit'
 
@@ -322,7 +328,7 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
 class BaseTeamStandingsView(BaseStandingsView):
     """Base class for views that display team standings."""
 
-    page_title = 'Team Standings'
+    page_title = ugettext_lazy("Team Standings")
     page_emoji = '👯'
 
     def get_standings(self):
@@ -374,7 +380,7 @@ class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
 class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
-    page_title = 'Division Standings'
+    page_title = ugettext_lazy("Division Standings")
     page_emoji = '👯'
 
 
@@ -384,6 +390,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     During the tournament, "public team standings" only shows wins and results.
     Once the tab is released, to the public the team standings are known as the
     "team tab"."""
+    page_title = ugettext_lazy("Team Tab")
     public_page_preference = 'team_tab_released'
     public_limit_preference = 'team_tab_limit'
     rankings = ('rank',)
@@ -398,7 +405,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 
 class BaseMotionStandingsView(BaseStandingsView):
 
-    page_title = 'Motions Tab'
+    page_title = ugettext_lazy("Motions Tab")
     page_emoji = '💭'
     tables_orientation = 'rows'
 
@@ -443,7 +450,7 @@ class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
 class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplateView):
 
     public_page_preference = 'public_team_standings'
-    page_title = 'Current Team Standings'
+    page_title = ugettext_lazy("Current Team Standings")
     page_emoji = '🌟'
 
     def get_table(self):

@@ -797,30 +797,12 @@ class ShowAdjudicatorInstitutions(BooleanPreference):
     default = True
 
 
-@tournament_preferences_registry.register
-class ShowNovices(BooleanPreference):
-    help_text = "Indicates next to a speaker's name if they are a novice"
-    verbose_name = 'Show novices'
+@ tournament_preferences_registry.register
+class ShowSpeakerCategories(BooleanPreference):
+    help_text = "Indicates next to a speaker's name if they are in (public) speaker categories"
+    verbose_name = "Show speaker categories"
     section = ui_options
-    name = 'show_novices'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShowESL(BooleanPreference):
-    help_text = "Indicates next to a speaker's name if they are an ESL speaker"
-    verbose_name = 'Show ESL'
-    section = ui_options
-    name = 'show_esl'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShowEFL(BooleanPreference):
-    help_text = "Indicates next to a speaker's name if they are an EFL speaker"
-    verbose_name = 'Show EFL'
-    section = ui_options
-    name = 'show_efl'
+    name = 'show_speaker_categories'
     default = False
 
 

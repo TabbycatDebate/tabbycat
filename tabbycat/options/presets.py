@@ -46,8 +46,7 @@ class AustralsPreferences(PreferencesPreset):
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
-    ui_options__show_esl                       = True
-    ui_options__show_efl                       = True
+    ui_options__show_speaker_categories        = True
 
 
 class CanadianParliamentaryPreferences(PreferencesPreset):
@@ -89,7 +88,7 @@ class AustralianEastersPreferences(AustralsPreferences):
     debate_rules__motion_vetoes_enabled        = True
     data_entry__enable_motions                 = True
     # UI Options
-    ui_options__show_novices                   = True
+    ui_options__show_speaker_categories        = True
 
 
 class NZEastersPreferences(AustralsPreferences):
@@ -118,7 +117,7 @@ class NZEastersPreferences(AustralsPreferences):
     draw_rules__avoid_same_institution         = False # TODO: CHECK
     draw_rules__avoid_team_history             = False # TODO: CHECK
     # UI Options
-    ui_options__show_novices                   = True
+    ui_options__show_speaker_categories        = True
 
 
 class JoyntPreferences(AustralsPreferences):
@@ -149,7 +148,7 @@ class JoyntPreferences(AustralsPreferences):
     # Public Features
     public_features__public_side_allocations   = True
     # UI Options
-    ui_options__show_novices                   = True
+    ui_options__show_speaker_categories        = True
 
 
 class UADCPreferences(AustralsPreferences):
@@ -188,7 +187,7 @@ class UADCPreferences(AustralsPreferences):
     feedback__feedback_from_teams              = 'all-adjs' # Kinda a big deal
     # UI Options
     public_features__feedback_progress         = True  # Feedback is compulsory
-    ui_options__show_efl                       = True  # Only EFL status shown
+    ui_options__show_speaker_categories        = True
 
 
 class WSDCPreferences(AustralsPreferences):
@@ -242,7 +241,7 @@ class WADLPreferences(PreferencesPreset):
     draw_rules__draw_pairing_method            = 'slide'
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
     # UI Options
-    ui_options__show_novices                   = True
+    ui_options__show_speaker_categories        = True
     ui_options__show_emoji                     = False
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = False
