@@ -68,10 +68,27 @@ export default {
     },
   },
   methods: {
+    findDebateTeamInDebateByTeam(team, debate) {
+      var debateTeam = _.find(debate.debateTeams, function(dt) {
+        if (dt.team !== null) {
+          return dt.team.id === team.id
+        } else {
+          return false
+        }
+      });
+      return debateTeam
+    },
+    findDebateTeamInDebateBySide(side, debate) {
+      var debateTeam = _.find(debate.debateTeams, function(dt) {
+        return dt.side === side
+      });
+      return debateTeam
+    },
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
-        var fromPosition = _.findKey(this.debatesById[payload.debate].debateTeams,
-                                     this.allTeamsById[payload.team])
+        var team = this.allTeamsById[payload.team]
+        var debate = this.debatesById[payload.debate]
+        var fromPosition = this.findDebateTeamInDebateByTeam(team, debate)
         if (assignedPosition === fromPosition) {
           return // Moving to same debate/position; do nothing
         }

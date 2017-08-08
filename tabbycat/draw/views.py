@@ -521,10 +521,14 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
     save_url = "save-debate-teams"
 
     def annotate_draw(self, draw, serialised_draw):
-        round = self.get_round()
-        extra_debates = floor(round.active_teams.count() / 2 - len(serialised_draw))
-        for i in range(0, extra_debates):
-            # Make 'fake' debates as placeholders; need a unique ID (hence 9999)
+        r = self.get_round()
+        if r.tournament.pref('teams_in_debate') == 'bp':
+            total_possible_rooms = r.active_teams.count() / 4
+        else:
+            total_possible_rooms = r.active_teams.count() / 2
+
+        # Make 'fake' debates as placeholders; need a unique ID (hence 9999)
+        for i in range(0, floor(total_possible_rooms - len(serialised_draw))):
             serialised_draw.append({
                 'id': 999999 + i, 'debateTeams': {}, 'debateAdjudicators': [],
                 'bracket': 0, 'importance': 0, 'venue': None
