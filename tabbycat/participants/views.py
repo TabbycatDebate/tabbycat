@@ -4,7 +4,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.views.generic.base import View
+from django.views.generic import FormView
 
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
@@ -18,6 +21,7 @@ from utils.mixins import CacheMixin, ModelFormSetView, SuperuserRequiredMixin, V
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Speaker, Team
+from . import forms
 
 
 class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
@@ -240,6 +244,30 @@ class PublicTeamRecordView(PublicTournamentPageMixin, BaseTeamRecordView):
 class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorRecordView):
     public_page_preference = 'public_record'
     admin = False
+
+
+# ==============================================================================
+# Speaker eligibility
+# ==============================================================================
+
+class EditSpeakerCategoryEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, FormView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
+    form_class = forms.SpeakerCategoryEligibilityForm
+    template_name = 'edit_speaker_eligibility.html'
+
+    def get_success_url(self):
+        return reverse_tournament('participants-list', self.get_tournament())
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.get_tournament()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Speaker category eligibility saved.")
+        return super().form_valid(form)
 
 
 # ==============================================================================

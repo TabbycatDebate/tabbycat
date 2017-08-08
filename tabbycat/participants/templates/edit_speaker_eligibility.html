@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 {% load debate_tags static i18n %}
 
-{% block head-title %}{% trans "Break Eligibility" %}{% endblock %}
-{% block page-title %}{% trans "Break Eligibility" %}{% endblock %}
+{% block head-title %}{% trans "Speaker Category Eligibility" %}{% endblock %}
+{% block page-title %}{% trans "Speaker Category Eligibility" %}{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "breakqual_subnav.html" %}
+{% endblock %}
 
 {% block page-subnav-actions %}
-  <button class="btn btn-success submit-disable" id="submit-nav" data-loading-text="{% trans "Saving…" %}">
-    <span class="glyphicon glyphicon-floppy-disk"></span> {% trans "Save Teams' Eligibility" %}
+  <button class="btn btn-success submit-disable" id="submit-nav" data-loading-text="Saving...">
+    <span class="glyphicon glyphicon-floppy-disk"></span> {% trans "Save Speakers' Eligibility" %}
   </button>
 {% endblock %}
 
@@ -29,12 +33,13 @@
         <table class="table">
           <thead>
             <tr>
+              <th>Speaker</th>
               <th>Team</th>
               {% if pref.show_emoji %}
                 <th class="team-emoji"></th>
               {% endif %}
               <th>Institution</th>
-              {% for category in tournament.breakcategory_set.all %}
+              {% for category in tournament.speakercategory_set.all %}
                 <th>
                   {{ category.name }}
                   (<span id="count_{{ category.id }}"></span>)<br>
@@ -47,15 +52,18 @@
             </tr>
           </thead>
           <tbody>
-            {% for team, eligibility in form.instance_iter %}
+            {% for speaker, eligibility in form.instance_iter %}
               <tr>
                 <td>
-                  {% include "tables/team.html" with team=team %}
+                  {{ speaker.name }}
+                </td>
+                <td>
+                  {% include "tables/team.html" with team=speaker.team %}
                 </td>
                 {% if pref.show_emoji %}
-                  <td class="team-emoji">{{ team.emoji }}</td>
+                  <td class="team-emoji">{{ speaker.team.emoji }}</td>
                 {% endif %}
-                <td>{{ team.institution.name }}</td>
+                <td>{{ speaker.team.institution.name }}</td>
                 {% for checkbox in eligibility %}
                   <td class="checkbox-target">{{ checkbox.tag }}</td>
                 {% endfor %}

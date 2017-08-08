@@ -4,7 +4,6 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count
-from django.http import Http404
 from django.utils.translation import ugettext as _
 from django.views.generic.base import TemplateView
 

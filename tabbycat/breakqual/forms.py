@@ -1,6 +1,6 @@
 from django import forms
 
-from utils.forms import OptionalChoiceField
+from utils.forms import BaseEligibilityForm, OptionalChoiceField
 
 from .models import BreakingTeam
 
@@ -9,35 +9,20 @@ from .models import BreakingTeam
 # ==============================================================================
 
 
-class BreakEligibilityForm(forms.Form):
+class BreakEligibilityForm(BaseEligibilityForm):
     """Sets which teams are eligible for the break."""
 
+    categories_field_name = 'break_categories'
+
     def __init__(self, tournament, *args, **kwargs):
-        super(BreakEligibilityForm, self).__init__(*args, **kwargs)
         self.tournament = tournament
-        self._create_and_initialise_fields()
+        super().__init__(*args, **kwargs)
 
-    @staticmethod
-    def _fieldname_eligibility(team):
-        return 'eligibility_%(team)d' % {'team': team.id}
+    def get_instance_queryset(self):
+        return self.tournament.team_set.all()
 
-    def _create_and_initialise_fields(self):
-        """Dynamically generate fields, one ModelMultipleChoiceField for each
-        Team."""
-        for team in self.tournament.team_set.all():
-            self.fields[self._fieldname_eligibility(team)] = forms.ModelMultipleChoiceField(
-                queryset=self.tournament.breakcategory_set.all(), widget=forms.CheckboxSelectMultiple,
-                required=False)
-            self.initial[self._fieldname_eligibility(team)] = team.break_categories.all()
-
-    def save(self):
-        for team in self.tournament.team_set.all():
-            team.break_categories = self.cleaned_data[self._fieldname_eligibility(team)]
-            team.save()
-
-    def team_iter(self):
-        for team in self.tournament.team_set.all():
-            yield team, self[self._fieldname_eligibility(team)]
+    def get_category_queryset(self):
+        return self.tournament.breakcategory_set.all()
 
 
 # ==============================================================================
