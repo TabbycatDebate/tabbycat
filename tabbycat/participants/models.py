@@ -406,6 +406,9 @@ class Adjudicator(Person):
         related_name='adj_adj_conflicts',
         verbose_name=_("team conflicts"))
 
+    trainee = models.BooleanField(default=False,
+        verbose_name=_("always trainee"),
+        help_text=_("If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"))
     breaking = models.BooleanField(default=False,
         verbose_name=("breaking"))
     independent = models.BooleanField(default=False, blank=True,

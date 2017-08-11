@@ -278,7 +278,7 @@ class MaximumAdjScore(FloatPreference):
 
 @tournament_preferences_registry.register
 class ShowUnaccredited(BooleanPreference):
-    help_text = "Show if an adjudicator is a novice (unaccredited)"
+    help_text = "Show if an adjudicator is a trainee (unaccredited)"
     verbose_name = "Show unaccredited"
     section = feedback
     name = 'show_unaccredited'
