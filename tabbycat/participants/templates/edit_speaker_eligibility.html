@@ -1,123 +1,31 @@
-{% extends "base.html" %}
+{% extends "base_eligibility.html" %}
 {% load debate_tags static i18n %}
 
 {% block head-title %}{% trans "Speaker Category Eligibility" %}{% endblock %}
 {% block page-title %}{% trans "Speaker Category Eligibility" %}{% endblock %}
 
-{% block page-subnav-actions %}
-  <button class="btn btn-success submit-disable" id="submit-nav" data-loading-text="Saving...">
-    <span class="glyphicon glyphicon-floppy-disk"></span> {% trans "Save Speaker Category Eligibility" %}
-  </button>
+{% block save-button-text %}
+  {% trans "Save Speaker Category Eligibility" %}
 {% endblock %}
 
-{% block page-alerts %}
-  {% if form.errors %}
-    <div class="alert alert-danger">
-      <button type="button" class="close">&times;</button>
-      {% trans "Please correct the errors below." %}
-      {{ form.errors }}
-    </div>
+{% block eligibility-table-headers %}
+  <th>Speaker</th>
+  <th>Team</th>
+  {% if pref.show_emoji %}
+    <th class="team-emoji"></th>
   {% endif %}
+  <th>Institution</th>
 {% endblock %}
 
-{% block content %}
-
-  <form id="eligibilityForm" action="." method="POST" class="form-horizontal">
-    {% csrf_token %}
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Speaker</th>
-              <th>Team</th>
-              {% if pref.show_emoji %}
-                <th class="team-emoji"></th>
-              {% endif %}
-              <th>Institution</th>
-              {% for category in form.get_category_queryset %}
-                <th>
-                  {{ category.name }}
-                  (<span id="count_{{ category.id }}"></span>)<br>
-                  <span class="small"> select
-                    <a class="select-all" href="#" category="{{ category.id }}">all</a> or
-                    <a class="select-none" href="#" category="{{ category.id }}">none</a>
-                  </span>
-                </th>
-              {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for speaker, eligibility in form.instance_iter %}
-              <tr>
-                <td>
-                  {{ speaker.name }}
-                </td>
-                <td>
-                  {% include "tables/team.html" with team=speaker.team %}
-                </td>
-                {% if pref.show_emoji %}
-                  <td class="team-emoji">{{ speaker.team.emoji }}</td>
-                {% endif %}
-                <td>{{ speaker.team.institution.name }}</td>
-                {% for checkbox in eligibility %}
-                  <td class="checkbox-target">{{ checkbox.tag }}</td>
-                {% endfor %}
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </form>
-
-{% endblock %}
-
-{% block js %}
-
-  {{ block.super }}
-
-  <script>
-    $(document).ready( function() {
-
-      $("#submit-nav").click( function() {
-        $("#eligibilityForm").submit();
-      });
-
-      var updateCounts = function (value) {
-        $("#count_" + value).text($("input[type='checkbox'][value='" + value + "']:checked").length);
-      }
-
-      // initialize team counts
-      {% for category in form.get_category_queryset %}
-        updateCounts(String({{ category.id }}));
-      {% endfor %}
-
-      $(".select-all").each(function () {
-        $(this).click(function () {
-          var category = $(this).attr("category");
-          $("input[type='checkbox'][value='" + category + "']").each(function () {
-            $(this).prop("checked", true);
-          });
-          updateCounts(category);
-        });
-      });
-
-      $(".select-none").each(function () {
-        $(this).click(function () {
-          var category = $(this).attr("category");
-          $("input[type='checkbox'][value='" + category + "']").each(function () {
-            $(this).prop("checked", false);
-          });
-          updateCounts(category);
-        });
-      });
-
-      $(".dataTable input[type='checkbox']").click(function () {
-        updateCounts($(this).val());
-      });
-
-    });
-  </script>
+{% block eligibility-table-cells %}
+  <td>
+    {{ instance.name }}
+  </td>
+  <td>
+    {% include "tables/team.html" with team=instance.team %}
+  </td>
+  {% if pref.show_emoji %}
+    <td class="team-emoji">{{ instance.team.emoji }}</td>
+  {% endif %}
+  <td>{{ instance.team.institution.name }}</td>
 {% endblock %}
