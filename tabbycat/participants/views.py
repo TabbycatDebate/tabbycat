@@ -59,7 +59,8 @@ class BaseParticipantsListView(VueTableTemplateView):
 
 
 class ParticipantsListView(BaseParticipantsListView, SuperuserRequiredMixin, TournamentMixin):
-    pass
+
+    template_name = 'participants_list.html'
 
 
 class PublicParticipantsListView(BaseParticipantsListView, PublicTournamentPageMixin, CacheMixin):
