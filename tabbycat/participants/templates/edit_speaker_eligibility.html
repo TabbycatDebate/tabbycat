@@ -1,0 +1,35 @@
+{% extends "base_eligibility.html" %}
+{% load debate_tags static i18n %}
+
+{% block head-title %}{% trans "Speaker Category Eligibility" %}{% endblock %}
+{% block page-title %}{% trans "Speaker Category Eligibility" %}{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "participants_subnav.html" %}
+{% endblock %}
+
+{% block save-button-text %}
+  {% trans "Save Speaker Category Eligibility" %}
+{% endblock %}
+
+{% block eligibility-table-headers %}
+  <th>Speaker</th>
+  <th>Team</th>
+  {% if pref.show_emoji %}
+    <th class="team-emoji"></th>
+  {% endif %}
+  <th>Institution</th>
+{% endblock %}
+
+{% block eligibility-table-cells %}
+  <td>
+    {{ instance.name }}
+  </td>
+  <td>
+    {% include "tables/team.html" with team=instance.team %}
+  </td>
+  {% if pref.show_emoji %}
+    <td class="team-emoji">{{ instance.team.emoji }}</td>
+  {% endif %}
+  <td>{{ instance.team.institution.name }}</td>
+{% endblock %}

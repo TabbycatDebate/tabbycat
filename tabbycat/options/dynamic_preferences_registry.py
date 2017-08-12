@@ -278,7 +278,7 @@ class MaximumAdjScore(FloatPreference):
 
 @tournament_preferences_registry.register
 class ShowUnaccredited(BooleanPreference):
-    help_text = "Show if an adjudicator is a novice (unaccredited)"
+    help_text = "Show if an adjudicator is a trainee (unaccredited)"
     verbose_name = "Show unaccredited"
     section = feedback
     name = 'show_unaccredited'
@@ -486,39 +486,12 @@ class SpeakerTabReleaseLimit(IntegerPreference):
 
 
 @tournament_preferences_registry.register
-class ProsTabReleased(BooleanPreference):
-    help_text = "Enables public display of a pro-speakers only tab. Intended for use after the tournament."
-    verbose_name = "Release pros tab to public"
+class SpeakerCategoryTabsReleased(BooleanPreference):
+    help_text = "Enables public display of those speaker category tabs that are marked to be public. Intended for use after the tournament."
+    verbose_name = "Release speaker category tabs to public"
     section = tab_release
-    name = "pros_tab_released"
+    name = "speaker_category_tabs_released"
     default = False
-
-
-@tournament_preferences_registry.register
-class ProsTabReleaseLimit(IntegerPreference):
-    help_text = "Only show scores for the top X pro speakers in the public tab (set to 0 to show all pro speakers)."
-    verbose_name = "Top pros cutoff"
-    section = tab_release
-    name = "pros_tab_limit"
-    default = 0
-
-
-@tournament_preferences_registry.register
-class NovicesTabReleased(BooleanPreference):
-    help_text = "Enables public display of a novice-speakers only tab. Intended for use after the tournament."
-    verbose_name = "Release novices tab to public"
-    section = tab_release
-    name = "novices_tab_released"
-    default = False
-
-
-@tournament_preferences_registry.register
-class NovicesTabReleaseLimit(IntegerPreference):
-    help_text = "Only show scores for the top X novices in the public tab (set to 0 to show all novices)."
-    verbose_name = "Top novices cutoff"
-    section = tab_release
-    name = "novices_tab_limit"
-    default = 0
 
 
 @tournament_preferences_registry.register
@@ -536,42 +509,6 @@ class RepliesTabReleaseLimit(IntegerPreference):
     verbose_name = "Top replies cutoff"
     section = tab_release
     name = "replies_tab_limit"
-    default = 0
-
-
-@tournament_preferences_registry.register
-class ESLTabReleased(BooleanPreference):
-    help_text = "Enables public display of the ESL speakers tab. Intended for use after the tournament."
-    verbose_name = "Release ESL speakers tab to public"
-    section = tab_release
-    name = "esl_tab_released"
-    default = False
-
-
-@tournament_preferences_registry.register
-class ESLTabReleaseLimit(IntegerPreference):
-    help_text = "Only show scores for the top X ESL speakers in the public tab (set to 0 to show all speakers)."
-    verbose_name = "Top ESL speakers cutoff"
-    section = tab_release
-    name = "esl_tab_limit"
-    default = 0
-
-
-@tournament_preferences_registry.register
-class EFLTabReleased(BooleanPreference):
-    help_text = "Enables public display of the EFL speakers tab. Intended for use after the tournament."
-    verbose_name = "Release EFL speakers tab to public"
-    section = tab_release
-    name = "efl_tab_released"
-    default = False
-
-
-@tournament_preferences_registry.register
-class EFLTabReleaseLimit(IntegerPreference):
-    help_text = "Only show scores for the top X EFL speakers in the public tab (set to 0 to show all speakers)."
-    verbose_name = "Top EFL speakers cutoff"
-    section = tab_release
-    name = "efl_tab_limit"
     default = 0
 
 
@@ -860,30 +797,12 @@ class ShowAdjudicatorInstitutions(BooleanPreference):
     default = True
 
 
-@tournament_preferences_registry.register
-class ShowNovices(BooleanPreference):
-    help_text = "Indicates next to a speaker's name if they are a novice"
-    verbose_name = 'Show novices'
+@ tournament_preferences_registry.register
+class ShowSpeakerCategories(BooleanPreference):
+    help_text = "Indicates next to a speaker's name if they are in (public) speaker categories"
+    verbose_name = "Show speaker categories"
     section = ui_options
-    name = 'show_novices'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShowESL(BooleanPreference):
-    help_text = "Indicates next to a speaker's name if they are an ESL speaker"
-    verbose_name = 'Show ESL'
-    section = ui_options
-    name = 'show_esl'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShowEFL(BooleanPreference):
-    help_text = "Indicates next to a speaker's name if they are an EFL speaker"
-    verbose_name = 'Show EFL'
-    section = ui_options
-    name = 'show_efl'
+    name = 'show_speaker_categories'
     default = False
 
 

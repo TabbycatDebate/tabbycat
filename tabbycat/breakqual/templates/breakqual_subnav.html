@@ -1,18 +1,20 @@
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
   <a class="btn btn-default"
      href="{% tournamenturl 'breakqual-index' %}">
-    Breaks Overview
+    {% trans "Breaks Overview" %}
   </a>
   <div class="btn-group">
   {% for category in tournament.breakcategory_set.all %}
     <a class="btn btn-default"
        href="{% tournamenturl 'breakqual-teams' category.slug %}">
-      {{ category.name }} Break
+      {% blocktrans trimmed with category_name=category.name %}
+        {{ category_name }} Break
+      {% endblocktrans %}
     </a>
   {% endfor %}
   </div>
   <a class="btn btn-default"
      href="{% tournamenturl 'breakqual-adjudicators' %}">
-    Adjudicators' Break
+    {% trans "Adjudicators' Break" %}
   </a>

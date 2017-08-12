@@ -1277,7 +1277,7 @@ EMOJI_LIST = (
     # LAME ("🖊", ""),  # Lower Left Ballpoint Pen
     # LAME ("🖌", ""),  # Lower Left Paintbrush
     # LAME ("🖍", ""),  # Lower Left Crayon
-    # LAME ("🗂", ""),  # Card Index Dividers
+    # USED BY UI ("🗂", ""),  # Card Index Dividers
     # LAME ("🗒", ""),  # Spiral Note Pad
     # LAME ("🗓", ""),  # Spiral Calendar Pad
     # LAME ("🖇", ""),  # Linked Paperclips

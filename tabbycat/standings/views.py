@@ -1,16 +1,20 @@
 import json
+import logging
 
-from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
+from django.views.generic.base import TemplateView
 
 import motions.statistics as motion_statistics
 from motions.models import Motion
-from participants.models import Speaker, Team
+from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
-from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
+from utils.misc import redirect_tournament
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -20,6 +24,9 @@ from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
 from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
 from .templatetags.standingsformat import metricformat
+
+
+logger = logging.getLogger(__name__)
 
 
 class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
@@ -101,27 +108,35 @@ class PublicTabMixin(PublicTournamentPageMixin):
             rounds = rounds.filter(silent=False)
         return rounds
 
-    def limit_rank_display(self, standings):
-        """Sets the rank limit on the generated standings."""
+    def get_tab_limit(self):
         if hasattr(self, 'public_limit_preference'):
             tournament = self.get_tournament()
-            rank_limit = tournament.pref(self.public_limit_preference)
-            if rank_limit > 0:
-                standings.set_rank_limit(rank_limit)
+            return tournament.pref(self.public_limit_preference)
+        else:
+            return None
+
+    def limit_rank_display(self, standings):
+        """Sets the rank limit on the generated standings."""
+        limit = self.get_tab_limit()
+        if limit:
+            standings.set_rank_limit(limit)
 
     def populate_result_missing(self, standings):
         # Never highlight missing results on public tab pages
         pass
 
+    def append_limit(self, title):
+        limit = self.get_tab_limit()
+        if limit:
+            # Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
+            return _("%(title)s (Top %(limit)d Only)") % {'title': title, 'limit': limit}
+        else:
+            return title
+
     def get_page_title(self):
         # If set, make a note of any rank limitations in the title
-        if hasattr(self, 'public_limit_preference'):
-            tournament = self.get_tournament()
-            ranks_limit = tournament.pref(self.public_limit_preference)
-            if ranks_limit > 0:
-                return self.page_title + " (Top %s Only)" % ranks_limit
-
-        return self.page_title
+        title = super().get_page_title()
+        return self.append_limit(title)
 
     def get_context_data(self, **kwargs):
         kwargs['for_public'] = True
@@ -192,12 +207,17 @@ class BaseSpeakerStandingsView(BaseStandingsView):
 
 class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
     """The standard speaker standings view."""
-    page_title = 'Speaker Tab'
+    page_title = ugettext_lazy("Speaker Standings")
     page_emoji = '💯'
 
     def get_speakers(self):
-        return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
-            'team', 'team__institution', 'team__tournament').prefetch_related('team__speaker_set')
+        return Speaker.objects.filter(
+            team__tournament=self.get_tournament()
+        ).select_related(
+            'team', 'team__institution', 'team__tournament'
+        ).prefetch_related(
+            'team__speaker_set', 'categories'
+        )
 
     def get_metrics(self):
         method = self.get_tournament().pref('rank_speakers_by')
@@ -223,94 +243,57 @@ class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsV
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
+    page_title = ugettext_lazy("Speaker Tab")
     public_page_preference = 'speaker_tab_released'
-    public_limit_preference = 'speaker_tab_limit'
+
+    def get_tab_limit(self):
+        return self.get_tournament().pref('speaker_tab_limit')
 
 
-class BaseNoviceStandingsView(BaseStandardSpeakerStandingsView):
-    """Speaker standings view for novices."""
-    page_title = 'Novice Speaker Standings'
+class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseStandardSpeakerStandingsView):
+    """Speaker standings view for a category."""
 
-    def get_speakers(self):
-        return super().get_speakers().filter(novice=True)
-
-
-class NoviceStandingsView(SuperuserRequiredMixin, BaseNoviceStandingsView):
-
-    def get_context_data(self, **kwargs):
-        messages.info(self.request, "Novice status can be set on a per-speaker "
-            "basis in the Edit Database area.")
-        return super().get_context_data(**kwargs)
-
-
-class PublicNoviceTabView(PublicTabMixin, BaseNoviceStandingsView):
-    public_page_preference = 'novices_tab_released'
-    public_limit_preference = 'novices_tab_limit'
-
-
-class BaseESLStandingsView(BaseStandardSpeakerStandingsView):
-    """Speaker standings view for ESL speakers."""
-    page_title = 'ESL Speaker Standings'
+    model = SpeakerCategory
+    slug_url_kwarg = 'category'
 
     def get_speakers(self):
-        return super().get_speakers().filter(esl=True)
+        return self.object.speaker_set.select_related(
+            'team', 'team__institution', 'team__tournament').prefetch_related('team__speaker_set')
+
+    def get_page_title(self):
+        return _("%(category)s Speaker Standings") % {'category': self.object.name,}
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
 
 
-class ESLStandingsView(SuperuserRequiredMixin, BaseESLStandingsView):
-
-    def get_context_data(self, **kwargs):
-        messages.info(self.request, "ESL status can be set on a per-speaker "
-            "basis in the Edit Database area.")
-        return super().get_context_data(**kwargs)
-
-
-class PublicESLTabView(PublicTabMixin, BaseESLStandingsView):
-    public_page_preference = 'esl_tab_released'
-    public_limit_preference = 'esl_tab_limit'
-
-
-class BaseEFLStandingsView(BaseStandardSpeakerStandingsView):
-    """Speaker standings view for EFL speakers."""
-    page_title = 'EFL Speaker Standings'
-
-    def get_speakers(self):
-        return super().get_speakers().filter(efl=True)
-
-
-class EFLStandingsView(SuperuserRequiredMixin, BaseEFLStandingsView):
-
-    def get_context_data(self, **kwargs):
-        messages.info(self.request, "EFL status can be set on a per-speaker "
-            "basis in the Edit Database area.")
-        return super().get_context_data(**kwargs)
-
-
-class PublicEFLTabView(PublicTabMixin, BaseEFLStandingsView):
-    public_page_preference = 'efl_tab_released'
-    public_limit_preference = 'efl_tab_limit'
-
-
-class BaseProStandingsView(BaseStandardSpeakerStandingsView):
-    """Speaker standings view for non-novices (pro, varsity)."""
-
-    page_title = 'Pros Speaker Standings'
-
-    def get_speakers(self):
-        return super().get_speakers().filter(novice=False)
-
-
-class ProStandingsView(SuperuserRequiredMixin, BaseProStandingsView):
+class SpeakerCategoryStandingsView(SuperuserRequiredMixin, BaseSpeakerCategoryStandingsView):
     pass
 
 
-class PublicProTabView(PublicTabMixin, BaseProStandingsView):
-    public_page_preference = 'pros_tab_released'
-    public_limit_preference = 'pros_tab_limit'
+class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsView):
+    public_page_preference = 'speaker_category_tabs_released'
+
+    def get_tab_limit(self):
+        return self.object.limit
+
+    def get_page_title(self):
+        title = _("%(category)s Speaker Tab") % {'category': self.object.name,}
+        return self.append_limit(title)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not self.object.public:
+            logger.warning("Tried to access a non-public speaker category tab page: %s", self.object.slug)
+            messages.error(self.request, self.get_disabled_message())
+            return redirect_tournament('tournament-public-index', self.get_tournament())
+        return super().get(request, *args, **kwargs)
 
 
 class BaseReplyStandingsView(BaseSpeakerStandingsView):
     """Speaker standings view for replies."""
-    page_title = 'Reply Speaker Standings'
+    page_title = ugettext_lazy("Reply Speaker Standings")
     page_emoji = '💁'
 
     def get_speakers(self):
@@ -342,6 +325,7 @@ class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
 
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
+    page_title = ugettext_lazy("Reply Speaker Tab")
     public_page_preference = 'replies_tab_released'
     public_limit_preference = 'replies_tab_limit'
 
@@ -353,7 +337,7 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
 class BaseTeamStandingsView(BaseStandingsView):
     """Base class for views that display team standings."""
 
-    page_title = 'Team Standings'
+    page_title = ugettext_lazy("Team Standings")
     page_emoji = '👯'
 
     def get_standings(self):
@@ -405,7 +389,7 @@ class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
 class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
-    page_title = 'Division Standings'
+    page_title = ugettext_lazy("Division Standings")
     page_emoji = '👯'
 
 
@@ -415,6 +399,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     During the tournament, "public team standings" only shows wins and results.
     Once the tab is released, to the public the team standings are known as the
     "team tab"."""
+    page_title = ugettext_lazy("Team Tab")
     public_page_preference = 'team_tab_released'
     public_limit_preference = 'team_tab_limit'
     rankings = ('rank',)
@@ -429,7 +414,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 
 class BaseMotionStandingsView(BaseStandingsView):
 
-    page_title = 'Motions Tab'
+    page_title = ugettext_lazy("Motions Tab")
     page_emoji = '💭'
     tables_orientation = 'rows'
 
@@ -474,7 +459,7 @@ class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
 class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplateView):
 
     public_page_preference = 'public_team_standings'
-    page_title = 'Current Team Standings'
+    page_title = ugettext_lazy("Current Team Standings")
     page_emoji = '🌟'
 
     def get_table(self):

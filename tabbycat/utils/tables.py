@@ -326,12 +326,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_boolean_column(independent_header, [adj.independent for adj in adjudicators])
 
         if self.tournament.pref('show_unaccredited'):
-            accreddited_header = {
+            trainee_header = {
                 'key': 'accredited',
-                'tooltip': "Is Accredited",
+                'tooltip': "Always Trainee",
                 'icon': 'glyphicon-leaf',
             }
-            self.add_boolean_column(accreddited_header, [adj.novice for adj in adjudicators])
+            self.add_boolean_column(trainee_header, [adj.trainee for adj in adjudicators])
 
     def add_debate_adjudicators_column(self, debates, key="Adjudicators", show_splits=False, highlight_adj=None):
         da_data = []
@@ -429,23 +429,27 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
 
     def add_speaker_columns(self, speakers, key="Name"):
-        self.add_column(key, [speaker.name if not hasattr(speaker, 'anonymise') else "<em>Redacted</em>"
-                              for speaker in speakers])
-        if self.tournament.pref('show_novices'):
-            novice_header = {
-                'key': "Novice",
-                'icon': 'glyphicon-leaf',
-                'tooltip': "Novice Status",
-            }
-            self.add_boolean_column(novice_header, [speaker.novice for speaker in speakers])
+        speaker_data = []
+        for speaker in speakers:
+            if getattr(speaker, 'anonymise', False):
+                speaker_data.append("<em>" + _("Redacted") + "</em>")
+            else:
+                speaker_data.append(speaker.name)
 
-        if self.tournament.pref('show_esl'):
-            novice_header = {'key': "esl", 'text': "ESL"}
-            self.add_boolean_column(novice_header, [speaker.esl for speaker in speakers])
+        self.add_column(key, speaker_data)
 
-        if self.tournament.pref('show_efl'):
-            novice_header = {'key': "efl", 'text': "EFL"}
-            self.add_boolean_column(novice_header, [speaker.efl for speaker in speakers])
+        if self.tournament.pref('show_speaker_categories'):
+            categories_data = []
+            for speaker in speakers:
+                category_strs = []
+                for cat in speaker.categories.all():
+                    if cat.public:
+                        category_strs.append(cat.name)
+                    elif self.admin:
+                        category_strs.append("<em>" + cat.name + "</em>")
+                categories_data.append(", ".join(category_strs))
+
+            self.add_column("Categories", categories_data)
 
     def add_room_rank_columns(self, debates):
         header = {
