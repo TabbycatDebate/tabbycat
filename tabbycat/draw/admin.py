@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.core.exceptions import MultipleObjectsReturned
 from django.db.models import Prefetch
+from django.utils.translation import ugettext_lazy, ungettext
 
 from adjallocation.models import DebateAdjudicator
 from utils.admin import TabbycatModelAdminFieldsMixin
@@ -79,14 +80,15 @@ class DebateAdmin(admin.ModelAdmin):
         def _make_set_result_status(value, verbose_name):
             def _set_result_status(modeladmin, request, queryset):
                 count = queryset.update(result_status=value)
-                message_bit = "1 debate had its" if count == 1 else "{:d} debates had their".format(
-                    count)
-                modeladmin.message_user(
-                    request, message_bit + " status set to " + verbose_name)
+                message = ungettext("%(count)d debate had its status set to %(status)s.",
+                    "%(count)d debates had their statuses set to %(status)s.", count) % {
+                        'count': count, 'status': verbose_name}
+                modeladmin.message_user(request, message)
 
             # so that they look different to DebateAdmin
             _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower()
-            _set_result_status.short_description = "Set result status to %s" % verbose_name.lower()
+            _set_result_status.short_description = ugettext_lazy("Set result status to "
+                    "%(status)s") % {'status': verbose_name}
             return _set_result_status
 
         actions.append(_make_set_result_status(value, verbose_name))

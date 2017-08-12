@@ -23,9 +23,10 @@
         <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
           Motion:
         </div>
-        <div class="db-flex-item db-align-vertical-center">
+        <div class="db-flex-item db-align-vertical-center" v-if="motions">
           <em>{{ motions[0].text }}</em>
         </div>
+        <div v-else class="db-flex-item db-padding-horizontal db-fill-in"></div>
       </div>
     </section>
 
@@ -38,7 +39,8 @@
           <div class="db-flex-item-1 "></div>
           <div class="db-flex-item-2 db-flex-row">
             <div class="db-item-gutter"></div>
-            <div v-for="motion in roundInfo.motions" class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text">
+            <div v-for="motion in motionsAccountingForBlanks"
+                 class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text">
               <span class="db-fill-in">{{ motion.seq }}</span>
             </div>
             <div class="db-item-gutter"></div>
@@ -109,6 +111,13 @@ export default {
         return this.ballot.panel.splice(authorIndex, 1);
       } else {
         return this.ballot.panel
+      }
+    },
+    motionsAccountingForBlanks: function() {
+      if (this.roundInfo.motions.length > 0) {
+        return this.roundInfo.motions
+      } else {
+        return [{'seq': 1}, {'seq': 2}, {'seq': 3}]
       }
     }
   }
