@@ -68,7 +68,7 @@ def create_speaker_categories(apps, schema_editor):
             limit = get_limit(tournament, field)
 
             # Make public if either no tab is released, or this specific one is
-            public = (not any_released) or released.get(RELEASED_PREFERENCES[field], False)
+            public = (not any_released) or released.get(field, False)
 
             SpeakerCategory.objects.create(tournament=tournament, name=name, slug=field, seq=seq,
                     limit=limit, public=public)
