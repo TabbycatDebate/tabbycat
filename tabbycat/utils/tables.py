@@ -438,7 +438,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_column(key, speaker_data)
 
-        if self.tournament.pref('show_speaker_categories'):
+        speakercategory_set = self.tournament.speakercategory_set
+        if not self.admin:
+            speakercategory_set = speakercategory_set.filter(public=True)
+
+        if speakercategory_set.exists():
             categories_data = []
             for speaker in speakers:
                 category_strs = []

@@ -797,15 +797,6 @@ class ShowAdjudicatorInstitutions(BooleanPreference):
     default = True
 
 
-@ tournament_preferences_registry.register
-class ShowSpeakerCategories(BooleanPreference):
-    help_text = "Indicates next to a speaker's name if they are in (public) speaker categories"
-    verbose_name = "Show speaker categories"
-    section = ui_options
-    name = 'show_speaker_categories'
-    default = False
-
-
 @tournament_preferences_registry.register
 class ShowSpeakersInDraw(BooleanPreference):
     help_text = "Enables a hover element on every team's name showing that team's speakers"
