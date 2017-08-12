@@ -39,7 +39,7 @@ class InstitutionAdmin(admin.ModelAdmin):
 @admin.register(Speaker)
 class SpeakerAdmin(admin.ModelAdmin):
     list_filter = ('team__tournament',)
-    list_display = ('name', 'team', 'novice', 'esl', 'efl', 'gender')
+    list_display = ('name', 'team', 'gender')
     search_fields = ('name', )
     raw_id_fields = ('team', )
 
@@ -145,7 +145,7 @@ class AdjudicatorForm(forms.ModelForm):
 @admin.register(Adjudicator)
 class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
-    list_display = ('name', 'institution', 'tournament', 'novice',
+    list_display = ('name', 'institution', 'tournament', 'trainee',
                     'independent', 'adj_core', 'gender')
     search_fields = ('name',
                      'tournament__name',

@@ -115,12 +115,6 @@ class Person(models.Model):
         verbose_name=_("email"))
     phone = models.CharField(max_length=40, blank=True,
         verbose_name=_("phone"))
-    novice = models.BooleanField(default=False,
-        help_text="Novice status may be indicated on the tab, and may have its own Break Category or Top Speakers Tab")
-    esl = models.BooleanField(default=False,
-        help_text="ESL language status may have its own Break Category or Top Speakers Tab")
-    efl = models.BooleanField(default=False,
-        help_text="EFL language status may have its own Break Category or Top Speakers Tab")
     anonymous = models.BooleanField(default=False,
         verbose_name=_("anonymous"),
         help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
