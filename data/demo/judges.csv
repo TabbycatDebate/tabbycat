@@ -1,4 +1,4 @@
-name,institution,test_score,institution_conflicts,team_conflicts,adj_conflicts,gender,pronoun,adj_core,independent,novice,phone,email,notes
+name,institution,test_score,institution_conflicts,team_conflicts,adj_conflicts,gender,pronoun,adj_core,independent,trainee,phone,email,notes
 Levi Flores,Yale University,5,,,"Justin Ford, Jo Allen",M,he,1,0,0,(400) 258-4262,leviflores@fakemail.com,
 Boyd Pierce,Stanford University,5,,,,M,he,1,1,0,(645) 106-7743,boydpierce@fakemail.com,
 Eunice Mcbride,University of Toronto,5,,,,F,she,,0,0,(549) 309-9187,eunicemcbride@fakemail.com,

@@ -198,7 +198,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         Each line has:
             name, institution, team_name, use_team_name_as_prefix, gender,
-            pronoun, email, novice_status.
+            pronoun, email.
         """
 
         if auto_create_teams:
@@ -237,7 +237,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         (default), conflicts are created with adjudicators' own institutions.
 
         Each line has:
-            name, institution, rating, gender, independent, novice, cellphone,
+            name, institution, rating, gender, independent, trainee, cellphone,
             adj_core, email, notes, institution_conflicts, team_conflicts,
             adj_conflicts
         """
