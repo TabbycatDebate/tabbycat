@@ -138,8 +138,8 @@ class AdjudicatorForm(forms.ModelForm):
         fields = '__all__'
 
     def clean_url_key(self):
-        return self.cleaned_data[
-            'url_key'] or None  # So that the url key can be unique and be blank
+        # So that the url key can be unique and be blank
+        return self.cleaned_data['url_key'] or None
 
 
 @admin.register(Adjudicator)
@@ -147,11 +147,7 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'trainee',
                     'independent', 'adj_core', 'gender')
-    search_fields = ('name',
-                     'tournament__name',
-                     'institution__name',
-                     'institution__code', )
+    search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
     list_filter = ('tournament', 'name')
     inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
-               AdjudicatorAdjudicatorConflictInline,
-               AdjudicatorTestScoreHistoryInline)
+               AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
