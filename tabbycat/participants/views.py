@@ -74,25 +74,6 @@ class PublicParticipantsListView(BaseParticipantsListView, PublicTournamentPageM
 # Team and adjudicator record pages
 # ==============================================================================
 
-class ParticipantRecordsListView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
-
-    page_title = 'Team and Adjudicator Record Pages'
-    page_emoji = '🌸'
-
-    def get_tables(self):
-        t = self.get_tournament()
-
-        adjudicators = t.adjudicator_set.select_related('institution')
-        adjs_table = TabbycatTableBuilder(view=self, title="Adjudicators", sort_key="Name")
-        adjs_table.add_adjudicator_columns(adjudicators)
-
-        teams = t.team_set.select_related('institution')
-        teams_table = TabbycatTableBuilder(view=self, title="Teams", sort_key="Name")
-        teams_table.add_team_columns(teams, key="Name")
-
-        return [adjs_table, teams_table]
-
-
 class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     allow_null_tournament = True
