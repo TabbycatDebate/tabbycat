@@ -66,7 +66,7 @@ class HungarianAllocator(Allocator):
         self.populate_adj_scores(self.adjudicators)
 
         # Sort voting adjudicators in descending order by score
-        voting = [a for a in self.adjudicators if a._hungarian_score >= self.min_voting_score and not a.novice]
+        voting = [a for a in self.adjudicators if a._hungarian_score >= self.min_voting_score and not a.trainee]
         random.shuffle(voting)
         voting.sort(key=lambda a: a._hungarian_score, reverse=True)
 
