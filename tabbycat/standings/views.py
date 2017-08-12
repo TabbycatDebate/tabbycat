@@ -125,15 +125,18 @@ class PublicTabMixin(PublicTournamentPageMixin):
         # Never highlight missing results on public tab pages
         pass
 
-    def get_page_title(self):
-        # If set, make a note of any rank limitations in the title
-        title = super().get_page_title()
+    def append_limit(self, title):
         limit = self.get_tab_limit()
         if limit:
             # Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
             return _("%(title)s (Top %(limit)d Only)") % {'title': title, 'limit': limit}
         else:
             return title
+
+    def get_page_title(self):
+        # If set, make a note of any rank limitations in the title
+        title = super().get_page_title()
+        return self.append_limit(title)
 
     def get_context_data(self, **kwargs):
         kwargs['for_public'] = True
@@ -276,7 +279,8 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
         return self.object.limit
 
     def get_page_title(self):
-        return _("%(category)s Speaker Tab") % {'category': self.object.name,}
+        title = _("%(category)s Speaker Tab") % {'category': self.object.name,}
+        return self.append_limit(title)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
