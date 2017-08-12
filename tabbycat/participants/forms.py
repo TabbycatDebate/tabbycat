@@ -12,8 +12,13 @@ class SpeakerCategoryEligibilityForm(BaseEligibilityForm):
         super().__init__(*args, **kwargs)
 
     def get_instance_queryset(self):
-        return Speaker.objects.filter(team__tournament=self.tournament).order_by(
-                'team__short_name').select_related('team', 'team__institution')
+        return Speaker.objects.filter(
+            team__tournament=self.tournament
+        ).order_by(
+            'team__short_name'
+        ).select_related(
+            'team', 'team__institution'
+        ).prefetch_related('categories')
 
     def get_category_queryset(self):
         return self.tournament.speakercategory_set.all()

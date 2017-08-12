@@ -429,11 +429,27 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
 
     def add_speaker_columns(self, speakers, key="Name"):
-        self.add_column(key, [speaker.name if not hasattr(speaker, 'anonymise') else "<em>Redacted</em>"
-                              for speaker in speakers])
+        speaker_data = []
+        for speaker in speakers:
+            if getattr(speaker, 'anonymise', False):
+                speaker_data.append("<em>" + _("Redacted") + "</em>")
+            else:
+                speaker_data.append(speaker.name)
+
+        self.add_column(key, speaker_data)
 
         if self.tournament.pref('show_speaker_categories'):
-            self.add_column("Categories", [", ".join(cat.name for cat in speaker.categories.filter(public=True)) for speaker in speakers])
+            categories_data = []
+            for speaker in speakers:
+                category_strs = []
+                for cat in speaker.categories.all():
+                    if cat.public:
+                        category_strs.append(cat.name)
+                    elif self.admin:
+                        category_strs.append("<em>" + cat.name + "</em>")
+                categories_data.append(", ".join(category_strs))
+
+            self.add_column("Categories", categories_data)
 
     def add_room_rank_columns(self, debates):
         header = {

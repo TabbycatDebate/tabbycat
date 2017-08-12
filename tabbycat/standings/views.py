@@ -208,8 +208,13 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
     page_emoji = '💯'
 
     def get_speakers(self):
-        return Speaker.objects.filter(team__tournament=self.get_tournament()).select_related(
-            'team', 'team__institution', 'team__tournament').prefetch_related('team__speaker_set')
+        return Speaker.objects.filter(
+            team__tournament=self.get_tournament()
+        ).select_related(
+            'team', 'team__institution', 'team__tournament'
+        ).prefetch_related(
+            'team__speaker_set', 'categories'
+        )
 
     def get_metrics(self):
         method = self.get_tournament().pref('rank_speakers_by')
