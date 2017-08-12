@@ -202,15 +202,19 @@ class ModelFormSetMixin(FormSetMixin):
     def get_formset_class(self):
         return modelformset_factory(self.formset_model, **self.get_formset_factory_kwargs())
 
+    def get_formset_kwargs(self):
+        return {}
+
     def get_formset_queryset(self):
         return self.formset_model.objects.all()
 
     def get_formset(self):
         formset_class = self.get_formset_class()
         if self.request.method in ('POST', 'PUT'):
-            return formset_class(data=self.request.POST, files=self.request.FILES)
+            return formset_class(data=self.request.POST, files=self.request.FILES,
+                    **self.get_formset_kwargs())
         elif self.request.method == 'GET':
-            return formset_class(queryset=self.get_formset_queryset())
+            return formset_class(queryset=self.get_formset_queryset(), **self.get_formset_kwargs())
 
     def formset_valid(self, formset):
         self.instances = formset.save()

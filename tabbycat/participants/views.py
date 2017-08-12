@@ -2,7 +2,10 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch
+from django.forms import HiddenInput
 from django.http import JsonResponse
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.views.generic.base import View
 from django.views.generic import FormView
 
@@ -20,7 +23,7 @@ from utils.misc import reverse_tournament
 from utils.mixins import CacheMixin, ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import Adjudicator, Speaker, Team
+from .models import Adjudicator, Speaker, SpeakerCategory, Team
 from . import forms
 
 
@@ -248,8 +251,51 @@ class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorReco
 
 
 # ==============================================================================
-# Speaker eligibility
+# Speaker categories
 # ==============================================================================
+
+class EditSpeakerCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+    # The tournament is included in the form as a hidden input so that
+    # uniqueness checks will work. Since this is a superuser form, they can
+    # access all tournaments anyway, so tournament forgery wouldn't be a
+    # security risk.
+
+    template_name = 'speaker_categories_edit.html'
+    formset_model = SpeakerCategory
+
+    def get_formset_factory_kwargs(self):
+        return {
+            'fields': ('name', 'tournament', 'slug', 'seq', 'limit', 'public'),
+            'extra': 2,
+            'widgets': {
+                'tournament': HiddenInput
+            }
+        }
+
+    def get_formset_queryset(self):
+        return SpeakerCategory.objects.filter(tournament=self.get_tournament())
+
+    def get_formset_kwargs(self):
+        return {
+            'initial': [{'tournament': self.get_tournament()}] * 2,
+        }
+
+    def formset_valid(self, formset):
+        result = super().formset_valid(formset)
+        if self.instances:
+            message = ungettext("Saved speaker category: %(list)s",
+                "Saved speaker categories: %(list)s", len(self.instances)
+            ) % {
+                'list': ", ".join(category.name for category in self.instances)
+            }
+            messages.success(self.request, message)
+        if "add_more" in self.request.POST:
+            return redirect_tournament('participants-speaker-categories-edit', self.get_tournament())
+        return result
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_tournament('participants-list', self.get_tournament())
+
 
 class EditSpeakerCategoryEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, FormView):
 

@@ -1,4 +1,6 @@
-from participants.models import Speaker
+from django.forms import ModelForm
+
+from participants.models import Speaker, SpeakerCategory
 from utils.forms import BaseEligibilityForm
 
 

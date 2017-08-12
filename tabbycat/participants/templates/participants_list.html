@@ -1,8 +1,6 @@
 {% extends "base_vue_table.html" %}
 {% load debate_tags i18n %}
 
-{% block page-subnav-actions %}
-  <a class="btn btn-primary" href="{% tournamenturl 'participants-speaker-eligibility' %}">
-    <span class="glyphicon glyphicon-pencil"></span> {% trans "Edit Speaker Category Eligibility" %}
-  </a>
+{% block page-subnav-sections %}
+  {% include "participants_subnav.html" %}
 {% endblock %}

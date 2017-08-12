@@ -80,10 +80,12 @@ class SpeakerCategory(models.Model):
         verbose_name=_("tournament"))
     name = models.CharField(max_length=50,
         verbose_name=_("name"),
-        help_text=_("Name to be displayed, e.g., \"ESL\""))
+        # Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
+        help_text=_("Name to be displayed, e.g., \"Novice\", \"ESL\""))
     slug = models.SlugField(
         verbose_name=_("slug"),
-        help_text=_("Slug for URLs, e.g., \"esl\""))
+        # Translators: Translate esl to the acronym for "<target language> as a second/foreign language", not "English"
+        help_text=_("Slug for URLs, e.g., \"novice\", \"esl\""))
     seq = models.IntegerField(
         verbose_name=_("sequence number"),
         help_text=_("The order in which the categories are displayed"))
