@@ -4,7 +4,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch
 from django.forms import HiddenInput
 from django.http import JsonResponse
-from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.views.generic.base import View
 from django.views.generic import FormView
@@ -19,7 +18,7 @@ from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
-from utils.misc import reverse_tournament
+from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import CacheMixin, ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -284,10 +283,9 @@ class EditSpeakerCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFo
         result = super().formset_valid(formset)
         if self.instances:
             message = ungettext("Saved speaker category: %(list)s",
-                "Saved speaker categories: %(list)s", len(self.instances)
-            ) % {
-                'list': ", ".join(category.name for category in self.instances)
-            }
+                "Saved speaker categories: %(list)s",
+                len(self.instances)
+            ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         if "add_more" in self.request.POST:
             return redirect_tournament('participants-speaker-categories-edit', self.get_tournament())

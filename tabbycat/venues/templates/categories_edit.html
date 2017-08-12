@@ -8,13 +8,20 @@
 {% block content %}
 
   <div class="alert alert-info">
-    {% blocktrans trimmed %}
-      Venue categories allow you to
-        <ul>
-          <li>group venues together into "zones" to display in the draw and make navigation easier for participants, and/or</li>
-          <li>specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.</li>
-        </ul>
-    {% endblocktrans %}
+    <p>
+      {% blocktrans trimmed %}
+        Venue categories allow you to
+          <ul>
+            <li>group venues together into "zones" to display in the draw and make navigation easier for participants, and/or</li>
+            <li>specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.</li>
+          </ul>
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% blocktrans trimmed %}
+        If you want to delete venue categories, use the Edit Database area.
+      {% endblocktrans %}
+    </p>
   </div>
 
   {% if formset.errors %}

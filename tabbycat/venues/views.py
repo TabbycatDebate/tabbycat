@@ -3,7 +3,6 @@ import json
 from django.contrib import messages
 from django.forms import Select, TextInput
 from django.http import HttpResponseBadRequest
-from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.views.generic import TemplateView
 
@@ -91,10 +90,9 @@ class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetV
         result = super().formset_valid(formset)
         if self.instances:
             message = ungettext("Saved venue category: %(list)s",
-                "Saved venue categories: %(list)s", len(self.instances)
-            ) % {
-                'list': ", ".join(category.name for category in self.instances)
-            }
+                "Saved venue categories: %(list)s",
+                len(self.instances)
+            ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-categories', self.get_tournament())

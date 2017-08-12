@@ -12,12 +12,19 @@
 
   <div class="alert alert-info">
     {# Translators: Translate "ESL" to the acronym "<target language> as a second/foreign language", not the translation of "English as a second language". #}
-    {% blocktrans trimmed %}
-      Speaker categories allow category-specific speaker tabs to be produced,
-      <i>e.g.</i>, for novice or ESL categories. On this page, you can define
-      what speaker categories exist. After you've defined the categories, you
-      can set speaker eligibility on the speaker eligibility page.
-    {% endblocktrans %}
+    <p>
+      {% blocktrans trimmed %}
+        Speaker categories allow category-specific speaker tabs to be produced,
+        <i>e.g.</i>, for novice or ESL categories. On this page, you can define
+        what speaker categories exist. After you've defined the categories, you
+        can set speaker eligibility on the Speaker Eligibility page.
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% blocktrans trimmed %}
+        If you want to delete speaker categories, use the Edit Database area.
+      {% endblocktrans %}
+    </p>
   </div>
 
   {% if formset.errors %}
