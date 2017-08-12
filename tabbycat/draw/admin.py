@@ -82,8 +82,7 @@ class DebateAdmin(admin.ModelAdmin):
                 count = queryset.update(result_status=value)
                 message = ungettext("%(count)d debate had its status set to %(status)s.",
                     "%(count)d debates had their statuses set to %(status)s.", count) % {
-                        'count': count, 'status': verbose_name
-                    }
+                        'count': count, 'status': verbose_name}
                 modeladmin.message_user(request, message)
 
             # so that they look different to DebateAdmin
