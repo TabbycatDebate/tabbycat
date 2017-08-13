@@ -5,6 +5,7 @@ from utils.misc import reverse_tournament
 
 register = template.Library()
 
+
 @register.simple_tag
 def team_record_link(team, admin):
     """Team record links are used often, so this template tag just reduces
