@@ -74,8 +74,11 @@ class BaseDrawManager:
             debate.flags = ",".join(pairing.flags)  # comma-separated list
             debate.save()
 
-            DebateTeam(debate=debate, team=pairing.teams[0], side=DebateTeam.SIDE_AFFIRMATIVE).save()
-            DebateTeam(debate=debate, team=pairing.teams[1], side=DebateTeam.SIDE_NEGATIVE).save()
+            aff, neg = pairing.teams
+            DebateTeam(debate=debate, team=aff, side=DebateTeam.SIDE_AFFIRMATIVE,
+                flags=",".join(pairing.get_team_flags(aff))).save()
+            DebateTeam(debate=debate, team=neg, side=DebateTeam.SIDE_NEGATIVE,
+                flags=",".join(pairing.get_team_flags(neg))).save()
 
     def delete(self):
         self.round.debate_set.all().delete()

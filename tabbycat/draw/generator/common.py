@@ -29,7 +29,7 @@ class Pairing:
     """Simple data structure for communicating information about pairings.
     Draws always return a list of these."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], winner=None, division=None):
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, winner=None, division=None):
         """'teams' must be a list of two teams.
         'bracket' and 'room_rank' are both integers.
         'flags' is a list of strings."""
@@ -37,6 +37,7 @@ class Pairing:
         self.bracket       = bracket
         self.room_rank     = room_rank
         self.flags         = list(flags)
+        self.team_flags    = team_flags
         self.division      = division
         if winner is None:
             self._winner_index = None
@@ -49,9 +50,10 @@ class Pairing:
         bracket = debate.bracket
         room_rank = debate.room_rank
         flags = debate.flags.split(",")
+        team_flags = {debate.aff_team: debate.aff_team.flags.split(","), debate.neg_team: debate.neg_team.flags.split(",")}
         division = debate.division
         winner = debate.confirmed_ballot.result.winning_team()
-        return cls(teams, bracket, room_rank, flags, winner, division)
+        return cls(teams, bracket, room_rank, flags, team_flags, winner, division)
 
     def __repr__(self):
         return "<Pairing object: {0} vs {1} ({2}/{3})>".format(
@@ -119,6 +121,14 @@ class Pairing:
 
     def add_flags(self, flags):
         self.flags.extend(flags)
+
+    def add_team_flags(self, team, flags):
+        self.team_flags.setdefault(team, list()).extend(flags)
+
+    def get_team_flags(self, team):
+        if team not in self.teams:
+            logger.error("Tried to get flags for team %r in pairing %r", team, self)
+        return self.team_flags.get(team, [])
 
     def set_winner(self, team):
         try:
@@ -239,7 +249,7 @@ class BaseDrawGenerator:
         for pairing in pairings:
             for team in pairing.teams:
                 if team in self.team_flags:
-                    pairing.add_flags(self.team_flags[team])
+                    pairing.add_team_flags(team, self.team_flags[team])
 
     def allocate_sides(self, pairings):
         if self.options["side_allocations"] == "balance":
