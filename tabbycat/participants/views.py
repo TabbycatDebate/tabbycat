@@ -2,9 +2,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch
+from django.forms import HiddenInput
 from django.http import JsonResponse
+from django.utils.translation import ungettext
 from django.views.generic.base import View
+from django.views.generic import FormView
 
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
@@ -13,11 +18,12 @@ from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
-from utils.misc import reverse_tournament
+from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import CacheMixin, ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import Adjudicator, Speaker, Team
+from .models import Adjudicator, Speaker, SpeakerCategory, Team
+from . import forms
 
 
 class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
@@ -46,7 +52,7 @@ class BaseParticipantsListView(VueTableTemplateView):
         adjs_table.add_adjudicator_columns(adjudicators)
 
         speakers = Speaker.objects.filter(team__tournament=t).select_related(
-                'team', 'team__institution').prefetch_related('team__speaker_set')
+                'team', 'team__institution').prefetch_related('team__speaker_set', 'categories')
         speakers_table = TabbycatTableBuilder(view=self, title="Speakers", sort_key="Name")
         speakers_table.add_speaker_columns(speakers)
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
@@ -55,7 +61,8 @@ class BaseParticipantsListView(VueTableTemplateView):
 
 
 class ParticipantsListView(BaseParticipantsListView, SuperuserRequiredMixin, TournamentMixin):
-    pass
+
+    template_name = 'participants_list.html'
 
 
 class PublicParticipantsListView(BaseParticipantsListView, PublicTournamentPageMixin, CacheMixin):
@@ -66,25 +73,6 @@ class PublicParticipantsListView(BaseParticipantsListView, PublicTournamentPageM
 # ==============================================================================
 # Team and adjudicator record pages
 # ==============================================================================
-
-class ParticipantRecordsListView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
-
-    page_title = 'Team and Adjudicator Record Pages'
-    page_emoji = '🌸'
-
-    def get_tables(self):
-        t = self.get_tournament()
-
-        adjudicators = t.adjudicator_set.select_related('institution')
-        adjs_table = TabbycatTableBuilder(view=self, title="Adjudicators", sort_key="Name")
-        adjs_table.add_adjudicator_columns(adjudicators)
-
-        teams = t.team_set.select_related('institution')
-        teams_table = TabbycatTableBuilder(view=self, title="Teams", sort_key="Name")
-        teams_table.add_team_columns(teams, key="Name")
-
-        return [adjs_table, teams_table]
-
 
 class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
@@ -240,6 +228,72 @@ class PublicTeamRecordView(PublicTournamentPageMixin, BaseTeamRecordView):
 class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorRecordView):
     public_page_preference = 'public_record'
     admin = False
+
+
+# ==============================================================================
+# Speaker categories
+# ==============================================================================
+
+class EditSpeakerCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+    # The tournament is included in the form as a hidden input so that
+    # uniqueness checks will work. Since this is a superuser form, they can
+    # access all tournaments anyway, so tournament forgery wouldn't be a
+    # security risk.
+
+    template_name = 'speaker_categories_edit.html'
+    formset_model = SpeakerCategory
+
+    def get_formset_factory_kwargs(self):
+        return {
+            'fields': ('name', 'tournament', 'slug', 'seq', 'limit', 'public'),
+            'extra': 2,
+            'widgets': {
+                'tournament': HiddenInput
+            }
+        }
+
+    def get_formset_queryset(self):
+        return SpeakerCategory.objects.filter(tournament=self.get_tournament())
+
+    def get_formset_kwargs(self):
+        return {
+            'initial': [{'tournament': self.get_tournament()}] * 2,
+        }
+
+    def formset_valid(self, formset):
+        result = super().formset_valid(formset)
+        if self.instances:
+            message = ungettext("Saved speaker category: %(list)s",
+                "Saved speaker categories: %(list)s",
+                len(self.instances)
+            ) % {'list': ", ".join(category.name for category in self.instances)}
+            messages.success(self.request, message)
+        if "add_more" in self.request.POST:
+            return redirect_tournament('participants-speaker-categories-edit', self.get_tournament())
+        return result
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_tournament('participants-list', self.get_tournament())
+
+
+class EditSpeakerCategoryEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, FormView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
+    form_class = forms.SpeakerCategoryEligibilityForm
+    template_name = 'edit_speaker_eligibility.html'
+
+    def get_success_url(self):
+        return reverse_tournament('participants-list', self.get_tournament())
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.get_tournament()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Speaker category eligibility saved.")
+        return super().form_valid(form)
 
 
 # ==============================================================================

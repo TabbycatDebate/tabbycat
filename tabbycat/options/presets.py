@@ -92,26 +92,6 @@ class AustralsPreferences(PreferencesPreset):
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
-    ui_options__show_esl                       = True
-    ui_options__show_efl                       = True
-
-
-class AustralianEastersPreferences(AustralsPreferences):
-    name         = "Australian Easters Rules"
-    show_in_list = True
-    description  = ("3 vs 3 without replies, set motions, novices, intermediate "
-        "bubbles, one-up-one-down. Compliant with AIDA rules.")
-
-    # Scoring
-    scoring__score_min                         = 70.0
-    scoring__score_max                         = 80.0
-    scoring__maximum_margin                    = 15.0
-    # Debate Rules
-    debate_rules__reply_scores_enabled         = False
-    debate_rules__motion_vetoes_enabled        = True
-    data_entry__enable_motions                 = True
-    # UI Options
-    ui_options__show_novices                   = True
 
 
 class BritishParliamentaryPreferences(PreferencesPreset):
@@ -170,6 +150,22 @@ class CanadianParliamentaryPreferences(PreferencesPreset):
     draw_rules__draw_avoid_conflicts           = 'off'
 
 
+class AustralianEastersPreferences(AustralsPreferences):
+    name         = "Australian Easters Rules"
+    show_in_list = True
+    description  = ("3 vs 3 without replies, set motions, novices, intermediate "
+        "bubbles, one-up-one-down. Compliant with AIDA rules.")
+
+    # Scoring
+    scoring__score_min                         = 70.0
+    scoring__score_max                         = 80.0
+    scoring__maximum_margin                    = 15.0
+    # Debate Rules
+    debate_rules__reply_scores_enabled         = False
+    debate_rules__motion_vetoes_enabled        = True
+    data_entry__enable_motions                 = True
+
+
 class NZEastersPreferences(AustralsPreferences):
     name         = "New Zealand Easters Rules"
     show_in_list = True
@@ -195,8 +191,6 @@ class NZEastersPreferences(AustralsPreferences):
     draw_rules__draw_avoid_conflicts           = 'off'
     draw_rules__avoid_same_institution         = False # TODO: CHECK
     draw_rules__avoid_team_history             = False # TODO: CHECK
-    # UI Options
-    ui_options__show_novices                   = True
 
 
 class JoyntPreferences(AustralsPreferences):
@@ -226,8 +220,6 @@ class JoyntPreferences(AustralsPreferences):
     standings__team_standings_precedence       = ['wins', 'wbw', 'speaks_sum', 'wbw', 'draw_strength', 'wbw']
     # Public Features
     public_features__public_side_allocations   = True
-    # UI Options
-    ui_options__show_novices                   = True
 
 
 class UADCPreferences(AustralsPreferences):
@@ -266,7 +258,6 @@ class UADCPreferences(AustralsPreferences):
     feedback__feedback_from_teams              = 'all-adjs' # Kinda a big deal
     # UI Options
     public_features__feedback_progress         = True  # Feedback is compulsory
-    ui_options__show_efl                       = True  # Only EFL status shown
 
 
 class WSDCPreferences(AustralsPreferences):
@@ -320,7 +311,6 @@ class WADLPreferences(PreferencesPreset):
     draw_rules__draw_pairing_method            = 'slide'
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
     # UI Options
-    ui_options__show_novices                   = True
     ui_options__show_emoji                     = False
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = False

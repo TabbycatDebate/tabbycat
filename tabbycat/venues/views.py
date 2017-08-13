@@ -3,7 +3,7 @@ import json
 from django.contrib import messages
 from django.forms import Select, TextInput
 from django.http import HttpResponseBadRequest
-from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -89,9 +89,11 @@ class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetV
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
-            messages.success(self.request, _("Saved venue categories: %(list)s") % {
-                'list': ", ".join(category.name for category in self.instances)
-            })
+            message = ungettext("Saved venue category: %(list)s",
+                "Saved venue categories: %(list)s",
+                len(self.instances)
+            ) % {'list': ", ".join(category.name for category in self.instances)}
+            messages.success(self.request, message)
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-categories', self.get_tournament())
         return result
@@ -160,9 +162,10 @@ class VenueConstraintsView(SuperuserRequiredMixin, TournamentMixin, ModelFormSet
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
-            messages.success(self.request, _("Saved %(count)d venue constraints.") % {
-                'count': len(self.instances)
-            })
+            count = len(self.instances)
+            message = ungettext("Saved %(count)d venue constraint.",
+                "Saved %(count)d venue constraints.", count) % {'count': count}
+            messages.success(self.request, message)
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-constraints', self.get_tournament())
         return result

@@ -1,8 +1,15 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">👋</span>Welcome to {{ tournament.name }}{% endblock %}
-{% block page-title %}Welcome to {{ tournament.name }}{% endblock %}
+{% block head-title %}<span class="emoji">👋</span>
+{% blocktrans trimmed with tournament_name=tournament.name %}
+    Welcome to {{ tournament_name }}
+{% endblocktrans %}{% endblock %}
+{% block page-title %}
+  {% blocktrans trimmed with tournament_name=tournament.name %}
+    Welcome to {{ tournament_name }}
+  {% endblocktrans %}
+{% endblock %}
 
 {% block page-subnav-sections %}
   {{ tournament.welcome_msg|safe|linebreaks }}
@@ -12,7 +19,7 @@
 {% block page-alerts %}
   {% if not pref.team_tab_released and not pref.motion_tab_released and not pref.public_draw and not pref.public_results and not pref.public_divisions and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and not pref.public_ballots and not pref.public_feedback and not pref.show_all_draws %}
     <div class="alert alert-info">
-      Currently there is no public information available for this tournament
+      {% trans "There is currently no public information available for this tournament." %}
       <span class="emoji">😹</span>
     </div>
   {% endif %}
@@ -25,47 +32,40 @@
       <ul class="list-group">
         {% if pref.team_tab_released > 0 %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-team' %}">Team Tab</a>
+            <a href="{% tournamenturl 'standings-public-tab-team' %}">{% trans "Team Tab" %}</a>
           </li>
         {% endif %}
         {% if pref.speaker_tab_released > 0 %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-speaker' %}">Speaker Tab</a>
+            <a href="{% tournamenturl 'standings-public-tab-speaker' %}">{% trans "Speaker Tab" %}</a>
           </li>
         {% endif %}
-        {% if pref.pros_tab_released > 0 %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-pros' %}">Pros Speaker Tab</a>
-          </li>
-        {% endif %}
-        {% if pref.novices_tab_released > 0 %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-novices' %}">Novices Speaker Tab</a>
-          </li>
-        {% endif %}
-        {% if pref.esl_tab_released > 0 %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-esl' %}">ESL Speaker Tab</a>
-          </li>
-        {% endif %}
-        {% if pref.efl_tab_released > 0 %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-efl' %}">EFL Speaker Tab</a>
-          </li>
+        {% if pref.speaker_category_tabs_released > 0 %}
+          {% for category in tournament.speakercategory_set.all %}
+            {% if category.public %}
+              <li class="list-group-item">
+                <a href="{% tournamenturl 'standings-public-tab-speaker-category' category=category.slug %}">
+                  {% blocktrans trimmed with category_name=category.name %}
+                    {{ category_name }} Speaker Tab
+                  {% endblocktrans %}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
         {% endif %}
         {% if pref.replies_tab_released > 0 %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-replies' %}">Replies Tab</a>
+            <a href="{% tournamenturl 'standings-public-tab-replies' %}">{% trans "Replies Tab" %}</a>
           </li>
         {% endif %}
         {% if pref.motion_tab_released %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-motions' %}">Motions Tab</a>
+            <a href="{% tournamenturl 'standings-public-tab-motions' %}">{% trans "Motions Tab" %}</a>
           </li>
         {% endif %}
         {% if public_side_allocations %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'draw-public-side-allocations' %}">Sides</a>
+            <a href="{% tournamenturl 'draw-public-side-allocations' %}">{% trans "Sides" %}</a>
           </li>
         {% endif %}
         {% if pref.public_draw > 0  and pref.team_tab_released == 0 and pref.show_all_draws == 0 %}
@@ -75,79 +75,85 @@
         {% endif %}
         {% if pref.public_results and current_round.prev %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'results-public-index' %}">Results</a>
+            <a href="{% tournamenturl 'results-public-index' %}">{% trans "Results" %}</a>
           </li>
         {% endif %}
         {% if pref.public_divisions > 0 %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'public_divisions' %}">Divisions</a>
+            <a href="{% tournamenturl 'public_divisions' %}">{% trans "Divisions" %}</a>
           </li>
         {% endif %}
         {% if pref.public_motions %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'motions-public' %}">Motions</a>
+            <a href="{% tournamenturl 'motions-public' %}">{% trans "Motions" %}</a>
           </li>
         {% endif %}
         {% if pref.public_motions and pref.motion_tab_released == 0 and pref.draw_side_allocations == 'manual-ballot' %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'draw-public-side-allocations' %}">Sides</a>
+            <a href="{% tournamenturl 'draw-public-side-allocations' %}">{% trans "Sides" %}</a>
           </li>
         {% endif %}
         {% if pref.public_team_standings and current_round.prev and pref.team_tab_released == 0 %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-teams-current' %}">Team Standings</a>
+            <a href="{% tournamenturl 'standings-public-teams-current' %}">{% trans "Team Standings" %}</a>
           </li>
         {% endif %}
         {% if pref.public_breaking_teams %}
           {% for category in tournament.breakcategory_set.all %}
             <li class="list-group-item">
               <a href="{% tournamenturl 'breakqual-public-teams' category.slug %}">
-                {{ category.name }} Break
+                {% blocktrans trimmed with category_name=category.name %}
+                  {{ category_name }} Break
+                {% endblocktrans %}
               </a>
             </li>
           {% endfor %}
         {% endif %}
         {% if pref.public_breaking_adjs %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'breakqual-public-adjs' %}">Breaking Adjudicators</a>
+            <a href="{% tournamenturl 'breakqual-public-adjs' %}">{% trans "Breaking Adjudicators" %}</a>
           </li>
         {% endif %}
         {% if pref.public_diversity %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-diversity' %}">Diversity Overview</a>
+            <a href="{% tournamenturl 'standings-public-diversity' %}">{% trans "Diversity Overview" %}</a>
           </li>
         {% endif %}
         {% if pref.public_participants %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'participants-public-list' %}">Participants</a>
+            <a href="{% tournamenturl 'participants-public-list' %}">{% trans "Participants" %}</a>
           </li>
         {% endif %}
         {% if pref.feedback_progress %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'public_feedback_progress' %}">Feedback Progress</a>
+            <a href="{% tournamenturl 'public_feedback_progress' %}">{% trans "Feedback Progres" %}s</a>
           </li>
         {% endif %}
         {% if pref.public_ballots %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'results-public-ballot-submission-index' %}">Enter Ballot</a>
+            <a href="{% tournamenturl 'results-public-ballot-submission-index' %}">{% trans "Enter Ballot" %}</a>
           </li>
         {% endif %}
         {% if pref.public_feedback %}
           <li class="list-group-item">
-            <a href="{% tournamenturl 'adjfeedback-public-add-index' %}">Enter Feedback</a>
+            <a href="{% tournamenturl 'adjfeedback-public-add-index' %}">{% trans "Enter Feedback" %}</a>
           </li>
         {% endif %}
         {% if pref.show_all_draws > 0 %}
           {% for r in tournament.round_set.all %}
             {% if r.draw_status == r.STATUS_RELEASED %}
               <li class="list-group-item">
-                <a href="{% roundurl 'draw-public-for-round' r %}">Draw for {{ r.name }}</a>
+                <a href="{% roundurl 'draw-public-for-round' r %}">
+                  {% blocktrans trimmed with round_name=r.name %}
+                    Draw for {{ round_name }}
+                  {% endblocktrans %}
+                  </a>
               </li>
             {% endif %}
           {% endfor %}
           {% if pref.enable_mass_draws > 0 %}
             <li class="list-group-item">
-              <a href="{% tournamenturl 'draw-public-all-draws' %}">View All Draws</a>
+              <a href="{% tournamenturl 'draw-public-all-draws' %}">{% trans "View All Draws" %}</a>
             </li>
           {% endif %}
         {% endif %}

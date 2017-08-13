@@ -77,6 +77,38 @@ class Institution(models.Model):
         return {'name': self.name, 'id': self.id, 'code': self.code}
 
 
+class SpeakerCategory(models.Model):
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        verbose_name=_("tournament"))
+    name = models.CharField(max_length=50,
+        verbose_name=_("name"),
+        # Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
+        help_text=_("Name to be displayed, e.g., \"Novice\", \"ESL\""))
+    slug = models.SlugField(
+        verbose_name=_("slug"),
+        # Translators: Translate esl to the acronym for "<target language> as a second/foreign language", not "English"
+        help_text=_("Slug for URLs, e.g., \"novice\", \"esl\""))
+    seq = models.IntegerField(
+        verbose_name=_("sequence number"),
+        help_text=_("The order in which the categories are displayed"))
+    limit = models.IntegerField(default=0,
+        verbose_name=_("limit"),
+        help_text=_("At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"))
+    public = models.BooleanField(default=True,
+        verbose_name=_("public"),
+        help_text=_("If checked, this category will be included in the speaker category tabs shown to the public"))
+
+    class Meta:
+        unique_together = [('tournament', 'seq'), ('tournament', 'slug')]
+        ordering = ['tournament', 'seq']
+        index_together = ['tournament', 'seq']
+        verbose_name = _("speaker category")
+        verbose_name_plural = _("speaker categories")
+
+    def __str__(self):
+        return "[{}] {}".format(self.tournament.slug, self.name)
+
+
 class Person(models.Model):
     name = models.CharField(max_length=40, db_index=True,
         verbose_name=_("name"))
@@ -85,12 +117,6 @@ class Person(models.Model):
         verbose_name=_("e-mail address"))
     phone = models.CharField(max_length=40, blank=True,
         verbose_name=_("phone"))
-    novice = models.BooleanField(default=False,
-        help_text="Novice status may be indicated on the tab, and may have its own Break Category or Top Speakers Tab")
-    esl = models.BooleanField(default=False,
-        help_text="ESL language status may have its own Break Category or Top Speakers Tab")
-    efl = models.BooleanField(default=False,
-        help_text="EFL language status may have its own Break Category or Top Speakers Tab")
     anonymous = models.BooleanField(default=False,
         verbose_name=_("anonymous"),
         help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
@@ -325,6 +351,8 @@ class Team(models.Model):
 class Speaker(Person):
     team = models.ForeignKey(Team, models.CASCADE,
         verbose_name=_("team"))
+    categories = models.ManyToManyField(SpeakerCategory, blank=True,
+        verbose_name=_("speaker categories"))
 
     class Meta:
         verbose_name = _("speaker")
@@ -362,6 +390,9 @@ class Adjudicator(Person):
         related_name='adj_adj_conflicts',
         verbose_name=_("team conflicts"))
 
+    trainee = models.BooleanField(default=False,
+        verbose_name=_("always trainee"),
+        help_text=_("If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"))
     breaking = models.BooleanField(default=False,
         verbose_name=_("breaking"))
     independent = models.BooleanField(default=False, blank=True,

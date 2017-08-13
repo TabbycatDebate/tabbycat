@@ -79,10 +79,6 @@ def get_menu_highlight(request):
         return {'tab_pros_nav': True}
     elif "tab" in request.path and "novices" in request.path:
         return {'tab_novices_nav': True}
-    elif "efl" in request.path:
-        return {'tab_efl_nav': True}
-    elif "esl" in request.path:
-        return {'tab_esl_nav': True}
     elif "tab" in request.path and "replies" in request.path:
         return {'tab_replies_nav': True}
     else:

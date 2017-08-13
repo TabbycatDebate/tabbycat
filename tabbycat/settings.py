@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'en'
 USE_I18N = True
 
-TABBYCAT_VERSION = '2.0.0a'
+TABBYCAT_VERSION = '1.5.0-dev'
 TABBYCAT_CODENAME = 'Iberian Lynx'
-READTHEDOCS_VERSION = 'v1.4.0'
+READTHEDOCS_VERSION = 'v1.5.0'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
@@ -133,8 +133,11 @@ CACHES = {
     }
 }
 
-# Use the cache for sessions rather than the db
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+# Use a db backed cache for sessions unless the app is retired (no db writes)
+if 'RETIRED' in os.environ:
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+else:
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
 # Static Files and Compilation

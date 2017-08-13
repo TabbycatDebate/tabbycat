@@ -4138,9 +4138,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4156,9 +4153,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4174,9 +4168,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4192,9 +4183,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4210,9 +4198,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4228,9 +4213,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4246,9 +4228,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4264,9 +4243,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4282,9 +4258,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4300,9 +4273,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4318,9 +4288,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4336,9 +4303,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4354,9 +4318,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4372,9 +4333,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4390,9 +4348,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4408,9 +4363,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4426,9 +4378,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4444,9 +4393,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4462,9 +4408,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4480,9 +4423,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4498,9 +4438,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4516,9 +4453,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4534,9 +4468,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4552,9 +4483,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4570,9 +4498,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4588,9 +4513,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4606,9 +4528,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4624,9 +4543,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4642,9 +4558,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4660,9 +4573,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4678,9 +4588,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4696,9 +4603,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4714,9 +4618,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4732,9 +4633,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4750,9 +4648,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4768,9 +4663,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4786,9 +4678,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4804,9 +4693,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4822,9 +4708,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4840,9 +4723,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4858,9 +4738,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4876,9 +4753,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4894,9 +4768,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4912,9 +4783,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4930,9 +4798,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4948,9 +4813,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4966,9 +4828,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4984,9 +4843,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5002,9 +4858,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5020,9 +4873,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5038,9 +4888,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5056,9 +4903,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5074,9 +4918,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5092,9 +4933,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5110,9 +4948,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5128,9 +4963,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5146,9 +4978,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5164,9 +4993,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5182,9 +5008,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5200,9 +5023,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5218,9 +5038,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5236,9 +5053,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5254,9 +5068,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5272,9 +5083,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5290,9 +5098,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5308,9 +5113,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5326,9 +5128,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5344,9 +5143,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5362,9 +5158,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5380,9 +5173,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5398,9 +5188,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5416,9 +5203,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5434,9 +5218,6 @@
         "barcode_id": null,
         "email": "leviflores@gmail.com",
         "phone": "(400) 258-4262",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5452,9 +5233,6 @@
         "barcode_id": null,
         "email": "boydpierce@yahoo.com",
         "phone": "(645) 106-7743",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5470,9 +5248,6 @@
         "barcode_id": null,
         "email": "eunicemcbride@outlook.com",
         "phone": "(549) 309-9187",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5488,9 +5263,6 @@
         "barcode_id": null,
         "email": "ramonacobb@yahoo.com",
         "phone": "(440) 487-5776",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5506,9 +5278,6 @@
         "barcode_id": null,
         "email": "justinford@outlook.com",
         "phone": "(618) 921-9188",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5524,9 +5293,6 @@
         "barcode_id": null,
         "email": "luisbennett@gmail.com",
         "phone": "(730) 097-8797",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5542,9 +5308,6 @@
         "barcode_id": null,
         "email": "mandyestrada@gmail.com",
         "phone": "(559) 299-0471",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5560,9 +5323,6 @@
         "barcode_id": null,
         "email": "leighmcgee@gmail.com",
         "phone": "(844) 760-9302",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5578,9 +5338,6 @@
         "barcode_id": null,
         "email": "jacquelinefreeman@yahoo.com",
         "phone": "(297) 916-1716",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5596,9 +5353,6 @@
         "barcode_id": null,
         "email": "hollyhoward@gmail.com",
         "phone": "(958) 783-2610",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5614,9 +5368,6 @@
         "barcode_id": null,
         "email": "pedroburgess@yahoo.com",
         "phone": "(854) 441-0104",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5632,9 +5383,6 @@
         "barcode_id": null,
         "email": "kristycarr@yahoo.com",
         "phone": "(644) 607-3297",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5650,9 +5398,6 @@
         "barcode_id": null,
         "email": "wilmavaughn@outlook.com",
         "phone": "(398) 759-9537",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5668,9 +5413,6 @@
         "barcode_id": null,
         "email": "virginiamccarthy@gmail.com",
         "phone": "(455) 177-0459",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5686,9 +5428,6 @@
         "barcode_id": null,
         "email": "tashajenkins@outlook.com",
         "phone": "(875) 519-9891",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5704,9 +5443,6 @@
         "barcode_id": null,
         "email": "tobywong@gmail.com",
         "phone": "(404) 641-5999",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5722,9 +5458,6 @@
         "barcode_id": null,
         "email": "joallen@yahoo.com",
         "phone": "(761) 993-2983",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": "",
@@ -5740,9 +5473,6 @@
         "barcode_id": null,
         "email": "billygriffin@outlook.com",
         "phone": "(430) 532-2939",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5758,9 +5488,6 @@
         "barcode_id": null,
         "email": "angelareed@yahoo.com",
         "phone": "(936) 500-1228",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5776,9 +5503,6 @@
         "barcode_id": null,
         "email": "hugolewis@outlook.com",
         "phone": "(422) 585-9609",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5794,9 +5518,6 @@
         "barcode_id": null,
         "email": "cassandrawilson@gmail.com",
         "phone": "(604) 306-2084",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5812,9 +5533,6 @@
         "barcode_id": null,
         "email": "georgewillis@yahoo.com",
         "phone": "(222) 204-5944",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5830,9 +5548,6 @@
         "barcode_id": null,
         "email": "jamiehodges@outlook.com",
         "phone": "(737) 122-6102",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5848,9 +5563,6 @@
         "barcode_id": null,
         "email": "bennierodriguez@gmail.com",
         "phone": "(537) 641-2175",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5866,9 +5578,6 @@
         "barcode_id": null,
         "email": "allisonmartin@outlook.com",
         "phone": "(525) 384-2715",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5884,9 +5593,6 @@
         "barcode_id": null,
         "email": "kristielliott@gmail.com",
         "phone": "(790) 289-5430",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5902,9 +5608,6 @@
         "barcode_id": null,
         "email": "pearlgraves@outlook.com",
         "phone": "(317) 721-2439",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5920,9 +5623,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -5938,9 +5638,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -6444,504 +6141,576 @@
     "model": "participants.speaker",
     "pk": 1,
     "fields": {
-        "team": 1
+        "team": 1,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 2,
     "fields": {
-        "team": 1
+        "team": 1,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 3,
     "fields": {
-        "team": 1
+        "team": 1,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 4,
     "fields": {
-        "team": 2
+        "team": 2,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 5,
     "fields": {
-        "team": 2
+        "team": 2,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 6,
     "fields": {
-        "team": 2
+        "team": 2,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 7,
     "fields": {
-        "team": 3
+        "team": 3,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 8,
     "fields": {
-        "team": 3
+        "team": 3,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 9,
     "fields": {
-        "team": 3
+        "team": 3,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 10,
     "fields": {
-        "team": 4
+        "team": 4,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 11,
     "fields": {
-        "team": 4
+        "team": 4,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 12,
     "fields": {
-        "team": 4
+        "team": 4,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 13,
     "fields": {
-        "team": 5
+        "team": 5,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 14,
     "fields": {
-        "team": 5
+        "team": 5,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 15,
     "fields": {
-        "team": 5
+        "team": 5,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 16,
     "fields": {
-        "team": 6
+        "team": 6,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 17,
     "fields": {
-        "team": 6
+        "team": 6,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 18,
     "fields": {
-        "team": 6
+        "team": 6,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 19,
     "fields": {
-        "team": 7
+        "team": 7,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 20,
     "fields": {
-        "team": 7
+        "team": 7,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 21,
     "fields": {
-        "team": 7
+        "team": 7,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 22,
     "fields": {
-        "team": 8
+        "team": 8,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 23,
     "fields": {
-        "team": 8
+        "team": 8,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 24,
     "fields": {
-        "team": 8
+        "team": 8,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 25,
     "fields": {
-        "team": 9
+        "team": 9,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 26,
     "fields": {
-        "team": 9
+        "team": 9,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 27,
     "fields": {
-        "team": 9
+        "team": 9,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 28,
     "fields": {
-        "team": 10
+        "team": 10,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 29,
     "fields": {
-        "team": 10
+        "team": 10,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 30,
     "fields": {
-        "team": 10
+        "team": 10,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 31,
     "fields": {
-        "team": 11
+        "team": 11,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 32,
     "fields": {
-        "team": 11
+        "team": 11,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 33,
     "fields": {
-        "team": 11
+        "team": 11,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 34,
     "fields": {
-        "team": 12
+        "team": 12,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 35,
     "fields": {
-        "team": 12
+        "team": 12,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 36,
     "fields": {
-        "team": 12
+        "team": 12,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 37,
     "fields": {
-        "team": 13
+        "team": 13,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 38,
     "fields": {
-        "team": 13
+        "team": 13,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 39,
     "fields": {
-        "team": 13
+        "team": 13,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 40,
     "fields": {
-        "team": 14
+        "team": 14,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 41,
     "fields": {
-        "team": 14
+        "team": 14,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 42,
     "fields": {
-        "team": 14
+        "team": 14,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 43,
     "fields": {
-        "team": 15
+        "team": 15,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 44,
     "fields": {
-        "team": 15
+        "team": 15,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 45,
     "fields": {
-        "team": 15
+        "team": 15,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 46,
     "fields": {
-        "team": 16
+        "team": 16,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 47,
     "fields": {
-        "team": 16
+        "team": 16,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 48,
     "fields": {
-        "team": 16
+        "team": 16,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 49,
     "fields": {
-        "team": 17
+        "team": 17,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 50,
     "fields": {
-        "team": 17
+        "team": 17,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 51,
     "fields": {
-        "team": 17
+        "team": 17,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 52,
     "fields": {
-        "team": 18
+        "team": 18,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 53,
     "fields": {
-        "team": 18
+        "team": 18,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 54,
     "fields": {
-        "team": 18
+        "team": 18,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 55,
     "fields": {
-        "team": 19
+        "team": 19,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 56,
     "fields": {
-        "team": 19
+        "team": 19,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 57,
     "fields": {
-        "team": 19
+        "team": 19,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 58,
     "fields": {
-        "team": 20
+        "team": 20,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 59,
     "fields": {
-        "team": 20
+        "team": 20,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 60,
     "fields": {
-        "team": 20
+        "team": 20,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 61,
     "fields": {
-        "team": 21
+        "team": 21,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 62,
     "fields": {
-        "team": 21
+        "team": 21,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 63,
     "fields": {
-        "team": 21
+        "team": 21,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 64,
     "fields": {
-        "team": 22
+        "team": 22,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 65,
     "fields": {
-        "team": 22
+        "team": 22,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 66,
     "fields": {
-        "team": 22
+        "team": 22,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 67,
     "fields": {
-        "team": 23
+        "team": 23,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 68,
     "fields": {
-        "team": 23
+        "team": 23,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 69,
     "fields": {
-        "team": 23
+        "team": 23,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 70,
     "fields": {
-        "team": 24
+        "team": 24,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 71,
     "fields": {
-        "team": 24
+        "team": 24,
+        "categories": []
     }
 },
 {
     "model": "participants.speaker",
     "pk": 72,
     "fields": {
-        "team": 24
+        "team": 24,
+        "categories": []
     }
 },
 {
@@ -6952,6 +6721,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -6965,6 +6735,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": true,
         "adj_core": false
@@ -6978,6 +6749,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -6991,6 +6763,7 @@
         "tournament": 1,
         "test_score": 1.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -7004,6 +6777,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7017,6 +6791,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": false,
         "adj_core": false
@@ -7030,6 +6805,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -7043,6 +6819,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7056,6 +6833,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -7069,6 +6847,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -7082,6 +6861,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7095,6 +6875,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7108,6 +6889,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -7121,6 +6903,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7134,6 +6917,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": true,
         "adj_core": false
@@ -7147,6 +6931,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": false,
         "adj_core": false
@@ -7160,6 +6945,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": false,
         "adj_core": false
@@ -7173,6 +6959,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": false,
         "adj_core": false
@@ -7186,6 +6973,7 @@
         "tournament": 1,
         "test_score": 1.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7199,6 +6987,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": false,
         "adj_core": false
@@ -7212,6 +7001,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7225,6 +7015,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": false,
         "adj_core": false
@@ -7238,6 +7029,7 @@
         "tournament": 1,
         "test_score": 3.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": false,
         "adj_core": false
@@ -7251,6 +7043,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7264,6 +7057,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7277,6 +7071,7 @@
         "tournament": 1,
         "test_score": 3.0,
         "url_key": null,
+        "trainee": false,
         "breaking": true,
         "independent": false,
         "adj_core": false
@@ -7290,6 +7085,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7303,6 +7099,7 @@
         "tournament": null,
         "test_score": 2.5,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -7316,6 +7113,7 @@
         "tournament": null,
         "test_score": 2.5,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
