@@ -273,6 +273,9 @@ class DebateTeam(models.Model):
     side = models.CharField(max_length=3, choices=SIDE_CHOICES,
         verbose_name=_("side"))
 
+    # comma-separated list of strings
+    flags = models.CharField(max_length=100, blank=True)
+
     class Meta:
         verbose_name = _("debate team")
         verbose_name_plural = _("debate teams")
@@ -292,6 +295,13 @@ class DebateTeam(models.Model):
                 logger.warning("No opponent found for %s", str(self))
                 self._opponent = None
             return self._opponent
+
+    def get_flags_display(self):
+        if not self.flags:
+            return []  # don't return [""]
+        else:
+            # If the verbose description can't be found, just show the raw flag
+            return [DRAW_FLAG_DESCRIPTIONS.get(f, f) for f in self.flags.split(",")]
 
     def get_result_display(self):
         if self.win is True:

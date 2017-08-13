@@ -412,68 +412,68 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
     expected = dict()
     expected[1] = [dict(
         odd_bracket="pullup_top", pairing_method="slide", avoid_conflicts="one_up_one_down", side_allocations="balance"),
-        [(12,  2, ["pullup"], True),
-         (3,  14, ["1u1d_hist"], True),
-         (11,  4, ["1u1d_other"], False),
-         (6,   7, ["1u1d_other", "pullup"], True),
-         (17,  8, ["1u1d_hist"], True),
-         (9,  24, ["1u1d_other"], False),
-         (15, 23, ["1u1d_inst"], True),
-         (18, 25, [], False),
-         (22,  1, ["pullup"], True),
-         (5,  19, ["1u1d_other"], True),
-         (10, 21, ["1u1d_inst"], False),
-         (16, 13, ["1u1d_other", "pullup"], True),
-         (20, 26, ["1u1d_hist"], True)]]
+        [(12,  2, [], [], ["pullup"], True),
+         (3,  14, ["1u1d_hist"], [], [], True),
+         (11,  4, ["1u1d_other"], [], [], False),
+         (6,   7, ["1u1d_other"], [], ["pullup"], True),
+         (17,  8, ["1u1d_hist"], [], [], True),
+         (9,  24, ["1u1d_other"], [], [], False),
+         (15, 23, ["1u1d_inst"], [], [], True),
+         (18, 25, [], [], [], False),
+         (22,  1, [], [], ["pullup"], True),
+         (5,  19, ["1u1d_other"], [], [], True),
+         (10, 21, ["1u1d_inst"], [], [], False),
+         (16, 13, ["1u1d_other"], [], ["pullup"], True),
+         (20, 26, ["1u1d_hist"], [], [], True)]]
 
     expected[2] = [dict(
         odd_bracket="intermediate_bubble_up_down", pairing_method="slide", avoid_conflicts="one_up_one_down", side_allocations="balance"),
-        [(12, 2, [], True),
-         (3, 17, [], True),  # institution conflict, but swapping
+        [(12, 2, [], [], [], True),
+         (3, 17, [], [], [], True),  # institution conflict, but swapping
                              # would give history conflict
-         (11, 14, ["1u1d_inst"], True),
-         (6, 4, ["1u1d_other"], False),
-         (8, 7, [], True),
-         (9, 22, [], True),
-         (15, 23, [], True),
-         (18, 24, [], False),
-         (1, 25, [], False),
-         (5, 20, [], False),
-         (10, 21, [], False),
-         (16, 26, ["bub_up_hist"], True),
-         (19, 13, ["bub_up_accom"], False)]]
+         (11, 14, ["1u1d_inst"], [], [], True),
+         (6, 4, ["1u1d_other"], [], [], False),
+         (8, 7, [], [], [], True),
+         (9, 22, [], [], [], True),
+         (15, 23, [], [], [], True),
+         (18, 24, [], [], [], False),
+         (1, 25, [], [], [], False),
+         (5, 20, [], [], [], False),
+         (10, 21, [], [], [], False),
+         (16, 26, [], [], ["bub_up_hist"], True),
+         (19, 13, [], ["bub_up_accom"], [], False)]]
 
     expected[3] = [dict(
         odd_bracket="intermediate1", pairing_method="fold", avoid_conflicts="off", side_allocations="preallocated"),
-        [(12, 11, [], False),
-         (2,   8, [], False),
-         (3,  17, [], False),
-         (4,   6, [], False),
-         (14, 15, [], False),
-         (7,  22, [], False),
-         (9,  18, [], False),
-         (23, 16, [], False),
-         (24,  5, [], False),
-         (25,  1, [], False),
-         (10, 26, [], False),
-         (20, 19, [], False),
-         (21, 13, [], False)]]
+        [(12, 11, [], [], [], False),
+         (2,   8, [], [], [], False),
+         (3,  17, [], [], [], False),
+         (4,   6, [], [], [], False),
+         (14, 15, [], [], [], False),
+         (7,  22, [], [], [], False),
+         (9,  18, [], [], [], False),
+         (23, 16, [], [], [], False),
+         (24,  5, [], [], [], False),
+         (25,  1, [], [], [], False),
+         (10, 26, [], [], [], False),
+         (20, 19, [], [], [], False),
+         (21, 13, [], [], [], False)]]
 
     expected[4] = [dict(
         odd_bracket="intermediate2", pairing_method="fold", avoid_conflicts="off", side_allocations="preallocated"),
-        [(12, 11, [], False),
-         (2,   8, [], False),
-         (3,  17, [], False),
-         (4,   6, [], False),
-         (14, 15, [], False),
-         (7,  22, [], False),
-         (9,  18, [], False),
-         (23, 16, [], False),
-         (24,  5, [], False),
-         (25,  1, [], False),
-         (10, 26, [], False),
-         (20, 19, [], False),
-         (21, 13, [], False)]]
+        [(12, 11, [], [], [], False),
+         (2,   8, [], [], [], False),
+         (3,  17, [], [], [], False),
+         (4,   6, [], [], [], False),
+         (14, 15, [], [], [], False),
+         (7,  22, [], [], [], False),
+         (9,  18, [], [], [], False),
+         (23, 16, [], [], [], False),
+         (24,  5, [], [], [], False),
+         (25,  1, [], [], [], False),
+         (10, 26, [], [], [], False),
+         (20, 19, [], [], [], False),
+         (21, 13, [], [], [], False)]]
 
     combinations = [(1, 1), (1, 2), (1, 3), (1, 4)]
 
@@ -488,14 +488,24 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                 standings = self.standings[standings_key]
                 kwargs, expected = self.expected[expected_key]
                 draw = self.do_draw(standings, kwargs)
-                for actual, (exp_aff, exp_neg, exp_flags, same_affs) in zip(draw, expected):
+
+                for actual, (exp_aff, exp_neg, exp_flags, exp_aff_flags, exp_neg_flags, same_affs) in zip(draw, expected):
                     actual_teams = tuple([t.id for t in actual.teams])
                     expected_teams = (exp_aff, exp_neg)
+
                     if same_affs:
                         self.assertCountEqual(actual_teams, expected_teams)
                     else:
                         self.assertEqual(actual_teams, expected_teams)
+
                     self.assertEqual(actual.flags, exp_flags)
+
+                    if exp_aff == actual.teams[0].id:
+                        self.assertEqual(actual.get_team_flags(actual.teams[0]), exp_aff_flags)
+                        self.assertEqual(actual.get_team_flags(actual.teams[1]), exp_neg_flags)
+                    else:
+                        self.assertEqual(actual.get_team_flags(actual.teams[1]), exp_aff_flags)
+                        self.assertEqual(actual.get_team_flags(actual.teams[0]), exp_neg_flags)
 
 
 class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.TestCase):

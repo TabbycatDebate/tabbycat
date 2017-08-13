@@ -100,7 +100,8 @@ class BaseDrawManager:
             debate.save()
 
             for team, side in zip(pairing.teams, self.round.tournament.sides):
-                DebateTeam.objects.create(debate=debate, team=team, side=side)
+                DebateTeam.objects.create(debate=debate, team=team, side=side,
+                        flags=",".join(pairing.get_team_flags(team)))
 
     def delete(self):
         self.round.debate_set.all().delete()

@@ -33,7 +33,7 @@ class BasePairing:
     This is a base class for functionality common to both two-team pairings and
     BP pairings."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], division=None):
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, winner=None, division=None):
         """'teams' must be a list of two teams, or four teams if it's for BP.
         'bracket' and 'room_rank' are both integers.
         'flags' is a list of strings."""
@@ -41,7 +41,12 @@ class BasePairing:
         self.bracket = bracket
         self.room_rank = room_rank
         self.flags = list(flags)
+        self.team_flags = dict(team_flags)
         self.division = division
+        if winner is None:
+            self._winner_index = None
+        else:
+            self._winner_index = self.teams.index(winner)
 
     @classmethod
     def from_debate(cls, debate):
@@ -49,14 +54,27 @@ class BasePairing:
         bracket = debate.bracket
         room_rank = debate.room_rank
         flags = debate.flags.split(",")
+        team_flags = {debate.aff_team: debate.aff_team.flags.split(","), debate.neg_team: debate.neg_team.flags.split(",")}
         division = debate.division
-        return cls(teams, bracket, room_rank, flags, division)
+        if debate.confirmed_ballot is not None:
+            winner = debate.confirmed_ballot.result.winning_team()
+        else:
+            winner = None
+        return cls(teams, bracket, room_rank, flags, team_flags, winner, division)
 
     def add_flag(self, flag):
         self.flags.append(flag)
 
     def add_flags(self, flags):
         self.flags.extend(flags)
+
+    def add_team_flags(self, team, flags):
+        self.team_flags.setdefault(team, list()).extend(flags)
+
+    def get_team_flags(self, team):
+        if team not in self.teams:
+            logger.error("Tried to get flags for team %r in pairing %r", team, self)
+        return self.team_flags.get(team, [])
 
     @property
     def venue_category(self):
@@ -227,7 +245,7 @@ class BaseDrawGenerator:
         for pairing in pairings:
             for team in pairing.teams:
                 if team in self.team_flags:
-                    pairing.add_flags(self.team_flags[team])
+                    pairing.add_team_flags(team, self.team_flags[team])
 
     @classmethod
     def available_options(cls):
