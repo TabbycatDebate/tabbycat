@@ -33,7 +33,7 @@ class BasePairing:
     This is a base class for functionality common to both two-team pairings and
     BP pairings."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, winner=None, division=None):
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, division=None):
         """'teams' must be a list of two teams, or four teams if it's for BP.
         'bracket' and 'room_rank' are both integers.
         'flags' is a list of strings."""
@@ -43,10 +43,6 @@ class BasePairing:
         self.flags = list(flags)
         self.team_flags = dict(team_flags)
         self.division = division
-        if winner is None:
-            self._winner_index = None
-        else:
-            self._winner_index = self.teams.index(winner)
 
     @classmethod
     def from_debate(cls, debate):
@@ -56,11 +52,7 @@ class BasePairing:
         flags = debate.flags.split(",")
         team_flags = {debate.aff_team: debate.aff_team.flags.split(","), debate.neg_team: debate.neg_team.flags.split(",")}
         division = debate.division
-        if debate.confirmed_ballot is not None:
-            winner = debate.confirmed_ballot.result.winning_team()
-        else:
-            winner = None
-        return cls(teams, bracket, room_rank, flags, team_flags, winner, division)
+        return cls(teams, bracket, room_rank, flags, team_flags, division)
 
     def add_flag(self, flag):
         self.flags.append(flag)
@@ -92,8 +84,8 @@ class Pairing(BasePairing):
 
     sides = ['aff', 'neg']
 
-    def __init__(self, teams, bracket, room_rank, flags=[], winner=None, division=None):
-        super().__init__(teams, bracket, room_rank, flags, division)
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, winner=None, division=None):
+        super().__init__(teams, bracket, room_rank, flags, team_flags, division)
         assert len(self.teams) == 2, "There must be two teams in a Pairing"
         self.set_winner(winner)
 
@@ -165,8 +157,8 @@ class BPPairing(BasePairing):
 
     sides = ['og', 'oo', 'cg', 'co']
 
-    def __init__(self, teams, bracket, room_rank, flags=[], division=None):
-        super().__init__(teams, bracket, room_rank, flags, division)
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, division=None):
+        super().__init__(teams, bracket, room_rank, flags, team_flags, division)
         assert len(self.teams) == 4, "There must be four teams in a BPPairing"
 
     def __repr__(self):

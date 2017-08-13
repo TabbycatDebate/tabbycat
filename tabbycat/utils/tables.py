@@ -608,8 +608,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for debate in debates:
             # conflicts is a list of (level, message) tuples
             conflicts = [("primary", flag) for flag in debate.get_flags_display()]
-            conflicts += [("primary", "%(team)s: %(flag)s" % {'team': dt.team.short_name, 'flag': flag})
-                    for dt in (debate.aff_dt, debate.neg_dt) for flag in dt.get_flags_display()]
+            conflicts += [("primary", "%(team)s: %(flag)s" % {'team': debate.get_team(side).short_name, 'flag': flag})
+                    for side in self.tournament.sides for flag in debate.get_dt(side).get_flags_display()]
             history = debate.history
             if history > 0:
                 conflicts.append(("warning", "Teams have met " +

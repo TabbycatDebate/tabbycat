@@ -283,8 +283,11 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
             points_in_room = set(team.points for team in teams)
             if not all([x in allowed for x in points_in_room]):
                 logger.error("Teams with points %s in room that should only have %s", allowed, points_in_room)
-            flags = ["pullup"] if len(points_in_room) > 1 else []
-            pairing = BPPairing(teams=teams, bracket=level, room_rank=i, flags=flags)
+            pairing = BPPairing(teams=teams, bracket=level, room_rank=i)
             pairings.append(pairing)
+
+            for team in teams:
+                if team.points < max(points_in_room):
+                    self.add_team_flag(team, "pullup")
 
         return pairings
