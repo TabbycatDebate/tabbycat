@@ -70,14 +70,14 @@ def create_speaker_categories(apps, schema_editor):
             # Make public if either no tab is released, or this specific one is
             public = (not any_released) or released.get(field, False)
 
-            SpeakerCategory.objects.create(tournament=tournament, name=name, slug=field, seq=seq,
-                    limit=limit, public=public)
+            SpeakerCategory.objects.get_or_create(tournament=tournament, slug=field,
+                    defaults={'name': name, 'seq': seq, 'limit': limit, 'public': public})
 
         # Finally, create the pro category (for everyone; can be deleted manually if not used)
         # but only make it public if the tab is already released (i.e. assume it's not wanted)
-        if not SpeakerCategory.objects.filter(tournament=tournament, slug="pro").exists():
-            SpeakerCategory.objects.create(tournament=tournament, name="Pro", slug="pro", seq=last_seq+3,
-                limit=get_limit(tournament, "pro"), public=released.get("pros_tab_released", False))
+        SpeakerCategory.objects.get_or_create(tournament=tournament, slug="pro", name="Pro",
+                defaults={'name': "Pro", 'seq': last_seq+4, 'limit': get_limit(tournament, "pro"),
+                          'public': released.get("pros_tab_released", False)})
 
 
 def convert_speaker_categories(apps, schema_editor):
