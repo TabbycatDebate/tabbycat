@@ -37,7 +37,7 @@ class Pairing:
         self.bracket       = bracket
         self.room_rank     = room_rank
         self.flags         = list(flags)
-        self.team_flags    = team_flags
+        self.team_flags    = dict(team_flags)
         self.division      = division
         if winner is None:
             self._winner_index = None
