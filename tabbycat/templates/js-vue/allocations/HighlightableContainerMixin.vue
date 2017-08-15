@@ -12,10 +12,10 @@ export default {
   },
   methods: {
     setHighlights(highlights) {
-      _.forEach(this.teams, function(item) {
+      _.forEach(this.debateTeams, function(item) {
         item.highlights = highlights
       })
-      _.forEach(this.adjudicators, function(item) {
+      _.forEach(this.debateAdjudicators, function(item) {
         item.highlights = highlights
       })
       _.forEach(this.unallocatedItems, function(item) {

@@ -16,7 +16,7 @@
     </div>
 
     <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions" @resort="updateSorting"
+      <draw-header :positions="positions" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
         <div @click="updateSorting('venue')" slot="hvenue"
              class="vue-sortable thead flex-cell flex-12 vue-droppable-container">

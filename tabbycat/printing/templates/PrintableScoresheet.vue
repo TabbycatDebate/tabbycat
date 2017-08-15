@@ -2,7 +2,7 @@
   <div class="db-flex-column db-flex-item-1">
 
     <section class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static"
-             v-if="ballot.panel && ballot.panel.length > 1">
+             v-if="ballot.debateAdjudicators && ballot.debateAdjudicators.length > 1">
       <div class="db-padding-horizontal db-align-vertical-center db-vertical-center-text">
         The other adjudicators are
         <span v-for="(da, i) in panellistsExcludingSelf">
@@ -71,14 +71,14 @@
     </section>
 
     <section class="db-margins-m db-flex-row db-flex-item-7">
-      <printable-team-scores :dt="orderedTeams[0]" :round-info="roundInfo"></printable-team-scores>
+      <printable-team-scores :dt="ballot.debateTeams[0]" :round-info="roundInfo"></printable-team-scores>
       <div class="db-item-gutter"></div>
-      <printable-team-scores :dt="orderedTeams[1]" :round-info="roundInfo"></printable-team-scores>
+      <printable-team-scores :dt="ballot.debateTeams[1]" :round-info="roundInfo"></printable-team-scores>
     </section>
     <section class="db-margins-m db-flex-row db-flex-item-7" v-if="roundInfo.isBP">
-      <printable-team-scores :dt="orderedTeams[2]" :round-info="roundInfo"></printable-team-scores>
+      <printable-team-scores :dt="ballot.debateTeams[2]" :round-info="roundInfo"></printable-team-scores>
       <div class="db-item-gutter"></div>
-      <printable-team-scores :dt="orderedTeams[3]" :round-info="roundInfo"></printable-team-scores>
+      <printable-team-scores :dt="ballot.debateTeams[3]" :round-info="roundInfo"></printable-team-scores>
     </section>
 
     <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="!roundInfo.isBP">
@@ -118,20 +118,15 @@ export default {
   props: ['ballot', 'roundInfo'],
   components: {PrintableTeamScores},
   computed: {
-    orderedTeams: function() {
-      return _.map(this.ballot.teams, function(value, key) {
-        return { position: key, team: value }
-      })
-    },
     panellistsExcludingSelf: function() {
       var ballotSource = this.ballot.author
-      var authoringPanellist = _.find(this.ballot.panel, function(panellist) {
+      var authoringPanellist = _.find(this.ballot.debateAdjudicators, function(panellist) {
         return panellist.adjudicator.name === ballotSource
       });
       if (!_.isUndefined(authoringPanellist)) {
-        return _.without(this.ballot.panel, authoringPanellist)
+        return _.without(this.ballot.debateAdjudicators, authoringPanellist)
       } else {
-        return this.ballot.panel
+        return this.ballot.debateAdjudicators
       }
     },
     motionsAccountingForBlanks: function() {

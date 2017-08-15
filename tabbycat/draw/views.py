@@ -521,13 +521,17 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
     save_url = "save-debate-teams"
 
     def annotate_draw(self, draw, serialised_draw):
-        round = self.get_round()
-        extra_debates = floor(round.active_teams.count() / 2 - len(serialised_draw))
-        for i in range(0, extra_debates):
-            # Make 'fake' debates as placeholders; need a unique ID (hence 9999)
+        r = self.get_round()
+        if r.tournament.pref('teams_in_debate') == 'bp':
+            total_possible_rooms = r.active_teams.count() / 4
+        else:
+            total_possible_rooms = r.active_teams.count() / 2
+
+        # Make 'fake' debates as placeholders; need a unique ID (hence 9999)
+        for i in range(0, floor(total_possible_rooms - len(serialised_draw))):
             serialised_draw.append({
-                'id': 999999 + i, 'teams': {}, 'panel': [], 'bracket': 0,
-                'importance': 0, 'venue': None
+                'id': 999999 + i, 'debateTeams': {}, 'debateAdjudicators': [],
+                'bracket': 0, 'importance': 0, 'venue': None
             })
 
         return super().annotate_draw(draw, serialised_draw)
@@ -548,24 +552,13 @@ class SaveDrawMatchups(SaveDragAndDropDebateMixin):
     action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
     allows_creation = True
 
-    def identify_side(self, translated_side):
-        # Positions are sent over in their labelled/translate form; need to lookup
-        # This is hardcoded to aff/neg; will need to refactor when sides update
-        translated_sides = {
-            get_side_name(self.get_tournament(), name, 'full'): name for name in ['aff', 'neg']}
-        side_short = translated_sides[translated_side]
-        if side_short is 'aff':
-            side = DebateTeam.SIDE_AFFIRMATIVE
-        if side_short is 'neg':
-            side = DebateTeam.SIDE_NEGATIVE
-        return side
-
     def modify_debate(self, debate, posted_debate):
-        teams = posted_debate['teams'].items()
+        debate_teams = posted_debate['debateTeams']
         logger.debug("Processing change for %r", debate)
-        for d_side, d_team in teams:
-            side = self.identify_side(d_side)
-            team = Team.objects.get(pk=d_team['id'])
+        for dt in debate_teams:
+            side = dt['side']
+            team = Team.objects.get(pk=dt['team']['id'])
+
             logger.debug("  Saving change for %s", team.short_name)
             if DebateTeam.objects.filter(debate=debate, team=team, side=side).exists():
                 logger.debug("    Skipping %s as not changed", team.short_name)

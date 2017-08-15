@@ -192,7 +192,7 @@ class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
         for debate in draw:
             debate_info = debate.serialize()
 
-            if len(debate_info['panel']) is 0:
+            if len(debate_info['debateAdjudicators']) is 0:
                 ballot_data = {
                     'author': "_______________________________________________",
                     'authorInstitution': "",
@@ -201,7 +201,7 @@ class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
                 ballot_data.update(debate_info)  # Extend with debateInfo keys
                 ballots.append(ballot_data)
             else:
-                for adj in (a for a in debate_info['panel'] if a['position'] != "T"):
+                for adj in (a for a in debate_info['debateAdjudicators'] if a['position'] != "T"):
                     ballot_data = {
                         'author': adj['adjudicator']['name'],
                         'authorInstitution': adj['adjudicator']['institution']['code'],

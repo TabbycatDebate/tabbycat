@@ -35,8 +35,8 @@ export default {
   methods: {
     authorPositionWithSoloCheck: function(position) {
       if (position === 'C') {
-        var panellists = _.filter(this.ballot.panel, function(panellist) {
-          return panellist.position === "P";
+        var panellists = _.filter(this.ballot.debateAdjudicators, function(da) {
+          return da.position === "P";
         })
         if (!_.isUndefined(panellists) && panellists.length > 0) {
           return "Chair of Panel"

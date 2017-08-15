@@ -41,18 +41,18 @@ export default {
   },
   computed: {
     teamsById: function() {
-      return _.keyBy(this.teams, 'id')
+      return _.keyBy(this.debateTeams, 'id')
     },
     divisionsOrderedByName: function() {
       return _.orderBy(this.divisions, 'name')
     },
     unallocatedTeams: function() {
-      return _.filter(this.teams, { 'division': null })
+      return _.filter(this.debateTeams, { 'division': null })
     }
   },
   methods: {
     teamsInDivision: function(divisionId) {
-      return _.filter(this.teams, { 'division': divisionId })
+      return _.filter(this.debateTeams, { 'division': divisionId })
     },
     moveToDivision(payload, assignedId) {
       this.teamsById[payload.team].division = assignedId

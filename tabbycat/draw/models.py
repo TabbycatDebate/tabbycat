@@ -228,15 +228,30 @@ class Debate(models.Model):
             # return a fake one if it is not
             return Motion(text='-', reference='-')
 
+    # For the front end need to ensure that there are no gaps in the debateTeams
+    def serial_debateteams_ordered(self):
+        t = self.round.tournament
+        for side in t.sides:
+            sdt = {'side': side, 'team': None,
+                   'position': get_side_name(t, side, 'full'),
+                   'abbr': get_side_name(t, side, 'abbr')}
+            try:
+                debate_team = self.get_dt(side)
+                sdt['team'] = debate_team.team.serialize()
+            except ObjectDoesNotExist:
+                pass
+
+            yield sdt
+
     def serialize(self):
         round = self.round
         debate = {'id': self.id, 'bracket': self.bracket,
                   'importance': self.importance, 'locked': False}
         debate['venue'] = self.venue.serialize() if self.venue else None
-        debate['teams'] = {
-            dt.get_side_name(round.tournament):dt.team.serialize() for dt in self.debateteam_set.all()}
-        debate['panel'] = [{
-            'adjudicator': adj.serialize(round=round), 'position': position,
+        debate['debateTeams'] = list(self.serial_debateteams_ordered())
+        debate['debateAdjudicators'] = [{
+            'position': position,
+            'adjudicator': adj.serialize(round=round),
         } for adj, position in self.adjudicators.with_debateadj_types()]
         return debate
 
@@ -327,11 +342,12 @@ class DebateTeam(models.Model):
                 self._win = None
             return self._win
 
-    def get_side_name(self, tournament=None):
+    def get_side_name(self, tournament=None, name_type='full'):
         """Should be used instead of get_side_display() on views.
         `tournament` can be passed in if known, for performance."""
         if self.side in [DebateTeam.SIDE_AFF, DebateTeam.SIDE_NEG]:
-            return get_side_name(tournament or self.debate.round.tournament, self.side, 'full')
+            return get_side_name(tournament or self.debate.round.tournament,
+                                 self.side, name_type)
         else:
             return self.get_side_display()
 

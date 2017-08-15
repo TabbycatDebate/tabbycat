@@ -6,7 +6,7 @@ export default {
   mixins: [MovingMixin],
   methods: {
     getPanellist(debate, adjudicator=false, position=false) {
-      var potentialPanellist = _.find(debate.panel, function(panellist) {
+      var potentialPanellist = _.find(debate.debateAdjudicators, function(panellist) {
         if (adjudicator) { return panellist.adjudicator.id === adjudicator.id }
         if (position) { return panellist.position === position }
       })
@@ -15,10 +15,10 @@ export default {
       }
     },
     removefromPanel(debate, adjudicator) {
-      var adjIndex = _.findIndex(debate.panel, function(panellist) {
+      var adjIndex = _.findIndex(debate.debateAdjudicators, function(panellist) {
         return panellist.adjudicator.id == adjudicator.id;
       });
-      debate.panel.splice(adjIndex, 1)
+      debate.debateAdjudicators.splice(adjIndex, 1)
     },
     saveMoveForType(adjudicatorId, fromDebate, toDebate, toPosition=null) {
       var adjudicator = this.adjudicatorsById[adjudicatorId]
@@ -33,7 +33,7 @@ export default {
         addToUnused.push(adjudicator)
       } else if (fromDebate === 'unused') {
         // Moving from unsued to a panel
-        toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
+        toDebate.debateAdjudicators.push({ 'adjudicator': adjudicator, 'position': toPosition })
         if (!this.roundInfo.adjudicatorDoubling) {
           // Only remove if the tournament has set double allocations
           removeFromUnused.push(adjudicator)
@@ -49,16 +49,16 @@ export default {
           // Moving to a currently-occupied chair position from anywhere; ie a swap
           this.removefromPanel(toDebate, currentChair)
           this.removefromPanel(fromDebate, adjudicator)
-          toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
-          fromDebate.panel.push({ 'adjudicator': currentChair, 'position': oldPosition })
+          toDebate.debateAdjudicators.push({ 'adjudicator': adjudicator, 'position': toPosition })
+          fromDebate.debateAdjudicators.push({ 'adjudicator': currentChair, 'position': oldPosition })
         } else {
           // Remove them from their current panel; add to new panel
           this.removefromPanel(fromDebate, adjudicator)
-          toDebate.panel.push({ 'adjudicator': adjudicator, 'position': toPosition })
+          toDebate.debateAdjudicators.push({ 'adjudicator': adjudicator, 'position': toPosition })
         }
       }
       // After saving the
-      var movedPanellists = _.concat(toDebate.panel, fromDebate.panel)
+      var movedPanellists = _.concat(toDebate.debateAdjudicators, fromDebate.debateAdjudicators)
       var movedAdjudicators = _.mapValues(movedPanellists, 'adjudicator')
       var movedAdjsById = _.keyBy(movedAdjudicators, 'id')
 

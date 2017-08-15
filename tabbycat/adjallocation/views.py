@@ -64,11 +64,13 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
         for debate in serialised_draw:
-            for panellist in debate['panel']:
-                panellist['adjudicator'] = self.annotate_conflicts(panellist['adjudicator'], 'for_adjs')
-                panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
-            for (position, team) in debate['teams'].items():
-                team = self.annotate_conflicts(team, 'for_teams')
+            for da in debate['debateAdjudicators']:
+                da['adjudicator'] = self.annotate_conflicts(da['adjudicator'], 'for_adjs')
+                da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
+            for dt in debate['debateTeams']:
+                if not dt['team']:
+                    continue
+                dt['team'] = self.annotate_conflicts(dt['team'], 'for_teams')
 
         return super().annotate_draw(draw, serialised_draw)
 
@@ -152,7 +154,7 @@ class SaveDebatePanel(SaveDragAndDropDebateMixin):
         return Adjudicator.objects.get(pk=id)
 
     def modify_debate(self, debate, posted_debate):
-        panellists = posted_debate['panel']
+        panellists = posted_debate['debateAdjudicators']
         message = "Processing change for %s" % debate.id
 
         # below are DEBUG

@@ -18,7 +18,6 @@ from actionlog.mixins import LogActionMixin
 from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import Debate
 from participants.models import Region
-from tournaments.utils import get_side_name
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
@@ -317,14 +316,17 @@ class DrawForDragAndDropMixin(RoundMixin):
         for debate in serialised_draw:
             break_thresholds = self.break_thresholds
             liveness = 0
-            for (position, team) in debate['teams'].items():
+            for dt in debate['debateTeams']:
+                team = dt['team']
+                if not team:
+                    continue
                 team = self.annotate_break_classes(team, break_thresholds)
                 team = self.annotate_region_classes(team)
                 if team['break_categories'] is not None:
-                    liveness += len([bc for bc in team['break_categories'] if
-                                     bc['will_break'] == 'live'])
-            for panellist in debate['panel']:
-                panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
+                    liveness += len([bc for bc in team['break_categories']
+                                     if bc['will_break'] == 'live'])
+            for da in debate['debateAdjudicators']:
+                da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
 
             debate['liveness'] = liveness
 
@@ -351,17 +353,8 @@ class DrawForDragAndDropMixin(RoundMixin):
         if not t.pref('no_trainee_position'):
             adjudicator_positions += "T"
 
-        if t.pref('teams_in_debate') == "bp":
-            codes = ['og', 'oo', 'cg', 'co']
-        else:
-            codes = ['aff', 'neg']
-
-        team_positions = [{'full': get_side_name(t, c, 'full'),
-                           'abbr': get_side_name(t, c, 'abbr')} for c in codes]
-
         round_info = {
-            'positions': team_positions,
-            'adjudicatorPositions': adjudicator_positions,
+            'adjudicatorPositions': adjudicator_positions, # Depends on prefs
             'adjudicatorDoubling': t.pref('duplicate_adjs'),
             'backUrl': reverse_round('draw', round),
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,

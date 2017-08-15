@@ -13,11 +13,11 @@
     </div>
 
     <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions"  @resort="updateSorting"
+      <draw-header :positions="positions"  @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
         <template slot="hteams">
           <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
-               v-for="position in roundInfo.positions" @click="updateSorting(position.full)"
+               v-for="position in positions" @click="updateSorting(position.side)"
                data-toggle="tooltip" :title="'The ' + position.full + ' team'">
             <span>{{ position.abbr }}</span>
             <span :class="sortClasses(position.full)"></span>
@@ -26,13 +26,12 @@
       </draw-header>
       <debate v-for="debate in dataOrderedByKey"
               :debate="debate" :key="debate.id" :round-info="roundInfo">
-        <template v-for="position in roundInfo.positions">
+        <template v-for="dt in debate.debateTeams">
           <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
-               :slot="'s-' + position.full">
+               :slot="'s-' + dt.side">
             <droppable-generic :assignment-id="debate.id"
-                               :assignment-position="position.full" :locked="debate.locked">
-              <draggable-team v-if="debate.teams[position.full]"
-                              :team="debate.teams[position.full]"
+                               :assignment-position="dt.side" :locked="debate.locked">
+              <draggable-team v-if="dt.team" :team="dt.team"
                               :debate-id="debate.id" :locked="debate.locked"></draggable-team>
             </droppable-generic>
           </div>
@@ -69,10 +68,27 @@ export default {
     },
   },
   methods: {
+    findDebateTeamInDebateByTeam(team, debate) {
+      var debateTeam = _.find(debate.debateTeams, function(dt) {
+        if (dt.team !== null) {
+          return dt.team.id === team.id
+        } else {
+          return false
+        }
+      });
+      return debateTeam
+    },
+    findDebateTeamInDebateBySide(side, debate) {
+      var debateTeam = _.find(debate.debateTeams, function(dt) {
+        return dt.side === side
+      });
+      return debateTeam
+    },
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
-        var fromPosition = _.findKey(this.debatesById[payload.debate].teams,
-                                     this.allTeamsById[payload.team])
+        var team = this.allTeamsById[payload.team]
+        var debate = this.debatesById[payload.debate]
+        var fromPosition = this.findDebateTeamInDebateByTeam(team, debate)
         if (assignedPosition === fromPosition) {
           return // Moving to same debate/position; do nothing
         }

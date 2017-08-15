@@ -32,14 +32,15 @@ import _ from 'lodash'
 export default {
   mixins: [DebateConflictsMixin],
   components: { DroppableGeneric, DraggableAdjudicator },
-  props: ['panel', 'teams', 'debateId', 'percentiles', 'locked', 'adjPositions'],
+  props: ['panel', 'adjPositions', 'teams', 'debateId',
+          'percentiles', 'locked', ],
   methods: {
     getAdjudicatorsByPosition: function(panel, position) {
       return _.filter(panel, { 'position': position })
     },
     getCSSForPosition: function(position) {
       var css = 'flex-horizontal '
-      var adjs = this.getAdjudicatorsByPosition(this.panel, position).length
+      var adjs = this.getAdjudicatorsByPosition(this.debateAdjudicators, position).length
       if ((position === "C" && adjs === 0) ||
           (position === "P" && adjs % 2 != 0)) {
         return css += 'panel-incomplete'

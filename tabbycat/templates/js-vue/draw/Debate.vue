@@ -21,11 +21,10 @@
       </div>
     </slot>
 
-    <template v-for="position in roundInfo.positions">
-      <slot :name="'s-' + position.full">
+    <template v-for="dt in debate.debateTeams">
+      <slot :name="'s-' + dt.side">
         <div class="draw-cell flex-6 draw-team-cell">
-          <draw-team v-if="debate.teams[position.full]"
-                     :team="debate.teams[position.full]"></draw-team>
+          <draw-team v-if="dt.team" :team="dt.team"></draw-team>
         </div>
       </slot>
     </template>
@@ -33,10 +32,10 @@
     <slot name="spanel">
       <div class="draw-cell flex-12">
         <div><!-- Need a container else they align -->
-          <draw-adjudicator v-for="panellist in debate.panel"
-            :adjudicator="panellist.adjudicator"
-            :position="panellist.position"
-            :key="panellist.adjudicator.id">
+          <draw-adjudicator v-for="da in debate.debateAdjudicators"
+            :adjudicator="da.adjudicator"
+            :position="da.position"
+            :key="da.adjudicator.id">
           </draw-adjudicator>
         </div>
       </div>
