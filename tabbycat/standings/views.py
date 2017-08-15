@@ -14,6 +14,7 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
+from tournaments.utils import get_side_name
 from utils.misc import redirect_tournament
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
@@ -428,16 +429,19 @@ class BaseMotionStandingsView(BaseStandingsView):
 
     def get_motions_table(self, t, rounds):
         motions = motion_statistics.statistics(tournament=t, rounds=rounds)
-        table = MotionsStandingsTableBuilder(view=self, sort_key="Order")
+        table = MotionsStandingsTableBuilder(view=self, sort_key="Round")
 
-        table.add_round_column([motion.round for motion in motions])
+        table.add_round_column([m.round for m in motions])
         table.add_motion_column(motions, show_order=True)
-        table.add_column("Aff Wins", [motion.aff_wins for motion in motions])
-        table.add_column("Neg Wins", [motion.neg_wins for motion in motions])
+
+        for side in t.sides:
+            column_label = get_side_name(t, side, "abbr") + " wins"
+            table.add_column(column_label, [m.wins[side] for m in motions])
+
         table.add_debate_balance_column(motions)
         if self.get_tournament().pref('motion_vetoes_enabled'):
-            table.add_column("Aff Vetoes", [motion.aff_vetoes for motion in motions])
-            table.add_column("Neg Vetoes", [motion.neg_vetoes for motion in motions])
+            table.add_column("Aff Vetoes", [m.aff_vetoes for m in motions])
+            table.add_column("Neg Vetoes", [m.neg_vetoes for m in motions])
             table.add_veto_balance_column(motions)
         return table
 

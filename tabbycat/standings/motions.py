@@ -25,7 +25,7 @@ class MotionsStandingsTableBuilder(TabbycatTableBuilder):
         }
         overall_data = []
         for motion in motions:
-            c_stat, label, info = get_balance(motion, False)
+            c_stat, label, info = get_balance(motion, self.tournament, False)
             overall_data.append({'text': label, 'sort': c_stat, 'tooltip': info})
         self.add_column(overall_header, overall_data)
 
@@ -38,23 +38,28 @@ class MotionsStandingsTableBuilder(TabbycatTableBuilder):
         }
         overall_data = []
         for motion in motions:
-            c_stat, label, info = get_balance(motion, True)
+            c_stat, label, info = get_balance(motion, self.tournament, True)
             overall_data.append({'text': label, 'sort': c_stat, 'tooltip': info})
         self.add_column(overall_header, overall_data)
 
 
-def get_balance(motion, is_vetoes):
-    if is_vetoes and (motion.aff_vetoes + motion.neg_vetoes) < 10:
-        return 0, 'inconclusive', 'Too few vetoes to determine meaningful balance'
-    if not is_vetoes and motion.chosen_in < 10:
-        return 0, 'inconclusive', 'Too few debates to determine meaningful balance'
+def get_balance(motion, tournament, for_vetoes):
+    inconclusive = 'Too few vetoes to determine meaningful balance'
+
+    if tournament.pref('teams_in_debate') == 'two':
+        if for_vetoes and (motion.aff_vetoes + motion.neg_vetoes) < 10:
+            return 0, 'inconclusive', inconclusive
+        if not for_vetoes and motion.chosen_in < 10:
+            return 0, 'inconclusive', inconclusive
+        else:
+            return two_team_balance(motion, for_vetoes)
     else:
-        return two_team_balance(motion, is_vetoes)
+        return four_team_balance(motion)
 
 
-def two_team_balance(motion, is_vetoes):
+def two_team_balance(motion, for_vetoes):
     # Test and confidence levels contributed by Viran Weerasekera
-    if is_vetoes:
+    if for_vetoes:
         affs = motion.neg_vetoes # 6
         negs = motion.aff_vetoes # 6
         n_2 = int((affs + negs) / 2)
@@ -75,3 +80,7 @@ def two_team_balance(motion, is_vetoes):
         return c_stat, balance['label'].replace('TEAM', 'neg'), info
     else:
         return c_stat, balance['label'], info
+
+
+def four_team_balance(motion):
+    return None, None, None
