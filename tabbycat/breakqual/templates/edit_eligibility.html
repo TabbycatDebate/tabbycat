@@ -25,3 +25,18 @@
   {% endif %}
   <td>{{ instance.institution.name }}</td>
 {% endblock %}
+
+{% block page-alerts %}
+  {% if not form.get_category_queryset.exists %}
+    <div class="alert alert-warning" role="alert">
+      {% blocktrans trimmed %}
+        This tournament does not have any break categories set up. You can read
+         about how to create breaks
+        <a href="http://tabbycat.readthedocs.io/en/stable/features/breaks.html"
+            class="alert-link" target="_blank">
+          at our documentation.
+        </a>
+      {% endblocktrans %}
+    </div>
+  {% endif %}
+{% endblock %}
