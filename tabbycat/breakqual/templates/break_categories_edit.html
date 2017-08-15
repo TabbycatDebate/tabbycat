@@ -1,0 +1,31 @@
+{% extends "base_formset.html" %}
+{% load add_field_css debate_tags i18n %}
+
+{% block head-title %}<span class="emoji">🏪</span> {% trans "Break Categories" %}{% endblock %}
+{% block page-title %}🏪{% trans "Break Categories" %}{% endblock %}
+
+{% block save-button-text %}{% trans "Save Break Categories" %}{% endblock %}
+
+{% block content %}
+
+  <div class="alert alert-info">
+    <p>
+      {% blocktrans trimmed %}
+        On this page, you can define what break categories exist, for example, a
+        novice or ESL break. Note that, the open break, if you're having one,
+        must be explicitly defined. After you've defined the categories, you can
+        set which teams are eligible for which breaks on the Break Eligibility
+        page.
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% url 'admin:breakqual_breakcategory_changelist' as edit_db_url %}
+      {% blocktrans trimmed %}
+        If you want to delete break categories, use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
+      {% endblocktrans %}
+    </p>
+  </div>
+
+  {{ block.super }}
+
+{% endblock content %}

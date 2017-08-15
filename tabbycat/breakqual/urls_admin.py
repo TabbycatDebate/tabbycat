@@ -20,4 +20,7 @@ urlpatterns = [
     url(r'^eligibility/$',
         views.EditEligibilityFormView.as_view(),
         name='breakqual-edit-eligibility'),
+    url(r'^categories/$',
+        views.EditBreakCategoriesView.as_view(),
+        name='breakqual-break-categories-edit'),
 ]
