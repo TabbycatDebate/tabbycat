@@ -4,7 +4,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch
 from django.forms import HiddenInput
 from django.http import JsonResponse
-from django.utils.translation import ungettext
+from django.utils.translation import ugettext_lazy, ungettext
+from django.utils.translation import ugettext as _
 from django.views.generic.base import View
 from django.views.generic import FormView
 
@@ -41,7 +42,7 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
 
 class BaseParticipantsListView(VueTableTemplateView):
 
-    page_title = 'Participants'
+    page_title = ugettext_lazy("Participants")
     page_emoji = '🚌'
 
     def get_tables(self):
@@ -94,7 +95,7 @@ class BaseTeamRecordView(BaseRecordView):
     template_name = 'team_record.html'
 
     def get_page_title(self):
-        return 'Record for ' + self.object.long_name
+        return _("Record for %(name)s") % {'name': self.object.long_name}
 
     def get_page_emoji(self):
         if self.get_tournament().pref('show_emoji'):
@@ -157,7 +158,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     page_emoji = '⚖'
 
     def get_page_title(self):
-        return 'Record for ' + self.object.name
+        return _("Record for %(name)s") % {'name': self.object.name}
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
@@ -199,7 +200,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         populate_wins(debates)
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TabbycatTableBuilder(view=self, title="Previous Rounds", sort_key="Round")
+        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key="Round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_results_columns(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=self.object)
@@ -234,7 +235,7 @@ class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorReco
 # Speaker categories
 # ==============================================================================
 
-class EditSpeakerCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
     # The tournament is included in the form as a hidden input so that
     # uniqueness checks will work. Since this is a superuser form, they can
     # access all tournaments anyway, so tournament forgery wouldn't be a
@@ -242,6 +243,7 @@ class EditSpeakerCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFo
 
     template_name = 'speaker_categories_edit.html'
     formset_model = SpeakerCategory
+    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_CATEGORIES_EDIT
 
     def get_formset_factory_kwargs(self):
         return {
@@ -268,6 +270,8 @@ class EditSpeakerCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFo
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
+        else:
+            messages.success(self.request, _("No changes were made to the speaker categories."))
         if "add_more" in self.request.POST:
             return redirect_tournament('participants-speaker-categories-edit', self.get_tournament())
         return result
@@ -292,7 +296,7 @@ class EditSpeakerCategoryEligibilityFormView(LogActionMixin, SuperuserRequiredMi
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Speaker category eligibility saved.")
+        messages.success(self.request, _("Speaker category eligibility saved."))
         return super().form_valid(form)
 
 
@@ -324,11 +328,11 @@ class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, ModelFormSetView)
         return super().get_context_data(**kwargs)
 
     def formset_valid(self, formset):
-        messages.success(self.request, "Your shift check-ins have been saved")
+        messages.success(self.request, _("Your shift check-ins have been saved"))
         return super().formset_valid(formset)
 
     def formset_invalid(self, formset):
-        messages.error(self.request, "Whoops! There was a problem with the form.")
+        messages.error(self.request, _("Whoops! There was a problem with the form."))
         return super().formset_invalid(formset)
 
     def get(self, request, *args, **kwargs):

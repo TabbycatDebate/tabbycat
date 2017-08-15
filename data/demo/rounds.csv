@@ -7,5 +7,5 @@ seq,name,abbreviation,stage,draw_type,silent,feedback_weight,break_category
 6,ESL Semifinal,SSF,E,F,1,0.7,esl
 7,Open Semifinal,OSF,E,B,1,0.7,open
 8,ESL Grand Final,SGF,E,B,1,0.7,esl
-9,EFL Grand Final,FGF,E,F,1,0.7,efl
+9,Novice Grand Final,NGF,E,F,1,0.7,novice
 10,Open Grand Final,OGF,E,B,1,0.7,open

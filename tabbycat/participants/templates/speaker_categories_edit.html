@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_formset.html" %}
 {% load add_field_css debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">🗂</span>{% trans "Speaker Categories" %}{% endblock %}
@@ -7,6 +7,8 @@
 {% block page-subnav-sections %}
   {% include "participants_subnav.html" %}
 {% endblock %}
+
+{% block save-button-text %}{% trans "Save Speaker Categories" %}{% endblock %}
 
 {% block content %}
 
@@ -21,69 +23,13 @@
       {% endblocktrans %}
     </p>
     <p>
+      {% url 'admin:participants_speakercategory_changelist' as edit_db_url %}
       {% blocktrans trimmed %}
-        If you want to delete speaker categories, use the Edit Database area.
+        If you want to delete speaker categories, use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
       {% endblocktrans %}
     </p>
   </div>
 
-  {% if formset.errors %}
-  <div class="alert alert-danger">
-    <p>{% trans "There are some problems with the data on this form:" %}</p>
-    {{ formset.non_form_errors }}
-  </div>
-  {% endif %}
-
-  <form method="POST" action="" class="form-horizontal">
-    {% csrf_token %}
-    <div class="panel panel-default">
-      <ul class="list-group">
-        {{ formset.management_form }}
-
-        {% for form in formset %}
-        <li class="list-group-item">
-
-          {% if form.non_field_errors %}
-            <div class="col-sm-12">
-              {{ form.non_field_errors }}
-            </div>
-          {% endif %}
-
-          {% for field in form.hidden_fields %}
-            {{ field }}
-          {% endfor %}
-
-          {% for field in form.visible_fields %}
-            <div class="form-group">
-              <label class="col-sm-2 control-label" for="{{ field.id_for_label }}">
-                {{ field.label }}
-              </label>
-              <div class="col-sm-4">
-                {{ field|addcss:"form-control" }}
-              </div>
-              <div class="col-sm-6">
-                <span class="help-block">
-                  {{ field.help_text }}
-                </span>
-                {{ field.errors }}
-              </div>
-            </div>
-          {% endfor %}
-
-        </li>
-        {% endfor %}
-        <li class="list-group-item">
-          <div class="row">
-            <div class="col-md-6">
-              <input class="btn btn-block btn-success" type="submit" name="submit" value="{% trans 'Save Speaker Categories' %}" />
-            </div>
-            <div class="col-md-6">
-              <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </form>
+  {{ block.super }}
 
 {% endblock content %}

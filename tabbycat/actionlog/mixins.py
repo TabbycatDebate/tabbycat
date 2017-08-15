@@ -99,6 +99,13 @@ class LogActionMixin:
         action_log_fields.update(kwargs)
         ActionLogEntry.objects.log(ip_address=ip_address, **action_log_fields)
 
+    # If these methods exist, add `self.log_action()` to them.
+    # (If they don't, this should be harmless.)
+
     def form_valid(self, form):
         self.log_action()
         return super().form_valid(form)
+
+    def formset_valid(self, formset):
+        self.log_action()
+        return super().formset_valid(formset)

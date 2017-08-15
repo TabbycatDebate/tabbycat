@@ -33,6 +33,10 @@ class AdminBreakIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView)
         return super().get_context_data(**kwargs)
 
 
+# ==============================================================================
+# Teams
+# ==============================================================================
+
 class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     model = BreakCategory
@@ -175,6 +179,10 @@ class GenerateAllBreaksView(GenerateBreakMixin, LogActionMixin, TournamentMixin,
         return super().post(request, *args, **kwargs)
 
 
+# ==============================================================================
+# Adjudicators
+# ==============================================================================
+
 class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
 
     page_title = 'Breaking Adjudicators'
@@ -193,6 +201,10 @@ class AdminBreakingAdjudicatorsView(LoginRequiredMixin, BaseBreakingAdjudicators
 class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, CacheMixin, BaseBreakingAdjudicatorsView):
     public_page_preference = 'public_breaking_adjs'
 
+
+# ==============================================================================
+# Eligibility and categories
+# ==============================================================================
 
 class EditEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, FormView):
 
