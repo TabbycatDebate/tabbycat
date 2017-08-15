@@ -1,28 +1,7 @@
 {% extends "base.html" %}
-{% load add_field_css debate_tags i18n %}
-{% load debate_tags %}
-
-{% block head-title %}<span class="emoji">🏪</span>{% trans "Venue Categories" %}{% endblock %}
-{% block page-title %}🏪{% trans "Venue Categories" %}{% endblock %}
+{% load add_field_css i18n %}
 
 {% block content %}
-
-  <div class="alert alert-info">
-    <p>
-      {% blocktrans trimmed %}
-        Venue categories allow you to
-          <ul>
-            <li>group venues together into "zones" to display in the draw and make navigation easier for participants, and/or</li>
-            <li>specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.</li>
-          </ul>
-      {% endblocktrans %}
-    </p>
-    <p>
-      {% blocktrans trimmed %}
-        If you want to delete venue categories, use the Edit Database area.
-      {% endblocktrans %}
-    </p>
-  </div>
 
   {% if formset.errors %}
   <div class="alert alert-danger">
@@ -52,10 +31,10 @@
 
           {% for field in form.visible_fields %}
             <div class="form-group">
-              <label class="col-sm-3 control-label" for="{{ field.id_for_label }}">
+              <label class="col-sm-2 control-label" for="{{ field.id_for_label }}">
                 {{ field.label }}
               </label>
-              <div class="col-sm-3">
+              <div class="col-sm-4">
                 {{ field|addcss:"form-control" }}
               </div>
               <div class="col-sm-6">
@@ -72,7 +51,7 @@
         <li class="list-group-item">
           <div class="row">
             <div class="col-md-6">
-              <input class="btn btn-block btn-success" type="submit" name="submit" value="{% trans 'Save Venue Categories' %}" />
+              <input class="btn btn-block btn-success" type="submit" name="submit" value="{% block save-button-text %}Save{% endblock %}" />
             </div>
             <div class="col-md-6">
               <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />

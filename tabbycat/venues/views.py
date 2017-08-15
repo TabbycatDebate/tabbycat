@@ -76,7 +76,7 @@ class SaveVenuesView(SaveDragAndDropDebateMixin):
 
 
 class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
-    template_name = 'categories_edit.html'
+    template_name = 'venue_categories_edit.html'
     formset_model = VenueCategory
 
     def get_formset_factory_kwargs(self):
