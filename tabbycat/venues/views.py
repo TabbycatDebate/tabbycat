@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.forms import Select, TextInput
 from django.http import HttpResponseBadRequest
 from django.utils.translation import ungettext
+from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -75,9 +76,10 @@ class SaveVenuesView(SaveDragAndDropDebateMixin):
         return debate
 
 
-class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+class VenueCategoriesView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
     template_name = 'venue_categories_edit.html'
     formset_model = VenueCategory
+    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CATEGORIES_EDIT
 
     def get_formset_factory_kwargs(self):
         formset_factory_kwargs = {
@@ -94,6 +96,8 @@ class VenueCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetV
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
+        else:
+            messages.success(self.request, _("No changes were made to the venue categories."))
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-categories', self.get_tournament())
         return result

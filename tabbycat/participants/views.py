@@ -235,7 +235,7 @@ class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorReco
 # Speaker categories
 # ==============================================================================
 
-class EditSpeakerCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
     # The tournament is included in the form as a hidden input so that
     # uniqueness checks will work. Since this is a superuser form, they can
     # access all tournaments anyway, so tournament forgery wouldn't be a
@@ -243,6 +243,7 @@ class EditSpeakerCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFo
 
     template_name = 'speaker_categories_edit.html'
     formset_model = SpeakerCategory
+    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_CATEGORIES_EDIT
 
     def get_formset_factory_kwargs(self):
         return {
@@ -269,6 +270,8 @@ class EditSpeakerCategoriesView(SuperuserRequiredMixin, TournamentMixin, ModelFo
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
+        else:
+            messages.success(self.request, _("No changes were made to the speaker categories."))
         if "add_more" in self.request.POST:
             return redirect_tournament('participants-speaker-categories-edit', self.get_tournament())
         return result
