@@ -16,7 +16,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from actionlog.mixins import LogActionMixin
 from breakqual.utils import calculate_live_thresholds, determine_liveness
-from draw.models import Debate
+from draw.models import Debate, MultipleDebateTeamsError, NoDebateTeamFoundError
 from participants.models import Region
 from tournaments.utils import get_side_name
 
@@ -96,7 +96,21 @@ class TournamentMixin(TabbycatPageTitlesMixin):
                 home_url = reverse('tabbycat-index')
                 redirect_url = add_query_parameter(home_url, 'redirect', 'false')
                 return HttpResponseRedirect(redirect_url)
-        return super().dispatch(request, *args, **kwargs)
+
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except (MultipleDebateTeamsError, NoDebateTeamFoundError) as e:
+            if hasattr(self.request, 'user') and self.request.user.is_superuser:
+                logger.exception("Debate team side assignment error, redirecting to admin:draw_debate_changelist")
+                messages.warning(request, _("Teams don't appear to be correctly assigned to sides "
+                        "in a debate. Please resolve this problem before continuing: "
+                        "%(error)s") % {'error': e})
+                return redirect('admin:draw_debate_changelist')
+            else:
+                logger.exception("Debate team side assignment error, redirecting to tournament-public-index")
+                messages.error(request, _("There's a problem with how teams are assigned to sides "
+                        "in a debate. The tab director will need to resolve this issue."))
+                return redirect_tournament('tournament-public-index', tournament)
 
 
 class RoundMixin(TournamentMixin):
