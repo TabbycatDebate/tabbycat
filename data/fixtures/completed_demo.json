@@ -1749,8 +1749,8 @@
     "pk": 3,
     "fields": {
         "tournament": 1,
-        "name": "EFL",
-        "slug": "efl",
+        "name": "Novice",
+        "slug": "novice",
         "seq": 30,
         "break_size": 2,
         "is_general": false,
@@ -22083,8 +22083,8 @@
     "fields": {
         "tournament": 1,
         "seq": 9,
-        "name": "EFL Grand Final",
-        "abbreviation": "FGF",
+        "name": "Novice Grand Final",
+        "abbreviation": "NGF",
         "stage": "E",
         "draw_type": "F",
         "break_category": 3,
