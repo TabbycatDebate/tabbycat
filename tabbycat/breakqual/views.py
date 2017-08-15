@@ -1,15 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import HiddenInput
-from django.utils.translation import ungettext
 from django.utils.translation import ugettext as _
 from django.views.generic import FormView, TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from utils.misc import reverse_tournament
-from utils.mixins import (CacheMixin, ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin,
-                          VueTableTemplateView)
+from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
 
@@ -227,49 +224,3 @@ class EditEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, Tournament
         form.save()
         messages.success(self.request, "Break eligibility saved.")
         return super().form_valid(form)
-
-
-class EditBreakCategoriesView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
-    # The tournament is included in the form as a hidden input so that
-    # uniqueness checks will work. Since this is a superuser form, they can
-    # access all tournaments anyway, so tournament forgery wouldn't be a
-    # security risk.
-
-    template_name = 'break_categories_edit.html'
-    formset_model = BreakCategory
-    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_CATEGORIES_EDIT
-
-    def get_formset_factory_kwargs(self):
-        return {
-            'fields': ('name', 'tournament', 'slug', 'seq', 'break_size', 'is_general', 'priority', 'rule'),
-            'extra': 2,
-            'widgets': {
-                'tournament': HiddenInput
-            },
-            'labels': {'is_general': _("General category")},
-        }
-
-    def get_formset_queryset(self):
-        return BreakCategory.objects.filter(tournament=self.get_tournament())
-
-    def get_formset_kwargs(self):
-        return {
-            'initial': [{'tournament': self.get_tournament()}] * 2,
-        }
-
-    def formset_valid(self, formset):
-        result = super().formset_valid(formset)
-        if self.instances:
-            message = ungettext("Saved break category: %(list)s",
-                "Saved break categories: %(list)s",
-                len(self.instances)
-            ) % {'list': ", ".join(category.name for category in self.instances)}
-            messages.success(self.request, message)
-        else:
-            messages.success(self.request, _("No changes were made to the break categories."))
-        if "add_more" in self.request.POST:
-            return redirect_tournament('breakqual-break-categories-edit', self.get_tournament())
-        return result
-
-    def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('breakqual-index', self.get_tournament())
