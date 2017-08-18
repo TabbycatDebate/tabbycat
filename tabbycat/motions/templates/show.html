@@ -33,6 +33,12 @@
                 {{ m.text }}
               </span>
             </div>
+          {% empty %}
+            <div class="flex-1 flex-vertical-center">
+              <h1 class="display-1 text-danger">
+                😳 There are no motions for this round in Tabbycat.
+              </span>
+            </div>
           {% endfor %}
         </div>
       </div>

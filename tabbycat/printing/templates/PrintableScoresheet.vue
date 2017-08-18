@@ -23,7 +23,8 @@
       </div>
     </section>
 
-    <section v-if="!roundInfo.hasMotions" class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static">
+    <section v-if="!roundInfo.hasMotions && roundInfo.motions[0]"
+             class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static">
       <div class="db-padding-horizontal db-align-vertical-center db-vertical-center-text">
         <span>The motion is <em>{{ roundInfo.motions[0].text }}.</em></span>
       </div>

@@ -532,7 +532,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if not venue:
                 return {'text': ''}
 
-            cell = {'text': venue.display_name}
+            cell = {'text': venue.display_name, 'class': 'venue-name'}
 
             categories = venue.venuecategory_set.all()
             if not for_admin:

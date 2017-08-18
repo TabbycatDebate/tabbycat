@@ -20,12 +20,12 @@
 
     <div class="db-flex-item-1 db-flex-row">
       <div class="db-flex-item db-flex-static db-align-vertical-center db-right-text db-padding-horizontal">
-        <em>Data Entry:</em>
+        <em>Data Entry</em>
       </div>
       <div class="db-flex-item db-fill-in ">
       </div>
       <div class="db-flex-item db-flex-static db-align-vertical-center db-right-text db-padding-horizontal">
-        <em>Data Check:</em>
+        <em>Data Check</em>
       </div>
       <div class="db-flex-item db-fill-in ">
       </div>
