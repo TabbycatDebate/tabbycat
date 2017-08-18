@@ -41,14 +41,19 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         else:
             teams = self._get_dict(tournament.team_set)
 
+        # Basic check before enable the button to advance
         adjs = self._get_dict(tournament.relevant_adjudicators)
         venues = self._get_dict(tournament.relevant_venues)
-
-        # Basic check before enable the button to advance
         kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0 and venues['in_now'] > 0
         kwargs['checkin_types'] = [teams, adjs, venues]
-        kwargs['min_adjudicators'] = teams['in_now'] // 2
-        kwargs['min_venues'] = teams['in_now'] // 2
+
+        # Check the number of teams/adjudicators is sufficient
+        if tournament.pref('teams_in_debate') == 'two':
+            per_room_divisor = 2
+        else:
+            per_room_divisor = 4
+        kwargs['min_adjudicators'] = teams['in_now'] // per_room_divisor
+        kwargs['min_venues'] = teams['in_now'] // per_room_divisor
 
         kwargs['error_type'] = getattr(self, 'error_type', None)
         return super().get_context_data(**kwargs)
