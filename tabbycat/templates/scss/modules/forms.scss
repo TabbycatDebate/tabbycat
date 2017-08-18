@@ -13,6 +13,29 @@
   border-bottom: 0; // Need to prevent dashed lines in glyphicons in btns
 }
 
+.btn-no-hover:hover {
+  background-color: inherit; // Allow btns to have no hovers but not be dimmed
+  border-color: #ccc;
+  cursor: default;
+}
+
+.btn-success.btn-no-hover:hover {
+  background-color: $brand-success;
+}
+
+.btn-info.btn-no-hover:hover {
+  background-color: $brand-info;
+}
+
+.btn-warning.btn-no-hover:hover {
+  background-color: $brand-warning;
+}
+
+.btn-danger.btn-no-hover:hover {
+  background-color: $brand-danger;
+}
+
+
 //------------------------------------------------------------------------------
 // Inputs (in general)
 //------------------------------------------------------------------------------
