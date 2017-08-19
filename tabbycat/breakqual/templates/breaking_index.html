@@ -1,32 +1,38 @@
 {% extends "base.html" %}
-{% load static %}
-{% load debate_tags %}
+{% load static debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">👑</span>Breaks{% endblock %}
-{% block page-title %}Breaks{% endblock %}
+{% block head-title %}<span class="emoji">👑</span> {% trans "Breaks" %}{% endblock %}
+{% block page-title %}{% trans "Breaks" %}{% endblock %}
 
 {% block page-alerts %}
   {% if not categories.exists %}
     <div class="alert alert-warning" role="alert">
-      This tournament does not have any break categories set up. You can read
-       about how to create breaks
-      <a href="http://tabbycat.readthedocs.io/en/stable/features/breaks.html"
-          class="alert-link" target="_blank">
-        at our documentation.
-      </a>
+      {% blocktrans trimmed %}
+        This tournament does not have any break categories set up. You can read
+         about how to create breaks
+        <a href="http://tabbycat.readthedocs.io/en/stable/features/breaks.html"
+            class="alert-link" target="_blank">
+          at our documentation.
+        </a>
+      {% endblocktrans %}
     </div>
   {% elif no_teams_eligible %}
+    {% tournamenturl 'breakqual-edit-eligibility' as eligibility_url %}
     <div class="alert alert-warning" role="alert">
-      It looks like no teams are currently marked as eligible for the break.
-      To set which teams are eligible, click the
-      <a href="{% tournamenturl 'breakqual-edit-eligibility' %}" class="alert-link">
-      Edit Teams' Eligibility</a> button above-right.
+      {% blocktrans trimmed %}
+        It looks like no teams are currently marked as eligible for the break.
+        To set which teams are eligible, click the
+        <a href="{{ eligibility_url }}" class="alert-link">
+        Edit Teams' Eligibility</a> button above-right.
+      {% endblocktrans %}
     </div>
   {% elif break_not_generated %}
     <div class="alert alert-info" role="alert">
-      The break hasn't been generated yet. To generate it, view any of the team
-      breaks (via the above buttons), and then click on "Generate the Break
-      for All Categories".
+      {% blocktrans trimmed %}
+        The break hasn't been generated yet. To generate it, view any of the team
+        breaks (via the above buttons), and then click on "Generate the Break
+        for All Categories".
+      {% endblocktrans %}
     </div>
   {% endif %}
 {% endblock %}
@@ -37,7 +43,7 @@
 
 {% block page-subnav-actions %}
   <a class="btn btn-primary" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
-    <span class="glyphicon glyphicon-pencil"></span> Edit Teams' Eligibility
+    <span class="glyphicon glyphicon-pencil"></span> {% trans "Edit Teams' Eligibility" %}
   </a>
 {% endblock %}
 
@@ -51,7 +57,9 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               <h4 class="panel-title">
-                Teams Eligible for the {{ category.name }} Break
+                {% blocktrans trimmed with category_name=category.name %}
+                  Teams Eligible for the {{ category_name }} Break
+                {% endblocktrans %}
                 {% if category.nonbreaking != category.eligible %}
                   ({{ category.eligible }})
                 {% endif %}
@@ -72,19 +80,19 @@
                        {% if category.breaking == 0 %}progress-empty{% endif %}"
                        role="progressbar"
                        style="width: {% percentage category.breaking teams_in_tournament %}%;">
-                    <span>{{ category.breaking }} breaking</span>
+                    <span>{% blocktrans with n=category.breaking %}{{ n }} breaking{% endblocktrans %}</span>
                   </div>
                   <div class="progress-bar progress-bar-warning
                        {% if category.excluded == 0 %}progress-empty{% endif %}"
                        role="progressbar"
                        style="width: {% percentage category.excluded teams_in_tournament %}%;">
-                    <span>{{ category.excluded }} excluded </span>
+                    <span>{% blocktrans with n=category.excluded %}{{ n }} excluded{% endblocktrans %}</span>
                   </div>
                   <div class="progress-bar progress-bar-primary
                        {% if category.nonbreaking == 0 %}progress-empty{% endif %}"
                        role="progressbar"
                        style="width: {% percentage category.nonbreaking teams_in_tournament %}%;">
-                    <span>{{ category.nonbreaking }} not breaking</span>
+                    <span>{% blocktrans with n=category.nonbreaking %}{{ n }} not breaking{% endblocktrans %}</span>
                   </div>
                 {% endif %}
               </div>
