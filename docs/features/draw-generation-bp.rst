@@ -22,11 +22,11 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
 |                         | preferred             |                                   |
 +-------------------------+-----------------------+-----------------------------------+
 | **Rényi order**         | Order of Rényi        | Any non-negative number           |
-|                         | entropy               | (default: 1, *i.e.*               |
+|                         | entropy               | (default: **1**, *i.e.*           |
 |                         |                       | Shannon entropy)                  |
 +-------------------------+-----------------------+-----------------------------------+
 | **Position cost**       | Degree to which large | Any non-negative number           |
-| **exponent**            | position imbalances   | (default: 4)                      |
+| **exponent**            | position imbalances   | (default: **4**)                  |
 |                         | should be prioritized |                                   |
 +-------------------------+-----------------------+-----------------------------------+
 | **Assignment method**   | Algorithm used to     | - `Hungarian`\*                   |
@@ -47,13 +47,30 @@ Pullup distribution
 
 If the number of teams in a bracket is not a multiple of four, it pulls up teams from the next bracket down. The pullup distribution then governs how those teams are paired into the upper bracket.
 
-* If `Anywhere in bracket` is selected, then the pullup teams are treated as if they were any other team in their new bracket. For example, if there are 17 teams in a 10-point bracket, then the three 9-point teams that get pulled up may be paired anywhere in the 10-point bracket, independently of each other. Chance might put them in the same room, but more likely, they will not all be in the same room, so there will be multiple pullup rooms in the 10-point bracket.
-* If `All in the same room` is selected, then all of the pullup teams will be paired into the same room. This means that there will be at most one pullup room per bracket, effectively creating an "intermediate bracket".
+The available options are as follows:
+
+* **Anywhere in bracket:** The pullup teams are treated as if they were any other team in their new bracket. For example, if there are 17 teams in a 10-point bracket, then the three 9-point teams that get pulled up may be paired anywhere in the 10-point bracket, independently of each other. Chance might put them in the same room, but more likely, they will not all be in the same room, so there will be multiple pullup rooms in the 10-point bracket.
+* **All in the same room:** All of the pullup teams will be paired into the same room. This means that there will be at most one pullup room per bracket, effectively creating an "intermediate bracket".
 
 .. note:: While it can be argued that the `All in the same room` setting is fairer, it is prohibited by the WUDC constitution. If your tournament follows WUDC rules, you cannot use this setting.
 
 Position cost
 -------------
+
+The `position cost function` is a function that indicates how "bad" it would be if a team were to be allocated a certain position (OG, OO, CG, CO) in a debate. When generating a draw, Tabbycat chooses from among the draws that minimize the sum of the position costs for each team.
+
+More formally:
+
+* A `position history` or just `history` :math:`\mathcal{H}` is a 4-tuple where each element is the number of times a team has already been in the corresponding position.
+* A cost function :math:`C(\mathcal{H},s)` is a function specifying how "bad" it would be if a team with position history :math:`\mathcal{H}` were assigned the position :math:`s` in the next round.
+
+Tabbycat allows you to choose from a number of different **position cost functions**, as well as a **position cost exponent** :math:`\beta`. Then, when allocating teams to debates, Tabbycat allocates teams to positions :math:`\(s_t, t \in\mathcal{T}\)` to minimize
+
+.. math::
+
+  \sum_{t \in \mathcal{T}} [C(\mathcal{H}_t,s_t)]^\beta
+
+where :math:`\mathcal{T}` is the set of all teams, :math:`\mathcal{H}_t` is the position history of team :math:`t` and :math:`s_t` is the position to which team :math:`t` would be allocated.
 
 Simple
 ******
