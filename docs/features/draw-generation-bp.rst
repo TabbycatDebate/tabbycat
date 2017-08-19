@@ -61,16 +61,16 @@ The `position cost function` is a function that indicates how "bad" it would be 
 
 More formally:
 
-* A `position history` or just `history` :math:`\mathcal{H}` is a 4-tuple where each element is the number of times a team has already been in the corresponding position. For example, :math:`\mathcal{H} = (0, 2, 1, 1)` means that a team has been in OO twice, CG and CO once each, and hasn't been in OG.
-* A cost function :math:`C(\mathcal{H},s)` is a function specifying how "bad" it would be if a team with position history :math:`\mathcal{H}` were assigned the position :math:`s` in the next round.
+* A `position history` or just `history` :math:`\mathbf{h}` is a 4-tuple where each element is the number of times a team has already been in the corresponding position. For example, :math:`\mathbf{h} = (0, 2, 1, 1)` means that a team has been in OO twice, CG and CO once each, and hasn't been in OG.
+* A cost function :math:`C(\mathbf{h},s)` is a function specifying how "bad" it would be if a team with position history :math:`\mathbf{h}` were assigned the position :math:`s` in the next round.
 
 Tabbycat allows you to choose from a number of different **position cost functions**, as well as a **position cost exponent** :math:`\beta`. Then, when allocating teams to debates, Tabbycat allocates teams to positions :math:`(s_t, t \in\mathcal{T})` to minimise
 
 .. math::
 
-  \sum_{t \in \mathcal{T}} [C(\mathcal{H}_t,s_t)]^\beta
+  \sum_{t \in \mathcal{T}} [C(\mathbf{h}_t,s_t)]^\beta
 
-where :math:`\mathcal{T}` is the set of all teams, :math:`\mathcal{H}_t` is the position history of team :math:`t` and :math:`s_t` is the position to which team :math:`t` would be allocated.
+where :math:`\mathcal{T}` is the set of all teams, :math:`\mathbf{h}_t` is the position history of team :math:`t` and :math:`s_t` is the position to which team :math:`t` would be allocated.
 
 Position cost exponent
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -90,9 +90,18 @@ Position cost functions
 Simple
 """"""
 
+The simple cost function :math:`C_\textrm{simple}(\mathbf{h},s)` returns the number of times the team has already been in position :math:`s`, less the number of times the team has been in its least frequent position. That is,
+
+.. math::
+
+  C_\mathrm{simple}(\mathbf{h},s) = \mathbf{h}[s] - \min_{s'} \mathbf{h}[s']
+
+where :math:`\mathbf{h}[s]` is the element of :math:`\mathbf{h}` corresponding to position :math:`s`.
 
 Rényi entropy
 """""""""""""
+
+The Rényi entropy cost function :math:`C_\textrm{R\'enyi}(\mathbf{h},s)`
 
 
 Population variance
