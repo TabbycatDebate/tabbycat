@@ -314,3 +314,6 @@ else:
             '_static/theme_overrides.css',
         ],
     }
+
+
+imgmath_image_format = 'svg'

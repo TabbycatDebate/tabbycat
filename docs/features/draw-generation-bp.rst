@@ -75,7 +75,7 @@ where :math:`\mathcal{T}` is the set of all teams, :math:`\mathbf{h}_t` is the p
 Position cost exponent
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The position cost exponent :math:`\beta` controls how different teams trade off with each other.
+The **position cost exponent** :math:`\beta` controls how different teams trade off with each other.
 
 The larger :math:`\beta` is, the more concerned it is with preventing `very` bad situations. That is, it will give more teams some slight unevenness in order to prevent one team from getting a `very` uneven history. At the extreme, as :math:`\beta\rightarrow\infty`, it will do everything it can to minimise the plight of the `worst-off` team, and it won't care for `any` team other than the worst-off.
 
@@ -86,6 +86,8 @@ The "balanced" approach would be :math:`\beta = 1`, which just takes the cost fu
 
 Position cost functions
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+Tabbycat allows you to choose between three position cost functions :math:`C(\mathbf{h},s)`: **Simple**, **Rényi entropy** and **Population variance**.
 
 Simple
 """"""
@@ -101,7 +103,17 @@ where :math:`\mathbf{h}[s]` is the element of :math:`\mathbf{h}` corresponding t
 Rényi entropy
 """""""""""""
 
-The Rényi entropy cost function :math:`C_\textrm{R\'enyi}(\mathbf{h},s)`
+The Rényi entropy cost function :math:`C_\textrm{R\'enyi}(\mathbf{h},s)` is defined as
+
+.. math::
+
+  C_\textrm{R\'enyi}(\mathbf{h},s) = n_\mathbf{h} [2 - H_\alpha(p_{\mathbf{h},s})]
+
+where
+
+- :math:`n_\mathbf{h} = \sum_s' \mathbf{h}[s']` is the number of rounds the team has competed in so far,
+- :math:`H_\alpha(p)` is the `Rényi entropy <https://en.wikipedia.org/wiki/R%C3%A9nyi_entropy>`_ of order :math:`\alpha`, of the probability distribution :math:`p`,
+- :math:`p_{\mathbf{h},s}` is the empirical distribution that would arise if :math:`\mathbf{h}`
 
 
 Population variance
