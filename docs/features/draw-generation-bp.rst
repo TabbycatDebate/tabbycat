@@ -61,7 +61,7 @@ The `position cost function` is a function that indicates how "bad" it would be 
 
 More formally:
 
-* A `position history` or just `history` :math:`\mathcal{H}` is a 4-tuple where each element is the number of times a team has already been in the corresponding position.
+* A `position history` or just `history` :math:`\mathcal{H}` is a 4-tuple where each element is the number of times a team has already been in the corresponding position. For example, :math:`\mathcal{H} = (0, 2, 1, 1)` means that a team has been in OO twice, CG and CO once each, and hasn't been in OG.
 * A cost function :math:`C(\mathcal{H},s)` is a function specifying how "bad" it would be if a team with position history :math:`\mathcal{H}` were assigned the position :math:`s` in the next round.
 
 Tabbycat allows you to choose from a number of different **position cost functions**, as well as a **position cost exponent** :math:`\beta`. Then, when allocating teams to debates, Tabbycat allocates teams to positions :math:`(s_t, t \in\mathcal{T})` to minimise
