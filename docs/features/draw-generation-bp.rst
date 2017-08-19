@@ -54,8 +54,8 @@ The available options are as follows:
 
 .. note:: While it can be argued that the `All in the same room` setting is fairer, it is prohibited by the WUDC constitution. If your tournament follows WUDC rules, you cannot use this setting.
 
-Position cost
--------------
+Position cost options
+---------------------
 
 The `position cost function` is a function that indicates how "bad" it would be if a team were to be allocated a certain position (OG, OO, CG, CO) in a debate. When generating a draw, Tabbycat chooses from among the draws that minimize the sum of the position costs for each team.
 
@@ -64,7 +64,7 @@ More formally:
 * A `position history` or just `history` :math:`\mathcal{H}` is a 4-tuple where each element is the number of times a team has already been in the corresponding position.
 * A cost function :math:`C(\mathcal{H},s)` is a function specifying how "bad" it would be if a team with position history :math:`\mathcal{H}` were assigned the position :math:`s` in the next round.
 
-Tabbycat allows you to choose from a number of different **position cost functions**, as well as a **position cost exponent** :math:`\beta`. Then, when allocating teams to debates, Tabbycat allocates teams to positions :math:`\(s_t, t \in\mathcal{T}\)` to minimize
+Tabbycat allows you to choose from a number of different **position cost functions**, as well as a **position cost exponent** :math:`\beta`. Then, when allocating teams to debates, Tabbycat allocates teams to positions :math:`(s_t, t \in\mathcal{T})` to minimize
 
 .. math::
 
@@ -72,16 +72,23 @@ Tabbycat allows you to choose from a number of different **position cost functio
 
 where :math:`\mathcal{T}` is the set of all teams, :math:`\mathcal{H}_t` is the position history of team :math:`t` and :math:`s_t` is the position to which team :math:`t` would be allocated.
 
+Position cost exponent
+^^^^^^^^^^^^^^^^^^^^^^
+
+
+Position cost functions
+^^^^^^^^^^^^^^^^^^^^^^^
+
 Simple
-******
+""""""
 
 
 Rényi entropy
-*************
+"""""""""""""
 
 
 Population variance
-*******************
+"""""""""""""""""""
 
 
 Assignment method
