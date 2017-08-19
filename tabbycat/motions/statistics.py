@@ -18,9 +18,6 @@ def statistics(tournament, rounds):
         ballot_submission__debate__round__in=rounds).select_related(
         'debate_team', 'ballot_submission__motion')
 
-    print(motions)
-    print(winners)
-
     wins = dict()
     for pos, _ in DebateTeam.SIDE_CHOICES:
         wins[pos] = dict.fromkeys(motions, 0)

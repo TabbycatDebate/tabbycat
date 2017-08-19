@@ -14,6 +14,13 @@
             No Gender Information
           </p>
           <hr>
+          <donut-chart v-for="set in graphsData.speakers_categories"
+                       :graph-data="set.data" :title="set.title"
+                       :key="set.title"></donut-chart>
+          <p v-if="graphsData.speakers_categories.length === 0">
+            No Speaker Categories Information
+          </p>
+          <hr>
           <donut-chart v-for="set in graphsData.speakers_region"
                        :graph-data="set.data" :title="set.title"
                        :regions="graphsData.regions"

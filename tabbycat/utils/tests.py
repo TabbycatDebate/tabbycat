@@ -85,13 +85,53 @@ class BaseTournamentTest():
             return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
 
+class ConditionalTournamentTest(BaseTournamentTest):
+    """For testing a view class that is conditionally shown depending on a
+    preference being set or not. Inheriting classes must also inherit from
+    TestCase and provide a view_toggle as a dynamic preferences path;
+    along with validate_response path """
+
+    view_toggle = None
+
+    def validate_response(self, response):
+        raise NotImplementedError
+
+    def test_set_preference(self):
+        # Check a page IS resolving when the preference is set
+        self.t.preferences[self.view_toggle] = True
+        response = self.get_response()
+
+        # 200 OK should be issued if setting is not enabled
+        self.assertEqual(response.status_code, 200)
+        self.validate_response(response)
+
+    def test_unset_preference(self):
+        # Check a page is not resolving when the preference is not set
+        self.t.preferences[self.view_toggle] = False
+
+        with self.assertLogs('tournaments.mixins', logging.WARNING):
+            response = self.get_response()
+
+        # 302 redirect should be issued if setting is not enabled
+        self.assertEqual(response.status_code, 302)
+
+
+class ConditionalTournamentViewBasicCheck(ConditionalTournamentTest):
+    """Simply checks the view and only fails if an error is thrown"""
+
+    def validate_response(self, response):
+        return True
+
+
 class BaseTableViewTest(BaseTournamentTest):
     """Base class for testing table views; provides methods for validating data.
     If inheriting classes are validating data they should overwrite
     table_data methods"""
 
-    def validate_table_data(self, r):
+    def validate_response(self, response):
+        self.validate_table_data(response)
 
+    def validate_table_data(self, r):
         if 'tableData' in r.context and self.table_data():
             data = len(json.loads(r.context['tableData']))
             self.assertEqual(self.table_data(), data)
@@ -114,31 +154,9 @@ class BaseTableViewTest(BaseTournamentTest):
         return False
 
 
-class ConditionalTableViewTest(BaseTableViewTest):
-    """For testing a view class that is conditionally shown depending on a
-    preference being set or not. Inheriting classes must also inherit from
-    TestCase and provide a view_toggle as a dynamic preferences path"""
-
-    view_toggle = None
-
-    def test_set_preference(self):
-        # Check a page IS resolving when the preference is set
-        self.t.preferences[self.view_toggle] = True
-        response = self.get_response()
-
-        # 200 OK should be issued if setting is not enabled
-        self.assertEqual(response.status_code, 200)
-        self.validate_table_data(response)
-
-    def test_unset_preference(self):
-        # Check a page is not resolving when the preference is not set
-        self.t.preferences[self.view_toggle] = False
-
-        with self.assertLogs('tournaments.mixins', logging.WARNING):
-            response = self.get_response()
-
-        # 302 redirect should be issued if setting is not enabled
-        self.assertEqual(response.status_code, 302)
+class ConditionalTableViewTest(ConditionalTournamentTest, BaseTableViewTest):
+    """Convenience for importing"""
+    pass
 
 
 class BaseDebateTestCase(TestCase):
