@@ -8,37 +8,37 @@ Summary of options
 ==================
 Options are set in the **Configuration** page as described in :ref:`starting a tournament <starting-a-tournament>`.
 
-+---------------------------+---------------------+-------------------------------------------+
-|           Option          |     Description     |              Allowable values             |
-+===========================+=====================+===========================================+
-| **Draw odd brackets**     | How to resolve      | - Pull up from top                        |
-|                           | odd brackets        | - Pull up from bottom                     |
-|                           |                     | - Pull up at random                       |
-|                           |                     |                                           |
-|                           |                     | If sides are `Random` or `Balance`:       |
-|                           |                     |                                           |
-|                           |                     | - Intermediate                            |
-|                           |                     | - Intermediate with bubble-up-bubble-down |
-|                           |                     |                                           |
-|                           |                     | If sides are `Pre-allocated`:             |
-|                           |                     |                                           |
-|                           |                     | - Intermediate 1                          |
-|                           |                     | - Intermediate 2                          |
-+---------------------------+---------------------+-------------------------------------------+
-| **Draw side allocations** | How to allocate     | - Random                                  |
-|                           | aff/neg             | - Balance                                 |
-|                           |                     | - Pre-allocated                           |
-|                           |                     | - Manual ballot                           |
-+---------------------------+---------------------+-------------------------------------------+
-| **Draw pairing method**   | How to pair teams   | - Slide                                   |
-|                           | within brackets     | - Fold                                    |
-|                           |                     | - Random                                  |
-|                           |                     | - Adjacent                                |
-+---------------------------+---------------------+-------------------------------------------+
-| **Draw avoid conflicts**  | How to avoid        | - Off                                     |
-|                           | history/institution | - One-up-one-down                         |
-|                           | conflicts           |                                           |
-+---------------------------+---------------------+-------------------------------------------+
++-----------------------------+---------------------+-------------------------------------------+
+|            Option           |     Description     |              Allowable values             |
++=============================+=====================+===========================================+
+| :ref:`Draw odd brackets     | How to resolve      | - Pull up from top                        |
+| <draw-odd-bracket>`         | odd brackets        | - Pull up from bottom                     |
+|                             |                     | - Pull up at random                       |
+|                             |                     |                                           |
+|                             |                     | If sides are `Random` or `Balance`:       |
+|                             |                     |                                           |
+|                             |                     | - Intermediate                            |
+|                             |                     | - Intermediate with bubble-up-bubble-down |
+|                             |                     |                                           |
+|                             |                     | If sides are `Pre-allocated`:             |
+|                             |                     |                                           |
+|                             |                     | - Intermediate 1                          |
+|                             |                     | - Intermediate 2                          |
++-----------------------------+---------------------+-------------------------------------------+
+| :ref:`Draw side allocations | How to allocate     | - Random                                  |
+| <draw-side-allocations>`    | aff/neg             | - Balance                                 |
+|                             |                     | - Pre-allocated                           |
+|                             |                     | - Manual ballot                           |
++-----------------------------+---------------------+-------------------------------------------+
+| :ref:`Draw pairing method   | How to pair teams   | - Slide                                   |
+| <draw-pairing-method>`      | within brackets     | - Fold                                    |
+|                             |                     | - Random                                  |
+|                             |                     | - Adjacent                                |
++-----------------------------+---------------------+-------------------------------------------+
+| :ref:`Draw avoid conflicts  | How to avoid        | - Off                                     |
+| <draw-conflict-avoidance>`  | history/institution | - One-up-one-down                         |
+|                             | conflicts           |                                           |
++-----------------------------+---------------------+-------------------------------------------+
 
 .. caution:: The valid options for intermediate bubbles change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
 
@@ -57,6 +57,8 @@ a number of different methods.
 
 Explanations of options
 =======================
+
+.. _draw-odd-bracket:
 
 Odd bracket resolution
 ----------------------
@@ -87,6 +89,8 @@ When sides are pre-allocated, an "odd bracket" is one that has an uneven number 
 
 **Intermediate 1** and **Intermediate 2** differ only in what happens if there aren't enough teams in the next bracket to fill the intermediate bubble. In **Intermediate 1**, it will just take teams from the bracket after that, and so on, until the intermediate bubble is filled. In **Intermediate 2**, it will split the intermediate bubble: the teams that can be paired with the next bracket form the first intermediate bubble, and then the teams that aren't form a new (unfilled) intermediate bubble, to be filled from teams from the bubble after that. This keeps going, splitting into as many intermediate bubbles as necessary, until all excess teams from the original odd bracket are paired.
 
+.. _draw-side-allocations:
+
 Side allocations
 ----------------
 There are four methods:
@@ -110,6 +114,8 @@ There isn't currently any way to edit side allocations from the front end. To do
 
 * You can also do this by writing a script that creates ``TeamPositionAllocation`` objects and saves them. Have a look at `draw/management/commands/generatesideallocations.py <https://github.com/czlee/tabbycat/blob/master/tabbycat/draw/management/commands/generatesideallocations.py>`_ for an example.
 
+.. _draw-pairing-method:
+
 Pairing method
 --------------
 It's easiest to describe these by example, using a ten-team bracket:
@@ -120,6 +126,8 @@ It's easiest to describe these by example, using a ten-team bracket:
 * **Random**: paired at random within bracket.
 
 Teams are always paired within their brackets, after resolving odd brackets.
+
+.. _draw-conflict-avoidance:
 
 Conflict avoidance method
 -------------------------
