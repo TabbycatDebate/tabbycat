@@ -56,7 +56,7 @@ admin.site.register(Speaker, SpeakerAdmin)
 
 class SpeakerInline(admin.TabularInline):
     model = Speaker
-    fields = ('name', 'novice', 'gender')
+    fields = ('name', 'gender')
 
 
 class TeamSideAllocationInline(admin.TabularInline):
