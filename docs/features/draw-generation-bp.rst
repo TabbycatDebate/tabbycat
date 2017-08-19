@@ -36,7 +36,7 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
 The big picture
 ===============
 
-To try to achieve position balance, Tabbycat treats the allocation of teams to debates as an `assignment problem <https://en.wikipedia.org/wiki/Assignment_problem>`_. That is, it computes the "cost" of assigning each team to each position in each debate, and finds an assignment of all teams to a position in a debate that minimizes the total cost (the sum over all teams).
+To try to achieve position balance, Tabbycat treats the allocation of teams to debates as an `assignment problem <https://en.wikipedia.org/wiki/Assignment_problem>`_. That is, it computes the "cost" of assigning each team to each position in each debate, and finds an assignment of all teams to a position in a debate that minimises the total cost (the sum over all teams).
 
 
 Explanations of options
@@ -57,14 +57,14 @@ The available options are as follows:
 Position cost options
 ---------------------
 
-The `position cost function` is a function that indicates how "bad" it would be if a team were to be allocated a certain position (OG, OO, CG, CO) in a debate. When generating a draw, Tabbycat chooses from among the draws that minimize the sum of the position costs for each team.
+The `position cost function` is a function that indicates how "bad" it would be if a team were to be allocated a certain position (OG, OO, CG, CO) in a debate. When generating a draw, Tabbycat chooses from among the draws that minimise the sum of the position costs for each team.
 
 More formally:
 
 * A `position history` or just `history` :math:`\mathcal{H}` is a 4-tuple where each element is the number of times a team has already been in the corresponding position.
 * A cost function :math:`C(\mathcal{H},s)` is a function specifying how "bad" it would be if a team with position history :math:`\mathcal{H}` were assigned the position :math:`s` in the next round.
 
-Tabbycat allows you to choose from a number of different **position cost functions**, as well as a **position cost exponent** :math:`\beta`. Then, when allocating teams to debates, Tabbycat allocates teams to positions :math:`(s_t, t \in\mathcal{T})` to minimize
+Tabbycat allows you to choose from a number of different **position cost functions**, as well as a **position cost exponent** :math:`\beta`. Then, when allocating teams to debates, Tabbycat allocates teams to positions :math:`(s_t, t \in\mathcal{T})` to minimise
 
 .. math::
 
@@ -74,6 +74,14 @@ where :math:`\mathcal{T}` is the set of all teams, :math:`\mathcal{H}_t` is the 
 
 Position cost exponent
 ^^^^^^^^^^^^^^^^^^^^^^
+
+The position cost exponent :math:`\beta` controls how different teams trade off with each other.
+
+The larger :math:`\beta` is, the more concerned it is with preventing `very` bad situations. That is, it will give more teams some slight unevenness in order to prevent one team from getting a `very` uneven history. At the extreme, as :math:`\beta\rightarrow\infty`, it will do everything it can to minimise the plight of the `worst-off` team, and it won't care for `any` team other than the worst-off.
+
+The smaller :math:`\beta` is, the more concerned it is with preventing `any` unevenness. That is, it will try to keep more teams from being uneven `at all`, at the cost of possibly letting just one team get a very uneven history. At the extreme, as :math:`\beta\rightarrow\zero`, it will do everything it can to minimise the number of teams with a non-optimal profile---but if it can't keep `everyone` even, then it won't care exactly `how` uneven the unlucky teams get.
+
+The "balanced" approach would be :math:`\beta = 1`, which just takes the cost function as-is. This doesn't mean that this is the best idea, however---you'd typically want to bias towards preventing very uneven histories a bit more. Most tournaments will probably what :math:`\beta` to be somewhere between 2 and 5.  (Note that :math:`\beta` need not be an integer.)
 
 
 Position cost functions
