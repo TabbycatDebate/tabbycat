@@ -68,8 +68,7 @@ The **draw odd brackets** option specifies what you do when a bracket has an odd
 The exact mechanics depend on whether or not sides are pre-allocated.
 
 When sides are not pre-allocated
-********************************
-
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **Pull-up methods:** Take a team from the next bracket down, and add them to the odd bracket to form an even bracket. You can choose to pull up the top team from the next bracket, or the bottom team, or a randomly chosen team.
 
 **Intermediate bubbles:** Take the bottom team from the odd bracket and match them against the top team from the next bracket. An intermediate bubble always has two teams.
@@ -79,8 +78,7 @@ If you're using conflict avoidance and intermediate bubbles, you will probably w
 .. caution:: Using `Intermediate` with `One-up-one-down` does **not** imply `Intermediate with bubble-up-bubble-down`. You must enable `Intermediate with bubble-up-bubble-down` specifically.
 
 When sides are pre-allocated
-****************************
-
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 When sides are pre-allocated, an "odd bracket" is one that has an uneven number of affirmative and negative teams. (So odd brackets can have an even number of teams, *e.g.* 4 affs and 2 negs.)
 
 **Pull-up methods:** Take as many teams from the next bracket down as necessary to fill the bracket. If there aren't enough teams in the next bracket down, take teams from the bracket after that, and so on, until the (original) odd bracket is filled. Higher brackets are always filled first. You can choose to pull up the top teams from the next bracket, the bottom teams, or a random selection of teams.
@@ -99,7 +97,7 @@ There are four methods:
 * **Manually enter from ballot** is used for tournaments where the sides of the teams involved are not assigned in advance, but are instead determined by the teams themselves
 
 Pre-allocated sides
-*******************
+^^^^^^^^^^^^^^^^^^^
 There isn't currently any way to edit side allocations from the front end. To do so from the back end, you need to create one ``TeamPositionAllocation`` entry for each team in each round. All teams must have an allocation for every round. There are a few ways to do this, take your pick:
 
 * If you're using the :ref:`importtournament command <importtournament-command>`, it reads sides from the file sides.csv.
