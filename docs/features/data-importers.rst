@@ -164,6 +164,8 @@ transformation function was provided, as summarised in the following table:
 
 .. tip::
 
+  .. rst-class:: spaced-list
+
   - If a transformation isn't an existing method, you might find
     `lambda functions <https://docs.python.org/2/tutorial/controlflow.html#lambda-expressions>`_
     useful. For example: ``lambda x: Speaker.objects.get(name=x)``.
