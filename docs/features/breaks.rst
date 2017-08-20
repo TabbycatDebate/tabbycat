@@ -30,45 +30,51 @@ Tabbycat supports several break qualification rules, and each break category
 must be configured to use one of them. Most tournaments will use "Standard",
 which is the default.
 
-+-----------------------------+---------------------------------------------------------+
-| Rule name (string to        |                       Description                       |
-| use in ``importtournament`` |                                                         |
-| CSV files)                  |                                                         |
-+=============================+=========================================================+
-| **Standard**                | The top *n* teams break. This is the default, and       |
-| (``standard``)              | most tournaments use this rule.                         |
-+-----------------------------+---------------------------------------------------------+
-| **AIDA 1996**               | The top *n* teams that are also in the top three teams  |
-| (``aida-1996``)             | from their institution break.                           |
-+-----------------------------+---------------------------------------------------------+
-| **AIDA 2016 (Australs)**    | The top *n* teams that fulfil either of these criteria  |
-| (``aida-2016-australs``)    | break:                                                  |
-|                             |                                                         |
-|                             | - They are in the top *n* teams overall, and in the     |
-|                             |   top three teams from their institution.               |
-|                             | - They have at least as many wins as the *n*\ th-ranked |
-|                             |   team, and they are the top team from their            |
-|                             |   institution.                                          |
-|                             |                                                         |
-|                             | If fewer than *n* teams fulfil either criterion, then   |
-|                             | the best teams not fulfilling the criteria are added to |
-|                             | make *n* teams.                                         |
-+-----------------------------+---------------------------------------------------------+
-| **AIDA 2016 (Easters)**     | As for AIDA 2016 (Australs), except that if fewer than  |
-| (``aida-2016-easters``)     | *n* teams fulfil either criterion, then only the best   |
-|                             | teams who are in the top three teams from their         |
-|                             | institution are added to make *n* teams.                |
-+-----------------------------+---------------------------------------------------------+
-| **WADL division winners     | The division winners are taken first, then the best     |
-| first**                     | teams who did not win their division are added to make  |
-| (``wadl-div-first``)        | *n* teams.                                              |
-+-----------------------------+---------------------------------------------------------+
-| **WADL division winners     | The division winners are guaranteed to break, and the   |
-| guaranteed**                | best teams who did not win their division are added     |
-| (``wadl-div-guaranteed``)   | to make *n* teams. (Teams are sorted in their original  |
-|                             | rankings, unlike the "division winners first" rule.)    |
-|                             |                                                         |
-+-----------------------------+---------------------------------------------------------+
+.. list-table::
+  :header-rows: 1
+  :stub-columns: 1
+  :widths: 30 70
+
+  * - Rule name (string to use in ``importtournament`` CSV files)
+    - Descrption
+
+  * - Standard (``standard``)
+    - The top *n* teams break. This is the default, and
+      most tournaments use this rule.
+
+  * - AIDA 1996 (``aida-1996``)
+    - The top *n* teams that are also in the top three teams
+      from their institution break.
+
+  * - AIDA 2016 (Australs) (``aida-2016-australs``)
+    - The top *n* teams that fulfil either of these criteria
+      break:
+
+      - They are in the top *n* teams overall, and in the top three teams from
+        their institution.
+      - They have at least as many wins as the *n*\ th-ranked team, and they are
+        the top team from their institution.
+
+      If fewer than *n* teams fulfil either criterion, then
+      the best teams not fulfilling the criteria are added to
+      make *n* teams.
+
+  * - AIDA 2016 (Easters) (``aida-2016-easters``)
+    - As for AIDA 2016 (Australs), except that if fewer than
+      *n* teams fulfil either criterion, then only the best
+      teams who are in the top three teams from their
+      institution are added to make *n* teams.
+
+  * - WADL division winners first (``wadl-div-first``)
+    - The division winners are taken first, then the best
+      teams who did not win their division are added to make
+      *n* teams.
+
+  * - WADL division winners guaranteed (``wadl-div-guaranteed``)
+    - The division winners are guaranteed to break, and the
+      best teams who did not win their division are added
+      to make *n* teams. (Teams are sorted in their original
+      rankings, unlike the "division winners first" rule.)
 
 .. note:: The break generators are somewhat more complex than described in the
   above table: among other things, they also handle cases where there is a tie
