@@ -77,7 +77,7 @@ class HungarianAllocator(Allocator):
             solos = voting[:n_debates]
             panellists = []
         else:
-            n_expected_solos = n_debates if self.no_panellists else n_debates - (n_voting - n_debates) // 2
+            n_expected_solos = n_debates - (n_voting - n_debates) // 2
             solos = voting[:n_expected_solos]
             panellists = voting[n_expected_solos:]
 
@@ -107,7 +107,7 @@ class HungarianAllocator(Allocator):
         # Allocate solos
         m = Munkres()
 
-        if len(solos) > 0:
+        if len(solos) > 0 and len(solo_debates) > 0:
             logger.info("costing solos")
             cost_matrix = []
             for debate in solo_debates:
