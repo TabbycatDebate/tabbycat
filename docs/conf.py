@@ -58,9 +58,9 @@ author = 'Philip Belesky, Chuan-Zheng Lee'
 # built documents.
 #
 # The short X.Y version.
-version = '1.4'
+version = '1.5'
 # The full version, including alpha/beta/rc tags.
-release = '1.4.1'
+release = '1.5.0-dev'
 
 rst_epilog = """
 .. |vrelease| replace:: v{release}
@@ -211,6 +211,7 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Tabbycatdoc'
 
+
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
@@ -314,3 +315,8 @@ else:
             '_static/theme_overrides.css',
         ],
     }
+
+
+# -- Options for inline LaTeX (imgmath) ------------------------------------
+
+imgmath_image_format = 'svg'
