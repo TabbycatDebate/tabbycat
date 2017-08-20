@@ -114,7 +114,7 @@ where :math:`\mathbf{h}[s]` is the element of :math:`\mathbf{h}` corresponding t
 Rényi entropy
 """""""""""""
 
-Informally speaking, the Rényi entropy is a measure of the diversity of the positions in a team's position history. A position history consisting only of one position has *low* entropy, while a position history that is perfectly evenly distributed has *high* entropy. The **Rényi entropy cost function** reverses this intuition, so that an even hypothetical position history has low cost, while an uneven hypothetical position history has high cost.
+Informally speaking, the Rényi entropy is a measure of the diversity of the positions in a team's history. A history consisting only of one position has *low* entropy, while a history that is perfectly evenly distributed has *high* entropy. The **Rényi entropy cost function** reverses this intuition, so that an even hypothetical history has low cost, while an uneven hypothetical history has high cost.
 
 The Rényi entropy takes one parameter, known as its *order*, :math:`\alpha`, which will be further discussed below.
 
@@ -127,13 +127,13 @@ More formally, the Rényi entropy cost function :math:`C_\textrm{R\'enyi}(\mathb
 where
 
 - :math:`n_\mathbf{h} = \sum_{s'} \mathbf{h}[s']` is the number of rounds the team has competed in so far.
-- :math:`\hat{p}_{\mathbf{h},s}` is the *normalized hypothetical* position history that would arise if a team with position history :math:`\mathbf{h}` were to be allocated position :math:`s` in the next round; that is,
+- :math:`\hat{p}_{\mathbf{h},s}` is the *normalized hypothetical* position history that would arise if a team with history :math:`\mathbf{h}` were to be allocated position :math:`s` in the next round; that is,
 
   .. math::
 
     \hat{p}_{\mathbf{h},s}[s'] = \begin{cases}
       \frac{1}{n_\mathbf{h} + 1} (\mathbf{h}[s'] + 1), &\text{ if } s = s', \\
-      \frac{1}{n_\mathbf{h} + 1} (\mathbf{h}[s']), &\text{ if } s \ne s'.
+      \frac{1}{n_\mathbf{h} + 1} \mathbf{h}[s'], &\text{ if } s \ne s'.
     \end{cases}
 
   Note that :math:`\hat{p}_{\mathbf{h},s}` is a probability distribution (that is, its elements sum to 1).
@@ -180,7 +180,7 @@ The **population variance** cost function is just the population variance of the
 
   C_\textrm{popvar}(\mathbf{h},s) = \frac14 \sum_{s'\in\mathcal{S}} \left(\mathbf{\hat{h}}_s[s'] - \mu_{\mathbf{\hat{h}}_s} \right)^2,
 
-where :math:`\mathbf{\hat{h}}_s` is the hypothetical position history that would arise if a team with position history :math:`\mathbf{h}` were to be allocated position :math:`s` in the next round; that is,
+where :math:`\mathbf{\hat{h}}_s` is the *hypothetical* position history that would arise if a team with history :math:`\mathbf{h}` were to be allocated position :math:`s` in the next round; that is,
 
   .. math::
 
