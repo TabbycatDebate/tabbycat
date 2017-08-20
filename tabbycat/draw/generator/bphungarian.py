@@ -30,23 +30,24 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
 
         "position_cost" - How position costs are assigned. Permitted values:
 
-            "simple"  - Cost is the number of times the team has already been in
-                        that position, less the number of times the team has
-                        been in its least frequent position.
+            "simple"   - Cost is the number of times the team has already been
+                         in that position, less the number of times the team has
+                         been in its least frequent position.
 
-            "entropy" - Rényi entropy, C = n[2 - H_α(p)], where p is the
-                        empirical distribution associated with the position
-                        profile of the team, H_α(p) is the Rényi entropy of
-                        order α thereof, and n is the sum of the profile (i.e.
-                        number of rounds the team has competed in). See the
-                        "renyi_order" option below.
+            "entropy"  - Rényi entropy, C = n[2 - H_α(p)], where p is the
+                         empirical distribution associated with the position
+                         history of the team, H_α(p) is the Rényi entropy of
+                         order α thereof, and n is the number of rounds the team
+                         has competed in). See the "renyi_order" option below.
 
-            "variance" - The population variance of frequencies in the profile.
+            "variance" - The population variance of multiplicities in the
+                         history.
 
         "exponent" - (float) The value returned by the cost function is raised
                      to this power. Higher exponents place more weight on
-                     reducing larger problems, i.e., highly uneven profiles.
-                     Most tournaments should use a value between 2.0 and 5.0.
+                     reducing larger problems, i.e., highly uneven position
+                     histories. Most tournaments should use a value between 2.0
+                     and 5.0.
 
         "renyi_order" - (float) The order of the Rényi entropy used, often
                         denoted by α. The case α = 1.0 yields Shannon entropy;
@@ -174,39 +175,39 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
             return self.get_option_function("position_cost", self.POSITION_COST_FUNCTIONS)
 
     @staticmethod
-    def _update_profile(pos, profile):
-        new_profile = profile.copy()
-        new_profile[pos] += 1
-        return new_profile
+    def _update_history(pos, history):
+        new_history = history.copy()
+        new_history[pos] += 1
+        return new_history
 
     @staticmethod
-    def _position_cost_simple(pos, profile):
-        return profile[pos]
+    def _position_cost_simple(pos, history):
+        return history[pos]
 
     @staticmethod
-    def _position_cost_variance(pos, profile):
-        profile = BPHungarianDrawGenerator._update_profile(pos, profile)
-        return pvariance(profile)
+    def _position_cost_variance(pos, history):
+        history = BPHungarianDrawGenerator._update_history(pos, history)
+        return pvariance(history)
 
     @staticmethod
-    def _position_cost_shannon_entropy(pos, profile):
-        profile = BPHungarianDrawGenerator._update_profile(pos, profile)
-        n = sum(profile)
-        probs = [p/n for p in profile]
+    def _position_cost_shannon_entropy(pos, history):
+        history = BPHungarianDrawGenerator._update_history(pos, history)
+        n = sum(history)
+        probs = [p/n for p in history]
         selfinfo = [0 if p == 0 else -p*log2(p) for p in probs]
         return (2 - sum(selfinfo)) * n
 
     @staticmethod
-    def _position_cost_min_entropy(pos, profile):
-        profile = BPHungarianDrawGenerator._update_profile(pos, profile)
-        return (2 - log2(sum(p > 0 for p in profile))) * sum(profile)
+    def _position_cost_min_entropy(pos, history):
+        history = BPHungarianDrawGenerator._update_history(pos, history)
+        return (2 - log2(sum(p > 0 for p in history))) * sum(history)
 
     @staticmethod
     def _get_position_cost_renyi_entropy_function(α):  # noqa: N803
-        def _position_cost_renyi_entropy(pos, profile):
-            profile = BPHungarianDrawGenerator._update_profile(pos, profile)
-            n = sum(profile)
-            probs = [p/n for p in profile]
+        def _position_cost_renyi_entropy(pos, history):
+            history = BPHungarianDrawGenerator._update_history(pos, history)
+            n = sum(history)
+            probs = [p/n for p in history]
             return (2 - log2(sum([p ** α for p in probs])) / (1 - α)) * n
         return _position_cost_renyi_entropy
 
@@ -219,7 +220,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
          - if the team (given its points) is not allowed in the room, use
            DISALLOWED.
          - otherwise, for each position, use the position cost for that position
-           (for a team with that position history profile).
+           (for a team with that position history).
         """
         nteams = len(self.teams)
         cost = self.get_position_cost_function()
