@@ -105,7 +105,6 @@ class HungarianAllocator(Allocator):
                     "(less than %d)", len(panel_debates), len(panellists), len(panel_debates) * 3)
 
         # Allocate solos
-
         m = Munkres()
 
         if len(solos) > 0:
@@ -130,8 +129,7 @@ class HungarianAllocator(Allocator):
             alloc = []
 
         # Allocate panellists
-
-        if len(panellists) > 0:
+        if len(panellists) > 0 and len(panel_debates) > 0:
             logger.info("costing panellists")
             cost_matrix = []
             for i, debate in enumerate(panel_debates):
