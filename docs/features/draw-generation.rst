@@ -8,37 +8,49 @@ Summary of options
 ==================
 Options are set in the **Configuration** page as described in :ref:`starting a tournament <starting-a-tournament>`.
 
-+-----------------------------+---------------------+-------------------------------------------+
-|            Option           |     Description     |              Allowable values             |
-+=============================+=====================+===========================================+
-| :ref:`Draw odd brackets     | How to resolve      | - Pull up from top                        |
-| <draw-odd-bracket>`         | odd brackets        | - Pull up from bottom                     |
-|                             |                     | - Pull up at random                       |
-|                             |                     |                                           |
-|                             |                     | If sides are `Random` or `Balance`:       |
-|                             |                     |                                           |
-|                             |                     | - Intermediate                            |
-|                             |                     | - Intermediate with bubble-up-bubble-down |
-|                             |                     |                                           |
-|                             |                     | If sides are `Pre-allocated`:             |
-|                             |                     |                                           |
-|                             |                     | - Intermediate 1                          |
-|                             |                     | - Intermediate 2                          |
-+-----------------------------+---------------------+-------------------------------------------+
-| :ref:`Draw side allocations | How to allocate     | - Random                                  |
-| <draw-side-allocations>`    | aff/neg             | - Balance                                 |
-|                             |                     | - Pre-allocated                           |
-|                             |                     | - Manual ballot                           |
-+-----------------------------+---------------------+-------------------------------------------+
-| :ref:`Draw pairing method   | How to pair teams   | - Slide                                   |
-| <draw-pairing-method>`      | within brackets     | - Fold                                    |
-|                             |                     | - Random                                  |
-|                             |                     | - Adjacent                                |
-+-----------------------------+---------------------+-------------------------------------------+
-| :ref:`Draw avoid conflicts  | How to avoid        | - Off                                     |
-| <draw-conflict-avoidance>`  | history/institution | - One-up-one-down                         |
-|                             | conflicts           |                                           |
-+-----------------------------+---------------------+-------------------------------------------+
+.. list-table::
+  :header-rows: 1
+  :stub-columns: 1
+  :widths: 20 40 40
+
+  * - Option
+    - Description
+    - Allowable values
+
+  * - :ref:`Draw odd brackets <draw-odd-bracket>`
+    - How to resolve odd brackets
+    - - Pull up from top
+      - Pull up from bottom
+      - Pull up at random
+
+      If sides are `Random` or `Balance`:
+
+      - Intermediate
+      - Intermediate with bubble-up-bubble-down
+
+      If sides are `Pre-allocated`:
+
+      - Intermediate 1
+      - Intermediate 2
+
+  * - :ref:`Draw side allocations <draw-side-allocations>`
+    - How to allocate aff/neg
+    - - Random
+      - Balance
+      - Pre-allocated
+      - Manual ballot
+
+  * - :ref:`Draw pairing method <draw-pairing-method>`
+    - How to pair teams within brackets
+    - - Slide
+      - Fold
+      - Adjacent
+      - Random
+
+  * - :ref:`Draw avoid conflicts <draw-conflict-avoidance>`
+    - How to avoid history/institution conflicts
+    - - Off
+      - One-up-one-down
 
 .. caution:: The valid options for intermediate bubbles change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
 

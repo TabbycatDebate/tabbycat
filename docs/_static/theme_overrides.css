@@ -14,6 +14,12 @@ pre.literal-block, .rst-content .literal-block, .rst-content pre.literal-block {
 .wy-table-responsive table td, .wy-table-responsive table th {
   white-space: normal;
 }
+.rst-content table.docutils td {
+  vertical-align: top;
+}
+.rst-content table.docutils th.stub {
+  text-align: left;
+}
 .rst-content table.docutils p {
   font-size: 100%;
   margin-bottom: 12px;
