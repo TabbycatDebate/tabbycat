@@ -9,29 +9,33 @@ Summary of options
 
 Options are set in the **Configuration** page as described in :ref:`starting a tournament <starting-a-tournament>`. Options in `italics` with an asterisk are not WUDC-compliant. The recommended options are shown in **bold**.
 
-+-----------------------------------+-----------------------+-----------------------------------+
-|               Option              |      Description      |          Allowable values         |
-+===================================+=======================+===================================+
-| :ref:`Pullup distribution         | Where pullup teams    | - **Anywhere in bracket**         |
-| <draw-bp-pullup-distribution>`    | get placed            | - `All in the same room`\*        |
-+-----------------------------------+-----------------------+-----------------------------------+
-| :ref:`Position cost               | Which cost function   | - Simple                          |
-| <draw-bp-position-cost>`          | to use to indicate    | - **Rényi entropy**               |
-|                                   | which position        | - Population variance             |
-|                                   | profiles are          |                                   |
-|                                   | preferred             |                                   |
-+-----------------------------------+-----------------------+-----------------------------------+
-| :ref:`Rényi order                 | Order of Rényi        | Any non-negative number           |
-| <draw-bp-renyi-order>`            | entropy               | (default: **1**, *i.e.*           |
-|                                   |                       | Shannon entropy)                  |
-+-----------------------------------+-----------------------+-----------------------------------+
-| :ref:`Position cost exponent      | Degree to which large | Any non-negative number           |
-| <draw-bp-position-cost-exponent>` | position imbalances   | (default: **4**)                  |
-|                                   | should be prioritized |                                   |
-+-----------------------------------+-----------------------+-----------------------------------+
-| :ref:`Assignment method           | Algorithm used to     | - `Hungarian`\*                   |
-| <draw-bp-assignment-method>`      | assign positions      | - **Hungarian with preshuffling** |
-+-----------------------------------+-----------------------+-----------------------------------+
+.. list-table::
+  :header-rows: 1
+  :stub-columns: 1
+  :widths: 20 40 40
+
+  * - Option
+    - Description
+    - Allowable values
+  * - :ref:`Pullup distribution <draw-bp-pullup-distribution>`
+    - Where pullup teams get placed
+    - - **Anywhere in bracket**
+      - *All in the same room*\*
+  * - :ref:`Position cost <draw-bp-position-cost>`
+    - Which cost function to use to indicate which position profiles are preferred
+    - - Simple
+      - **Rényi entropy**
+      - Population variance
+  * - :ref:`Rényi order <draw-bp-renyi-order>`
+    - Order of Rényi entropy
+    - Any non-negative number (default: **1**, *i.e.* Shannon entropy)
+  * - :ref:`Position cost exponent <draw-bp-position-cost-exponent>`
+    - Degree to which large position imbalances should be prioritized
+    - Any non-negative number (default: **4**)
+  * - :ref:`Assignment method <draw-bp-assignment-method>`
+    - Algorithm used to assign positions
+    - - *Hungarian*\*
+      - **Hungarian with preshuffling**
 
 The big picture
 ===============
@@ -51,8 +55,11 @@ If the number of teams in a bracket is not a multiple of four, it pulls up teams
 
 The available options are as follows:
 
-* **Anywhere in bracket:** The pullup teams are treated as if they were any other team in their new bracket. For example, if there are 17 teams in a 10-point bracket, then the three 9-point teams that get pulled up may be paired anywhere in the 10-point bracket, independently of each other. Chance might put them in the same room, but more likely, they will not all be in the same room, so there will be multiple pullup rooms in the 10-point bracket.
-* **All in the same room:** All of the pullup teams will be paired into the same room. This means that there will be at most one pullup room per bracket, effectively creating an "intermediate bracket".
+.. rst-class:: spaced-list
+
+- **Anywhere in bracket:** The pullup teams are treated as if they were any other team in their new bracket. For example, if there are 17 teams in a 10-point bracket, then the three 9-point teams that get pulled up may be paired anywhere in the 10-point bracket, independently of each other. Chance might put them in the same room, but more likely, they will not all be in the same room, so there will be multiple pullup rooms in the 10-point bracket.
+
+- **All in the same room:** All of the pullup teams will be paired into the same room. This means that there will be at most one pullup room per bracket, effectively creating an "intermediate bracket".
 
 .. note:: While it can be argued that the `All in the same room` setting is fairer, it is prohibited by the WUDC constitution. If your tournament follows WUDC rules, you cannot use this setting.
 
@@ -63,8 +70,10 @@ The `position cost function` is a function that indicates how "bad" it would be 
 
 More formally:
 
-* A `position history` or just `history` :math:`\mathbf{h}` is a 4-tuple where each element is the number of times a team has already been in the corresponding position. For example, :math:`\mathbf{h} = (0, 2, 1, 1)` means that a team has been in OO twice, CG and CO once each, and hasn't been in OG.
-* A cost function :math:`C(\mathbf{h},s)` is a function specifying how "bad" it would be if a team with position history :math:`\mathbf{h}` were assigned the position :math:`s` in the next round.
+.. rst-class:: spaced-list
+
+- A `position history` or just `history` :math:`\mathbf{h}` is a 4-tuple where each element is the number of times a team has already been in the corresponding position. For example, :math:`\mathbf{h} = (0, 2, 1, 1)` means that a team has been in OO twice, CG and CO once each, and hasn't been in OG.
+- A cost function :math:`C(\mathbf{h},s)` is a function specifying how "bad" it would be if a team with position history :math:`\mathbf{h}` were assigned the position :math:`s` in the next round.
 
 Tabbycat allows you to choose from a number of different **position cost functions**, as well as a **position cost exponent** :math:`\beta`. Then, when allocating teams to debates, Tabbycat allocates teams to positions :math:`(s_t, t \in\mathcal{T})` to minimise
 
@@ -80,6 +89,8 @@ Position cost exponent
 ^^^^^^^^^^^^^^^^^^^^^^
 
 The **position cost exponent** :math:`\beta` controls how different teams trade off with each other.
+
+.. rst-class:: spaced-list
 
 - The **larger** :math:`\beta` is, the more concerned it is with preventing *very* bad situations. That is, it will give more teams some slight unevenness in order to prevent one team from getting a `very` uneven history.
 
@@ -126,6 +137,8 @@ More formally, the Rényi entropy cost function :math:`C_\textrm{R\'enyi}(\mathb
 
 where
 
+.. rst-class:: spaced-list
+
 - :math:`n_\mathbf{h} = \sum_{s'} \mathbf{h}[s']` is the number of rounds the team has competed in so far.
 - :math:`\hat{p}_{\mathbf{h},s}` is the *normalized hypothetical* position history that would arise if a team with history :math:`\mathbf{h}` were to be allocated position :math:`s` in the next round; that is,
 
@@ -144,7 +157,7 @@ where
 
     H_\alpha(p) = \frac{1}{1-\alpha} \log_2 \left( \sum_{s\in\mathcal{S}} (p[s])^\alpha \right), \qquad \alpha \ne 1.
 
-  or in the special (limiting) case where :math:`\alpha=1`, it reduces to the `Shannon entropy <https://en.wikipedia.org/wiki/Shannon_entropy>`_,
+  In the special (limiting) case where :math:`\alpha=1`, it reduces to the `Shannon entropy <https://en.wikipedia.org/wiki/Shannon_entropy>`_,
 
   .. math::
 
@@ -154,11 +167,13 @@ where
 
 .. _draw-bp-renyi-order:
 
-The **Rényi order** is the parameter :math:`\alpha` above, and it controls *what it means to be "even among positions"* for a team. Note that "evenness" is not easily defined. After round 8, which position history is more even: (0, 2, 2, 3) or (1, 1, 1, 5)? The Rényi order allows us to tune this definition.
+The **Rényi order** is the parameter :math:`\alpha` above, and it controls *what it means to be "even among positions"* for a team. Note that "evenness" is not easily defined. After round 8, which position history is more even: (0, 2, 3, 3) or (1, 1, 1, 5)? The Rényi order allows us to tune this definition.
 
-- The **smaller** :math:`\alpha` is, the more it cares that teams compete in every position *at least* once, favouring (1, 1, 1, 5) over (0, 2, 2, 3): it's more important that a team finally see OG, than it is that another not be in CO five times.
+.. rst-class:: spaced-list
 
-- The **larger** :math:`\alpha` is, the more it cares that teams do not compete in *any* (one) position too many times, favouring (0, 2, 2, 3) over (1, 1, 1, 5): it's more important that a team avoid a fifth CO, than it is that another team get the opportunity to OG.
+- The **smaller** :math:`\alpha` is, the more it cares that teams compete in every position *at least* once, favouring (1, 1, 1, 5) over (0, 2, 3, 3): it's worse to have never OGed, than it is to have COed five times.
+
+- The **larger** :math:`\alpha` is, the more it cares that teams do not compete in *any* (one) position too many times, favouring (0, 2, 3, 3) over (1, 1, 1, 5): it's worse to have COed five times, than it is to have never OGed.
 
 - At the small extreme, as :math:`\alpha\rightarrow0`, it *only* counts how many positions a team has seen at least once, and doesn't care about the distribution among them so long as a team has been in each position once.
 
@@ -202,9 +217,16 @@ At the extremes, a team that has seen all positions evenly will have a populatio
 Assignment method
 -----------------
 
-Tabbycat uses the Hungarian algorithm to solve the assignment problem.
+Tabbycat uses the `Hungarian algorithm <https://en.wikipedia.org/wiki/Hungarian_algorithm>`_ to solve the `assignment problem <https://en.wikipedia.org/wiki/Assignment_problem>`_ of assigning teams to positions in debates. This can be run with or without preshuffling:
 
-- **Hungarian** just runs the Hungarian algorithm on the position cost matrix as-is, with no randomness.
-- **Hungarian with preshuffling** also runs the Hungarian algorithm on the position cost matrix, but randomly permutes the rows and columns of the cost matrix beforehand, so that the draw is randomized.
+.. rst-class:: spaced-list
 
-.. note:: Running the Hungarian algorithm without preshuffling has the side effect of grouping teams with similar speaker scores in to the same room, and is therefore prohibited by WUDC rules. Its inclusion is mainly academic; most tournaments will not want to use it.
+- **Hungarian algorithm** just runs the Hungarian algorithm as-is, with no randomness. This probably isn't what you want.
+
+- **Hungarian algorithm with preshuffling** also runs the Hungarian algorithm on the position cost matrix, but shuffles the input so that the draw is randomized, subject to having optimal position allocations.
+
+  Preshuffling doesn't compromise the optimality of position allocations: It simply shuffles the order in which teams and debates appear in the input to the algorithm, by randomly permuting the rows and columns of the position cost matrix. The Hungarian algorithm still guarantees an optimal position assignment, according to the chosen position cost function.
+
+.. note:: Running the Hungarian algorithm *without* preshuffling has the side effect of grouping teams with similar speaker scores in to the same room, and is therefore prohibited by WUDC rules. Its inclusion as an option is mainly academic; most tournaments will not want to use it in practice.
+
+No other assignment methods are currently supported. For example, Tabbycat can't run fold (high-low) or adjacent (high-high) pairing *within* brackets.
