@@ -13,7 +13,6 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from tournaments.utils import get_side_name
 from utils.misc import redirect_tournament
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
@@ -421,7 +420,6 @@ class BaseMotionStandingsView(TournamentMixin, TemplateView):
     template_name = 'standings_motions.html'
     page_title = ugettext_lazy("Motions Tab")
     page_emoji = '💭'
-
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
