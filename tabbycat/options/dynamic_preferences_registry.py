@@ -222,7 +222,7 @@ class BPPullupDistribution(ChoicePreference):
     name = 'bp_pullup_distribution'
     choices = (
         ('anywhere', _("Anywhere in bracket")),
-        ('one_room', _("All in the same room")),
+        ('one_room', _("All in the same room (not WUDC-compliant)")),
     )
     default = 'anywhere'
 
@@ -257,7 +257,7 @@ class BPPositionCostExponent(FloatPreference):
     help_text = _("The BP position cost is raised to this power; higher exponents "
                   "bias towards resolving fewer large position imbalances over more "
                   "small ones. See documentation for details.")
-    verbose_name = _("Position cost exponent")
+    verbose_name = _("BP position cost exponent")
     section = draw_rules
     name = 'bp_position_cost_exponent'
     default = 4.0
@@ -271,7 +271,7 @@ class BPAssignmentMethod(ChoicePreference):
     section = draw_rules
     name = 'bp_assignment_method'
     choices = (
-        ('hungarian', _("Hungarian algorithm")),
+        ('hungarian', _("Hungarian algorithm (not WUDC-compliant)")),
         ('hungarian_preshuffled', _("Hungarian algorithm with preshuffling")),
     )
     default = 'hungarian_preshuffled'

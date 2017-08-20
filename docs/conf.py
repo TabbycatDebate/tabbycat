@@ -211,6 +211,7 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Tabbycatdoc'
 
+
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
@@ -315,5 +316,7 @@ else:
         ],
     }
 
+
+# -- Options for inline LaTeX (imgmath) ------------------------------------
 
 imgmath_image_format = 'svg'
