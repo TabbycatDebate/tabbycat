@@ -125,7 +125,7 @@ where :math:`\mathbf{h}[s]` is the element of :math:`\mathbf{h}` corresponding t
 Rényi entropy
 """""""""""""
 
-Informally speaking, the Rényi entropy is a measure of the diversity of the positions in a team's history. A history consisting only of one position has *low* entropy, while a history that is perfectly evenly distributed has *high* entropy. The **Rényi entropy cost function** reverses this intuition, so that an even hypothetical history has low cost, while an uneven hypothetical history has high cost.
+Informally speaking, the `Rényi entropy <https://en.wikipedia.org/wiki/R%C3%A9nyi_entropy>`_ is a measure of the diversity of the positions in a team's history. A history consisting only of one position has *low* entropy, while a history that is perfectly evenly distributed has *high* entropy. The **Rényi entropy cost function** reverses this intuition, so that an even hypothetical history has low cost, while an uneven hypothetical history has high cost.
 
 The Rényi entropy takes one parameter, known as its *order*, :math:`\alpha`, which will be further discussed below.
 
