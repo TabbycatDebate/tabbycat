@@ -154,7 +154,7 @@ class BaseTableViewTest(BaseTournamentTest):
         return False
 
 
-class ConditionalTableViewTest(ConditionalTournamentTest, BaseTableViewTest):
+class ConditionalTableViewTest(BaseTableViewTest, ConditionalTournamentTest):
     """Convenience for importing"""
     pass
 
