@@ -8,7 +8,6 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.views.generic.base import TemplateView
 
-import motions.statistics as motion_statistics
 from motions.models import Motion
 from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
@@ -19,7 +18,7 @@ from utils.misc import redirect_tournament
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .motions import MotionsStandingsTableBuilder
+from .motions import gather_motion_stats, get_motion_balance
 from .diversity import get_diversity_data_sets
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
@@ -417,43 +416,33 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 # Motion standings
 # ==============================================================================
 
-class BaseMotionStandingsView(BaseStandingsView):
+class BaseMotionStandingsView(TournamentMixin, TemplateView):
 
+    template_name = 'standings_motions.html'
     page_title = ugettext_lazy("Motions Tab")
     page_emoji = '💭'
-    tables_orientation = 'rows'
 
-    def get_rounds(self):
-        """Returns all of the rounds that should be included in the tab."""
-        return self.get_tournament().round_set.order_by('seq')
 
-    def get_motions_table(self, t, rounds):
-        motions = motion_statistics.statistics(tournament=t, rounds=rounds)
-        table = MotionsStandingsTableBuilder(view=self, sort_key="Round")
-
-        table.add_round_column([m.round for m in motions])
-        table.add_motion_column(motions, show_order=True)
-
-        for side in t.sides:
-            column_label = get_side_name(t, side, "abbr") + " wins"
-            table.add_column(column_label, [m.wins[side] for m in motions])
-
-        table.add_debate_balance_column(motions)
-        if self.get_tournament().pref('motion_vetoes_enabled'):
-            table.add_column("Aff Vetoes", [m.aff_vetoes for m in motions])
-            table.add_column("Neg Vetoes", [m.neg_vetoes for m in motions])
-            table.add_veto_balance_column(motions)
-        return table
-
-    def get_tables(self):
+    def get_context_data(self, **kwargs):
         t = self.get_tournament()
-        in_rounds = self.get_motions_table(t, t.prelim_rounds())
-        out_rounds = self.get_motions_table(t, t.break_rounds())
-        return [in_rounds, out_rounds]
+        rounds = t.round_set.order_by('seq')
+
+        motions = Motion.objects.select_related('round').filter(round__in=rounds).order_by('round')
+        motions = gather_motion_stats(motions, rounds, t)
+
+        for motion in motions:
+            result_balance = get_motion_balance(motion.placings, motion.chosen)
+            setattr(motion, 'result_balance', result_balance)
+            if hasattr(motion, 'vetoes'):
+                veto_balance = get_motion_balance(motion.vetoes, motion.chosen, True)
+                setattr(motion, 'veto_balance', veto_balance)
+
+        kwargs['motions'] = motions
+        return super().get_context_data(**kwargs)
 
 
 class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
-    template_name = 'standings_table.html'
+    pass
 
 
 class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):

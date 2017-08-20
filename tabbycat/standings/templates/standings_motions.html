@@ -1,0 +1,126 @@
+{% extends "standings_base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block page-title %}💭Motions Tab{% endblock %}
+{% block head-title %}<span class="emoji">💭</span>💭Motions Tab{% endblock %}
+
+{% block content %}
+
+  {% regroup motions by round as motions_by_round %}
+
+    {% for round, round_motions in motions_by_round %}
+    <div class="list-group">
+
+      <div class="list-group-item text-right disabled strong">
+        {{ round.name }}
+      </div>
+
+      {% for motion in round_motions %}
+
+        <div class="list-group-item no-bottom-padding">
+
+          <h4 class="vertical-spacing">
+            {% if round_motions|length > 1 %}{{ motion.seq }}.{% endif %}
+            {{ motion }}
+          </h4>
+
+          <div class="row">
+
+            <div class="col-sm-{% if pref.motion_vetoes_enabled %}7{% else %}12{% endif %} vertical-spacing">
+
+              <div class="btn-group btn-group-xs">
+                {% for position, count in motion.placings.items %}
+                  <div class="btn btn-default">
+                    <span class="{% if forloop.counter == 1 %}text-success{% else %}text-danger{% endif %}">
+                      {{ count.1 }} {{ position }} wins
+                    </span>
+                  </div>
+                {% endfor %}
+              </div>
+              <div class="btn-group btn-group-xs pull-right">
+                <div class="btn btn-default" data-toggle="tooltip" title="{{ motion.result_balance.1 }}">
+                  <span class="text-muted">{{ motion.result_balance.0 }}</span>
+                </div>
+              </div>
+              <div class="progress">
+                {% widthratio motion.placings.aff.0 motion.round_total 100 as affper %}
+                <div class="progress-bar progress-bar-success" style="width: {{ affper}}%">
+                  {% if affper != "0" %}{{ affper }}%{% endif %}
+                </div>
+                {% widthratio motion.placings.neg.0 motion.round_total 100 as negper %}
+                <div class="progress-bar progress-bar-danger" style="width: {{ negper}}%">
+                  {% if negper != "0" %}{{ negper }}%{% endif %}
+                </div>
+              </div>
+
+            </div>
+
+            {% if pref.motion_vetoes_enabled %}
+              <div class="col-sm-5 vertical-spacing">
+
+                <div class="btn-group btn-group-xs">
+                   {% for position, count in motion.vetoes.items %}
+                    <div class="btn btn-default">
+                      <span class="{% if forloop.counter == 1 %}text-info{% else %}text-warning{% endif %}">
+                        {{ count }} {{ position }} vetoes
+                      </span>
+                    </div>
+                  {% endfor %}
+                </div>
+                <div class="btn-group btn-group-xs pull-right">
+                  <div class="btn btn-default" data-toggle="tooltip" title="{{ motion.result_balance.1 }}">
+                    <span class="text-muted">{{ motion.result_balance.0 }}</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  {% widthratio motion.vetoes.aff motion.round_total 50 as affper %}
+                  <div class="progress-bar progress-bar-info" style="width: {{ affper}}%">
+                      {% if affper != "0" %}{{ affper }}%{% endif %}
+                  </div>
+                  {% widthratio motion.vetoes.neg motion.round_total 50 as negper %}
+                  <div class="progress-bar progress-bar-warning" style="width: {{ negper}}%">
+                      {% if negper != "0" %}{{ negper }}%{% endif %}
+                  </div>
+                </div>
+
+              </div>
+            {% endif %}
+
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+    {% endfor %}
+
+{% endblock content %}
+
+<!--
+
+
+        <div class="list-group-item">
+          <div class="row">
+            <div class="col-xs-6 col-sm-4">
+              <h6>Results ( debates)</h6>
+              {% for position, count in motion.placings.items %}
+                <p>{{ count.1 }} {{ position }} wins (%/{{motion.chosen }})</p>
+              {% endfor %}
+              <p>{{ motion.result_balance.1 }}  (motion.result_balance)</p>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <h6>Chosen In</h6>
+              {# <p>X/Y debates</p> #}
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <h6>Vetoes</h6>
+              {% for position, count in motion.vetoes.items %}
+                <p>{{ count }}/{{motion.chosen }} {{ position }} vetoes</p>
+              {% endfor %}
+              <p>{{ motion.veto_balance.1 }} (motion.veto_balance)</p>
+            </div>
+          </div>
+        </div>
+
+         -->
