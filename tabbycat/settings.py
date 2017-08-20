@@ -193,12 +193,6 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
         },
-        'mail_admins': {  # errors and above are e-mailed to admins
-            'level': 'ERROR',
-            'filters': ['require_debug_false', 'except_importer_base'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
-        },
         'sentry': {
             'level': 'WARNING',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
@@ -210,7 +204,7 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'django.request': {
-            'handlers': ['mail_admins', 'sentry'],
+            'handlers': ['sentry'],
             'level': 'ERROR',
         },
         'raven': {
@@ -233,7 +227,7 @@ LOGGING = {
 
 for app in TABBYCAT_APPS:
     LOGGING['loggers'][app] = {
-        'handlers': ['console', 'mail_admins', 'sentry'],
+        'handlers': ['console', 'sentry'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
 

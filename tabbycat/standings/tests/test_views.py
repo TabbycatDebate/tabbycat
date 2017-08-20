@@ -21,4 +21,3 @@ class PublicRepliesTabViewTest(ConditionalTournamentViewBasicCheck, TestCase):
 class PublicMotionsTabViewTest(ConditionalTournamentViewBasicCheck, TestCase):
     view_name = 'standings-public-tab-motions'
     view_toggle = 'tab_release__motion_tab_released'
-
