@@ -30,7 +30,7 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
     - Order of Rényi entropy
     - Any non-negative number (default: **1**, *i.e.* Shannon entropy)
   * - :ref:`Position cost exponent <draw-bp-position-cost-exponent>`
-    - Degree to which large position imbalances should be prioritized
+    - Degree to which large position imbalances should be prioritised
     - Any non-negative number (default: **4**)
   * - :ref:`Assignment method <draw-bp-assignment-method>`
     - Algorithm used to assign positions
@@ -42,6 +42,62 @@ The big picture
 
 To try to achieve position balance, Tabbycat treats the allocation of teams to debates as an `assignment problem <https://en.wikipedia.org/wiki/Assignment_problem>`_. That is, it computes the "cost" of assigning each team to each position in each debate, and finds an assignment of all teams to a position in a debate that minimises the total cost (the sum over all teams).
 
+A simple example
+----------------
+
+Here's a small example, to illustrate the idea. Say you have a tournament with 16 teams, and you're about to draw round 4. There are sixteen "places" in the draw: four positions in each of four rooms. Tabbycat calculates the "cost" of putting each team in each place, and puts them in a matrix, like this:
+
+.. role:: q
+
+.. raw:: html
+
+    <style> .q {color: blue; font-weight: bold;} </style>
+
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+|    Room   |                Top                |               Second                |                Third               |               Bottom               |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| Position  | OG     | OO     | CG     | CO     | OG      | OO     | CG     | CO      | OG     | OO      | CG     | CO     | OG     | OO      | CG     | CO     |
++===========+========+========+========+========+=========+========+========+=========+========+=========+========+========+========+=========+========+========+
+| **A (8)** | 16     | 16     | 16     | :q:`0` | ∞       | ∞      | ∞      | ∞       | ∞      | ∞       | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **B (7)** | 16     | :q:`0` | 16     | 16     | ∞       | ∞      | ∞      | ∞       | ∞      | ∞       | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **C (7)** | 16     | 16     | :q:`0` | 16     | ∞       | ∞      | ∞      | ∞       | ∞      | ∞       | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **D (6)** | 16     | 0      | 16     | 16     | :q:`16` | 0      | 16     | 16      | ∞      | ∞       | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **E (6)** | :q:`0` | 16     | 16     | 16     | 0       | 16     | 16     | 16      | ∞      | ∞       | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **F (6)** | 16     | 16     | 0      | 16     | 16      | 16     | :q:`0` | 16      | ∞      | ∞       | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **G (5)** | ∞      | ∞      | ∞      | ∞      | 16      | :q:`0` | 16     | 16      | ∞      | ∞       | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **H (5)** | ∞      | ∞      | ∞      | ∞      | 16      | 0      | 16     | :q:`16` | ∞      | ∞       | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **I (4)** | ∞      | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      | ∞       | 16     | 16      | :q:`0` | 16     | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **J (4)** | ∞      | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      | ∞       | 16     | 16      | 16     | :q:`0` | ∞      | ∞       | ∞      | ∞      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **K (3)** | ∞      | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      | ∞       | :q:`0` | 16      | 16     | 16     | 0      | 16      | 16     | 16     |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **L (3)** | ∞      | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      | ∞       | 16     | 16      | 0      | 16     | 16     | 16      | :q:`0` | 16     |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **M (3)** | ∞      | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      | ∞       | 16     | :q:`16` | 16     | 0      | 16     | 16      | 16     | 0      |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **N (3)** | ∞      | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      | ∞       | 0      | 16      | 16     | 16     | :q:`0` | 16      | 16     | 16     |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **O (1)** | ∞      | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      | ∞       | ∞      | ∞       | ∞      | ∞      | 16     | 16      | 16     | :q:`0` |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+| **P (1)** | ∞      | ∞      | ∞      | ∞      | ∞       | ∞      | ∞      | ∞       | ∞      | ∞       | ∞      | ∞      | 0      | :q:`16` | 16     | 16     |
++-----------+--------+--------+--------+--------+---------+--------+--------+---------+--------+---------+--------+--------+--------+---------+--------+--------+
+
+Each "16" is the cost of putting a team in a position it's seen once; each "0" is the cost of putting a team in the position it hasn't. (Details of how this is calculated are :ref:`below <draw-bp-position-cost-section>`.) For example, team A (on 8 points) has been in every position except CO. The ∞'s indicate places where the team isn't allowed to go, because the room isn't in their bracket. For example, the three teams on 6 points (D, E, F) can go in either the top or second room, because any of them can be the pullup team.
+
+The algorithm then chooses entries so that one is selected from each row and one is selected from each column, in a way that minimises the sum of the selected entries. In this case, the selected entries are highlighted in blue. For example, the top room comprises teams E (OG), B (OO), C (CG) and A (CO).
+
+Sometimes, particularly in round 4, it simply isn't possible to "satisfy" everyone. For example, among the top eight teams, five haven't been in OO, but only two can be accommodated within those brackets. In this case, teams B and G got lucky; there are also many other draws that would have incurred the same total cost.
+
+More generally, in most cases, there will be many optimal solutions. To randomise the selection among them, Tabbycat (under default settings) randomly permutes the rows and columns of the matrix before starting the assignment algorithm.
 
 Explanations of options
 =======================
@@ -62,6 +118,8 @@ The available options are as follows:
 - **All in the same room:** All of the pullup teams will be paired into the same room. This means that there will be at most one pullup room per bracket, effectively creating an "intermediate bracket".
 
 .. note:: While it can be argued that the `All in the same room` setting is fairer, it is prohibited by the WUDC constitution. If your tournament follows WUDC rules, you cannot use this setting.
+
+.. _draw-bp-position-cost-section:
 
 Position cost options
 ---------------------
@@ -140,7 +198,7 @@ where
 .. rst-class:: spaced-list
 
 - :math:`n_\mathbf{h} = \sum_{s'} \mathbf{h}[s']` is the number of rounds the team has competed in so far.
-- :math:`\hat{p}_{\mathbf{h},s}` is the *normalized hypothetical* position history that would arise if a team with history :math:`\mathbf{h}` were to be allocated position :math:`s` in the next round; that is,
+- :math:`\hat{p}_{\mathbf{h},s}` is the *normalised hypothetical* position history that would arise if a team with history :math:`\mathbf{h}` were to be allocated position :math:`s` in the next round; that is,
 
   .. math::
 
@@ -183,7 +241,7 @@ The "balanced" approach would be :math:`\alpha=1` (the `Shannon entropy <https:/
 
 To give some intuition for the useful range: In round 9, a strict ordering by number of positions seen at least once occurs for approximately :math:`\alpha < 0.742`. A strict ordering by number of times in the most frequent position occurs for :math:`\alpha>3`. Changing :math:`\alpha` outside the range :math:`[0.742, 3]` will still affect the relative (cardinal) weighting *between teams*, but will not affect the *ordinal* ranking of possible histories.
 
-The purpose of weighting costs by :math:`n_\mathbf{h}` is to prioritize those teams who have competed in every round over those who have competed in fewer rounds.
+The purpose of weighting costs by :math:`n_\mathbf{h}` is to prioritise those teams who have competed in every round over those who have competed in fewer rounds.
 
 
 Population variance
@@ -223,7 +281,7 @@ Tabbycat uses the `Hungarian algorithm <https://en.wikipedia.org/wiki/Hungarian_
 
 - **Hungarian algorithm** just runs the Hungarian algorithm as-is, with no randomness. This probably isn't what you want.
 
-- **Hungarian algorithm with preshuffling** also runs the Hungarian algorithm on the position cost matrix, but shuffles the input so that the draw is randomized, subject to having optimal position allocations.
+- **Hungarian algorithm with preshuffling** also runs the Hungarian algorithm on the position cost matrix, but shuffles the input so that the draw is randomised, subject to having optimal position allocations.
 
   Preshuffling doesn't compromise the optimality of position allocations: It simply shuffles the order in which teams and debates appear in the input to the algorithm, by randomly permuting the rows and columns of the position cost matrix. The Hungarian algorithm still guarantees an optimal position assignment, according to the chosen position cost function.
 
