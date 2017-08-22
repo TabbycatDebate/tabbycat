@@ -4,6 +4,7 @@ import logging
 
 from django.db.models import Prefetch, Sum
 from django.db.models.expressions import RawSQL
+from django.utils.translation import ugettext_lazy as _
 
 from draw.models import DebateTeam
 from draw.prefetch import populate_opponents
@@ -78,10 +79,10 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for team points using win = 2, loss = 1, loss by forfeit = 0."""
     key = "points210"
-    name = "points"
-    abbr = "Pts"
+    name = _("points")
+    abbr = _("Pts")
 
-    choice_name = "Points (2/1/0)"
+    choice_name = _("Points (2/1/0)")
 
     def annotate(self, queryset, standings, round=None):
         # Includes forfeits
@@ -109,8 +110,8 @@ class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total number of points."""
     key = "points"
-    name = "points"
-    abbr = "Pts"
+    name = _("points")
+    abbr = _("Pts")
 
     function = "SUM"
     field = "points"
@@ -119,8 +120,8 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total number of wins."""
     key = "wins"
-    name = "wins"
-    abbr = "Wins"
+    name = _("wins")
+    abbr = _("Wins")
 
     function = "COUNT"
     field = "win"
@@ -130,8 +131,8 @@ class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
     key = "speaks_sum"
-    name = "total speaker score"
-    abbr = "Spk"
+    name = _("total speaker score")
+    abbr = _("Spk")
 
     function = "SUM"
     field = "score"
@@ -140,8 +141,8 @@ class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
     key = "speaks_avg"
-    name = "average speaker score"
-    abbr = "ASS"
+    name = _("average speaker score")
+    abbr = _("ASS")
     exclude_forfeits = True
 
     function = "AVG"
@@ -151,8 +152,8 @@ class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for sum of margins."""
     key = "margin_sum"
-    name = "sum of margins"
-    abbr = "Marg"
+    name = _("sum of margins")
+    abbr = _("Marg")
 
     function = "SUM"
     field = "margin"
@@ -161,8 +162,8 @@ class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for average margin, excluding forfeit ballots."""
     key = "margin_avg"
-    name = "average margin"
-    abbr = "AWM"
+    name = _("average margin")
+    abbr = _("AWM")
 
     function = "AVG"
     field = "margin"
@@ -172,8 +173,8 @@ class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
     """Metric annotator for draw strength."""
     key = "draw_strength"
-    name = "draw strength"
-    abbr = "DS"
+    name = _("draw strength")
+    abbr = _("DS")
 
     def annotate(self, queryset, standings, round=None):
         if not queryset.exists():
@@ -212,9 +213,9 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     "2.4 votes" for that debate."""
 
     key = "num_adjs"
-    name = "number of adjudicators who voted for this team"
-    abbr = "Ballots"
-    choice_name = "votes/ballots carried"
+    name = _("number of adjudicators who voted for this team")
+    abbr = _("Ballots")
+    choice_name = _("votes/ballots carried")
     function = "SUM"
 
     def __init__(self, adjs_per_debate=3):
@@ -238,8 +239,8 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 class NumberOfFirstsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     key = "firsts"
-    name = "number of firsts"
-    abbr = "1sts"
+    name = _("number of firsts")
+    abbr = _("1sts")
 
     function = "COUNT"
     field = "points"
@@ -248,8 +249,8 @@ class NumberOfFirstsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 class NumberOfSecondsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     key = "seconds"
-    name = "number of seconds"
-    abbr = "2nds"
+    name = _("number of seconds")
+    abbr = _("2nds")
 
     function = "COUNT"
     field = "points"
@@ -261,9 +262,9 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     the precedence."""
 
     key_prefix = "wbw"
-    name_prefix = "Who-beat-whom"
-    abbr_prefix = "WBW"
-    choice_name = "who-beat-whom"
+    name_prefix = _("Who-beat-whom")
+    abbr_prefix = _("WBW")
+    choice_name = _("who-beat-whom")
 
     def __init__(self, index, keys):
         if len(keys) == 0:
@@ -308,9 +309,9 @@ class DivisionsWhoBeatWhomMetricAnnotator(WhoBeatWhomMetricAnnotator):
     every who-beat-whom in the precedence."""
 
     key_prefix = "wbwd"
-    name_prefix = "Who-beat-whom (in division)"
-    abbr_prefix = "WBWD"
-    choice_name = "who-beat-whom (in divisions)"
+    name_prefix = _("Who-beat-whom (in division)")
+    abbr_prefix = _("WBWD")
+    choice_name = _("who-beat-whom (in divisions)")
 
     def annotate(self, queryset, standings, round=None):
         key = metricgetter(*self.keys)

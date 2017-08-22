@@ -1,0 +1,254 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-22 16:38+1000\n"
+"PO-Revision-Date: 2017-08-21 23:19-0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.3\n"
+
+#: standings/speakers.py:68 standings/speakers.py:100
+msgid "total"
+msgstr ""
+
+#: standings/speakers.py:69 standings/speakers.py:101
+msgid "Total"
+msgstr ""
+
+#: standings/speakers.py:76 standings/speakers.py:109
+msgid "average"
+msgstr ""
+
+#: standings/speakers.py:77 standings/speakers.py:110
+msgid "Avg"
+msgstr ""
+
+#: standings/speakers.py:84 standings/speakers.py:118
+msgid "standard deviation"
+msgstr ""
+
+#: standings/speakers.py:85 standings/speakers.py:119
+msgid "Stdev"
+msgstr ""
+
+#: standings/speakers.py:92
+msgid "speeches given"
+msgstr ""
+
+#: standings/speakers.py:93 standings/speakers.py:128
+msgid "Num"
+msgstr ""
+
+#: standings/speakers.py:127
+#, fuzzy
+#| msgid "Replies"
+msgid "replies given"
+msgstr "Résponses"
+
+#: standings/teams.py:82 standings/teams.py:113
+msgid "points"
+msgstr ""
+
+#: standings/teams.py:83 standings/teams.py:114
+msgid "Pts"
+msgstr ""
+
+#: standings/teams.py:85
+msgid "Points (2/1/0)"
+msgstr ""
+
+#: standings/teams.py:123
+msgid "wins"
+msgstr ""
+
+#: standings/teams.py:124
+msgid "Wins"
+msgstr ""
+
+#: standings/teams.py:134
+msgid "total speaker score"
+msgstr ""
+
+#: standings/teams.py:135
+msgid "Spk"
+msgstr ""
+
+#: standings/teams.py:144
+msgid "average speaker score"
+msgstr ""
+
+#: standings/teams.py:145
+msgid "ASS"
+msgstr ""
+
+#: standings/teams.py:155
+msgid "sum of margins"
+msgstr ""
+
+#: standings/teams.py:156
+msgid "Marg"
+msgstr ""
+
+#: standings/teams.py:165
+msgid "average margin"
+msgstr ""
+
+#: standings/teams.py:166
+msgid "AWM"
+msgstr ""
+
+#: standings/teams.py:176
+msgid "draw strength"
+msgstr ""
+
+#: standings/teams.py:177
+msgid "DS"
+msgstr ""
+
+#: standings/teams.py:216
+msgid "number of adjudicators who voted for this team"
+msgstr ""
+
+#: standings/teams.py:217
+msgid "Ballots"
+msgstr ""
+
+#: standings/teams.py:218
+msgid "votes/ballots carried"
+msgstr ""
+
+#: standings/teams.py:242
+msgid "number of firsts"
+msgstr ""
+
+#: standings/teams.py:243
+msgid "1sts"
+msgstr ""
+
+#: standings/teams.py:252
+msgid "number of seconds"
+msgstr ""
+
+#: standings/teams.py:253
+msgid "2nds"
+msgstr ""
+
+#: standings/teams.py:265
+msgid "Who-beat-whom"
+msgstr ""
+
+#: standings/teams.py:266
+msgid "WBW"
+msgstr ""
+
+#: standings/teams.py:267
+msgid "who-beat-whom"
+msgstr ""
+
+#: standings/teams.py:312
+msgid "Who-beat-whom (in division)"
+msgstr ""
+
+#: standings/teams.py:313
+msgid "WBWD"
+msgstr ""
+
+#: standings/teams.py:314
+msgid "who-beat-whom (in divisions)"
+msgstr ""
+
+#: standings/templates/standings_menu.html:6
+msgid "Overview"
+msgstr "Aperçu"
+
+#: standings/templates/standings_menu.html:13
+msgid "Teams"
+msgstr "Équipes"
+
+#: standings/templates/standings_menu.html:18
+msgid "Divisions"
+msgstr "Divisions"
+
+#: standings/templates/standings_menu.html:26
+msgid "Speakers"
+msgstr "Orateurs"
+
+#: standings/templates/standings_menu.html:31
+msgid "Replies"
+msgstr "Résponses"
+
+#: standings/templates/standings_menu.html:37
+#, python-format
+msgid "%(category_name)s Speakers"
+msgstr "Orateurs de la catégorie %(category_name)s"
+
+#: standings/templates/standings_menu.html:47
+msgid "Motions Balance"
+msgstr "Équilibre des motions"
+
+#: standings/templates/standings_menu.html:52
+msgid "Diversity Overview"
+msgstr "Aperçu de la diversité"
+
+#. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
+#: standings/views.py:133
+#, python-format
+msgid "%(title)s (Top %(limit)d Only)"
+msgstr "%(title)s (seulement les %(limit)d en tête)"
+
+#: standings/views.py:211
+msgid "Speaker Standings"
+msgstr "Classement des orateurs"
+
+#: standings/views.py:247
+msgid "Speaker Tab"
+msgstr "Tab des orateurs"
+
+#: standings/views.py:265
+#, python-format
+msgid "%(category)s Speaker Standings"
+msgstr "Classement des orateurs de la catégorie %(category)s"
+
+#: standings/views.py:283
+#, python-format
+msgid "%(category)s Speaker Tab"
+msgstr "Tab des orateurs de la catégorie %(category)s"
+
+#: standings/views.py:297
+msgid "Reply Speaker Standings"
+msgstr "Classement des orateurs de réponse de la catégorie %(category_name)s"
+
+#: standings/views.py:329
+msgid "Reply Speaker Tab"
+msgstr "Tab des orateurs de réponse de la catégorie %(category_name)s"
+
+#: standings/views.py:341
+msgid "Team Standings"
+msgstr "Classement des équipes"
+
+#: standings/views.py:397
+msgid "Division Standings"
+msgstr "Classement par division"
+
+#: standings/views.py:407
+msgid "Team Tab"
+msgstr "Tab des équipes"
+
+#: standings/views.py:422
+msgid "Motions Tab"
+msgstr "Tab des motions"
+
+#: standings/views.py:470
+msgid "Current Team Standings"
+msgstr "Classement actuel des équipes"

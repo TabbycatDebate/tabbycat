@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 08:27+1000\n"
+"POT-Creation-Date: 2017-08-22 16:38+1000\n"
 "PO-Revision-Date: 2017-06-22 17:57+1200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -62,22 +62,30 @@ msgstr ""
 msgid "Tournaments"
 msgstr "Tournois"
 
-#: tournaments/forms.py:22
+#: tournaments/forms.py:23
 msgid "Number of preliminary rounds"
 msgstr "Nombre de tours préliminaires"
 
-#: tournaments/forms.py:27
+#: tournaments/forms.py:28
 msgid "Number of teams in the open break"
 msgstr "Nombre d'équipes dans le break open"
 
-#: tournaments/forms.py:28
+#: tournaments/forms.py:29
 msgid "Leave blank if there are no break rounds."
 msgstr ""
 "C'est-a-dire, qui avancera aux tours à élimination dans la catégorie open. "
 "Laissez vide s'il n'y a pas de tours à élimination."
 
+#: tournaments/forms.py:33
+msgid "Configuration"
+msgstr ""
+
+#: tournaments/forms.py:34
+msgid "Pre-configure the tournament for a standard format "
+msgstr ""
+
 #. Translators: This is the name given to the 'Open Break'.
-#: tournaments/forms.py:53
+#: tournaments/forms.py:59
 msgid "Open"
 msgstr "Open"
 
@@ -86,6 +94,34 @@ msgstr "Open"
 msgid ""
 "There's a problem with the data for the tournament %(tournament_name)s. "
 "Please contact a tab director and ask them to set its current round."
+msgstr ""
+
+#: tournaments/mixins.py:105
+#, python-format
+msgid ""
+"Teams don't appear to be correctly assigned to sides in a debate. Please "
+"resolve this problem before continuing: %(error)s"
+msgstr ""
+
+#: tournaments/mixins.py:111
+msgid ""
+"There's a problem with how teams are assigned to sides in a debate. The tab "
+"director will need to resolve this issue."
+msgstr ""
+
+#: tournaments/mixins.py:132
+#, python-format
+msgid "as of %(round)s"
+msgstr ""
+
+#: tournaments/mixins.py:183
+#, fuzzy
+#| msgid "Text/html entered here shows on the homepage for this tournament"
+msgid "That page isn't enabled for this tournament."
+msgstr "Ce texte ou ce html est affiché sur le page d'accueil pour ce tournoi"
+
+#: tournaments/mixins.py:191
+msgid "That tournament no longer exists."
 msgstr ""
 
 #: tournaments/models.py:28
@@ -437,6 +473,100 @@ msgstr "Charger les données démonstratives (tournoi avec 24 équipes)"
 #: tournaments/templates/donations.html:4
 msgid "Donate to Tabbycat"
 msgstr "Donations à Tabbycat"
+
+#: tournaments/templates/public_tournament_index.html:5
+#: tournaments/templates/public_tournament_index.html:9
+#, python-format
+msgid "Welcome to %(tournament_name)s"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:22
+msgid "There is currently no public information available for this tournament."
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:35
+msgid "Team Tab"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:40
+msgid "Speaker Tab"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:48
+#, python-format
+msgid "%(category_name)s Speaker Tab"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:58
+msgid "Replies Tab"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:63
+msgid "Motions Tab"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:68
+#: tournaments/templates/public_tournament_index.html:93
+msgid "Sides"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:78
+#, fuzzy
+#| msgid "No Results In"
+msgid "Results"
+msgstr "Aucun résultat"
+
+#: tournaments/templates/public_tournament_index.html:83
+msgid "Divisions"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:88
+#, fuzzy
+#| msgid "opposition's"
+msgid "Motions"
+msgstr "de l'opposition"
+
+#: tournaments/templates/public_tournament_index.html:98
+msgid "Team Standings"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:105
+#, python-format
+msgid "%(category_name)s Break"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:114
+msgid "Breaking Adjudicators"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:119
+msgid "Diversity Overview"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:124
+msgid "Participants"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:129
+msgid "Feedback Progres"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:134
+msgid "Enter Ballot"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:139
+msgid "Enter Feedback"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:147
+#, python-format
+msgid "Draw for %(round_name)s"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:156
+msgid "View All Draws"
+msgstr ""
 
 #: tournaments/templates/set_current_round.html:28
 #, python-format
@@ -808,6 +938,3 @@ msgstr ""
 
 #~ msgid "Latest Results"
 #~ msgstr "Résultats récents"
-
-#~ msgid "No Results In"
-#~ msgstr "Aucun résultat"

@@ -1,4 +1,4 @@
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 <ul class="nav nav-stacked" role="tablist">
   <li role="presentation" class="dropdown">
@@ -12,15 +12,19 @@
     </a>
     <ul id="tournament-select-menu" class="dropdown-menu"
         aria-labelledby="tournament_select">
-      {% for t in all_tournaments %}
+      {% for other_tournament in all_tournaments %}
         <li>
-          <a class="small" href="{{ t.get_absolute_url  }}">
-            <strong>{{ t }}</strong> (Admin)
+          <a class="small" href="{{ other_tournament.get_absolute_url  }}">
+            {% blocktrans trimmed %}
+              <strong>{{ other_tournament }}</strong> (Admin)
+            {% endblocktrans %}
           </a>
         </li>
         <li>
-          <a class="small" href="{{ t.get_public_url  }}">
-            <strong>{{ t }}</strong> (Public)
+          <a class="small" href="{{ other_tournament.get_public_url  }}">
+            {% blocktrans trimmed %}
+              <strong>{{ other_tournament }}</strong> (Public)
+            {% endblocktrans %}
           </a>
         </li>
         <li role="separator" class="divider"></li>
@@ -28,19 +32,19 @@
       <li>
         <a class="small" href="/">
           <span class="glyphicon glyphicon-home"></span>&nbsp;
-          Site Home
+          {% trans "Site Home" %}
         </a>
       </li>
       <li>
         <a class="small" href="{% url 'tournament-create' %}">
           <span class="glyphicon glyphicon-pencil"></span>&nbsp;
-          New Tournament
+          {% trans "New Tournament" %}
         </a>
       </li>
       <li>
         <a class="small" href="{% url 'admin:index' %}">
           <span class="glyphicon glyphicon-edit"></span>&nbsp;
-          Edit Database
+          {% trans "Edit Database" %}
         </a>
       </li>
     </ul>
@@ -58,7 +62,7 @@
         <span class="circle-icon icon-container">
           <span class="glyphicon glyphicon-th"></span>
         </span>
-         Overview
+         {% trans "Overview" %}
       </a>
   </li>
   {% if pref.side_allocations_enabled == 'preallocated' %}
@@ -68,7 +72,7 @@
         <span class="circle-icon icon-container">
           <span class="glyphicon glyphicon-resize-horizontal"></span>
         </span>
-         Sides
+         {% trans "Sides" %}
       </a>
     </li>
   {% endif %}
@@ -79,7 +83,7 @@
         <span class="circle-icon icon-container">
           <span class="glyphicon glyphicon-th-list"></span>
         </span>
-         Divisions
+         {% trans "Divisions" %}
       </a>
     </li>
   {% endif %}
@@ -89,7 +93,7 @@
       <span class="circle-icon icon-container">
         <span class="glyphicon glyphicon-comment"></span>
       </span>
-       Feedback
+       {% trans "Feedback" %}
     </a>
   </li>
   <li class="standalone">
@@ -98,7 +102,7 @@
       <span class="circle-icon icon-container">
         <span class="glyphicon glyphicon-stats"></span>
       </span>
-       Standings
+       {% trans "Standings" %}
     </a>
   </li>
   <li class="panel">
@@ -115,7 +119,7 @@
         <span class="circle-icon icon-container">
           <span class="glyphicon glyphicon-briefcase"></span>
         </span>
-        Setup<span class="caret pull-right"></span>
+        {% trans "Setup" %}<span class="caret pull-right"></span>
       </a>
     </div>
     <div id="collapseOne"
@@ -129,7 +133,7 @@
             <span class="circle-icon icon-container">
               <span class="glyphicon glyphicon-cog"></span>
             </span>
-            Configuration
+            {% trans "Configuration" %}
           </a>
         </li>
         <li>
@@ -138,7 +142,7 @@
             <span class="circle-icon icon-container">
               <span class="glyphicon glyphicon-download"></span>
             </span>
-            Import Data
+            {% trans "Import Data" %}
           </a>
         </li>
         <li>
@@ -147,7 +151,7 @@
             <span class="circle-icon icon-container">
               <span class="glyphicon glyphicon-user"></span>
             </span>
-            Participants
+            {% trans "Participants" %}
           </a>
         </li>
         <li>
@@ -156,7 +160,7 @@
             <span class="circle-icon icon-container">
               <span class="glyphicon glyphicon-link"></span>
             </span>
-            Private URLs
+            {% trans "Private URLs" %}
           </a>
         </li>
         <li>
@@ -164,7 +168,7 @@
             <span class="circle-icon icon-container">
               <span class="glyphicon glyphicon-edit"></span>
             </span>
-            Edit Database
+            {% trans "Edit Database" %}
           </a>
         </li>
       </ul>
@@ -182,7 +186,7 @@
               <span class="circle-icon icon-container">
                 <span class="glyphicon glyphicon-gift"></span>
               </span>
-              Breaks
+              {% trans "Breaks" %}
             </a>
           </div>
         </li>
@@ -196,7 +200,9 @@
       <span class="circle-icon icon-container">
         <span class="glyphicon glyphicon-lock"></span>
       </span>
-      Log Out ({{ user }})
+      {% blocktrans trimmed %}
+        Log Out ({{ user }})
+      {% endblocktrans %}
     </a>
   </li>
 
