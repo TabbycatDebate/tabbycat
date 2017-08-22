@@ -3,7 +3,7 @@ from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.utils import formats
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import ugettext_lazy, ungettext
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.utils import adjudicator_conflicts_display
@@ -618,7 +618,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             history = debate.history
             if history > 0:
                 conflicts.append(("warning", ungettext("Teams have met once",
-                        "Teams have met %(count)d times", count) % {count: history}))
+                        "Teams have met %(count)d times", history) % {'count': history}))
             if len(set(t.institution_id for t in debate.teams)) != len(debate.teams):
                 conflicts.append(("warning", _("Teams are from the same institution")))
             conflicts.extend(adjudicator_conflicts_by_debate[debate])
