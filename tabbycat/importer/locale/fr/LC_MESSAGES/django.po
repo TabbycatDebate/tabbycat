@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 08:27+1000\n"
+"POT-Creation-Date: 2017-08-22 16:38+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,7 @@ msgstr ""
 msgid "There must be at least one speaker."
 msgstr ""
 
-#: importer/forms.py:264
+#: importer/forms.py:265
 msgid "Rating"
 msgstr ""
 
@@ -157,34 +157,27 @@ msgid ""
 "works well for small- and medium-sized tournaments."
 msgstr ""
 
-#: importer/templates/simple_import_index.html:17
-#, python-format
-msgid ""
-"If you are having problems with this importer, you can use the <a href="
-"\"%(oldimporterurl)s\">older version</a>."
-msgstr ""
-
-#: importer/templates/simple_import_index.html:29
+#: importer/templates/simple_import_index.html:23
 msgid "Add Institutions"
 msgstr ""
 
-#: importer/templates/simple_import_index.html:35
+#: importer/templates/simple_import_index.html:29
 msgid "Add Teams"
 msgstr ""
 
-#: importer/templates/simple_import_index.html:41
+#: importer/templates/simple_import_index.html:35
 msgid "Add Adjudicators"
 msgstr ""
 
-#: importer/templates/simple_import_index.html:47
+#: importer/templates/simple_import_index.html:41
 msgid "Add Venues"
 msgstr ""
 
-#: importer/templates/simple_import_index.html:53
+#: importer/templates/simple_import_index.html:47
 msgid "Add/Edit Venue Categories"
 msgstr ""
 
-#: importer/templates/simple_import_index.html:59
+#: importer/templates/simple_import_index.html:53
 msgid "Add/Edit Venue Constraints"
 msgstr ""
 

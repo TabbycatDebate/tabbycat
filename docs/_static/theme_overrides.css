@@ -14,6 +14,12 @@ pre.literal-block, .rst-content .literal-block, .rst-content pre.literal-block {
 .wy-table-responsive table td, .wy-table-responsive table th {
   white-space: normal;
 }
+.rst-content table.docutils td {
+  vertical-align: top;
+}
+.rst-content table.docutils th.stub {
+  text-align: left;
+}
 .rst-content table.docutils p {
   font-size: 100%;
   margin-bottom: 12px;
@@ -23,4 +29,16 @@ pre.literal-block, .rst-content .literal-block, .rst-content pre.literal-block {
 }
 .rst-content table.docutils ul:last-child {
   margin-bottom: 0;
+}
+.rst-content .section ul.spaced-list > li, .rst-content .section ol.spaced-list > li  {
+  /* Allows some lists to have spacing between list items, useful for lists
+     comprising paragraph. To use, use the directive
+       .. rst-class:: spaced-list
+     just before the first element of the list.
+  */
+  margin-bottom: 12px;
+}
+.rst-content .section ul ul.spaced-list, .rst-content .section ul ol.spaced-list,
+.rst-content .section ol ul.spaced-list, .rst-content .section ol ol.spaced-list {
+  margin-top: 12px;
 }

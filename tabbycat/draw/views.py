@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.html import mark_safe
 from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -42,7 +43,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
     sort_key = 'Venue'
 
     def get_page_title(self):
-        return 'Draw for %s' % self.get_round().name
+        return _("Draw for %(round)s") % {'round': self.get_round().name}
 
     def get_page_emoji(self):
         if not self.get_round():
@@ -55,7 +56,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
     def get_page_subtitle(self):
         round = self.get_round()
         if round and round.starts_at:
-            return 'debates start at %s' % round.starts_at.strftime('%H:%M')
+            return _("debates start at %(time)s") % {'time': round.starts_at.strftime('%H:%M')}
         else:
             return ''
 
@@ -135,7 +136,7 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, Ba
         return None
 
     def get_page_title(self):
-        return 'All Debates for all Rounds of %s ' % self.get_tournament().name
+        return _("All Debates for All Rounds of %(tournament)s") % {'tournament': self.get_tournament().name}
 
     def get_draw(self):
         all_rounds = Round.objects.filter(tournament=self.get_tournament(),
@@ -484,7 +485,7 @@ class ApplyDebateScheduleView(DrawStatusEdit):
 
 class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
-    page_title = "Side Pre-Allocations"
+    page_title = ugettext_lazy("Side Pre-Allocations")
 
     def get_table(self):
         tournament = self.get_tournament()
@@ -601,9 +602,7 @@ class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, Template
 
 class AllDrawsForAllTeamsView(CrossTournamentPageMixin, CacheMixin, BaseDrawTableView):
     public_page_preference = 'enable_mass_draws'
-
-    def get_page_title(self):
-        return 'All Draws for All Teams'
+    page_title = ugettext_lazy("All Draws for All Teams")
 
     def get_draw(self):
         draw = Debate.objects.all().select_related('round', 'round__tournament',
@@ -618,7 +617,7 @@ class AllDrawsForInstitutionView(CrossTournamentPageMixin, CacheMixin, BaseDrawT
         return Institution.objects.get(pk=self.kwargs['institution_id'])
 
     def get_page_title(self):
-        return 'All Debates for Teams from %s' % self.get_institution().name
+        return _("All Debates for Teams from %(institution)s") % {'institution': self.get_institution().name}
 
     def get_draw(self):
         institution = self.get_institution()
@@ -637,16 +636,16 @@ class AllDrawsForVenueView(CrossTournamentPageMixin, CacheMixin, BaseDrawTableVi
         try:
             return VenueCategory.objects.get(pk=self.kwargs['venue_id'])
         except VenueCategory.DoesNotExist:
-            messages.warning(self.request, 'This venue category does not exist \
-                or the URL for it might have changed. Try finding it again \
-                from the homepage.')
+            messages.warning(self.request, _("This venue category does not exist "
+                "or the URL for it might have changed. Try finding it again "
+                "from the homepage."))
             return False
 
     def get_page_title(self):
         if self.get_venue_category():
-            return 'All Debates at %s' % self.get_venue_category().name
+            return _("All Debates at %(venue_category)s") % {'venue_category': self.get_venue_category().name}
         else:
-            return 'Unknown Venue Category'
+            return _("Unknown Venue Category")
 
     def get_draw(self):
         draw = Debate.objects.filter(

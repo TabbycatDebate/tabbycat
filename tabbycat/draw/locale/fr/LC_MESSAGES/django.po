@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 08:27+1000\n"
+"POT-Creation-Date: 2017-08-22 16:38+1000\n"
 "PO-Revision-Date: 2017-06-22 17:54+1200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,6 +17,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.2\n"
+
+#: draw/admin.py:67
+#, python-format
+msgid "%(count)d debate had its status set to %(status)s."
+msgid_plural "%(count)d debates had their statuses set to %(status)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: draw/admin.py:74
+#, python-format
+msgid "Set result status to %(status)s"
+msgstr ""
 
 #: draw/apps.py:7
 msgid "Draw"
@@ -70,7 +82,7 @@ msgstr ""
 msgid "Pull-up team"
 msgstr ""
 
-#: draw/generator/common.py:178
+#: draw/generator/common.py:188
 #, python-format
 msgid ""
 "The number of teams presented for the draw was not a multiple of %(num)d."
@@ -78,7 +90,7 @@ msgstr ""
 "Le nombre d’équipes présenté pour le tirage au sort n'est pas un multiple de "
 "%(num)d."
 
-#: draw/generator/common.py:181
+#: draw/generator/common.py:191
 msgid "There were no teams for the draw."
 msgstr "Il n’y a pas d’équipes pour le tirage au sort."
 
@@ -122,22 +134,28 @@ msgid "The draw type %(type)s can't be used with British Parliamentary."
 msgstr ""
 
 #: draw/models.py:27
-msgid "None"
-msgstr "Aucun"
+msgid "none"
+msgstr ""
 
 #: draw/models.py:28
-msgid "Postponed"
+#, fuzzy
+#| msgid "Postponed"
+msgid "postponed"
 msgstr "Reporté"
 
 #: draw/models.py:29
-msgid "Draft"
+#, fuzzy
+#| msgid "Draft"
+msgid "draft"
 msgstr "Brouillon"
 
 #: draw/models.py:30
-msgid "Confirmed"
+#, fuzzy
+#| msgid "Confirmed"
+msgid "confirmed"
 msgstr "Confirmé"
 
-#: draw/models.py:35 draw/models.py:336
+#: draw/models.py:35 draw/models.py:370
 msgid "round"
 msgstr "tour"
 
@@ -177,7 +195,7 @@ msgstr "état de résultat"
 msgid "ballot in"
 msgstr "bulletin reçu"
 
-#: draw/models.py:62 draw/models.py:270
+#: draw/models.py:62 draw/models.py:285
 msgid "debate"
 msgstr "débat"
 
@@ -185,67 +203,67 @@ msgstr "débat"
 msgid "debates"
 msgstr "débats"
 
-#: draw/models.py:259
+#: draw/models.py:274
 msgid "affirmative"
 msgstr "affirmatif"
 
-#: draw/models.py:260
+#: draw/models.py:275
 msgid "negative"
 msgstr "négatif"
 
-#: draw/models.py:261
+#: draw/models.py:276
 msgid "opening government"
 msgstr ""
 
-#: draw/models.py:262
+#: draw/models.py:277
 msgid "opening opposition"
 msgstr ""
 
-#: draw/models.py:263
+#: draw/models.py:278
 msgid "closing government"
 msgstr ""
 
-#: draw/models.py:264
+#: draw/models.py:279
 msgid "closing opposition"
 msgstr ""
 
-#: draw/models.py:265
+#: draw/models.py:280
 msgid "unallocated"
 msgstr "pas attributé"
 
-#: draw/models.py:272 draw/models.py:338
+#: draw/models.py:287 draw/models.py:372
 msgid "team"
 msgstr "équipe"
 
-#: draw/models.py:274 draw/models.py:340
+#: draw/models.py:289 draw/models.py:374
 msgid "side"
 msgstr "côté"
 
-#: draw/models.py:277
+#: draw/models.py:295
 msgid "debate team"
 msgstr "débat-équipe"
 
-#: draw/models.py:278
+#: draw/models.py:296
 msgid "debate teams"
 msgstr "débat-équipes"
 
-#: draw/models.py:298
+#: draw/models.py:323
 msgid "won"
 msgstr "a gagné"
 
-#: draw/models.py:300
+#: draw/models.py:325
 msgid "lost"
 msgstr "a perdu"
 
-#: draw/models.py:302
+#: draw/models.py:327
 msgid "result unknown"
 msgstr "résultat inconnu"
 
-#: draw/models.py:344
+#: draw/models.py:378
 msgid "team side allocation"
 msgstr "attribution de côté à une équipe"
 
-#: draw/models.py:345
+#: draw/models.py:379
 msgid "team side allocations"
 msgstr "attributions de côté à une équipe"
 
@@ -302,59 +320,93 @@ msgstr ""
 "reste le cas. Si vous ne le faites pas correctement, nombreux pages "
 "<strong>planteront certainement</strong>."
 
-#: draw/views.py:110
+#: draw/templates/edit_matchups.html:11
+msgid ""
+"This interface is intended to easily swap the positions of teams within a "
+"debate, such as for final rounds where these are not known in advance. "
+"However it can also be used to create new debates and edit existing "
+"matchups. This should be done with caution; edits to matchups will "
+"<em>remove any round results for the teams that are moved</em>. In general "
+"you should only ever edit draws this way before they are released; and only "
+"then if you don't want a 'correct' draw."
+msgstr ""
+
+#: draw/templates/edit_matchups.html:22
+msgid ""
+"Note that changes to matchups will only be saved once a debate has <em>all "
+"of its team slots filled</em>. You can create new debates by dragging into "
+"the blank rows at the bottom, but debates cannot be deleted here — you will "
+"need to go into the Edit Database area for that."
+msgstr ""
+
+#: draw/views.py:46
+#, python-format
+msgid "Draw for %(round)s"
+msgstr ""
+
+#: draw/views.py:59
+#, python-format
+msgid "debates start at %(time)s"
+msgstr ""
+
+#: draw/views.py:111
 #, python-format
 msgid "The draw for %(round)s has yet to be released."
 msgstr ""
 
-#: draw/views.py:188 draw/views.py:276
+#: draw/views.py:139
+#, python-format
+msgid "All Debates for All Rounds of %(tournament)s"
+msgstr ""
+
+#: draw/views.py:189 draw/views.py:277
 #, python-format
 msgid "Draw with details for %(round)s"
 msgstr ""
 
-#: draw/views.py:190
+#: draw/views.py:191
 #, python-format
 msgid "No draw for %(round)s"
 msgstr ""
 
-#: draw/views.py:192
+#: draw/views.py:193
 #, python-format
 msgid "Draft draw for %(round)s"
 msgstr ""
 
-#: draw/views.py:195
+#: draw/views.py:196
 #, python-format
 msgid "Confirmed draw for %(round)s"
 msgstr ""
 
-#: draw/views.py:198
+#: draw/views.py:199
 #, python-format
 msgid "Released draw for %(round)s"
 msgstr ""
 
 #. Translators: e.g. possessive might be "affirmative's" to get "affirmative's break rank"
-#: draw/views.py:247
+#: draw/views.py:248
 #, python-format
 msgid "%(possessive)s break rank"
 msgstr "rang de break %(possessive)s"
 
-#: draw/views.py:250
+#: draw/views.py:251
 #, python-format
 msgid "%(initial)sBR"
 msgstr "RB%(initial)s"
 
-#: draw/views.py:261
+#: draw/views.py:262
 msgid ""
 "No draw exists yet — go to the check-ins section for this round to generate "
 "a draw."
 msgstr ""
 
-#: draw/views.py:295
+#: draw/views.py:296
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
 msgstr ""
 
-#: draw/views.py:302
+#: draw/views.py:303
 #, python-format
 msgid ""
 "<p>There was a problem creating the draw: <em>%(error)s</em></p>\n"
@@ -362,35 +414,68 @@ msgid ""
 "contact the developers.</p>"
 msgstr ""
 
-#: draw/views.py:314
+#: draw/views.py:315
 msgid ""
 "Venues were not auto-allocated because there are one or more adjudicator "
 "venue constraints. You should run venue allocations after allocating "
 "adjudicators."
 msgstr ""
 
-#: draw/views.py:343
+#: draw/views.py:344
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
-#: draw/views.py:363
+#: draw/views.py:364
 msgid ""
 "Released the draw. It will now show on the public-facing pages of this "
 "website."
 msgstr ""
 
-#: draw/views.py:379
+#: draw/views.py:380
 msgid ""
 "Unreleased the draw. It will no longer show on the public-facing pages of "
 "this website."
 msgstr ""
 
-#: draw/views.py:392
+#: draw/views.py:393
 #, python-format
 msgid ""
 "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with "
 "a colon, for example: \"13:57\"."
 msgstr ""
+
+#: draw/views.py:488
+#, fuzzy
+#| msgid "team side allocations"
+msgid "Side Pre-Allocations"
+msgstr "attributions de côté à une équipe"
+
+#: draw/views.py:605
+msgid "All Draws for All Teams"
+msgstr ""
+
+#: draw/views.py:620
+#, python-format
+msgid "All Debates for Teams from %(institution)s"
+msgstr ""
+
+#: draw/views.py:639
+msgid ""
+"This venue category does not exist or the URL for it might have changed. Try "
+"finding it again from the homepage."
+msgstr ""
+
+#: draw/views.py:646
+#, python-format
+msgid "All Debates at %(venue_category)s"
+msgstr ""
+
+#: draw/views.py:648
+msgid "Unknown Venue Category"
+msgstr ""
+
+#~ msgid "None"
+#~ msgstr "Aucun"
 
 #~ msgid "There was not an even number of active teams."
 #~ msgstr "Le nombre d'équipes actives n'est pas pair."

@@ -2,21 +2,21 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-#, fuzzy
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 08:27+1000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2017-08-22 16:38+1000\n"
+"PO-Revision-Date: 2017-08-21 23:35-0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: breakqual/apps.py:7
 msgid "Break Qualification"
@@ -84,15 +84,15 @@ msgstr ""
 
 #: breakqual/models.py:32
 msgid "AIDA 1996"
-msgstr ""
+msgstr "AIDA 1996"
 
 #: breakqual/models.py:33
 msgid "AIDA 2016 (Easters)"
-msgstr ""
+msgstr "AIDA 2016 (Easters)"
 
 #: breakqual/models.py:34
 msgid "AIDA 2016 (Australs)"
-msgstr ""
+msgstr "AIDA 2016 (Australs)"
 
 #: breakqual/models.py:35
 msgid "WADL division winners first"
@@ -172,28 +172,108 @@ msgstr ""
 msgid "breaking team"
 msgstr ""
 
-#: breakqual/views.py:78
+#: breakqual/templates/breaking_index.html:4
+#: breakqual/templates/breaking_index.html:5
+msgid "Breaks"
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:10
+#: breakqual/templates/edit_eligibility.html:32
+msgid ""
+"This tournament does not have any break categories set up. You can read "
+"about how to create breaks <a href=\"http://tabbycat.readthedocs.io/en/"
+"stable/features/breaks.html\" class=\"alert-link\" target=\"_blank\"> at our "
+"documentation. </a>"
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:22
+#, python-format
+msgid ""
+"It looks like no teams are currently marked as eligible for the break. To "
+"set which teams are eligible, click the <a href=\"%(eligibility_url)s\" "
+"class=\"alert-link\"> Edit Teams' Eligibility</a> button above-right."
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:31
+msgid ""
+"The break hasn't been generated yet. To generate it, view any of the team "
+"breaks (via the above buttons), and then click on \"Generate the Break for "
+"All Categories\"."
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:46
+msgid "Edit Teams' Eligibility"
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:60
+#, python-format
+msgid "Teams Eligible for the %(category_name)s Break"
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:83
+#, python-format
+msgid "%(n)s breaking"
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:89
+#, python-format
+msgid "%(n)s excluded"
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:95
+#, python-format
+msgid "%(n)s not breaking"
+msgstr ""
+
+#: breakqual/templates/breakqual_subnav.html:5
+msgid "Breaks Overview"
+msgstr ""
+
+#: breakqual/templates/breakqual_subnav.html:11
+#, python-format
+msgid "%(category_name)s Break"
+msgstr ""
+
+#: breakqual/templates/breakqual_subnav.html:19
+msgid "Adjudicators' Break"
+msgstr ""
+
+#: breakqual/templates/edit_eligibility.html:4
+#: breakqual/templates/edit_eligibility.html:5
+msgid "Break Eligibility"
+msgstr ""
+
+#: breakqual/templates/edit_eligibility.html:8
+msgid "Save Teams' Eligibility"
+msgstr ""
+
+#: breakqual/views.py:59
+#, python-format
+msgid "%(category)s Break"
+msgstr ""
+
+#: breakqual/views.py:82
 #, python-format
 msgid ""
 "There was an error generating the break for category %(category)s: "
 "%(message)s"
 msgstr ""
 
-#: breakqual/views.py:135
+#: breakqual/views.py:139
 #, python-format
 msgid ""
 "Changes to breaking team remarks saved and teams break updated for the "
 "following break categories: %(categories)s."
 msgstr ""
 
-#: breakqual/views.py:142
+#: breakqual/views.py:146
 #, python-format
 msgid ""
 "Changes to breaking team remarks saved and teams break updated for break "
 "category %(category)s."
 msgstr ""
 
-#: breakqual/views.py:171
+#: breakqual/views.py:175
 #, python-format
 msgid ""
 "Teams break generated for the following break categories: %(categories)s."

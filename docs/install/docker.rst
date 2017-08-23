@@ -35,6 +35,8 @@ If using OS X or Linux
 If using Windows 10 Pro, Enterprise, or Education Edition
 ---------------------------------------------------------
 
+.. rst-class:: spaced-list
+
 1. Install the **Docker App** from the `Docker downloads page <https://www.docker.com/products/overview>`_.
 2. Before or shortly after installing it, Docker may ask you to enable hypervisor and restart your PC. If it asks you this follow the prompts and restart as asked.
 3. Once Docker has finished installing, open up the newly-installed Docker application, then right-click the app's icon (the whale) in the Taskbar.
@@ -59,6 +61,8 @@ If using the Docker App
 
 *These instructions apply if you installed the Docker App, i.e., if you are using Mac OS X, Linux or Windows Pro/Enterprise/Education.*
 
+.. rst-class:: spaced-list
+
 1. Ensure that Docker application is open (there should be a whale icon in your menu/task bar) and that it says that Docker is running.
 
 2. Browse to the location where you extracted Tabbycat to. Open up the **bin** folder there. Within that folder:
@@ -77,6 +81,8 @@ If using the Docker Toolbox
 ---------------------------
 
 *These instructions apply if you installed the Docker Toolbox, i.e., if you are using Windows 7, Windows 8 or Windows 10 Home.*
+
+.. rst-class:: spaced-list
 
 1. Start the **Docker Quickstart Terminal**.
 

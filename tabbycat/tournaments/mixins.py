@@ -11,7 +11,8 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.views.generic.detail import SingleObjectMixin
 
 from actionlog.mixins import LogActionMixin
@@ -128,7 +129,7 @@ class RoundMixin(TournamentMixin):
     round_redirect_pattern_name = None
 
     def get_page_subtitle(self):
-        return 'as of %s' % self.get_round().name
+        return _("as of %(round)s") % {'round': self.get_round().name}
 
     def get_round(self):
         # First look in self,
@@ -179,7 +180,7 @@ class PublicTournamentPageMixin(TournamentMixin):
     """
 
     public_page_preference = None
-    disabled_message = "That page isn't enabled for this tournament."
+    disabled_message = ugettext_lazy("That page isn't enabled for this tournament.")
 
     def get_disabled_message(self):
         return self.disabled_message
@@ -187,7 +188,7 @@ class PublicTournamentPageMixin(TournamentMixin):
     def dispatch(self, request, *args, **kwargs):
         tournament = self.get_tournament()
         if tournament is None:
-            messages.info(self.request, "That tournament no longer exists.")
+            messages.info(self.request, _("That tournament no longer exists."))
             return redirect('tabbycat-index')
         if self.public_page_preference is None:
             raise ImproperlyConfigured("public_page_preference isn't set on this view.")

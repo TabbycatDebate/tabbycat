@@ -1,5 +1,7 @@
 """Standings generator for speakers."""
 
+from django.utils.translation import ugettext_lazy as _
+
 from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
@@ -63,40 +65,40 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
     key = "speaks_sum"
-    name = "total"
-    abbr = "Total"
+    name = _("total")
+    abbr = _("Total")
     function = "SUM"
 
 
 class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for average speaker score."""
     key = "speaks_avg"
-    name = "average"
-    abbr = "Avg"
+    name = _("average")
+    abbr = _("Avg")
     function = "AVG"
 
 
 class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for standard deviation of speaker score."""
     key = "speaks_stddev"
-    name = "standard deviation"
-    abbr = "Stdev"
+    name = _("standard deviation")
+    abbr = _("Stdev")
     function = "STDDEV_SAMP"
 
 
 class NumberOfSpeechesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for number of speeches given."""
     key = "speeches_count"
-    name = "speeches given"
-    abbr = "Num"
+    name = _("speeches given")
+    abbr = _("Num")
     function = "COUNT"
 
 
 class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for total reply score."""
     key = "replies_sum"
-    name = "total"
-    abbr = "Total"
+    name = _("total")
+    abbr = _("Total")
     function = "SUM"
     replies = True
 
@@ -104,8 +106,8 @@ class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for average reply score."""
     key = "replies_avg"
-    name = "average"
-    abbr = "Avg"
+    name = _("average")
+    abbr = _("Avg")
     function = "AVG"
     replies = True
 
@@ -113,8 +115,8 @@ class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for standard deviation of reply score."""
     key = "replies_stddev"
-    name = "standard deviation"
-    abbr = "Stdev"
+    name = _("standard deviation")
+    abbr = _("Stdev")
     function = "STDDEV_SAMP"
     replies = True
 
@@ -122,8 +124,8 @@ class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnot
 class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for number of replies given."""
     key = "replies_count"
-    name = "replies given"
-    abbr = "Num"
+    name = _("replies given")
+    abbr = _("Num")
     function = "COUNT"
     replies = True
 

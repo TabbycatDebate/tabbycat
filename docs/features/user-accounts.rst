@@ -6,17 +6,35 @@ User Accounts
 
 For obvious reasons, user logins are required to data entry and administrative functions. There are (conceptually) four levels of access:
 
-+-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-|   Access  | Should be used by  |                Grants access to                  |                                            Is capable of                                            |
-+===========+====================+==================================================+=====================================================================================================+
-| Public    | The public         | Publicly available information.                  | Viewing things, and submitting new ballots/feedback if that function is enabled.                    |
-+-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-| Assistant | Data entry helpers | Specialised data entry (ballots and feedback).   | Entering and confirming ballots and feedback.                                                       |
-+-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-| Superuser | Adjudication core  | The Tabbycat admin interface.                    | Generating draws, editing ballots, feedback and adjudicator scores, checking in ballots and people. |
-+-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
-| Staff     | Tab director       | The Tabbycat admin and edit database interfaces. | Editing the database directly.                                                                      |
-+-----------+--------------------+--------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+.. list-table::
+  :header-rows: 1
+  :stub-columns: 1
+  :widths: 15 15 25 45
+
+  * - Access
+    - Should be used by
+    - Grants access to
+    - Is capable of
+
+  * - Public
+    - The public
+    - Publicly available information.
+    - Viewing things, and submitting new ballots/feedback if that function is enabled.
+
+  * - Assistant
+    - Data entry helpers
+    - Specialised data entry (ballots and feedback).
+    - Entering and confirming ballots and feedback.
+
+  * - Superuser
+    - Adjudication core
+    - The Tabbycat admin interface.
+    - Generating draws, editing ballots, feedback and adjudicator scores, checking in ballots and people.
+
+  * - Staff
+    - Tab director
+    - The Tabbycat admin and edit database interfaces.
+    - Editing the database directly.
 
 Account roles
 =============
@@ -43,5 +61,5 @@ To add an account:
 3. What you do next depends on what sort of account you're creating:
 
    - If this is an assistant account, click "Save" or "Save and add another". (Any account not marked staff or superuser is an assistant account.)
-   - If they're being assigned superuser and/or staff privileges, then click "Save and continue editing", and check the appropriate boxes before clicking "Save". 
+   - If they're being assigned superuser and/or staff privileges, then click "Save and continue editing", and check the appropriate boxes before clicking "Save".
    - If you also wanted their names to be associated with their accounts, click "Save and continue editing" and fill out the relevant fields. But their names *etc.* aren't used for anything by Tabbycat.

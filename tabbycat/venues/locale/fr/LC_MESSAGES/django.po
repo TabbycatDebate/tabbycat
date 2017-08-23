@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 08:27+1000\n"
+"POT-Creation-Date: 2017-08-22 16:38+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,12 +124,16 @@ msgstr ""
 msgid "venue constraints"
 msgstr ""
 
-#: venues/templates/categories_edit.html:5
-#: venues/templates/categories_edit.html:6
+#: venues/templates/venue_categories_edit.html:4
+#: venues/templates/venue_categories_edit.html:5
 msgid "Venue Categories"
 msgstr ""
 
-#: venues/templates/categories_edit.html:11
+#: venues/templates/venue_categories_edit.html:7
+msgid "Save Venue Categories"
+msgstr ""
+
+#: venues/templates/venue_categories_edit.html:13
 msgid ""
 "Venue categories allow you to <ul> <li>group venues together into \"zones\" "
 "to display in the draw and make navigation easier for participants, and/or</"
@@ -138,26 +142,19 @@ msgid ""
 "li> </ul>"
 msgstr ""
 
-#: venues/templates/categories_edit.html:22
-#: venues/templates/venue_constraints_edit.html:24
-msgid "There are some problems with the data on this form:"
+#: venues/templates/venue_categories_edit.html:23
+#, python-format
+msgid ""
+"If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" "
+"class=\"alert-link\">Edit Database</a> area."
 msgstr ""
 
-#: venues/templates/categories_edit.html:68
-msgid "Save Venue Categories"
-msgstr ""
-
-#: venues/templates/categories_edit.html:71
-#: venues/templates/venue_constraints_edit.html:73
-msgid "Save and Add More"
-msgstr ""
-
+#: venues/templates/venue_constraints_edit.html:4
 #: venues/templates/venue_constraints_edit.html:5
-#: venues/templates/venue_constraints_edit.html:6
 msgid "Venue Constraints"
 msgstr ""
 
-#: venues/templates/venue_constraints_edit.html:11
+#: venues/templates/venue_constraints_edit.html:10
 msgid ""
 "Venue constraints tell the venue allocator to try to keep the specified team "
 "or adjudicator, or all teams (but not adjudicators) from the specified "
@@ -167,16 +164,32 @@ msgid ""
 "which are taken if a higher-priority constraint couldn't be met."
 msgstr ""
 
-#: venues/templates/venue_constraints_edit.html:70
+#: venues/templates/venue_constraints_edit.html:23
+msgid "There are some problems with the data on this form:"
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html:69
 msgid "Save Venue Constraints"
 msgstr ""
 
-#: venues/views.py:92
-#, python-format
-msgid "Saved venue categories: %(list)s"
+#: venues/templates/venue_constraints_edit.html:72
+msgid "Save and Add More"
 msgstr ""
 
-#: venues/views.py:163
+#: venues/views.py:94
 #, python-format
-msgid "Saved %(count)d venue constraints."
+msgid "Saved venue category: %(list)s"
+msgid_plural "Saved venue categories: %(list)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venues/views.py:100
+msgid "No changes were made to the venue categories."
 msgstr ""
+
+#: venues/views.py:170
+#, python-format
+msgid "Saved %(count)d venue constraint."
+msgid_plural "Saved %(count)d venue constraints."
+msgstr[0] ""
+msgstr[1] ""

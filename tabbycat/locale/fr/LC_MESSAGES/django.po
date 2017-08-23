@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 08:27+1000\n"
-"PO-Revision-Date: 2017-06-18 21:03+1200\n"
+"POT-Creation-Date: 2017-08-22 16:38+1000\n"
+"PO-Revision-Date: 2017-08-21 23:45-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -16,10 +16,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
+msgstr ""
+
+#: templates/base_eligibility.html:5
+msgid "Saving…"
+msgstr ""
+
+#: templates/base_eligibility.html:14
+msgid "Please correct the errors below."
+msgstr ""
+
+#: templates/base_formset.html:8
+msgid "There are some problems with the data on this form:"
+msgstr ""
+
+#: templates/base_formset.html:57
+msgid "Save and Add More"
 msgstr ""
 
 #: templates/footer.html:12
@@ -69,10 +85,10 @@ msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
 #: templates/footer.html:41
 #, python-format
 msgid ""
-"Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a "
-"href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
-"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a "
-"href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"Using an app designed for debate timekeeping makes speaking and adjudicating "
+"easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/"
+"id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/"
+"iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee."
 "debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
 "\">Debatekeeper</a> (Android)."
 msgstr ""
@@ -115,6 +131,138 @@ msgstr "Groupe sur Facebook"
 #: templates/footer.html:74
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
+
+#: templates/nav/admin_nav.html:18
+#, python-format
+msgid "<strong>%(other_tournament)s</strong> (Admin)"
+msgstr "<strong>%(other_tournament)s</strong> (admin)"
+
+#: templates/nav/admin_nav.html:25
+#, python-format
+msgid "<strong>%(other_tournament)s</strong> (Public)"
+msgstr "<strong>%(other_tournament)s</strong> (public)"
+
+#: templates/nav/admin_nav.html:35
+msgid "Site Home"
+msgstr "Page d'accueil"
+
+#: templates/nav/admin_nav.html:41
+msgid "New Tournament"
+msgstr "Nouveau tournoi"
+
+#: templates/nav/admin_nav.html:47 templates/nav/admin_nav.html:171
+msgid "Edit Database"
+msgstr "Modification de la base de données"
+
+#: templates/nav/admin_nav.html:65
+msgid "Overview"
+msgstr "Aperçu"
+
+#: templates/nav/admin_nav.html:75 templates/nav/public_nav.html:114
+msgid "Sides"
+msgstr ""
+
+#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:104
+msgid "Divisions"
+msgstr "Divisions"
+
+#: templates/nav/admin_nav.html:96
+msgid "Feedback"
+msgstr "Commentaires"
+
+#: templates/nav/admin_nav.html:105 templates/nav/public_nav.html:119
+msgid "Standings"
+msgstr "Classement"
+
+#: templates/nav/admin_nav.html:122
+msgid "Setup"
+msgstr ""
+
+#: templates/nav/admin_nav.html:136
+msgid "Configuration"
+msgstr "Configuration"
+
+#: templates/nav/admin_nav.html:145
+msgid "Import Data"
+msgstr "Importer les données"
+
+#: templates/nav/admin_nav.html:154 templates/nav/public_nav.html:129
+msgid "Participants"
+msgstr "Participants"
+
+#: templates/nav/admin_nav.html:163
+msgid "Private URLs"
+msgstr "URLs privées"
+
+#: templates/nav/admin_nav.html:189
+msgid "Breaks"
+msgstr "Breaks"
+
+#: templates/nav/admin_nav.html:203
+#, python-format
+msgid "Log Out (%(user)s)"
+msgstr "Déconnexion (%(user)s)"
+
+#: templates/nav/public_nav.html:6
+msgid "Team Tab"
+msgstr ""
+
+#: templates/nav/public_nav.html:11
+msgid "Speaker Tab"
+msgstr ""
+
+#: templates/nav/public_nav.html:19
+#, python-format
+msgid "%(category_name)s Speaker Tab"
+msgstr ""
+
+#: templates/nav/public_nav.html:29
+msgid "Replies Tab"
+msgstr ""
+
+#: templates/nav/public_nav.html:34
+msgid "Motions Tab"
+msgstr ""
+
+#: templates/nav/public_nav.html:48
+msgid "Draws"
+msgstr ""
+
+#: templates/nav/public_nav.html:59
+msgid "View All"
+msgstr ""
+
+#: templates/nav/public_nav.html:71
+msgid "Results"
+msgstr ""
+
+#: templates/nav/public_nav.html:87
+msgid "Break"
+msgstr ""
+
+#: templates/nav/public_nav.html:95
+msgid "Adjudicators"
+msgstr ""
+
+#: templates/nav/public_nav.html:109
+msgid "Motions"
+msgstr ""
+
+#: templates/nav/public_nav.html:124
+msgid "Diversity"
+msgstr ""
+
+#: templates/nav/public_nav.html:134
+msgid "Feedback Progress"
+msgstr ""
+
+#: templates/nav/public_nav.html:139
+msgid "Enter Ballot"
+msgstr ""
+
+#: templates/nav/public_nav.html:144
+msgid "Enter Feedback"
+msgstr ""
 
 #: templates/registration/login.html:4
 msgctxt "page title"
@@ -303,6 +451,26 @@ msgstr ""
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr ""
 
+#, fuzzy
+#~| msgid "Need ballots?"
+#~ msgid "Discarded ballot set"
+#~ msgstr "Avez-vous besoin des bulletins&nbsp;?"
+
+#, fuzzy
+#~| msgid "Need ballots?"
+#~ msgid "Checked in ballot set"
+#~ msgstr "Avez-vous besoin des bulletins&nbsp;?"
+
+#, fuzzy
+#~| msgid "Need ballots?"
+#~ msgid "Created ballot set"
+#~ msgstr "Avez-vous besoin des bulletins&nbsp;?"
+
+#, fuzzy
+#~| msgid "Need ballots?"
+#~ msgid "Confirmed ballot set"
+#~ msgstr "Avez-vous besoin des bulletins&nbsp;?"
+
 #~ msgid "%(side_abbr)s%(metric_abbr)s"
 #~ msgstr "%(metric_abbr)s%(side_abbr)s"
 
@@ -318,9 +486,6 @@ msgstr ""
 #~| msgid "%(side_abbr)s%(aff_abbr)ss"
 #~ msgid "%(side_abbr)sSC"
 #~ msgstr "%(side_abbr)s%(aff_abbr)ss"
-
-#~ msgid "tournament"
-#~ msgstr "tournoi"
 
 #~ msgctxt "button"
 #~ msgid "Login"
