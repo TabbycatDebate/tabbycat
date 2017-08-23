@@ -251,6 +251,9 @@ if 'DATABASE_URL' in os.environ and not DEBUG:
         'release': TABBYCAT_VERSION,
     }
 
+    # Custom implementation makes the user ID the e-mail address, rather than the primary key
+    SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
+
 # ==============================================================================
 # Messages
 # ==============================================================================
