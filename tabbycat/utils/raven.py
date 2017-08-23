@@ -4,15 +4,16 @@ from raven.contrib.django.utils import get_host
 
 
 class TabbycatRavenClient(DjangoClient):
-    """Makes the user ID the e-mail address, rather than the primary key."""
+    """Customizations to the Raven client for Tabbycat.
+
+    The base implementation can be found at:
+    https://github.com/getsentry/raven-python/blob/master/raven/contrib/django/client.py
+    """
 
     def get_data_from_request(self, request):
         """Override the user ID with the e-mail address if it exists, or append
-        the host name if it does not exist.
-
-        The base implementation can be found at:
-        https://github.com/getsentry/raven-python/blob/master/raven/contrib/django/client.py
-        """
+        the host name if it does not exist. (Because we receive reports from
+        many sites, the primary key of the user isn't very helpful.)"""
 
         result = super().get_data_from_request(request)
 
