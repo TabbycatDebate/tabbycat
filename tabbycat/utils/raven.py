@@ -1,9 +1,17 @@
+from django.conf import settings
 from raven.contrib.django.raven_compat import DjangoClient
 from raven.contrib.django.utils import get_host
 
 
-class UserIdByEmailRavenClient(DjangoClient):
+class TabbycatRavenClient(DjangoClient):
     """Makes the user ID the e-mail address, rather than the primary key."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Add tab director e-mail to extra context
+        if hasattr(settings, 'TAB_DIRECTOR_EMAIL'):
+            self.extra_context({'tab_director_email': settings.TAB_DIRECTOR_EMAIL})
 
     def get_data_from_request(self, request):
         """Override the user ID with the e-mail address if it exists, or append
