@@ -2,12 +2,20 @@
 Change Log
 ==========
 
+1.4.2
+-----
+*Release date: 23 August 2017*
+
+- Minor bug fixes and error logging improvements
+
+
 1.4.1
 -----
 *Release date: 2 August 2017*
 
 - Fixed bug that prevented edited matchups from being saved
 - Added flag to prevent retired sites from using the database for sessions
+
 
 1.4.0 (Havana Brown)
 --------------------
@@ -30,6 +38,7 @@ Change Log
 - Fixed issue where toggling iron-person speeches on and off wouldn't hide/unset the relevant checkboxes
 - Fixed issue where VenueCategories could not be edited if they did not have Venues set
 - Various other small fixes and improvements
+
 
 1.3.1
 -----

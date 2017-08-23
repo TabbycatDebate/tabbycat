@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'en'
 USE_I18N = True
 
-TABBYCAT_VERSION = '1.4.1'
+TABBYCAT_VERSION = '1.4.2'
 TABBYCAT_CODENAME = 'Havana Brown'
-READTHEDOCS_VERSION = 'v1.4.1'
+READTHEDOCS_VERSION = 'v1.4.2'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
@@ -250,6 +250,9 @@ if 'DATABASE_URL' in os.environ and not DEBUG:
         'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
         'release': TABBYCAT_VERSION,
     }
+
+    # Custom implementation makes the user ID the e-mail address, rather than the primary key
+    SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
 
 # ==============================================================================
 # Messages
