@@ -50,6 +50,7 @@ export default {
       this.isDroppable = false;
       if (typeof this.handleDrop === 'function') {
         var payloadData = event.dataTransfer.getData("text");
+        console.log('DEBUG: JSON drop handleDrop payloadData', payloadData)
         this.handleDrop(JSON.parse(payloadData));
       }
     },
