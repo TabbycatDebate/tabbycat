@@ -8,7 +8,8 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.views.generic.base import TemplateView
 
-from motions.models import Motion
+from motions.models import DebateTeamMotionPreference, Motion
+from motions.statistics import MotionStats
 from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
@@ -17,7 +18,6 @@ from utils.misc import redirect_tournament
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .motions import gather_motion_stats, get_motion_balance
 from .diversity import get_diversity_data_sets
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
@@ -425,17 +425,22 @@ class BaseMotionStandingsView(TournamentMixin, TemplateView):
         t = self.get_tournament()
         rounds = t.round_set.order_by('seq')
 
-        motions = Motion.objects.select_related('round').filter(round__in=rounds).order_by('round')
-        motions = gather_motion_stats(motions, rounds, t)
+        motions = Motion.objects.select_related('round').filter(round__in=rounds).order_by('round', 'seq')
+        results = TeamScore.objects.filter(ballot_submission__confirmed=True,
+            ballot_submission__debate__round__in=rounds).select_related(
+            'debate_team', 'ballot_submission__debate__round',
+            'ballot_submission__motion')
+        if t.pref('motion_vetoes_enabled'):
+            vetoes = DebateTeamMotionPreference.objects.filter(
+                preference=3,
+                ballot_submission__confirmed=True,
+                ballot_submission__debate__round__in=rounds).select_related(
+                'debate_team', 'ballot_submission__motion')
+        else:
+            vetoes = False
+        analysed_motions = [MotionStats(m, t, results, vetoes) for m in motions]
 
-        for motion in motions:
-            result_balance = get_motion_balance(motion.placings, motion.chosen)
-            setattr(motion, 'result_balance', result_balance)
-            if hasattr(motion, 'vetoes'):
-                veto_balance = get_motion_balance(motion.vetoes, motion.chosen, True)
-                setattr(motion, 'veto_balance', veto_balance)
-
-        kwargs['motions'] = motions
+        kwargs['analysed_motions'] = analysed_motions
         return super().get_context_data(**kwargs)
 
 
