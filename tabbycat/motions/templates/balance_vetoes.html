@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <div class="col-sm-5 vertical-spacing">
 
   {% if am.veto_rates.aff.1 != 0 and am.veto_rates.neg.1 != 0 %}
@@ -30,7 +32,7 @@
 
     <div class="btn-group btn-group-xs pull-left">
       <div class="btn btn-default" disabled="disabled">
-        No teams vetoed this topic
+        {% trans "No teams vetoed this topic" %}
       </div>
     </div>
 

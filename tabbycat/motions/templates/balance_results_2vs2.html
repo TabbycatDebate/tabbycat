@@ -1,3 +1,4 @@
+{% load i18n %}
 
 {% if am.debate_rooms > 0 %}
 
@@ -38,7 +39,7 @@
 
   <div class="btn-group btn-group-xs pull-left">
     <div class="btn btn-default" disabled="disabled">
-      No teams debated this topic
+      {% trans "No teams debated this topic" %}
     </div>
   </div>
 

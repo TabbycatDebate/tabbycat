@@ -1,3 +1,5 @@
+{% load i18n %}
+
 {% if am.debate_rooms > 0 %}
 
   <div class="row vertical-spacing">
@@ -15,7 +17,9 @@
         {% endfor %}
 
       </div>
-      <h6 class="text-center text-muted">average points per position</h6>
+      <h6 class="text-center text-muted">
+        {% trans "average points per position" %}
+      </h6>
     </div>
   </div>
 
@@ -37,7 +41,9 @@
           {% endfor %}
 
         </div>
-        <h6 class="text-center  text-muted">{{ position.upper }} results per position</h6>
+        <h6 class="text-center  text-muted">{{ position.upper }}
+          {% trans "results per position" %}
+        </h6>
       </div>
 
     {% endfor %}
@@ -46,9 +52,9 @@
 
 {% else %}
 
-  <div class="btn-group btn-group-xs pull-left">
+  <div class="btn-group btn-group-xs pull-left vertical-spacing">
     <div class="btn btn-default" disabled="disabled">
-      No results for this topic
+      {% trans "No results for this topic" %}
     </div>
   </div>
 
