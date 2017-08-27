@@ -179,15 +179,6 @@ if os.environ.get('SENDGRID_USERNAME', ''):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',  # disables e-mails to admins when DEBUG on
-        },
-        'except_importer_base': {
-            '()': 'utils.logging.ExceptFilter',
-            'name': 'importer.base',
-        },
-    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
