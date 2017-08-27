@@ -43,7 +43,7 @@ export default {
       return true
     },
     determineDebatesToSave(fromDebate, toDebate) {
-      if (fromDebate.id === toDebate.id) {
+      if (fromDebate.id === toDebate.id && this.debateCheckIfShouldSave(toDebate)) {
         return [toDebate]
       }
       var debatesToSave = []
