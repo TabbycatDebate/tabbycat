@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 16:38+1000\n"
-"PO-Revision-Date: 2017-06-22 17:57+1200\n"
+"POT-Creation-Date: 2017-08-27 14:52+1000\n"
+"PO-Revision-Date: 2017-08-26 21:50-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: tournaments/admin.py:36
 #, python-format
@@ -112,13 +112,11 @@ msgstr ""
 #: tournaments/mixins.py:132
 #, python-format
 msgid "as of %(round)s"
-msgstr ""
+msgstr "à compter de %(round)s"
 
 #: tournaments/mixins.py:183
-#, fuzzy
-#| msgid "Text/html entered here shows on the homepage for this tournament"
 msgid "That page isn't enabled for this tournament."
-msgstr "Ce texte ou ce html est affiché sur le page d'accueil pour ce tournoi"
+msgstr "Ce page n'est pas activé pour ce tournoi."
 
 #: tournaments/mixins.py:191
 msgid "That tournament no longer exists."
@@ -511,20 +509,16 @@ msgid "Sides"
 msgstr ""
 
 #: tournaments/templates/public_tournament_index.html:78
-#, fuzzy
-#| msgid "No Results In"
 msgid "Results"
-msgstr "Aucun résultat"
+msgstr "Résultats"
 
 #: tournaments/templates/public_tournament_index.html:83
 msgid "Divisions"
 msgstr ""
 
 #: tournaments/templates/public_tournament_index.html:88
-#, fuzzy
-#| msgid "opposition's"
 msgid "Motions"
-msgstr "de l'opposition"
+msgstr "Motions"
 
 #: tournaments/templates/public_tournament_index.html:98
 msgid "Team Standings"

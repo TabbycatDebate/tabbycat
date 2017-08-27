@@ -1,28 +1,27 @@
 {% extends "base_vue_table.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load debate_tags static i18n %}
 
 {% block page-subnav-sections %}
   <a href="{% roundurl 'availability-index' round %}" class="btn btn-default">
-    <span class="glyphicon glyphicon-chevron-left"></span>Overview
+    <span class="glyphicon glyphicon-chevron-left"></span>{% trans "Overview" %}
   </a>
-  {% if round.is_break_round and page_title == 'Adjudicator Check-Ins' %}
+  {% if round.is_break_round and model == 'participants.Adjudicator' %}
     <a class="btn btn-primary submit-disable"
        href="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
-      Check In All Breaking
+      {% trans "Check In All Breaking" %}
     </a>
   {% endif %}
   {% if round.seq > 1 %}
     <button id="select_previous" class="btn btn-default" type="button">
-      Copy from Previous
+      {% trans "Copy from Previous" %}
     </button>
   {% endif %}
   <div class="btn-group">
     <button id="select_all" class="btn btn-default">
-      Select All
+      {% trans "Select All" %}
     </button>
     <button id="select_none" class="btn btn-default">
-      Select None
+      {% trans "Select None" %}
     </button>
   </div>
   {{ block.super }}
@@ -30,17 +29,18 @@
 
 {% block page-subnav-actions %}
   <button id="save_availability" class="btn btn-success submit-disable" >
-    <span class="glyphicon glyphicon-floppy-disk"></span> Save Selected
+    <span class="glyphicon glyphicon-floppy-disk"></span> {% trans "Save Selected" %}
   </button>
 {% endblock %}
 
 {% block js %}
 
+  {% roundurl 'availability-index' round as index_url %}
+
   {{ block.super }}
   <script>
 
     var updateURL = '{{ update_url }}';
-    var overviewURL = '{% roundurl 'availability-index' round %}';
 
     $('#select_all').click(function() {
       $(":checkbox.vue-table-checkbox").each(function(){
@@ -83,11 +83,11 @@
           references: references,
         },
         success: function(data, status) {
-          $.fn.showAlert('success', 'Saved availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the check-ins overview page?</a>', 2000);
+          $.fn.showAlert('success', 'Saved availabilities. <a href="{{ index_url }}" class="alert-link"> Return to the check-ins overview page?</a>', 2000);
           btn.button('reset');
         },
         error: function(xhr, error, ex) {
-          $.fn.showAlert('danger', 'Error saving availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the check-ins overview page?</a>', 5000);
+          $.fn.showAlert('danger', 'Error saving availabilities. <a href="{{ index_url }}" class="alert-link"> Return to the check-ins overview page?</a>', 5000);
           btn.button('reset');
         }
       });

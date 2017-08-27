@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.base import TemplateView, View
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 
 from . import utils
 
@@ -23,9 +25,17 @@ from venues.models import Venue
 logger = logging.getLogger(__name__)
 
 
+# These need to be entire strings, for translations
+CHECK_IN_TITLES = {
+    Team: ugettext_lazy("Team Check-Ins"),
+    Adjudicator: ugettext_lazy("Adjudicator Check-Ins"),
+    Venue: ugettext_lazy("Venue Check-Ins"),
+}
+
+
 class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'availability_index.html'
-    page_title = 'Check-Ins Overview'
+    page_title = ugettext_lazy("Check-Ins Overview")
     page_emoji = '📍'
 
     def get_context_data(self, **kwargs):
@@ -62,7 +72,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         r = self.get_round()
         if r.draw_type is r.DRAW_FIRSTBREAK:
             break_size = r.break_category.breakingteam_set_competing.count()
-            teams_dict = {'type': 'Team', 'total': break_size}
+            teams_dict = {'title': CHECK_IN_TITLES[Team], 'total': break_size}
             if break_size < 2:
                 teams_dict['in_now'] = 0
                 teams_dict['message'] = "%d breaking team%s — no debates can happen" % (break_size, "" if break_size == 1 else "s")
@@ -82,7 +92,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             else:
                 advancing_teams = last_round.debate_set.count()
             return {
-                'type'      : 'Team',
+                'title'     : CHECK_IN_TITLES[Team],
                 'total'     : advancing_teams,
                 'in_now'    : advancing_teams,
                 'message'   : '%s advancing teams are debating this round' % advancing_teams
@@ -91,8 +101,8 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         else: # this should never happen, but it did once...
             self.error_type = 'bad_draw_type_for_break_round'
             return {
-                'type' : 'Team',
-                'total': 0,
+                'title'  : CHECK_IN_TITLES[Team],
+                'total'  : 0,
                 'in_now' : 0,
                 'message': "status unclear — see message above"
             }
@@ -102,7 +112,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         availability_queryset = RoundAvailability.objects.filter(content_type=contenttype)
         round = self.get_round()
         result = {
-            'type': queryset_all.model._meta.verbose_name.title(),
+            'title': CHECK_IN_TITLES[queryset_all.model],
             'total': queryset_all.count(),
             'in_now': availability_queryset.filter(round=round).count(),
         }
@@ -121,10 +131,11 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
     template_name = "base_availability.html"
 
     def get_page_title(self):
-        return self.model._meta.verbose_name.title() + " Check-Ins"
+        return CHECK_IN_TITLES[self.model]
 
     def get_context_data(self, **kwargs):
         kwargs['update_url'] = reverse_round(self.update_view, self.get_round())
+        kwargs['model'] = self.model._meta.label  # does not get translated
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
@@ -137,13 +148,14 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
         table.add_checkbox_columns([inst.available for inst in queryset],
-            [inst.id for inst in queryset], "Active Now")
+            [inst.id for inst in queryset], _("Active Now"))
 
         if round.prev:
-            table.add_column("Active in %s" % round.prev.abbreviation, [{
-                'sort': inst.prev_available,
-                'icon': 'glyphicon-ok' if inst.prev_available else ''
-            } for inst in queryset])
+            table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation},
+                [{
+                    'sort': inst.prev_available,
+                    'icon': 'glyphicon-ok' if inst.prev_available else ''
+                } for inst in queryset])
 
         self.add_description_columns(table, queryset)
         return table
@@ -188,10 +200,10 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
         for v in venues:
             v.cats = ", ".join([vc.name for vc in v.venuecategory_set.all()])
 
-        table.add_column("Venue", [v.name for v in venues])
-        table.add_column("Display Name (for the draw)", [v.display_name for v in venues])
-        table.add_column("Categories", [v.cats for v in venues])
-        table.add_column("Priority", [v.priority for v in venues])
+        table.add_column(_("Venue"), [v.name for v in venues])
+        table.add_column(_("Display Name (for the draw)"), [v.display_name for v in venues])
+        table.add_column(_("Categories"), [v.cats for v in venues])
+        table.add_column(_("Priority"), [v.priority for v in venues])
 
 
 # ==============================================================================
@@ -209,14 +221,14 @@ class BaseBulkActivationView(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirec
 
 
 class CheckInAllInRoundView(BaseBulkActivationView):
-    activation_msg = 'Checked in all teams, adjudicators and venues.'
+    activation_msg = ugettext_lazy("Checked in all teams, adjudicators and venues.")
 
     def activate_function(self):
         utils.activate_all(self.get_round())
 
 
 class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
-    activation_msg = 'Checked in all breaking adjudicators.'
+    activation_msg = ugettext_lazy("Checked in all breaking adjudicators.")
 
     def activate_function(self):
         utils.set_availability(self.get_tournament().relevant_adjudicators.filter(breaking=True),
@@ -224,7 +236,7 @@ class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
 
 
 class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
-    activation_msg = 'Checked in all teams, adjudicators and venues from previous round.'
+    activation_msg = ugettext_lazy("Checked in all teams, adjudicators and venues from previous round.")
 
     def activate_function(self):
         t = self.get_tournament()
