@@ -14,17 +14,19 @@ class MotionStats:
         {'critical': 1000.0, 'label': '99.9% likely TEAM favoured', 'freedom': .001},
     ]
 
-    def __init__(self, motion, t, results, vetoes=False):
+    def __init__(self, motion, t, results, vetoes=None):
         self.motion = motion
         self.round = motion.round # Needed for regroup
         self.sides = t.sides
 
         if t.pref('enable_motions'):
             results_data = [r for r in results if r.ballot_submission.motion == motion]
-            vetoes_data = [v for v in vetoes if v.motion == motion]
+            if vetoes:
+                vetoes_data = [v for v in vetoes if v.motion == motion]
         else:
             results_data = [r for r in results if r.ballot_submission.debate.round == self.round]
-            vetoes_data = [v for v in vetoes if v.motion.round == self.round]
+            if vetoes:
+                vetoes_data = [v for v in vetoes if v.motion.round == self.round]
 
         if t.pref('teams_in_debate') == 'two':
             self.isBP = False

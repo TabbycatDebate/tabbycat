@@ -437,7 +437,8 @@ class BaseMotionStandingsView(TournamentMixin, TemplateView):
                 ballot_submission__debate__round__in=rounds).select_related(
                 'debate_team', 'ballot_submission__motion')
         else:
-            vetoes = False
+            vetoes = None
+
         analysed_motions = [MotionStats(m, t, results, vetoes) for m in motions]
 
         kwargs['analysed_motions'] = analysed_motions
