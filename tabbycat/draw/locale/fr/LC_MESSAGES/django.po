@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 16:38+1000\n"
-"PO-Revision-Date: 2017-06-22 17:54+1200\n"
+"POT-Creation-Date: 2017-08-27 14:52+1000\n"
+"PO-Revision-Date: 2017-08-26 21:57-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: draw/admin.py:67
 #, python-format
@@ -32,7 +32,7 @@ msgstr ""
 
 #: draw/apps.py:7
 msgid "Draw"
-msgstr "Tirage au sort"
+msgstr "Tirage"
 
 #: draw/generator/__init__.py:13
 msgid "Too many swaps"
@@ -87,12 +87,11 @@ msgstr ""
 msgid ""
 "The number of teams presented for the draw was not a multiple of %(num)d."
 msgstr ""
-"Le nombre d’équipes présenté pour le tirage au sort n'est pas un multiple de "
-"%(num)d."
+"Le nombre d’équipes présenté pour le tirage n'est pas un multiple de %(num)d."
 
 #: draw/generator/common.py:191
 msgid "There were no teams for the draw."
-msgstr "Il n’y a pas d’équipes pour le tirage au sort."
+msgstr "Il n’y a pas d’équipes pour le tirage."
 
 #: draw/generator/elimination.py:50
 #, python-format
@@ -101,7 +100,7 @@ msgid ""
 "two to generate an elimination round draw."
 msgstr ""
 "Il n'y a que %d équipes « breaking » dans cette catégorie ; il faut au moins "
-"deux pour générer un tirage au sort pour un tour d'éliminatoire."
+"deux pour générer un tirage pour un tour d'éliminatoire."
 
 #: draw/generator/elimination.py:75
 #, python-format
@@ -138,22 +137,16 @@ msgid "none"
 msgstr ""
 
 #: draw/models.py:28
-#, fuzzy
-#| msgid "Postponed"
 msgid "postponed"
-msgstr "Reporté"
+msgstr "repoussé"
 
 #: draw/models.py:29
-#, fuzzy
-#| msgid "Draft"
 msgid "draft"
-msgstr "Brouillon"
+msgstr "brouillon"
 
 #: draw/models.py:30
-#, fuzzy
-#| msgid "Confirmed"
 msgid "confirmed"
-msgstr "Confirmé"
+msgstr "confirmé"
 
 #: draw/models.py:35 draw/models.py:370
 msgid "round"
@@ -298,9 +291,9 @@ msgid ""
 "them have exactly one affirmative and one negative team."
 msgstr ""
 "Il s’agit d’une source commune d’erreurs. Si cela vous arrive, vérifiez les "
-"débats (sous la section de Tirage au sort dans cette zone pour modifier la "
-"base de données) pour s'assurer que chacune a exactement une équipe "
-"affirmative et une équipe négative."
+"débats (sous la section de Tirage dans cette zone pour modifier la base de "
+"données) pour s'assurer que chacune a exactement une équipe affirmative et "
+"une équipe négative."
 
 #: draw/templates/admin/draw/debateteam/edit_warning.html:5
 msgid "WARNING!!! If you are editing debate teams, read this first!"
@@ -445,10 +438,8 @@ msgid ""
 msgstr ""
 
 #: draw/views.py:488
-#, fuzzy
-#| msgid "team side allocations"
 msgid "Side Pre-Allocations"
-msgstr "attributions de côté à une équipe"
+msgstr "Attributions de côté à une équipe"
 
 #: draw/views.py:605
 msgid "All Draws for All Teams"

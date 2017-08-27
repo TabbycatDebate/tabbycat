@@ -1,4 +1,4 @@
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 <li class="panel">
 
@@ -41,7 +41,7 @@
             {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
             {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
             {% else %} btn-inactive{% endif %}">
-          <span class="emoji"></span></span>Check-Ins
+          <span class="emoji"></span></span>{% trans "Check-Ins" %}
         </a>
       </li>
       <li>
@@ -54,7 +54,7 @@
             {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
             {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
             {% else %} btn-info{% endif %}">
-          <span class="emoji"></span></span>Draw
+          <span class="emoji"></span></span>{% trans "Draw" %}
         </a>
       </li>
       <li>
@@ -67,7 +67,7 @@
             {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
             {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
             {% else %} btn-info{% endif %}">
-          <span class="emoji"></span></span>Display
+          <span class="emoji"></span></span>{% trans "Display" %}
         </a>
       </li>
       <li>
@@ -78,7 +78,7 @@
             {% if r.motion__count > 0 %} btn-success
             {% elif r.draw_status != r.STATUS_NONE and r.seq >= current_round.seq %} btn-info
             {% else %} btn-inactive{% endif %}">
-          <span class="emoji"></span></span>Motions
+          <span class="emoji"></span></span>{% trans "Motions" %}
         </a>
       </li>
       <li>
@@ -90,7 +90,7 @@
             {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-info
             {% elif r.draw_status == r.STATUS_RELEASED %} btn-info
             {% else %} btn-inactive{% endif %}">
-          <span class="emoji"></span></span>Results
+          <span class="emoji"></span></span>{% trans "Results" %}
         </a>
       </li>
     </ul>

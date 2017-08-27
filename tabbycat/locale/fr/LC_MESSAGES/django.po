@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 16:38+1000\n"
-"PO-Revision-Date: 2017-08-21 23:45-0700\n"
+"POT-Creation-Date: 2017-08-27 14:52+1000\n"
+"PO-Revision-Date: 2017-08-26 21:54-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -232,9 +232,9 @@ msgstr ""
 msgid "View All"
 msgstr ""
 
-#: templates/nav/public_nav.html:71
+#: templates/nav/public_nav.html:71 templates/nav/round_panel.html:93
 msgid "Results"
-msgstr ""
+msgstr "Résultats"
 
 #: templates/nav/public_nav.html:87
 msgid "Break"
@@ -244,9 +244,9 @@ msgstr ""
 msgid "Adjudicators"
 msgstr ""
 
-#: templates/nav/public_nav.html:109
+#: templates/nav/public_nav.html:109 templates/nav/round_panel.html:81
 msgid "Motions"
-msgstr ""
+msgstr "Motions"
 
 #: templates/nav/public_nav.html:124
 msgid "Diversity"
@@ -263,6 +263,18 @@ msgstr ""
 #: templates/nav/public_nav.html:144
 msgid "Enter Feedback"
 msgstr ""
+
+#: templates/nav/round_panel.html:44
+msgid "Check-Ins"
+msgstr "Enregistrements"
+
+#: templates/nav/round_panel.html:57
+msgid "Draw"
+msgstr "Tirage"
+
+#: templates/nav/round_panel.html:70
+msgid "Display"
+msgstr "Affichage"
 
 #: templates/registration/login.html:4
 msgctxt "page title"
