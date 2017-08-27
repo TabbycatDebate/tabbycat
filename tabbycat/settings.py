@@ -179,25 +179,10 @@ if os.environ.get('SENDGRID_USERNAME', ''):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',  # disables e-mails to admins when DEBUG on
-        },
-        'except_importer_base': {
-            '()': 'utils.logging.ExceptFilter',
-            'name': 'importer.base',
-        },
-    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
-        },
-        'mail_admins': {  # errors and above are e-mailed to admins
-            'level': 'ERROR',
-            'filters': ['require_debug_false', 'except_importer_base'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
         },
         'sentry': {
             'level': 'WARNING',
@@ -210,7 +195,7 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'django.request': {
-            'handlers': ['mail_admins', 'sentry'],
+            'handlers': ['sentry'],
             'level': 'ERROR',
         },
         'raven': {
@@ -233,7 +218,7 @@ LOGGING = {
 
 for app in TABBYCAT_APPS:
     LOGGING['loggers'][app] = {
-        'handlers': ['console', 'mail_admins', 'sentry'],
+        'handlers': ['console', 'sentry'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
 
