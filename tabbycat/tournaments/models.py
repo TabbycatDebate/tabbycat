@@ -426,15 +426,30 @@ class Round(models.Model):
 
     @cached_property
     def prev(self):
+        """Returns the round that comes before this round. If this is a break
+        round, then it returns the round in the same break category preceding
+        this round, or the last preliminary round if it's the first break round
+        in the category."""
+        rounds = self.tournament.round_set.filter(seq__lt=self.seq).order_by('-seq')
+        if self.draw_type == Round.DRAW_FIRSTBREAK:
+            rounds = rounds.filter(stage=Round.STAGE_PRELIMINARY)
+        elif self.draw_type == Round.DRAW_BREAK:
+            rounds = rounds.filter(break_category=self.break_category)
         try:
-            return self.tournament.round_set.filter(seq__lt=self.seq).order_by('-seq').first()
+            return rounds.first()
         except Round.DoesNotExist:
             return None
 
     @cached_property
     def next(self):
+        """Returns the round that comes after this round. If this is a break
+        round, then it returns the round in the same break category that comes
+        after this round."""
+        rounds = self.tournament.round_set.filter(seq__gt=self.seq).order_by('seq')
+        if self.stage == Round.STAGE_ELIMINATION:
+            rounds = rounds.filter(break_category=self.break_category)
         try:
-            return self.tournament.round_set.filter(seq__gt=self.seq).order_by('seq').first()
+            return rounds.first()
         except Round.DoesNotExist:
             return None
 
