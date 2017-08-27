@@ -1,0 +1,45 @@
+
+{% if am.debate_rooms > 0 %}
+
+  <div class="vertical-spacing">
+
+    <div class="btn-group btn-group-xs">
+
+      {% for position, count in am.placings.items %}
+
+        <div class="btn btn-default">
+          <span class="{% if forloop.counter == 1 %}text-success{% else %}text-danger{% endif %}">
+            {{ count.1 }} {{ position }} win{{ count.1|pluralize}}
+          </span>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+    <div class="btn-group btn-group-xs pull-right">
+      <div class="btn btn-default" data-toggle="tooltip" title="{{ am.result_balance.1 }}">
+        <span class="text-muted">{{ am.result_balance.0 }}</span>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar progress-bar-success" style="width: {{ am.results_rates.aff.0 }}%">
+        {% if am.results_rates.aff.0 != "0" %}{{ am.results_rates.aff.0 }}%{% endif %}
+      </div>
+      <div class="progress-bar progress-bar-danger" style="width: {{ am.results_rates.neg.0 }}%">
+        {% if am.results_rates.neg.0 != "0" %}{{ am.results_rates.neg.0 }}%{% endif %}
+      </div>
+    </div>
+
+  </div>
+
+{% else %}
+
+  <div class="btn-group btn-group-xs pull-left">
+    <div class="btn btn-default" disabled="disabled">
+      No teams debated this topic
+    </div>
+  </div>
+
+{% endif %}

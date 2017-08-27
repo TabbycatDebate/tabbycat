@@ -43,19 +43,6 @@ def tournament_side_names(tournament, name_type):
     return side_names
 
 
-@register.simple_tag
-def bp_motion_points_avg(point_counts):
-    all_points = []
-    for points, count in point_counts.items():
-        for i in range(0, count):
-            all_points.append(points)
-
-    if len(all_points) > 0:
-        return sum(all_points) / float(len(all_points))
-    else:
-        return None
-
-
 class TournamentURLNode(URLNode):
 
     def __init__(self, view_name, args, kwargs, asvar):

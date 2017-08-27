@@ -120,3 +120,18 @@ class MotionStats:
                 rates_for_side[side][points] = percentage
 
         return rates_for_side
+
+    @cached_property
+    def points_average(self):
+        if self.debate_rooms == 0:
+            return None
+
+        avgs_for_side = dict(self.points_dict())
+        for side in self.sides:
+            all_points = []
+            for points, count in self.placings[side].items():
+                all_points.append(points * count)
+
+            avgs_for_side[side] = sum(all_points) / float(len(all_points))
+
+        return avgs_for_side
