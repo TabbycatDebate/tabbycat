@@ -52,7 +52,7 @@ class Pairing:
         flags = debate.flags.split(",")
         team_flags = {debate.aff_team: debate.aff_team.flags.split(","), debate.neg_team: debate.neg_team.flags.split(",")}
         division = debate.division
-        winner = debate.confirmed_ballot.result.winning_team()
+        winner = debate.confirmed_ballot.result.winning_team() if debate.confirmed_ballot else None
         return cls(teams, bracket, room_rank, flags, team_flags, winner, division)
 
     def __repr__(self):
