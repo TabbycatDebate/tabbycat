@@ -92,7 +92,8 @@ class Pairing(BasePairing):
     @classmethod
     def from_debate(cls, debate):
         instance = super().from_debate(debate)
-        instance.set_winner(debate.confirmed_ballot.result.winning_team())
+        winner = debate.confirmed_ballot.result.winning_team() if debate.confirmed_ballot else None
+        instance.set_winner(winner)
         return instance
 
     def __repr__(self):
