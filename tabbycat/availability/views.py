@@ -45,7 +45,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
         # Basic check before enable the button to advance
         kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0 and venues['in_now'] > 0
-        kwargs['checkin_types'] = [teams, adjs, venues]
+        kwargs['checkin_info'] = {'teams': teams, 'adjs': adjs, 'venues': venues}
         kwargs['min_adjudicators'] = teams['in_now'] // 2
         kwargs['min_venues'] = teams['in_now'] // 2
 
