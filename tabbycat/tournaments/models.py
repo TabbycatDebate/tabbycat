@@ -74,6 +74,10 @@ class Tournament(models.Model):
     # --------------------------------------------------------------------------
 
     def pref(self, name):
+        """Keep a record in this instance, to avoid hitting the cache
+        unnecessarily. Note that this means that, if a tournament preference is
+        changed, an instance of the Tournament (Python) object that has already
+        queries that preference value won't pick up on the change."""
         try:
             return self._prefs[name]
         except KeyError:
