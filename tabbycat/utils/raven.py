@@ -11,12 +11,11 @@ class TabbycatRavenClient(DjangoClient):
     """
 
     def get_data_from_request(self, request):
-        """Override the user ID with the e-mail address if it exists, or append
-        the host name if it does not exist. (Because we receive reports from
-        many sites, the primary key of the user isn't very helpful.)"""
-
         result = super().get_data_from_request(request)
 
+        # Override the user ID with the e-mail address if it exists, or append
+        # the host name if it does not exist. (Because we receive reports from
+        # many sites, the primary key of the user isn't very helpful.)
         try:
             user_info = result.get('user')
             if user_info:
@@ -30,6 +29,15 @@ class TabbycatRavenClient(DjangoClient):
         except Exception:
             # Just make best efforts; if it all fell apart, so be it.
             pass
+
+        # Include tournament preferences, if there are any
+        try:
+            tournament = getattr(request, 'tournament', None)
+            if tournament is not None:
+                extra_info = result.setdefault('extra', {})
+                extra_info['tournament_prefs'] = request.tournament.preferences.all()
+        except Exception as e:
+            pass  # again, best efforts only
 
         return result
 
