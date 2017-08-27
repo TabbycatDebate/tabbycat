@@ -3,17 +3,6 @@ from django.utils.functional import cached_property
 
 class MotionStats:
 
-    # Critical Values / Determination
-    BALANCES = [
-        {'critical': 0.455,  'label': '50% (balanced)',             'freedom': .5},
-        {'critical': 2.706,  'label': '90% likely TEAM favoured ',  'freedom': .1},
-        {'critical': 3.841,  'label': '95% likely TEAM favoured',   'freedom': .05},
-        {'critical': 5.412,  'label': '98% likely TEAM favoured',   'freedom': .02},
-        {'critical': 6.635,  'label': '99% likely TEAM favoured',   'freedom': .01},
-        # The last value is large enough to be a catch-all; ie over 99.9% confidence
-        {'critical': 1000.0, 'label': '99.9% likely TEAM favoured', 'freedom': .001},
-    ]
-
     def __init__(self, motion, t, results, vetoes=None):
         self.motion = motion
         self.round = motion.round # Needed for regroup
@@ -65,7 +54,7 @@ class MotionStats:
 
     def determine_balance(self, for_vetoes=False):
         if self.debate_rooms < 10: # Too few wins/vetoes to calculate
-            return 'inconclusive', 'Too few debate to determine meaningful balance'
+            return 'balance inconclusive', 'Too few debate to determine meaningful balance'
         elif self.isBP:
             return self.two_team_balance(for_vetoes)
         else:
@@ -85,9 +74,7 @@ class MotionStats:
         neg_c_stat = pow(negs - n_2, 2) / n_2
         c_stat = round(aff_c_stat + neg_c_stat, 2)
 
-        # print('\tc_stat', c_stat)
-        threshold = next((ir for ir in self.BALANCES if c_stat <= ir['critical']), None)
-
+        threshold = next((ir for ir in self.BALANCES_2V2 if c_stat <= ir['critical']), None)
         info = "%s critical value; %s level of signficance" % (c_stat, threshold['freedom'])
 
         if affs > negs:
@@ -97,8 +84,14 @@ class MotionStats:
         else:
             return threshold['label'], info
 
-    # def four_team_balance(results_for_motion, chosen_count):
-    #     return None, None
+    def four_team_balance(self):
+        # For reference here we have self.placings dictionary of positions { 'og': X, 'oo': Y }
+        # Within each position key there is a list of points and the total number of times that side
+        # received those points; ie { 'og': {3: 9, 2: 10, 1: 5, 0: 8}
+
+        threshold = next((ir for ir in self.BALANCES if c_stat <= ir['critical']), None)
+        info = "%s critical value; %s level of signficance" % (c_stat, threshold['freedom'])
+        return threshold['label'], info
 
     @cached_property
     def results_rates(self):
@@ -135,3 +128,18 @@ class MotionStats:
             avgs_for_side[side] = sum(all_points) / float(len(all_points))
 
         return avgs_for_side
+
+    # Critical Values / Determination
+    BALANCES_2V2 = [
+        {'critical': 0.455,  'label': '50% (balanced)',             'freedom': .5},
+        {'critical': 2.706,  'label': '90% likely TEAM favoured ',  'freedom': .1},
+        {'critical': 3.841,  'label': '95% likely TEAM favoured',   'freedom': .05},
+        {'critical': 5.412,  'label': '98% likely TEAM favoured',   'freedom': .02},
+        {'critical': 6.635,  'label': '99% likely TEAM favoured',   'freedom': .01},
+        # The last value is large enough to be a catch-all; ie over 99.9% confidence
+        {'critical': 1000.0, 'label': '99.9% likely TEAM favoured', 'freedom': .001},
+    ]
+
+    BALANCES_BP = [
+
+    ]
