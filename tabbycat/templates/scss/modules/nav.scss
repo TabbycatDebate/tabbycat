@@ -1,94 +1,78 @@
 //------------------------------------------------------------------------------
-// Public Header
-//------------------------------------------------------------------------------
-
-.navbar-toggle {
-  margin-right: 0; // Too much padding
-}
-
-.navbar-brand {
-  height: auto;
-}
-
-.navbar-brand-primary.navbar-nav {
-  margin-bottom: 0; // Mobile spacing fix
-}
-
-//------------------------------------------------------------------------------
 // Admin Sidebar
 //------------------------------------------------------------------------------
 
-// Offset the sidebar; should be nav-sidebar + 15
-.nav-sidebar-offset {
-  padding-left: $sidebar-width;
-}
+// // Offset the sidebar; should be nav-sidebar + 15
+// .nav-sidebar-offset {
+//   padding-left: $sidebar-width;
+// }
 
-.override-sidebar-offset { // For fullscreen pages
+// .override-sidebar-offset { // For fullscreen pages
 
-  .nav-sidebar-offset {
-    padding-left: 0;
-  }
-}
+//   .nav-sidebar-offset {
+//     padding-left: 0;
+//   }
+// }
 
-.nav-sidebar {
-  background: $sidebar-bg;
-  width: $sidebar-width;
-  position: fixed;
-  height: 100%;
-  z-index: $z_3;
-  padding-left: 0;
-  padding-top: 0; // So the pill hover isn't flush
+// .nav-sidebar {
+//   background: $sidebar-bg;
+//   width: $sidebar-width;
+//   position: fixed;
+//   height: 100%;
+//   z-index: $z_3;
+//   padding-left: 0;
+//   padding-top: 0; // So the pill hover isn't flush
 
-  .overflow-scroll-wrapper {
-    overflow-y: auto;
-    height: 100%;
-    padding-bottom: 10px;
-  }
+//   .overflow-scroll-wrapper {
+//     overflow-y: auto;
+//     height: 100%;
+//     padding-bottom: 10px;
+//   }
 
-  // Title Element
-  .tournament-select {
-    padding: 16px;
-    margin-left: 0;
-    border-radius: 0;
-    color: $sidebar-muted-text;
+//   // Title Element
+//   .tournament-select {
+//     padding: 16px;
+//     margin-left: 0;
+//     border-radius: 0;
+//     color: $sidebar-muted-text;
 
-    .caret {
-      margin-top: 5px;
-    }
+//     .caret {
+//       margin-top: 5px;
+//     }
 
-    .emoji {
-      margin-right: 7px; // Align the the other icons
-    }
+//     .emoji {
+//       margin-right: 7px; // Align the the other icons
+//     }
 
-    &:hover,
-    &.active {
-      background: none;
-      color: #fff;
-    }
-  }
+//     &:hover,
+//     &.active {
+//       background: none;
+//       color: #fff;
+//     }
+//   }
 
-  .dropdown-menu {
-    width: 100%;
-  }
-}
+//   .dropdown-menu {
+//     width: 100%;
+//   }
+// }
 
-//------------------------------------------------------------------------------
-// Tournament Drop Down Menu
-//------------------------------------------------------------------------------
+// //------------------------------------------------------------------------------
+// // Tournament Drop Down Menu
+// //------------------------------------------------------------------------------
 
-// Tournament Nav
-.tournament-select-menu {
-  width: $sidebar-width - 7px;
-  margin-left: 3px;
-  margin-top: 3px;
-  min-width: auto;
+// // Tournament Nav
+// .tournament-select-menu {
+//   width: $sidebar-width - 7px;
+//   margin-left: 3px;
+//   margin-top: 3px;
+//   min-width: auto;
 
-  > li > a {
-    padding: 3px 5px 3px 8px;
+//   > li > a {
+//     padding: 3px 5px 3px 8px;
 
-    .badge {
-      font-size: 10px;
-    }
-  }
-}
+//     .badge {
+//       font-size: 10px;
+//     }
+//   }
+// }
 

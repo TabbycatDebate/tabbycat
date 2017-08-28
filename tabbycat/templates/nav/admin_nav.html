@@ -1,104 +1,73 @@
 {% load debate_tags i18n %}
 
-<ul class="nav">
+  <div class="list-group border-0 card text-center text-md-left">
 
-  <li role="presentation" class="dropdown">
-    <a id="tournament_select" class="tournament-select" href="#"
-       class="dropdown-toggle {% if overview_nav %}active{% endif %}"
-       data-toggle="dropdown"
-       role="button" aria-haspopup="true" aria-expanded="false">
-      <h5>
-        {{ tournament }}<span class="caret pull-right"></span>
-      </h5>
+  <a href="#menu1" class="list-group-item d-inline-block collapsed" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"><i class="fa fa-dashboard"></i> <span class="d-none d-md-inline">Item 1</span> </a>
+
+  <a href="{% tournamenturl 'tournament-admin-home' %}" data-parent="#sidebar"
+     class="list-group-item d-inline-block collapsed {% if overview_nav %}active{% endif %}">
+    <i data-feather="monitor"></i>
+    <span class="d-none d-md-inline">{% trans "Overview" %}</span>
+  </a>
+
+  {% if pref.side_allocations_enabled == 'preallocated' %}
+    <a href="{% tournamenturl 'draw-side-allocations' %}" data-parent="#sidebar"
+      class="list-group-item d-inline-block collapsed {% if sides_nav %}active{% endif %}">
+      <i data-feather="shuffle"></i>
+      <span class="d-none d-md-inline">{% trans "Sides" %}</span>
     </a>
-    <ul id="tournament-select-menu" class="dropdown-menu"
-        aria-labelledby="tournament_select">
-      {% for other_tournament in all_tournaments %}
-        <li>
-          <a class="small" href="{{ other_tournament.get_absolute_url  }}">
-            {% blocktrans trimmed %}
-              <strong>{{ other_tournament }}</strong> (Admin)
-            {% endblocktrans %}
-          </a>
-        </li>
-        <li>
-          <a class="small" href="{{ other_tournament.get_public_url  }}">
-            {% blocktrans trimmed %}
-              <strong>{{ other_tournament }}</strong> (Public)
-            {% endblocktrans %}
-          </a>
-        </li>
-        <li role="separator" class="divider"></li>
-      {% endfor %}
-      <li>
-        <a class="small" href="/">
-          <i data-feather="home"></i>&nbsp;
-          {% trans "Site Home" %}
-        </a>
-      </li>
-      <li>
-        <a class="small" href="{% url 'tournament-create' %}">
-          <i data-feather="edit"></i>&nbsp;
-          {% trans "New Tournament" %}
-        </a>
-      </li>
-    </ul>
-  </li>
+  {% endif %}
 
-</ul>
+  {% if pref.enable_divisions %}
+    <a href="{% tournamenturl 'division_allocations' %}" data-parent="#sidebar"
+       class="list-group-item d-inline-block collapsed {% if divisions_nav %}active{% endif %}">
+      <span class="circle-icon icon-container">
+        <i data-feather="layers"></i>
+      </span>
+      {% trans "Divisions" %}
+    </a>
+  {% endif %}
+
+  <a href="{% tournamenturl 'adjfeedback-overview' %}" data-parent="#sidebar"
+   class="list-group-item d-inline-block collapsed {% if feedback_nav %}active{% endif %}">
+    <i data-feather="message-circle"></i>
+    <span class="d-none d-md-inline">{% trans "Feedback" %}</span>
+  </a>
+
+  <a href="{% roundurl 'standings-index' current_round %}" data-parent="#sidebar"
+   class="list-group-item d-inline-block collapsed {% if standings_nav %}active{% endif %}">
+    <i data-feather="bar-chart-2"></i>
+    <span class="d-none d-md-inline">{% trans "Standings" %}</span>
+  </a>
+
+  {% for r in tournament.rounds_for_nav %}
+    {% ifchanged r.stage %}
+      {% if r.stage == 'E' %}
+        <a href="{% tournamenturl 'breakqual-index' %}"
+           class="list-group-item d-inline-block collapsed {% if break_nav %}active{% endif %}" >
+          <i data-feather="target"></i>
+          <span class="d-none d-md-inline">{% trans "Breaks" %}</span>
+        </a>
+      {% endif %}
+    {% endifchanged %}
+    {% include 'nav/round_panel.html' %}
+  {% endfor %}
+
+  <a href="{% url 'logout' %}" data-parent="#sidebar"
+   class="list-group-item d-inline-block collapsed">
+    <i data-feather="log-out"></i>
+    <span class="d-none d-md-inline">{% blocktrans trimmed %}Log Out ({{ user }}){% endblocktrans %}</span>
+  </a>
+
+</div>
+
 
 <!--
+
  <ul class="nav flex-column nav-accordion" id="accordion" role="tablist">
 
-  <li class="standalone">
-     <a href="{% tournamenturl 'tournament-admin-home' %}"
-        class="{% if overview_nav %}active{% endif %}">
-        <span class="circle-icon icon-container">
-          <i data-feather="monitor"></i>
-        </span>
-         {% trans "Overview" %}
-      </a>
-  </li>
-  {% if pref.side_allocations_enabled == 'preallocated' %}
-    <li class="standalone">
-      <a href="{% tournamenturl 'draw-side-allocations' %}"
-         class="{% if sides_nav %}active{% endif %}">
-        <span class="circle-icon icon-container">
-          <i data-feather="shuffle"></i>
-        </span>
-         {% trans "Sides" %}
-      </a>
-    </li>
-  {% endif %}
-  {% if pref.enable_divisions %}
-    <li class="standalone">
-      <a href="{% tournamenturl 'division_allocations' %}"
-         class="{% if divisions_nav %}active {% endif %}">
-        <span class="circle-icon icon-container">
-          <i data-feather="layers"></i>
-        </span>
-         {% trans "Divisions" %}
-      </a>
-    </li>
-  {% endif %}
-  <li class="standalone">
-    <a href="{% tournamenturl 'adjfeedback-overview' %}"
-       class="{% if feedback_nav %} active {% endif %}">
-      <span class="circle-icon icon-container">
-        <i data-feather="message-circle"></i>
-      </span>
-       {% trans "Feedback" %}
-    </a>
-  </li>
-  <li class="standalone">
-    <a href="{% roundurl 'standings-index' current_round %}"
-       class="{% if standings_nav %} active {% endif %}">
-      <span class="circle-icon icon-container">
-        <i data-feather="bar-chart-2"></i>
-      </span>
-       {% trans "Standings" %}
-    </a>
-  </li>
+
+
   <li class="panel">
     <div class="progress-line standard-line"></div>
     <div class="" role="tab" id="headingOne">
@@ -169,37 +138,6 @@
     </div>
   </li>
 
-  {% for r in tournament.rounds_for_nav %}
-    {% ifchanged r.stage %}
-      {% if r.stage == 'E' %}
-        <li class="panel">
-          <div class="progress-line standard-line"></div>
-          <div class="">
-             <a class="{% if break_nav %}active{% endif %}"
-                href="{% tournamenturl 'breakqual-index' %}">
-              <span class="circle-icon icon-container">
-                <i data-feather="target"></i>
-              </span>
-              {% trans "Breaks" %}
-            </a>
-          </div>
-        </li>
-      {% endif %}
-    {% endifchanged %}
-    {% include 'nav/round_panel.html' %}
-  {% endfor %}
 
-  <li class="standalone">
-    <a class="" href="{% url 'logout' %}">
-      <span class="circle-icon icon-container">
-        <i data-feather="log-out"></i>
-      </span>
-      {% blocktrans trimmed %}
-        Log Out ({{ user }})
-      {% endblocktrans %}
-    </a>
-  </li>
-
-</ul>
 
 -->

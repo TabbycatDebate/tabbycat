@@ -1,108 +1,100 @@
 {% load debate_tags %}
 {% load i18n %}
 
+<div class="row mt-3 {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
 
-<footer class="footer">
+  <div class="navbar navbar-light bg-light container-fluid small">
 
-  <div class="container-fluid">
+    <div class="row mt-3 mb-2">
 
-    <div class="row mt-3 {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
+      <div class="col-md-6">
+        <h6>
+          {% if tournament %}
+            {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed %}This site runs on {% endblocktrans %}
+          {% endif %}
+          <span class="emoji">😸</span>Tabbycat
+          {% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}
+        </h6>
+        <p class="text-muted">
+          {% blocktrans trimmed %}
+            Tabbycat is an open-source project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
+          {% endblocktrans %}
+          {% if tournament and tournament.billable_teams > 0 %}
+            {% blocktrans trimmed with amount=tournament.billable_teams %}
+              For a tournament of this size, we suggest a donation of <strong>${{ amount }}</strong>.
+            {% endblocktrans %}
+            <a href="{% tournamenturl 'tournament-donations' %}">
+              {% trans "Learn more about donating." %}
+            </a>
+          {% else %}
+            {% url 'donations' as donations_link %}
+            {% blocktrans trimmed %}
+              <a href="{{ donations_link }}">Donations to Tabbycat from individuals or organisations</a> are much appreciated.
+            {% endblocktrans %}
+          {% endif %}
+        </p>
+      </div>
 
-      <div class="navbar navbar-light bg-light container-fluid small">
+      <div class="col-md-4 mt-2 mt-md-0">
+        <h6>{% blocktrans trimmed %}Still timing debates with the stopwatch app?{% endblocktrans %}</h6>
+        <p class="text-muted">
+          {% blocktrans trimmed %}
+            Using an app designed for debate timekeeping makes speaking and adjudicating easier!
+            Check out <a href="https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%20Installs&mt=8">Timekept</a> (iPhone/iPad)
+            or <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%3Dtabbycat%26utm_medium%3Dfooter">Debatekeeper</a> (Android).
+          {% endblocktrans %}
+        </p>
+      </div>
 
-        <div class="row mt-3 mb-2">
+      <div class="col-md-2 mt-2 mt-md-0">
+        <h6>{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
+        <p class="text-muted">
+          {% blocktrans trimmed %}
+            Use <a href="http://debatingballot.com" target="_blank">debatingBallot.com</a> to design and print great ballots online.
+          {% endblocktrans %}
+        </p>
+      </div>
 
-          <div class="col-md-6">
-            <h6>
-              {% if tournament %}
-                {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
-              {% else %}
-                {% blocktrans trimmed %}This site runs on {% endblocktrans %}
-              {% endif %}
-              <span class="emoji">😸</span>Tabbycat
-              {% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}
-            </h6>
-            <p class="text-muted">
-              {% blocktrans trimmed %}
-                Tabbycat is an open-source project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
-              {% endblocktrans %}
-              {% if tournament and tournament.billable_teams > 0 %}
-                {% blocktrans trimmed with amount=tournament.billable_teams %}
-                  For a tournament of this size, we suggest a donation of <strong>${{ amount }}</strong>.
-                {% endblocktrans %}
-                <a href="{% tournamenturl 'tournament-donations' %}">
-                  {% trans "Learn more about donating." %}
-                </a>
-              {% else %}
-                {% url 'donations' as donations_link %}
-                {% blocktrans trimmed %}
-                  <a href="{{ donations_link }}">Donations to Tabbycat from individuals or organisations</a> are much appreciated.
-                {% endblocktrans %}
-              {% endif %}
-            </p>
-          </div>
+     <div class="w-100"></div>
 
-          <div class="col-md-4 mt-2 mt-md-0">
-            <h6>{% blocktrans trimmed %}Still timing debates with the stopwatch app?{% endblocktrans %}</h6>
-            <p class="text-muted">
-              {% blocktrans trimmed %}
-                Using an app designed for debate timekeeping makes speaking and adjudicating easier!
-                Check out <a href="https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%20Installs&mt=8">Timekept</a> (iPhone/iPad)
-                or <a href="https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%3Dtabbycat%26utm_medium%3Dfooter">Debatekeeper</a> (Android).
-              {% endblocktrans %}
-            </p>
-          </div>
-
-          <div class="col-md-2 mt-2 mt-md-0">
-            <h6>{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
-            <p class="text-muted">
-              {% blocktrans trimmed %}
-                Use <a href="http://debatingballot.com" target="_blank">debatingBallot.com</a> to design and print great ballots online.
-              {% endblocktrans %}
-            </p>
-          </div>
-
-         <div class="w-100"></div>
-
-          <div class="col mt-2">
-            <ul class="nav justify-content-center">
-              <li class="nav-item">
-                <i data-feather="github"></i>
-                <a class="nav-link" href="https://github.com/czlee/tabbycat/">
-                  {% trans "GitHub" %}
-                </a>
-              </li>
-              <li class="nav-item">
-                <i data-feather="book"></i>
-                <a class="nav-link" href="http://tabbycat.readthedocs.io/en/stable/">
-                  {% trans "Documentation" %}
-                </a>
-              </li>
-              <li class="nav-item">
-                <i data-feather="help-circle"></i>
-                <a class="nav-link" href="http://tabbycat.readthedocs.io/en/stable/about/support.html">
-                  {% trans "Support" %}
-                </a>
-              </li>
-              <li class="nav-item">
-                <i data-feather="facebook"></i>
-                <a class="nav-link" href="https://www.facebook.com/groups/tabbycat.debate/">
-                  {% trans "Facebook Group" %}
-                </a>
-              </li>
-              <li class="nav-item">
-                <i data-feather="upload-cloud"></i>
-                <a class="nav-link" href="http://tabbycat.readthedocs.io/en/stable/install/heroku.html#installation-the-short-way">
-                  {% trans "Set Up A Copy" %}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
+      <div class="col mt-2">
+        <ul class="nav justify-content-center">
+          <li class="nav-item">
+            <i data-feather="github"></i>
+            <a class="nav-link" href="https://github.com/czlee/tabbycat/">
+              {% trans "GitHub" %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <i data-feather="book"></i>
+            <a class="nav-link" href="http://tabbycat.readthedocs.io/en/stable/">
+              {% trans "Documentation" %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <i data-feather="help-circle"></i>
+            <a class="nav-link" href="http://tabbycat.readthedocs.io/en/stable/about/support.html">
+              {% trans "Support" %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <i data-feather="facebook"></i>
+            <a class="nav-link" href="https://www.facebook.com/groups/tabbycat.debate/">
+              {% trans "Facebook Group" %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <i data-feather="upload-cloud"></i>
+            <a class="nav-link" href="http://tabbycat.readthedocs.io/en/stable/install/heroku.html#installation-the-short-way">
+              {% trans "Set Up A Copy" %}
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
   </div>
+</div>
 
-</footer>

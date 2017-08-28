@@ -24,19 +24,33 @@
 <body class="{% block body-class %}{% endblock %}">
 
   {% block nav %}
-    {% if 'admin/' in request.path and user.is_superuser %}
-      {% include "nav/admin_nav.html" %}
-    {% else %}
+    {% if 'admin/' not in request.path %}
       {% include "nav/top_nav_base.html" %}
     {% endif %}
   {% endblock nav %}
 
   <div class="container-fluid">
 
-    {% block header %}
+    {% if 'admin/' in request.path and user.is_superuser %}
+      <!-- Insert a second level column structure for a side nav -->
+      <div class="row">
+        <div class="col-md-3 float-left col-1 pl-0 pr-0 collapse width show" id="sidebar">
+          {% include "nav/admin_nav.html" %}
+        </div>
+        <main class="col-md-9 float-left col px-5 pl-md-2 pt-2 main">
+    {% endif %}
 
+    {% block header %}
       <div class="row {% if 'admin/' in request.path and user.is_superuser %}white-bg mb-3 nav-sidebar-offset{% endif %}">
         <div class="col mt-4 mb-3">
+
+          <!-- Show menu reveal toggle for admin area -->
+          {% if 'admin/' in request.path and user.is_superuser %}
+            <a href="#" data-target="#sidebar" data-toggle="collapse">
+              <i data-feather="menu"></i>
+            </a>
+          {% endif %}
+
           <h3>
             {% if page_title %}
               {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
@@ -55,7 +69,7 @@
 
     {% block subheader %}
       <div class="row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
-        <div class="col-md-12 page-sub-nav">
+        <div class="col page-sub-nav">
           <ul class="nav nav-pills navbar-left">
             {% block page-subnav-sections %}{% endblock %}
           </ul>
@@ -79,15 +93,26 @@
       </div>
     {% endblock subheader %}
 
-    <div class="row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
+    <div class="row">
       <div class="col">
         {% block content %}{% endblock content %}
       </div>
     </div>
 
+    {% if 'admin/' in request.path and user.is_superuser %}
+        </main>
+      </div>
+    {% endif %}
+
   </div>
 
-  {% block footer %}{% include "footer.html" %}{% endblock footer %}
+  {% if 'admin/' not in request.path %}
+    <footer class="footer">
+      <div class="container-fluid">
+        {% block footer %}{% include "footer.html" %}{% endblock footer %}
+      </div>
+    </footer>
+  {% endif %}
 
   {% block modals %}
     <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true">
