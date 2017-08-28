@@ -26,6 +26,11 @@ def presets_for_form():
     return choices
 
 
+def public_presets_for_form():
+    return [('Public Information Options', 'Enable Public Information'),
+            (False, 'Disable Public Information')]
+
+
 def get_preferences_data(selected_preset, tournament):
     preset_preferences = []
     # Create an instance of the class and iterate over its properties for the UI

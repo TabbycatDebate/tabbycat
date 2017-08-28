@@ -73,10 +73,10 @@ input[type="range"] {
 }
 
 // Inline form errors from django
-.errorlist,
-label.error {
+.errorlist, label.error {
   color: $state-danger-text;
-  padding: 10px 0 0 5px;
+  padding: 0 0 0 0;
+  list-style-type: none;
   font-weight: bold;
 }
 

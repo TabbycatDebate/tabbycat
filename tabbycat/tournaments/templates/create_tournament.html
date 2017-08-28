@@ -8,20 +8,20 @@
 
 {% block content %}
 
-<div class="alert alert-info">
-  {% url 'donations' as donations_url %}
-  {% blocktrans trimmed %}
-    Tabbycat is free to use for non-profit and non-fundraising tournaments
-    (although donations are encouraged). If your tournament is run for profit
-    or for fundraising, please note that there is a
-    <a href="{{ donations_url }}">required payment</a>. For more details,
-    see the <a href="http://tabbycat.readthedocs.io/en/stable/about/licence.html">
-    Tabbycat licence agreement</a>.
-  {% endblocktrans %}
-</div>
+  <div class="alert alert-warning">
+    {% url 'donations' as donations_url %}
+    {% blocktrans trimmed %}
+      Tabbycat is free to use for non-profit and non-fundraising tournaments
+      (although donations are encouraged). If your tournament is run for profit
+      or for fundraising, please note that there is a
+      <a href="{{ donations_url }}">required payment</a>. For more details,
+      see the <a href="http://tabbycat.readthedocs.io/en/stable/about/licence.html">
+      Tabbycat licence agreement</a>.
+    {% endblocktrans %}
+  </div>
 
-  <div class="card">
-    <div class="card-body">
+  <div class="card border-primary">
+    <div class="card-body text-primary">
 
       <strong>{% trans "Just trying out Tabbycat?" %}</strong>
       {% blocktrans trimmed %}
@@ -40,7 +40,7 @@
             </button>
           </form>
           {% if preexisting_small_demo %}
-            <div class="alert alert-warning">
+            <div class="alert alert-warning mt-3 mb-0 small">
               {% blocktrans trimmed %}
                 You already have a tournament set up using this data set. Reloading
                 the data will delete <strong>all data</strong> from that tourament.
@@ -56,7 +56,7 @@
             </button>
           </form>
           {% if preexisting_large_demo %}
-            <div class="alert alert-warning">
+            <div class="alert alert-warning mt-3 mb-0 small">
               {% blocktrans trimmed %}
                 You already have a tournament set up using this data set. Reloading
                 the data will delete <strong>all data</strong> from that tourament.
@@ -82,18 +82,15 @@
           </div>
         {% endif %}
 
-        <div class="row">
-            {% for field in form %}
-            <div class="col-6">
-              <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field|addcss:"form-control" }}
-                <small class="form-text text-muted">{{ field.help_text }}</small>
-                <small class="form-text text-danger">{{ field.errors }}</small>
-              </div>
-            </div>
-            {% endfor %}
-        </div>
+        {% for field in form %}
+
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field|addcss:"form-control" }}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+            <small class="form-text text-danger">{{ field.errors }}</small>
+          </div>
+        {% endfor %}
 
         <button type="submit" class="btn mt-3 btn-block btn-success form-control">
           {% trans "Create Tournament" %}

@@ -6,13 +6,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
-from options.presets import all_presets, get_preferences_data, presets_for_form
+from options.presets import all_presets, get_preferences_data, presets_for_form, public_presets_for_form
 
 from .models import Round, Tournament
 from .utils import auto_make_break_rounds, auto_make_rounds
 
 
-class TournamentForm(ModelForm):
+class TournamentStartForm(ModelForm):
 
     class Meta:
         model = Tournament
@@ -27,11 +27,6 @@ class TournamentForm(ModelForm):
         required=False,
         label=_("Number of teams in the open break"),
         help_text=_("Leave blank if there are no break rounds."))
-
-    preset_rules = ChoiceField(
-        choices=presets_for_form(), # Tuple with (Present_Index, Preset_Name)
-        label=_("Configuration"),
-        help_text=_("Pre-configure the tournament for a standard format "))
 
     def add_default_feedback_questions(self, tournament):
         agree = AdjudicatorFeedbackQuestion(
@@ -48,7 +43,7 @@ class TournamentForm(ModelForm):
         comments.save()
 
     def save(self):
-        tournament = super(TournamentForm, self).save()
+        tournament = super(TournamentStartForm, self).save()
         auto_make_rounds(tournament, self.cleaned_data["num_prelim_rounds"])
 
         break_size = self.cleaned_data["break_size"]
@@ -69,19 +64,47 @@ class TournamentForm(ModelForm):
             num_break_rounds = math.ceil(math.log2(break_size))
             auto_make_break_rounds(tournament, num_break_rounds, open_break)
 
-        # Identify + apply selected preset
-        selected_index = self.cleaned_data["preset_rules"]
-        presets = list(all_presets())
-        selected_preset = next(p for p in presets if p.name == selected_index)
-        selected_preferences = get_preferences_data(selected_preset, tournament)
-        for preference in selected_preferences:
-            tournament.preferences[preference['key']] = preference['new_value']
-
         self.add_default_feedback_questions(tournament)
         tournament.current_round = tournament.round_set.first()
         tournament.save()
 
         return tournament
+
+
+class TournamentConfigureForm(ModelForm):
+
+    class Meta:
+        model = Tournament
+        fields = ('preset_rules', 'public_info')
+
+    preset_rules = ChoiceField(
+        choices=presets_for_form(), # Tuple with (Present_Index, Preset_Name)
+        label=_("Format Configuration"),
+        help_text=_("Apply a standard set of settings to match a common debate format "))
+
+    public_info = ChoiceField(
+        choices=public_presets_for_form(), # Tuple with (Present_Index, Preset_Name)
+        label=_("Public Configuration"),
+        help_text=_("Show non-sensitive information of the public-facing side of this site, like draws (once released) and the motions of previous rounds"))
+
+    def save(self):
+        presets = list(all_presets())
+        t = self.instance
+
+        # Identify + apply selected preset
+        selected_index = self.cleaned_data["preset_rules"]
+        selected_preset = next(p for p in presets if p.name == selected_index)
+        selected_preferences = get_preferences_data(selected_preset, t)
+        for preference in selected_preferences:
+            t.preferences[preference['key']] = preference['new_value']
+
+        # Apply public info presets
+        do_public = self.cleaned_data["public_info"]
+        public_preset = next((p for p in presets if p.name == do_public), False)
+        if public_preset:
+            public_preferences = get_preferences_data(public_preset, t)
+            for preference in public_preferences:
+                t.preferences[preference['key']] = preference['new_value']
 
 
 class CurrentRoundField(ModelChoiceField):
