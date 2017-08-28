@@ -58,7 +58,8 @@ class MotionStats:
         elif self.isBP:
             return self.two_team_balance(for_vetoes)
         else:
-            return self.four_team_balance(for_vetoes)
+            return None
+            return self.four_team_balance(for_vetoes) # Not implemented
 
     def two_team_balance(self, for_vetoes):
         # Test and confidence levels contributed by Viran Weerasekera
@@ -88,10 +89,10 @@ class MotionStats:
         # For reference here we have self.placings dictionary of positions { 'og': X, 'oo': Y }
         # Within each position key there is a list of points and the total number of times that side
         # received those points; ie { 'og': {3: 9, 2: 10, 1: 5, 0: 8}
-
-        threshold = next((ir for ir in self.BALANCES if c_stat <= ir['critical']), None)
-        info = "%s critical value; %s level of signficance" % (c_stat, threshold['freedom'])
-        return threshold['label'], info
+        # threshold = next((ir for ir in self.BALANCES if c_stat <= ir['critical']), None)
+        # info = "%s critical value; %s level of signficance" % (c_stat, threshold['freedom'])
+        # return threshold['label'], info
+        raise NotImplementedError
 
     @cached_property
     def results_rates(self):
