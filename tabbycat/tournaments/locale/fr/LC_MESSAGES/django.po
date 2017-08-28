@@ -655,8 +655,8 @@ msgid "Dashboard"
 msgstr "Tableau de bord"
 
 #: tournaments/templates/tournament_index.html:7
-msgid "Tournament Overview"
-msgstr "Aperçu du tournoi"
+msgid "Overview"
+msgstr "Aperçu"
 
 #: tournaments/templates/tournament_index.html:10
 #, python-format

@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% block page-title %}{% trans "Dashboard" %}{% endblock %}
-{% block head-title %}<span class="emoji">⏰</span>{% trans "Tournament Overview" %}{% endblock %}
+{% block head-title %}<span class="emoji">⏰</span>{% trans "Overview" %}{% endblock %}
 
 {% block sub-title %}
   {% blocktrans with round_name=round.name round_status=round.get_draw_status_display.lower %}{{ round_name }}'s status is {{ round_status }}{% endblocktrans %}
@@ -32,7 +32,7 @@
     <div class="list-group mt-3">
       <a href="{% tournamenturl 'importer-simple-index' %}" class="list-group-item list-group-call">
         <i data-feather="circle"></i>
-        Use the simple import to add your initial data.
+        Use the simple importer to add your initial data.
       </a>
     </div>
 

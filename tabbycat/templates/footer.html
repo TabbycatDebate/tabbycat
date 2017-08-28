@@ -1,13 +1,13 @@
 {% load debate_tags %}
 {% load i18n %}
 
-<div class="row mt-3 {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
+<div class="row mt-3">
 
   <div class="navbar navbar-light bg-light container-fluid small">
 
     <div class="row mt-3 mb-2">
 
-      <div class="col-md-6">
+      <div class="col-lg-6 col-md-5">
         <h6>
           {% if tournament %}
             {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
@@ -37,7 +37,7 @@
         </p>
       </div>
 
-      <div class="col-md-4 mt-2 mt-md-0">
+      <div class="col-lg-4 col-md-4 mt-2 mt-md-0">
         <h6>{% blocktrans trimmed %}Still timing debates with the stopwatch app?{% endblocktrans %}</h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
@@ -48,7 +48,7 @@
         </p>
       </div>
 
-      <div class="col-md-2 mt-2 mt-md-0">
+      <div class="col-lg-2 col-md-3 mt-2 mt-md-0">
         <h6>{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
         <p class="text-muted">
           {% blocktrans trimmed %}

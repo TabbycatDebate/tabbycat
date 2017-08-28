@@ -2,8 +2,23 @@
 // Admin Sidebar Customisation
 //------------------------------------------------------------------------------
 
-#sidebar .list-group-item {
+// Used to take the full height appearnce
+.fake-sidebar {
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
 
+  .list-group-item {
+    width: 100%;
+    background: $sidebar-bg;
+    height: 100%;
+    z-index: 0;
+    border-radius: 0;
+  }
+}
+
+#sidebar .list-group-item {
   background: $sidebar-bg;
   border-radius: 0;
   border-left: 0;
@@ -76,6 +91,11 @@
       margin-bottom: -2px;
     }
   }
+
+  #sidebar .collapse .list-group-item,
+  #sidebar .collapsing .list-group-item  {
+    font-size: 10px;
+  }
 }
 
 @include media-breakpoint-up(lg) {
@@ -91,6 +111,11 @@
       margin-bottom: -2px;
     }
   }
+
+  #sidebar .collapse .list-group-item,
+  #sidebar .collapsing .list-group-item {
+    font-size: 12px;
+  }
 }
 
 @include media-breakpoint-down(sm) {
@@ -98,10 +123,14 @@
   /* overlay sub levels on small screens */
   #sidebar .list-group .collapse.in,
   #sidebar .list-group .collapse.show {
-    position: absolute;
     z-index: 1;
     width: 190px;
     background: red;
+    text-align: left;
+
+    .feather {
+      margin-right: 12px;
+    }
   }
 
 }

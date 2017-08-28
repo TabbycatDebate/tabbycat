@@ -32,6 +32,14 @@
   <div class="container-fluid">
 
     {% if 'admin/' in request.path and user.is_superuser %}
+
+      <!-- Fake full height for menu -->
+      <div class="row">
+        <div class="col-md-2 col-1 float-left pl-0 pr-lg-3 pr-md-3 pr-0 d-none d-sm-block width fake-sidebar">
+          <div class="list-group-item"></div>
+        </div>
+      </div>
+
       <!-- Insert a second level column structure for a side nav -->
       <div class="row">
         <div class="col-md-2 col-1 float-left pl-0 pr-md-3 pr-0 collapse width show" id="sidebar">
@@ -58,19 +66,20 @@
         </div>
 
         <div class="col mt-4 mb-3">
-          <!-- Show menu reveal toggle for admin area -->
+          <!-- Menu to toggle/show the main menu for admin area
           {% if 'admin/' in request.path and user.is_superuser %}
             <a href="#" data-target="#sidebar" data-toggle="collapse">
               <i data-feather="menu"></i>
             </a>
           {% endif %}
+          -->
         </div>
 
       </div>
     {% endblock header %}
 
     {% block subheader %}
-      <div class="row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
+      <div class="row">
         <div class="col page-sub-nav">
           <ul class="nav nav-pills navbar-left">
             {% block page-subnav-sections %}{% endblock %}
@@ -81,7 +90,7 @@
         </div>
       </div>
 
-      <div class="row d-print-none {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
+      <div class="row d-print-none">
         <div class="col" id="messages-container">
           {% if messages %}
             {% for message in messages %}
@@ -102,8 +111,10 @@
     </div>
 
     {% if 'admin/' in request.path and user.is_superuser %}
+
         </main>
       </div>
+
     {% endif %}
 
   </div>
@@ -112,6 +123,17 @@
     <footer class="footer">
       <div class="container-fluid">
         {% block footer %}{% include "footer.html" %}{% endblock footer %}
+      </div>
+    </footer>
+  {% else %}
+    <footer class="footer">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col d-none d-sm-block"></div>
+          <div class="col-sm-10 col">
+            {% block footeradmin %}{% include "footer.html" %}{% endblock footeradmin %}
+          </div>
+        </div>
       </div>
     </footer>
   {% endif %}

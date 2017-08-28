@@ -21,12 +21,10 @@
       </a>
     {% endfor %}
     <a href="/" class="list-group-item" data-parent="#titleh">
-      <i data-feather="chevron-down" class="d-none d-md-inline"></i>
-      <span class="d-none d-md-inline">Site Home</span>
+      <i data-feather="chevron-down" class="d-none d-md-inline"></i>Site Home
     </a>
     <a href="{% url 'tournament-create' %}" class="list-group-item" data-parent="#titleh">
-      <i data-feather="edit-2" class="d-none d-md-inline"></i>
-      <span class="d-none d-md-inline">New Tournament</span>
+      <i data-feather="edit-2" class="d-none d-md-inline"></i>New Tournament
     </a>
   </div>
 
@@ -46,28 +44,23 @@
   <div class="collapse" id="setuph">
     <a href="{% tournamenturl 'options-tournament-index' %}"
        class="list-group-item {% if options_nav %}active{% endif %}" data-parent="#setuph">
-      <span class="circle-icon small-circle"><i data-feather="settings"></i></span>
-      <span class="d-none d-md-inline">{% trans "Configuration" %}</span>
+      <span class="circle-icon small-circle"><i data-feather="settings"></i>{% trans "Configuration" %}
     </a>
     <a href="{% tournamenturl 'importer-simple-index' %}"
        class="list-group-item {% if import_nav %}active{% endif %}" data-parent="#setuph">
-      <span class="circle-icon small-circle"><i data-feather="download-cloud"></i></span>
-      <span class="d-none d-md-inline">{% trans "Import Data" %}</span>
+      <span class="circle-icon small-circle"><i data-feather="download-cloud"></i>{% trans "Import Data" %}
     </a>
     <a href="{% tournamenturl 'participants-list' %}"
        class="list-group-item {% if participants_nav %}active{% endif %}" data-parent="#setuph">
-      <span class="circle-icon small-circle"><i data-feather="user"></i></span>
-      <span class="d-none d-md-inline">{% trans "Participants" %}</span>
+      <span class="circle-icon small-circle"><i data-feather="user"></i>{% trans "Participants" %}
     </a>
     <a href="{% tournamenturl 'randomised-urls-view' %}"
        class="list-group-item {% if import_random %}active{% endif %}"
        data-parent="#rh{{ r.id }}">
-      <span class="circle-icon small-circle"><i data-feather="link"></i></span>
-      <span class="d-none d-md-inline">{% trans "Private URLs" %}</span>
+      <span class="circle-icon small-circle"><i data-feather="link"></i>{% trans "Private URLs" %}
     </a>
     <a href="{% url 'admin:index' %}" target="_blank" class="list-group-item" data-parent="#setuph">
-      <span class="circle-icon small-circle"><i data-feather="edit"></i></span>
-      <span class="d-none d-md-inline">{% trans "Edit Database" %}</span>
+      <span class="circle-icon small-circle"><i data-feather="edit"></i>{% trans "Edit Database" %}
     </a>
   </div>
 

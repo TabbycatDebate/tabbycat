@@ -34,8 +34,29 @@ body {
 }
 
 //------------------------------------------------------------------------------
-// Responsive Considerations
+// Responsive tweaks
 //------------------------------------------------------------------------------
+
+@include media-breakpoint-up(xs) {
+  // Applies just to phones
+  .footer {
+    height: $footer-height * 0.9;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  // Applies just to tablets
+  .footer {
+    height: $footer-height * 1.4;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  // Applies just to laptops/desktops
+  .footer {
+    height: $footer-height;
+  }
+}
 
 // For Desktops
 @media (min-width: breakpoint-min(sm, $grid-breakpoints)) {
@@ -43,7 +64,6 @@ body {
   .footer a.nav-link {
     padding: 0; // Override bootstrap defaults for spacing
   }
-
 }
 
 // For Phones
