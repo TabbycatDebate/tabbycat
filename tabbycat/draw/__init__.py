@@ -1,2 +1,2 @@
-from .generator import DrawGenerator, DrawError, Pairing
+from .generator import DrawFatalError, DrawGenerator, DrawUserError, Pairing
 default_app_config = 'draw.apps.DrawConfig'

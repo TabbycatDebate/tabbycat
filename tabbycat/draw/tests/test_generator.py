@@ -3,7 +3,7 @@ import copy
 
 from collections import OrderedDict
 
-from .. import DrawError, DrawGenerator, Pairing
+from .. import DrawFatalError, DrawGenerator, DrawUserError, Pairing
 from ..generator.utils import partial_break_round_split
 from .utils import TestDivision, TestTeam
 
@@ -113,7 +113,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             with self.subTest(method=method):
                 b2 = copy.deepcopy(brackets)
                 self.ppd.options["odd_bracket"] = method
-                self.assertRaises(DrawError, self.ppd.resolve_odd_brackets, b2)
+                self.assertRaises(DrawFatalError, self.ppd.resolve_odd_brackets, b2)
 
     def test_pullup_top(self):
         self.bracket_resolve_odd("pullup_top", OrderedDict([
@@ -722,7 +722,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             with self.subTest(method=method):
                 ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket=method)
                 brackets = copy.deepcopy(self.brackets[99])
-                self.assertRaises(DrawError, ppd.resolve_odd_brackets, brackets)
+                self.assertRaises(DrawFatalError, ppd.resolve_odd_brackets, brackets)
 
     def test_pullup_random(self):
         for j in range(10):
@@ -849,7 +849,7 @@ class TestEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
         teams = self._teams(1, 7, 3, 8, 9, 11)
         results = self._results(3, ([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
         self.ed = DrawGenerator("elimination", teams, results=results)
-        self.assertRaises(DrawError, self.ed.generate)
+        self.assertRaises(DrawUserError, self.ed.generate)
 
     def run_draw(self, teams, results, expected):
         self.ed = DrawGenerator("elimination", teams, results=results)

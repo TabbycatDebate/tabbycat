@@ -6,22 +6,28 @@ from django.utils.translation import ugettext as _
 logger = logging.getLogger(__name__)
 
 
-class DrawError(Exception):
-    """DrawError is raised by any DrawGenerator class when a problem prevents
-    a draw from being produced. DrawErrors are caught by the view class, and
-    shown to the user as an error message.
+class BaseDrawError(Exception):
+    pass
 
-    Some DrawErrors are user errors, for example, not having any teams. Others
-    are error conditions in the algorithm that are never supposed to happen.
-    Theoretically, user errors shouldn't happen either: The user interface is
-    meant to prevent the user from trying to generate a draw if it would lead to
-    a user error.
 
-    However, because a user error is rectifiable, our convention is to
-    internationalise (translate) strings that a user could take action to
-    rectify, before passing them to the DrawError() constructor. On the other
-    hand, algorithm errors are not translated, since that just creates
-    unnecessary work for translators."""
+class DrawUserError(BaseDrawError):
+    """DrawUserError is raised by any DrawGenerator class when a problem that
+    would appear to be user error prevents a draw from being produced.
+    DrawUserErrors are caught by the view class and shown to the user as an
+    error message.
+
+    Because DrawUserErrors expected and rectifier, the strings that go into them
+    should be internationalised (marked for translation)."""
+    pass
+
+
+class DrawFatalError(BaseDrawError):
+    """DrawAlgorithmError is raised by any DrawGenerator class when a problem
+    that is an error condition that should never (ever) happen prevents a draw
+    from being produced. DrawAlgorithmError are also caught by the view class
+    and shown to the user as an error message. However, because they should
+    never happen, their messages are not internationalised, since that just
+    creates unnecessary work for translators."""
     pass
 
 
@@ -101,7 +107,7 @@ class Pairing:
         except AttributeError:
             # In theory redundant, since DrawGenerators should use check_teams_for_attribute
             # to check for this.
-            raise DrawError("For conflict avoidance, teams must have an attribute 'institution'.")
+            raise DrawFatalError("For conflict avoidance, teams must have an attribute 'institution'.")
 
     @property
     def conflict_hist(self):
@@ -112,7 +118,7 @@ class Pairing:
         except AttributeError:
             # In theory redundant, since DrawGenerators should use check_teams_for_attribute
             # to check for this.
-            raise DrawError("For conflict avoidance, teams must have an attribute 'seen'.")
+            raise DrawFatalError("For conflict avoidance, teams must have an attribute 'seen'.")
 
     def add_flag(self, flag):
         self.flags.append(flag)
@@ -178,9 +184,9 @@ class BaseDrawGenerator:
 
         if self.requires_even_teams:
             if not len(self.teams) % 2 == 0:
-                raise DrawError(_("There was not an even number of active teams."))
+                raise DrawUserError(_("There was not an even number of active teams."))
             if not self.teams:
-                raise DrawError(_("There were no teams for the draw."))
+                raise DrawUserError(_("There were no teams for the draw."))
 
         if results is None and self.requires_prev_results:
             raise TypeError("'results' is required for draw of type {0:s}".format(
@@ -263,16 +269,16 @@ class BaseDrawGenerator:
 
     def check_teams_for_attribute(self, name, choices=None, checkfunc=None):
         """Checks that all teams have the specified attribute, and raises a
-        DrawError if they don't. This should be called during the constructor.
-        Note: Whether to run this check will sometimes be conditional on options
-        supplied to the DrawGenerator.
-        'name' is the name of the attribute.
-        'choices', if specified, is a list of allowed values for the attribute.
+        DrawFatalError if they don't. This should be called during the
+        constructor. Note: Whether to run this check will sometimes be
+        conditional on options supplied to the DrawGenerator. 'name' is the name
+        of the attribute. 'choices', if specified, is a list of allowed values
+        for the attribute.
         """
         has_attribute = [hasattr(x, name) for x in self.teams]
         if not all(has_attribute):
             offending_teams = has_attribute.count(False)
-            raise DrawError("{0} out of {1} teams don't have a '{name}' attribute.".format(
+            raise DrawFatalError("{0} out of {1} teams don't have a '{name}' attribute.".format(
                 offending_teams, len(self.teams), name=name))
 
         if choices:
@@ -284,7 +290,7 @@ class BaseDrawGenerator:
 
         if not all(attribute_value_valid):
             offending_teams = attribute_value_valid.count(False)
-            raise DrawError("{0} out of {1} teams has an invalid '{name}' attribute. Valid choices: ".format(
+            raise DrawFatalError("{0} out of {1} teams has an invalid '{name}' attribute. Valid choices: ".format(
                 offending_teams, len(self.teams), name=name) + ", ".join(map(repr, choices)))
 
 

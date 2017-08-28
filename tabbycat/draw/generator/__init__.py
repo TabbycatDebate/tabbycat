@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 
-from .common import BaseDrawGenerator, DrawError, ManualDrawGenerator, Pairing
+from .common import BaseDrawGenerator, DrawFatalError, DrawUserError, ManualDrawGenerator, Pairing
 from .elimination import FirstEliminationDrawGenerator, EliminationDrawGenerator
 from .powerpair import PowerPairedDrawGenerator, PowerPairedWithAllocatedSidesDrawGenerator
 from .random import RandomDrawGenerator, RandomWithAllocatedSidesDrawGenerator
