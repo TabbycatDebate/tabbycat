@@ -2,7 +2,22 @@
 // Footer Layout Changes
 //------------------------------------------------------------------------------
 
-.tabbycat-footer {
+// As per http://v4-alpha.getbootstrap.com/examples/sticky-footer-navbar/
+
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  margin-bottom: $footer-height;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: $footer-height;
 
   a {
     border-bottom: 1px solid $gray-600;
@@ -25,35 +40,18 @@
 // For Desktops
 @media (min-width: breakpoint-min(sm, $grid-breakpoints)) {
 
-  .tabbycat-footer {
-    bottom: 0;
-    position: absolute;
-    width: 100%;
-
-    a.nav-link {
-      padding: 0; // Override bootstrap defaults for spacing
-    }
+  .footer a.nav-link {
+    padding: 0; // Override bootstrap defaults for spacing
   }
 
-  .accommodate-footer {
-    min-height: 100vh; // Push the footer down
-    padding-bottom: 220px; // Leave room for the footer
-  }
-
-  .override-accommodate-footer .accommodate-footer {
-    padding-bottom: 0;
-  }
 }
 
 // For Phones
 @media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
 
-  .tabbycat-footer {
-    position: relative;
-  }
-
-  .nav-item {
+  .footer .nav-item {
     margin-left: 15px; // Override bootstrap defaults for spacing
+
     a.nav-link {
       padding-left: 0;
     }

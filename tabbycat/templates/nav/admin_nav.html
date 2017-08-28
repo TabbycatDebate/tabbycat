@@ -1,6 +1,7 @@
 {% load debate_tags i18n %}
 
-<ul class="nav nav-stacked" role="tablist">
+<ul class="nav">
+
   <li role="presentation" class="dropdown">
     <a id="tournament_select" class="tournament-select" href="#"
        class="dropdown-toggle {% if overview_nav %}active{% endif %}"
@@ -43,12 +44,11 @@
       </li>
     </ul>
   </li>
+
 </ul>
 
-<ul class="nav nav-stacked nav-accordion"
-    id="accordion"
-    role="tablist"
-    aria-multiselectable="true">
+<!--
+ <ul class="nav flex-column nav-accordion" id="accordion" role="tablist">
 
   <li class="standalone">
      <a href="{% tournamenturl 'tournament-admin-home' %}"
@@ -201,3 +201,5 @@
   </li>
 
 </ul>
+
+-->

@@ -1,13 +1,13 @@
 {% load debate_tags %}
 
-<li {% if ballots_nav %}class="active"{% endif %}>
-  <a href="{% roundurl 'results-round-list' current_round %}">Enter Results</a>
+<li class="nav-item {% if ballots_nav %}active{% endif %}">
+  <a class="nav-link" href="{% roundurl 'results-round-list' current_round %}">Enter Results</a>
 </li>
-<li {% if feedback_nav %}class="active"{% endif %}>
-  <a href="{% tournamenturl 'adjfeedback-add-index' %}">Enter Feedback</a>
+<li class="nav-item {% if feedback_nav %}active{% endif %}">
+  <a class="nav-link" href="{% tournamenturl 'adjfeedback-add-index' %}">Enter Feedback</a>
 </li>
 {% if pref.assistant_access != "results_only" %}
-<li {% if draw_nav %}class="active"{% endif %}>
-  <a href="{% roundurl 'draw-display' current_round %}">Display/Print Draw</a>
+<li class="nav-item {% if draw_nav %}active{% endif %}">
+  <a class="nav-link" href="{% roundurl 'draw-display' current_round %}">Display/Print Draw</a>
 </li>
 {% endif %}
