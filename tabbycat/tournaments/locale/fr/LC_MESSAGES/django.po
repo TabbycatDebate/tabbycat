@@ -383,7 +383,7 @@ msgid "Hello!"
 msgstr "Bonjour !"
 
 #: tournaments/templates/blank_site_start.html:26
-msgid "Welcome to your new Tabbycat installation!"
+msgid "Welcome to Tabbycat!"
 msgstr "Bienvenue à votre nouvelle installation de Tabbycat !"
 
 #: tournaments/templates/blank_site_start.html:31
