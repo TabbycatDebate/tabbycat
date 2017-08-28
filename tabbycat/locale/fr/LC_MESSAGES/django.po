@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-27 14:52+1000\n"
-"PO-Revision-Date: 2017-08-26 21:54-0700\n"
+"POT-Creation-Date: 2017-08-28 14:48+1000\n"
+"PO-Revision-Date: 2017-08-27 21:58-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -20,23 +20,24 @@ msgstr ""
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
-msgstr ""
+msgstr "Vous devez d’abord supprimer les objets ci-dessus."
 
 #: templates/base_eligibility.html:5
 msgid "Saving…"
-msgstr ""
+msgstr "Enregistrement en cours…"
 
 #: templates/base_eligibility.html:14
 msgid "Please correct the errors below."
-msgstr ""
+msgstr "Veuillez corriger les erreurs indiquées."
 
 #: templates/base_formset.html:8
 msgid "There are some problems with the data on this form:"
 msgstr ""
+"Des problèmes en lien avec les données sure ce formulaire sont apparus :"
 
 #: templates/base_formset.html:57
 msgid "Save and Add More"
-msgstr ""
+msgstr "Enregistrer et ajouter davantage"
 
 #: templates/footer.html:12
 #, python-format
@@ -52,7 +53,7 @@ msgid ""
 "Tabbycat is an open-source project developed by volunteers, and is free to "
 "use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
-"Tabbycat est un projet open source, développe par des bénévoles. Vous pouvez "
+"Tabbycat est un projet open source, développé par des bénévoles. Vous pouvez "
 "l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
 "collecter des fonds."
 
@@ -144,7 +145,7 @@ msgstr "<strong>%(other_tournament)s</strong> (public)"
 
 #: templates/nav/admin_nav.html:35
 msgid "Site Home"
-msgstr "Page d'accueil"
+msgstr "Page d'accueil du site"
 
 #: templates/nav/admin_nav.html:41
 msgid "New Tournament"
@@ -160,7 +161,7 @@ msgstr "Aperçu"
 
 #: templates/nav/admin_nav.html:75 templates/nav/public_nav.html:114
 msgid "Sides"
-msgstr ""
+msgstr "Côtés"
 
 #: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:104
 msgid "Divisions"
@@ -176,7 +177,7 @@ msgstr "Classement"
 
 #: templates/nav/admin_nav.html:122
 msgid "Setup"
-msgstr ""
+msgstr "Configuration"
 
 #: templates/nav/admin_nav.html:136
 msgid "Configuration"
@@ -184,7 +185,7 @@ msgstr "Configuration"
 
 #: templates/nav/admin_nav.html:145
 msgid "Import Data"
-msgstr "Importer les données"
+msgstr "Importation des données"
 
 #: templates/nav/admin_nav.html:154 templates/nav/public_nav.html:129
 msgid "Participants"
@@ -196,7 +197,7 @@ msgstr "URLs privées"
 
 #: templates/nav/admin_nav.html:189
 msgid "Breaks"
-msgstr "Breaks"
+msgstr "Qualifications"
 
 #: templates/nav/admin_nav.html:203
 #, python-format
@@ -205,32 +206,32 @@ msgstr "Déconnexion (%(user)s)"
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
-msgstr ""
+msgstr "Tab des équipes"
 
 #: templates/nav/public_nav.html:11
 msgid "Speaker Tab"
-msgstr ""
+msgstr "Tab des orateurs"
 
 #: templates/nav/public_nav.html:19
 #, python-format
 msgid "%(category_name)s Speaker Tab"
-msgstr ""
+msgstr "Tab des orateurs de la catégorie %(category_name)s"
 
 #: templates/nav/public_nav.html:29
 msgid "Replies Tab"
-msgstr ""
+msgstr "Tab des discours de résponse"
 
 #: templates/nav/public_nav.html:34
 msgid "Motions Tab"
-msgstr ""
+msgstr "Tab des motions"
 
 #: templates/nav/public_nav.html:48
 msgid "Draws"
-msgstr ""
+msgstr "Tirages"
 
 #: templates/nav/public_nav.html:59
 msgid "View All"
-msgstr ""
+msgstr "Afficher tout"
 
 #: templates/nav/public_nav.html:71 templates/nav/round_panel.html:93
 msgid "Results"
@@ -238,11 +239,11 @@ msgstr "Résultats"
 
 #: templates/nav/public_nav.html:87
 msgid "Break"
-msgstr ""
+msgstr "Qualification"
 
 #: templates/nav/public_nav.html:95
 msgid "Adjudicators"
-msgstr ""
+msgstr "Juges"
 
 #: templates/nav/public_nav.html:109 templates/nav/round_panel.html:81
 msgid "Motions"
@@ -250,19 +251,19 @@ msgstr "Motions"
 
 #: templates/nav/public_nav.html:124
 msgid "Diversity"
-msgstr ""
+msgstr "Aperçu de la diversité"
 
 #: templates/nav/public_nav.html:134
 msgid "Feedback Progress"
-msgstr ""
+msgstr "Progrès des commentaires"
 
 #: templates/nav/public_nav.html:139
 msgid "Enter Ballot"
-msgstr ""
+msgstr "Saisie d'un bulletin"
 
 #: templates/nav/public_nav.html:144
 msgid "Enter Feedback"
-msgstr ""
+msgstr "Saisie d'une commentaire"
 
 #: templates/nav/round_panel.html:44
 msgid "Check-Ins"
@@ -284,7 +285,7 @@ msgstr "Connexion"
 #: templates/registration/login.html:30
 msgctxt "page title"
 msgid "Log in to Tabbycat"
-msgstr ""
+msgstr "Connexion à Tabbycat"
 
 #: templates/registration/login.html:37
 msgid "Your username and password didn't match."
@@ -305,122 +306,137 @@ msgstr "Veuillez vous connecter afin de voir ce page."
 #: templates/registration/login.html:57
 msgctxt "button"
 msgid "Log In"
-msgstr ""
+msgstr "Connexion"
 
 #: templates/registration/login.html:61
 msgid "I forgot my password"
-msgstr ""
+msgstr "J'ai oublié mon mot de passe"
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_done.html:5
 msgctxt "page title"
 msgid "Password changed"
-msgstr ""
+msgstr "Mot de passe modifié avec succès"
 
 #: templates/registration/password_change_done.html:15
 msgid "Your password has been changed."
-msgstr ""
+msgstr "Votre mot de passe a bien été modifié."
 
 #: templates/registration/password_change_done.html:21
 msgid "Go to the home page"
-msgstr ""
+msgstr "Aller sur la page d’accueil"
 
 #: templates/registration/password_change_form.html:4
 #: templates/registration/password_change_form.html:14
 msgctxt "page title"
 msgid "Password Change"
-msgstr ""
+msgstr "Modification du mot de passe"
 
 #: templates/registration/password_change_form.html:20
 #: templates/registration/password_reset_confirm.html:21
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Veuillez corriger l'erreur ci-dessous."
+msgstr[1] "Veuillez corriger les erreurs ci-dessous."
 
 #: templates/registration/password_change_form.html:29
 msgid "Please enter your old password, then enter a new one (twice):"
 msgstr ""
+"Veuillez saisir votre ancien mot de passe, puis saisissez un nouveau (deux "
+"fois) :"
 
 #: templates/registration/password_change_form.html:45
 #: templates/registration/password_reset_confirm.html:46
 msgctxt "button"
 msgid "Change my password"
-msgstr ""
+msgstr "Modifier mon mot de passe"
 
 #: templates/registration/password_change_form.html:50
 msgid "Cancel and go back to the site home page"
-msgstr ""
+msgstr "Annuler et revenir à la page d’accueil du site"
 
 #: templates/registration/password_reset_complete.html:4
 #: templates/registration/password_reset_complete.html:5
 msgctxt "page title"
 msgid "Password reset complete"
-msgstr ""
+msgstr "Réinitialisation du mot de passe effectuée"
 
 #: templates/registration/password_reset_complete.html:15
 msgid "Your password has been reset."
-msgstr ""
+msgstr "Votre mot de passe a été réinitialisé."
 
 #. Translators: This text appears on a button that takes the user to the login page after a password reset.
 #: templates/registration/password_reset_complete.html:22
 msgid "Go to the login page"
-msgstr ""
+msgstr "Aller à la page de connexion"
 
 #: templates/registration/password_reset_confirm.html:4
 #: templates/registration/password_reset_confirm.html:14
 msgctxt "page title"
 msgid "Password Reset Confirmation"
-msgstr ""
+msgstr "Confirmation de réinitialisation de mot de passe"
 
 #: templates/registration/password_reset_confirm.html:30
 msgid "Please enter a new password (twice):"
-msgstr ""
+msgstr "Veuillez saisir un nouveau mot de passe (deux fois) :"
 
 #: templates/registration/password_reset_confirm.html:52
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
 msgstr ""
+"Le lien de réinitialisation de mot de passe était invalide, peut-être parce "
+"qu'il a déjà été utilisé. Veuillez demander une nouvelle réinitialisation de "
+"mot de passe."
 
 #: templates/registration/password_reset_done.html:4
 #: templates/registration/password_reset_done.html:5
 msgctxt "page title"
 msgid "Password reset e-mail sent"
-msgstr ""
+msgstr "Courriel de réinitialisation de mot de passe a été envoyé"
 
 #: templates/registration/password_reset_done.html:15
 msgid ""
 "We've e-mailed you instructions for setting your password, if an account "
 "exists with the e-mail address you entered. You should receive them shortly."
 msgstr ""
+"Un courriel contenant des instructions sur la manière de réinitialiser votre "
+"mot de passe a été envoyé à l'adresse électronique que vous avez fournie. "
+"Vous devriez le recevoir rapidement."
 
 #: templates/registration/password_reset_done.html:18
 msgid ""
 "If you don't receive an e-mail, please make sure you've entered the address "
 "you registered with, and check your spam folder."
 msgstr ""
+"Si vous ne recevez pas de courriel, assurez-vous d'avoir saisi la même "
+"adresse avec laquelle vous vous êtes enregistré et vérifiez votre dossier de "
+"courriers indésirables / spam."
 
 #. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
 #: templates/registration/password_reset_done.html:25
 msgid "Return to the login page"
-msgstr ""
+msgstr "Retourner à la page de connexion"
 
 #: templates/registration/password_reset_email.html:2
 #, python-format
 msgid "Hi, %(username)s!"
-msgstr ""
+msgstr "Bonjour, %(username)s !"
 
 #: templates/registration/password_reset_email.html:6
 #, python-format
 msgid ""
-"Someone asked for password reset for the e-mail address %(email)s on the "
+"Someone asked for a password reset for the e-mail address %(email)s on the "
 "Tabbycat site at %(protocol)s://%(domain)s."
 msgstr ""
+"Quelqu'un a demandé une réinitialisation de mot de passe pour l'adresse "
+"courriel %(email)s sur le site Tabbycat à %(protocol)s://%(domain)s."
 
 #: templates/registration/password_reset_email.html:10
 msgid "If this was you, follow the link below to reset your password:"
 msgstr ""
+"Si c’était vous, suivez le lien ci-dessous afin de réinitialiser votre mot "
+"de passe :"
 
 #: templates/registration/password_reset_email.html:13
 #, python-format
@@ -429,59 +445,44 @@ msgid ""
 "address into the password reset form on the Tabbycat site at %(protocol)s://"
 "%(domain)s."
 msgstr ""
+"Si ce n’était pas vous, cela signifie probablement que quelqu'un d’autre a "
+"saisi votre adresse courriel dans le formulaire de réinitialisation de mot "
+"de passe sur le site Tabbycat à %(protocol)s://%(domain)s."
 
 #: templates/registration/password_reset_form.html:4
 #: templates/registration/password_reset_form.html:24
 msgctxt "page title"
 msgid "Password Reset"
-msgstr ""
+msgstr "Réinitialisation de mot de passe"
 
 #: templates/registration/password_reset_form.html:15
 msgid "Please enter a valid e-mail address."
-msgstr ""
+msgstr "Veuillez saisir une adresse e-mail valide."
 
 #: templates/registration/password_reset_form.html:28
 msgid ""
 "Enter your e-mail address below, and we'll e-mail you a password reset link."
 msgstr ""
+"Saisissez votre adresse courriel ci-dessous, et nous vous enverrons un lien "
+"de réinitialisation de mot de passe."
 
 #: templates/registration/password_reset_form.html:36
 msgid "E-mail address"
-msgstr ""
+msgstr "Adresse de courriel"
 
 #: templates/registration/password_reset_form.html:44
 msgctxt "button"
 msgid "Reset my password"
-msgstr ""
+msgstr "Réinitialiser mon mot de passe"
 
 #: templates/registration/password_reset_form.html:49
 msgid "Back to the login page"
-msgstr ""
+msgstr "Retour à la page de connexion"
 
 #: templates/registration/password_reset_subject.txt:2
 #, python-format
 msgid "Password reset on Tabbycat site at %(domain)s"
-msgstr ""
-
-#, fuzzy
-#~| msgid "Need ballots?"
-#~ msgid "Discarded ballot set"
-#~ msgstr "Avez-vous besoin des bulletins&nbsp;?"
-
-#, fuzzy
-#~| msgid "Need ballots?"
-#~ msgid "Checked in ballot set"
-#~ msgstr "Avez-vous besoin des bulletins&nbsp;?"
-
-#, fuzzy
-#~| msgid "Need ballots?"
-#~ msgid "Created ballot set"
-#~ msgstr "Avez-vous besoin des bulletins&nbsp;?"
-
-#, fuzzy
-#~| msgid "Need ballots?"
-#~ msgid "Confirmed ballot set"
-#~ msgstr "Avez-vous besoin des bulletins&nbsp;?"
+msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
 
 #~ msgid "%(side_abbr)s%(metric_abbr)s"
 #~ msgstr "%(metric_abbr)s%(side_abbr)s"

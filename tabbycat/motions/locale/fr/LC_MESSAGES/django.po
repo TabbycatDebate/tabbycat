@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 16:38+1000\n"
+"POT-Creation-Date: 2017-08-28 14:48+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: motions/templates/balance_results_2vs2.html:42
+msgid "No teams debated this topic"
+msgstr ""
+
+#: motions/templates/balance_results_bp.html:21
+msgid "average points per position"
+msgstr ""
+
+#: motions/templates/balance_results_bp.html:45
+msgid "results per position"
+msgstr ""
+
+#: motions/templates/balance_results_bp.html:57
+msgid "No results for this topic"
+msgstr ""
+
+#: motions/templates/balance_vetoes.html:35
+msgid "No teams vetoed this topic"
+msgstr ""
 
 #: motions/templates/edit.html:65
 msgid "There are some problems with the data on this form:"

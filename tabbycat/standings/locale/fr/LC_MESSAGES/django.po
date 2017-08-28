@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 16:38+1000\n"
+"POT-Creation-Date: 2017-08-28 14:48+1000\n"
 "PO-Revision-Date: 2017-08-21 23:19-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -202,53 +202,53 @@ msgid "Diversity Overview"
 msgstr "Aperçu de la diversité"
 
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
-#: standings/views.py:133
+#: standings/views.py:131
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
 msgstr "%(title)s (seulement les %(limit)d en tête)"
 
-#: standings/views.py:211
+#: standings/views.py:209
 msgid "Speaker Standings"
 msgstr "Classement des orateurs"
 
-#: standings/views.py:247
+#: standings/views.py:245
 msgid "Speaker Tab"
 msgstr "Tab des orateurs"
 
-#: standings/views.py:265
+#: standings/views.py:263
 #, python-format
 msgid "%(category)s Speaker Standings"
 msgstr "Classement des orateurs de la catégorie %(category)s"
 
-#: standings/views.py:283
+#: standings/views.py:281
 #, python-format
 msgid "%(category)s Speaker Tab"
 msgstr "Tab des orateurs de la catégorie %(category)s"
 
-#: standings/views.py:297
+#: standings/views.py:295
 msgid "Reply Speaker Standings"
 msgstr "Classement des orateurs de réponse de la catégorie %(category_name)s"
 
-#: standings/views.py:329
+#: standings/views.py:327
 msgid "Reply Speaker Tab"
 msgstr "Tab des orateurs de réponse de la catégorie %(category_name)s"
 
-#: standings/views.py:341
+#: standings/views.py:339
 msgid "Team Standings"
 msgstr "Classement des équipes"
 
-#: standings/views.py:397
+#: standings/views.py:395
 msgid "Division Standings"
 msgstr "Classement par division"
 
-#: standings/views.py:407
+#: standings/views.py:405
 msgid "Team Tab"
 msgstr "Tab des équipes"
 
-#: standings/views.py:422
+#: standings/views.py:421
 msgid "Motions Tab"
 msgstr "Tab des motions"
 
-#: standings/views.py:470
+#: standings/views.py:463
 msgid "Current Team Standings"
 msgstr "Classement actuel des équipes"
