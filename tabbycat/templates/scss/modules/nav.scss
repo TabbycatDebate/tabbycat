@@ -1,78 +1,128 @@
 //------------------------------------------------------------------------------
-// Admin Sidebar
+// Admin Sidebar Customisation
 //------------------------------------------------------------------------------
 
-// // Offset the sidebar; should be nav-sidebar + 15
-// .nav-sidebar-offset {
-//   padding-left: $sidebar-width;
-// }
+#sidebar .list-group-item {
 
-// .override-sidebar-offset { // For fullscreen pages
+  background: $sidebar-bg;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  color: $sidebar-muted-text;
 
-//   .nav-sidebar-offset {
-//     padding-left: 0;
-//   }
-// }
+  &.active, &[aria-expanded="true"] {
+    background: darken($sidebar-bg, 5%);
+    border-color: darken($sidebar-bg, 10%);
+    color: #fff;
+  }
 
-// .nav-sidebar {
-//   background: $sidebar-bg;
-//   width: $sidebar-width;
-//   position: fixed;
-//   height: 100%;
-//   z-index: $z_3;
-//   padding-left: 0;
-//   padding-top: 0; // So the pill hover isn't flush
+  &[aria-expanded="true"] .feather-chevron-down {
+    display: none !important; // Need to override d-none for mobile
+  }
+  &[aria-expanded="false"] .feather-chevron-up {
+    display: none !important; // Need to override d-none for mobile
+  }
+}
 
-//   .overflow-scroll-wrapper {
-//     overflow-y: auto;
-//     height: 100%;
-//     padding-bottom: 10px;
-//   }
+// Sub menu items
+#sidebar .collapse .list-group-item,
+#sidebar .collapsing .list-group-item {
+  background: darken($sidebar-bg, 5%);
+  border: none;
+  @extend .small;
+}
 
-//   // Title Element
-//   .tournament-select {
-//     padding: 16px;
-//     margin-left: 0;
-//     border-radius: 0;
-//     color: $sidebar-muted-text;
+#sidebar .list-group-item.tournament-title {
+  text-transform: uppercase;
+  float: left;
+}
 
-//     .caret {
-//       margin-top: 5px;
-//     }
+.sidebar-expand {
+  float: right;
+  display: inline;
+}
 
-//     .emoji {
-//       margin-right: 7px; // Align the the other icons
-//     }
+//------------------------------------------------------------------------------
+// From https://www.codeply.com/go/GQ1Mz8RqZB
+//------------------------------------------------------------------------------
 
-//     &:hover,
-//     &.active {
-//       background: none;
-//       color: #fff;
-//     }
-//   }
+#sidebar .list-group-item {
+  white-space: nowrap;
+}
 
-//   .dropdown-menu {
-//     width: 100%;
-//   }
-// }
+//------------------------------------------------------------------------------
+// Responsive tweaks
+//------------------------------------------------------------------------------
 
-// //------------------------------------------------------------------------------
-// // Tournament Drop Down Menu
-// //------------------------------------------------------------------------------
+@include media-breakpoint-up(xs) {
+  // Applies just to phones
 
-// // Tournament Nav
-// .tournament-select-menu {
-//   width: $sidebar-width - 7px;
-//   margin-left: 3px;
-//   margin-top: 3px;
-//   min-width: auto;
+  #sidebar .list-group-item {
+    font-size: 12px;
+    padding: 0.75rem 0.5rem;
+  }
+}
 
-//   > li > a {
-//     padding: 3px 5px 3px 8px;
+@include media-breakpoint-up(sm) {
 
-//     .badge {
-//       font-size: 10px;
-//     }
-//   }
-// }
+  // Applies just to tablets
+  #sidebar .list-group-item {
+    font-size: 12px;
+    padding: 0.5rem 0.75rem;
 
+    .feather {
+      width: 12px;
+      height: 12px;
+      margin-bottom: -2px;
+    }
+  }
+}
+
+@include media-breakpoint-up(lg) {
+
+  // Applies just to screens
+  #sidebar .list-group-item {
+    font-size: $font-size-sm;
+    padding: 0.5rem 1rem;
+
+    .feather {
+      width: 14px;
+      height: 14px;
+      margin-bottom: -2px;
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+
+  /* overlay sub levels on small screens */
+  #sidebar .list-group .collapse.in,
+  #sidebar .list-group .collapse.show {
+    position: absolute;
+    z-index: 1;
+    width: 190px;
+    background: red;
+  }
+
+}
+
+/* change transition animation to width when entire sidebar is toggled */
+#sidebar.collapse {
+  -webkit-transition-timing-function: ease;
+       -o-transition-timing-function: ease;
+          transition-timing-function: ease;
+  -webkit-transition-duration: .2s;
+       -o-transition-duration: .2s;
+          transition-duration: .2s;
+}
+
+#sidebar.collapsing {
+  opacity: 0.8;
+  width: 0;
+  -webkit-transition-timing-function: ease-in;
+       -o-transition-timing-function: ease-in;
+          transition-timing-function: ease-in;
+  -webkit-transition-property: width;
+       -o-transition-property: width;
+          transition-property: width;
+}

@@ -1,14 +1,75 @@
 {% load debate_tags i18n %}
 
-  <div class="list-group border-0 card text-center text-md-left">
+<div class="list-group border-0 card text-center text-md-left">
 
-  <a href="#menu1" class="list-group-item d-inline-block collapsed" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"><i class="fa fa-dashboard"></i> <span class="d-none d-md-inline">Item 1</span> </a>
+  <a href="#tlisth" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
+    data-parent="#sidebar" class="list-group-item d-inline-block">
+    <h6 class="pt-0 pt-md-4 pb-0 pb-md-1 tournament-title float-left">
+      {% if tournament.emoji %}{{ tournament.emoji }}{% else %}<i data-feather="award"></i>{% endif %}
+      <span class="d-none d-md-inline">{{ tournament }}</span>
+    </h6>
+    <div class="pt-3 float-right">
+      <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
+      <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
+    </div>
+  </a>
+  <div class="collapse" id="tlisth">
+    {% for t in all_tournaments %}
+      <a href="{{ t.get_absolute_url  }}" class="list-group-item" data-parent="#titleh">
+        <i data-feather="settings" class="d-none d-md-inline"></i>
+        {{ t }}
+      </a>
+    {% endfor %}
+    <a href="/" class="list-group-item" data-parent="#titleh">
+      <i data-feather="chevron-down" class="d-none d-md-inline"></i>
+      <span class="d-none d-md-inline">Site Home</span>
+    </a>
+    <a href="{% url 'tournament-create' %}" class="list-group-item" data-parent="#titleh">
+      <i data-feather="edit-2" class="d-none d-md-inline"></i>
+      <span class="d-none d-md-inline">New Tournament</span>
+    </a>
+  </div>
 
   <a href="{% tournamenturl 'tournament-admin-home' %}" data-parent="#sidebar"
      class="list-group-item d-inline-block collapsed {% if overview_nav %}active{% endif %}">
     <i data-feather="monitor"></i>
     <span class="d-none d-md-inline">{% trans "Overview" %}</span>
   </a>
+
+  <a href="#setuph" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
+     class="list-group-item d-inline-block {% if options_nav or import_nav %}active{% else %}collapsed{% endif %}" >
+     <i data-feather="briefcase"></i>
+     <span class="d-none d-md-inline">{% trans "Setup" %}</span>
+     <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
+     <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
+  </a>
+  <div class="collapse" id="setuph">
+    <a href="{% tournamenturl 'options-tournament-index' %}"
+       class="list-group-item {% if options_nav %}active{% endif %}" data-parent="#setuph">
+      <span class="circle-icon small-circle"><i data-feather="settings"></i></span>
+      <span class="d-none d-md-inline">{% trans "Configuration" %}</span>
+    </a>
+    <a href="{% tournamenturl 'importer-simple-index' %}"
+       class="list-group-item {% if import_nav %}active{% endif %}" data-parent="#setuph">
+      <span class="circle-icon small-circle"><i data-feather="download-cloud"></i></span>
+      <span class="d-none d-md-inline">{% trans "Import Data" %}</span>
+    </a>
+    <a href="{% tournamenturl 'participants-list' %}"
+       class="list-group-item {% if participants_nav %}active{% endif %}" data-parent="#setuph">
+      <span class="circle-icon small-circle"><i data-feather="user"></i></span>
+      <span class="d-none d-md-inline">{% trans "Participants" %}</span>
+    </a>
+    <a href="{% tournamenturl 'randomised-urls-view' %}"
+       class="list-group-item {% if import_random %}active{% endif %}"
+       data-parent="#rh{{ r.id }}">
+      <span class="circle-icon small-circle"><i data-feather="link"></i></span>
+      <span class="d-none d-md-inline">{% trans "Private URLs" %}</span>
+    </a>
+    <a href="{% url 'admin:index' %}" target="_blank" class="list-group-item" data-parent="#setuph">
+      <span class="circle-icon small-circle"><i data-feather="edit"></i></span>
+      <span class="d-none d-md-inline">{% trans "Edit Database" %}</span>
+    </a>
+  </div>
 
   {% if pref.side_allocations_enabled == 'preallocated' %}
     <a href="{% tournamenturl 'draw-side-allocations' %}" data-parent="#sidebar"
@@ -56,88 +117,7 @@
   <a href="{% url 'logout' %}" data-parent="#sidebar"
    class="list-group-item d-inline-block collapsed">
     <i data-feather="log-out"></i>
-    <span class="d-none d-md-inline">{% blocktrans trimmed %}Log Out ({{ user }}){% endblocktrans %}</span>
+    <span class="d-none d-md-inline">{% blocktrans trimmed %}Log Out{% endblocktrans %}</span>
   </a>
 
 </div>
-
-
-<!--
-
- <ul class="nav flex-column nav-accordion" id="accordion" role="tablist">
-
-
-
-  <li class="panel">
-    <div class="progress-line standard-line"></div>
-    <div class="" role="tab" id="headingOne">
-      <a class="{% if options_nav or import_nav %}active
-                {% else %}collapsed{% endif %}"
-         role="button"
-         data-toggle="collapse"
-         data-parent="#accordion"
-         href="#collapseOne"
-         aria-expanded="{% if options_nav or import_nav or participants_nav %}true{% else %}false{% endif %}"
-         aria-controls="collapseOne">
-        <span class="circle-icon icon-container">
-          <i data-feather="briefcase"></i>
-        </span>
-        {% trans "Setup" %}<span class="caret pull-right"></span>
-      </a>
-    </div>
-    <div id="collapseOne"
-         class="panel-collapse collapse {% if options_nav or import_nav or import_random or participants_nav%}in{% endif %}"
-         role="tabpanel"
-         aria-labelledby="headingOne">
-      <ul class="nav nav-pills nav-stacked">
-        <li>
-          <a class="{% if options_nav %}active{% endif %}"
-             href="{% tournamenturl 'options-tournament-index' %}">
-            <span class="circle-icon icon-container">
-              <i data-feather="settings"></i>
-            </span>
-            {% trans "Configuration" %}
-          </a>
-        </li>
-        <li>
-          <a class="{% if import_nav %}active{% endif %}"
-             href="{% tournamenturl 'importer-simple-index' %}">
-            <span class="circle-icon icon-container">
-              <i data-feather="download-cloud"></i>
-            </span>
-            {% trans "Import Data" %}
-          </a>
-        </li>
-        <li>
-          <a class="{% if participants_nav %}active{% endif %}"
-             href="{% tournamenturl 'participants-list' %}">
-            <span class="circle-icon icon-container">
-              <i data-feather="user"></i>
-            </span>
-            {% trans "Participants" %}
-          </a>
-        </li>
-        <li>
-          <a class="{% if import_random %}active{% endif %}"
-             href="{% tournamenturl 'randomised-urls-view' %}">
-            <span class="circle-icon icon-container">
-              <i data-feather="link"></i>
-            </span>
-            {% trans "Private URLs" %}
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'admin:index' %}" target="_blank">
-            <span class="circle-icon icon-container">
-              <i data-feather="edit"></i>
-            </span>
-            {% trans "Edit Database" %}
-          </a>
-        </li>
-      </ul>
-    </div>
-  </li>
-
-
-
--->

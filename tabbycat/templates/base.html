@@ -34,36 +34,38 @@
     {% if 'admin/' in request.path and user.is_superuser %}
       <!-- Insert a second level column structure for a side nav -->
       <div class="row">
-        <div class="col-md-3 float-left col-1 pl-0 pr-0 collapse width show" id="sidebar">
+        <div class="col-md-2 col-1 float-left pl-0 pr-md-3 pr-0 collapse width show" id="sidebar">
           {% include "nav/admin_nav.html" %}
         </div>
-        <main class="col-md-9 float-left col px-5 pl-md-2 pt-2 main">
+        <main class="col-md-10 col float-left pl-md-0 pl-3 main">
     {% endif %}
 
     {% block header %}
-      <div class="row {% if 'admin/' in request.path and user.is_superuser %}white-bg mb-3 nav-sidebar-offset{% endif %}">
-        <div class="col mt-4 mb-3">
+      <div class="row {% if 'admin/' in request.path and user.is_superuser %}white-bg mb-3{% endif %}">
+        <div class="col-10 mt-4 mb-3 h3">
 
+          {% if page_title %}
+            {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
+          {% else %}
+            {% block head-title %}{% endblock %}
+          {% endif %}
+          {% if page_subtitle %}
+            <small class="text-muted">{{ page_subtitle }}</small>
+          {% else %}
+            <small class="text-muted">{% block sub-title %}{% endblock %}</small>
+          {% endif %}
+
+        </div>
+
+        <div class="col mt-4 mb-3">
           <!-- Show menu reveal toggle for admin area -->
           {% if 'admin/' in request.path and user.is_superuser %}
             <a href="#" data-target="#sidebar" data-toggle="collapse">
               <i data-feather="menu"></i>
             </a>
           {% endif %}
-
-          <h3>
-            {% if page_title %}
-              {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
-            {% else %}
-              {% block head-title %}{% endblock %}
-            {% endif %}
-            {% if page_subtitle %}
-              <small class="text-muted">{{ page_subtitle }}</small>
-            {% else %}
-              <small class="text-muted">{% block sub-title %}{% endblock %}</small>
-            {% endif %}
-          </h3>
         </div>
+
       </div>
     {% endblock header %}
 

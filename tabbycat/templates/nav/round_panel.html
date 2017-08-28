@@ -8,13 +8,13 @@
 
 <a href="#rh{{ r.id }}" data-toggle="collapse" data-parent="#sidebar"
    class="list-group-item d-inline-block {% if r.seq == round.seq %}active{% else %}collapsed{% endif %}" aria-expanded="false">
-
    <span class="circle-icon {% if r == current_round %}btn-info{% elif r.seq > current_round.seq %}btn-inactive{% elif r.seq < current_round.seq %}btn-success{% endif %}">
    </span>
-   <span class="d-none d-md-inline">
-    {{ r.abbreviation }} <span class="caret pull-right"></span>
+   <span class="">
+    {{ r.abbreviation }}
    </span>
-
+   <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
+   <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
 </a>
 
 <div class="collapse" id="rh{{ r.id }}">
@@ -22,18 +22,15 @@
   <a href="{% roundurl 'availability-index' r %}"
      class="list-group-item {% if availability_nav and round == r %}active{% endif %}"
      data-parent="#rh{{ r.id }}">
-
     <span class="circle-icon small-circle
       {% if r.seq < current_round.seq %} btn-success{% elif r == current_round and r.draw_status == r.STATUS_NONE %} btn-info{% elif r.draw_status == r.STATUS_DRAFT %} btn-success{% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success{% elif r.draw_status == r.STATUS_RELEASED %} btn-success{% else %} btn-inactive{% endif %}">
     </span>
     <span class="d-none d-md-inline">{% trans "Check-Ins" %}</span>
-
   </a>
 
   <a href="{% roundurl 'draw' r %}"
      class="list-group-item {% if draw_nav and round == r %}active{% endif %}"
      data-parent="#rh{{ r.id }}">
-
     <span class="circle-icon small-circle
       {% if r.seq < current_round.seq %} btn-success
       {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
@@ -42,13 +39,11 @@
       {% else %} btn-info{% endif %}">
     </span>
     <span class="d-none d-md-inline">{% trans "Draw" %}</span>
-
   </a>
 
   <a href="{% roundurl 'draw-display' r %}"
     class="list-group-item {% if display_nav and round == r %}active{% endif %}"
     data-parent="#rh{{ r.id }}">
-
     <span class="circle-icon small-circle
       {% if r.seq < current_round.seq %} btn-success
       {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
@@ -57,26 +52,22 @@
       {% else %} btn-info{% endif %}">
     </span>
     <span class="d-none d-md-inline">{% trans "Display" %}</span>
-
   </a>
 
   <a href="{% roundurl 'motions-edit' r %}"
     class="list-group-item {% if motions_nav and round == r %}active{% endif %}"
     data-parent="#rh{{ r.id }}">
-
     <span class="circle-icon small-circle
       {% if r.motion__count > 0 %} btn-success
       {% elif r.draw_status != r.STATUS_NONE and r.seq >= current_round.seq %} btn-info
       {% else %} btn-inactive{% endif %}">
     </span>
     <span class="d-none d-md-inline">{% trans "Motions" %}</span>
-
   </a>
 
   <a href="{% roundurl 'results-round-list' r %}"
      class="list-group-item {% if ballots_nav and round == r %}active{% endif %}"
      data-parent="#rh{{ r.id }}">
-
     <span class="circle-icon small-circle
       {% if r.seq < current_round.seq %} btn-success
       {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-info
@@ -84,7 +75,6 @@
       {% else %} btn-inactive{% endif %}">
     </span>
     <span class="d-none d-md-inline">{% trans "Results" %}</span>
-
   </a>
 
 </div>

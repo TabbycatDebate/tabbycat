@@ -1,161 +1,161 @@
-//------------------------------------------------------------------------------
-// Custom styling/layout for the sidebar and its round progresss indicators
-//------------------------------------------------------------------------------
+// //------------------------------------------------------------------------------
+// // Custom styling/layout for the sidebar and its round progresss indicators
+// //------------------------------------------------------------------------------
 
-.nav-accordion {
+// .nav-accordion {
 
-  li.panel,
-  li.standalone {
-    background: none; // override
-    border: 0;
-    box-shadow: none;
-    margin: 0; // override
-    z-index: 10; // sit above the progress line
+//   li.panel,
+//   li.standalone {
+//     background: none; // override
+//     border: 0;
+//     box-shadow: none;
+//     margin: 0; // override
+//     z-index: 10; // sit above the progress line
 
-    // All Buttons
-    a {
-      color: $sidebar-muted-text;
-      font-size: 12px;
-      display: block;
-      padding: 6px 16px 6px 19px;
+//     // All Buttons
+//     a {
+//       color: $sidebar-muted-text;
+//       font-size: 12px;
+//       display: block;
+//       padding: 6px 16px 6px 19px;
 
-      .glyphicon {
-        margin-right: 11px; // Top categories for left hand menu
-        font-size: 11px;
-      }
+//       .glyphicon {
+//         margin-right: 11px; // Top categories for left hand menu
+//         font-size: 11px;
+//       }
 
-      &:hover,
-      &.active,
-      &:focus {
-        background: $sidebar-bg-highlight;
-        color: $alt-bg;
-        text-decoration: none;
-      }
-    }
+//       &:hover,
+//       &.active,
+//       &:focus {
+//         background: $sidebar-bg-highlight;
+//         color: $alt-bg;
+//         text-decoration: none;
+//       }
+//     }
 
-    .nav-pills {
-      padding-bottom: 4px;
-    }
-    .nav-pills a {
-      font-size: 11px;
-    }
+//     .nav-pills {
+//       padding-bottom: 4px;
+//     }
+//     .nav-pills a {
+//       font-size: 11px;
+//     }
 
-  }
+//   }
 
-  li.panel li a .glyphicon {
-    margin-right: 15px; // For the options in the Setup sub menu
-  }
+//   li.panel li a .glyphicon {
+//     margin-right: 15px; // For the options in the Setup sub menu
+//   }
 
-  .panel-collapse {
-    background: $sidebar-bg-highlight;
-  }
+//   .panel-collapse {
+//     background: $sidebar-bg-highlight;
+//   }
 
-  // Just top level buttons
-  // EXPANDED
-  li.panel div[role="tab"] a[aria-expanded="true"] {
-    background: $sidebar-bg-highlight;
+//   // Just top level buttons
+//   // EXPANDED
+//   li.panel div[role="tab"] a[aria-expanded="true"] {
+//     background: $sidebar-bg-highlight;
 
-    .caret {
-      margin-top: 7px;
-      transform: rotate(0deg);
-    }
-  }
-  // NOT EXPANDED
-  li.panel div[role="tab"] a[aria-expanded="false"] {
+//     .caret {
+//       margin-top: 7px;
+//       transform: rotate(0deg);
+//     }
+//   }
+//   // NOT EXPANDED
+//   li.panel div[role="tab"] a[aria-expanded="false"] {
 
-    .caret {
-      margin-top: 7px;
-      transform: rotate(90deg);
-      transition: 0.3s ease-in-out;
-    }
-  }
-}
+//     .caret {
+//       margin-top: 7px;
+//       transform: rotate(90deg);
+//       transition: 0.3s ease-in-out;
+//     }
+//   }
+// }
 
-//------------------------------------------------------------------------------
-// Progress Indicators
-//------------------------------------------------------------------------------
+// //------------------------------------------------------------------------------
+// // Progress Indicators
+// //------------------------------------------------------------------------------
 
-.progress-line {
-  height: 100%;
-  margin: 20px 0 0 21px;
-  position: absolute;
-  width: 8px;
-  z-index: -10;
+// .progress-line {
+//   height: 100%;
+//   margin: 20px 0 0 21px;
+//   position: absolute;
+//   width: 8px;
+//   z-index: -10;
 
-  &.standard-line {
-    background: theme-color("gray");
-  }
-}
+//   &.standard-line {
+//     background: theme-color("gray");
+//   }
+// }
 
-.circle-icon {
-  background: $alt-bg;
-  border: 3px solid theme-color("gray");
-  border-radius: 21px;
-  display: inline-block;
-  float: left;
-  height: 20px;
-  margin: -2px 10px 0 -5px;
-  width: 20px;
-  z-index: 10;
+// .circle-icon {
+//   background: $alt-bg;
+//   border: 3px solid theme-color("gray");
+//   border-radius: 21px;
+//   display: inline-block;
+//   float: left;
+//   height: 20px;
+//   margin: -2px 10px 0 -5px;
+//   width: 20px;
+//   z-index: 10;
 
-  .feather {
-    margin-left: 1px;
-    margin-top: 1px;
-    z-index: 10;
-  }
+//   .feather {
+//     margin-left: 1px;
+//     margin-top: 1px;
+//     z-index: 10;
+//   }
 
-  &.btn-success {
-    background: theme-color("green");
-  }
+//   &.btn-success {
+//     background: theme-color("green");
+//   }
 
-  &.btn-info {
-    background: theme-color("cyan");
-  }
+//   &.btn-info {
+//     background: theme-color("cyan");
+//   }
 
-  &.btn-inactive {
-    background: darken($gray-300, 3);
-  }
+//   &.btn-inactive {
+//     background: darken($gray-300, 3);
+//   }
 
-  &.icon-container {
-    background: theme-color("gray");
-  }
-}
+//   &.icon-container {
+//     background: theme-color("gray");
+//   }
+// }
 
-.nav-stacked .nav-stacked {
+// .nav-stacked .nav-stacked {
 
-  .progress-line {
-    border-color: theme-color("gray");
-    margin: -3px 0 0 21px;
-    z-index: 10;
-  }
+//   .progress-line {
+//     border-color: theme-color("gray");
+//     margin: -3px 0 0 21px;
+//     z-index: 10;
+//   }
 
-  a {
-    z-index: 20;
-  }
-}
+//   a {
+//     z-index: 20;
+//   }
+// }
 
-.nav-accordion li.panel a:hover {
+// .nav-accordion li.panel a:hover {
 
-  .circle-icon {
-    border-color: #888;
-  }
+//   .circle-icon {
+//     border-color: #888;
+//   }
 
-  .icon-container {
-    border-color: theme-color("gray");
-    color: $alt-bg;
-  }
-}
+//   .icon-container {
+//     border-color: theme-color("gray");
+//     color: $alt-bg;
+//   }
+// }
 
-.sub-nav {
+// .sub-nav {
 
-  .circle-icon {
-    height: 18px;
-    margin: -2px 12px -3px -6px;
-    width: 18px;
-  }
+//   .circle-icon {
+//     height: 18px;
+//     margin: -2px 12px -3px -6px;
+//     width: 18px;
+//   }
 
-  .progress-line {
-    margin-left: 27px;
-    width: 6px;
-  }
-}
+//   .progress-line {
+//     margin-left: 27px;
+//     width: 6px;
+//   }
+// }
