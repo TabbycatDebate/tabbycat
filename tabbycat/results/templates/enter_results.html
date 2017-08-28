@@ -21,7 +21,7 @@
 {% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}{% endblock %}
 {% block page-subnav-sections %}
   <a class="btn btn-default" href="{% roundurl 'results-round-list' debate.round %}">
-    <span class="glyphicon glyphicon-chevron-left"></span>
+    <span class="icon glyphicon-chevron-left"></span>
     {% trans "Back to All Results" %}
   </a>
   {% if not new %}

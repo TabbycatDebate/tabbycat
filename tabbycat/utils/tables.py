@@ -352,7 +352,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('show_adjudicator_institutions') and not hide_institution:
             self.add_column({
                 'key': "Institution",
-                'icon': 'glyphicon-home',
+                'icon': 'home',
                 'tooltip': "Institution",
             }, [adj.institution.code for adj in adjudicators])
 
@@ -360,14 +360,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             adjcore_header = {
                 'key': 'adjcore',
                 'tooltip': _("Member of the Adjudication Core"),
-                'icon': 'glyphicon-sunglasses',
+                'icon': 'users',
             }
             self.add_boolean_column(adjcore_header, [adj.adj_core for adj in adjudicators])
 
             independent_header = {
                 'key': 'independent',
                 'tooltip': _("Independent Adjudicator"),
-                'icon': 'glyphicon-knight',
+                'icon': 'user-plus',
             }
             self.add_boolean_column(independent_header, [adj.independent for adj in adjudicators])
 
@@ -375,7 +375,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             trainee_header = {
                 'key': 'accredited',
                 'tooltip': _("Always Trainee"),
-                'icon': 'glyphicon-leaf',
+                'icon': 'user-minus',
             }
             self.add_boolean_column(trainee_header, [adj.trainee for adj in adjudicators])
 
@@ -441,7 +441,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if show_order and self.tournament.pref('enable_motions'):
             self.add_column({
                 'key': _("Order"),
-                'icon': 'glyphicon glyphicon-sort-by-order-alt',
+                'icon': 'hash',
                 'tooltip': _("Order as listed"),
             }, [{
                 'text': motion.seq,
@@ -467,7 +467,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('show_team_institutions') and not hide_institution:
             self.add_column({
                 'key': _("Institution"),
-                'icon': 'glyphicon-home',
+                'icon': 'home',
                 'tooltip': _("Institution"),
             }, [team.institution.code if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams])
 
@@ -508,7 +508,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_room_rank_columns(self, debates):
         header = {
             'key': "Room rank",
-            'icon': 'glyphicon-stats',
+            'icon': 'bar-chart-2',
             'tooltip': _("Room rank of this debate"),
         }
         self.add_column(header, [debate.room_rank for debate in debates])
@@ -516,7 +516,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_debate_bracket_columns(self, debates):
         header = {
             'key': "Bracket",
-            'icon': 'glyphicon-stats',
+            'icon': 'bar-chart-2',
             'tooltip': _("Bracket of this debate"),
         }
 
@@ -581,7 +581,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         venue_header = {
             'key': _("Venue"),
-            'icon': 'glyphicon-map-marker',
+            'icon': 'map-pin',
             'tooltip': _("Venue"),
         }
         self.add_column(venue_header, venue_data)

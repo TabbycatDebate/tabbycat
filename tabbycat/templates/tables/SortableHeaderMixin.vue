@@ -11,15 +11,15 @@ export default {
       this.$emit('resort', key)
     },
     sortClasses: function(key) {
-      var baseCSS = "glyphicon vue-sort-key "
+      var baseCSS = "vue-sort-key "
       if (this.sortKey === key) {
         if (this.sortOrder === "asc") {
-          return baseCSS + "vue-sort-active glyphicon-sort-by-attributes-alt"
+          return baseCSS + "vue-sort-active sort-by-asc"
         } else {
-          return baseCSS + "vue-sort-active glyphicon-sort-by-attributes"
+          return baseCSS + "vue-sort-active sort-by-desc"
         }
       }
-      return baseCSS + "text-muted glyphicon-sort"
+      return baseCSS + "text-muted"
     }
   },
 }

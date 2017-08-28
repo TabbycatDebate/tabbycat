@@ -6,7 +6,7 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
+    <span class="icon glyphicon-chevron-left"></span> Back to Draw
   </a>
 {% endblock %}
 
@@ -43,9 +43,9 @@
               {{ shift.debate.division.venue_category }} @
               {{ shift.debate.time.time|time:'h:i' }}
               {% if shift.timing_confirmed == True %}
-                <span class="glyphicon glyphicon-ok pull-right"></span>
+                <span class="icon glyphicon-ok pull-right"></span>
               {% elif shift.timing_confirmed == False %}
-                <span class="glyphicon glyphicon-remove pull-right"></span>
+                <span class="icon glyphicon-remove pull-right"></span>
               {% endif %}
             </li>
           {% endfor %}

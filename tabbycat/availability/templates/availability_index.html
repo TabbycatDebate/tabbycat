@@ -56,7 +56,7 @@
 
   {% if round.draw_status == round.STATUS_CONFIRMED or round.draw_status == round.STATUS_RELEASED %}
     <a class="btn btn-success submit-disable" href="{% roundurl 'draw' round %}">
-      {% trans "View Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+      {% trans "View Draw" %} <span class="icon glyphicon-chevron-right"></span>
     </a>
   {% else %}
     {% if previous_unconfirmed and not round.is_break_round %}
@@ -64,46 +64,46 @@
         data-toggle="tooltip" title="{{ previous_unconfirmed }} debates from
         {{ round.prev.name }} do not have a completed ballot —
         this may lead to a draw that fails or is incorrect">
-        {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+        {% trans "Generate Draw" %} <span class="icon glyphicon-chevron-right"></span>
       </button>
     {% elif checkin_types.0.in_now == 0 %}
       <button class="btn btn-danger submit-disable disabled"
         data-toggle="tooltip" title="{% trans "The draw cannot be generated until some teams have been checked in." %}">
-        {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+        {% trans "Generate Draw" %} <span class="icon glyphicon-chevron-right"></span>
       </button>
     {% elif checkin_types.1.in_now == 0 %}
       <button class="btn btn-danger submit-disable disabled"
         data-toggle="tooltip" title="{% trans "The draw cannot be generated until some adjudicators have been checked in." %}">
-        {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+        {% trans "Generate Draw" %} <span class="icon glyphicon-chevron-right"></span>
       </button>
     {% elif checkin_types.2.in_now == 0 %}
       <button class="btn btn-danger submit-disable disabled"
         data-toggle="tooltip" title="{% trans "The draw cannot be generated until some venues have been checked in." %}">
-        {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+        {% trans "Generate Draw" %} <span class="icon glyphicon-chevron-right"></span>
       </button>
     {% elif min_venues > checkin_types.2.in_now %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="{% trans "There aren't enough venues checked in for the number of debates — the draw may not generate properly." %}">
-         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+         {% trans "Generate Draw" %} <span class="icon glyphicon-chevron-right"></span>
        </button>
     {% elif min_adjudicators > checkin_types.1.in_now %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="{% trans "There aren't enough adjudicators checked in for the number of debates — the draw may not generate properly." %}">
-        {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+        {% trans "Generate Draw" %} <span class="icon glyphicon-chevron-right"></span>
       </button>
     {% elif pref.teams_in_debate == 'two' and not checkin_types.0.in_now|divisibleby:2  %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="{% trans "There is an uneven number of teams checked in — the draw may not generate properly." %}">
-        {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+        {% trans "Generate Draw" %} <span class="icon glyphicon-chevron-right"></span>
       </button>
     {% elif pref.teams_in_debate == 'bp' and not checkin_types.0.in_now|divisibleby:4  %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="{% trans "The number of teams checked in is not a multiple of 4 — the draw may not generate properly." %}">
-        {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+        {% trans "Generate Draw" %} <span class="icon glyphicon-chevron-right"></span>
       </button>
     {% else %}
       <button class="btn btn-success submit-disable" id="createDraw">
-        {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
+        {% trans "Generate Draw" %} <span class="icon glyphicon-chevron-right"></span>
       </button>
     {% endif %}
   {% endif %}

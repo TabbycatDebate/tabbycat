@@ -74,13 +74,13 @@
 <ul class="list-group">
   {% if user.is_superuser %}
     <li class="list-group-item">
-      <span class="glyphicon glyphicon-pencil"></span>&nbsp;
+      <i data-feather="plus-circle"></i>
       <a href="{% url 'tournament-create' %}">
         {% trans "New Tournament" %}
       </a>
     </li>
     <li class="list-group-item">
-      <span class="glyphicon glyphicon-edit"></span>&nbsp;
+      <i data-feather="edit"></i>
       <a href="{% url 'admin:index' %}">
         {% trans "Edit Database Area" %}
       </a>
@@ -88,20 +88,21 @@
   {% endif %}
   {% if user.is_authenticated %}
     <li class="list-group-item">
-      <span class="glyphicon glyphicon-erase"></span>&nbsp;
+      <i data-feather="rotate-cw"></i>
       <a class="" href="{% url 'password_change' %}">
         {% blocktrans %}Change Password ({{ user }}){% endblocktrans %}
       </a>
     </li>
     <li class="list-group-item">
-      <span class="glyphicon glyphicon-lock"></span>&nbsp;
+      <i data-feather="log-out"></i>
       <a class="" href="{% url 'logout' %}">
         {% blocktrans %}Log Out ({{ user }}){% endblocktrans %}
       </a>
     </li>
   {% else %}
     <li class="list-group-item">
-      <span class="emoji">🔓</span><a class="" href="{% url 'login' %}">{% trans "Log In as Admin" %}</a>
+      <i data-feather="log-in"></i>
+      <a class="" href="{% url 'login' %}">{% trans "Log In as Admin" %}</a>
     </li>
   {% endif %}
 </ul>

@@ -31,13 +31,13 @@
       {% endfor %}
       <li>
         <a class="small" href="/">
-          <span class="glyphicon glyphicon-home"></span>&nbsp;
+          <i data-feather="home"></i>&nbsp;
           {% trans "Site Home" %}
         </a>
       </li>
       <li>
         <a class="small" href="{% url 'tournament-create' %}">
-          <span class="glyphicon glyphicon-pencil"></span>&nbsp;
+          <i data-feather="edit"></i>&nbsp;
           {% trans "New Tournament" %}
         </a>
       </li>
@@ -54,7 +54,7 @@
      <a href="{% tournamenturl 'tournament-admin-home' %}"
         class="{% if overview_nav %}active{% endif %}">
         <span class="circle-icon icon-container">
-          <span class="glyphicon glyphicon-th"></span>
+          <i data-feather="monitor"></i>
         </span>
          {% trans "Overview" %}
       </a>
@@ -64,7 +64,7 @@
       <a href="{% tournamenturl 'draw-side-allocations' %}"
          class="{% if sides_nav %}active{% endif %}">
         <span class="circle-icon icon-container">
-          <span class="glyphicon glyphicon-resize-horizontal"></span>
+          <i data-feather="shuffle"></i>
         </span>
          {% trans "Sides" %}
       </a>
@@ -75,7 +75,7 @@
       <a href="{% tournamenturl 'division_allocations' %}"
          class="{% if divisions_nav %}active {% endif %}">
         <span class="circle-icon icon-container">
-          <span class="glyphicon glyphicon-th-list"></span>
+          <i data-feather="layers"></i>
         </span>
          {% trans "Divisions" %}
       </a>
@@ -85,7 +85,7 @@
     <a href="{% tournamenturl 'adjfeedback-overview' %}"
        class="{% if feedback_nav %} active {% endif %}">
       <span class="circle-icon icon-container">
-        <span class="glyphicon glyphicon-comment"></span>
+        <i data-feather="message-circle"></i>
       </span>
        {% trans "Feedback" %}
     </a>
@@ -94,7 +94,7 @@
     <a href="{% roundurl 'standings-index' current_round %}"
        class="{% if standings_nav %} active {% endif %}">
       <span class="circle-icon icon-container">
-        <span class="glyphicon glyphicon-stats"></span>
+        <i data-feather="bar-chart-2"></i>
       </span>
        {% trans "Standings" %}
     </a>
@@ -111,7 +111,7 @@
          aria-expanded="{% if options_nav or import_nav or participants_nav %}true{% else %}false{% endif %}"
          aria-controls="collapseOne">
         <span class="circle-icon icon-container">
-          <span class="glyphicon glyphicon-briefcase"></span>
+          <i data-feather="briefcase"></i>
         </span>
         {% trans "Setup" %}<span class="caret pull-right"></span>
       </a>
@@ -125,7 +125,7 @@
           <a class="{% if options_nav %}active{% endif %}"
              href="{% tournamenturl 'options-tournament-index' %}">
             <span class="circle-icon icon-container">
-              <span class="glyphicon glyphicon-cog"></span>
+              <i data-feather="settings"></i>
             </span>
             {% trans "Configuration" %}
           </a>
@@ -134,7 +134,7 @@
           <a class="{% if import_nav %}active{% endif %}"
              href="{% tournamenturl 'importer-simple-index' %}">
             <span class="circle-icon icon-container">
-              <span class="glyphicon glyphicon-download"></span>
+              <i data-feather="download-cloud"></i>
             </span>
             {% trans "Import Data" %}
           </a>
@@ -143,7 +143,7 @@
           <a class="{% if participants_nav %}active{% endif %}"
              href="{% tournamenturl 'participants-list' %}">
             <span class="circle-icon icon-container">
-              <span class="glyphicon glyphicon-user"></span>
+              <i data-feather="user"></i>
             </span>
             {% trans "Participants" %}
           </a>
@@ -152,7 +152,7 @@
           <a class="{% if import_random %}active{% endif %}"
              href="{% tournamenturl 'randomised-urls-view' %}">
             <span class="circle-icon icon-container">
-              <span class="glyphicon glyphicon-link"></span>
+              <i data-feather="link"></i>
             </span>
             {% trans "Private URLs" %}
           </a>
@@ -160,7 +160,7 @@
         <li>
           <a href="{% url 'admin:index' %}" target="_blank">
             <span class="circle-icon icon-container">
-              <span class="glyphicon glyphicon-edit"></span>
+              <i data-feather="edit"></i>
             </span>
             {% trans "Edit Database" %}
           </a>
@@ -178,7 +178,7 @@
              <a class="{% if break_nav %}active{% endif %}"
                 href="{% tournamenturl 'breakqual-index' %}">
               <span class="circle-icon icon-container">
-                <span class="glyphicon glyphicon-gift"></span>
+                <i data-feather="target"></i>
               </span>
               {% trans "Breaks" %}
             </a>
@@ -192,7 +192,7 @@
   <li class="standalone">
     <a class="" href="{% url 'logout' %}">
       <span class="circle-icon icon-container">
-        <span class="glyphicon glyphicon-lock"></span>
+        <i data-feather="log-out"></i>
       </span>
       {% blocktrans trimmed %}
         Log Out ({{ user }})

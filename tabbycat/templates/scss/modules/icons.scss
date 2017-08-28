@@ -21,11 +21,23 @@ span.emoji {
 }
 
 //------------------------------------------------------------------------------
-// Glyphicons
+// Icon Styles
 //------------------------------------------------------------------------------
 
-// Icons should have brighter colors (using text-success is too dull)
+// Fixing old
 .glyphicon {
+  height: 12px;
+  width: 12px;
+  background: red;
+}
+
+.feather {
+  height: 12px;
+  width: 12px;
+}
+
+// Icons should have brighter colors (using text-success is too dull)
+.feather {
 
   &.text-success {
     color: $brand-success;

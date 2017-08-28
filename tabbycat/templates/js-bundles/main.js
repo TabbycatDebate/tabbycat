@@ -10,6 +10,9 @@ window.$ = $; // Set for browser window
 
 require("bootstrap"); // Need to call boostrap functions from within Vue etc
 
+// Icons
+var feather = require('feather-icons')
+
 // Mount global jquery stuff here
 $(document).ready(function(){
   // Enable hover tooltips for all elements
@@ -28,6 +31,7 @@ $(document).ready(function(){
       checkBox.trigger("change");
     }
   });
+  feather.replace()
 });
 
 // Add alerts programmatically

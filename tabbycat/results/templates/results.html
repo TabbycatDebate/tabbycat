@@ -9,7 +9,7 @@
 {% block page-subnav-sections %}
   {% if user.is_superuser %}
     <a href="{% roundurl 'motions-edit' %}" class="btn btn-default">
-      <span class="glyphicon glyphicon-chevron-left"></span> Back to Motions
+      <span class="icon glyphicon-chevron-left"></span> Back to Motions
     </a>
     <a class="btn btn-default submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
       Check In Ballots
@@ -20,7 +20,7 @@
 {% block page-subnav-actions %}
   {% if user.is_superuser and round.seq < tournament.round_set.count and current_round == round %}
     <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger{% endif %} submit-disable" href="{% roundurl 'tournament-advance-round-check' %}">
-      Advance to Next Round <span class="glyphicon glyphicon-chevron-right"></span>
+      Advance to Next Round <span class="icon glyphicon-chevron-right"></span>
     </a>
   {% endif %}
 {% endblock %}
@@ -54,23 +54,23 @@
           </a>
         {% endif %}
         <span class="btn btn-primary" disabled>
-          {{ stats.ballot_in }} / {{ stats.total }} Checked In <span class="glyphicon glyphicon-inbox"></span>
+          {{ stats.ballot_in }} / {{ stats.total }} Checked In <span class="icon glyphicon-inbox"></span>
         </span>
         <span class="btn btn-danger" disabled>
-          {{ stats.none }} / {{ stats.total }} Unknown <span class="glyphicon glyphicon-remove"></span>
+          {{ stats.none }} / {{ stats.total }} Unknown <span class="icon glyphicon-remove"></span>
         </span>
         <span class="btn btn-warning" disabled>
-          {{ stats.draft }} / {{ stats.total }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span>
+          {{ stats.draft }} / {{ stats.total }} Unconfirmed <span class="icon glyphicon-adjust"></span>
         </span>
         <span class="btn btn-success" disabled>
-          {{ stats.confirmed }} / {{ stats.total }} Confirmed <span class="glyphicon glyphicon-ok"></span>
+          {{ stats.confirmed }} / {{ stats.total }} Confirmed <span class="icon glyphicon-ok"></span>
         </span>
         {% if pref.enable_postponements %}
           <span class="btn btn-default" disabled>
-            {{ stats.postponed }} / {{ stats.total }} Postponed <span class="glyphicon glyphicon-pause"></span>
+            {{ stats.postponed }} / {{ stats.total }} Postponed <span class="icon glyphicon-pause"></span>
           </span>
           <span class="btn btn-default" disabled>
-            Byes <span class="glyphicon glyphicon-fast-forward"></span>
+            Byes <span class="icon glyphicon-fast-forward"></span>
           </span>
         {% endif %}
       </div>

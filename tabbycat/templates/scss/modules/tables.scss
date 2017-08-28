@@ -43,35 +43,73 @@ thead,
   background: $alt-bg; // Fixed header needs a background while scrolling
   line-height: 18px; // Otherwise the border is too clone to the text
 
-  .glyphicon {
-    line-height: 18px; // Otherwise the border is too clone to the text
-  }
 }
 
 .vue-sortable {
   white-space: nowrap; // Stop a toggle being pushed into 2 rows
+  min-width: 28px; // Don't let the sort keys resize widths
 
-  &:hover,
-  &:hover .glyphicon {
-    @extend .text-primary;
-    cursor: pointer;
+  .vue-sort-key .feather {
+    margin-left: -3px;
+    margin-right: -5px
   }
 
-  .vue-sort-key {
+  // By default don't show if not hovering or active
+  .feather-chevrons-up, .feather-chevrons-down {
     display: none;
-    margin-left: -1px;
+  }
+
+  // When active show the currently active sort order
+  .sort-by-desc .feather-chevrons-down {
+    display: inline;
+  }
+
+  .sort-by-asc .feather-chevrons-up {
+    display: inline;
   }
 
   &:hover {
+
+    @extend .text-primary;
+    cursor: pointer;
+
+    // By default; if not sorting is active; show sort-desc
     .vue-sort-key {
-      display: inline-block; // Hide sorting elements except for hovers
+
+      .feather-chevrons-down {
+        display: none;
+      }
+
+      .feather-chevrons-up {
+        display: inline;
+      }
     }
+
+    // When hovering over active sorting show the sorting order a click activates
+    .sort-by-desc {
+
+      .feather-chevrons-down {
+        display: none;
+      }
+
+      .feather-chevrons-up {
+        display: inline;
+      }
+    }
+
+    .sort-by-asc {
+
+      .feather-chevrons-down {
+        display: inline;
+      }
+
+      .feather-chevrons-up {
+        display: none;
+      }
+    }
+
   }
 
-  .vue-sort-active.vue-sort-key {
-    display: inline-block; // Override hiding when active
-    @extend .text-primary;
-  }
 }
 
 //------------------------------------------------------------------------------

@@ -82,7 +82,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
     def add_ballot_entry_columns(self, debates):
 
-        entry_header = {'key': 'EB', 'icon': "glyphicon-plus"}
+        entry_header = {'key': 'EB', 'icon': "plus-circle"}
         entry_cells = [{'text': self.get_ballot_text(d)} for d in debates]
         self.add_column(entry_header, entry_cells)
 

@@ -6,19 +6,23 @@
 
 {% block content %}
   <div class="row">
-    {% for feedback in feedbacks %}
+    <div class="col-md-12">
 
-      <div class="col-md-4">
-        {% include 'feedback_card.html' %}
-      </div>
+      {% for feedback in feedbacks %}
 
-      {% if forloop.counter|divisibleby:3 %}
-        </div><div class="row">
-      {% endif %}
+        <div class="col-md-4">
+          {% include 'feedback_card.html' %}
+        </div>
 
-    {% empty %}
-    <div class="alert alert-info">No feedback has been submitted yet.</div>
+        {% if forloop.counter|divisibleby:3 %}
+          </div><div class="row">
+        {% endif %}
 
-  {% endfor %}
+      {% empty %}
+      <div class="alert alert-info">No feedback has been submitted yet.</div>
+
+    {% endfor %}
+
+    </div>
   </div>
 {% endblock content %}

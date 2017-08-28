@@ -3,7 +3,7 @@
 
 {% block page-subnav-sections %}
   <a href="{% roundurl 'availability-index' round %}" class="btn btn-default">
-    <span class="glyphicon glyphicon-chevron-left"></span>{% trans "Overview" %}
+    <span class="icon glyphicon-chevron-left"></span>{% trans "Overview" %}
   </a>
   {% if round.is_break_round and model == 'participants.Adjudicator' %}
     <a class="btn btn-primary submit-disable"
@@ -29,7 +29,7 @@
 
 {% block page-subnav-actions %}
   <button id="save_availability" class="btn btn-success submit-disable" >
-    <span class="glyphicon glyphicon-floppy-disk"></span> {% trans "Save Selected" %}
+    <span class="icon glyphicon-floppy-disk"></span> {% trans "Save Selected" %}
   </button>
 {% endblock %}
 
