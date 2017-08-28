@@ -789,7 +789,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 row.append(cell)
             results_data.append(row)
 
-        results_header = [get_side_name(self.tournament, side, 'full').capitalize()
+        results_header = [get_side_name(self.tournament, side, 'abbr').capitalize()
                 for side in self.tournament.sides]
         self.add_columns(results_header, results_data)
 
