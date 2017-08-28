@@ -15,7 +15,6 @@ from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
 from participants.models import Adjudicator, Team
 from actionlog.models import ActionLogEntry
-from tournaments.models import Round
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
 from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
@@ -84,13 +83,12 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             return teams_dict
 
         elif r.draw_type is r.DRAW_BREAK:
-            last_round = r.break_category.round_set.filter(stage=Round.STAGE_ELIMINATION,
-                    seq__lt=r.seq).order_by('-seq').first()
-            if last_round is None:
+            if r.prev is None:
                 self.error_type = 'no_last_round'
                 advancing_teams = 0
             else:
-                advancing_teams = last_round.debate_set.count()
+                advancing_teams = r.prev.debate_set.count()
+
             return {
                 'title'     : CHECK_IN_TITLES[Team],
                 'total'     : advancing_teams,
