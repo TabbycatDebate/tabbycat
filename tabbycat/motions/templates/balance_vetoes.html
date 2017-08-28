@@ -1,0 +1,41 @@
+{% load i18n %}
+
+<div class="col-sm-5 vertical-spacing">
+
+  {% if am.veto_rates.aff.1 != 0 and am.veto_rates.neg.1 != 0 %}
+
+    <div class="btn-group btn-group-xs">
+       {% for position, count in am.vetoes.items %}
+        <div class="btn btn-default">
+          <span class="{% if forloop.counter == 1 %}text-info{% else %}text-warning{% endif %}">
+            {{ count.1 }} {{ position }} veto{{ count.1|pluralize:"es" }}
+          </span>
+        </div>
+      {% endfor %}
+    </div>
+
+      <div class="btn-group btn-group-xs pull-right">
+        <div class="btn btn-default" data-toggle="tooltip" title="{{ am.result_balance.1 }}">
+          <span class="text-muted">{{ am.result_balance.0 }}</span>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="progress-bar progress-bar-info" style="width: {{ am.veto_rates.aff.1 }}%">
+          {% if am.veto_rates.aff.1 != "0" %}{{ am.veto_rates.aff.1 }}%{% endif %}
+        </div>
+        <div class="progress-bar progress-bar-warning" style="width: {{ am.veto_rates.neg.1 }}%">
+          {% if am.veto_rates.neg.1 != "0" %}{{ am.veto_rates.neg.1 }}%{% endif %}
+        </div>
+      </div>
+
+  {% else %}
+
+    <div class="btn-group btn-group-xs pull-left">
+      <div class="btn btn-default" disabled="disabled">
+        {% trans "No teams vetoed this topic" %}
+      </div>
+    </div>
+
+  {% endif %}
+
+</div>
