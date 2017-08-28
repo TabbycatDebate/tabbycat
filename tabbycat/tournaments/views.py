@@ -102,7 +102,8 @@ class RoundAdvanceView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, PostO
         # Advance relative to the round of the view, not the current round, so
         # that in times of confusion, going back then clicking again won't advance
         # twice.
-        next_round = self.get_round().next
+        next_round = tournament.round_set.filter(seq__gt=self.get_round().seq).order_by('seq').first()
+
         if next_round:
             tournament.current_round = next_round
             tournament.save()
