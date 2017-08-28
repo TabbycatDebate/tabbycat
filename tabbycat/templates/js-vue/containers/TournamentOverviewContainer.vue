@@ -4,8 +4,8 @@
     <div class="row">
       <div class="col-sm-12">
         <h4 class="text-center">Number of Ballots In</h4>
-        <div class="panel panel-default">
-          <div class="panel-body">
+        <div class="card">
+          <div class="card-body">
             <ballots-graph :poll-url="ballotsUrl"></ballots-graph>
           </div>
         </div>

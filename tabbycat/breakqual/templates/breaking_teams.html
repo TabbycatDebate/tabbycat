@@ -98,8 +98,8 @@
 {% if generated %}
   <form action="." method="POST">
     {% csrf_token %}
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
 
         {{ block.super }}
 

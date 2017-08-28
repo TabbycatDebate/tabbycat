@@ -2,7 +2,7 @@
 // Overall Layout
 //------------------------------------------------------------------------------
 
-.panel-body .table {
+.card-body .table {
   background: $alt-bg; // For when tables blow out on mobile
   margin-bottom: 0; // Panel body has its own bottom padding
   > tbody > tr:hover td {
@@ -141,7 +141,7 @@ thead,
 
   // For highlighting bracket boundaries
   &.highlight-row {
-    border-top: 3px solid $brand-info;
+    border-top: 3px solid theme-color("info");
   }
 
   &.checkbox-target:hover,
@@ -155,7 +155,7 @@ thead,
 //------------------------------------------------------------------------------
 
 // For Phones
-@media (max-width: $screen-sm-min) {
+@media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
 
   .table-container {
     margin-right: -15px;
@@ -164,7 +164,7 @@ thead,
     border-right: 0;
     border-radius: 0;
 
-    .panel-body {
+    .card-body {
       padding-left: 0;
       padding-right: 0;
     }

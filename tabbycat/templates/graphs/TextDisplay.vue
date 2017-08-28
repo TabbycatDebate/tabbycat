@@ -18,7 +18,7 @@
     </template>
 
     <div class="row">
-     <h5 class="text-center vertical-spacing">{{ set.title }}</h5>
+     <h5 class="text-center mb-3">{{ set.title }}</h5>
     </div>
 
   </div>

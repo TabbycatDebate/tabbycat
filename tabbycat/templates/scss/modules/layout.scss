@@ -2,20 +2,12 @@
 // General Utilities
 //------------------------------------------------------------------------------
 
-.vertical-spacing {
-  margin-bottom: $line-height-computed;
-}
-
-.half-vertical-spacing {
-  margin-bottom: $line-height-computed * 0.5;
-}
-
 .no-top-margin {
   margin-top: 0;
 }
 
 .no-bottom-padding {
-  padding-bottom: 0; // Mostly for panel-body elements
+  padding-bottom: 0; // Mostly for card-body elements
 }
 
 .no-bottom-margin {
@@ -27,17 +19,17 @@
   padding-right: 0;
 }
 
+
+.list-group-call {
+  @extend .list-group-item-action;
+  @extend .list-group-item-success;
+  @extend .strong
+}
+
+
 //------------------------------------------------------------------------------
 // Headers
 //------------------------------------------------------------------------------
-
-.head-title {
-  padding: 0 0 16px 5px;
-
-  small {
-    line-height: $font-size-h3 * $headings-line-height * 1.2;
-  }
-}
 
 // For the admin area
 .white-bg {
@@ -52,7 +44,7 @@
 
   .btn,
   .input-group {
-    margin-bottom: $line-height-computed;
+    margin-bottom: $line-height-base;
   }
 
   .navbar-right {

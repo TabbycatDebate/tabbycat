@@ -9,7 +9,7 @@
   &:hover {
     cursor: help; // for tooltips
     span {
-      border-color: $brand-primary;
+      border-color: theme-color("primary");
     }
   }
 
@@ -137,7 +137,7 @@
 @keyframes flash-animation {
 
   from {
-    color: $brand-success;
+    color: theme-color("success");
   }
 
   to {

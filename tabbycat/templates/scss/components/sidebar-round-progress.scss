@@ -83,13 +83,13 @@
   z-index: -10;
 
   &.standard-line {
-    background: $gray;
+    background: theme-color("gray");
   }
 }
 
 .circle-icon {
   background: $alt-bg;
-  border: 3px solid $gray;
+  border: 3px solid theme-color("gray");
   border-radius: 21px;
   display: inline-block;
   float: left;
@@ -105,26 +105,26 @@
   }
 
   &.btn-success {
-    background: $btn-success-bg;
+    background: theme-color("green");
   }
 
   &.btn-info {
-    background: $btn-info-bg;
+    background: theme-color("cyan");
   }
 
   &.btn-inactive {
-    background: darken($gray-lighter, 3);
+    background: darken($gray-300, 3);
   }
 
   &.icon-container {
-    background: $gray;
+    background: theme-color("gray");
   }
 }
 
 .nav-stacked .nav-stacked {
 
   .progress-line {
-    border-color: $gray;
+    border-color: theme-color("gray");
     margin: -3px 0 0 21px;
     z-index: 10;
   }
@@ -141,7 +141,7 @@
   }
 
   .icon-container {
-    border-color: $gray;
+    border-color: theme-color("gray");
     color: $alt-bg;
   }
 }

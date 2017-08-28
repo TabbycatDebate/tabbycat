@@ -4,27 +4,18 @@
 
 .tabbycat-footer {
 
-  .navbar {
-    padding-top: 10px;
-    margin-bottom: 0;
+  a {
+    border-bottom: 1px solid $gray-600;
+    color: theme-color("dark");
   }
 
-  a,
-  a.nav-link {
-    color: $text-primary;
-    opacity: 1;
-    border-bottom: 1px solid #ccc;
-
-    &:hover {
-      color: $navbar-default-link-hover-color;
-      text-decoration: none;
-    }
+  .nav a.nav-link {
+    display: inline-block; // Need to move up inline with icons
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 20px;
   }
 
-  a.nav-link {
-    line-height: 16px;
-    margin: 5px 20px 15px 0;
-  }
 }
 
 //------------------------------------------------------------------------------
@@ -32,7 +23,7 @@
 //------------------------------------------------------------------------------
 
 // For Desktops
-@media (min-width: $screen-sm-min) {
+@media (min-width: breakpoint-min(sm, $grid-breakpoints)) {
 
   .tabbycat-footer {
     bottom: 0;
@@ -55,11 +46,10 @@
 }
 
 // For Phones
-@media (max-width: $screen-sm-min) {
+@media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
 
   .tabbycat-footer {
     position: relative;
-    margin-top: 20px;
   }
 
   .nav-item {

@@ -40,7 +40,7 @@
 .draw-header {
   @extend .draw-row;
 
-  border-top: 1px solid $btn-default-border;
+  border-top: 1px solid $input-border-color;
   border-radius: 4px 4px 0 0;
   padding-top: 8px;
 }
@@ -50,8 +50,8 @@
   @extend .flex-horizontal;
 
   background: #fff; // Need to compensate for lack of table background
-  border-left: 1px solid $btn-default-border;
-  border-right: 1px solid $btn-default-border;
+  border-left: 1px solid $input-border-color;
+  border-right: 1px solid $input-border-color;
 }
 
 .draw-cell {

@@ -7,104 +7,87 @@
 
 {% block content %}
 
-<ul class="list-group">
+<div class="list-group">
   {% for tournament in tournaments %}
     {% if user.is_authenticated %}
-      <li class="list-group-item">
-        <a href="{{ tournament.get_absolute_url }}">
-          {% with tournament_name=tournament.name %}
-            {% if user.is_superuser %}
-              <span class="emoji">🔧</span>{% blocktrans trimmed %}
-              Admin area for <strong>{{ tournament_name }}</strong>
-              {% endblocktrans %}
-            {% else %}
-              <span class="emoji">🔧</span>{% blocktrans trimmed %}
-              Assistant area for <strong>{{ tournament_name }}</strong>
-              {% endblocktrans %}
-            {% endif %}
-          {% endwith %}
-        </a>
-      </li>
-    {% endif %}
-    <li class="list-group-item">
-      <a href="{{ tournament.get_public_url }}">
-        <span class="emoji">
-          {{ tournament.emoji|default:"🏆" }}
-        </span>{{ tournament.name }}
+      <a href="{{ tournament.get_absolute_url }}" class="list-group-item list-group-item-action">
+        {% with tournament_name=tournament.name %}
+          {% if user.is_superuser %}
+            <span class="emoji">🔧</span>{% blocktrans trimmed %}
+            Admin area for <strong>{{ tournament_name }}</strong>
+            {% endblocktrans %}
+          {% else %}
+            <span class="emoji">🔧</span>{% blocktrans trimmed %}
+            Assistant area for <strong>{{ tournament_name }}</strong>
+            {% endblocktrans %}
+          {% endif %}
+        {% endwith %}
       </a>
-    </li>
+    {% endif %}
+    <a href="{{ tournament.get_public_url }}" class="list-group-item list-group-item-action">
+      <span class="emoji">
+        {{ tournament.emoji|default:"🏆" }}
+      </span>{{ tournament.name }}
+    </a>
   {% empty %}
     {% if user.is_authenticated %}
-      <li class="list-group-item">
-        {% url 'tournament-create' as create_url %}
+      {% url 'tournament-create' as create_url %}
+      <a href="{{ create_url }}" class="list-group-item list-group-call">
+        <i data-feather="check-circle"></i>
         {% blocktrans trimmed %}
-          It looks like there aren't any tournaments on this site. Would you like to <a href="{{ create_url }}">create one</a>?
+          It looks like there aren't any tournaments on this site. Would you like to create one?
         {% endblocktrans %}
-      </li>
+      </a>
     {% else %}
-      <li class="list-group-item">
+      <div class="list-group-item lead">
         {% blocktrans trimmed %}
           There are currently no tournaments set up on this site.
         {% endblocktrans %}
-      </li>
+      </div>
     {% endif %}
   {% endfor %}
-</ul>
+</div>
 
 {% if tournaments.0.preferences.league_options__enable_mass_draws %}
-  <ul class="list-group">
-    <li class="list-group-item">
-      <a href="{% url 'all_tournaments-all-venues' %}">
-        <span class="emoji">🎪</span>{% trans "All Draws by Venue" %}
-      </a>
-    </li>
-    <li class="list-group-item">
-      <a href="{% url 'all-tournaments-all-institutions' %}">
-        <span class="emoji">🏢</span>{% trans "All Draws by School" %}
-      </a>
-    </li>
-    <li class="list-group-item">
-      <a href="{% url 'all-tournaments-all-teams' %}">
-        <span class="emoji">👯</span>{% trans "All Teams and Divisions" %}
-      </a>
-    </li>
-  </ul>
+  <div class="list-group mt-3">
+    <a href="{% url 'all_tournaments-all-venues' %}" class="list-group-item list-group-item-action">
+      <span class="emoji">🎪</span>{% trans "All Draws by Venue" %}
+    </a>
+    <a href="{% url 'all-tournaments-all-institutions' %}" class="list-group-item list-group-item-action">
+      <span class="emoji">🏢</span>{% trans "All Draws by School" %}
+    </a>
+    <a href="{% url 'all-tournaments-all-teams' %}" class="list-group-item list-group-item-action">
+      <span class="emoji">👯</span>{% trans "All Teams and Divisions" %}
+    </a>
+  </div>
 {% endif %}
 
-<ul class="list-group">
+<div class="list-group mt-3">
   {% if user.is_superuser %}
-    <li class="list-group-item">
+    <a href="{% url 'tournament-create' %}" class="list-group-item list-group-item-action">
       <i data-feather="plus-circle"></i>
-      <a href="{% url 'tournament-create' %}">
         {% trans "New Tournament" %}
-      </a>
-    </li>
-    <li class="list-group-item">
+    </a>
+    <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action">
       <i data-feather="edit"></i>
-      <a href="{% url 'admin:index' %}">
         {% trans "Edit Database Area" %}
-      </a>
-    </li>
+    </a>
   {% endif %}
   {% if user.is_authenticated %}
-    <li class="list-group-item">
+    <a href="{% url 'password_change' %}" class="list-group-item list-group-item-action">
       <i data-feather="rotate-cw"></i>
-      <a class="" href="{% url 'password_change' %}">
-        {% blocktrans %}Change Password ({{ user }}){% endblocktrans %}
-      </a>
-    </li>
-    <li class="list-group-item">
+      {% blocktrans %}Change Password ({{ user }}){% endblocktrans %}
+    </a>
+    <a href="{% url 'logout' %}" class="list-group-item list-group-item-action">
       <i data-feather="log-out"></i>
-      <a class="" href="{% url 'logout' %}">
-        {% blocktrans %}Log Out ({{ user }}){% endblocktrans %}
-      </a>
-    </li>
+      {% blocktrans %}Log Out ({{ user }}){% endblocktrans %}
+    </a>
   {% else %}
-    <li class="list-group-item">
+    <a href="{% url 'login' %}" class="list-group-item list-group-item-action">
       <i data-feather="log-in"></i>
-      <a class="" href="{% url 'login' %}">{% trans "Log In as Admin" %}</a>
-    </li>
+      {% trans "Log In as Admin" %}
+    </a>
   {% endif %}
-</ul>
+</div>
 
 {% endblock content %}

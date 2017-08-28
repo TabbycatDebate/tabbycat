@@ -144,7 +144,7 @@
               {% endwith %}
 
             {% empty %} {# elif not debateadjudicator #}
-              <div class="panel-body">
+              <div class="card-body">
                 <em>
                   {% blocktrans trimmed with adj_name=adjudicator.name %}
                     {{ adj_name }} is not adjudicating this round.
@@ -154,7 +154,7 @@
             {% endfor %} {# debateadjudicator #}
 
           {% else %} {# elif not (draw_released or admin_page) #}
-            <div class="panel-body">
+            <div class="card-body">
               <em>{% trans "The draw for this round hasn't yet been released." %}</em>
             </div>
           {% endif %} {# draw_released or admin_page #}
@@ -164,7 +164,7 @@
 
     {% if pref.public_participants or admin_page %}
       <div class="col-lg-6">
-        <div class="panel panel-default">
+        <div class="card">
           <div class="panel-heading">
             <h4 class="panel-title">
               {# Just call it 'name' since this string is also used with teams #}

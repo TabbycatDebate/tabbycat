@@ -13,11 +13,11 @@
 {% block content %}
 
   <div class="col-md-12">
-    <div class="panel panel-default">
+    <div class="card">
       <div class="panel-heading">
         <h3 class="panel-title">Adjudicators with no confirmed shifts</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         {% for adj in adjs %}
           {% if adj.shifts|length == 0 %}
             {{ adj.name }},
@@ -30,7 +30,7 @@
   {% for adj in adjs %}
     {% if adj.shifts|length > 0 %}
     <div class="col-md-2">
-      <div class="panel panel-default">
+      <div class="card">
         <div class="panel-heading">
           <h3 class="panel-title">{{ adj.name }}</h3>
         </div>

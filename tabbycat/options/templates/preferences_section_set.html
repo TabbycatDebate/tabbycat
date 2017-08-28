@@ -23,8 +23,8 @@
 
 {% block content %}
 
-  <div class="panel panel-default">
-    <form action="" enctype="multipart/form-data" method="post" class="panel-body form-horizontal">
+  <div class="card">
+    <form action="" enctype="multipart/form-data" method="post" class="card-body form-horizontal">
       {% csrf_token %}
       {% for field in form %}
         <div class="form-group">
@@ -35,7 +35,7 @@
             {{field|addcss:"form-control"}}
           </div>
           <div class="col-sm-7">
-            <span class="help-block">
+            <span >
               {{ field.help_text }}
             </span>
             {% if field.errors %}

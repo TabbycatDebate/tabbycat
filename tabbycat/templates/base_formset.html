@@ -12,7 +12,7 @@
 
   <form method="POST" action="" class="form-horizontal">
     {% csrf_token %}
-    <div class="panel panel-default">
+    <div class="card">
       <ul class="list-group">
         {{ formset.management_form }}
 
@@ -38,7 +38,7 @@
                 {{ field|addcss:"form-control" }}
               </div>
               <div class="col-sm-6">
-                <span class="help-block">
+                <span >
                   {{ field.help_text }}
                 </span>
                 {{ field.errors }}

@@ -69,7 +69,7 @@
 
   <form method="POST" action="" class="form-horizontal">
     {% csrf_token %}
-    <div class="panel panel-default">
+    <div class="card">
       <ul class="list-group">
         {{ formset.management_form }}
         <li class="list-group-item">
@@ -92,7 +92,7 @@
               {{ form.text|addcss:"form-control help-anchor required text-area-limited"}}
               {{ form.text.errors }}
             </div>
-            <div class="col-sm-3 help-block">
+            <div class="col-sm-3 ">
               {{ form.text.help_text }}
             </div>
           </div>
@@ -103,7 +103,7 @@
             <div class="col-sm-8">
               {{ form.reference|addcss:"form-control required" }}
             </div>
-            <div class="col-sm-3 help-block">
+            <div class="col-sm-3 ">
               {{ form.reference.help_text }}
             </div>
           </div>
@@ -145,7 +145,7 @@
 
               </div>
             </div>
-            <div class="col-sm-3 help-block">
+            <div class="col-sm-3 ">
               {{form.seq.help_text}}
             </div>
           </div>

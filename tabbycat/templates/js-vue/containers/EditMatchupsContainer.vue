@@ -9,10 +9,10 @@
     </div>
 
     <div class="row">
-      <div class="vertical-spacing" id="messages-container"></div>
+      <div class="mb-3" id="messages-container"></div>
     </div>
 
-    <div class="vertical-spacing">
+    <div class="mb-3">
       <draw-header :positions="positions"  @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
         <template slot="hteams">

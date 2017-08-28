@@ -2,7 +2,7 @@
   <div>
 
     <div class="row">
-      <div class="col-md-12 half-vertical-spacing hidden-print">
+      <div class="col-md-12 half-mb-3 hidden-print">
         <div class="input-group">
           <input id="table-search" type="search"
                  v-model="filterKey" @keyup="updateTableFilters"
@@ -16,11 +16,11 @@
 
     <div class="row">
       <div v-for="(table, i) in tablesData" :class="tableClass">
-        <div class="panel panel-default table-container" :id="getTableId(i)">
+        <div class="card table-container" :id="getTableId(i)">
           <div class="panel-heading" v-if="table.title">
             <h4 class="panel-title">{{ table.title }}</h4>
           </div>
-          <div class="panel-body">
+          <div class="card-body">
             <smart-table
               :table-headers="table.head" :table-content="table.data"
               :table-class="table.class"

@@ -11,6 +11,11 @@
   text-rendering: optimizeLegibility;
 }
 
+h6, .h6 {
+  font-size: $small-font-size;
+  text-transform: uppercase;
+}
+
 //------------------------------------------------------------------------------
 // Text Utilities
 //------------------------------------------------------------------------------
@@ -27,7 +32,7 @@
 
 .subtitle {
   text-transform: uppercase;
-  font-size: $font-size-h6;
+  font-size: $h6-font-size;
   font-weight: normal;
 }
 
@@ -50,5 +55,5 @@
 }
 
 .nav-pills a.btn-default {
-  color: $brand-primary;
+  color: theme-color("primary");
 }

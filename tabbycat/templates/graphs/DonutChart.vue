@@ -1,7 +1,7 @@
 <template>
   <div :style="{ width: '49.5%', display: 'inline-block' }">
 
-    <h5 class="text-center no-top-padding vertical-spacing">
+    <h5 class="text-center no-top-padding mb-3">
       {{ title }}<br>({{ total }})
     </h5>
 

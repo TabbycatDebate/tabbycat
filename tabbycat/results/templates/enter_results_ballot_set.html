@@ -14,11 +14,11 @@
 
   <div class="row">
     <div class="col-md-12">
-      <div class="panel panel-default">
+      <div class="card">
         <div class="panel-heading">
           <h4 class="panel-title">{% trans "Debate Information" %}</h4>
         </div>
-        <div class="panel-body form-panel">
+        <div class="card-body form-panel">
 
           {% if form.choose_sides %}
             <div class="form-group">
@@ -87,7 +87,7 @@
   {% for sheet in form.scoresheets %}
     <div class="row">
       <div class="col-md-12">
-        <div class="panel panel-default">
+        <div class="card">
           <div class="panel-heading">
             <h4 class="panel-title">
               {% if sheet.adjudicator %}
@@ -99,7 +99,7 @@
               {% endif %}
             </h4>
           </div>
-          <div class="panel-body form-panel">
+          <div class="card-body form-panel">
 
             {% if form.choosing_sides %}
               <p class="sides-before-scores-warning text-warning col-xs-12">
@@ -169,11 +169,11 @@
   {% if pref.enable_forfeits %}
     <div class="row">
       <div class="col-md-12">
-        <div class="panel panel-default">
+        <div class="card">
           <div class="panel-heading">
             <h4 class="panel-title">{% trans "Forfeits" %}</h4>
           </div>
-          <div class="panel-body">
+          <div class="card-body">
             {{ form.forfeit|addcss:"forfeits-group" }}
             {{ form.forfeit.errors }}
           </div>

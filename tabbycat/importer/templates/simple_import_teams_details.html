@@ -32,7 +32,7 @@
     <div class="row">
       <div class="col-sm-12">
 
-        <div class="panel panel-default">
+        <div class="card">
           <div class="panel-heading">
             <h5 class="panel-title">
               {% blocktrans trimmed with institution_name=forms.grouper.name %}
@@ -40,7 +40,7 @@
               {% endblocktrans %}
             </h5>
           </div>
-          <div class="panel-body no-bottom-padding">
+          <div class="card-body no-bottom-padding">
 
             {% for form in forms.list %}
 

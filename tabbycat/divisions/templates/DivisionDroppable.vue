@@ -1,5 +1,5 @@
 <template>
-  <div :class="['panel panel-default', { 'panel-danger': hasEvenNumbers }]">
+  <div :class="['card', { 'panel-danger': hasEvenNumbers }]">
 
     <div class="panel-heading text-center">
       <h5 class="panel-title">
@@ -8,7 +8,7 @@
     </div>
 
     <droppable-generic :assignment-id="division.id"
-                       :extra-css="'panel-body division-droppable'">
+                       :extra-css="'card-body division-droppable'">
       <draggable-team v-for="team in teams" :key="team.id":team="team">
       </draggable-team>
     </droppable-generic>

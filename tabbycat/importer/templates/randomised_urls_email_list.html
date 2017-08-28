@@ -7,9 +7,9 @@
 {% block content %}
 
   {% if url_type == 'feedback' %}
-    <form action="{% tournamenturl 'confirm-feedback-urls-send' %}" method="POST" class="vertical-spacing">
+    <form action="{% tournamenturl 'confirm-feedback-urls-send' %}" method="POST" class="mb-3">
   {% elif url_type == 'ballot' %}
-    <form action="{% tournamenturl 'confirm-ballot-urls-send' %}" method="POST" class="vertical-spacing">
+    <form action="{% tournamenturl 'confirm-ballot-urls-send' %}" method="POST" class="mb-3">
   {% endif %}
     {% csrf_token %}
     <button class="btn btn-success btn-block" type="submit">
@@ -20,9 +20,9 @@
   <div class="row">
 
     <div class="col-md-12">
-      <div class="panel panel-default">
+      <div class="card">
         <div class="panel-heading strong">Adjudicators With Email Addresses</div>
-        <div class="panel-body">
+        <div class="card-body">
           {% for adj in adjs %}
             {% if adj.url_key and adj.email %}
               {{ adj.name }}, {{ adj.email }},
@@ -42,9 +42,9 @@
 
     {% if url_type == 'feedback' %}
       <div class="col-md-12">
-        <div class="panel panel-default">
+        <div class="card">
           <div class="panel-heading strong">Teams With Email Addresses</div>
-          <div class="panel-body">
+          <div class="card-body">
             {% for team in teams %}
               {% if team.url_key %}
                 {% for speaker in team.speakers %}
@@ -64,9 +64,9 @@
     {% endif %}
 
     <div class="col-md-12">
-      <div class="panel panel-default">
+      <div class="card">
         <div class="panel-heading strong">Adjudicators Without Email Addresses</div>
-        <div class="panel-body">
+        <div class="card-body">
           {% for adj in adjs %}
             {% if adj.url_key %}
               {% if not adj.email %}
@@ -88,9 +88,9 @@
 
     {% if url_type == 'feedback' %}
       <div class="col-md-12">
-        <div class="panel panel-default">
+        <div class="card">
           <div class="panel-heading strong">Teams Without Email Addresses</div>
-          <div class="panel-body">
+          <div class="card-body">
             {% for team in teams %}
               {% if team.url_key %}
                 {% for speaker in team.speakers %}

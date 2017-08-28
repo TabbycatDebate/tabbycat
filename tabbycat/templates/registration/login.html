@@ -17,57 +17,60 @@
 
 {% block content %}
 
-<form id="login" action="." method="POST" class="form-horizontal">
-  {% csrf_token %}
-
-
-
   <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-sm-12">
-      <div class="panel panel-default">
 
-        <div class="panel-heading panel-title">
-          <h4>
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+
+      <div class="card">
+
+        <div class="card-body">
+
+          <h4 class="card-title mb-4">
             <i data-feather="lock"></i>
             {% trans "Log in to Tabbycat" context "page title" %}
           </h4>
-        </div>
 
-        <div class="panel-body">
-
-          {% if form.errors %}
-            <div class="alert alert-danger">
-              {% trans "Your username and password didn't match." %}
-            </div>
-          {% endif %}
-          {% if next %}
-            {% if user.is_authenticated %}
-              <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
-            {% else %}
-              <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>
+          <form id="login" action="." method="POST">
+            {% csrf_token %}
+            {% if form.errors %}
+              <div class="alert alert-danger">
+                {% trans "Your username and password didn't match." %}
+              </div>
             {% endif %}
-          {% endif %}
+            {% if next %}
+              {% if user.is_authenticated %}
+                <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
+              {% else %}
+                <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>
+              {% endif %}
+            {% endif %}
 
-          {% for field in form %}
-          <div class="vertical-spacing">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field|addcss:"form-control" }}
-            {{ field.errors }}
-          </div>
-          {% endfor %}
+            {% for field in form %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field|addcss:"form-control" }}
+              {{ field.errors }}
+            </div>
+            {% endfor %}
 
-          <button type="submit" name="continue" class="btn btn-block btn-success vertical-spacing">
-            {% trans "Log In" context "button" %}
-          </button>
-          <input type="hidden" name="next" value="{{ next }}" />
-          <div class="text-center">
-            <a href="{% url 'password_reset' %}">{% trans "I forgot my password" %}</a>
-          </div>
+            <button type="submit" name="continue" class="btn btn-block btn-success mb-3">
+              {% trans "Log In" context "button" %}
+            </button>
+            <input type="hidden" name="next" value="{{ next }}" />
+            <div class="text-center">
+              <a href="{% url 'password_reset' %}">{% trans "I forgot my password" %}</a>
+            </div>
+
+          </form>
+
         </div>
 
       </div>
+
     </div>
+    <div class="col-md-3"></div>
+
   </div>
 
-</form>
 {% endblock %}

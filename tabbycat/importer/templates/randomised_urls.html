@@ -92,8 +92,8 @@
 
   {% if exists %}
 
-    <div class="panel panel-default col-md-12">
-      <div class="panel-body">
+    <div class="card col-md-12">
+      <div class="card-body">
         <table class="table">
           <thead>
             <tr>
@@ -138,8 +138,8 @@
       </div>
     </div>
 
-    <div class="panel panel-default col-md-12">
-      <div class="panel-body">
+    <div class="card col-md-12">
+      <div class="card-body">
         <table class="table">
           <thead>
             <tr>
@@ -173,11 +173,11 @@
 
   {% else %}
 
-    <div class="panel panel-default">
+    <div class="card">
       <div class="panel-heading">
         <h5>There are no private URLs assigned. Would you like to generate them?</h5>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <form action="{% tournamenturl 'randomised-urls-generate' %}" method="POST">
         {% csrf_token %}
         <button class="btn btn-success btn-block" id="generateRandomisedUrls" type="submit">

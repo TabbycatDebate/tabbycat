@@ -14,7 +14,7 @@
     <div class="row">
       {% for form in formset %}
         <div class="col-md-4">
-          <div class="panel panel-default">
+          <div class="card">
             <div class="panel-heading">
               <h4 class="panel-title">
                 {{ form.instance.debate.round.tournament }}
@@ -23,7 +23,7 @@
                 {{ form.instance.debate.division.time_slot }}
               </h4>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
               <div class="input-group">
                 {{ form }}
               </div>

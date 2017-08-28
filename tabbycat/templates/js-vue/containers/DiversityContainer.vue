@@ -2,11 +2,11 @@
   <div class="row">
 
     <div class="col-md-3">
-      <div class="panel panel-default">
+      <div class="card">
         <div class="panel-heading text-center">
           <h4 class="panel-title">Speaker Demographics</h4>
         </div>
-        <div class="panel-body text-center no-side-padding">
+        <div class="card-body text-center no-side-padding">
           <donut-chart v-for="set in graphsData.speakers_gender"
                        :graph-data="set.data" :title="set.title"
                        :key="set.title"></donut-chart>
@@ -33,11 +33,11 @@
     </div>
 
     <div class="col-md-3">
-      <div class="panel panel-default">
+      <div class="card">
         <div class="panel-heading text-center">
           <h4 class="panel-title">Adjudicator Demographics</h4>
         </div>
-        <div class="panel-body text-center no-side-padding">
+        <div class="card-body text-center no-side-padding">
           <donut-chart v-for="set in graphsData.adjudicators_gender"
                        :graph-data="set.data" :title="set.title"
                        :key="set.title"></donut-chart>
@@ -57,11 +57,11 @@
     </div>
 
     <div class="col-md-3">
-      <div class="panel panel-default">
+      <div class="card">
         <div class="panel-heading text-center">
           <h4 class="panel-title">Speaker Results</h4>
         </div>
-        <div class="panel-body text-center">
+        <div class="card-body text-center">
           <text-display v-for="set in graphsData.speakers_results"
                         :set="set" :key="set.title"></text-display>
           <p v-if="graphsData.speakers_results.length === 0">
@@ -78,11 +78,11 @@
     </div>
 
     <div class="col-md-3">
-      <div class="panel panel-default">
+      <div class="card">
         <div class="panel-heading text-center">
           <h4 class="panel-title">Adjudicator Results</h4>
         </div>
-        <div class="panel-body text-center">
+        <div class="card-body text-center">
           <text-display v-for="set in graphsData.adjudicators_results"
                         :set="set" :key="set.title"></text-display>
           <p v-if="graphsData.adjudicators_results.length === 0">

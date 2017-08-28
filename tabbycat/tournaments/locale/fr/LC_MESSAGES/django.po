@@ -138,7 +138,7 @@ msgstr "nom"
 
 #: tournaments/models.py:37
 msgid ""
-"The full name used on the homepage, e.g. \"Australasian Intervarsity "
+"The full name, e.g. \"Australasian Intervarsity "
 "Debating Championships 2016\""
 msgstr ""
 "Le nom complet qui est affiché sur la page d'accueil, p. ex. \"Championnat "

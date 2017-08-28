@@ -34,7 +34,7 @@ span.emoji {
 .feather {
   height: 18px; // Line height of default text @13px is ~18.5px
   width: 18px;
-  margin-bottom: -3px;
+  margin-bottom: -4px;
   margin-right: 2px;
 }
 
@@ -42,22 +42,22 @@ span.emoji {
 .feather {
 
   &.text-success {
-    color: $brand-success;
+    color: theme-color("success");
   }
 
   &.text-danger {
-    color: $brand-danger;
+    color: theme-color("danger");
   }
 
   &.text-warning {
-    color: $brand-warning;
+    color: theme-color("warning");
   }
 
   &.text-info {
-    color: $brand-info;
+    color: theme-color("info");
   }
 
   &.text-primary {
-    color: $brand-primary;
+    color: theme-color("primary");
   }
 }

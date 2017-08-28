@@ -2,7 +2,7 @@
 
 {% if am.debate_rooms > 0 %}
 
-  <div class="row vertical-spacing">
+  <div class="row mb-3">
     <div class="col-md-12">
       <div class="progress">
 
@@ -27,7 +27,7 @@
 
     {% for position, places in am.results_rates.items %}
 
-      <div class="col-md-3 vertical-spacing">
+      <div class="col-md-3 mb-3">
         <div class="progress">
 
           {% for points, average in places.items %}
@@ -52,7 +52,7 @@
 
 {% else %}
 
-  <div class="btn-group btn-group-xs pull-left vertical-spacing">
+  <div class="btn-group btn-group-xs pull-left mb-3">
     <div class="btn btn-default" disabled="disabled">
       {% trans "No results for this topic" %}
     </div>

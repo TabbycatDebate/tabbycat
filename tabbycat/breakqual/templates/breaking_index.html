@@ -54,7 +54,7 @@
 
       {% with teams_in_tournament=tournament.team_set.count %}
         {% for category in categories %}
-          <div class="panel panel-default">
+          <div class="card">
             <div class="panel-heading">
               <h4 class="panel-title">
                 {% blocktrans trimmed with category_name=category.name %}
@@ -65,7 +65,7 @@
                 {% endif %}
               </h4>
             </div>
-            <div class="panel-body round-progresses">
+            <div class="card-body round-progresses">
               <div class="progress">
                 {% if category.nonbreaking == category.eligible %}
                   <div class="progress-bar progress-bar-primary

@@ -9,65 +9,20 @@
 {% block content %}
 
 <div class="alert alert-info">
-  <p>
-    {% url 'donations' as donations_url %}
-    {% blocktrans trimmed %}
-      Tabbycat is free to use for non-profit and non-fundraising tournaments
-      (although donations are encouraged). If your tournament is run for profit
-      or for fundraising, please note that there is a
-      <a href="{{ donations_url }}">required payment</a>. For more details,
-      see the <a href="http://tabbycat.readthedocs.io/en/stable/about/licence.html">
-      Tabbycat licence agreement</a>.
-    {% endblocktrans %}
-  </p>
+  {% url 'donations' as donations_url %}
+  {% blocktrans trimmed %}
+    Tabbycat is free to use for non-profit and non-fundraising tournaments
+    (although donations are encouraged). If your tournament is run for profit
+    or for fundraising, please note that there is a
+    <a href="{{ donations_url }}">required payment</a>. For more details,
+    see the <a href="http://tabbycat.readthedocs.io/en/stable/about/licence.html">
+    Tabbycat licence agreement</a>.
+  {% endblocktrans %}
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-body">
+  <div class="card">
+    <div class="card-body">
 
-    <form action="." method="POST" class="">
-
-      {% csrf_token %}
-
-      {% if form.errors %}
-        <div class="alert alert-danger">
-          {% trans "Whoops! There was an error with one or more fields." %}
-          {{ form.non_field_errors }}
-        </div>
-      {% endif %}
-
-      {% for field in form %}
-        <div class="form-group">
-          <div class="row">
-            <div class="col-sm-6">
-              <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
-              {{ field|addcss:"form-control" }}
-            </div>
-            <div class="col-sm-6">
-              <label></label>
-              <span class="help-block">
-                {{ field.help_text }}
-              </span>
-              {{ field.errors }}
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-
-      <div class="form-group">
-        <button type="submit" class="btn btn-block btn-success form-control">
-          {% trans "Create Tournament" %}
-        </button>
-      </div>
-
-    </form>
-
-  </div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-body">
-    <p>
       <strong>{% trans "Just trying out Tabbycat?" %}</strong>
       {% blocktrans trimmed %}
         If you are just learning or playing around with Tabbycat it's easiest
@@ -75,44 +30,77 @@
         set of teams, adjudicators, venues, and the like.
         This demo tournament can then be easily deleted later on.
       {% endblocktrans %}
-    </p>
-    <div class="row">
-      <div class="col-sm-6">
-        <form action="{% url 'load-demo' %}" method="POST">
-          <input type="hidden" name="source" value="demo_simple">
-          <button type="submit" class="btn btn-primary btn-block">
-            {% trans "Load Demo Data (10-team tournament)" %}
-          </button>
-        </form>
-        {% if preexisting_small_demo %}
-          <br>
-          <div class="alert alert-warning">
-          {% blocktrans trimmed %}
-            You already have a tournament set up using this data set. Reloading
-            the data will delete <strong>all data</strong> from that tourament.
-          {% endblocktrans %}
-          </div>
-        {% endif %}
+
+      <div class="row mt-3">
+        <div class="col">
+          <form action="{% url 'load-demo' %}" method="POST">
+            <input type="hidden" name="source" value="demo_simple">
+            <button type="submit" class="btn btn-primary btn-block">
+              {% trans "Load Demo Data (10-team tournament)" %}
+            </button>
+          </form>
+          {% if preexisting_small_demo %}
+            <div class="alert alert-warning">
+              {% blocktrans trimmed %}
+                You already have a tournament set up using this data set. Reloading
+                the data will delete <strong>all data</strong> from that tourament.
+              {% endblocktrans %}
+            </div>
+          {% endif %}
+        </div>
+        <div class="col">
+          <form action="{% url 'load-demo' %}" method="POST">
+            <input type="hidden" name="source" value="demo">
+            <button type="submit" class="btn btn-primary btn-block">
+              {% trans "Load Demo Data (24-team tournament)" %}
+            </button>
+          </form>
+          {% if preexisting_large_demo %}
+            <div class="alert alert-warning">
+              {% blocktrans trimmed %}
+                You already have a tournament set up using this data set. Reloading
+                the data will delete <strong>all data</strong> from that tourament.
+              {% endblocktrans %}
+            </div>
+          {% endif %}
+        </div>
       </div>
-      <div class="col-sm-6">
-        <form action="{% url 'load-demo' %}" method="POST">
-          <input type="hidden" name="source" value="demo">
-          <button type="submit" class="btn btn-primary btn-block">
-            {% trans "Load Demo Data (24-team tournament)" %}
-          </button>
-        </form>
-        {% if preexisting_large_demo %}
-          <br>
-          <div class="alert alert-warning">
-          {% blocktrans trimmed %}
-            You already have a tournament set up using this data set. Reloading
-            the data will delete <strong>all data</strong> from that tourament.
-          {% endblocktrans %}
-          </div>
-        {% endif %}
-      </div>
+
     </div>
   </div>
-</div>
+
+  <div class="card mt-3">
+    <div class="card-body">
+      <form action="." method="POST" class="">
+
+        {% csrf_token %}
+
+        {% if form.errors %}
+          <div class="alert alert-danger">
+            {% trans "Whoops! There was an error with one or more fields." %}
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <div class="row">
+            {% for field in form %}
+            <div class="col-6">
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field|addcss:"form-control" }}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                <small class="form-text text-danger">{{ field.errors }}</small>
+              </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn mt-3 btn-block btn-success form-control">
+          {% trans "Create Tournament" %}
+        </button>
+
+      </form>
+    </div>
+  </div>
 
 {% endblock %}

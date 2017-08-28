@@ -11,11 +11,11 @@
       <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
     </div>
 
-    <div class="row vertical-spacing">
+    <div class="row mb-3">
       <div id="messages-container"></div>
     </div>
 
-    <div class="vertical-spacing">
+    <div class="mb-3">
       <draw-header :positions="positions" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
         <div @click="updateSorting('venue')" slot="hvenue"

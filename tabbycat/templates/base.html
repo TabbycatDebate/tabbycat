@@ -4,8 +4,10 @@
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <title>{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
+
   <link rel="icon" type="image/png" href="/static/favicon.ico" />
   <!--[if IE]><link rel="shortcut icon" href="{% static 'favicon.ico' %}"/><![endif]-->
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
@@ -22,7 +24,7 @@
 <body class="{% block body-class %}{% endblock %}">
 
   {% block body %}<!-- Needed for old edit adjs page -->
-    <div class="col-md-12 accommodate-footer ">
+    <div class="col accommodate-footer ">
 
       {% block nav %}
         <div class="row ">
@@ -39,8 +41,8 @@
       {% endblock nav %}
 
       {% block header %}
-        <div class="row head-title {% if 'admin/' in request.path and user.is_superuser %}white-bg vertical-spacing nav-sidebar-offset{% endif %}">
-          <div class="col-md-12">
+        <div class="row {% if 'admin/' in request.path and user.is_superuser %}white-bg mb-3 nav-sidebar-offset{% endif %}">
+          <div class="col mt-4 mb-3">
             <h3>
               {% if page_title %}
                 {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
@@ -69,18 +71,16 @@
           </div>
         </div>
 
-        <div class="row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
-          <div class="col-md-12">
-            <div class="form-inline messages db-hide" id="messages-container">
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated">
-                    {{ message }}
-                  </div>
-                {% endfor %}
-              {% endif %}
-              {% block page-alerts %}{% endblock %}
-            </div>
+        <div class="row d-print-none {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
+          <div class="col" id="messages-container">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated " role="alert">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+            {% block page-alerts %}{% endblock %}
           </div>
         </div>
       {% endblock subheader %}

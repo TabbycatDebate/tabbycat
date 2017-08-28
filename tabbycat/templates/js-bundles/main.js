@@ -8,13 +8,19 @@ var $ = require("jquery");
 global.jQuery = $; // Set for bootstrap
 window.$ = $; // Set for browser window
 
-require("bootstrap"); // Need to call boostrap functions from within Vue etc
+// Hover over options Needs to come before bootstrap
+import Popper from 'popper.js';
+window.Popper = Popper;
+
+// Import bootstrap javascript plugins
+require("bootstrap");
 
 // Icons
 var feather = require('feather-icons')
 
 // Mount global jquery stuff here
 $(document).ready(function(){
+
   // Enable hover tooltips for all elements
   $('[data-toggle=tooltip]').tooltip({
     'html': true

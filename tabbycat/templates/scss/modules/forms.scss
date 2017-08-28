@@ -20,36 +20,25 @@
 }
 
 .btn-success.btn-no-hover:hover {
-  background-color: $brand-success;
+  background-color: theme-color("success");
 }
 
 .btn-info.btn-no-hover:hover {
-  background-color: $brand-info;
+  background-color: theme-color("info");
 }
 
 .btn-warning.btn-no-hover:hover {
-  background-color: $brand-warning;
+  background-color: theme-color("warning");
 }
 
 .btn-danger.btn-no-hover:hover {
-  background-color: $brand-danger;
+  background-color: theme-color("danger");
 }
 
 
 //------------------------------------------------------------------------------
 // Inputs (in general)
 //------------------------------------------------------------------------------
-
-// Give buttons more padding
-.form-control,
-.form-control-parent input {
-  @extend .form-control;
-
-  border-radius: $border-radius-large;
-  border-width: 2px;
-  height: 39px;
-  max-width: 100%;
-}
 
 .list-group-item .form-group:last-child {
   margin-bottom: 0; // List group items are already bottom padded
@@ -75,7 +64,7 @@ input[type="range"] {
 }
 
 // Don't pad form panels as the elements already have padding
-.panel-body.form-panel {
+.card-body.form-panel {
   padding-bottom: 0;
 }
 

@@ -51,11 +51,11 @@
     {% include "enter_results_ballot_set.html" %}
     <div class="row">
         <div class="col-sm-12">
-          <div class="panel panel-default">
+          <div class="card">
             <div class="panel-heading">
               <h4 class="panel-title">{% trans "Ballot Status" %}</h4>
             </div>
-            <div class="panel-body form-panel">
+            <div class="card-body form-panel">
               <div class="form-group col-md-6">
                 {{ form.discarded }}
                 {{ form.discarded.errors }}
@@ -76,7 +76,7 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
-          <div class="panel panel-default">
+          <div class="card">
             <div class="panel-heading">
               <h4 class="panel-title">
                 {% blocktrans trimmed %}
@@ -85,7 +85,7 @@
                 {% endblocktrans %}
               </h4>
             </div>
-            <div class="panel-body form-panel">
+            <div class="card-body form-panel">
               <div class="form-group">
                 <div class="col-sm-4 col-xs-12">
                   {{ form.debate_result_status|addcss:"form-control" }}
