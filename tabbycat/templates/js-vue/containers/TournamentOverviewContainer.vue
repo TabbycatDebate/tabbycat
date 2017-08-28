@@ -1,35 +1,43 @@
 <template>
   <div>
 
-    <div class="row">
-      <div class="col-sm-12">
-        <h4 class="text-center">Number of Ballots In</h4>
-        <div class="card">
+    <div class="row" v-if="roundStatus">
+
+      <div class="col">
+        <div class="card bg-info text-white bg-info text-white">
+          <div class="card-header h5 text-center">Number of Ballots In</div>
           <div class="card-body">
             <ballots-graph :poll-url="ballotsUrl"></ballots-graph>
           </div>
         </div>
       </div>
+
     </div>
 
     <div class="row">
-      <div class="col-md-6">
-        <h4 class="text-center">Latest Actions</h4>
-        <ul class="list-group">
-          <updates-list v-for="action in latestActions" :key="action.timestamp"
-                        :item="action"></updates-list>
-          <li class="list-group-item" v-if="!latestActions">Loading...</li>
-          <li class="list-group-item" v-if="latestActions.length === 0">No Actions In</li>
-        </ul>
+
+      <div class="col mt-4">
+        <div class="card bg-info text-white">
+          <div class="card-header h5">Latest Actions</div>
+          <ul class="list-group list-group-flush">
+            <updates-list v-for="action in latestActions" :key="action.timestamp"
+                          :item="action"></updates-list>
+            <li class="list-group-item list-group-item-primary" v-if="!latestActions">Loading...</li>
+            <li class="list-group-item list-group-item-light" v-if="latestActions.length === 0">No Actions Yet</li>
+          </ul>
+        </div>
       </div>
-      <div class="col-md-6">
-        <h4 class="text-center">Latest Results</h4>
-        <ul class="list-group">
-          <updates-list v-for="result in latestResults" :key="result.timestamp"
-                        :item="result"></updates-list>
-          <li class="list-group-item" v-if="!latestResults">Loading...</li>
-          <li class="list-group-item" v-if="latestResults.length === 0">No Results In</li>
-        </ul>
+
+      <div class="col mt-4">
+        <div class="card bg-info text-white">
+          <div class="card-header h5">Latest Results</div>
+          <ul class="list-group list-group-flush">
+            <updates-list v-for="result in latestResults" :key="result.timestamp"
+                          :item="result"></updates-list>
+            <li class="list-group-item list-group-item-primary" v-if="!latestResults">Loading...</li>
+            <li class="list-group-item list-group-item-light" v-if="latestResults.length === 0">No Results Yet</li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -43,7 +51,7 @@ import BallotsGraph from '../../graphs/BallotsGraph.vue'
 export default {
   mixins: [],
   components: { UpdatesList, BallotsGraph },
-  props: [ 'actionsUrl', 'resultsUrl', 'ballotsUrl' ],
+  props: [ 'actionsUrl', 'resultsUrl', 'ballotsUrl', 'roundStatus'],
   data: function() {
     return {
       latestActions: false,

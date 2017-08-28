@@ -7,35 +7,42 @@
 {% block head-title %}<span class="emoji">⏰</span>{% trans "Tournament Overview" %}{% endblock %}
 
 {% block sub-title %}
-  {% blocktrans with round_name=round.name round_status=round.get_draw_status_display.lower %}{{ round_name }} is {{ round_status }}{% endblocktrans %}
-  ({% trans "this page will refresh its data automatically" %})
+  {% blocktrans with round_name=round.name round_status=round.get_draw_status_display.lower %}{{ round_name }}'s status is {{ round_status }}{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
 
   {% if blank %}
-    <div class="alert alert-info">
-      <p>
-        <strong>Welcome to your new tournament!</strong> The next step is to
-        import your initial tournament data: the institutions, teams, adjudicators
-        and venues that are in your tournament. There are a number of ways to do
-        this. For small-to-medium tournaments, you can use the
-        <a href="{% tournamenturl 'importer-simple-index' %}" class="alert-link">simple importer</a>.
-        (This is also the <em>Setup > Import Data</em> link on the left.)
-      </p>
-      {# Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link. #}
-      <p>{% blocktrans trimmed %}For more information, please consult our
-        <a href="https://tabbycat.readthedocs.io/en/{{ readthedocs_version }}/use/importing-data.html" class="alert-link" target="_blank">
-          documentation on importing initial data</a>.
-          {% endblocktrans %}
-      </p>
+    <div class="card border-info text-info mb-3">
+      <div class="card-body">
+        <h4 class="card-title">Welcome to your new tournament!</h4>
+        <p class="card-text">
+          The next step is to import your initial tournament data: the institutions, teams, adjudicators
+          and venues that are in your tournament. There are a number of ways to do
+          this. For small-to-medium tournaments, the simple importer is your best bet.
+          {# Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link. #}
+          {% blocktrans trimmed %}For more information, please consult our
+          <a href="https://tabbycat.readthedocs.io/en/{{ readthedocs_version }}/use/importing-data.html" class="alert-link" target="_blank">
+            documentation on importing initial data</a>.
+            {% endblocktrans %}
+        </p>
+      </div>
     </div>
+
+    <div class="list-group mt-3">
+      <a href="{% tournamenturl 'importer-simple-index' %}" class="list-group-item list-group-call">
+        <i data-feather="circle"></i>
+        Use the simple import to add your initial data.
+      </a>
+    </div>
+
   {% endif %}
 
   <div id="vueMount">
     <tournament-overview-container :actions-url="updateActionsURL"
                                    :results-url="updateResultsURL"
-                                   :ballots-url="updateBallotsURL">
+                                   :ballots-url="updateBallotsURL"
+                                   :round-status="roundStatus">
     </tournament-overview-container>
 
   </div>
@@ -48,6 +55,7 @@
       updateBallotsURL: '{% tournamenturl 'results-ballots-graph-data' %}',
       updateActionsURL: '{% tournamenturl 'actionlog-latest-json' %}',
       updateResultsURL: '{% tournamenturl 'results-latest-json' %}',
+      roundStatus: '{{ round_status }}'
     }
   </script>
   {{ block.super }}

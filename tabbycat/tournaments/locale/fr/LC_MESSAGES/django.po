@@ -663,10 +663,6 @@ msgstr "Aperçu du tournoi"
 msgid "%(round_name)s is %(round_status)s"
 msgstr "%(round_name)s est %(round_status)s"
 
-#: tournaments/templates/tournament_index.html:11
-msgid "this page will refresh its data automatically"
-msgstr "ce page se rafraîchira automatiquement"
-
 #. Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link.
 #: tournaments/templates/tournament_index.html:27
 #, python-format

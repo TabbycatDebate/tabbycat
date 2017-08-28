@@ -1,6 +1,6 @@
 <template>
 
-  <li class='list-group-item'>
+  <li class='list-group-item list-group-item-info'>
     <span class='badge'>
       {{ item.timestamp }}
     </span>

@@ -21,8 +21,8 @@
 
 
 .list-group-call {
-  @extend .list-group-item-action;
-  @extend .list-group-item-success;
+  @extend .bg-success;
+  @extend .text-white;
   @extend .strong
 }
 
