@@ -37,8 +37,6 @@ gulp.task('fonts-compile', function() {
       'node_modules/bootstrap-sass/assets/fonts/**/*.ttf',
       'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
       'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
-      'node_modules/lato-font/fonts/lato-normal/lato-normal.woff',
-      'node_modules/lato-font/fonts/lato-normal/lato-normal.woff2'
     ])
     .pipe(rename({dirname: ''})) // Remove folder structure
     .pipe(gulp.dest(outputDir + 'fonts/'));
