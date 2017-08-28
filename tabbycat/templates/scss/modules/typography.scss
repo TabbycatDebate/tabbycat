@@ -1,10 +1,11 @@
 //------------------------------------------------------------------------------
 // Web Fonts
 //------------------------------------------------------------------------------
+
 // Primary Typeface
 @font-face {
-  font-family: 'LatoLatinWeb';
-  src: url('/static/fonts/lato-normal.woff2') format('woff2'), url('/static/fonts/lato-normal.woff') format('woff');
+  font-family: 'Interface-Regular';
+  src: url('/static/fonts/Interface-Regular.woff2') format('woff2'), url('/static/fonts/Interface-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;

@@ -7,9 +7,12 @@
 // Boostrap Type
 //------------------------------------------------------------------------------
 
-$font-family-sans-serif: "LatoLatinWeb", Helvetica, Arial, sans-serif;
-$headings-font-family: Helvetica, Arial, sans-serif;
+$font-size-base: 13px !default;
+$font-family-sans-serif: "Interface-Regular", Helvetica, Arial, sans-serif;
+
+$headings-font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
 $headings-font-weight: bold;
+
 $icon-font-path: '/static/fonts/';
 
 //------------------------------------------------------------------------------
