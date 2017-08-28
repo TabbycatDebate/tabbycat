@@ -23,7 +23,7 @@
     </div>
 
     <div class="row">
-      {% if ct.in_before %}
+      {% if ct.in_before is not None %}
         <div class="col-md-1 col-sm-1">{{ round.prev.abbreviation }}</div>
         <div class="col-md-11 col-sm-11">
           <div class="progress">
