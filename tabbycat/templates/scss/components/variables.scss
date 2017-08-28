@@ -7,7 +7,7 @@
 // Boostrap Type
 //------------------------------------------------------------------------------
 
-$font-size-base: 13px !default;
+$font-size-base: 14px !default;
 $font-family-sans-serif: "Interface-Regular", Helvetica, Arial, sans-serif;
 
 $headings-font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
@@ -97,6 +97,14 @@ $adj-ranking-8: hsla(0, 0%, 50%, 1);
 
 $sidebar-width: 155px;
 $tooltip-max-width: 330px;
+
+//------------------------------------------------------------------------------
+// Custom Details
+//------------------------------------------------------------------------------
+
+$border-radius-small: 1px;
+$border-radius-base: 3px;
+$border-radius-large: 4px;
 
 //------------------------------------------------------------------------------
 // Z-Index Hierarchy

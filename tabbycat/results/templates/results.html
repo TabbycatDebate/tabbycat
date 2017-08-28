@@ -20,7 +20,7 @@
 {% block page-subnav-actions %}
   {% if user.is_superuser and round.seq < tournament.round_set.count and current_round == round %}
     <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger{% endif %} submit-disable" href="{% roundurl 'tournament-advance-round-check' %}">
-      Advance to Next Round <span class="icon glyphicon-chevron-right"></span>
+      Advance to Next Round <i data-feather="chevron-right"></i>
     </a>
   {% endif %}
 {% endblock %}

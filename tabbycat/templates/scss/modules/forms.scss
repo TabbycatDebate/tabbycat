@@ -45,7 +45,7 @@
 .form-control-parent input {
   @extend .form-control;
 
-  border-radius: 6px;
+  border-radius: $border-radius-large;
   border-width: 2px;
   height: 39px;
   max-width: 100%;
