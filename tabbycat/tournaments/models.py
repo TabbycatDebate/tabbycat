@@ -442,12 +442,10 @@ class Round(models.Model):
 
     @cached_property
     def next(self):
-        """Returns the round that comes after this round. If this is a break
-        round, then it returns the round in the same break category that comes
-        after this round."""
+        # Deprecated, believed to be not used, but kept just in case there's an
+        # oversight. Remove in version 1.5.
+        logger.error("There was a call to Round.next(), which is deprecated.", stack_info=True)
         rounds = self.tournament.round_set.filter(seq__gt=self.seq).order_by('seq')
-        if self.stage == Round.STAGE_ELIMINATION:
-            rounds = rounds.filter(break_category=self.break_category)
         try:
             return rounds.first()
         except Round.DoesNotExist:
