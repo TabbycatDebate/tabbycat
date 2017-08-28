@@ -66,37 +66,37 @@
         this may lead to a draw that fails or is incorrect">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
-    {% elif checkin_info.teams.in_now == 0 %}
+    {% elif checkin_types.0.in_now == 0 %}
       <button class="btn btn-danger submit-disable disabled"
         data-toggle="tooltip" title="The draw cannot be generated until some
         teams have been checked in">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
-    {% elif checkin_info.adjs.in_now == 0 %}
+    {% elif checkin_types.1.in_now == 0 %}
       <button class="btn btn-danger submit-disable disabled"
         data-toggle="tooltip" title="The draw cannot be generated until some
         adjudicators have been checked in">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
-    {% elif checkin_info.venues.in_now == 0 %}
+    {% elif checkin_types.2.in_now == 0 %}
       <button class="btn btn-danger submit-disable disabled"
         data-toggle="tooltip" title="The draw cannot be generated until some
         venues have been checked in">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
-    {% elif min_venues > checkin_info.venues.in_now %}
+    {% elif min_venues > checkin_types.2.in_now %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="There are too few venue checked in
          for the number of debates — the draw may not generate properly">
          {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
        </button>
-    {% elif min_adjudicators > checkin_info.adjs.in_now %}
+    {% elif min_adjudicators > checkin_types.1.in_now %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="There are too few adjudicators checked in
         for the number of debates — the draw may not generate properly">
         {% trans "Generate Draw" %} <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
-    {% elif not checkin_info.teams.in_now|divisibleby:2  %}
+    {% elif not checkin_types.0.in_now|divisibleby:2  %}
       <button class="btn btn-warning" id="createDraw"
         data-toggle="tooltip" title="There is an uneven number of teams checked in
          for this round — the draw may not generate properly">
@@ -127,13 +127,13 @@
     </div>
   {% endif %}
 
-  {% if not checkin_info.teams.in_now|divisibleby:2  %}
+  {% if not checkin_types.0.in_now|divisibleby:2  %}
     <div class="alert alert-danger">
       {% trans "There is an uneven number of teams checked in for this round." %}
     </div>
   {% endif %}
 
-  {% if min_adjudicators > checkin_info.adjs.in_now %}
+  {% if min_adjudicators > checkin_types.1.in_now %}
     <div class="alert alert-warning">
       {% blocktrans trimmed with required_count=min_adjudicators|apnumber count count=min_adjudicators %}
         There needs to be at least one adjudicator checked in, given the number
@@ -145,7 +145,7 @@
     </div>
   {% endif %}
 
-  {% if min_venues > checkin_info.venues.in_now %}
+  {% if min_venues > checkin_types.2.in_now %}
     <div class="alert alert-warning">
       {% blocktrans trimmed with required_count=min_venue|apnumber count count=min_venues %}
         There needs to be at least one venue checked in, given the number of
@@ -184,7 +184,7 @@
     </div>
   {% endif %}
 
-  {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_info.teams.total == 0 %}
+  {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_types.0.total == 0 %}
     <div class="alert alert-warning">
       {% blocktrans trimmed with break_category=round.break_category.name %}
         There don't appear to be any teams breaking in the {{ break_category }}
@@ -195,7 +195,7 @@
     </div>
   {% endif %}
 
-  {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_info.teams.total == 1 %}
+  {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_types.0.total == 1 %}
     <div class="alert alert-warning">
       {% blocktrans trimmed with break_category=round.break_category.name %}
         There's only one team breaking in the {{ break_category }} Break.
@@ -241,7 +241,7 @@
 
   <div class="row">
     <div class="col-md-12">
-      {% for type, info in checkin_info.items %}
+      {% for ct in checkin_types %}
         {% include 'checkin_progress.html' %}
       {% endfor %}
     </div>

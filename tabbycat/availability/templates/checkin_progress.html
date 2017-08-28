@@ -3,7 +3,7 @@
 <div class="panel panel-default">
 
   <div class="panel-heading">
-    <h4 class="panel-title">{{ type }} Check-Ins</h4>
+    <h4 class="panel-title">{{ ct.type }} Check-Ins</h4>
   </div>
   <div class="panel-body round-progresses">
 
@@ -12,36 +12,36 @@
       <div class="col-md-11 col-sm-11">
         <div class="progress">
           <div class="progress-bar progress-bar-success
-                      {% if info.in_now == 0 %}progress-empty{% endif %}"
-               role="progressbar" aria-valuenow="{{ info.in_now }}"
-               aria-valuemin="0" aria-valuemax="{{ info.total }}"
-               style="width: {% percentage info.in_now info.total %}%;">
-            <span>{{ info.in_now }}/{{ info.total }}</span>
+                      {% if ct.in_now == 0 %}progress-empty{% endif %}"
+               role="progressbar" aria-valuenow="{{ ct.in_now }}"
+               aria-valuemin="0" aria-valuemax="{{ ct.total }}"
+               style="width: {% percentage ct.in_now ct.total %}%;">
+            <span>{{ ct.in_now }}/{{ ct.total }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <div class="row">
-      {% if info.in_before %}
+      {% if ct.in_before %}
         <div class="col-md-1 col-sm-1">{{ round.prev.abbreviation }}</div>
         <div class="col-md-11 col-sm-11">
           <div class="progress">
             <div class="progress-bar progress-bar-info
-                        {% if info.in_before == 0 %}progress-empty{% endif %}"
-                 role="progressbar" aria-valuenow="{{ info.in_now }}"
-                 aria-valuemin="0" aria-valuemax="{{ info.total }}"
-                 style="width: {% percentage info.in_before info.total %}%;">
-              <span>{{ info.in_before }}/{{ info.total }}</span>
+                        {% if ct.in_before == 0 %}progress-empty{% endif %}"
+                 role="progressbar" aria-valuenow="{{ ct.in_now }}"
+                 aria-valuemin="0" aria-valuemax="{{ ct.total }}"
+                 style="width: {% percentage ct.in_before ct.total %}%;">
+              <span>{{ ct.in_before }}/{{ ct.total }}</span>
             </div>
           </div>
         </div>
       {% endif %}
     </div>
 
-    {% if info.message %}
+    {% if ct.message %}
       <div class="col-md-5">
-      {{ info.message }}
+      {{ ct.message }}
       </div>
     {% endif %}
 
