@@ -5,20 +5,20 @@
 
   <div class="btn-group">
     {% if round.is_break_round %}
-      <a class="btn btn-default disabled">
+      <a class="btn btn-primary disabled">
         {% trans "Check In Teams" %}
       </a>
     {% else %}
-      <a class="btn btn-default submit-disable"
+      <a class="btn btn-primary submit-disable"
          href="{% roundurl 'availability-teams' round %}">
         {% trans "Check In Teams" %}
       </a>
     {% endif %}
-    <a class="btn btn-default submit-disable"
+    <a class="btn btn-primary submit-disable"
        href="{% roundurl 'availability-adjudicators' round %}">
       {% trans "Check In Adjs" %}
     </a>
-    <a class="btn btn-default submit-disable"
+    <a class="btn btn-primary submit-disable"
        href="{% roundurl 'availability-venues' round %}">
       {% trans "Check In Venues" %}
     </a>

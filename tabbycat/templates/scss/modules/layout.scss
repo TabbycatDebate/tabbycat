@@ -19,19 +19,17 @@
   padding-right: 0;
 }
 
+// Prominent call to actions to do stuff
 .list-group-call {
   @extend .bg-success;
   @extend .text-white;
   @extend .strong
 }
 
-//------------------------------------------------------------------------------
-// Headers
-//------------------------------------------------------------------------------
-
-// For the admin area
-.white-bg {
-  background: $alt-bg;
+// Chevrons used to indicate advance staes
+.advance {
+  float: right;
+  margin-top: 3px;
 }
 
 //------------------------------------------------------------------------------

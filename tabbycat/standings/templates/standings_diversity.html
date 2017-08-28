@@ -15,20 +15,20 @@
   </div>
 
   <div class="nav nav-pills navbar-left btn-group mb-3">
-    <button disabled class="btn btn-default gender-display gender-male h6">
+    <button disabled class="btn btn-primary gender-display gender-male h6">
       Male identifying
     </button>
-    <button disabled class="btn btn-default gender-display gender-nm h6">
+    <button disabled class="btn btn-primary gender-display gender-nm h6">
       Non-cis male identifying
     </button>
-    <button disabled class="btn btn-default gender-display gender-unknown h6">
+    <button disabled class="btn btn-primary gender-display gender-unknown h6">
       Unknown
     </button>
   </div>
 
   <div class="nav nav-pills pull-right btn-group mb-3">
     {% for r in regions %}
-      <button disabled class="btn btn-default region-display region-{{ r.seq }} h6">
+      <button disabled class="btn btn-primary region-display region-{{ r.seq }} h6">
         {{ r.name }}
       </button>
     {% endfor %}

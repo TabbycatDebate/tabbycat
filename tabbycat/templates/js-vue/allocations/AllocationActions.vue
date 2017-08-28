@@ -5,7 +5,7 @@
 
         <div class="btn-toolbar">
           <div class="btn-group btn-group-sm">
-            <a :href="roundInfo.backUrl" class="btn btn-default btn-sm" data-toggle="tooltip"
+            <a :href="roundInfo.backUrl" class="btn btn-primary btn-sm" data-toggle="tooltip"
                data-placement="bottom" title="Return to Draw">
               <span class="glyphicon glyphicon-chevron-left"></span>Back
             </a>
@@ -20,7 +20,7 @@
           <div class="btn-group btn-group-sm">
             <template v-if="!highlights.region && !highlights.gender &&
                             !highlights.category && !highlights.ranking">
-              <button class="visible-lg-block btn btn-default">Conflicts Key</button>
+              <button class="visible-lg-block btn btn-primary">Conflicts Key</button>
               <button class="btn conflictable conflicts-toolbar hover-histories-2-ago">
                 Seen Before
               </button>
@@ -35,31 +35,31 @@
               </button>
             </template>
             <template v-if="highlights.gender">
-              <button class="visible-lg-block btn btn-default">Gender Key</button>
+              <button class="visible-lg-block btn btn-primary">Gender Key</button>
               <button class="btn gender-display gender-male">Male</button>
               <button class="btn gender-display gender-f">Female</button>
               <button class="btn gender-display gender-o">Other</button>
               <button class="btn gender-display gender-">Unknown</button>
             </template>
             <template v-if="highlights.region">
-              <button class="visible-lg-block btn btn-default">Region Key</button>
+              <button class="visible-lg-block btn btn-primary">Region Key</button>
               <button v-for="region in roundInfo.regions"
-                      :class="['btn btn-default region-display', 'region-' + region.class]">
+                      :class="['btn btn-primary region-display', 'region-' + region.class]">
                 {{ region.name }}
               </button>
             </template>
             <template v-if="highlights.category">
-              <button class="visible-lg-block btn btn-default">Category Key</button>
+              <button class="visible-lg-block btn btn-primary">Category Key</button>
               <button v-for="category in roundInfo.categories"
-                      :class="['btn btn-default category-display', 'category-' + category.class]">
+                      :class="['btn btn-primary category-display', 'category-' + category.class]">
                 {{ category.name }} Break
               </button>
-              <button  class="btn btn-default">
+              <button  class="btn btn-primary">
                 None Assigned
               </button>
             </template>
             <template v-if="highlights.ranking">
-              <button class="visible-lg-block btn btn-default">Ranking Key</button>
+              <button class="visible-lg-block btn btn-primary">Ranking Key</button>
               <button v-for="threshold in percentiles"
                       :class="['btn ranking-display', 'ranking-' + threshold.percentile]">
                 {{ threshold.grade }}</button>
@@ -69,7 +69,7 @@
         <div class="btn-toolbar">
           <div class="btn-group btn-group-sm">
             <button v-for="label in highlightLabels" @click="toggleHighlight(label)"
-                    :class="['btn btn-default nav-link hoverable', highlights[label] ? 'active' : '']">
+                    :class="['btn btn-primary nav-link hoverable', highlights[label] ? 'active' : '']">
               <span :class="['glyphicon', highlights[label] ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"></span>
               {{ titleCase(label) }}
             </button>

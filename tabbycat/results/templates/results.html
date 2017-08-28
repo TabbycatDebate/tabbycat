@@ -8,10 +8,10 @@
 
 {% block page-subnav-sections %}
   {% if user.is_superuser %}
-    <a href="{% roundurl 'motions-edit' %}" class="btn btn-default">
-      <span class="icon glyphicon-chevron-left"></span> Back to Motions
+    <a href="{% roundurl 'motions-edit' %}" class="btn btn-primary">
+      <i data-feather="chevron-left"></i> Back to Motions
     </a>
-    <a class="btn btn-default submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
+    <a class="btn btn-primary submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
       Check In Ballots
     </a>
   {% endif %}
@@ -49,7 +49,7 @@
       <div class="btn-group btn-group-justified mb-3" role="group">
 
         {% if not user.is_superuser %}
-          <a class="btn btn-default submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
+          <a class="btn btn-primary submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
             Check-In Ballots
           </a>
         {% endif %}
@@ -66,10 +66,10 @@
           {{ stats.confirmed }} / {{ stats.total }} Confirmed <span class="icon glyphicon-ok"></span>
         </span>
         {% if pref.enable_postponements %}
-          <span class="btn btn-default" disabled>
+          <span class="btn btn-primary" disabled>
             {{ stats.postponed }} / {{ stats.total }} Postponed <span class="icon glyphicon-pause"></span>
           </span>
-          <span class="btn btn-default" disabled>
+          <span class="btn btn-primary" disabled>
             Byes <span class="icon glyphicon-fast-forward"></span>
           </span>
         {% endif %}

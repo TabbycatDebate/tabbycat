@@ -7,18 +7,19 @@
 
 {% block content %}
 
-<div class="alert alert-info">
-  <p>
+<div class="card border-info text-info">
+  <div class="card-body">
     Paste a list of institutions with one institution per line and following the format of:
-    <em>Full Name,Nickname</em>. For example:<br><br>
-    <em>Victoria University of Wellington,VIC<br>
-    University of Melbourne,MUDS<br>
-    Universiti Teknologi MARA,UTMARA</em><br><br>
+    <em>Full Name,Nickname</em>. For example:
+    <pre><code>
+Victoria University of Wellington,VIC
+University of Melbourne,MUDS
+Universiti Teknologi MARA,UTMARA</code></pre>
     Note that teams that use an institutional prefix will use the Nickname for this purpose, ie "MUDS 1".
-  </p>
+  </div>
 </div>
 
-<form action="." method="POST">
+<form action="." method="POST" class="mt-3">
   {% csrf_token %}
   {{ wizard.management_form }}
 
@@ -32,7 +33,7 @@
   <div class="form-group">
     {{ wizard.form.institutions_raw|addcss:"form-control" }}
   </div>
-  <input type="submit" class="btn btn-primary btn-block submit-disable" value="{% trans 'Next Step' %}">
+  <input type="submit" class="btn btn-success btn-block submit-disable" value="{% trans 'Next Step' %}">
 
 </form>
 

@@ -6,7 +6,7 @@
 
     <div class="btn-group btn-group-xs">
        {% for position, count in am.vetoes.items %}
-        <div class="btn btn-default">
+        <div class="btn btn-primary">
           <span class="{% if forloop.counter == 1 %}text-info{% else %}text-warning{% endif %}">
             {{ count.1 }} {{ position }} veto{{ count.1|pluralize:"es" }}
           </span>
@@ -15,7 +15,7 @@
     </div>
 
       <div class="btn-group btn-group-xs pull-right">
-        <div class="btn btn-default" data-toggle="tooltip" title="{{ am.result_balance.1 }}">
+        <div class="btn btn-primary" data-toggle="tooltip" title="{{ am.result_balance.1 }}">
           <span class="text-muted">{{ am.result_balance.0 }}</span>
         </div>
       </div>
@@ -31,7 +31,7 @@
   {% else %}
 
     <div class="btn-group btn-group-xs pull-left">
-      <div class="btn btn-default" disabled="disabled">
+      <div class="btn btn-primary" disabled="disabled">
         {% trans "No teams vetoed this topic" %}
       </div>
     </div>

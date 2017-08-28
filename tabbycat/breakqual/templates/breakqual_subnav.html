@@ -1,12 +1,12 @@
 {% load debate_tags i18n %}
 
-  <a class="btn btn-default"
+  <a class="btn btn-primary"
      href="{% tournamenturl 'breakqual-index' %}">
     {% trans "Breaks Overview" %}
   </a>
   <div class="btn-group">
   {% for category in tournament.breakcategory_set.all %}
-    <a class="btn btn-default"
+    <a class="btn btn-primary"
        href="{% tournamenturl 'breakqual-teams' category.slug %}">
       {% blocktrans trimmed with category_name=category.name %}
         {{ category_name }} Break
@@ -14,7 +14,7 @@
     </a>
   {% endfor %}
   </div>
-  <a class="btn btn-default"
+  <a class="btn btn-primary"
      href="{% tournamenturl 'breakqual-adjudicators' %}">
     {% trans "Adjudicators' Break" %}
   </a>

@@ -5,13 +5,13 @@
 
         <div class="btn-toolbar flex-align-start">
           <div class="btn-group btn-group-sm">
-            <div v-for="item in tier.features[0]" :class="[item.class, 'btn btn-default']" >
+            <div v-for="item in tier.features[0]" :class="[item.class, 'btn btn-primary']" >
               <span v-if="item.icon" :class="[item.icon, 'glyphicon']"></span>
               {{ item.title }}
             </div>
           </div>
           <div class="btn-group btn-group-sm">
-            <div v-for="item in tier.features[1]" :class="[item.class, 'btn btn-default']" >
+            <div v-for="item in tier.features[1]" :class="[item.class, 'btn btn-primary']" >
               <span v-if="item.icon" :class="[item.icon, 'glyphicon']"></span>
               {{ item.title }}
             </div>
@@ -20,7 +20,7 @@
 
         <div class="btn-toolbar">
           <div class="btn-group btn-group-sm">
-            <div v-for="item in tier.features[2]" :class="[item.class, 'btn btn-default']" >
+            <div v-for="item in tier.features[2]" :class="[item.class, 'btn btn-primary']" >
               <span v-if="item.icon" :class="[item.icon, 'glyphicon']"></span>
               {{ item.title }}
             </div>

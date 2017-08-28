@@ -45,6 +45,9 @@
   background: darken($sidebar-bg, 5%);
   border: none;
   @extend .small;
+  .feather {
+    margin-right: 0.4rem;
+  }
 }
 
 #sidebar .list-group-item.tournament-title {

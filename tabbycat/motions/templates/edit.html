@@ -5,8 +5,8 @@
 {% block page-title %}Edit Motions for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% roundurl 'draw-display' %}">
-    <span class="icon glyphicon-chevron-left"></span> Back to Display
+  <a class="btn btn-primary submit-disable" href="{% roundurl 'draw-display' %}">
+    <i data-feather="chevron-left"></i> Back to Display
   </a>
   {% if round.motions_released %}
     <form class="" id="unreleaseForm" method="POST" action="{% roundurl 'motions-unrelease' %}">
@@ -30,7 +30,7 @@
     </form>
   {% endif %}
   {% if pref.enable_division_motions %}
-    <a href="{% roundurl 'motions_assign' %}" class="btn btn-default submit-disable">
+    <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary submit-disable">
       Assign Motions to Divisions
     </a>
   {% endif %}

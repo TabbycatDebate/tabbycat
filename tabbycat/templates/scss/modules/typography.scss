@@ -44,16 +44,3 @@ h6, .h6 {
 .alert-link {
   text-decoration: underline;
 }
-
-//------------------------------------------------------------------------------
-// Buttons
-//------------------------------------------------------------------------------
-
-// Actionable elements (buttons, navs) should be distinct
-.nav {
-  font-family: $headings-font-family;
-}
-
-.nav-pills a.btn-default {
-  color: theme-color("primary");
-}
