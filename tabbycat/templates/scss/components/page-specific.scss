@@ -3,19 +3,61 @@
 //------------------------------------------------------------------------------
 
 .round-progresses {
+  padding-bottom: 0px;
 
   .row:first-child {
     margin-bottom: 10px; // Space out the bars slightly
   }
 
-  .progress {
-    margin-bottom: 0; // Progress bars have bottom margins; need to offset
-  }
+}
 
-  .progress-empty span {
-    color: #000; // If its showing 0/x make the text visible and not flush
-    margin-left: 10px;
+.progress {
+  // margin-bottom: 0; // Progress bars have bottom margins; need to offset
+  height: 30px; // Increase height from standard
+  margin-top: 4px;
+  margin-bottom: 0px;
+
+  .progress-bar {
+    line-height: 30px;
   }
+}
+
+.progress-empty span {
+  color: #000; // If its showing 0/x make the text visible and not flush
+  margin-left: 10px;
+}
+
+//------------------------------------------------------------------------------
+// Motions Tab
+//------------------------------------------------------------------------------
+
+.progress-bar-og {
+  background-color: $brand-primary;
+}
+
+.progress-bar-oo {
+  background-color: $brand-warning;
+}
+
+.progress-bar-cg {
+  background-color: $break-cat-4;
+}
+
+.progress-bar-co {
+  background-color: $break-cat-2;
+}
+
+.progress-points-3 {
+  background: rgba(0,0,0,.9);
+}
+.progress-points-2 {
+  background: rgba(0,0,0,.7);
+}
+.progress-points-1 {
+  background: rgba(0,0,0,.5);
+}
+.progress-points-0 {
+  background: rgba(0,0,0,.3);
 }
 
 //------------------------------------------------------------------------------

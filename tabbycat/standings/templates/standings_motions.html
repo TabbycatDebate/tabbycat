@@ -1,0 +1,52 @@
+{% extends "standings_base.html" %}
+{% load debate_tags %}
+{% load static %}
+
+{% block page-title %}💭Motions Tab{% endblock %}
+{% block head-title %}<span class="emoji">💭</span>💭Motions Tab{% endblock %}
+
+{% block content %}
+
+  {% regroup analysed_motions by round as motions_by_round %}
+
+    {% for round, round_motions in motions_by_round %}
+      <div class="list-group">
+
+        <div class="list-group-item text-right disabled strong">
+          {{ round.name }}
+        </div>
+
+        {% for am in round_motions %}
+
+          <div class="list-group-item no-bottom-padding">
+
+            <h4 class="vertical-spacing">
+              {% if round_motions|length > 1 %}{{ am.motion.seq }}.{% endif %}
+              {{ am.motion }}
+            </h4>
+
+            <div class="row">
+
+              <div class="col-sm-{% if pref.motion_vetoes_enabled %}7{% else %}12{% endif %}">
+
+                {% if pref.teams_in_debate == 'two' %}
+                  {% include "balance_results_2vs2.html" %}
+                {% else %}
+                  {% include "balance_results_bp.html" %}
+                {% endif %}
+
+              </div>
+
+              {% if pref.motion_vetoes_enabled %}
+                {% include "balance_vetoes.html" %}
+              {% endif %}
+
+            </div>
+
+          </div>
+        {% endfor %}
+
+      </div>
+    {% endfor %}
+
+{% endblock content %}
