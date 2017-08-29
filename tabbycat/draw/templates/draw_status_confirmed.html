@@ -29,44 +29,94 @@
       {% endif %}
     {% endwith %}
   {% endif %}
-  {% if active_adjs.count < draw.count %}
-    <div class="alert alert-danger" id="">
-      There are currently fewer checked-in adjudicators than there are rooms.
-      <a href="{% roundurl 'availability-adjudicators' round %}" class="alert-link">
-        Check in some more adjudicators.
-      </a>
-    </div>
-  {% else %}
-    {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel %}
-      {% if no_chair > 0 or even_panel > 0 %}
-        <div class="alert alert-warning">
-          {% if no_chair > 0 %}
-            {{ no_chair|apnumber|capfirst }} debate{{ no_chair|pluralize:" does,s do" }} not have a chair.
-          {% endif %}
-          {% if even_panel > 0 %}
-            {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of adjudicators.
-          {% endif %}
-          <a href="{% roundurl 'edit-adj-allocation' %}" class="alert-link">
-            Allocate adjudicators.
-          </a>
-        </div>
-      {% endif %}
-    {% endwith %}
-  {% endif %}
-  {% with no_venue=round.num_debates_without_venue %}
-    {% if no_venue > 0 %}
-      <div class="alert alert-warning" id="">
-        {{ no_venue|apnumber|capfirst }} debate{{ no_venue|pluralize:" does,s do" }} not have a venue.
-        <a href="{% roundurl 'venues-edit' round %}" class="alert-link">
-          Allocate venues.
-        </a>
-      </div>
-    {% endif %}
-  {% endwith %}
 
 {% endblock %}
 
-{% block js %}
+{% block content %}
+
+  <div class="row mb-4">
+    <div class="col">
+      <div class="card">
+
+        <div class="card-body">
+          <h5 class="card-title mb-0">Adjudicator Allocations</h5>
+        </div>
+
+        {% if active_adjs.count < draw.count %}
+          <div class="list-group-item list-group-item-danger" id="">
+            <i data-feather="alert-circle"></i>
+            There are currently fewer checked-in adjudicators than there are rooms.
+            <a href="{% roundurl 'availability-adjudicators' round %}" class="alert-link">
+              Check in some more adjudicators.
+            </a>
+          </div>
+        {% else %}
+          {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel %}
+            {% if no_chair > 0 or even_panel > 0 %}
+              <div class="list-group-item list-group-item-warning">
+                <i data-feather="alert-circle"></i>
+                {% if no_chair > 0 %}
+                  {{ no_chair|apnumber|capfirst }} debate{{ no_chair|pluralize:" does,s do" }} not have a chair.
+                {% endif %}
+                {% if even_panel > 0 %}
+                  {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of adjudicators.
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endwith %}
+        {% endif %}
+
+        <div class="list-group list-group-flush">
+          <a href="{% roundurl 'edit-adj-allocation' %}" class="list-group-item list-group-call">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <i data-feather="{% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}check-{% else %}circle{% endif %}"></i>
+              </div>
+              <div class="col pl-0 pr-0">
+                Allocate Adjudicators
+              </div>
+              <div class="col-auto"><i data-feather="chevron-right"></i></div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+
+        <div class="card-body">
+          <h5 class="card-title mb-0">Venue Allocations</h5>
+        </div>
+        <div class="list-group list-group-flush">
+
+          {% with no_venue=round.num_debates_without_venue %}
+            {% if no_venue > 0 %}
+              <div class="list-group-item list-group-item-warning">
+                <i data-feather="alert-circle"></i>
+                {{ no_venue|apnumber|capfirst }} debate{{ no_venue|pluralize:" does,s do" }} not have a venue.
+              </div>
+            {% endif %}
+          {% endwith %}
+
+          <a href="{% roundurl 'venues-edit' round %}" class="list-group-item list-group-call">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <i data-feather="{% if no_venue > 0 %}check-{% endif %}circle"></i>
+              </div>
+              <div class="col pl-0 pr-0">
+                Allocate Venues
+              </div>
+              <div class="col-auto"><i data-feather="chevron-right"></i></div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 
   {{ block.super }}
 

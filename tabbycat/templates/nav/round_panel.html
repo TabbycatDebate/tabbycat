@@ -7,14 +7,15 @@
 {% endif %}
 
 <a href="#rh{{ r.id }}" data-toggle="collapse" data-parent="#sidebar"
-   class="list-group-item d-inline-block {% if r == current_round %}text-info{% elif round == r %}active{% endif %}" aria-expanded="false">
+   class="list-group-item d-inline-block {% if r == current_round %}{% elif round == r %}active{% endif %}" aria-expanded="false">
    <span class="circle-icon {% if r == current_round %}btn-info{% elif r.seq > current_round.seq %}btn-inactive{% elif r.seq < current_round.seq %}btn-success{% endif %}">
-   </span>{{ r.abbreviation }}
+   </span>
+   {{ r.abbreviation }}
    <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
    <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
 </a>
 
-<div class="collapse {% if r == round %}show{% endif %}" id="rh{{ r.id }}">
+<div class="collapse {% if r == round and round_nav %}show{% endif %}" id="rh{{ r.id }}">
 
   <a href="{% roundurl 'availability-index' r %}"
      class="list-group-item {% if availability_nav and round == r %}active{% endif %}"

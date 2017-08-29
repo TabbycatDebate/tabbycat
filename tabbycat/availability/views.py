@@ -26,9 +26,9 @@ logger = logging.getLogger(__name__)
 
 # These need to be entire strings, for translations
 CHECK_IN_TITLES = {
-    Team: ugettext_lazy("Team Check-Ins"),
-    Adjudicator: ugettext_lazy("Adjudicator Check-Ins"),
-    Venue: ugettext_lazy("Venue Check-Ins"),
+    Team: ugettext_lazy("Teams"),
+    Adjudicator: ugettext_lazy("Adjudicators"),
+    Venue: ugettext_lazy("Venues"),
 }
 
 

@@ -2,20 +2,24 @@
 {% load debate_tags static i18n %}
 
 {% block page-subnav-sections %}
-  <a href="{% roundurl 'availability-index' round %}" class="btn btn-primary">
-    <i data-feather="chevron-left"></i>{% trans "Overview" %}
+
+  <a href="{% roundurl 'availability-index' round %}" class="btn btn-outline-primary">
+    <i data-feather="chevron-left"></i>{% trans "Check-Ins" %}
   </a>
+
   {% if round.is_break_round and model == 'participants.Adjudicator' %}
-    <a class="btn btn-primary "
+    <a class="btn btn-primary"
        href="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
       {% trans "Check In All Breaking" %}
     </a>
   {% endif %}
+
   {% if round.seq > 1 %}
     <button id="select_previous" class="btn btn-primary" type="button">
       {% trans "Copy from Previous" %}
     </button>
   {% endif %}
+
   <div class="btn-group">
     <button id="select_all" class="btn btn-primary">
       {% trans "Select All" %}
@@ -24,7 +28,9 @@
       {% trans "Select None" %}
     </button>
   </div>
+
   {{ block.super }}
+
 {% endblock %}
 
 {% block page-subnav-actions %}

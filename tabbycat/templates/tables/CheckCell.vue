@@ -2,7 +2,7 @@
 
   <td :class="cellData['class'] ? cellData['class'] : null" @click="saveBreaking">
 
-    <span v-if="cellData['sort']" class="hidden">
+    <span v-if="cellData['sort']" hidden>
       {{ cellData["sort"] }} <!-- Sorting key -->
     </span>
     <input type="checkbox" v-model="cellData.breaking">

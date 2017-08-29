@@ -1,33 +1,29 @@
 <template>
-  <div>
+  <div class="row">
 
-    <div class="row">
-      <div class="col-md-12 half-mb-3 hidden-print">
-        <div class="input-group">
-          <input id="table-search" type="search"
-                 v-model="filterKey" @keyup="updateTableFilters"
-                 class="form-control table-search" placeholder="Find in Table">
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-search"></span>
-          </span>
-        </div>
+    <div class="col-12 mb-3 hidden-print">
+      <div class="input-group">
+        <input id="table-search" type="search"
+               v-model="filterKey" @keyup="updateTableFilters"
+               class="form-control" placeholder="Find in Table">
+        <span class="input-group-addon">
+          <i data-feather="search"></i>
+        </span>
       </div>
     </div>
 
-    <div class="row">
-      <div v-for="(table, i) in tablesData" :class="tableClass">
-        <div class="card table-container" :id="getTableId(i)">
-          <div class="panel-heading" v-if="table.title">
-            <h4 class="panel-title">{{ table.title }}</h4>
-          </div>
-          <div class="card-body">
-            <smart-table
-              :table-headers="table.head" :table-content="table.data"
-              :table-class="table.class"
-              :default-sort-key="table.sort_key"
-              :default-sort-order="table.sort_order">
-            </smart-table>
-          </div>
+    <div class="col" v-for="(table, i) in tablesData" :class="tableClass">
+      <div class="card" :id="getTableId(i)">
+        <div class="panel-heading" v-if="table.title">
+          <h4 class="panel-title">{{ table.title }}</h4>
+        </div>
+        <div class="card-body table-container p-0">
+          <smart-table
+            :table-headers="table.head" :table-content="table.data"
+            :table-class="table.class"
+            :default-sort-key="table.sort_key"
+            :default-sort-order="table.sort_order">
+          </smart-table>
         </div>
       </div>
     </div>

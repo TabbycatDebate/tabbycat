@@ -19,6 +19,14 @@
   padding-right: 0;
 }
 
+#messages-container .alert:last-child {
+  @extend .mb-4;
+}
+
+//------------------------------------------------------------------------------
+// Lists
+//------------------------------------------------------------------------------
+
 // Prominent call to actions to do stuff
 .list-group-call {
 
@@ -37,7 +45,7 @@
   .text-#{$color} {
     a {
       @include alert-variant(theme-color-level($color, -10), theme-color-level($color, -9), theme-color-level($color, 6));
-      border-bottom: 1px solid theme-color-level($color);
+      text-decoration: underline;
       background: none;
       font-weight: bold;
     }
@@ -48,20 +56,6 @@
 // Page Sub Navs
 //------------------------------------------------------------------------------
 
-.page-sub-nav {
-
-  .btn,
-  .input-group {
-    margin-bottom: $line-height-base;
-  }
-
-  .navbar-right {
-    padding-right: 15px; // compensate for the pull-rights negative margin
-  }
-
-  .dropdown,
-  form {
-    display: inline-block; // Need this to bring their alignment up
-  }
+.page-navs .btn {
+  @extend .mb-4; // Need to do here so they don't blow out on button-less pages
 }
-

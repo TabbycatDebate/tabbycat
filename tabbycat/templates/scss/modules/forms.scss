@@ -4,12 +4,17 @@
 
 // Actionable elements (buttons, navs) should be distinct
 .btn {
-  font-family: $headings-font-family;
-  font-weight: $headings-font-weight;
   padding: 10px 12px;
 
   .feather {
     margin-bottom: -3px;
+  }
+}
+
+// Use mostly transparent backgrounds rather than fully transparent
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    background-color: rgba(255,255,255,0.75);
   }
 }
 

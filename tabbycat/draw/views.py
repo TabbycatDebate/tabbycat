@@ -272,9 +272,10 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
 class AdminDrawWithDetailsView(AdminDrawView):
     detailed = True
+    page_emoji = '👀'
 
     def get_page_title(self):
-        return _("Draw with details for %(round)s") % {'round': self.get_round().name}
+        return _("Draw with details") % {'round': self.get_round().name}
 
 
 # ==============================================================================

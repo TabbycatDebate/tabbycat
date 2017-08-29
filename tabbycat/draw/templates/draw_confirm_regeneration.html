@@ -6,23 +6,22 @@
 {% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-primary " href="{% roundurl 'draw' %}">
-    <i data-feather="chevron-left"></i> Back to Draw
+  <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
+    <i data-feather="chevron-left"></i> Draw
   </a>
 {% endblock %}
 
 {% block head-title %}
-  <span class="emoji"> </span>Confirm Draw Deletion for {{ round.name }}
+  <span class="emoji">🔥</span>Confirm Draw Deletion for {{ round.name }}
 {% endblock %}
 
 {% block page-alerts %}
 
   <div class="alert alert-warning">
-    <i data-feather="alert-circle"></i>
-    <p>Do you really want to regenerate the draw for {{ round.name }}? This will
+    Do you really want to regenerate the draw for {{ round.name }}? This will
     delete <strong>all the debates in the current draw</strong> —  including
     their ballots and adjudicator allocations — and cannot be undone.
-    You probably don't want to do this if any results have been entered!</p>
+    You probably don't want to do this if any results have been entered!
   </div>
 
   <form class="" method="POST" action="{% roundurl 'draw-regenerate' %}">

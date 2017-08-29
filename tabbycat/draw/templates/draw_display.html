@@ -7,12 +7,12 @@
 {% block page-subnav-sections %}
 {% if user.is_superuser %}
 
-    <a class="btn btn-primary " href="{% roundurl 'draw' %}">
-      <span class="icon glyphicon-chevron-left"></span> Back to Draw
+    <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
+      <i data-feather="chevron-left"></i> Draw
     </a>
 
     {% if not pref.enable_debate_scheduling %}
-      <a class="btn {% if round.starts_at %}btn-danger{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#editStartTime">
+      <a href="" class="btn {% if round.starts_at %}btn-danger{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#editStartTime">
         {% if round.starts_at %}
           Debates Start at {{ round.starts_at }}
         {% else %}
@@ -20,7 +20,7 @@
         {% endif %}
       </a>
     {% else %}
-      <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-primary ">
+      <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary ">
         Schedule Debates
       </a>
     {% endif %}
@@ -51,7 +51,7 @@
 
 {% block page-subnav-actions %}
 {% if user.is_superuser %}
-  <a class="btn btn-success " href="{% roundurl 'motions-edit' %}">
+  <a class="btn btn-outline-success " href="{% roundurl 'motions-edit' %}">
     Enter Motions <i data-feather="chevron-right"></i>
   </a>
 {% endif %}

@@ -29,7 +29,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         status_header = {
             'key': key,
             'tooltip': "Status of this debate's ballot",
-            'icon': "glyphicon-th-list",
+            'icon': "crosshair",
         }
         status_cell = [{
             'icon': self.get_status_meta(debate)[0],

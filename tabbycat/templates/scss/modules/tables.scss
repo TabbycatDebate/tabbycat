@@ -2,9 +2,19 @@
 // Overall Layout
 //------------------------------------------------------------------------------
 
-.card-body .table {
+.table-container {
+  margin: 8px;
+}
+
+.table {
+
+  font-size: $font-size-sm;
   background: $alt-bg; // For when tables blow out on mobile
-  margin-bottom: 0; // Panel body has its own bottom padding
+
+  th {
+    border-top: none;
+  }
+
   > tbody > tr:hover td {
     background-color: $table-bg-hover;
 
@@ -22,15 +32,6 @@
   }
 }
 
-// For the quick search; needs to fit within the row
-.table-search {
-  height: 41px;
-  border-width: 1px;
-}
-
-.table-container {
-  overflow-y: scroll; // Don't blow out page width when overflows occur
-}
 
 //------------------------------------------------------------------------------
 // HEADER STYLES
@@ -39,18 +40,15 @@
 thead,
 .thead {
   @extend .subtitle;
-
   background: $alt-bg; // Fixed header needs a background while scrolling
-  line-height: 18px; // Otherwise the border is too clone to the text
-
 }
 
 .vue-sortable {
   white-space: nowrap; // Stop a toggle being pushed into 2 rows
-  min-width: 28px; // Don't let the sort keys resize widths
+  min-width: 30px; // Don't let the sort keys resize widths
 
   .vue-sort-key .feather {
-    margin-left: -3px;
+    margin-left: -5px;
     margin-right: -5px
   }
 
@@ -119,7 +117,14 @@ thead,
 .table > thead > tr > th,
 .table > tbody > tr > td {
   padding: 8px 4px; // Narrow spacing post-BP
+
+  .feather {
+    width: 14px;
+    height: 14px;
+    margin-bottom: -3px;
+  }
 }
+
 .team-name {
   min-width: 125px; // BP team cells need a good width when using abbreviations
 }
@@ -156,19 +161,6 @@ thead,
 
 // For Phones
 @media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
-
-  .table-container {
-    margin-right: -15px;
-    margin-left: -15px;
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
-
-    .card-body {
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
 
   .team-name .emoji {
     display: block; // Fix ugly wrapping and make names easier to identify

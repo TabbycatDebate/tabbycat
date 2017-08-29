@@ -67,6 +67,7 @@ def get_menu_highlight(request):
             elif "diversity" in path:
                 menu['standings_diversity_nav'] = True
         elif "round" in path:
+            menu['round_nav'] = True
             if "availability" in path:
                 menu['availability_nav'] = True
             elif "display" in path:

@@ -91,7 +91,7 @@ class BaseTableBuilder:
         - `data` must be an iterable of booleans.
         """
         cells = [{
-            'icon': 'glyphicon-ok' if datum else '',
+            'icon': 'check' if datum else '',
             'sort':  1 if datum else 2,
         } for datum in data]
         self.add_column(header, cells)
@@ -247,11 +247,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         }
 
         if ts.win is True:
-            cell['icon'] = "glyphicon-arrow-up text-success"
+            cell['icon'] = "arrow-up text-success"
             cell['sort'] = 1
             cell['popover']['title'] = _("Won against %(team)s") % {'team': opp.long_name}
         elif ts.win is False:
-            cell['icon'] = "glyphicon-arrow-down text-danger"
+            cell['icon'] = "arrow-down text-danger"
             cell['sort'] = 2
             cell['popover']['title'] = _("Lost to %(team)s") % {'team': opp.long_name}
         else: # None
@@ -320,7 +320,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_tournament_column(self, tournaments, key=ugettext_lazy("Tournament")):
         header = {
-            'key': key, 'icon': 'glyphicon-tags', 'tooltip': 'Tournament'
+            'key': key, 'icon': 'tag', 'tooltip': 'Tournament'
         }
         data = [{
             'sort': t.seq, 'text': t.short_name, 'tooltip': t.short_name,
@@ -329,7 +329,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_round_column(self, rounds, key=ugettext_lazy("Round")):
         header = {
-            'key': key, 'icon': 'glyphicon-time', 'tooltip': 'Round'
+            'key': key, 'icon': 'clock', 'tooltip': 'Round'
         }
         data = [{
             'sort': round.seq, 'text': round.abbreviation, 'tooltip': round.name,
@@ -474,7 +474,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if show_divisions and self.tournament.pref('enable_divisions'):
             self.add_column({
                 'key': _("Division"),
-                'icon': 'glyphicon-th-list',
+                'icon': 'layer',
                 'tooltip': _("Division"),
             }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
 
@@ -566,7 +566,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
                 divisions_header = {
                     'key': _("Division"),
-                    'icon': 'glyphicon-th-list',
+                    'icon': 'layer',
                     'tooltip': _("Division"),
                 }
                 divisions_data = ['D' + d.division.name if d.division else '' for d in debates]
@@ -728,7 +728,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(state_header, state_data)
 
     def add_debate_ballot_link_column(self, debates):
-        ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
+        ballot_links_header = {'key': "Ballot", 'icon': 'search'}
 
         if self.admin:
             ballot_links_data = [{
@@ -738,7 +738,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(ballot_links_header, ballot_links_data)
 
         elif self.tournament.pref('ballots_released'):
-            ballot_links_header = {'key': "Ballot", 'icon': 'glyphicon-search'}
+            ballot_links_header = {'key': "Ballot", 'icon': 'search'}
             ballot_links_data = [{
                 'text': _("View Ballot"),
                 'link': reverse_tournament('results-public-scoresheet-view', self.tournament, kwargs={'pk': debate.id})
@@ -778,10 +778,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
                 if debateteam.win is True:
                     cell['popover']['title'] += "—won"
-                    cell['icon'] = "glyphicon-arrow-up text-success"
+                    cell['icon'] = "arrow-up text-success"
                 elif debateteam.win is False:
                     cell['popover']['title'] += "—lost"
-                    cell['icon'] = "glyphicon-arrow-down text-danger"
+                    cell['icon'] = "arrow-down text-danger"
                 else: # None
                     cell['popover']['title'] += "—no result"
                     cell['icon'] = ""

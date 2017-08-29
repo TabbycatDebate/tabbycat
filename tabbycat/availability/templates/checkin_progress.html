@@ -3,36 +3,37 @@
 <div class="card">
 
   <div class="card-body round-progresses">
+    <h5 class="card-title">{{ ct.title }}</h5>
+  </div>
 
-    <h5 class="card-title">{{ ct.type }} Check-Ins</h5>
+  <div class="list-group list-group-flush">
 
-    <div class="row">
-
-      <div class="col-md-1 col-sm-1">
-        <h6>{{ round.abbreviation }}</h6>
+    <div class="list-group-item">
+      <div class="d-flex justify-content-end">
+        <span class="mr-auto">{{ round.abbreviation }}</span>
+        <strong>{{ ct.in_now }}/{{ ct.total }}</strong>
       </div>
-      <div class="col-md-11 col-sm-11">
-        <div class="progress">
-          <div class="progress-bar progress-bar-success
-                      {% if ct.in_now == 0 %}progress-empty{% endif %}"
-               role="progressbar" aria-valuenow="{{ ct.in_now }}"
-               aria-valuemin="0" aria-valuemax="{{ ct.total }}"
-               style="width: {% percentage ct.in_now ct.total %}%;">
-            <span>{{ ct.in_now }}/{{ ct.total }}</span>
-          </div>
+      <div class="progress mb-3">
+        <div class="progress-bar bg-success
+                    {% if ct.in_now == 0 %}progress-empty{% endif %}"
+             role="progressbar" aria-valuenow="{{ ct.in_now }}"
+             aria-valuemin="0" aria-valuemax="{{ ct.total }}"
+             style="width: {% percentage ct.in_now ct.total %}%;">
+          <span></span>
         </div>
       </div>
-
     </div>
 
-    <div class="row">
+    {% if ct.in_before is not None %}
+      <div class="list-group-item">
+        <div class="row">
 
-      {% if ct.in_before is not None %}
-        <div class="col-md-1 col-sm-1">{{ round.prev.abbreviation }}</div>
-          <h6>{{ round.prev.abbreviation }}
+        <div class="col-lg-3 col-12">
+          {{ round.prev.abbreviation }}
         </div>
-        <div class="col-md-11 col-sm-11">
-          <div class="progress">
+
+        <div class="col-lg-9 col-12">
+          <div class="progress mb-3">
             <div class="progress-bar progress-bar-info
                         {% if ct.in_before == 0 %}progress-empty{% endif %}"
                  role="progressbar" aria-valuenow="{{ ct.in_now }}"
@@ -42,9 +43,10 @@
             </div>
           </div>
         </div>
-      {% endif %}
 
-    </div>
+        </h6>
+      </div>
+    {% endif %}
 
     {% if ct.message %}
       <div class="col-md-5">
@@ -52,5 +54,22 @@
       </div>
     {% endif %}
 
+    <a class="list-group-item {% if ct.in_now == 0 %}list-group-call{% else %}bg-info text-white{% endif %}"
+       href="{% if forloop.counter == 1 and not round.is_break_round %}{% roundurl 'availability-teams' round %}{% elif forloop.counter == 2 %}{% roundurl 'availability-adjudicators' round %}{% elif forloop.counter == 3 %}{% roundurl 'availability-venues' round %}{% endif %}">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <i data-feather="{% if ct.in_now != 0 %}check-{% endif %}circle"></i>
+        </div>
+        <div class="col pl-0 pr-0">
+          {% trans "Check In" %}
+        </div>
+        <div class="col-auto"><i data-feather="chevron-right"></i></div>
+      </div>
+    </a>
+
+
+
+
   </div>
+
 </div>

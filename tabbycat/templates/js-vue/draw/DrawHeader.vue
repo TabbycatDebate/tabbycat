@@ -12,7 +12,7 @@
     <slot name="hcats">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('liveness')"
            data-toggle="tooltip" title="How many break categories are live in this room">
-        <span class="glyphicon glyphicon-heart"></span>
+        <i data-feather="heart"></i>
         <span :class="sortClasses('liveness')"></span>
       </div>
     </slot>
@@ -20,7 +20,7 @@
     <slot name="himportance">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('importance')"
            data-toggle="tooltip" title="The assigned priority value of this debate">
-        <span class="glyphicon glyphicon-fire"></span>
+        <i data-feather="thermometer"></i>
         <span :class="sortClasses('importance')"></span>
       </div>
     </slot>

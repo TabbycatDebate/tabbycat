@@ -79,7 +79,7 @@
                     <span>{{ category.eligible }}/{{ teams_in_tournament }}</span>
                   </div>
                 {% else %}
-                  <div class="progress-bar progress-bar-success
+                  <div class="progress-bar bg-success
                        {% if category.breaking == 0 %}progress-empty{% endif %}"
                        role="progressbar"
                        style="width: {% percentage category.breaking teams_in_tournament %}%;">

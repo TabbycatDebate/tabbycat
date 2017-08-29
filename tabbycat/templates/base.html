@@ -79,14 +79,12 @@
     {% endblock header %}
 
     {% block subheader %}
-      <div class="row">
-        <div class="col page-sub-nav pb-3">
-          <ul class="nav nav-pills navbar-left">
-            {% block page-subnav-sections %}{% endblock %}
-          </ul>
-          <div class="nav btn-group navbar-right">
-            {% block page-subnav-actions %}{% endblock %}
-          </div>
+      <div class="row page-navs">
+        <div class="col-md-auto col mr-auto mb-6">
+          {% block page-subnav-sections %}{% endblock %}
+        </div>
+        <div class="col-md-auto col mb-6 justify-content-end">
+          {% block page-subnav-actions %}{% endblock %}
         </div>
       </div>
 
