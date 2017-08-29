@@ -25,10 +25,6 @@ $(document).ready(function(){
   $('[data-toggle=tooltip]').tooltip({
     'html': true
   });
-  // Disable buttons post submission
-  $('.submit-disable').on('click', function () {
-    var $btn = $(this).button('loading');
-  });
   // Make larger click targets for checkboxes in tables
   $('.checkbox-target').on('click', function (e) {
     if (e.target === this) { // Don't trigger when clicking the input itself
@@ -37,7 +33,13 @@ $(document).ready(function(){
       checkBox.trigger("change");
     }
   });
+  // Feather shim for icons
   feather.replace()
+  // Remove the pre-expanded sidebar states for mobile (they overlap)
+  if ($(window).width() < 768) {
+    $("#sidebar .collapse").removeClass("show");
+  };
+
 });
 
 // Add alerts programmatically

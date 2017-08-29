@@ -5,7 +5,7 @@
 {% block page-title %}❔ Confirm {{ preset_title }} Presets{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-primary submit-disable"
+  <a class="btn btn-outline-primary "
      href="{% tournamenturl 'options-tournament-index' %}">
     <i data-feather="chevron-left"></i> Back to Configuration
   </a>
@@ -13,9 +13,8 @@
 
 {% block content %}
 
-  {% include "preferences_changed.html" with preferences=changed_preferences title="Preferences that will change" %}
-
   {% if unchanged_preferences.length > 0 %}
+
     <ul class="list-group">
       <li class="list-group-item">
         <span class="badge">{{ unchanged_preferences.length }}</span>
@@ -30,16 +29,10 @@
         </li>
       {% endfor %}
     </ul>
+
   {% endif %}
 
-  <button id="applyPresets" class="btn btn-success btn-block submit-disable"
-          data-loading-text="Saving...">
-    Apply {{ preset_title }} Presets
-  </button>
-
-  <form id="applyPresetsForm" method="POST">
-    {% csrf_token %}
-  </form>
+  {% include "preferences_changed.html" with preferences=changed_preferences title="Preferences that will change" %}
 
 {% endblock content %}
 

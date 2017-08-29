@@ -16,7 +16,7 @@
           <h3>Change Test Score</h3>
         </div>
         <div class="modal-body">
-          <form id="testScoreForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-test-score' %}" class="form-horizontal">
+          <form id="testScoreForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-test-score' %}" class="">
             {% csrf_token %}
             <input id="id_adj_id" name="adj_id" type="hidden" value="" />
             <div class="form-group">
@@ -52,7 +52,7 @@
             <h3>Edit Note</h3>
           </div>
           <div class="modal-body">
-            <form id="adjNoteForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-note' %}" class="form-horizontal">
+            <form id="adjNoteForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-note' %}" class="">
               {% csrf_token %}
               <input id="id_adj_id_note" name="adj_id" type="hidden" value="" />
               <div class="form-group">

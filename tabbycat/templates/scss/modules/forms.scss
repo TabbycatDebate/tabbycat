@@ -7,6 +7,10 @@
   font-family: $headings-font-family;
   font-weight: $headings-font-weight;
   padding: 10px 12px;
+
+  .feather {
+    margin-bottom: -3px;
+  }
 }
 
 .btn[data-toggle='tooltip'] span {

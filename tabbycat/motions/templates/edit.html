@@ -5,20 +5,20 @@
 {% block page-title %}Edit Motions for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-primary submit-disable" href="{% roundurl 'draw-display' %}">
+  <a class="btn btn-primary " href="{% roundurl 'draw-display' %}">
     <i data-feather="chevron-left"></i> Back to Display
   </a>
   {% if round.motions_released %}
     <form class="" id="unreleaseForm" method="POST" action="{% roundurl 'motions-unrelease' %}">
       {% csrf_token %}
-      <button class="btn btn-danger submit-disable" type="submit">
+      <button class="btn btn-danger " type="submit">
         Unrelease Motions to Public
       </button>
     </form>
   {% else %}
     <form class="" id="releaseForm" method="POST" action="{% roundurl 'motions-release' %}">
       {% csrf_token %}
-      <button class="btn btn-primary submit-disable" type="submit"
+      <button class="btn btn-primary " type="submit"
         data-toggle="tooltip" data-placement="bottom"
         title="Releasing motions makes them available the public-facing pages of
         this site. If your tournament is configured to display a running
@@ -30,7 +30,7 @@
     </form>
   {% endif %}
   {% if pref.enable_division_motions %}
-    <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary submit-disable">
+    <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary ">
       Assign Motions to Divisions
     </a>
   {% endif %}
@@ -67,7 +67,7 @@
   </div>
   {% endif %}
 
-  <form method="POST" action="" class="form-horizontal">
+  <form method="POST" action="" class="">
     {% csrf_token %}
     <div class="card">
       <ul class="list-group">

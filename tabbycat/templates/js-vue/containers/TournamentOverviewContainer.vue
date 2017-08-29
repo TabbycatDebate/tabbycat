@@ -19,7 +19,7 @@
       <div class="col mt-3">
         <div class="card border-info">
           <div class="card-body">
-            <h5 class="text-info mb-0">Latest Actions</h5>
+            <h5 class="text-info mb-0"><i data-feather="clock"></i> Latest Actions</h5>
           </div>
           <ul class="list-group list-group-flush">
             <updates-list v-for="action in latestActions" :key="action.timestamp"
@@ -33,7 +33,7 @@
       <div class="col mt-3">
         <div class="card border-info">
           <div class="card-body">
-            <h5 class="text-info mb-0">Latest Results</h5>
+            <h5 class="text-info mb-0"><i data-feather="clock"></i> Latest Results</h5>
           </div>
           <ul class="list-group list-group-flush">
             <updates-list v-for="result in latestResults" :key="result.timestamp"

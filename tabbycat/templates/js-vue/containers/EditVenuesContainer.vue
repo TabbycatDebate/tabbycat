@@ -2,10 +2,10 @@
   <div class="col-md-12 draw-container">
 
     <div class="row nav-pills">
-      <a class="btn btn-primary submit-disable" :href="roundInfo.backUrl">
+      <a class="btn btn-primary " :href="roundInfo.backUrl">
         <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
       </a>
-      <button class="btn btn-primary submit-disable" @click="createAutoAllocation">
+      <button class="btn btn-primary " @click="createAutoAllocation">
         Auto Allocate
       </button>
       <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>

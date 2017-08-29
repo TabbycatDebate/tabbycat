@@ -8,7 +8,7 @@
 
 {% block page-subnav-sections %}
 
-  <a class="btn btn-primary submit-disable"
+  <a class="btn btn-outline-primary"
      href="{% tournamenturl 'options-tournament-index' %}">
     <i data-feather="chevron-left"></i> Back to Configuration
   </a>
@@ -24,30 +24,31 @@
 {% block content %}
 
   <div class="card">
-    <form action="" enctype="multipart/form-data" method="post" class="card-body form-horizontal">
-      {% csrf_token %}
-      {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">
-            {{ field.label }} {{ field.section.name }}
-          </label>
-          <div class="col-sm-2">
+
+    <form action="" enctype="multipart/form-data" method="post" class="card-body">
+
+      <div class="row">
+
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="form-group mt-3 col-lg-6">
+            <label for="{{ field.id_for_label }}">
+              {{ field.label }} {{ field.section.name }}
+            </label>
             {{field|addcss:"form-control"}}
+            <small class="form-text text-muted">{{ field.help_text }}</span></small>
+            {{ field.errors }}
           </div>
-          <div class="col-sm-7">
-            <span >
-              {{ field.help_text }}
-            </span>
-            {% if field.errors %}
-              <div class="text-danger">{{ field.errors }}</div>
-            {% endif %}
-          </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+
+      </div>
+      <hr>
+
       <button type="submit" class="btn btn-success btn-block">
         Save Configuration
       </button>
     </form>
+
   </div>
 
 {% endblock content %}

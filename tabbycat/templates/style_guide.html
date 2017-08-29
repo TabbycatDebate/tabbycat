@@ -60,7 +60,7 @@
 
 <div class="list-group">
   <a href="" class="list-group-item list-group-call">
-    <div class="row align-items-center ">
+    <div class="row align-items-center">
       <div class="col-auto"><i data-feather="check-circle"></i></div>
       <div class="col pl-0 pr-0">
         This is a call to action. Call to actions are always green linked elements
@@ -69,6 +69,23 @@
     </div>
   </a>
 </div>
+
+
+<h6 class="mt-5">Cards (for sections of info or link blocks)</h6>
+
+<div class="card mt-3">
+  <div class="card-body text-info border-info">
+    <h4 class="card-title"><i data-feather="clock"></i>Info Title</h4>
+     Info description
+  </div>
+  <ul class="list-group list-group-flush">
+    <a href="" class="list-group-item list-group-item-action">
+      <h5 class="list-group-item-heading">Title</h5>
+      Body
+    </a>
+  </ul>
+</div>
+
 
 <h6 class="mt-5">Action Buttons (for forms or headers with actions)</h6>
 
@@ -117,17 +134,32 @@
       This is an error message raised by the form
     </div>
 
-    <div class="mb-3">
+    <div class="form-group mt-3">
       <label for="{{ field.id_for_label }}">Label A</label>
       <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
       <small class="form-text text-muted">Hint for form field</small>
     </div>
 
-    <div class="mb-3">
+    <div class="form-group mt-3">
       <label for="{{ field.id_for_label }}">Label B</label>
       <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
       <small class="form-text text-muted">Hint for form field</small>
       <ul class="errorlist"><li>Error for form field</li></ul>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-lg-6">
+        <label for="{{ field.id_for_label }}">Label C</label>
+        <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
+      </div>
+      <div class="form-group col-lg-6">
+        <label for="{{ field.id_for_label }}">Label D</label>
+        <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
+      </div>
+      <div class="form-group col-lg-6">
+        <label for="{{ field.id_for_label }}">Label E</label>
+        <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
+      </div>
     </div>
 
     <hr>
@@ -135,6 +167,7 @@
     <button type="submit" name="continue" class="btn btn-block btn-success mb-3">
       Action Button
     </button>
+
     <div class="text-center">
       <a href="">Alternate Option</a>
     </div>

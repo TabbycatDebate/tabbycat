@@ -46,6 +46,8 @@ For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `AirBnB jav
 
     $ npm run eslint
 
+For the front end interface design there is a style guide available at "/style/" once a tournament has been setup.
+
 Versioning convention
 =====================
 

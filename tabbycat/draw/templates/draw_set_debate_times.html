@@ -6,13 +6,13 @@
 {% block sub-title %}for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-primary submit-disable" href="{% roundurl 'draw' %}">
+  <a class="btn btn-primary " href="{% roundurl 'draw' %}">
     <i data-feather="chevron-left"></i> Back to Draw
   </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a href="{% roundurl 'draw-schedule-apply' %}" class="btn btn-success submit-disable" id="assignTimes">
+  <a href="{% roundurl 'draw-schedule-apply' %}" class="btn btn-success " id="assignTimes">
     <span class="icon glyphicon-floppy-disk"></span> Apply Times to Debates
   </a>
 {% endblock %}

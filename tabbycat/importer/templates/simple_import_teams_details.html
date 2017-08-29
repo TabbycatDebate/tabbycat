@@ -13,7 +13,7 @@
   {{ wizard.form.management_form }}
 
   <div class="row">
-    <div class="form-horizontal col-md-12 page-sub-nav">
+    <div class=" col-md-12 page-sub-nav">
       <button type="submit" class="btn btn-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
     </div>
   </div>
@@ -44,7 +44,7 @@
 
             {% for form in forms.list %}
 
-              <div class="form-horizontal">
+              <div class="">
 
                 {% if form.non_field_errors %}
                   <div class="col-sm-12">
@@ -81,7 +81,7 @@
   {% endfor %}
 
   <div class="row">
-    <div class=" form-horizontal col-md-12">
+    <div class="  col-md-12">
       <input type="submit" class="btn btn-block btn-success" value="{% trans 'Save All Teams' %}" />
     </div>
   </div>

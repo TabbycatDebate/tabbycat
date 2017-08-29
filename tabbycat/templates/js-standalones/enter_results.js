@@ -171,7 +171,7 @@ function update_speaker() {
 
 $("#resultsForm").validate({
   invalidHandler: function(event, validator) {
-    $('.submit-disable').button('reset');
+    $('.').button('reset');
   }
 });
 

@@ -2,31 +2,31 @@
 {% load debate_tags %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-primary submit-disable" href="{% roundurl 'availability-index' %}">
+  <a class="btn btn-primary " href="{% roundurl 'availability-index' %}">
     <i data-feather="chevron-left"></i> Back to Check-Ins
   </a>
 
   <div class="btn-group">
-    <a class="btn btn-primary submit-disable" href="{% roundurl 'edit-adj-allocation' %}" class="btn btn-primary submit-disable">
+    <a class="btn btn-primary " href="{% roundurl 'edit-adj-allocation' %}" class="btn btn-primary ">
       Allocate Adjudicators
     </a>
-    <a href="{% roundurl 'venues-edit' round %}" class="btn btn-primary submit-disable">
+    <a href="{% roundurl 'venues-edit' round %}" class="btn btn-primary ">
       Allocate Venues
     </a>
   </div>
   {% if pref.allocation_confirmations %}
-    <a href="{% roundurl 'draw-schedule-confirmations' %}" class="btn btn-primary submit-disable">
+    <a href="{% roundurl 'draw-schedule-confirmations' %}" class="btn btn-primary ">
       Confirm Shifts
     </a>
   {% endif %}
   <div class="btn-group">
-    <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-primary submit-disable">
+    <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-primary ">
       Edit Matchups
     </a>
-    <a class="btn btn-primary submit-disable" href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-primary submit-disable">
+    <a class="btn btn-primary " href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-primary ">
       Remake Draw
     </a>
-    <a class="btn btn-primary submit-disable" href="{% roundurl 'draw-details' %}">
+    <a class="btn btn-primary " href="{% roundurl 'draw-details' %}">
       Draw Details
     </a>
   </div>

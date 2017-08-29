@@ -2,7 +2,7 @@
 {% load debate_tags static i18n %}
 
 {% block page-subnav-actions %}
-  <button class="btn btn-success submit-disable" id="submit-nav" data-loading-text="{% trans "Saving…" %}">
+  <button class="btn btn-success " id="submit-nav" data-loading-text="{% trans "Saving…" %}">
     <span class="icon glyphicon-floppy-disk"></span> {% block save-button-text %}{% endblock %}
   </button>
 {% endblock %}
@@ -19,7 +19,7 @@
 
 {% block content %}
 
-  <form id="eligibilityForm" action="." method="POST" class="form-horizontal">
+  <form id="eligibilityForm" action="." method="POST" class="">
     {% csrf_token %}
     <div class="card">
       <div class="card-body">

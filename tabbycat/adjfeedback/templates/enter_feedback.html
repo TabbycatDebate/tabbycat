@@ -33,7 +33,7 @@
       {% if pref.feedback_introduction %}
         <p>{{ pref.feedback_introduction|safe }}</p>
       {% endif %}
-      <form id="feedbackForm" action="" method="POST" class="form-horizontal">
+      <form id="feedbackForm" action="" method="POST" class="">
         {% csrf_token %}
         {% for field in form %}
         <div class="form-group">

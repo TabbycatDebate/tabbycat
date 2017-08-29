@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-primary submit-disable"
+  <a class="btn btn-primary "
      href="{% tournamenturl 'options-tournament-index' %}">
     <i data-feather="chevron-left"></i> Back to Configuration
   </a>
@@ -67,7 +67,7 @@
       {% endif %}
 
       <div class="form-group">
-        <div class="form-horizontal row">
+        <div class=" row">
           <label for="{{ form.current_round.id_for_label }}" class="col-sm-3 control-label">
             {{ form.current_round.label }}
           </label>

@@ -14,7 +14,7 @@
   {{ wizard.form.management_form }}
 
   <div class="row">
-    <div class="form-horizontal col-md-12 page-sub-nav">
+    <div class=" col-md-12 page-sub-nav">
       <button type="submit" class="btn btn-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
     </div>
   </div>
@@ -33,7 +33,7 @@
       <div class="panel">
         <div class="card-body">
 
-          <div class=" form-horizontal">
+          <div class=" ">
             {% if form.non_field_errors %}
               <div class="col-sm-12">
                 {{ form.non_field_errors }}
@@ -62,7 +62,7 @@
   </div>
 
   <div class="row">
-    <div class=" form-horizontal col-md-12">
+    <div class="  col-md-12">
       <input type="submit" class="btn btn-success btn-block" value="{% trans 'Save All Institutions' %}" />
     </div>
   </div>
