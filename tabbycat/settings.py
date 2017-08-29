@@ -349,6 +349,6 @@ else:
         LOCAL_SETTINGS
     except NameError:
         try:
-            from local_settings import *   # noqa: F401, F403
+            from local_settings import *   # noqa
         except ImportError:
             pass
