@@ -34,6 +34,9 @@ urlpatterns = [
     url(r'^donations/',
         tournaments.views.DonationsView.as_view(),
         name='donations'),
+    url(r'^style/$',
+        tournaments.views.StyleGuideView.as_view(),
+        name='style-guide'),
 
     # Admin area
     url(r'^jet/',

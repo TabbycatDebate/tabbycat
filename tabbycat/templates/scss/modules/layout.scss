@@ -21,15 +21,27 @@
 
 // Prominent call to actions to do stuff
 .list-group-call {
+
   @extend .bg-success;
   @extend .text-white;
-  @extend .strong
+  @extend .strong;
+
+  .feather {
+    margin-right: 0px;
+  }
 }
 
-// Chevrons used to indicate advance staes
-.advance {
-  float: right;
-  margin-top: 3px;
+// Override some boostrap color defaults and automatically add color variations
+@each $color, $value in $theme-colors {
+  .alert-#{$color},
+  .text-#{$color} {
+    a {
+      @include alert-variant(theme-color-level($color, -10), theme-color-level($color, -9), theme-color-level($color, 6));
+      border-bottom: 1px solid theme-color-level($color);
+      background: none;
+      font-weight: bold;
+    }
+  }
 }
 
 //------------------------------------------------------------------------------

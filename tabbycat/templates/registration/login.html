@@ -31,18 +31,27 @@
             {% trans "Log in to Tabbycat" context "page title" %}
           </h4>
 
+          <hr>
+
           <form id="login" action="." method="POST">
             {% csrf_token %}
             {% if form.errors %}
               <div class="alert alert-danger">
+                <i data-feather="alert-circle"></i>
                 {% trans "Your username and password didn't match." %}
               </div>
             {% endif %}
             {% if next %}
               {% if user.is_authenticated %}
-                <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
+                <div class="alert alert-warning">
+                  <i data-feather="alert-circle"></i>
+                  {% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}
+                </div>
               {% else %}
-                <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>
+                <div class="alert alert-warning">
+                  <i data-feather="alert-circle"></i>
+                  {% trans "Please log in to see this page." %}
+                </div>
               {% endif %}
             {% endif %}
 
@@ -53,6 +62,8 @@
               {{ field.errors }}
             </div>
             {% endfor %}
+
+            <hr>
 
             <button type="submit" name="continue" class="btn btn-block btn-success mb-3">
               {% trans "Log In" context "button" %}

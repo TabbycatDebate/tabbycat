@@ -455,7 +455,7 @@ msgstr ""
 
 #: tournaments/templates/create_tournament.html:84
 msgid "Load Demo Data (10-team tournament)"
-msgstr "Charger les données démonstratives (tournoi avec 10 équipes)"
+msgstr "Charger les démonstratives (tournoi avec 10 équipes)"
 
 #: tournaments/templates/create_tournament.html:90
 #: tournaments/templates/create_tournament.html:107
@@ -466,7 +466,7 @@ msgstr ""
 
 #: tournaments/templates/create_tournament.html:101
 msgid "Load Demo Data (24-team tournament)"
-msgstr "Charger les données démonstratives (tournoi avec 24 équipes)"
+msgstr "Charger les démonstratives (tournoi avec 24 équipes)"
 
 #: tournaments/templates/donations.html:4
 msgid "Donate to Tabbycat"

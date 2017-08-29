@@ -47,7 +47,7 @@ body {
 @include media-breakpoint-up(sm) {
   // Applies just to tablets
   .footer {
-    height: $footer-height * 1.4;
+    height: $footer-height * 0.95;
   }
 }
 

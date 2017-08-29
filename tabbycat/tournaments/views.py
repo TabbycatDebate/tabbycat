@@ -23,7 +23,7 @@ from importer.base import TournamentDataImporterError
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import CacheMixin, PostOnlyRedirectView, TabbycatPageTitlesMixin, SuperuserRequiredMixin
 
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
@@ -157,7 +157,7 @@ class BlankSiteStartView(FormView):
         form.save()
         user = authenticate(username=self.request.POST['username'], password=self.request.POST['password1'])
         login(self.request, user)
-        messages.success(self.request, "Welcome! You've created an account for %s." % user.username)
+        messages.info(self.request, "Welcome! You've created an account for %s." % user.username)
 
         return super().form_valid(form)
 
@@ -269,3 +269,8 @@ class DonationsView(CacheMixin, TemplateView):
 
 class TournamentDonationsView(TournamentMixin, TemplateView):
     template_name = 'donations.html'
+
+
+class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
+    template_name = 'style_guide.html'
+    page_subtitle = 'Contextual sub title'
