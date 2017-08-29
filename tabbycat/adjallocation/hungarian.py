@@ -77,7 +77,7 @@ class HungarianAllocator(Allocator):
             solos = voting[:n_debates]
             panellists = []
         else:
-            n_expected_solos = n_debates - (n_voting - n_debates) // 2
+            n_expected_solos = max(n_debates - (n_voting - n_debates) // 2, 0)
             solos = voting[:n_expected_solos]
             panellists = voting[n_expected_solos:]
 

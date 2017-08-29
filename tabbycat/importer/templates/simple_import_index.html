@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">📑</span>Simple Importer{% endblock %}
-{% block page-title %}📑 Simple Importer{% endblock %}
+{% block head-title %}<span class="emoji">📑</span> {% trans "Simple Importer" %}{% endblock %}
+{% block page-title %}{% trans "Simple Importer" %}{% endblock %}
 
 {% block content %}
 
@@ -11,6 +11,49 @@
     {% blocktrans trimmed %}
       There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments.
     {% endblocktrans %}
+  </p>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="emoji">🏫</span>
+        <a href="{% tournamenturl 'importer-simple-institutions' %}">
+          {% trans "Add Institutions" context "link" %}
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">👯</span>
+        <a href="{% tournamenturl 'importer-simple-teams' %}">
+          {% trans "Add Teams" context "link" %}
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">👂</span>
+        <a href="{% tournamenturl 'importer-simple-adjudicators' %}">
+          {% trans "Add Adjudicators" context "link" %}
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🎪</span>
+        <a href="{% tournamenturl 'importer-simple-venues' %}">
+          {% trans "Add Venues" context "link" %}
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🏪</span>
+        <a href="{% tournamenturl 'venues-categories' %}">
+          {% trans "Add/Edit Venue Categories" context "link" %}
+        </a>
+      </li>
+      <li class="list-group-item">
+        <span class="emoji">🏰</span>
+        <a href="{% tournamenturl 'venues-constraints' %}">
+          {% trans "Add/Edit Venue Constraints" context "link" %}
+        </a>
+      </li>
+    </ul>
   </div>
 </div>
 
