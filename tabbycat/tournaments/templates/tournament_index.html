@@ -37,6 +37,16 @@
       </a>
     </div>
 
+  {% elif round_status == None %}
+
+    <div class="list-group mt-3">
+      <a href="{% roundurl 'availability-index' round %}" class="list-group-item list-group-call">
+        <i data-feather="circle"></i>
+        Go to the {{ round.abbreviation }} checkins area to begin creating a draw.
+        <i data-feather="chevron-right" class="float-right"></i>
+      </a>
+    </div>
+
   {% endif %}
 
   <div id="vueMount">

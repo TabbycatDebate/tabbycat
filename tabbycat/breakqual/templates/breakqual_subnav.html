@@ -1,7 +1,6 @@
 {% load debate_tags i18n %}
 
-  <a class="btn btn-primary"
-     href="{% tournamenturl 'breakqual-index' %}">
+  <a class="btn btn-outline-primary  {% if break_overview_nav %}active{% endif %}" href="{% tournamenturl 'breakqual-index' %}">
     {% trans "Breaks Overview" %}
   </a>
   <div class="btn-group">
@@ -14,7 +13,6 @@
     </a>
   {% endfor %}
   </div>
-  <a class="btn btn-primary"
-     href="{% tournamenturl 'breakqual-adjudicators' %}">
+  <a class="btn btn-outline-primary  {% if feedback_progress_nav %}active{% endif %}" href="{% tournamenturl 'breakqual-adjudicators' %}">
     {% trans "Adjudicators' Break" %}
   </a>

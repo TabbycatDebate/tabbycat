@@ -1,11 +1,8 @@
 <template>
 
-  <li class='list-group-item list-group-item-info'>
-    <span class='badge'>
-      {{ item.timestamp }}
-    </span>
-    <strong>{{ item.user }}</strong> {{ item.type }}
-    <em>{{ item.param }}</em>
+  <li class='list-group-item list-group-item-info d-flex justify-content-between align-items-center'>
+    <div><strong>{{ item.user }} </strong> {{ item.type }} <em>{{ item.param }}</em></div>
+    <span class="badge badge-default badge-pill">{{ item.timestamp }}</span>
   </li>
 
 </template>

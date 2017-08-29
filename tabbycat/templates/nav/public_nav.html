@@ -83,9 +83,10 @@
 
 <!-- BREAK RELEASES -->
 {% if pref.public_breaking_teams > 0 or pref.public_breaking_adjs > 0 %}
-  <li class="nav-item {% if break_nav %}active{% endif %}">
-    <a class="nav-link" href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Break" %}<b class="caret"></b></a>
-    <ul class="dropdown-menu">
+
+  <li class="nav-item dropdown {% if break_nav %}active{% endif %}">
+    <a class="nav-link dropdown-toggle" id="breakdrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "Break" %}<b class="caret"></b></a>
+    <ul class="dropdown-menu" aria-labelledby="breakdrop">
       {% if pref.public_breaking_teams %}
         {% for category in tournament.breakcategory_set.all %}
           <li><a class="nav-link" href="{% tournamenturl 'breakqual-public-teams' category.slug %}">{{ category.name }}</a></li>
