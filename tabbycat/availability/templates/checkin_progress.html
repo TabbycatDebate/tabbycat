@@ -3,7 +3,7 @@
 <div class="panel panel-default">
 
   <div class="panel-heading">
-    <h4 class="panel-title">{{ ct.title }}</h4>
+    <h4 class="panel-title">{{ ct.type }} Check-Ins</h4>
   </div>
   <div class="panel-body round-progresses">
 
@@ -25,8 +25,8 @@
     </div>
 
     <div class="row">
-      {% if ct.in_before %}
-        <div class="col-md-1 col-sm-1">
+      {% if ct.in_before is not None %}
+        <div class="col-md-1 col-sm-1">{{ round.prev.abbreviation }}</div>
           <h6>{{ round.prev.abbreviation }}
         </div>
         <div class="col-md-11 col-sm-11">
