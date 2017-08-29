@@ -58,6 +58,7 @@
           </form>
           {% if preexisting_large_demo %}
             <div class="alert alert-warning mt-3 mb-0 small">
+              <i data-feather="alert-circle"></i>
               {% blocktrans trimmed %}
                 You already have a tournament set up using this data set. Reloading
                 the data will delete <strong>all data</strong> from that tourament.
@@ -78,6 +79,7 @@
 
         {% if form.errors %}
           <div class="alert alert-danger">
+            <i data-feather="alert-circle"></i>
             {% trans "Whoops! There was an error with one or more fields." %}
             {{ form.non_field_errors }}
           </div>

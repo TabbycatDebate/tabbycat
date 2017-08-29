@@ -114,6 +114,7 @@
 
   {% if previous_unconfirmed > 0 and round.prev %}
     <div class="alert alert-danger">
+      <i data-feather="alert-circle"></i>
       {% roundurl 'results-round-list' round=round.prev as prev_round_results_url %}
       {% blocktrans trimmed with prev_round=round.prev.name count previous_unconfirmed=previous_unconfirmed %}
         Note: One debate from {{ prev_round }}
@@ -135,18 +136,21 @@
 
   {% if pref.teams_in_debate == 'two' and not checkin_types.0.in_now|divisibleby:2  %}
     <div class="alert alert-danger">
+      <i data-feather="alert-circle"></i>
       {% trans "There is an uneven number of teams checked in for this round." %}
     </div>
   {% endif %}
 
   {% if pref.teams_in_debate == 'bp' and not checkin_types.0.in_now|divisibleby:4  %}
     <div class="alert alert-danger">
+      <i data-feather="alert-circle"></i>
       {% trans "The number of teams checked in for this round is not a multiple of 4." %}
     </div>
   {% endif %}
 
   {% if min_adjudicators > checkin_types.1.in_now %}
     <div class="alert alert-warning">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with required_count=min_adjudicators|apnumber count count=min_adjudicators %}
         There needs to be at least one adjudicator checked in, given the number
         of debates.
@@ -159,6 +163,7 @@
 
   {% if min_venues > checkin_types.2.in_now %}
     <div class="alert alert-warning">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with required_count=min_venue|apnumber count count=min_venues %}
         There needs to be at least one venue checked in, given the number of
         debates.
@@ -171,6 +176,7 @@
 
   {% if round.seq > current_round.seq and not round.is_break_round %}
     <div class="alert alert-warning">
+      <i data-feather="alert-circle"></i>
       {% roundurl 'tournament-advance-round-check' current_round as advance_round_url %}
       {% blocktrans trimmed with round_name=round.name current_round_name=current_round.name %}
         This is a page for <strong>{{ round_name }}</strong>, however the current
@@ -186,6 +192,7 @@
 
   {% if not round.prev and round.draw_type == round.DRAW_POWERPAIRED %}
     <div class="alert alert-warning">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}
         This is the first round, but its draw type is
         <strong>{{ draw_type }}</strong>. Did you intend for it
@@ -198,6 +205,7 @@
 
   {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_types.0.total == 0 %}
     <div class="alert alert-warning">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with break_category=round.break_category.name %}
         There don't appear to be any teams breaking in the {{ break_category }}
         Break. Have you
@@ -209,6 +217,7 @@
 
   {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_types.0.total == 1 %}
     <div class="alert alert-warning">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with break_category=round.break_category.name %}
         There's only one team breaking in the {{ break_category }} Break.
         You can't generate an elimination round draw with only one team — you might
@@ -221,6 +230,7 @@
 
   {% if round.draw_type == round.DRAW_BREAK and error_type == 'no_last_round' %}
     <div class="alert alert-danger">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with break_category=round.break_category.name %}
         This is a subsequent elimination round, but there aren't any elimination
         rounds in the same break category ({{ break_category }}) before
@@ -234,16 +244,17 @@
 
   {% if error_type == 'bad_draw_type_for_break_round' %}
     <div class="alert alert-danger">
-    {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}
-      This is an elimination round, but its draw type is
-      <strong>{{ draw_type }}</strong>.
-      This combination isn't allowed — the draw type of elimination rounds must
-      be either <strong>first elimination</strong> (if it's the first
-      elimination round in its break category) or <strong>subsequent
-      elimination</strong>. Please
-      <a href="{{ change_round_url }}" class="alert-link">
-        change this round's draw type in the Edit Database area.</a>
-    {% endblocktrans %}
+      <i data-feather="alert-circle"></i>
+      {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}
+        This is an elimination round, but its draw type is
+        <strong>{{ draw_type }}</strong>.
+        This combination isn't allowed — the draw type of elimination rounds must
+        be either <strong>first elimination</strong> (if it's the first
+        elimination round in its break category) or <strong>subsequent
+        elimination</strong>. Please
+        <a href="{{ change_round_url }}" class="alert-link">
+          change this round's draw type in the Edit Database area.</a>
+      {% endblocktrans %}
     </div>
   {% endif %}
 

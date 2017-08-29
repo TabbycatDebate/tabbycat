@@ -25,6 +25,7 @@
 
 {% if next %}
   <div class="alert alert-warning">
+    <i data-feather="alert-circle"></i>
     {% blocktrans trimmed with tournament_name=tournament.name %}
       No round is currently set. In order for Tabbycat to work, please set the
       <strong>current round</strong> of the tournament
@@ -33,6 +34,7 @@
   </div>
 {% else %}
   <div class="alert alert-info">
+    <i data-feather="alert-circle"></i>
     {% blocktrans trimmed with tournament_name=tournament.name %}
       On this page, you can set the <strong>current round</strong> of the tournament
       <strong>{{ tournament_name }}</strong>.
@@ -42,6 +44,7 @@
 
 {% if not object.round_set.exists %}
   <div class="alert alert-danger">
+    <i data-feather="alert-circle"></i>
     {% url 'admin:tournaments_round_changelist' as round_changelist_url %}
     {% blocktrans trimmed with tournament_name=tournament.name %}
       The tournament <strong>{{ tournament_name }}</strong> has no rounds.
@@ -61,6 +64,7 @@
 
       {% if form.errors %}
         <div class="alert alert-danger">
+          <i data-feather="alert-circle"></i>
           {% trans "Whoops! There was an error with one or more fields." %}
           {{ form.non_field_errors }}
         </div>

@@ -7,6 +7,7 @@
 {% block content %}
 
   <div class="alert alert-info">
+    <i data-feather="alert-circle"></i>
     {% blocktrans trimmed %}
       Venue constraints tell the venue allocator to try to keep the specified
       team or adjudicator, or all teams (but not adjudicators) from the
@@ -20,6 +21,7 @@
 
   {% if formset.errors %}
   <div class="alert alert-danger">
+    <i data-feather="alert-circle"></i>
     <p>{% trans "There are some problems with the data on this form:" %}</p>
     {{ formset.non_form_errors }}
   </div>

@@ -25,6 +25,7 @@
 
         {% if form.errors %}
           <div class="alert alert-danger">
+            <i data-feather="alert-circle"></i>
             {% trans "Whoops! There was an error with one or more fields." %}
             {{ form.non_field_errors }}
           </div>

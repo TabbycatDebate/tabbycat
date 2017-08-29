@@ -7,6 +7,7 @@
 {% block page-alerts %}
   {% if not categories.exists %}
     <div class="alert alert-warning" role="alert">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed %}
         This tournament does not have any break categories set up. You can read
          about how to create breaks
@@ -19,6 +20,7 @@
   {% elif no_teams_eligible %}
     {% tournamenturl 'breakqual-edit-eligibility' as eligibility_url %}
     <div class="alert alert-warning" role="alert">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed %}
         It looks like no teams are currently marked as eligible for the break.
         To set which teams are eligible, click the
@@ -28,6 +30,7 @@
     </div>
   {% elif break_not_generated %}
     <div class="alert alert-info" role="alert">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed %}
         The break hasn't been generated yet. To generate it, view any of the team
         breaks (via the above buttons), and then click on "Generate the Break

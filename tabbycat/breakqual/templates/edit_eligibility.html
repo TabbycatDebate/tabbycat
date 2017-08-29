@@ -29,6 +29,7 @@
 {% block page-alerts %}
   {% if not form.get_category_queryset.exists %}
     <div class="alert alert-warning" role="alert">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed %}
         This tournament does not have any break categories set up. You can read
          about how to create breaks
