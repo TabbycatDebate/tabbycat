@@ -23,7 +23,7 @@ from importer.base import TournamentDataImporterError
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, PostOnlyRedirectView, TabbycatPageTitlesMixin, SuperuserRequiredMixin
+from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
 
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
