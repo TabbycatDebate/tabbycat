@@ -139,6 +139,7 @@
 
   /* overlay sub levels on small screens */
   #sidebar .list-group .collapse.in,
+  #sidebar .list-group .collapsing,
   #sidebar .list-group .collapse.show {
     z-index: 1;
     width: 190px;

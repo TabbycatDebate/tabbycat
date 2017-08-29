@@ -34,7 +34,7 @@ CHECK_IN_TITLES = {
 
 class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'availability_index.html'
-    page_title = ugettext_lazy("Check-Ins Overview")
+    page_title = ugettext_lazy("Check-Ins")
     page_emoji = '📍'
 
     def get_context_data(self, **kwargs):

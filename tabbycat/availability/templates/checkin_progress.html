@@ -2,12 +2,12 @@
 
 <div class="card">
 
-  <div class="panel-heading">
-    <h4 class="panel-title">{{ ct.type }} Check-Ins</h4>
-  </div>
   <div class="card-body round-progresses">
 
+    <h5 class="card-title">{{ ct.type }} Check-Ins</h5>
+
     <div class="row">
+
       <div class="col-md-1 col-sm-1">
         <h6>{{ round.abbreviation }}</h6>
       </div>
@@ -22,9 +22,11 @@
           </div>
         </div>
       </div>
+
     </div>
 
     <div class="row">
+
       {% if ct.in_before is not None %}
         <div class="col-md-1 col-sm-1">{{ round.prev.abbreviation }}</div>
           <h6>{{ round.prev.abbreviation }}
@@ -41,6 +43,7 @@
           </div>
         </div>
       {% endif %}
+
     </div>
 
     {% if ct.message %}

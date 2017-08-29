@@ -308,8 +308,8 @@ msgid "Venue Check-Ins"
 msgstr "Enregistrement des lieux"
 
 #: availability/views.py:37
-msgid "Check-Ins Overview"
-msgstr "Aperçu des enregistrements"
+msgid "Check-Ins"
+msgstr "Enregistrements"
 
 #: availability/views.py:149
 msgid "Active Now"

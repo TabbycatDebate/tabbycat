@@ -263,11 +263,11 @@
 {% block content %}
 
   <div class="row">
-    <div class="col-md-12">
-      {% for ct in checkin_types %}
+    {% for ct in checkin_types %}
+      <div class="col">
         {% include 'checkin_progress.html' %}
-      {% endfor %}
-    </div>
+      </div>
+    {% endfor %}
   </div>
 
   <form id="createForm" action="{% roundurl 'draw-create' %}" method="POST">
