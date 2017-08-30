@@ -80,11 +80,11 @@
 
     {% block subheader %}
       <div class="row page-navs">
-        <div class="col-md-auto col mr-auto mb-6">
-          {% block page-subnav-sections %}{% endblock %}
-        </div>
-        <div class="col-md-auto col mb-6 justify-content-end">
-          {% block page-subnav-actions %}{% endblock %}
+        <div class="col">
+          <div class="d-flex justify-content-between">
+            {% block page-subnav-sections %}{% endblock %}
+            {% block page-subnav-actions %}{% endblock %}
+          </div>
         </div>
       </div>
 

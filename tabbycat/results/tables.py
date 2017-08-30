@@ -18,7 +18,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         elif debate.result_status == Debate.STATUS_DRAFT:
             return "glyphicon-adjust text-info", 2, "Ballot is Unconfirmed"
         elif debate.result_status == Debate.STATUS_CONFIRMED:
-            return "glyphicon-ok text-success", 3, "Ballot is Confirmed"
+            return "check text-success", 3, "Ballot is Confirmed"
         elif debate.result_status == Debate.STATUS_POSTPONED:
             return "glyphicon-pause", 4, "Debate was Postponed"
         else:

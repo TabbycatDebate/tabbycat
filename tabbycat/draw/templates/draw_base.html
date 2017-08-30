@@ -11,15 +11,17 @@
       Confirm Shifts
     </a>
   {% endif %}
-  <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary ">
-    Edit Matchups
-  </a>
-  <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-primary ">
-    Remake Draw
-  </a>
-  <a href="{% roundurl 'draw-details' %}" class="btn btn-outline-primary ">
-    Draw Details
-  </a>
+  <div class="btn-group" role="group">
+    <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary ">
+      Edit Sides
+    </a>
+    <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-primary ">
+      Redo Draw
+    </a>
+    <a href="{% roundurl 'draw-details' %}" class="btn btn-outline-primary ">
+      Draw Details
+    </a>
+  </div>
 {% endblock %}
 
 {% block page-subnav-actions %}

@@ -46,7 +46,6 @@
 }
 
 .draw-row {
-  @extend .row;
   @extend .flex-horizontal;
 
   background: #fff; // Need to compensate for lack of table background

@@ -152,7 +152,7 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
             table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation},
                 [{
                     'sort': inst.prev_available,
-                    'icon': 'glyphicon-ok' if inst.prev_available else ''
+                    'icon': 'check' if inst.prev_available else ''
                 } for inst in queryset])
 
         self.add_description_columns(table, queryset)

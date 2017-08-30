@@ -37,12 +37,32 @@
       </a>
     </div>
 
-  {% elif round_status == None %}
+  {% elif round.get_draw_status_display.lower == 'none' %}
 
     <div class="list-group mt-3">
       <a href="{% roundurl 'availability-index' round %}" class="list-group-item list-group-call">
         <i data-feather="circle"></i>
         Go to the {{ round.abbreviation }} checkins area to begin creating a draw.
+        <i data-feather="chevron-right" class="float-right"></i>
+      </a>
+    </div>
+
+  {% elif round.get_draw_status_display.lower == 'confirmed' %}
+
+    <div class="list-group mt-3">
+      <a href="{% roundurl 'draw' round %}" class="list-group-item list-group-call">
+        <i data-feather="circle"></i>
+        Go to the {{ round.abbreviation }} draw area to allocate adjudicators.
+        <i data-feather="chevron-right" class="float-right"></i>
+      </a>
+    </div>
+
+  {% elif round.get_draw_status_display.lower == 'released' %}
+
+    <div class="list-group mt-3">
+      <a href="{% roundurl 'results' round %}" class="list-group-item list-group-call">
+        <i data-feather="circle"></i>
+        Go to the {{ round.abbreviation }} results area to begin entering ballots.
         <i data-feather="chevron-right" class="float-right"></i>
       </a>
     </div>

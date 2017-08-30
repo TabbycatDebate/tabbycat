@@ -120,61 +120,64 @@
 
 <div class="card mt-3">
 
-  <div class="card-body">
+  <div class="list-group list-group-flush">
+  <form>
 
-    <h4 class="card-title mb-4">
-      <i data-feather="lock"></i>
-      Form Title and Icon
-    </h4>
-
-    <p class="card-text">Explanatory text can go here</p>
-
-    <hr>
-
-    <div class="alert alert-danger">
-      <i data-feather="alert-circle"></i>
-      This is an error message raised by the form
+    <div class="list-group-item text-info pb-0">
+      <h4 class="card-title">
+        <i data-feather="lock"></i>
+        Form Title and Icon
+      </h4>
+      <p class="text-info">Explanatory text can go here</p>
     </div>
 
-    <div class="form-group mt-3">
-      <label for="{{ field.id_for_label }}">Label A</label>
-      <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
-      <small class="form-text text-muted">Hint for form field</small>
-    </div>
+    <div class="list-group-item pt-4 pb-4">
 
-    <div class="form-group mt-3">
-      <label for="{{ field.id_for_label }}">Label B</label>
-      <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
-      <small class="form-text text-muted">Hint for form field</small>
-      <ul class="errorlist"><li>Error for form field</li></ul>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-lg-6">
-        <label for="{{ field.id_for_label }}">Label C</label>
-        <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
+      <div class="alert alert-danger">
+        <i data-feather="alert-circle"></i>
+        This is an error message raised by the form
       </div>
-      <div class="form-group col-lg-6">
-        <label for="{{ field.id_for_label }}">Label D</label>
+
+      <div class="form-group mt-3">
+        <label for="{{ field.id_for_label }}">Label A</label>
         <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
+        <small class="form-text text-muted">Hint for form field</small>
       </div>
-      <div class="form-group col-lg-6">
-        <label for="{{ field.id_for_label }}">Label E</label>
+
+      <div class="form-group mt-3">
+        <label for="{{ field.id_for_label }}">Label B</label>
         <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
+        <small class="form-text text-muted">Hint for form field</small>
+        <ul class="errorlist"><li>Error for form field</li></ul>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-lg-6">
+          <label for="{{ field.id_for_label }}">Label C</label>
+          <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="{{ field.id_for_label }}">Label D</label>
+          <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="{{ field.id_for_label }}">Label E</label>
+          <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="list-group-item pt-4 pb-3">
+      <button type="submit" name="continue" class="btn btn-block btn-success">
+        Action Button
+      </button>
+      <div class="text-center mt-3">
+        <a href="">Alternate Option</a>
       </div>
     </div>
 
-    <hr>
-
-    <button type="submit" name="continue" class="btn btn-block btn-success mb-3">
-      Action Button
-    </button>
-
-    <div class="text-center">
-      <a href="">Alternate Option</a>
-    </div>
-
-
+  </form>
   </div>
 
 </div>

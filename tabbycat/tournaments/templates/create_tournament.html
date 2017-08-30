@@ -72,10 +72,11 @@
   </div>
 
   <div class="card mt-3">
-    <div class="card-body">
-      <form action="." method="POST" class="">
+    <div class="list-group list-group-flush">
+    <form action="." method="POST" class="">
+    {% csrf_token %}
 
-        {% csrf_token %}
+      <div class="list-group-item pt-4 pb-4">
 
         {% if form.errors %}
           <div class="alert alert-danger">
@@ -86,7 +87,6 @@
         {% endif %}
 
         {% for field in form %}
-
           <div class="form-group">
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
             {{ field|addcss:"form-control" }}
@@ -95,11 +95,14 @@
           </div>
         {% endfor %}
 
-        <button type="submit" class="btn mt-3 btn-block btn-success form-control">
+      </div>
+      <div class="list-group-item pt-4 pb-4">
+        <button type="submit" class="btn btn-block btn-success">
           {% trans "Create Tournament" %}
         </button>
+      </div>
 
-      </form>
+    </form>
     </div>
   </div>
 
