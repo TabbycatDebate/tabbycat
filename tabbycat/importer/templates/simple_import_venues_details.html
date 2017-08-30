@@ -7,25 +7,6 @@
 
 {% block content %}
 
-<div class="alert alert-info" id="">
-  <p>
-    {% blocktrans trimmed %}
-      Venues with lower priorities are allocated in the draw last. If you have
-      more venues than you need you can mark the worst venues with a lower
-      priority number.
-    {% endblocktrans %}
-  </p>
-
-  <p>
-    {% tournamenturl 'options-tournament-league' as options_league_url %}
-    {% blocktrans trimmed %}
-      Venues marked as 'shared' will not be associated with any particular
-      tournament but will be available to any tournament which has the
-      <a href="{{ options_league_url }}" class="alert-link">"Share Venues"
-      setting</a> enabled.
-    {% endblocktrans %}
-  </p>
-</div>
 
 <form method="POST">
   {% csrf_token %}
@@ -35,6 +16,27 @@
   <div class="row">
     <div class=" col-md-12 ">
       <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
+    </div>
+  </div>
+
+  <div class="card text-info border-info mb-3 mt-3">
+    <div class="card-body pb-0">
+      <p>
+        {% blocktrans trimmed %}
+          Venues with lower priorities are allocated in the draw last. If you have
+          more venues than you need you can mark the worst venues with a lower
+          priority number.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% tournamenturl 'options-tournament-league' as options_league_url %}
+        {% blocktrans trimmed %}
+          Venues marked as 'shared' will not be associated with any particular
+          tournament but will be available to any tournament which has the
+          <a href="{{ options_league_url }}" class="alert-link">"Share Venues"
+          setting</a> enabled.
+        {% endblocktrans %}
+      </p>
     </div>
   </div>
 
@@ -61,7 +63,7 @@
             {{ field }}
           {% endfor %}
 
-          <label class="col-sm-1 control-label" for="{{ form.name.id_for_label }}">
+          <label for="{{ form.name.id_for_label }}">
             {{ form.name.label }}
           </label>
           <div class="col-sm-4">
@@ -69,7 +71,7 @@
             {{ form.name.errors }}
           </div>
 
-          <label class="col-sm-1 control-label" for="{{ form.test_score.id_for_label }}">
+          <label for="{{ form.test_score.id_for_label }}">
             {{ form.priority.label }}
           </label>
           <div class="col-sm-2">
@@ -77,7 +79,7 @@
             {{ form.priority.errors }}
           </div>
 
-          <label class="col-sm-1 control-label" for="{{ form.shared.id_for_label }}">
+          <label for="{{ form.shared.id_for_label }}">
             {{ form.shared.label }}
           </label>
           <div class="col-sm-2">

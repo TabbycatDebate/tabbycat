@@ -72,7 +72,7 @@
                     {{ field }}
                   {% endfor %}
 
-                  <label class="col-sm-2 control-label" for="{{ form.name.id_for_label }}">
+                  <label  for="{{ form.name.id_for_label }}">
                     Adjudicator {{ forloop.counter }}'s {{ form.name.label }}
                   </label>
                   <div class="col-sm-4">
@@ -80,7 +80,7 @@
                     {{ form.name.errors }}
                   </div>
 
-                  <label class="col-sm-1 control-label" for="{{ form.test_score.id_for_label }}">
+                  <label for="{{ form.test_score.id_for_label }}">
                     {{ form.test_score.label }}
                   </label>
                   <div class="col-sm-2">
@@ -88,7 +88,7 @@
                     {{ form.test_score.errors }}
                   </div>
 
-                  <label class="col-sm-1 control-label" for="{{ form.shared.id_for_label }}">
+                  <label for="{{ form.shared.id_for_label }}">
                     {{ form.shared.label }}
                   </label>
                   <div class="col-sm-2">

@@ -7,33 +7,44 @@
 
 {% block content %}
 
-<div class="alert alert-info">
-  <p>
-    Paste a list of venues with one venue per line and following the format of:
-    <em>Name,Priority</em>.
-     For example:<br><br>
-    <em>140,200<br>
-    2.9.0,100<br>
-    11G,50</em>
-  </p>
-</div>
-
-<form action="." method="POST">
+<div class="card">
+  <form action="." method="POST">
   {% csrf_token %}
-  {{ wizard.management_form }}
 
-  {% if wizard.form.venues_raw.errors %}
-  <div class="alert alert-danger">
-    <p>{% trans "There are some problems with the data on this form:" %}</p>
-    {{ wizard.form.venues_raw.errors }}
-  </div>
-  {% endif %}
+    <div class="list-group-item text-info">
+      Paste a list of venues with one venue per line and following the format of:
+      <em>Name,Priority</em>. For example:
+    </div>
 
-  <div class="form-group">
-    {{ wizard.form.venues_raw|addcss:"form-control" }}
-  </div>
-  <input type="submit" class="btn btn-primary btn-block " value="{% trans 'Next Step' %}">
+
+    <div class="list-group-item list-group-item-secondary pb-0">
+<pre><code>Room 140,200
+2.9.0,100
+11G,50</code></pre>
+    </div>
+
+    <div class="list-group-item pb-3 pt-3">
+
+      {% csrf_token %}
+      {{ wizard.management_form }}
+
+      {% if wizard.form.venues_raw.errors %}
+      <div class="alert alert-danger">
+        <p>{% trans "There are some problems with the data on this form:" %}</p>
+        {{ wizard.form.venues_raw.errors }}
+      </div>
+      {% endif %}
+
+      <div class="form-group">
+        {{ wizard.form.venues_raw|addcss:"form-control" }}
+      </div>
+
+    </div>
+    <div class="list-group-item pt-3 pb-3">
+      <input type="submit" class="btn btn-primary btn-block " value="{% trans 'Next Step' %}">
+    </div>
 
 </form>
+</code>
 
 {% endblock content %}

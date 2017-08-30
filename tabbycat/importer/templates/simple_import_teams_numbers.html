@@ -10,6 +10,7 @@
 {% if wizard.form.fields|length == 0 %}
 
   <div class="alert alert-warning" role="alert">
+    <i data-feather="alert-circle"></i>
     {% tournamenturl 'importer-simple-institutions' as import_institutions_url %}
     {% blocktrans trimmed %}
       You need to
@@ -20,11 +21,11 @@
 
 {% else %}
 
-  <div class="alert alert-info">
-    <p>{% blocktrans trimmed %}
+  <div class="card text-info border-info mb-3">
+    <div class="card-body">{% blocktrans trimmed %}
       Specify the number of new teams to add per institution. In the next step
       you can specify team and speaker names.
-    {% endblocktrans %}</p>
+    {% endblocktrans %}</div>
   </div>
 
   <form method="POST">
@@ -38,8 +39,8 @@
     </div>
     {% endif %}
 
-    <div class="card">
-      <ul class="list-group">
+    <div class="card pt-3">
+      <ul class="list-group list-group-flush">
 
         {% for field in wizard.form %}
           <li class="list-group-item">
@@ -55,7 +56,7 @@
           </li>
         {% endfor %}
 
-        <li class="list-group-item">
+        <li class="list-group-item pt-4 pb-3">
           <input type="submit" class="btn btn-primary btn-block" value="{% trans 'Next Step' %}" />
         </li>
 

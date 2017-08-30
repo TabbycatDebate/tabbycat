@@ -54,13 +54,13 @@
             {# Password isn't always used. #}
             {% if form.password %}
               <div class="form-group">
-                <label for="{{ form.password.id_for_label }}" class="col-sm-2 control-label">{{ form.password.label }}</label>
+                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
                 <div class="col-sm-9 col-md-6">
                   {{form.password|addcss:"form-control"}}
                 </div>
                 <div class="col-md-2 col-xs-10 ">
                   {% if form.password.errors %}
-                    <label for="{{ form.password.id_for_label }}" class="control-label">{{ form.password.errors }}</label>
+                    <label for="{{ form.password.id_for_label }}" >{{ form.password.errors }}</label>
                   {% endif %}
                 </div>
               </div>
