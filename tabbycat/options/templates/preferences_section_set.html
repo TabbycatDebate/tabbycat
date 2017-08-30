@@ -14,10 +14,7 @@
   </a>
 
   {% if form.errors %}
-    <div class="alert alert-danger">
-      Please correct the errors below.
-      {{ form.non_field_errors }}
-    </div>
+    {% include "components/form-errors.html" with errors=form.errors %}
   {% endif %}
 {% endblock %}
 
@@ -31,14 +28,7 @@
 
         {% csrf_token %}
         {% for field in form %}
-          <div class="form-group mt-3 col-lg-6">
-            <label for="{{ field.id_for_label }}">
-              {{ field.label }} {{ field.section.name }}
-            </label>
-            {{field|addcss:"form-control"}}
-            <small class="form-text text-muted">{{ field.help_text }}</span></small>
-            {{ field.errors }}
-          </div>
+          {% include "components/form-field.html" %}
         {% endfor %}
 
       </div>

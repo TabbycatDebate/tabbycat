@@ -54,21 +54,20 @@
       </div>
     {% endif %}
 
-    <a class="list-group-item {% if ct.in_now == 0 %}list-group-call{% else %}bg-info text-white{% endif %}"
-       href="{% if forloop.counter == 1 and not round.is_break_round %}{% roundurl 'availability-teams' round %}{% elif forloop.counter == 2 %}{% roundurl 'availability-adjudicators' round %}{% elif forloop.counter == 3 %}{% roundurl 'availability-venues' round %}{% endif %}">
-      <div class="row align-items-center">
-        <div class="col-auto">
-          <i data-feather="{% if ct.in_now != 0 %}check-{% endif %}circle"></i>
-        </div>
-        <div class="col pl-0 pr-0">
-          {% trans "Check In" %}
-        </div>
-        <div class="col-auto"><i data-feather="chevron-right"></i></div>
-      </div>
-    </a>
+    {% if forloop.counter == 1 and not round.is_break_round %}
+      {% roundurl 'availability-teams' round as url %}
+    {% elif forloop.counter == 2 %}
+      {% roundurl 'availability-adjudicators' round as url %}
+    {% elif forloop.counter == 3 %}
+      {% roundurl 'availability-venues' round as url %}
+    {% endif %}
 
-
-
+    {% trans "Check In" as title %}
+    {% if ct.in_now == 0 %}
+      {% include "components/item-action.html" with success=True %}
+    {% else %}
+      {% include "components/item-action.html" with icon=check-circle %}
+    {% endif %}
 
   </div>
 

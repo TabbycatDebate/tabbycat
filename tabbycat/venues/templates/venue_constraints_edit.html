@@ -20,11 +20,7 @@
   </div>
 
   {% if formset.errors %}
-  <div class="alert alert-danger">
-    <i data-feather="alert-circle"></i>
-    <p>{% trans "There are some problems with the data on this form:" %}</p>
-    {{ formset.non_form_errors }}
-  </div>
+    {% include "components/form-errors.html" with errors=formset.errors %}
   {% endif %}
 
   <form method="POST" action="" class="">

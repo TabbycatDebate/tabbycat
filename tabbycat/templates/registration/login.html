@@ -34,9 +34,11 @@
             {% csrf_token %}
             {% if form.errors %}
               {% trans "Your username and password didn't match." as message %}
-              {% include "components/alert.html" with type="danger" %}
+              {% include "components/form-errors.html" with errors=form.errors %}
             {% endif %}
+
             {% if next %}
+
               {% if user.is_authenticated %}
                 {% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." as message %}
                 {% include "components/alert.html" with type="warning" %}
@@ -47,11 +49,7 @@
             {% endif %}
 
             {% for field in form %}
-            <div class="mb-3">
-              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-              {{ field|addcss:"form-control" }}
-              {{ field.errors }}
-            </div>
+              {% include "components/form-field.html" %}
             {% endfor %}
 
           </div>

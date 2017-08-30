@@ -3,13 +3,8 @@
 <div id="ballot_set">
 
   {% if form.errors %}
-    <div class="alert alert-danger">
-      <p>{% trans "There are some problems with this scoresheet. Please review and correct them." %}</p>
-      {% if form.non_field_errors %}
-        <p>{% trans "General errors:" %}</p>
-        <div class="ballot-errors">{{ form.non_field_errors }}</div>
-      {% endif %}
-    </div>
+    {% trans "There are some problems with this scoresheet. Please review and correct them." as message %}
+    {% include "components/form-errors.html" with errors=form.errors %}
   {% endif %}
 
   <div class="row">

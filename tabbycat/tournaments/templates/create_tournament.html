@@ -74,33 +74,14 @@
   <div class="card mt-3">
     <div class="list-group list-group-flush">
     <form action="." method="POST" class="">
-    {% csrf_token %}
+      {% csrf_token %}
 
-      <div class="list-group-item pt-4 pb-4">
+      {% include "components/form-main.html" %}
 
-        {% if form.errors %}
-          <div class="alert alert-danger">
-            <i data-feather="alert-circle"></i>
-            {% trans "Whoops! There was an error with one or more fields." %}
-            {{ form.non_field_errors }}
-          </div>
-        {% endif %}
-
-        {% for field in form %}
-          <div class="form-group">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field|addcss:"form-control" }}
-            <small class="form-text text-muted">{{ field.help_text }}</small>
-            <small class="form-text text-danger">{{ field.errors }}</small>
-          </div>
-        {% endfor %}
-
-      </div>
-      <div class="list-group-item pt-4 pb-4">
-        <button type="submit" class="btn btn-block btn-success">
-          {% trans "Create Tournament" %}
-        </button>
-      </div>
+      {% trans "Create Tournament" as title %}
+      {% trans "Cancel and go back to the site home page" as subtitle %}
+      {% url 'tabbycat-index' as suburl %}
+      {% include "components/form-submit.html" %}
 
     </form>
     </div>

@@ -32,18 +32,13 @@
 
   <div class="list-group">
     {% if user.is_authenticated %}
-      {% url 'tournament-create' as create_url %}
-      <a href="{{ create_url }}" class="list-group-item list-group-call">
-        <div class="row align-items-center ">
-          <div class="col-auto"><i data-feather="circle"></i></div>
-          <div class="col pl-0 pr-0">
-            {% blocktrans trimmed %}
-              It looks like there aren't any tournaments on this site. Would you like to create one?
-            {% endblocktrans %}
-          </div>
-          <div class="col-auto"><i data-feather="chevron-right"></i></div>
-        </div>
-      </a>
+
+      {% blocktrans trimmed asvar text %}
+        It looks like there aren't any tournaments on this site. Would you like to create one?
+      {% endblocktrans %}
+      {% url 'tournament-create' as url %}
+      {% include "components/item-action.html" with success=True %}
+
     {% else %}
       <div class="list-group-item lead">
         {% blocktrans trimmed %}

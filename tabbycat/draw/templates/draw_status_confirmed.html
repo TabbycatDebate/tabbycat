@@ -67,18 +67,13 @@
         {% endif %}
 
         <div class="list-group list-group-flush">
-          <a href="{% roundurl 'edit-adj-allocation' %}" class="list-group-item list-group-call">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <i data-feather="{% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}check-{% else %}circle{% endif %}"></i>
-              </div>
-              <div class="col pl-0 pr-0">
-                Allocate Adjudicators
-              </div>
-              <div class="col-auto"><i data-feather="chevron-right"></i></div>
-            </div>
-          </a>
-        </div>
+
+          {% roundurl  'edit-adj-allocation' as url %}
+          {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
+            {% include "components/item-action.html" with title="Allocate Adjudicators" icon=check-circle %}
+          {% else %}
+            {% include "components/item-action.html" with title="Allocate Adjudicators" success=True %}
+          {% endif %}
 
       </div>
     </div>

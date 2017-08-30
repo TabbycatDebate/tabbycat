@@ -24,21 +24,13 @@
         {% csrf_token %}
 
         {% if form.errors %}
-          <div class="alert alert-danger">
-            <i data-feather="alert-circle"></i>
-            {% trans "Whoops! There was an error with one or more fields." %}
-            {{ form.non_field_errors }}
-          </div>
+          {% include "components/form-errors.html" with errors=form.errors %}
         {% endif %}
 
-          {% for field in form %}
-            <div class="form-group">
-              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-              {{ field|addcss:"form-control" }}
-              <small class="form-text text-muted">{{ field.help_text }}</small>
-              <small class="form-text text-danger">{{ field.errors }}</small>
-            </div>
-          {% endfor %}
+        {% for field in form %}
+          {% include "components/form-field.html" %}
+        {% endfor %}
+
       </div>
 
       <div class="list-group-item  pt-4 pb-4">

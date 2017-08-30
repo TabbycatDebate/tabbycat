@@ -9,13 +9,7 @@
     {% csrf_token %}
 
       {% if formset.errors %}
-        <div class="list-group-item pb-4">
-          <div class="alert alert-danger mt-2">
-            <i data-feather="alert-circle"></i>
-            <p>{% trans "There are some problems with the data on this form:" %}</p>
-            {{ formset.non_form_errors }}
-          </div>
-        </div>
+        {% include "components/form-errors.html" with errors=formset.errors %}
       {% endif %}
 
       {{ formset.management_form }}

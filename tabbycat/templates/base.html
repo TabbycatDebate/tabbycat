@@ -93,7 +93,7 @@
         <div class="col" id="messages-container">
           {% if messages %}
             {% for message in messages %}
-              {% include "components/alert.html" with type="message.tags" message=message %}
+              {% include "components/alert.html" with type=message.tags message=message %}
             {% endfor %}
           {% endif %}
           {% block page-alerts %}{% endblock %}

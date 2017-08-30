@@ -29,10 +29,7 @@
       {{ wizard.management_form }}
 
       {% if wizard.form.venues_raw.errors %}
-      <div class="alert alert-danger">
-        <p>{% trans "There are some problems with the data on this form:" %}</p>
-        {{ wizard.form.venues_raw.errors }}
-      </div>
+        {% include "components/form-errors.html" with errors=wizard.form.venues_raw.errors %}
       {% endif %}
 
       <div class="form-group">

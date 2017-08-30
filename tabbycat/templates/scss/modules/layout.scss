@@ -27,18 +27,6 @@
 // Lists
 //------------------------------------------------------------------------------
 
-// Prominent call to actions to do stuff
-.list-group-call {
-
-  @extend .bg-success;
-  @extend .text-white;
-  @extend .strong;
-
-  .feather {
-    margin-right: 0px;
-  }
-}
-
 // Override some boostrap color defaults and automatically add color variations
 @each $color, $value in $theme-colors {
   .alert-#{$color},

@@ -26,9 +26,7 @@
             <p class="list-group-item-text">{{ form.instance.text }}</p>
           </li>
           {% if form.errors %}
-            <li class="list-group-item">
-              <div class="error">{{ form.errors }}</div>
-            </li>
+            {% include "components/form-errors.html" with errors=form.errors %}
           {% endif %}
           {% if form.divisions %}
             {% for d in form.divisions %}

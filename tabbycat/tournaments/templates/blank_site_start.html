@@ -9,7 +9,7 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-lg-6 ml-lg-auto mr-md-auto">
+  <div class="col-lg-8 ml-lg-auto mr-md-auto">
 
     <div class="card">
 
@@ -43,24 +43,7 @@
           </p>
         </div>
 
-        <div class="list-group-item pb-4">
-
-          {% if form.errors %}
-            <div class="alert alert-danger mt-2">
-              <i data-feather="alert-circle"></i>
-              {% blocktrans trimmed %}
-              Whoops! There was an error with one or more fields.
-              {% endblocktrans %}
-              {{ form.non_field_errors }}
-            </div>
-          {% endif %}
-
-          {% for field in form %}
-            {% include "components/form-field.html" %}
-          {% endfor %}
-
-        </div>
-
+        {% include "components/form-main.html" %}
         {% trans "Create Account" as title %}
         {% include "components/form-submit.html" %}
 

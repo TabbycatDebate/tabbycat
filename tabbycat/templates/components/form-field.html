@@ -3,6 +3,9 @@
 <div class="form-group">
   <label for="{{ field.id_for_label }}" class="">{{ field.label }}</label>
   {{ field|addcss:"form-control" }}
+  {% if field.help_text  %}
+    <small class="form-text text-muted">{{ field.help_text }}</small>
+  {% endif %}
   {% if errors %}
     {{ errors }}
   {% endif %}

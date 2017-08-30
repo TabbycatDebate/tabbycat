@@ -25,10 +25,7 @@
   {% include "components/explainer-card.html" with type="info" %}
 
   {% if wizard.form.errors %}
-  <div class="alert alert-danger">
-    <p>{% trans "There are some problems with the data on this form:" %}</p>
-    {{ wizard.form.non_form_errors }}
-  </div>
+    {% include "components/form-errors.html" with errors=wizard.form.non_form_errors %}
   {% endif %}
 
   <ul class="list-group">

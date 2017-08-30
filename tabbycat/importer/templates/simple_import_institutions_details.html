@@ -27,11 +27,7 @@
         <div class="list-group list-group-flush">
 
           {% if wizard.form.errors %}
-          <div class="alert alert-danger">
-            <i data-feather="alert-circle"></i>
-            <p>{% trans "There are some problems with the data on this form:" %}</p>
-            {{ wizard.form.non_form_errors }}
-          </div>
+            {% include "components/form-errors.html" with errors=wizard.form.non_form_errors %}
           {% endif %}
 
         </div>

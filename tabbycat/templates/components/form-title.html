@@ -1,10 +1,10 @@
 <div class="list-group-item">
-  <h4 class="card-title {% if not text %}mb-1{% endif %}">
+  <h4 class="card-title mt-2 {% if not text %}mb-2{% endif %}">
     {% if icon %}<i data-feather="lock"></i>{% endif %}
     {% if emoji %}<span class="emoji">{{ emoji }}</span>{% endif %}
     {{ title }}
   </h4>
   {% if text %}
-    <p class="card-text">Explanatory text can go here</p>
+    <p class="card-text">{{ text }}</p>
   {% endif %}
 </div>

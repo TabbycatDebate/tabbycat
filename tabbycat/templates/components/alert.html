@@ -4,4 +4,9 @@
   </button>
   <i data-feather="bell"></i>
   {{ message|safe }}
+
+  {% if extra %}
+    <div class="mt-3">{{ extra|safe }}</div>
+  {% endif %}
+
 </div>

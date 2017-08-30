@@ -15,15 +15,8 @@
   {% endif %}
 
   {% if form.errors %}
-    <div class="alert alert-danger">
-      <i data-feather="alert-circle"></i>
-      <p>There are some problems with this feedback submission. Please review and correct them.</p>
-
-      {% if form.non_field_errors %}
-        <p>General errors:</p>
-        <div class="ballot-errors">{{ form.non_field_errors }}</div>
-      {% endif %}
-    </div>
+    {% trans "There are some problems with this feedback submission. Please review and correct them." as message %}
+    {% include "components/form-errors.html" with errors=form.errors %}
   {% endif %}
 
   <div class="card">
@@ -34,19 +27,7 @@
       <form id="feedbackForm" action="" method="POST" class="">
         {% csrf_token %}
         {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.id_for_label }}" class="col-md-3 col-sm-11 control-label">
-            {{ field.label }}
-          </label>
-          <div class="col-sm-11 col-md-7">
-            {{field|addcss:"form-control"}}
-          </div>
-          <div class="col-md-2 col-xs-10">
-            {% if field.errors %}
-              <label for="{{ field.id_for_label }}" >{{ field.errors }}</label>
-            {% endif %}
-          </div>
-        </div>
+          {% include "components/form-field.html" %}
         {% endfor %}
         <div class="form-group">
           <div class="col-md-offset-3 col-md-7">

@@ -9,11 +9,7 @@
 
 {% block page-alerts %}
   {% if form.errors %}
-    <div class="alert alert-danger">
-      <button type="button" class="close">&times;</button>
-      {% trans "Please correct the errors below." %}
-      {{ form.errors }}
-    </div>
+    {% include "components/form-errors.html" with errors=form.errors %}
   {% endif %}
 {% endblock %}
 
