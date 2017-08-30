@@ -9,23 +9,27 @@
 
 {% for tournament in tournaments %}
   <div class="list-group mt-2">
+
     {% if user.is_authenticated %}
-      <a href="{{ tournament.get_absolute_url }}" class="list-group-item list-group-item-action">
-        {% with tournament_name=tournament.name %}
-          <i data-feather="settings"></i>
-          {% if user.is_superuser %}
-            {% blocktrans trimmed %}Admin area for <strong>{{ tournament_name }}</strong>{% endblocktrans %}
-          {% else %}
-            {% blocktrans trimmed %}Assistant area for <strong>{{ tournament_name }}</strong>{% endblocktrans %}
-          {% endif %}
-        {% endwith %}
-      </a>
+      {% if user.is_superuser %}
+        {% blocktrans trimmed asvar text with tn=tournament.name %}
+          Admin area for <strong>{{ tn }}</strong>
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed asvar text with tn=tournament.name %}
+          Assistant area for <strong>{{ tn }}</strong>
+        {% endblocktrans %}
+      {% endif %}
+      {% url tournament.get_absolute_url as url %}
+      {% include "components/item-action.html" with icon="settings" %}
     {% endif %}
-    <a href="{{ tournament.get_public_url }}" class="list-group-item list-group-item-action">
-      <span class="emoji">{{ tournament.emoji|default:"🏆" }}</span>{{ tournament.name }}
-    </a>
+
+    {% url tournament.get_public_url as url %}
+    {% include "components/item-action.html" with text=tournament.name emoji=tournament.emoji|default:"🏆" %}
+
   </div>
 {% empty %}
+
   <div class="list-group">
     {% if user.is_authenticated %}
       {% url 'tournament-create' as create_url %}
@@ -48,47 +52,52 @@
       </div>
     {% endif %}
   </div>
+
 {% endfor %}
 
 {% if tournaments.0.preferences.league_options__enable_mass_draws %}
   <div class="list-group mt-2">
-    <a href="{% url 'all_tournaments-all-venues' %}" class="list-group-item list-group-item-action">
-      <span class="emoji">🎪</span>{% trans "All Draws by Venue" %}
-    </a>
-    <a href="{% url 'all-tournaments-all-institutions' %}" class="list-group-item list-group-item-action">
-      <span class="emoji">🏢</span>{% trans "All Draws by School" %}
-    </a>
-    <a href="{% url 'all-tournaments-all-teams' %}" class="list-group-item list-group-item-action">
-      <span class="emoji">👯</span>{% trans "All Teams and Divisions" %}
-    </a>
+
+    {% trans "All Draws by Venue" as text %}
+    {% url 'all_tournaments-all-venues' as url %}
+    {% include "components/item-action.html" with emoji="🎪" %}
+
+    {% trans "All Draws by School" as text %}
+    {% url 'all_tournaments-all-institutions' as url %}
+    {% include "components/item-action.html" with emoji="🏢" %}
+
+    {% trans "All Teams and Divisions" as text %}
+    {% url 'all_tournaments-all-teams' as url %}
+    {% include "components/item-action.html" with emoji="👯" %}
+
   </div>
 {% endif %}
 
 <div class="list-group mt-3">
   {% if user.is_superuser %}
-    <a href="{% url 'tournament-create' %}" class="list-group-item list-group-item-action">
-      <i data-feather="plus-circle"></i>
-        {% trans "New Tournament" %}
-    </a>
-    <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action">
-      <i data-feather="edit"></i>
-        {% trans "Edit Database Area" %}
-    </a>
+
+    {% trans "New Tournament" as text %}{% url 'tournament-create' as url %}
+    {% include "components/item-action.html" with icon="plus-circle" %}
+
+    {% trans "Edit Database Area" as text %}{% url 'admin:index' as url %}
+    {% include "components/item-action.html" with icon="edit" %}
+
   {% endif %}
   {% if user.is_authenticated %}
-    <a href="{% url 'password_change' %}" class="list-group-item list-group-item-action">
-      <i data-feather="rotate-cw"></i>
-      {% blocktrans %}Change Password ({{ user }}){% endblocktrans %}
-    </a>
-    <a href="{% url 'logout' %}" class="list-group-item list-group-item-action">
-      <i data-feather="log-out"></i>
-      {% blocktrans %}Log Out ({{ user }}){% endblocktrans %}
-    </a>
+
+    {% blocktrans asvar text %}Change Password ({{ user }}){% endblocktrans %}
+    {% url 'password_change' as url %}
+    {% include "components/item-action.html" with icon="rotate-cw" %}
+
+    {% blocktrans asvar text %}Log Out ({{ user }}){% endblocktrans %}
+    {% url 'logout' as url %}
+    {% include "components/item-action.html" with icon="rotate-cw" %}
+
   {% else %}
-    <a href="{% url 'login' %}" class="list-group-item list-group-item-action">
-      <i data-feather="log-in"></i>
-      {% trans "Log In as Admin" %}
-    </a>
+
+    {% trans "Log In as Admin" as text %}{% url 'login' as url %}
+    {% include "components/item-action.html" with icon="log-in" %}
+
   {% endif %}
 </div>
 

@@ -6,69 +6,66 @@
 
 {% block content %}
 
-<div class="card border-info text-info">
-  <div class="card-body">
-    {% blocktrans trimmed %}
-      There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments.
-    {% endblocktrans %}
-  </div>
-</div>
+  {% blocktrans trimmed asvar p1 %}
+    There are <a href="https://tabbycat.readthedocs.io/en/stable/use/importing-data.html" target="_blank">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
 
-<ul class="list-group mt-3">
-  <a href="{% tournamenturl 'importer-simple-institutions' %}"
-     class="list-group-item list-group-item-action">
-    <div class="row align-items-center">
-      <div class="col">
-        <span class="emoji">🏫</span> {% trans "Add Institutions" %}
+  <ul class="list-group mt-3">
+    <a href="{% tournamenturl 'importer-simple-institutions' %}"
+       class="list-group-item list-group-item-action">
+      <div class="row align-items-center">
+        <div class="col">
+          <span class="emoji">🏫</span> {% trans "Add Institutions" %}
+        </div>
+        <div class="col-auto"><i data-feather="chevron-right"></i></div>
       </div>
-      <div class="col-auto"><i data-feather="chevron-right"></i></div>
-    </div>
-  </a>
-  <a href="{% tournamenturl 'importer-simple-teams' %}"
-     class="list-group-item list-group-item-action">
-    <div class="row align-items-center">
-      <div class="col">
-        <span class="emoji">👯</span> {% trans "Add Teams" %}
+    </a>
+    <a href="{% tournamenturl 'importer-simple-teams' %}"
+       class="list-group-item list-group-item-action">
+      <div class="row align-items-center">
+        <div class="col">
+          <span class="emoji">👯</span> {% trans "Add Teams" %}
+        </div>
+        <div class="col-auto"><i data-feather="chevron-right"></i></div>
       </div>
-      <div class="col-auto"><i data-feather="chevron-right"></i></div>
-    </div>
-  </a>
-  <a href="{% tournamenturl 'importer-simple-adjudicators' %}"
-     class="list-group-item list-group-item-action">
-    <div class="row align-items-center">
-      <div class="col">
-        <span class="emoji">👂</span> {% trans "Add Adjudicators" %}
+    </a>
+    <a href="{% tournamenturl 'importer-simple-adjudicators' %}"
+       class="list-group-item list-group-item-action">
+      <div class="row align-items-center">
+        <div class="col">
+          <span class="emoji">👂</span> {% trans "Add Adjudicators" %}
+        </div>
+        <div class="col-auto"><i data-feather="chevron-right"></i></div>
       </div>
-      <div class="col-auto"><i data-feather="chevron-right"></i></div>
-    </div>
-  </a>
-  <a href="{% tournamenturl 'importer-simple-venues' %}"
-     class="list-group-item list-group-item-action">
-    <div class="row align-items-center">
-      <div class="col">
-        <span class="emoji">🎪</span> {% trans "Add Venues" %}
+    </a>
+    <a href="{% tournamenturl 'importer-simple-venues' %}"
+       class="list-group-item list-group-item-action">
+      <div class="row align-items-center">
+        <div class="col">
+          <span class="emoji">🎪</span> {% trans "Add Venues" %}
+        </div>
+        <div class="col-auto"><i data-feather="chevron-right"></i></div>
       </div>
-      <div class="col-auto"><i data-feather="chevron-right"></i></div>
-    </div>
-  </a>
-  <a href="{% tournamenturl 'venues-categories' %}"
-     class="list-group-item list-group-item-action">
-    <div class="row align-items-center">
-      <div class="col">
-        <span class="emoji">🏪</span> {% trans "Add/Edit Venue Categories" %}
+    </a>
+    <a href="{% tournamenturl 'venues-categories' %}"
+       class="list-group-item list-group-item-action">
+      <div class="row align-items-center">
+        <div class="col">
+          <span class="emoji">🏪</span> {% trans "Add/Edit Venue Categories" %}
+        </div>
+        <div class="col-auto"><i data-feather="chevron-right"></i></div>
       </div>
-      <div class="col-auto"><i data-feather="chevron-right"></i></div>
-    </div>
-  </a>
-  <a href="{% tournamenturl 'venues-constraints' %}"
-     class="list-group-item list-group-item-action">
-    <div class="row align-items-center">
-      <div class="col">
-        <span class="emoji">🏰</span> {% trans "Add/Edit Venue Constraints" %}
+    </a>
+    <a href="{% tournamenturl 'venues-constraints' %}"
+       class="list-group-item list-group-item-action">
+      <div class="row align-items-center">
+        <div class="col">
+          <span class="emoji">🏰</span> {% trans "Add/Edit Venue Constraints" %}
+        </div>
+        <div class="col-auto"><i data-feather="chevron-right"></i></div>
       </div>
-      <div class="col-auto"><i data-feather="chevron-right"></i></div>
-    </div>
-  </a>
-</ul>
+    </a>
+  </ul>
 
 {% endblock content %}

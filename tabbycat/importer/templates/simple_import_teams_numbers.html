@@ -21,12 +21,9 @@
 
 {% else %}
 
-  <div class="card text-info border-info mb-3">
-    <div class="card-body">{% blocktrans trimmed %}
-      Specify the number of new teams to add per institution. In the next step
-      you can specify team and speaker names.
-    {% endblocktrans %}</div>
-  </div>
+  {% blocktrans trimmed asvar p1 %}Specify the number of new teams to add per institution. In the next step
+      you can specify team and speaker names.{% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
 
   <form method="POST">
     {% csrf_token %}

@@ -1,0 +1,11 @@
+
+<a href="{{ url }}" class="list-group-item list-group-item-action">
+  <div class="row align-items-center">
+    <div class="col-auto">
+      {% if icon %}<i data-feather="{{ icon }}"></i>{% endif %}
+      {% if emoji %}<span class="emoji">🎪</span>{% endif %}
+    </div>
+    <div class="col pl-0 pr-0">{{ text|safe }}</div>
+    <div class="col-auto"><i data-feather="chevron-right"></i></div>
+  </div>
+</a>

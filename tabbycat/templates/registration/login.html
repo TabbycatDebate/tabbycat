@@ -24,35 +24,25 @@
       <div class="card">
 
         <div class="list-group list-group-flush">
-          <form id="login" action="." method="POST">
+        <form id="login" action="." method="POST">
 
-          <div class="list-group-item pb-0">
-            <h4 class="card-title mb-4">
-              <i data-feather="lock"></i>
-              {% trans "Log in to Tabbycat" context "page title" %}
-            </h4>
-          </div>
+          {% trans "Log in to Tabbycat" context "page title" as title %}
+          {% include "components/form-title.html" with icon="lock" %}
 
           <div class="list-group-item pt-4 pb-4">
 
             {% csrf_token %}
             {% if form.errors %}
-              <div class="alert alert-danger">
-                <i data-feather="alert-circle"></i>
-                {% trans "Your username and password didn't match." %}
-              </div>
+              {% trans "Your username and password didn't match." as message %}
+              {% include "components/alert.html" with type="danger" %}
             {% endif %}
             {% if next %}
               {% if user.is_authenticated %}
-                <div class="alert alert-warning">
-                  <i data-feather="alert-circle"></i>
-                  {% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}
-                </div>
+                {% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." as message %}
+                {% include "components/alert.html" with type="warning" %}
               {% else %}
-                <div class="alert alert-warning">
-                  <i data-feather="alert-circle"></i>
-                  {% trans "Please log in to see this page." %}
-                </div>
+                {% trans "Please log in to see this page." as message %}
+                {% include "components/alert.html" with type="danger" %}
               {% endif %}
             {% endif %}
 
@@ -66,17 +56,11 @@
 
           </div>
 
-          <div class="list-group-item pt-4 pb-3">
-
-            <button type="submit" name="continue" class="btn btn-block btn-success mb-3">
-              {% trans "Log In" context "button" %}
-            </button>
-            <input type="hidden" name="next" value="{{ next }}" />
-            <div class="text-center">
-              <a href="{% url 'password_reset' %}">{% trans "I forgot my password" %}</a>
-            </div>
-
-          </div>
+          <input type="hidden" name="next" value="{{ next }}" />
+          {% trans "Log In" context "button" as title %}
+          {% trans "I forgot my password" context "button" as subtitle %}
+          {% url 'password_reset' as suburl %}
+          {% include "components/form-submit.html" %}
 
         </form>
         </div>

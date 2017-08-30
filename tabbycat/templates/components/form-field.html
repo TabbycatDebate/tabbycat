@@ -1,0 +1,9 @@
+{% load add_field_css %}
+
+<div class="form-group">
+  <label for="{{ field.id_for_label }}" class="">{{ field.label }}</label>
+  {{ field|addcss:"form-control" }}
+  {% if errors %}
+    {{ errors }}
+  {% endif %}
+</div>

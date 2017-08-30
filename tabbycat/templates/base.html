@@ -93,13 +93,7 @@
         <div class="col" id="messages-container">
           {% if messages %}
             {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated " role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <i data-feather="bell"></i>
-                {{ message }}
-              </div>
+              {% include "components/alert.html" with type="message.tags" message=message %}
             {% endfor %}
           {% endif %}
           {% block page-alerts %}{% endblock %}

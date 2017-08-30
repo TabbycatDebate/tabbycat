@@ -9,52 +9,24 @@
 
 <h6 class="mt-5">Alerts (notify of system events)</h6>
 
-<div class="alert alert-info updated mt-3" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">×</span>
-  </button>
-  <i data-feather="alert-circle"></i>
-  This is an alert of an event that has happened (ie logging in).  <a href="">Link</a>
-</div>
-
-<div class="alert alert-success updated " role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">×</span>
-  </button>
-  <i data-feather="alert-circle"></i>
-  This is message of success. Use sparingly and try to avoid having them
-  at the same time as call to actions.  <a href="">Link</a>
-</div>
-
-<div class="alert alert-warning updated" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">×</span>
-  </button>
-  <i data-feather="bell"></i>
-  This is a message of a warning. <a href="">Link</a>
-</div>
-
-<div class="alert alert-danger updated" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">×</span>
-  </button>
-  <i data-feather="bell"></i>
-  This is a message of an error or bad thing that happened. <a href="">Link</a>
-</div>
+{% include "components/alert.html" with type="info" message="This is an alert of an event that has happened (ie logging in)." %}
+{% include "components/alert.html" with type="success" message="This is an alert of an event that has happened (ie logging in)." %}
+{% include "components/alert.html" with type="warning" message="This is a message of a warning." %}
+{% include "components/alert.html" with type="danger" message="This is a message of an error or bad thing that happened" %}
 
 <h6 class="mt-5">Info Panels (explain crucial information on a page)</h6>
 
-<div class="card border-warning text-warning mt-3">
-  <div class="card-body">
-    This style of info card announces critical information. <a href="">Link</a>
-  </div>
-</div>
+{% blocktrans trimmed asvar p1 %}This style of info card announces critical information. <a href="">Link</a>.{% endblocktrans %}
+{% include "components/explainer-card.html" with type="warning" %}
 
-<div class="card border-info text-info mt-3">
-  <div class="card-body">
-    This style of info card announces general information. <a href="">Link</a>
+{% blocktrans trimmed asvar p1 %}This style of info card announces critical <a href="">information</a>.{% endblocktrans %}
+{% include "components/explainer-card.html" with type="info" %}
+
+<h6 class="mt-5">Nav actions</h6>
+
+  <div class="list-group mt-2">
+    {% include "components/item-action.html" with text="Nav Action Item" icon="feather" %}
   </div>
-</div>
 
 <h6 class="mt-5">Calls to Action (promp for necessary actions)</h6>
 
@@ -126,13 +98,10 @@
   <div class="list-group list-group-flush">
   <form>
 
-    <div class="list-group-item text-info pb-0">
-      <h4 class="card-title">
-        <i data-feather="lock"></i>
-        Form Title and Icon
-      </h4>
-      <p class="text-info">Explanatory text can go here</p>
-    </div>
+
+    {% trans "Form Title" context "page title" as title %}
+    {% trans "Sub Title Title" as text %}
+    {% include "components/form-title.html" with icon="feather" %}
 
     <div class="list-group-item pb-4">
 

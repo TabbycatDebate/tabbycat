@@ -17,15 +17,10 @@
       <form action="." method="POST">
       {% csrf_token %}
 
-        <div class="list-group-item pb-0">
+        {% trans "Welcome to Tabbycat!" as title %}
+        {% include "components/form-title.html" with emoji="👋" %}
 
-          <h3 class="card-title">
-            <span class="emoji">👋</span>
-            {% blocktrans trimmed %}
-              Welcome to Tabbycat!
-            {% endblocktrans %}
-          </h3>
-
+        <div class="list-group-item">
           <p class="text-info">
             {% blocktrans trimmed %}
               To get started, you'll need to create the first user account. This account
@@ -39,15 +34,15 @@
               username and password after it's created, or add new superusers afterwards.
             {% endblocktrans %}
           </p>
-          <p class="text-info">
+          <p class="text-info mb-0">
             {% blocktrans trimmed %}
               The e-mail address is used for password resets. You don't have to
               provide one, but if you don't, you won't be able to reset your password
               if you forget it.
             {% endblocktrans %}
           </p>
-
         </div>
+
         <div class="list-group-item pb-4">
 
           {% if form.errors %}
@@ -61,25 +56,13 @@
           {% endif %}
 
           {% for field in form %}
-            <div class="form-group">
-              <label for="{{ field.id_for_label }}" class="">{{ field.label }}</label>
-              {{ field|addcss:"form-control" }}
-              {% if field.errors %}
-                {{ field.errors }}
-              {% endif %}
-            </div>
+            {% include "components/form-field.html" %}
           {% endfor %}
 
-
         </div>
-        <div class="list-group-item pt-4 pb-3">
 
-          <button type="submit" class="btn btn-block btn-success form-control">
-            {% trans "Create Account" %}
-            <i data-feather="chevron-right"></i>
-          </button>
-
-        </div>
+        {% trans "Create Account" as title %}
+        {% include "components/form-submit.html" %}
 
       </form>
       </div>

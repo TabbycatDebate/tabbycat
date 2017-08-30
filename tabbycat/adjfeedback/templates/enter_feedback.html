@@ -11,23 +11,19 @@
 {% block content %}
 
   {% if tournament.current_round.seq == 1 and tournament.current_round.draw_status != tournament.current_round.STATUS_RELEASED %}
-    <div class="alert alert-warning">
-      <i data-feather="alert-circle"></i>
-      There are no feedback options because no rounds have been released to the
-      public yet. Check back when they have!
-    </div>
+    {% include "components/alert.html" with type="info" warning="There are no feedback options because no rounds have been released to the public yet. Check back when they have!" %}
   {% endif %}
 
   {% if form.errors %}
-  <div class="alert alert-danger">
-    <i data-feather="alert-circle"></i>
-    <p>There are some problems with this feedback submission. Please review and correct them.</p>
+    <div class="alert alert-danger">
+      <i data-feather="alert-circle"></i>
+      <p>There are some problems with this feedback submission. Please review and correct them.</p>
 
-    {% if form.non_field_errors %}
-      <p>General errors:</p>
-      <div class="ballot-errors">{{ form.non_field_errors }}</div>
-    {% endif %}
-  </div>
+      {% if form.non_field_errors %}
+        <p>General errors:</p>
+        <div class="ballot-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+    </div>
   {% endif %}
 
   <div class="card">
