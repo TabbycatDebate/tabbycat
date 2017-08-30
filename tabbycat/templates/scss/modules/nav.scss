@@ -62,21 +62,6 @@
 }
 
 //------------------------------------------------------------------------------
-// Full screen pages
-//------------------------------------------------------------------------------
-
-.override-sidebar-offset #sidebar,
-.override-sidebar-offset .fake-sidebar,
-.override-sidebar-offset .footer {
-  display: none !important;
-}
-
-.override-sidebar-offset .main {
-  @extend .col-12;
-  padding-right: 0;
-}
-
-//------------------------------------------------------------------------------
 // Responsive tweaks
 //------------------------------------------------------------------------------
 

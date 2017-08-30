@@ -11,7 +11,7 @@
     <a href="{% roundurl 'motions-edit' %}" class="btn btn-primary">
       <i data-feather="chevron-left"></i> Back to Motions
     </a>
-    <a class="btn btn-primary " href="{% roundurl 'results-ballot-checkin' round %}">
+    <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
       Check In Ballots
     </a>
   {% endif %}
@@ -19,7 +19,7 @@
 
 {% block page-subnav-actions %}
   {% if user.is_superuser and round.seq < tournament.round_set.count and current_round == round %}
-    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
+    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
       Advance to Next Round <i data-feather="chevron-right"></i>
     </a>
   {% endif %}
@@ -49,28 +49,28 @@
       <div class="btn-group btn-group-justified mb-3" role="group">
 
         {% if not user.is_superuser %}
-          <a class="btn btn-primary " href="{% roundurl 'results-ballot-checkin' round %}">
+          <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
             Check-In Ballots
           </a>
         {% endif %}
         <span class="btn btn-primary" disabled>
-          {{ stats.ballot_in }} / {{ stats.total }} Checked In <span class="icon glyphicon-inbox"></span>
+          {{ stats.ballot_in }} / {{ stats.total }} Checked In <span class="icon inbox"></span>
         </span>
         <span class="btn btn-danger" disabled>
-          {{ stats.none }} / {{ stats.total }} Unknown <span class="icon glyphicon-remove"></span>
+          {{ stats.none }} / {{ stats.total }} Unknown <i data-feather="x"></i>
         </span>
         <span class="btn btn-warning" disabled>
           {{ stats.draft }} / {{ stats.total }} Unconfirmed <span class="icon glyphicon-adjust"></span>
         </span>
         <span class="btn btn-success" disabled>
-          {{ stats.confirmed }} / {{ stats.total }} Confirmed <span class="icon glyphicon-ok"></span>
+          {{ stats.confirmed }} / {{ stats.total }} Confirmed <i data-feather="check"></i>
         </span>
         {% if pref.enable_postponements %}
           <span class="btn btn-primary" disabled>
             {{ stats.postponed }} / {{ stats.total }} Postponed <span class="icon glyphicon-pause"></span>
           </span>
           <span class="btn btn-primary" disabled>
-            Byes <span class="icon glyphicon-fast-forward"></span>
+            Byes <span class="icon fast-forward"></span>
           </span>
         {% endif %}
       </div>

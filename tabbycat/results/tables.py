@@ -10,17 +10,17 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
     def get_status_meta(self, debate):
         if any(team.type == Team.TYPE_BYE for team in debate.teams):
-            return "glyphicon-fast-forward", 5, "Bye Debate"
+            return "fast-forward", "", 5, "Bye Debate"
         elif debate.result_status == Debate.STATUS_NONE and not debate.ballot_in:
-            return "glyphicon-remove text-danger", 0, "No Ballot"
+            return "x", "text-danger", 0, "No Ballot"
         elif debate.result_status == Debate.STATUS_NONE and debate.ballot_in:
-            return "glyphicon-inbox text-warning", 1, "Ballot is In"
+            return "inbox", "text-warning", 1, "Ballot is In"
         elif debate.result_status == Debate.STATUS_DRAFT:
-            return "glyphicon-adjust text-info", 2, "Ballot is Unconfirmed"
+            return "sliders", "text-info", 2, "Ballot is Unconfirmed"
         elif debate.result_status == Debate.STATUS_CONFIRMED:
-            return "check text-success", 3, "Ballot is Confirmed"
+            return "check", "text-success", 3, "Ballot is Confirmed"
         elif debate.result_status == Debate.STATUS_POSTPONED:
-            return "glyphicon-pause", 4, "Debate was Postponed"
+            return "pause", "", 4, "Debate was Postponed"
         else:
             raise ValueError('Debate has no discernable status')
 
@@ -33,8 +33,9 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         }
         status_cell = [{
             'icon': self.get_status_meta(debate)[0],
-            'sort': self.get_status_meta(debate)[1],
-            'tooltip': self.get_status_meta(debate)[2]
+            'class': self.get_status_meta(debate)[1],
+            'sort': self.get_status_meta(debate)[2],
+            'tooltip': self.get_status_meta(debate)[3]
         } for debate in debates]
         self.add_column(status_header, status_cell)
 

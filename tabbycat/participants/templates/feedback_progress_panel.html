@@ -11,7 +11,7 @@
           {% if tracker.fulfilled %}
             <li class="list-group-item text-success">
               <span class="badge">{{ tracker.round.name }}</span>
-              <span class="icon glyphicon-ok"></span>
+              <i data-feather="check"></i>
               Has submitted feedback for
               <strong>{{ tracker.submission.adjudicator.name }}</strong> of
               {{ tracker.submission.adjudicator.institution.code }}
@@ -19,7 +19,7 @@
           {% elif tracker.expected and tracker.count == 0 %}
             <li class="list-group-item text-danger">
               <span class="badge">{{ tracker.round.name }}</span>
-              <span class="icon glyphicon-remove"></span>
+              <i data-feather="x"></i>
               Has not submitted feedback for
               {% for target in tracker.acceptable_targets %}
                 {% if not forloop.first and forloop.last %}or{% endif %}

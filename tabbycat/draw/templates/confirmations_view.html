@@ -43,9 +43,9 @@
               {{ shift.debate.division.venue_category }} @
               {{ shift.debate.time.time|time:'h:i' }}
               {% if shift.timing_confirmed == True %}
-                <span class="icon glyphicon-ok pull-right"></span>
+                <i data-feather="ok" class="pull-right"></span>
               {% elif shift.timing_confirmed == False %}
-                <span class="icon glyphicon-remove pull-right"></span>
+                <i data-feather="x" class="pull-right"></span>
               {% endif %}
             </li>
           {% endfor %}
