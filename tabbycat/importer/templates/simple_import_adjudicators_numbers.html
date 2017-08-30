@@ -34,8 +34,8 @@
     </div>
     {% endif %}
 
-    <div class="card">
-      <ul class="list-group">
+    <div class="card pt-3">
+      <ul class="list-group list-group-flush">
 
         {% for field in wizard.form %}
           <li class="list-group-item">
@@ -51,9 +51,8 @@
           </li>
         {% endfor %}
 
-        <li class="list-group-item">
-          <input type="submit" class="btn btn-primary btn-block" value="{% trans 'Next Step' %}" />
-        </li>
+        {% trans "Next Step" context "button" as title %}
+        {% include "components/form-submit.html" %}
 
       </ul>
     </div>

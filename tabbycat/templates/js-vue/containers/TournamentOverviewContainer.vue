@@ -16,7 +16,7 @@
 
     <div class="row">
 
-      <div class="col mt-4">
+      <div class="col mt-3">
         <div class="card border-info">
           <div class="card-body">
             <h5 class="text-info mb-0"><i data-feather="clock"></i> Latest Actions</h5>
@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="col mt-4">
+      <div class="col mt-3">
         <div class="card border-info">
           <div class="card-body">
             <h5 class="text-info mb-0"><i data-feather="clock"></i> Latest Results</h5>

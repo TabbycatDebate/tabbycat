@@ -1,3 +1,6 @@
+
+{% if alone == True %}<div class="list-item-group">{% endif %}
+
 <a href="{{ url }}" class="list-group-item list-group-item-action
    {% if success %}bg-success text-white strong{% endif %}">
 
@@ -8,11 +11,20 @@
         <i data-feather="circle"></i>
       {% else %}
         {% if icon %}<i data-feather="{{ icon }}"></i>{% endif %}
-        {% if emoji %}<span class="emoji">🎪</span>{% endif %}
+        {% if emoji %}<span class="emoji">{{ emoji }}</span>{% endif %}
       {% endif %}
     </div>
 
-    <div class="col pl-0 pr-0">{{ text|safe }}</div>
+    <div class="col pl-0 pr-0">
+
+      {% if extra %}
+        <h5>{{ text|safe }}</h5>
+        {{ extra }}
+      {% else %}
+        {{ text|safe }}
+      {% endif %}
+
+    </div>
 
     <div class="col-auto"><i data-feather="chevron-right"></i></div>
 
@@ -20,3 +32,4 @@
 
 </a>
 
+{% if alone == True %}</div>{% endif %}

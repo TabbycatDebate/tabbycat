@@ -19,55 +19,30 @@
     </div>
   </div>
 
-
   <div class="row">
     <div class="col">
 
       <div class="card mt-3">
-        <div class="list-group list-group-flush">
 
-          {% if wizard.form.errors %}
+        <div class="list-group list-group-flush">
+          {% if wizard.form.non_form_errors %}
             {% include "components/form-errors.html" with errors=wizard.form.non_form_errors %}
           {% endif %}
-
         </div>
 
         {% for form in wizard.form %}{# actually a formset #}
-          <div class="list-group-item">
 
-            {% if form.non_field_errors %}
-              <div class="alert alert-danger">
-                <i data-feather="alert-circle"></i>
-                {{ form.non_field_errors }}
-              </div>
-            {% endif %}
+          {{ form.id }}
+          {% include "components/form-main.html" with double=True %}
 
-            {{ form.id }}
-            <div class="row">
-              {% for field in form.visible_fields %}
-                <div class="form-group col-lg-6">
-                  <label for="{{ field.id_for_label }}">
-                    {{ field.label }}
-                  </label>
-                  {{ field|addcss:"form-control" }}
-                  {{ field.errors }}
-                </div>
-              {% endfor %}
-            </div>
-
-          </div>
         {% endfor %}
 
-        <div class="list-group-item pt-4 pb-3">
-          <input type="submit" class="btn btn-success btn-block" value="{% trans 'Save All Institutions' %}" />
-        </div>
+        {% trans "Save All Institutions" as title %}
+        {% include "components/form-submit.html" %}
 
       </div>
     </div>
   </div>
-
-
-
 
 </form>
 

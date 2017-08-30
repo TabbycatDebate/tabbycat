@@ -3,52 +3,21 @@
 
 {% block content %}
 
-  <div class="card mt-3">
-    <div class="list-group list-group-flush">
-    <form method="POST" action="" class="">
+  <form method="POST" action="" class="">
     {% csrf_token %}
+
+    <div class="card mt-3">
 
       {% if formset.errors %}
         {% include "components/form-errors.html" with errors=formset.errors %}
       {% endif %}
-
       {{ formset.management_form }}
 
       {% for form in formset %}
-        <div class="list-group-item pb-4">
-
-          {% if form.non_field_errors %}
-            <div class="alert alert-danger mt-2">
-              <i data-feather="alert-circle"></i>
-              {{ form.non_field_errors }}
-            </div>
-          {% endif %}
-
-          {% for field in form.hidden_fields %}
-            {{ field }}
-          {% endfor %}
-
-          <div class="row">
-            {% for field in form.visible_fields %}
-              <div class="form-group col-lg-6">
-                <label for="{{ field.id_for_label }}">
-                  {{ field.label }}
-                </label>
-                {{ field|addcss:"form-control" }}
-                <small class="form-text text-muted">{{ field.help_text }}</small>
-                {{ field.errors }}
-              </div>
-            {% endfor %}
-          </div>
-
-        </div>
+        {% include "components/form-main.html" with double=True %}
       {% endfor %}
 
-
-      </div>
-
-      <div class="list-group-item pt-4 pb-3">
-
+      <div class="list-group-item pt-3 pb-3">
         <div class="row">
           <div class="col">
             <input class="btn btn-block btn-success" type="submit" name="submit" value="{% block save-button-text %}Save{% endblock %}" />
@@ -57,12 +26,9 @@
             <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
           </div>
         </div>
-
       </div>
 
-
-    </form>
     </div>
-  </div>
+  </form>
 
 {% endblock content %}

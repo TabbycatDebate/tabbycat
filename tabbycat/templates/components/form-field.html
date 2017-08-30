@@ -1,6 +1,7 @@
 {% load add_field_css %}
 
-<div class="form-group">
+<div class="form-group {% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %}">
+
   <label for="{{ field.id_for_label }}" class="">{{ field.label }}</label>
   {{ field|addcss:"form-control" }}
   {% if field.help_text  %}
@@ -9,4 +10,5 @@
   {% if errors %}
     {{ errors }}
   {% endif %}
+
 </div>

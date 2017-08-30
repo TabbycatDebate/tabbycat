@@ -32,6 +32,7 @@
           <div class="list-group-item pt-4 pb-4">
 
             {% csrf_token %}
+
             {% if form.errors %}
               {% trans "Your username and password didn't match." as message %}
               {% include "components/form-errors.html" with errors=form.errors %}

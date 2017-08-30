@@ -12,60 +12,31 @@
   {% include "components/explainer-card.html" with type="info" %}
 
   <ul class="list-group mt-3">
-    <a href="{% tournamenturl 'importer-simple-institutions' %}"
-       class="list-group-item list-group-item-action">
-      <div class="row align-items-center">
-        <div class="col">
-          <span class="emoji">🏫</span> {% trans "Add Institutions" %}
-        </div>
-        <div class="col-auto"><i data-feather="chevron-right"></i></div>
-      </div>
-    </a>
-    <a href="{% tournamenturl 'importer-simple-teams' %}"
-       class="list-group-item list-group-item-action">
-      <div class="row align-items-center">
-        <div class="col">
-          <span class="emoji">👯</span> {% trans "Add Teams" %}
-        </div>
-        <div class="col-auto"><i data-feather="chevron-right"></i></div>
-      </div>
-    </a>
-    <a href="{% tournamenturl 'importer-simple-adjudicators' %}"
-       class="list-group-item list-group-item-action">
-      <div class="row align-items-center">
-        <div class="col">
-          <span class="emoji">👂</span> {% trans "Add Adjudicators" %}
-        </div>
-        <div class="col-auto"><i data-feather="chevron-right"></i></div>
-      </div>
-    </a>
-    <a href="{% tournamenturl 'importer-simple-venues' %}"
-       class="list-group-item list-group-item-action">
-      <div class="row align-items-center">
-        <div class="col">
-          <span class="emoji">🎪</span> {% trans "Add Venues" %}
-        </div>
-        <div class="col-auto"><i data-feather="chevron-right"></i></div>
-      </div>
-    </a>
-    <a href="{% tournamenturl 'venues-categories' %}"
-       class="list-group-item list-group-item-action">
-      <div class="row align-items-center">
-        <div class="col">
-          <span class="emoji">🏪</span> {% trans "Add/Edit Venue Categories" %}
-        </div>
-        <div class="col-auto"><i data-feather="chevron-right"></i></div>
-      </div>
-    </a>
-    <a href="{% tournamenturl 'venues-constraints' %}"
-       class="list-group-item list-group-item-action">
-      <div class="row align-items-center">
-        <div class="col">
-          <span class="emoji">🏰</span> {% trans "Add/Edit Venue Constraints" %}
-        </div>
-        <div class="col-auto"><i data-feather="chevron-right"></i></div>
-      </div>
-    </a>
+
+    {% trans "Add Institutions" as text %}
+    {% tournamenturl 'importer-simple-institutions' as url %}
+    {% include "components/item-action.html" with emoji="🏫"%}
+
+    {% tournamenturl 'importer-simple-teams' as url %}
+    {% trans "Add Teams" as text %}
+    {% include "components/item-action.html" with emoji="👯" %}
+
+    {% tournamenturl 'importer-simple-adjudicators' as url %}
+    {% trans "Add Adjudicators" as text %}
+    {% include "components/item-action.html" with emoji="👂" %}
+
+    {% tournamenturl 'importer-simple-venues' as url %}
+    {% trans "Add Venues" as text %}
+    {% include "components/item-action.html" with emoji="🎪" %}
+
+    {% tournamenturl 'venues-categories' as url %}
+    {% trans "Add/Edit Venue Categories" as text %}
+    {% include "components/item-action.html" with emoji="🏪" %}
+
+    {% tournamenturl 'venues-constraints' as url %}
+    {% trans "Add/Edit Venue Constraints" as text %}
+    {% include "components/item-action.html" with emoji="🏰" %}
+
   </ul>
 
 {% endblock content %}

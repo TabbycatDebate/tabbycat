@@ -11,35 +11,17 @@
 
   <div class="card mt-3">
     <div class="list-group list-group-flush">
-    <form action="." method="POST" class="">
+      <form action="." method="POST" class="">
 
-      <div class="list-group-item text-info">
-        To finish creating <em>{{ tournament.short_name }}</em> ready you should select
-        the basic configuration options. Note that these can always be changed
-        later (and with more precise control) if needed.
-      </div>
+        {% trans "To finish creating your tournament select a basic configuration options. Note that these can always be changed later (and with more precise control) if needed." as text %}
+        {% include "components/form-title.html" %}
 
-      <div class="list-group-item">
+        {% include "components/form-main.html" %}
 
-        {% csrf_token %}
+        {% trans "Configure Tournament" as title %}
+        {% include "components/form-submit.html" %}
 
-        {% if form.errors %}
-          {% include "components/form-errors.html" with errors=form.errors %}
-        {% endif %}
-
-        {% for field in form %}
-          {% include "components/form-field.html" %}
-        {% endfor %}
-
-      </div>
-
-      <div class="list-group-item  pt-4 pb-4">
-        <button type="submit" class="btn btn-block btn-success">
-          {% trans "Configure Tournament" %}
-        </button>
-      </div>
-
-    </form>
+      </form>
     </div>
   </div>
 

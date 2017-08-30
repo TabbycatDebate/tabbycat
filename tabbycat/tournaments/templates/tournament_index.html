@@ -13,6 +13,7 @@
 {% block content %}
 
   {% if blank %}
+
     <div class="card border-info text-info mb-3">
       <div class="card-body">
         <h4 class="card-title">Welcome to your new tournament!</h4>
@@ -30,23 +31,22 @@
     </div>
 
     {% tournamenturl 'importer-simple-index' as url %}
-    {% include "components/item-action.html" with text="Use the simple importer to add your initial data." success=True %}
+    {% include "components/item-action.html" with alone=True text="Use the simple importer to add your initial data." success=True %}
 
   {% elif round.get_draw_status_display.lower == 'none' %}
 
     {% roundurl 'availability-index' round as url %}
-    {% include "components/item-action.html" with text="Go to the checkins area to begin creating a draw." success=True %}
+    {% include "components/item-action.html" with alone=True text="Go to the checkins area to begin creating a draw." success=True %}
 
   {% elif round.get_draw_status_display.lower == 'confirmed' %}
 
     {% roundurl 'draw' round as url %}
-    {% include "components/item-action.html" with text="Go to the draw area to allocate adjudicators." success=True %}
-
+    {% include "components/item-action.html" with alone=True text="Go to the draw area to allocate adjudicators." success=True %}
 
   {% elif round.get_draw_status_display.lower == 'released' %}
 
     {% roundurl 'draw' round as url %}
-    {% include "components/item-action.html" with text="Go to the results area to begin entering ballots." success=True %}
+    {% include "components/item-action.html" with alone=True text="Go to the results area to begin entering ballots." success=True %}
 
   {% endif %}
 

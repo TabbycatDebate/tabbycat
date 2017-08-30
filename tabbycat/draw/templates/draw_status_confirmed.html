@@ -68,7 +68,7 @@
 
         <div class="list-group list-group-flush">
 
-          {% roundurl  'edit-adj-allocation' as url %}
+          {% roundurl 'edit-adj-allocation' as url %}
           {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
             {% include "components/item-action.html" with title="Allocate Adjudicators" icon=check-circle %}
           {% else %}

@@ -61,6 +61,7 @@ input[type=number] {
 input[type="radio"].form-control,
 input[type="checkbox"].form-control {
   width: 20px; // Mostly for integer scale questions; need to align with labels
+  height: 38px;
 }
 
 input[type="range"] {

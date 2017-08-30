@@ -27,47 +27,24 @@
   {% for forms in forms_by_institution %}
 
     <div class="card mt-3">
-      <div class="list-group list-group-flush pb-1">
 
-        <div class="list-group-item card-title pb-1">
-          <h4>{% blocktrans trimmed with institution_name=forms.grouper.name %}
-            Teams for {{ institution_name }}
-          {% endblocktrans %}</h4>
-        </div>
-
-        {% for form in forms.list %}
-          <div class="list-group-item pb-4">
-
-              {% if form.non_field_errors %}
-                <div class="col-sm-12">
-                  {{ form.non_field_errors }}
-                </div>
-              {% endif %}
-
-              {% for field in form.hidden_fields %}
-                {{ field }}
-              {% endfor %}
-
-              {% for field in form.visible_fields %}
-                <div class="form-group">
-                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                  {{ field|addcss:"form-control" }}
-                  {{ field.errors }}
-                </div>
-              {% endfor %}
-
-          </div>
-        {% endfor %}
-
+      <div class="list-group-item card-title pb-1">
+        <h4>{% blocktrans trimmed with institution_name=forms.grouper.name %}
+          Teams for {{ institution_name }}
+        {% endblocktrans %}</h4>
       </div>
+
+      {% for form in forms.list %}
+        {% include "components/form-main.html" with double=True %}
+      {% endfor %}
+
     </div>
 
   {% endfor %}
 
-  <div class="row mt-3">
-    <div class="col-md-12">
-      <input type="submit" class="btn btn-block btn-success" value="{% trans 'Save All Teams' %}" />
-    </div>
+  <div class="card mt-3">
+    {% trans "Save All Teams" as title %}
+    {% include "components/form-submit.html" %}
   </div>
 
 </form>

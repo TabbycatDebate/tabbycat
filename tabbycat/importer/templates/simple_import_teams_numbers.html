@@ -50,9 +50,8 @@
           </li>
         {% endfor %}
 
-        <li class="list-group-item pt-4 pb-3">
-          <input type="submit" class="btn btn-primary btn-block" value="{% trans 'Next Step' %}" />
-        </li>
+        {% trans "Next Step" context "button" as title %}
+        {% include "components/form-submit.html" %}
 
       </ul>
     </div>

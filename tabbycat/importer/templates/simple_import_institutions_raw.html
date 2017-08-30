@@ -12,12 +12,7 @@
   {% csrf_token %}
     <div class="list-group list-group-flush">
 
-      <div class="list-group-item text-info">
-        Paste a list of institutions with one institution per line and following
-        the format of: <em>Full Name,Nickname</em>. Note that teams that use an
-        institutional prefix will use their Nickname for this purpose, ie
-        "MUDS 1". For example:
-      </div>
+      {% include "components/form-title.html" with text="Paste a list of institutions with one institution per line and following the format of: <em>Full Name,Nickname</em>. Teams marked as using an institutional prefix will use the Nickname for this purpose, ie 'MUDS 1'. For example:" %}
 
       <div class="list-group-item list-group-item-secondary pt-0 pb-0">
         <pre><code>
@@ -31,10 +26,10 @@ Universiti Teknologi MARA,UTMARA</code></pre>
         {{ wizard.management_form }}
 
         {% if wizard.form.institutions_raw.errors %}
-        <div class="alert alert-danger">
-          <p>{% trans "There are some problems with the data on this form:" %}</p>
-          {{ wizard.form.institutions_raw.errors }}
-        </div>
+          <div class="alert alert-danger">
+            <p>{% trans "There are some problems with the data on this form:" %}</p>
+            {{ wizard.form.institutions_raw.errors }}
+          </div>
         {% endif %}
 
         <div class="form-group">
@@ -43,9 +38,8 @@ Universiti Teknologi MARA,UTMARA</code></pre>
 
       </div>
 
-      <div class="list-group-item pt-3 pb-3">
-        <input type="submit" class="btn btn-success btn-block " value="{% trans 'Next Step' %}">
-      </div>
+      {% trans "Next Step" as title %}
+      {% include "components/form-submit.html" %}
 
     </div>
   </form>

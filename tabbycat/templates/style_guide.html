@@ -30,7 +30,7 @@
 
 <h6 class="mt-5">Calls to Action (promp for necessary actions)</h6>
 
-{% include "components/item-action.html" with url="#" text="Go to the draw area to allocate adjudicators." success=True %}
+{% include "components/item-action.html" with url="#" alone=True text="Go to the draw area to allocate adjudicators." success=True %}
 
 <h6 class="mt-5">Cards (for sections of info or link blocks)</h6>
 
@@ -88,7 +88,6 @@
   <div class="list-group list-group-flush">
   <form>
 
-
     {% trans "Form Title" context "page title" as title %}
     {% trans "Sub Title Title" as text %}
     {% include "components/form-title.html" with icon="feather" %}
@@ -122,22 +121,14 @@
           <label for="{{ field.id_for_label }}">Label D</label>
           <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
         </div>
-        <div class="form-group col-lg-6">
-          <label for="{{ field.id_for_label }}">Label E</label>
-          <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
-        </div>
       </div>
 
     </div>
 
-    <div class="list-group-item pt-4 pb-3">
-      <button type="submit" name="continue" class="btn btn-block btn-success">
-        Action Button
-      </button>
-      <div class="text-center mt-3">
-        <a href="">Alternate Option</a>
-      </div>
-    </div>
+    {% trans "Log In" context "button" as title %}
+    {% trans "I forgot my password" context "button" as subtitle %}
+    {% url 'password_reset' as suburl %}
+    {% include "components/form-submit.html" %}
 
   </form>
   </div>
