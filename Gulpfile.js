@@ -30,17 +30,15 @@ if (isProduction === true) {
 }
 
 // Tasks
-gulp.task('fonts-compile', function() {
-  gulp.src([
-      'node_modules/bootstrap-sass/assets/fonts/**/*.eot',
-      'node_modules/bootstrap-sass/assets/fonts/**/*.svg',
-      'node_modules/bootstrap-sass/assets/fonts/**/*.ttf',
-      'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
-      'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
-    ])
-    .pipe(rename({dirname: ''})) // Remove folder structure
-    .pipe(gulp.dest(outputDir + 'fonts/'));
-});
+
+// DEPRECATED: no more custom fonts (until Interface is a package)
+// gulp.task('fonts-compile', function() {
+//   gulp.src([
+//       'node_modules/bootstrap/assets/fonts/**/*.woff2',
+//     ])
+//     .pipe(rename({dirname: ''})) // Remove folder structure
+//     .pipe(gulp.dest(outputDir + 'fonts/'));
+// });
 
 gulp.task('styles-compile', function() {
   gulp.src([
@@ -126,7 +124,7 @@ gulp.task("html-reload", function() {
 
 // Runs with --production if debug is false or there's no local settings
 gulp.task('build', [
-  'fonts-compile',
+  // 'fonts-compile',
   'styles-compile',
   'js-vendor-compile',
   'js-compile',

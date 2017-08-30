@@ -40,11 +40,12 @@
       {% include "components/item-action.html" with alone=True success=True %}
 
     {% else %}
-      <div class="list-group-item lead">
-        {% blocktrans trimmed %}
-          There are currently no tournaments set up on this site.
-        {% endblocktrans %}
-      </div>
+
+      {% blocktrans trimmed asvar p1 %}
+        There are currently no tournaments set up on this site.
+      {% endblocktrans %}
+      {% include "components/explainer-card.html" with type="info" %}
+
     {% endif %}
   </div>
 
