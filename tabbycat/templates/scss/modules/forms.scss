@@ -66,6 +66,7 @@ input[type="checkbox"].form-control {
 
 input[type="range"] {
   min-width: 70px; // Fix for IE Edge; doesn't show otherwise
+  width: 100%; // Fix for importance slider
 }
 
 // Labels in list groups need to vertically center with inputs

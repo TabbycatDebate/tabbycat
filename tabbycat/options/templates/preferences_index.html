@@ -57,7 +57,7 @@
   <div class="col">
 
     <ul class="list-group mt-3">
-      {% tournamenturl tournamenturl 'tournament-set-current-round' as url %}
+      {% tournamenturl 'tournament-set-current-round' as url %}
       {% include "components/item-action.html" with icon="clock" text="Manually Set Current Round" extra="Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page." %}
     </ul>
 

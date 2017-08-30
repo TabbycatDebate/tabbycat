@@ -28,7 +28,7 @@
     <slot name="hvenue">
       <div class="vue-sortable thead flex-cell flex-6" @click="resort('venue')"
            data-toggle="tooltip" title="The venue of this debate">
-        <span class="glyphicon icon-venue-location"></span>
+        <i data-feather="map-pin"></i>
         <span :class="sortClasses('venue')"></span>
       </div>
     </slot>

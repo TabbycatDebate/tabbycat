@@ -24,11 +24,12 @@ span.emoji {
 // Icon Styles
 //------------------------------------------------------------------------------
 
-// Fixing old
+// Fixing old; to deprecate
 .glyphicon {
   height: 16px;
   width: 16px;
   background: red;
+  position: absolute;
 }
 
 .feather {

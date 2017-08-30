@@ -62,11 +62,11 @@
       {% roundurl 'availability-venues' round as url %}
     {% endif %}
 
-    {% trans "Check In" as title %}
+    {% trans "Check In" as text %}
     {% if ct.in_now == 0 %}
       {% include "components/item-action.html" with alone=True success=True %}
     {% else %}
-      {% include "components/item-action.html" with alone=True icon=check-circle %}
+      {% include "components/item-action.html" with alone=True icon="check-circle" %}
     {% endif %}
 
   </div>

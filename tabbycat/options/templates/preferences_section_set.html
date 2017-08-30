@@ -13,32 +13,17 @@
     <i data-feather="chevron-left"></i> Back to Configuration
   </a>
 
-  {% if form.errors %}
-    {% include "components/form-errors.html" with errors=form.errors %}
-  {% endif %}
 {% endblock %}
 
 {% block content %}
 
-  <div class="card">
+  <form action="" enctype="multipart/form-data" method="post" class="">
+    <div class="card mt-3">
 
-    <form action="" enctype="multipart/form-data" method="post" class="card-body">
+      {% include "components/form-main.html" with double=True %}
+      {% include "components/form-submit.html" with title="Save Configuration" %}
 
-      <div class="row">
-
-        {% csrf_token %}
-        {% for field in form %}
-          {% include "components/form-field.html" %}
-        {% endfor %}
-
-      </div>
-      <hr>
-
-      <button type="submit" class="btn btn-success btn-block">
-        Save Configuration
-      </button>
-    </form>
-
-  </div>
+    </div>
+  </form>
 
 {% endblock content %}

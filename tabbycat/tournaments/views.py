@@ -175,7 +175,7 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):
-        t = Tournament.objects.last()
+        t = Tournament.objects.order_by('id').last()
         return reverse_tournament('tournament-configure', tournament=t)
 
 
@@ -197,7 +197,7 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
             messages.success(self.request, "Created new demo tournament. You "
                 "can now configure it below.")
 
-        new_tournament = Tournament.objects.last()
+        new_tournament = Tournament.objects.order_by('seq').last()
         return redirect(reverse_tournament('tournament-configure', tournament=new_tournament))
 
 

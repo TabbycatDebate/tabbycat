@@ -33,7 +33,7 @@
     </div>
 
     <div class="row">
-      <div class="col mb-3">
+      <div class="col mb-3 mt-3">
 
           <draw-header :positions="positions"  @resort="updateSorting"
                        :sort-key="sortKey" :sort-order="sortOrder">

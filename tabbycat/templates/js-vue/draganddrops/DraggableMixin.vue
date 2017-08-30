@@ -32,7 +32,6 @@ export default {
   methods: {
     dragStart: function(event) {
       if (this.locked) {
-        console.log('locked')
         event.preventDefault() // Firefox needs this
         return
       } else {

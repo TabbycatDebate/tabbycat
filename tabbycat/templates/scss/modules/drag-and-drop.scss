@@ -18,10 +18,10 @@
 
   background: #fff; // Need to override default :hover bg state that gets stuck
   margin: 4px 4px 0 0; // Need spacing offsets so they don't bunch
-  padding: 5px 6px;
+  padding: 7px 6px;
   position: relative; // Needs this so the "seen ago" hover tooltip will show
   border: 4px solid $input-border-color;
-  height: 42px;
+  height: 50px;
   text-align: left;
   @extend .flex-horizontal;
 
@@ -29,11 +29,22 @@
   .draggable-prefix {
     @extend .flex-vertical-center; // Vertically center score
     padding-right: 6px;
+
+    h4 {
+      margin-bottom: 0px;
+      font-family: $font-family-sans-serif;
+      font-weight: normal;
+      letter-spacing: -1px;
+    }
   }
 
   .draggable-title {
     overflow: hidden; // Needed for Windows/IE
-    line-height: 8px; // Compress text/sub-text spacing
+    line-height: 12px; // Compress text/sub-text spacing
+
+    h5 {
+      font-size: 15px;
+    }
 
     .subtitle {
       font-size: 11px; // Extra small subtext

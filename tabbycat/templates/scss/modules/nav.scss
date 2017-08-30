@@ -24,6 +24,7 @@
   border-left: 0;
   border-right: 0;
   color: $sidebar-muted-text;
+  white-space: nowrap;
 
   &.active, &[aria-expanded="true"] {
     background: darken($sidebar-bg, 5%);
@@ -61,11 +62,18 @@
 }
 
 //------------------------------------------------------------------------------
-// From https://www.codeply.com/go/GQ1Mz8RqZB
+// Full screen pages
 //------------------------------------------------------------------------------
 
-#sidebar .list-group-item {
-  white-space: nowrap;
+.override-sidebar-offset #sidebar,
+.override-sidebar-offset .fake-sidebar,
+.override-sidebar-offset .footer {
+  display: none !important;
+}
+
+.override-sidebar-offset .main {
+  @extend .col-12;
+  padding-right: 0;
 }
 
 //------------------------------------------------------------------------------

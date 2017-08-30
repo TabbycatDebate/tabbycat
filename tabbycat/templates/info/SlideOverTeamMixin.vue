@@ -28,7 +28,7 @@ export default {
         return {
           'title': s.name + ' (' + s.gender + ')',
           'class': 'gender-display gender-' + s.gender,
-          'icon': 'glyphicon-user'
+          'icon': 'user'
         }
       })
       return _.concat(teamInfo, speakersInfo)
@@ -44,9 +44,9 @@ export default {
       }
     },
     iconForBC: function(bc) {
-      if (bc.will_break === 'dead') { return 'glyphicon-remove' } else
-      if (bc.will_break === 'safe') { return 'glyphicon-ok' } else
-      if (bc.will_break === 'live') { return 'glyphicon-star' }
+      if (bc.will_break === 'dead') { return 'x' } else
+      if (bc.will_break === 'safe') { return 'check' } else
+      if (bc.will_break === 'live') { return 'star' }
     },
     formatForSlideOver: function(subject) {
       return {

@@ -31,7 +31,7 @@
 
     <slot name="spanel">
       <div class="draw-cell flex-12">
-        <div><!-- Need a container else they align -->
+        <div class="small ml-2"><!-- Need a container else they align -->
           <draw-adjudicator v-for="da in debate.debateAdjudicators"
             :adjudicator="da.adjudicator"
             :position="da.position"

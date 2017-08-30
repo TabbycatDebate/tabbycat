@@ -11,7 +11,7 @@ export default {
   computed: {
     ratingsFeature: function() {
       var ratings = [{ 'title': this.adjudicator.score + ' Feedback Score',
-                       'icon': 'glyphicon-signal' }]
+                       'icon': 'wifi' }]
       // Percentile rankings only on Edit Adjudicators page
       if (!_.isUndefined(this.percentileRanking)) {
         ratings.push({
@@ -25,7 +25,7 @@ export default {
       var gender = [
         { 'title': this.adjudicator.name + ' (' + this.adjudicator.gender + ')',
           'class': 'gender-display gender-' + this.adjudicator.gender,
-          'icon': 'glyphicon-user' }
+          'icon': 'user' }
       ]
       return gender
     },
