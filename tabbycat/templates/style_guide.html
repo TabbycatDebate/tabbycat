@@ -112,7 +112,10 @@
 <div class="btn btn-outline-primary">
   A link to somewhere
 </div>
-<div class="btn btn-outline-primary active disabled">
+<div class="btn btn-outline-primary active">
+  An link to somewhere
+</div>
+<div class="btn btn-outline-secondary disabled">
   A active but disabled link to somewhere (i.e. current page)
 </div>
 
@@ -131,20 +134,20 @@
       <p class="text-info">Explanatory text can go here</p>
     </div>
 
-    <div class="list-group-item pt-4 pb-4">
+    <div class="list-group-item pb-4">
 
-      <div class="alert alert-danger">
+      <div class="alert alert-danger mt-2">
         <i data-feather="alert-circle"></i>
         This is an error message raised by the form
       </div>
 
-      <div class="form-group mt-3">
+      <div class="form-group">
         <label for="{{ field.id_for_label }}">Label A</label>
         <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
         <small class="form-text text-muted">Hint for form field</small>
       </div>
 
-      <div class="form-group mt-3">
+      <div class="form-group">
         <label for="{{ field.id_for_label }}">Label B</label>
         <input type="password" name="old_password" autofocus="" class="form-control" required="" id="id_old_password">
         <small class="form-text text-muted">Hint for form field</small>

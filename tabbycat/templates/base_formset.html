@@ -3,24 +3,29 @@
 
 {% block content %}
 
-  {% if formset.errors %}
-  <div class="alert alert-danger">
-    <p>{% trans "There are some problems with the data on this form:" %}</p>
-    {{ formset.non_form_errors }}
-  </div>
-  {% endif %}
-
-  <form method="POST" action="" class="">
+  <div class="card mt-3">
+    <div class="list-group list-group-flush">
+    <form method="POST" action="" class="">
     {% csrf_token %}
-    <div class="card">
-      <ul class="list-group">
-        {{ formset.management_form }}
 
-        {% for form in formset %}
-        <li class="list-group-item">
+      {% if formset.errors %}
+        <div class="list-group-item pb-4">
+          <div class="alert alert-danger mt-2">
+            <i data-feather="alert-circle"></i>
+            <p>{% trans "There are some problems with the data on this form:" %}</p>
+            {{ formset.non_form_errors }}
+          </div>
+        </div>
+      {% endif %}
+
+      {{ formset.management_form }}
+
+      {% for form in formset %}
+        <div class="list-group-item pb-4">
 
           {% if form.non_field_errors %}
-            <div class="col-sm-12">
+            <div class="alert alert-danger mt-2">
+              <i data-feather="alert-circle"></i>
               {{ form.non_field_errors }}
             </div>
           {% endif %}
@@ -29,37 +34,41 @@
             {{ field }}
           {% endfor %}
 
-          {% for field in form.visible_fields %}
-            <div class="form-group">
-              <label class="col-sm-2 control-label" for="{{ field.id_for_label }}">
-                {{ field.label }}
-              </label>
-              <div class="col-sm-4">
+          <div class="row">
+            {% for field in form.visible_fields %}
+              <div class="form-group col-lg-6">
+                <label for="{{ field.id_for_label }}">
+                  {{ field.label }}
+                </label>
                 {{ field|addcss:"form-control" }}
-              </div>
-              <div class="col-sm-6">
-                <span >
-                  {{ field.help_text }}
-                </span>
+                <small class="form-text text-muted">{{ field.help_text }}</small>
                 {{ field.errors }}
               </div>
-            </div>
-          {% endfor %}
-
-        </li>
-        {% endfor %}
-        <li class="list-group-item">
-          <div class="row">
-            <div class="col-md-6">
-              <input class="btn btn-block btn-success" type="submit" name="submit" value="{% block save-button-text %}Save{% endblock %}" />
-            </div>
-            <div class="col-md-6">
-              <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
-            </div>
+            {% endfor %}
           </div>
-        </li>
-      </ul>
+
+        </div>
+      {% endfor %}
+
+
+      </div>
+
+      <div class="list-group-item pt-4 pb-3">
+
+        <div class="row">
+          <div class="col">
+            <input class="btn btn-block btn-success" type="submit" name="submit" value="{% block save-button-text %}Save{% endblock %}" />
+          </div>
+          <div class="col mt-md-0 mt-3">
+            <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
+          </div>
+        </div>
+
+      </div>
+
+
+    </form>
     </div>
-  </form>
+  </div>
 
 {% endblock content %}

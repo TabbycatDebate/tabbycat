@@ -19,87 +19,86 @@
 
   <div class="row">
 
-    <div class="col-md-12">
-      <div class="card">
-        <div class="panel-heading strong">Adjudicators With Email Addresses</div>
-        <div class="card-body">
-          {% for adj in adjs %}
-            {% if adj.url_key and adj.email %}
-              {{ adj.name }}, {{ adj.email }},
-              <small>
-              {% if url_type == 'feedback' %}
-                {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
-              {% elif url_type == 'ballot' %}
-                {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
-              {% endif %}
-              </small>
-              <br>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-
     {% if url_type == 'feedback' %}
-      <div class="col-md-12">
+      <div class="col-12 mt-3">
         <div class="card">
-          <div class="panel-heading strong">Teams With Email Addresses</div>
           <div class="card-body">
-            {% for team in teams %}
-              {% if team.url_key %}
-                {% for speaker in team.speakers %}
-                  {% if speaker.email %}
-                    {{ team.short_name }}, {{ speaker.name }}, {{ speaker.email }},
-                    <small>
-                    {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' team.url_key %}
-                    </small>
-                    <br>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
+            <h4 class="card-title">Teams With Email Addresses</h4>
+            <div class="card-text small">
+              {% for team in teams %}
+                {% if team.url_key %}
+                  {% for speaker in team.speakers %}
+                    {% if speaker.email %}
+                      <code>{{ team.short_name }}, {{ speaker.name }}, {{ speaker.email }},
+                      {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' team.url_key %}</code><br>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
     {% endif %}
 
-    <div class="col-md-12">
+    <div class="col-12">
       <div class="card">
-        <div class="panel-heading strong">Adjudicators Without Email Addresses</div>
         <div class="card-body">
+          <h4 class="card-title">Adjudicators With Email Addresses</h4>
+          <div class="card-text small">
           {% for adj in adjs %}
-            {% if adj.url_key %}
-              {% if not adj.email %}
-                {{ adj.name }}, No Email,
-                <small>
-                {% if url_type == 'feedback' %}
-                  {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
-                {% elif url_type == 'ballot' %}
-                  {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
-                {% endif %}
-                </small>
-                <br>
-              {% endif %}
+            {% if adj.url_key and adj.email %}
+              <code>{{ adj.name }}, {{ adj.email }},
+              {% if url_type == 'feedback' %}
+                {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
+              {% elif url_type == 'ballot' %}
+                {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
+              {% endif %}</code><br>
             {% endif %}
           {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 mt-3">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Adjudicators Without Email Addresses</h4>
+          <div class="card-text small">
+            {% for adj in adjs %}
+              {% if adj.url_key %}
+                {% if not adj.email %}
+                  <code>{{ adj.name }}, No Email,
+                  {% if url_type == 'feedback' %}
+                    {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
+                  {% elif url_type == 'ballot' %}
+                    {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
+                  {% endif %}</code><br>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
       </div>
     </div>
 
     {% if url_type == 'feedback' %}
-      <div class="col-md-12">
+      <div class="col-12 mt-3">
         <div class="card">
-          <div class="panel-heading strong">Teams Without Email Addresses</div>
           <div class="card-body">
-            {% for team in teams %}
-              {% if team.url_key %}
-                {% for speaker in team.speakers %}
-                  {% if not speaker.email %}
-                    {{ team.short_name }}, {{ speaker.name }}, No Email<br>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
+            <h4 class="card-text">Teams Without Email Addresses</h4>
+            <div class="card-text small">
+              {% for team in teams %}
+                {% if team.url_key %}
+                  {% for speaker in team.speakers %}
+                    {% if not speaker.email %}
+                      <code>{{ team.short_name }}, {{ speaker.name }}, No Email</code><br>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>

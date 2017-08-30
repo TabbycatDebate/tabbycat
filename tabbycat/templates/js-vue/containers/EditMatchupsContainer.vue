@@ -13,17 +13,19 @@
     <div class="row">
       <div class="col mb-2">
 
-        <div class="alert alert-warning">
-          This interface is intended to easily swap the positions of teams,
-          as often required for final rounds. However it can be used to create
-          new debates and edit matchups. This should be done with caution;
-          edits to matchups will <em>remove any round results for the moved
-          teams</em>. In general you should only use this on unreleased draws;
-          and only then if you don't want a 'correct' draw.
-          Note that changes to matchups will only be saved once
-          <em>all slots are filled</em>. You can create new debates by
-          dragging into the blank rows at the bottom, but debates cannot be
-          deleted here — that requires going to the Edit Database area.
+        <div class="card border-warning text-warning">
+          <div class="card-body">
+            This interface is intended to easily swap the positions of teams,
+            as often required for final rounds. However it can be used to create
+            new debates and edit matchups. This should be done with caution;
+            edits to matchups will <em>remove any round results for the moved
+            teams</em>. In general you should only use this on unreleased draws;
+            and only then if you don't want a 'correct' draw.
+            Note that changes to matchups will only be saved once
+            <em>all slots are filled</em>. You can create new debates by
+            dragging into the blank rows at the bottom, but debates cannot be
+            deleted here — that requires going to the Edit Database area.
+          </div>
         </div>
         <div id="messages-container"></div>
 

@@ -12,22 +12,20 @@
 
 {% block content %}
 
-  <div class="alert alert-info">
+  <div class="card text-info border-info">
     {# Translators: Translate "ESL" to the acronym "<target language> as a second/foreign language", not the translation of "English as a second language". #}
-    <p>
+    <div class="card-body">
       {% blocktrans trimmed %}
         Speaker categories allow category-specific speaker tabs to be produced,
         <i>e.g.</i>, for novice or ESL categories. On this page, you can define
         what speaker categories exist. After you've defined the categories, you
         can set speaker eligibility on the Speaker Eligibility page.
       {% endblocktrans %}
-    </p>
-    <p>
       {% url 'admin:participants_speakercategory_changelist' as edit_db_url %}
       {% blocktrans trimmed %}
         If you want to delete speaker categories, use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
       {% endblocktrans %}
-    </p>
+    </div>
   </div>
 
   {{ block.super }}

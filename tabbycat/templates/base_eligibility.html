@@ -21,9 +21,10 @@
 
   <form id="eligibilityForm" action="." method="POST" class="">
     {% csrf_token %}
+
     <div class="card">
-      <div class="card-body">
-        <table class="table">
+      <div class="card-body table-container">
+        <table class="table table-responsive">
           <thead>
             <tr>
               {% block eligibility-table-headers %}

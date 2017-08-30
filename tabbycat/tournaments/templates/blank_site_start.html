@@ -13,43 +13,45 @@
 
     <div class="card">
 
-      <div class="card-body">
+      <div class="list-group list-group-flush">
+      <form action="." method="POST">
+      {% csrf_token %}
 
-        <h3 class="card-title">
-          <span class="emoji">👋</span>
-          {% blocktrans trimmed %}
-            Welcome to Tabbycat!
-          {% endblocktrans %}
-        </h3>
+        <div class="list-group-item pb-0">
 
-        <p>
-          {% blocktrans trimmed %}
-            To get started, you'll need to create the first user account. This account
-            is a "superuser" account: it will be able to edit anything on the site.
-            Therefore, you should use a strong password.
-          {% endblocktrans %}
-        </p>
-        <p>
-          {% blocktrans trimmed %}
-            You can only create this account once, but if you like, you can change the
-            username and password after it's created, or add new superusers afterwards.
-          {% endblocktrans %}
-        </p>
-        <p>
-          {% blocktrans trimmed %}
-            The e-mail address is used for password resets. You don't have to
-            provide one, but if you don't, you won't be able to reset your password
-            if you forget it.
-          {% endblocktrans %}
-        </p>
+          <h3 class="card-title">
+            <span class="emoji">👋</span>
+            {% blocktrans trimmed %}
+              Welcome to Tabbycat!
+            {% endblocktrans %}
+          </h3>
 
-        <hr>
+          <p class="text-info">
+            {% blocktrans trimmed %}
+              To get started, you'll need to create the first user account. This account
+              is a "superuser" account: it will be able to edit anything on the site.
+              Therefore, you should use a strong password.
+            {% endblocktrans %}
+          </p>
+          <p class="text-info">
+            {% blocktrans trimmed %}
+              You can only create this account once, but if you like, you can change the
+              username and password after it's created, or add new superusers afterwards.
+            {% endblocktrans %}
+          </p>
+          <p class="text-info">
+            {% blocktrans trimmed %}
+              The e-mail address is used for password resets. You don't have to
+              provide one, but if you don't, you won't be able to reset your password
+              if you forget it.
+            {% endblocktrans %}
+          </p>
 
-        <form action="." method="POST">
-          {% csrf_token %}
+        </div>
+        <div class="list-group-item pb-4">
 
           {% if form.errors %}
-            <div class="alert alert-danger">
+            <div class="alert alert-danger mt-2">
               <i data-feather="alert-circle"></i>
               {% blocktrans trimmed %}
               Whoops! There was an error with one or more fields.
@@ -68,14 +70,18 @@
             </div>
           {% endfor %}
 
-          <hr>
+
+        </div>
+        <div class="list-group-item pt-4 pb-3">
 
           <button type="submit" class="btn btn-block btn-success form-control">
             {% trans "Create Account" %}
             <i data-feather="chevron-right"></i>
           </button>
 
-        </form>
+        </div>
+
+      </form>
       </div>
     </div>
 

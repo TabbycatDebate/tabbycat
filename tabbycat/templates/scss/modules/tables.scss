@@ -3,7 +3,8 @@
 //------------------------------------------------------------------------------
 
 .table-container {
-  margin: 8px;
+  @extend .p-0;
+  margin: 8px 8px 0 8px;
 }
 
 .table {
@@ -115,7 +116,8 @@ thead,
 //------------------------------------------------------------------------------
 
 .table > thead > tr > th,
-.table > tbody > tr > td {
+.table > tbody > tr > td,
+.draw-container .thead {
   padding: 8px 4px; // Narrow spacing post-BP
 
   .feather {
