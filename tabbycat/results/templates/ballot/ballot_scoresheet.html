@@ -1,34 +1,46 @@
 {% load add_field_css debate_tags i18n %}
 
-<div class="card position" {% if forloop.first %}id="team-{{ team.team.id }}"{% endif %}>
+<div class="card mb-3 mr-0 position" {% if forloop.first %}id="team-{{ team.team.id }}"{% endif %}>
+  <div class="list-group list-group-flush">
 
-  <h4 class="card-title">{{ team.team.short_name }}</h4>
-  <h6 class="card-subtitle mb-2 text-muted">{{ team.side_name }}</h6>
-
-  {% for position in team.speakers %}
-    {% include "ballot/ballot_speaks.html" %}
-  {% endfor %}
-
-  <div class="row">
-
-    <div class="col col-mr-auto d-flex align-items-center">
-      Total
-    </div>
-
-    <div class="col mr-0">
-      <div name="{{ team.side_code }}_margin"
-           class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_margin" type="text" readonly />
-        +0
+    <div class="list-group-item pb-0">
+      <div class="row">
+        <div class="col mr-auto card-title">
+          {{ team.team.short_name }}
+        </div>
+        <div class="col card-subtitle text-muted text-right pt-2">
+          <h6>{{ team.side_name }}</h6>
+        </div>
       </div>
     </div>
 
-    <div class="col mr-0">
-      <div name="{{ team.side_code }}_total"
-           class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_total" type="text" readonly />
-        00
+    {% for position in team.speakers %}
+      {% include "ballot/ballot_speaks.html" %}
+    {% endfor %}
+
+    <div class="list-group-item">
+      <div class="row">
+
+        <div class="col col-mr-auto d-flex align-items-center">
+          Total
+        </div>
+
+        <div class="col mr-0">
+          <div name="{{ team.side_code }}_margin" type="text" readonly
+               class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_margin"  />
+            +0
+          </div>
+        </div>
+
+        <div class="col mr-0">
+          <div name="{{ team.side_code }}_total" type="text" readonly
+               class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_total"  />
+            00
+          </div>
+        </div>
+
       </div>
     </div>
 
   </div>
-
 </div>

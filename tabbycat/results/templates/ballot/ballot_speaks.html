@@ -1,38 +1,39 @@
 {% load add_field_css debate_tags i18n %}
 
-<div class="row js-team-speakers s{{ position.pos }}">
+<div class="list-group-item js-team-speakers s{{ position.pos }}">
+  <div class="row">
+    <div class="col-2 speaker-position-label">
+      {{ position.name }}
+    </div>
 
-  <div class="col-2 speaker-position-label">
-    {{ position.name }}
+    <div class="col form-group {{ position.speaker.errors|yesno:'error,' }}">
+
+      {% if forloop.parentloop.parentloop.first %}
+
+        {# On the first form, display the speaker selection dropdown. #}
+        {{ position.speaker|addcss:"js-speaker custom-select required" }}
+        {{ position.speaker.errors }}
+
+        <div class="iron-person form-label" style="display: none">
+          <span data-toggle="tooltip" title="{% trans "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate." %}">
+            <span>{{ position.ghost.label_tag }}</span>
+          </span>
+          {{ position.ghost }}
+        </div>
+
+      {% else %}
+
+        {# On every other form, display a disabled field that JavaScript will populate when the selection in the first form changes. #}
+        <div type="text" id="disabledTextInput" class="btn speaker-name" disabled></div>
+
+      {% endif %}
+
+    </div>
+
+    <div class="col-3 form-group {{ team.side_code }} score {{ position.score_errors|yesno:'error,' }}">
+      {{ position.score|addcss:"form-control" }}
+      {{ position.score.errors }}
+    </div>
+
   </div>
-
-  <div class="col-7 form-group {{ position.speaker.errors|yesno:'error,' }}">
-
-    {% if forloop.parentloop.parentloop.first %}
-
-      {# On the first form, display the speaker selection dropdown. #}
-      {{ position.speaker|addcss:"js-speaker required" }}
-      {{ position.speaker.errors }}
-
-      <div class="iron-person form-label" style="display: none">
-        <span data-toggle="tooltip" title="{% trans "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate." %}">
-          <span>{{ position.ghost.label_tag }}</span>
-        </span>
-        {{ position.ghost }}
-      </div>
-
-    {% else %}
-
-      {# On every other form, display a disabled field that JavaScript will populate when the selection in the first form changes. #}
-      <div type="text" id="disabledTextInput" class="btn speaker-name" disabled></div>
-
-    {% endif %}
-
-  </div>
-
-  <div class="col-3 {{ team.side_code }} score {{ position.score_errors|yesno:'error,' }}">
-    {{ position.score }}
-    {{ position.score.errors }}
-  </div>
-
 </div>
