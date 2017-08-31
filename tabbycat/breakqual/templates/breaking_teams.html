@@ -23,7 +23,7 @@
     <div class="forms-block-inline">
       <form action="{% tournamenturl 'breakqual-generate-all' category.slug %}" method="POST">
         {% csrf_token %}
-        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }}"
+        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control"
                 id="generateBreakingTeams" type="submit">
           Generate the Break for All Categories
         </button>

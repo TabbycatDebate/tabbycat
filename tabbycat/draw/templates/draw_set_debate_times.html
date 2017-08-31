@@ -36,9 +36,9 @@
                 </div>
                 <div class="col-md-7">
                 {% if vc.placeholder_date %}
-                  <input type="date"  name="{{ vc.id }}" value='{{ vc.placeholder_date|date:"Y" }}-{{ vc.placeholder_date|date:"m" }}-{{ vc.placeholder_date|date:"d" }}'>
+                  <input type="date" class="form-control" name="{{ vc.id }}" value='{{ vc.placeholder_date|date:"Y" }}-{{ vc.placeholder_date|date:"m" }}-{{ vc.placeholder_date|date:"d" }}'>
                 {% else %}
-                  <input type="date"  name="{{ vc.id }}" value="">
+                  <input type="date" class="form-control" name="{{ vc.id }}" value="">
                 {% endif %}
                 </div>
               </div>
@@ -64,7 +64,7 @@
                 <h5>{{ d.name }} <small>{{ d.venue_category.name }}</small></h5>
               </div>
               <div class="col-md-8">
-                <input type="time" class="jquery-division-time" name="{{ d.id }}" value="{{ d.time_slot|time:'H:i' }}">
+                <input type="time" class="form-control jquery-division-time" name="{{ d.id }}" value="{{ d.time_slot|time:'H:i' }}">
               </div>
             </div>
           </div>

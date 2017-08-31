@@ -16,7 +16,7 @@
         <div class="form-group">
           <label for="venue" >Venue</label>
           <div class="col-sm-6">
-            <input id="venue"  type="text" name="venue" list="venues_list" />
+            <input id="venue"  class="form-control" type="text" name="venue" list="venues_list" />
             <datalist id="venues_list">
               {% for venue in venue_options %}
                 <option data-value="{{ venue.id }}" value="{{ venue.display_name }}">
@@ -31,7 +31,7 @@
           <div class="form-group">
             <label ></label>
             <div class="col-sm-10">
-              <p id="message" class="alert alert-warning  h4">
+              <p id="message" class="alert alert-warning h4">
                 Please check all these details before you check the ballot in.
               </p>
             </div>
