@@ -58,8 +58,8 @@ input[type=number] {
   text-align: center;
 }
 
-input[type="radio"]
-input[type="checkbox"].{
+input[type="radio"],
+input[type="checkbox"] {
   width: 20px; // Mostly for integer scale questions; need to align with labels
   height: 38px;
 }

@@ -3,9 +3,9 @@
 
     <div class="col-12 mb-3 hidden-print">
       <div class="input-group">
-        <input id="table-search" type="search"
+        <input class="form-control" id="table-search" type="search"
                v-model="filterKey" @keyup="updateTableFilters"
-                placeholder="Find in Table">
+               placeholder="Find in Table">
         <span class="input-group-addon">
           <i data-feather="search"></i>
         </span>
