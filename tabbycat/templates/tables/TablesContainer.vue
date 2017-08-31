@@ -5,7 +5,7 @@
       <div class="input-group">
         <input id="table-search" type="search"
                v-model="filterKey" @keyup="updateTableFilters"
-               class="form-control" placeholder="Find in Table">
+                placeholder="Find in Table">
         <span class="input-group-addon">
           <i data-feather="search"></i>
         </span>

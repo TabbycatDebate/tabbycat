@@ -86,7 +86,7 @@
               {{ form.text.label }}
             </label>
             <div class="col-sm-8">
-              {{ form.text|addcss:"form-control help-anchor required text-area-limited"}}
+              {{ form.text|addcss:"help-anchor required text-area-limited"}}
               {{ form.text.errors }}
             </div>
             <div class="col-sm-3 ">
@@ -98,7 +98,7 @@
               {{ form.reference.label }}  {{ form.reference.errors }}
             </label>
             <div class="col-sm-8">
-              {{ form.reference|addcss:"form-control required" }}
+              {{ form.reference|addcss:"required" }}
             </div>
             <div class="col-sm-3 ">
               {{ form.reference.help_text }}
@@ -113,7 +113,7 @@
               <div class="row">
 
                 <div class="col-md-4">
-                  {{form.seq|addcss:"form-control required"}}
+                  {{form.seq|addcss:"required"}}
                 </div>
 
                 <div class="col-md-4">
@@ -122,7 +122,7 @@
                       {{ form.DELETE.label }}
                     </label>
                     <div class="col-sm-6">
-                      {{form.DELETE|addcss:"form-control"}}{{ form.id }}
+                      {{form.DELETE}}{{ form.id }}
                     </div>
                   </div>
                 </div>
@@ -134,7 +134,7 @@
                       {{ form.flagged.label }} {{ form.flagged.errors }}
                     </label>
                     <div class="col-sm-6">
-                      {{form.flagged|addcss:"form-control help-anchor"}}
+                      {{form.flagged|addcss:"help-anchor"}}
                     </div>
                   </div>
                   {% endif %}

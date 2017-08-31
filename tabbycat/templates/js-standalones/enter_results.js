@@ -220,9 +220,6 @@ $("#hasIron").change(function() {
 {% if pref.enable_forfeits %}
 
   function disable_required() {
-    $("#ballot_set").find(".form-control").removeClass("required").removeClass("error");
-    $("#ballot_set").find(".form-control-parent .number").removeClass("required").removeClass("error");
-    $("#ballot_set").find(".form-control").removeClass("required").removeClass("error");
     $("#ballot_set").find(".scoresheet select").attr("disabled", true);
     $("#ballot_set").find(".scoresheet input").attr("disabled", true);
   }

@@ -1,47 +1,34 @@
 {% load add_field_css debate_tags i18n %}
 
-<div class="col-md-6 col-xs-12 position" {% if forloop.first %}id="team-{{ team.team.id }}"{% endif %}>
-  <div class="form-group">
-    <label class="h4 col-md-offset-1 col-xs-offset-1 control-label" >
-      {{ team.team.short_name }}
-    </label>
-    ({{ team.side_name }})
-  </div>
+<div class="card position" {% if forloop.first %}id="team-{{ team.team.id }}"{% endif %}>
+
+  <h4 class="card-title">{{ team.team.short_name }}</h4>
+  <h6 class="card-subtitle mb-2 text-muted">{{ team.side_name }}</h6>
+
   {% for position in team.speakers %}
-    <div class="form-group js-team-speakers s{{ position.pos }}">
-      <label class="col-md-2 col-xs-9 control-label speaker-position-label">
-        {{ position.name }}
-      </label>
-      <div class="col-md-7 col-xs-9 {{ position.speaker.errors|yesno:'error,' }}">
-        {% if forloop.parentloop.parentloop.first %}
-          {# On the first form, display the speaker selection dropdown. #}
-          {{ position.speaker|addcss:"form-control js-speaker required" }}
-          {{ position.speaker.errors }}
-          <div class="iron-person form-label" style="display: none">
-            <span data-toggle="tooltip" title="{% trans "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate." %}">
-              <span>{{ position.ghost.label_tag }}</span>
-            </span>
-            {{ position.ghost }}
-          </div>
-        {% else %}
-          {# On every other form, display a disabled field that JavaScript will populate when the selection in the first form changes. #}
-          <div type="text" id="disabledTextInput" class="btn form-control speaker-name" disabled></div>
-        {% endif %}
-      </div>
-      <div class="col-md-3 col-xs-9 {{ team.side_code }} score form-control-parent {{ position.score_errors|yesno:'error,' }}">
-        {{ position.score }}
-        {{ position.score.errors }}
-      </div>
-    </div>
+    {% include "ballot/ballot_speaks.html" %}
   {% endfor %}
-  <div class="form-group">
-    <label class="col-md-2 col-xs-9 control-label" >Total</label>
-    <div class="form-control-parent col-md-3 col-md-offset-4 col-xs-9">
-      <div name="{{ team.side_code }}_margin" class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_margin" type="text" readonly />+0</div>
+
+  <div class="row">
+
+    <div class="col col-mr-auto d-flex align-items-center">
+      Total
     </div>
-    <div class="form-control-parent col-md-3 col-xs-9">
-      <div name="{{ team.side_code }}_total" class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_total" type="text" readonly />00</div>
+
+    <div class="col mr-0">
+      <div name="{{ team.side_code }}_margin"
+           class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_margin" type="text" readonly />
+        +0
+      </div>
     </div>
+
+    <div class="col mr-0">
+      <div name="{{ team.side_code }}_total"
+           class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_total" type="text" readonly />
+        00
+      </div>
+    </div>
+
   </div>
 
 </div>

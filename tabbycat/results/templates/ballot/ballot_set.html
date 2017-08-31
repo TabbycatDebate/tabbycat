@@ -29,11 +29,14 @@
         </p>
       {% endif %}
 
-      <div class="clearfix scoresheet row">
-
-        {% for team in sheet.teams %}
-          {% include "ballot/ballot_scoresheet.html" %}
-        {% endfor %}
+      <div class="list-group-item scoresheet">
+        <div class="card-deck">
+          {% for team in sheet.teams %}
+            <!-- Break for four team formats -->
+            {% if forloop.counter == 3 %}</div><div class="card-deck">{% endif %}
+            {% include "ballot/ballot_scoresheet.html" %}
+          {% endfor %}
+        </div>
 
       </div>
     </div>

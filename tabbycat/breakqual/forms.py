@@ -43,7 +43,7 @@ class BreakingTeamsForm(forms.Form):
         return 'remark_%(team)d' % {'team': team.id}
 
     def get_remark_field(self, team):  # Team not BreakingTeam
-        return self[self._fieldname_remark(team)].as_widget(attrs={'class': 'form-control'})
+        return self[self._fieldname_remark(team)].as_widget()
 
     def _bt(self, team):
         return self._bts_by_team_id[team.id]

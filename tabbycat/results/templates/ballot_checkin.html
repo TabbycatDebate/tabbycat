@@ -16,7 +16,7 @@
         <div class="form-group">
           <label for="venue" >Venue</label>
           <div class="col-sm-6">
-            <input id="venue" class="form-control" type="text" name="venue" list="venues_list" />
+            <input id="venue"  type="text" name="venue" list="venues_list" />
             <datalist id="venues_list">
               {% for venue in venue_options %}
                 <option data-value="{{ venue.id }}" value="{{ venue.display_name }}">
@@ -31,7 +31,7 @@
           <div class="form-group">
             <label ></label>
             <div class="col-sm-10">
-              <p id="message" class="alert alert-warning form-control-static h4">
+              <p id="message" class="alert alert-warning  h4">
                 Please check all these details before you check the ballot in.
               </p>
             </div>
@@ -39,25 +39,25 @@
           <div class="form-group">
             <label >Venue</label>
             <div class="col-sm-6">
-              <p id="venue_confirm" class="form-control-static detail"></p>
+              <p id="venue_confirm" class=" detail"></p>
             </div>
           </div>
           <div class="form-group">
             <label >Affirmative</label>
             <div class="col-sm-6">
-              <p id="aff_team" class="form-control-static detail"></p>
+              <p id="aff_team" class=" detail"></p>
             </div>
           </div>
           <div class="form-group">
             <label >Negative</label>
             <div class="col-sm-6">
-              <p id="neg_team" class="form-control-static detail"></p>
+              <p id="neg_team" class=" detail"></p>
             </div>
           </div>
           <div class="form-group">
             <label ></label>
             <div class="col-sm-6">
-              <p class="form-control-static">There should be <span id="num_ballots"></span>, <span id="ballot_from"></span></p>
+              <p class="">There should be <span id="num_ballots"></span>, <span id="ballot_from"></span></p>
               <ul class="" id="adjudicators"></ul>
             </div>
           </div>
