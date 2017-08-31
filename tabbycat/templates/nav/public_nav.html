@@ -67,13 +67,19 @@
 
 <!-- RESULTS RELEASES -->
 {% if pref.public_results and current_round.prev %}
-  <li class="nav-item {% if results_nav %}active{% endif %}">
-    <a class="nav-link" href="#" data-toggle="dropdown">{% trans "Results" %}<b class="caret"></b></a>
-    <ul class="dropdown-menu">
+  <li class="nav-item dropdown {% if results_nav %}active{% endif %}">
+    <a class="nav-link dropdown-toggle" href="#" id="roundsDrop"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       {% trans "Results" %}
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="roundsDrop">
       {% for r in tournament.round_set.all %}
         {% if not r.silent or pref.all_results_released %}
           {% if r.seq < current_round.seq or pref.all_results_released %}
-            <li><a class="nav-link" href="{% roundurl 'results-public-round' r %}">{{ r.name }}</a></li>
+            <a class="nav-link dropdown-item"
+               href="{% roundurl 'results-public-round' r %}">
+              {{ r.name }}
+            </a>
           {% endif %}
         {% endif %}
       {% endfor %}
@@ -85,17 +91,26 @@
 {% if pref.public_breaking_teams > 0 or pref.public_breaking_adjs > 0 %}
 
   <li class="nav-item dropdown {% if break_nav %}active{% endif %}">
-    <a class="nav-link dropdown-toggle" id="breakdrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "Break" %}<b class="caret"></b></a>
-    <ul class="dropdown-menu" aria-labelledby="breakdrop">
+    <a class="nav-link dropdown-toggle" id="breakdrop" data-toggle="dropdown"
+       aria-haspopup="true" aria-expanded="false">
+      {% trans "Break" %}
+    </a>
+    <div class="dropdown-menu" aria-labelledby="breakdrop">
       {% if pref.public_breaking_teams %}
         {% for category in tournament.breakcategory_set.all %}
-          <li><a class="nav-link" href="{% tournamenturl 'breakqual-public-teams' category.slug %}">{{ category.name }}</a></li>
+          <a class="dropdown-item nav-link"
+             href="{% tournamenturl 'breakqual-public-teams' category.slug %}">
+            {{ category.name }}
+          </a>
         {% endfor %}
       {% endif %}
       {% if pref.public_breaking_adjs %}
-        <li><a class="nav-link" href="{% tournamenturl 'breakqual-public-adjs' %}">{% trans "Adjudicators" %}</a></li>
+        <a class="nav-link dropdown-item"
+           href="{% tournamenturl 'breakqual-public-adjs' %}">
+          {% trans "Adjudicators" %}
+        </a>
       {% endif %}
-    </ul>
+    </div>
   </li>
 {% endif %}
 

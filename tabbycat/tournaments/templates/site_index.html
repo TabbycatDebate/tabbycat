@@ -20,12 +20,10 @@
           Assistant area for <strong>{{ tn }}</strong>
         {% endblocktrans %}
       {% endif %}
-      {% url tournament.get_absolute_url as url %}
-      {% include "components/item-action.html" with icon="settings" %}
+      {% include "components/item-action.html" with icon="settings" url=tournament.get_absolute_url%}
     {% endif %}
 
-    {% url tournament.get_public_url as url %}
-    {% include "components/item-action.html" with text=tournament.name emoji=tournament.emoji|default:"🏆" %}
+    {% include "components/item-action.html" with text=tournament.name emoji=tournament.emoji|default:"🏆" url=tournament.get_public_url%}
 
   </div>
 {% empty %}

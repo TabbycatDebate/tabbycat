@@ -19,7 +19,10 @@
       {% if all_tournaments.count > 1 or user.is_authenticated %}
 
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" id="tournamentdrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ tournament }}<b class="caret"></b></a>
+          <a class="nav-link dropdown-toggle" id="tournamentdrop"
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ tournament }}
+          </a>
           <div class="dropdown-menu" aria-labelledby="tournamentdrop">
 
             {% for tournament in all_tournaments %}
