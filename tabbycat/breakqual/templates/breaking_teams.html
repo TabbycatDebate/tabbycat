@@ -16,7 +16,7 @@
     <form action="{% tournamenturl 'breakqual-generate-all' category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
-        <span class="icon glyphicon-repeat"></span> Delete and Regenerate All Breaks
+        <i data-feather="repeat"></i> Delete and Regenerate All Breaks
       </button>
     </form>
   {% else %}

@@ -54,20 +54,20 @@
           </a>
         {% endif %}
         <span class="btn btn-primary" disabled>
-          {{ stats.ballot_in }} / {{ stats.total }} Checked In <span class="icon inbox"></span>
+          {{ stats.ballot_in }} / {{ stats.total }} Checked In <i data-feather="inbox"></i>
         </span>
         <span class="btn btn-danger" disabled>
           {{ stats.none }} / {{ stats.total }} Unknown <i data-feather="x"></i>
         </span>
         <span class="btn btn-warning" disabled>
-          {{ stats.draft }} / {{ stats.total }} Unconfirmed <span class="icon glyphicon-adjust"></span>
+          {{ stats.draft }} / {{ stats.total }} Unconfirmed <i data-feather="circle"></i>
         </span>
         <span class="btn btn-success" disabled>
           {{ stats.confirmed }} / {{ stats.total }} Confirmed <i data-feather="check"></i>
         </span>
         {% if pref.enable_postponements %}
           <span class="btn btn-primary" disabled>
-            {{ stats.postponed }} / {{ stats.total }} Postponed <span class="icon glyphicon-pause"></span>
+            {{ stats.postponed }} / {{ stats.total }} Postponed <i data-feather="pause"></i>
           </span>
           <span class="btn btn-primary" disabled>
             Byes <span class="icon fast-forward"></span>

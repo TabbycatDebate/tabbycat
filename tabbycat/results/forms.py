@@ -656,7 +656,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
 
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
-        through the form. Used in the enter_results_ballot_set.html template."""
+        through the form. Used in the ballot_set.html.html template."""
         return [{"teams": self.scoresheet(self._fieldname_score)}]
 
 
@@ -741,7 +741,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
 
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
-        through the form. Used in the enter_results_ballot_set.html template."""
+        through the form. Used in the ballot_set.html.html template."""
 
         for adj in self.adjudicators:
             sheet_dict = {

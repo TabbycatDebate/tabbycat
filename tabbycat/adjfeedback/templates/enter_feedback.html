@@ -11,7 +11,7 @@
 {% block content %}
 
   {% if tournament.current_round.seq == 1 and tournament.current_round.draw_status != tournament.current_round.STATUS_RELEASED %}
-    {% include "components/alert.html" with type="info" warning="There are no feedback options because no rounds have been released to the public yet. Check back when they have!" %}
+    {% include "components/alert.html" with type="info" message="There are no feedback options because no rounds have been released to the public yet. Check back when they have!" %}
   {% endif %}
 
   {% if form.errors %}

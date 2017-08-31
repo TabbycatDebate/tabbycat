@@ -66,10 +66,12 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             else:
                 ballotsubs_info += edit_status + "</a><small>"
 
+            ballotsubs_info += "<br>" # Entered in should be on a new line
+
             if ballotsub.submitter_type == ballotsub.SUBMITTER_TABROOM:
-                ballotsubs_info += " <em>entered by " + ballotsub.submitter.username + "</em>"
+                ballotsubs_info += " <em class='text-nowrap'>entered by " + ballotsub.submitter.username + "</em>"
             elif ballotsub.submitter_type == ballotsub.SUBMITTER_PUBLIC:
-                ballotsubs_info += " <em>a public submission by " + ballotsub.ip_address + "</em>"
+                ballotsubs_info += " <em class='text-nowrap'>a public submission by " + ballotsub.ip_address + "</em>"
 
             ballotsubs_info += "</small><br />"
 
