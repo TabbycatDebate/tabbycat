@@ -141,27 +141,24 @@
 <div class="modal fade" id="editStartTime" tabindex="-1" role="dialog" aria-labelledby="editStartTime">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
-      <div class="modal-header">
-        <h3>Change Start Time</h3>
-      </div>
-      <div class="modal-body">
-        <form id="startTimeForm" method="POST" action="{% roundurl 'draw-start-time-set' %}" class="">
-          <div class="form-group">
-            <label>
-              Start at
-            </label>
-            <div class="col-sm-6">
+
+      <form id="startTimeForm" method="POST" action="{% roundurl 'draw-start-time-set' %}" class="">
+        <div class="modal-body list-group list-group-flush">
+
+          {% include "components/form-title.html" with title="Change Start Time" %}
+
+          <div class="list-group-item pb-3">
+            <div class="form-group">
+              <label>Start at</label>
               <input class="form-control" placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time" ></input>
             </div>
           </div>
-          <div class="form-group">
-            <label></label>
-            <div class="col-sm-6">
-              <button type="submit" value="Save" class="btn btn-success " data-loading-text="Saving...">Save</button>
-            </div>
-          </div>
-        </form>
-      </div>
+
+          {% include "components/form-submit.html" with title="Save" %}
+
+        </div>
+      </form>
+
     </div>
   </div>
 </div>

@@ -93,6 +93,7 @@
 .modal-xl { // For motions page; probably feedback also (want super big modals)
   height: 92%;
   width: 95%;
+  max-width: 1200px;
 
   .modal-content {
     height: 100%;

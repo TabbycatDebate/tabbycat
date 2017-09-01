@@ -9,14 +9,13 @@
 
 {% block content %}
 
-  <div class="container-fluid flex-vertical-center" style="height: 600px">
-    <div class="row flex-1">
-      <div class="col-md-4 col-md-offset-4">
-        <button class="btn btn-lg btn-success btn-block"
-                data-toggle="modal" data-target="#myModal">
-          Reveal Motions for {{ round.name }}
-        </button>
-      </div>
+  <div class="container-fluid d-flex align-items-center justify-content-center"
+       style="width: 100%; height: 95vh;">
+    <div>
+      <button class="btn btn-lg btn-success btn-block"
+              data-toggle="modal" data-target="#myModal">
+        Reveal Motions for {{ round.name }}
+      </button>
     </div>
   </div>
 
@@ -26,7 +25,7 @@
         <div class="modal-body flex-1 flex-vertical">
           {% for m in motions %}
             <div class="flex-1 flex-vertical-center">
-              <h1 class="display-1">
+              <span class="display-3">
                 {% if motions|length > 1 %}
                   <span class="text-muted">{{ forloop.counter }}.</span>
                 {% endif %}
@@ -35,8 +34,8 @@
             </div>
           {% empty %}
             <div class="flex-1 flex-vertical-center">
-              <h1 class="display-1 text-danger">
-                😳 There are no motions for this round in Tabbycat.
+              <span class="display-3 text-danger">
+                😳 There are no motions for this round entered into Tabbycat.
               </span>
             </div>
           {% endfor %}
