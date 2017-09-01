@@ -63,8 +63,8 @@
               {% endif %}
               {% if even_panel > 0 %}
 
-                {% blocktrans asvar text with evens|apnumber|capfirst as evens and evens|pluralize:" has a panel,s have panels" as debate_suffix %}
-                  {{ evens}} debate{{ debate_suffix }} with an even number of adjudicators.
+                {% blocktrans asvar text with even_panel|apnumber|capfirst as evens and even_panel|pluralize:" has a panel,s have panels" as debate_suffix %}
+                  {{ evens }} debate{{ debate_suffix }} with an even number of adjudicators.
                 {% endblocktrans %}
 
                 {% include "components/item-alert.html" with type="danger" %}
