@@ -78,7 +78,7 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
         motions = formset.save(commit=False)
         round = self.get_round()
         for motion in motions:
-            if self.get_tournament().pref('enable_motions'):
+            if not self.get_tournament().pref('enable_motions'):
                 motion.seq = 1
 
             motion.round = round
