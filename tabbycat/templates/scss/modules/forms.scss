@@ -22,29 +22,6 @@
   border-bottom: 0; // Need to prevent dashed lines in glyphicons in btns
 }
 
-.btn-no-hover:hover {
-  background-color: inherit; // Allow btns to have no hovers but not be dimmed
-  border-color: #ccc;
-  cursor: default;
-}
-
-.btn-success.btn-no-hover:hover {
-  background-color: theme-color("success");
-}
-
-.btn-info.btn-no-hover:hover {
-  background-color: theme-color("info");
-}
-
-.btn-warning.btn-no-hover:hover {
-  background-color: theme-color("warning");
-}
-
-.btn-danger.btn-no-hover:hover {
-  background-color: theme-color("danger");
-}
-
-
 //------------------------------------------------------------------------------
 // Inputs (in general)
 //------------------------------------------------------------------------------

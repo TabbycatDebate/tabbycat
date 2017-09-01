@@ -21,20 +21,24 @@
     <div class="list-group-item">
       <div class="row">
 
-        <div class="col col-mr-auto d-flex align-items-center">
-          Total
-        </div>
-
-        <div class="col mr-0">
-          <div name="{{ team.side_code }}_margin" type="text" readonly
-               class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_margin"  />
+        <div class="col mr-0 col-mr-auto btn-group">
+          <div readonly disabled
+               class="btn btn-outline-secondary" />
+            Margin
+          </div>
+          <div name="{{ team.side_code }}_margin" type="text" readonly disabled
+               class="btn btn-secondary {{ team.side_code }}_margin"  />
             +0
           </div>
         </div>
 
-        <div class="col mr-0">
-          <div name="{{ team.side_code }}_total" type="text" readonly
-               class="btn btn-block btn-primary btn-no-hover {{ team.side_code }}_total"  />
+        <div class="col-5 mr-0 btn-group">
+          <div readonly disabled
+               class="btn btn-outline-secondary" />
+            Total
+          </div>
+          <div name="{{ team.side_code }}_total" type="text" readonly disabled
+               class="btn btn-block btn-secondary {{ team.side_code }}_total"  />
             00
           </div>
         </div>

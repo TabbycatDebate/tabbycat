@@ -56,13 +56,15 @@
 
     {% if forloop.counter == 1 and not round.is_break_round %}
       {% roundurl 'availability-teams' round as url %}
+      {% trans "Check In Teams" as text %}
     {% elif forloop.counter == 2 %}
       {% roundurl 'availability-adjudicators' round as url %}
+      {% trans "Check In Adjudicators" as text %}
     {% elif forloop.counter == 3 %}
       {% roundurl 'availability-venues' round as url %}
+      {% trans "Check In Venues" as text %}
     {% endif %}
 
-    {% trans "Check In" as text %}
     {% if ct.in_now == 0 %}
       {% include "components/item-action.html" with alone=True success=True %}
     {% else %}

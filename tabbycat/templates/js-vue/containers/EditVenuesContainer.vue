@@ -1,12 +1,12 @@
 <template>
-  <div class="col-md-12 draw-container">
+  <div class="draw-container">
 
     <div class="row page-navs">
       <div class="col d-flex justify-content-between">
         <a class="btn btn-outline-primary " :href="roundInfo.backUrl">
           <i data-feather="chevron-left"></i> Back to Draw
         </a>
-        <button class="btn btn-primary " @click="createAutoAllocation">
+        <button class="btn btn-success " @click="createAutoAllocation">
           Auto Allocate
         </button>
         <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>

@@ -2,6 +2,7 @@
 {% load humanize %}
 {% load static %}
 {% load debate_tags %}
+{% load i18n %}
 
 {% block page-title %}Draw for {{ round.name }}{% endblock %}
 {% block head-title %}
@@ -47,27 +48,26 @@
 
           {% if active_adjs.count < draw.count %}
 
-            <div class="list-group-item list-group-item-danger" id="">
-              <i data-feather="alert-circle"></i>
-              There are currently fewer checked-in adjudicators than there are rooms.
-              <a href="{% roundurl 'availability-adjudicators' round %}" class="alert-link">
-                Check in some more adjudicators.
-              </a>
-            </div>
+            {% include "components/item-alert.html" with type=danger text="There are currently fewer checked-in adjudicators than there are rooms." %}
 
           {% else %}
 
             {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel %}
-              {% if no_chair > 0 or even_panel > 0 %}
-                <div class="list-group-item list-group-item-warning">
-                  <i data-feather="alert-circle"></i>
-                  {% if no_chair > 0 %}
-                    {{ no_chair|apnumber|capfirst }} debate{{ no_chair|pluralize:" does,s do" }} not have a chair.
-                  {% endif %}
-                  {% if even_panel > 0 %}
-                    {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of adjudicators.
-                  {% endif %}
-                </div>
+              {% if no_chair > 0 %}
+
+                {% blocktrans asvar text with no_chair|apnumber|capfirst as chairless and no_chair|pluralize:" does,s do" as debate_suffix %}
+                  {{ no_chair }} debate{{ debate_suffix }} not have a chair.
+                {% endblocktrans %}
+                {% include "components/item-alert.html" with type="danger" %}
+
+              {% endif %}
+              {% if even_panel > 0 %}
+
+                {% blocktrans asvar text with evens|apnumber|capfirst as evens and evens|pluralize:" has a panel,s have panels" as debate_suffix %}
+                  {{ evens}} debate{{ debate_suffix }} with an even number of adjudicators.
+                {% endblocktrans %}
+
+                {% include "components/item-alert.html" with type="danger" %}
               {% endif %}
             {% endwith %}
 
@@ -75,9 +75,9 @@
 
           {% roundurl 'edit-adj-allocation' as url %}
           {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
-            {% include "components/item-action.html" with text="Allocate Adjudicators" icon="check-circle" %}
-          {% else %}
             {% include "components/item-action.html" with text="Allocate Adjudicators" success=True %}
+          {% else %}
+            {% include "components/item-action.html" with text="Allocate Adjudicators" icon="check-circle" %}
           {% endif %}
 
         </div>
@@ -104,9 +104,9 @@
 
           {% roundurl 'venues-edit' round as url %}
           {% if no_venue > 0 %}
-            {% include "components/item-action.html" with text="Allocate Venues" icon="check-circle" %}
-          {% else %}
             {% include "components/item-action.html" with text="Allocate Venues" success=True %}
+          {% else %}
+            {% include "components/item-action.html" with text="Allocate Venues" icon="check-circle" %}
           {% endif %}
 
         </div>

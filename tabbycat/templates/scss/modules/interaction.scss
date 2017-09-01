@@ -129,6 +129,10 @@
   opacity: 0;
 }
 
+.auto-save {
+  min-width: 112px; // Don't want it resizing as text updates
+}
+
 .save-flash {
   animation-name: flash-animation;
   animation-duration: 5s;

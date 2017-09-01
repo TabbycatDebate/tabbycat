@@ -1,89 +1,103 @@
 <template>
 
-  <nav class="navbar navbar-default fixed-top allocation-actions pt-3 bg-light pb-3 d-flex justify-content-between">
+  <div><!-- Need extra top level element; modal cant be inside a .fixed-top -->
 
-    <div class="btn-group">
-      <div class="btn-group btn-group-sm">
-        <a :href="roundInfo.backUrl" class="btn btn-outline-primary btn-sm" data-toggle="tooltip"
-           data-placement="bottom" title="Return to Draw">
-          <i data-feather="chevron-left"></i>Back
-        </a>
-        <auto-save-counter :css="'btn-sm'"></auto-save-counter>
-        <a class="btn btn-success text-white btn-sm" @click="showAutoAllocationModal">
-          Auto Allocate
-        </a>
-      </div>
-    </div>
+    <nav class="navbar navbar-default fixed-top allocation-actions pt-3 bg-light pb-3 d-flex justify-content-between">
 
-    <div class="btn-group">
-      <div class="btn-group btn-group-sm">
-        <template v-if="!highlights.region && !highlights.gender &&
-                        !highlights.category && !highlights.ranking">
-          <button class="visible-lg-block btn btn-outline-secondary">Conflicts Key</button>
-          <button class="btn conflictable conflicts-toolbar hover-histories-2-ago disabled">
-            Seen Before
-          </button>
-          <button class="btn conflictable conflicts-toolbar hover-institution disabled">
-            Institutional <span class="d-lg-inline d-none">Clash</span>
-          </button>
-          <button class="btn conflictable conflicts-toolbar hover-adjudicator disabled">
-            Personal <span class="d-lg-inline d-none">Clash</span>
-          </button>
-          <button class="btn panel-incomplete disabled">
-            Unbalanced <span class="d-lg-inline d-none">Panel</span>
-          </button>
-        </template>
-        <template v-if="highlights.gender">
-          <button class="visible-lg-block btn btn-outline-secondary disabled">Gender Key</button>
-          <button class="btn gender-display gender-male">Male</button>
-          <button class="btn gender-display gender-f">Female</button>
-          <button class="btn gender-display gender-o">Other</button>
-          <button class="btn gender-display gender-">Unknown</button>
-        </template>
-        <template v-if="highlights.region">
-          <button class="visible-lg-block btn btn-outline-secondary">Region Key</button>
-          <button v-for="region in roundInfo.regions"
-                  :class="['btn btn-primary region-display', 'region-' + region.class]">
-            {{ region.name }}
-          </button>
-        </template>
-        <template v-if="highlights.category">
-          <button class="visible-lg-block btn btn-outline-secondary">Category Key</button>
-          <button v-for="category in roundInfo.categories"
-                  :class="['btn btn-primary category-display', 'category-' + category.class]">
-            {{ category.name }} Break
-          </button>
-          <button  class="btn btn-primary">
-            None Assigned
-          </button>
-        </template>
-        <template v-if="highlights.ranking">
-          <button class="visible-lg-block btn btn-outline-secondary">Ranking Key</button>
-          <button v-for="threshold in percentiles"
-                  :class="['btn ranking-display', 'ranking-' + threshold.percentile]">
-            {{ threshold.grade }}</button>
-        </template>
+      <div class="btn-group">
+        <div class="btn-group btn-group-sm">
+          <a :href="roundInfo.backUrl" class="btn btn-outline-primary btn-sm" data-toggle="tooltip"
+             data-placement="bottom" title="Return to Draw">
+            <i data-feather="chevron-left"></i>Back
+          </a>
+          <auto-save-counter :css="'btn-sm'"></auto-save-counter>
+          <a class="btn btn-success text-white btn-sm" @click="showAutoAllocationModal">
+            Auto Allocate
+          </a>
+        </div>
       </div>
-    </div>
 
-    <div class="btn-group">
-      <div class="btn-group btn-group-sm">
-        <button v-for="label in highlightLabels" @click="toggleHighlight(label)"
-                :class="['btn btn-primary hoverable disabled', highlights[label] ? 'active' : '']">
-          <span :class="highlights[label] ? 'd-none' : ''">
-            <i data-feather="eye"></i>
-          </span>
-          <span :class="highlights[label] ? '' : 'd-none'">
-            <i data-feather="eye-off"></i>
-          </span>
-          {{ titleCase(label) }}
-        </button>
+      <div class="btn-group">
+        <div class="btn-group btn-group-sm">
+          <template v-if="!highlights.region && !highlights.gender &&
+                          !highlights.category && !highlights.ranking">
+            <button class="visible-lg-block btn btn-outline-secondary">
+              <span class="d-xl-inline d-none">Conflicts</span> Key
+            </button>
+            <button class="btn conflictable conflicts-toolbar hover-histories-2-ago disabled">
+              Seen <span class="d-xl-inline d-none">Before</span>
+            </button>
+            <button class="btn conflictable conflicts-toolbar hover-institution disabled">
+              Institutional <span class="d-xl-inline d-none">Clash</span>
+            </button>
+            <button class="btn conflictable conflicts-toolbar hover-adjudicator disabled">
+              Personal <span class="d-xl-inline d-none">Clash</span>
+            </button>
+            <button class="btn panel-incomplete disabled">
+              Unbalanced
+            </button>
+          </template>
+          <template v-if="highlights.gender">
+            <button class="visible-lg-block btn btn-outline-secondary disabled">
+              <span class="d-xl-inline d-none">Gender</span> Key
+            </button>
+            <button class="btn gender-display gender-male">Male</button>
+            <button class="btn gender-display gender-f">Female</button>
+            <button class="btn gender-display gender-o">Other</button>
+            <button class="btn gender-display gender-">Unknown</button>
+          </template>
+          <template v-if="highlights.region">
+            <button class="visible-lg-block btn btn-outline-secondary disabled">
+              <span class="d-xl-inline d-none">Region</span> Key
+            </button>
+            <button v-for="region in roundInfo.regions"
+                    :class="['btn btn-primary region-display', 'region-' + region.class]">
+              {{ region.name }}
+            </button>
+          </template>
+          <template v-if="highlights.category">
+            <button class="visible-lg-block btn btn-outline-secondary disabled">
+              <span class="d-xl-inline d-none">Category</span> Key
+            </button>
+            <button v-for="category in roundInfo.categories"
+                    :class="['btn btn-primary category-display', 'category-' + category.class]">
+              {{ category.name }} Break
+            </button>
+            <button  class="btn btn-primary">
+              None Assigned
+            </button>
+          </template>
+          <template v-if="highlights.ranking">
+            <button class="visible-lg-block btn btn-outline-secondary disabled">
+              <span class="d-xl-inline d-none">Ranking</span> Key
+            </button>
+            <button v-for="threshold in percentiles"
+                    :class="['btn ranking-display', 'ranking-' + threshold.percentile]">
+              {{ threshold.grade }}</button>
+          </template>
+        </div>
       </div>
-    </div>
+
+      <div class="btn-group">
+        <div class="btn-group btn-group-sm">
+          <button v-for="label in highlightLabels" @click="toggleHighlight(label)"
+                  :class="['btn btn-primary hoverable disabled', highlights[label] ? 'active' : '']">
+            <span :class="highlights[label] ? 'd-none' : ''">
+              <i data-feather="eye"></i>
+            </span>
+            <span :class="highlights[label] ? '' : 'd-none'">
+              <i data-feather="eye-off"></i>
+            </span>
+            {{ titleCase(label) }}
+          </button>
+        </div>
+      </div>
+
+    </nav>
 
     <allocation-modal :round-info="roundInfo"></allocation-modal>
 
-  </nav>
+  </div>
 
 </template>
 
@@ -98,7 +112,7 @@ export default {
     // Internal state storing the status of which diversity highlight is being toggled
     return {
       highlights: { region: false, gender: false, category: false, ranking: false },
-      highlightLabels: { region: 'region', gender: 'gender', category: 'category', ranking: 'ranking' }
+      highlightLabels: { region: 'region', gender: 'gender', category: 'category', ranking: 'rank' }
     }
   },
   methods: {

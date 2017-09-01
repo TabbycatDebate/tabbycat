@@ -27,7 +27,8 @@
             deleted here — that requires going to the Edit Database area.
           </div>
         </div>
-        <div id="messages-container"></div>
+
+        <div id="allocations-container"></div>
 
       </div>
     </div>

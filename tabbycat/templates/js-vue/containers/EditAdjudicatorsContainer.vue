@@ -1,11 +1,11 @@
 <template>
-  <div class="col-md-12 draw-container allocation-container">
+  <div class="draw-container allocation-container">
 
     <allocation-actions :round-info="roundInfo"
                         :percentiles="percentileThresholds"></allocation-actions>
 
     <div class="row">
-      <div class="mb-3 allocation-messages" id="messages-container"></div>
+      <div class="mb-3 col allocation-messages" id="allocations-container"></div>
     </div>
 
     <div class="mb-3">

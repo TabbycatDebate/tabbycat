@@ -49,7 +49,7 @@
     {% endif %}
 
     {% block header %}
-      <div class="row {% if 'admin/' in request.path and user.is_superuser %}mb-3{% endif %}">
+      <div class="row d-print-none {% if 'admin/' in request.path and user.is_superuser %}mb-3{% endif %}">
         <div class="col mt-4 mb-3 h3">
 
           {% if page_title %}

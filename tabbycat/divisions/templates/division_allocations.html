@@ -32,7 +32,7 @@
   <form method="POST" action="{% tournamenturl 'create_division' %}">
     {% csrf_token %}
     <button class="btn btn-success " type="submit" >
-      <span class="icon icon-enter-data"></span> Add New Division
+      <i data-feather="plus-circle"></i> Add New Division
     </button>
   </form>
 {% endblock %}
