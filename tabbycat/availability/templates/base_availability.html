@@ -65,7 +65,7 @@
     $('#select_previous').click(function() {
       $(":checkbox.vue-table-checkbox").each(function(){
         var prev_round = $(this).parents("td").siblings("td").first();
-        var prev_active = prev_round.children(".hidden").text().trim();
+        var prev_active = prev_round.children("[hidden]").text().trim();
         if (prev_active === 'true') {
           $(this).prop('checked', true);
         } else {
