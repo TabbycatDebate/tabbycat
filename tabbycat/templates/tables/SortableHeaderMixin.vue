@@ -12,7 +12,8 @@ export default {
     },
     sortClasses: function(key) {
       var baseCSS = "vue-sort-key "
-      if (this.sortKey === key) {
+      console.log(this.sortKey, key)
+      if (this.sortKey.toLowerCase() === key.toLowerCase()) {
         if (this.sortOrder === "asc") {
           return baseCSS + "vue-sort-active sort-by-asc"
         } else {

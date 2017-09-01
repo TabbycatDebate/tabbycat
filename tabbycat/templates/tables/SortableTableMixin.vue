@@ -37,11 +37,18 @@ export default {
   computed: {
     dataOrderedByKey: function() {
       // Find the index of the cell matching the sortKey within each row
-      var orderedHeaderIndex = _.findIndex(this.headers, {'key': this.sortKey});
+      var key = this.sortKey.toLowerCase()
+      var orderedHeaderIndex = _.findIndex(this.headers, function(header) {
+        return header.key.toLowerCase() == key;
+      });
+
+      // If no matches found log an error (asynchronously so table will render)
       if (orderedHeaderIndex === -1) {
-        console.log("Couldn't locate sort key: ", this.sortKey, " in headers", this.headers)
+        var errorDetails = "No sort key '" + key + "' in headers: " + _.map(this.headers, 'key');
+        setTimeout(function () { throw new Error(errorDetails); }, 500)
         return this.sortableData
       }
+
       // Sort the array of rows based on the value of the cell index
       // For DrawContainer row is the debate dictionary
       var self = this
