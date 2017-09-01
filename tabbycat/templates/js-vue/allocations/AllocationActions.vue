@@ -21,19 +21,19 @@
         <div class="btn-group btn-group-sm">
           <template v-if="!highlights.region && !highlights.gender &&
                           !highlights.category && !highlights.ranking">
-            <button class="visible-lg-block btn btn-outline-secondary">
+            <button class="visible-lg-block btn btn-outline-secondary disabled">
               <span class="d-xl-inline d-none">Conflicts</span> Key
             </button>
-            <button class="btn conflictable conflicts-toolbar hover-histories-2-ago disabled">
+            <button class="btn conflictable conflicts-toolbar hover-histories-2-ago">
               Seen <span class="d-xl-inline d-none">Before</span>
             </button>
-            <button class="btn conflictable conflicts-toolbar hover-institution disabled">
+            <button class="btn conflictable conflicts-toolbar hover-institution">
               Institutional <span class="d-xl-inline d-none">Clash</span>
             </button>
-            <button class="btn conflictable conflicts-toolbar hover-adjudicator disabled">
+            <button class="btn conflictable conflicts-toolbar hover-adjudicator">
               Personal <span class="d-xl-inline d-none">Clash</span>
             </button>
-            <button class="btn panel-incomplete disabled">
+            <button class="btn panel-incomplete">
               Unbalanced
             </button>
           </template>
