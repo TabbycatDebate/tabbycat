@@ -13,38 +13,16 @@
         <span class="mr-auto">{{ round.abbreviation }}</span>
         <strong>{{ ct.in_now }}/{{ ct.total }}</strong>
       </div>
-      <div class="progress mb-3">
-        <div class="progress-bar bg-success
-                    {% if ct.in_now == 0 %}progress-empty{% endif %}"
-             role="progressbar" aria-valuenow="{{ ct.in_now }}"
-             aria-valuemin="0" aria-valuemax="{{ ct.total }}"
-             style="width: {% percentage ct.in_now ct.total %}%;">
-          <span></span>
-        </div>
-      </div>
+      {% include "components/progress-bar.html" with value=ct.in_now total=ct.total type="success" %}
     </div>
 
     {% if ct.in_before is not None %}
       <div class="list-group-item">
-        <div class="row">
-
-        <div class="col-lg-3 col-12">
-          {{ round.prev.abbreviation }}
+        <div class="d-flex justify-content-end">
+          <span class="mr-auto">{{ round.prev.abbreviation }}</span>
+          <strong>{{ ct.in_before }}/{{ ct.total }}</strong>
         </div>
-
-        <div class="col-lg-9 col-12">
-          <div class="progress mb-3">
-            <div class="progress-bar progress-bar-info
-                        {% if ct.in_before == 0 %}progress-empty{% endif %}"
-                 role="progressbar" aria-valuenow="{{ ct.in_now }}"
-                 aria-valuemin="0" aria-valuemax="{{ ct.total }}"
-                 style="width: {% percentage ct.in_before ct.total %}%;">
-              <span>{{ ct.in_before }}/{{ ct.total }}</span>
-            </div>
-          </div>
-        </div>
-
-        </h6>
+        {% include "components/progress-bar.html" with value=ct.in_before total=ct.total type="secondary" %}
       </div>
     {% endif %}
 
