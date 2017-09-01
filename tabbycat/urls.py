@@ -54,10 +54,6 @@ urlpatterns = [
     url(r'^accounts/',
         include('django.contrib.auth.urls')),
 
-    # Favicon for old browsers that ignore the head link
-    url(r'^favicon\.ico$',
-        RedirectView.as_view(url='/static/favicon.ico')),
-
     # Redirect for old-style tournament URLs
     # Avoid keyword argument name 'tournament_slug' to avoid triggering DebateMiddleware
     url(r'^t/(?P<slug>[-\w_]+)/(?P<page>[-\w_/]*)$',
