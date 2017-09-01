@@ -47,10 +47,29 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
     # the form processing analogously to FormView, with less decomposition.
     # See also: participants.views.PublicConfirmShiftView.
 
-    template_name = 'edit.html'
+    template_name = 'motions_edit.html'
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
-    formset_factory_kwargs = dict(can_delete=True, extra=3, exclude=['round'])
     formset_model = Motion
+
+    def get_formset_factory_kwargs(self):
+        tournament = self.get_tournament()
+        excludes = ['round', 'id']
+
+        if not tournament.pref('enable_flagged_motions'):
+            excludes.append('flagged')
+
+        if not tournament.pref('enable_divisions'):
+            excludes.append('divisions')
+
+        if tournament.pref('enable_motions'):
+            delete = True
+            extras = 3 - self.get_formset_queryset().count()
+        else:
+            excludes.append('seq')
+            extras = 1 - self.get_formset_queryset().count()
+            delete = False
+
+        return dict(can_delete=delete, extra=extras, exclude=excludes)
 
     def get_formset_queryset(self):
         return self.get_round().motion_set.all()
@@ -59,6 +78,9 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
         motions = formset.save(commit=False)
         round = self.get_round()
         for motion in motions:
+            if self.get_tournament().pref('enable_motions'):
+                motion.seq = 1
+
             motion.round = round
             motion.save()
             self.log_action(content_object=motion)
