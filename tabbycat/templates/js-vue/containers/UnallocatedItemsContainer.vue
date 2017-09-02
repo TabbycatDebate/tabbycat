@@ -5,7 +5,7 @@
     @dragleave="dragLeave"
     @drop="drop"
     :class="{ 'vue-is-drag-enter': isDroppable }"
-    class="navbar navbar-default fixed-bottom vue-droppable unallocated-items"
+    class="navbar navbar-default fixed-bottom vue-droppable justify-content-center unallocated-items"
     :style="{height: height + 'px'}" ref="resizeableElement">
 
     <slot><!-- Container sets unallocated items here --></slot>

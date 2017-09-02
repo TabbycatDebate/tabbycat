@@ -56,10 +56,10 @@ class MotionStats:
         if self.debate_rooms < 10: # Too few wins/vetoes to calculate
             return 'balance inconclusive', 'Too few debate to determine meaningful balance'
         elif self.isBP:
-            return self.two_team_balance(for_vetoes)
-        else:
             return None
-            return self.four_team_balance(for_vetoes) # Not implemented
+            # return self.four_team_balance(for_vetoes) # Not implemented
+        else:
+            return self.two_team_balance(for_vetoes)
 
     def two_team_balance(self, for_vetoes):
         # Test and confidence levels contributed by Viran Weerasekera

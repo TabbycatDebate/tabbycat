@@ -14,9 +14,11 @@ if (aff_speakers.indexOf("Speaker 1") != -1 && neg_speakers.indexOf("Speaker 1")
 }
 
 function refresh_totals(scoresheet) {
+
   $scoresheet = $(scoresheet);
 
   // Fix the branching logic here into something cleaner
+  var allClasses = 'btn-dark btn-secondary btn-success btn-primary btn-warning btn-danger';
 
   if ($('.position').length === 2) {
     // 2-team
@@ -29,19 +31,21 @@ function refresh_totals(scoresheet) {
     $aff_total.text(aff);
     $neg_total.text(neg);
 
+    $aff_total.removeClass(allClasses);
+    $neg_total.removeClass(allClasses);
     if (aff > neg) {
-      $aff_total.addClass('btn-success').removeClass('btn-danger');
-      $neg_total.addClass('btn-danger').removeClass('btn-success');
+      $aff_total.addClass('btn-success');
+      $neg_total.addClass('btn-danger');
       $aff_margin.text("+" + Number(aff - neg));
       $neg_margin.text(Number(neg - aff));
     } else if (neg > aff) {
-      $aff_total.addClass('btn-danger').removeClass('btn-success');
-      $neg_total.addClass('btn-success').removeClass('btn-danger');
+      $aff_total.addClass('btn-danger');
+      $neg_total.addClass('btn-success');
       $aff_margin.text(Number(aff - neg));
       $neg_margin.text("+" + Number(neg - aff));
     } else {
-      $aff_total.addClass('btn-danger').removeClass('btn-success');
-      $neg_total.addClass('btn-danger').removeClass('btn-success');
+      $aff_total.addClass('btn-dark');
+      $neg_total.addClass('btn-dark');
       $aff_margin.text(Number(aff - neg));
       $neg_margin.text(Number(neg - aff));
     }
@@ -58,7 +62,7 @@ function refresh_totals(scoresheet) {
       margins_elements[team] = $('.' + team + '_margin', $scoresheet);
       var team_total = sum($('.' + team + '.score input', $scoresheet));
       // Update totals scores only if both speaker scores have been entered
-      if (team_total > 100) {
+      if (team_total > 99) {
         total_scores[team] = team_total
         totals_elements[team].text(total_scores[team]);
       }
@@ -74,18 +78,20 @@ function refresh_totals(scoresheet) {
 
     // Use sorted dictionary to assign relative margins and win indicators
     for (var i = 0; i <= sortedScores.length - 1; i++) {
-      var team = sortedScores[i][0]
+
+      var team = sortedScores[i][0];
       if (total_scores[team] === 0) { continue }
-      totals_elements[team].removeClass('btn-success').removeClass('btn-primary').removeClass('btn-warning').removeClass('btn-danger');
 
       // Add winning class indicators; but not if there was a tie
       var tie = false;
       for (var j = 0; j <= sortedScores.length - 1; j++) {
         if (j === i) { continue }
         if (total_scores[team] === total_scores[sortedScores[j][0]]) {
-          tie = true
+          tie = true;
         }
       }
+
+      totals_elements[team].removeClass(allClasses);
       if (!tie && sortedScores.length > 3) {
         if (i === 0) {
           totals_elements[team].addClass('btn-success');
@@ -97,14 +103,17 @@ function refresh_totals(scoresheet) {
           totals_elements[team].addClass('btn-danger');
         }
       }
+      if (tie) {
+        totals_elements[team].addClass('btn-dark');
+      }
 
       // Display margin
-      var top_score = total_scores[sortedScores[0][0]]
-      var margin = String(top_score - total_scores[team])
+      var top_score = total_scores[sortedScores[0][0]];
+      var margin = String(top_score - total_scores[team]);
       if (margin !== "0") {
         margin = "-" + margin
       }
-      margins_elements[team].text(margin)
+      margins_elements[team].text(margin);
     }
   }
 
@@ -176,10 +185,10 @@ $("#resultsForm").validate({
 });
 
 $('.scoresheet').each(function() {
-    refresh_totals($(this));
+  refresh_totals($(this));
 });
 $('.score input').change(function() {
-    refresh_totals($(this).parents('.scoresheet'));
+  refresh_totals($(this).parents('.scoresheet'));
 });
 
 $('.js-team-speakers select').change(update_speakers).each(update_speaker);
