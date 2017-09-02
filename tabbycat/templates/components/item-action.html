@@ -22,6 +22,9 @@
       {% else %}
         {{ text|safe }}
       {% endif %}
+      {% if subtext %}
+        <span class="text-muted">{{ subtext }}</span>
+      {% endif %}
 
     </div>
 

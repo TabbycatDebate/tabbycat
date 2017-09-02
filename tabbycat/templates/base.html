@@ -24,13 +24,14 @@
   {% block nav %}
     {% if 'admin/' not in request.path %}
       {% include "nav/top_nav_base.html" %}
+    {% elif user.is_authenticated and not user.is_superuser %}
+      {% include "nav/top_nav_base.html" %}
     {% endif %}
   {% endblock nav %}
 
   <div class="container-fluid">
 
     {% if 'admin/' in request.path and user.is_superuser %}
-
       <!-- Fake full height for menu -->
       <div class="row">
         <div class="col-md-2 col-1 float-left pl-0 pr-lg-3 pr-md-3 pr-0 d-none d-sm-block width fake-sidebar">
@@ -62,17 +63,6 @@
           {% endif %}
 
         </div>
-
-        <!-- Menu to toggle/show the main menu for admin area
-        <div class="col mt-4 mb-3">
-          {% if 'admin/' in request.path and user.is_superuser %}
-            <a href="#" data-target="#sidebar" data-toggle="collapse">
-              <i data-feather="menu"></i>
-            </a>
-          {% endif %}
-        </div>
-        -->
-
       </div>
     {% endblock header %}
 
