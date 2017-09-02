@@ -8,7 +8,7 @@
 
 {% block page-subnav-sections %}
   {% if user.is_superuser %}
-    <a href="{% roundurl 'motions-edit' %}" class="btn btn-primary">
+    <a href="{% roundurl 'motions-edit' %}" class="btn btn-outline-primary">
       <i data-feather="chevron-left"></i> Back to Motions
     </a>
     <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">

@@ -3,31 +3,33 @@
 
 {% block page-subnav-sections %}
 
-  {% if round.is_break_round %}
-    <form method="POST" action="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
-      {% csrf_token %}
-      <button class="btn btn-primary " type="submit">
-        {% trans "Check In All Breaking Adjs" %}
-      </button>
-    </form>
-  {% else %}
-    <form method="POST" action="{% roundurl 'availability-checkin-all' %}">
-      {% csrf_token %}
-      <button class="btn btn-primary " type="submit">
-        {% trans "Check In Everything" %}
-      </button>
-    </form>
-    {% if round.prev %}
-      <form method="POST" action="{% roundurl 'availability-checkin-previous' %}">
+  <div class="btn-group" role="group">
+    {% if round.is_break_round %}
+      <form method="POST" action="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
         {% csrf_token %}
         <button class="btn btn-primary " type="submit">
-          {% blocktrans trimmed with prev_round=round.prev.abbreviation %}
-            Copy from {{ prev_round }}
-          {% endblocktrans %}
+          {% trans "Check In All Breaking Adjs" %}
         </button>
       </form>
+    {% else %}
+      <form method="POST" action="{% roundurl 'availability-checkin-all' %}">
+        {% csrf_token %}
+        <button class="btn btn-primary " type="submit">
+          {% trans "Check In Everything" %}
+        </button>
+      </form>
+      {% if round.prev %}
+        <form method="POST" action="{% roundurl 'availability-checkin-previous' %}">
+          {% csrf_token %}
+          <button class="btn btn-primary " type="submit">
+            {% blocktrans trimmed with prev_round=round.prev.abbreviation %}
+              Copy from {{ prev_round }}
+            {% endblocktrans %}
+          </button>
+        </form>
+      {% endif %}
     {% endif %}
-  {% endif %}
+  </div>
 
 {% endblock %}
 

@@ -18,6 +18,7 @@ from participants.models import Adjudicator
 from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
+from tournaments.utils import get_side_name
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
 from utils.mixins import (CacheMixin, JsonDataResponsePostView, JsonDataResponseView,
                           SuperuserOrTabroomAssistantTemplateResponseMixin,
@@ -477,10 +478,9 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
             winner = '?'
             loser = '?'
             for teamscore in ballotsub.teamscore_set.all():
-                team_str = "{:s} as ({:s})".format(
+                team_str = "{:s} as {:s}".format(
                     teamscore.debate_team.team.short_name,
-                    teamscore.debate_team.get_side_name(self.get_tournament(),
-                                                        name_type='abbr'))
+                    get_side_name(t, teamscore.debate_team.side, 'abbr'))
 
                 if t.pref('teams_in_debate') == 'bp':
                     if teamscore.points == 3:
@@ -494,7 +494,7 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
                         loser = team_str
 
             if t.pref('teams_in_debate') == 'bp':
-                result = 'Win for ' + winner + '<br> 🍩 for ' + loser
+                result = 'Win for ' + winner + '<br> Loss for ' + loser
             else:
                 result = winner + ' won vs ' + loser
 
