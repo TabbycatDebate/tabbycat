@@ -3,19 +3,24 @@
 
 {% block page-subnav-sections %}
   <div class="btn-group">
-    <a class="btn btn-outline-primary  {% if feedback_overview_nav %}active disabled{% endif %}" href="{% tournamenturl 'adjfeedback-overview' %}">
+    <a class="btn btn-outline-primary {% if feedback_overview_nav %}active disabled{% endif %}"
+       href="{% tournamenturl 'adjfeedback-overview' %}">
       Overview
     </a>
-    <a class="btn btn-outline-primary  {% if feedback_latest_nav %}active disabled{% endif %}" href="{% tournamenturl 'adjfeedback-view-latest' %}">
+    <a class="btn btn-outline-primary {% if feedback_latest_nav %}active disabled{% endif %}"
+       href="{% tournamenturl 'adjfeedback-view-latest' %}">
       Latest
     </a>
-    <a class="btn btn-outline-primary  {% if feedback_source_nav %}active disabled{% endif %}" href="{% tournamenturl 'adjfeedback-view-by-source' %}">
+    <a class="btn btn-outline-primary {% if feedback_source_nav %}active disabled{% endif %}"
+       href="{% tournamenturl 'adjfeedback-view-by-source' %}">
       Find by Source
     </a>
-    <a class="btn btn-outline-primary  {% if feedback_target_nav %}active disabled{% endif %}" href="{% tournamenturl 'adjfeedback-view-by-target' %}">
+    <a class="btn btn-outline-primary {% if feedback_target_nav %}active disabled{% endif %}"
+       href="{% tournamenturl 'adjfeedback-view-by-target' %}">
       Find by Target
     </a>
-    <a class="btn btn-outline-primary  {% if feedback_progress_nav %}active disabled{% endif %}" href="{% tournamenturl 'feedback_progress' %}">
+    <a class="btn btn-outline-primary {% if feedback_progress_nav %}active disabled{% endif %}"
+       href="{% tournamenturl 'feedback_progress' %}">
       Unsubmitted Feedback
     </a>
   </div>
@@ -23,6 +28,6 @@
 
 {% block page-subnav-actions %}
   <a class="btn btn-outline-success" href="{% tournamenturl 'adjfeedback-add-index' %}">
-    <i data-feather="plus-circle"></i> Add Feedback
+    Add Feedback
   </a>
 {% endblock %}

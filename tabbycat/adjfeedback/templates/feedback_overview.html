@@ -12,34 +12,29 @@
   <div class="modal fade" id="edit-test-score" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
-        <div class="modal-header text-center">
-          <h3>Change Test Score</h3>
-        </div>
-        <div class="modal-body">
-          <form id="testScoreForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-test-score' %}" class="">
-            {% csrf_token %}
-            <input id="id_adj_id" name="adj_id" type="hidden" value="" />
-            <div class="form-group">
-              <label >
-                Test score
-              </label>
-              <div class="col-sm-6">
-                <input id="id_test_score" name="test_score" placeholder="3.5" type="number" step="any" ></input>
+        <form id="testScoreForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-test-score' %}" class="">
+          <div class="modal-body pb-0 pt-0">
+            <div class="list-group list-group-flush">
+
+              {% include "components/form-title.html" with title="Change Test Score" %}
+
+              {% csrf_token %}
+
+              <div class="list-group-item">
+                <input id="id_adj_id" name="adj_id" type="hidden" value="" />
+                <div class="form-group">
+                  <label>
+                    Test score
+                  </label>
+                  <input id="id_test_score" class="form-control" name="test_score" placeholder="3.5" type="number" step="any" ></input>
+                </div>
               </div>
-              <div class="col-sm-2">
-                <span ></span>
+
+              {% include "components/form-submit.html" with title="Save Test Score" %}
+
               </div>
-            </div>
-            <div class="form-group">
-              <label ></label>
-              <div class="col-sm-6">
-                <button type="submit" value="Save" class="btn btn-success btn-block">
-                  Save Test Score
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>

@@ -51,7 +51,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         test_data = [{
             'text': '%0.1f' % adj.test_score if adj.test_score is not None else 'N/A',
             'modal': adj.id,
-            'class': 'edit-2',
+            'class': 'edit-test-score',
             'tooltip': 'Click to edit test score',
         } for adj in adjudicators]
         self.add_column(test_header, test_data)

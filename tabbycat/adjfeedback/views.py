@@ -56,7 +56,7 @@ class GetAdjFeedbackJSON(LoginRequiredMixin, TournamentMixin, JsonDataResponseVi
 class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
 
     template_name = 'feedback_overview.html'
-    page_title = 'Adjudicator Feedback Summary'
+    page_title = 'Feedback Overview'
     page_emoji = '🙅'
 
     def get_adjudicators(self):
