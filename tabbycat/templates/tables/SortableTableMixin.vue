@@ -39,7 +39,7 @@ export default {
       // Find the index of the cell matching the sortKey within each row
       var key = this.sortKey.toLowerCase()
       // Tables with no data have no headers
-      if (this.headers.length === 0) {
+      if (this.headers.length === 0 || key === '') {
         return this.sortableData;
       }
       // Identify header matching to sort key
