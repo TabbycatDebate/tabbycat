@@ -16,6 +16,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
 from participants.models import Adjudicator, Institution, Team
+from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import CrossTournamentPageMixin, DrawForDragAndDropMixin
 from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, SaveDragAndDropDebateMixin, TournamentMixin
@@ -317,6 +318,17 @@ class CreateDrawView(DrawStatusEdit):
                 "contact the developers.</p>"
             ) % {'message': str(e)}))
             logger.exception("Fatal error creating draw: " + str(e))
+            return HttpResponseRedirect(reverse_round('availability-index', round))
+        except StandingsError as e:
+            messages.error(request, mark_safe(_(
+                "<p>The team standings could not be generated, because the following error occurred: "
+                "<em>%(message)s</em></p>\n"
+                "<p>Because the draw uses the current team standings, this prevents "
+                "the draw from being generated. You may need to double-check the standings "
+                "configuration under the Setup section. If this issue persists and you're "
+                "not sure how to fix it, please contact the developers.</p>"
+            ) % {'message': str(e)}))
+            logger.exception("Error generating standings for draw: " + str(e))
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
         relevant_adj_venue_constraints = VenueConstraint.objects.filter(
