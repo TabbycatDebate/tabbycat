@@ -16,35 +16,6 @@
     </a>
   {% endif %}
 
-  <div class="btn-group" role="group">
-
-    {% if not user.is_superuser %}
-      <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
-        Check-In Ballots
-      </a>
-    {% endif %}
-    <span class="btn btn-primary disabled">
-      {{ stats.ballot_in }} Checked In <i data-feather="inbox"></i>
-    </span>
-    <span class="btn btn-danger disabled">
-      {{ stats.none }} Unknown <i data-feather="x"></i>
-    </span>
-    <span class="btn btn-warning disabled">
-      {{ stats.draft }} Unconfirmed <i data-feather="circle"></i>
-    </span>
-    <span class="btn btn-success disabled">
-      {{ stats.confirmed }} Confirmed <i data-feather="check"></i>
-    </span>
-    {% if pref.enable_postponements %}
-      <span class="btn btn-primary disabled">
-        {{ stats.postponed }} Postponed <i data-feather="pause"></i>
-      </span>
-      <span class="btn btn-primary disabled" disabled>
-        Byes <span class="icon fast-forward"></span>
-      </span>
-    {% endif %}
-  </div>
-
 {% endblock %}
 
 {% block page-subnav-actions %}
@@ -72,6 +43,36 @@
 {% endblock %}
 
 {% block content %}
+
+  <div class"col">
+    <div class="btn-group mb-3" role="group">
+      {% if not user.is_superuser %}
+        <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
+          Check-In Ballots
+        </a>
+      {% endif %}
+      <span class="btn btn-primary disabled">
+        {{ stats.ballot_in }} Checked In <i data-feather="inbox"></i>
+      </span>
+      <span class="btn btn-danger disabled">
+        {{ stats.none }} Unknown <i data-feather="x"></i>
+      </span>
+      <span class="btn btn-warning disabled">
+        {{ stats.draft }} Unconfirmed <i data-feather="circle"></i>
+      </span>
+      <span class="btn btn-success disabled">
+        {{ stats.confirmed }} Confirmed <i data-feather="check"></i>
+      </span>
+      {% if pref.enable_postponements %}
+        <span class="btn btn-primary disabled">
+          {{ stats.postponed }} Postponed <i data-feather="pause"></i>
+        </span>
+        <span class="btn btn-primary disabled" disabled>
+          Byes <span class="icon fast-forward"></span>
+        </span>
+      {% endif %}
+    </div>
+  </div>
 
   {{ block.super }}
 

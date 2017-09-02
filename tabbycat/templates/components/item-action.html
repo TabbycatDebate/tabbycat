@@ -1,7 +1,8 @@
 {% if alone == True %}<div class="list-item-group">{% endif %}
 
 <a href="{{ url }}" class="list-group-item list-group-item-action
-   {% if success %}bg-success text-white{% endif %}">
+   {% if success %}bg-success text-white{% endif %}
+   {% if type %}list-group-item-{{ type }}{% endif %}">
 
   <div class="row align-items-center">
 

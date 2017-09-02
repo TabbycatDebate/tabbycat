@@ -77,7 +77,7 @@
           {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
             {% include "components/item-action.html" with text="Allocate Adjudicators" success=True %}
           {% else %}
-            {% include "components/item-action.html" with text="Allocate Adjudicators" icon="check-circle" %}
+            {% include "components/item-action.html" with text="Allocate Adjudicators" type="primary" icon="check-circle" %}
           {% endif %}
 
         </div>
@@ -106,7 +106,7 @@
           {% if no_venue > 0 %}
             {% include "components/item-action.html" with text="Allocate Venues" success=True %}
           {% else %}
-            {% include "components/item-action.html" with text="Allocate Venues" icon="check-circle" %}
+            {% include "components/item-action.html" with text="Allocate Venues" type="primary" icon="check-circle" %}
           {% endif %}
 
         </div>
