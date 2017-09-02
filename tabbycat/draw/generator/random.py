@@ -1,6 +1,8 @@
 import random
 
-from .common import BaseDrawGenerator, DrawError, Pairing
+from django.utils.translation import ugettext as _
+
+from .common import BaseDrawGenerator, DrawUserError, Pairing
 
 
 class RandomDrawGenerator(BaseDrawGenerator):
@@ -84,9 +86,10 @@ class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
         neg_teams = [t for t in self.teams if t.allocated_side == "neg"]
 
         if len(aff_teams) != len(neg_teams):
-            raise DrawError("There were {0} aff teams but {1} neg teams.".format(len(aff_teams), len(neg_teams)))
+            raise DrawUserError(_("There were %(aff_count)d affirmative teams but %(neg_count)d negative "
+                    "teams.") % {'aff_count': len(aff_teams), 'neg_count': len(neg_teams)})
         if len(aff_teams) + len(neg_teams) != len(self.teams):
-            raise DrawError("One or more teams had an allocated side that wasn't 'aff' or 'neg'.")
+            raise DrawUserError(_("One or more teams had an allocated side that wasn't 'aff' or 'neg'."))
 
         random.shuffle(aff_teams)
         random.shuffle(neg_teams)

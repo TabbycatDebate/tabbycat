@@ -27,7 +27,7 @@ from venues.allocator import allocate_venues
 from venues.models import VenueCategory, VenueConstraint
 
 from .dbutils import delete_round_draw
-from .generator import DrawError
+from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
@@ -300,10 +300,17 @@ class CreateDrawView(DrawStatusEdit):
         manager = DrawManager(round)
         try:
             manager.create()
-        except DrawError as e:
-            messages.error(request, "There was a problem creating the draw: " + str(e) + " If this "
-                " issue persists and you're not sure how to resolve it, please contact the developers.")
-            logger.exception("Problem creating draw: " + str(e))
+        except DrawUserError as e:
+            messages.error(request, _("The draw could not be created, for the following reason: "
+                "%(message)s Please fix this issue before attempting to create the "
+                "draw.") % {'message': str(e)})
+            logger.warning("User error creating draw: " + str(e), exc_info=True)
+            return HttpResponseRedirect(reverse_round('availability-index', round))
+        except DrawFatalError as e:
+            messages.error(request, _("The draw could not be created, because the following error "
+                "occurred: %(message)s. If this issue persists and you're not sure how to "
+                "fix it, please contact the developers.") % {'message': str(e)})
+            logger.exception("Fatal error creating draw: " + str(e))
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
         relevant_adj_venue_constraints = VenueConstraint.objects.filter(

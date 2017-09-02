@@ -18,13 +18,13 @@ from utils.misc import redirect_tournament
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
+from .base import StandingsError
 from .motions import MotionsStandingsTableBuilder
 from .diversity import get_diversity_data_sets
 from .teams import TeamStandingsGenerator
 from .speakers import SpeakerStandingsGenerator
 from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
 from .templatetags.standingsformat import metricformat
-
 
 logger = logging.getLogger(__name__)
 
@@ -158,9 +158,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         speakers = self.get_speakers()
         metrics, extra_metrics = self.get_metrics()
         rank_filter = self.get_rank_filter()
-        generator = SpeakerStandingsGenerator(metrics, self.rankings,
-                                              extra_metrics,
-                                              rank_filter=rank_filter)
+        generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics, rank_filter=rank_filter)
         standings = generator.generate(speakers, round=round)
 
         rounds = self.get_rounds()
@@ -171,9 +169,17 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         return standings, rounds
 
     def get_table(self):
-        standings, rounds = self.get_standings()
-
         table = TabbycatTableBuilder(view=self, sort_key="Rk")
+
+        try:
+            standings, rounds = self.get_standings()
+        except StandingsError as e:
+            messages.error(self.request, _("There was an error generating the standings: "
+                "%(message)s. You may need to double-check the standings configuration under "
+                "the Setup section. If this issue persists and you're not sure how to fix it, "
+                "please contact the developers.") % {'message': str(e)})
+            logger.exception("Error generating standings: " + str(e))
+            return table
 
         # Easiest to redact info here before passing to column constructors
         if hasattr(self, 'public_page_preference'):
@@ -362,9 +368,18 @@ class BaseTeamStandingsView(BaseStandingsView):
         pass
 
     def get_table(self):
-        standings, rounds = self.get_standings()
-
         table = TabbycatTableBuilder(view=self, sort_key="Rk")
+
+        try:
+            standings, rounds = self.get_standings()
+        except StandingsError as e:
+            messages.error(self.request, _("There was an error generating the standings: "
+                "%(message)s. You may need to double-check the standings configuration under "
+                "the Setup section. If this issue persists and you're not sure how to fix it, "
+                "please contact the developers.") % {'message': str(e)})
+            logger.exception("Error generating standings: " + str(e))
+            return table
+
         table.add_ranking_columns(standings)
         table.add_team_columns([info.team for info in standings])
 
