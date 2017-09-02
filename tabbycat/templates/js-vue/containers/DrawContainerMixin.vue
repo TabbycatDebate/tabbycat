@@ -108,7 +108,7 @@ export default {
     // Duplicating sortableHeaderMixin; but can't inheret in a slot
     sortClasses: function(key) {
       var baseCSS = "vue-sort-key "
-      if (this.sortKey.toLowerCase() === key.toLowerCase()) {
+      if (!_.isUndefined(this.sortKey) && this.sortKey.toLowerCase() === key.toLowerCase()) {
         if (this.sortOrder === "asc") {
           return baseCSS + "vue-sort-active sort-asc"
         } else {
