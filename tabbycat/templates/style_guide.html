@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head-title %}<span class="emoji">👋</span> Top Level Title with Emoji{% endblock %}
+{% block page-title %}Tabbycat Style Guide{% endblock %}
+{% block nav %}{% endblock %}
+
+{% block content %}
+
+<h6 class="mt-5">Alerts (notify of system events)</h6>
+
+{% include "components/alert.html" with type="info" message="This is an alert of an event that has happened (ie logging in)." %}
+{% include "components/alert.html" with type="success" message="This is an alert of an event that has happened (ie logging in)." %}
+{% include "components/alert.html" with type="warning" message="This is a message of a warning." %}
+{% include "components/alert.html" with type="danger" message="This is a message of an error or bad thing that happened" %}
+
+<h6 class="mt-5">Info Panels (explain crucial information on a page)</h6>
+
+{% blocktrans trimmed asvar p1 %}This style of info card announces critical information. <a href="">Link</a>.{% endblocktrans %}
+{% include "components/explainer-card.html" with type="warning" %}
+
+{% blocktrans trimmed asvar p1 %}This style of info card announces critical <a href="">information</a>.{% endblocktrans %}
+{% include "components/explainer-card.html" with type="info" %}
+
+<h6 class="mt-5">Nav actions</h6>
+
+  <div class="list-group mt-2">
+    {% include "components/item-action.html" with text="Nav Action Item" icon="feather" %}
+  </div>
+
+<h6 class="mt-5">Calls to Action (promp for necessary actions)</h6>
+
+{% include "components/item-action.html" with url="#" alone=True text="Go to the draw area to allocate adjudicators." success=True %}
+
+<h6 class="mt-5">Cards (for sections of info or link blocks)</h6>
+
+<div class="card mt-3">
+  <div class="card-body text-info border-info">
+    <h4 class="card-title"><i data-feather="clock"></i>Info Title</h4>
+     Info description
+  </div>
+  <ul class="list-group list-group-flush">
+    <a href="" class="list-group-item list-group-item-action">
+      <h5 class="list-group-item-heading">Title</h5>
+      Body
+    </a>
+  </ul>
+</div>
+
+<h6 class="mt-5">Tables</h6>
+
+
+
+<h6 class="mt-5">Action Buttons (for forms or headers with actions)</h6>
+
+<div class="btn btn-success">
+  Primary Data-Altering Action
+</div>
+<div class="btn btn-success" disabled>
+  Secondary Data-Altering Action
+</div>
+<div class="btn btn-primary" disabled>
+  Disabled SDA
+</div>
+<div class="btn btn-danger">
+  Destructive Action
+</div>
+<div class="btn btn-danger" disabled>
+  Disabled DA
+</div>
+
+<h6 class="mt-5">Nav Buttons (acting as links or navigation items in headers)</h6>
+
+<div class="btn btn-outline-primary">
+  A link to somewhere
+</div>
+<div class="btn btn-outline-primary active">
+  An link to somewhere
+</div>
+<div class="btn btn-outline-secondary disabled">
+  A active but disabled link to somewhere (i.e. current page)
+</div>
+
+<h6 class="mt-5">Forms</h6>
+
+<div class="card mt-3">
+
+  <div class="list-group list-group-flush">
+  <form>
+
+    {% trans "Form Title" context "page title" as title %}
+    {% trans "Sub Title Title" as text %}
+    {% include "components/form-title.html" with icon="feather" %}
+
+    <div class="list-group-item pb-4">
+
+      <div class="alert alert-danger mt-2">
+        <i data-feather="alert-circle"></i>
+        This is an error message raised by the form
+      </div>
+
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">Label A</label>
+        <input class="form-control" type="password" name="old_password" autofocus=""  required="" id="id_old_password">
+        <small class="form-text text-muted">Hint for form field</small>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">Label B</label>
+        <input class="form-control" type="password" name="old_password" autofocus=""  required="" id="id_old_password">
+        <small class="form-text text-muted">Hint for form field</small>
+        <ul class="errorlist"><li>Error for form field</li></ul>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-lg-6">
+          <label for="{{ field.id_for_label }}">Label C</label>
+          <input class="form-control" type="password" name="old_password" autofocus=""  required="" id="id_old_password">
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="{{ field.id_for_label }}">Label D</label>
+          <input class="form-control" type="password" name="old_password" autofocus=""  required="" id="id_old_password">
+        </div>
+      </div>
+
+    </div>
+
+    {% trans "Log In" context "button" as title %}
+    {% trans "I forgot my password" context "button" as subtitle %}
+    {% url 'password_reset' as suburl %}
+    {% include "components/form-submit.html" %}
+
+  </form>
+  </div>
+
+</div>
+
+{% endblock content %}

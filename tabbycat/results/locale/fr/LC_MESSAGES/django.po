@@ -407,57 +407,57 @@ msgstr "Enregistrer Bulletin"
 msgid "Cancel Entry"
 msgstr "Annuler"
 
-#: results/templates/enter_results_ballot_set.html:7
+#: results/templates/ballot_set.html.html:7
 msgid ""
 "There are some problems with this scoresheet. Please review and correct them."
 msgstr ""
 "Cette feuille de débat a des problèmes. Veuillez les examiner et les "
 "corriger."
 
-#: results/templates/enter_results_ballot_set.html:9
+#: results/templates/ballot_set.html.html:9
 msgid "General errors:"
 msgstr "Erreurs généraux :"
 
-#: results/templates/enter_results_ballot_set.html:19
+#: results/templates/ballot_set.html.html:19
 msgid "Debate Information"
 msgstr "Informations concernant le débat"
 
-#: results/templates/enter_results_ballot_set.html:26
+#: results/templates/ballot_set.html.html:26
 msgid "Sides"
 msgstr "Côtés"
 
-#: results/templates/enter_results_ballot_set.html:43
+#: results/templates/ballot_set.html.html:43
 msgid "Selected motion"
 msgstr "Motion selectionée"
 
-#: results/templates/enter_results_ballot_set.html:68
+#: results/templates/ballot_set.html.html:68
 msgid "'Iron' speeches"
 msgstr "Discours « iron »"
 
-#: results/templates/enter_results_ballot_set.html:73
+#: results/templates/ballot_set.html.html:73
 msgid "No, there were no speakers who spoke multiple times"
 msgstr "Non, il n'y avait pas d'orateur qui a fait plusieurs discours"
 
-#: results/templates/enter_results_ballot_set.html:76
+#: results/templates/ballot_set.html.html:76
 msgid "Yes, there were speakers who spoke multiple times"
 msgstr ""
 "Oui, il y avait un ou plusieurs orateurs qui ont fait plusieurs discours"
 
-#: results/templates/enter_results_ballot_set.html:94
+#: results/templates/ballot_set.html.html:94
 #, python-format
 msgid "Ballot from %(name)s (%(institution)s)"
 msgstr "Bulletin de %(name)s (%(institution)s)"
 
-#: results/templates/enter_results_ballot_set.html:98
+#: results/templates/ballot_set.html.html:98
 #: results/templates/public_ballot_set.html:45
 msgid "Scoresheet"
 msgstr "Feuille de débat"
 
-#: results/templates/enter_results_ballot_set.html:106
+#: results/templates/ballot_set.html.html:106
 msgid "Assign sides before entering scores"
 msgstr "Attribuez les côtés avant de saisir les scores"
 
-#: results/templates/enter_results_ballot_set.html:132
+#: results/templates/ballot_set.html.html:132
 msgid ""
 "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-"
 "manning' you would typically mark only the lesser of their scores as a "
@@ -467,72 +467,72 @@ msgstr ""
 "orateur fait un « iron-man », en général vous ne marqueriez que le moindre "
 "de leurs scores comme doublon."
 
-#: results/templates/enter_results_ballot_set.html:174
+#: results/templates/ballot_set.html.html:174
 msgid "Forfeits"
 msgstr "Forfaits"
 
-#: results/templates/other_ballots_list.html:5
+#: results/templates/ballot/other_ballots_list.html:5
 msgid "This ballot set is <strong>confirmed</strong>."
 msgstr "Cet ensemble de bulletins est <strong>confirmé</strong>."
 
-#: results/templates/other_ballots_list.html:10
+#: results/templates/ballot/other_ballots_list.html:10
 msgid "This ballot set is <strong>discarded</strong>."
 msgstr "Ce bulletin est <strong>rejeté</strong>."
 
-#: results/templates/other_ballots_list.html:20
+#: results/templates/ballot/other_ballots_list.html:20
 #, python-format
 msgid "There is %(number)s existing ballot set for this debate."
 msgid_plural "There are %(number)s existing ballot sets for this debate."
 msgstr[0] "Il y a %(number)s ensemble de bulletins existant pour ce débat."
 msgstr[1] "Il y a %(number)s ensembles de bulletins existants pour ce débat."
 
-#: results/templates/other_ballots_list.html:30
+#: results/templates/ballot/other_ballots_list.html:30
 #, python-format
 msgid "There are %(number)s ballot sets for this debate."
 msgstr "Il y a %(number)s ensembles de bulletins pour ce débat."
 
-#: results/templates/other_ballots_list.html:45
+#: results/templates/ballot/other_ballots_list.html:45
 msgid "CURRENTLY VIEWING"
 msgstr "VOUS LE CONSULTEZ ACTUELLEMENT"
 
-#: results/templates/other_ballots_list.html:48
+#: results/templates/ballot/other_ballots_list.html:48
 #, python-format
 msgid "Version <strong>%(version)s</strong>,"
 msgstr "Version <strong>%(version)s</strong>,"
 
-#: results/templates/other_ballots_list.html:53
+#: results/templates/ballot/other_ballots_list.html:53
 #, python-format
 msgid "entered by <strong>%(submitter)s</strong>,"
 msgstr "saisi par <strong>%(submitter)s</strong>,"
 
-#: results/templates/other_ballots_list.html:57
+#: results/templates/ballot/other_ballots_list.html:57
 #, python-format
 msgid "submitted from the public form on %(ip_address)s,"
 msgstr "soumis de la formulaire publique de %(ip_address)s,"
 
-#: results/templates/other_ballots_list.html:62
+#: results/templates/ballot/other_ballots_list.html:62
 #, python-format
 msgid "%(timestamp)s (%(timeago)s ago),"
 msgstr "%(timestamp)s (il y a %(timeago)s),"
 
-#: results/templates/other_ballots_list.html:67
+#: results/templates/ballot/other_ballots_list.html:67
 #, python-format
 msgid "confirmed by <strong>%(confirmer)s</strong>"
 msgstr "confirmé par <strong>%(confirmer)s</strong>"
 
-#: results/templates/other_ballots_list.html:71
+#: results/templates/ballot/other_ballots_list.html:71
 msgid "confirmed by <strong>unknown confirmer</strong>"
 msgstr "confirmé par <strong>inconnu</strong>"
 
-#: results/templates/other_ballots_list.html:73
+#: results/templates/ballot/other_ballots_list.html:73
 msgid "unconfirmed"
 msgstr "non confirmé"
 
-#: results/templates/other_ballots_list.html:77
+#: results/templates/ballot/other_ballots_list.html:77
 msgid "(discarded)"
 msgstr "(rejeté)"
 
-#: results/templates/other_ballots_list.html:81
+#: results/templates/ballot/other_ballots_list.html:81
 #, python-format
 msgid "<em>(identical to version %(others)s)</em>"
 msgid_plural "<em>(identical to versions %(others)s)</em>"

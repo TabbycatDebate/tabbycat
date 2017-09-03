@@ -40,7 +40,7 @@ export default {
     },
     getCSSForPosition: function(position) {
       var css = 'flex-horizontal '
-      var adjs = this.getAdjudicatorsByPosition(this.debateAdjudicators, position).length
+      var adjs = this.getAdjudicatorsByPosition(this.panel, position).length
       if ((position === "C" && adjs === 0) ||
           (position === "P" && adjs % 2 != 0)) {
         return css += 'panel-incomplete'

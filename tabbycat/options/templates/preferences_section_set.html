@@ -8,46 +8,22 @@
 
 {% block page-subnav-sections %}
 
-  <a class="btn btn-default submit-disable"
+  <a class="btn btn-outline-primary"
      href="{% tournamenturl 'options-tournament-index' %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Configuration
+    <i data-feather="chevron-left"></i> Back to Configuration
   </a>
 
-  {% if form.errors %}
-    <div class="alert alert-danger">
-      Please correct the errors below.
-      {{ form.non_field_errors }}
-    </div>
-  {% endif %}
 {% endblock %}
 
 {% block content %}
 
-  <div class="panel panel-default">
-    <form action="" enctype="multipart/form-data" method="post" class="panel-body form-horizontal">
-      {% csrf_token %}
-      {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.id_for_label }}" class="col-sm-3 control-label">
-            {{ field.label }} {{ field.section.name }}
-          </label>
-          <div class="col-sm-2">
-            {{field|addcss:"form-control"}}
-          </div>
-          <div class="col-sm-7">
-            <span class="help-block">
-              {{ field.help_text }}
-            </span>
-            {% if field.errors %}
-              <div class="text-danger">{{ field.errors }}</div>
-            {% endif %}
-          </div>
-        </div>
-      {% endfor %}
-      <button type="submit" class="btn btn-success btn-block">
-        Save Configuration
-      </button>
-    </form>
-  </div>
+  <form action="" enctype="multipart/form-data" method="post" class="">
+    <div class="card mt-3">
+
+      {% include "components/form-main.html" with double=True %}
+      {% include "components/form-submit.html" with title="Save Configuration" %}
+
+    </div>
+  </form>
 
 {% endblock content %}

@@ -2,129 +2,84 @@
 {% load debate_tags %}
 {% load add_field_css %}
 
-{% block page-title %}🔧Tournament Configuration{% endblock %}
-{% block head-title %}<span class="emoji">🔧</span>Tournament Configuration{% endblock %}
+{% block page-title %}🔧Configuration{% endblock %}
+{% block head-title %}<span class="emoji">🔧</span>Configuration{% endblock %}
 
 {% block content %}
 
 <div class="row">
 
-  <div class="col-md-6">
+  <div class="col">
     <ul class="list-group">
-        <a href="{% tournamenturl 'options-tournament-scoring' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">💯</span>Score Rules
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine the range of points that can awarded to speeches, replies, and teams.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-draw-rules' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">📏</span>Draw Rules
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how teams are matched together in the draw and how adjudicators are auto-allocated.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-debate-rules' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">⚖</span>Debate Rules
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how many speeches there are per side, how motions are decided, and whether replies are delivered.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-standings' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">📊</span>Standings
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how teams and speakers are ranked for in the released tabs.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-feedback' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">🙅</span>Feedback
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how an adj can be scored and who can submit feedback.
-          </p>
-        </a>
+
+      {% tournamenturl 'options-tournament-scoring' as url %}
+      {% include "components/item-action.html" with emoji="💯" text="Score Rules" extra="The settings that determine the range of points that can awarded to speeches, replies, and teams."%}
+
+      {% tournamenturl 'options-tournament-draw-rules' as url %}
+      {% include "components/item-action.html" with emoji="📏" text="Draw Rules" extra="The settings that determine how teams are matched together in the draw and how adjudicators are auto-allocated."%}
+
+      {% tournamenturl 'options-tournament-debate-rules' as url %}
+      {% include "components/item-action.html" with emoji="⚖" text="Debate Rules" extra="The settings that determine how many speeches there are per side, how motions are decided, and whether replies are delivered."%}
+
+      {% tournamenturl 'options-tournament-standings' as url %}
+      {% include "components/item-action.html" with emoji="📊" text="Standings" extra="The settings that determine how teams and speakers are ranked for in the released tabs."%}
+
+
+      {% tournamenturl 'options-tournament-feedback' as url %}
+      {% include "components/item-action.html" with emoji="🙅" text="Feedback" extra="The settings that determine how an adj can be scored and who can submit feedback."%}
+
     </ul>
   </div>
-  <div class="col-md-6">
+
+  <div class="col">
     <ul class="list-group">
-        <a href="{% tournamenturl 'options-tournament-tab-release' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">🚨</span>Tab Release
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine when to release a public tab is made visible and what data it shows.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-data-entry' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">📝</span>Data Entry
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how ballots and feedback are entered, including online submission options.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-public-features' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">📢</span>Public Features
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine what information the site displays to the publicly accessible page.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-ui' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">💻</span>UI Options
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine small tweaks in what information is presented by the interface.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-league' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">🏫</span>League Options
-          </h4>
-          <p class="list-group-item-text">
-            Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported.
-          </p>
-        </a>
+
+      {% tournamenturl 'options-tournament-tab-release' as url %}
+      {% include "components/item-action.html" with emoji="🚨" text="Tab Release" extra="The settings that determine when to release a public tab is made visible and what data it shows."%}
+
+      {% tournamenturl 'options-tournament-data-entry' as url %}
+      {% include "components/item-action.html" with emoji="📝" text="Data Entry" extra="The settings that determine how ballots and feedback are entered, including online submission options."%}
+
+      {% tournamenturl 'options-tournament-public-features' as url %}
+      {% include "components/item-action.html" with emoji="📢" text="Public Features" extra="The settings that determine what information the site displays to the publicly accessible page."%}
+
+      {% tournamenturl 'options-tournament-ui' as url %}
+      {% include "components/item-action.html" with emoji="💻" text="UI Options" extra="The settings that determine small tweaks in what information is presented by the interface."%}
+
+      {% tournamenturl 'options-tournament-league' as url %}
+      {% include "components/item-action.html" with emoji="🏫" text="League Options" extra="Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported."%}
+
     </ul>
   </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <ul class="list-group">
-      <div class="list-group-item list-group-item-info">
-        <p class="list-group-item-text">Note: these presets only modify common
-        the settings for basic rules; double check our
+
+  <div class="w-100"></div>
+
+  <div class="col">
+
+    <ul class="list-group mt-3">
+      {% tournamenturl 'tournament-set-current-round' as url %}
+      {% include "components/item-action.html" with icon="clock" text="Manually Set Current Round" extra="Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page." %}
+    </ul>
+
+    <div class="card mt-3">
+
+      <div class="card-body text-info border-info">
+        <h4 class="card-title"><i data-feather="clipboard"></i> Presents</h4>
+        These modify common settings for basic rules; double check our
         <a href="https://tabbycat.readthedocs.io/" target="_blank">documentation</a> to ensure they are
-        correct for your tournament. These links will display settings changes
-        and give you the option to confirm them.</p>
+        correct for your tournament. Each links will display what settings it changes before applying them.
       </div>
-      {% for preset in presets %}
-        <a href="{% tournamenturl 'options-presets-confirm' preset.slugified_name %}" class="list-group-item">
-          <h4 class="list-group-item-heading">Apply {{ preset.name }}</h4>
-          <p>{{ preset.description }}</p>
-        </a>
-      {% endfor %}
-    </ul>
+
+      <ul class="list-group list-group-flush">
+        {% for preset in presets %}
+          {% tournamenturl 'options-presets-confirm' preset.slugified_name as url %}
+          {% include "components/item-action.html" with icon="play" text=Apply|add:preset.name extra=preset.description %}
+        {% endfor %}
+      </ul>
+
+    </div>
+
   </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <ul class="list-group">
-      <a href="{% tournamenturl 'tournament-set-current-round' %}" class="list-group-item">
-        <h4 class="list-group-item-heading">Manually Set Current Round</h4>
-        <p>Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page.</p>
-      </a>
-    </ul>
-  </div>
+
 </div>
 {% endblock content %}

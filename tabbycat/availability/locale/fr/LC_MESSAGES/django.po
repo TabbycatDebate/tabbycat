@@ -19,15 +19,15 @@ msgstr ""
 "X-Generator: Poedit 2.0.3\n"
 
 #: availability/templates/availability_index.html:9
-#: availability/templates/availability_index.html:14
+#: availability/templates/checkin_progress.html:59
 msgid "Check In Teams"
 msgstr "Enregistrer les équipes"
 
-#: availability/templates/availability_index.html:19
+#: availability/templates/checkin_progress.html:62
 msgid "Check In Adjs"
 msgstr "Enregistrer les juges"
 
-#: availability/templates/availability_index.html:23
+#: availability/templates/checkin_progress.html:65
 msgid "Check In Venues"
 msgstr "Enregistrer les lieux"
 
@@ -308,8 +308,8 @@ msgid "Venue Check-Ins"
 msgstr "Enregistrement des lieux"
 
 #: availability/views.py:37
-msgid "Check-Ins Overview"
-msgstr "Aperçu des enregistrements"
+msgid "Check-Ins"
+msgstr "Enregistrements"
 
 #: availability/views.py:149
 msgid "Active Now"

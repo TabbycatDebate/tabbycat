@@ -1,0 +1,50 @@
+{% load add_field_css debate_tags i18n %}
+
+<div class="card pr-0 mr-0 m-2 position" {% if forloop.first %}id="team-{{ team.team.id }}"{% endif %}>
+  <div class="list-group list-group-flush">
+
+    <div class="list-group-item pb-0">
+      <div class="row">
+        <div class="col mr-auto card-title">
+          {{ team.team.short_name }}
+        </div>
+        <div class="col-auto card-subtitle text-muted text-right pt-2">
+          <h6>{{ team.side_code }}</h6>
+        </div>
+      </div>
+    </div>
+
+    {% for position in team.speakers %}
+      {% include "ballot/ballot_speaks.html" %}
+    {% endfor %}
+
+    <div class="list-group-item">
+      <div class="row">
+
+        <div class="col mr-0 col-mr-auto btn-group">
+          <div readonly disabled
+               class="btn btn-outline-secondary" />
+            Margin
+          </div>
+          <div name="{{ team.side_code }}_margin" type="text" readonly disabled
+               class="btn btn-secondary {{ team.side_code }}_margin"  />
+            +0
+          </div>
+        </div>
+
+        <div class="col-5 mr-0 btn-group">
+          <div readonly disabled
+               class="btn btn-outline-secondary" />
+            Total
+          </div>
+          <div name="{{ team.side_code }}_total" type="text" readonly disabled
+               class="btn btn-block btn-secondary {{ team.side_code }}_total"  />
+            00
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

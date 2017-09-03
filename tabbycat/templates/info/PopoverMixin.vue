@@ -14,7 +14,7 @@ export default {
 
       // Destroy previous popovers attached to this element; so they don't stick
       // around when a table is filtered or searched
-      $(event.target).popover('destroy')
+      $(event.target).popover('dispose')
 
       var self = this
       // Construct new popover

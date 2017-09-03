@@ -11,7 +11,7 @@ export default {
         title += ' (' + adjorteam.region.name + ')'
         css += 'region-display region-' + adjorteam.region.class
       }
-      return [{ 'title': title, 'icon': 'glyphicon-globe', 'class': css }]
+      return [{ 'title': title, 'icon': 'globe', 'class': css }]
     },
   }
 }

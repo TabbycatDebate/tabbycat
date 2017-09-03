@@ -1,0 +1,21 @@
+{% load add_field_css %}
+
+<div class="form-group {% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %}">
+
+  {% if not field.is_hidden %}
+    <label for="{{ field.id_for_label }}">
+      {{ field.label }}
+    </label>
+  {% endif %}
+
+  {{ field|addcss:"form-control" }}
+
+  {% if field.help_text  %}
+    <small class="form-text text-muted">{{ field.help_text }}</small>
+  {% endif %}
+
+  {% if errors %}
+    {{ errors }}
+  {% endif %}
+
+</div>

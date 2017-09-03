@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^$',
+    url(r'^overview/$',
         views.StandingsIndexView.as_view(),
         name='standings-index'),
     url(r'^team/$',

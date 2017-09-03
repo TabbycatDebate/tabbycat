@@ -10,6 +10,7 @@
 {% if wizard.form.fields|length == 0 %}
 
   <div class="alert alert-warning" role="alert">
+    <i data-feather="alert-circle"></i>
     {% tournamenturl 'importer-simple-institutions' as import_institutions_url %}
     {% blocktrans trimmed %}
       You need to
@@ -20,26 +21,20 @@
 
 {% else %}
 
-  <div class="alert alert-info">
-    <p>{% blocktrans trimmed %}
-      Specify the number of new teams to add per institution. In the next step
-      you can specify team and speaker names.
-    {% endblocktrans %}</p>
-  </div>
+  {% blocktrans trimmed asvar p1 %}Specify the number of new teams to add per institution. In the next step
+      you can specify team and speaker names.{% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
 
   <form method="POST">
     {% csrf_token %}
     {{ wizard.management_form }}
 
     {% if wizard.form.errors %}
-    <div class="alert alert-danger">
-      <p>{% trans "There are some problems with the data on this form:" %}</p>
-      {{ wizard.form.non_form_errors }}
-    </div>
+      {% include "components/form-errors.html" with errors=wizard.form.non_form_errors %}
     {% endif %}
 
-    <div class="panel panel-default">
-      <ul class="list-group">
+    <div class="card pt-3">
+      <ul class="list-group list-group-flush">
 
         {% for field in wizard.form %}
           <li class="list-group-item">
@@ -55,9 +50,8 @@
           </li>
         {% endfor %}
 
-        <li class="list-group-item">
-          <input type="submit" class="btn btn-primary btn-block" value="{% trans 'Next Step' %}" />
-        </li>
+        {% trans "Next Step" context "button" as title %}
+        {% include "components/form-submit.html" %}
 
       </ul>
     </div>

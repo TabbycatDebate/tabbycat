@@ -80,7 +80,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
         for side in tournament.sides:
             table.add_team_columns([d.get_team(side) for d in draw], hide_institution=True,
-                key=get_side_name(tournament, side, 'full'))
+                key=get_side_name(tournament, side, 'abbr'))
 
         if tournament.pref('enable_division_motions'):
             table.add_motion_column(d.division_motion for d in draw)
@@ -272,9 +272,10 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
 class AdminDrawWithDetailsView(AdminDrawView):
     detailed = True
+    page_emoji = '👀'
 
     def get_page_title(self):
-        return _("Draw with details for %(round)s") % {'round': self.get_round().name}
+        return _("Draw with details") % {'round': self.get_round().name}
 
 
 # ==============================================================================

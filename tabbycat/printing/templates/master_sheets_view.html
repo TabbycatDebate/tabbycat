@@ -19,11 +19,11 @@
   {% for tournament in active_tournaments %}
     {% if tournament.debates|length > 0 %}
 
-    <div class="panel panel-default printable-mastersheet">
+    <div class="card printable-mastersheet">
       <div class="panel-heading">
         <h4 class="panel-title">{{ tournament.short_name }}</h4>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
 
         <table id="" class="table">
           <thead>
@@ -79,11 +79,11 @@
     {% endif %}
   {% endfor %}
 
-  <div class="panel panel-default">
+  <div class="card">
     <div class="panel-heading">
       <h4 class="panel-title">Additional Comments from the Head Ajudicator</h4>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       <table id="" class="table">
         <thead>
           <tr class="h4 table-division">

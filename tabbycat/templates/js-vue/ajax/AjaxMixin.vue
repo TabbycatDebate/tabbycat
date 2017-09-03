@@ -36,14 +36,16 @@ export default {
         $('#modalAlert').find('.modal-body').text(
           "Failed to save a change to " + message + " because the server did " +
           "not respond in time. This could be because your internet access " +
-          "is slow/unreliable, or the server is under heavy load."
+          "is slow/unreliable, or the server is under heavy load. Best to " +
+          "refresh this page to ensure the data is up to date"
         )
       } else {
         $('#modalAlert').find('.modal-body').text(
           "Failed to save a change to " + message + " because of a server " +
-          " error. Try making the change, or try refreshing the page and " +
-          " retrying then. If the problem persists please get in touch with " +
-          " the developers."
+          "error. Try making the change, or try refreshing the page and " +
+          "retrying then. If the problem persists please get in touch with " +
+          "the developers. Best to refresh this page to ensure the data is " +
+          "up to date"
         )
       }
     }

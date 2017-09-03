@@ -4,7 +4,7 @@
     <slot name="hbacket">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('bracket')"
            data-toggle="tooltip" title="Debate's Bracket">
-        <span class="glyphicon glyphicon-stats"></span>
+        <i data-feather="bar-chart-2"></i>
         <span :class="sortClasses('bracket')"></span>
       </div>
     </slot>
@@ -12,7 +12,7 @@
     <slot name="hcats">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('liveness')"
            data-toggle="tooltip" title="How many break categories are live in this room">
-        <span class="glyphicon glyphicon-heart"></span>
+        <i data-feather="heart"></i>
         <span :class="sortClasses('liveness')"></span>
       </div>
     </slot>
@@ -20,7 +20,7 @@
     <slot name="himportance">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('importance')"
            data-toggle="tooltip" title="The assigned priority value of this debate">
-        <span class="glyphicon glyphicon-fire"></span>
+        <i data-feather="thermometer"></i>
         <span :class="sortClasses('importance')"></span>
       </div>
     </slot>
@@ -28,7 +28,7 @@
     <slot name="hvenue">
       <div class="vue-sortable thead flex-cell flex-6" @click="resort('venue')"
            data-toggle="tooltip" title="The venue of this debate">
-        <span class="glyphicon glyphicon-map-marker"></span>
+        <i data-feather="map-pin"></i>
         <span :class="sortClasses('venue')"></span>
       </div>
     </slot>

@@ -24,7 +24,7 @@ class MotionStats:
         else:
             self.isBP = True
             self.debate_rooms = len(results_data) / 4
-            self.round_rooms = len(results) / 4
+            self.round_rooms = self.debate_rooms
 
         self.placings = self.gather_placings(self.points_dict(), results_data)
         self.result_balance = self.determine_balance()
@@ -56,10 +56,10 @@ class MotionStats:
         if self.debate_rooms < 10: # Too few wins/vetoes to calculate
             return 'balance inconclusive', 'Too few debate to determine meaningful balance'
         elif self.isBP:
-            return self.two_team_balance(for_vetoes)
-        else:
             return None
-            return self.four_team_balance(for_vetoes) # Not implemented
+            # return self.four_team_balance(for_vetoes) # Not implemented
+        else:
+            return self.two_team_balance(for_vetoes)
 
     def two_team_balance(self, for_vetoes):
         # Test and confidence levels contributed by Viran Weerasekera
@@ -111,7 +111,7 @@ class MotionStats:
         for side in self.sides:
             for points, count in data_set[side].items():
                 percentage = data_set[side][points] / self.round_rooms * 100
-                rates_for_side[side][points] = percentage
+                rates_for_side[side][points] = round(percentage, 1)
 
         return rates_for_side
 
@@ -123,10 +123,12 @@ class MotionStats:
         avgs_for_side = dict(self.points_dict())
         for side in self.sides:
             all_points = []
+            counts = 0
             for points, count in self.placings[side].items():
                 all_points.append(points * count)
+                counts += count
 
-            avgs_for_side[side] = sum(all_points) / float(len(all_points))
+            avgs_for_side[side] = sum(all_points) / float(counts)
 
         return avgs_for_side
 

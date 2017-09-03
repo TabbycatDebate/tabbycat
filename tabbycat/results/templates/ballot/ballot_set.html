@@ -1,0 +1,61 @@
+{% load add_field_css debate_tags i18n %}
+
+<div id="ballot_set">
+
+  {% if form.errors %}
+    {% trans "There are some problems with this scoresheet. Please review and correct them." as message %}
+    {% include "components/form-errors.html" with errors=form.errors %}
+  {% endif %}
+
+  {% include "ballot/ballot_debate_info.html" %}
+
+  {% for sheet in form.scoresheets %}
+
+  <div class="card mt-3">
+    <div class="list-group list-group-flush">
+
+      {% if sheet.adjudicator %}
+        {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code asvar title %}
+          Ballot from {{ name }} ({{ institution }})
+        {% endblocktrans %}
+      {% else %}
+        {% trans "Scoresheet" as title %}
+      {% endif %}
+      {% include "components/form-title.html" %}
+
+      {% if form.choosing_sides %}
+        <p class="sides-before-scores-warning text-warning col-xs-12">
+          {% trans "Assign sides before entering scores" %}
+        </p>
+      {% endif %}
+
+      <div class="list-group-item scoresheet p-3">
+        <div class="card-deck pr-2">
+          {% for team in sheet.teams %}
+            <!-- Break for four team formats -->
+            {% if forloop.counter == 3 %}
+              </div><div class="card-deck pr-3">
+            {% endif %}
+            {% include "ballot/ballot_scoresheet.html" %}
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+
+  {% if pref.enable_forfeits %}
+    <div class="card mt-3">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans "Forfeits" %}</h4>
+      </div>
+      <div class="card-body">
+        {{ form.forfeit|addcss:"forfeits-group" }}
+        {{ form.forfeit.errors }}
+      </div>
+    </div>
+  {% endif %}
+
+</div>

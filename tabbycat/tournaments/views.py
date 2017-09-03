@@ -23,9 +23,9 @@ from importer.base import TournamentDataImporterError
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
 
-from .forms import SetCurrentRoundForm, TournamentForm
+from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
 
@@ -157,7 +157,7 @@ class BlankSiteStartView(FormView):
         form.save()
         user = authenticate(username=self.request.POST['username'], password=self.request.POST['password1'])
         login(self.request, user)
-        messages.success(self.request, "Welcome! You've created an account for %s." % user.username)
+        messages.info(self.request, "Welcome! You've created an account for %s." % user.username)
 
         return super().form_valid(form)
 
@@ -166,13 +166,17 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""
 
     model = Tournament
-    form_class = TournamentForm
+    form_class = TournamentStartForm
     template_name = "create_tournament.html"
 
     def get_context_data(self, **kwargs):
         kwargs["preexisting_small_demo"] = Tournament.objects.filter(slug="demo_simple").exists()
         kwargs["preexisting_large_demo"] = Tournament.objects.filter(slug="demo").exists()
         return super().get_context_data(**kwargs)
+
+    def get_success_url(self):
+        t = Tournament.objects.order_by('id').last()
+        return reverse_tournament('tournament-configure', tournament=t)
 
 
 class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
@@ -191,9 +195,21 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
             logger.error("Error importing demo tournament: " + str(e))
         else:
             messages.success(self.request, "Created new demo tournament. You "
-                "can access it below.")
+                "can now configure it below.")
 
-        return redirect('tabbycat-index')
+        new_tournament = Tournament.objects.order_by('seq').last()
+        return redirect(reverse_tournament('tournament-configure', tournament=new_tournament))
+
+
+class ConfigureTournamentView(SuperuserRequiredMixin, UpdateView, TournamentMixin):
+    model = Tournament
+    form_class = TournamentConfigureForm
+    template_name = "configure_tournament.html"
+    slug_url_kwarg = 'tournament_slug'
+
+    def get_success_url(self):
+        t = self.get_tournament()
+        return reverse_tournament('tournament-admin-home', tournament=t)
 
 
 class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
@@ -253,3 +269,8 @@ class DonationsView(CacheMixin, TemplateView):
 
 class TournamentDonationsView(TournamentMixin, TemplateView):
     template_name = 'donations.html'
+
+
+class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
+    template_name = 'style_guide.html'
+    page_subtitle = 'Contextual sub title'

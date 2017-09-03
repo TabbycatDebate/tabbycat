@@ -2,6 +2,18 @@
 Change Log
 ==========
 
+
+2.0.0
+-----
+*Release date: *
+
+- Updated design
+  - Better tablet and mobile interfaces; including a fully responsive sidebar for the admin area
+  - Rolled the motions stage into the 'display' stage of the round workflow
+  - More explicit and obvious calls-to-action for key tasks to complete
+  - Sidebar menu now displays all sub-items for Feedback, Standings, and Breaks
+  - Updated typography, icons, and colors, forms, and more!
+
 1.4.2
 -----
 *Release date: 23 August 2017*

@@ -1,53 +1,56 @@
 {% load debate_tags i18n %}
 
-<div class="panel panel-default">
+<div class="card">
 
-  <div class="panel-heading">
-    <h4 class="panel-title">{{ ct.type }} Check-Ins</h4>
+  <div class="card-body round-progresses">
+    <h5 class="card-title">{{ ct.title }}</h5>
   </div>
-  <div class="panel-body round-progresses">
 
-    <div class="row">
-      <div class="col-md-1 col-sm-1">
-        <h6>{{ round.abbreviation }}</h6>
+  <div class="list-group list-group-flush">
+
+    <div class="list-group-item">
+      <div class="d-flex justify-content-end">
+        <span class="mr-auto">{{ round.abbreviation }}</span>
+        <strong>{{ ct.in_now }}/{{ ct.total }}</strong>
       </div>
-      <div class="col-md-11 col-sm-11">
-        <div class="progress">
-          <div class="progress-bar progress-bar-success
-                      {% if ct.in_now == 0 %}progress-empty{% endif %}"
-               role="progressbar" aria-valuenow="{{ ct.in_now }}"
-               aria-valuemin="0" aria-valuemax="{{ ct.total }}"
-               style="width: {% percentage ct.in_now ct.total %}%;">
-            <span>{{ ct.in_now }}/{{ ct.total }}</span>
-          </div>
-        </div>
-      </div>
+      {% include "components/progress-bar.html" with value=ct.in_now total=ct.total type="success" %}
     </div>
 
-    <div class="row">
-      {% if ct.in_before is not None %}
-        <div class="col-md-1 col-sm-1">{{ round.prev.abbreviation }}</div>
-          <h6>{{ round.prev.abbreviation }}
+    {% if ct.in_before is not None %}
+      <div class="list-group-item">
+        <div class="d-flex justify-content-end">
+          <span class="mr-auto">{{ round.prev.abbreviation }}</span>
+          <strong>{{ ct.in_before }}/{{ ct.total }}</strong>
         </div>
-        <div class="col-md-11 col-sm-11">
-          <div class="progress">
-            <div class="progress-bar progress-bar-info
-                        {% if ct.in_before == 0 %}progress-empty{% endif %}"
-                 role="progressbar" aria-valuenow="{{ ct.in_now }}"
-                 aria-valuemin="0" aria-valuemax="{{ ct.total }}"
-                 style="width: {% percentage ct.in_before ct.total %}%;">
-              <span>{{ ct.in_before }}/{{ ct.total }}</span>
-            </div>
-          </div>
-        </div>
-      {% endif %}
-    </div>
-
-    {% if ct.message %}
-      <div class="col-md-5">
-      {{ ct.message }}
+        {% include "components/progress-bar.html" with value=ct.in_before total=ct.total type="secondary" %}
       </div>
     {% endif %}
 
+    {% if ct.message %}
+      <div class="list-group-item list-group-item-info">
+        {{ ct.message }}
+      </div>
+    {% endif %}
+
+    {% if forloop.counter == 1 and not round.is_break_round %}
+      {% roundurl 'availability-teams' round as url %}
+      {% trans "Check In Teams" as text %}
+    {% elif forloop.counter == 2 %}
+      {% roundurl 'availability-adjudicators' round as url %}
+      {% trans "Check In Adjudicators" as text %}
+    {% elif forloop.counter == 3 %}
+      {% roundurl 'availability-venues' round as url %}
+      {% trans "Check In Venues" as text %}
+    {% endif %}
+
+    {% if forloop.counter != 1 or not round.is_break_round %}
+      {% if ct.in_now == 0 %}
+        {% include "components/item-action.html" with alone=True success=True %}
+      {% else %}
+        {% include "components/item-action.html" with alone=True type="primary" icon="check-circle" %}
+      {% endif %}
+    {% endif %}
+
   </div>
+
 </div>

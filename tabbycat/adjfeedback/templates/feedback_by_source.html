@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block head-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
 {% block page-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
@@ -8,20 +8,22 @@
 {% block content %}
 
   <div class="row">
-  {% for feedback in feedbacks %}
+    {% for feedback in feedbacks %}
 
-    <div class="col-md-4">
-      {% include 'feedback_card.html' %}
-    </div>
+      <div class="col-md-4">
+        {% include 'feedback_card.html' %}
+      </div>
 
-    {% if forloop.counter|divisibleby:3 %}
-      </div><div class="row">
-    {% endif %}
+      {% if forloop.counter|divisibleby:3 %}
+        </div><div class="row">
+      {% endif %}
 
-  {% empty %}
-    <div class="alert alert-info">{{ source_name }} hasn't submitted any feedback yet.</div>
+    {% empty %}
 
-  {% endfor %}
+      {% blocktrans trimmed asvar message %}{{ source_name }} hasn't submitted any feedback yet.{% endblocktrans %}
+      {% include "components/alert.html" with type="info" %}
+
+    {% endfor %}
   </div>
 
 {% endblock content %}

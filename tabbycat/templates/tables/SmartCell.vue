@@ -1,13 +1,13 @@
 <template>
   <td :class="cellData['class'] ? cellData['class'] : null">
 
-    <span v-if="cellData['sort']" class="hidden">
+    <span v-if="cellData['sort']" hidden>
       {{ cellData["sort"] }} <!-- Sorting key -->
     </span>
 
     <!-- Icons or Emoji -->
-    <span v-if="cellData['icon']" class="glyphicon" :class="cellData['icon']">
-    </span>
+    <i v-if="cellData['icon']" :data-feather="cellData['icon']">
+    </i>
     <span v-if="cellData['emoji']" class="emoji" >{{ cellData["emoji"] }}</span>
 
     <!-- Tooltip/Popovers Hovers Wrapper -->
@@ -33,15 +33,17 @@
       <br><span class="small" v-html="cellData['subtext']"></span>
     </span>
 
-    <div class="popover-raw hide" v-if="canSupportPopover">
-      <li v-for="popItem in popOverContent" class="list-group-item">
-        <a v-if="popItem['link']" :href="popItem['link']">
-          <span v-html="popItem['text']"></span>
-        </a>
-        <span v-else>
-          <span v-html="popItem['text']"></span>
-        </span>
-      </li>
+    <div class="popover-raw" hidden v-if="canSupportPopover">
+      <ul class="list-group list-group-item-flush">
+        <li v-for="popItem in popOverContent" class="list-group-item">
+          <a v-if="popItem['link']" :href="popItem['link']">
+            <span v-html="popItem['text']"></span>
+          </a>
+          <span v-else>
+            <span v-html="popItem['text']"></span>
+          </span>
+        </li>
+      </ul>
     </div>
 
   </td>

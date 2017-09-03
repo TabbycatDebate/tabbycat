@@ -16,14 +16,15 @@
     <form action="{% tournamenturl 'breakqual-generate-all' category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
-        <span class="glyphicon glyphicon-repeat"></span> Delete and Regenerate All Breaks
+        <i data-feather="repeat"></i> Delete and Regenerate All Breaks
       </button>
     </form>
   {% else %}
     <div class="forms-block-inline">
       <form action="{% tournamenturl 'breakqual-generate-all' category.slug %}" method="POST">
         {% csrf_token %}
-        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control" id="generateBreakingTeams" type="submit">
+        <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control"
+                id="generateBreakingTeams" type="submit">
           Generate the Break for All Categories
         </button>
       </form>
@@ -35,6 +36,7 @@
 
   {% if category.team_set.count == 0 %}
     <div class="alert alert-warning">
+      <i data-feather="alert-circle"></i>
       There are <strong>0 teams marked as eligible</strong> for this category — you will need to
        <a href="{% tournamenturl 'breakqual-edit-eligibility' %}" class="alert-link">
       add some eligible teams</a> for this break to generate correctly.
@@ -42,6 +44,7 @@
   {% endif %}
   {% if generated %}
     <div class="alert alert-warning">
+      <i data-feather="alert-circle"></i>
       <p>This break uses the <strong>{{ category.get_rule_display }}</strong> rule
        — if you intended to use a different rule, you should
        <a href="{% url 'admin:breakqual_breakcategory_change' category.id %}">
@@ -53,6 +56,7 @@
       corner cases.</p>
     </div>
     <div class="alert alert-info">
+      <i data-feather="alert-circle"></i>
       <p>
         <strong>How to edit the break:</strong> Edit the remarks in the
         right-hand column. Any team with a remark will be excluded from this
@@ -71,6 +75,7 @@
   {% else %}
     {% if pref.public_breaking_teams %}
       <div class="alert alert-danger">
+        <i data-feather="alert-circle"></i>
         The <strong>public breaking teams</strong> configuration setting is
         enabled. As soon as you click the button, the breaking teams list will
         be visible on the public site, before you have a chance to
@@ -81,6 +86,7 @@
       </div>
     {% else %}
       <div class="alert alert-info">
+        <i data-feather="alert-circle"></i>
         <p>
           The break hasn't yet been generated. Would you like to generate
           the break for all categories?
@@ -98,13 +104,14 @@
 {% if generated %}
   <form action="." method="POST">
     {% csrf_token %}
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
 
         {{ block.super }}
 
         {% if pref.public_breaking_teams %}
           <div class="alert alert-danger">
+            <i data-feather="alert-circle"></i>
             <strong>Caution!</strong> The "public breaking teams" option is turned on, so the break
             is publicly visible. If you update the break(s), the changes will become visible
             <strong>immediately</strong>, <strong>without a chance for you to review them</strong>.
@@ -113,12 +120,12 @@
 
         <div class="row">
           <div class="form-inline col-md-6">
-            <button class="btn btn-default btn-block btn-success" type="submit" name="save_update_all">
+            <button class="btn btn-primary btn-block btn-success" type="submit" name="save_update_all">
                 Save Remarks and Update All Breaks
             </button>
           </div>
           <div class="form-inline col-md-6">
-            <button class="btn btn-default btn-block btn-success }}" type="submit" name="save_update_one">
+            <button class="btn btn-primary btn-block btn-success }}" type="submit" name="save_update_one">
                 Save Remarks and Update the {{ category.name }} Break
             </button>
           </div>

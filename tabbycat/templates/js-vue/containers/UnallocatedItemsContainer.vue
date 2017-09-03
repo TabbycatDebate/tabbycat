@@ -5,14 +5,14 @@
     @dragleave="dragLeave"
     @drop="drop"
     :class="{ 'vue-is-drag-enter': isDroppable }"
-    class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-items"
+    class="navbar navbar-default fixed-bottom vue-droppable justify-content-center unallocated-items"
     :style="{height: height + 'px'}" ref="resizeableElement">
 
     <slot><!-- Container sets unallocated items here --></slot>
 
     <div class="resize-handler navbar-toggle collapsed"
          @dragover.prevent @mousedown="resizeStart">
-      <span class="glyphicon glyphicon-menu-hamburger"></span>
+      <i data-feather="menu" class="align-self-center mx-auto"></i>
     </div>
 
   </nav>

@@ -34,7 +34,7 @@ def validate_tournament_slug(value):
 class Tournament(models.Model):
     name = models.CharField(max_length=100,
         verbose_name=_("name"),
-        help_text=_("The full name used on the homepage, e.g. \"Australasian Intervarsity Debating Championships 2016\""))
+        help_text=_("The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""))
     short_name = models.CharField(max_length=25, blank=True, default="",
         verbose_name=_("short name"),
         help_text=_("The name used in the menu, e.g. \"Australs 2016\""))

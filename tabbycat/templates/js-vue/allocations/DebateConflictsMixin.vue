@@ -8,7 +8,7 @@ export default {
 
   computed: {
     conflictablesToSearch: function() {
-      var a = _.map(this.debateAdjudicators, function(da) {
+      var a = _.map(this.panel, function(da) {
         return da.adjudicator
       })
       var b = _.map(this.debateTeams, function(dt) {
@@ -17,7 +17,7 @@ export default {
       return a.concat(b)
     },
     adjudicatorIds: function() {
-      return _.map(this.debateAdjudicators, function(da) {
+      return _.map(this.panel, function(da) {
         return da.adjudicator.id
       })
     },
@@ -42,7 +42,7 @@ export default {
         _.forEach(this.debateTeams, function(dt) {
           self.$eventHub.$emit('unset-conflicts-for-team-' + dt.team.id, 'panel')
         })
-        _.forEach(this.debateAdjudicators, function(da) {
+        _.forEach(this.panel, function(da) {
           self.$eventHub.$emit('unset-conflicts-for-adjudicator-' + da.adjudicator.id, 'panel')
         })
       }
@@ -94,7 +94,7 @@ export default {
           self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
         }
       })
-      _.forEach(this.debateAdjudicators, function(da) {
+      _.forEach(this.panel, function(da) {
         var adj = da.adjudicator
         if (adj.institution.id === conflict && adj !== conflictingItem) {
           var eventCode = 'set-conflicts-for-adjudicator-' + adj.id

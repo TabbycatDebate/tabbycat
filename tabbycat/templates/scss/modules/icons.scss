@@ -21,29 +21,56 @@ span.emoji {
 }
 
 //------------------------------------------------------------------------------
-// Glyphicons
+// Icon Styles
 //------------------------------------------------------------------------------
 
-// Icons should have brighter colors (using text-success is too dull)
+// Fixing old; to deprecate
 .glyphicon {
+  height: 16px;
+  width: 16px;
+  background: red;
+  position: absolute;
+}
+
+.feather {
+  height: 18px; // Line height of default text @13px is ~18.5px
+  width: 18px;
+}
+
+.list-group-item,
+.alert,
+.card-title {
+
+  .feather {
+    margin-bottom: -3px;
+    margin-right: 10px;
+  }
+  .emoji {
+    margin-left: 1px;
+    margin-right: 11px;
+  }
+}
+
+// Icons should have brighter colors (using text-success is too dull)
+.feather {
 
   &.text-success {
-    color: $brand-success;
+    color: theme-color("success");
   }
 
   &.text-danger {
-    color: $brand-danger;
+    color: theme-color("danger");
   }
 
   &.text-warning {
-    color: $brand-warning;
+    color: theme-color("warning");
   }
 
   &.text-info {
-    color: $brand-info;
+    color: theme-color("info");
   }
 
   &.text-primary {
-    color: $brand-primary;
+    color: theme-color("primary");
   }
 }

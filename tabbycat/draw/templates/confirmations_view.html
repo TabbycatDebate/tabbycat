@@ -5,19 +5,19 @@
 {% block page-title %}Shift Confirmations{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
+  <a class="btn btn-primary " href="{% roundurl 'draw' %}">
+    <i data-feather="chevron-left"></i> Back to Draw
   </a>
 {% endblock %}
 
 {% block content %}
 
   <div class="col-md-12">
-    <div class="panel panel-default">
+    <div class="card">
       <div class="panel-heading">
         <h3 class="panel-title">Adjudicators with no confirmed shifts</h3>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         {% for adj in adjs %}
           {% if adj.shifts|length == 0 %}
             {{ adj.name }},
@@ -30,7 +30,7 @@
   {% for adj in adjs %}
     {% if adj.shifts|length > 0 %}
     <div class="col-md-2">
-      <div class="panel panel-default">
+      <div class="card">
         <div class="panel-heading">
           <h3 class="panel-title">{{ adj.name }}</h3>
         </div>
@@ -43,9 +43,9 @@
               {{ shift.debate.division.venue_category }} @
               {{ shift.debate.time.time|time:'h:i' }}
               {% if shift.timing_confirmed == True %}
-                <span class="glyphicon glyphicon-ok pull-right"></span>
+                <i data-feather="ok" class="pull-right"></span>
               {% elif shift.timing_confirmed == False %}
-                <span class="glyphicon glyphicon-remove pull-right"></span>
+                <i data-feather="x" class="pull-right"></span>
               {% endif %}
             </li>
           {% endfor %}

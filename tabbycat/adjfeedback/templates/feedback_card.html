@@ -16,7 +16,7 @@
       <li class="list-group-item list-group-item-danger" data-toggle="tooltip"
         title="This is most likely because the team or adjudicator who submitted
          this feedback has done submitted several times on the same person.">
-        <span class="glyphicon glyphicon-info-sign"></span>
+        <span class="icon glyphicon-info-sign"></span>
         This feedback is not confirmed; it will not affect this adjudicator's score.
       </li>
   {% endif %}
@@ -38,7 +38,7 @@
       <li class="list-group-item">
         {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
           <small><strong title="{{ item.question.text }}" data-toggle="tooltip">{{ item.question.reference }}</strong></small>
-          <span class="glyphicon glyphicon-{{ item.answer|yesno:"ok text-success,remove text-danger,minus" }}"></span>
+          <span class="icon glyphicon-{{ item.answer|yesno:"ok text-success,remove text-danger,minus" }}"></span>
         {% elif item.question.answer_type == 'f' %}
           <small><strong>{{ item.question.text }}</strong></small>
           {{ item.answer|floatformat:"2" }}

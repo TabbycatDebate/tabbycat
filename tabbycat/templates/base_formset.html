@@ -3,62 +3,31 @@
 
 {% block content %}
 
-  {% if formset.errors %}
-  <div class="alert alert-danger">
-    <p>{% trans "There are some problems with the data on this form:" %}</p>
-    {{ formset.non_form_errors }}
-  </div>
-  {% endif %}
-
-  <form method="POST" action="" class="form-horizontal">
+  <form method="POST" action="" class="">
     {% csrf_token %}
-    <div class="panel panel-default">
-      <ul class="list-group">
-        {{ formset.management_form }}
 
-        {% for form in formset %}
-        <li class="list-group-item">
+    <div class="card mt-3">
 
-          {% if form.non_field_errors %}
-            <div class="col-sm-12">
-              {{ form.non_field_errors }}
-            </div>
-          {% endif %}
+      {% if formset.errors %}
+        {% include "components/form-errors.html" with errors=formset.errors %}
+      {% endif %}
+      {{ formset.management_form }}
 
-          {% for field in form.hidden_fields %}
-            {{ field }}
-          {% endfor %}
+      {% for form in formset %}
+        {% include "components/form-main.html" with double=True %}
+      {% endfor %}
 
-          {% for field in form.visible_fields %}
-            <div class="form-group">
-              <label class="col-sm-2 control-label" for="{{ field.id_for_label }}">
-                {{ field.label }}
-              </label>
-              <div class="col-sm-4">
-                {{ field|addcss:"form-control" }}
-              </div>
-              <div class="col-sm-6">
-                <span class="help-block">
-                  {{ field.help_text }}
-                </span>
-                {{ field.errors }}
-              </div>
-            </div>
-          {% endfor %}
-
-        </li>
-        {% endfor %}
-        <li class="list-group-item">
-          <div class="row">
-            <div class="col-md-6">
-              <input class="btn btn-block btn-success" type="submit" name="submit" value="{% block save-button-text %}Save{% endblock %}" />
-            </div>
-            <div class="col-md-6">
-              <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
-            </div>
+      <div class="list-group-item pt-3 pb-3">
+        <div class="row">
+          <div class="col">
+            <input class="btn btn-block btn-success" type="submit" name="submit" value="{% block save-button-text %}Save{% endblock %}" />
           </div>
-        </li>
-      </ul>
+          <div class="col mt-md-0 mt-3">
+            <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
+          </div>
+        </div>
+      </div>
+
     </div>
   </form>
 

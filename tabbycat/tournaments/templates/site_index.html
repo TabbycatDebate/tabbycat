@@ -7,103 +7,92 @@
 
 {% block content %}
 
-<ul class="list-group">
-  {% for tournament in tournaments %}
+{% for tournament in tournaments %}
+  <div class="list-group mt-2">
+
     {% if user.is_authenticated %}
-      <li class="list-group-item">
-        <a href="{{ tournament.get_absolute_url }}">
-          {% with tournament_name=tournament.name %}
-            {% if user.is_superuser %}
-              <span class="emoji">🔧</span>{% blocktrans trimmed %}
-              Admin area for <strong>{{ tournament_name }}</strong>
-              {% endblocktrans %}
-            {% else %}
-              <span class="emoji">🔧</span>{% blocktrans trimmed %}
-              Assistant area for <strong>{{ tournament_name }}</strong>
-              {% endblocktrans %}
-            {% endif %}
-          {% endwith %}
-        </a>
-      </li>
-    {% endif %}
-    <li class="list-group-item">
-      <a href="{{ tournament.get_public_url }}">
-        <span class="emoji">
-          {{ tournament.emoji|default:"🏆" }}
-        </span>{{ tournament.name }}
-      </a>
-    </li>
-  {% empty %}
-    {% if user.is_authenticated %}
-      <li class="list-group-item">
-        {% url 'tournament-create' as create_url %}
-        {% blocktrans trimmed %}
-          It looks like there aren't any tournaments on this site. Would you like to <a href="{{ create_url }}">create one</a>?
+      {% if user.is_superuser %}
+        {% blocktrans trimmed asvar text with tn=tournament.name %}
+          Admin area for <strong>{{ tn }}</strong>
         {% endblocktrans %}
-      </li>
+      {% else %}
+        {% blocktrans trimmed asvar text with tn=tournament.name %}
+          Assistant area for <strong>{{ tn }}</strong>
+        {% endblocktrans %}
+      {% endif %}
+      {% include "components/item-action.html" with icon="settings" url=tournament.get_absolute_url%}
+    {% endif %}
+
+    {% include "components/item-action.html" with text=tournament.name emoji=tournament.emoji|default:"🏆" url=tournament.get_public_url%}
+
+  </div>
+{% empty %}
+
+  <div class="list-group">
+    {% if user.is_authenticated %}
+
+      {% blocktrans trimmed asvar text %}
+        It looks like there aren't any tournaments on this site. Would you like to create one?
+      {% endblocktrans %}
+      {% url 'tournament-create' as url %}
+      {% include "components/item-action.html" with alone=True success=True %}
+
     {% else %}
-      <li class="list-group-item">
-        {% blocktrans trimmed %}
-          There are currently no tournaments set up on this site.
-        {% endblocktrans %}
-      </li>
+
+      {% blocktrans trimmed asvar p1 %}
+        There are currently no tournaments set up on this site.
+      {% endblocktrans %}
+      {% include "components/explainer-card.html" with type="info" %}
+
     {% endif %}
-  {% endfor %}
-</ul>
+  </div>
+
+{% endfor %}
 
 {% if tournaments.0.preferences.league_options__enable_mass_draws %}
-  <ul class="list-group">
-    <li class="list-group-item">
-      <a href="{% url 'all_tournaments-all-venues' %}">
-        <span class="emoji">🎪</span>{% trans "All Draws by Venue" %}
-      </a>
-    </li>
-    <li class="list-group-item">
-      <a href="{% url 'all-tournaments-all-institutions' %}">
-        <span class="emoji">🏢</span>{% trans "All Draws by School" %}
-      </a>
-    </li>
-    <li class="list-group-item">
-      <a href="{% url 'all-tournaments-all-teams' %}">
-        <span class="emoji">👯</span>{% trans "All Teams and Divisions" %}
-      </a>
-    </li>
-  </ul>
+  <div class="list-group mt-2">
+
+    {% trans "All Draws by Venue" as text %}
+    {% url 'all_tournaments-all-venues' as url %}
+    {% include "components/item-action.html" with emoji="🎪" %}
+
+    {% trans "All Draws by School" as text %}
+    {% url 'all_tournaments-all-institutions' as url %}
+    {% include "components/item-action.html" with emoji="🏢" %}
+
+    {% trans "All Teams and Divisions" as text %}
+    {% url 'all_tournaments-all-teams' as url %}
+    {% include "components/item-action.html" with emoji="👯" %}
+
+  </div>
 {% endif %}
 
-<ul class="list-group">
+<div class="list-group mt-3">
   {% if user.is_superuser %}
-    <li class="list-group-item">
-      <span class="glyphicon glyphicon-pencil"></span>&nbsp;
-      <a href="{% url 'tournament-create' %}">
-        {% trans "New Tournament" %}
-      </a>
-    </li>
-    <li class="list-group-item">
-      <span class="glyphicon glyphicon-edit"></span>&nbsp;
-      <a href="{% url 'admin:index' %}">
-        {% trans "Edit Database Area" %}
-      </a>
-    </li>
+
+    {% trans "New Tournament" as text %}{% url 'tournament-create' as url %}
+    {% include "components/item-action.html" with icon="plus-circle" %}
+
+    {% trans "Edit Database Area" as text %}{% url 'admin:index' as url %}
+    {% include "components/item-action.html" with icon="edit" %}
+
   {% endif %}
   {% if user.is_authenticated %}
-    <li class="list-group-item">
-      <span class="glyphicon glyphicon-erase"></span>&nbsp;
-      <a class="" href="{% url 'password_change' %}">
-        {% blocktrans %}Change Password ({{ user }}){% endblocktrans %}
-      </a>
-    </li>
-    <li class="list-group-item">
-      <span class="glyphicon glyphicon-lock"></span>&nbsp;
-      <a class="" href="{% url 'logout' %}">
-        {% blocktrans %}Log Out ({{ user }}){% endblocktrans %}
-      </a>
-    </li>
+
+    {% blocktrans asvar text %}Change Password ({{ user }}){% endblocktrans %}
+    {% url 'password_change' as url %}
+    {% include "components/item-action.html" with icon="rotate-cw" %}
+
+    {% blocktrans asvar text %}Log Out ({{ user }}){% endblocktrans %}
+    {% url 'logout' as url %}
+    {% include "components/item-action.html" with icon="rotate-cw" %}
+
   {% else %}
-    <li class="list-group-item">
-      <span class="emoji">🔓</span><a class="" href="{% url 'login' %}">{% trans "Log In as Admin" %}</a>
-    </li>
+
+    {% trans "Log In as Admin" as text %}{% url 'login' as url %}
+    {% include "components/item-action.html" with icon="log-in" %}
+
   {% endif %}
-</ul>
+</div>
 
 {% endblock content %}

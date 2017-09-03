@@ -4,7 +4,7 @@
        @dragenter="dragEnter" @dragleave="dragLeave">
 
     <div v-if="locked" class="vue-droppable-lock-spinner">
-      <div class="glyphicon glyphicon-refresh spinning"></div>
+      <i data-feather="loader" class="spinning"></i>
     </div>
     <slot><!-- Container sets the dropped items here --></slot>
 

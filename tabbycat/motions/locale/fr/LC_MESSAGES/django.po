@@ -38,6 +38,6 @@ msgstr ""
 msgid "No teams vetoed this topic"
 msgstr ""
 
-#: motions/templates/edit.html:65
+#: motions/templates/motions_edit.html:65
 msgid "There are some problems with the data on this form:"
 msgstr ""

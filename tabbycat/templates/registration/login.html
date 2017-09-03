@@ -17,54 +17,56 @@
 
 {% block content %}
 
-<form id="login" action="." method="POST" class="form-horizontal">
-  {% csrf_token %}
-
-
-
   <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-sm-12">
-      <div class="panel panel-default">
 
-        <div class="panel-heading panel-title">
-          <h4>🔓{% trans "Log in to Tabbycat" context "page title" %}</h4>
-        </div>
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <div class="card">
 
-        <div class="panel-body">
+        <div class="list-group list-group-flush">
+        <form id="login" action="." method="POST">
 
-          {% if form.errors %}
-            <div class="alert alert-danger">
-              {% trans "Your username and password didn't match." %}
-            </div>
-          {% endif %}
-          {% if next %}
-            {% if user.is_authenticated %}
-              <div class="alert alert-warning">{% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." %}</div>
-            {% else %}
-              <div class="alert alert-warning">{% trans "Please log in to see this page." %}</div>
+          {% trans "Log in to Tabbycat" context "page title" as title %}
+          {% include "components/form-title.html" with icon="lock" %}
+
+          <div class="list-group-item pt-4 pb-4">
+
+            {% csrf_token %}
+
+            {% if form.errors %}
+              {% trans "Your username and password didn't match." as message %}
+              {% include "components/form-errors.html" with errors=form.errors %}
             {% endif %}
-          {% endif %}
 
-          {% for field in form %}
-          <div class="vertical-spacing">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field|addcss:"form-control" }}
-            {{ field.errors }}
+            {% if next %}
+
+              {% if user.is_authenticated %}
+                {% trans "Your account doesn't have access to this page. To proceed, please log in with an account that has access." as message %}
+                {% include "components/alert.html" with type="warning" %}
+              {% else %}
+                {% trans "Please log in to see this page." as message %}
+                {% include "components/alert.html" with type="danger" %}
+              {% endif %}
+            {% endif %}
+
+            {% for field in form %}
+              {% include "components/form-field.html" %}
+            {% endfor %}
+
           </div>
-          {% endfor %}
 
-          <button type="submit" name="continue" class="btn btn-block btn-success vertical-spacing">
-            {% trans "Log In" context "button" %}
-          </button>
           <input type="hidden" name="next" value="{{ next }}" />
-          <div class="text-center">
-            <a href="{% url 'password_reset' %}">{% trans "I forgot my password" %}</a>
-          </div>
-        </div>
+          {% trans "Log In" context "button" as title %}
+          {% trans "I forgot my password" context "button" as subtitle %}
+          {% url 'password_reset' as suburl %}
+          {% include "components/form-submit.html" %}
 
+        </form>
+        </div>
       </div>
     </div>
+    <div class="col-md-3"></div>
+
   </div>
 
-</form>
 {% endblock %}

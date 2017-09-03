@@ -10,17 +10,17 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
     def get_status_meta(self, debate):
         if any(team.type == Team.TYPE_BYE for team in debate.teams):
-            return "glyphicon-fast-forward", 5, "Bye Debate"
+            return "fast-forward", "", 5, "Bye Debate"
         elif debate.result_status == Debate.STATUS_NONE and not debate.ballot_in:
-            return "glyphicon-remove text-danger", 0, "No Ballot"
+            return "x", "text-danger", 0, "No Ballot"
         elif debate.result_status == Debate.STATUS_NONE and debate.ballot_in:
-            return "glyphicon-inbox text-warning", 1, "Ballot is In"
+            return "inbox", "text-warning", 1, "Ballot is In"
         elif debate.result_status == Debate.STATUS_DRAFT:
-            return "glyphicon-adjust text-info", 2, "Ballot is Unconfirmed"
+            return "sliders", "text-info", 2, "Ballot is Unconfirmed"
         elif debate.result_status == Debate.STATUS_CONFIRMED:
-            return "glyphicon-ok text-success", 3, "Ballot is Confirmed"
+            return "check", "text-success", 3, "Ballot is Confirmed"
         elif debate.result_status == Debate.STATUS_POSTPONED:
-            return "glyphicon-pause", 4, "Debate was Postponed"
+            return "pause", "", 4, "Debate was Postponed"
         else:
             raise ValueError('Debate has no discernable status')
 
@@ -29,12 +29,13 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         status_header = {
             'key': key,
             'tooltip': "Status of this debate's ballot",
-            'icon': "glyphicon-th-list",
+            'icon': "crosshair",
         }
         status_cell = [{
             'icon': self.get_status_meta(debate)[0],
-            'sort': self.get_status_meta(debate)[1],
-            'tooltip': self.get_status_meta(debate)[2]
+            'class': self.get_status_meta(debate)[1],
+            'sort': self.get_status_meta(debate)[2],
+            'tooltip': self.get_status_meta(debate)[3]
         } for debate in debates]
         self.add_column(status_header, status_cell)
 
@@ -65,10 +66,12 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             else:
                 ballotsubs_info += edit_status + "</a><small>"
 
+            ballotsubs_info += "<br>" # Entered in should be on a new line
+
             if ballotsub.submitter_type == ballotsub.SUBMITTER_TABROOM:
-                ballotsubs_info += " <em>entered by " + ballotsub.submitter.username + "</em>"
+                ballotsubs_info += " <em class='text-nowrap'>entered by " + ballotsub.submitter.username + "</em>"
             elif ballotsub.submitter_type == ballotsub.SUBMITTER_PUBLIC:
-                ballotsubs_info += " <em>a public submission by " + ballotsub.ip_address + "</em>"
+                ballotsubs_info += " <em class='text-nowrap'>a public submission by " + ballotsub.ip_address + "</em>"
 
             ballotsubs_info += "</small><br />"
 
@@ -82,7 +85,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
     def add_ballot_entry_columns(self, debates):
 
-        entry_header = {'key': 'EB', 'icon': "glyphicon-plus"}
+        entry_header = {'key': 'EB', 'icon': "plus-circle"}
         entry_cells = [{'text': self.get_ballot_text(d)} for d in debates]
         self.add_column(entry_header, entry_cells)
 

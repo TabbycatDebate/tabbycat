@@ -26,6 +26,11 @@ def presets_for_form():
     return choices
 
 
+def public_presets_for_form():
+    return [('Public Information Options', 'Enable Public Information'),
+            (False, 'Disable Public Information')]
+
+
 def get_preferences_data(selected_preset, tournament):
     preset_preferences = []
     # Create an instance of the class and iterate over its properties for the UI
@@ -360,7 +365,6 @@ class TabRelease(PreferencesPreset):
 
     tab_release__team_tab_released             = True
     tab_release__speaker_tab_released          = True
-    tab_release__replies_tab_released          = True
     tab_release__motion_tab_released           = True
     tab_release__ballots_released              = True
     tab_release__all_results_released          = True

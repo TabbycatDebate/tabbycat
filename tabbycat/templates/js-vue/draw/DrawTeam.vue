@@ -5,7 +5,7 @@
        @mouseleave="handleHoverOff">
 
     <div>
-      <span>{{ team.short_name }}</span>
+      <span class="small">{{ team.short_name }}</span>
     </div>
 
     <div class="history-tooltip tooltip" v-if="hasHistoryConflict">

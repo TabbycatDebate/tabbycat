@@ -1,42 +1,67 @@
 <template>
-  <div class="col-md-12 draw-container">
+  <div class="draw-container">
 
-    <div class="row nav-pills">
-      <a class="btn btn-default submit-disable" :href="roundInfo.backUrl">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
-      </a>
-      <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
+    <div class="row page-navs">
+      <div class="col d-flex justify-content-between">
+        <a class="btn btn-outline-primary " :href="roundInfo.backUrl">
+          <i data-feather="chevron-left"></i> Back to Draw
+        </a>
+        <auto-save-counter :css="'btn-md'"></auto-save-counter>
+      </div>
     </div>
 
     <div class="row">
-      <div class="vertical-spacing" id="messages-container"></div>
+      <div class="col mb-2">
+
+        <div class="card border-warning text-warning">
+          <div class="card-body">
+            This interface is intended to easily swap the positions of teams,
+            as often required for final rounds. However it can be used to create
+            new debates and edit matchups. This should be done with caution;
+            edits to matchups will <em>remove any round results for the moved
+            teams</em>. In general you should only use this on unreleased draws;
+            and only then if you don't want a 'correct' draw.
+            Note that changes to matchups will only be saved once
+            <em>all slots are filled</em>. You can create new debates by
+            dragging into the blank rows at the bottom, but debates cannot be
+            deleted here — that requires going to the Edit Database area.
+          </div>
+        </div>
+
+        <div id="allocations-container"></div>
+
+      </div>
     </div>
 
-    <div class="vertical-spacing">
-      <draw-header :positions="positions"  @resort="updateSorting"
-                   :sort-key="sortKey" :sort-order="sortOrder">
-        <template slot="hteams">
-          <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
-               v-for="position in positions" @click="updateSorting(position.side)"
-               data-toggle="tooltip" :title="'The ' + position.full + ' team'">
-            <span>{{ position.abbr }}</span>
-            <span :class="sortClasses(position.full)"></span>
-          </div>
-        </template>
-      </draw-header>
-      <debate v-for="debate in dataOrderedByKey"
-              :debate="debate" :key="debate.id" :round-info="roundInfo">
-        <template v-for="dt in debate.debateTeams">
-          <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
-               :slot="'s-' + dt.side">
-            <droppable-generic :assignment-id="debate.id"
-                               :assignment-position="dt.side" :locked="debate.locked">
-              <draggable-team v-if="dt.team" :team="dt.team"
-                              :debate-id="debate.id" :locked="debate.locked"></draggable-team>
-            </droppable-generic>
-          </div>
-        </template>
-      </debate>
+    <div class="row">
+      <div class="col mb-3 mt-3">
+
+          <draw-header :positions="positions"  @resort="updateSorting"
+                       :sort-key="sortKey" :sort-order="sortOrder">
+            <template slot="hteams">
+              <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
+                   v-for="position in positions" @click="updateSorting(position.side)"
+                   data-toggle="tooltip" :title="'The ' + position.full + ' team'">
+                <span>{{ position.abbr }}</span>
+                <span :class="sortClasses(position.full)"></span>
+              </div>
+            </template>
+          </draw-header>
+          <debate v-for="debate in dataOrderedByKey"
+                  :debate="debate" :key="debate.id" :round-info="roundInfo">
+            <template v-for="dt in debate.debateTeams">
+              <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
+                   :slot="'s-' + dt.side">
+                <droppable-generic :assignment-id="debate.id"
+                                   :assignment-position="dt.side" :locked="debate.locked">
+                  <draggable-team v-if="dt.team" :team="dt.team"
+                                  :debate-id="debate.id" :locked="debate.locked"></draggable-team>
+                </droppable-generic>
+              </div>
+            </template>
+          </debate>
+
+      </div>
     </div>
 
     <unallocated-items-container>

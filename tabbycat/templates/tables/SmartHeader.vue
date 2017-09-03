@@ -5,7 +5,8 @@
           :data-toggle="header['tooltip'] ? 'tooltip' : null"
           @hover="header['tooltip'] ? showTooltip  : null">
 
-      <span v-if="header['icon']" class="glyphicon" :class="header['icon']"></span>
+      <i v-if="header['icon']" :data-feather="header['icon']"></i>
+
       <span v-if="header['text']" v-html="header['text']"></span>
 
       <span v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('text')">
@@ -14,7 +15,10 @@
 
     </span>
 
-    <span :class="sortClasses(header['key'])"></span>
+    <span :class="sortClasses(header['key'])">
+      <i data-feather="chevrons-down"></i>
+      <i data-feather="chevrons-up"></i>
+    </span>
 
   </th>
 </template>

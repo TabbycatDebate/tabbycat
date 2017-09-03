@@ -4,52 +4,27 @@
 
 // Actionable elements (buttons, navs) should be distinct
 .btn {
-  font-family: $headings-font-family;
-  font-weight: $headings-font-weight;
   padding: 10px 12px;
+
+  .feather {
+    margin-bottom: -3px;
+  }
+}
+
+// Use mostly transparent backgrounds rather than fully transparent
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    background-color: rgba(255,255,255,0.75);
+  }
 }
 
 .btn[data-toggle='tooltip'] span {
   border-bottom: 0; // Need to prevent dashed lines in glyphicons in btns
 }
 
-.btn-no-hover:hover {
-  background-color: inherit; // Allow btns to have no hovers but not be dimmed
-  border-color: #ccc;
-  cursor: default;
-}
-
-.btn-success.btn-no-hover:hover {
-  background-color: $brand-success;
-}
-
-.btn-info.btn-no-hover:hover {
-  background-color: $brand-info;
-}
-
-.btn-warning.btn-no-hover:hover {
-  background-color: $brand-warning;
-}
-
-.btn-danger.btn-no-hover:hover {
-  background-color: $brand-danger;
-}
-
-
 //------------------------------------------------------------------------------
 // Inputs (in general)
 //------------------------------------------------------------------------------
-
-// Give buttons more padding
-.form-control,
-.form-control-parent input {
-  @extend .form-control;
-
-  border-radius: 6px;
-  border-width: 2px;
-  height: 39px;
-  max-width: 100%;
-}
 
 .list-group-item .form-group:last-child {
   margin-bottom: 0; // List group items are already bottom padded
@@ -60,13 +35,15 @@ input[type=number] {
   text-align: center;
 }
 
-input[type="radio"].form-control,
-input[type="checkbox"].form-control {
+input[type="radio"],
+input[type="checkbox"] {
   width: 20px; // Mostly for integer scale questions; need to align with labels
+  height: 38px;
 }
 
 input[type="range"] {
   min-width: 70px; // Fix for IE Edge; doesn't show otherwise
+  width: 100%; // Fix for importance slider
 }
 
 // Labels in list groups need to vertically center with inputs
@@ -75,7 +52,7 @@ input[type="range"] {
 }
 
 // Don't pad form panels as the elements already have padding
-.panel-body.form-panel {
+.card-body.form-panel {
   padding-bottom: 0;
 }
 
@@ -84,11 +61,13 @@ input[type="range"] {
 }
 
 // Inline form errors from django
-.errorlist,
-label.error {
+.errorlist, label.error {
   color: $state-danger-text;
-  padding: 10px 0 0 5px;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
   font-weight: bold;
+  font-size: $font-size-sm;
 }
 
 //------------------------------------------------------------------------------

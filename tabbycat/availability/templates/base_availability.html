@@ -2,34 +2,40 @@
 {% load debate_tags static i18n %}
 
 {% block page-subnav-sections %}
-  <a href="{% roundurl 'availability-index' round %}" class="btn btn-default">
-    <span class="glyphicon glyphicon-chevron-left"></span>{% trans "Overview" %}
+
+  <a href="{% roundurl 'availability-index' round %}" class="btn btn-outline-primary">
+    <i data-feather="chevron-left"></i>{% trans "Check-Ins" %}
   </a>
+
   {% if round.is_break_round and model == 'participants.Adjudicator' %}
-    <a class="btn btn-primary submit-disable"
+    <a class="btn btn-primary"
        href="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
       {% trans "Check In All Breaking" %}
     </a>
   {% endif %}
+
   {% if round.seq > 1 %}
-    <button id="select_previous" class="btn btn-default" type="button">
+    <button id="select_previous" class="btn btn-primary" type="button">
       {% trans "Copy from Previous" %}
     </button>
   {% endif %}
+
   <div class="btn-group">
-    <button id="select_all" class="btn btn-default">
+    <button id="select_all" class="btn btn-primary">
       {% trans "Select All" %}
     </button>
-    <button id="select_none" class="btn btn-default">
+    <button id="select_none" class="btn btn-primary">
       {% trans "Select None" %}
     </button>
   </div>
+
   {{ block.super }}
+
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <button id="save_availability" class="btn btn-success submit-disable" >
-    <span class="glyphicon glyphicon-floppy-disk"></span> {% trans "Save Selected" %}
+  <button id="save_availability" class="btn btn-success " >
+    <span class="icon glyphicon-floppy-disk"></span> {% trans "Save Selected" %}
   </button>
 {% endblock %}
 
@@ -59,7 +65,7 @@
     $('#select_previous').click(function() {
       $(":checkbox.vue-table-checkbox").each(function(){
         var prev_round = $(this).parents("td").siblings("td").first();
-        var prev_active = prev_round.children(".hidden").text().trim();
+        var prev_active = prev_round.children("[hidden]").text().trim();
         if (prev_active === 'true') {
           $(this).prop('checked', true);
         } else {

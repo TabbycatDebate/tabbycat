@@ -9,7 +9,7 @@
   &:hover {
     cursor: help; // for tooltips
     span {
-      border-color: $brand-primary;
+      border-color: theme-color("primary");
     }
   }
 
@@ -22,7 +22,7 @@
   max-width: 350px;
 }
 
-.popover-content {
+.popover-body {
   // For popovers we use list-groups which need to remove the original padding
   padding: 0;
 
@@ -93,6 +93,7 @@
 .modal-xl { // For motions page; probably feedback also (want super big modals)
   height: 92%;
   width: 95%;
+  max-width: 1200px;
 
   .modal-content {
     height: 100%;
@@ -129,6 +130,10 @@
   opacity: 0;
 }
 
+.auto-save {
+  min-width: 112px; // Don't want it resizing as text updates
+}
+
 .save-flash {
   animation-name: flash-animation;
   animation-duration: 5s;
@@ -137,7 +142,7 @@
 @keyframes flash-animation {
 
   from {
-    color: $brand-success;
+    color: theme-color("success");
   }
 
   to {

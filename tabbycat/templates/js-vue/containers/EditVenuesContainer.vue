@@ -1,21 +1,19 @@
 <template>
-  <div class="col-md-12 draw-container">
+  <div class="draw-container">
 
-    <div class="row nav-pills">
-      <a class="btn btn-default submit-disable" :href="roundInfo.backUrl">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
-      </a>
-      <button class="btn btn-primary submit-disable" @click="createAutoAllocation">
-        Auto Allocate
-      </button>
-      <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
+    <div class="row page-navs">
+      <div class="col d-flex justify-content-between">
+        <a class="btn btn-outline-primary " :href="roundInfo.backUrl">
+          <i data-feather="chevron-left"></i> Back to Draw
+        </a>
+        <button class="btn btn-success " @click="createAutoAllocation">
+          Auto Allocate
+        </button>
+        <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
+      </div>
     </div>
 
-    <div class="row vertical-spacing">
-      <div id="messages-container"></div>
-    </div>
-
-    <div class="vertical-spacing">
+    <div class="mb-3 mt-3">
       <draw-header :positions="positions" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
         <div @click="updateSorting('venue')" slot="hvenue"

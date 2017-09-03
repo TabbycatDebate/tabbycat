@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags i18n %}
+
+{% block head-title %}Edit Motions for {{ round.name }}{% endblock %}
+{% block page-title %}Edit Motions for {{ round.name }}{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-outline-primary " href="{% roundurl 'draw-display' %}">
+    <i data-feather="chevron-left"></i> Back to Display
+  </a>
+  {% if round.motions_released %}
+    <form class="" id="unreleaseForm" method="POST" action="{% roundurl 'motions-unrelease' %}">
+      {% csrf_token %}
+      <button class="btn btn-danger " type="submit">
+        Unrelease Motions to Public
+      </button>
+    </form>
+  {% else %}
+    <form class="" id="releaseForm" method="POST" action="{% roundurl 'motions-release' %}">
+      {% csrf_token %}
+      <button class="btn btn-primary " type="submit"
+        data-toggle="tooltip" data-placement="bottom"
+        title="Releasing motions makes them available the public-facing pages of
+        this site. If your tournament is configured to display a running
+        list of motions, or to allow adjudicators to submit ballots that require
+        motion selection, you will need to release each round's motions before
+        that can happen.">
+        Release Motions to Public
+      </button>
+    </form>
+  {% endif %}
+  {% if pref.enable_division_motions %}
+    <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary ">
+      Assign Motions to Divisions
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+  <a href="{% roundurl 'results-round-list' %}" class="btn btn-outline-success">
+    Enter Results<i data-feather="chevron-right"></i>
+  </a>
+{% endblock %}
+
+{% block page-alerts %}
+  {% if round.motion_set.all.count == 0 %}
+    <div class="alert alert-danger">
+      Results cannot be entered without motions. Enter at least one motion below and then hit "Save Motions".
+    </div>
+  {% endif %}
+  {% if round.motions_released and not pref.public_motions %}
+    <div class="alert alert-warning">
+      You have released the motions, but they will not show to the public unless
+      the 'public view of motions' setting is enabled in
+      <a class="alert-link" href="{% tournamenturl 'options-tournament-index' %}">
+        this tournament's configuration</a>.
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  {% if formset.errors %}
+    {% include "components/form-errors.html" with errors=formset.errors %}
+  {% endif %}
+
+  <form method="POST" action="" class="">
+    {% csrf_token %}
+
+    <div class="card-deck pr-3 mb-3 ">
+
+      {{ formset.management_form }}
+
+      {% for form in formset %}
+        <div class="card mr-0">
+          <div class="list-group list-group-flush">
+            <div class="list-group-item">
+
+              {% if formset.non_field_errors %}
+                {% include "components/form-errors.html" with errors=form.non_field_errors %}
+              {% endif %}
+              {% for field in form %}
+                {% include "components/form-field.html" %}
+              {% endfor %}
+
+            </div>
+          </div>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+    {% include "components/form-submit.html" with title="Save Motions" %}
+
+  </form>
+
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+
+    $(document).ready( function() {
+      $(window).keydown( function(e){
+        if(e.keyCode == 13) {
+          e.preventDefault();
+          return false;
+        }
+      } );
+    } );
+
+  </script>
+{% endblock js %}

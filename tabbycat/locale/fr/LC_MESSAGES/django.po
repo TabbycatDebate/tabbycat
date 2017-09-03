@@ -340,10 +340,9 @@ msgstr[0] "Veuillez corriger l'erreur ci-dessous."
 msgstr[1] "Veuillez corriger les erreurs ci-dessous."
 
 #: templates/registration/password_change_form.html:29
-msgid "Please enter your old password, then enter a new one (twice):"
+msgid "Please enter your old password, then enter a new one"
 msgstr ""
-"Veuillez saisir votre ancien mot de passe, puis saisissez un nouveau (deux "
-"fois) :"
+"Veuillez saisir votre ancien mot de passe, puis saisissez un nouveau"
 
 #: templates/registration/password_change_form.html:45
 #: templates/registration/password_reset_confirm.html:46

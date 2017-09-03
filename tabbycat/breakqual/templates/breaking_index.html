@@ -7,6 +7,7 @@
 {% block page-alerts %}
   {% if not categories.exists %}
     <div class="alert alert-warning" role="alert">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed %}
         This tournament does not have any break categories set up. You can read
          about how to create breaks
@@ -19,6 +20,7 @@
   {% elif no_teams_eligible %}
     {% tournamenturl 'breakqual-edit-eligibility' as eligibility_url %}
     <div class="alert alert-warning" role="alert">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed %}
         It looks like no teams are currently marked as eligible for the break.
         To set which teams are eligible, click the
@@ -28,6 +30,7 @@
     </div>
   {% elif break_not_generated %}
     <div class="alert alert-info" role="alert">
+      <i data-feather="alert-circle"></i>
       {% blocktrans trimmed %}
         The break hasn't been generated yet. To generate it, view any of the team
         breaks (via the above buttons), and then click on "Generate the Break
@@ -43,7 +46,7 @@
 
 {% block page-subnav-actions %}
   <a class="btn btn-primary" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
-    <span class="glyphicon glyphicon-pencil"></span> {% trans "Edit Teams' Eligibility" %}
+    <i data-feather="edit"></i> {% trans "Edit Teams' Eligibility" %}
   </a>
 {% endblock %}
 
@@ -54,7 +57,7 @@
 
       {% with teams_in_tournament=tournament.team_set.count %}
         {% for category in categories %}
-          <div class="panel panel-default">
+          <div class="card">
             <div class="panel-heading">
               <h4 class="panel-title">
                 {% blocktrans trimmed with category_name=category.name %}
@@ -65,7 +68,7 @@
                 {% endif %}
               </h4>
             </div>
-            <div class="panel-body round-progresses">
+            <div class="card-body round-progresses">
               <div class="progress">
                 {% if category.nonbreaking == category.eligible %}
                   <div class="progress-bar progress-bar-primary
@@ -76,7 +79,7 @@
                     <span>{{ category.eligible }}/{{ teams_in_tournament }}</span>
                   </div>
                 {% else %}
-                  <div class="progress-bar progress-bar-success
+                  <div class="progress-bar bg-success
                        {% if category.breaking == 0 %}progress-empty{% endif %}"
                        role="progressbar"
                        style="width: {% percentage category.breaking teams_in_tournament %}%;">

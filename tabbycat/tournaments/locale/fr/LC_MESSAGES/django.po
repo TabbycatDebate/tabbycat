@@ -138,7 +138,7 @@ msgstr "nom"
 
 #: tournaments/models.py:37
 msgid ""
-"The full name used on the homepage, e.g. \"Australasian Intervarsity "
+"The full name, e.g. \"Australasian Intervarsity "
 "Debating Championships 2016\""
 msgstr ""
 "Le nom complet qui est affiché sur la page d'accueil, p. ex. \"Championnat "
@@ -383,7 +383,7 @@ msgid "Hello!"
 msgstr "Bonjour !"
 
 #: tournaments/templates/blank_site_start.html:26
-msgid "Welcome to your new Tabbycat installation!"
+msgid "Welcome to Tabbycat!"
 msgstr "Bienvenue à votre nouvelle installation de Tabbycat !"
 
 #: tournaments/templates/blank_site_start.html:31
@@ -455,7 +455,7 @@ msgstr ""
 
 #: tournaments/templates/create_tournament.html:84
 msgid "Load Demo Data (10-team tournament)"
-msgstr "Charger les données démonstratives (tournoi avec 10 équipes)"
+msgstr "Charger les démonstratives (tournoi avec 10 équipes)"
 
 #: tournaments/templates/create_tournament.html:90
 #: tournaments/templates/create_tournament.html:107
@@ -466,7 +466,7 @@ msgstr ""
 
 #: tournaments/templates/create_tournament.html:101
 msgid "Load Demo Data (24-team tournament)"
-msgstr "Charger les données démonstratives (tournoi avec 24 équipes)"
+msgstr "Charger les démonstratives (tournoi avec 24 équipes)"
 
 #: tournaments/templates/donations.html:4
 msgid "Donate to Tabbycat"
@@ -655,17 +655,13 @@ msgid "Dashboard"
 msgstr "Tableau de bord"
 
 #: tournaments/templates/tournament_index.html:7
-msgid "Tournament Overview"
-msgstr "Aperçu du tournoi"
+msgid "Overview"
+msgstr "Aperçu"
 
 #: tournaments/templates/tournament_index.html:10
 #, python-format
 msgid "%(round_name)s is %(round_status)s"
 msgstr "%(round_name)s est %(round_status)s"
-
-#: tournaments/templates/tournament_index.html:11
-msgid "this page will refresh its data automatically"
-msgstr "ce page se rafraîchira automatiquement"
 
 #. Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link.
 #: tournaments/templates/tournament_index.html:27

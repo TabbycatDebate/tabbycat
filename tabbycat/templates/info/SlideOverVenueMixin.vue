@@ -29,7 +29,7 @@ export default {
         'tiers': [{
           'features': [
             [{ 'title': this.venue.name + ' (Priority of ' + this.venue.priority + ')',
-               'icon': 'glyphicon-map-marker' }],
+               'icon': 'icon-venue-location' }],
             null,
             this.venueCategoriesFeature,
           ]

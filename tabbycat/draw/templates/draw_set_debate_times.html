@@ -6,14 +6,14 @@
 {% block sub-title %}for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
+  <a class="btn btn-primary " href="{% roundurl 'draw' %}">
+    <i data-feather="chevron-left"></i> Back to Draw
   </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a href="{% roundurl 'draw-schedule-apply' %}" class="btn btn-success submit-disable" id="assignTimes">
-    <span class="glyphicon glyphicon-floppy-disk"></span> Apply Times to Debates
+  <a href="{% roundurl 'draw-schedule-apply' %}" class="btn btn-success " id="assignTimes">
+    <span class="icon glyphicon-floppy-disk"></span> Apply Times to Debates
   </a>
 {% endblock %}
 
@@ -21,7 +21,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="panel panel-default">
+    <div class="card">
       <div class="panel-heading">
         <h4 class="panel-title">Assign Dates to Venue Catgories</h4>
       </div>
@@ -49,7 +49,7 @@
     </div>
   </div>
   <div class="col-md-6">
-    <div class="panel panel-default">
+    <div class="card">
       <div class="panel-heading">
         <h4 class="panel-title">Assign Times to Divisions</h4>
       </div>

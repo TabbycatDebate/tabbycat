@@ -2,38 +2,30 @@
 {% load debate_tags %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% roundurl 'availability-index' %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Check-Ins
+  <a class="btn btn-outline-primary " href="{% roundurl 'availability-index' %}">
+    <i data-feather="chevron-left"></i> Check-Ins
   </a>
 
-  <div class="btn-group">
-    <a class="btn btn-default submit-disable" href="{% roundurl 'edit-adj-allocation' %}" class="btn btn-default submit-disable">
-      Allocate Adjudicators
-    </a>
-    <a href="{% roundurl 'venues-edit' round %}" class="btn btn-default submit-disable">
-      Allocate Venues
-    </a>
-  </div>
   {% if pref.allocation_confirmations %}
-    <a href="{% roundurl 'draw-schedule-confirmations' %}" class="btn btn-default submit-disable">
+    <a href="{% roundurl 'draw-schedule-confirmations' %}" class="btn btn-outline-primary ">
       Confirm Shifts
     </a>
   {% endif %}
-  <div class="btn-group">
-    <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-default submit-disable">
-      Edit Matchups
+  <div class="btn-group" role="group">
+    <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary ">
+      Edit Sides
     </a>
-    <a class="btn btn-default submit-disable" href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-default submit-disable">
-      Remake Draw
+    <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-primary ">
+      Redo Draw
     </a>
-    <a class="btn btn-default submit-disable" href="{% roundurl 'draw-details' %}">
+    <a href="{% roundurl 'draw-details' %}" class="btn btn-outline-primary ">
       Draw Details
     </a>
   </div>
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <a href="{% roundurl 'draw-display' %}" class="btn btn-success">
-    Display Draw<span class="glyphicon glyphicon-chevron-right"></span>
+  <a href="{% roundurl 'draw-display' %}" class="btn btn-outline-success">
+    Display Draw<i data-feather="chevron-right"></i>
   </a>
 {% endblock %}

@@ -13,7 +13,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_breaking_checkbox(self, adjudicators, key="Breaking"):
         breaking_header = {
             'key': 'B',
-            'icon': 'glyphicon-star',
+            'icon': 'award',
             'tooltip': 'Whether the adj is marked as breaking (click to mark)',
         }
         breaking_data = [{
@@ -34,7 +34,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         overall_header = {
             'key': 'Overall Score',
-            'icon': 'glyphicon-signal',
+            'icon': 'crosshair',
             'tooltip': 'Current weighted score',
         }
         overall_data = [{
@@ -45,7 +45,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         test_header = {
             'key': 'Test Score',
-            'icon': 'glyphicon-scale',
+            'icon': 'clipboard',
             'tooltip': 'Test score result',
         }
         test_data = [{
@@ -75,7 +75,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_feedback_link_columns(self, adjudicators):
         link_head = {
             'key': 'VF',
-            'icon': 'glyphicon-question-sign'
+            'icon': 'zoom-in'
         }
         link_cell = [{
             'text': 'View<br>Feedback',
@@ -88,7 +88,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         if self.tournament.pref('enable_adj_notes'):
             note_head = {
                 'key': 'NO',
-                'icon': 'glyphicon-list-alt'
+                'icon': 'tablet'
             }
             note_cell = [{
                 'text': 'Edit<br>Note',
@@ -99,7 +99,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         adjudications_head = {
             'key': 'DD',
-            'icon': 'glyphicon-eye-open',
+            'icon': 'eye',
             'tooltip': 'Debates adjudicated'
         }
         adjudications_cell = [{'text': adj.debates} for adj in adjudicators]
@@ -107,7 +107,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         avgs_head = {
             'key': 'AVGS',
-            'icon': 'glyphicon-resize-full',
+            'icon': 'crosshair',
             'tooltip': 'Average Margin (top) and Average Score (bottom)'
         }
         avgs_cell = [{
@@ -129,7 +129,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         owed_header = {
             'key': 'Owed',
-            'icon': 'glyphicon-remove',
+            'icon': 'slash',
             'tooltip': 'Unsubmitted feedback ballots',
         }
         owed_data = [_owed_cell(progress) for progress in progress_list]
@@ -151,7 +151,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
             owed_link_header = {
                 'key': 'Submitted',
-                'icon': 'glyphicon-question-sign',
+                'icon': 'check',
             }
             owed_link_data = [{
                 'text': 'View Missing Feedback',

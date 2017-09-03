@@ -10,7 +10,7 @@
   {% regroup analysed_motions by round as motions_by_round %}
 
     {% for round, round_motions in motions_by_round %}
-      <div class="list-group">
+      <div class="list-group mt-3">
 
         <div class="list-group-item text-right disabled strong">
           {{ round.name }}
@@ -20,7 +20,7 @@
 
           <div class="list-group-item no-bottom-padding">
 
-            <h4 class="vertical-spacing">
+            <h4 class="mb-3">
               {% if round_motions|length > 1 %}{{ am.motion.seq }}.{% endif %}
               {{ am.motion }}
             </h4>

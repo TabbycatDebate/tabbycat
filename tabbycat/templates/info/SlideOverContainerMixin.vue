@@ -65,12 +65,12 @@ export default {
           } else if (clashesType === 'adjudicator') {
             if (!_.isUndefined(self.adjudicatorsById[clash])) {
               var clashName = self.adjShortName(self.adjudicatorsById[clash].name)
-              var clashIcon = 'glyphicon-user'
+              var clashIcon = 'user'
             }
           } else if (clashesType === 'institution') {
             if (!_.isUndefined(self.institutionsById[clash])) {
               var clashName = self.institutionsById[clash].code
-              var clashIcon = 'glyphicon-globe'
+              var clashIcon = 'globe'
             }
           }
           // Institution/Teams/Adjs may be clashed but not present in this draw

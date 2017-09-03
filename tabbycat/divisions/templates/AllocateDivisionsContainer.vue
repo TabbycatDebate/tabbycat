@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-12 draw-container">
+  <div class="draw-container">
 
     <div class="row divisions-holder">
       <div v-for="division in divisionsOrderedByName" :key="division.id"

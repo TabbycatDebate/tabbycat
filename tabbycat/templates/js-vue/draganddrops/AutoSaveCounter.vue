@@ -1,7 +1,7 @@
 <template>
 
   <!-- ADD tooltip -->
-  <button :class="['btn btn-default disabled', customClasses, animationClass]" data-toggle="tooltip"
+  <button :class="['btn btn-outline-secondary auto-save', customClasses, animationClass]" data-toggle="tooltip"
           data-placement="bottom" title="Changes are automatically saved; however do not edit/change allocations across multiple browsers/computers at the same time!">
     <span :class="[animationClass]">{{ savedAgoDisplay }}</span>
   </button>
@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     savedAgoDisplay: function() {
-      if (!this.lastSaved) { return "No saved changes" }
+      if (!this.lastSaved) { return "No changes" }
       var savedAgo = Math.abs(new Date() - this.lastSaved) / 1000
       if (savedAgo > 59) {
         return "Saved at " + this.hours + ":" + this.minutes

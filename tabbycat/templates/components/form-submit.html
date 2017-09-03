@@ -1,0 +1,13 @@
+<div class="list-group-item pt-4 pb-2">
+
+  <button type="submit" name="continue" class="btn btn-block btn-success mb-3">
+    {{ title }}
+  </button>
+
+  {% if subtitle %}
+    <div class="text-center pb-2 small">
+      <a href="{{ suburl }}">{{ subtitle }}</a>
+    </div>
+  {% endif %}
+
+</div>

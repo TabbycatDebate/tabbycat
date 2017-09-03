@@ -19,6 +19,7 @@
 {% block page-alerts %}
   {% if not pref.team_tab_released and not pref.motion_tab_released and not pref.public_draw and not pref.public_results and not pref.public_divisions and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and not pref.public_ballots and not pref.public_feedback and not pref.show_all_draws %}
     <div class="alert alert-info">
+      <i data-feather="alert-circle"></i>
       {% trans "There is currently no public information available for this tournament." %}
       <span class="emoji">😹</span>
     </div>
@@ -27,138 +28,147 @@
 
 {% block content %}
 
-  <div class="row">
-    <div class="col-md-12">
-      <ul class="list-group">
-        {% if pref.team_tab_released > 0 %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-team' %}">{% trans "Team Tab" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.speaker_tab_released > 0 %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-speaker' %}">{% trans "Speaker Tab" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.speaker_category_tabs_released > 0 %}
-          {% for category in tournament.speakercategory_set.all %}
-            {% if category.public %}
-              <li class="list-group-item">
-                <a href="{% tournamenturl 'standings-public-tab-speaker-category' category=category.slug %}">
-                  {% blocktrans trimmed with category_name=category.name %}
-                    {{ category_name }} Speaker Tab
-                  {% endblocktrans %}
-                </a>
-              </li>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-        {% if pref.replies_tab_released > 0 %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-replies' %}">{% trans "Replies Tab" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.motion_tab_released %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-tab-motions' %}">{% trans "Motions Tab" %}</a>
-          </li>
-        {% endif %}
-        {% if public_side_allocations %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'draw-public-side-allocations' %}">{% trans "Sides" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.public_draw > 0  and pref.team_tab_released == 0 and pref.show_all_draws == 0 %}
-          <li class="list-group-item"><a class="public-draw-nav" href="{% tournamenturl 'draw-public-current-round' %}">
-            Draw for {{ current_round.name }}
-          </a></li>
-        {% endif %}
-        {% if pref.public_results and current_round.prev %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'results-public-index' %}">{% trans "Results" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.public_divisions > 0 %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'public_divisions' %}">{% trans "Divisions" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.public_motions %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'motions-public' %}">{% trans "Motions" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.public_motions and pref.motion_tab_released == 0 and pref.draw_side_allocations == 'manual-ballot' %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'draw-public-side-allocations' %}">{% trans "Sides" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.public_team_standings and current_round.prev and pref.team_tab_released == 0 %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-teams-current' %}">{% trans "Team Standings" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.public_breaking_teams %}
-          {% for category in tournament.breakcategory_set.all %}
-            <li class="list-group-item">
-              <a href="{% tournamenturl 'breakqual-public-teams' category.slug %}">
-                {% blocktrans trimmed with category_name=category.name %}
-                  {{ category_name }} Break
-                {% endblocktrans %}
-              </a>
-            </li>
-          {% endfor %}
-        {% endif %}
-        {% if pref.public_breaking_adjs %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'breakqual-public-adjs' %}">{% trans "Breaking Adjudicators" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.public_diversity %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'standings-public-diversity' %}">{% trans "Diversity Overview" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.public_participants %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'participants-public-list' %}">{% trans "Participants" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.feedback_progress %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'public_feedback_progress' %}">{% trans "Feedback Progres" %}s</a>
-          </li>
-        {% endif %}
-        {% if pref.public_ballots %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'results-public-ballot-submission-index' %}">{% trans "Enter Ballot" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.public_feedback %}
-          <li class="list-group-item">
-            <a href="{% tournamenturl 'adjfeedback-public-add-index' %}">{% trans "Enter Feedback" %}</a>
-          </li>
-        {% endif %}
-        {% if pref.show_all_draws > 0 %}
-          {% for r in tournament.round_set.all %}
-            {% if r.draw_status == r.STATUS_RELEASED %}
-              <li class="list-group-item">
-                <a href="{% roundurl 'draw-public-for-round' r %}">
-                  {% blocktrans trimmed with round_name=r.name %}
-                    Draw for {{ round_name }}
-                  {% endblocktrans %}
-                  </a>
-              </li>
-            {% endif %}
-          {% endfor %}
-          {% if pref.enable_mass_draws > 0 %}
-            <li class="list-group-item">
-              <a href="{% tournamenturl 'draw-public-all-draws' %}">{% trans "View All Draws" %}</a>
-            </li>
-          {% endif %}
-        {% endif %}
-      </ul>
-    </div>
-  </div>
+ <div class="list-group mt-2">
 
+    {% if pref.team_tab_released > 0 %}
+      {% trans "Team Tab" as text %}
+      {% tournamenturl 'standings-public-tab-team' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.speaker_tab_released > 0 %}
+      {% trans "Speaker Tab" as text %}
+      {% tournamenturl 'standings-public-tab-speaker' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.speaker_category_tabs_released > 0 %}
+      {% for category in tournament.speakercategory_set.all %}
+        {% if category.public %}
+          {% blocktrans asvar text trimmed with category_name=category.name %}
+            {{ category_name }} Speaker Tab
+          {% endblocktrans %}
+          {% tournamenturl 'standings-public-tab-speaker-category' category=category.slug as url %}
+          {% include "components/item-action.html" %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if pref.replies_tab_released > 0 %}
+      {% trans "Replies Tab" as text %}
+      {% tournamenturl 'standings-public-tab-replies' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.motion_tab_released %}
+      {% trans "Motions Tab" as text %}
+      {% tournamenturl 'standings-public-tab-motions' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if public_side_allocations %}
+      {% trans "Sides" as text %}
+      {% tournamenturl 'draw-public-side-allocations' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_draw > 0  and pref.team_tab_released == 0 and pref.show_all_draws == 0 %}
+      {% tournamenturl 'draw-public-current-round' as url %}
+      {% include "components/item-action.html" with text="Draw for "|add:current_round.name %}
+    {% endif %}
+
+    {% if pref.public_results and current_round.prev %}
+      {% trans "Results" as text %}
+      {% tournamenturl 'results-public-index' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_divisions > 0 %}
+      {% trans "Divisions" as text %}
+      {% tournamenturl 'public_divisions' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_motions %}
+      {% trans "Motions" as text %}
+      {% tournamenturl 'motions-public' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_motions and pref.motion_tab_released == 0 and pref.draw_side_allocations == 'manual-ballot' %}
+      {% trans "Sides" as text %}
+      {% tournamenturl 'draw-public-side-allocations' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_team_standings and current_round.prev and pref.team_tab_released == 0 %}
+      {% trans "Team Standings" as text %}
+      {% tournamenturl 'standings-public-teams-current' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_breaking_teams %}
+      {% for category in tournament.breakcategory_set.all %}
+        {% blocktrans trimmed asvar text with category_name=category.name %}
+          {{ category_name }} Break
+        {% endblocktrans %}
+        {% tournamenturl 'breakqual-public-teams' category.slug as url %}
+        {% include "components/item-action.html" %}
+      {% endfor %}
+    {% endif %}
+
+    {% if pref.public_breaking_adjs %}
+      {% trans "Breaking Adjudicators" as text %}
+      {% tournamenturl 'breakqual-public-adjs' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_diversity %}
+      {% trans "Diversity Overview" as text %}
+      {% tournamenturl 'standings-public-diversity' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_participants %}
+      {% trans "Participants" as text %}
+      {% tournamenturl 'participants-public-list' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.feedback_progress %}
+      {% trans "Feedback Progres" as text %}
+      {% tournamenturl 'public_feedback_progress' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_ballots %}
+      {% trans "Enter Ballot" as text %}
+      {% tournamenturl 'results-public-ballot-submission-index' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.public_feedback %}
+      {% trans "Enter Feedback" as text %}
+      {% tournamenturl 'adjfeedback-public-add-index' as url %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if pref.show_all_draws > 0 %}
+      {% for r in tournament.round_set.all %}
+        {% if r.draw_status == r.STATUS_RELEASED %}
+          {% blocktrans trimmed asvar text with round_name=r.name %}
+            Draw for {{ round_name }}
+          {% endblocktrans %}
+          {% roundurl 'draw-public-for-round' r as url %}
+          {% include "components/item-action.html" %}
+        {% endif %}
+      {% endfor %}
+      {% if pref.enable_mass_draws > 0 %}
+        {% trans "View All Draws" as text %}
+        {% tournamenturl 'draw-public-all-draws' as url %}
+        {% include "components/item-action.html" %}
+      {% endif %}
+    {% endif %}
+
+  </div>
 {% endblock content %}

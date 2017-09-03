@@ -34,6 +34,9 @@ urlpatterns = [
     url(r'^donations/',
         tournaments.views.DonationsView.as_view(),
         name='donations'),
+    url(r'^style/$',
+        tournaments.views.StyleGuideView.as_view(),
+        name='style-guide'),
 
     # Admin area
     url(r'^jet/',
@@ -50,10 +53,6 @@ urlpatterns = [
         name='logout'),
     url(r'^accounts/',
         include('django.contrib.auth.urls')),
-
-    # Favicon for old browsers that ignore the head link
-    url(r'^favicon\.ico$',
-        RedirectView.as_view(url='/static/favicon.ico')),
 
     # Redirect for old-style tournament URLs
     # Avoid keyword argument name 'tournament_slug' to avoid triggering DebateMiddleware
@@ -81,17 +80,17 @@ if settings.DEBUG:  # Only serve debug toolbar when on DEBUG
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
     if kwargs.get('user'):
-        messages.success(request, 'Later, ' + kwargs['user'].username + ' — you were logged out!')
+        messages.info(request, 'Later, ' + kwargs['user'].username + ' — you were logged out!')
     else: # should never happen, but just in case
-        messages.success(request, 'Later! You were logged out!')
+        messages.info(request, 'Later! You were logged out!')
 
 
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
     if kwargs.get('user'):
-        messages.success(request, 'Hi, ' + kwargs['user'].username + ' — you just logged in!')
+        messages.info(request, 'Hi, ' + kwargs['user'].username + ' — you just logged in!')
     else: # should never happen, but just in case
-        messages.success(request, 'Welcome! You just logged in!')
+        messages.info(request, 'Welcome! You just logged in!')
 
 
 # ==============================================================================

@@ -2,9 +2,20 @@
 // Overall Layout
 //------------------------------------------------------------------------------
 
-.panel-body .table {
+.table-container {
+  @extend .p-0;
+  margin: 8px 8px 0;
+}
+
+.table {
+
+  font-size: $font-size-sm;
   background: $alt-bg; // For when tables blow out on mobile
-  margin-bottom: 0; // Panel body has its own bottom padding
+
+  th {
+    border-top: none;
+  }
+
   > tbody > tr:hover td {
     background-color: $table-bg-hover;
 
@@ -22,15 +33,6 @@
   }
 }
 
-// For the quick search; needs to fit within the row
-.table-search {
-  height: 41px;
-  border-width: 1px;
-}
-
-.table-container {
-  overflow-y: scroll; // Don't blow out page width when overflows occur
-}
 
 //------------------------------------------------------------------------------
 // HEADER STYLES
@@ -39,39 +41,74 @@
 thead,
 .thead {
   @extend .subtitle;
-
   background: $alt-bg; // Fixed header needs a background while scrolling
-  line-height: 18px; // Otherwise the border is too clone to the text
-
-  .glyphicon {
-    line-height: 18px; // Otherwise the border is too clone to the text
-  }
 }
 
 .vue-sortable {
   white-space: nowrap; // Stop a toggle being pushed into 2 rows
+  min-width: 30px; // Don't let the sort keys resize widths
 
-  &:hover,
-  &:hover .glyphicon {
-    @extend .text-primary;
-    cursor: pointer;
+  .vue-sort-key .feather {
+    margin-left: -5px;
+    margin-right: -5px
   }
 
-  .vue-sort-key {
+  // By default don't show if not hovering or active
+  .feather-chevrons-up, .feather-chevrons-down {
     display: none;
-    margin-left: -1px;
+  }
+
+  // When active show the currently active sort order
+  .sort-by-desc .feather-chevrons-down {
+    display: inline;
+  }
+
+  .sort-by-asc .feather-chevrons-up {
+    display: inline;
   }
 
   &:hover {
+
+    @extend .text-primary;
+    cursor: pointer;
+
+    // By default; if not sorting is active; show sort-desc
     .vue-sort-key {
-      display: inline-block; // Hide sorting elements except for hovers
+
+      .feather-chevrons-down {
+        display: none;
+      }
+
+      .feather-chevrons-up {
+        display: inline;
+      }
     }
+
+    // When hovering over active sorting show the sorting order a click activates
+    .sort-by-desc {
+
+      .feather-chevrons-down {
+        display: none;
+      }
+
+      .feather-chevrons-up {
+        display: inline;
+      }
+    }
+
+    .sort-by-asc {
+
+      .feather-chevrons-down {
+        display: inline;
+      }
+
+      .feather-chevrons-up {
+        display: none;
+      }
+    }
+
   }
 
-  .vue-sort-active.vue-sort-key {
-    display: inline-block; // Override hiding when active
-    @extend .text-primary;
-  }
 }
 
 //------------------------------------------------------------------------------
@@ -79,11 +116,19 @@ thead,
 //------------------------------------------------------------------------------
 
 .table > thead > tr > th,
-.table > tbody > tr > td {
+.table > tbody > tr > td,
+.draw-container .thead {
   padding: 8px 4px; // Narrow spacing post-BP
+
+  .feather {
+    width: 14px;
+    height: 14px;
+    margin-bottom: -3px;
+  }
 }
+
 .team-name {
-  min-width: 150px; // BP team cells need a good width when using abbreviations
+  min-width: 125px; // BP team cells need a good width when using abbreviations
 }
 .venue-name {
   min-width: 75px; // With BP cells ensure venue names don't get squished
@@ -103,7 +148,7 @@ thead,
 
   // For highlighting bracket boundaries
   &.highlight-row {
-    border-top: 3px solid $brand-info;
+    border-top: 3px solid theme-color("info");
   }
 
   &.checkbox-target:hover,
@@ -117,20 +162,7 @@ thead,
 //------------------------------------------------------------------------------
 
 // For Phones
-@media (max-width: $screen-sm-min) {
-
-  .table-container {
-    margin-right: -15px;
-    margin-left: -15px;
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
-
-    .panel-body {
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
+@media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
 
   .team-name .emoji {
     display: block; // Fix ugly wrapping and make names easier to identify

@@ -1,155 +1,161 @@
-//------------------------------------------------------------------------------
-// Custom styling/layout for the sidebar and its round progresss indicators
-//------------------------------------------------------------------------------
+// //------------------------------------------------------------------------------
+// // Custom styling/layout for the sidebar and its round progresss indicators
+// //------------------------------------------------------------------------------
 
-.nav-accordion {
+// .nav-accordion {
 
-  li.panel,
-  li.standalone {
-    background: none; // override
-    border: 0;
-    box-shadow: none;
-    margin: 0; // override
-    z-index: 10; // sit above the progress line
+//   li.panel,
+//   li.standalone {
+//     background: none; // override
+//     border: 0;
+//     box-shadow: none;
+//     margin: 0; // override
+//     z-index: 10; // sit above the progress line
 
-    // All Buttons
-    a {
-      color: $sidebar-muted-text;
-      display: block;
-      font-family: $font-family-sans-serif;
-      font-size: $font-size-h6;
-      padding: 6px 16px 6px 19px;
+//     // All Buttons
+//     a {
+//       color: $sidebar-muted-text;
+//       font-size: 12px;
+//       display: block;
+//       padding: 6px 16px 6px 19px;
 
-      .glyphicon {
-        margin-right: 11px; // Top categories for left hand menu
-        font-size: 11px;
-      }
+//       .glyphicon {
+//         margin-right: 11px; // Top categories for left hand menu
+//         font-size: 11px;
+//       }
 
-      &:hover,
-      &.active,
-      &:focus {
-        background: $sidebar-bg-highlight;
-        color: $alt-bg;
-        text-decoration: none;
-      }
-    }
-  }
+//       &:hover,
+//       &.active,
+//       &:focus {
+//         background: $sidebar-bg-highlight;
+//         color: $alt-bg;
+//         text-decoration: none;
+//       }
+//     }
 
-  li.panel li a .glyphicon {
-    margin-right: 15px; // For the options in the Setup sub menu
-  }
+//     .nav-pills {
+//       padding-bottom: 4px;
+//     }
+//     .nav-pills a {
+//       font-size: 11px;
+//     }
 
-  .panel-collapse {
-    background: $sidebar-bg-highlight;
-  }
+//   }
 
-  // Just top level buttons
-  // EXPANDED
-  li.panel div[role="tab"] a[aria-expanded="true"] {
-    background: $sidebar-bg-highlight;
+//   li.panel li a .glyphicon {
+//     margin-right: 15px; // For the options in the Setup sub menu
+//   }
 
-    .caret {
-      margin-top: 7px;
-      transform: rotate(0deg);
-    }
-  }
-  // NOT EXPANDED
-  li.panel div[role="tab"] a[aria-expanded="false"] {
+//   .panel-collapse {
+//     background: $sidebar-bg-highlight;
+//   }
 
-    .caret {
-      margin-top: 7px;
-      transform: rotate(90deg);
-      transition: 0.3s ease-in-out;
-    }
-  }
-}
+//   // Just top level buttons
+//   // EXPANDED
+//   li.panel div[role="tab"] a[aria-expanded="true"] {
+//     background: $sidebar-bg-highlight;
 
-//------------------------------------------------------------------------------
-// Progress Indicators
-//------------------------------------------------------------------------------
+//     .caret {
+//       margin-top: 7px;
+//       transform: rotate(0deg);
+//     }
+//   }
+//   // NOT EXPANDED
+//   li.panel div[role="tab"] a[aria-expanded="false"] {
 
-.progress-line {
-  height: 100%;
-  margin: 20px 0 0 21px;
-  position: absolute;
-  width: 8px;
-  z-index: -10;
+//     .caret {
+//       margin-top: 7px;
+//       transform: rotate(90deg);
+//       transition: 0.3s ease-in-out;
+//     }
+//   }
+// }
 
-  &.standard-line {
-    background: $gray;
-  }
-}
+// //------------------------------------------------------------------------------
+// // Progress Indicators
+// //------------------------------------------------------------------------------
 
-.circle-icon {
-  background: $alt-bg;
-  border: 3px solid $gray;
-  border-radius: 21px;
-  display: inline-block;
-  float: left;
-  height: 21px;
-  margin: -2px 10px 0 -5px;
-  width: 21px;
-  z-index: 10;
+// .progress-line {
+//   height: 100%;
+//   margin: 20px 0 0 21px;
+//   position: absolute;
+//   width: 8px;
+//   z-index: -10;
 
-  .glyphicon {
-    margin-left: 2px;
-    top: 0;
-    z-index: 10;
-    font-size: 11px;
-  }
+//   &.standard-line {
+//     background: theme-color("gray");
+//   }
+// }
 
-  &.btn-success {
-    background: $btn-success-bg;
-  }
+// .circle-icon {
+//   background: $alt-bg;
+//   border: 3px solid theme-color("gray");
+//   border-radius: 21px;
+//   display: inline-block;
+//   float: left;
+//   height: 20px;
+//   margin: -2px 10px 0 -5px;
+//   width: 20px;
+//   z-index: 10;
 
-  &.btn-info {
-    background: $btn-info-bg;
-  }
+//   .feather {
+//     margin-left: 1px;
+//     margin-top: 1px;
+//     z-index: 10;
+//   }
 
-  &.btn-inactive {
-    background: darken($gray-lighter, 3);
-  }
+//   &.btn-success {
+//     background: theme-color("green");
+//   }
 
-  &.icon-container {
-    background: $gray;
-  }
-}
+//   &.btn-info {
+//     background: theme-color("cyan");
+//   }
 
-.nav-stacked .nav-stacked {
+//   &.btn-inactive {
+//     background: darken($gray-300, 3);
+//   }
 
-  .progress-line {
-    border-color: $gray;
-    margin: -3px 0 0 21px;
-    z-index: 10;
-  }
+//   &.icon-container {
+//     background: theme-color("gray");
+//   }
+// }
 
-  a {
-    z-index: 20;
-  }
-}
+// .nav-stacked .nav-stacked {
 
-.nav-accordion li.panel a:hover {
+//   .progress-line {
+//     border-color: theme-color("gray");
+//     margin: -3px 0 0 21px;
+//     z-index: 10;
+//   }
 
-  .circle-icon {
-    border-color: #888;
-  }
+//   a {
+//     z-index: 20;
+//   }
+// }
 
-  .icon-container {
-    border-color: $gray;
-    color: $alt-bg;
-  }
-}
+// .nav-accordion li.panel a:hover {
 
-.sub-nav {
+//   .circle-icon {
+//     border-color: #888;
+//   }
 
-  .circle-icon {
-    height: 18px;
-    margin: -2px 12px -3px -6px;
-    width: 18px;
-  }
+//   .icon-container {
+//     border-color: theme-color("gray");
+//     color: $alt-bg;
+//   }
+// }
 
-  .progress-line {
-    margin-left: 27px;
-    width: 6px;
-  }
-}
+// .sub-nav {
+
+//   .circle-icon {
+//     height: 18px;
+//     margin: -2px 12px -3px -6px;
+//     width: 18px;
+//   }
+
+//   .progress-line {
+//     margin-left: 27px;
+//     width: 6px;
+//   }
+// }

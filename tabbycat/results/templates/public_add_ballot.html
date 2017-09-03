@@ -6,13 +6,13 @@
 {% block sub-title %}(click your name on this list){% endblock %}
 
 {% block content %}
-<div class="panel panel-default">
-  <div class="panel-body">
-    <table class="table">
+<div class="card">
+  <div class="card-body table-container">
+    <table class="table table-responsive">
       <thead>
         <tr>
           <th>Adj<span class="hidden-xs">udicator</span></th>
-          <th><span class="glyphicon glyphicon-map-marker" data-toggle="tooltip"title="Venue"></span></th>
+          <th><i data-feather="map-pin" data-toggle="tooltip"title="Venue"></i></th>
           {% tournament_side_names tournament 'full' as side_names %}
           {% for name in side_names %}
             <th>{{ name }}</th>

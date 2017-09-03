@@ -2,68 +2,76 @@
 // Footer Layout Changes
 //------------------------------------------------------------------------------
 
-.tabbycat-footer {
+// As per http://v4-alpha.getbootstrap.com/examples/sticky-footer-navbar/
 
-  .navbar {
-    padding-top: 10px;
-    margin-bottom: 0;
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  margin-bottom: $footer-height;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: $footer-height;
+
+  a {
+    border-bottom: 1px solid $gray-600;
+    color: theme-color("dark");
   }
 
-  a,
-  a.nav-link {
-    color: $text-primary;
-    opacity: 1;
-    border-bottom: 1px solid #ccc;
-
-    &:hover {
-      color: $navbar-default-link-hover-color;
-      text-decoration: none;
-    }
+  .nav a.nav-link {
+    display: inline-block; // Need to move up inline with icons
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 20px;
   }
 
-  a.nav-link {
-    line-height: 16px;
-    margin: 5px 20px 15px 0;
-  }
 }
 
 //------------------------------------------------------------------------------
-// Responsive Considerations
+// Responsive tweaks
 //------------------------------------------------------------------------------
 
+@include media-breakpoint-up(xs) {
+  // Applies just to phones
+  .footer {
+    height: $footer-height * 0.9;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  // Applies just to tablets
+  .footer {
+    height: $footer-height * 0.95;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  // Applies just to laptops/desktops
+  .footer {
+    height: $footer-height;
+  }
+}
+
 // For Desktops
-@media (min-width: $screen-sm-min) {
+@media (min-width: breakpoint-min(sm, $grid-breakpoints)) {
 
-  .tabbycat-footer {
-    bottom: 0;
-    position: absolute;
-    width: 100%;
-
-    a.nav-link {
-      padding: 0; // Override bootstrap defaults for spacing
-    }
-  }
-
-  .accommodate-footer {
-    min-height: 100vh; // Push the footer down
-    padding-bottom: 220px; // Leave room for the footer
-  }
-
-  .override-accommodate-footer .accommodate-footer {
-    padding-bottom: 0;
+  .footer a.nav-link {
+    padding: 0; // Override bootstrap defaults for spacing
   }
 }
 
 // For Phones
-@media (max-width: $screen-sm-min) {
+@media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
 
-  .tabbycat-footer {
-    position: relative;
-    margin-top: 20px;
-  }
-
-  .nav-item {
+  .footer .nav-item {
     margin-left: 15px; // Override bootstrap defaults for spacing
+
     a.nav-link {
       padding-left: 0;
     }

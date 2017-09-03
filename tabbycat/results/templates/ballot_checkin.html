@@ -10,54 +10,54 @@
 
 {% block content %}
   <!-- Surround with a form so that we can press 'Enter' on the venue field to submit. -->
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div class=" form-horizontal">
+  <div class="card">
+    <div class="card-body">
+      <div class=" ">
         <div class="form-group">
-          <label for="venue" class="col-sm-1 control-label">Venue</label>
+          <label for="venue" >Venue</label>
           <div class="col-sm-6">
-            <input id="venue" class="form-control" type="text" name="venue" list="venues_list" />
+            <input id="venue"  class="form-control" type="text" name="venue" list="venues_list" />
             <datalist id="venues_list">
               {% for venue in venue_options %}
                 <option data-value="{{ venue.id }}" value="{{ venue.display_name }}">
               {% endfor %}
             </datalist>
           </div>
-          <div class="col-sm-4 help-block">
+          <div class="col-sm-4 ">
             Type or select the ballot's <strong>venue</strong>, then hit Enter.
           </div>
         </div>
         <div class="debate-details" id="debate_details">
           <div class="form-group">
-            <label class="col-sm-1 control-label"></label>
+            <label ></label>
             <div class="col-sm-10">
-              <p id="message" class="alert alert-warning form-control-static h4">
+              <p id="message" class="alert alert-warning h4">
                 Please check all these details before you check the ballot in.
               </p>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-1 control-label">Venue</label>
+            <label >Venue</label>
             <div class="col-sm-6">
-              <p id="venue_confirm" class="form-control-static detail"></p>
+              <p id="venue_confirm" class=" detail"></p>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-1 control-label">Affirmative</label>
+            <label >Affirmative</label>
             <div class="col-sm-6">
-              <p id="aff_team" class="form-control-static detail"></p>
+              <p id="aff_team" class=" detail"></p>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-1 control-label">Negative</label>
+            <label >Negative</label>
             <div class="col-sm-6">
-              <p id="neg_team" class="form-control-static detail"></p>
+              <p id="neg_team" class=" detail"></p>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-1 control-label"></label>
+            <label ></label>
             <div class="col-sm-6">
-              <p class="form-control-static">There should be <span id="num_ballots"></span>, <span id="ballot_from"></span></p>
+              <p class="">There should be <span id="num_ballots"></span>, <span id="ballot_from"></span></p>
               <ul class="" id="adjudicators"></ul>
             </div>
           </div>

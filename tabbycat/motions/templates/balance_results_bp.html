@@ -2,22 +2,20 @@
 
 {% if am.debate_rooms > 0 %}
 
-  <div class="row vertical-spacing">
+  <div class="row mb-3">
     <div class="col-md-12">
       <div class="progress">
 
         {% for position, average in am.points_average.items %}
-
-          {% widthratio average 9 100 as average_width %}
+          {% widthratio average 6 100 as average_width %}
           <div class="progress-bar progress-bar-{{ position }}"
                style="width: {{ average_width }}%">
             {{ position.upper }} {{ average|floatformat }}
           </div>
-
         {% endfor %}
 
       </div>
-      <h6 class="text-center text-muted">
+      <h6 class="mt-2 text-center text-muted">
         {% trans "average points per position" %}
       </h6>
     </div>
@@ -27,7 +25,7 @@
 
     {% for position, places in am.results_rates.items %}
 
-      <div class="col-md-3 vertical-spacing">
+      <div class="col-md-3 mb-3">
         <div class="progress">
 
           {% for points, average in places.items %}
@@ -35,13 +33,13 @@
             <div class="progress-bar progress-points-{{ points }}"
                  style="width: {{ average }}%" data-toggle="tooltip"
                  title="{{ average }}% of {{ position }} results were for {{ points }} points">
-              {{ points }}s
+              {% if average > 0 %}{{ points|floatformat }}s{% endif %}
             </div>
 
           {% endfor %}
 
         </div>
-        <h6 class="text-center  text-muted">{{ position.upper }}
+        <h6 class="mt-2 text-center text-muted">{{ position.upper }}
           {% trans "results per position" %}
         </h6>
       </div>
@@ -52,10 +50,12 @@
 
 {% else %}
 
-  <div class="btn-group btn-group-xs pull-left vertical-spacing">
-    <div class="btn btn-default" disabled="disabled">
+  <!-- Deprecate until four team motion test available
+  <div class="btn-group btn-group-xs pull-left mb-3">
+    <div class="btn btn-primary" disabled="disabled">
       {% trans "No results for this topic" %}
     </div>
   </div>
+  -->
 
 {% endif %}

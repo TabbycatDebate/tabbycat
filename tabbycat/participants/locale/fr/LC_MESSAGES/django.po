@@ -585,7 +585,7 @@ msgid "Speaker Category Eligibility"
 msgstr ""
 
 #: participants/templates/edit_speaker_eligibility.html:12
-msgid "Save Speaker Category Eligibility"
+msgid "Save Eligibility"
 msgstr ""
 
 #: participants/templates/edit_speaker_eligibility.html:41

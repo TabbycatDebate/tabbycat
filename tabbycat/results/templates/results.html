@@ -8,19 +8,20 @@
 
 {% block page-subnav-sections %}
   {% if user.is_superuser %}
-    <a href="{% roundurl 'motions-edit' %}" class="btn btn-default">
-      <span class="glyphicon glyphicon-chevron-left"></span> Back to Motions
+    <a href="{% roundurl 'motions-edit' %}" class="btn btn-outline-primary">
+      <i data-feather="chevron-left"></i> Back to Motions
     </a>
-    <a class="btn btn-default submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
+    <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
       Check In Ballots
     </a>
   {% endif %}
+
 {% endblock %}
 
 {% block page-subnav-actions %}
   {% if user.is_superuser and round.seq < tournament.round_set.count and current_round == round %}
-    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger{% endif %} submit-disable" href="{% roundurl 'tournament-advance-round-check' %}">
-      Advance to Next Round <span class="glyphicon glyphicon-chevron-right"></span>
+    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
+      Advance to Next Round <i data-feather="chevron-right"></i>
     </a>
   {% endif %}
 {% endblock %}
@@ -43,40 +44,35 @@
 
 {% block content %}
 
-  <div class="row">
-    <div class="col-sm-12">
-
-      <div class="btn-group btn-group-justified vertical-spacing" role="group">
-
-        {% if not user.is_superuser %}
-          <a class="btn btn-default submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
-            Check-In Ballots
-          </a>
-        {% endif %}
-        <span class="btn btn-primary" disabled>
-          {{ stats.ballot_in }} / {{ stats.total }} Checked In <span class="glyphicon glyphicon-inbox"></span>
+  <div class"col">
+    <div class="btn-group mb-3" role="group">
+      {% if not user.is_superuser %}
+        <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
+          Check-In Ballots
+        </a>
+      {% endif %}
+      <span class="btn btn-primary disabled">
+        {{ stats.ballot_in }} Checked In <i data-feather="inbox"></i>
+      </span>
+      <span class="btn btn-danger disabled">
+        {{ stats.none }} Unknown <i data-feather="x"></i>
+      </span>
+      <span class="btn btn-warning disabled">
+        {{ stats.draft }} Unconfirmed <i data-feather="circle"></i>
+      </span>
+      <span class="btn btn-success disabled">
+        {{ stats.confirmed }} Confirmed <i data-feather="check"></i>
+      </span>
+      {% if pref.enable_postponements %}
+        <span class="btn btn-primary disabled">
+          {{ stats.postponed }} Postponed <i data-feather="pause"></i>
         </span>
-        <span class="btn btn-danger" disabled>
-          {{ stats.none }} / {{ stats.total }} Unknown <span class="glyphicon glyphicon-remove"></span>
+        <span class="btn btn-primary disabled" disabled>
+          Byes <span class="icon fast-forward"></span>
         </span>
-        <span class="btn btn-warning" disabled>
-          {{ stats.draft }} / {{ stats.total }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span>
-        </span>
-        <span class="btn btn-success" disabled>
-          {{ stats.confirmed }} / {{ stats.total }} Confirmed <span class="glyphicon glyphicon-ok"></span>
-        </span>
-        {% if pref.enable_postponements %}
-          <span class="btn btn-default" disabled>
-            {{ stats.postponed }} / {{ stats.total }} Postponed <span class="glyphicon glyphicon-pause"></span>
-          </span>
-          <span class="btn btn-default" disabled>
-            Byes <span class="glyphicon glyphicon-fast-forward"></span>
-          </span>
-        {% endif %}
-      </div>
-
-    </div><!-- end col -->
-  </div><!-- end row -->
+      {% endif %}
+    </div>
+  </div>
 
   {{ block.super }}
 

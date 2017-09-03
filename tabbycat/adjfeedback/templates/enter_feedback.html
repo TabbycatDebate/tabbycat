@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load add_field_css %}
+{% load add_field_css i18n %}
 
 {% block page-title %}🙅Enter Feedback{% endblock %}
 {% block head-title %}
@@ -11,54 +11,36 @@
 {% block content %}
 
   {% if tournament.current_round.seq == 1 and tournament.current_round.draw_status != tournament.current_round.STATUS_RELEASED %}
-    <div class="alert alert-warning">
-      There are no feedback options because no rounds have been released to the
-      public yet. Check back when they have!
-    </div>
+    {% include "components/alert.html" with type="info" message="There are no feedback options because no rounds have been released to the public yet. Check back when they have!" %}
   {% endif %}
 
-  {% if form.errors %}
-  <div class="alert alert-danger">
-    <p>There are some problems with this feedback submission. Please review and correct them.</p>
+  <form id="feedbackForm" action="" method="POST" class="">
+    <div class="card">
+      <div class="list-group list-group-flush">
 
-    {% if form.non_field_errors %}
-      <p>General errors:</p>
-      <div class="ballot-errors">{{ form.non_field_errors }}</div>
-    {% endif %}
-  </div>
-  {% endif %}
+        <div class="list-group-item">
 
-  <div class="panel panel-default">
-    <div class="panel-body">
-      {% if pref.feedback_introduction %}
-        <p>{{ pref.feedback_introduction|safe }}</p>
-      {% endif %}
-      <form id="feedbackForm" action="" method="POST" class="form-horizontal">
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.id_for_label }}" class="col-md-3 col-sm-11 control-label">
-            {{ field.label }}
-          </label>
-          <div class="col-sm-11 col-md-7">
-            {{field|addcss:"form-control"}}
-          </div>
-          <div class="col-md-2 col-xs-10">
-            {% if field.errors %}
-              <label for="{{ field.id_for_label }}" class="control-label">{{ field.errors }}</label>
-            {% endif %}
-          </div>
+          {% if form.errors %}
+            {% trans "There are some problems with this feedback submission. Please review and correct them." as message %}
+            {% include "components/form-errors.html" with errors=form.errors %}
+          {% endif %}
+
+          {% if pref.feedback_introduction %}
+            <p>{{ pref.feedback_introduction|safe }}</p>
+          {% endif %}
+
+            {% csrf_token %}
+
+          {% for field in form %}
+            {% include "components/form-field.html" %}
+          {% endfor %}
+
         </div>
-        {% endfor %}
-        <div class="form-group">
-          <div class="col-md-offset-3 col-md-7">
-            <button type="submit" value="Save" class="btn btn-success btn-block">
-              {% block submit-button-text %}Save Feedback{% endblock %}
-            </button>
-          </div>
-        </div>
-      </form>
+
+        {% include "components/form-submit.html" with title="Save Feedback" %}
+
+      </div>
     </div>
-  </div>
+  </form>
 
 {% endblock content %}
