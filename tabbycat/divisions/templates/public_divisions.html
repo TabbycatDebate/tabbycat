@@ -14,7 +14,7 @@
       {% for division in venue_category.divisions %}
         <ul class="list-group col-sm-2">
           <li class="list-group-item">
-            <span class="badge">{{ division.time_slot|time:'h:i A' }}</span>
+            <span class="badge badge-secondary">{{ division.time_slot|time:'h:i A' }}</span>
             <h5 class="list-group-item-heading">Division {{ division.name }}</h5>
           </li>
           {% for team in division.teams.all %}

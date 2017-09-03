@@ -17,12 +17,12 @@
 
     <ul class="list-group">
       <li class="list-group-item">
-        <span class="badge">{{ unchanged_preferences.length }}</span>
+        <span class="badge badge-secondary">{{ unchanged_preferences.length }}</span>
         <h4>Preferences that will not change</h4>
       </li>
       {% for preference in unchanged_preferences %}
         <li class="list-group-item">
-          <span class="badge">{{ preference.new_value }}</span>
+          <span class="badge badge-secondary">{{ preference.new_value }}</span>
           <span data-toggle="tooltip" title="{{ preference.help_text }}">
             {{ preference.name }}
           </span>

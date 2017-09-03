@@ -10,7 +10,7 @@
     {% for vc in venue_categories %}
       <a href="{% url 'all-draws-for-venue' vc.id %}"class="list-group-item">
         <span>Draws for {{ vc.description }}</span>
-        <span class="badge">VIEW ALL</span>
+        <span class="badge badge-secondary">VIEW ALL</span>
       </a>
     {% endfor %}
   </ul>

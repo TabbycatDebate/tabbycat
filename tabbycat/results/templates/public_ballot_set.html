@@ -54,13 +54,13 @@
               <li class="list-group-item">
                 <div class="col-md-2 col-xs-3 strong">{{ position.name }}</div>
                 {{ position.speaker }}
-                <span class="badge">{{ position.score }}</span>
+                <span class="badge badge-secondary">{{ position.score }}</span>
               </li>
             {% endfor %}
             <li class="list-group-item list-group-item-{{ team.win|yesno:"success,danger" }}">
               <div class="col-md-2 col-xs-3"></div>
               <em>Total for {{ team.team.short_name }} ({{ team.side }})</em>
-              <span class="badge">{{ team.total }}</span>
+              <span class="badge badge-secondary">{{ team.total }}</span>
             </li>
           </ul>
         {% endfor %}
