@@ -297,14 +297,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         cell = {'popover': {'content': [{'text': "<br />".join(other_team_strs)}]}}
 
+        side = ts.debate_team.get_side_name()
         if ts.points is not None:
             place = places.get(ts.points, "??")
             cell['text'] = place
-            cell['popover']['title'] = _("%(place)s from %(side)s") % {
-                    'place': place, 'side': ts.debate_team.get_side_name()},
+            cell['popover']['title'] = _(place + " from " + side)
         else:
             cell['text'] = "–"
-            cell['popover']['title'] = _("No result for debate from %(side)s") % {'side': ts.debate_team.get_side_name()}
+            cell['popover']['title'] = _("No result for debate from " + side)
 
         if show_score:
             cell['subtext'] = metricformat(ts.score)
