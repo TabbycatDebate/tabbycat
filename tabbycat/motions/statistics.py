@@ -123,10 +123,12 @@ class MotionStats:
         avgs_for_side = dict(self.points_dict())
         for side in self.sides:
             all_points = []
+            counts = 0
             for points, count in self.placings[side].items():
                 all_points.append(points * count)
+                counts += count
 
-            avgs_for_side[side] = sum(all_points) / float(len(all_points))
+            avgs_for_side[side] = sum(all_points) / float(counts)
 
         return avgs_for_side
 
