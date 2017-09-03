@@ -21,25 +21,37 @@
 
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
-      <div class="modal-content flex-vertical">
-        <div class="modal-body flex-1 flex-vertical">
-          {% for m in motions %}
-            <div class="flex-1 flex-vertical-center">
-              <span class="display-3">
-                {% if motions|length > 1 %}
-                  <span class="text-muted">{{ forloop.counter }}.</span>
-                {% endif %}
-                {{ m.text }}
-              </span>
+      <div class="modal-content">
+        {% if motions|length == 0 %}
+
+          <div class="modal-body d-flex align-items-center justify-content-center">
+            <div class="display-3 text-danger">
+              😳 There are no motions for this round entered into Tabbycat.
             </div>
-          {% empty %}
-            <div class="flex-1 flex-vertical-center">
-              <span class="display-3 text-danger">
-                😳 There are no motions for this round entered into Tabbycat.
-              </span>
-            </div>
-          {% endfor %}
-        </div>
+          </div>
+
+        {% elif motions|length == 1 %}
+
+          <div class="modal-body display-2 d-flex align-items-center justify-content-center text-center">
+            {{ motions.0.text }}
+          </div>
+
+        {% else %}
+
+          <div class="modal-body d-flex flex-column">
+            {% for m in motions %}
+              <div class="display-4 col d-flex align-items-center">
+                <div>
+                  {% if motions|length > 1 %}
+                    <span class="text-muted">{{ forloop.counter }}.</span>
+                  {% endif %}
+                  {{ m.text }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+        {% endif %}
       </div>
     </div>
   </div>

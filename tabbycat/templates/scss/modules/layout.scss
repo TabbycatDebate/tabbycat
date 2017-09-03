@@ -29,10 +29,14 @@
   display: none !important;
 }
 
-.override-sidebar-offset .main {
-  @extend .col-12;
-  @extend .pl-3;
-  // padding-right: 0;
+.override-sidebar-offset {
+  margin-bottom: 0px; // Override footer offset
+
+  .main {
+    @extend .col-12;
+    @extend .pl-3;
+    // padding-right: 0;
+  }
 }
 
 //------------------------------------------------------------------------------
