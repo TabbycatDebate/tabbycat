@@ -24,7 +24,7 @@ class MotionStats:
         else:
             self.isBP = True
             self.debate_rooms = len(results_data) / 4
-            self.round_rooms = len(results) / 4
+            self.round_rooms = self.debate_rooms
 
         self.placings = self.gather_placings(self.points_dict(), results_data)
         self.result_balance = self.determine_balance()
@@ -111,7 +111,7 @@ class MotionStats:
         for side in self.sides:
             for points, count in data_set[side].items():
                 percentage = data_set[side][points] / self.round_rooms * 100
-                rates_for_side[side][points] = percentage
+                rates_for_side[side][points] = round(percentage, 1)
 
         return rates_for_side
 

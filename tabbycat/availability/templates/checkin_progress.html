@@ -27,8 +27,8 @@
     {% endif %}
 
     {% if ct.message %}
-      <div class="col-md-5">
-      {{ ct.message }}
+      <div class="list-group-item list-group-item-info">
+        {{ ct.message }}
       </div>
     {% endif %}
 
@@ -43,10 +43,12 @@
       {% trans "Check In Venues" as text %}
     {% endif %}
 
-    {% if ct.in_now == 0 %}
-      {% include "components/item-action.html" with alone=True success=True %}
-    {% else %}
-      {% include "components/item-action.html" with alone=True type="primary" icon="check-circle" %}
+    {% if forloop.counter != 1 or not round.is_break_round %}
+      {% if ct.in_now == 0 %}
+        {% include "components/item-action.html" with alone=True success=True %}
+      {% else %}
+        {% include "components/item-action.html" with alone=True type="primary" icon="check-circle" %}
+      {% endif %}
     {% endif %}
 
   </div>

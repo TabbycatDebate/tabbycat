@@ -7,13 +7,11 @@
       <div class="progress">
 
         {% for position, average in am.points_average.items %}
-
           {% widthratio average 9 100 as average_width %}
           <div class="progress-bar progress-bar-{{ position }}"
                style="width: {{ average_width }}%">
             {{ position.upper }} {{ average|floatformat }}
           </div>
-
         {% endfor %}
 
       </div>
