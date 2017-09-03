@@ -123,7 +123,7 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
 
         teams = tournament.team_set.all()
         team_table = TabbycatTableBuilder(
-            view=self, title='From Teams', sort_key='Name')
+            view=self, title='From Teams', sort_key='Team')
         team_table.add_team_columns(teams)
         team_feedback_data = []
         for team in teams:
@@ -140,7 +140,7 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
 
         adjs = tournament.adjudicator_set.all()
         adj_table = TabbycatTableBuilder(
-            view=self, title='From Adjudicators', sort_key='Feedbacks')
+            view=self, title='From Adjudicators', sort_key='Name')
         adj_table.add_adjudicator_columns(adjs)
         adj_feedback_data = []
         for adj in adjs:
