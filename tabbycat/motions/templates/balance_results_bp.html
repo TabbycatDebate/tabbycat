@@ -17,7 +17,7 @@
         {% endfor %}
 
       </div>
-      <h6 class="text-center text-muted">
+      <h6 class="mt-2 text-center text-muted">
         {% trans "average points per position" %}
       </h6>
     </div>
@@ -35,13 +35,13 @@
             <div class="progress-bar progress-points-{{ points }}"
                  style="width: {{ average }}%" data-toggle="tooltip"
                  title="{{ average }}% of {{ position }} results were for {{ points }} points">
-              {{ points }}s
+              {% if average > 0 %}{{ points|floatformat }}s{% endif %}
             </div>
 
           {% endfor %}
 
         </div>
-        <h6 class="text-center  text-muted">{{ position.upper }}
+        <h6 class="mt-2 text-center text-muted">{{ position.upper }}
           {% trans "results per position" %}
         </h6>
       </div>
@@ -52,10 +52,12 @@
 
 {% else %}
 
+  <!-- Deprecate until four team motion test available
   <div class="btn-group btn-group-xs pull-left mb-3">
     <div class="btn btn-primary" disabled="disabled">
       {% trans "No results for this topic" %}
     </div>
   </div>
+  -->
 
 {% endif %}

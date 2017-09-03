@@ -3,22 +3,23 @@
 
     <template v-for="(data, index) in set.data">
 
-      <div class="col-md-4 text-center">
-        <h4 :class="'no-bottom-margin text-body gender-text gender-' + data.label.toLowerCase()">
+      <div class="col-4 text-center">
+        <h5 :class="'no-bottom-margin text-body gender-text gender-' + data.label.toLowerCase()">
           {{ offset(data.count) }}
-        </h4>
+        </h5>
       </div>
 
-      <div v-if="set.datum && index == 0" class="col-md-4 text-center">
-        <h4 class="no-bottom-margin text-body">
+      <div v-if="set.datum && index == 0" class="col-4 text-center">
+        <h5 class="no-bottom-margin text-body">
           {{ round(set.datum) }}
-        </h4>
+        </h5>
       </div>
 
     </template>
 
-    <div class="row">
-     <h5 class="text-center mb-3">{{ set.title }}</h5>
+    <div class="col text-center text-muted h6 mb-3 mt-2">
+      {{ set.title }}
+      <hr>
     </div>
 
   </div>

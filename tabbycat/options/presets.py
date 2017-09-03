@@ -365,7 +365,6 @@ class TabRelease(PreferencesPreset):
 
     tab_release__team_tab_released             = True
     tab_release__speaker_tab_released          = True
-    tab_release__replies_tab_released          = True
     tab_release__motion_tab_released           = True
     tab_release__ballots_released              = True
     tab_release__all_results_released          = True
