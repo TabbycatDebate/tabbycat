@@ -97,7 +97,7 @@
       <ul class="list-group list-group-flush">
         {% for preset in presets %}
           {% tournamenturl 'options-presets-confirm' preset.slugified_name as url %}
-          {% blocktrans asvar title with preset_name=preset.name %}
+          {% blocktrans trimmed asvar title with preset_name=preset.name %}
             Apply {{ preset_name }}
           {% endblocktrans %}
           {% include "components/item-action.html" with icon="play" text=title extra=preset.description %}
