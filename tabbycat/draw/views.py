@@ -181,6 +181,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     detailed = False
     sort_key = 'Bracket'
     sort_order = 'desc'
+    use_template_subtitle = True
 
     def get_page_title(self):
         round = self.get_round()

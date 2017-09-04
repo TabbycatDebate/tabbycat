@@ -129,7 +129,10 @@ class RoundMixin(TournamentMixin):
     round_redirect_pattern_name = None
 
     def get_page_subtitle(self):
-        return _("for %(round)s") % {'round': self.get_round().name}
+        if not getattr(self, "page_subtitle") and not getattr(self, "use_template_subtitle", False):
+            return _("for %(round)s") % {'round': self.get_round().name}
+        else:
+            return super().get_page_subtitle()
 
     def get_round(self):
         # First look in self,
