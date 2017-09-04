@@ -632,6 +632,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } for debate_conflicts in conflicts_by_debate]
         self.add_column(conflicts_header, conflicts_data)
 
+        return adjudicator_conflicts_by_debate, venue_conflicts_by_debate
+
     def _standings_headers(self, info_list, side=None):
         side_abbr = get_side_name(self.tournament, side, 'initial') if side else ''
         side_possessive = get_side_name(self.tournament, side, 'possessive') if side else ''

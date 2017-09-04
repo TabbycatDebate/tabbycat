@@ -236,11 +236,24 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
-        table.add_draw_conflicts_columns(draw)
+        self.adjudicator_conflicts, self.venue_conflicts = table.add_draw_conflicts_columns(draw)
+
         if not r.is_break_round:
             table.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
 
         return table
+
+    def get_context_data(self, **kwargs):
+        # Need to call super() first, so that get_table() can populate
+        # self.venue_conflicts and self.adjudicator_conflicts.
+        data = super().get_context_data(**kwargs)
+
+        def _count(conflicts):
+            return [len([x for x in c if x[0] != 'success']) > 0 for c in conflicts.values()].count(True)
+
+        data['debates_with_adj_conflicts'] = _count(self.adjudicator_conflicts)
+        data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
+        return data
 
     def _add_break_rank_columns(self, table, draw, category):
         tournament = self.get_tournament()

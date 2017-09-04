@@ -26,23 +26,6 @@
   {% endif %}
 {% endblock %}
 
-{% block page-alerts %}
-  {% if not pref.duplicate_adjs %}
-    {% with duplicates=round.duplicate_panellists %}
-      {% if duplicates %}
-        <div class="alert alert-danger">
-          {% blocktrans trimmed with adjudicators=duplicates|join:", " count duplicates=duplicates|length %}
-            Adjudicator <strong>{{ adjudicators }}</strong> has been allocated twice.
-          {% plural %}
-            The following adjudicators have been allocated twice: <strong>{{ adjudicators }}</strong>
-          {% endblocktrans %}
-        </div>
-      {% endif %}
-    {% endwith %}
-  {% endif %}
-
-{% endblock %}
-
 {% block content %}
 
   <div class="row mb-4">
@@ -56,44 +39,61 @@
 
         <div class="list-group list-group-flush">
 
-          {% if active_adjs.count < draw.count %}
+          {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel duplicates=round.duplicate_panellists %}
 
-            {% include "components/item-alert.html" with type=danger text="There are currently fewer checked-in adjudicators than there are rooms." %}
+            {% if active_adjs.count < draw.count %}
 
-          {% else %}
+              {% include "components/item-alert.html" with type=danger text="There are currently fewer checked-in adjudicators than there are rooms." %}
 
-            {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel %}
+            {% else %}
 
               {% if no_chair > 0 %}
-                {% blocktrans asvar text count no_chair=no_chair %}
-                  One debate does not have a chair.
+                {% blocktrans trimmed asvar text count ndebates=no_chair %}
+                  1 debate does not have a chair.
                 {% plural %}
-                  {{ no_chair }} debates do not have a chair.
+                  {{ ndebates }} debates do not have a chair.
+                {% endblocktrans %}
+                {% include "components/item-alert.html" with type="danger" %}
+              {% endif %}
+
+              {% if not pref.duplicate_adjs and duplicates %}
+                {% blocktrans trimmed asvar text with adjudicators=duplicates|join:", " count ndebates=duplicates|length %}
+                  <strong>{{ adjudicators }}</strong> is adjudicating multiple debates.
+                {% plural %}
+                  The following <strong>{{ ndebates }}</strong> adjudicators are adjudicating multiple debates: <strong>{{ adjudicators }}</strong>
                 {% endblocktrans %}
                 {% include "components/item-alert.html" with type="danger" %}
               {% endif %}
 
               {% if even_panel > 0 %}
-                {% blocktrans asvar text count even_panel=even_panel %}
-                  One debate has a panel with an even number of adjudicators.
+                {% blocktrans trimmed asvar text count ndebates=even_panel %}
+                  1 debate has a panel with an even number of adjudicators.
                 {% plural %}
-                  {{ even_panel }} debates have panels with an even number of adjudicators.
+                  {{ ndebates }} debates have panels with an even number of adjudicators.
                 {% endblocktrans %}
-                {% include "components/item-alert.html" with type="danger" %}
+                {% include "components/item-alert.html" with type="warning" %}
               {% endif %}
 
-            {% endwith %}
+              {% if debates_with_adj_conflicts > 0 %}
+                {% blocktrans trimmed asvar text count ndebates=debates_with_adj_conflicts %}
+                  1 debate has an adjudicator conflict.
+                {% plural %}
+                  {{ ndebates }} debates have adjudicator conflicts.
+                {% endblocktrans %}
+                {% include "components/item-alert.html" with type="warning" %}
+              {% endif %}
 
-          {% endif %}
+            {% endif %} {# active_adjs.count < draw.count #}
 
-          {% roundurl 'edit-adj-allocation' as url %}
-          {% trans "Allocate Adjudicators" as title %}
-          {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
-            {% include "components/item-action.html" with text=title success=True %}
-          {% else %}
-            {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
-          {% endif %}
+            {% roundurl 'edit-adj-allocation' as url %}
+            {% trans "Allocate Adjudicators" as title %}
+            {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
+              {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
+            {% else %}
+              {% include "components/item-action.html" with text=title success=True %}
+            {% endif %}
 
+          {% endwith %}
         </div>
 
       </div>
@@ -107,24 +107,44 @@
         </div>
         <div class="list-group list-group-flush">
 
-          {% with no_venue=round.num_debates_without_venue %}
+          {% with no_venue=round.num_debates_without_venue duplicates=round.duplicate_venues %}
+
             {% if no_venue > 0 %}
-              {% blocktrans asvar text count no_venue=no_venue %}
-                One debate does not have a venue.
+              {% blocktrans trimmed asvar text count ndebates=no_venue %}
+                1 debate does not have a venue.
               {% plural %}
-                {{ no_venue }} debates do not have a venue.
+                {{ ndebates }} debates do not have a venue.
               {% endblocktrans %}
               {% include "components/item-alert.html" with type="warning" %}
             {% endif %}
-          {% endwith %}
 
-          {% roundurl 'venues-edit' round as url %}
-          {% trans "Allocate Venues" as title %}
-          {% if no_venue > 0 %}
-            {% include "components/item-action.html" with text=title success=True %}
-          {% else %}
-            {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
-          {% endif %}
+            {% if duplicates %}
+              {% blocktrans trimmed asvar text with venues=duplicates|join:", " count ndebates=duplicates|length %}
+                There are multiple debates in <strong>{{ venues }}</strong>.
+              {% plural %}
+                The following <strong>{{ ndebates }}</strong> venues have multiple debates in them: <strong>{{ venues }}</strong>
+              {% endblocktrans %}
+              {% include "components/item-alert.html" with type="danger" %}
+            {% endif %}
+
+            {% if debates_with_venue_conflicts > 0 %}
+              {% blocktrans trimmed asvar text count ndebates=debates_with_venue_conflicts %}
+                1 debate has a venue constraint violation.
+              {% plural %}
+                {{ ndebates }} debates have venue constraint violations.
+              {% endblocktrans %}
+              {% include "components/item-alert.html" with type="warning" %}
+            {% endif %}
+
+            {% roundurl 'venues-edit' round as url %}
+            {% trans "Allocate Venues" as title %}
+            {% if no_venue > 0 %}
+              {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
+            {% else %}
+              {% include "components/item-action.html" with text=title success=True %}
+            {% endif %}
+
+          {% endwith %}
 
         </div>
 

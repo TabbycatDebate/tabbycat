@@ -307,11 +307,20 @@ class Round(models.Model):
         if errors:
             raise ValidationError(errors)
 
+    # --------------------------------------------------------------------------
+    # Checks for potential errors
+    # --------------------------------------------------------------------------
+
     def duplicate_panellists(self):
-        """ Checks if there any duplicate allocations """
+        """Returns a QuerySet of adjudicators who are allocated twice in the round."""
         from participants.models import Adjudicator
         return Adjudicator.objects.filter(debateadjudicator__debate__round=self).annotate(
                 Count('debateadjudicator')).filter(debateadjudicator__count__gt=1)
+
+    def duplicate_venues(self):
+        from venues.models import Venue
+        return Venue.objects.filter(debate__round=self).annotate(Count('debate')).filter(
+                debate__count__gt=1)
 
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
