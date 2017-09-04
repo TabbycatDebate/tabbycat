@@ -62,6 +62,31 @@
 }
 
 //------------------------------------------------------------------------------
+// Circle Icons
+//------------------------------------------------------------------------------
+
+.circle-icon {
+  @extend .d-none;
+  @extend .d-md-inline;
+  z-index: 99; // Float above progress line
+}
+
+.circle-done {
+  stroke: lighten(theme-color("success"), 20);
+  fill: theme-color("success");
+}
+
+.circle-current {
+  stroke: lighten(theme-color("warning"), 20);
+  fill: theme-color("warning");
+}
+
+.circle-later {
+  stroke: lighten($gray-600, 20);
+  fill: $gray-600;
+}
+
+//------------------------------------------------------------------------------
 // Responsive tweaks
 //------------------------------------------------------------------------------
 

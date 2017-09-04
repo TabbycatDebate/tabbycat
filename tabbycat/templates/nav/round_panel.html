@@ -1,29 +1,21 @@
 {% load debate_tags i18n %}
 
-{% if r.is_break_round and forloop.last %}
-{% else %}
-  <div class="progress-line standard-line"></div>
-{% endif %}
-
-<a href="#rh{{ r.id }}" data-toggle="collapse" data-parent="#sidebar"
-   class="list-group-item d-inline-block {% if r == current_round %}{% elif round == r %}active{% endif %}" aria-expanded="false">
-
+<a href="#rh{{ r.id }}" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
+   class="list-group-item d-inline-block {% if r == current_round %}{% elif round == r %}active{% endif %}">
   <i data-feather="circle" class="circle-icon
     {% if r == current_round %}circle-current
     {% elif r.seq > current_round.seq %}circle-later
     {% elif r.seq < current_round.seq %}circle-done{% endif %}"></i>
   <span class="d-none d-md-inline">{{ r.abbreviation }}</span>
   <span class="d-md-none">{{ r.abbreviation|slice:":2" }}</span>
-
   <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
   <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
 </a>
 
 <div class="collapse {% if r == round and round_nav %}show{% endif %}" id="rh{{ r.id }}">
 
-  <a href="{% roundurl 'availability-index' r %}"
-     class="list-group-item {% if availability_nav and round == r %}active{% endif %}"
-     data-parent="#rh{{ r.id }}">
+  <a href="{% roundurl 'availability-index' r %}" data-parent="#rh{{ r.id }}"
+     class="list-group-item {% if availability_nav and round == r %}active{% endif %}">
     <i data-feather="circle" class="circle-icon
       {% if r.seq < current_round.seq %} circle-done
       {% elif r == current_round and r.draw_status == r.STATUS_NONE %} circle-current
@@ -34,9 +26,8 @@
     {% trans "Check-Ins" %}
   </a>
 
-  <a href="{% roundurl 'draw' r %}"
-     class="list-group-item {% if draw_nav and round == r %}active{% endif %}"
-     data-parent="#rh{{ r.id }}">
+  <a href="{% roundurl 'draw' r %}" data-parent="#rh{{ r.id }}"
+     class="list-group-item {% if draw_nav and round == r %}active{% endif %}">
     <i data-feather="circle" class="circle-icon
       {% if r.seq < current_round.seq %} circle-done
       {% elif r.draw_status == r.STATUS_NONE %} circle-later
@@ -46,9 +37,8 @@
     {% trans "Draw" %}
   </a>
 
-  <a href="{% roundurl 'draw-display' r %}"
-    class="list-group-item {% if display_nav and round == r %}active{% endif %}"
-    data-parent="#rh{{ r.id }}">
+  <a href="{% roundurl 'draw-display' r %}" data-parent="#rh{{ r.id }}"
+    class="list-group-item {% if display_nav and round == r %}active{% endif %}">
     <i data-feather="circle" class="circle-icon
       {% if r.seq < current_round.seq %} circle-done
       {% elif r.draw_status == r.STATUS_NONE %} circle-later
@@ -59,9 +49,8 @@
     {% trans "Display" %}
   </a>
 
-  <a href="{% roundurl 'motions-edit' r %}"
-    class="list-group-item {% if motions_nav and round == r %}active{% endif %}"
-    data-parent="#rh{{ r.id }}">
+  <a href="{% roundurl 'motions-edit' r %}" data-parent="#rh{{ r.id }}"
+    class="list-group-item {% if motions_nav and round == r %}active{% endif %}">
     <i data-feather="circle" class="circle-icon
       {% if r.motion__count > 0 %} circle-done
       {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-current
@@ -70,9 +59,8 @@
     {% trans "Motions" %}
   </a>
 
-  <a href="{% roundurl 'results-round-list' r %}"
-     class="list-group-item {% if results_nav and round == r %}active{% endif %}"
-     data-parent="#rh{{ r.id }}">
+  <a href="{% roundurl 'results-round-list' r %}" data-parent="#rh{{ r.id }}"
+     class="list-group-item {% if results_nav and round == r %}active{% endif %}">
     <i data-feather="circle" class="circle-icon
       {% if r.seq < current_round.seq %} circle-done
       {% elif r.draw_status == r.STATUS_CONFIRMED %}circle-current
