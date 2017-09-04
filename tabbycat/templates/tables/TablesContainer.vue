@@ -1,7 +1,7 @@
 <template>
   <div class="row">
 
-    <div class="col-12 mb-3 hidden-print">
+    <div class="col-12 mb-1 hidden-print">
       <div class="input-group">
         <input class="form-control" id="table-search" type="search"
                v-model="filterKey" @keyup="updateTableFilters"
