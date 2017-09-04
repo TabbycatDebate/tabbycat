@@ -1,9 +1,8 @@
 {% extends "base.html" %}
-{% load debate_tags %}
-{% load add_field_css %}
+{% load debate_tags add_field_css i18n %}
 
-{% block page-title %}🔧Configuration{% endblock %}
-{% block head-title %}<span class="emoji">🔧</span>Configuration{% endblock %}
+{% block page-title %}{% trans "Configuration" %}{% endblock %}
+{% block head-title %}<span class="emoji">🔧</span> {% trans "Configuration" %}{% endblock %}
 
 {% block content %}
 
@@ -13,20 +12,30 @@
     <ul class="list-group">
 
       {% tournamenturl 'options-tournament-scoring' as url %}
-      {% include "components/item-action.html" with emoji="💯" text="Score Rules" extra="The settings that determine the range of points that can awarded to speeches, replies, and teams."%}
+      {% trans "Score Rules" as title %}
+      {% trans "The settings that determine the range of points that can awarded to speeches, replies, and teams." as description %}
+      {% include "components/item-action.html" with emoji="💯" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-draw-rules' as url %}
-      {% include "components/item-action.html" with emoji="📏" text="Draw Rules" extra="The settings that determine how teams are matched together in the draw and how adjudicators are auto-allocated."%}
+      {% trans "Draw Rules" as title %}
+      {% trans "The settings that determine how teams are matched together in the draw and how adjudicators are auto-allocated." as description %}
+      {% include "components/item-action.html" with emoji="📏" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-debate-rules' as url %}
-      {% include "components/item-action.html" with emoji="⚖" text="Debate Rules" extra="The settings that determine how many speeches there are per side, how motions are decided, and whether replies are delivered."%}
+      {% trans "Debate Rules" as title %}
+      {% trans "The settings that determine how many speeches there are per side, how motions are decided, and whether replies are delivered." as description %}
+      {% include "components/item-action.html" with emoji="⚖" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-standings' as url %}
-      {% include "components/item-action.html" with emoji="📊" text="Standings" extra="The settings that determine how teams and speakers are ranked for in the released tabs."%}
+      {% trans "Standings" as title %}
+      {% trans "The settings that determine how teams and speakers are ranked for in the released tabs." as description %}
+      {% include "components/item-action.html" with emoji="📊" text=title extra=description %}
 
 
       {% tournamenturl 'options-tournament-feedback' as url %}
-      {% include "components/item-action.html" with emoji="🙅" text="Feedback" extra="The settings that determine how an adj can be scored and who can submit feedback."%}
+      {% trans "Feedback" as title %}
+      {% trans "The settings that determine how an adj can be scored and who can submit feedback." as description %}
+      {% include "components/item-action.html" with emoji="🙅" text=title extra=description %}
 
     </ul>
   </div>
@@ -35,19 +44,29 @@
     <ul class="list-group">
 
       {% tournamenturl 'options-tournament-tab-release' as url %}
-      {% include "components/item-action.html" with emoji="🚨" text="Tab Release" extra="The settings that determine when to release a public tab is made visible and what data it shows."%}
+      {% trans "Tab Release" as title %}
+      {% trans "The settings that determine when to release a public tab is made visible and what data it shows." as description %}
+      {% include "components/item-action.html" with emoji="🚨" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-data-entry' as url %}
-      {% include "components/item-action.html" with emoji="📝" text="Data Entry" extra="The settings that determine how ballots and feedback are entered, including online submission options."%}
+      {% trans "Data Entry" as title %}
+      {% trans "The settings that determine how ballots and feedback are entered, including online submission options." as description %}
+      {% include "components/item-action.html" with emoji="📝" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-public-features' as url %}
-      {% include "components/item-action.html" with emoji="📢" text="Public Features" extra="The settings that determine what information the site displays to the publicly accessible page."%}
+      {% trans "Public Features" as title %}
+      {% trans "The settings that determine what information the site displays to the publicly accessible page." as description %}
+      {% include "components/item-action.html" with emoji="📢" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-ui' as url %}
-      {% include "components/item-action.html" with emoji="💻" text="UI Options" extra="The settings that determine small tweaks in what information is presented by the interface."%}
+      {% trans "UI Options" as title %}
+      {% trans "The settings that determine small tweaks in what information is presented by the interface." as description %}
+      {% include "components/item-action.html" with emoji="💻" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-league' as url %}
-      {% include "components/item-action.html" with emoji="🏫" text="League Options" extra="Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported."%}
+      {% trans "League Options" as title %}
+      {% trans "Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported." as description %}
+      {% include "components/item-action.html" with emoji="🏫" text=title extra=description %}
 
     </ul>
   </div>
@@ -58,22 +77,30 @@
 
     <ul class="list-group mt-3">
       {% tournamenturl 'tournament-set-current-round' as url %}
-      {% include "components/item-action.html" with icon="clock" text="Manually Set Current Round" extra="Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page." %}
+      {% trans "Manually Set Current Round" as title %}
+      {% trans "Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page." as description %}
+      {% include "components/item-action.html" with icon="clock" text=title extra=description %}
     </ul>
 
     <div class="card mt-3">
 
       <div class="card-body text-info border-info">
-        <h4 class="card-title"><i data-feather="clipboard"></i> Presents</h4>
-        These modify common settings for basic rules; double check our
-        <a href="https://tabbycat.readthedocs.io/" target="_blank">documentation</a> to ensure they are
-        correct for your tournament. Each links will display what settings it changes before applying them.
+        <h4 class="card-title"><i data-feather="clipboard"></i> {% trans "Presets" %}</h4>
+        {% blocktrans trimmed %}
+          These modify common settings for basic rules; double check our
+          <a href="https://tabbycat.readthedocs.io/" target="_blank">documentation</a>
+          to ensure they are correct for your tournament. Each links will display what
+          settings it changes before applying them.
+        {% endblocktrans %}
       </div>
 
       <ul class="list-group list-group-flush">
         {% for preset in presets %}
           {% tournamenturl 'options-presets-confirm' preset.slugified_name as url %}
-          {% include "components/item-action.html" with icon="play" text=Apply|add:preset.name extra=preset.description %}
+          {% blocktrans asvar title with preset_name=preset.name %}
+            Apply {{ preset_name }}
+          {% endblocktrans %}
+          {% include "components/item-action.html" with icon="play" text=title extra=preset.description %}
         {% endfor %}
       </ul>
 
