@@ -1,31 +1,40 @@
 {% extends "draw_base.html" %}
-{% load humanize %}
-{% load static %}
-{% load debate_tags %}
-{% load i18n %}
+{% load humanize static debate_tags i18n %}
 
-{% block page-title %}Draw for {{ round.name }}{% endblock %}
+{% block page-title %}{% blocktrans trimmed with round_name=round.name %}
+  Draw for {{ round_name }}
+{% endblocktrans %}{% endblock %}
 {% block head-title %}
-  <span class="emoji"> 👀</span>Draw for {{ round.name }}
+  <span class="emoji">👀</span> {% blocktrans trimmed with round_name=round.name %}
+  Draw for {{ round_name }}
+{% endblocktrans %}
 {% endblock %}
 {% block sub-title %}
   {% if round.draw_status == round.STATUS_CONFIRMED %}
-    draw is confirmed but not released;
+    {% trans "draw is confirmed but not released;" %}
   {% elif round.draw_status == round.STATUS_RELEASED %}
-    draw is confirmed and released;
+    {% trans "draw is confirmed and released;" %}
   {% else %}
+    {# don't translate this, it should never happen #}
     DRAW STATUS ERROR,
   {% endif %}
-  motions {{ round.motions_released|yesno:",are not" }} released
+  {% if round.motions_released %}
+    {% trans "motions are released" %}
+  {% else %}
+    {% trans "motions are not released" %}
+  {% endif %}
 {% endblock %}
 
 {% block page-alerts %}
   {% if not pref.duplicate_adjs %}
     {% with duplicates=round.duplicate_panellists %}
       {% if duplicates %}
-        <div class="alert alert-danger" >
-          Adjudicator{{ duplicates|pluralize }} <strong>{{ duplicates|join:", " }}</strong>
-          {{ duplicates|pluralize:"has, have" }} been allocated twice.
+        <div class="alert alert-danger">
+          {% blocktrans trimmed with adjudicators=duplicates|join:", " count duplicates=duplicates|length %}
+            Adjudicator <strong>{{ adjudicators }}</strong> has been allocated twice.
+          {% plural %}
+            The following adjudicators have been allocated twice: <strong>{{ adjudicators }}</strong>
+          {% endblocktrans %}
         </div>
       {% endif %}
     {% endwith %}
@@ -41,7 +50,7 @@
       <div class="card">
 
         <div class="card-body">
-          <h5 class="card-title mb-0">Adjudicator Allocations</h5>
+          <h5 class="card-title mb-0">{% trans "Adjudicator Allocations" %}</h5>
         </div>
 
         <div class="list-group list-group-flush">
@@ -77,10 +86,11 @@
           {% endif %}
 
           {% roundurl 'edit-adj-allocation' as url %}
+          {% trans "Allocate Adjudicators" as title %}
           {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
-            {% include "components/item-action.html" with text="Allocate Adjudicators" success=True %}
+            {% include "components/item-action.html" with text=title success=True %}
           {% else %}
-            {% include "components/item-action.html" with text="Allocate Adjudicators" type="primary" icon="check-circle" %}
+            {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
           {% endif %}
 
         </div>
@@ -92,7 +102,7 @@
       <div class="card">
 
         <div class="card-body">
-          <h5 class="card-title mb-0">Venue Allocations</h5>
+          <h5 class="card-title mb-0">{% trans "Venue Allocations" %}</h5>
         </div>
         <div class="list-group list-group-flush">
 
@@ -108,10 +118,11 @@
           {% endwith %}
 
           {% roundurl 'venues-edit' round as url %}
+          {% trans "Allocate Venues" as title %}
           {% if no_venue > 0 %}
-            {% include "components/item-action.html" with text="Allocate Venues" success=True %}
+            {% include "components/item-action.html" with text=title success=True %}
           {% else %}
-            {% include "components/item-action.html" with text="Allocate Venues" type="primary" icon="check-circle" %}
+            {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
           {% endif %}
 
         </div>

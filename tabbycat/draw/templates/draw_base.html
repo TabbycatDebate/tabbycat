@@ -1,31 +1,31 @@
 {% extends "base_vue_table.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'availability-index' %}">
-    <i data-feather="chevron-left"></i> Check-Ins
+    <i data-feather="chevron-left"></i> {% trans "Check-Ins" %}
   </a>
 
   {% if pref.allocation_confirmations %}
     <a href="{% roundurl 'draw-schedule-confirmations' %}" class="btn btn-outline-primary ">
-      Confirm Shifts
+      {% trans "Confirm Shifts" %}
     </a>
   {% endif %}
   <div class="btn-group" role="group">
     <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary ">
-      Edit Sides or Matchups
+      {% trans "Edit Sides or Matchups" %}
     </a>
     <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-primary ">
-      Redo Draw
+      {% trans "Redo Draw" %}
     </a>
     <a href="{% roundurl 'draw-details' %}" class="btn btn-outline-primary ">
-      Draw Details
+      {% trans "Draw Details" %}
     </a>
   </div>
 {% endblock %}
 
 {% block page-subnav-actions %}
   <a href="{% roundurl 'draw-display' %}" class="btn btn-outline-success">
-    Display Draw<i data-feather="chevron-right"></i>
+    {% trans "Display Draw" %}<i data-feather="chevron-right"></i>
   </a>
 {% endblock %}
