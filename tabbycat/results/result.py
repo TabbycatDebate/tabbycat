@@ -410,9 +410,16 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
                 "side": side_name,
                 "team": self.debateteams[side].team,
                 "total": sheet.get_total(side),
-                "win": sheet.winner() == side,
                 "speakers": [],
             }
+
+            # Colour result according to outcome of debate
+            if hasattr(sheet, 'winner'):
+                side_dict["win_style"] = "success" if sheet.winner() == side else "danger"
+            elif hasattr(sheet, 'rank'):
+                rank = sheet.rank(side)
+                side_dict["win_style"] = ["success", "primary", "warning", "danger"][rank-1]
+
             for pos, pos_name in zip(self.positions, pos_names):
                 side_dict["speakers"].append({
                     "pos": pos,
