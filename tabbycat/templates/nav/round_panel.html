@@ -1,6 +1,5 @@
 {% load debate_tags i18n %}
 
-
 {% if r.is_break_round and forloop.last %}
 {% else %}
   <div class="progress-line standard-line"></div>
@@ -8,11 +7,16 @@
 
 <a href="#rh{{ r.id }}" data-toggle="collapse" data-parent="#sidebar"
    class="list-group-item d-inline-block {% if r == current_round %}{% elif round == r %}active{% endif %}" aria-expanded="false">
-   <span class="circle-icon {% if r == current_round %}btn-info{% elif r.seq > current_round.seq %}btn-inactive{% elif r.seq < current_round.seq %}btn-success{% endif %}">
-   </span>
-   {{ r.abbreviation }}
-   <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
-   <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
+
+  <i data-feather="circle" class="circle-icon
+    {% if r == current_round %}circle-current
+    {% elif r.seq > current_round.seq %}circle-later
+    {% elif r.seq < current_round.seq %}circle-done{% endif %}"></i>
+  <span class="d-none d-md-inline">{{ r.abbreviation }}</span>
+  <span class="d-md-none">{{ r.abbreviation|slice:":2" }}</span>
+
+  <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
+  <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
 </a>
 
 <div class="collapse {% if r == round and round_nav %}show{% endif %}" id="rh{{ r.id }}">
@@ -20,54 +24,61 @@
   <a href="{% roundurl 'availability-index' r %}"
      class="list-group-item {% if availability_nav and round == r %}active{% endif %}"
      data-parent="#rh{{ r.id }}">
-    <span class="circle-icon small-circle
-      {% if r.seq < current_round.seq %} btn-success{% elif r == current_round and r.draw_status == r.STATUS_NONE %} btn-info{% elif r.draw_status == r.STATUS_DRAFT %} btn-success{% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success{% elif r.draw_status == r.STATUS_RELEASED %} btn-success{% else %} btn-inactive{% endif %}">
-    </span>{% trans "Check-Ins" %}
+    <i data-feather="circle" class="circle-icon
+      {% if r.seq < current_round.seq %} circle-done
+      {% elif r == current_round and r.draw_status == r.STATUS_NONE %} circle-current
+      {% elif r.draw_status == r.STATUS_DRAFT %} circle-done
+      {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-done
+      {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
+      {% else %} circle-later{% endif %}"></i>
+    {% trans "Check-Ins" %}
   </a>
 
   <a href="{% roundurl 'draw' r %}"
      class="list-group-item {% if draw_nav and round == r %}active{% endif %}"
      data-parent="#rh{{ r.id }}">
-    <span class="circle-icon small-circle
-      {% if r.seq < current_round.seq %} btn-success
-      {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
-      {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
-      {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
-      {% else %} btn-info{% endif %}">
-    </span>{% trans "Draw" %}
+    <i data-feather="circle" class="circle-icon
+      {% if r.seq < current_round.seq %} circle-done
+      {% elif r.draw_status == r.STATUS_NONE %} circle-later
+      {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-done
+      {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
+      {% else %} circle-current{% endif %}"></i>
+    {% trans "Draw" %}
   </a>
 
   <a href="{% roundurl 'draw-display' r %}"
     class="list-group-item {% if display_nav and round == r %}active{% endif %}"
     data-parent="#rh{{ r.id }}">
-    <span class="circle-icon small-circle
-      {% if r.seq < current_round.seq %} btn-success
-      {% elif r.draw_status == r.STATUS_NONE %} btn-inactive
-      {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-success
-      {% elif r.draw_status == r.STATUS_RELEASED %} btn-success
-      {% else %} btn-info{% endif %}">
-    </span>{% trans "Display" %}
+    <i data-feather="circle" class="circle-icon
+      {% if r.seq < current_round.seq %} circle-done
+      {% elif r.draw_status == r.STATUS_NONE %} circle-later
+      {% elif r.draw_status == r.STATUS_DRAFT %} circle-later
+      {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-current
+      {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
+      {% else %} circle-current{% endif %}"></i>
+    {% trans "Display" %}
   </a>
 
   <a href="{% roundurl 'motions-edit' r %}"
     class="list-group-item {% if motions_nav and round == r %}active{% endif %}"
     data-parent="#rh{{ r.id }}">
-    <span class="circle-icon small-circle
-      {% if r.motion__count > 0 %} btn-success
-      {% elif r.draw_status != r.STATUS_NONE and r.seq >= current_round.seq %} btn-info
-      {% else %} btn-inactive{% endif %}">
-    </span>{% trans "Motions" %}
+    <i data-feather="circle" class="circle-icon
+      {% if r.motion__count > 0 %} circle-done
+      {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-current
+      {% elif r.draw_status == r.STATUS_RELEASED %} circle-current
+      {% else %} circle-later{% endif %}"></i>
+    {% trans "Motions" %}
   </a>
 
   <a href="{% roundurl 'results-round-list' r %}"
      class="list-group-item {% if results_nav and round == r %}active{% endif %}"
      data-parent="#rh{{ r.id }}">
-    <span class="circle-icon small-circle
-      {% if r.seq < current_round.seq %} btn-success
-      {% elif r.draw_status == r.STATUS_CONFIRMED %} btn-info
-      {% elif r.draw_status == r.STATUS_RELEASED %} btn-info
-      {% else %} btn-inactive{% endif %}">
-    </span>{% trans "Results" %}
+    <i data-feather="circle" class="circle-icon
+      {% if r.seq < current_round.seq %} circle-done
+      {% elif r.draw_status == r.STATUS_CONFIRMED %}circle-current
+      {% elif r.draw_status == r.STATUS_RELEASED %}circle-current
+      {% else %} circle-later{% endif %}"></i>
+    {% trans "Results" %}
   </a>
 
 </div>

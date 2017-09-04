@@ -6,7 +6,7 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'draw-display' %}">
-    <i data-feather="chevron-left"></i> Back to Display
+    <i data-feather="chevron-left"></i> Display Draw
   </a>
   {% if round.motions_released %}
     <form class="" id="unreleaseForm" method="POST" action="{% roundurl 'motions-unrelease' %}">
