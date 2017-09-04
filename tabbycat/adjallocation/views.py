@@ -10,7 +10,7 @@ from actionlog.models import ActionLogEntry
 from breakqual.models import BreakCategory
 from draw.models import Debate
 from participants.models import Adjudicator, Region
-# from participants.utils import regions_ordered
+from participants.prefetch import populate_feedback_scores
 from tournaments.models import Round
 from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, SaveDragAndDropDebateMixin
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
@@ -37,7 +37,9 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
 
     def get_unallocated_adjudicators(self):
         round = self.get_round()
-        unused_adjs = [a.serialize(round) for a in round.unused_adjudicators()]
+        unused_adj_instances = round.unused_adjudicators().select_related('institution__region')
+        populate_feedback_scores(unused_adj_instances)
+        unused_adjs = [a.serialize(round) for a in unused_adj_instances]
         unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
         unused_adjs = [self.annotate_conflicts(a, 'for_adjs') for a in unused_adjs]
         return json.dumps(unused_adjs)

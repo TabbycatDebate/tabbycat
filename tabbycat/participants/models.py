@@ -281,8 +281,7 @@ class Team(models.Model):
         except AttributeError:
             from results.models import TeamScore
             self._wins_count = TeamScore.objects.filter(ballot_submission__confirmed=True,
-                                            debate_team__team=self,
-                                            win=True).count()
+                    debate_team__team=self, win=True).count()
             return self._wins_count
 
     @cached_property
@@ -339,8 +338,7 @@ class Team(models.Model):
         team['conflicts'] = {'clashes': [], 'histories': []}
         team['institution'] = self.institution.serialize
         team['region'] = self.region.serialize if self.region else None
-        speakers = list(self.speakers.order_by('name'))
-        team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in speakers]
+        team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in self.speakers]
         break_categories = self.break_categories.all()
         team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
         team['highlights'] = {'region': False, 'gender': False, 'category': False}

@@ -7,7 +7,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.functional import cached_property
@@ -16,9 +16,11 @@ from django.utils.translation import ugettext_lazy
 from django.views.generic.detail import SingleObjectMixin
 
 from actionlog.mixins import LogActionMixin
+from adjallocation.models import DebateAdjudicator
 from breakqual.utils import calculate_live_thresholds, determine_liveness
-from draw.models import Debate, MultipleDebateTeamsError, NoDebateTeamFoundError
-from participants.models import Region
+from draw.models import Debate, DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
+from participants.models import Region, Speaker
+from participants.prefetch import populate_feedback_scores, populate_win_counts
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
@@ -355,9 +357,23 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     def get_draw(self):
         round = self.get_round()
-        draw = round.debate_set_with_prefetches(ordering=('-importance', 'room_rank',),
-                                                speakers=True, divisions=False,
-                                                institutions=True, wins=True)
+
+        # The use-case for prefetches here is so intense that we'll just implement
+        # a separate one (as opposed to use Round.debate_set_with_prefetches())
+        draw = round.debate_set.select_related('round__tournament').prefetch_related(
+            Prefetch('debateadjudicator_set',
+                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution__region')),
+            Prefetch('debateteam_set',
+                queryset=DebateTeam.objects.select_related(
+                    'team__institution__region'
+                ).prefetch_related(
+                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
+                )),
+            'debateteam_set__team__break_categories',
+        )
+        populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
+        populate_feedback_scores([da.adjudicator for debate in draw for da in debate.debateadjudicator_set.all()])
+
         serialised_draw = [d.serialize() for d in draw]
         draw = self.annotate_draw(draw, serialised_draw)
         return json.dumps(serialised_draw)

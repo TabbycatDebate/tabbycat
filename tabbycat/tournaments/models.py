@@ -364,6 +364,7 @@ class Round(models.Model):
         out which team is on which side, and sets attributes accordingly."""
         from adjallocation.models import DebateAdjudicator
         from draw.models import DebateTeam
+        from participants.models import Speaker
         from results.prefetch import populate_confirmed_ballots, populate_wins
 
         debates = self.debate_set.all()
@@ -380,15 +381,16 @@ class Round(models.Model):
             debates = debates.select_related('division', 'division__venue_category')
         if venues:
             debates = debates.select_related('venue').prefetch_related('venue__venuecategory_set')
+
         if teams or wins or institutions or speakers:
+            debateteam_prefetch_queryset = DebateTeam.objects.select_related('team')
+            if institutions:
+                debateteam_prefetch_queryset = debateteam_prefetch_queryset.select_related('team__institution')
+            if speakers:
+                debateteam_prefetch_queryset = debateteam_prefetch_queryset.prefetch_related(
+                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')))
             debates = debates.prefetch_related(
-                Prefetch('debateteam_set',
-                    queryset=DebateTeam.objects.select_related(
-                        'team__institution' if institutions else 'team')
-                )
-            )
-        if speakers:
-            debates = debates.prefetch_related('debateteam_set__team__speaker_set')
+                Prefetch('debateteam_set', queryset=debateteam_prefetch_queryset))
 
         if ordering:
             debates = debates.order_by(*ordering)

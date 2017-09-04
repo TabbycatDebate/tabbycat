@@ -22,7 +22,7 @@ from .models import Venue, VenueCategory, VenueConstraint
 class VenueAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
 
     def get_unallocated_venues(self):
-        unused_venues = self.get_round().unused_venues()
+        unused_venues = self.get_round().unused_venues().prefetch_related('venuecategory_set')
         return json.dumps([v.serialize() for v in unused_venues])
 
 
@@ -33,7 +33,7 @@ class EditVenuesView(VenueAllocationViewBase, TemplateView):
     save_url = "save-debate-venues"
 
     def get_context_data(self, **kwargs):
-        vcs = VenueConstraint.objects.all()
+        vcs = VenueConstraint.objects.prefetch_related('subject')
         kwargs['vueVenueConstraints'] = json.dumps([vc.serialize() for vc in vcs])
         kwargs['vueUnusedVenues'] = self.get_unallocated_venues()
         return super().get_context_data(**kwargs)
