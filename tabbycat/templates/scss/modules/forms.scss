@@ -13,8 +13,9 @@
 
 // Use mostly transparent backgrounds rather than fully transparent
 @each $color, $value in $theme-colors {
+
   .btn-outline-#{$color} {
-    background-color: rgba(255,255,255,0.75);
+    background-color: rgba(255, 255, 255, 0.75);
   }
 }
 
@@ -61,7 +62,8 @@ input[type="range"] {
 }
 
 // Inline form errors from django
-.errorlist, label.error {
+.errorlist,
+label.error {
   color: $state-danger-text;
   margin: 0;
   padding: 0;

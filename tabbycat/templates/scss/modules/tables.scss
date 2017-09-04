@@ -4,16 +4,16 @@
 
 .table-container {
   @extend .p-0;
+
   margin: 8px 8px 0;
 }
 
 .table {
-
   font-size: $font-size-sm;
   background: $alt-bg; // For when tables blow out on mobile
 
   th {
-    border-top: none;
+    border-top: 0;
   }
 
   > tbody > tr:hover td {
@@ -33,7 +33,6 @@
   }
 }
 
-
 //------------------------------------------------------------------------------
 // HEADER STYLES
 //------------------------------------------------------------------------------
@@ -41,6 +40,7 @@
 thead,
 .thead {
   @extend .subtitle;
+
   background: $alt-bg; // Fixed header needs a background while scrolling
 }
 
@@ -50,11 +50,12 @@ thead,
 
   .vue-sort-key .feather {
     margin-left: -5px;
-    margin-right: -5px
+    margin-right: -5px;
   }
 
   // By default don't show if not hovering or active
-  .feather-chevrons-up, .feather-chevrons-down {
+  .feather-chevrons-up,
+  .feather-chevrons-down {
     display: none;
   }
 
@@ -68,10 +69,9 @@ thead,
   }
 
   &:hover {
-
     @extend .text-primary;
-    cursor: pointer;
 
+    cursor: pointer;
     // By default; if not sorting is active; show sort-desc
     .vue-sort-key {
 
@@ -106,9 +106,7 @@ thead,
         display: none;
       }
     }
-
   }
-
 }
 
 //------------------------------------------------------------------------------
@@ -130,6 +128,7 @@ thead,
 .team-name {
   min-width: 125px; // BP team cells need a good width when using abbreviations
 }
+
 .venue-name {
   min-width: 75px; // With BP cells ensure venue names don't get squished
 }

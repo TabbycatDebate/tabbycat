@@ -23,14 +23,14 @@
 // Full screen pages
 //------------------------------------------------------------------------------
 
-.override-sidebar-offset #sidebar,
+.override-sidebar-offset .admin-sidebar,
 .override-sidebar-offset .fake-sidebar,
 .override-sidebar-offset .footer {
   display: none !important;
 }
 
 .override-sidebar-offset {
-  margin-bottom: 0px; // Override footer offset
+  margin-bottom: 0; // Override footer offset
 
   .main {
     @extend .col-12;
@@ -45,10 +45,13 @@
 
 // Override some boostrap color defaults and automatically add color variations
 @each $color, $value in $theme-colors {
+
   .alert-#{$color},
   .text-#{$color} {
+
     a {
       @include alert-variant(theme-color-level($color, -10), theme-color-level($color, -9), theme-color-level($color, 6));
+
       text-decoration: underline;
       background: none;
       font-weight: bold;
