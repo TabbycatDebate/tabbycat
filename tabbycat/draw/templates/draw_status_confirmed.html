@@ -38,7 +38,6 @@
         </div>
 
         <div class="list-group list-group-flush">
-
           {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel duplicates=round.duplicate_panellists %}
 
             {% if active_adjs.count < draw.count %}
@@ -91,6 +90,7 @@
               {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
             {% else %}
               {% include "components/item-action.html" with text=title success=True %}
+
             {% endif %}
 
           {% endwith %}
@@ -133,7 +133,7 @@
               {% plural %}
                 {{ ndebates }} debates have venue constraint violations.
               {% endblocktrans %}
-              {% include "components/item-alert.html" with type="warning" %}
+              {% include "components/item-alert.html" with type="danger" %}
             {% endif %}
 
             {% roundurl 'venues-edit' round as url %}

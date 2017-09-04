@@ -30,29 +30,31 @@ body {
     padding-right: 0;
     margin-right: 20px;
   }
-
 }
 
 //------------------------------------------------------------------------------
 // Responsive tweaks
 //------------------------------------------------------------------------------
 
+// Applies just to phones
 @include media-breakpoint-up(xs) {
-  // Applies just to phones
+
   .footer {
     height: $footer-height * 0.9;
   }
 }
 
+// Applies just to tablets
 @include media-breakpoint-up(sm) {
-  // Applies just to tablets
+
   .footer {
     height: $footer-height * 0.95;
   }
 }
 
+// Applies just to laptops/desktops
 @include media-breakpoint-up(lg) {
-  // Applies just to laptops/desktops
+
   .footer {
     height: $footer-height;
   }

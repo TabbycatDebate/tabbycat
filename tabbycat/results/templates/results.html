@@ -44,34 +44,40 @@
 
 {% block content %}
 
-  <div class"col">
-    <div class="btn-group mb-3" role="group">
-      {% if not user.is_superuser %}
-        <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
-          Check-In Ballots
-        </a>
-      {% endif %}
-      <span class="btn btn-primary disabled">
+  <div class="row mb-4">
+
+    <div class="col-3">
+      <span class="btn btn-block btn-primary disabled">
         {{ stats.ballot_in }} Checked In <i data-feather="inbox"></i>
       </span>
-      <span class="btn btn-danger disabled">
-        {{ stats.none }} Unknown <i data-feather="x"></i>
-      </span>
-      <span class="btn btn-warning disabled">
-        {{ stats.draft }} Unconfirmed <i data-feather="circle"></i>
-      </span>
-      <span class="btn btn-success disabled">
-        {{ stats.confirmed }} Confirmed <i data-feather="check"></i>
-      </span>
-      {% if pref.enable_postponements %}
-        <span class="btn btn-primary disabled">
-          {{ stats.postponed }} Postponed <i data-feather="pause"></i>
-        </span>
-        <span class="btn btn-primary disabled" disabled>
-          Byes <span class="icon fast-forward"></span>
-        </span>
-      {% endif %}
     </div>
+    <div class="col-3">
+      <span class="btn btn-block btn-danger disabled">
+        {{ stats.none }} Unknown <i data-feather="x"></i>
+       </span>
+    </div>
+    <div class="col-3">
+      <span class="btn btn-block btn-warning disabled">
+        {{ stats.draft }} Unconfirmed <i data-feather="circle"></i>
+       </span>
+    </div>
+    <div class="col-3">
+      <span class="btn btn-block btn-success disabled">
+        {{ stats.confirmed }} Confirmed <i data-feather="check"></i>
+       </span>
+    </div>
+    {% if pref.enable_postponements %}
+      <div class="col-3">
+        <span class="btn btn-block btn-primary disabled">
+          {{ stats.postponed }} Postponed <i data-feather="pause"></i>
+         </span>
+      </div>
+      <div class="col-3">
+        <span class="btn btn-block btn-primary disabled">
+          Byes <span class="icon fast-forward"></span>
+         </span>
+      </div>
+    {% endif %}
   </div>
 
   {{ block.super }}

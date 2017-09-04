@@ -18,7 +18,7 @@
   }
 }
 
-#sidebar .list-group-item {
+.admin-sidebar .list-group-item {
   background: $sidebar-bg;
   border-radius: 0;
   border-left: 0;
@@ -26,7 +26,8 @@
   color: $sidebar-muted-text;
   white-space: nowrap;
 
-  &.active, &[aria-expanded="true"] {
+  &.active,
+  &[aria-expanded="true"] {
     background: darken($sidebar-bg, 5%);
     border-color: darken($sidebar-bg, 10%);
     color: #fff;
@@ -35,23 +36,26 @@
   &[aria-expanded="true"] .feather-chevron-down {
     display: none !important; // Need to override d-none for mobile
   }
+
   &[aria-expanded="false"] .feather-chevron-up {
     display: none !important; // Need to override d-none for mobile
   }
 }
 
 // Sub menu items
-#sidebar .collapse .list-group-item,
-#sidebar .collapsing .list-group-item {
-  background: darken($sidebar-bg, 5%);
-  border: none;
+.admin-sidebar .collapse .list-group-item,
+.admin-sidebar .collapsing .list-group-item {
   @extend .small;
+
+  background: darken($sidebar-bg, 5%);
+  border: 0;
+
   .feather {
     margin-right: 0.4rem;
   }
 }
 
-#sidebar .list-group-item.tournament-title {
+.admin-sidebar .list-group-item.tournament-title {
   text-transform: uppercase;
   float: left;
 }
@@ -62,22 +66,48 @@
 }
 
 //------------------------------------------------------------------------------
+// Circle Icons
+//------------------------------------------------------------------------------
+
+.circle-icon {
+  @extend .d-none;
+  @extend .d-md-inline;
+
+  z-index: 99; // Float above progress line
+}
+
+.circle-done {
+  stroke: lighten(theme-color("success"), 20);
+  fill: theme-color("success");
+}
+
+.circle-current {
+  stroke: lighten(theme-color("warning"), 20);
+  fill: theme-color("warning");
+}
+
+.circle-later {
+  stroke: lighten($gray-600, 20);
+  fill: $gray-600;
+}
+
+//------------------------------------------------------------------------------
 // Responsive tweaks
 //------------------------------------------------------------------------------
 
+// Applies just to phones
 @include media-breakpoint-up(xs) {
-  // Applies just to phones
 
-  #sidebar .list-group-item {
+  .admin-sidebar .list-group-item {
     font-size: 12px;
     padding: 0.75rem 0.45rem;
   }
 }
 
+// Applies just to tablets
 @include media-breakpoint-up(sm) {
 
-  // Applies just to tablets
-  #sidebar .list-group-item {
+  .admin-sidebar .list-group-item {
     font-size: 12px;
     padding: 0.5rem 0.75rem;
 
@@ -86,23 +116,24 @@
       height: 12px;
       margin-right: 4px;
     }
+
     .feather-chevron-down,
     .feather-chevron-up {
       margin-top: 2px;
-      margin-right: 0px;
+      margin-right: 0;
     }
   }
 
-  #sidebar .collapse .list-group-item,
-  #sidebar .collapsing .list-group-item  {
+  .admin-sidebar .collapse .list-group-item,
+  .admin-sidebar .collapsing .list-group-item {
     font-size: 10px;
   }
 }
 
+// Applies just to screens
 @include media-breakpoint-up(lg) {
 
-  // Applies just to screens
-  #sidebar .list-group-item {
+  .admin-sidebar .list-group-item {
     font-size: $font-size-sm;
     padding: 0.5rem 1rem;
 
@@ -111,15 +142,16 @@
       height: 14px;
       margin-right: 8px;
     }
+
     .feather-chevron-down,
     .feather-chevron-up {
       margin-top: 2px;
-      margin-right: 0px;
+      margin-right: 0;
     }
   }
 
-  #sidebar .collapse .list-group-item,
-  #sidebar .collapsing .list-group-item {
+  .admin-sidebar .collapse .list-group-item,
+  .admin-sidebar .collapsing .list-group-item {
     font-size: 12px;
 
     .feather {
@@ -128,12 +160,12 @@
   }
 }
 
+// overlay sub levels on small screens
 @include media-breakpoint-down(sm) {
 
-  /* overlay sub levels on small screens */
-  #sidebar .list-group .collapse.in,
-  #sidebar .list-group .collapsing,
-  #sidebar .list-group .collapse.show {
+  .admin-sidebar .list-group .collapse.in,
+  .admin-sidebar .list-group .collapsing,
+  .admin-sidebar .list-group .collapse.show {
     z-index: 111;
     width: 190px;
     background: red;
@@ -143,26 +175,25 @@
       margin-right: 12px;
     }
   }
-
 }
 
-/* change transition animation to width when entire sidebar is toggled */
-#sidebar.collapse {
+// Change transition animation to width when entire sidebar is toggled
+.admin-sidebar.collapse {
   -webkit-transition-timing-function: ease;
-       -o-transition-timing-function: ease;
-          transition-timing-function: ease;
-  -webkit-transition-duration: .2s;
-       -o-transition-duration: .2s;
-          transition-duration: .2s;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-transition-duration: 0.2s;
+  -o-transition-duration: 0.2s;
+  transition-duration: 0.2s;
 }
 
-#sidebar.collapsing {
+.admin-sidebar.collapsing {
   opacity: 0.8;
   width: 0;
   -webkit-transition-timing-function: ease-in;
-       -o-transition-timing-function: ease-in;
-          transition-timing-function: ease-in;
+  -o-transition-timing-function: ease-in;
+  transition-timing-function: ease-in;
   -webkit-transition-property: width;
-       -o-transition-property: width;
-          transition-property: width;
+  -o-transition-property: width;
+  transition-property: width;
 }
