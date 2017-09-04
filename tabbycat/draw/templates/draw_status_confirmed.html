@@ -87,10 +87,9 @@
             {% roundurl 'edit-adj-allocation' as url %}
             {% trans "Allocate Adjudicators" as title %}
             {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
-              {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
-            {% else %}
               {% include "components/item-action.html" with text=title success=True %}
-
+            {% else %}
+              {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
             {% endif %}
 
           {% endwith %}
@@ -139,9 +138,9 @@
             {% roundurl 'venues-edit' round as url %}
             {% trans "Allocate Venues" as title %}
             {% if no_venue > 0 %}
-              {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
-            {% else %}
               {% include "components/item-action.html" with text=title success=True %}
+            {% else %}
+              {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
             {% endif %}
 
           {% endwith %}
