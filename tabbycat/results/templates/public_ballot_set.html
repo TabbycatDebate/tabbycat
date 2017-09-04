@@ -57,7 +57,7 @@
                 <span class="badge badge-secondary">{{ position.score }}</span>
               </li>
             {% endfor %}
-            <li class="list-group-item list-group-item-{{ team.win|yesno:"success,danger" }}">
+            <li class="list-group-item list-group-item-{{ team.win_style }}">
               <div class="col-md-2 col-xs-3"></div>
               <em>Total for {{ team.team.short_name }} ({{ team.side }})</em>
               <span class="badge badge-secondary">{{ team.total }}</span>
