@@ -6,20 +6,17 @@
 
 {% block content %}
 
-<div class="row">
-  <div class="col-md-12">
-    <ul class="list-group">
-      {% for r in tournament.round_set.all %}
-        {% if not r.silent or pref.all_results_released %}
-          {% if r.seq < current_round.seq or pref.all_results_released %}
-          <li class="list-group-item"><a class="public-results-nav" href="{% roundurl 'results-public-round' r %}">
-            Results for {{ r.name }}
-          </a></li>
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </div>
-</div>
+<ul class="list-group">
+  {% for r in tournament.round_set.all %}
+    {% if not r.silent or pref.all_results_released %}
+      {% if r.seq < current_round.seq or pref.all_results_released %}
+
+        {% roundurl 'results-public-round' r as url %}
+        {% include "components/item-action.html" with text="Results for "|add:r.name %}
+
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</ul>
 
 {% endblock content %}
