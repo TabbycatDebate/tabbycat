@@ -93,7 +93,7 @@ class AustralsPreferences(PreferencesPreset):
     # Standings Rules
     standings__standings_missed_debates        = 2  # TODO= check this
     standings__team_standings_precedence       = ['wins', 'speaks_sum']
-    standings__rank_speakers_by                = 'total'
+    standings__rank_speakers_by                = 'average' # constitutional
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
@@ -125,7 +125,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     # Standings Rules
     standings__standings_missed_debates        = 2  # TODO check this?
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
-    standings__rank_speakers_by                = 'total'
+    standings__rank_speakers_by                = 'average' # TODO check this?
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
@@ -169,6 +169,8 @@ class AustralianEastersPreferences(AustralsPreferences):
     debate_rules__reply_scores_enabled         = False
     debate_rules__motion_vetoes_enabled        = True
     data_entry__enable_motions                 = True
+    # Standings Rules
+    standings__rank_speakers_by                = 'average' # constitutional
 
 
 class NZEastersPreferences(AustralsPreferences):
@@ -288,6 +290,7 @@ class WSDCPreferences(AustralsPreferences):
     draw_rules__avoid_same_institution         = False
     # Standings
     standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg']
+    standings__rank_speakers_by                = 'average' # Speakers sub in/out
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = False

@@ -495,7 +495,7 @@ class RankSpeakersBy(ChoicePreference):
         ('average', _("Average")),
         ('total', _("Total")),
     )
-    default = 'total'
+    default = 'average'
 
 
 @tournament_preferences_registry.register
