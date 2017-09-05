@@ -4,13 +4,13 @@
     <template v-for="(data, index) in set.data">
 
       <div class="col-4 text-center">
-        <h5 :class="'no-bottom-margin text-body gender-text gender-' + data.label.toLowerCase()">
+        <h5 :class="'mb-0 text-body gender-text gender-' + data.label.toLowerCase()">
           {{ offset(data.count) }}
         </h5>
       </div>
 
       <div v-if="set.datum && index == 0" class="col-4 text-center">
-        <h5 class="no-bottom-margin text-body">
+        <h5 class="mb-0 text-body">
           {{ round(set.datum) }}
         </h5>
       </div>

@@ -2,7 +2,7 @@
   <div class="card-deck">
 
     <div class="card">
-      <div class="card-body text-center no-side-padding">
+      <div class="card-body text-center px-0">
         <h5 class="card-title mb-4">Speaker Demographics</h5>
         <donut-chart v-for="set in graphsData.speakers_gender"
                      :graph-data="set.data" :title="set.title"
@@ -29,7 +29,7 @@
     </div>
 
     <div class="card">
-      <div class="card-body text-center no-side-padding">
+      <div class="card-body text-center px-0">
         <h5 class="card-title mb-4">Adjudicator Demographics</h5>
         <donut-chart v-for="set in graphsData.adjudicators_gender"
                      :graph-data="set.data" :title="set.title"

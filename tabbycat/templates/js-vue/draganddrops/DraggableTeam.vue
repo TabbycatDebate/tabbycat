@@ -12,7 +12,7 @@
       <h4>{{ team.wins }}</h4>
     </div>
     <div class="draggable-title">
-      <h5 class="no-top-margin no-bottom-margin">{{ titleWithLimit }}</h5>
+      <h5 class="mt-0 mb-0">{{ titleWithLimit }}</h5>
       <span class="small subtitle">
         {{ team.institution.code }}
       </span>

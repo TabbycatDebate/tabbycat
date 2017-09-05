@@ -36,17 +36,17 @@
   {% elif round.get_draw_status_display.lower == 'none' %}
 
     {% roundurl 'availability-index' round as url %}
-    {% include "components/item-action.html" with alone=True text="Go to the checkins area to begin creating a draw." success=True %}
+    {% include "components/item-action.html" with alone=True text="Go to the checkins area to begin creating a draw for "|add:round.name success=True %}
 
   {% elif round.get_draw_status_display.lower == 'confirmed' %}
 
     {% roundurl 'draw' round as url %}
-    {% include "components/item-action.html" with alone=True text="Go to the draw area to allocate adjudicators." success=True %}
+    {% include "components/item-action.html" with alone=True text="Go to the draw area to allocate adjudicators for "|add:round.name success=True %}
 
   {% elif round.get_draw_status_display.lower == 'released' %}
 
     {% roundurl 'draw' round as url %}
-    {% include "components/item-action.html" with alone=True text="Go to the results area to begin entering ballots." success=True %}
+    {% include "components/item-action.html" with alone=True text="Go to the results area to begin entering ballots for "|add:round.name success=True %}
 
   {% endif %}
 

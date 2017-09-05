@@ -11,7 +11,7 @@
       <h4>{{ adjudicator.score }}</h4>
     </div>
     <div class="draggable-title">
-      <h5 class="no-top-margin no-bottom-margin">
+      <h5 class="mt-0 mb-0">
         {{ initialledName }}
       </h5>
       <span class="small subtitle" v-if="adjudicator.institution">
