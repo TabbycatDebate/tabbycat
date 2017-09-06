@@ -1,8 +1,9 @@
+import json
 import logging
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
@@ -129,10 +130,11 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
     template_name = "base_availability.html"
 
     def get_page_title(self):
-        return CHECK_IN_TITLES[self.model]
+        return CHECK_IN_TITLES[self.model] + " Availability"
 
     def get_context_data(self, **kwargs):
         kwargs['model'] = self.model._meta.label  # does not get translated
+        kwargs['saveURL'] = reverse_round(self.update_view, self.get_round())
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
@@ -141,13 +143,10 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
     def get_table(self):
         round = self.get_round()
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
-
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
-        table.add_column(_("Active Now"),
-            [{
+        table.add_column(_("Active Now"), [{
                 'component': 'availability-check-cell',
-                'saveURL': reverse_round(self.update_view, self.get_round()),
                 'available': inst.available,
                 'sort': inst.available,
                 'id': inst.id,
@@ -155,8 +154,7 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
             } for inst in queryset])
 
         if round.prev:
-            table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation},
-                [{
+            table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}, [{
                     'sort': inst.prev_available,
                     'icon': 'check' if inst.prev_available else ''
                 } for inst in queryset])
@@ -266,15 +264,20 @@ class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
 class BaseAvailabilityUpdateView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, View):
 
     def post(self, request, *args, **kwargs):
+
+        body = self.request.body.decode('utf-8')
+        posted_info = json.loads(body)
+
         try:
-            references = request.POST.getlist('references[]')
-            utils.set_availability_by_id(self.model, references, self.get_round())
+            utils.set_availability_by_id(self.model, posted_info, self.get_round())
             self.log_action()
-            return HttpResponse('ok')
 
         except:
-            logger.exception("Error handling availability updates")
-            return HttpResponseBadRequest()
+            message = "Error handling availability updates"
+            logger.exception(message)
+            return JsonResponse({'status': 'false', 'message': message}, status=500)
+
+        return JsonResponse(json.dumps(True), safe=False)
 
 
 class UpdateAdjudicatorsAvailabilityView(BaseAvailabilityUpdateView):

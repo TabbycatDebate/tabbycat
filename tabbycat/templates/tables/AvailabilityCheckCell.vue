@@ -6,31 +6,19 @@
       {{ cellData.available }}
     </span>
     <input type="checkbox" v-model="cellData.available" @click="checkUpdate">
-    av: {{ cellData.available }}
 
   </td>
 
 </template>
 
 <script>
-import AjaxMixin from '../js-vue/ajax/AjaxMixin.vue'
 
 export default {
-  mixins: [AjaxMixin],
-  props: {
-    cellData: Object,
-  },
-  computed: {
-    breaking: function() {
-      return this.cellData.breaking
-    }
-  },
+  props: { cellData: Object },
   methods: {
     checkUpdate: function () {
-      var cd = this.cellData
-      var message = "availability type " + cd.id + "'s availability status as " + cd.available
-      var payload = { 'breaking': cd.breaking, id: cd.id }
-      this.ajaxSave(cd.saveURL, payload, message, null, null, null)
+      this.$eventHub.$emit('toggle-availability', this.cellData.id,
+                                                  this.cellData.available)
     },
   },
 }

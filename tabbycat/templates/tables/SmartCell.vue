@@ -83,7 +83,6 @@ export default {
     getFeatherIcon: function() {
       // Need to dynamically update icons once table order changes
       // as they are otherwise tied to the DOM
-      console.log('getFeatherIcon');
       return feather.toSvg(this.cellData['icon']);
     }
   },
