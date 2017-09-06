@@ -132,7 +132,6 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
         return CHECK_IN_TITLES[self.model]
 
     def get_context_data(self, **kwargs):
-        kwargs['update_url'] = reverse_round(self.update_view, self.get_round())
         kwargs['model'] = self.model._meta.label  # does not get translated
         return super().get_context_data(**kwargs)
 
@@ -145,8 +144,15 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
 
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
-        table.add_checkbox_columns([inst.available for inst in queryset],
-            [inst.id for inst in queryset], _("Active Now"))
+        table.add_column(_("Active Now"),
+            [{
+                'component': 'availability-check-cell',
+                'saveURL': reverse_round(self.update_view, self.get_round()),
+                'available': inst.available,
+                'sort': inst.available,
+                'id': inst.id,
+                'prev': inst.prev_available,
+            } for inst in queryset])
 
         if round.prev:
             table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation},

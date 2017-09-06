@@ -41,12 +41,8 @@
 
 {% block js %}
 
-  {% roundurl 'availability-index' round as index_url %}
-
   {{ block.super }}
   <script>
-
-    var updateURL = '{{ update_url }}';
 
     $('#select_all').click(function() {
       $(":checkbox.vue-table-checkbox").each(function(){
