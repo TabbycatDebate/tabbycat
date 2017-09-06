@@ -16,7 +16,7 @@ window.Popper = Popper;
 require("bootstrap");
 
 // Icons
-var feather = require('feather-icons')
+import feather from 'feather-icons';
 
 // Mount global jquery stuff here
 $(document).ready(function(){
@@ -34,7 +34,7 @@ $(document).ready(function(){
     }
   });
   // Feather shim for icons
-  feather.replace()
+  feather.replace();
   // Remove the pre-expanded sidebar states for mobile (they overlap)
   if ($(window).width() < 768) {
     $("#sidebar .collapse").removeClass("show");

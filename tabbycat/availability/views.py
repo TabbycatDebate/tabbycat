@@ -151,7 +151,7 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
                 'available': inst.available,
                 'sort': inst.available,
                 'id': inst.id,
-                'prev': inst.prev_available,
+                'prev': inst.prev_available if round.prev else False,
             } for inst in queryset])
 
         if round.prev:

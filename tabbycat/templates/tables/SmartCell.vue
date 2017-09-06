@@ -6,8 +6,7 @@
     </span>
 
     <!-- Icons or Emoji -->
-    <i v-if="cellData['icon']" :data-feather="cellData['icon']">
-    </i>
+    <span v-if="cellData['icon']" v-html="getFeatherIcon"></span>
     <span v-if="cellData['emoji']" class="emoji" >{{ cellData["emoji"] }}</span>
 
     <!-- Tooltip/Popovers Hovers Wrapper -->
@@ -51,6 +50,7 @@
 
 <script>
 import PopoverMixin from '../info/PopoverMixin.vue'
+import feather from 'feather-icons';
 
 export default {
   mixins: [PopoverMixin],
@@ -72,13 +72,19 @@ export default {
       }
       return false
     },
-    popOverContent: function () {
+    popOverContent: function() {
       if (this.canSupportPopover === true) {
         return this.cellData['popover']['content'].filter(function(key){
           return key['text'] !== ""
         });
       }
       return false
+    },
+    getFeatherIcon: function() {
+      // Need to dynamically update icons once table order changes
+      // as they are otherwise tied to the DOM
+      console.log('getFeatherIcon');
+      return feather.toSvg(this.cellData['icon']);
     }
   },
   methods: {
