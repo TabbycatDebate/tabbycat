@@ -32,12 +32,14 @@ import SmartHeader from './SmartHeader.vue'
 import SmartCell from './SmartCell.vue'
 import SortableTableMixin from '../tables/SortableTableMixin.vue'
 import FeedbackTrend from '../graphs/FeedbackTrend.vue'
+import AvailabilityCheckCell from '../tables/AvailabilityCheckCell.vue'
 import BreakingCheckCell from '../tables/BreakingCheckCell.vue'
 import _ from 'lodash'
 
 export default {
   mixins: [SortableTableMixin],
-  components: { SmartHeader, SmartCell, FeedbackTrend, BreakingCheckCell },
+  components: { SmartHeader, SmartCell, FeedbackTrend, AvailabilityCheckCell,
+                BreakingCheckCell },
   props: { tableHeaders: Array, tableContent: Array, tableClass: String },
   computed: {
     rows: function() {

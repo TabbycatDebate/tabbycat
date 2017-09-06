@@ -4,7 +4,9 @@
 {% block content %}
 
   <div id="vueMount">
-    <tables-container :tables-data=tablesData orientation={{ tables_orientation|safe }} ></tables-container>
+    <tables-container :tables-data="tablesData"
+                      orientation="{{ tables_orientation|safe }}">
+    </tables-container>
   </div>
 
 {% endblock content %}
