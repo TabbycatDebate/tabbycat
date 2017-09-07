@@ -18,12 +18,14 @@ from divisions.models import Division
 from participants.models import Adjudicator, Institution, Team
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
-from tournaments.mixins import CrossTournamentPageMixin, DrawForDragAndDropMixin
-from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin, SaveDragAndDropDebateMixin, TournamentMixin
+from standings.views import BaseStandingsView
+from tournaments.mixins import (CrossTournamentPageMixin, DrawForDragAndDropMixin,
+    OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
+    SaveDragAndDropDebateMixin, TournamentMixin)
 from tournaments.models import Round
 from tournaments.utils import aff_name, get_side_name, neg_name
 from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
-from utils.misc import reverse_round
+from utils.misc import reverse_round, reverse_tournament
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
 from venues.models import VenueCategory, VenueConstraint
@@ -320,14 +322,15 @@ class CreateDrawView(DrawStatusEdit):
             logger.exception("Fatal error creating draw: " + str(e))
             return HttpResponseRedirect(reverse_round('availability-index', round))
         except StandingsError as e:
-            messages.error(request, mark_safe(_(
+            message = _(
                 "<p>The team standings could not be generated, because the following error occurred: "
                 "<em>%(message)s</em></p>\n"
-                "<p>Because the draw uses the current team standings, this prevents "
-                "the draw from being generated. You may need to double-check the standings "
-                "configuration under the Setup section. If this issue persists and you're "
-                "not sure how to fix it, please contact the developers.</p>"
-            ) % {'message': str(e)}))
+                "<p>Because generating the draw uses the current team standings, this "
+                "prevents the draw from being generated.</p>"
+            ) % {'message': str(e)}
+            standings_options_url = reverse_tournament('options-tournament-standings', self.get_tournament())
+            instructions = BaseStandingsView.standings_error_instructions % {'standings_options_url': standings_options_url}
+            messages.error(request, mark_safe(message + instructions))
             logger.exception("Error generating standings for draw: " + str(e))
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
