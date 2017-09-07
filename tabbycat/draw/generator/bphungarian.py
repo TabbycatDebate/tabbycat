@@ -5,6 +5,7 @@ from collections import Counter
 from math import log2
 from statistics import pvariance
 
+from django.utils.translation import ugettext as _
 import munkres
 
 from .common import BaseBPDrawGenerator, BPPairing, DrawUserError
@@ -230,7 +231,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         costs = []
         for team in self.teams:
             row = []
-            for _, allowed in rooms:
+            for level, allowed in rooms:
                 if team.points not in allowed:
                     row.extend([munkres.DISALLOWED] * 4)
                 else:

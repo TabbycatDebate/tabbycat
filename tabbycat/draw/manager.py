@@ -7,7 +7,7 @@ from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
 from .models import Debate, DebateTeam
-from .generator import DrawError, DrawGenerator, Pairing
+from .generator import DrawGenerator, DrawUserError, Pairing
 
 OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_institution"     : "draw_rules__avoid_same_institution",
@@ -32,11 +32,11 @@ def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
         klass = DRAW_MANAGER_CLASSES[(teams_in_debate, round.draw_type)]
     except KeyError:
         if teams_in_debate == 'two':
-            raise DrawError(_("The draw type %(type)s can't be used with two-team formats.") % {'type': round.get_draw_type_display()})
+            raise DrawUserError(_("The draw type %(type)s can't be used with two-team formats.") % {'type': round.get_draw_type_display()})
         elif teams_in_debate == 'bp':
-            raise DrawError(_("The draw type %(type)s can't be used with British Parliamentary.") % {'type': round.get_draw_type_display()})
+            raise DrawUserError(_("The draw type %(type)s can't be used with British Parliamentary.") % {'type': round.get_draw_type_display()})
         else:
-            raise DrawError("Unrecognised teams in debate option: %s" % teams_in_debate)
+            raise DrawUserError(_("Unrecognised \"teams in debate\" option: %(option)s") % {'option': teams_in_debate})
     return klass(round, active_only)
 
 

@@ -315,19 +315,20 @@ class CreateDrawView(DrawStatusEdit):
             manager = DrawManager(round)
             manager.create()
         except DrawUserError as e:
-            messages.error(request, mark_safe(
-                _("<p>The draw could not be created, for the following reason: "
+            messages.error(request, mark_safe(_(
+                "<p>The draw could not be created, for the following reason: "
                 "<em>%(message)s</em></p>\n"
                 "<p>Please fix this issue before attempting to create the draw.</p>"
-                ) % {'message': str(e)}))
+            ) % {'message': str(e)}))
             logger.warning("User error creating draw: " + str(e), exc_info=True)
             return HttpResponseRedirect(reverse_round('availability-index', round))
         except DrawFatalError as e:
-            messages.error(request, mark_safe(
-                _("The draw could not be created, because the following error occurred: "
+            messages.error(request, mark_safe(_(
+                "The draw could not be created, because the following error occurred: "
                 "<em>%(message)s</em></p>\n"
                 "<p>If this issue persists and you're not sure how to resolve it, please "
-                "contact the developers.</p>") % {'message': str(e)}))
+                "contact the developers.</p>"
+            ) % {'message': str(e)}))
             logger.exception("Fatal error creating draw: " + str(e))
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
