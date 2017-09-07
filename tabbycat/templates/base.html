@@ -57,9 +57,9 @@
             {% block head-title %}{% endblock %}
           {% endif %}
           {% if page_subtitle %}
-            <small class="text-muted">{{ page_subtitle }}</small>
+            <small class="text-muted d-md-inline d-none">{{ page_subtitle }}</small>
           {% else %}
-            <small class="text-muted">{% block sub-title %}{% endblock %}</small>
+            <small class="text-muted d-md-inline d-none">{% block sub-title %}{% endblock %}</small>
           {% endif %}
 
         </div>
