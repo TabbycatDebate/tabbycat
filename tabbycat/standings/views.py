@@ -15,7 +15,7 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import redirect_tournament
+from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -84,15 +84,26 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
 
     standings_error_message = ugettext_lazy(
         "<p>There was an error generating the standings: "
-        "<em>%(message)s</em></p>\n"
-        "<p>You may need to double-check the standings configuration under "
-        "the Setup section. If this issue persists and you're not sure how "
-        "to fix it, please contact the developers.</p>"
+        "<em>%(message)s</em></p>"
+    )
+
+    standings_error_instructions = ugettext_lazy(
+        "<p>You may need to double-check the "
+        "<a href=\"%(standings_options_url)s\" class=\"alert-link\">"
+        "standings configuration under the Setup section</a>. "
+        "If this issue persists and you're not sure how to fix it, please "
+        "contact the developers.</p>"
     )
 
     def get_rounds(self):
         """Returns all of the rounds that should be included in the tab."""
         return self.get_tournament().prelim_rounds(until=self.get_round()).order_by('seq')
+
+    def get_standings_error_message(self, e):
+        message = self.standings_error_message % {'message': str(e)}
+        standings_options_url = reverse_tournament('options-tournament-standings', self.get_tournament())
+        instructions = self.standings_error_instructions % {'standings_options_url': standings_options_url}
+        return mark_safe(message + instructions)
 
 
 class PublicTabMixin(PublicTournamentPageMixin):
@@ -182,7 +193,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         try:
             standings, rounds = self.get_standings()
         except StandingsError as e:
-            messages.error(self.request, mark_safe(self.standings_error_message % {'message': str(e)}))
+            messages.error(self.request, self.get_standings_error_message(e))
             logger.exception("Error generating standings: " + str(e))
             return table
 
@@ -395,7 +406,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         try:
             standings, rounds = self.get_standings()
         except StandingsError as e:
-            messages.error(self.request, mark_safe(self.standings_error_message % {'message': str(e)}))
+            messages.error(self.request, self.get_standings_error_message(e))
             logger.exception("Error generating standings: " + str(e))
             return table
 
