@@ -1,7 +1,7 @@
 import random
 from collections import OrderedDict
 
-from .common import BasePairDrawGenerator, DrawError, Pairing
+from .common import BasePairDrawGenerator, DrawFatalError, Pairing
 from .one_up_one_down import OneUpOneDownSwapper
 
 
@@ -127,7 +127,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             if len(teams) % 2 != 0:
                 pullup_needed_for = teams
         if pullup_needed_for:
-            raise DrawError("Last bracket is still odd!\n" + repr(pullup_needed_for))
+            raise DrawFatalError("Last bracket is still odd!\n" + repr(pullup_needed_for))
 
     @classmethod
     def _intermediate_bubbles(cls, brackets):
@@ -143,7 +143,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             if len(teams) > 0:
                 new[points] = teams
         if odd_team:
-            raise DrawError("Last bracket is still odd!\n" + repr(odd_team))
+            raise DrawFatalError("Last bracket is still odd!\n" + repr(odd_team))
         brackets.clear()
         brackets.update(new)
 
@@ -164,7 +164,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                 if team1.seen(team2):
                     return 2  # History
             except AttributeError:
-                raise DrawError("For conflict avoidance, teams must have attributes 'institution' and 'seen'.")
+                raise DrawFatalError("For conflict avoidance, teams must have attributes 'institution' and 'seen'.")
             return 0  # No conflict
 
         for points, teams in brackets.items():
@@ -455,7 +455,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
             pullups_needed_for = new_pullups_needed_for
 
         if pullups_needed_for:
-            raise DrawError("Last bracket still needed pullups!\n" + repr(pullups_needed_for))
+            raise DrawFatalError("Last bracket still needed pullups!\n" + repr(pullups_needed_for))
 
     @classmethod
     def _intermediate_bubbles_1(cls, brackets):
@@ -507,7 +507,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                 unfilled[points-0.5] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
 
         if unfilled:
-            raise DrawError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
+            raise DrawFatalError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
 
         # Currently, the brackets are out of order, since e.g. 3.5 would have been
         # inserted after 3 (or maybe even after 2). Let's change that:
@@ -535,7 +535,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
             for unfilled_points, unfilled_pool in unfilled.items():
                 intermediates.setdefault(unfilled_points, list())
                 if unfilled_pool["aff"] and unfilled_pool["neg"]:
-                    raise DrawError("An unfilled pool unexpectedly had both affirmative and negative teams.")
+                    raise DrawFatalError("An unfilled pool unexpectedly had both affirmative and negative teams.")
                 elif unfilled_pool["aff"]:
                     # In a new bracket, take the lesser of how many excess affirmative
                     # teams there are, and how many negative teams in the pool we have.
@@ -582,7 +582,7 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
                 unfilled[points] = {"aff": pool["aff"][n:], "neg": pool["neg"][n:]}
 
         if unfilled:
-            raise DrawError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
+            raise DrawFatalError("There are still unfilled intermediate brackets!\n" + repr(unfilled))
 
         # Currently, the brackets are out of order, since e.g. 3.5 would have been
         # inserted after 3 (or maybe even after 2). Let's change that:

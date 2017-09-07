@@ -437,15 +437,15 @@ class BaseBallotSetForm(forms.Form):
                 # The last speaker can't give the reply.
                 if reply_speaker == last_speaker and reply_speaker is not None:
                     self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
-                        _("The last substantive speaker and reply speaker for the %(side)s team can't be the same."),
-                        params={'side': self._side_name(side)}, code='reply_speaker_consecutive'
+                        _("The last substantive speaker and reply speaker can't be the same."),
+                        code='reply_speaker_consecutive'
                     ))
 
                 # The reply speaker must have given a substantive speech.
                 if speaker_counts[reply_speaker] == 0:
                     self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
-                        _("The reply speaker for the %(side)s team did not give a substantive speech."),
-                        params={'side': self._side_name(side)}, code='reply_speaker_not_repeat'
+                        _("The reply speaker for this team did not give a substantive speech."),
+                        code='reply_speaker_not_repeat'
                     ))
 
     def clean_scoresheet(self, cleaned_data):

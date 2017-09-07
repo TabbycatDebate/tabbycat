@@ -29,7 +29,7 @@ from venues.allocator import allocate_venues
 from venues.models import VenueCategory, VenueConstraint
 
 from .dbutils import delete_round_draw
-from .generator import DrawError
+from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
@@ -314,12 +314,21 @@ class CreateDrawView(DrawStatusEdit):
         try:
             manager = DrawManager(round)
             manager.create()
-        except DrawError as e:
-            messages.error(request, mark_safe(_("<p>There was a problem creating the draw: "
-                "<em>%(error)s</em></p>\n"
-                "<p>If this issue persists and you're not sure how to resolve it, "
-                "please contact the developers.</p>") % {'error': str(e)}))
-            logger.exception("Problem creating draw: " + str(e))
+        except DrawUserError as e:
+            messages.error(request, mark_safe(
+                _("<p>The draw could not be created, for the following reason: "
+                "<em>%(message)s</em></p>\n"
+                "<p>Please fix this issue before attempting to create the draw.</p>"
+                ) % {'message': str(e)}))
+            logger.warning("User error creating draw: " + str(e), exc_info=True)
+            return HttpResponseRedirect(reverse_round('availability-index', round))
+        except DrawFatalError as e:
+            messages.error(request, mark_safe(
+                _("The draw could not be created, because the following error occurred: "
+                "<em>%(message)s</em></p>\n"
+                "<p>If this issue persists and you're not sure how to resolve it, please "
+                "contact the developers.</p>") % {'message': str(e)}))
+            logger.exception("Fatal error creating draw: " + str(e))
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
         relevant_adj_venue_constraints = VenueConstraint.objects.filter(
