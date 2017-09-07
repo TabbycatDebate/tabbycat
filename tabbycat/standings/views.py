@@ -4,6 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.views.generic.base import TemplateView
@@ -80,6 +81,14 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
 class BaseStandingsView(RoundMixin, VueTableTemplateView):
 
     template_name = 'standings_table.html'
+
+    standings_error_message = ugettext_lazy(
+        "<p>There was an error generating the standings: "
+        "<em>%(message)s</em></p>\n"
+        "<p>You may need to double-check the standings configuration under "
+        "the Setup section. If this issue persists and you're not sure how "
+        "to fix it, please contact the developers.</p>"
+    )
 
     def get_rounds(self):
         """Returns all of the rounds that should be included in the tab."""
@@ -173,10 +182,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         try:
             standings, rounds = self.get_standings()
         except StandingsError as e:
-            messages.error(self.request, _("There was an error generating the standings: "
-                "%(message)s. You may need to double-check the standings configuration under "
-                "the Setup section. If this issue persists and you're not sure how to fix it, "
-                "please contact the developers.") % {'message': str(e)})
+            messages.error(self.request, mark_safe(self.standings_error_message % {'message': str(e)}))
             logger.exception("Error generating standings: " + str(e))
             return table
 
@@ -389,10 +395,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         try:
             standings, rounds = self.get_standings()
         except StandingsError as e:
-            messages.error(self.request, _("There was an error generating the standings: "
-                "%(message)s. You may need to double-check the standings configuration under "
-                "the Setup section. If this issue persists and you're not sure how to fix it, "
-                "please contact the developers.") % {'message': str(e)})
+            messages.error(self.request, mark_safe(self.standings_error_message % {'message': str(e)}))
             logger.exception("Error generating standings: " + str(e))
             return table
 
