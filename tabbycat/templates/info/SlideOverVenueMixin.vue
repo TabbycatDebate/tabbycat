@@ -10,7 +10,7 @@ export default {
       var categories = _.map(this.venue.categories, function(vc) {
         return {
           'title': self.getCategoryName(vc),
-          'icon': 'glyphicon-tags'
+          'icon': 'tag'
         }
       })
       return categories

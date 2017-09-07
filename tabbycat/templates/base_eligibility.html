@@ -3,7 +3,7 @@
 
 {% block page-subnav-actions %}
   <button class="btn btn-success " id="submit-nav" data-loading-text="{% trans "Saving…" %}">
-    <span class="icon glyphicon-floppy-disk"></span> {% block save-button-text %}{% endblock %}
+    {% block save-button-text %}{% endblock %}
   </button>
 {% endblock %}
 
