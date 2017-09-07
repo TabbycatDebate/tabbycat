@@ -7,7 +7,7 @@ from statistics import pvariance
 
 import munkres
 
-from .common import BaseBPDrawGenerator, BPPairing, DrawError
+from .common import BaseBPDrawGenerator, BPPairing, DrawUserError
 
 logger = logging.getLogger(__name__)
 
@@ -170,7 +170,8 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
                 logger.info("Using Rényi entropy with α = %f", α)
                 return self._get_position_cost_renyi_entropy_function(α)
             else:
-                raise DrawError("The Rényi order can't be negative, and it's currently set to %f." % α)
+                raise DrawUserError(_("The Rényi order can't be negative, and it's currently set "
+                    "to %(alpha)f.") % {'alpha': α})
         else:  # fall back to general implementation
             return self.get_option_function("position_cost", self.POSITION_COST_FUNCTIONS)
 
