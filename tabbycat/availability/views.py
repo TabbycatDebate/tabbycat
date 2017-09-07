@@ -146,18 +146,18 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
         table.add_column(_("Active Now"), [{
-                'component': 'availability-check-cell',
-                'available': inst.available,
-                'sort': inst.available,
-                'id': inst.id,
-                'prev': inst.prev_available if round.prev else False,
-            } for inst in queryset])
+            'component': 'availability-check-cell',
+            'available': inst.available,
+            'sort': inst.available,
+            'id': inst.id,
+            'prev': inst.prev_available if round.prev else False,
+        } for inst in queryset])
 
         if round.prev:
             table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}, [{
-                    'sort': inst.prev_available,
-                    'icon': 'check' if inst.prev_available else ''
-                } for inst in queryset])
+                'sort': inst.prev_available,
+                'icon': 'check' if inst.prev_available else ''
+            } for inst in queryset])
 
         self.add_description_columns(table, queryset)
         return table
