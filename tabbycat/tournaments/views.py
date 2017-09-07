@@ -233,6 +233,10 @@ class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
         return context
 
 
+class FixDebateTeamsView(SuperuserRequiredMixin, TemplateView):
+    template_name = "fix_debate_teams.html"
+
+
 class TournamentPermanentRedirectView(RedirectView):
     """Redirect old-style /t/<slug>/... URLs to new-style /<slug>/... URLs."""
 
