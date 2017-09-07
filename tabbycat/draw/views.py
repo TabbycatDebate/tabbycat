@@ -8,6 +8,7 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext as _
 
 from actionlog.mixins import LogActionMixin
@@ -301,15 +302,20 @@ class CreateDrawView(DrawStatusEdit):
         try:
             manager.create()
         except DrawUserError as e:
-            messages.error(request, _("The draw could not be created, for the following reason: "
-                "%(message)s Please fix this issue before attempting to create the "
-                "draw.") % {'message': str(e)})
+            messages.error(request, mark_safe(_(
+                "<p>The draw could not be created, for the following reason: "
+                "<em>%(message)s</em></p>\n"
+                "<p>Please fix this issue before attempting to create the draw.</p>"
+            ) % {'message': str(e)}))
             logger.warning("User error creating draw: " + str(e), exc_info=True)
             return HttpResponseRedirect(reverse_round('availability-index', round))
         except DrawFatalError as e:
-            messages.error(request, _("The draw could not be created, because the following error "
-                "occurred: %(message)s. If this issue persists and you're not sure how to "
-                "fix it, please contact the developers.") % {'message': str(e)})
+            messages.error(request, mark_safe(_(
+                "The draw could not be created, because the following error occurred: "
+                "<em>%(message)s</em></p>\n"
+                "<p>If this issue persists and you're not sure how to resolve it, please "
+                "contact the developers.</p>"
+            ) % {'message': str(e)}))
             logger.exception("Fatal error creating draw: " + str(e))
             return HttpResponseRedirect(reverse_round('availability-index', round))
 
