@@ -234,6 +234,50 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['popover']['content'].append(self._team_record_link(team))
         return cell
 
+    def _result_cell_class_two(self, win, cell):
+        if win is True:
+            cell['popover']['title'] += " won"
+            cell['icon'] = "chevron-up"
+            cell['iconClass'] = "text-success"
+            cell['sort'] = 2
+        elif win is False:
+            cell['popover']['title'] += " lost"
+            cell['icon'] = "chevron-down"
+            cell['iconClass'] = "text-danger"
+            cell['sort'] = 1
+        else: # None
+            cell['popover']['title'] += "—no result"
+            cell['icon'] = ""
+            cell['sort'] = 0
+        return cell
+
+    def _result_cell_class_four(self, points, cell):
+        if points is 3:
+            cell['popover']['title'] += " took 1st"
+            cell['icon'] = "chevrons-up"
+            cell['iconClass'] = "text-success"
+            cell['sort'] = 4
+        elif points is 2:
+            cell['popover']['title'] += " took 2nd"
+            cell['icon'] = "chevron-up"
+            cell['iconClass'] = "text-info"
+            cell['sort'] = 3
+        elif points is 1:
+            cell['popover']['title'] += " took 3rd"
+            cell['icon'] = "chevron-down"
+            cell['iconClass'] = "text-warning"
+            cell['sort'] = 2
+        elif points is 0:
+            cell['popover']['title'] += " took 4th"
+            cell['icon'] = "chevrons-down"
+            cell['iconClass'] = "text-danger"
+            cell['sort'] = 1
+        else: # None
+            cell['popover']['title'] += "—no result"
+            cell['icon'] = ""
+            cell['sort'] = 0
+        return cell
+
     def _result_cell_two(self, ts, compress=False, show_score=False, show_ballots=False):
         if not hasattr(ts, 'debate_team') or not hasattr(ts.debate_team.opponent, 'team'):
             return {'text': self.BLANK_TEXT}
@@ -245,18 +289,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'text': _(" vs %(opposition)s") % {'opposition': opp_vshort if compress else opp.short_name},
             'popover': {'content': [{'text': ''}], 'title': ''}
         }
+        cell = self._result_cell_class_two(ts.win, cell)
 
         if ts.win is True:
-            cell['icon'] = "arrow-up text-success"
-            cell['sort'] = 1
             cell['popover']['title'] = _("Won against %(team)s") % {'team': opp.long_name}
         elif ts.win is False:
-            cell['icon'] = "arrow-down text-danger"
-            cell['sort'] = 2
             cell['popover']['title'] = _("Lost to %(team)s") % {'team': opp.long_name}
         else: # None
-            cell['icon'] = ""
-            cell['sort'] = 3
             cell['popover']['title'] = _("No result for debate against %(team)s") % {'team': opp.long_name}
 
         if show_score:
@@ -295,7 +334,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 line = "<strong>" + line + "</strong>"
             other_team_strs.append(line)
 
-        cell = {'popover': {'content': [{'text': "<br />".join(other_team_strs)}]}}
+        cell = {'popover': {
+            'content': [{'text': "<br />".join(other_team_strs)}],
+            'title': ""
+        }}
+        cell = self._result_cell_class_four(ts.points, cell)
 
         side = ts.debate_team.get_side_name()
         if ts.points is not None:
@@ -777,16 +820,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     continue
 
                 cell = self._team_cell(team, hide_emoji=True)
-
-                if debateteam.win is True:
-                    cell['popover']['title'] += "—won"
-                    cell['icon'] = "arrow-up text-success"
-                elif debateteam.win is False:
-                    cell['popover']['title'] += "—lost"
-                    cell['icon'] = "arrow-down text-danger"
-                else: # None
-                    cell['popover']['title'] += "—no result"
-                    cell['icon'] = ""
+                if self.tournament.pref('teams_in_debate') == 'bp':
+                    cell = self._result_cell_class_four(debateteam.points, cell)
+                else:
+                    cell = self._result_cell_class_two(debateteam.win, cell)
 
                 row.append(cell)
             results_data.append(row)

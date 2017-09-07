@@ -117,12 +117,22 @@ thead,
 .table > tbody > tr > td,
 .draw-container .thead {
   padding: 8px 4px; // Narrow spacing post-BP
+}
 
-  .feather {
-    width: 14px;
-    height: 14px;
-    margin-bottom: -3px;
-  }
+// Icons in headers
+.table > thead > tr > th .feather,
+.draw-container .thead .feather {
+  width: 14px;
+  height: 14px;
+  margin-bottom: -3px;
+}
+
+// Icons in cells (may as well make them big to match text size)
+.table > tbody > tr > td .feather {
+  width: 24px;
+  height: 24px;
+  margin-bottom: -6px;
+  margin-right: -3px;
 }
 
 .team-name {
