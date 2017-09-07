@@ -9,6 +9,10 @@
 
 {% block page-subnav-actions %}
 
+  <a href="{% roundurl 'results-round-list' %}" class="btn btn-outline-primary">
+    <i data-feather="chevron-left"></i>Enter Results
+  </a>
+
   <form action="{% roundurl 'tournament-advance-round' %}" method="POST">
     {% csrf_token %}
     <button class="btn  {{increment_ok|yesno:"btn-success,btn-danger"}}" id="createDraw" type="submit" data-loading-text="Advancing...">
