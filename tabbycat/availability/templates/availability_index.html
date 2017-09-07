@@ -147,7 +147,7 @@
 
   {% if min_venues > checkin_types.2.in_now %}
     <div class="alert alert-warning">
-      {% blocktrans trimmed with required_count=min_venue|apnumber count count=min_venues %}
+      {% blocktrans trimmed with required_count=min_venues|apnumber count count=min_venues %}
         There needs to be at least one venue checked in, given the number of
         debates.
       {% plural %}
