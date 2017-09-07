@@ -60,7 +60,7 @@ export default {
           if (clashesType === 'team') {
             if (!_.isUndefined(self.teamsById[clash])) {
               var clashName = self.teamsById[clash].short_name
-              var clashIcon = 'glyphicon-comment'
+              var clashIcon = 'message-circle'
             }
           } else if (clashesType === 'adjudicator') {
             if (!_.isUndefined(self.adjudicatorsById[clash])) {
@@ -117,7 +117,7 @@ export default {
       _.forEach(formattedHistories, function(history, index) {
         if (!_.includes(countedRounds, history.ago)) {
           formattedHistories.splice(index, 0, {
-            'title': '-' + history.ago, 'icon': 'glyphicon-time',
+            'title': '-' + history.ago, 'icon': 'clock',
             'class': history.ago > 2 ? ' visible-lg-block' : ' '
           })
           countedRounds.push(history.ago)

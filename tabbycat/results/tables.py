@@ -52,7 +52,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             link = reverse_tournament('results-ballotset-edit',
                                       self.tournament,
                                       kwargs={'pk': ballotsub.id})
-            ballotsubs_info += "<a href=" + link + ">"
+            ballotsubs_info += "<a href=" + link + " class='text-nowrap'>"
 
             if ballotsub.confirmed:
                 edit_status = "Re-edit v" + str(ballotsub.version)
@@ -64,16 +64,14 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             if ballotsub.discarded:
                 ballotsubs_info += "<strike class='text-muted'>" + edit_status + "</strike></a><small> discarded; "
             else:
-                ballotsubs_info += edit_status + "</a><small>"
-
-            ballotsubs_info += "<br>" # Entered in should be on a new line
+                ballotsubs_info += edit_status + "</a><small class='d-block text-nowrap'>"
 
             if ballotsub.submitter_type == ballotsub.SUBMITTER_TABROOM:
-                ballotsubs_info += " <em class='text-nowrap'>entered by " + ballotsub.submitter.username + "</em>"
+                ballotsubs_info += " added by " + ballotsub.submitter.username
             elif ballotsub.submitter_type == ballotsub.SUBMITTER_PUBLIC:
-                ballotsubs_info += " <em class='text-nowrap'>a public submission by " + ballotsub.ip_address + "</em>"
+                ballotsubs_info += " a public submission by " + ballotsub.ip_address
 
-            ballotsubs_info += "</small><br />"
+            ballotsubs_info += "</small>"
 
         if all(x.discarded for x in ballotsubmissions):
             link = reverse_tournament('results-ballotset-new',

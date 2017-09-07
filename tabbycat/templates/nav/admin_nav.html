@@ -2,13 +2,16 @@
 
 <div class="list-group border-0 card text-center text-md-left">
 
-  <a href="#tlisth" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
-    data-parent="#sidebar" class="list-group-item d-inline-block">
-    <h6 class="pt-0 pt-md-4 pb-0 pb-md-1 tournament-title float-left">
+  <a href="#tlisth" data-toggle="collapse" data-parent="#sidebar"
+    aria-expanded="false" data-parent="#sidebar"
+    class="list-group-item d-inline-block tournament-title d-flex justify-content-between align-items-center">
+    <div>
       {% if tournament.emoji %}{{ tournament.emoji }}{% else %}<i data-feather="award"></i>{% endif %}
-      <span class="d-none d-md-inline">{{ tournament }}</span>
-    </h6>
-    <div class="pt-4 float-right">
+    </div>
+    <div class="mb-0 d-none d-md-inline h6 mr-auto pt-1 pl-1 pr-2">
+      {{ tournament }}
+    </div>
+    <div>
       <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
       <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
     </div>
@@ -16,17 +19,17 @@
   <div class="collapse" id="tlisth">
     {% for t in all_tournaments %}
       <a href="{{ t.get_absolute_url  }}" class="list-group-item" data-parent="#titleh">
-        <i data-feather="settings" class="d-none d-md-inline"></i>{{ t }}
+        <i data-feather="settings"></i>{{ t }}
       </a>
       <a href="{{ t.get_public_url  }}" class="list-group-item" data-parent="#titleh">
-        <i data-feather="eye" class="d-none d-md-inline"></i>{{ t }}
+        <i data-feather="eye"></i>{{ t }}
       </a>
     {% endfor %}
     <a href="/" class="list-group-item" data-parent="#titleh">
-      <i data-feather="home" class="d-none d-md-inline"></i>Site Home
+      <i data-feather="home"></i>Site Home
     </a>
     <a href="{% url 'tournament-create' %}" class="list-group-item" data-parent="#titleh">
-      <i data-feather="edit-2" class="d-none d-md-inline"></i>New Tournament
+      <i data-feather="edit-2"></i>New Tournament
     </a>
   </div>
 

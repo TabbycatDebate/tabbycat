@@ -7,6 +7,7 @@ Change Log
 -----
 *Release date: *
 
+- After creating a new tournament you will now be prompted to apply a basic rules and public information preset
 - Updated design
   - Better tablet and mobile interfaces; including a fully responsive sidebar for the admin area
   - Rolled the motions stage into the 'display' stage of the round workflow

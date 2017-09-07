@@ -6,7 +6,7 @@
     </span>
 
     <!-- Icons or Emoji -->
-    <span v-if="cellData['icon']" v-html="getFeatherIcon"></span>
+    <span v-if="cellData['icon']" :class="cellData['iconClass']" v-html="getFeatherIcon"></span>
     <span v-if="cellData['emoji']" class="emoji" >{{ cellData["emoji"] }}</span>
 
     <!-- Tooltip/Popovers Hovers Wrapper -->

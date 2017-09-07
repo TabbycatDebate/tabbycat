@@ -342,6 +342,22 @@ class DebateTeam(models.Model):
                 self._win = None
             return self._win
 
+    @property
+    def points(self):
+        """Convenience function. Returns the number of points this team received
+        or None if there isn't a confirmed result.
+
+        This result is stored for the lifetime of the instance -- it won't
+        update on the same instance if a result is entered."""
+        try:
+            return self._points
+        except AttributeError:
+            try:
+                self._points = self.teamscore_set.get(ballot_submission__confirmed=True).points
+            except ObjectDoesNotExist:
+                self._points = None
+            return self._points
+
     def get_side_name(self, tournament=None, name_type='full'):
         """Should be used instead of get_side_display() on views.
         `tournament` can be passed in if known, for performance."""

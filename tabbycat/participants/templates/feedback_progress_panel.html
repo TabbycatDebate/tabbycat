@@ -33,7 +33,7 @@
       {% elif tracker.expected %}
         <div class="list-group-item text-warning">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
-          <span class="icon glyphicon-question-sign"></span>
+          <i data-feather="info"></i>
           More feedback submissions than expected for this debate:
           {% for submission in tracker.acceptable_submissions %}
               <strong>{{ submission.adjudicator.name }}</strong> of
@@ -43,7 +43,7 @@
       {% else %} {# if not tracker.fulfilled and not tracker.expected #}
         <div class="list-group-item text-warning">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
-          <span class="icon glyphicon-question-sign"></span>
+          <i data-feather="info"></i>
           Unexpected feedback submission for
           <strong>{{ tracker.submission.adjudicator.name }}</strong> of
           {{ tracker.submission.adjudicator.institution.code }}

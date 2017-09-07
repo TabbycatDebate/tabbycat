@@ -5,7 +5,7 @@
 
     <div class="list-group-item">
       <h5 class="mb-0">
-        <span class="badge
+        <span class="badge float-right
               {% if feedback.score <= score_thresholds.low_score %}badge-danger
               {% elif feedback.score <= score_thresholds.medium_score %}badge-warning
               {% elif feedback.score > score_thresholds.high_score %}badge-success
@@ -17,10 +17,10 @@
       </h5>
     </div>
     {% if not feedback.confirmed %}
-      <div class="list-group-item list-group-item-danger" data-toggle="tooltip"
+      <div class="list-group-item text-info" data-toggle="tooltip"
         title="This is most likely because the team or adjudicator who submitted
          this feedback has done submitted several times on the same person.">
-        <span class="icon glyphicon-info-sign"></span>
+        <i data-feather="info"></i>
         This feedback is not confirmed; it will not affect this adjudicator's score.
       </div>
     {% endif %}
@@ -41,8 +41,14 @@
       {% if item.answer %}
         <div class="list-group-item">
           {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
-            <small><strong title="{{ item.question.text }}" data-toggle="tooltip">{{ item.question.reference }}</strong></small>
-            <span class="icon glyphicon-{{ item.answer|yesno:"ok text-success,remove text-danger,minus" }}"></span>
+            {% if item.answer %}
+              <i data-feather="check" class="text-success"></i>
+            {% else %}
+              <i data-feather="x" class="text-danger"></i>
+            {% endif %}
+            <small title="{{ item.question.text }}" data-toggle="tooltip">
+              {{ item.question.reference }}
+            </small>
           {% elif item.question.answer_type == 'f' %}
             <small><strong>{{ item.question.text }}</strong></small>
             {{ item.answer|floatformat:"2" }}

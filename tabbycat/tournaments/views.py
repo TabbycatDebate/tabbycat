@@ -197,7 +197,7 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
             messages.success(self.request, "Created new demo tournament. You "
                 "can now configure it below.")
 
-        new_tournament = Tournament.objects.order_by('seq').last()
+        new_tournament = Tournament.objects.order_by('id').last()
         return redirect(reverse_tournament('tournament-configure', tournament=new_tournament))
 
 
@@ -247,6 +247,10 @@ class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
             self.redirect_field_name: self.get_redirect_to(use_default=False),
         })
         return context
+
+
+class FixDebateTeamsView(SuperuserRequiredMixin, TemplateView):
+    template_name = "fix_debate_teams.html"
 
 
 class TournamentPermanentRedirectView(RedirectView):

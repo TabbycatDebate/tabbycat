@@ -24,7 +24,6 @@
   border-left: 0;
   border-right: 0;
   color: $sidebar-muted-text;
-  white-space: nowrap;
 
   &.active,
   &[aria-expanded="true"] {
@@ -55,9 +54,8 @@
   }
 }
 
-.admin-sidebar .list-group-item.tournament-title {
-  text-transform: uppercase;
-  float: left;
+.admin-sidebar .tournament-title {
+  min-height: 70px;
 }
 
 .sidebar-expand {

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load debate_tags %}
+{% load add_field_css i18n %}
+
+{% block page-title %}Debate Team Error{% endblock %}
+{% block head-title %}
+  <span class="emoji">‼️</span>Debate Team Missing
+{% endblock %}
+
+
+{% block content %}
+
+  <div class="card">
+    <div class="card-body">
+
+      <p class="card-text">
+        Debates in Tabbycat always require all positions to be assigned, and for
+        each position to be occupied. When that is not the case this error occurs.
+        Usually this is the result of debates having been manually edited.
+      </p>
+
+      <p class="card-text">
+        To fix this you will need to go to <em>Debates</em> section of the Edit
+        Database area and then find the debate the red message above mentions.
+        If you can't find that specific debate easily, click through to any
+        debate and then change the number in the URL to match the "debate ID"
+        mentioned above; i.e.
+        <code>yourtournament.com/database/draw/debate/<strong>85</strong>/change/</code>
+      </p>
+
+      <p>
+        Once in that debate click through to the <strong>Debate Teams</strong>
+        tab and ensure that:
+      </p>
+
+      <ul>
+        <li>Every <strong>Side</strong> that should be present in the debate is
+        present and has a <strong>Team</strong> assigned. If a team is missing,
+        find an empty row and use the magnifying glass to select a team. Then
+        set the new team's side as relevant.
+        </li>
+        <li>No <strong>Team</strong> has the same <strong>Side</strong> as
+        another team.</li>
+      </ul>
+
+      <p class="card-text">Note that after making changes you'll need to
+      <strong>Save</strong> them. You should then be able to return to whatever
+      page you were originally on without the error reoccurring.</p>
+
+      <hr>
+
+      <a href="{% url 'admin:draw_debate_changelist' %}"
+         class="btn btn-block btn-success" target="_blank">
+         Go the Debates section of the Edit Database Area
+      </a>
+
+    </div>
+  </div>
+
+{% endblock %}

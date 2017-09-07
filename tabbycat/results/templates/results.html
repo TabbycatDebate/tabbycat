@@ -9,7 +9,7 @@
 {% block page-subnav-sections %}
   {% if user.is_superuser %}
     <a href="{% roundurl 'motions-edit' %}" class="btn btn-outline-primary">
-      <i data-feather="chevron-left"></i> Back to Motions
+      <i data-feather="chevron-left"></i> Edit Motions
     </a>
     <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
       Check In Ballots
@@ -20,7 +20,7 @@
 
 {% block page-subnav-actions %}
   {% if user.is_superuser and round.seq < tournament.round_set.count and current_round == round %}
-    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
+    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
       Advance to Next Round <i data-feather="chevron-right"></i>
     </a>
   {% endif %}
@@ -46,33 +46,33 @@
 
   <div class="row mb-4">
 
-    <div class="col-3">
+    <div class="col-md-3 col-12">
       <span class="btn btn-block btn-primary disabled">
         {{ stats.ballot_in }} Checked In <i data-feather="inbox"></i>
       </span>
     </div>
-    <div class="col-3">
+    <div class="col-md-3 col-12">
       <span class="btn btn-block btn-danger disabled">
         {{ stats.none }} Unknown <i data-feather="x"></i>
        </span>
     </div>
-    <div class="col-3">
+    <div class="col-md-3 col-12">
       <span class="btn btn-block btn-warning disabled">
         {{ stats.draft }} Unconfirmed <i data-feather="circle"></i>
        </span>
     </div>
-    <div class="col-3">
+    <div class="col-md-3 col-12">
       <span class="btn btn-block btn-success disabled">
         {{ stats.confirmed }} Confirmed <i data-feather="check"></i>
        </span>
     </div>
     {% if pref.enable_postponements %}
-      <div class="col-3">
+      <div class="col-md-3 col-12">
         <span class="btn btn-block btn-primary disabled">
           {{ stats.postponed }} Postponed <i data-feather="pause"></i>
          </span>
       </div>
-      <div class="col-3">
+      <div class="col-md-3 col-12">
         <span class="btn btn-block btn-primary disabled">
           Byes <span class="icon fast-forward"></span>
          </span>

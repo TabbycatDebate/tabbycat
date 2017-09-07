@@ -22,12 +22,12 @@ class BaseRankAnnotator:
     Subclasses must implement the method `annotate()`.
 
     Subclasses must also set the `key`, `name` and `abbr` attributes, either as
-    class attributes or object attributes. The `glyphicon` attribute is
+    class attributes or object attributes. The `icon` attribute is
     optional.
 
      - `name` is a name for display in the user interface
      - `abbr` is used instead of `name` when there is not enough space for `name`
-     - `glyphicon`, optional, is the name of a glyphicon to be used if possible
+     - `icon`, optional, is the name of a icon to be used if possible
 
     The default constructor does nothing, but subclasses may have constructors
     that initialise themselves with parameters."""
@@ -35,10 +35,10 @@ class BaseRankAnnotator:
     key = None  # Must be set by subclasses
     name = None  # Must be set by subclasses
     abbr = None  # Must be set by subclasses
-    glyphicon = None
+    icon = None
 
     def run(self, standings):
-        standings.record_added_ranking(self.key, self.name, self.abbr, self.glyphicon)
+        standings.record_added_ranking(self.key, self.name, self.abbr, self.icon)
         self.annotate(standings.rank_eligible)
 
     def annotate(self, standings):
@@ -55,7 +55,7 @@ class BasicRankAnnotator(BaseRankAnnotator):
     key = "rank"
     name = "rank"
     abbr = "Rk"
-    glyphicon = "signal"
+    icon = "bar-chart"
 
     def __init__(self, metrics):
         self.rank_key = metricgetter(*metrics)
