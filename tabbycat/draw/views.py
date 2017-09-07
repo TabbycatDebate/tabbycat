@@ -252,8 +252,10 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         def _count(conflicts):
             return [len([x for x in c if x[0] != 'success']) > 0 for c in conflicts.values()].count(True)
 
-        data['debates_with_adj_conflicts'] = _count(self.adjudicator_conflicts)
-        data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
+        if hasattr(self, 'adjudicator_conflicts'):
+            data['debates_with_adj_conflicts'] = _count(self.adjudicator_conflicts)
+        if hasattr(self, 'venue_conflicts'):
+            data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
         return data
 
     def _add_break_rank_columns(self, table, draw, category):
