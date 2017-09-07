@@ -700,7 +700,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'key': key,
                 'tooltip': tooltip,
                 'icon': info['icon'],
-                'text': str(info['abbr']) if info['icon'] == None else None
+                'text': str(info['abbr']) if info['icon'] is None else None
             }
             headers.append(header)
         return headers

@@ -5,7 +5,7 @@
 
     <div class="list-group-item">
       <h5 class="mb-0">
-        <span class="badge
+        <span class="badge float-right
               {% if feedback.score <= score_thresholds.low_score %}badge-danger
               {% elif feedback.score <= score_thresholds.medium_score %}badge-warning
               {% elif feedback.score > score_thresholds.high_score %}badge-success
@@ -17,7 +17,7 @@
       </h5>
     </div>
     {% if not feedback.confirmed %}
-      <div class="list-group-item list-group-item-danger" data-toggle="tooltip"
+      <div class="list-group-item text-info" data-toggle="tooltip"
         title="This is most likely because the team or adjudicator who submitted
          this feedback has done submitted several times on the same person.">
         <i data-feather="info"></i>

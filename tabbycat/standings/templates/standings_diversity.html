@@ -6,8 +6,8 @@
 {% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
 {% block diversity_active %}active{% endblock %}
 
-{% block page-alerts %}
 
+{% block page-subnav-sections %}
   <div class="nav nav-pills navbar-left btn-group mb-3">
     <button disabled class="btn btn-primary gender-display gender-male h6">
       Male identifying
@@ -19,16 +19,21 @@
       Unknown
     </button>
   </div>
+{% endblock %}
 
-  {% include "components/explainer-card.html" with type="info" p1="The speaker and adjudicator results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments." %}
-
-  <div class="nav nav-pills pull-right btn-group mb-3">
+{% block page-subnav-actions %}
+  <div class="nav nav-pills float-right btn-group mb-3">
     {% for r in regions %}
       <button disabled class="btn btn-primary region-display region-{{ r.seq }} h6">
         {{ r.name }}
       </button>
     {% endfor %}
   </div>
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% include "components/explainer-card.html" with type="info" p1="The speaker and adjudicator results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments." %}
 
 {% endblock %}
 
