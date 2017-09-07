@@ -8,10 +8,10 @@
     <div>
       {% if tournament.emoji %}{{ tournament.emoji }}{% else %}<i data-feather="award"></i>{% endif %}
     </div>
-    <h6 class="mb-0">
-      <div class="d-none d-md-inline">{{ tournament }}</div>
-    </h6>
-    <div class="">
+    <div class="mb-0 d-none d-md-inline h6 mr-auto pt-1 pl-1 pr-2">
+      {{ tournament }}
+    </div>
+    <div>
       <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
       <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
     </div>
