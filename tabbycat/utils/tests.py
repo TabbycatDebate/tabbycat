@@ -151,7 +151,6 @@ class TableViewTestsMixin:
         return False
 
 
-
 class ConditionalTableViewTestsMixin(TableViewTestsMixin, ConditionalTournamentTestsMixin):
     """Combination of TableViewTestsMixin and ConditionalTournamentTestsMixin,
     for convenience."""
