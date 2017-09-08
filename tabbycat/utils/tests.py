@@ -38,18 +38,7 @@ def suppress_logs(name, level, returnto=logging.NOTSET):
     suppressed_logger.setLevel(returnto)
 
 
-class BaseViewTest():
-    """For testing a view class that is always available. Inheriting classes
-    must also inherit from TestCase"""
-
-    def test(self):
-        response = self.get_response()
-        # 200 OK should be issued if setting is not enabled
-        self.assertEqual(response.status_code, 200)
-        self.validate_table_data(response)
-
-
-class BaseTournamentTest():
+class TournamentTestCase(TestCase):
     """For testing a populated view on a tournament with a given set dataset"""
 
     fixtures = ['completed_demo.json']
@@ -76,16 +65,12 @@ class BaseTournamentTest():
     def get_response(self):
         with self.modify_settings(
             # Remove whitenoise middleware as it won't resolve on Travis
-            MIDDLEWARE={
-                'remove': [
-                    'whitenoise.middleware.WhiteNoiseMiddleware',
-                ],
-            }
+            MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']}
         ):
             return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
 
-class BaseTableViewTest(BaseTournamentTest):
+class TableViewTestCase(TournamentTestCase):
     """Base class for testing table views; provides methods for validating data.
     If inheriting classes are validating data they should overwrite
     table_data methods"""
@@ -114,7 +99,7 @@ class BaseTableViewTest(BaseTournamentTest):
         return False
 
 
-class ConditionalTableViewTest(BaseTableViewTest):
+class ConditionalTableViewTestCase(TableViewTestCase):
     """For testing a view class that is conditionally shown depending on a
     preference being set or not. Inheriting classes must also inherit from
     TestCase and provide a view_toggle as a dynamic preferences path"""
@@ -170,7 +155,7 @@ class BaseDebateTestCase(TestCase):
         self.t.delete()
 
 
-class BaseSeleniumTestCase(StaticLiveServerTestCase):
+class SeleniumTestCase(StaticLiveServerTestCase):
     """Used to verify rendered html and javascript functionality on the site as
     rendered. Opens a Chrome window and checks for JS/DOM state on the fixture
     debate."""
@@ -187,10 +172,9 @@ class BaseSeleniumTestCase(StaticLiveServerTestCase):
         super(BaseSeleniumTestCase, cls).tearDownClass()
 
 
-class BaseSeleniumTournamentTestCase(BaseSeleniumTestCase, BaseTournamentTest):
+class SeleniumTournamentTestCase(TournamentTestCase, SeleniumTestCase):
     """ Basically reimplementing BaseTournamentTest; but use cls not self """
 
-    fixtures = ['completed_demo.json'] # Must be set here; doesn't inheret
     set_preferences = None
     unset_preferences = None
 
