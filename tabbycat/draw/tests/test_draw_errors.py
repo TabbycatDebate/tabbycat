@@ -1,12 +1,11 @@
 import logging
 
-from django.test import modify_settings
 from django.contrib.messages import ERROR
 
 from availability.utils import set_availability
-from draw.generator import DrawFatalError, DrawUserError
+from draw.generator import DrawUserError
 from standings.base import StandingsError
-from utils.misc import reverse_round, reverse_tournament
+from utils.misc import reverse_round
 from utils.tests import suppress_logs, TournamentTestCase
 
 
