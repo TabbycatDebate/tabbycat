@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+1.4.3
+-----
+*Release date: 8 September 2017*
+
+- A number of improvements to error handling and logging
+- Changed the "previous round" of an elimination round to point to the last one in the same break category
+- Other minor bug fixes
+
+
 1.4.2
 -----
 *Release date: 23 August 2017*
