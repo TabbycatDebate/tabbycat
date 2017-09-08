@@ -13,8 +13,8 @@
     </div>
 
     <div class="col" v-for="(table, i) in tablesData" :class="tableClass">
-      <div class="card" :id="getTableId(i)">
-        <div class="card-body table-container">
+      <div class="card table-container" :id="getTableId(i)">
+        <div class="card-body">
           <h4 class="card-title p-2" v-if="table.title">{{ table.title }}</h4>
           <smart-table
             :table-headers="table.head" :table-content="table.data"

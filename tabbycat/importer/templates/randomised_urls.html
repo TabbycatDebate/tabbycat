@@ -106,8 +106,8 @@
     <div class="row">
 
       <div class="col">
-        <div class="card">
-          <div class="card-body table-container">
+        <div class="card table-container">
+          <div class="card-body">
             <table class="table table-responsive">
               <thead>
                 <tr>
@@ -138,7 +138,8 @@
                         </td>
                       {% endif %}
                     {% else %}
-                      <td>no URL</td><td>no URL</td>
+                      <td class="text-warning">no URL</td>
+                      <td class="text-warning">no URL</td>
                     {% endif %}
                   </tr>
                 {% empty %}
@@ -153,8 +154,8 @@
       </div>
 
       <div class="col mt-3">
-        <div class="card">
-          <div class="card-body table-container">
+        <div class="card table-container">
+          <div class="card-body">
             <table class="table table-responsive">
               <thead>
                 <tr>
