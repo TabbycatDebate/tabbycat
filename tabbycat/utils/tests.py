@@ -3,7 +3,7 @@ import json
 import logging
 
 from django.core.urlresolvers import reverse
-from django.test import Client, override_settings, TestCase
+from django.test import Client, modify_settings, override_settings, TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.chrome.webdriver import WebDriver
 
@@ -38,6 +38,9 @@ def suppress_logs(name, level, returnto=logging.NOTSET):
     suppressed_logger.setLevel(returnto)
 
 
+# Remove whitenoise middleware as it won't resolve on Travis
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+@modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
 class TournamentTestsMixin:
     """Mixin that provides methods for testing a populated view on a tournament,
     with a prepopulated database."""
@@ -63,13 +66,8 @@ class TournamentTestsMixin:
             kwargs['round_seq'] = self.round_seq
         return kwargs
 
-    @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
     def get_response(self):
-        with self.modify_settings(
-            # Remove whitenoise middleware as it won't resolve on Travis
-            MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']}
-        ):
-            return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
+        return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
 
 class TournamentTestCase(TournamentTestsMixin, TestCase):
