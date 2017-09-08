@@ -4,6 +4,7 @@ from django.contrib import admin, messages
 from django.contrib.auth.views import logout as auth_logout
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
+from django.utils.translation import ugettext as _
 from django.views.generic.base import RedirectView
 
 import tournaments.views
@@ -81,20 +82,26 @@ if settings.DEBUG:  # Only serve debug toolbar when on DEBUG
 # Logout/Login Confirmations
 # ==============================================================================
 
+# These messages don't always work properly with unit tests, so set fail_silently=True
+
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
     if kwargs.get('user'):
-        messages.success(request, 'Later, ' + kwargs['user'].username + ' — you were logged out!')
+        messages.success(request,
+            _("Later, %(username)s — you were logged out!") % {'username': kwargs['user'].username},
+            fail_silently=True)
     else: # should never happen, but just in case
-        messages.success(request, 'Later! You were logged out!')
+        messages.success(request, _("Later! You were logged out!"), fail_silently=True)
 
 
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
     if kwargs.get('user'):
-        messages.success(request, 'Hi, ' + kwargs['user'].username + ' — you just logged in!')
+        messages.success(request,
+            _("Hi, %(username)s — you just logged in!")  % {'username': kwargs['user'].username},
+            fail_silently=True)
     else: # should never happen, but just in case
-        messages.success(request, 'Welcome! You just logged in!')
+        messages.success(request, _("Welcome! You just logged in!"), fail_silently=True)
 
 
 # ==============================================================================

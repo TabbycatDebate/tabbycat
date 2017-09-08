@@ -1,10 +1,10 @@
 from django.test import TestCase
 
-from utils.tests import ConditionalTableViewTest
+from utils.tests import ConditionalTableViewTestsMixin
 from participants.models import Adjudicator, Speaker
 
 
-class PublicParticipantsViewTestCase(ConditionalTableViewTest, TestCase):
+class PublicParticipantsViewTestCase(ConditionalTableViewTestsMixin, TestCase):
 
     view_toggle = 'public_features__public_participants'
     view_name = 'public_participants'
