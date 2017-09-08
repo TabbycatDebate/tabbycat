@@ -1,8 +1,10 @@
+from django.test import TestCase
+
 from tournaments.models import Round
-from utils.tests import ConditionalTableViewTestCase
+from utils.tests import ConditionalTableViewTestsMixin
 
 
-class PublicResultsForRoundViewTestCase(ConditionalTableViewTestCase):
+class PublicResultsForRoundViewTestCase(ConditionalTableViewTestsMixin, TestCase):
 
     view_toggle = 'public_features__public_results'
     view_name = 'results-public-round'

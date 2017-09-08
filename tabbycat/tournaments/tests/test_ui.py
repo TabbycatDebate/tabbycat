@@ -1,9 +1,9 @@
 from django.test import tag
 from selenium.webdriver.support.ui import WebDriverWait
-from utils.tests import BaseSeleniumTournamentTestCase
+from utils.tests import SeleniumTournamentTestCase
 
 
-class CoreFunctionsTests(BaseSeleniumTournamentTestCase):
+class CoreFunctionsTests(SeleniumTournamentTestCase):
 
     @tag('functional')
     def test_login(self):

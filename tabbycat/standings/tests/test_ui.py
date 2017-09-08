@@ -1,10 +1,10 @@
 from django.test import tag
 from selenium.webdriver.support.ui import WebDriverWait
 
-from utils.tests import BaseSeleniumTournamentTestCase
+from utils.tests import SeleniumTournamentTestCase
 
 
-class CoreStandingsTests(BaseSeleniumTournamentTestCase):
+class CoreStandingsTests(SeleniumTournamentTestCase):
 
     set_preferences = ['tab_release__speaker_tab_released',
                        'tab_release__team_tab_released',

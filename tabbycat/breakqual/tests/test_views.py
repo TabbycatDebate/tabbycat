@@ -3,10 +3,10 @@ import logging
 from django.test import TestCase
 
 from breakqual.models import BreakingTeam
-from utils.tests import ConditionalTableViewTestCase, suppress_logs
+from utils.tests import ConditionalTableViewTestsMixin, suppress_logs
 
 
-class BreakingTeamsViewTestMixin(ConditionalTableViewTestCase):
+class BreakingTeamsViewTestMixin(ConditionalTableViewTestsMixin):
     view_name = 'breakqual-public-teams'
     view_toggle = 'public_features__public_breaking_teams'
 
@@ -38,6 +38,6 @@ class PublicEFLBreakingTeamsViewTest(BreakingTeamsViewTestMixin, TestCase):
     break_slug = 'efl'
 
 
-class PublicBreakingAdjudicatorsViewTest(ConditionalTableViewTestCase):
+class PublicBreakingAdjudicatorsViewTest(ConditionalTableViewTestsMixin, TestCase):
     view_name = 'breakqual-public-adjs'
     view_toggle = 'public_features__public_breaking_adjs'
