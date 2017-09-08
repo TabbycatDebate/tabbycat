@@ -7,13 +7,15 @@ Change Log
 -----
 *Release date: *
 
-- After creating a new tournament you will now be prompted to apply a basic rules and public information preset
-- Updated design
+- Refreshed interface design
   - Better tablet and mobile interfaces; including a fully responsive sidebar for the admin area
-  - Rolled the motions stage into the 'display' stage of the round workflow
-  - More explicit and obvious calls-to-action for key tasks to complete
-  - Sidebar menu now displays all sub-items for Feedback, Standings, and Breaks
+  - More explicit and obvious calls-to-action for the key tasks necessary to running a round
+  - Redesign motions tab page
+  - Sidebar menu items now display all sub-items within a section, such as for Feedback, Standings, and Breaks
   - Updated typography, icons, and colors, forms, and more!
+- Quality of life improvements
+  - After creating a new tournament you will now be prompted to apply a basic rules and public information preset
+  - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using.
 
 1.4.2
 -----
