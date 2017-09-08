@@ -38,9 +38,6 @@ def suppress_logs(name, level, returnto=logging.NOTSET):
     suppressed_logger.setLevel(returnto)
 
 
-# Remove whitenoise middleware as it won't resolve on Travis
-@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
-@modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
 class TournamentTestsMixin:
     """Mixin that provides methods for testing a populated view on a tournament,
     with a prepopulated database."""
@@ -66,10 +63,16 @@ class TournamentTestsMixin:
             kwargs['round_seq'] = self.round_seq
         return kwargs
 
+    # Remove whitenoise middleware as it won't resolve on Travis
+    @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+    @modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
     def get_response(self):
         return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
 
+# Remove whitenoise middleware as it won't resolve on Travis
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+@modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
 class TournamentTestCase(TournamentTestsMixin, TestCase):
     """Extension of django.test.TestCase that provides methods for testing a
     populated view on a tournament, with a prepopulated database."""
