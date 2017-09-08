@@ -1156,8 +1156,8 @@
     "pk": 3,
     "fields": {
         "tournament": 1,
-        "name": "EFL",
-        "slug": "efl",
+        "name": "Novice",
+        "slug": "novice",
         "seq": 30,
         "break_size": 2,
         "is_general": false,
@@ -1363,7 +1363,8 @@
     "fields": {
         "debate": 1,
         "team": 12,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1372,7 +1373,8 @@
     "fields": {
         "debate": 1,
         "team": 18,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1381,7 +1383,8 @@
     "fields": {
         "debate": 2,
         "team": 4,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1390,7 +1393,8 @@
     "fields": {
         "debate": 2,
         "team": 17,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1399,7 +1403,8 @@
     "fields": {
         "debate": 3,
         "team": 16,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1408,7 +1413,8 @@
     "fields": {
         "debate": 3,
         "team": 13,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1417,7 +1423,8 @@
     "fields": {
         "debate": 4,
         "team": 20,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1426,7 +1433,8 @@
     "fields": {
         "debate": 4,
         "team": 1,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1435,7 +1443,8 @@
     "fields": {
         "debate": 5,
         "team": 3,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1444,7 +1453,8 @@
     "fields": {
         "debate": 5,
         "team": 8,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1453,7 +1463,8 @@
     "fields": {
         "debate": 6,
         "team": 9,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1462,7 +1473,8 @@
     "fields": {
         "debate": 6,
         "team": 23,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1471,7 +1483,8 @@
     "fields": {
         "debate": 7,
         "team": 11,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1480,7 +1493,8 @@
     "fields": {
         "debate": 7,
         "team": 19,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1489,7 +1503,8 @@
     "fields": {
         "debate": 8,
         "team": 7,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1498,7 +1513,8 @@
     "fields": {
         "debate": 8,
         "team": 22,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1507,7 +1523,8 @@
     "fields": {
         "debate": 9,
         "team": 2,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1516,7 +1533,8 @@
     "fields": {
         "debate": 9,
         "team": 10,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1525,7 +1543,8 @@
     "fields": {
         "debate": 10,
         "team": 24,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1534,7 +1553,8 @@
     "fields": {
         "debate": 10,
         "team": 14,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1543,7 +1563,8 @@
     "fields": {
         "debate": 11,
         "team": 6,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1552,7 +1573,8 @@
     "fields": {
         "debate": 11,
         "team": 21,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1561,7 +1583,8 @@
     "fields": {
         "debate": 12,
         "team": 5,
-        "side": "aff"
+        "side": "aff",
+        "flags": ""
     }
 },
 {
@@ -1570,7 +1593,8 @@
     "fields": {
         "debate": 12,
         "team": 15,
-        "side": "neg"
+        "side": "neg",
+        "flags": ""
     }
 },
 {
@@ -1969,6 +1993,30 @@
     }
 },
 {
+    "model": "participants.speakercategory",
+    "pk": 1,
+    "fields": {
+        "tournament": 1,
+        "name": "Novice",
+        "slug": "novice",
+        "seq": 3,
+        "limit": 0,
+        "public": true
+    }
+},
+{
+    "model": "participants.speakercategory",
+    "pk": 2,
+    "fields": {
+        "tournament": 1,
+        "name": "Pro",
+        "slug": "pro",
+        "seq": 4,
+        "limit": 0,
+        "public": false
+    }
+},
+{
     "model": "participants.person",
     "pk": 1,
     "fields": {
@@ -1976,9 +2024,6 @@
         "barcode_id": null,
         "email": "georgiacrawford@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -1994,9 +2039,6 @@
         "barcode_id": null,
         "email": "wandagriffin@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2012,9 +2054,6 @@
         "barcode_id": null,
         "email": "helenkeller@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2030,9 +2069,6 @@
         "barcode_id": null,
         "email": "russellwarren@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2048,9 +2084,6 @@
         "barcode_id": null,
         "email": "angelrhodes@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2066,9 +2099,6 @@
         "barcode_id": null,
         "email": "terryhenderson@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2084,9 +2114,6 @@
         "barcode_id": null,
         "email": "kyleruiz@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2102,9 +2129,6 @@
         "barcode_id": null,
         "email": "randolphlambert@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2120,9 +2144,6 @@
         "barcode_id": null,
         "email": "sergiopittman@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2138,9 +2159,6 @@
         "barcode_id": null,
         "email": "earnestbecker@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2156,9 +2174,6 @@
         "barcode_id": null,
         "email": "ellisrowe@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2174,9 +2189,6 @@
         "barcode_id": null,
         "email": "robinroberson@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2192,9 +2204,6 @@
         "barcode_id": null,
         "email": "gwennewman@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2210,9 +2219,6 @@
         "barcode_id": null,
         "email": "robyncaldwell@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2228,9 +2234,6 @@
         "barcode_id": null,
         "email": "angieholt@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2246,9 +2249,6 @@
         "barcode_id": null,
         "email": "melvinjordan@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2264,9 +2264,6 @@
         "barcode_id": null,
         "email": "gladysburke@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2282,9 +2279,6 @@
         "barcode_id": null,
         "email": "pattysaunders@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2300,9 +2294,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2318,9 +2309,6 @@
         "barcode_id": null,
         "email": "stellalindsey@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2336,9 +2324,6 @@
         "barcode_id": null,
         "email": "adrianmay@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2354,9 +2339,6 @@
         "barcode_id": null,
         "email": "taylorbrown@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2372,9 +2354,6 @@
         "barcode_id": null,
         "email": "bethanychambers@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2390,9 +2369,6 @@
         "barcode_id": null,
         "email": "pamelabryan@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2408,9 +2384,6 @@
         "barcode_id": null,
         "email": "janetnunez@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2426,9 +2399,6 @@
         "barcode_id": null,
         "email": "owenchandler@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2444,9 +2414,6 @@
         "barcode_id": null,
         "email": "lillierodriquez@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2462,9 +2429,6 @@
         "barcode_id": null,
         "email": "rufusdennis@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2480,9 +2444,6 @@
         "barcode_id": null,
         "email": "martylove@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2498,9 +2459,6 @@
         "barcode_id": null,
         "email": "sheliawright@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2516,9 +2474,6 @@
         "barcode_id": null,
         "email": "clarkmills@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2534,9 +2489,6 @@
         "barcode_id": null,
         "email": "randycarroll@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2552,9 +2504,6 @@
         "barcode_id": null,
         "email": "caseysparks@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2570,9 +2519,6 @@
         "barcode_id": null,
         "email": "candacebowen@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2588,9 +2534,6 @@
         "barcode_id": null,
         "email": "jaimelong@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2606,9 +2549,6 @@
         "barcode_id": null,
         "email": "leonhall@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2624,9 +2564,6 @@
         "barcode_id": null,
         "email": "morrisnichols@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2642,9 +2579,6 @@
         "barcode_id": null,
         "email": "benjaminpadilla@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2660,9 +2594,6 @@
         "barcode_id": null,
         "email": "phillyons@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2678,9 +2609,6 @@
         "barcode_id": null,
         "email": "clayholland@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2696,9 +2624,6 @@
         "barcode_id": null,
         "email": "elenacobb@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2714,9 +2639,6 @@
         "barcode_id": null,
         "email": "shawntorres@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2732,9 +2654,6 @@
         "barcode_id": null,
         "email": "williscarson@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2750,9 +2669,6 @@
         "barcode_id": null,
         "email": "wendellnelson@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2768,9 +2684,6 @@
         "barcode_id": null,
         "email": "feliciawelch@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2786,9 +2699,6 @@
         "barcode_id": null,
         "email": "corymeyer@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2804,9 +2714,6 @@
         "barcode_id": null,
         "email": "stacyfrazier@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2822,9 +2729,6 @@
         "barcode_id": null,
         "email": "clairedunn@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2840,9 +2744,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2858,9 +2759,6 @@
         "barcode_id": null,
         "email": "patriciapalmer@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2876,9 +2774,6 @@
         "barcode_id": null,
         "email": "stewartday@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2894,9 +2789,6 @@
         "barcode_id": null,
         "email": "timmycraig@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2912,9 +2804,6 @@
         "barcode_id": null,
         "email": "patrickkelly@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2930,9 +2819,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2948,9 +2834,6 @@
         "barcode_id": null,
         "email": "andylane@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2966,9 +2849,6 @@
         "barcode_id": null,
         "email": "scottmcdonald@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -2984,9 +2864,6 @@
         "barcode_id": null,
         "email": "charlenecortez@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3002,9 +2879,6 @@
         "barcode_id": null,
         "email": "leighholmes@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3020,9 +2894,6 @@
         "barcode_id": null,
         "email": "almaspencer@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3038,9 +2909,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3056,9 +2924,6 @@
         "barcode_id": null,
         "email": "emiliosimmons@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3074,9 +2939,6 @@
         "barcode_id": null,
         "email": "rondelgado@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3092,9 +2954,6 @@
         "barcode_id": null,
         "email": "nadinebarber@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3110,9 +2969,6 @@
         "barcode_id": null,
         "email": "gailadkins@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3128,9 +2984,6 @@
         "barcode_id": null,
         "email": "willardwalton@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3146,9 +2999,6 @@
         "barcode_id": null,
         "email": "jackiepeterson@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3164,9 +3014,6 @@
         "barcode_id": null,
         "email": "terrythornton@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3182,9 +3029,6 @@
         "barcode_id": null,
         "email": "normanrodgers@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3200,9 +3044,6 @@
         "barcode_id": null,
         "email": "mattielee@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3218,9 +3059,6 @@
         "barcode_id": null,
         "email": "woodrowharvey@fakemail.com",
         "phone": "",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3236,9 +3074,6 @@
         "barcode_id": null,
         "email": "javierchavez@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3254,9 +3089,6 @@
         "barcode_id": null,
         "email": "janiedaniels@fakemail.com",
         "phone": "",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3272,9 +3104,6 @@
         "barcode_id": null,
         "email": "leviflores@fakemail.com",
         "phone": "(400) 258-4262",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3290,9 +3119,6 @@
         "barcode_id": null,
         "email": "boydpierce@fakemail.com",
         "phone": "(645) 106-7743",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3308,9 +3134,6 @@
         "barcode_id": null,
         "email": "eunicemcbride@fakemail.com",
         "phone": "(549) 309-9187",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3326,9 +3149,6 @@
         "barcode_id": null,
         "email": "ramonacobb@fakemail.com",
         "phone": "(440) 487-5776",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3344,9 +3164,6 @@
         "barcode_id": null,
         "email": "justinford@fakemail.com",
         "phone": "(618) 921-9188",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3362,9 +3179,6 @@
         "barcode_id": null,
         "email": "luisbennett@fakemail.com",
         "phone": "(730) 097-8797",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3380,9 +3194,6 @@
         "barcode_id": null,
         "email": "mandyestrada@fakemail.com",
         "phone": "(559) 299-0471",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3398,9 +3209,6 @@
         "barcode_id": null,
         "email": "leighmcgee@fakemail.com",
         "phone": "(844) 760-9302",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3416,9 +3224,6 @@
         "barcode_id": null,
         "email": "jacquelinefreeman@fakemail.com",
         "phone": "(297) 916-1716",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3434,9 +3239,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "(958) 783-2610",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3452,9 +3254,6 @@
         "barcode_id": null,
         "email": "pedroburgess@fakemail.com",
         "phone": "(854) 441-0104",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3470,9 +3269,6 @@
         "barcode_id": null,
         "email": "kristycarr@fakemail.com",
         "phone": "(644) 607-3297",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3488,9 +3284,6 @@
         "barcode_id": null,
         "email": "wilmavaughn@fakemail.com",
         "phone": "(398) 759-9537",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3506,9 +3299,6 @@
         "barcode_id": null,
         "email": "virginiamccarthy@fakemail.com",
         "phone": "(455) 177-0459",
-        "novice": true,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3524,9 +3314,6 @@
         "barcode_id": null,
         "email": "tashajenkins@fakemail.com",
         "phone": "(875) 519-9891",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3542,9 +3329,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "(404) 641-5999",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3560,9 +3344,6 @@
         "barcode_id": null,
         "email": "joallen@fakemail.com",
         "phone": "(761) 993-2983",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3578,9 +3359,6 @@
         "barcode_id": null,
         "email": "billygriffin@fakemail.com",
         "phone": "(430) 532-2939",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3596,9 +3374,6 @@
         "barcode_id": null,
         "email": "angelareed@fakemail.com",
         "phone": "(936) 500-1228",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3614,9 +3389,6 @@
         "barcode_id": null,
         "email": "hugolewis@fakemail.com",
         "phone": "(422) 585-9609",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3632,9 +3404,6 @@
         "barcode_id": null,
         "email": "cassandrawilson@fakemail.com",
         "phone": "(604) 306-2084",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3650,9 +3419,6 @@
         "barcode_id": null,
         "email": "georgewillis@fakemail.com",
         "phone": "(222) 204-5944",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3668,9 +3434,6 @@
         "barcode_id": null,
         "email": "jamiehodges@fakemail.com",
         "phone": "(737) 122-6102",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3686,9 +3449,6 @@
         "barcode_id": null,
         "email": "bennierodriguez@fakemail.com",
         "phone": "(537) 641-2175",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3704,9 +3464,6 @@
         "barcode_id": null,
         "email": "allisonmartin@fakemail.com",
         "phone": "(525) 384-2715",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3722,9 +3479,6 @@
         "barcode_id": null,
         "email": "kristielliott@fakemail.com",
         "phone": "(790) 289-5430",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -3740,9 +3494,6 @@
         "barcode_id": null,
         "email": null,
         "phone": "(317) 721-2439",
-        "novice": false,
-        "esl": false,
-        "efl": false,
         "anonymous": false,
         "checkin_message": "",
         "notes": null,
@@ -4186,504 +3937,720 @@
     "model": "participants.speaker",
     "pk": 1,
     "fields": {
-        "team": 1
+        "team": 1,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 2,
     "fields": {
-        "team": 1
+        "team": 1,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 3,
     "fields": {
-        "team": 1
+        "team": 1,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 4,
     "fields": {
-        "team": 2
+        "team": 2,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 5,
     "fields": {
-        "team": 2
+        "team": 2,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 6,
     "fields": {
-        "team": 2
+        "team": 2,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 7,
     "fields": {
-        "team": 3
+        "team": 3,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 8,
     "fields": {
-        "team": 3
+        "team": 3,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 9,
     "fields": {
-        "team": 3
+        "team": 3,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 10,
     "fields": {
-        "team": 4
+        "team": 4,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 11,
     "fields": {
-        "team": 4
+        "team": 4,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 12,
     "fields": {
-        "team": 4
+        "team": 4,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 13,
     "fields": {
-        "team": 5
+        "team": 5,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 14,
     "fields": {
-        "team": 5
+        "team": 5,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 15,
     "fields": {
-        "team": 5
+        "team": 5,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 16,
     "fields": {
-        "team": 6
+        "team": 6,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 17,
     "fields": {
-        "team": 6
+        "team": 6,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 18,
     "fields": {
-        "team": 6
+        "team": 6,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 19,
     "fields": {
-        "team": 7
+        "team": 7,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 20,
     "fields": {
-        "team": 7
+        "team": 7,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 21,
     "fields": {
-        "team": 7
+        "team": 7,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 22,
     "fields": {
-        "team": 8
+        "team": 8,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 23,
     "fields": {
-        "team": 8
+        "team": 8,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 24,
     "fields": {
-        "team": 8
+        "team": 8,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 25,
     "fields": {
-        "team": 9
+        "team": 9,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 26,
     "fields": {
-        "team": 9
+        "team": 9,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 27,
     "fields": {
-        "team": 9
+        "team": 9,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 28,
     "fields": {
-        "team": 10
+        "team": 10,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 29,
     "fields": {
-        "team": 10
+        "team": 10,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 30,
     "fields": {
-        "team": 10
+        "team": 10,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 31,
     "fields": {
-        "team": 11
+        "team": 11,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 32,
     "fields": {
-        "team": 11
+        "team": 11,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 33,
     "fields": {
-        "team": 11
+        "team": 11,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 34,
     "fields": {
-        "team": 12
+        "team": 12,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 35,
     "fields": {
-        "team": 12
+        "team": 12,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 36,
     "fields": {
-        "team": 12
+        "team": 12,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 37,
     "fields": {
-        "team": 13
+        "team": 13,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 38,
     "fields": {
-        "team": 13
+        "team": 13,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 39,
     "fields": {
-        "team": 13
+        "team": 13,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 40,
     "fields": {
-        "team": 14
+        "team": 14,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 41,
     "fields": {
-        "team": 14
+        "team": 14,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 42,
     "fields": {
-        "team": 14
+        "team": 14,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 43,
     "fields": {
-        "team": 15
+        "team": 15,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 44,
     "fields": {
-        "team": 15
+        "team": 15,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 45,
     "fields": {
-        "team": 15
+        "team": 15,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 46,
     "fields": {
-        "team": 16
+        "team": 16,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 47,
     "fields": {
-        "team": 16
+        "team": 16,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 48,
     "fields": {
-        "team": 16
+        "team": 16,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 49,
     "fields": {
-        "team": 17
+        "team": 17,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 50,
     "fields": {
-        "team": 17
+        "team": 17,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 51,
     "fields": {
-        "team": 17
+        "team": 17,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 52,
     "fields": {
-        "team": 18
+        "team": 18,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 53,
     "fields": {
-        "team": 18
+        "team": 18,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 54,
     "fields": {
-        "team": 18
+        "team": 18,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 55,
     "fields": {
-        "team": 19
+        "team": 19,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 56,
     "fields": {
-        "team": 19
+        "team": 19,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 57,
     "fields": {
-        "team": 19
+        "team": 19,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 58,
     "fields": {
-        "team": 20
+        "team": 20,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 59,
     "fields": {
-        "team": 20
+        "team": 20,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 60,
     "fields": {
-        "team": 20
+        "team": 20,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 61,
     "fields": {
-        "team": 21
+        "team": 21,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 62,
     "fields": {
-        "team": 21
+        "team": 21,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 63,
     "fields": {
-        "team": 21
+        "team": 21,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 64,
     "fields": {
-        "team": 22
+        "team": 22,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 65,
     "fields": {
-        "team": 22
+        "team": 22,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 66,
     "fields": {
-        "team": 22
+        "team": 22,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 67,
     "fields": {
-        "team": 23
+        "team": 23,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 68,
     "fields": {
-        "team": 23
+        "team": 23,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 69,
     "fields": {
-        "team": 23
+        "team": 23,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 70,
     "fields": {
-        "team": 24
+        "team": 24,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 71,
     "fields": {
-        "team": 24
+        "team": 24,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "model": "participants.speaker",
     "pk": 72,
     "fields": {
-        "team": 24
+        "team": 24,
+        "categories": [
+            2
+        ]
     }
 },
 {
@@ -4694,6 +4661,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": true
@@ -4707,6 +4675,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": true
@@ -4720,6 +4689,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4733,6 +4703,7 @@
         "tournament": 1,
         "test_score": 1.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -4746,6 +4717,7 @@
         "tournament": 1,
         "test_score": 0.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4759,6 +4731,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4772,6 +4745,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -4785,6 +4759,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4798,6 +4773,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": true
@@ -4811,6 +4787,7 @@
         "tournament": 1,
         "test_score": 0.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -4824,6 +4801,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4837,6 +4815,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": true,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4850,6 +4829,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": true,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -4863,6 +4843,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": true,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4876,6 +4857,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": true,
         "adj_core": false
@@ -4889,6 +4871,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4902,6 +4885,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4915,6 +4899,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4928,6 +4913,7 @@
         "tournament": 1,
         "test_score": 1.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4941,6 +4927,7 @@
         "tournament": 1,
         "test_score": 0.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4954,6 +4941,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4967,6 +4955,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4980,6 +4969,7 @@
         "tournament": 1,
         "test_score": 3.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -4993,6 +4983,7 @@
         "tournament": 1,
         "test_score": 2.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -5006,6 +4997,7 @@
         "tournament": 1,
         "test_score": 4.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -5019,6 +5011,7 @@
         "tournament": 1,
         "test_score": 3.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false
@@ -5032,6 +5025,7 @@
         "tournament": 1,
         "test_score": 5.0,
         "url_key": null,
+        "trainee": false,
         "breaking": false,
         "independent": false,
         "adj_core": false

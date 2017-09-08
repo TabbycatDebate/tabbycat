@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 dj flush
-dj loaddata ./data/fixtures/completed_demo.json
+dj loaddata ./data/fixtures/$1.json
 dj migrate
 dj checkpreferences
 dj dumpdata --natural-foreign --natural-primary \
@@ -9,4 +9,4 @@ dj dumpdata --natural-foreign --natural-primary \
             -e contenttypes -e options -e options -e auth.Permission \
             -e admin.logentry -e actionlog.actionlogentry -e sessions \
             --indent 4 \
-            --format=json -o data/fixtures/completed_demo.json
+            --format=json -o data/fixtures/$1.json
