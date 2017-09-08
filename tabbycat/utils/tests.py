@@ -38,19 +38,9 @@ def suppress_logs(name, level, returnto=logging.NOTSET):
     suppressed_logger.setLevel(returnto)
 
 
-class BaseViewTest():
-    """For testing a view class that is always available. Inheriting classes
-    must also inherit from TestCase"""
-
-    def test(self):
-        response = self.get_response()
-        # 200 OK should be issued if setting is not enabled
-        self.assertEqual(response.status_code, 200)
-        self.validate_table_data(response)
-
-
-class BaseTournamentTest():
-    """For testing a populated view on a tournament with a given set dataset"""
+class TournamentTestsMixin:
+    """Mixin that provides methods for testing a populated view on a tournament,
+    with a prepopulated database."""
 
     fixtures = ['completed_demo.json']
     round_seq = None
@@ -59,6 +49,7 @@ class BaseTournamentTest():
         return Tournament.objects.first()
 
     def setUp(self):
+        super().setUp()
         self.t = self.get_tournament()
         self.client = Client()
 
@@ -76,20 +67,17 @@ class BaseTournamentTest():
     def get_response(self):
         with self.modify_settings(
             # Remove whitenoise middleware as it won't resolve on Travis
-            MIDDLEWARE={
-                'remove': [
-                    'whitenoise.middleware.WhiteNoiseMiddleware',
-                ],
-            }
+            MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']}
         ):
             return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
 
-class ConditionalTournamentTest(BaseTournamentTest):
-    """For testing a view class that is conditionally shown depending on a
-    preference being set or not. Inheriting classes must also inherit from
-    TestCase and provide a view_toggle as a dynamic preferences path;
-    along with validate_response path """
+class ConditionalTournamentTestsMixin(TournamentTestsMixin):
+    """Mixin that provides tests for testing a view class that is conditionally
+    shown depending on whether a user preference is set.
+
+    Subclasses must inherit from TestCase separately. This can't be a TestCase
+    subclass, because it provides tests which would be run on the base class."""
 
     view_toggle = None
 
@@ -116,17 +104,25 @@ class ConditionalTournamentTest(BaseTournamentTest):
         self.assertEqual(response.status_code, 302)
 
 
-class ConditionalTournamentViewBasicCheck(ConditionalTournamentTest):
+class ConditionalTournamentViewBasicCheckMixin(ConditionalTournamentTestsMixin):
     """Simply checks the view and only fails if an error is thrown"""
 
     def validate_response(self, response):
         return True
 
 
-class BaseTableViewTest(BaseTournamentTest):
-    """Base class for testing table views; provides methods for validating data.
-    If inheriting classes are validating data they should overwrite
-    table_data methods"""
+class TournamentTestCase(TournamentTestsMixin, TestCase):
+    """Extension of django.test.TestCase that provides methods for testing a
+    populated view on a tournament, with a prepopulated database."""
+    pass
+
+
+class TableViewTestsMixin:
+    """Mixin that provides methods for validating data in table views.
+    Subclasses should override the `table_data` methods."""
+
+    # This can't be a TestCase subclass, because it is inherited by
+    # ConditionalTableViewTestsMixin, which provides tests.
 
     def validate_response(self, response):
         self.validate_table_data(response)
@@ -154,9 +150,10 @@ class BaseTableViewTest(BaseTournamentTest):
         return False
 
 
-class ConditionalTableViewTest(BaseTableViewTest, ConditionalTournamentTest):
-    """Convenience for importing"""
-    pass
+
+class ConditionalTableViewTestsMixin(TableViewTestsMixin, ConditionalTournamentTestsMixin):
+    """Combination of TableViewTestsMixin and ConditionalTournamentTestsMixin,
+    for convenience."""
 
 
 class BaseDebateTestCase(TestCase):
@@ -164,7 +161,7 @@ class BaseDebateTestCase(TestCase):
     to create the basic data to simulate simple tournament functions"""
 
     def setUp(self):
-        super(BaseDebateTestCase, self).setUp()
+        super().setUp()
         # add test models
         self.t = Tournament.objects.create(slug="tournament")
         for i in range(4):
@@ -188,36 +185,34 @@ class BaseDebateTestCase(TestCase):
         self.t.delete()
 
 
-class BaseSeleniumTestCase(StaticLiveServerTestCase):
+class SeleniumTestCase(StaticLiveServerTestCase):
     """Used to verify rendered html and javascript functionality on the site as
     rendered. Opens a Chrome window and checks for JS/DOM state on the fixture
     debate."""
 
     @classmethod
     def setUpClass(cls):
-        super(BaseSeleniumTestCase, cls).setUpClass()
+        super().setUpClass()
         cls.selenium = WebDriver()
         cls.selenium.implicitly_wait(10)
 
     @classmethod
     def tearDownClass(cls):
         cls.selenium.quit()
-        super(BaseSeleniumTestCase, cls).tearDownClass()
+        super().tearDownClass()
 
 
-class BaseSeleniumTournamentTestCase(BaseSeleniumTestCase, BaseTournamentTest):
+class SeleniumTournamentTestCase(TournamentTestCase, SeleniumTestCase):
     """ Basically reimplementing BaseTournamentTest; but use cls not self """
 
-    fixtures = ['completed_demo.json'] # Must be set here; doesn't inheret
     set_preferences = None
     unset_preferences = None
 
-    def setUp(self): # Must override BaseTournamentTest for unknown reasons
-        t = self.get_tournament()
+    def setUp(self):
+        super().setUp()
         if self.set_preferences:
-            for set_pref in self.set_preferences:
-                t.preferences[set_pref] = True
+            for pref in self.set_preferences:
+                self.t.preferences[pref] = True
         if self.unset_preferences:
-            for set_pref in self.unset_preferences:
-                t.preferences[set_pref] = False
-        self.client = Client()
+            for pref in self.unset_preferences:
+                self.t.preferences[pref] = False
