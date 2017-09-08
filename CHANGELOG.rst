@@ -2,7 +2,6 @@
 Change Log
 ==========
 
-
 2.0.0
 -----
 *Release date: *
@@ -16,6 +15,16 @@ Change Log
 - Quality of life improvements
   - After creating a new tournament you will now be prompted to apply a basic rules and public information preset
   - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using.
+
+
+1.4.3
+-----
+*Release date: 9 September 2017*
+
+- A number of improvements to error handling and logging
+- Changed the "previous round" of an elimination round to point to the last one in the same break category
+- Other minor bug fixes
+
 
 1.4.2
 -----
