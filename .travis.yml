@@ -23,6 +23,7 @@ script:
   - flake8 tabbycat
   - coverage run tabbycat/manage.py test -v 2 --exclude-tag=functional
 after_script:
+  - coverage xml
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/
