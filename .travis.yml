@@ -19,10 +19,12 @@ before_script:  # code coverage tool
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  - cd tabbycat
 script:
   - flake8 .
-  - cd tabbycat && coverage run manage.py test -v 2 --exclude-tag=functional && cd ..
+  - coverage run manage.py test -v 2 --exclude-tag=functional
 after_script:
+  - cd ..
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/
