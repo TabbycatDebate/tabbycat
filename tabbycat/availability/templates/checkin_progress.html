@@ -3,7 +3,7 @@
 <div class="card">
 
   <div class="card-body round-progresses">
-    <h5 class="card-title">{{ ct.title }}</h5>
+    <h5 class="card-title">{{ info.title }}</h5>
   </div>
 
   <div class="list-group list-group-flush">
@@ -11,40 +11,40 @@
     <div class="list-group-item">
       <div class="d-flex justify-content-end">
         <span class="mr-auto">{{ round.abbreviation }}</span>
-        <strong>{{ ct.in_now }}/{{ ct.total }}</strong>
+        <strong>{{ info.in_now }}/{{ info.total }}</strong>
       </div>
-      {% include "components/progress-bar.html" with value=ct.in_now total=ct.total type="success" %}
+      {% include "components/progress-bar.html" with value=info.in_now total=info.total type="success" %}
     </div>
 
-    {% if ct.in_before is not None %}
+    {% if info.in_before is not None %}
       <div class="list-group-item">
         <div class="d-flex justify-content-end">
           <span class="mr-auto">{{ round.prev.abbreviation }}</span>
-          <strong>{{ ct.in_before }}/{{ ct.total }}</strong>
+          <strong>{{ info.in_before }}/{{ info.total }}</strong>
         </div>
-        {% include "components/progress-bar.html" with value=ct.in_before total=ct.total type="secondary" %}
+        {% include "components/progress-bar.html" with value=info.in_before total=info.total type="secondary" %}
       </div>
     {% endif %}
 
-    {% if ct.message %}
+    {% if info.message %}
       <div class="list-group-item list-group-item-info">
-        {{ ct.message }}
+        {{ info.message }}
       </div>
     {% endif %}
 
-    {% if forloop.counter == 1 and not round.is_break_round %}
+    {% if type == "teams" and not round.is_break_round %}
       {% roundurl 'availability-teams' round as url %}
       {% trans "Check In Teams" as text %}
-    {% elif forloop.counter == 2 %}
+    {% elif type == "adjs" %}
       {% roundurl 'availability-adjudicators' round as url %}
       {% trans "Check In Adjudicators" as text %}
-    {% elif forloop.counter == 3 %}
+    {% elif type == "venues" %}
       {% roundurl 'availability-venues' round as url %}
       {% trans "Check In Venues" as text %}
     {% endif %}
 
-    {% if forloop.counter != 1 or not round.is_break_round %}
-      {% if ct.in_now == 0 %}
+    {% if type != "teams" or not round.is_break_round %}
+      {% if info.in_now == 0 %}
         {% include "components/item-action.html" with alone=True success=True %}
       {% else %}
         {% include "components/item-action.html" with alone=True type="primary" icon="check-circle" %}

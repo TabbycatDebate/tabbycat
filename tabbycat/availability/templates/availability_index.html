@@ -246,7 +246,7 @@
 {% block content %}
 
   <div class="row">
-    {% for ct in checkin_info.values %}
+    {% for type, info in checkin_info.items %}
       <div class="col-md-4 mb-3">
         {% include 'checkin_progress.html' %}
       </div>
