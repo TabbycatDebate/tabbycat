@@ -6,6 +6,9 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
+env:
+  global:
+    - CC_TEST_REPORTER_ID=e93289b66782f99213fec69659f0428021cf8cd284c79637e07323f15fd29461
 addons:
   postgresql: "9.6"
   # chrome: stable # Re-enable for functional tests
@@ -13,11 +16,18 @@ services:
   - postgresql
 install:
   - pip install -r requirements_common.txt
-  - pip install codeclimate-test-reporter
+  - pip install coverage
   - npm install
+before_script:  # code coverage tool
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script:
-  - flake8 .
-  - cd tabbycat && coverage run manage.py test -v 2 --exclude-tag=functional
+  - flake8 tabbycat
+  - coverage run tabbycat/manage.py test -v 2 --exclude-tag=functional
+after_script:
+  - coverage xml
+  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/
 # Currently it runs and loads the view; but doesn't seem to resolve the asserts
