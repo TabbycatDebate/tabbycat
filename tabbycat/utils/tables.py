@@ -634,10 +634,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
         headers = self._standings_headers(standings.metrics_info(), side)
         data = []
         for standing in standings_list:
-            standings_raw = [s for s in standing.itermetrics()]
-            standings_metric = [s for s in map(metricformat, standings_raw)]
-            data.append([{'text': metric, 'sort': float(raw)}
-                for raw, metric in zip(standings_raw, standings_metric)])
+            row = []
+            for metric in standing.itermetrics():
+                try:
+                    sort = float(metric)
+                except (TypeError, ValueError):
+                    sort = 99999
+                row.append({'text': metricformat(metric), 'sort': sort})
+            data.append(row)
         self.add_columns(headers, data)
 
     def add_debate_metric_columns(self, draw, standings):
