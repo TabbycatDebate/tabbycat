@@ -1,5 +1,6 @@
 import json
 import logging
+from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
@@ -55,7 +56,9 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         adjs = self._get_dict(tournament.relevant_adjudicators)
         venues = self._get_dict(tournament.relevant_venues)
         kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0 and venues['in_now'] > 0
-        kwargs['checkin_types'] = [teams, adjs, venues]
+
+        # Order needs to be predictable when iterating through values
+        kwargs['checkin_info'] = OrderedDict([('teams', teams), ('adjs', adjs), ('venues', venues)])
 
         # Check the number of teams/adjudicators is sufficient
         if tournament.pref('teams_in_debate') == 'two':
