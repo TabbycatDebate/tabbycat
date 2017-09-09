@@ -261,23 +261,7 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
 
 
 class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsView):
-
-    def get(self, request, *args, **kwargs):
-        metrics = self.get_metrics()
-        if metrics[0][0] == 'speaks_avg':
-            message = """Note that speakers are being sorted by their <strong>
-                         average score</strong>. """
-        if metrics[0][0] == 'speaks_total':
-            message = """Note that speakers are being sorted by their <strong>
-                         total score</strong>; any speaker who misses a single
-                         debate will be severely punished in these ranks. """
-        message += """Speakers can miss up to %s debates before not placing in
-                      the speaker tab. """ % self.get_tournament().pref('standings_missed_debates')
-        message += """These settings can be changed in the Standings section of
-                      this tournament's configuration"""
-
-        messages.info(self.request, message)
-        return super().get(request, *args, **kwargs)
+    template_name = 'speaker_standings.html'  # add an info alert
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):

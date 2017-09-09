@@ -1,0 +1,25 @@
+{% extends "standings_table.html" %}
+{% load debate_tags i18n %}
+
+{% block page-alerts %}
+  <div class="alert alert-info">
+    {% if pref.rank_speakers_by == 'average' %}
+      {% trans "Note that speakers are being sorted by their <strong>average score</strong>." %}
+    {% elif pref.rank_speakers_by == 'total' %}
+      {% blocktrans trimmed %}
+        Note that speakers are being sorted by their <strong>total score</strong>.
+        Any speaker who misses a single debate will be severely punished in these rankings.
+      {% endblocktrans %}
+    {% endif %}
+    {% blocktrans trimmed with count=pref.standings_missed_debates %}
+      Also, speakers can miss up to {{ count }} debates before they are omitted from
+      the speaker tab.
+    {% endblocktrans %}
+    {% tournamenturl 'options-tournament-standings' as standings_config_url %}
+    {% blocktrans trimmed %}
+      These settings can be changed in the
+      <a href="{{ standings_config_url }}" class="alert-link">Standings section
+      of this tournament's configuration</a>.
+    {% endblocktrans %}
+  </div>
+{% endblock %}
