@@ -1,4 +1,5 @@
 import logging
+from collections import OrderedDict
 from threading import Lock
 
 from django.conf import settings
@@ -7,6 +8,8 @@ from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import management
 from django.core.urlresolvers import reverse_lazy
+from django.db.models import Q
+from django.db.models.expressions import RawSQL
 from django.http import Http404
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
@@ -28,6 +31,7 @@ from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixi
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
+from .utils import get_side_name
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -249,8 +253,45 @@ class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
         return context
 
 
-class FixDebateTeamsView(SuperuserRequiredMixin, TemplateView):
+class FixDebateTeamsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
     template_name = "fix_debate_teams.html"
+
+    def get_incomplete_debates(self):
+        tournament = self.get_tournament()
+        annotations = {  # annotates with the number of DebateTeams on each side in the debate
+            side: RawSQL("""
+                SELECT DISTINCT COUNT('a')
+                FROM draw_debateteam
+                WHERE draw_debate.id = draw_debateteam.debate_id
+                AND draw_debateteam.side = %s""", (side,))
+            for side in tournament.sides
+        }
+        debates = Debate.objects.filter(round__tournament=tournament)
+        debates = debates.prefetch_related('debateteam_set__team').annotate(**annotations)
+
+        # A debate is incomplete if there isn't exactly one team on each side
+        incomplete_debates = debates.filter(~Q(**{side: 1 for side in tournament.sides}))
+
+        # Finally, go through and populate lists of teams on each side
+        for debate in incomplete_debates:
+            debate.teams_on_each_side = OrderedDict((side, []) for side in tournament.sides)
+            for dt in debate.debateteam_set.all():
+                try:
+                    debate.teams_on_each_side[dt.side].append(dt.team)
+                except KeyError:
+                    pass
+
+        return incomplete_debates
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['side_names'] = [get_side_name(tournament, side, 'full') for side in tournament.sides]
+        kwargs['incomplete_debates'] = self.get_incomplete_debates()
+        return super().get_context_data(**kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        # bypass the TournamentMixin checks, to avoid potential redirect loops
+        return TemplateView.dispatch(self, request, *args, **kwargs)
 
 
 class TournamentPermanentRedirectView(RedirectView):

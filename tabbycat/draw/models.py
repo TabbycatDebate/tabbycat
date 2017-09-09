@@ -134,12 +134,12 @@ class Debate(models.Model):
                 self._populate_teams()
             if attr in self._multiple_found:
                 raise MultipleDebateTeamsError("Multiple debate teams found for '%s' in debate ID %d. "
-                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()), self.id)
+                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
             try:
                 return self._team_properties[attr]
             except KeyError:
                 raise NoDebateTeamFoundError("No debate team found for '%s' in debate ID %d. "
-                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()), self.id)
+                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
         return _property
 
     @property

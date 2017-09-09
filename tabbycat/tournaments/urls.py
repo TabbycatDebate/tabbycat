@@ -103,4 +103,9 @@ urlpatterns = [
     # Venues App
     url(r'^admin/venues/',
         include('venues.urls_admin')),
+
+    # Error Pages
+    url(r'^admin/fix-debate-teams/$',
+        views.FixDebateTeamsView.as_view(),
+        name='tournament-fix-debate-teams'),
 ]
