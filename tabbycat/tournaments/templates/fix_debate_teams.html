@@ -20,17 +20,10 @@
       </p>
 
       <p class="card-text">
-        To fix this you will need to go to <em>Debates</em> section of the Edit
-        Database area and then find the debate the red message above mentions.
-        If you can't find that specific debate easily, click through to any
-        debate and then change the number in the URL to match the "debate ID"
-        mentioned above; i.e.
-        <code>yourtournament.com/database/draw/debate/<strong>85</strong>/change/</code>
-      </p>
-
-      <p>
-        Once in that debate click through to the <strong>Debate Teams</strong>
-        tab and ensure that:
+        To fix this you will need to go to Debates section of the Edit Database
+        area and edit the debate the red message above mentions (use the button
+        below). Once in that debate click through to the
+        <strong>Debate Teams</strong> tab and ensure that:
       </p>
 
       <ul>
@@ -44,14 +37,14 @@
       </ul>
 
       <p class="card-text">Note that after making changes you'll need to
-      <strong>Save</strong> them. You should then be able to return to whatever
-      page you were originally on without the error reoccurring.</p>
+      <strong>Save</strong> them. You should then be able to return to the
+      original page that you were on.</p>
 
       <hr>
 
-      <a href="{% url 'admin:draw_debate_changelist' %}"
-         class="btn btn-block btn-success" target="_blank">
-         Go the Debates section of the Edit Database Area
+      <a href="{% url 'admin:draw_debate_change' debate_id %}"
+         class="btn btn-block btn-primary" target="_blank">
+         Fix this debate in the Edit Database Area
       </a>
 
     </div>

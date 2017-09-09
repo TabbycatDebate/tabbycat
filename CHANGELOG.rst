@@ -14,7 +14,8 @@ Change Log
   - Updated typography, icons, and colors, forms, and more!
 - Quality of life improvements
   - After creating a new tournament you will now be prompted to apply a basic rules and public information preset
-  - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using.
+  - Better handle errors that arise when a debate team is missing or where two teams have been assigned the same side
+  - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
 
 
 1.4.3
