@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^donations/',
         tournaments.views.DonationsView.as_view(),
         name='donations'),
-    url(r'^fix_debate_teams/(?P<debate_id>\d+)/$',
+    url(r'^fix_debate_teams/$',
         tournaments.views.FixDebateTeamsView.as_view(),
         name='fix-debate-teams'),
     url(r'^style/$',

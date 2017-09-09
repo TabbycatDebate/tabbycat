@@ -107,7 +107,7 @@ class TournamentMixin(TabbycatPageTitlesMixin):
                 messages.error(request, _("Teams don't appear to be correctly assigned to sides "
                         "in a debate. Please resolve this problem before continuing: "
                         "%(error)s") % {'error': e})
-                return redirect('fix-debate-teams', debate_id=e.debate_id)
+                return redirect('fix-debate-teams')
             else:
                 logger.exception("Debate team side assignment error, redirecting to tournament-public-index")
                 messages.error(request, _("There's a problem with how teams are assigned to sides "

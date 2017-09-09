@@ -369,15 +369,11 @@ class DebateTeam(models.Model):
 
 
 class MultipleDebateTeamsError(DebateTeam.MultipleObjectsReturned):
-    def __init__(self, message, debate_id):
-        self.message = message
-        self.debate_id = debate_id
+    pass
 
 
 class NoDebateTeamFoundError(DebateTeam.DoesNotExist):
-    def __init__(self, message, debate_id):
-        self.message = message
-        self.debate_id = debate_id
+    pass
 
 
 class TeamSideAllocation(models.Model):
