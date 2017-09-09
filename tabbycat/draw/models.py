@@ -361,11 +361,11 @@ class DebateTeam(models.Model):
     def get_side_name(self, tournament=None, name_type='full'):
         """Should be used instead of get_side_display() on views.
         `tournament` can be passed in if known, for performance."""
-        if self.side in [DebateTeam.SIDE_AFF, DebateTeam.SIDE_NEG]:
+        try:
             return get_side_name(tournament or self.debate.round.tournament,
                                  self.side, name_type)
-        else:
-            return self.get_side_display()
+        except KeyError:
+            return self.get_side_display()  # fallback
 
 
 class MultipleDebateTeamsError(DebateTeam.MultipleObjectsReturned):
