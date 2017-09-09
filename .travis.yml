@@ -16,15 +16,15 @@ install:
   - pip install coverage
   - npm install
 before_script:  # code coverage tool
+  - cd tabbycat
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-  - cd tabbycat
 script:
   - flake8 .
   - coverage run manage.py test -v 2 --exclude-tag=functional
 after_script:
-  - cd ..
+  - coverage xml
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --prefix $(pwd)/tabbycat; fi
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/
