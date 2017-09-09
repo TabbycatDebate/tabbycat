@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^create/',
         tournaments.views.CreateTournamentView.as_view(),
         name='tournament-create'),
-    url(r'^load_demo/',
+    url(r'^load-demo/',
         tournaments.views.LoadDemoView.as_view(),
         name='load-demo'),
 

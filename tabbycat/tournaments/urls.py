@@ -29,7 +29,7 @@ urlpatterns = [
         name='tournament-set-current-round'),
 
     # Action Logs App
-    url(r'^admin/action_log/',
+    url(r'^admin/actionlog/',
         include('actionlog.urls')),
 
     # Allocations App
