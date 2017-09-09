@@ -21,7 +21,7 @@ before_script:  # code coverage tool
   - ./cc-test-reporter before-build
 script:
   - flake8 .
-  - cd tabbycat && coverage run manage.py test -v 2 --exclude-tag=functional
+  - cd tabbycat && coverage run manage.py test -v 2 --exclude-tag=functional && cd ..
 after_script:
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 # The below is used to enable selenium testing as per:
