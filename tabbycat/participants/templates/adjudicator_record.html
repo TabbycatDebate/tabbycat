@@ -82,8 +82,7 @@
                   <div class="list-group-item">
                     <strong>{% trans "Teams:" %}</strong>
                     {% for dt in debate.debateteams_ordered %}
-                      {% team_record_link dt.team admin_page %}
-                      ({{ dt.get_side_name }}){% if not forloop.last %},{% endif %}
+                      {% team_record_link dt.team admin_page %}{% if debate.sides_confirmed %} ({{ dt.get_side_name }}){% endif %}{% if not forloop.last %},{% endif %}
                     {% endfor %}
                   </div>
                 {% endif %} {# pref.teams_in_debate == 'bp' #}

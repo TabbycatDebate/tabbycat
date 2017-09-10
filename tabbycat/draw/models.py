@@ -57,6 +57,9 @@ class Debate(models.Model):
         verbose_name=_("result status"))
     ballot_in = models.BooleanField(default=False,
         verbose_name=_("ballot in"))
+    sides_confirmed = models.BooleanField(default=True,
+        verbose_name=_("sides confirmed"),
+        help_text=_("If unchecked, the sides assigned to teams in this debate are just placeholders."))
 
     class Meta:
         verbose_name = _("debate")
@@ -74,14 +77,18 @@ class Debate(models.Model):
     @property
     def matchup(self):
         # This method is used by __str__, so it's not allowed to crash (ever)
+        if not self.sides_confirmed:
+            teams_list = ", ".join([dt.team.short_name for dt in self.debateteam_set.all()])
+            # Translators: This is appended to a list of teams, e.g. "Auckland
+            # 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
+            # space.
+            return teams_list + ugettext(" (sides not confirmed)")
         try:
-            return " vs ".join(self.get_team(side).short_name for side in self.round.tournament.sides)
+            # Translators: This goes between teams in a debate, e.g. "Auckland 1
+            # vs Vic Wellington 1". Mind the leading and trailing spaces.
+            return ugettext(" vs ").join(self.get_team(side).short_name for side in self.round.tournament.sides)
         except (ObjectDoesNotExist, MultipleObjectsReturned):
-            dts = self.debateteam_set.all()
-            if all(dt.side == DebateTeam.SIDE_UNALLOCATED for dt in dts):
-                return ", ".join([dt.team.short_name for dt in dts])
-            else:
-                return self._teams_and_sides_display()
+            return self._teams_and_sides_display()
 
     def _teams_and_sides_display(self):
         return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_display())
@@ -270,14 +277,12 @@ class DebateTeam(models.Model):
     SIDE_OO = 'oo'
     SIDE_CG = 'cg'
     SIDE_CO = 'co'
-    SIDE_UNALLOCATED = '-'
     SIDE_CHOICES = ((SIDE_AFF, _("affirmative")),
                     (SIDE_NEG, _("negative")),
                     (SIDE_OG, _("opening government")),
                     (SIDE_OO, _("opening opposition")),
                     (SIDE_CG, _("closing government")),
-                    (SIDE_CO, _("closing opposition")),
-                    (SIDE_UNALLOCATED, _("unallocated")), )
+                    (SIDE_CO, _("closing opposition")))
 
     objects = DebateTeamManager()
 

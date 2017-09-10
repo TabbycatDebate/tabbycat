@@ -218,6 +218,10 @@ class BaseDebateResult:
         self.load_debateteams()
 
     def load_debateteams(self):
+
+        if not self.debate.sides_confirmed:
+            return  # don't load if sides aren't confirmed
+
         debateteams = self.debate.debateteam_set.filter(
                 side__in=self.sides).select_related('team')
 
@@ -261,6 +265,9 @@ class BaseDebateResult:
                 raise ValueError("Team %s is not in debate %s" % (team, self.debate))
             debateteam.side = side
             debateteam.save()
+
+        self.debate.sides_confirmed = True
+        self.debate.save()
 
         self.debate._populate_teams()  # refresh
         self.load_debateteams()  # refresh
@@ -334,6 +341,9 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
 
     def load_speakers(self):
         """Loads team and speaker identities from the database into the buffer."""
+
+        if not self.debate.sides_confirmed:
+            return  # don't load if sides aren't confirmed
 
         speakerscores = self.ballotsub.speakerscore_set.filter(
             debate_team__side__in=self.sides,
