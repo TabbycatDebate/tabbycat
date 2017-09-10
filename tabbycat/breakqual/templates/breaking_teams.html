@@ -1,7 +1,5 @@
 {% extends "base_vue_table.html" %}
-{% load static %}
-{% load debate_tags %}
-{% load add_field_css %}
+{% load static debate_tags i18n add_field_css %}
 
 {% block head-title %}<span class="emoji">👑</span>{{ category.name }} Break{% endblock %}
 {% block sub-title %}{{ pref.public_breaking_teams|yesno:",not "}}publicly visible{% endblock %}
@@ -35,43 +33,31 @@
 {% block page-alerts %}
 
   {% if category.team_set.count == 0 %}
-    <div class="alert alert-warning">
-      <i data-feather="alert-circle"></i>
-      There are <strong>0 teams marked as eligible</strong> for this category — you will need to
-       <a href="{% tournamenturl 'breakqual-edit-eligibility' %}" class="alert-link">
+
+    {% tournamenturl 'breakqual-edit-eligibility' as url %}
+    {% blocktrans trimmed asvar message %}
+    There are <strong>0 teams marked as eligible</strong> for this category — you will need to
+       <a href="{{ url }}" class="alert-link">
       add some eligible teams</a> for this break to generate correctly.
-    </div>
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" %}
+
   {% endif %}
+
   {% if generated %}
-    <div class="alert alert-warning">
-      <i data-feather="alert-circle"></i>
-      <p>This break uses the <strong>{{ category.get_rule_display }}</strong> rule
-       — if you intended to use a different rule, you should
-       <a href="{% url 'admin:breakqual_breakcategory_change' category.id %}">
-        edit the rule for this break category in the Edit Database area</a>,
-        then delete and regenerate all breaks.
-      </p>
-      <p>Please double-check this before announcing the break or releasing it to
-       the public. The code that generates the break is not robustly tested for
-      corner cases.</p>
-    </div>
-    <div class="alert alert-info">
-      <i data-feather="alert-circle"></i>
-      <p>
-        <strong>How to edit the break:</strong> Edit the remarks in the
-        right-hand column. Any team with a remark will be excluded from this
-        break. (The break generator will sometimes insert its own remarks.)
-        Then, click the appropriate <em>Save Remarks and Update</em> button
-        below.
-      </p>
-      <p>
-        If you have complicated break rules (for example, if some teams are
-        allowed to choose their preferred category) then you may have to update
-        remarks a few times to get the correct break. As a last resort, you can
-        <a href="{% url 'admin:breakqual_breakingteam_changelist' %}">
-        edit the breaking teams list directly in the Edit Database area</a>.
-      </p>
-    </div>
+
+    {% url 'admin:breakqual_breakcategory_change' category.id as url %}
+    {% blocktrans trimmed asvar p1 with category=category.get_rule_display %}
+      This break uses the <strong>{{ category }}</strong> rule — if you intended to use a different rule, you should <a href="{{ url }}"> edit the rule for this break category in the Edit Database area</a>, then delete and regenerate all breaks. lease double-check this before announcing the break or releasing it to the public. The code that generates the break is not robustly tested for corner cases.
+    {% endblocktrans %}
+    {% include "components/explainer-card.html" with type="warning" %}
+
+    {% url 'admin:breakqual_breakingteam_changelist' as url %}
+    {% blocktrans trimmed asvar p1 %}
+      To edit the break use the remarks in the right-hand column. Any team with a remark will be excluded from this break (the break generator will insert sometimes insert its own remarks). Then, click the appropriate Save Remarks and Update button below. If you have complicated break rules (for example, if some teams are allowed to choose their preferred category) then you may have to update remarks a few times to get the correct break. As a last resort, you can <a href="{{ url }}"> edit the breaking teams list directly in the Edit Database area</a>.
+    {% endblocktrans %}
+    {% include "components/explainer-card.html" with type="info" %}
+
   {% else %}
     {% if pref.public_breaking_teams %}
       <div class="alert alert-danger">
@@ -104,35 +90,35 @@
 {% if generated %}
   <form action="." method="POST">
     {% csrf_token %}
+
+    {{ block.super }}
+
+    {% if pref.public_breaking_teams %}
+
+      {% blocktrans trimmed asvar message %}
+        <strong>Caution!</strong> The "public breaking teams" option is turned on, so the break
+        is publicly visible. If you update the break(s), the changes will become visible
+        <strong>immediately</strong>, <strong>without a chance for you to review them</strong>.
+      {% endblocktrans %}
+      {% include "components/alert.html" with type="danger" %}
+
+    {% endif %}
+
     <div class="card">
-      <div class="card-body">
-
-        {{ block.super }}
-
-        {% if pref.public_breaking_teams %}
-          <div class="alert alert-danger">
-            <i data-feather="alert-circle"></i>
-            <strong>Caution!</strong> The "public breaking teams" option is turned on, so the break
-            is publicly visible. If you update the break(s), the changes will become visible
-            <strong>immediately</strong>, <strong>without a chance for you to review them</strong>.
-          </div>
-        {% endif %}
-
-        <div class="row">
-          <div class="form-inline col-md-6">
-            <button class="btn btn-primary btn-block btn-success" type="submit" name="save_update_all">
-                Save Remarks and Update All Breaks
-            </button>
-          </div>
-          <div class="form-inline col-md-6">
-            <button class="btn btn-primary btn-block btn-success }}" type="submit" name="save_update_one">
-                Save Remarks and Update the {{ category.name }} Break
-            </button>
-          </div>
+      <div class="card-body row">
+        <div class="form-inline col-md-6">
+          <button class="btn btn-primary btn-block btn-success" type="submit" name="save_update_all">
+              Save Remarks and Update All Breaks
+          </button>
         </div>
-
+        <div class="form-inline col-md-6">
+          <button class="btn btn-primary btn-block btn-success }}" type="submit" name="save_update_one">
+              Save Remarks and Update the {{ category.name }} Break
+          </button>
+        </div>
       </div>
     </div>
+
   </form>
 {% else %}
   <div id="vueMount"></div><!-- Prevent unfound item error for Vue -->

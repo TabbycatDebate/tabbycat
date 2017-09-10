@@ -2,8 +2,8 @@
 
 <div class="card">
 
-  <div class="card-body round-progresses">
-    <h5 class="card-title">{{ info.title }}</h5>
+  <div class="card-body">
+    <h5 class="card-title mb-0">{{ info.title }}</h5>
   </div>
 
   <div class="list-group list-group-flush">
@@ -34,13 +34,13 @@
 
     {% if type == "teams" and not round.is_break_round %}
       {% roundurl 'availability-teams' round as url %}
-      {% trans "Check In Teams" as text %}
+      {% trans "Check-in teams" as text %}
     {% elif type == "adjs" %}
       {% roundurl 'availability-adjudicators' round as url %}
-      {% trans "Check In Adjudicators" as text %}
+      {% trans "Check-in adjudicators" as text %}
     {% elif type == "venues" %}
       {% roundurl 'availability-venues' round as url %}
-      {% trans "Check In Venues" as text %}
+      {% trans "Check-in venues" as text %}
     {% endif %}
 
     {% if type != "teams" or not round.is_break_round %}

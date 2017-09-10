@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div class="col" v-for="(table, i) in tablesData" :class="tableClass">
+    <div class="col mb-3" v-for="(table, i) in tablesData" :class="tableClass">
       <div class="card table-container" :id="getTableId(i)">
         <div class="card-body">
           <h4 class="card-title" v-if="table.title">{{ table.title }}</h4>

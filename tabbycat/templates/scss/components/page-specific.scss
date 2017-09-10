@@ -2,14 +2,6 @@
 // Checkins
 //------------------------------------------------------------------------------
 
-.round-progresses {
-  padding-bottom: 0;
-
-  .row:first-child {
-    margin-bottom: 10px; // Space out the bars slightly
-  }
-}
-
 .progress {
   // margin-bottom: 0; // Progress bars have bottom margins; need to offset
   height: 30px; // Increase height from standard
