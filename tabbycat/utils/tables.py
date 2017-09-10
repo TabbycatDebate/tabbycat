@@ -220,7 +220,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             return {'text': '', 'link': False}
 
-    def _team_cell(self, team, hide_emoji=True):
+    def _team_cell(self, team, hide_emoji=True, subtext=None):
+        text = team.short_name
         cell = {
             'text': team.short_name,
             'emoji': team.emoji if self.tournament.pref('show_emoji') and not hide_emoji else None,
@@ -228,6 +229,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'class': 'team-name',
             'popover': {'title': team.long_name, 'content': []}
         }
+        if subtext:
+            cell['subtext'] = subtext
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({'text': ", ".join([s.name for s in team.speakers])})
         if self._show_record_links:
@@ -570,6 +573,21 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
 
+    def add_debate_team_columns(self, debates):
+        all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
+
+        for i, side in enumerate(self.tournament.sides, start=1):
+            side_abbr = get_side_name(self.tournament, side, 'abbr')
+
+            team_data = []
+            for debate in debates:
+                team = debate.get_team(side)
+                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbr
+                team_data.append(self._team_cell(team, subtext=subtext))
+
+            key = side_abbr if all_sides_confirmed else  _("Team %(num)d") % {'num': i}
+            self.add_column(key, team_data)
+
     def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):
 
         def construct_venue_cell(venue):
@@ -810,13 +828,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(round.abbreviation, results)
 
     def add_debate_results_columns(self, debates):
+        all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
+        side_abbrs = {side: get_side_name(self.tournament, side, 'abbr')
+            for side in self.tournament.sides}
+
         results_data = []
         for debate in debates:
             row = []
-            for pos in self.tournament.sides:
+            for side in self.tournament.sides:
                 try:
-                    debateteam = debate.get_dt(pos)
-                    team = debate.get_team(pos)
+                    debateteam = debate.get_dt(side)
+                    team = debate.get_team(side)
                 except ObjectDoesNotExist:
                     row.append(self.BLANK_TEXT)
                     continue
@@ -824,7 +846,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     row.append("<error>")
                     continue
 
-                cell = self._team_cell(team, hide_emoji=True)
+                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbrs[side]
+                cell = self._team_cell(team, hide_emoji=True, subtext=subtext)
+
                 if self.tournament.pref('teams_in_debate') == 'bp':
                     cell = self._result_cell_class_four(debateteam.points, cell)
                 else:
@@ -833,8 +857,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 row.append(cell)
             results_data.append(row)
 
-        results_header = [get_side_name(self.tournament, side, 'abbr').capitalize()
-                for side in self.tournament.sides]
+        if all_sides_confirmed:
+            results_header = [get_side_name(self.tournament, side, 'abbr').capitalize()
+                    for side in self.tournament.sides]
+        else:
+            results_header = [_("Team %(num)d") % {'num': i} for i in range(1, len(side_abbrs)+1)]
+
         self.add_columns(results_header, results_data)
 
     def add_standings_results_columns(self, standings, rounds, show_ballots):
