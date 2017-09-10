@@ -45,13 +45,13 @@
 
   // Must be below histories (to take precedence)
   &.hover-institution {
-    background: $conflict-institution;
+    @include hover-highlights($conflict-institution);
   }
 
   // Must be below histories + institutions (ie to take precedence)
   &.hover-adjudicator,
   &.hover-team {
-    background: $conflict-clash;
+    @include hover-highlights($conflict-clash);
   }
 
   &.panel-histories-1-ago {

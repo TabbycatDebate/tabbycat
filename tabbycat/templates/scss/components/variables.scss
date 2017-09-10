@@ -108,6 +108,17 @@ $tooltip-max-width: 330px;
 $footer-height: 175px;
 
 //------------------------------------------------------------------------------
+// Custom Mixins
+//------------------------------------------------------------------------------
+
+// For diversity and allocation highlights
+@mixin hover-highlights($baseColor) {
+  background-color: $baseColor;
+  border-color: darken($baseColor, 5);
+  color: #fff;
+}
+
+//------------------------------------------------------------------------------
 // Z-Index Hierarchy
 //------------------------------------------------------------------------------
 

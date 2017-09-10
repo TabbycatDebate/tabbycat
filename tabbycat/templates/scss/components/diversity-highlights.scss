@@ -9,23 +9,19 @@
 .category-display {
 
   &.category-0 {
-    background-color: $break-cat-1;
-    color: #fff;
+    @include hover-highlights($break-cat-1);
   }
 
   &.category-1 {
-    background-color: $break-cat-2;
-    color: #fff;
+    @include hover-highlights($break-cat-2);
   }
 
   &.category-2 {
-    background-color: $break-cat-3;
-    color: #fff;
+    @include hover-highlights($break-cat-3);
   }
 
   &.category-3 {
-    background-color: $break-cat-4;
-    color: #fff;
+    @include hover-highlights($break-cat-4);
   }
 }
 
@@ -34,53 +30,46 @@
   &.gender-male,
   &.gender-m,
   &.gender-M {
-    background-color: $male;
-    color: #fff;
+    @include hover-highlights($male);
   }
 
   &.gender-female,
   &.gender-f,
   &.gender-F,
   &.gender-nm {
-    background-color: $female;
-    color: #fff;
+    @include hover-highlights($female);
   }
 
   &.gender-other,
   &.gender-o,
   &.gender-O {
-    background-color: $other;
-    color: #fff;
+    @include hover-highlights($other);
   }
 
   &.gender-unknown,
   &.gender-u,
   &.gender-U,
   &.gender- {
-    background-color: $unknown;
+    @include hover-highlights($unknown);
   }
 
   // For Teams
   &.gender-men-2 {
-    background-color: $male;
-    color: #fff;
+    @include hover-highlights($male);
   }
 
   &.gender-notmen-2 {
-    background-color: $female;
-    color: #fff;
+    @include hover-highlights($female);
   }
 
   &.gender-men-3,
   &.gender-men-4 {
-    background-color: darken($male, 20%);
-    color: #fff;
+    @include hover-highlights(darken($male, 20%));
   }
 
   &.gender-notmen-3,
   &.gender-notmen-4 {
-    background-color: darken($female, 20%);
-    color: #fff;
+    @include hover-highlights(darken($female, 20%));
   }
 }
 
@@ -125,48 +114,39 @@ path.gender-other {
 .region-display {
 
   &.region-0 {
-    background-color: $region-cat-0;
-    color: #fff;
+    @include hover-highlights($region-cat-0);
   }
 
   &.region-1 {
-    background-color: $region-cat-1;
-    color: #fff;
+    @include hover-highlights($region-cat-1);
   }
 
   &.region-2 {
-    background-color: $region-cat-2;
-    color: #fff;
+    @include hover-highlights($region-cat-2);
   }
 
   &.region-3 {
-    background-color: $region-cat-3;
-    color: #fff;
+    @include hover-highlights($region-cat-3);
   }
 
   &.region-4 {
-    background-color: $region-cat-4;
-    color: #fff;
+    @include hover-highlights($region-cat-4);
   }
 
   &.region-5 {
-    background-color: $region-cat-5;
-    color: #fff;
+    @include hover-highlights($region-cat-5);
   }
 
   &.region-6 {
-    background-color: $region-cat-6;
-    color: #fff;
+    @include hover-highlights($region-cat-6);
   }
 
   &.region-7 {
-    background-color: $region-cat-7;
-    color: #fff;
+    @include hover-highlights($region-cat-7);
   }
 
   &.region-8 {
-    background-color: $region-cat-8;
-    color: #fff;
+    @include hover-highlights($region-cat-8);
   }
 }
 
@@ -211,47 +191,38 @@ path.region-8 {
 .ranking-display {
 
   &.ranking-90 {
-    background-color: $adj-ranking-0;
-    color: #fff;
+    @include hover-highlights($adj-ranking-0);
   }
 
   &.ranking-80 {
-    background-color: $adj-ranking-1;
-    color: #fff;
+    @include hover-highlights($adj-ranking-1);
   }
 
   &.ranking-70 {
-    background-color: $adj-ranking-2;
-    color: #fff;
+    @include hover-highlights($adj-ranking-2);
   }
 
   &.ranking-60 {
-    background-color: $adj-ranking-3;
-    color: #fff;
+    @include hover-highlights($adj-ranking-3);
   }
 
   &.ranking-50 {
-    background-color: $adj-ranking-4;
-    color: #fff;
+    @include hover-highlights($adj-ranking-4);
   }
 
   &.ranking-40 {
-    background-color: $adj-ranking-5;
-    color: #fff;
+    @include hover-highlights($adj-ranking-5);
   }
 
   &.ranking-30 {
-    background-color: $adj-ranking-6;
-    color: #fff;
+    @include hover-highlights($adj-ranking-6);
   }
 
   &.ranking-20 {
-    background-color: $adj-ranking-7;
-    color: #fff;
+    @include hover-highlights($adj-ranking-7);
   }
 
   &.ranking-10 {
-    background-color: $adj-ranking-8;
-    color: #fff;
+    @include hover-highlights($adj-ranking-8);
   }
 }

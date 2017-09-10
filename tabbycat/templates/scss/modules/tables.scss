@@ -7,6 +7,7 @@
   .card-title {
     @extend .p-1;
   }
+
   .card-body {
     @extend .px-2;
   }
@@ -207,7 +208,7 @@ thead,
     border-radius: 0;
 
     .card-body {
-      padding: 0.5rem 0rem;
+      padding: 0.5rem 0;
     }
   }
 
@@ -215,11 +216,4 @@ thead,
   .main .table-container {
     margin-left: 0;
   }
-
-}
-
-
-// For Phones
-@media (max-width: breakpoint-min(md, $grid-breakpoints)) {
-
 }
