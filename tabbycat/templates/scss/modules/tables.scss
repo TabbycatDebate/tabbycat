@@ -4,14 +4,18 @@
 
 .table-container {
 
+  .card-title {
+    @extend .p-1;
+  }
   .card-body {
-    padding: 0.5rem;
+    @extend .px-2;
   }
 }
 
 .table {
   font-size: $font-size-sm;
   background: $alt-bg; // For when tables blow out on mobile
+  margin-bottom: 0; // Handled by the container elements
 
   th {
     border-top: 0;

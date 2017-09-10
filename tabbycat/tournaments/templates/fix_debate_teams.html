@@ -9,124 +9,128 @@
 
 {% block content %}
 
-  <div class="card">
-    <div class="card-body">
+<div class="card">
+  <div class="card-body">
 
-      <p class="card-text">
+    <p class="card-text">
+      {% blocktrans trimmed %}
+        Tabbycat always requires that, in every debate, one and only one team is
+        assigned to each side. When that is not the case, this error occurs.
+        Usually, this is the result of debates having been manually edited.
+      {% endblocktrans %}
+    </p>
+
+    <p class="card-text">
+      {% blocktrans trimmed %}
+        A list of offending debates is presented below. To fix them, you'll need
+        to do the following:
+      {% endblocktrans %}
+    </p>
+
+    <ol>
+      <li>
+        {# Translators: This is in a list of instructions. #}
         {% blocktrans trimmed %}
-          Tabbycat always requires that, in every debate, one and only one team is
-          assigned to each side. When that is not the case, this error occurs.
-          Usually, this is the result of debates having been manually edited.
+          Click the <strong>Fix this debate</strong> button for that debate.
         {% endblocktrans %}
-      </p>
-
-      <p class="card-text">
+      </li>
+      <li>
+        {# Translators: This is in a list of instructions. #}
         {% blocktrans trimmed %}
-          A list of offending debates is presented below. To fix them, you'll need
-          to do the following:
+          Ensure that every <strong>side</strong> that should be present in the
+          debate is present and has a <strong>team</strong> assigned. If a team
+          is missing, find an empty row and use the magnifying glass to select a
+          team. Then set the new team's <strong>side</strong> accordingly.
         {% endblocktrans %}
-      </p>
-
-      <ol>
-        <li>
-          {# Translators: This is in a list of instructions. #}
-          {% blocktrans trimmed %}
-            Click the <strong>Fix this debate</strong> button for that debate.
-          {% endblocktrans %}
-        </li>
-        <li>
-          {# Translators: This is in a list of instructions. #}
-          {% blocktrans trimmed %}
-            Ensure that every <strong>side</strong> that should be present in the
-            debate is present and has a <strong>team</strong> assigned. If a team
-            is missing, find an empty row and use the magnifying glass to select a
-            team. Then set the new team's <strong>side</strong> accordingly.
-          {% endblocktrans %}
-        </li>
-        <li>
-          {# Translators: This is in a list of instructions. #}
-          {% blocktrans trimmed %}
-            Ensure that no <strong>side</strong> appears more than once in the
-            debate.
-          {% endblocktrans %}
-        </li>
-        <li>
-          {# Translators: This is in a list of instructions. #}
-          {% blocktrans trimmed %}
-            <strong>Save</strong> the changes.
-          {% endblocktrans %}
-        </li>
-      </ol>
-
-      <p class="card-text">
+      </li>
+      <li>
+        {# Translators: This is in a list of instructions. #}
         {% blocktrans trimmed %}
-          Once you've fixed all the debates, you should then be
-          able to return to whatever page you were originally on without the error
-          reoccurring.
+          Ensure that no <strong>side</strong> appears more than once in the
+          debate.
         {% endblocktrans %}
-      </p>
-
-      <table class="table table-responsive">
-        <thead>
-          <tr>
-            <th>{% trans "Debate ID" %}</th>
-            {% for side_name in side_names %}
-              <th>
-                {% blocktrans trimmed %}
-                  Team(s) on {{ side_name }}
-                {% endblocktrans %}
-              </th>
-            {% endfor %}
-            <th>{% trans "Link to fix this debate" %}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for debate in incomplete_debates %}
-            <tr>
-              <td><strong>{{ debate.id }}</strong></td>
-              {% for teams_on_side in debate.teams_on_each_side.values %}
-                {% with nteams=teams_on_side|length %}
-                  {% if nteams == 0 %}
-                    <td class="table-danger">
-                      <strong>{% trans "No teams" %}</strong>
-                    </td>
-                  {% elif nteams == 1 %}
-                    <td>
-                      {{ teams_on_side.0.short_name }}
-                    </td>
-                  {% else %}
-                    <td class="table-danger">
-                      <strong>{% trans "Multiple teams" %}</strong>
-                      <ul style="margin-bottom: 0">
-                        {% for team in teams_on_side %}
-                          <li>{{ team.short_name }}</li>
-                        {% endfor %}
-                      </ul>
-                    </td>
-                  {% endif %}
-                {% endwith %}
-              {% endfor %}
-              <td><a href="{% url 'admin:draw_debate_change' debate.id %}#/tab/inline_0/" class="btn btn-block btn-success" target="_blank">{% trans "Fix this debate" context "button label" %}</a></td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="{{ side_names|length|add:2 }}" class="text-center table-success">
-                <p>{% trans "It looks like all debates are in good shape!" %}</p>
-                <p>{% trans "If you keep getting redirected to this page and you're not sure why, please contact the developers of Tabbycat." %}</p>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
-      <p class="card-text">
-        {% url 'admin:draw_debate_changelist' as edit_debates_url %}
+      </li>
+      <li>
+        {# Translators: This is in a list of instructions. #}
         {% blocktrans trimmed %}
-          You can also see all the debates in the <a href="{{ edit_debates_url }}" target="_blank">Debates section of the Edit Database Area</a>.
+          <strong>Save</strong> the changes.
         {% endblocktrans %}
-      </p>
+      </li>
+    </ol>
 
-    </div>
+    <p class="card-text">
+      {% blocktrans trimmed %}
+        Once you've fixed all the debates, you should then be
+        able to return to whatever page you were originally on without the error
+        reoccurring.
+      {% endblocktrans %}
+      {% url 'admin:draw_debate_changelist' as edit_debates_url %}
+      {% blocktrans trimmed %}
+        You can also see all the debates in the <a href="{{ edit_debates_url }}" target="_blank">Debates section of the Edit Database Area</a>.
+      {% endblocktrans %}
+    </p>
   </div>
+</div>
+
+<div class="card table-container mt-3">
+  <div class="card-body">
+
+    <table class="table table-responsive">
+      <thead>
+        <tr>
+          <th>{% trans "Debate ID" %}</th>
+          {% for side_name in side_names %}
+            <th>
+              {% blocktrans trimmed %}
+                Team(s) on {{ side_name }}
+              {% endblocktrans %}
+            </th>
+          {% endfor %}
+          <th>{% trans "Link to fix this debate" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for debate in incomplete_debates %}
+          <tr>
+            <td><strong>{{ debate.id }}</strong></td>
+            {% for teams_on_side in debate.teams_on_each_side.values %}
+              {% with nteams=teams_on_side|length %}
+                {% if nteams == 0 %}
+                  <td class="text-danger">
+                    <strong>{% trans "No teams" %}</strong>
+                  </td>
+                {% elif nteams == 1 %}
+                  <td>
+                    {{ teams_on_side.0.short_name }}
+                  </td>
+                {% else %}
+                  <td class="text-danger">
+                    <strong>{% trans "Multiple teams" %}</strong><br>
+                    {% for team in teams_on_side %}
+                      {{ team.short_name }}<br>
+                    {% endfor %}
+                  </td>
+                {% endif %}
+              {% endwith %}
+            {% endfor %}
+            <td>
+              <a href="{% url 'admin:draw_debate_change' debate.id %}#/tab/inline_0/"
+                 class="btn btn-block btn-success" target="_blank">
+                 {% trans "Fix this debate" context "button label" %}
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="{{ side_names|length|add:2 }}" class="text-center table-success">
+              <p>{% trans "It looks like all debates are in good shape!" %}</p>
+              <p>{% trans "If you keep getting redirected to this page and you're not sure why, please contact the developers of Tabbycat." %}</p>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 
 {% endblock %}
