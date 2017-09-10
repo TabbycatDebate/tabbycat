@@ -14,8 +14,8 @@
     <small class="form-text text-muted">{{ field.help_text }}</small>
   {% endif %}
 
-  {% if errors %}
-    {{ errors }}
+  {% if field.errors %}
+    {{ field.errors }}
   {% endif %}
 
 </div>

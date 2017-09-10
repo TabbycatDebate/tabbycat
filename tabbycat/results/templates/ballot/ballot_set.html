@@ -4,7 +4,7 @@
 
   {% if form.errors %}
     {% trans "There are some problems with this scoresheet. Please review and correct them." as message %}
-    {% include "components/form-errors.html" with errors=form.errors %}
+    {% include "components/form-errors.html" with errors=form.non_field_errors %}
   {% endif %}
 
   {% include "ballot/ballot_debate_info.html" %}
