@@ -220,7 +220,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return {'text': '', 'link': False}
 
     def _team_cell(self, team, hide_emoji=True, subtext=None):
-        text = team.short_name
         cell = {
             'text': team.short_name,
             'emoji': team.emoji if self.tournament.pref('show_emoji') and not hide_emoji else None,
@@ -586,7 +585,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbr
                 team_data.append(self._team_cell(team, subtext=subtext))
 
-            key = side_abbr if all_sides_confirmed else  _("Team %(num)d") % {'num': i}
+            key = side_abbr if all_sides_confirmed else _("Team %(num)d") % {'num': i}
             self.add_column(key, team_data)
 
     def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):

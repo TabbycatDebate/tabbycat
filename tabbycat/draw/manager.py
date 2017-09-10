@@ -97,8 +97,8 @@ class BaseDrawManager:
             debate.bracket = pairing.bracket
             debate.room_rank = pairing.room_rank
             debate.flags = ",".join(pairing.flags)  # comma-separated list
-            if (self.round.tournament.pref('draw_side_allocations') == "manual-ballot"
-                    or self.round.is_break_round):
+            if (self.round.tournament.pref('draw_side_allocations') == "manual-ballot" or
+                    self.round.is_break_round):
                 debate.sides_confirmed = False
             debate.save()
 

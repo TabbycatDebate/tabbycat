@@ -207,7 +207,6 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
     def get_table(self):
         r = self.get_round()
-        tournament = self.get_tournament()
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key, sort_order=self.sort_order)
         if r.draw_status == Round.STATUS_NONE:
             return table # Return Blank
@@ -225,7 +224,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         # For draw details and draw draft pages
         if (r.draw_status == Round.STATUS_DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
-            metrics = r.tournament.pref('team_standings_precedence')
+            metrics = self.get_tournament().pref('team_standings_precedence')
             generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
             standings = generator.generate(teams, round=r.prev)
             if not r.is_break_round:

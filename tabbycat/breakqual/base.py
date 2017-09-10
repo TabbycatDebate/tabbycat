@@ -90,14 +90,16 @@ class BaseBreakGenerator:
                     name = annotator_class.name
                 return force_text(name)
 
-            raise BreakGeneratorError(_("The break qualification rule %(rule)s "
-                "requires the following metric(s) to be in the team standings "
-                "precedence in order to work: %(required)s; and the following "
-                "are missing: %(missing)s.") % {
+            raise BreakGeneratorError(
+                _("The break qualification rule %(rule)s requires the following "
+                "metric(s) to be in the team standings precedence in order to "
+                "work: %(required)s; and the following are missing: "
+                "%(missing)s.") % {
                     'rule': self.category.get_rule_display(),
                     'required': ", ".join(_metric_name(metric) for metric in self.required_metrics),
                     'missing': ", ".join(_metric_name(metric) for metric in missing_metrics),
-                })
+                }
+            )
 
     def set_team_queryset(self):
         """Sets `self.team_queryset` to the queryset of all teams relevant to
