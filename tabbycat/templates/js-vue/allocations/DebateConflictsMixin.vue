@@ -8,27 +8,27 @@ export default {
 
   computed: {
     conflictablesToSearch: function() {
-      var a = _.map(this.panel, function(da) {
+      var a = _.map(this.panelAdjudicators, function(da) {
         return da.adjudicator
       })
-      var b = _.map(this.debateTeams, function(dt) {
+      var b = _.map(this.panelTeams, function(dt) {
         return dt.team
       })
       return a.concat(b)
     },
     adjudicatorIds: function() {
-      return _.map(this.panel, function(da) {
+      return _.map(this.panelAdjudicators, function(da) {
         return da.adjudicator.id
       })
     },
     teamIds: function() {
-      return _.map(this.debateTeams, function(dt) {
+      return _.map(this.panelTeams, function(dt) {
         return dt.team.id
       })
     },
   },
   watch: {
-    panel: function() {
+    panelAdjudicators: function() {
       this.$nextTick(function () {
         this.checkForPanelClashes() // NEED to wait for DOM updates to trigger
       })
@@ -39,10 +39,10 @@ export default {
       var self = this
       // Turn off all conflicts that might remain from beforehand
       if (unset) {
-        _.forEach(this.debateTeams, function(dt) {
+        _.forEach(this.panelTeams, function(dt) {
           self.$eventHub.$emit('unset-conflicts-for-team-' + dt.team.id, 'panel')
         })
-        _.forEach(this.panel, function(da) {
+        _.forEach(this.panelAdjudicators, function(da) {
           self.$eventHub.$emit('unset-conflicts-for-adjudicator-' + da.adjudicator.id, 'panel')
         })
       }
@@ -82,7 +82,7 @@ export default {
     },
     checkIfInPanelWithInstitution: function(conflict, conflictingItem) {
       var self = this
-      _.forEach(this.debateTeams, function(dt) {
+      _.forEach(this.panelTeams, function(dt) {
         var team = dt.team
         if ( (team.institution.id === conflict && team !== conflictingItem) &&
              (_.has(conflictingItem, 'score')) ) {
@@ -94,7 +94,7 @@ export default {
           self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
         }
       })
-      _.forEach(this.panel, function(da) {
+      _.forEach(this.panelAdjudicators, function(da) {
         var adj = da.adjudicator
         if (adj.institution.id === conflict && adj !== conflictingItem) {
           var eventCode = 'set-conflicts-for-adjudicator-' + adj.id

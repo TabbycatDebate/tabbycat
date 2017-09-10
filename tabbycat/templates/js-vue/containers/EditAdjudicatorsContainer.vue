@@ -44,8 +44,8 @@
         </div>
         <template slot="svenue"><!-- Hide Venues --></template>
         <template slot="spanel">
-          <debate-panel :panel="debate.debateAdjudicators" :debate-id="debate.id"
-                        :teams="debate.debateTeams"
+          <debate-panel :panel-adjudicators="debate.debateAdjudicators" :debate-id="debate.id"
+                        :panel-teams="debate.debateTeams"
                         :percentiles="percentileThresholds"
                         :locked="debate.locked"
                         :adj-positions="adjPositions"></debate-panel>
