@@ -56,20 +56,24 @@ class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
             if avg:
                 kwargs["round_speaks"].append({'round': r.name, 'score': avg})
 
-        margins = TeamScore.objects.filter(
-                    ballot_submission__confirmed=True,
-                    debate_team__team__tournament=t,
-                    margin__gte=0).select_related(
-                    'debate_team__team', 'debate_team__debate__round',
-                    'debate_team__team__institution')
-        kwargs["top_margins"] = margins.order_by('-margin')[:9]
-        kwargs["bottom_margins"] = margins.order_by('margin')[:9]
+        team_scores = TeamScore.objects.filter(
+            ballot_submission__confirmed=True,
+            debate_team__team__tournament=t).select_related('debate_team__team',
+                'debate_team__debate__round', 'debate_team__team__institution')
+        if t.pref('teams_in_debate') == 'bp':
+            kwargs["top_team_scores"] = team_scores.order_by('-score')[:9]
+            kwargs["bottom_team_scores"] = team_scores.order_by('score')[:9]
+        else:
+            team_scores = team_scores.filter(margin__gte=0)
+            kwargs["top_margins"] = team_scores.order_by('-margin')[:9]
+            kwargs["bottom_margins"] = team_scores.order_by('margin')[:9]
 
-        motions = Motion.objects.filter(
-                    round__seq__lte=round.seq, round__tournament=t).annotate(
-                    Count('ballotsubmission'))
-        kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:4]
-        kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:4]
+        if t.pref('motion_vetoes_enabled'):
+            motions = Motion.objects.filter(
+                        round__seq__lte=round.seq, round__tournament=t).annotate(
+                        Count('ballotsubmission'))
+            kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:4]
+            kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:4]
 
         return super().get_context_data(**kwargs)
 

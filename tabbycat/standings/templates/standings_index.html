@@ -9,158 +9,181 @@
 
 {% block content %}
 
-  <div class="card-columns">
+<div class="card-columns">
 
+  <div class="card">
+    <!-- List group -->
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <h5 class="card-title mb-0">Top Speaks</h5>
+      </li>
+      {% for top_speak in top_speaks %}
+        <li class="list-group-item">
+          {{ top_speak.speaker }} in
+          {{ top_speak.debate_team.debate.round.abbreviation }}
+          <span class="badge badge-secondary float-right">{{ top_speak.score|floatformat }}</span>
+        </li>
+      {% empty %}
+        <li class="list-group-item">
+          No data yet
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <!-- List group -->
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <h5 class="card-title mb-0">Bottom Speaks</h5>
+      </li>
+      {% for bottom_speak in bottom_speaks %}
+        <li class="list-group-item">
+          {{ bottom_speak.speaker }} in
+          {{ bottom_speak.debate_team.debate.round.abbreviation }}
+          <span class="badge badge-secondary float-right">{{ bottom_speak.score|floatformat }}</span>
+        </li>
+      {% empty %}
+      <li class="list-group-item">No data yet</li>{% endfor %}
+    </ul>
+  </div>
+
+  {% if top_margins %}
     <div class="card">
       <!-- List group -->
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h5 class="card-title mb-0">Top Speaks</h5>
+          <h5 class="card-title mb-0">Largest Margins</h5>
         </li>
-        {% if top_speaks %}
-          {% for top_speak in top_speaks %}
-            <li class="list-group-item">
-              {{ top_speak.speaker }} in
-              {{ top_speak.debate_team.debate.round.abbreviation }}
-              <span class="badge badge-secondary float-right">{{ top_speak.score|floatformat }}</span>
-            </li>
-          {% endfor %}
-        {% else %}
+        {% for top_margin in top_margins %}
           <li class="list-group-item">
-            No data yet
+            {{ top_margin.debate_team.team.short_name }}  vs
+            {{ top_margin.debate_team.opponent.team.short_name }} in
+            {{ top_margin.debate_team.debate.round.abbreviation }}
+            <span class="badge badge-secondary float-right">{{ top_margin.margin|floatformat }}</span>
           </li>
-        {% endif %}
+        {% empty %}
+          <li class="list-group-item">No data yet</li>
+        {% endfor %}
       </ul>
     </div>
+  {% endif %}
 
-    {% if pref.motion_vetoes_enabled %}
-      <div class="card">
-        <!-- List group -->
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <h5 class="card-title mb-0">Most and Least Popular Motions</h5>
-          </li>
-          {% if top_motions %}
-            {% for top_motion in top_motions %}
-              <li class="list-group-item">
-                {{ top_motion.reference }} in
-                {{ top_motion.round.abbreviation }}
-                <span class="badge badge-secondary float-right">{{ top_motion.ballotsubmission__count }}</span>
-              </li>
-            {% endfor %}
-          {% else %}
-            <li class="list-group-item">
-              No data yet
-            </li>
-          {% endif %}
-          <li class="list-group-item disabled">
-          ...
-          </li>
-          {% if bottom_motions %}
-            {% for bottom_motion in bottom_motions %}
-              <li class="list-group-item">
-                {{ bottom_motion.reference }} in
-                {{ bottom_motion.round.abbreviation }}
-                <span class="badge badge-secondary float-right">{{ bottom_motion.ballotsubmission__count }}</span>
-              </li>
-            {% endfor %}
-          {% else %}
-            <li class="list-group-item">
-              No data yet
-            </li>
-          {% endif %}
-        </ul>
-      </div>
-    {% endif %}
-
-    <div class="card">
-      <!-- List group -->
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <h5 class="card-title mb-0">Top Margins</h5>
-        </li>
-        {% if top_margins %}
-          {% for top_margin in top_margins %}
-            <li class="list-group-item">
-              {{ top_margin.debate_team.team.short_name }}  vs
-              {{ top_margin.debate_team.opponent.team.short_name }} in
-              {{ top_margin.debate_team.debate.round.abbreviation }}
-              <span class="badge badge-secondary float-right">{{ top_margin.margin|floatformat }}</span>
-            </li>
-          {% endfor %}
-        {% else %}
-          <li class="list-group-item">
-            No data yet
-          </li>
-        {% endif %}
-      </ul>
-    </div>
-
-    <div class="card">
-      <!-- List group -->
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <h5 class="card-title mb-0">Bottom Speaks</h5>
-        </li>
-        {% if bottom_speaks %}
-          {% for bottom_speak in bottom_speaks %}
-            <li class="list-group-item">
-              {{ bottom_speak.speaker }} in
-              {{ bottom_speak.debate_team.debate.round.abbreviation }}
-              <span class="badge badge-secondary float-right">{{ bottom_speak.score|floatformat }}</span>
-            </li>
-          {% endfor %}
-        {% else %}
-          <li class="list-group-item">
-            No data yet
-          </li>
-        {% endif %}
-      </ul>
-    </div>
-
-    <div class="card">
-      <!-- List group -->
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <h5 class="card-title mb-0">Average Speaks</h5>
-        </li>
-        {% if round_speaks %}
-          {% for round_speak in round_speaks %}
-            <li class="list-group-item">
-              {{ round_speak.round }}
-              <span class="badge badge-secondary float-right">{{ round_speak.score|floatformat }}</span>
-            </li>
-          {% endfor %}
-        {% else %}
-          <li class="list-group-item">
-            No data yet
-          </li>
-        {% endif %}
-      </ul>
-    </div>
-
+  {% if bottom_margins %}
     <div class="card">
       <!-- List group -->
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
           <h5 class="card-title mb-0">Closest Margins</h5>
         </li>
-        {% if bottom_margins %}
-          {% for bottom_margin in bottom_margins %}
-            <li class="list-group-item">
-              {{ bottom_margin.debate_team.team.short_name }} vs
-              {{ bottom_margin.debate_team.opponent.team.short_name }} in
-              {{ bottom_margin.debate_team.debate.round.abbreviation }}
-              <span class="badge badge-secondary float-right">{{ bottom_margin.margin|floatformat }}</span>
-            </li>
-          {% endfor %}
-        {% else %}
+        {% for bottom_margin in bottom_margins %}
+          <li class="list-group-item">
+            {{ bottom_margin.debate_team.team.short_name }} vs
+            {{ bottom_margin.debate_team.opponent.team.short_name }} in
+            {{ bottom_margin.debate_team.debate.round.abbreviation }}
+            <span class="badge badge-secondary float-right">{{ bottom_margin.margin|floatformat }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item">No data yet</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if top_team_scores %}
+    <div class="card">
+      <!-- List group -->
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h5 class="card-title mb-0">Top Team Scores</h5>
+        </li>
+        {% for top_score in top_team_scores %}
+          <li class="list-group-item">
+            {{ top_score.debate_team.team.short_name }} in
+            {{ top_score.debate_team.debate.round.abbreviation }}
+            <span class="badge badge-secondary float-right">{{ top_score.score }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item">No data yet</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if bottom_team_scores %}
+    <div class="card">
+      <!-- List group -->
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h5 class="card-title mb-0">Bottom Team Scores</h5>
+        </li>
+        {% for bottom_score in bottom_team_scores %}
+          <li class="list-group-item">
+            {{ bottom_score.debate_team.team.short_name }} in
+            {{ bottom_score.debate_team.debate.round.abbreviation }}
+            <span class="badge badge-secondary float-right">{{ bottom_score.score }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item">No data yet</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if top_motions or bottom_motions %}
+    <div class="card">
+      <!-- List group -->
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h5 class="card-title mb-0">Most/Least Popular Motions</h5>
+        </li>
+        {% for top_motion in top_motions %}
+          <li class="list-group-item">
+            {{ top_motion.reference }} in
+            {{ top_motion.round.abbreviation }}
+            <span class="badge badge-secondary float-right">{{ top_motion.ballotsubmission__count }}</span>
+          </li>
+        {% empty %}
           <li class="list-group-item">
             No data yet
           </li>
-        {% endif %}
+        {% endfor %}
+        <li class="list-group-item disabled">
+        ...
+        </li>
+        {% for bottom_motion in bottom_motions %}
+          <li class="list-group-item">
+            {{ bottom_motion.reference }} in
+            {{ bottom_motion.round.abbreviation }}
+            <span class="badge badge-secondary float-right">{{ bottom_motion.ballotsubmission__count }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item">
+            No data yet
+          </li>
+        {% endfor %}
       </ul>
     </div>
+  {% endif %}
 
+  <div class="card">
+    <!-- List group -->
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <h5 class="card-title mb-0">Average Speaks</h5>
+      </li>
+      {% if round_speaks %}
+        {% for round_speak in round_speaks %}
+          <li class="list-group-item">
+            {{ round_speak.round }}
+            <span class="badge badge-secondary float-right">{{ round_speak.score|floatformat }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item">No data yet</li>
+        {% endfor %}
+      {% endif %}
+    </ul>
   </div>
+
+</div>
 {% endblock %}
