@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.utils import formats
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
@@ -836,15 +835,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for debate in debates:
             row = []
             for side in self.tournament.sides:
-                try:
-                    debateteam = debate.get_dt(side)
-                    team = debate.get_team(side)
-                except ObjectDoesNotExist:
-                    row.append(self.BLANK_TEXT)
-                    continue
-                except MultipleObjectsReturned:
-                    row.append("<error>")
-                    continue
+                debateteam = debate.get_dt(side)
+                team = debate.get_team(side)
 
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbrs[side]
                 cell = self._team_cell(team, hide_emoji=True, subtext=subtext)
