@@ -45,7 +45,7 @@
 
   {% elif round.get_draw_status_display.lower == 'released' %}
 
-    {% roundurl 'draw' round as url %}
+    {% roundurl 'results-round-list' round as url %}
     {% include "components/item-action.html" with alone=True text="Go to the results area to begin entering ballots for "|add:round.name success=True %}
 
   {% endif %}
