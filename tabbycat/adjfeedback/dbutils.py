@@ -72,10 +72,19 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
     if debate.adjudicators.chair is None:
         raise ValueError("This debate ({}) doesn't have a chair.".format(debate.matchup))
 
-    sources_and_subjects = [
-        (debate.aff_team, debate.adjudicators.chair),
-        (debate.neg_team, debate.adjudicators.chair),
-    ]
+    if debate.round.tournament.pref('teams_in_debate') == 'bp':
+        sources_and_subjects = [
+            (debate.og_team, debate.adjudicators.chair),
+            (debate.oo_team, debate.adjudicators.chair),
+            (debate.cg_team, debate.adjudicators.chair),
+            (debate.co_team, debate.adjudicators.chair),
+        ]
+    else:
+        sources_and_subjects = [
+            (debate.aff_team, debate.adjudicators.chair),
+            (debate.neg_team, debate.adjudicators.chair),
+        ]
+
     sources_and_subjects.extend(itertools.permutations(
         (adj for adj, position in debate.adjudicators.with_debateadj_types()), 2))
 
