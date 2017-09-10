@@ -16,37 +16,51 @@
 
     <div class="card border-info text-info mb-3">
       <div class="card-body">
-        <h4 class="card-title">Welcome to your new tournament!</h4>
+        <h4 class="card-title">{% trans "Welcome to your new tournament!" %}</h4>
         <p class="card-text">
-          The next step is to import your initial tournament data: the institutions, teams, adjudicators
-          and venues that are in your tournament. There are a number of ways to do
-          this. For small-to-medium tournaments, the simple importer is your best bet.
+          {% blocktrans trimmed %}
+            The next step is to import your initial tournament data: the
+            institutions, teams, adjudicators and venues that are in your
+            tournament. There are a number of ways to do this. For small-to-medium
+            tournaments, the simple importer is your best bet.
+          {% endblocktrans %}
           {# Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link. #}
-          {% blocktrans trimmed %}For more information, please consult our
-          <a href="https://tabbycat.readthedocs.io/en/{{ readthedocs_version }}/use/importing-data.html" class="alert-link" target="_blank">
+          {% blocktrans trimmed %}
+            For more information, please consult our
+            <a href="https://tabbycat.readthedocs.io/en/{{ readthedocs_version }}/use/importing-data.html" class="alert-link" target="_blank">
             documentation on importing initial data</a>.
-            {% endblocktrans %}
+          {% endblocktrans %}
         </p>
       </div>
     </div>
 
     {% tournamenturl 'importer-simple-index' as url %}
-    {% include "components/item-action.html" with alone=True text="Use the simple importer to add your initial data." success=True %}
+    {% trans "Use the simple importer to add your initial data." as text %}
+    {% include "components/item-action.html" with alone=True success=True %}
 
   {% elif round.get_draw_status_display.lower == 'none' %}
 
     {% roundurl 'availability-index' round as url %}
-    {% include "components/item-action.html" with alone=True text="Go to the checkins area to begin creating a draw for "|add:round.name success=True %}
+    {% blocktrans trimmed with round_name=round.name asvar text %}
+      Go to the checkins area to begin creating a draw for {{ round_name }}
+    {% endblocktrans %}
+    {% include "components/item-action.html" with alone=True success=True %}
 
   {% elif round.get_draw_status_display.lower == 'confirmed' %}
 
     {% roundurl 'draw' round as url %}
-    {% include "components/item-action.html" with alone=True text="Go to the draw area to allocate adjudicators for "|add:round.name success=True %}
+    {% blocktrans trimmed with round_name=round.name asvar text %}
+      Go to the draw area to allocate adjudicators for {{ round_name }}
+    {% endblocktrans %}
+    {% include "components/item-action.html" with alone=True success=True %}
 
   {% elif round.get_draw_status_display.lower == 'released' %}
 
     {% roundurl 'results-round-list' round as url %}
-    {% include "components/item-action.html" with alone=True text="Go to the results area to begin entering ballots for "|add:round.name success=True %}
+    {% blocktrans trimmed with round_name=round.name asvar text %}
+      Go to the results area to begin entering ballots for {{ round_name }}
+    {% endblocktrans %}
+    {% include "components/item-action.html" with alone=True success=True %}
 
   {% endif %}
 
