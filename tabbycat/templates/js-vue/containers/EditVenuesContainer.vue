@@ -7,7 +7,7 @@
           <i data-feather="chevron-left"></i> Back to Draw
         </a>
         <button class="btn btn-success " @click="createAutoAllocation">
-          Auto Allocate
+          Auto Allocate all Venues
         </button>
         <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
       </div>

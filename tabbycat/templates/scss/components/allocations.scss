@@ -194,6 +194,10 @@
     border-color: #fff;
     border-width: 4px;
     border-style: solid;
+
+    > div {
+      line-height: 16px; // Prevent massive line wraps
+    }
   }
 }
 
