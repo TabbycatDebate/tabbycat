@@ -200,7 +200,11 @@ class LatestFeedbackView(FeedbackCardsView):
     template_name = "feedback_latest.html"
 
     def get_feedback_queryset(self):
-        return AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
+        t = self.get_tournament()
+        return AdjudicatorFeedback.objects.filter(
+            Q(adjudicator__tournament=t) |
+            Q(adjudicator__tournament__isnull=True)).order_by(
+            '-timestamp')[:30].select_related(
             'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
 
 

@@ -3,18 +3,18 @@
 <div class="card">
   <div class="list-group list-group-flush">
 
-    <div class="list-group-item">
-      <h5 class="mb-0">
-        <span class="badge float-right
-              {% if feedback.score <= score_thresholds.low_score %}badge-danger
-              {% elif feedback.score <= score_thresholds.medium_score %}badge-warning
-              {% elif feedback.score > score_thresholds.high_score %}badge-success
-              {% else %}badge-secondary{% endif %}">
-          {{ feedback.score }}
-        </span>
-        {{ feedback.adjudicator.name }}
-        {% if feedback.debate_adjudicator %} as {{ feedback.debate_adjudicator.get_type_display }}{% endif %}
-      </h5>
+    <div class="list-group-item h5 mb-0">
+      <span class="badge float-right
+            {% if feedback.score <= score_thresholds.low_score %}badge-danger
+            {% elif feedback.score <= score_thresholds.medium_score %}badge-warning
+            {% elif feedback.score > score_thresholds.high_score %}badge-success
+            {% else %}badge-primary{% endif %}">
+        {{ feedback.score }}
+      </span>
+      On {{ feedback.adjudicator.name }}
+      <span class="text-secondary small">
+        <br>as {{ feedback.debate_adjudicator.get_type_display }}
+      </span>
     </div>
     {% if not feedback.confirmed %}
       <div class="list-group-item text-info" data-toggle="tooltip"
@@ -24,39 +24,42 @@
         This feedback is not confirmed; it will not affect this adjudicator's score.
       </div>
     {% endif %}
-    <div class="list-group-item">
+    <div class="list-group-item h6">
       From
       {% if feedback.source_adjudicator %}
+        <span class="badge badge-secondary float-right">
+          {{ feedback.source_adjudicator.get_type_display }}
+        </span>
         <strong>{{ feedback.source_adjudicator.adjudicator.name }}</strong>
-        ({{ feedback.source_adjudicator.adjudicator.institution.code }},
-        {{ feedback.source_adjudicator.get_type_display }})
       {% elif feedback.source_team %}
-        <strong>{{ feedback.source_team.team.long_name }}</strong>
-        ({{ feedback.source_team.get_result_display }})
+        <span class="badge badge-secondary float-right">
+          {{ feedback.source_team.get_result_display }}
+        </span>
+        <strong>{{ feedback.source_team.team.short_name }}</strong>
       {% else %}
         unknown
       {% endif %}
     </div>
     {% for item in feedback.items %}
       {% if item.answer %}
-        <div class="list-group-item">
+        <div class="list-group-item small">
           {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
             {% if item.answer %}
               <i data-feather="check" class="text-success"></i>
             {% else %}
               <i data-feather="x" class="text-danger"></i>
             {% endif %}
-            <small title="{{ item.question.text }}" data-toggle="tooltip">
+            <span title="{{ item.question.text }}" data-toggle="tooltip">
               {{ item.question.reference }}
-            </small>
+            </span>
           {% elif item.question.answer_type == 'f' %}
-            <small><strong>{{ item.question.text }}</strong></small>
-            {{ item.answer|floatformat:"2" }}
+            <span class="text-secondary">{{ item.question.text }}</span>
+            <span class="text-heading">{{ item.answer|floatformat:"2" }}</span>
           {% elif item.question.answer_type == 'tl' %}
-            {{ item.answer }}
+            <span class="text-heading">{{ item.answer }}</span>
           {% else %}
-            <small><strong>{{ item.question.text }}</strong></small>
-            {{ item.answer }}
+            <span class="text-secondary">{{ item.question.text }}</span>
+            <span class="text-heading">{{ item.answer }}</span>
           {% endif %}
         </div>
       {% endif %}

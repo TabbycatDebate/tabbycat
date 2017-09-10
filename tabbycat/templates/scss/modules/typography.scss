@@ -17,6 +17,12 @@ h6,
   text-transform: uppercase;
 }
 
+.text-heading {
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+  color: $headings-color;
+}
+
 //------------------------------------------------------------------------------
 // Text Utilities
 //------------------------------------------------------------------------------
