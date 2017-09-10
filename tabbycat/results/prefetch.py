@@ -132,7 +132,7 @@ def populate_results(ballotsubs):
             ballot_submission__in=ballotsubs,
             debate_team__side__in=sides,
             position__in=positions
-        ).select_related('debate_adjudicator__adjudicator')
+        ).select_related('debate_adjudicator__adjudicator', 'debate_team')
 
         for ssba in ssbas:
             result = results_by_ballotsub_id[ssba.ballot_submission_id]
