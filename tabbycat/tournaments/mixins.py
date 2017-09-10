@@ -417,7 +417,7 @@ class SaveDragAndDropDebateMixin(JsonDataResponsePostView, SuperuserRequiredMixi
         if Debate.objects.filter(pk=id).exists():
             debate = Debate.objects.get(pk=id)
             return debate
-        elif self.allow_creation:
+        elif self.allows_creation:
             print('Creating debate')
             debate = Debate.objects.create(round=self.get_round())
             debate.save()
