@@ -1,3 +1,4 @@
+import json
 import logging
 from collections import OrderedDict
 from threading import Lock
@@ -27,7 +28,7 @@ from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
 from utils.mixins import CacheMixin, SuperuserRequiredMixin, TabbycatPageTitlesMixin
-from utils.views import JsonDataResponsePostView, PostOnlyRedirectView
+from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
@@ -342,16 +343,26 @@ class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogA
         except Debate.DoesNotExist:
             if not self.allows_creation:
                 logger.exception("Debate with ID %d in round %s doesn't exist, and allows_creation was False", id, rd)
-                return None
-            logger.debug("Debate with ID %d in round %s doesn't exist, creating new debate", id, rd.name)
+                raise BadJsonRequestError("Debate ID %d doesn't exist" % (id,))
+            logger.info("Debate with ID %d in round %s doesn't exist, creating new debate", id, rd.name)
             return Debate.objects.create(round=rd)
 
     def post_data(self):
         body = self.request.body.decode('utf-8')
-        posted_debate = json.loads(body)
-        debate = self.get_debate(posted_debate['id'])
-        if debate is None:
-            return HttpResponseBadRequest("Debate with ID %d doesn't exist")
+
+        try:
+            posted_debate = json.loads(body)
+        except ValueError:
+            logger.exception("Bad JSON provided for drag-and-drop edit")
+            raise BadJsonRequestError("Malformed JSON provided")
+
+        try:
+            debate_id = posted_debate['id']
+        except KeyError:
+            logger.exception("No debate ID provided in JSON request for drag-and-drop edit")
+            raise BadJsonRequestError("No debate ID provided")
+
+        debate = self.get_debate(debate_id)
         debate = self.modify_debate(debate, posted_debate)
         self.log_action()
         return json.dumps(debate.serialize())
