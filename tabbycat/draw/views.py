@@ -626,6 +626,8 @@ class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
             logger.debug("%s debate team: %s in [%s] is now %s", "Created" if created else "Updated",
                     side, debate.matchup, team_name_lookup[team_id])
 
+        debate._populate_teams()
+
         return debate
 
 
