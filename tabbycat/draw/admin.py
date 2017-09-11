@@ -44,7 +44,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 @admin.register(Debate)
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'round', 'bracket', 'matchup', 'result_status', 'sides_confirmed')
+    list_display = ('id', 'round', 'bracket', 'matchup', 'result_status')
     list_filter = ('round__tournament', 'round', 'division')
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
     raw_id_fields = ('venue', 'division')
