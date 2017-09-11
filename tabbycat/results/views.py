@@ -20,7 +20,6 @@ from participants.models import Adjudicator
 from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
-from tournaments.utils import get_side_name
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
 from utils.mixins import (CacheMixin, JsonDataResponsePostView, JsonDataResponseView,
                           SuperuserOrTabroomAssistantTemplateResponseMixin,
