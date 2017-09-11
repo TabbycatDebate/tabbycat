@@ -9,10 +9,12 @@ from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from tournaments.mixins import DrawForDragAndDropMixin, SaveDragAndDropDebateMixin, TournamentMixin
+from tournaments.mixins import DrawForDragAndDropMixin, TournamentMixin
 from tournaments.models import Round
+from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import JsonDataResponsePostView, ModelFormSetView, SuperuserRequiredMixin
+from utils.mixins import SuperuserRequiredMixin
+from utils.views import JsonDataResponsePostView, ModelFormSetView
 
 from .allocator import allocate_venues
 from .forms import venuecategoryform_factory
@@ -61,7 +63,7 @@ class AutoAllocateVenuesView(VenueAllocationViewBase, LogActionMixin, JsonDataRe
         return super().post(request, *args, **kwargs)
 
 
-class SaveVenuesView(SaveDragAndDropDebateMixin):
+class SaveVenuesView(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
     def get_moved_item(self, id):

@@ -1,6 +1,7 @@
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
-from utils.mixins import JsonDataResponseView, LoginRequiredMixin
+from utils.mixins import LoginRequiredMixin
+from utils.views import JsonDataResponseView
 from tournaments.mixins import TournamentMixin
 
 

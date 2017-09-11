@@ -14,7 +14,8 @@ from participants.emoji import set_emoji
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.mixins import TournamentMixin
 from utils.misc import reverse_tournament
-from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import SuperuserRequiredMixin
+from utils.views import PostOnlyRedirectView
 from utils.urlkeys import populate_url_keys
 from venues.models import Venue
 

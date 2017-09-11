@@ -19,7 +19,8 @@ from participants.models import Adjudicator, Team
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
-from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import SuperuserRequiredMixin
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round
 from venues.models import Venue
 

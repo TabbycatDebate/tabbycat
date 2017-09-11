@@ -7,7 +7,8 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin
 from utils.misc import redirect_round
-from utils.mixins import ModelFormSetView, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import SuperuserRequiredMixin
+from utils.views import ModelFormSetView, PostOnlyRedirectView
 
 from .models import Motion
 from .forms import ModelAssignForm

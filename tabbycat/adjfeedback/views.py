@@ -19,9 +19,9 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 
 from utils.misc import reverse_tournament
-from utils.mixins import (CacheMixin, JsonDataResponseView, PostOnlyRedirectView,
-                          SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin,
-                          VueTableTemplateView)
+from utils.mixins import (CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin,
+                          SuperuserRequiredMixin)
+from utils.views import JsonDataResponseView, PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory

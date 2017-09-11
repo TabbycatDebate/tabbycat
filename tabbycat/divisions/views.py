@@ -10,7 +10,8 @@ from django.views.generic.base import TemplateView, View
 
 from participants.models import Institution, Team
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.views import PostOnlyRedirectView
 from venues.models import VenueCategory, VenueConstraint
 
 from .division_allocator import DivisionAllocator

@@ -23,7 +23,7 @@ from participants.models import Region, Speaker
 from participants.prefetch import populate_feedback_scores, populate_win_counts
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
+from utils.mixins import TabbycatPageTitlesMixin
 
 
 from .models import Round, Tournament
@@ -402,33 +402,3 @@ class DrawForDragAndDropMixin(RoundMixin):
         kwargs['vueDebates'] = self.get_draw()
         kwargs['vueRoundInfo'] = self.get_round_info()
         return super().get_context_data(**kwargs)
-
-
-class SaveDragAndDropDebateMixin(JsonDataResponsePostView, SuperuserRequiredMixin, RoundMixin, LogActionMixin):
-    """For AJAX issued updates which post a Debate dictionary; which is then
-    modified and return back via a JSON response"""
-    allows_creation = False
-
-    def modify_debate(self):
-        # Children must modify the debate object and return it
-        raise NotImplementedError
-
-    def get_debate(self, id):
-        if Debate.objects.filter(pk=id).exists():
-            debate = Debate.objects.get(pk=id)
-            return debate
-        elif self.allows_creation:
-            print('Creating debate')
-            debate = Debate.objects.create(round=self.get_round())
-            debate.save()
-            return debate
-        else:
-            raise ValueError('SaveDragAndDropDebateMixin posted a debate ID that doesnt exist')
-
-    def post_data(self):
-        body = self.request.body.decode('utf-8')
-        posted_debate = json.loads(body)
-        debate = self.get_debate(posted_debate['id'])
-        debate = self.modify_debate(debate, posted_debate)
-        self.log_action()
-        return json.dumps(debate.serialize())

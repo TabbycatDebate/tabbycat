@@ -26,7 +26,8 @@ from importer.base import TournamentDataImporterError
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
+from utils.mixins import CacheMixin, SuperuserRequiredMixin, TabbycatPageTitlesMixin
+from utils.views import JsonDataResponsePostView, PostOnlyRedirectView
 
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
@@ -319,3 +320,38 @@ class TournamentDonationsView(TournamentMixin, TemplateView):
 class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
     template_name = 'style_guide.html'
     page_subtitle = 'Contextual sub title'
+
+
+# ==============================================================================
+# Base classes for other apps
+# ==============================================================================
+
+class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogActionMixin, JsonDataResponsePostView):
+    """For AJAX issued updates which post a Debate dictionary; which is then
+    modified and return back via a JSON response"""
+    allows_creation = False
+
+    def modify_debate(self):
+        # Children must modify the debate object and return it
+        raise NotImplementedError
+
+    def get_debate(self, id):
+        rd = self.get_round()
+        try:
+            return rd.debate_set.get(pk=id)
+        except Debate.DoesNotExist:
+            if not self.allows_creation:
+                logger.exception("Debate with ID %d in round %s doesn't exist, and allows_creation was False", id, rd)
+                return None
+            logger.debug("Debate with ID %d in round %s doesn't exist, creating new debate", id, rd.name)
+            return Debate.objects.create(round=rd)
+
+    def post_data(self):
+        body = self.request.body.decode('utf-8')
+        posted_debate = json.loads(body)
+        debate = self.get_debate(posted_debate['id'])
+        if debate is None:
+            return HttpResponseBadRequest("Debate with ID %d doesn't exist")
+        debate = self.modify_debate(debate, posted_debate)
+        self.log_action()
+        return json.dumps(debate.serialize())

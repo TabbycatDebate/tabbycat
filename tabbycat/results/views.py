@@ -21,9 +21,8 @@ from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObj
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
-from utils.mixins import (CacheMixin, JsonDataResponsePostView, JsonDataResponseView,
-                          SuperuserOrTabroomAssistantTemplateResponseMixin,
-                          SuperuserRequiredMixin, VueTableTemplateView)
+from utils.mixins import CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin
+from utils.views import JsonDataResponsePostView, JsonDataResponseView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 

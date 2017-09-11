@@ -20,7 +20,8 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Speaker, SpeakerCategory, Team

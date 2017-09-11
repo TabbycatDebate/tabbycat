@@ -22,10 +22,12 @@ from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
 from tournaments.mixins import (CrossTournamentPageMixin, DrawForDragAndDropMixin,
     OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
-    SaveDragAndDropDebateMixin, TournamentMixin)
+    TournamentMixin)
 from tournaments.models import Round
+from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from tournaments.utils import get_side_name
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round, reverse_tournament
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
@@ -591,7 +593,7 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
         return super().get_context_data(**kwargs)
 
 
-class SaveDrawMatchups(SaveDragAndDropDebateMixin):
+class SaveDrawMatchups(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
     allows_creation = True
 

@@ -12,8 +12,10 @@ from draw.models import Debate
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.models import Round
-from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, SaveDragAndDropDebateMixin
-from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
+from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin
+from tournaments.views import BaseSaveDragAndDropDebateJsonView
+from utils.mixins import SuperuserRequiredMixin
+from utils.views import JsonDataResponsePostView
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
@@ -151,7 +153,7 @@ class SaveDebateImportance(SuperuserRequiredMixin, RoundMixin, LogActionMixin, V
         return JsonResponse(json.dumps(posted_info), safe=False)
 
 
-class SaveDebatePanel(SaveDragAndDropDebateMixin):
+class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
     def get_moved_item(self, id):

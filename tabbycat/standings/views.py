@@ -16,7 +16,8 @@ from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import SuperuserRequiredMixin
+from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .base import StandingsError
