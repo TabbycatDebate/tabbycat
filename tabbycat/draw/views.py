@@ -27,7 +27,7 @@ from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from tournaments.utils import get_side_name
 from utils.mixins import CacheMixin, SuperuserRequiredMixin
-from utils.views import PostOnlyRedirectView, VueTableTemplateView
+from utils.views import BadJsonRequestError, PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round, reverse_tournament
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
@@ -593,31 +593,37 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
         return super().get_context_data(**kwargs)
 
 
-class SaveDrawMatchups(BaseSaveDragAndDropDebateJsonView):
+class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
     allows_creation = True
 
     def modify_debate(self, debate, posted_debate):
-        debate_teams = posted_debate['debateTeams']
-        logger.debug("Processing change for %r", debate)
-        for dt in debate_teams:
+        tournament = self.get_tournament()
+        posted_debateteams = posted_debate['debateTeams']
+
+        # Check that all sides are present, and without extras
+        sides = [dt['side'] for dt in posted_debateteams]
+        if set(sides) != set(tournament.sides):
+            raise BadJsonRequestError("Sides in JSON object weren't correct")
+
+        # Delete existing entries that won't be wanted (there shouldn't be any, but just in case)
+        delete_count, deleted = debate.debateteam_set.exclude(side__in=tournament.sides).delete()
+        if delete_count > 0:
+            logger.debug("Deleted %d debate teams from [%s]", deleted.get('draw.DebateTeam', 0), debate.matchup)
+
+        # Update other DebateTeam objects
+        for dt in posted_debateteams:
+            team_id = dt['team']['id']
+            try:
+                team = Team.objects.get(pk=team_id, tournament=tournament)
+            except Team.DoesNotExist:
+                raise BadJsonRequestError("Team with ID %d does not exist in tournament %s" % (team_id, tournament.name))
+
             side = dt['side']
-            team = Team.objects.get(pk=dt['team']['id'])
-
-            logger.debug("  Saving change for %s", team.short_name)
-            if DebateTeam.objects.filter(debate=debate, team=team, side=side).exists():
-                logger.debug("    Skipping %s as not changed", team.short_name)
-                continue # Skip the rest of the loop; no edit needed
-            # Delete whatever team currently exists in that spot
-            if DebateTeam.objects.filter(debate=debate, side=side).exists():
-                existing = DebateTeam.objects.get(debate=debate, side=side)
-                logger.debug('    Deleting %s as %s', existing.team.short_name, existing.side)
-                existing.delete()
-
-            logger.debug("    Saving %s as %s", team.short_name, side)
-            new_allocation = DebateTeam.objects.create(debate=debate, team=team,
-                                                       side=side)
-            new_allocation.save()
+            obj, created = DebateTeam.objects.update_or_create(debate=debate, side=side,
+                defaults={'team': team})
+            logger.debug("%s debate team: %s in [%s] is now %s", "Created" if created else "Updated",
+                    side, debate.matchup, team.short_name)
 
         return debate
 

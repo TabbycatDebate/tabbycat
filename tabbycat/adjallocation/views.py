@@ -1,6 +1,7 @@
 import json
 import logging
 
+from django.db.models import Q
 from django.views.generic.base import TemplateView, View
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.utils.functional import cached_property
@@ -15,7 +16,7 @@ from tournaments.models import Round
 from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.mixins import SuperuserRequiredMixin
-from utils.views import JsonDataResponsePostView
+from utils.views import BadJsonRequestError, JsonDataResponsePostView
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
@@ -126,12 +127,12 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDa
         self.log_action()
         if round.draw_status == Round.STATUS_RELEASED:
             info = "Draw is already released, unrelease draw to redo auto-allocations."
-            print(info)
-            return {'status':'false','message': info}, True
+            logger.warning(info)
+            raise BadJsonRequestError(info)
         if round.draw_status != Round.STATUS_CONFIRMED:
             info = "Draw is not confirmed, confirm draw to run auto-allocations."
-            print(info)
-            return {'status':'false', 'message': info}, True
+            logger.warning(info)
+            raise BadJsonRequestError(info)
 
         allocate_adjudicators(self.get_round(), HungarianAllocator)
         return {
@@ -160,39 +161,27 @@ class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
         return Adjudicator.objects.get(pk=id)
 
     def modify_debate(self, debate, posted_debate):
-        panellists = posted_debate['debateAdjudicators']
-        message = "Processing change for %s" % debate.id
+        tournament = self.get_tournament()
+        posted_debateadjudicators = posted_debate['debateAdjudicators']
 
-        # below are DEBUG
-        for da in DebateAdjudicator.objects.filter(debate=debate).order_by('type'):
-            message += "\nExisting: %s" % da
-        for panellist in panellists:
-            message += "\nNew: %s %s" % (panellist['adjudicator']['name'], panellist['position'])
+        # Delete adjudicators who aren't in the posted information
+        adj_ids = [da['adjudicator']['id'] for da in posted_debateadjudicators]
+        delete_count, deleted = debate.debateadjudicator_set.exclude(adjudicator_id__in=adj_ids).delete()
+        if delete_count > 0:
+            logger.debug("Deleted %d debate adjudicators from [%s]", delete_count, debate.matchup)
 
-        for da in DebateAdjudicator.objects.filter(debate=debate):
-            message += "\n\tChecking %s" % da
-            match = next((p for p in panellists if p["adjudicator"]["id"] == da.adjudicator.id), None)
-            if match:
-                message += "\n\t\tExists in panel already %s" % da
-                if match['position'] == da.type:
-                    message += "\n\t\t\tPASS — Is in same position %s" % da
-                else:
-                    da.type = match['position']
-                    da.save()
-                    message += "\n\t\t\tUPDATE — Changed position to %s" % da
-                # Updated or not needed to be touched; remove from consideration for adding
-                panellists.remove(match)
-            else:
-                message += "\n\tDELETE — No longer needed; deleting %s" % da
-                da.delete()
+        # Update or create positions of adjudicators in debate
+        for debateadj in posted_debateadjudicators:
+            adj_id = debateadj['adjudicator']['id']
+            try:  # Check that adjudicator is in tournament before allocating
+                adjudicator = Adjudicator.objects.get(Q(tournament=tournament) | Q(tournament__isnull=True), pk=adj_id)
+            except Adjudicator.DoesNotExist:
+                raise BadJsonRequestError("Adjudicator with ID %d does not exist in tournament %s" % (adj_id, tournament.name))
 
-        for p in panellists:
-            adjudicator = Adjudicator.objects.get(pk=p["adjudicator"]["id"])
-            new_allocation = DebateAdjudicator.objects.create(debate=debate,
-                adjudicator=adjudicator, type=p["position"])
-            new_allocation.save() # Move to new location
-            message += "\n\tNEW — Creating new allocation %s" % new_allocation
+            adjtype = debateadj['position']
+            obj, created = DebateAdjudicator.objects.update_or_create(debate=debate, adjudicator=adjudicator,
+                    defaults={'type': adjtype})
+            logger.debug("%s debate adjudicator: %s is now %s in [%s]", "Created" if created else "Updated",
+                    adjudicator.name, obj.get_type_display(), debate.matchup)
 
-        message += "\n---"
-        # print(message)
         return debate

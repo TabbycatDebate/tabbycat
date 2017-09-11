@@ -191,4 +191,4 @@ class AdjudicatorAllocation:
                 continue
             _, created = DebateAdjudicator.objects.update_or_create(debate=self.debate, adjudicator=adj,
                     defaults={'type': t})
-            logger.info("updating: %s, %s, %s, created = %s" % (self.debate, adj, t, created))
+            logger.debug("%s: %s, %s, %s", "Created" if created else "Updated", self.debate, adj, t)

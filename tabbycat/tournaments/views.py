@@ -331,6 +331,7 @@ class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogA
     """For AJAX issued updates which post a Debate dictionary; which is then
     modified and return back via a JSON response"""
     allows_creation = False
+    required_json_fields = []
 
     def modify_debate(self, debate, posted_debate):
         """Modifies the Debate object `debate` using the information in the dict
@@ -339,9 +340,14 @@ class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogA
         raise NotImplementedError
 
     def get_debate(self, id):
+        """Returns the debate with ID `id`. If the debate doesn't exist and
+        `self.allows_creation` is True, it creates a new debate (and saves it)
+        and returns it. If the debate doesn't exist and `self.allows_creation`
+        is False, it raises a BadJsonRequestError.
+        """
         r = self.get_round()
         try:
-            return Debate.objects.get(round=rd, pk=id)
+            return Debate.objects.get(round=r, pk=id)
         except Debate.DoesNotExist:
             if not self.allows_creation:
                 logger.exception("Debate with ID %d in round %s doesn't exist, and allows_creation was False", id, rd)
@@ -350,21 +356,13 @@ class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogA
             return Debate.objects.create(round=r)
 
     def post_data(self):
-        body = self.request.body.decode('utf-8')
-
         try:
-            posted_debate = json.loads(body)
+            posted_debate = json.loads(self.body)
         except ValueError:
             logger.exception("Bad JSON provided for drag-and-drop edit")
             raise BadJsonRequestError("Malformed JSON provided")
 
-        try:
-            debate_id = posted_debate['id']
-        except KeyError:
-            logger.exception("No debate ID provided in JSON request for drag-and-drop edit")
-            raise BadJsonRequestError("No debate ID provided")
-
-        debate = self.get_debate(debate_id)
+        debate = self.get_debate(posted_debate['id'])
         debate = self.modify_debate(debate, posted_debate)
         self.log_action()
         return json.dumps(debate.serialize())
