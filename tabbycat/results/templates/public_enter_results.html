@@ -16,27 +16,31 @@
   {% endblocktrans %}
 {% endblock %}
 
-{% block content %}
+{% block page-alerts %}
 
   {% if form.scoresheets|length > 1 %}
-    <div class="alert alert-warning">
-      {% blocktrans trimmed with adj_name=adjudicator.name %}
-        {{ adj_name }}, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!
-      {% endblocktrans %}
-    </div>
+    {% blocktrans trimmed with adj_name=adjudicator.name asvar message %}
+      {{ adj_name }}, note that you must enter <strong>all of the ballots</strong> from your panel, not just your own!
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" %}
   {% endif %}
 
   {% with nballotsubs=all_ballotsubs.count %}
     {% if nballotsubs > 0 %}
-      <div class="alert alert-danger">
-        {% blocktrans trimmed with nsubmissions=nballotsubs|apnumber count counter=nballotsubs %}
-          This form has already been submitted <strong>once</strong>. Please contact a tab official after submitting your form.
-        {% plural %}
-          This form has already been submitted <strong>{{ nsubmissions }}</strong> times. Please contact a tab official after submitting your form.
-        {% endblocktrans %}
-      </div>
+      {% blocktrans trimmed with nsubmissions=nballotsubs|apnumber count counter=nballotsubs asvar message %}
+        This form has already been submitted <strong>once</strong>. Please contact a tab official after submitting your form.
+      {% plural %}
+        This form has already been submitted <strong>{{ nsubmissions }}</strong> times. Please contact a tab official after submitting your form.
+      {% endblocktrans %}
+      {% include "components/alert.html" with type="danger" %}
     {% endif %}
   {% endwith %}
+
+{% endblock %}
+
+{% block content %}
+
+  {% include "includes/public_enter_results_info.html" %}
 
   <form id="resultsForm" action="." method="POST" class="">
     {% csrf_token %}

@@ -6,9 +6,9 @@
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
 {% block content %}
-  <div class="alert alert-info">This page is specific to you, {{ adjudicator.name }}.
-    The URL doesn't change, so if you bookmark it, you can easily return here after each debate.
-  </div>
+
+  {% include "includes/public_enter_results_info.html" %}
+
   <div class="lead">
     {{ message }}
   </div>
