@@ -161,7 +161,6 @@ class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
         return Adjudicator.objects.get(pk=id)
 
     def modify_debate(self, debate, posted_debate):
-        tournament = self.get_tournament()
         posted_debateadjudicators = posted_debate['debateAdjudicators']
 
         # Delete adjudicators who aren't in the posted information
@@ -170,7 +169,7 @@ class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
         logger.debug("Deleted %d debate adjudicators from [%s]", delete_count, debate.matchup)
 
         # Check all the adjudicators are part of the tournament
-        adjs = Adjudicator.objects.filter(Q(tournament=tournament) | Q(tournament__isnull=True), id__in=adj_ids)
+        adjs = Adjudicator.objects.filter(Q(tournament=self.get_tournament()) | Q(tournament__isnull=True), id__in=adj_ids)
         if len(adjs) != len(posted_debateadjudicators):
             raise BadJsonRequestError("Not all adjudicators specified are associated with the tournament")
         adj_name_lookup = {adj.id: adj.name for adj in adjs}  # for debugging messages

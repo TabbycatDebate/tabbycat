@@ -1,6 +1,7 @@
 import json
 
 from django.contrib import messages
+from django.db.models import Q
 from django.forms import Select, TextInput
 from django.http import HttpResponseBadRequest
 from django.utils.translation import ungettext
@@ -71,7 +72,14 @@ class SaveVenuesView(BaseSaveDragAndDropDebateJsonView):
 
     def modify_debate(self, debate, posted_debate):
         if posted_debate['venue']:
-            debate.venue = Venue.objects.get(pk=posted_debate['venue']['id'])
+            try:
+                venue = Venue.objects.get(
+                    Q(tournament=self.get_tournament()) | Q(tournament__isnull=True),
+                    id=posted_debate['venue']['id']
+                )
+            except Venue.DoesNotExist:
+                raise BadJsonRequestError("Venue is not associated with the tournament")
+            debate.venue = venue
         else:
             debate.venue = None
         debate.save()
