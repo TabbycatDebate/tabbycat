@@ -102,7 +102,11 @@ class JsonDataResponsePostView(View):
 
     def post(self, request, *args, **kwargs):
         self.request = request
-        return JsonResponse(self.post_data(), safe=False)
+        data, error = self.post_data()
+        if error == True:
+            return JsonResponse(data, status=500)
+        else:
+            return JsonResponse(data, safe=False)
 
 
 class SuperuserRequiredMixin(UserPassesTestMixin):

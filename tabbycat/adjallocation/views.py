@@ -120,20 +120,22 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDa
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
     def post_data(self):
+        round = self.get_round()
+        self.log_action()
+        if round.draw_status == Round.STATUS_RELEASED:
+            info = "Draw is already released, unrelease draw to redo auto-allocations."
+            print(info)
+            return {'status':'false','message': info}, True
+        if round.draw_status != Round.STATUS_CONFIRMED:
+            info = "Draw is not confirmed, confirm draw to run auto-allocations."
+            print(info)
+            return {'status':'false', 'message': info}, True
+
         allocate_adjudicators(self.get_round(), HungarianAllocator)
         return {
             'debates': self.get_draw(),
             'unallocatedAdjudicators': self.get_unallocated_adjudicators()
         }
-
-    def post(self, request, *args, **kwargs):
-        round = self.get_round()
-        if round.draw_status == Round.STATUS_RELEASED:
-            return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
-        if round.draw_status != Round.STATUS_CONFIRMED:
-            return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
-        self.log_action()
-        return super().post(request, *args, **kwargs)
 
 
 class SaveDebateImportance(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):

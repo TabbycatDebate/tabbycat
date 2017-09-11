@@ -51,6 +51,12 @@ $.fn.extend({
         $("#alertdiv").alert('close');
       }, timeout);
     }
+  },
+  loadButton: function(button) {
+    $(button).prop("disabled", true);
+  },
+  resetButton: function(button) {
+    $(button).prop("disabled", false);
   }
 });
 
