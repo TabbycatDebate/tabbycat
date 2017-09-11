@@ -15,10 +15,9 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.views.generic.detail import SingleObjectMixin
 
-from actionlog.mixins import LogActionMixin
 from adjallocation.models import DebateAdjudicator
 from breakqual.utils import calculate_live_thresholds, determine_liveness
-from draw.models import Debate, DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
+from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
 from participants.models import Region, Speaker
 from participants.prefetch import populate_feedback_scores, populate_win_counts
 

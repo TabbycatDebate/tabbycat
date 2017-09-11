@@ -350,7 +350,7 @@ class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogA
             return Debate.objects.get(round=r, pk=id)
         except Debate.DoesNotExist:
             if not self.allows_creation:
-                logger.exception("Debate with ID %d in round %s doesn't exist, and allows_creation was False", id, rd)
+                logger.exception("Debate with ID %d in round %s doesn't exist, and allows_creation was False", id, r)
                 raise BadJsonRequestError("Debate ID %d doesn't exist" % (id,))
             logger.info("Debate with ID %d in round %s doesn't exist, creating new debate", id, r.name)
             return Debate.objects.create(round=r)

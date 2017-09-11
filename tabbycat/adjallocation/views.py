@@ -3,7 +3,7 @@ import logging
 
 from django.db.models import Q
 from django.views.generic.base import TemplateView, View
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import JsonResponse
 from django.utils.functional import cached_property
 
 from actionlog.mixins import LogActionMixin
