@@ -270,11 +270,8 @@ class BaseBallotSetForm(forms.Form):
             if self.debate.result_status == Debate.STATUS_NONE:
                 initial['debate_result_status'] = Debate.STATUS_CONFIRMED
 
-        # HACK: Check here to see if self.ballotsub has been saved -- if it's not,
-        # then it's a new ballot set, and choose_sides should not be populated
-        # with an initial value. Fix when models support a proper "no side
-        # assigned" state (it currently doesn't).
-        if self.choosing_sides and self.ballotsub.pk is not None:
+        # If sides are already confirmed, initialise the choose sides field
+        if self.choosing_sides and self.ballotsub.debate.sides_confirmed:
             try:
                 initial['choose_sides'] = str(self.debate.aff_team.id) + "," + str(self.debate.neg_team.id)
             except DebateTeam.DoesNotExist:

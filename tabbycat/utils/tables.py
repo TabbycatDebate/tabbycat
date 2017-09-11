@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.utils import formats
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
@@ -220,7 +219,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             return {'text': '', 'link': False}
 
-    def _team_cell(self, team, hide_emoji=True):
+    def _team_cell(self, team, hide_emoji=True, subtext=None):
         cell = {
             'text': team.short_name,
             'emoji': team.emoji if self.tournament.pref('show_emoji') and not hide_emoji else None,
@@ -228,6 +227,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'class': 'team-name',
             'popover': {'title': team.long_name, 'content': []}
         }
+        if subtext:
+            cell['subtext'] = subtext
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({'text': ", ".join([s.name for s in team.speakers])})
         if self._show_record_links:
@@ -235,45 +236,47 @@ class TabbycatTableBuilder(BaseTableBuilder):
         return cell
 
     def _result_cell_class_two(self, win, cell):
+        team_name = cell['popover']['title']
         if win is True:
-            cell['popover']['title'] += " won"
+            cell['popover']['title'] = _("%(team)s won") % {'team': team_name}
             cell['icon'] = "chevron-up"
             cell['iconClass'] = "text-success"
             cell['sort'] = 2
         elif win is False:
-            cell['popover']['title'] += " lost"
+            cell['popover']['title'] = _("%(team)s lost") % {'team': team_name}
             cell['icon'] = "chevron-down"
             cell['iconClass'] = "text-danger"
             cell['sort'] = 1
         else: # None
-            cell['popover']['title'] += "—no result"
+            cell['popover']['title'] = _("%(team)s—no result") % {'team': team_name}
             cell['icon'] = ""
             cell['sort'] = 0
         return cell
 
     def _result_cell_class_four(self, points, cell):
+        team_name = cell['popover']['title']
         if points is 3:
-            cell['popover']['title'] += " took 1st"
+            cell['popover']['title'] = _("%(team)s took 1st") % {'team': team_name}
             cell['icon'] = "chevrons-up"
             cell['iconClass'] = "text-success"
             cell['sort'] = 4
         elif points is 2:
-            cell['popover']['title'] += " took 2nd"
+            cell['popover']['title'] = _("%(team)s took 2nd") % {'team': team_name}
             cell['icon'] = "chevron-up"
             cell['iconClass'] = "text-info"
             cell['sort'] = 3
         elif points is 1:
-            cell['popover']['title'] += " took 3rd"
+            cell['popover']['title'] = _("%(team)s took 3rd") % {'team': team_name}
             cell['icon'] = "chevron-down"
             cell['iconClass'] = "text-warning"
             cell['sort'] = 2
         elif points is 0:
-            cell['popover']['title'] += " took 4th"
+            cell['popover']['title'] = _("%(team)s took 4th") % {'team': team_name}
             cell['icon'] = "chevrons-down"
             cell['iconClass'] = "text-danger"
             cell['sort'] = 1
         else: # None
-            cell['popover']['title'] += "—no result"
+            cell['popover']['title'] = _("%(team)s—no result") % {'team': team_name}
             cell['icon'] = ""
             cell['sort'] = 0
         return cell
@@ -363,7 +366,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_tournament_column(self, tournaments, key=ugettext_lazy("Tournament")):
         header = {
-            'key': key, 'icon': 'tag', 'tooltip': 'Tournament'
+            'key': key, 'icon': 'tag', 'tooltip': _("Tournament")
         }
         data = [{
             'sort': t.seq, 'text': t.short_name, 'tooltip': t.short_name,
@@ -372,7 +375,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_round_column(self, rounds, key=ugettext_lazy("Round")):
         header = {
-            'key': key, 'icon': 'clock', 'tooltip': 'Round'
+            'key': key, 'icon': 'clock', 'tooltip': _("Round")
         }
         data = [{
             'sort': round.seq, 'text': round.abbreviation, 'tooltip': round.name,
@@ -394,9 +397,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if self.tournament.pref('show_adjudicator_institutions') and not hide_institution:
             self.add_column({
-                'key': "Institution",
+                'key': _("Institution"),
                 'icon': 'home',
-                'tooltip': "Institution",
+                'tooltip': _("Institution"),
             }, [adj.institution.code for adj in adjudicators])
 
         if not hide_metadata:
@@ -569,6 +572,21 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return x
 
         self.add_column(header, [_fmt(debate.bracket) for debate in debates])
+
+    def add_debate_team_columns(self, debates):
+        all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
+
+        for i, side in enumerate(self.tournament.sides, start=1):
+            side_abbr = get_side_name(self.tournament, side, 'abbr')
+
+            team_data = []
+            for debate in debates:
+                team = debate.get_team(side)
+                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbr
+                team_data.append(self._team_cell(team, subtext=subtext))
+
+            key = side_abbr if all_sides_confirmed else _("Team %(num)d") % {'num': i}
+            self.add_column(key, team_data)
 
     def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):
 
@@ -778,7 +796,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(state_header, state_data)
 
     def add_debate_ballot_link_column(self, debates):
-        ballot_links_header = {'key': "Ballot", 'icon': 'search'}
+        ballot_links_header = {'key': _("Ballot"), 'icon': 'search'}
 
         if self.admin:
             ballot_links_data = [{
@@ -788,7 +806,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(ballot_links_header, ballot_links_data)
 
         elif self.tournament.pref('ballots_released'):
-            ballot_links_header = {'key': "Ballot", 'icon': 'search'}
+            ballot_links_header = {'key': _("Ballot"), 'icon': 'search'}
             ballot_links_data = [{
                 'text': _("View Ballot"),
                 'link': reverse_tournament('results-public-scoresheet-view', self.tournament, kwargs={'pk': debate.id})
@@ -810,21 +828,20 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(round.abbreviation, results)
 
     def add_debate_results_columns(self, debates):
+        all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
+        side_abbrs = {side: get_side_name(self.tournament, side, 'abbr')
+            for side in self.tournament.sides}
+
         results_data = []
         for debate in debates:
             row = []
-            for pos in self.tournament.sides:
-                try:
-                    debateteam = debate.get_dt(pos)
-                    team = debate.get_team(pos)
-                except ObjectDoesNotExist:
-                    row.append(self.BLANK_TEXT)
-                    continue
-                except MultipleObjectsReturned:
-                    row.append("<error>")
-                    continue
+            for side in self.tournament.sides:
+                debateteam = debate.get_dt(side)
+                team = debate.get_team(side)
 
-                cell = self._team_cell(team, hide_emoji=True)
+                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbrs[side]
+                cell = self._team_cell(team, hide_emoji=True, subtext=subtext)
+
                 if self.tournament.pref('teams_in_debate') == 'bp':
                     cell = self._result_cell_class_four(debateteam.points, cell)
                 else:
@@ -833,8 +850,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 row.append(cell)
             results_data.append(row)
 
-        results_header = [get_side_name(self.tournament, side, 'abbr').capitalize()
-                for side in self.tournament.sides]
+        if all_sides_confirmed:
+            results_header = [get_side_name(self.tournament, side, 'abbr').capitalize()
+                    for side in self.tournament.sides]
+        else:
+            results_header = [_("Team %(num)d") % {'num': i} for i in range(1, len(side_abbrs)+1)]
+
         self.add_columns(results_header, results_data)
 
     def add_standings_results_columns(self, standings, rounds, show_ballots):

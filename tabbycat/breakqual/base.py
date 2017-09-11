@@ -4,6 +4,9 @@ generator (which just takes the top teams)."""
 import logging
 from itertools import groupby
 
+from django.utils.encoding import force_text
+from django.utils.translation import ugettext as _
+
 from breakqual.models import BreakingTeam
 from standings.teams import TeamStandingsGenerator
 
@@ -82,18 +85,21 @@ class BaseBreakGenerator:
                 except KeyError:
                     return "<unknown metric>"
                 if hasattr(annotator_class, 'choice_name'):
-                    return annotator_class.choice_name
+                    name = annotator_class.choice_name
                 else:
-                    return annotator_class.name
+                    name = annotator_class.name
+                return force_text(name)
 
-            raise BreakGeneratorError("The break qualification rule {rule} "
-                "requires the following metric(s) to be in the team standings "
-                "precedence in order to work: {required}; and the following "
-                "are missing: {missing}.".format(
-                    rule=self.category.get_rule_display(),
-                    required=", ".join(_metric_name(metric) for metric in self.required_metrics),
-                    missing=", ".join(_metric_name(metric) for metric in missing_metrics),
-                ))
+            raise BreakGeneratorError(
+                _("The break qualification rule %(rule)s requires the following "
+                "metric(s) to be in the team standings precedence in order to "
+                "work: %(required)s; and the following are missing: "
+                "%(missing)s.") % {
+                    'rule': self.category.get_rule_display(),
+                    'required': ", ".join(_metric_name(metric) for metric in self.required_metrics),
+                    'missing': ", ".join(_metric_name(metric) for metric in missing_metrics),
+                }
+            )
 
     def set_team_queryset(self):
         """Sets `self.team_queryset` to the queryset of all teams relevant to

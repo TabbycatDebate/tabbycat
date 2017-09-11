@@ -28,31 +28,32 @@
 
                 {# Position, opponent and venue #}
                 <div class="list-group-item lead {% if draw_released %}active{% endif %}">
+                  {% trans "Venue TBA" as venue_tba %}
 
                   {# (Two-team formats) #}
                   {% if pref.teams_in_debate == 'two' %}
                     {% team_record_link debateteam.opponent.team admin_page as opponent %}
 
-                    {% if debateteam.side == debateteam.SIDE_UNALLOCATED %}
-                      {% blocktrans trimmed with team_name=team.short_name venue=debate.venue.display_name|default:"Venue TBA" %}
-                        {{ team_name }} is debating against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
+                    {% if debate.sides_confirmed %}
+                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
+                        {{ team_name }} is debating as the <strong>{{ side }}</strong> team against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% else %}
-                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:"Venue TBA" %}
-                        {{ team_name }} is debating as the <strong>{{ side }}</strong> team against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
+                      {% blocktrans trimmed with team_name=team.short_name venue=debate.venue.display_name|default:venue_tba %}
+                        {{ team_name }} is debating against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% endif %}
 
                   {# (British Parliamentary) #}
                   {% elif pref.teams_in_debate == 'bp' %}
 
-                    {% if debateteam.side == debateteam.SIDE_UNALLOCATED %}
-                      {% blocktrans trimmed with team_name=team.short_name venue=debate.venue.display_name|default:"Venue TBA" %}
-                        {{ team_name }} is debating in <strong>{{ venue }}</strong>.
+                    {% if debate.sides_confirmed %}
+                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
+                        {{ team_name }} is debating as the <strong>{{ side }}</strong> team in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% else %}
-                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:"Venue TBA" %}
-                        {{ team_name }} is debating as the <strong>{{ side }}</strong> team in <strong>{{ venue }}</strong>.
+                      {% blocktrans trimmed with team_name=team.short_name venue=debate.venue.display_name|default:venue_tba %}
+                        {{ team_name }} is debating in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% endif %}
                   {% endif %}
@@ -73,11 +74,11 @@
                     <strong>{% trans "Teams:" %}</strong>
                     {% for dt in debate.debateteams_ordered %}
                       {% if dt != debateteam %}
-                        {% team_record_link dt.team admin_page %}
+                        {% team_record_link dt.team admin_page %}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
                       {% else %} {# elif dt == debateteam #}
-                        {{ dt.team.short_name }}
+                        {{ dt.team.short_name }}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
                       {% endif %} {# dt != debateteam #}
-                      ({{ dt.get_side_name }}){% if not forloop.last %},{% endif %}
+                      {% if debate.sides_confirmed %} ({{ dt.get_side_name }}){% if not forloop.last %},{% endif %}{% endif %}
                     {% endfor %}
                   </div>
                 {% endif %} {# pref.teams_in_debate == 'bp' #}
