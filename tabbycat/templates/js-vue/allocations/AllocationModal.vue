@@ -46,8 +46,6 @@ export default {
         url: this.roundInfo.autoUrl,
         dataType: 'json',
       }).done(function(data, textStatus, jqXHR) {
-        // Handle Success
-        console.log('done', data, textStatus, jqXHR)
         // Success handler
         self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
         self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedAdjudicators))
@@ -56,10 +54,10 @@ export default {
         $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
       }).fail(function(response) {
         // Handle Failure
-        console.log('fail', jqXHR, textStatus, errorThrown)
+        console.log('fail', response)
         self.resetAutoAllocationModal(event.target)
-        // $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
-      });
+        $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
+      })
     },
   }
 }

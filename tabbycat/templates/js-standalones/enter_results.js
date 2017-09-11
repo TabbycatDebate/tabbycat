@@ -180,7 +180,7 @@ function update_speaker() {
 
 $("#resultsForm").validate({
   invalidHandler: function(event, validator) {
-    $('.').button('reset');
+    $.fn.resetButton('.')
   }
 });
 

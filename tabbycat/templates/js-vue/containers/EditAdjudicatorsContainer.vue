@@ -5,7 +5,7 @@
                         :percentiles="percentileThresholds"></allocation-actions>
 
     <div class="row">
-      <div class="mb-3 col allocation-messages" id="allocations-container"></div>
+      <div class="mb-3 col allocation-messages" id="messages-container"></div>
     </div>
 
     <div class="mb-3">

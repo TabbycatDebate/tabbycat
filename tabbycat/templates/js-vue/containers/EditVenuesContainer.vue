@@ -93,21 +93,21 @@ export default {
     },
     createAutoAllocation: function(event) {
       var self = this
-      $(event.target).button('loading')
+      $.fn.loadButton(event.target)
       $.post({
         url: this.roundInfo.autoUrl,
-        success: function(data, textStatus, jqXHR) {
-          $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
-          self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
-          self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedVenues))
-          self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-          $(event.target).button('reset')
-        },
-        error: function(data, textStatus, jqXHR) {
-          $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
-        },
-        dataType: "json"
-      });
+        dataType: 'json',
+      }).done(function(data, textStatus, jqXHR) {
+        // Success handler
+        self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
+        self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedVenues))
+        self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
+        $.fn.resetButton(button)
+        $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
+      }).fail(function(response) {
+        $.fn.resetButton(button)
+        $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
+      })
     },
   }
 }

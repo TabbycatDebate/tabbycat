@@ -28,7 +28,7 @@
           </div>
         </div>
 
-        <div id="allocations-container"></div>
+        <div id="messages-container"></div>
 
       </div>
     </div>
