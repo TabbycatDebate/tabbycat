@@ -106,14 +106,16 @@ export default {
     },
     setConflicts: function(hoverOrPanel, conflictType, state, originator) {
       // Receive a conflict message from elsewhere and activate the conflict
+      if (conflictType === 'institution' && hoverOrPanel === 'hover') {
+        if (originator === this.conflictable) {
+          return // Institutional conflicts shouldn't self-conflict
+        }
+      }
       // if (conflictType === 'institution') {
       //   console.debug('setConflicts()', hoverOrPanel, conflictType,
       //     'conflicts for', this.conflictableType, this.conflictable.id, this.isConflicted, originator)
       // }
-      if (originator !== this.conflictable && 'hoverOrPanel' !== 'hover') {
-        // Institutional conflicts shouldn't self-conflict
-        this.isConflicted[hoverOrPanel][conflictType] = state
-      }
+      this.isConflicted[hoverOrPanel][conflictType] = state
     },
     unsetConflicts: function(hoverOrPanel) {
       // Receive a conflict message from elsewhere and deactivate the conflict
