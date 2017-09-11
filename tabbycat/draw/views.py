@@ -208,7 +208,6 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
     def get_table(self):
         r = self.get_round()
-        tournament = self.get_tournament()
 
         sort_key = _("Room rank") if r.is_break_round else _("Bracket")
         table = TabbycatTableBuilder(view=self, sort_key=sort_key, sort_order=self.sort_order)
