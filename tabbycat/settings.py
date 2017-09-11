@@ -306,10 +306,6 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
             }
         }
 
-# Add an indicator that this site is running on a free tier
-if os.environ.get('KITTEN', '') == 'true':
-    TABBYCAT_VERSION += "k"
-
 # ==============================================================================
 # Travis CI
 # ==============================================================================
