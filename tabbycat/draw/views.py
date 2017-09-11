@@ -608,22 +608,23 @@ class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
 
         # Delete existing entries that won't be wanted (there shouldn't be any, but just in case)
         delete_count, deleted = debate.debateteam_set.exclude(side__in=tournament.sides).delete()
-        if delete_count > 0:
-            logger.debug("Deleted %d debate teams from [%s]", deleted.get('draw.DebateTeam', 0), debate.matchup)
+        logger.debug("Deleted %d debate teams from [%s]", deleted.get('draw.DebateTeam', 0), debate.matchup)
+
+        # Check that all teams are part of the tournament
+        team_ids = [dt['team']['id'] for dt in posted_debateteams]
+        teams = Team.objects.filter(tournament=tournament, id__in=team_ids)
+        if len(teams) != len(posted_debateteams):
+            raise BadJsonRequestError("Not all teams specified are associated with the tournament")
+        team_name_lookup = {team.id: team.short_name for team in teams}  # for debugging messages
 
         # Update other DebateTeam objects
         for dt in posted_debateteams:
             team_id = dt['team']['id']
-            try:
-                team = Team.objects.get(pk=team_id, tournament=tournament)
-            except Team.DoesNotExist:
-                raise BadJsonRequestError("Team with ID %d does not exist in tournament %s" % (team_id, tournament.name))
-
             side = dt['side']
             obj, created = DebateTeam.objects.update_or_create(debate=debate, side=side,
-                defaults={'team': team})
+                defaults={'team_id': team_id})
             logger.debug("%s debate team: %s in [%s] is now %s", "Created" if created else "Updated",
-                    side, debate.matchup, team.short_name)
+                    side, debate.matchup, team_name_lookup[team_id])
 
         return debate
 

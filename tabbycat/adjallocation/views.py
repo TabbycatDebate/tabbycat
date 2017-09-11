@@ -167,21 +167,21 @@ class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
         # Delete adjudicators who aren't in the posted information
         adj_ids = [da['adjudicator']['id'] for da in posted_debateadjudicators]
         delete_count, deleted = debate.debateadjudicator_set.exclude(adjudicator_id__in=adj_ids).delete()
-        if delete_count > 0:
-            logger.debug("Deleted %d debate adjudicators from [%s]", delete_count, debate.matchup)
+        logger.debug("Deleted %d debate adjudicators from [%s]", delete_count, debate.matchup)
+
+        # Check all the adjudicators are part of the tournament
+        adjs = Adjudicator.objects.filter(Q(tournament=tournament) | Q(tournament__isnull=True), id__in=adj_ids)
+        if len(adjs) != len(posted_debateadjudicators):
+            raise BadJsonRequestError("Not all adjudicators specified are associated with the tournament")
+        adj_name_lookup = {adj.id: adj.name for adj in adjs}  # for debugging messages
 
         # Update or create positions of adjudicators in debate
         for debateadj in posted_debateadjudicators:
             adj_id = debateadj['adjudicator']['id']
-            try:  # Check that adjudicator is in tournament before allocating
-                adjudicator = Adjudicator.objects.get(Q(tournament=tournament) | Q(tournament__isnull=True), pk=adj_id)
-            except Adjudicator.DoesNotExist:
-                raise BadJsonRequestError("Adjudicator with ID %d does not exist in tournament %s" % (adj_id, tournament.name))
-
             adjtype = debateadj['position']
-            obj, created = DebateAdjudicator.objects.update_or_create(debate=debate, adjudicator=adjudicator,
-                    defaults={'type': adjtype})
+            obj, created = DebateAdjudicator.objects.update_or_create(debate=debate,
+                    adjudicator_id=adj_id, defaults={'type': adjtype})
             logger.debug("%s debate adjudicator: %s is now %s in [%s]", "Created" if created else "Updated",
-                    adjudicator.name, obj.get_type_display(), debate.matchup)
+                    adj_name_lookup[adj_id], obj.get_type_display(), debate.matchup)
 
         return debate
