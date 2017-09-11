@@ -19,6 +19,7 @@ export default {
     // These looklike 'set-conflicts-for-team-99 (histories, teams, true)
     var conflictCode = this.conflictableType + '-' + this.conflictable.id
     this.$eventHub.$on('set-conflicts-for-' + conflictCode, this.setConflicts)
+
     // Institutional conflicts are many to many; need to subscribe to all
     var self = this
     var institutionConflicts = this.conflictable.conflicts.clashes.institution
@@ -26,6 +27,7 @@ export default {
       var conflictCode = 'institution' + '-' + institutionConflict
       self.$eventHub.$on('set-conflicts-for-' + conflictCode, self.setConflicts)
     })
+
     // Turning off all hovers
     this.$eventHub.$on('unset-conflicts', this.unsetConflicts)
     // Turning off all panel conflicts
@@ -69,6 +71,9 @@ export default {
   },
   methods: {
     showHoverConflicts: function() {
+      // Called on mouse over
+      // console.debug('showHoverConflicts() for ', this.conflictableType,
+      //   this.conflictable.id, this.isConflicted)
       // Issue conflict events; typically on beginning hover
       var self = this
       _.forEach(this.conflictable.conflicts, function(conflictsCategories, clashOrHistory) {
@@ -81,27 +86,37 @@ export default {
         })
       })
     },
-    issueConflict: function(conflict, conflictType, clashOrHistory) {
-      if (clashOrHistory === 'clashes') {
-        var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict
-        this.$eventHub.$emit(eventCode, 'hover', conflictType, true)
-      } else if (clashOrHistory === 'histories') {
-        var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict.id
-        this.$eventHub.$emit(eventCode, 'hover', 'histories', conflict.ago)
-      }
-    },
     hideHoverConflicts: function() {
       // Issue hide conflict events; typically on ending hover
       this.$eventHub.$emit('unset-conflicts', 'hover')
     },
-    setConflicts: function(hoverOrPanel, conflictType, state) {
-      // if (hoverOrPanel !== 'hover') {
-      //   console.info('Enabling', hoverOrPanel, conflictType, 'conflicts for',
-      //     this.conflictableType, this.conflictable.id, this.isConflicted)
+    issueConflict: function(conflict, conflictType, clashOrHistory) {
+      // Activate a given conflict after having been hovered
+      // if (conflictType === 'institution') {
+      //   console.debug('issueConflict() ', conflictType, 'conflicts for',
+      //     this.conflictableType, this.conflictable.id, this.isConflicted, conflict)
       // }
-      this.isConflicted[hoverOrPanel][conflictType] = state
+      if (clashOrHistory === 'clashes') {
+        var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict
+        this.$eventHub.$emit(eventCode, 'hover', conflictType, true, this.conflictable)
+      } else if (clashOrHistory === 'histories') {
+        var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict.id
+        this.$eventHub.$emit(eventCode, 'hover', 'histories', conflict.ago, this.conflictable)
+      }
+    },
+    setConflicts: function(hoverOrPanel, conflictType, state, originator) {
+      // Receive a conflict message from elsewhere and activate the conflict
+      // if (conflictType === 'institution') {
+      //   console.debug('setConflicts()', hoverOrPanel, conflictType,
+      //     'conflicts for', this.conflictableType, this.conflictable.id, this.isConflicted, originator)
+      // }
+      if (originator !== this.conflictable && 'hoverOrPanel' !== 'hover') {
+        // Institutional conflicts shouldn't self-conflict
+        this.isConflicted[hoverOrPanel][conflictType] = state
+      }
     },
     unsetConflicts: function(hoverOrPanel) {
+      // Receive a conflict message from elsewhere and deactivate the conflict
       // if (hoverOrPanel !== 'hover') {
       //   console.info('unsetting panel conflicts for ', this.conflictableType, this.conflictable.id)
       // }

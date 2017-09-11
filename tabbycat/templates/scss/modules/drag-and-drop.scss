@@ -60,10 +60,8 @@
 
 .vue-draggable.vue-is-hovering,
 .vue-draggable:active {
-  background: #000 !important;
-  border-color: theme-color("gray");
   cursor: move;
-  color: #fff;
+  @include hover-highlights(#000);
 }
 
 .vue-is-dragging {
