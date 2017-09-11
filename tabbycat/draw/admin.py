@@ -44,7 +44,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 @admin.register(Debate)
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'round', 'bracket', 'matchup', 'result_status')
+    list_display = ('id', 'round', 'bracket', 'matchup', 'result_status', 'sides_confirmed')
     list_filter = ('round__tournament', 'round', 'division')
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
     raw_id_fields = ('venue', 'division')
@@ -77,3 +77,23 @@ class DebateAdmin(admin.ModelAdmin):
 
         actions.append(_make_set_result_status(value, verbose_name))
     del value, verbose_name  # for fail-fast
+
+    def mark_as_sides_confirmed(self, request, queryset):
+        updated = queryset.update(sides_confirmed=True)
+        message = ungettext(
+            "%(count)d debate was marked as having its sides confirmed.",
+            "%(count)d debates were marked as having their sides confirmed.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
+
+    def mark_as_sides_not_confirmed(self, request, queryset):
+        updated = queryset.update(sides_confirmed=False)
+        message = ungettext(
+            "%(count)d debate was marked as having its sides not confirmed.",
+            "%(count)d debates were marked as having their sides not confirmed.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
+
+    actions.extend(['mark_as_sides_confirmed', 'mark_as_sides_not_confirmed'])
