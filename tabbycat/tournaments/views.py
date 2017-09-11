@@ -332,20 +332,22 @@ class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogA
     modified and return back via a JSON response"""
     allows_creation = False
 
-    def modify_debate(self):
-        # Children must modify the debate object and return it
+    def modify_debate(self, debate, posted_debate):
+        """Modifies the Debate object `debate` using the information in the dict
+        `posted_debate`, and returns the modified debate.
+        Must be implemented by subclasses."""
         raise NotImplementedError
 
     def get_debate(self, id):
-        rd = self.get_round()
+        r = self.get_round()
         try:
-            return rd.debate_set.get(pk=id)
+            return Debate.objects.get(round=rd, pk=id)
         except Debate.DoesNotExist:
             if not self.allows_creation:
                 logger.exception("Debate with ID %d in round %s doesn't exist, and allows_creation was False", id, rd)
                 raise BadJsonRequestError("Debate ID %d doesn't exist" % (id,))
-            logger.info("Debate with ID %d in round %s doesn't exist, creating new debate", id, rd.name)
-            return Debate.objects.create(round=rd)
+            logger.info("Debate with ID %d in round %s doesn't exist, creating new debate", id, r.name)
+            return Debate.objects.create(round=r)
 
     def post_data(self):
         body = self.request.body.decode('utf-8')
