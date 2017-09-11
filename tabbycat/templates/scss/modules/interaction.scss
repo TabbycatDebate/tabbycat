@@ -16,10 +16,18 @@
   span {
     border-bottom: 2px dotted #ccc;
   }
+
+  .popover span {
+    border-bottom: 0; // De-inherit (popovers must be children of hover-target)
+  }
+
+  .popover a:hover {
+    cursor: pointer; // De-inherit (popovers must be children of hover-target)
+  }
 }
 
 .popover {
-  max-width: 350px;
+  max-width: 400px;
 }
 
 .popover-body {
