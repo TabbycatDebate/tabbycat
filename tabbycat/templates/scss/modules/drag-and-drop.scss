@@ -35,7 +35,7 @@
       font-family: $font-family-sans-serif;
       font-weight: normal;
       letter-spacing: -1px;
-      @extend .text-secondary;
+      color: theme-color("secondary");
     }
   }
 
@@ -51,7 +51,7 @@
       display: block;
       margin-top: -1px;
       font-size: 10px; // Extra small subtext
-      @extend .text-secondary;
+      color: theme-color("secondary");
     }
     // @extend .flex-inline;
     // @extend .flex-vertical-center;
