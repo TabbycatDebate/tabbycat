@@ -1,0 +1,18 @@
+{% load i18n %}
+
+{% if private_url %}
+  {% blocktrans trimmed with adj_name=adjudicator.name asvar p1 %}
+    The URL of this page is personalised to you, {{ adj_name }}. <strong>Do not
+    share it with anyone:</strong> anyone who knows this URL can submit results
+    for your debates. If you bookmark this page and return here after each
+    debate, it will always show the debate that you just adjudicated.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+{% else %}
+  {% blocktrans trimmed with adj_name=adjudicator.name asvar p1 %}
+    The URL of this page is personalised to you, {{ adj_name }}. If you bookmark
+    this page and return here after each debate, it will always show the debate
+    that you just adjudicated.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+{% endif %}
