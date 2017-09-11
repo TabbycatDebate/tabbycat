@@ -73,15 +73,6 @@
   }
 }
 
-.unallocated-items {
-  height: auto;
-  z-index: $z_3; // Need to hover abovve underlying .tooltips
-  padding-right: 40px; // Leave space for dragging handles
-  > div {
-    display: inline-flex;
-  }
-}
-
 .thead {
   border-bottom: 2px solid $table-border-color;
   padding-bottom: $table-cell-padding;

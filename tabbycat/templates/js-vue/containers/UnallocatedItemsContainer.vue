@@ -8,12 +8,11 @@
     class="navbar navbar-default fixed-bottom vue-droppable justify-content-center unallocated-items"
     :style="{height: height + 'px'}" ref="resizeableElement">
 
-    <slot><!-- Container sets unallocated items here --></slot>
-
-    <div class="resize-handler navbar-toggle collapsed"
-         @dragover.prevent @mousedown="resizeStart">
+    <section class="resize-handler" @dragover.prevent @mousedown="resizeStart">
       <i data-feather="menu" class="align-self-center mx-auto"></i>
-    </div>
+    </section>
+
+    <slot><!-- Container sets unallocated items here --></slot>
 
   </nav>
 </template>
