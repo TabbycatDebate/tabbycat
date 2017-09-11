@@ -1,8 +1,8 @@
 import json
+import logging
 
 from django.contrib import messages
 from django.forms import Select, TextInput
-from django.http import HttpResponseBadRequest
 from django.utils.translation import ungettext
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView
@@ -14,11 +14,13 @@ from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import SuperuserRequiredMixin
-from utils.views import JsonDataResponsePostView, ModelFormSetView
+from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
 from .allocator import allocate_venues
 from .forms import venuecategoryform_factory
 from .models import Venue, VenueCategory, VenueConstraint
+
+logger = logging.getLogger(__name__)
 
 
 class VenueAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
@@ -47,20 +49,22 @@ class AutoAllocateVenuesView(VenueAllocationViewBase, LogActionMixin, JsonDataRe
     round_redirect_pattern_name = 'venues-edit'
 
     def post_data(self):
+        round = self.get_round()
+        self.log_action()
+        if round.draw_status == Round.STATUS_RELEASED:
+            info = "Draw is already released, unrelease draw to redo auto-allocations."
+            logger.warning(info)
+            raise BadJsonRequestError(info)
+        if round.draw_status != Round.STATUS_CONFIRMED:
+            info = "Draw is not confirmed, confirm draw to run auto-allocations."
+            logger.warning(info)
+            raise BadJsonRequestError(info)
+
         allocate_venues(self.get_round())
         return {
             'debates': self.get_draw(),
             'unallocatedVenues': self.get_unallocated_venues()
         }
-
-    def post(self, request, *args, **kwargs):
-        round = self.get_round()
-        if round.draw_status == Round.STATUS_RELEASED:
-            return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
-        if round.draw_status != Round.STATUS_CONFIRMED:
-            return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
-        self.log_action()
-        return super().post(request, *args, **kwargs)
 
 
 class SaveVenuesView(BaseSaveDragAndDropDebateJsonView):

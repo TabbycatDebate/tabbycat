@@ -51,12 +51,12 @@ export default {
         self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedAdjudicators))
         self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
         self.resetAutoAllocationModal(event.target)
-        $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
+        $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
       }).fail(function(response) {
         // Handle Failure
-        console.log('fail', response)
+        var info = response.responseJSON.message
+        $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
         self.resetAutoAllocationModal(event.target)
-        $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
       })
     },
   }

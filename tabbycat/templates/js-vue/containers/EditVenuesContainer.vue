@@ -102,11 +102,12 @@ export default {
         self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
         self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedVenues))
         self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-        $.fn.resetButton(button)
-        $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
+        $.fn.showAlert('success', 'Successfully loadeded the auto allocation', 10000)
+        $.fn.resetButton(event.target)
       }).fail(function(response) {
-        $.fn.resetButton(button)
-        $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
+        var info = response.responseJSON.message
+        $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
+        $.fn.resetButton(event.target)
       })
     },
   }
