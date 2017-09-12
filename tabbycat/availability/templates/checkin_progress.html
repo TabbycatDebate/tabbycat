@@ -34,13 +34,13 @@
 
     {% if type == "teams" and not round.is_break_round %}
       {% roundurl 'availability-teams' round as url %}
-      {% trans "Check-in teams" as text %}
+      {% trans "Check in teams" as text %}
     {% elif type == "adjs" %}
       {% roundurl 'availability-adjudicators' round as url %}
-      {% trans "Check-in adjudicators" as text %}
+      {% trans "Check in adjudicators" as text %}
     {% elif type == "venues" %}
       {% roundurl 'availability-venues' round as url %}
-      {% trans "Check-in venues" as text %}
+      {% trans "Check in venues" as text %}
     {% endif %}
 
     {% if type != "teams" or not round.is_break_round %}
