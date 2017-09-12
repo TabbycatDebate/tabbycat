@@ -3,7 +3,7 @@
   <div>
 
     <!-- Icons or Emoji -->
-    <i :class="cellData['iconClass']" v-html="getFeatherIcon">ICON</i>
+    <i :class="cellData['iconClass']" v-html="getFeatherIcon"></i>
     <i v-if="cellData['emoji']" class="emoji" >{{ cellData["emoji"] }}</i>
 
     <!-- Links and modals -->
@@ -30,7 +30,6 @@
 <script>
 import FeatherMixin from './FeatherMixin.vue'
 import _ from 'lodash'
-import feather from 'feather-icons';
 
 export default {
   mixins: [ FeatherMixin ],

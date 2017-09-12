@@ -83,6 +83,10 @@
   .list-group-item {
     padding: 7px 3px; // Tighten up spacing of the sub elements
     border-radius: 0;
+
+    .feather {
+      margin-right: 0;
+    }
   }
 
   .list-group-item:first-child {
