@@ -20,6 +20,10 @@
       <span v-html="cellData['text']"></span>
     </span>
 
+    <span v-if="cellData['subtext']">
+      <br><span class="small" v-html="cellData['subtext']"></span>
+    </span>
+
   </div>
 
 </template>

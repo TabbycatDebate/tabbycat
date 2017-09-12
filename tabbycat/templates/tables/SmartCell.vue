@@ -14,10 +14,6 @@
       <cell-content :cell-data="cellData"></cell-content>
     </template>
 
-    <span v-if="cellData['subtext']">
-      <br><span class="small" v-html="cellData['subtext']"></span>
-    </span>
-
   </td>
 </template>
 
