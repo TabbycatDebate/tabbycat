@@ -1,4 +1,4 @@
-# Tabbycat
+# 😸 Tabbycat
 
 [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)
 [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/)
@@ -11,7 +11,7 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was use
 
 **Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
 
-## Features
+## 🔍 Features
 
 - Enter data from multiple computers simultaneously and (optionally) display results, draws, and other information online
 - Deployable to [Heroku](https://www.heroku.com/) for an easy, fast, and free setup
@@ -21,7 +21,7 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was use
 - Support for Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/standings-rules.html)
 - Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html) with (optional) online submission
 
-## Installation and User Guide
+## 📖 Installation and Usage
 
 Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/). The fastest way to launch a Tabbycat site is to click this button:
 
@@ -31,17 +31,17 @@ During the installation process Heroku will ask you to verify your account by ad
 
 That said if you do not have access to a credit or debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it does not send error reports to the developers and can handle much less public traffic. We strongly recommend using it only as a last resort, and even then only for small tournaments. [Use this link to setup a Tabbykitten version](https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/kitten).
 
-## Licence
-
-We haven't released Tabbycat under an open-source licence, so there is no formal and general right to use this software. Nonetheless, you're welcome to freely use Tabbycat to help run a debating tournament. However, if your tournament is run as a for-profit or for-fundraising activity a donation to Tabbycat's maintainers is required. More details [are available in our licence information](http://tabbycat.readthedocs.io/en/latest/about/licence.html).
-
-## Support and Development
+## 💪 Support and Contributing
 
 If you have any feedback or would like to request support, we'd love to hear from you! There are a number of ways to get in touch, all [outlined in our documentation](http://tabbycat.readthedocs.io/en/latest/about/support.html).
 
 Contributions are welcome, and are greatly appreciated! Details about how to contribute [are also outlined in our documentation](http://tabbycat.readthedocs.io/en/latest/about/contributing.html).
 
-## Authors
+## ©️ Licence
+
+We haven't released Tabbycat under an open-source licence, so there is no formal and general right to use this software. Nonetheless, you're welcome to freely use Tabbycat to help run a debating tournament. However, if your tournament is run as a for-profit or for-fundraising activity a donation to Tabbycat's maintainers is required. More details [are available in our licence information](http://tabbycat.readthedocs.io/en/latest/about/licence.html).
+
+## ✏️ Authors
 
 Tabbycat was authored by Qi-Shan Lim for Auckland Australs in 2010. The current active developers are:
 
