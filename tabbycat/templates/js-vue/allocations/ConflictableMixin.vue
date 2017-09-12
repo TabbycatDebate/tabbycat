@@ -96,7 +96,8 @@ export default {
     issueConflict: function(conflict, conflictType, clashOrHistory) {
       // Activate a given conflict after having been hovered
       if (this.debugMode) {
-        console.debug('\tissueConflict() of type', conflictType, 'against', conflict)
+        console.debug('\tissueConflict() of type', conflictType, clashOrHistory,
+                      'against', conflict)
       }
       if (clashOrHistory === 'clashes') {
         var eventCode = 'set-conflicts-for-' + conflictType + '-' + conflict
@@ -114,9 +115,9 @@ export default {
         }
       }
       if (this.debugMode) {
-        console.debug('\t\tsetConflicts() of type', hoverOrPanel, '/',
-          conflictType, 'for', this.conflictableType, this.conflictable.id,
-          'as', state, 'from', originator.id)
+        console.debug('\t\tsetConflicts() of type', hoverOrPanel, '-',
+                      conflictType, 'for', this.conflictableType,
+                      this.conflictable.id, 'as', state, 'from', originator)
       }
       this.isConflicted[hoverOrPanel][conflictType] = state
     },
