@@ -520,7 +520,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if show_divisions and self.tournament.pref('enable_divisions'):
             self.add_column({
                 'key': _("Division"),
-                'icon': 'layer',
+                'icon': 'layers',
                 'tooltip': _("Division"),
             }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
 
@@ -627,7 +627,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
                 divisions_header = {
                     'key': _("Division"),
-                    'icon': 'layer',
+                    'icon': 'layers',
                     'tooltip': _("Division"),
                 }
                 divisions_data = ['D' + d.division.name if d.division else '' for d in debates]

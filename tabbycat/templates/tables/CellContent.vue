@@ -3,8 +3,7 @@
   <div>
 
     <!-- Icons or Emoji -->
-    <i v-if="cellData['icon']" :class="cellData['iconClass']"
-       v-html="getFeatherIcon"></i>
+    <i :class="cellData['iconClass']" v-html="getFeatherIcon">ICON</i>
     <i v-if="cellData['emoji']" class="emoji" >{{ cellData["emoji"] }}</i>
 
     <!-- Links and modals -->
@@ -29,18 +28,20 @@
 </template>
 
 <script>
+import FeatherMixin from './FeatherMixin.vue'
+import _ from 'lodash'
 import feather from 'feather-icons';
 
 export default {
+  mixins: [ FeatherMixin ],
   props: { cellData: Object },
   computed: {
-    getFeatherIcon: function() {
-      // Need to dynamically update icons once table order changes
-      // as they are otherwise tied to the DOM
-      if (this.cellData.hasOwnProperty('icon')) {
-        return feather.toSvg(this.cellData['icon']);
+    icon: function() {
+      if (!_.isUndefined(this.cellData['icon'])) {
+        return this.cellData['icon']
+      } else {
+        return false
       }
-      return false
     },
   }
 }

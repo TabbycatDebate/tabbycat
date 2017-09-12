@@ -115,6 +115,7 @@
 
 .spinning {
   animation: spin 1s infinite linear;
+  color: theme-color("primary");
 }
 @keyframes spin {
 

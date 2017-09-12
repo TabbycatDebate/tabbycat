@@ -69,8 +69,8 @@
 }
 
 .vue-draggable.locked {
-  cursor: no-drop;
   opacity: 0.33;
+  pointer-events: none;
 }
 
 //------------------------------------------------------------------------------
@@ -99,11 +99,6 @@
   color: theme-color("success");
   @extend .flex-vertical-center;
   @extend .flex-horizontal-center;
-
-  .spinning {
-    width: 25px; // Need a set height/width to it rotates around a central axis
-    height: 24px;
-  }
 }
 
 .draw-cell .vue-droppable {
