@@ -4,6 +4,13 @@ import _ from 'lodash'
 
 export default {
   methods: {
+    genderBrackets: function(gender) {
+      if (gender) {
+        return '(' + gender + ')'
+      } else {
+        return ''
+      }
+    },
     institutionDetailForSlideOver: function(adjorteam) {
       var title = adjorteam.institution.name
       var css = ''

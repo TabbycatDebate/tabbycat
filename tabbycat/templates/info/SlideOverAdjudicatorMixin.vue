@@ -23,7 +23,7 @@ export default {
     },
     genderFeature: function() {
       var gender = [
-        { 'title': this.adjudicator.name + ' (' + this.adjudicator.gender + ')',
+        { 'title': this.adjudicator.name + this.genderBrackets(this.adjudicator.gender),
           'class': 'gender-display gender-' + this.adjudicator.gender,
           'icon': 'user' }
       ]

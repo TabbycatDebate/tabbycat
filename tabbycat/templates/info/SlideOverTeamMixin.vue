@@ -26,7 +26,7 @@ export default {
       var teamInfo = { 'title': this.team.short_name }
       var speakersInfo = _.map(this.team.speakers, function(s) {
         return {
-          'title': s.name + ' (' + s.gender + ')',
+          'title': s.name + self.genderBrackets(s.gender),
           'class': 'gender-display gender-' + s.gender,
           'icon': 'user'
         }
