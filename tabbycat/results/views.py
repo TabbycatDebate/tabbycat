@@ -327,7 +327,7 @@ class EditBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView)
             message = _("Ballot set for %(matchup)s confirmed.")
         else:
             message = _("Edits to ballot set for %(matchup)s saved.")
-        messages.success(self.request, message % {'debate': self.debate.matchup})
+        messages.success(self.request, message % {'matchup': self.debate.matchup})
 
     def populate_objects(self):
         self.ballotsub = self.object = self.get_object()
