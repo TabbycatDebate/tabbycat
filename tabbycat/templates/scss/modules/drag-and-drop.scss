@@ -128,7 +128,8 @@
 //------------------------------------------------------------------------------
 
 .unallocated-items {
-  height: auto;
+  height: 100%;
+  width: 100%;
   z-index: $z_3; // Need to hover abovve underlying .tooltips
 
   > div {
@@ -139,8 +140,9 @@
 .resize-handler {
   width: 100%;
   text-align: center;
-  padding-top: 3px;
-  height: 20px;
+  height: 18px;
+  margin-bottom: -28px;
+  z-index: $z_3 + 1;
 
   &:hover {
     cursor: ns-resize;
