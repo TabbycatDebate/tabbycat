@@ -58,7 +58,8 @@ export default {
           return panel.adjudicator
         })
       })
-      return _.flattenDeep(allPanellists)
+      var allAdjudicators = allPanellists.concat(this.unallocatedItems)
+      return _.flattenDeep(allAdjudicators)
     },
     venues: function() {
       // Return all teams as a single array
@@ -85,7 +86,8 @@ export default {
       var adjInstitutions = _.map(this.adjudicators, function(adjudicator) {
         return adjudicator.institution
       })
-      var uniqueInstitutions = _.uniq(teamInstitutions.concat(adjInstitutions))
+      var allInstitutions = teamInstitutions.concat(adjInstitutions)
+      var uniqueInstitutions = _.uniq(allInstitutions)
       return _.keyBy(uniqueInstitutions, 'id')
     },
     unallocatedById: function() {
