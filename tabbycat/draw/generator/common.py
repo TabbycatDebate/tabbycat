@@ -56,7 +56,10 @@ class BasePairing:
         bracket = debate.bracket
         room_rank = debate.room_rank
         flags = debate.flags.split(",")
-        team_flags = {debate.aff_team: debate.aff_team.flags.split(","), debate.neg_team: debate.neg_team.flags.split(",")}
+        team_flags = {
+            debate.aff_team: debate.aff_dt.flags.split(","),
+            debate.neg_team: debate.neg_dt.flags.split(",")
+        }
         division = debate.division
         return cls(teams, bracket, room_rank, flags, team_flags, division)
 
