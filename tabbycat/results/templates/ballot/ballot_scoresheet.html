@@ -1,6 +1,6 @@
 {% load add_field_css debate_tags i18n %}
 
-<div class="card pr-0 mr-0 m-2 position" {% if forloop.first %}id="team-{{ team.team.id }}"{% endif %}>
+<div class="card pr-0 mr-0 m-2 position" {% if forloop.parentloop.first %}id="team-{{ team.team.id }}"{% endif %}>
   <div class="list-group list-group-flush">
 
     <div class="list-group-item pb-0">
