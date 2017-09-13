@@ -33,44 +33,46 @@ export default {
     adjudicators: function() {
       return _.map(this.panelAdjudicators, function(da) { return da.adjudicator })
     },
-    allPanelConflicts: function() {
+    allConflicts: function() {
       // Create an array of conflicts gathered from each team or adjudicator
       var allConflicts = _.map(this.adjudicators, function(adj) {
         return adj.conflicts
       })
       _.forEach(this.teams, function(team) {
         // Remove any institutional conflicts coming from teams; only via adjs
-        delete team.conflicts.clashes.institution
-        allConflicts.push(team.conflicts)
+        var teamConflicts = _.clone(team.conflicts.clashes)
+        delete teamConflicts.institution
+        if (!_.isEmpty(teamConflicts)) {
+          allConflicts.push(teamConflicts)
+        }
       })
       return allConflicts
     },
-    filteredPanelConflicts: function() {
+    filteredConflicts: function() {
       // Traverse the combined conflicts object and delete those not relevant
-      // to the panel
+      // to the panel. This allows us to (later) activate all the leftovers
       var filteredConflicts = {
         'clashes': { 'adjudicator': [], 'institution': [], 'team': [] },
         'histories': { 'adjudicator': [], 'institution': [], 'team': [] }
       }
       var self = this
-      _.forEach(this.allPanelConflicts, function(adjOrTeamsConflicts) {
+      _.forEach(this.allConflicts, function(adjOrTeamsConflicts) {
         // For all of the panel conflicts
-        self.forEachConflict(adjOrTeamsConflicts,
-          function(conflict, type, clashOrHistory) {
-            // Drill down into each adj/teams conflicts and filter out those
-            // that cannot apply to the panel as-is
-            if (self.checkIfInPanel(conflict, type, clashOrHistory)) {
-              filteredConflicts[clashOrHistory][type].push(conflict)
-            }
+        self.forEachConflict(adjOrTeamsConflicts, function(conflict, type, clashOrHistory) {
+          // Drill down into each adj/teams conflicts and filter out those
+          // that cannot apply to the panel as-is
+          if (self.checkIfInPanel(conflict, type, clashOrHistory)) {
+            filteredConflicts[clashOrHistory][type].push(conflict)
           }
-        )
+        })
       })
       return filteredConflicts
     },
   },
   methods: {
     deactivatePanelConflicts: function() {
-      // Turn off all conflicts that might remain from previous panellists
+      // Turn off all conflicts that might remain from previous panellists who
+      // have been moved on
       var self = this
       _.forEach(this.adjudicatorIds, function(id, da) {
         self.unsendConflict(id, 'adjudicator', 'adjudicator', 'panel', 'clashes')
@@ -84,17 +86,16 @@ export default {
       })
     },
     activatePanelConflicts: function() {
-      // Turn on all conflicts as set by the filteredPanelConflicts()
+      // Turn on all conflicts by activating what hs been set by
+      // filteredPanelConflicts(). Calls/happens when a panel updates
       var self = this
-      this.forEachConflict(this.filteredPanelConflicts,
-        function(conflict, type, clashOrHistory) {
-          if (type === 'institution') {
-            self.activatePanelWithInstitutionalConflict(conflict)
-          } else {
-            self.sendConflict(conflict, type, type, 'panel', clashOrHistory)
-          }
+      this.forEachConflict(this.filteredConflicts, function(conflict, type, clashOrHistory) {
+        if (type === 'institution') {
+          self.activatePanelWithInstitutionalConflict(conflict) // See below
+        } else {
+          self.sendConflict(conflict, type, type, 'panel', clashOrHistory)
         }
-      )
+      })
     },
     activatePanelWithInstitutionalConflict: function(conflict) {
       // For institutional conflicts within a panel we want to send them
@@ -102,30 +103,38 @@ export default {
       // can do a global broadcast by institutional ID); that is to say we
       // need to find and target just the teams/adjs who need them and then
       // target those items specifically
+      var self = this
 
       var teamsMatches = _.filter(this.teams, function(team) {
         return team.institution.id === conflict.id;
       });
-
-      _.forEach(this.teamsMatches, function(team) {
+      // Find teams of the same institution as the conflict
+      _.forEach(teamsMatches, function(team) {
         if (team.institution.id === conflict.id) {
-          console.log('team match')
-          self.sendConflict(team.id, 'team', 'institutional', 'panel', 'clashes')
+          self.sendConflict(team, 'team',       'institution', 'panel', 'clashes')
         }
       })
 
+      // Find adjs who have the same institutional conflicts as the conflict we
+      // we are checking. We have to loop over the adj in questions actual
+      // institutional conflicts; not just their current institution as
+      // its a many to many relationship
       var adjsMatches = _.filter(this.adjudicators, function(adj) {
-        return adj.institution.id === conflict.id;
+        var adjudicatorsInstitutions = adj.conflicts.clashes.institution
+        var institutionIDs = _.map(adjudicatorsInstitutions, 'id');
+        if (institutionIDs.indexOf(conflict.id) !== -1) {
+          return true
+        } else {
+          return false
+        }
       });
 
-      // _.forEach(this.adjudicators, function(adjudicator) {
-      //   if (adjudicator.institution.id === conflict.id) {
-      //     console.log('team match')
-      //     //self.sendConflict(team.id, 'team', 'institutional', 'panel', 'clashes')
-      //   }
-      // })
-
-
+      // Unlike with teams; adj-adj institution conflicts require co-presence
+      if (adjsMatches.length > 1 || teamsMatches.length > 0) {
+        _.forEach(adjsMatches, function(adj) {
+          self.sendConflict(adj, 'adjudicator', 'institution', 'panel', 'clashes')
+        })
+      }
     },
     checkIfInPanel: function(conflict, type, clashOrHistory) {
       // For a given conflict from a team/adj check if it can actually apply

@@ -50,7 +50,7 @@ export default {
       if (!_.isUndefined(this.adjudicator)) { return this.adjudicator }
     },
     conflictingInstitutionIDs: function() {
-      return _.map(this.conflictable.conflicts.clashes.institution, 'id');
+      return _.map(this.conflictable.conflicts.clashes.institution, 'id')
     },
     conflictsStatus: function() {
       var conflictsCSS = 'conflictable'
@@ -92,16 +92,16 @@ export default {
       )
     },
     setConflicts: function(id, hoverOrPanel, clashOrHistory,
-                           eventType, conflictType, state) {
+                               eventType, conflictType, state) {
       // Receive a conflict message from elsewhere and activate the conflict
       if (id !== this.conflictable.id) {
         return // Conflict doesn't match what is broadcast
       }
+      if (this.debugMode) {
+       this.debugLog('setConflicts() ', 2, id, hoverOrPanel, clashOrHistory, eventType, conflictType, state)
+      }
       if (clashOrHistory === 'histories') {
         conflictType = 'histories' // Histories have seperate type; override it
-      }
-      if (this.debugMode) {
-        this.debugLog('setConflicts()', 2, id, hoverOrPanel, clashOrHistory, eventType, conflictType, state)
       }
       this.isConflicted[hoverOrPanel][conflictType] = state
     },
@@ -110,11 +110,11 @@ export default {
       if (this.isHovering === true) {
         return // Don't show institutional conflicts on self (when hovering)
       }
+      if (this.debugMode) {
+        this.debugLog('setInstitutionConflicts()', 2, this.conflictable.id, hoverOrPanel, clashOrHistory, this.conflictableType, conflictType, state)
+      }
       // Check if the supplied institutional ID matches any of this object's clashes
       if (this.conflictingInstitutionIDs.indexOf(id) !== -1) {
-        if (this.debugMode) {
-          this.debugLog('setInstitutionConflicts()', 2, id, hoverOrPanel, clashOrHistory, eventType, conflictType, state)
-        }
         this.isConflicted[hoverOrPanel]['institution'] = state
       }
     },
