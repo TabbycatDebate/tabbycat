@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block page-alerts %}
-  {% if not has_motions %}
+  {% if pref.enable_motions and not has_motions %}
     <div class="alert alert-danger">
       Currently there are no motions entered for this round, so debate results
       cannot be entered. <a href="{% roundurl 'motions-edit' current_round %}" class="alert-link">Add Motions.</a>

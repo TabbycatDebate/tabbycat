@@ -126,6 +126,12 @@ class BaseDebateResult:
 
     TEAMSCORE_FIELDS = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible', 'forfeit']
 
+    # These are used by prefetch_results to determine whether to populate
+    # certain fields.
+    is_voting = False
+    uses_advancing = False
+    uses_speakers = False
+
     def __init__(self, ballotsub, load=True):
         """Constructor.
         `ballotsub` must be a BallotSubmission.
@@ -272,6 +278,8 @@ class BaseDebateResult:
 
 class BaseDebateResultWithSpeakers(BaseDebateResult):
     """Adds management of speaker identities, ghosts and scores."""
+
+    uses_speakers = True
 
     def __init__(self, ballotsub, load=True):
         super().__init__(ballotsub, load=False)
@@ -803,6 +811,9 @@ class BPEliminationDebateResult(BaseDebateResult):
     identities, speaker scores or ranks.  Instead, it just notes the two
     advancing teams, using the `win` field, which is set to True for both of
     the advancing teams."""
+
+    is_voting = False
+    uses_advancing = True
 
     # --------------------------------------------------------------------------
     # Management methods

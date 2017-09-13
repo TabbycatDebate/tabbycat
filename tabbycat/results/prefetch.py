@@ -68,6 +68,11 @@ def populate_results(ballotsubs):
     debates prefetched (using select_related).
     """
 
+    # If the database is correct, some of the checks like `result.is_voting`,
+    # `result.uses_speakers` etc. should be redundant. But it's best not to
+    # assume this, so we always check these before calling a method that only
+    # exists in some DebateResult subclasses.
+
     if not ballotsubs:
         return
 
@@ -79,7 +84,7 @@ def populate_results(ballotsubs):
     results_by_debate_id = {}
     results_by_ballotsub_id = {}
 
-    # Create the VotingDebateResults
+    # Create the DebateResults
     for ballotsub in ballotsubs:
         result = DebateResult(ballotsub, load=False)
         result.init_blank_buffer()
@@ -115,29 +120,40 @@ def populate_results(ballotsubs):
 
     # Populate scoresheets (load_scoresheets)
 
-    if result.is_voting:
+    debateadjs = DebateAdjudicator.objects.filter(
+        debate__ballotsubmission__in=ballotsubs
+    ).exclude(
+        type=DebateAdjudicator.TYPE_TRAINEE
+    ).select_related('adjudicator').distinct()
 
-        debateadjs = DebateAdjudicator.objects.filter(
-            debate__ballotsubmission__in=ballotsubs
-        ).exclude(
-            type=DebateAdjudicator.TYPE_TRAINEE
-        ).select_related('adjudicator').distinct()
-
-        for da in debateadjs:
-            for result in results_by_debate_id[da.debate_id]:
+    for da in debateadjs:
+        for result in results_by_debate_id[da.debate_id]:
+            if result.is_voting:
                 result.debateadjs[da.adjudicator] = da
                 result.scoresheets[da.adjudicator] = result.scoresheet_class(positions)
 
-        ssbas = SpeakerScoreByAdj.objects.filter(
-            ballot_submission__in=ballotsubs,
-            debate_team__side__in=sides,
-            position__in=positions
-        ).select_related('debate_adjudicator__adjudicator', 'debate_team')
+    ssbas = SpeakerScoreByAdj.objects.filter(
+        ballot_submission__in=ballotsubs,
+        debate_team__side__in=sides,
+        position__in=positions
+    ).select_related('debate_adjudicator__adjudicator', 'debate_team')
 
-        for ssba in ssbas:
-            result = results_by_ballotsub_id[ssba.ballot_submission_id]
+    for ssba in ssbas:
+        result = results_by_ballotsub_id[ssba.ballot_submission_id]
+        if result.is_voting:
             result.set_score(ssba.debate_adjudicator.adjudicator, ssba.debate_team.side,
                 ssba.position, ssba.score)
+
+    # Populate advancing (load_advancing)
+    teamscores = TeamScore.objects.filter(
+        ballot_submission__in=ballotsubs,
+        debate_team__side__in=sides
+    ).select_related('debate_team')
+
+    for ts in teamscores:
+        result = results_by_ballotsub_id[ts.ballot_submission_id]
+        if result.uses_advancing and ts.win:
+            result.advancing.append(ts.debate_team.side)
 
     # Finally, check that everything is in order
 

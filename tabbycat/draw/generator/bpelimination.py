@@ -43,7 +43,7 @@ class BaseBPEliminationDrawGenerator(BaseBPDrawGenerator):
         """Collates the advancing teams from `self.results`, checks them for
         validity, and returns them in a list of lists, ordered by room rank."""
         self.results.sort(key=lambda x: x.room_rank)
-        advancing = [pairing.advancing_teams() for pairing in self.results]
+        advancing = [pairing.advancing for pairing in self.results]
         advancing_counts = [len(teams) for teams in advancing]
         if advancing_counts.count(0) > 0:
             raise DrawUserError(_("%d debates in the previous round don't have a result.") % advancing_counts.count(0))
@@ -75,13 +75,15 @@ class AfterPartialBPEliminationDrawGenerator(BaseBPEliminationDrawGenerator):
     """For the round immediately following a partial elimination round, i.e.,
     the second elimination round where the break size is 6*2^n."""
 
+    requires_prev_results = True
+
     def make_pairings(self):
         # e.g. if lowest room rank was 9, then 8 teams should bypass
         nbypassing = min([pairing.room_rank for pairing in self.results]) - 1
         if nbypassing % 2 != 0:
             raise DrawUserError(_("The room ranks of the partial elimination round indicate that "
                 "an odd number of teams (%(nbypassing)d) bypassed it.") % {'nbypassing': nbypassing})
-        ndebates = len(nbypassing) // 2
+        ndebates = nbypassing // 2
         if len(self.results) != ndebates:
             raise DrawUserError(_("The room ranks of the partial elimination round indicate "
                 "that %(nbypassing)d teams bypassed it, but %(advancing)d teams advanced from "
@@ -125,6 +127,8 @@ class SubsequentBPEliminationDrawGenerator(BaseBPEliminationDrawGenerator):
     """For all elimination rounds after the first one if the break size is
     4*2^n, or after the second one if the break size is 6*2^n."""
 
+    requires_prev_results = True
+
     def make_pairings(self):
         advancing = self._get_advancing_teams()
         if not (len(advancing) >= 2 and ispow2(len(advancing))):
@@ -141,4 +145,4 @@ class SubsequentBPEliminationDrawGenerator(BaseBPEliminationDrawGenerator):
             teams = teams1 + teams2  # join lists
             pairing = BPPairing(teams, bracket=0, room_rank=i)
             pairings.append(pairing)
-            return pairings
+        return pairings

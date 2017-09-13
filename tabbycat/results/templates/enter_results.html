@@ -35,7 +35,7 @@
 
 {% block page-alerts %}
 
-  {% if debate.adjudicators.is_even %}
+  {% if pref.ballots_per_debate == 'per-adj' and debate.adjudicators.is_even %}
     {% blocktrans trimmed asvar message %}
       This debate has a panel with an even number of voting adjudicators.
       If the adjudicators split evenly, the debate will be awarded to the team
@@ -54,7 +54,11 @@
 
     {% csrf_token %}
 
-    {% include "ballot/ballot_set.html" %}
+    {% if pref.teams_in_debate == 'bp' and debate.round.is_break_round %}
+      {% include "ballot/bp_elimination_ballot.html" %}
+    {% else %}
+      {% include "ballot/ballot_set.html" %}
+    {% endif %}
 
     <div class="card mt-3">
       <div class="list-group list-group-flush">

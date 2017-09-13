@@ -158,6 +158,34 @@ class BaseResultForm(forms.Form):
 
         return cleaned_data
 
+    def save(self):
+
+        # 1. Unconfirm the other, if necessary
+        if self.cleaned_data['confirmed']:
+            if self.debate.confirmed_ballot != self.ballotsub and self.debate.confirmed_ballot is not None:
+                self.debate.confirmed_ballot.confirmed = False
+                self.debate.confirmed_ballot.save()
+
+        # 2. Save ballot submission so that we can create related objects
+        if self.ballotsub.pk is None:
+            self.ballotsub.save()
+
+        # 3. Save the specifics of the ballot
+        self.save_ballot()
+
+        # 4. Save ballot and result status
+        self.ballotsub.discarded = self.cleaned_data['discarded']
+        self.ballotsub.confirmed = self.cleaned_data['confirmed']
+        self.ballotsub.save()
+
+        self.debate.result_status = self.cleaned_data['debate_result_status']
+        self.debate.save()
+
+        return self.ballotsub
+
+    def save_ballot(self):
+        raise NotImplementedError
+
 
 class BaseBallotSetForm(BaseResultForm):
     """Form for data entry for a single ballot set. Responsible for presenting
@@ -478,17 +506,7 @@ class BaseBallotSetForm(BaseResultForm):
     # Saving
     # --------------------------------------------------------------------------
 
-    def save(self):
-
-        # 1. Unconfirm the other, if necessary
-        if self.cleaned_data['confirmed']:
-            if self.debate.confirmed_ballot != self.ballotsub and self.debate.confirmed_ballot is not None:
-                self.debate.confirmed_ballot.confirmed = False
-                self.debate.confirmed_ballot.save()
-
-        # 2. Save ballot submission so that we can create related objects
-        if self.ballotsub.pk is None:
-            self.ballotsub.save()
+    def save_ballot(self):
 
         # 3. Check if there was a forfeit
         if self.using_forfeits and self.cleaned_data.get('forfeit'):
@@ -529,15 +547,6 @@ class BaseBallotSetForm(BaseResultForm):
             self.populate_result_with_scores(result)
 
         result.save()
-
-        self.ballotsub.discarded = self.cleaned_data['discarded']
-        self.ballotsub.confirmed = self.cleaned_data['confirmed']
-        self.ballotsub.save()
-
-        self.debate.result_status = self.cleaned_data['debate_result_status']
-        self.debate.save()
-
-        return self.ballotsub
 
     def populate_result_with_scores(self, result):
         """Should populate `result` with speaker scores in-place, using the data
@@ -774,12 +783,14 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
             yield sheet_dict
 
 
-class BPEliminationResultForm(forms.Form):
+class BPEliminationResultForm(BaseResultForm):
 
     def __init__(self, ballotsub, *args, **kwargs):
         super().__init__(ballotsub, *args, **kwargs)
 
-        side_choices = [(side, self._side_name(side)) for side in self.tournament.sides]
+        side_choices = [(side, _("%(team)s (%(side)s)") % {
+            'team': self.debate.get_team(side).short_name,
+            'side': self._side_name(side)}) for side in self.tournament.sides]
         self.fields['advancing'] = forms.MultipleChoiceField(choices=side_choices,
                 widget=forms.CheckboxSelectMultiple)
 
@@ -789,10 +800,15 @@ class BPEliminationResultForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
 
-        if len(cleaned_data.get('advancing', [])) != 2:
+        if 'advancing' in cleaned_data and len(cleaned_data['advancing']) != 2:
             self.add_error('advancing', forms.ValidationError(
                 _("There must be exactly two teams advancing."),
                 code='num_advancing'
             ))
 
         return cleaned_data
+
+    def save_ballot(self):
+        result = BPEliminationDebateResult(self.ballotsub)
+        result.set_advancing(self.cleaned_data['advancing'])
+        result.save()

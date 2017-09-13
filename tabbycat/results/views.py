@@ -26,7 +26,7 @@ from utils.views import JsonDataResponsePostView, JsonDataResponseView, VueTable
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
-from .forms import PerAdjudicatorBallotSetForm, SingleBallotSetForm
+from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
@@ -231,7 +231,10 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         return all_ballotsubs
 
     def get_form_class(self):
-        if self.get_tournament().pref('ballots_per_debate') == 'per-adj':
+        tournament = self.get_tournament()
+        if tournament.pref('teams_in_debate') == 'bp' and self.debate.round.is_break_round:
+            return BPEliminationResultForm
+        elif tournament.pref('ballots_per_debate') == 'per-adj':
             return PerAdjudicatorBallotSetForm
         else:
             return SingleBallotSetForm
@@ -300,9 +303,18 @@ class NewBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView):
             submitter_type=BallotSubmission.SUBMITTER_TABROOM,
             ip_address=get_ip_address(self.request))
 
-        if not self.debate.adjudicators.has_chair:
+        t = self.get_tournament()
+
+        if t.pref('ballots_per_debate') == 'per-adj' and \
+                not self.debate.adjudicators.has_chair:
             messages.error(self.request, _("Whoops! The debate %(debate)s doesn't have a chair, "
                 "so you can't enter results for it.") % {'debate': self.debate.matchup})
+            return redirect_round('results-round-list', self.ballotsub.debate.round)
+
+        if not (t.pref('draw_side_allocations') == 'manual-ballot' and
+                t.pref('teams_in_debate') == 'two') and not self.debate.sides_confirmed:
+            messages.error(self.request, _("Whoops! The debate %(debate)s doesn't have its "
+                "sides confirmed, so you can't enter results for it.") % {'debate': self.debate.matchup})
             return redirect_round('results-round-list', self.ballotsub.debate.round)
 
 

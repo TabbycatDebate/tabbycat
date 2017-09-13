@@ -281,6 +281,24 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['sort'] = 0
         return cell
 
+    def _result_cell_class_four_elim(self, advancing, cell):
+        team_name = cell['popover']['title']
+        if advancing is True:
+            cell['popover']['title'] = _("%(team)s is advancing") % {'team': team_name}
+            cell['icon'] = "chevron-up"
+            cell['iconClass'] = "text-success"
+            cell['sort'] = 2
+        elif advancing is False:
+            cell['popover']['title'] = _("%(team)s is not advancing") % {'team': team_name}
+            cell['icon'] = "chevron-down"
+            cell['iconClass'] = "text-danger"
+            cell['sort'] = 1
+        else: # None
+            cell['popover']['title'] = _("%(team)s—no result") % {'team': team_name}
+            cell['icon'] = ""
+            cell['sort'] = 0
+        return cell
+
     def _result_cell_two(self, ts, compress=False, show_score=False, show_ballots=False):
         if not hasattr(ts, 'debate_team') or not hasattr(ts.debate_team.opponent, 'team'):
             return {'text': self.BLANK_TEXT}
@@ -325,7 +343,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if not hasattr(ts, 'debate_team'):
             return {'text': self.BLANK_TEXT}
 
-        places = {0: _("4th"), 1: _("3rd"), 2: _("2nd"), 3: _("1st")}
         other_teams = {dt.side: dt.team.short_name for dt in ts.debate_team.debate.debateteam_set.all()}
         other_team_strs = []
         for side in self.tournament.sides:
@@ -341,18 +358,32 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'content': [{'text': "<br />".join(other_team_strs)}],
             'title': ""
         }}
-        cell = self._result_cell_class_four(ts.points, cell)
 
         side = ts.debate_team.get_side_name()
-        if ts.points is not None:
-            place = places.get(ts.points, "??")
-            cell['text'] = place
-            cell['popover']['title'] = _(place + " from " + side)
-        else:
-            cell['text'] = "–"
-            cell['popover']['title'] = _("No result for debate from " + side)
 
-        if show_score:
+        if ts.debate_team.debate.round.is_break_round:
+            cell = self._result_cell_class_four_elim(ts.win, cell)
+            if ts.win is True:
+                cell['text'] = _("advancing")
+                cell['popover']['title'] = _("Advancing from %(side)s") % {'side': side}
+            elif ts.win is False:
+                cell['text'] = _("eliminated")
+                cell['popover']['title'] = _("Not advancing from %(side)s") % {'side': side}
+            else:
+                cell['text'] = "–"
+                cell['popover']['title'] = _("No result for debate from %(side)s") % {'side': side}
+        else:
+            cell = self._result_cell_class_four(ts.points, cell)
+            places = {0: _("4th"), 1: _("3rd"), 2: _("2nd"), 3: _("1st")}
+            if ts.points is not None:
+                place = places.get(ts.points, "??")
+                cell['text'] = place
+                cell['popover']['title'] = _("%(place)s from %(side)s") % {'place': place, 'side': side}
+            else:
+                cell['text'] = "–"
+                cell['popover']['title'] = _("No result for debate from %(side)s") % {'side': side}
+
+        if show_score and ts.score is not None:
             cell['subtext'] = metricformat(ts.score)
             cell['popover']['content'].append(
                 {'text': _("Received <strong>%s</strong> team points") % metricformat(ts.score)})
@@ -842,10 +873,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbrs[side]
                 cell = self._team_cell(team, hide_emoji=True, subtext=subtext)
 
-                if self.tournament.pref('teams_in_debate') == 'bp':
-                    cell = self._result_cell_class_four(debateteam.points, cell)
-                else:
+                if self.tournament.pref('teams_in_debate') == 'two':
                     cell = self._result_cell_class_two(debateteam.win, cell)
+                elif debate.round.is_break_round:
+                    cell = self._result_cell_class_four_elim(debateteam.win, cell)
+                else:
+                    cell = self._result_cell_class_four(debateteam.points, cell)
 
                 row.append(cell)
             results_data.append(row)

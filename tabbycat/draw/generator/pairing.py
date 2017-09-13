@@ -63,7 +63,8 @@ class BasePairing:
             for side in tournament.sides
         }
         division = debate.division
-        return cls(teams, bracket, room_rank, flags, team_flags, division)
+        return cls(teams, bracket=bracket, room_rank=room_rank, flags=flags,
+                team_flags=team_flags, division=division)
 
     def add_flag(self, flag):
         self.flags.append(flag)
@@ -199,7 +200,7 @@ class BPEliminationResultPairing(BPPairing):
     @classmethod
     def from_debate(cls, debate, tournament=None):
         instance = super().from_debate(debate, tournament)
-        advancing = debate.confirmed_ballot.result.advancing_teams() if debate.confirmed_ballot else None
+        advancing = debate.confirmed_ballot.result.advancing_teams() if debate.confirmed_ballot else []
         instance.set_advancing(advancing)
         return instance
 
