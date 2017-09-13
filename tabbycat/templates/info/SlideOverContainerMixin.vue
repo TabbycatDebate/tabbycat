@@ -93,21 +93,24 @@ export default {
         _.forEach(historiesList, function(history) {
           if (historiesType === 'team') {
             if (_.isUndefined(self.teamsById[history.id])) {
-              var historyName = 'Unknown' // Saw someone not in current draw
+              var historyName = false // Saw someone not in current draw
             } else {
               var historyName = self.teamsById[history.id].short_name
             }
           } else if (historiesType === 'adjudicator') {
             if (_.isUndefined(self.adjudicatorsById[history.id])) {
-              var historyName = 'Unknown' // Saw someone not in current draw
+              var historyName = false // Saw someone not in current draw
             } else {
               var historyName = self.adjShortName(self.adjudicatorsById[history.id].name)
             }
           }
-          var css = 'conflictable hover-histories-' + history.ago + '-ago'
-          // Only show last 2 rounds for small screens
-          if (history.ago > 2) { css += ' visible-lg-block' }
-          formattedHistories.push({'title': historyName, 'ago': history.ago, 'class': css})
+          // Only push if the team/adj is present in the draw
+          if (historyName) {
+            var css = 'conflictable hover-histories-' + history.ago + '-ago'
+            // Only show last 2 rounds for small screens
+            if (history.ago > 2) { css += ' visible-lg-block' }
+            formattedHistories.push({'title': historyName, 'ago': history.ago, 'class': css})
+          }
         })
       })
       // Order by rounds;

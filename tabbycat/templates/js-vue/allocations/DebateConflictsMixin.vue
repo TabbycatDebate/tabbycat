@@ -71,22 +71,24 @@ export default {
   methods: {
     deactivatePanelConflicts: function() {
       // Turn off all conflicts that might remain from previous panellists
-      console.log('deactivatePanelConflicts')
+      console.debug('deactivatePanelConflicts')
       var self = this
-      _.forEach(this.adjudicatorIds, function(id, dt) {
-        self.unsendConflict(id, 'adjudicator', 'panel')
+      _.forEach(this.adjudicatorIds, function(id, da) {
+        self.unsendConflict(id, 'adjudicator', 'panel', 'clashes', da)
+        self.unsendConflict(id, 'adjudicator', 'panel', 'histories', da)
       })
-      _.forEach(this.teamIds, function(id, da) {
-        self.unsendConflict(id, 'team', 'panel')
+      _.forEach(this.teamIds, function(id, dt) {
+        self.unsendConflict(id, 'team', 'panel', 'clashes', dt)
+        self.unsendConflict(id, 'team', 'panel', 'histories', dt)
       })
     },
     activatePanelConflicts: function() {
       // Turn on all conflicts as set by the filteredPanelConflicts()
-      console.log('activatePanelConflicts')
+      console.debug('activatePanelConflicts')
       var self = this
       this.forEachConflict(this.filteredPanelConflicts,
         function(conflict, type, clashOrHistory) {
-          self.sendConflict(conflict, type, 'panel', clashOrHistory)
+          self.sendConflict(conflict, type, 'panel', clashOrHistory, null)
         }
       )
     },
@@ -94,7 +96,7 @@ export default {
       // For a given conflict from a team/adj check if it can actually apply
       // to the panel
       if (type === 'institution') {
-        return this.checkIfInPanelWithInstitution(conflict.id)
+        return this.checkIfInPanelWithInstitution(conflict)
       } else if (type === 'team' && _.includes(this.teamIds, conflict.id)) {
         return true // Team not present
       } else if (type === 'adjudicator' && _.includes(this.adjudicatorIds, conflict.id)) {
@@ -103,30 +105,22 @@ export default {
       return false
     },
     checkIfInPanelWithInstitution: function(conflict) {
-      return false
-      // var self = this
-      // _.forEach(this.panelTeams, function(dt) {
-      //   var team = dt.team
-      //   if ( (team.institution.id === conflict && team !== conflictingItem) &&
-      //        (_.has(conflictingItem, 'score')) ) {
-      //     // Don't self-conflict and don't allow team-team institution conflicts
-      //     var eventCode = 'set-conflicts-for-team-' + team.id
-      //     self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
-      //     // Reverse the conflict (incase conflicting not own institution)
-      //     var eventCode = 'set-conflicts-for-adjudicator-' + conflictingItem.id
-      //     self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
-      //   }
-      // })
-      // _.forEach(this.panelAdjudicators, function(panellist) {
-      //   var adj = panellist.adjudicator
-      //   if (adj.institution.id === conflict && adj !== conflictingItem) {
-      //     var eventCode = 'set-conflicts-for-adjudicator-' + adj.id
-      //     self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
-      //     // Reverse the conflict (incase conflicting not own institution)
-      //     var eventCode = 'set-conflicts-for-adjudicator-' + conflictingItem.id
-      //     self.$eventHub.$emit(eventCode, 'panel', 'institution', true)
-      //   }
-      // })
+      // Given a conflict with a certain institution we count up matching
+      // teams/adjs and activate if there are more than 0 matches
+
+      var teamsMatches = _.filter(this.panelTeams, function(debateTeam) {
+        return debateTeam.team.institution.id === conflict.id;
+      });
+      var adjsMatches = _.filter(this.panelAdjudicators, function(panellist) {
+        return panellist.adjudicator.institution.id === conflict.id;
+      });
+
+      console.log('inst matches for ', conflict.id, ' total ', teamsMatches.length + adjsMatches.length)
+      if (teamsMatches.length + adjsMatches.length > 1) {
+        return true
+      } else {
+        return false
+      }
     }
   },
 }

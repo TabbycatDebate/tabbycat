@@ -5,8 +5,11 @@
        @mouseleave="handleHoverOff">
 
     <div>
-      <span class="small">
-        <span v-if="debugMode">{{ team.id }}</span>
+      <span v-if="debugMode">
+        Team:{{ team.id }}<br>
+        Inst: {{ team.institution.id }}
+      </span>
+      <span class="small" v-else>
         {{ team.short_name }}
       </span>
     </div>
