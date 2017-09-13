@@ -91,7 +91,6 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
             'total': len(self._get_draw())
         }
 
-        kwargs["has_motions"] = round.motion_set.count() > 0
         return super().get_context_data(**kwargs)
 
 

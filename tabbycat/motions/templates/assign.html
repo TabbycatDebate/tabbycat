@@ -1,13 +1,12 @@
 {% extends "base.html" %}
-{% load add_field_css %}
-{% load debate_tags %}
+{% load add_field_css debate_tags i18n %}
 
-{% block head-title %}Assign Motions for {{ round.name }}{% endblock %}
-{% block page-title %}Assign Motions for {{ round.name }}{% endblock %}
+{% block head-title %}{% trans "Assign Motions" %}{% endblock %}
+{% block page-title %}{% trans "Assign Motions" %}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-primary " href="{% roundurl 'draw' %}">
-    <i data-feather="chevron-left"></i> Back to Display
+    <i data-feather="chevron-left"></i> {% trans "Back to Display" %}
   </a>
 {% endblock %}
 
@@ -40,7 +39,7 @@
     </div>
 
     <div class="row">
-      <input class="btn btn-block btn-success" type="submit" name="submit" value="Save Motion Assignments" />
+      <input class="btn btn-block btn-success" type="submit" name="submit" value="{% trans "Save Motion Assignments" %}" />
     </div>
 
   </form>
