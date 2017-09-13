@@ -88,7 +88,7 @@ def populate_clashes(conflicts, conflict, type, for_type):
     if adj_or_team_id not in conflicts[for_type]:
         conflicts[for_type][adj_or_team_id] = {'team': [], 'institution': [], 'adjudicator': []}
 
-    conflicts[for_type][adj_or_team_id][type].append(conflictee_id)
+    conflicts[for_type][adj_or_team_id][type].append({ 'id': conflictee_id})
     return conflicts
 
 

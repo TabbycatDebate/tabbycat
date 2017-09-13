@@ -5,7 +5,10 @@
        @mouseleave="handleHoverOff">
 
     <div>
-      <span class="small">{{ team.short_name }}</span>
+      <span class="small">
+        <span v-if="debugMode">{{ team.id }}</span>
+        {{ team.short_name }}
+      </span>
     </div>
 
     <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
@@ -24,6 +27,9 @@ import HighlightableMixin from '../allocations/HighlightableMixin.vue'
 import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
+  data: function () {
+    return { debugMode: true }
+  },
   mixins: [SlideOverSubjectMixin, SlideOverTeamMixin,
            HighlightableMixin, ConflictableMixin],
   props: { 'team': Object },

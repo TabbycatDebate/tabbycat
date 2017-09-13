@@ -58,18 +58,18 @@ export default {
         _.forEach(clashesList, function(clash) {
           var clashName = false
           if (clashesType === 'team') {
-            if (!_.isUndefined(self.teamsById[clash])) {
-              var clashName = self.teamsById[clash].short_name
+            if (!_.isUndefined(self.teamsById[clash.id])) {
+              var clashName = self.teamsById[clash.id].short_name
               var clashIcon = 'message-circle'
             }
           } else if (clashesType === 'adjudicator') {
-            if (!_.isUndefined(self.adjudicatorsById[clash])) {
-              var clashName = self.adjShortName(self.adjudicatorsById[clash].name)
+            if (!_.isUndefined(self.adjudicatorsById[clash.id])) {
+              var clashName = self.adjShortName(self.adjudicatorsById[clash.id].name)
               var clashIcon = 'user'
             }
           } else if (clashesType === 'institution') {
-            if (!_.isUndefined(self.institutionsById[clash])) {
-              var clashName = self.institutionsById[clash].code
+            if (!_.isUndefined(self.institutionsById[clash.id])) {
+              var clashName = self.institutionsById[clash.id].code
               var clashIcon = 'globe'
             }
           }
