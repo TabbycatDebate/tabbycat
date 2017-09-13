@@ -7,14 +7,10 @@ export default {
   // acting across the entire adj/team pool (for hovers) and instead only
   // focusing it on conflicts within a debate panel / debate teams
   mixins: [ConflictUtilitiesMixin],
-  data: function () {
-    return {
-      debugMode: true
-    }
-  },
+  data: function () { return { debugMode: true }},
   watch: {
     filteredPanelConflicts: function() {
-      // Re-up all conflicts when the master conflicts dictionary changes
+      // Re-calculate all conflicts when the master conflicts dictionary changes
       this.$nextTick(function() {
         // MUST wait for all data to finish resolving when panel info has been
         // updated before recalculating conflicts
@@ -26,24 +22,33 @@ export default {
   mounted: function() {
     this.$nextTick(function() {
       // MUST to wait for DOM to resolve on initial load before calculating
-      // conflicts
+      // the conflicts
       this.activatePanelConflicts()
     })
   },
   computed: {
-    allPanelConflicts: function() {
-      // An array of conflicts gathered from each team or adjudicator
-      var debateAdjs = _.map(this.panelAdjudicators, function(da) {
-        return da.adjudicator
-      })
-      var debateTeams = _.map(this.panelTeams, function(dt) {
+    teams: function() {
+      return _.map(this.panelTeams, function(dt) {
         return dt.team
       })
-      var allTeamsAndAdjs = debateAdjs.concat(debateTeams)
+    },
+    adjudicators: function() {
+      return _.map(this.panelAdjudicators, function(da) {
+        return da.adjudicator
+      })
+    },
+    allPanelConflicts: function() {
+      // An array of conflicts gathered from each team or adjudicator
+      var allTeamsAndAdjs = this.adjudicators.concat(this.teams)
       var allConflicts = _.mapValues(allTeamsAndAdjs, function(conflictable) {
-        return conflictable.conflicts;
+        return conflictable.conflicts
       });
       return allConflicts
+    },
+    allInstitutionIDs: function() {
+      var teamInstitutions = _.map(this.teams, 'institution.id')
+      var adjInstitutions = _.map(this.adjudicators, 'institution.id')
+      return teamInstitutions.concat(adjInstitutions)
     },
     filteredPanelConflicts: function() {
       // Traverse the combined conflicts object and delete those not relevant
@@ -71,24 +76,26 @@ export default {
   methods: {
     deactivatePanelConflicts: function() {
       // Turn off all conflicts that might remain from previous panellists
-      console.debug('deactivatePanelConflicts')
       var self = this
       _.forEach(this.adjudicatorIds, function(id, da) {
-        self.unsendConflict(id, 'adjudicator', 'panel', 'clashes', da)
-        self.unsendConflict(id, 'adjudicator', 'panel', 'histories', da)
+        self.unsendConflict(id, 'adjudicator', 'panel', 'clashes')
+        self.unsendConflict(id, 'adjudicator', 'panel', 'histories')
       })
       _.forEach(this.teamIds, function(id, dt) {
-        self.unsendConflict(id, 'team', 'panel', 'clashes', dt)
-        self.unsendConflict(id, 'team', 'panel', 'histories', dt)
+        self.unsendConflict(id, 'team', 'panel', 'clashes')
+        self.unsendConflict(id, 'team', 'panel', 'histories')
+      })
+      // For institutions just loop through unique instIDs present in the panel
+      _.forEach(_.uniq(this.allInstitutionIDs), function(institutionId) {
+        self.unsendConflict(institutionId, 'institution', 'panel', 'clashes')
       })
     },
     activatePanelConflicts: function() {
       // Turn on all conflicts as set by the filteredPanelConflicts()
-      console.debug('activatePanelConflicts')
       var self = this
       this.forEachConflict(this.filteredPanelConflicts,
         function(conflict, type, clashOrHistory) {
-          self.sendConflict(conflict, type, 'panel', clashOrHistory, null)
+          self.sendConflict(conflict, type, 'panel', clashOrHistory)
         }
       )
     },
@@ -107,15 +114,12 @@ export default {
     checkIfInPanelWithInstitution: function(conflict) {
       // Given a conflict with a certain institution we count up matching
       // teams/adjs and activate if there are more than 0 matches
-
       var teamsMatches = _.filter(this.panelTeams, function(debateTeam) {
         return debateTeam.team.institution.id === conflict.id;
       });
       var adjsMatches = _.filter(this.panelAdjudicators, function(panellist) {
         return panellist.adjudicator.institution.id === conflict.id;
       });
-
-      // console.log('inst matches for ', conflict.id, ' total ', teamsMatches.length + adjsMatches.length)
       if (teamsMatches.length + adjsMatches.length > 1) {
         return true
       } else {

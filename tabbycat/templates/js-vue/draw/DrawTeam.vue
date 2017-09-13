@@ -15,7 +15,8 @@
     </div>
 
     <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
-      <div class="tooltip-inner conflictable hover-histories-1-ago">
+      <div class="tooltip-inner conflictable"
+           :class="'hover-histories-' + hasHistoryConflict + '-ago'">
         {{ hasHistoryConflict }} ago
       </div>
     </div>
