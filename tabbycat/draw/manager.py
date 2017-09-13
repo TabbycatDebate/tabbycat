@@ -8,7 +8,8 @@ from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
 from .models import Debate, DebateTeam
-from .generator import DrawGenerator, DrawUserError, ResultPairing
+from .generator import BPEliminationResultPairing, DrawGenerator, DrawUserError, ResultPairing
+from .generator.utils import ispow2
 
 logger = logging.getLogger(__name__)
 
@@ -204,30 +205,55 @@ class RoundRobinDrawManager(BaseDrawManager):
 
 
 class BaseEliminationDrawManager(BaseDrawManager):
+    result_pairing_class = None
+
     def get_teams(self):
         breaking_teams = self.round.break_category.breakingteam_set_competing.order_by(
                 'break_rank').select_related('team')
         return [bt.team for bt in breaking_teams]
 
-
-class EliminationDrawManager(BaseEliminationDrawManager):
-    generator_type = "elimination"
-
-    def get_generator_type(self):
-        if self.round.prev.is_break_round:
-            return "elimination"
-        else:
-            return "first_elimination"
-
     def get_results(self):
         if self.round.prev is not None and self.round.prev.is_break_round:
             debates = self.round.prev.debate_set_with_prefetches(ordering=('room_rank',), results=True,
                     adjudicators=False, speakers=False, divisions=False, venues=False)
-            pairings = [ResultPairing.from_debate(debate, tournament=self.round.tournament)
+            pairings = [self.result_pairing_class.from_debate(debate, tournament=self.round.tournament)
                         for debate in debates]
             return pairings
         else:
             return None
+
+
+class EliminationDrawManager(BaseEliminationDrawManager):
+    result_pairing_class = ResultPairing
+
+    def get_generator_type(self):
+        if self.round.prev is not None and self.round.prev.is_break_round:
+            return "elimination"
+        else:
+            return "first_elimination"
+
+
+class BPEliminationDrawManager(BaseEliminationDrawManager):
+    result_pairing_class = BPEliminationResultPairing
+
+    def get_generator_type(self):
+        break_size = self.round.break_category.break_size
+        if break_size % 6 == 0 and ispow2(break_size // 6):
+            nprev_rounds = self.round.break_category.round_set.filter(seq__lt=self.round.seq).count()
+            if nprev_rounds == 0:
+                return "partial_elimination"
+            elif nprev_rounds == 1:
+                return "after_partial_elimination"
+            else:
+                return "elimination"
+        elif break_size % 4 == 0 and ispow2(break_size // 4):
+            if self.round.prev is not None and self.round.prev.is_break_round:
+                return "elimination"
+            else:
+                return "first_elimination"
+        else:
+            raise DrawUserError(_("The break size (%(size)d) for this break category was invalid. "
+                "It must be either six times or four times a power of two.") % {'size': break_size})
 
 
 DRAW_MANAGER_CLASSES = {
@@ -239,4 +265,5 @@ DRAW_MANAGER_CLASSES = {
     ('bp', Round.DRAW_RANDOM): RandomDrawManager,
     ('bp', Round.DRAW_MANUAL): ManualDrawManager,
     ('bp', Round.DRAW_POWERPAIRED): PowerPairedDrawManager,
+    ('bp', Round.DRAW_ELIMINATION): BPEliminationDrawManager,
 }

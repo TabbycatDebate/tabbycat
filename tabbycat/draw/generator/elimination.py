@@ -6,7 +6,7 @@ from django.utils.translation import ugettext as _
 
 from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
 from .pairing import Pairing
-from .utils import partial_break_round_split
+from .utils import ispow2, partial_break_round_split
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ class FirstEliminationDrawGenerator(BaseEliminationDrawGenerator):
         return self._make_pairings(teams, bypassing)
 
 
-class EliminationDrawGenerator(BaseEliminationDrawGenerator):
+class SubsequentEliminationDrawGenerator(BaseEliminationDrawGenerator):
     """Class for second or subsequent elimination round.
     For this draw type, 'teams' should be the teams that automatically
     advanced to this round (i.e., bypassed the previous break round).
@@ -81,7 +81,7 @@ class EliminationDrawGenerator(BaseEliminationDrawGenerator):
         teams = self.teams[:bypassing] + winners
         logger.info("%d teams bypassed the previous round and %d teams won the last round" % (bypassing, len(winners)))
 
-        if len(teams) & (len(teams) - 1) != 0:
+        if not ispow2(len(teams)):
             raise DrawUserError(_("The number of teams (%d) in this round is not a power of two.") % len(teams))
 
         return self._make_pairings(teams, 0)

@@ -1,12 +1,14 @@
 from django.utils.translation import ugettext_lazy as _
 
 from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError, ManualDrawGenerator
-from .pairing import ResultPairing
-from .elimination import FirstEliminationDrawGenerator, EliminationDrawGenerator
+from .pairing import ResultPairing, BPEliminationResultPairing
+from .elimination import FirstEliminationDrawGenerator, SubsequentEliminationDrawGenerator
 from .powerpair import PowerPairedDrawGenerator, PowerPairedWithAllocatedSidesDrawGenerator
 from .random import RandomBPDrawGenerator, RandomDrawGenerator, RandomWithAllocatedSidesDrawGenerator
 from .roundrobin import RoundRobinDrawGenerator
 from .bphungarian import BPHungarianDrawGenerator
+from .bpelimination import (PartialBPEliminationDrawGenerator, AfterPartialBPEliminationDrawGenerator,
+    FirstBPEliminationDrawGenerator, SubsequentBPEliminationDrawGenerator)
 
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
@@ -51,7 +53,7 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
         elif draw_type == "first_elimination":
             klass = FirstEliminationDrawGenerator
         elif draw_type == "elimination":
-            klass = EliminationDrawGenerator
+            klass = SubsequentEliminationDrawGenerator
         else:
             raise ValueError("Unrecognised draw type for two-team draw: {}".format(draw_type))
 
@@ -60,6 +62,14 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
             klass = RandomBPDrawGenerator
         elif draw_type == "power_paired":
             klass = BPHungarianDrawGenerator
+        elif draw_type == "partial_elimination":
+            klass = PartialBPEliminationDrawGenerator
+        elif draw_type == "after_partial_elimination":
+            klass = AfterPartialBPEliminationDrawGenerator
+        elif draw_type == "first_elimination":
+            klass = FirstBPEliminationDrawGenerator
+        elif draw_type == "elimination":
+            klass = SubsequentBPEliminationDrawGenerator
         else:
             raise ValueError("Unrecognised draw type for BP draw: {}".format(draw_type))
 

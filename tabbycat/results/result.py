@@ -79,7 +79,10 @@ def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     elif ballots_per_debate == 'per-debate' and teams_in_debate == 'two':
         return ConsensusDebateResult(ballotsub, *args, **kwargs)
     elif ballots_per_debate == 'per-debate' and teams_in_debate == 'bp':
-        return BPDebateResult(ballotsub, *args, **kwargs)
+        if ballotsub.debate.round.is_break_round:
+            return BPEliminationDebateResult(ballotsub, *args, **kwargs)
+        else:
+            return BPDebateResult(ballotsub, *args, **kwargs)
     else:
         raise ValueError("Invalid combination for 'ballots_per_debate' and 'teams_in_debate' preferences: %s, %s" %
                 (ballots_per_debate, teams_in_debate))
@@ -852,6 +855,13 @@ class BPEliminationDebateResult(BaseDebateResult):
         if len(sides) != 2:
             raise ValueError("Exactly two sides should be advancing, found: %s" % sides)
         self.advancing = sides
+
+    def advancing_teams(self):
+        """Returns the teams advancing from this debate. Doesn't check that the
+        number of advancing teams is exactly two, which might be the case if
+        this result was loaded from the database or if the result is incomplete.
+        If that property is important, callers should check it themselves."""
+        return [self.debateteams[side].team for side in self.advancing]
 
     # --------------------------------------------------------------------------
     # Team score fields
