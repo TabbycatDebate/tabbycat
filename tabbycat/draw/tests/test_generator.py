@@ -4,7 +4,7 @@ import copy
 from collections import OrderedDict
 
 from .. import DrawFatalError, DrawGenerator, DrawUserError
-from ..generator.pairing import Pairing
+from ..generator.pairing import Pairing, ResultPairing
 from ..generator.utils import partial_break_round_split
 from .utils import TestDivision, TestTeam
 
@@ -836,7 +836,7 @@ class TestEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
 
         pairings = list()
         for i, (teams, winner) in enumerate(args, start=start_rank):
-            pairing = Pairing(_p(teams), 0, i, winner=_t(winner))
+            pairing = ResultPairing(_p(teams), 0, i, winner=_t(winner))
             pairings.append(pairing)
         return pairings
 
