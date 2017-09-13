@@ -34,6 +34,18 @@ export default {
   components: { DroppableGeneric, DraggableAdjudicator },
   props: ['panelAdjudicators', 'adjPositions', 'panelTeams', 'debateId',
           'percentiles', 'locked', ],
+  computed: {
+    adjudicatorIds: function() {
+      return _.map(this.panelAdjudicators, function(da) {
+        return da.adjudicator.id
+      })
+    },
+    teamIds: function() {
+      return _.map(this.panelTeams, function(dt) {
+        return dt.team.id
+      })
+    },
+  },
   methods: {
     getAdjudicatorsByPosition: function(panelAdjudicators, position) {
       return _.filter(panelAdjudicators, { 'position': position })

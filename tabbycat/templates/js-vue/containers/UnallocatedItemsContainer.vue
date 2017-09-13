@@ -11,7 +11,8 @@
       <i data-feather="menu" class="align-self-center mx-auto"></i>
     </section>
 
-    <div class="vue-droppable justify-content-center d-flex unallocated-items pt-4 p-2"
+    <div class="vue-droppable unallocated-items pt-4 p-2
+                justify-content-center d-flex flex-wrap"
          :class="{ 'vue-is-drag-enter': isDroppable }">
 
       <slot><!-- Container sets unallocated items here --></slot>
