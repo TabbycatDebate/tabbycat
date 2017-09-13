@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext as _
+
 from draw.models import Debate
 from participants.models import Team
 from utils.misc import reverse_tournament
@@ -10,17 +12,17 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
     def get_status_meta(self, debate):
         if any(team.type == Team.TYPE_BYE for team in debate.teams):
-            return "fast-forward", "", 5, "Bye Debate"
+            return "fast-forward", "", 5, _("Bye Debate")
         elif debate.result_status == Debate.STATUS_NONE and not debate.ballot_in:
-            return "x", "text-danger", 0, "No Ballot"
+            return "x", "text-danger", 0, _("No Ballot")
         elif debate.result_status == Debate.STATUS_NONE and debate.ballot_in:
-            return "inbox", "text-warning", 1, "Ballot is In"
+            return "inbox", "text-warning", 1, _("Ballot is In")
         elif debate.result_status == Debate.STATUS_DRAFT:
-            return "sliders", "text-info", 2, "Ballot is Unconfirmed"
+            return "sliders", "text-info", 2, _("Ballot is Unconfirmed")
         elif debate.result_status == Debate.STATUS_CONFIRMED:
-            return "check", "text-success", 3, "Ballot is Confirmed"
+            return "check", "text-success", 3, _("Ballot is Confirmed")
         elif debate.result_status == Debate.STATUS_POSTPONED:
-            return "pause", "", 4, "Debate was Postponed"
+            return "pause", "", 4, _("Debate was Postponed")
         else:
             raise ValueError('Debate has no discernable status')
 
@@ -28,16 +30,20 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
         status_header = {
             'key': key,
-            'tooltip': "Status of this debate's ballot",
+            'tooltip': _("Status of this debate's ballot"),
             'icon': "crosshair",
         }
-        status_cell = [{
-            'icon': self.get_status_meta(debate)[0],
-            'class': self.get_status_meta(debate)[1],
-            'sort': self.get_status_meta(debate)[2],
-            'tooltip': self.get_status_meta(debate)[3]
-        } for debate in debates]
-        self.add_column(status_header, status_cell)
+        status_cells = []
+        for debate in debates:
+            meta = self.get_status_meta(debate)
+            cell = {
+                'icon': meta[0],
+                'class': meta[1],
+                'sort': meta[2],
+                'tooltip': meta[3]
+            }
+            status_cells.append(cell)
+        self.add_column(status_header, status_cells)
 
     def get_ballot_text(self, debate):
         ballotsubs_info = " "
@@ -55,21 +61,24 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             ballotsubs_info += "<a href=" + link + " class='text-nowrap'>"
 
             if ballotsub.confirmed:
-                edit_status = "Re-edit v" + str(ballotsub.version)
+                edit_status = _("Re-edit v%(version)d") % {'version': ballotsub.version}
             elif self.admin:
-                edit_status = "Edit v" + str(ballotsub.version)
+                edit_status = _("Edit v%(version)d") % {'version': ballotsub.version}
             else:
-                edit_status = "Review v" + str(ballotsub.version)
+                edit_status = _("Review v%(version)d") % {'version': ballotsub.version}
 
             if ballotsub.discarded:
-                ballotsubs_info += "<strike class='text-muted'>" + edit_status + "</strike></a><small> discarded; "
+                ballotsubs_info += "<strike class='text-muted'>" + edit_status + "</strike></a>"
+                ballotsubs_info += "<small class='d-block text-nowrap'>"
+                # Translators: This comes after a link to edit the ballot and before the line indicating its author. Please mind the leading and trailing spaces.
+                ballotsubs_info += _(" discarded; ")
             else:
                 ballotsubs_info += edit_status + "</a><small class='d-block text-nowrap'>"
 
             if ballotsub.submitter_type == ballotsub.SUBMITTER_TABROOM:
-                ballotsubs_info += " added by " + ballotsub.submitter.username
+                ballotsubs_info += _(" added by %(user)s") % {'user': ballotsub.submitter.username}
             elif ballotsub.submitter_type == ballotsub.SUBMITTER_PUBLIC:
-                ballotsubs_info += " a public submission by " + ballotsub.ip_address
+                ballotsubs_info += _(" a public submission from %(ip_address)s") % {'ip_address': ballotsub.ip_address}
 
             ballotsubs_info += "</small>"
 
@@ -77,7 +86,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             link = reverse_tournament('results-ballotset-new',
                                       self.tournament,
                                       kwargs={'debate_id': debate.id})
-            ballotsubs_info += "<a href=" + link + ">Enter Ballot</a>"
+            ballotsubs_info += "<a href=" + link + ">" + _("Enter Ballot")  + "</a>"
 
         return ballotsubs_info
 
@@ -88,12 +97,12 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         self.add_column(entry_header, entry_cells)
 
         if self.tournament.pref('enable_postponements'):
-            postpones_header = {'key': 'Postpone'}
+            postpones_header = {'key': _("Postpone")}
             postpones_cells = []
             for debate in debates:
                 if debate.result_status == Debate.STATUS_POSTPONED:
-                    text = '<a href="#" class="unpostpone-link" debate-id="{:d}">Unpostpone</a>'
+                    text = '<a href="#" class="unpostpone-link" debate-id="{:d}">' + _("Unpostpone") + '</a>'
                 else:
-                    text = '<a href="#" class="postpone-link" debate-id="{:d}">Postpone</a>'
+                    text = '<a href="#" class="postpone-link" debate-id="{:d}">' + _("Postpone") + '</a>'
                 postpones_cells.append(text.format(debate.id))
             self.add_column(postpones_header, postpones_cells)
