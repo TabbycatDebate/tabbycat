@@ -18,20 +18,20 @@ export default {
     }
   },
   mounted: function () {
-    // Watch for issues conflect events issued on the global event hub
-    // These looklike 'set-conflicts-for-team-99 (histories, teams, true)
-    var conflictCode = 'set-conflicts-for-' + this.conflictableType + '-' + this.conflictable.id
+
+    // These looklike 'set-conflicts-for-team (teamID, hoverOrPanel, clashOrHistory, type, state)
+    var conflictCode = 'set-conflicts-for-' + this.conflictableType
     this.$eventHub.$on(conflictCode, this.setConflicts)
 
     // Turning off targetted panel conflicts
-    var eventCode = 'unset-conflicts-for-' + this.conflictableType + '-' + this.conflictable.id
+    var eventCode = 'unset-conflicts-for-' + this.conflictableType
     this.$eventHub.$on(eventCode, this.unsetConflicts)
 
     // Institutional conflicts are many to many; need to subscribe to all
     var self = this
     var institutionConflicts = this.conflictable.conflicts.clashes.institution
     _.forEach(institutionConflicts, function(conflict) {
-      var conflictCode = 'conflicts-for-institution-' + conflict.id
+      var conflictCode = 'conflicts-for-institution'
       self.$eventHub.$on('set-' + conflictCode, self.setConflicts)
       self.$eventHub.$on('unset-' + conflictCode, self.unsetConflicts)
     })
@@ -94,8 +94,11 @@ export default {
         }
       )
     },
-    setConflicts: function(hoverOrPanel, clashOrHistory, type, state) {
+    setConflicts: function(id, hoverOrPanel, clashOrHistory, type, state) {
       // Receive a conflict message from elsewhere and activate the conflict
+      if (id !== this.conflictable.id) {
+        return // Conflict doesn't match what is broadcast
+      }
       // if (conflictType === 'institution' && hoverOrPanel === 'hover') {
       //   if (originator === this.conflictable) {
       //     return // Institutional conflicts shouldn't self-conflict
@@ -104,24 +107,25 @@ export default {
       if (clashOrHistory === 'histories') {
         type = 'histories' // Histories have  seperate type
       }
-      if (this.debugMode) {
-        console.debug('\t\tConflictable setConflicts() of type',
-                      hoverOrPanel, clashOrHistory, 'for ', this.type,
-                      this.conflictable.id, 'as', state)
+      if (this.debugMode && type !== 'histories') {
+        console.debug('\t\tConflictable setConflicts()\t of hoverOrPanel:',
+                      hoverOrPanel, '\t\t type:', type, '\t\tid:',
+                      this.conflictable.id, '\tas', state)
       }
       this.isConflicted[hoverOrPanel][type] = state
     },
-    unsetConflicts: function(hoverOrPanel, clashOrHistory, type, state) {
+    unsetConflicts: function(id, hoverOrPanel, clashOrHistory, type, state) {
       // Receive a conflict message from elsewhere and deactivate the conflict
-      // When a unhovering over something it broadcasts to all objects
-      // This is not very efficient but prevents state errors from drag/drops
+      if (id !== this.conflictable.id) {
+        return // Conflict doesn't match what is broadcast
+      }
       if (clashOrHistory === 'histories') {
         type = 'histories' // Histories have  seperate type
       }
-      if (this.debugMode) {
-        console.debug('\t\tConflictable unsetConflicts() of type',
-                      hoverOrPanel, clashOrHistory, 'for', this.type,
-                      this.conflictable.id, 'as', state)
+      if (this.debugMode && type !== 'histories') {
+        console.debug('\t\tConflictable unsetConflicts()\t of hoverOrPanel:',
+                      hoverOrPanel, '\t\t type:', type, '\t\tid:',
+                      this.conflictable.id, '\tas', state)
       }
       this.isConflicted[hoverOrPanel][type] = state
     }

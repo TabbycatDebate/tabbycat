@@ -115,7 +115,7 @@ export default {
         return panellist.adjudicator.institution.id === conflict.id;
       });
 
-      console.log('inst matches for ', conflict.id, ' total ', teamsMatches.length + adjsMatches.length)
+      // console.log('inst matches for ', conflict.id, ' total ', teamsMatches.length + adjsMatches.length)
       if (teamsMatches.length + adjsMatches.length > 1) {
         return true
       } else {
