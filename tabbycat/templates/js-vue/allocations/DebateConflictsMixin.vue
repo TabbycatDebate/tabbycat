@@ -7,7 +7,7 @@ export default {
   // acting across the entire adj/team pool (for hovers) and instead only
   // focusing it on conflicts within a debate panel / debate teams
   mixins: [ConflictUtilitiesMixin],
-  data: function () { return { debugMode: true }},
+  data: function () { return { debugMode: false }},
   watch: {
     filteredPanelConflicts: function() {
       // Re-calculate all conflicts when the master conflicts dictionary changes
