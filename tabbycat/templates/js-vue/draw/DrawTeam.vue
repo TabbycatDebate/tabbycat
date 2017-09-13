@@ -32,7 +32,7 @@ import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
   data: function () {
-    return { debugMode: true }
+    return { debugMode: false }
   },
   mixins: [SlideOverSubjectMixin, SlideOverTeamMixin,
            HighlightableMixin, ConflictableMixin],

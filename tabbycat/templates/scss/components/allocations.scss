@@ -80,8 +80,9 @@
 
 .flex-cell {
   min-width: 30px;
-  padding-left: $table-cell-padding - 2;
-  padding-right: $table-cell-padding - 2;
+  border: 1px solid #ccc;
+  padding-right: 0 !important;
+  box-sizing:  border-box;
 }
 
 .cell-padding-helper {

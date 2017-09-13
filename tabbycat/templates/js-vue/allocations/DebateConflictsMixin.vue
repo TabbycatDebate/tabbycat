@@ -40,8 +40,8 @@ export default {
       })
       _.forEach(this.teams, function(team) {
         // Remove any institutional conflicts coming from teams; only via adjs
-        var teamConflicts = _.clone(team.conflicts.clashes)
-        delete teamConflicts.institution
+        var teamConflicts = _.clone(team.conflicts)
+        delete teamConflicts.clashes.institution
         if (!_.isEmpty(teamConflicts)) {
           allConflicts.push(teamConflicts)
         }
