@@ -9,7 +9,8 @@ from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
-from .result import BPDebateResult, ConsensusDebateResult, ForfeitDebateResult, VotingDebateResult
+from .result import (BPDebateResult, BPEliminationDebateResult, ConsensusDebateResult,
+                     ForfeitDebateResult, VotingDebateResult)
 from .utils import side_and_position_names
 
 logger = logging.getLogger(__name__)
@@ -771,3 +772,27 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                 ),
             }
             yield sheet_dict
+
+
+class BPEliminationResultForm(forms.Form):
+
+    def __init__(self, ballotsub, *args, **kwargs):
+        super().__init__(ballotsub, *args, **kwargs)
+
+        side_choices = [(side, self._side_name(side)) for side in self.tournament.sides]
+        self.fields['advancing'] = forms.MultipleChoiceField(choices=side_choices,
+                widget=forms.CheckboxSelectMultiple)
+
+        result = BPEliminationDebateResult(self.ballotsub)
+        self.initial['advancing'] = result.advancing_sides()
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if len(cleaned_data.get('advancing', [])) != 2:
+            self.add_error('advancing', forms.ValidationError(
+                _("There must be exactly two teams advancing."),
+                code='num_advancing'
+            ))
+
+        return cleaned_data

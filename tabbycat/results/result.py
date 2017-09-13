@@ -856,6 +856,9 @@ class BPEliminationDebateResult(BaseDebateResult):
             raise ValueError("Exactly two sides should be advancing, found: %s" % sides)
         self.advancing = sides
 
+    def advancing_sides(self):
+        return self.advancing
+
     def advancing_teams(self):
         """Returns the teams advancing from this debate. Doesn't check that the
         number of advancing teams is exactly two, which might be the case if
