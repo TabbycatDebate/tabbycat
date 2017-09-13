@@ -28,27 +28,22 @@ export default {
   },
   computed: {
     teams: function() {
-      return _.map(this.panelTeams, function(dt) {
-        return dt.team
-      })
+      return _.map(this.panelTeams, function(dt) { return dt.team })
     },
     adjudicators: function() {
-      return _.map(this.panelAdjudicators, function(da) {
-        return da.adjudicator
-      })
+      return _.map(this.panelAdjudicators, function(da) { return da.adjudicator })
     },
     allPanelConflicts: function() {
-      // An array of conflicts gathered from each team or adjudicator
-      var allTeamsAndAdjs = this.adjudicators.concat(this.teams)
-      var allConflicts = _.mapValues(allTeamsAndAdjs, function(conflictable) {
-        return conflictable.conflicts
-      });
+      // Create an array of conflicts gathered from each team or adjudicator
+      var allConflicts = _.map(this.adjudicators, function(adj) {
+        return adj.conflicts
+      })
+      _.forEach(this.teams, function(team) {
+        // Remove any institutional conflicts coming from teams; only via adjs
+        delete team.conflicts.clashes.institution
+        allConflicts.push(team.conflicts)
+      })
       return allConflicts
-    },
-    allInstitutionIDs: function() {
-      var teamInstitutions = _.map(this.teams, 'institution.id')
-      var adjInstitutions = _.map(this.adjudicators, 'institution.id')
-      return teamInstitutions.concat(adjInstitutions)
     },
     filteredPanelConflicts: function() {
       // Traverse the combined conflicts object and delete those not relevant
@@ -78,16 +73,14 @@ export default {
       // Turn off all conflicts that might remain from previous panellists
       var self = this
       _.forEach(this.adjudicatorIds, function(id, da) {
-        self.unsendConflict(id, 'adjudicator', 'panel', 'clashes')
-        self.unsendConflict(id, 'adjudicator', 'panel', 'histories')
+        self.unsendConflict(id, 'adjudicator', 'adjudicator', 'panel', 'clashes')
+        self.unsendConflict(id, 'adjudicator', 'adjudicator', 'panel', 'histories')
+        self.unsendConflict(id, 'institution', 'adjudicator', 'panel', 'clashes')
       })
       _.forEach(this.teamIds, function(id, dt) {
-        self.unsendConflict(id, 'team', 'panel', 'clashes')
-        self.unsendConflict(id, 'team', 'panel', 'histories')
-      })
-      // For institutions just loop through unique instIDs present in the panel
-      _.forEach(_.uniq(this.allInstitutionIDs), function(institutionId) {
-        self.unsendConflict(institutionId, 'institution', 'panel', 'clashes')
+        self.unsendConflict(id, 'team', 'team', 'panel', 'clashes')
+        self.unsendConflict(id, 'team', 'team', 'panel', 'histories')
+        self.unsendConflict(id, 'institution', 'team', 'panel', 'clashes')
       })
     },
     activatePanelConflicts: function() {
@@ -95,15 +88,50 @@ export default {
       var self = this
       this.forEachConflict(this.filteredPanelConflicts,
         function(conflict, type, clashOrHistory) {
-          self.sendConflict(conflict, type, 'panel', clashOrHistory)
+          if (type === 'institution') {
+            self.activatePanelWithInstitutionalConflict(conflict)
+          } else {
+            self.sendConflict(conflict, type, type, 'panel', clashOrHistory)
+          }
         }
       )
+    },
+    activatePanelWithInstitutionalConflict: function(conflict) {
+      // For institutional conflicts within a panel we want to send them
+      // out in a targetted fashion (unlike for say hover-overs where we
+      // can do a global broadcast by institutional ID); that is to say we
+      // need to find and target just the teams/adjs who need them and then
+      // target those items specifically
+
+      var teamsMatches = _.filter(this.teams, function(team) {
+        return team.institution.id === conflict.id;
+      });
+
+      _.forEach(this.teamsMatches, function(team) {
+        if (team.institution.id === conflict.id) {
+          console.log('team match')
+          self.sendConflict(team.id, 'team', 'institutional', 'panel', 'clashes')
+        }
+      })
+
+      var adjsMatches = _.filter(this.adjudicators, function(adj) {
+        return adj.institution.id === conflict.id;
+      });
+
+      // _.forEach(this.adjudicators, function(adjudicator) {
+      //   if (adjudicator.institution.id === conflict.id) {
+      //     console.log('team match')
+      //     //self.sendConflict(team.id, 'team', 'institutional', 'panel', 'clashes')
+      //   }
+      // })
+
+
     },
     checkIfInPanel: function(conflict, type, clashOrHistory) {
       // For a given conflict from a team/adj check if it can actually apply
       // to the panel
       if (type === 'institution') {
-        return this.checkIfInPanelWithInstitution(conflict)
+        return true // These are calculated later
       } else if (type === 'team' && _.includes(this.teamIds, conflict.id)) {
         return true // Team not present
       } else if (type === 'adjudicator' && _.includes(this.adjudicatorIds, conflict.id)) {
@@ -111,21 +139,6 @@ export default {
       }
       return false
     },
-    checkIfInPanelWithInstitution: function(conflict) {
-      // Given a conflict with a certain institution we count up matching
-      // teams/adjs and activate if there are more than 0 matches
-      var teamsMatches = _.filter(this.panelTeams, function(debateTeam) {
-        return debateTeam.team.institution.id === conflict.id;
-      });
-      var adjsMatches = _.filter(this.panelAdjudicators, function(panellist) {
-        return panellist.adjudicator.institution.id === conflict.id;
-      });
-      if (teamsMatches.length + adjsMatches.length > 1) {
-        return true
-      } else {
-        return false
-      }
-    }
   },
 }
 </script>

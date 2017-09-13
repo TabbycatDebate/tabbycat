@@ -4,28 +4,24 @@ import _ from 'lodash'
 export default {
 
   methods: {
-    sendConflict: function(conflict, type, hoverOrPanel, clashOrHistory) {
+    sendConflict: function(conflict, eventType, conflictType, hoverOrPanel, clashOrHistory) {
       // Issue a Vue message to activate a given conflict type
-      var eventCode = 'set-conflicts-for-' + type
+      var eventCode = 'set-conflicts-for-' + eventType
 
       var state = true
       if (clashOrHistory === 'histories') {
         var state = conflict.ago // Override; histories use int values
       }
 
-      this.debugLog("_ " + eventCode, 1, conflict.id,
-                           hoverOrPanel, clashOrHistory, type, state)
-      this.$eventHub.$emit(eventCode, conflict.id,
-                           hoverOrPanel, clashOrHistory, type, state)
+      this.debugLog(       eventCode, 1, conflict.id, hoverOrPanel, clashOrHistory, eventType, conflictType, state)
+      this.$eventHub.$emit(eventCode, conflict.id, hoverOrPanel, clashOrHistory, eventType, conflictType, state)
     },
-    unsendConflict: function(id, type, hoverOrPanel, clashOrHistory) {
+    unsendConflict: function(id, eventType, conflictType, hoverOrPanel, clashOrHistory) {
       // Issue a Vue message to deactivate a given conflict type
-      var eventCode = 'unset-conflicts-for-' + type
+      var eventCode = 'unset-conflicts-for-' + eventType
 
-      this.debugLog(eventCode, 1, id,
-                    hoverOrPanel, clashOrHistory, type, false)
-      this.$eventHub.$emit(eventCode, id, hoverOrPanel, clashOrHistory,
-                                      type, false)
+      this.debugLog(       eventCode, 1, id, hoverOrPanel, clashOrHistory, eventType, conflictType, false)
+      this.$eventHub.$emit(eventCode, id, hoverOrPanel, clashOrHistory, eventType, conflictType, false)
     },
     forEachConflict: function(conflictsList, callBack) {
       // Traverses a list of conflicts and calls the provided function on each
@@ -44,16 +40,18 @@ export default {
       })
     },
     debugLog: function(title, tabLevel, id,
-                       hoverOrPanel, clashOrHistory, type, state) {
+                       hoverOrPanel, clashOrHistory, eventType, conflictType, state) {
       if (_.isUndefined(this.conflictable)) {
         var source = "panel"
       } else {
         var source = this.conflictable.id + " " + this.conflictableType
       }
-      console.debug("\t".repeat(tabLevel) + title,
-                    '\t for', source,
-                    '\t as active vs', type, ' #', id,
-                    '\t', hoverOrPanel, '\t', clashOrHistory)
+      var spacer = "                      "
+      console.debug(("\t".repeat(tabLevel) + title + spacer).substring(0, 35),
+        ('to ' + conflictType + ' #' + id + spacer).substring(0, 25),
+        ('via ' + hoverOrPanel + '' + spacer).substring(0, 40),
+        (' as ' + state + ' for ' + clashOrHistory + spacer).substring(0, 35)
+      )
     },
   }
 
