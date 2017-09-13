@@ -71,18 +71,18 @@
 
                 <div class="list-group-item">
                   <div class="d-flex justify-content-end">
-                    <span class="mr-auto">{% trans "Not breaking" %}</span>
-                    <strong>{{ category.nonbreaking }}/{{ teams_in_tournament }}</strong>
-                  </div>
-                  {% include "components/progress-bar.html" with value=category.nonbreaking type="pimary" %}
-                </div>
-
-                <div class="list-group-item">
-                  <div class="d-flex justify-content-end">
                     <span class="mr-auto">{% trans "Excluded" %}</span>
                     <strong>{{ category.excluded }}/{{ teams_in_tournament }}</strong>
                   </div>
                   {% include "components/progress-bar.html" with value=category.excluded type="warning" %}
+                </div>
+
+                <div class="list-group-item">
+                  <div class="d-flex justify-content-end">
+                    <span class="mr-auto">{% trans "Not breaking" %}</span>
+                    <strong>{{ category.nonbreaking }}/{{ teams_in_tournament }}</strong>
+                  </div>
+                  {% include "components/progress-bar.html" with value=category.nonbreaking type="primary" %}
                 </div>
 
               {% endwith %}
