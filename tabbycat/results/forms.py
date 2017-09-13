@@ -4,7 +4,8 @@ from itertools import product
 from collections import Counter
 
 from django import forms
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
@@ -117,7 +118,49 @@ class ReplyScoreField(BaseScoreField):
 # Result/ballot forms
 # ==============================================================================
 
-class BaseBallotSetForm(forms.Form):
+class BaseResultForm(forms.Form):
+    """Base class for forms that report results. Contains fields and methods
+    common to absolutely everything (which isn't very much)."""
+
+    confirmed = forms.BooleanField(required=False)
+    discarded = forms.BooleanField(required=False)
+    debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
+
+    def __init__(self, ballotsub, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ballotsub = ballotsub
+        self.debate = ballotsub.debate
+        self.tournament = self.debate.round.tournament
+
+        self.initial.update({
+            'debate_result_status': self.debate.result_status,
+            'confirmed': self.ballotsub.confirmed,
+            'discarded': self.ballotsub.discarded
+        })
+
+    def _side_name(self, side):
+        return get_side_name(self.tournament, side, 'full')
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get('discarded') and cleaned_data.get('confirmed'):
+            for field in ('discarded', 'confirmed'):
+                self.add_error(field, forms.ValidationError(
+                    _("The ballot set can't be both discarded and confirmed."),
+                    code='discard_confirm'
+                ))
+
+        if cleaned_data.get('debate_result_status') == Debate.STATUS_CONFIRMED and not cleaned_data.get('confirmed') and self.debate.confirmed_ballot is None:
+            self.add_error('debate_result_status', forms.ValidationError(
+                _("The debate status can't be confirmed unless one of the ballot sets is confirmed."),
+                code='status_confirm'
+            ))
+
+        return cleaned_data
+
+
+class BaseBallotSetForm(BaseResultForm):
     """Form for data entry for a single ballot set. Responsible for presenting
     the part that looks like a ballot, i.e. speaker names and scores for each
     adjudicator. Not responsible for controls that submit the form or anything
@@ -130,18 +173,13 @@ class BaseBallotSetForm(forms.Form):
     (voting) or a single ballot for the debate (consensus), we use subclasses.
     """
 
-    confirmed = forms.BooleanField(required=False)
-    discarded = forms.BooleanField(required=False)
-    debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
-
     result_class = None
 
     def __init__(self, ballotsub, *args, **kwargs):
-        self.ballotsub = ballotsub
-        self.debate = ballotsub.debate
+        super().__init__(ballotsub, *args, **kwargs)
+
         self.adjudicators = list(self.debate.adjudicators.voting())
         self.motions = self.debate.round.motion_set
-        self.tournament = self.debate.round.tournament
 
         self.using_motions = self.tournament.pref('enable_motions')
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
@@ -154,8 +192,6 @@ class BaseBallotSetForm(forms.Form):
 
         self.has_tournament_password = kwargs.pop('password', False) and self.tournament.pref('public_use_password')
 
-        super().__init__(*args, **kwargs)
-
         self.sides = self.tournament.sides
         self.positions = self.tournament.positions
         self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
@@ -163,14 +199,11 @@ class BaseBallotSetForm(forms.Form):
 
         self.create_fields()
         self.set_tab_indices()
-        self.initial = self.initial_data()
+        self.initial.update(self.initial_data())
 
     # --------------------------------------------------------------------------
     # Field names and field convenience functions
     # --------------------------------------------------------------------------
-
-    def _side_name(self, side):
-        return get_side_name(self.tournament, side, 'full')
 
     @staticmethod
     def _fieldname_motion_veto(side):
@@ -247,7 +280,7 @@ class BaseBallotSetForm(forms.Form):
 
             # 4(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
-                label="Mark as a duplicate speech")
+                label=_("Mark as a duplicate speech"))
 
         self.create_score_fields()
 
@@ -259,9 +292,7 @@ class BaseBallotSetForm(forms.Form):
     def initial_data(self):
         """Generates dictionary of initial form data."""
 
-        initial = {'debate_result_status': self.debate.result_status,
-                   'confirmed': self.ballotsub.confirmed,
-                   'discarded': self.ballotsub.discarded}
+        initial = {}
 
         # When bypassing confirmations we just pre-check
         if self.bypassing_checks:
@@ -368,19 +399,6 @@ class BaseBallotSetForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-
-        if cleaned_data.get('discarded') and cleaned_data.get('confirmed'):
-            for field in ('discarded', 'confirmed'):
-                self.add_error(field, forms.ValidationError(
-                    _("The ballot set can't be both discarded and confirmed."),
-                    code='discard_confirm'
-                ))
-
-        if cleaned_data.get('debate_result_status') == Debate.STATUS_CONFIRMED and not cleaned_data.get('confirmed') and self.debate.confirmed_ballot is None:
-            self.add_error('debate_result_status', forms.ValidationError(
-                _("The debate status can't be confirmed unless one of the ballot sets is confirmed."),
-                code='status_confirm'
-            ))
 
         if not cleaned_data.get('forfeit'):
             self.clean_speakers(cleaned_data)
