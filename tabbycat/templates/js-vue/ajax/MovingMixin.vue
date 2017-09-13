@@ -22,23 +22,26 @@ export default {
       return niceName
     },
     saveMove(movedItemId, fromDebateId, toDebateId, toPosition=null) {
-      // We clone each object so we can roll back to the originals if it fails
-      var toDebate = this.debatesById[toDebateId]
+
       var fromDebate = this.debatesById[fromDebateId]
       if (_.isUndefined(fromDebate)) { // Undefined if coming from unused
         fromDebate = 'unused'
       }
+      var toDebate = this.debatesById[toDebateId]
       if (_.isUndefined(toDebate)) { // Undefined if going to unused
         toDebate = 'unused'
       }
+
       // We clone each object so we can roll back to the originals if it fails
       var clonedToDebate = _.cloneDeep(toDebate)
+
       if (toDebate.id === fromDebate.id) {
         // For in-panel swaps we want them referring to the same variable
         var clonedFromDebate = clonedToDebate
       } else {
         var clonedFromDebate = _.cloneDeep(fromDebate)
       }
+
       this.saveMoveForType(movedItemId, clonedFromDebate, clonedToDebate, toPosition)
     },
     debateCheckIfShouldSave(debate) {

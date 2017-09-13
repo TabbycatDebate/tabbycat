@@ -128,5 +128,6 @@ $footer-height: 175px;
 //------------------------------------------------------------------------------
 
 $z_1: 2030; // Mostly modals
-$z_2: 1530; // Hover elements like tooltips or the adj info sliderover display
-$z_3: 1030; // Fixed floating elements like unallocated spots or fixed headers
+$z_2: 1050; // Hover elements like tooltips or the adj info sliderover display
+// Note that boostrap nav items are 1030; so these should be below:
+$z_3: 730; // Fixed floating elements like unallocated spots or fixed headers
