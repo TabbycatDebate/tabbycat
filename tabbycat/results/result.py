@@ -163,13 +163,7 @@ class BaseDebateResult:
         set prior to calling this function. Subclasses should extend this
         method as necessary.
         """
-        try:
-            self.debateteams = dict.fromkeys(self.sides, None)
-        except AttributeError:
-            if not hasattr(self, 'sides'):
-                raise AttributeError("The DebateResult instance must have a sides attribute before init_blank_buffer() is called.")
-            else:
-                raise
+        self.debateteams = dict.fromkeys(self.sides, None)
 
     def assert_loaded(self):
         """Raise an AssertionError if there is some problem with the data
@@ -298,14 +292,8 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
 
     def init_blank_buffer(self):
         super().init_blank_buffer()
-        try:
-            self.speakers = {side: dict.fromkeys(self.positions, None) for side in self.sides}
-            self.ghosts = {side: dict.fromkeys(self.positions, False) for side in self.sides}
-        except AttributeError:
-            if not hasattr(self, 'positions'):
-                raise AttributeError("The DebateResult instance must a positions attribute before init_blank_buffer() is called.")
-            else:
-                raise
+        self.speakers = {side: dict.fromkeys(self.positions, None) for side in self.sides}
+        self.ghosts = {side: dict.fromkeys(self.positions, False) for side in self.sides}
 
     def assert_loaded(self):
         super().assert_loaded()
@@ -691,7 +679,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             yield sheet_dict
 
 
-class BaseConsensusDebateResult(BaseDebateResultWithSpeakers):
+class BaseConsensusDebateResultWithSpeakers(BaseDebateResultWithSpeakers):
     """Basically a wrapper for a single scoresheet. Knows nothing about
     adjudicators."""
 
@@ -775,7 +763,8 @@ class BaseConsensusDebateResult(BaseDebateResultWithSpeakers):
         return [{"teams": self.sheet_as_dicts(self.scoresheet)}]
 
 
-class ConsensusDebateResult(BaseConsensusDebateResult):
+class ConsensusDebateResult(BaseConsensusDebateResultWithSpeakers):
+    """For consensus decisions in two-team formats."""
 
     def winning_side(self):
         return self.scoresheet.winner()
@@ -796,13 +785,80 @@ class ConsensusDebateResult(BaseConsensusDebateResult):
         return self.calculate_margin(side)
 
 
-class BPDebateResult(BaseConsensusDebateResult):
+class BPDebateResult(BaseConsensusDebateResultWithSpeakers):
+    """For British Parliamentary preliminary rounds."""
 
     def teamscorefield_points(self, side):
         return 4 - self.scoresheet.rank(side)
 
     def teamscorefield_score(self, side):
         return self.scoresheet.get_total(side)
+
+
+class BPEliminationDebateResult(BaseDebateResult):
+    """For British Parliamentary elimination rounds.  Does not take speaker
+    identities, speaker scores or ranks.  Instead, it just notes the two
+    advancing teams, using the `win` field, which is set to True for both of
+    the advancing teams."""
+
+    # --------------------------------------------------------------------------
+    # Management methods
+    # --------------------------------------------------------------------------
+
+    def init_blank_buffer(self):
+        super().init_blank_buffer()
+        # To be complete, this list must have two sides in it, but we don't
+        # enforce anything before checking completeness.
+        self.advancing = []
+
+    def is_complete(self):
+        if not super().is_complete():
+            return False
+        if len(set(self.advancing)) != 2:
+            return False
+        return all(x in self.sides for x in self.advancing)
+
+    def identical(self, other):
+        if not super().identical(other):
+            return False
+        if self.advancing != other.advancing:
+            return False
+        return True
+
+    # --------------------------------------------------------------------------
+    # Load and save methods
+    # --------------------------------------------------------------------------
+
+    def load_from_db(self):
+        super().load_from_db()
+        self.load_advancing()
+
+    def load_advancing(self):
+        queryset = self.ballotsub.teamscore_set.filter(
+            debate_team__side__in=self.sides, win=True
+        ).values_list('debate_team__side', flat=True)
+        self.advancing = list(queryset)
+
+    # --------------------------------------------------------------------------
+    # Data setting and retrieval
+    # --------------------------------------------------------------------------
+
+    def set_advancing(self, sides):
+        """Sets the advancing teams to those on the sides listed in `sides`.
+        `sides` must be a list of two BP sides. If it's not, this method raises
+        a ValueError."""
+        if not all(x in self.sides for x in self.advancing):
+            raise ValueError("Found invalid sides: %s" % sides)
+        if len(sides) != 2:
+            raise ValueError("Exactly two sides should be advancing, found: %s" % sides)
+        self.advancing = sides
+
+    # --------------------------------------------------------------------------
+    # Team score fields
+    # --------------------------------------------------------------------------
+
+    def teamscorefield_win(self, side):
+        return side in self.advancing
 
 
 class ForfeitDebateResult(BaseDebateResult):

@@ -1,7 +1,8 @@
 import random
 from collections import OrderedDict
 
-from .common import BasePairDrawGenerator, DrawFatalError, Pairing
+from .common import BasePairDrawGenerator, DrawFatalError
+from .pairing import Pairing
 from .one_up_one_down import OneUpOneDownSwapper
 
 

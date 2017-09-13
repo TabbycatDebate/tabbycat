@@ -8,7 +8,8 @@ from statistics import pvariance
 from django.utils.translation import ugettext as _
 import munkres
 
-from .common import BaseBPDrawGenerator, BPPairing, DrawUserError
+from .common import BaseBPDrawGenerator, DrawUserError
+from .pairing import BPPairing
 
 logger = logging.getLogger(__name__)
 

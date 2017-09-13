@@ -7,7 +7,7 @@ from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
 from .models import Debate, DebateTeam
-from .generator import DrawGenerator, DrawUserError, Pairing
+from .generator import DrawGenerator, DrawUserError, ResultPairing
 
 OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_institution"     : "draw_rules__avoid_same_institution",
@@ -207,10 +207,13 @@ class EliminationDrawManager(BaseEliminationDrawManager):
     draw_type = "elimination"
 
     def get_results(self):
-        last_round = self.round.break_category.round_set.filter(seq__lt=self.round.seq).order_by('-seq').first()
-        debates = last_round.debate_set.all()
-        result = [Pairing.from_debate(debate) for debate in debates]
-        return result
+        last_round = self.round.break_category.round_set.filter(
+                seq__lt=self.round.seq).order_by('-seq').first()
+        debates = last_round.debate_set_with_prefetches(ordering=('room_rank',), results=True,
+                adjudicators=False, speakers=False, divisions=False, venues=False)
+        pairings = [ResultPairing.from_debate(debate, tournament=self.round.tournament)
+                    for debate in debates]
+        return pairings
 
 
 DRAW_MANAGER_CLASSES = {

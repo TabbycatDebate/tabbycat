@@ -1,8 +1,11 @@
+"""Draw generators for two-team elimination rounds."""
+
 import logging
 
 from django.utils.translation import ugettext as _
 
-from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError, Pairing
+from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
+from .pairing import Pairing
 from .utils import partial_break_round_split
 
 logger = logging.getLogger(__name__)
@@ -70,7 +73,7 @@ class EliminationDrawGenerator(BaseEliminationDrawGenerator):
 
     def make_pairings(self):
         self.results.sort(key=lambda x: x.room_rank)
-        winners = [p.winner for p in self.results]
+        winners = [pairing.winner for pairing in self.results]
         if winners.count(None) > 0:
             raise DrawUserError(_("%d debates in the previous round don't have a result.") % winners.count(None))
 

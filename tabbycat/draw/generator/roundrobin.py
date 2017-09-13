@@ -1,7 +1,8 @@
 import logging
 from collections import OrderedDict
 
-from .common import BasePairDrawGenerator, Pairing
+from .common import BasePairDrawGenerator
+from .pairing import Pairing
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,11 @@
+"""Draw generators for randomly drawn rounds, both two-team and BP."""
+
 import random
 
 from django.utils.translation import ugettext as _
 
-from .common import BaseBPDrawGenerator, BasePairDrawGenerator, BPPairing, DrawUserError, Pairing
+from .common import BaseBPDrawGenerator, BasePairDrawGenerator, DrawUserError
+from .pairing import BPPairing, Pairing
 
 
 class RandomPairingsMixin:
