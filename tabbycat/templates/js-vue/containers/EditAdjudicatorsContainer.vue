@@ -20,17 +20,17 @@
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
           <div :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 6 : adjPositions.length > 1 ? 8 : 12)]">
+                        'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
             <span>Chair</span>
           </div>
           <div v-if="adjPositions.indexOf('P') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 24: 16)]">
+                        'flex-' + (adjPositions.length > 2 ? 17: 16)]">
             <span>Panel</span>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
                :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 6: 16)]">
+                        'flex-' + (adjPositions.length > 2 ? 10: 16)]">
             <span>Trainees</span>
           </div>
         </template>

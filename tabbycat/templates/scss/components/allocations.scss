@@ -80,8 +80,9 @@
 
 .flex-cell {
   min-width: 30px;
-  padding-left: $table-cell-padding - 2;
-  padding-right: $table-cell-padding - 2;
+  border: 1px solid #ccc;
+  padding-right: 0 !important;
+  box-sizing:  border-box;
 }
 
 .cell-padding-helper {
@@ -135,16 +136,16 @@
 
 // For showing inline time since history conflict
 .history-tooltip {
-  font-size: 10px;
+  font-size: 9px;
   line-height: 10px;
   opacity: 1;
   z-index: $z_3; // Knock back from default so it doesnt clash with modals etc
   position: absolute;
-  bottom: -8px;
-  right: -8px;
+  bottom: -3px;
+  right: -3px;
 
   .tooltip-inner {
-    padding: 3px;
+    padding: 2px 3px;
   }
 }
 

@@ -1,0 +1,8724 @@
+[
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$36000$H0WamTmigmLg$qQbf0bgUPCxT8yH1yYL2JUPvKa3aeb5P8S1xgKQtyNg=",
+        "last_login": "2017-09-13T21:09:02.359",
+        "is_superuser": true,
+        "username": "philip",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2017-09-13T21:08:51.569",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 1,
+    "fields": {
+        "debate": 4,
+        "adjudicator": 81,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 2,
+    "fields": {
+        "debate": 4,
+        "adjudicator": 90,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 3,
+    "fields": {
+        "debate": 4,
+        "adjudicator": 94,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 4,
+    "fields": {
+        "debate": 6,
+        "adjudicator": 93,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 5,
+    "fields": {
+        "debate": 6,
+        "adjudicator": 95,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 6,
+    "fields": {
+        "debate": 6,
+        "adjudicator": 87,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 7,
+    "fields": {
+        "debate": 1,
+        "adjudicator": 73,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 8,
+    "fields": {
+        "debate": 1,
+        "adjudicator": 97,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 9,
+    "fields": {
+        "debate": 1,
+        "adjudicator": 96,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 10,
+    "fields": {
+        "debate": 2,
+        "adjudicator": 88,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 11,
+    "fields": {
+        "debate": 2,
+        "adjudicator": 79,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 12,
+    "fields": {
+        "debate": 2,
+        "adjudicator": 75,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 13,
+    "fields": {
+        "debate": 3,
+        "adjudicator": 83,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 14,
+    "fields": {
+        "debate": 3,
+        "adjudicator": 80,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 15,
+    "fields": {
+        "debate": 3,
+        "adjudicator": 98,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 16,
+    "fields": {
+        "debate": 5,
+        "adjudicator": 74,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 17,
+    "fields": {
+        "debate": 5,
+        "adjudicator": 99,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 18,
+    "fields": {
+        "debate": 5,
+        "adjudicator": 89,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 21,
+    "fields": {
+        "debate": 7,
+        "adjudicator": 73,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 22,
+    "fields": {
+        "debate": 10,
+        "adjudicator": 74,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 23,
+    "fields": {
+        "debate": 9,
+        "adjudicator": 83,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 24,
+    "fields": {
+        "debate": 9,
+        "adjudicator": 92,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 25,
+    "fields": {
+        "debate": 12,
+        "adjudicator": 76,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 26,
+    "fields": {
+        "debate": 10,
+        "adjudicator": 93,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 27,
+    "fields": {
+        "debate": 8,
+        "adjudicator": 99,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 28,
+    "fields": {
+        "debate": 8,
+        "adjudicator": 89,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 29,
+    "fields": {
+        "debate": 11,
+        "adjudicator": 75,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 30,
+    "fields": {
+        "debate": 11,
+        "adjudicator": 82,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 31,
+    "fields": {
+        "debate": 8,
+        "adjudicator": 77,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 32,
+    "fields": {
+        "debate": 11,
+        "adjudicator": 91,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 33,
+    "fields": {
+        "debate": 9,
+        "adjudicator": 78,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 34,
+    "fields": {
+        "debate": 10,
+        "adjudicator": 85,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.adjudicatorconflict",
+    "pk": 9,
+    "fields": {
+        "adjudicator": 73,
+        "team": 2
+    }
+},
+{
+    "model": "adjallocation.adjudicatoradjudicatorconflict",
+    "pk": 6,
+    "fields": {
+        "adjudicator": 83,
+        "conflict_adjudicator": 92
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 1,
+    "fields": {
+        "adjudicator": 73,
+        "institution": 13
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 2,
+    "fields": {
+        "adjudicator": 74,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 3,
+    "fields": {
+        "adjudicator": 75,
+        "institution": 12
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 4,
+    "fields": {
+        "adjudicator": 76,
+        "institution": 1
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 5,
+    "fields": {
+        "adjudicator": 77,
+        "institution": 1
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 6,
+    "fields": {
+        "adjudicator": 78,
+        "institution": 2
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 7,
+    "fields": {
+        "adjudicator": 79,
+        "institution": 3
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 8,
+    "fields": {
+        "adjudicator": 80,
+        "institution": 4
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 9,
+    "fields": {
+        "adjudicator": 81,
+        "institution": 4
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 10,
+    "fields": {
+        "adjudicator": 82,
+        "institution": 12
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 11,
+    "fields": {
+        "adjudicator": 83,
+        "institution": 12
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 12,
+    "fields": {
+        "adjudicator": 84,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 13,
+    "fields": {
+        "adjudicator": 85,
+        "institution": 5
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 15,
+    "fields": {
+        "adjudicator": 87,
+        "institution": 6
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 16,
+    "fields": {
+        "adjudicator": 88,
+        "institution": 6
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 17,
+    "fields": {
+        "adjudicator": 89,
+        "institution": 7
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 18,
+    "fields": {
+        "adjudicator": 90,
+        "institution": 7
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 19,
+    "fields": {
+        "adjudicator": 91,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 20,
+    "fields": {
+        "adjudicator": 92,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 21,
+    "fields": {
+        "adjudicator": 93,
+        "institution": 9
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 22,
+    "fields": {
+        "adjudicator": 94,
+        "institution": 10
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 23,
+    "fields": {
+        "adjudicator": 95,
+        "institution": 10
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 24,
+    "fields": {
+        "adjudicator": 96,
+        "institution": 11
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 25,
+    "fields": {
+        "adjudicator": 97,
+        "institution": 13
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 26,
+    "fields": {
+        "adjudicator": 98,
+        "institution": 13
+    }
+},
+{
+    "model": "adjallocation.adjudicatorinstitutionconflict",
+    "pk": 37,
+    "fields": {
+        "adjudicator": 76,
+        "institution": 10
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 1,
+    "fields": {
+        "adjudicator": 73,
+        "round": null,
+        "score": 5.0,
+        "timestamp": "2017-09-13T21:09:08.276"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 2,
+    "fields": {
+        "adjudicator": 74,
+        "round": null,
+        "score": 5.0,
+        "timestamp": "2017-09-13T21:09:08.281"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 3,
+    "fields": {
+        "adjudicator": 75,
+        "round": null,
+        "score": 5.0,
+        "timestamp": "2017-09-13T21:09:08.282"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 4,
+    "fields": {
+        "adjudicator": 76,
+        "round": null,
+        "score": 1.0,
+        "timestamp": "2017-09-13T21:09:08.283"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 5,
+    "fields": {
+        "adjudicator": 78,
+        "round": null,
+        "score": 2.0,
+        "timestamp": "2017-09-13T21:09:08.285"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 6,
+    "fields": {
+        "adjudicator": 79,
+        "round": null,
+        "score": 5.0,
+        "timestamp": "2017-09-13T21:09:08.286"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 7,
+    "fields": {
+        "adjudicator": 80,
+        "round": null,
+        "score": 4.0,
+        "timestamp": "2017-09-13T21:09:08.287"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 8,
+    "fields": {
+        "adjudicator": 81,
+        "round": null,
+        "score": 5.0,
+        "timestamp": "2017-09-13T21:09:08.288"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 9,
+    "fields": {
+        "adjudicator": 83,
+        "round": null,
+        "score": 4.0,
+        "timestamp": "2017-09-13T21:09:08.289"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 10,
+    "fields": {
+        "adjudicator": 84,
+        "round": null,
+        "score": 4.0,
+        "timestamp": "2017-09-13T21:09:08.290"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 11,
+    "fields": {
+        "adjudicator": 85,
+        "round": null,
+        "score": 4.0,
+        "timestamp": "2017-09-13T21:09:08.290"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 12,
+    "fields": {
+        "adjudicator": 86,
+        "round": null,
+        "score": 2.0,
+        "timestamp": "2017-09-13T21:09:08.291"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 13,
+    "fields": {
+        "adjudicator": 87,
+        "round": null,
+        "score": 2.0,
+        "timestamp": "2017-09-13T21:09:08.292"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 14,
+    "fields": {
+        "adjudicator": 88,
+        "round": null,
+        "score": 5.0,
+        "timestamp": "2017-09-13T21:09:08.292"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 15,
+    "fields": {
+        "adjudicator": 89,
+        "round": null,
+        "score": 2.0,
+        "timestamp": "2017-09-13T21:09:08.293"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 16,
+    "fields": {
+        "adjudicator": 90,
+        "round": null,
+        "score": 2.0,
+        "timestamp": "2017-09-13T21:09:08.294"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 17,
+    "fields": {
+        "adjudicator": 91,
+        "round": null,
+        "score": 1.0,
+        "timestamp": "2017-09-13T21:09:08.294"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 18,
+    "fields": {
+        "adjudicator": 93,
+        "round": null,
+        "score": 4.0,
+        "timestamp": "2017-09-13T21:09:08.295"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 19,
+    "fields": {
+        "adjudicator": 94,
+        "round": null,
+        "score": 2.0,
+        "timestamp": "2017-09-13T21:09:08.296"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 20,
+    "fields": {
+        "adjudicator": 95,
+        "round": null,
+        "score": 3.0,
+        "timestamp": "2017-09-13T21:09:08.296"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 21,
+    "fields": {
+        "adjudicator": 96,
+        "round": null,
+        "score": 2.0,
+        "timestamp": "2017-09-13T21:09:08.297"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 22,
+    "fields": {
+        "adjudicator": 97,
+        "round": null,
+        "score": 4.0,
+        "timestamp": "2017-09-13T21:09:08.298"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 23,
+    "fields": {
+        "adjudicator": 98,
+        "round": null,
+        "score": 3.0,
+        "timestamp": "2017-09-13T21:09:08.298"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatortestscorehistory",
+    "pk": 24,
+    "fields": {
+        "adjudicator": 99,
+        "round": null,
+        "score": 5.0,
+        "timestamp": "2017-09-13T21:09:08.299"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 1,
+    "fields": {
+        "tournament": 1,
+        "seq": 10,
+        "text": "Did you agree with the decision?",
+        "name": "Agree",
+        "reference": "agree",
+        "from_adj": false,
+        "from_team": true,
+        "answer_type": "bs",
+        "required": true,
+        "min_value": null,
+        "max_value": null,
+        "choices": ""
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 2,
+    "fields": {
+        "tournament": 1,
+        "seq": 11,
+        "text": "Did this judge's decision concur with yours?",
+        "name": "Concur",
+        "reference": "concur",
+        "from_adj": true,
+        "from_team": false,
+        "answer_type": "bs",
+        "required": true,
+        "min_value": null,
+        "max_value": null,
+        "choices": ""
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 3,
+    "fields": {
+        "tournament": 1,
+        "seq": 20,
+        "text": "What adjustment should be applied to this judge's speaker scores?",
+        "name": "Adjustment",
+        "reference": "adjustment",
+        "from_adj": true,
+        "from_team": false,
+        "answer_type": "f",
+        "required": true,
+        "min_value": -20.0,
+        "max_value": 20.0,
+        "choices": ""
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 4,
+    "fields": {
+        "tournament": 1,
+        "seq": 30,
+        "text": "Choose one word to describe this adjudicator.",
+        "name": "One word",
+        "reference": "word",
+        "from_adj": true,
+        "from_team": true,
+        "answer_type": "t",
+        "required": true,
+        "min_value": null,
+        "max_value": null,
+        "choices": ""
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 5,
+    "fields": {
+        "tournament": 1,
+        "seq": 40,
+        "text": "Do you think this adjudicator should be promoted?",
+        "name": "Promote",
+        "reference": "promote",
+        "from_adj": true,
+        "from_team": true,
+        "answer_type": "bc",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": ""
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 6,
+    "fields": {
+        "tournament": 1,
+        "seq": 50,
+        "text": "Do you think this adjudicator should be demoted?",
+        "name": "Demote",
+        "reference": "demote",
+        "from_adj": true,
+        "from_team": true,
+        "answer_type": "bc",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": ""
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 7,
+    "fields": {
+        "tournament": 1,
+        "seq": 60,
+        "text": "How well was this adjudicator's reasoning explained?",
+        "name": "Explanation",
+        "reference": "explanation",
+        "from_adj": true,
+        "from_team": true,
+        "answer_type": "is",
+        "required": true,
+        "min_value": 0.0,
+        "max_value": 10.0,
+        "choices": ""
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 8,
+    "fields": {
+        "tournament": 1,
+        "seq": 70,
+        "text": "How impartial did you think this adjudicator was?",
+        "name": "Impartial",
+        "reference": "impartial",
+        "from_adj": true,
+        "from_team": true,
+        "answer_type": "is",
+        "required": true,
+        "min_value": 0.0,
+        "max_value": 10.0,
+        "choices": ""
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 9,
+    "fields": {
+        "tournament": 1,
+        "seq": 80,
+        "text": "Would you like to see this adjudicator again?",
+        "name": "Again",
+        "reference": "again",
+        "from_adj": false,
+        "from_team": true,
+        "answer_type": "ss",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": "Absolutely!//Sure, why not//If I have to//Please don't"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 10,
+    "fields": {
+        "tournament": 1,
+        "seq": 90,
+        "text": "How would you describe this adjudicator?",
+        "name": "Adjectives",
+        "reference": "adjectives",
+        "from_adj": false,
+        "from_team": true,
+        "answer_type": "ms",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": "biased//clear//concise//rambly//attentive//inattentive"
+    }
+},
+{
+    "model": "adjfeedback.adjudicatorfeedbackquestion",
+    "pk": 11,
+    "fields": {
+        "tournament": 1,
+        "seq": 1000,
+        "text": "Other comments:",
+        "name": "Comments",
+        "reference": "comments",
+        "from_adj": true,
+        "from_team": true,
+        "answer_type": "tl",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": ""
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 1,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 1,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 2,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 2,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 3,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 3,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 4,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 4,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 5,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 5,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 6,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 6,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 7,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 7,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 8,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 8,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 9,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 9,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 10,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 10,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 11,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 11,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 12,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 12,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 13,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 13,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 14,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 14,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 15,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 15,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 16,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 16,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 17,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 17,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 18,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 18,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 19,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 19,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 20,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 20,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 21,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 21,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 22,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 22,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 23,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 23,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 24,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 24,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 25,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 73,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 26,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 74,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 27,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 75,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 28,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 76,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 29,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 77,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 30,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 78,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 31,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 79,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 32,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 80,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 33,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 81,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 34,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 82,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 35,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 83,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 36,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 84,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 37,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 85,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 38,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 86,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 39,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 87,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 40,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 88,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 41,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 89,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 42,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 90,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 43,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 91,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 44,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 92,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 45,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 93,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 46,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 94,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 47,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 95,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 48,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 96,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 49,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 97,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 50,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 98,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 51,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 99,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 52,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 1,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 53,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 2,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 54,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 3,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 55,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 4,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 56,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 5,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 57,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 6,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 58,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 7,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 59,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 8,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 60,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 9,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 61,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 10,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 62,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 11,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 63,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 12,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 64,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 13,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 65,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 14,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 66,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 15,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 67,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 16,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 68,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 17,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 69,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 18,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 70,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 19,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 71,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 20,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 72,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 21,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 73,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 22,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 74,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 23,
+        "round": 1
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 75,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 1,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 76,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 2,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 77,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 3,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 78,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 4,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 79,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 5,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 80,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 6,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 81,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 7,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 82,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 8,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 83,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 9,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 84,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 10,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 85,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 11,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 86,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 12,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 87,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 13,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 88,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 14,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 89,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 15,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 90,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 16,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 91,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 17,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 92,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 18,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 93,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 19,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 94,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 20,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 95,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 21,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 96,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 22,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 97,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 23,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 98,
+    "fields": {
+        "content_type": [
+            "participants",
+            "person"
+        ],
+        "object_id": 24,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 99,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 73,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 100,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 74,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 101,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 75,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 102,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 76,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 103,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 77,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 104,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 78,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 105,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 79,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 106,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 80,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 107,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 81,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 108,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 82,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 109,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 83,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 110,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 84,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 111,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 85,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 112,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 86,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 113,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 87,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 114,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 88,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 115,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 89,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 116,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 90,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 117,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 91,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 118,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 92,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 119,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 93,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 120,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 94,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 121,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 95,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 122,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 96,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 123,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 97,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 124,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 98,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 125,
+    "fields": {
+        "content_type": [
+            "participants",
+            "team"
+        ],
+        "object_id": 99,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 126,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 1,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 127,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 2,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 128,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 3,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 129,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 4,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 130,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 5,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 131,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 6,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 132,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 7,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 133,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 8,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 134,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 9,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 135,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 10,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 136,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 11,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 137,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 12,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 138,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 13,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 139,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 14,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 140,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 15,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 141,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 16,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 142,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 17,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 143,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 18,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 144,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 19,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 145,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 20,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 146,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 21,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 147,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 22,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 148,
+    "fields": {
+        "content_type": [
+            "venues",
+            "venue"
+        ],
+        "object_id": 23,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 149,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 73,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 150,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 74,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 151,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 75,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 152,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 76,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 153,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 77,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 154,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 78,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 155,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 79,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 156,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 80,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 157,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 81,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 158,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 82,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 159,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 83,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 160,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 84,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 161,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 85,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 162,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 86,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 163,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 87,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 164,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 88,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 165,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 89,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 166,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 90,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 167,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 91,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 168,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 92,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 169,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 93,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 170,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 94,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 171,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 95,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 172,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 96,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 173,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 97,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 174,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 98,
+        "round": 2
+    }
+},
+{
+    "model": "availability.roundavailability",
+    "pk": 175,
+    "fields": {
+        "content_type": [
+            "participants",
+            "adjudicator"
+        ],
+        "object_id": 99,
+        "round": 2
+    }
+},
+{
+    "model": "breakqual.breakcategory",
+    "pk": 1,
+    "fields": {
+        "tournament": 1,
+        "name": "Open",
+        "slug": "open",
+        "seq": 10,
+        "break_size": 8,
+        "is_general": true,
+        "priority": 30,
+        "rule": "standard"
+    }
+},
+{
+    "model": "breakqual.breakcategory",
+    "pk": 2,
+    "fields": {
+        "tournament": 1,
+        "name": "ESL",
+        "slug": "esl",
+        "seq": 20,
+        "break_size": 4,
+        "is_general": false,
+        "priority": 20,
+        "rule": "standard"
+    }
+},
+{
+    "model": "breakqual.breakcategory",
+    "pk": 3,
+    "fields": {
+        "tournament": 1,
+        "name": "Novice",
+        "slug": "novice",
+        "seq": 30,
+        "break_size": 2,
+        "is_general": false,
+        "priority": 10,
+        "rule": "standard"
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 1,
+    "fields": {
+        "round": 1,
+        "venue": 16,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 0,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "C",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 2,
+    "fields": {
+        "round": 1,
+        "venue": 15,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 0,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "C",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 3,
+    "fields": {
+        "round": 1,
+        "venue": 20,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 0,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "C",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 4,
+    "fields": {
+        "round": 1,
+        "venue": 18,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 0,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "C",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 5,
+    "fields": {
+        "round": 1,
+        "venue": 19,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 0,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "C",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 6,
+    "fields": {
+        "round": 1,
+        "venue": 17,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 0,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "C",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 7,
+    "fields": {
+        "round": 2,
+        "venue": null,
+        "division": null,
+        "bracket": 1.0,
+        "room_rank": 5,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 8,
+    "fields": {
+        "round": 2,
+        "venue": null,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 6,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 9,
+    "fields": {
+        "round": 2,
+        "venue": null,
+        "division": null,
+        "bracket": 3.0,
+        "room_rank": 2,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 10,
+    "fields": {
+        "round": 2,
+        "venue": null,
+        "division": null,
+        "bracket": 3.0,
+        "room_rank": 1,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 11,
+    "fields": {
+        "round": 2,
+        "venue": null,
+        "division": null,
+        "bracket": 1.0,
+        "room_rank": 4,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 12,
+    "fields": {
+        "round": 2,
+        "venue": null,
+        "division": null,
+        "bracket": 2.0,
+        "room_rank": 3,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "ballot_in": false,
+        "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 1,
+    "fields": {
+        "debate": 1,
+        "team": 9,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 2,
+    "fields": {
+        "debate": 1,
+        "team": 19,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 3,
+    "fields": {
+        "debate": 1,
+        "team": 7,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 4,
+    "fields": {
+        "debate": 1,
+        "team": 17,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 5,
+    "fields": {
+        "debate": 2,
+        "team": 22,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 6,
+    "fields": {
+        "debate": 2,
+        "team": 20,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 7,
+    "fields": {
+        "debate": 2,
+        "team": 24,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 8,
+    "fields": {
+        "debate": 2,
+        "team": 13,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 9,
+    "fields": {
+        "debate": 3,
+        "team": 10,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 10,
+    "fields": {
+        "debate": 3,
+        "team": 11,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 11,
+    "fields": {
+        "debate": 3,
+        "team": 16,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 12,
+    "fields": {
+        "debate": 3,
+        "team": 18,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 13,
+    "fields": {
+        "debate": 4,
+        "team": 15,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 14,
+    "fields": {
+        "debate": 4,
+        "team": 3,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 15,
+    "fields": {
+        "debate": 4,
+        "team": 23,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 16,
+    "fields": {
+        "debate": 4,
+        "team": 14,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 17,
+    "fields": {
+        "debate": 5,
+        "team": 2,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 18,
+    "fields": {
+        "debate": 5,
+        "team": 5,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 19,
+    "fields": {
+        "debate": 5,
+        "team": 1,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 20,
+    "fields": {
+        "debate": 5,
+        "team": 21,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 21,
+    "fields": {
+        "debate": 6,
+        "team": 4,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 22,
+    "fields": {
+        "debate": 6,
+        "team": 8,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 23,
+    "fields": {
+        "debate": 6,
+        "team": 12,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 24,
+    "fields": {
+        "debate": 6,
+        "team": 6,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 25,
+    "fields": {
+        "debate": 7,
+        "team": 20,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 26,
+    "fields": {
+        "debate": 7,
+        "team": 2,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 27,
+    "fields": {
+        "debate": 7,
+        "team": 21,
+        "side": "cg",
+        "flags": "pullup"
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 28,
+    "fields": {
+        "debate": 7,
+        "team": 5,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 29,
+    "fields": {
+        "debate": 8,
+        "team": 7,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 30,
+    "fields": {
+        "debate": 8,
+        "team": 13,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 31,
+    "fields": {
+        "debate": 8,
+        "team": 15,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 32,
+    "fields": {
+        "debate": 8,
+        "team": 16,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 33,
+    "fields": {
+        "debate": 9,
+        "team": 24,
+        "side": "og",
+        "flags": "pullup"
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 34,
+    "fields": {
+        "debate": 9,
+        "team": 1,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 35,
+    "fields": {
+        "debate": 9,
+        "team": 9,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 36,
+    "fields": {
+        "debate": 9,
+        "team": 23,
+        "side": "co",
+        "flags": "pullup"
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 37,
+    "fields": {
+        "debate": 10,
+        "team": 14,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 38,
+    "fields": {
+        "debate": 10,
+        "team": 6,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 39,
+    "fields": {
+        "debate": 10,
+        "team": 11,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 40,
+    "fields": {
+        "debate": 10,
+        "team": 22,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 41,
+    "fields": {
+        "debate": 11,
+        "team": 3,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 42,
+    "fields": {
+        "debate": 11,
+        "team": 17,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 43,
+    "fields": {
+        "debate": 11,
+        "team": 4,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 44,
+    "fields": {
+        "debate": 11,
+        "team": 12,
+        "side": "co",
+        "flags": "pullup"
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 45,
+    "fields": {
+        "debate": 12,
+        "team": 18,
+        "side": "og",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 46,
+    "fields": {
+        "debate": 12,
+        "team": 10,
+        "side": "oo",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 47,
+    "fields": {
+        "debate": 12,
+        "team": 8,
+        "side": "cg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 48,
+    "fields": {
+        "debate": 12,
+        "team": 19,
+        "side": "co",
+        "flags": ""
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 1,
+    "fields": {
+        "seq": 1,
+        "text": "This House would abolish national days",
+        "reference": "National days",
+        "flagged": false,
+        "round": 1,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 2,
+    "fields": {
+        "seq": 2,
+        "text": "This House regrets the existence of Valentine's Day",
+        "reference": "Valentine\u2019s Day",
+        "flagged": false,
+        "round": 1,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 3,
+    "fields": {
+        "seq": 3,
+        "text": "This House would rename Christmas with a name that is religiously neutral",
+        "reference": "Christmas",
+        "flagged": false,
+        "round": 1,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 4,
+    "fields": {
+        "seq": 1,
+        "text": "This House would not buy Apple",
+        "reference": "Apple",
+        "flagged": false,
+        "round": 2,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 5,
+    "fields": {
+        "seq": 2,
+        "text": "This House would end all research and development tax credits for highly profitable technology companies",
+        "reference": "R&D tax credit",
+        "flagged": false,
+        "round": 2,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 6,
+    "fields": {
+        "seq": 3,
+        "text": "This House regrets the rise of computer science at the expense of the humanities",
+        "reference": "Computer science",
+        "flagged": false,
+        "round": 2,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 7,
+    "fields": {
+        "seq": 1,
+        "text": "This House would favour creativity over intelligence",
+        "reference": "Creativity and intelligence",
+        "flagged": false,
+        "round": 3,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 8,
+    "fields": {
+        "seq": 2,
+        "text": "This House believes that field hockey is better than ice hockey",
+        "reference": "Hockey",
+        "flagged": false,
+        "round": 3,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 9,
+    "fields": {
+        "seq": 3,
+        "text": "This House would rather play with Lego than Barbie",
+        "reference": "Lego and Barbie",
+        "flagged": false,
+        "round": 3,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 10,
+    "fields": {
+        "seq": 1,
+        "text": "This House would stop importing bananas from Latin America",
+        "reference": "Bananas",
+        "flagged": false,
+        "round": 4,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 11,
+    "fields": {
+        "seq": 2,
+        "text": "This House believes that tomatoes are a fruit",
+        "reference": "Tomatoes",
+        "flagged": false,
+        "round": 4,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 12,
+    "fields": {
+        "seq": 3,
+        "text": "This House would require all fruit to carry labels noting what pesticides are used on them",
+        "reference": "Pesticide labelling",
+        "flagged": false,
+        "round": 4,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 13,
+    "fields": {
+        "seq": 1,
+        "text": "This House would make an exception to laws forbidding indecent exposure for days with hot temperatures",
+        "reference": "Indecent exposure",
+        "flagged": false,
+        "round": 7,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 14,
+    "fields": {
+        "seq": 2,
+        "text": "This House regrets the development of different fashion lines for men and women",
+        "reference": "Gender and fashion",
+        "flagged": false,
+        "round": 7,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 15,
+    "fields": {
+        "seq": 3,
+        "text": "This House believes that it is unprofessional to wear flip-flops (jandals, thongs) to work",
+        "reference": "Flip-flops",
+        "flagged": false,
+        "round": 7,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 16,
+    "fields": {
+        "seq": 1,
+        "text": "This House would stop using cash",
+        "reference": "Cash",
+        "flagged": false,
+        "round": 10,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 17,
+    "fields": {
+        "seq": 2,
+        "text": "This House supports Bitcoin",
+        "reference": "Bitcoin",
+        "flagged": false,
+        "round": 10,
+        "divisions": []
+    }
+},
+{
+    "model": "motions.motion",
+    "pk": 18,
+    "fields": {
+        "seq": 3,
+        "text": "This House would allow private organisations to compete in providing currency",
+        "reference": "Private currency",
+        "flagged": false,
+        "round": 10,
+        "divisions": []
+    }
+},
+{
+    "model": "participants.region",
+    "pk": 1,
+    "fields": {
+        "name": "NY"
+    }
+},
+{
+    "model": "participants.region",
+    "pk": 2,
+    "fields": {
+        "name": "MA"
+    }
+},
+{
+    "model": "participants.region",
+    "pk": 3,
+    "fields": {
+        "name": "MD"
+    }
+},
+{
+    "model": "participants.region",
+    "pk": 4,
+    "fields": {
+        "name": "CT"
+    }
+},
+{
+    "model": "participants.region",
+    "pk": 5,
+    "fields": {
+        "name": "PA"
+    }
+},
+{
+    "model": "participants.region",
+    "pk": 6,
+    "fields": {
+        "name": "CA"
+    }
+},
+{
+    "model": "participants.region",
+    "pk": 7,
+    "fields": {
+        "name": "Other"
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 1,
+    "fields": {
+        "name": "California Institute of Technology",
+        "code": "Caltech",
+        "abbreviation": "Calt",
+        "region": 6
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 2,
+    "fields": {
+        "name": "Columbia University",
+        "code": "Columbia",
+        "abbreviation": "Colum",
+        "region": 1
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 3,
+    "fields": {
+        "name": "Cornell University",
+        "code": "Cornell",
+        "abbreviation": "Corn",
+        "region": 1
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 4,
+    "fields": {
+        "name": "Harvard University",
+        "code": "Harvard",
+        "abbreviation": "Harv",
+        "region": 2
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 5,
+    "fields": {
+        "name": "Johns Hopkins University",
+        "code": "Johns Hopkins",
+        "abbreviation": "JHU",
+        "region": 3
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 6,
+    "fields": {
+        "name": "Massachusetts Institute of Technology",
+        "code": "MIT",
+        "abbreviation": "MIT",
+        "region": 2
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 7,
+    "fields": {
+        "name": "Princeton University",
+        "code": "Princeton",
+        "abbreviation": "Prin",
+        "region": null
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 8,
+    "fields": {
+        "name": "Stanford University",
+        "code": "Stanford",
+        "abbreviation": "Stan",
+        "region": 6
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 9,
+    "fields": {
+        "name": "University of California, Berkeley",
+        "code": "Berkeley",
+        "abbreviation": "Cal",
+        "region": 6
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 10,
+    "fields": {
+        "name": "University of Chicago",
+        "code": "Chicago",
+        "abbreviation": "Chic",
+        "region": null
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 11,
+    "fields": {
+        "name": "University of Pennsylvania",
+        "code": "Pennsylvania",
+        "abbreviation": "Penn",
+        "region": 5
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 12,
+    "fields": {
+        "name": "University of Toronto",
+        "code": "Toronto",
+        "abbreviation": "Toron",
+        "region": null
+    }
+},
+{
+    "model": "participants.institution",
+    "pk": 13,
+    "fields": {
+        "name": "Yale University",
+        "code": "Yale",
+        "abbreviation": "Yale",
+        "region": 4
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 1,
+    "fields": {
+        "name": "Georgia Crawford",
+        "barcode_id": null,
+        "email": "georgiacrawford@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 2,
+    "fields": {
+        "name": "Wanda Griffin",
+        "barcode_id": null,
+        "email": "wandagriffin@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 3,
+    "fields": {
+        "name": "Helen Keller",
+        "barcode_id": null,
+        "email": "helenkeller@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 4,
+    "fields": {
+        "name": "Russell Warren",
+        "barcode_id": null,
+        "email": "russellwarren@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 5,
+    "fields": {
+        "name": "Angel Rhodes",
+        "barcode_id": null,
+        "email": "angelrhodes@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "",
+        "pronoun": "they"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 6,
+    "fields": {
+        "name": "Terry Henderson",
+        "barcode_id": null,
+        "email": "terryhenderson@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 7,
+    "fields": {
+        "name": "Kyle Ruiz",
+        "barcode_id": null,
+        "email": "kyleruiz@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 8,
+    "fields": {
+        "name": "Randolph Lambert",
+        "barcode_id": null,
+        "email": "randolphlambert@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 9,
+    "fields": {
+        "name": "Sergio Pittman",
+        "barcode_id": null,
+        "email": "sergiopittman@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 10,
+    "fields": {
+        "name": "Earnest Becker",
+        "barcode_id": null,
+        "email": "earnestbecker@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 11,
+    "fields": {
+        "name": "Ellis Rowe",
+        "barcode_id": null,
+        "email": "ellisrowe@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 12,
+    "fields": {
+        "name": "Robin Roberson",
+        "barcode_id": null,
+        "email": "robinroberson@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 13,
+    "fields": {
+        "name": "Gwen Newman",
+        "barcode_id": null,
+        "email": "gwennewman@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 14,
+    "fields": {
+        "name": "Robyn Caldwell",
+        "barcode_id": null,
+        "email": "robyncaldwell@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 15,
+    "fields": {
+        "name": "Angie Holt",
+        "barcode_id": null,
+        "email": "angieholt@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 16,
+    "fields": {
+        "name": "Melvin Jordan",
+        "barcode_id": null,
+        "email": "melvinjordan@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 17,
+    "fields": {
+        "name": "Gladys Burke",
+        "barcode_id": null,
+        "email": "gladysburke@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 18,
+    "fields": {
+        "name": "Patty Saunders",
+        "barcode_id": null,
+        "email": "pattysaunders@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 19,
+    "fields": {
+        "name": "Thomas Pierce",
+        "barcode_id": null,
+        "email": null,
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 20,
+    "fields": {
+        "name": "Stella Lindsey",
+        "barcode_id": null,
+        "email": "stellalindsey@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 21,
+    "fields": {
+        "name": "Adrian May",
+        "barcode_id": null,
+        "email": "adrianmay@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 22,
+    "fields": {
+        "name": "Taylor Brown",
+        "barcode_id": null,
+        "email": "taylorbrown@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 23,
+    "fields": {
+        "name": "Bethany Chambers",
+        "barcode_id": null,
+        "email": "bethanychambers@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 24,
+    "fields": {
+        "name": "Pamela Bryan",
+        "barcode_id": null,
+        "email": "pamelabryan@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 25,
+    "fields": {
+        "name": "Janet Nunez",
+        "barcode_id": null,
+        "email": "janetnunez@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 26,
+    "fields": {
+        "name": "Owen Chandler",
+        "barcode_id": null,
+        "email": "owenchandler@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 27,
+    "fields": {
+        "name": "Lillie Rodriquez",
+        "barcode_id": null,
+        "email": "lillierodriquez@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 28,
+    "fields": {
+        "name": "Rufus Dennis",
+        "barcode_id": null,
+        "email": "rufusdennis@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 29,
+    "fields": {
+        "name": "Marty Love",
+        "barcode_id": null,
+        "email": "martylove@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 30,
+    "fields": {
+        "name": "Shelia Wright",
+        "barcode_id": null,
+        "email": "sheliawright@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 31,
+    "fields": {
+        "name": "Clark Mills",
+        "barcode_id": null,
+        "email": "clarkmills@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 32,
+    "fields": {
+        "name": "Randy Carroll",
+        "barcode_id": null,
+        "email": "randycarroll@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 33,
+    "fields": {
+        "name": "Casey Sparks",
+        "barcode_id": null,
+        "email": "caseysparks@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 34,
+    "fields": {
+        "name": "Candace Bowen",
+        "barcode_id": null,
+        "email": "candacebowen@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 35,
+    "fields": {
+        "name": "Jaime Long",
+        "barcode_id": null,
+        "email": "jaimelong@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 36,
+    "fields": {
+        "name": "Leon Hall",
+        "barcode_id": null,
+        "email": "leonhall@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 37,
+    "fields": {
+        "name": "Morris Nichols",
+        "barcode_id": null,
+        "email": "morrisnichols@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 38,
+    "fields": {
+        "name": "Benjamin Padilla",
+        "barcode_id": null,
+        "email": "benjaminpadilla@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 39,
+    "fields": {
+        "name": "Phil Lyons",
+        "barcode_id": null,
+        "email": "phillyons@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 40,
+    "fields": {
+        "name": "Clay Holland",
+        "barcode_id": null,
+        "email": "clayholland@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 41,
+    "fields": {
+        "name": "Elena Cobb",
+        "barcode_id": null,
+        "email": "elenacobb@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 42,
+    "fields": {
+        "name": "Shawn Torres",
+        "barcode_id": null,
+        "email": "shawntorres@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 43,
+    "fields": {
+        "name": "Willis Carson",
+        "barcode_id": null,
+        "email": "williscarson@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 44,
+    "fields": {
+        "name": "Wendell Nelson",
+        "barcode_id": null,
+        "email": "wendellnelson@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 45,
+    "fields": {
+        "name": "Felicia Welch",
+        "barcode_id": null,
+        "email": "feliciawelch@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 46,
+    "fields": {
+        "name": "Cory Meyer",
+        "barcode_id": null,
+        "email": "corymeyer@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 47,
+    "fields": {
+        "name": "Stacy Frazier",
+        "barcode_id": null,
+        "email": "stacyfrazier@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 48,
+    "fields": {
+        "name": "Claire Dunn",
+        "barcode_id": null,
+        "email": "clairedunn@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 49,
+    "fields": {
+        "name": "Eloise Munoz",
+        "barcode_id": null,
+        "email": null,
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 50,
+    "fields": {
+        "name": "Patricia Palmer",
+        "barcode_id": null,
+        "email": "patriciapalmer@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 51,
+    "fields": {
+        "name": "Stewart Day",
+        "barcode_id": null,
+        "email": "stewartday@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 52,
+    "fields": {
+        "name": "Timmy Craig",
+        "barcode_id": null,
+        "email": "timmycraig@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 53,
+    "fields": {
+        "name": "Patrick Kelly",
+        "barcode_id": null,
+        "email": "patrickkelly@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 54,
+    "fields": {
+        "name": "Kristopher Hayes",
+        "barcode_id": null,
+        "email": null,
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 55,
+    "fields": {
+        "name": "Andy Lane",
+        "barcode_id": null,
+        "email": "andylane@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 56,
+    "fields": {
+        "name": "Scott Mcdonald",
+        "barcode_id": null,
+        "email": "scottmcdonald@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 57,
+    "fields": {
+        "name": "Charlene Cortez",
+        "barcode_id": null,
+        "email": "charlenecortez@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 58,
+    "fields": {
+        "name": "Leigh Holmes",
+        "barcode_id": null,
+        "email": "leighholmes@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 59,
+    "fields": {
+        "name": "Alma Spencer",
+        "barcode_id": null,
+        "email": "almaspencer@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 60,
+    "fields": {
+        "name": "Winston Castro",
+        "barcode_id": null,
+        "email": null,
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 61,
+    "fields": {
+        "name": "Emilio Simmons",
+        "barcode_id": null,
+        "email": "emiliosimmons@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 62,
+    "fields": {
+        "name": "Ron Delgado",
+        "barcode_id": null,
+        "email": "rondelgado@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 63,
+    "fields": {
+        "name": "Nadine Barber",
+        "barcode_id": null,
+        "email": "nadinebarber@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 64,
+    "fields": {
+        "name": "Gail Adkins",
+        "barcode_id": null,
+        "email": "gailadkins@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 65,
+    "fields": {
+        "name": "Willard Walton",
+        "barcode_id": null,
+        "email": "willardwalton@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 66,
+    "fields": {
+        "name": "Jackie Peterson",
+        "barcode_id": null,
+        "email": "jackiepeterson@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 67,
+    "fields": {
+        "name": "Terry Thornton",
+        "barcode_id": null,
+        "email": "terrythornton@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "",
+        "pronoun": "they"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 68,
+    "fields": {
+        "name": "Norman Rodgers",
+        "barcode_id": null,
+        "email": "normanrodgers@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 69,
+    "fields": {
+        "name": "Mattie Lee",
+        "barcode_id": null,
+        "email": "mattielee@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "",
+        "pronoun": "they"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 70,
+    "fields": {
+        "name": "Woodrow Harvey",
+        "barcode_id": null,
+        "email": "woodrowharvey@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 71,
+    "fields": {
+        "name": "Javier Chavez",
+        "barcode_id": null,
+        "email": "javierchavez@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 72,
+    "fields": {
+        "name": "Janie Daniels",
+        "barcode_id": null,
+        "email": "janiedaniels@fakemail.com",
+        "phone": "",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 73,
+    "fields": {
+        "name": "RED (ip)",
+        "barcode_id": null,
+        "email": "leviflores@fakemail.com",
+        "phone": "(400) 258-4262",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 74,
+    "fields": {
+        "name": "Orange (ip)",
+        "barcode_id": null,
+        "email": "boydpierce@fakemail.com",
+        "phone": "(645) 106-7743",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 75,
+    "fields": {
+        "name": "ORANGE",
+        "barcode_id": null,
+        "email": "eunicemcbride@fakemail.com",
+        "phone": "(549) 309-9187",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 76,
+    "fields": {
+        "name": "Orange (Institutional IP)",
+        "barcode_id": null,
+        "email": "ramonacobb@fakemail.com",
+        "phone": "(440) 487-5776",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 77,
+    "fields": {
+        "name": "Justin Ford",
+        "barcode_id": null,
+        "email": "justinford@fakemail.com",
+        "phone": "(618) 921-9188",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 78,
+    "fields": {
+        "name": "Luis Bennett",
+        "barcode_id": null,
+        "email": "luisbennett@fakemail.com",
+        "phone": "(730) 097-8797",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 79,
+    "fields": {
+        "name": "Mandy Estrada",
+        "barcode_id": null,
+        "email": "mandyestrada@fakemail.com",
+        "phone": "(559) 299-0471",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 80,
+    "fields": {
+        "name": "Leigh Mcgee",
+        "barcode_id": null,
+        "email": "leighmcgee@fakemail.com",
+        "phone": "(844) 760-9302",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 81,
+    "fields": {
+        "name": "Jacqueline Freeman",
+        "barcode_id": null,
+        "email": "jacquelinefreeman@fakemail.com",
+        "phone": "(297) 916-1716",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 82,
+    "fields": {
+        "name": "ORANGE",
+        "barcode_id": null,
+        "email": null,
+        "phone": "(958) 783-2610",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 83,
+    "fields": {
+        "name": "RED Personal_IP",
+        "barcode_id": null,
+        "email": "pedroburgess@fakemail.com",
+        "phone": "(854) 441-0104",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 84,
+    "fields": {
+        "name": "Kristy Carr",
+        "barcode_id": null,
+        "email": "kristycarr@fakemail.com",
+        "phone": "(644) 607-3297",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 85,
+    "fields": {
+        "name": "Wilma Vaughn",
+        "barcode_id": null,
+        "email": "wilmavaughn@fakemail.com",
+        "phone": "(398) 759-9537",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 86,
+    "fields": {
+        "name": "Virginia Mccarthy",
+        "barcode_id": null,
+        "email": "virginiamccarthy@fakemail.com",
+        "phone": "(455) 177-0459",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 87,
+    "fields": {
+        "name": "Tasha Jenkins",
+        "barcode_id": null,
+        "email": "tashajenkins@fakemail.com",
+        "phone": "(875) 519-9891",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "",
+        "pronoun": ""
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 88,
+    "fields": {
+        "name": "Toby Wong",
+        "barcode_id": null,
+        "email": null,
+        "phone": "(404) 641-5999",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 89,
+    "fields": {
+        "name": "BLUE 1",
+        "barcode_id": null,
+        "email": "joallen@fakemail.com",
+        "phone": "(761) 993-2983",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 90,
+    "fields": {
+        "name": "Billy Griffin",
+        "barcode_id": null,
+        "email": "billygriffin@fakemail.com",
+        "phone": "(430) 532-2939",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 91,
+    "fields": {
+        "name": "Angela Reed",
+        "barcode_id": null,
+        "email": "angelareed@fakemail.com",
+        "phone": "(936) 500-1228",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 92,
+    "fields": {
+        "name": "RED Personal_IP",
+        "barcode_id": null,
+        "email": "hugolewis@fakemail.com",
+        "phone": "(422) 585-9609",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "M",
+        "pronoun": "they"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 93,
+    "fields": {
+        "name": "BLUE_1",
+        "barcode_id": null,
+        "email": "cassandrawilson@fakemail.com",
+        "phone": "(604) 306-2084",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 94,
+    "fields": {
+        "name": "George Willis",
+        "barcode_id": null,
+        "email": "georgewillis@fakemail.com",
+        "phone": "(222) 204-5944",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "M",
+        "pronoun": "he"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 95,
+    "fields": {
+        "name": "Jamie Hodges",
+        "barcode_id": null,
+        "email": "jamiehodges@fakemail.com",
+        "phone": "(737) 122-6102",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 96,
+    "fields": {
+        "name": "Bennie Rodriguez",
+        "barcode_id": null,
+        "email": "bennierodriguez@fakemail.com",
+        "phone": "(537) 641-2175",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 97,
+    "fields": {
+        "name": "Allison Martin",
+        "barcode_id": null,
+        "email": "allisonmartin@fakemail.com",
+        "phone": "(525) 384-2715",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 98,
+    "fields": {
+        "name": "Kristi Elliott",
+        "barcode_id": null,
+        "email": "kristielliott@fakemail.com",
+        "phone": "(790) 289-5430",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": null,
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.person",
+    "pk": 99,
+    "fields": {
+        "name": "BLUE 1",
+        "barcode_id": null,
+        "email": null,
+        "phone": "(317) 721-2439",
+        "anonymous": false,
+        "checkin_message": "",
+        "notes": "",
+        "gender": "F",
+        "pronoun": "she"
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 1,
+    "fields": {
+        "reference": "Custom Team Name",
+        "short_reference": "Custom Team Name",
+        "short_name": "Custom Team Name",
+        "long_name": "Custom Team Name",
+        "institution": 1,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": false,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udecd",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 2,
+    "fields": {
+        "reference": "2",
+        "short_reference": "RED",
+        "short_name": "RED",
+        "long_name": "2",
+        "institution": 1,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": false,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83c\udf96",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 3,
+    "fields": {
+        "reference": "3",
+        "short_reference": "3",
+        "short_name": "Caltech 3",
+        "long_name": "California Institute of Technology 3",
+        "institution": 1,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udeac",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 4,
+    "fields": {
+        "reference": "1",
+        "short_reference": "1",
+        "short_name": "Columbia 1",
+        "long_name": "Columbia University 1",
+        "institution": 2,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83e\udd20",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 5,
+    "fields": {
+        "reference": "1",
+        "short_reference": "1",
+        "short_name": "Cornell 1",
+        "long_name": "Cornell University 1",
+        "institution": 3,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udebf",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 6,
+    "fields": {
+        "reference": "1",
+        "short_reference": "BLUE_1",
+        "short_name": "BLUE_1",
+        "long_name": "1",
+        "institution": 4,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": false,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\ude07",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 7,
+    "fields": {
+        "reference": "2",
+        "short_reference": "2",
+        "short_name": "Harvard 2",
+        "long_name": "Harvard University 2",
+        "institution": 4,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83c\udfa8",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 8,
+    "fields": {
+        "reference": "1",
+        "short_reference": "1",
+        "short_name": "Johns Hopkins 1",
+        "long_name": "Johns Hopkins University 1",
+        "institution": 5,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\ude37",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 9,
+    "fields": {
+        "reference": "1",
+        "short_reference": "1",
+        "short_name": "MIT 1",
+        "long_name": "Massachusetts Institute of Technology 1",
+        "institution": 6,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udca1",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 10,
+    "fields": {
+        "reference": "2",
+        "short_reference": "2",
+        "short_name": "MIT 2",
+        "long_name": "Massachusetts Institute of Technology 2",
+        "institution": 6,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83c\udf2d",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 11,
+    "fields": {
+        "reference": "1",
+        "short_reference": "1",
+        "short_name": "Princeton 1",
+        "long_name": "Princeton University 1",
+        "institution": 7,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udcaa",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 12,
+    "fields": {
+        "reference": "2",
+        "short_reference": "2",
+        "short_name": "Princeton 2",
+        "long_name": "Princeton University 2",
+        "institution": 7,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83c\udfa4",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 13,
+    "fields": {
+        "reference": "1",
+        "short_reference": "1",
+        "short_name": "Stanford 1",
+        "long_name": "Stanford University 1",
+        "institution": 8,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83c\udf02",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 14,
+    "fields": {
+        "reference": "2",
+        "short_reference": "ORANGE",
+        "short_name": "ORANGE",
+        "long_name": "2",
+        "institution": 8,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": false,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udd2e",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 15,
+    "fields": {
+        "reference": "3",
+        "short_reference": "3",
+        "short_name": "Stanford 3",
+        "long_name": "Stanford University 3",
+        "institution": 8,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83e\udd24",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 16,
+    "fields": {
+        "reference": "1",
+        "short_reference": "1",
+        "short_name": "Berkeley 1",
+        "long_name": "University of California, Berkeley 1",
+        "institution": 9,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83e\udd84",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 17,
+    "fields": {
+        "reference": "1",
+        "short_reference": "1",
+        "short_name": "Chicago 1",
+        "long_name": "University of Chicago 1",
+        "institution": 10,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udc7b",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 18,
+    "fields": {
+        "reference": "2",
+        "short_reference": "ORANGE",
+        "short_name": "ORANGE",
+        "long_name": "2",
+        "institution": 10,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": false,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83c\udf54",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 19,
+    "fields": {
+        "reference": "3",
+        "short_reference": "ORANGE",
+        "short_name": "ORANGE",
+        "long_name": "3",
+        "institution": 10,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": false,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\ude19",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 20,
+    "fields": {
+        "reference": "1",
+        "short_reference": "1",
+        "short_name": "Pennsylvania 1",
+        "long_name": "University of Pennsylvania 1",
+        "institution": 11,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udc2f",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 21,
+    "fields": {
+        "reference": "2",
+        "short_reference": "2",
+        "short_name": "Pennsylvania 2",
+        "long_name": "University of Pennsylvania 2",
+        "institution": 11,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83e\udd35",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 22,
+    "fields": {
+        "reference": "Special Name",
+        "short_reference": "Special Name",
+        "short_name": "Special Name",
+        "long_name": "Special Name",
+        "institution": 13,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": false,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udc2e",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 23,
+    "fields": {
+        "reference": "2",
+        "short_reference": "2",
+        "short_name": "Yale 2",
+        "long_name": "Yale University 2",
+        "institution": 13,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83d\udebd",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.team",
+    "pk": 24,
+    "fields": {
+        "reference": "3",
+        "short_reference": "3",
+        "short_name": "Yale 3",
+        "long_name": "Yale University 3",
+        "institution": 13,
+        "tournament": 1,
+        "division": null,
+        "use_institution_prefix": true,
+        "url_key": null,
+        "type": "N",
+        "emoji": "\ud83c\udf83",
+        "break_categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 1,
+    "fields": {
+        "team": 1,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 2,
+    "fields": {
+        "team": 1,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 3,
+    "fields": {
+        "team": 1,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 4,
+    "fields": {
+        "team": 2,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 5,
+    "fields": {
+        "team": 2,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 6,
+    "fields": {
+        "team": 2,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 7,
+    "fields": {
+        "team": 3,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 8,
+    "fields": {
+        "team": 3,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 9,
+    "fields": {
+        "team": 3,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 10,
+    "fields": {
+        "team": 4,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 11,
+    "fields": {
+        "team": 4,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 12,
+    "fields": {
+        "team": 4,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 13,
+    "fields": {
+        "team": 5,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 14,
+    "fields": {
+        "team": 5,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 15,
+    "fields": {
+        "team": 5,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 16,
+    "fields": {
+        "team": 6,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 17,
+    "fields": {
+        "team": 6,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 18,
+    "fields": {
+        "team": 6,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 19,
+    "fields": {
+        "team": 7,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 20,
+    "fields": {
+        "team": 7,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 21,
+    "fields": {
+        "team": 7,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 22,
+    "fields": {
+        "team": 8,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 23,
+    "fields": {
+        "team": 8,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 24,
+    "fields": {
+        "team": 8,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 25,
+    "fields": {
+        "team": 9,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 26,
+    "fields": {
+        "team": 9,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 27,
+    "fields": {
+        "team": 9,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 28,
+    "fields": {
+        "team": 10,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 29,
+    "fields": {
+        "team": 10,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 30,
+    "fields": {
+        "team": 10,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 31,
+    "fields": {
+        "team": 11,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 32,
+    "fields": {
+        "team": 11,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 33,
+    "fields": {
+        "team": 11,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 34,
+    "fields": {
+        "team": 12,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 35,
+    "fields": {
+        "team": 12,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 36,
+    "fields": {
+        "team": 12,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 37,
+    "fields": {
+        "team": 13,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 38,
+    "fields": {
+        "team": 13,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 39,
+    "fields": {
+        "team": 13,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 40,
+    "fields": {
+        "team": 14,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 41,
+    "fields": {
+        "team": 14,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 42,
+    "fields": {
+        "team": 14,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 43,
+    "fields": {
+        "team": 15,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 44,
+    "fields": {
+        "team": 15,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 45,
+    "fields": {
+        "team": 15,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 46,
+    "fields": {
+        "team": 16,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 47,
+    "fields": {
+        "team": 16,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 48,
+    "fields": {
+        "team": 16,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 49,
+    "fields": {
+        "team": 17,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 50,
+    "fields": {
+        "team": 17,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 51,
+    "fields": {
+        "team": 17,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 52,
+    "fields": {
+        "team": 18,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 53,
+    "fields": {
+        "team": 18,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 54,
+    "fields": {
+        "team": 18,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 55,
+    "fields": {
+        "team": 19,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 56,
+    "fields": {
+        "team": 19,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 57,
+    "fields": {
+        "team": 19,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 58,
+    "fields": {
+        "team": 20,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 59,
+    "fields": {
+        "team": 20,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 60,
+    "fields": {
+        "team": 20,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 61,
+    "fields": {
+        "team": 21,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 62,
+    "fields": {
+        "team": 21,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 63,
+    "fields": {
+        "team": 21,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 64,
+    "fields": {
+        "team": 22,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 65,
+    "fields": {
+        "team": 22,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 66,
+    "fields": {
+        "team": 22,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 67,
+    "fields": {
+        "team": 23,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 68,
+    "fields": {
+        "team": 23,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 69,
+    "fields": {
+        "team": 23,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 70,
+    "fields": {
+        "team": 24,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 71,
+    "fields": {
+        "team": 24,
+        "categories": []
+    }
+},
+{
+    "model": "participants.speaker",
+    "pk": 72,
+    "fields": {
+        "team": 24,
+        "categories": []
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 73,
+    "fields": {
+        "institution": 13,
+        "tournament": 1,
+        "test_score": 5.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": true
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 74,
+    "fields": {
+        "institution": 8,
+        "tournament": 1,
+        "test_score": 5.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": true,
+        "adj_core": true
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 75,
+    "fields": {
+        "institution": 12,
+        "tournament": 1,
+        "test_score": 5.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 76,
+    "fields": {
+        "institution": 1,
+        "tournament": 1,
+        "test_score": 1.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": true,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 77,
+    "fields": {
+        "institution": 1,
+        "tournament": 1,
+        "test_score": 0.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 78,
+    "fields": {
+        "institution": 2,
+        "tournament": 1,
+        "test_score": 2.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 79,
+    "fields": {
+        "institution": 3,
+        "tournament": 1,
+        "test_score": 5.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": true,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 80,
+    "fields": {
+        "institution": 4,
+        "tournament": 1,
+        "test_score": 4.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 81,
+    "fields": {
+        "institution": 4,
+        "tournament": 1,
+        "test_score": 5.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": true,
+        "adj_core": true
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 82,
+    "fields": {
+        "institution": 12,
+        "tournament": 1,
+        "test_score": 0.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": true,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 83,
+    "fields": {
+        "institution": 12,
+        "tournament": 1,
+        "test_score": 4.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 84,
+    "fields": {
+        "institution": 8,
+        "tournament": 1,
+        "test_score": 4.0,
+        "url_key": null,
+        "trainee": true,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 85,
+    "fields": {
+        "institution": 5,
+        "tournament": 1,
+        "test_score": 4.0,
+        "url_key": null,
+        "trainee": true,
+        "breaking": false,
+        "independent": true,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 86,
+    "fields": {
+        "institution": 5,
+        "tournament": 1,
+        "test_score": 2.0,
+        "url_key": null,
+        "trainee": true,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 87,
+    "fields": {
+        "institution": 6,
+        "tournament": 1,
+        "test_score": 2.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": true,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 88,
+    "fields": {
+        "institution": 6,
+        "tournament": 1,
+        "test_score": 5.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 89,
+    "fields": {
+        "institution": 7,
+        "tournament": 1,
+        "test_score": 2.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 90,
+    "fields": {
+        "institution": 7,
+        "tournament": 1,
+        "test_score": 2.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 91,
+    "fields": {
+        "institution": 8,
+        "tournament": 1,
+        "test_score": 1.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 92,
+    "fields": {
+        "institution": 8,
+        "tournament": 1,
+        "test_score": 0.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 93,
+    "fields": {
+        "institution": 9,
+        "tournament": 1,
+        "test_score": 4.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 94,
+    "fields": {
+        "institution": 10,
+        "tournament": 1,
+        "test_score": 2.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 95,
+    "fields": {
+        "institution": 10,
+        "tournament": 1,
+        "test_score": 3.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 96,
+    "fields": {
+        "institution": 11,
+        "tournament": 1,
+        "test_score": 2.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 97,
+    "fields": {
+        "institution": 13,
+        "tournament": 1,
+        "test_score": 4.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 98,
+    "fields": {
+        "institution": 13,
+        "tournament": 1,
+        "test_score": 3.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "participants.adjudicator",
+    "pk": 99,
+    "fields": {
+        "institution": 5,
+        "tournament": 1,
+        "test_score": 5.0,
+        "url_key": null,
+        "trainee": false,
+        "breaking": false,
+        "independent": false,
+        "adj_core": false
+    }
+},
+{
+    "model": "results.ballotsubmission",
+    "pk": 1,
+    "fields": {
+        "timestamp": "2017-09-13T21:09:23.738",
+        "version": 1,
+        "submitter_type": "T",
+        "confirmed": true,
+        "submitter": [
+            "philip"
+        ],
+        "confirmer": null,
+        "confirm_timestamp": null,
+        "ip_address": null,
+        "debate": 4,
+        "motion": 2,
+        "copied_from": null,
+        "discarded": false,
+        "forfeit": null
+    }
+},
+{
+    "model": "results.ballotsubmission",
+    "pk": 2,
+    "fields": {
+        "timestamp": "2017-09-13T21:09:23.849",
+        "version": 1,
+        "submitter_type": "T",
+        "confirmed": true,
+        "submitter": [
+            "philip"
+        ],
+        "confirmer": null,
+        "confirm_timestamp": null,
+        "ip_address": null,
+        "debate": 6,
+        "motion": 3,
+        "copied_from": null,
+        "discarded": false,
+        "forfeit": null
+    }
+},
+{
+    "model": "results.ballotsubmission",
+    "pk": 3,
+    "fields": {
+        "timestamp": "2017-09-13T21:09:23.947",
+        "version": 1,
+        "submitter_type": "T",
+        "confirmed": true,
+        "submitter": [
+            "philip"
+        ],
+        "confirmer": null,
+        "confirm_timestamp": null,
+        "ip_address": null,
+        "debate": 1,
+        "motion": 3,
+        "copied_from": null,
+        "discarded": false,
+        "forfeit": null
+    }
+},
+{
+    "model": "results.ballotsubmission",
+    "pk": 4,
+    "fields": {
+        "timestamp": "2017-09-13T21:09:24.043",
+        "version": 1,
+        "submitter_type": "T",
+        "confirmed": true,
+        "submitter": [
+            "philip"
+        ],
+        "confirmer": null,
+        "confirm_timestamp": null,
+        "ip_address": null,
+        "debate": 2,
+        "motion": 1,
+        "copied_from": null,
+        "discarded": false,
+        "forfeit": null
+    }
+},
+{
+    "model": "results.ballotsubmission",
+    "pk": 5,
+    "fields": {
+        "timestamp": "2017-09-13T21:09:24.142",
+        "version": 1,
+        "submitter_type": "T",
+        "confirmed": true,
+        "submitter": [
+            "philip"
+        ],
+        "confirmer": null,
+        "confirm_timestamp": null,
+        "ip_address": null,
+        "debate": 3,
+        "motion": 1,
+        "copied_from": null,
+        "discarded": false,
+        "forfeit": null
+    }
+},
+{
+    "model": "results.ballotsubmission",
+    "pk": 6,
+    "fields": {
+        "timestamp": "2017-09-13T21:09:24.250",
+        "version": 1,
+        "submitter_type": "T",
+        "confirmed": true,
+        "submitter": [
+            "philip"
+        ],
+        "confirmer": null,
+        "confirm_timestamp": null,
+        "ip_address": null,
+        "debate": 5,
+        "motion": 1,
+        "copied_from": null,
+        "discarded": false,
+        "forfeit": null
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 1,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 13,
+        "points": 0,
+        "win": null,
+        "margin": null,
+        "score": 130.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 2,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 14,
+        "points": 1,
+        "win": null,
+        "margin": null,
+        "score": 145.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 3,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 15,
+        "points": 2,
+        "win": null,
+        "margin": null,
+        "score": 149.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 4,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 16,
+        "points": 3,
+        "win": null,
+        "margin": null,
+        "score": 175.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 5,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 21,
+        "points": 1,
+        "win": null,
+        "margin": null,
+        "score": 137.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 6,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 22,
+        "points": 2,
+        "win": null,
+        "margin": null,
+        "score": 158.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 7,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 23,
+        "points": 0,
+        "win": null,
+        "margin": null,
+        "score": 131.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 8,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 24,
+        "points": 3,
+        "win": null,
+        "margin": null,
+        "score": 173.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 9,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 1,
+        "points": 3,
+        "win": null,
+        "margin": null,
+        "score": 162.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 10,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 2,
+        "points": 2,
+        "win": null,
+        "margin": null,
+        "score": 133.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 11,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 3,
+        "points": 0,
+        "win": null,
+        "margin": null,
+        "score": 119.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 12,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 4,
+        "points": 1,
+        "win": null,
+        "margin": null,
+        "score": 126.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 13,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 5,
+        "points": 3,
+        "win": null,
+        "margin": null,
+        "score": 178.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 14,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 6,
+        "points": 1,
+        "win": null,
+        "margin": null,
+        "score": 146.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 15,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 7,
+        "points": 2,
+        "win": null,
+        "margin": null,
+        "score": 177.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 16,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 8,
+        "points": 0,
+        "win": null,
+        "margin": null,
+        "score": 134.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 17,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 9,
+        "points": 1,
+        "win": null,
+        "margin": null,
+        "score": 148.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 18,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 10,
+        "points": 3,
+        "win": null,
+        "margin": null,
+        "score": 174.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 19,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 11,
+        "points": 0,
+        "win": null,
+        "margin": null,
+        "score": 135.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 20,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 12,
+        "points": 2,
+        "win": null,
+        "margin": null,
+        "score": 172.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 21,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 17,
+        "points": 2,
+        "win": null,
+        "margin": null,
+        "score": 147.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 22,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 18,
+        "points": 1,
+        "win": null,
+        "margin": null,
+        "score": 135.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 23,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 19,
+        "points": 3,
+        "win": null,
+        "margin": null,
+        "score": 171.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.teamscore",
+    "pk": 24,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 20,
+        "points": 0,
+        "win": null,
+        "margin": null,
+        "score": 127.0,
+        "votes_given": null,
+        "votes_possible": null,
+        "forfeit": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 1,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 13,
+        "speaker": 43,
+        "score": 55.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 2,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 13,
+        "speaker": 44,
+        "score": 75.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 3,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 14,
+        "speaker": 7,
+        "score": 63.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 4,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 14,
+        "speaker": 8,
+        "score": 82.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 5,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 15,
+        "speaker": 67,
+        "score": 60.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 6,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 15,
+        "speaker": 68,
+        "score": 89.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 7,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 16,
+        "speaker": 40,
+        "score": 98.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 8,
+    "fields": {
+        "ballot_submission": 1,
+        "debate_team": 16,
+        "speaker": 41,
+        "score": 77.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 9,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 21,
+        "speaker": 10,
+        "score": 76.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 10,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 21,
+        "speaker": 11,
+        "score": 61.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 11,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 22,
+        "speaker": 22,
+        "score": 94.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 12,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 22,
+        "speaker": 23,
+        "score": 64.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 13,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 23,
+        "speaker": 34,
+        "score": 79.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 14,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 23,
+        "speaker": 35,
+        "score": 52.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 15,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 24,
+        "speaker": 16,
+        "score": 89.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 16,
+    "fields": {
+        "ballot_submission": 2,
+        "debate_team": 24,
+        "speaker": 17,
+        "score": 84.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 17,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 1,
+        "speaker": 25,
+        "score": 84.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 18,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 1,
+        "speaker": 26,
+        "score": 78.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 19,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 2,
+        "speaker": 55,
+        "score": 74.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 20,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 2,
+        "speaker": 56,
+        "score": 59.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 21,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 3,
+        "speaker": 19,
+        "score": 65.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 22,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 3,
+        "speaker": 20,
+        "score": 54.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 23,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 4,
+        "speaker": 49,
+        "score": 72.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 24,
+    "fields": {
+        "ballot_submission": 3,
+        "debate_team": 4,
+        "speaker": 50,
+        "score": 54.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 25,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 5,
+        "speaker": 64,
+        "score": 92.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 26,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 5,
+        "speaker": 65,
+        "score": 86.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 27,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 6,
+        "speaker": 58,
+        "score": 66.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 28,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 6,
+        "speaker": 59,
+        "score": 80.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 29,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 7,
+        "speaker": 70,
+        "score": 87.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 30,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 7,
+        "speaker": 71,
+        "score": 90.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 31,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 8,
+        "speaker": 37,
+        "score": 61.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 32,
+    "fields": {
+        "ballot_submission": 4,
+        "debate_team": 8,
+        "speaker": 38,
+        "score": 73.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 33,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 9,
+        "speaker": 28,
+        "score": 52.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 34,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 9,
+        "speaker": 29,
+        "score": 96.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 35,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 10,
+        "speaker": 31,
+        "score": 96.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 36,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 10,
+        "speaker": 32,
+        "score": 78.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 37,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 11,
+        "speaker": 46,
+        "score": 80.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 38,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 11,
+        "speaker": 47,
+        "score": 55.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 39,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 12,
+        "speaker": 52,
+        "score": 76.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 40,
+    "fields": {
+        "ballot_submission": 5,
+        "debate_team": 12,
+        "speaker": 53,
+        "score": 96.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 41,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 17,
+        "speaker": 4,
+        "score": 80.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 42,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 17,
+        "speaker": 5,
+        "score": 67.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 43,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 18,
+        "speaker": 13,
+        "score": 56.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 44,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 18,
+        "speaker": 14,
+        "score": 79.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 45,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 19,
+        "speaker": 1,
+        "score": 92.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 46,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 19,
+        "speaker": 2,
+        "score": 79.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 47,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 20,
+        "speaker": 61,
+        "score": 63.0,
+        "position": 1,
+        "ghost": false
+    }
+},
+{
+    "model": "results.speakerscore",
+    "pk": 48,
+    "fields": {
+        "ballot_submission": 6,
+        "debate_team": 20,
+        "speaker": 62,
+        "score": 64.0,
+        "position": 2,
+        "ghost": false
+    }
+},
+{
+    "model": "tournaments.tournament",
+    "pk": 1,
+    "fields": {
+        "name": "demo",
+        "short_name": "demo",
+        "emoji": null,
+        "seq": null,
+        "slug": "demo",
+        "current_round": 2,
+        "welcome_msg": "",
+        "active": true
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 1,
+    "fields": {
+        "tournament": 1,
+        "seq": 1,
+        "name": "Round 1",
+        "abbreviation": "R1",
+        "stage": "P",
+        "draw_type": "R",
+        "break_category": null,
+        "draw_status": "C",
+        "feedback_weight": 0.7,
+        "silent": false,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 2,
+    "fields": {
+        "tournament": 1,
+        "seq": 2,
+        "name": "Round 2",
+        "abbreviation": "R2",
+        "stage": "P",
+        "draw_type": "P",
+        "break_category": null,
+        "draw_status": "C",
+        "feedback_weight": 0.7,
+        "silent": false,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 3,
+    "fields": {
+        "tournament": 1,
+        "seq": 3,
+        "name": "Round 3",
+        "abbreviation": "R3",
+        "stage": "P",
+        "draw_type": "P",
+        "break_category": null,
+        "draw_status": "N",
+        "feedback_weight": 0.7,
+        "silent": false,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 4,
+    "fields": {
+        "tournament": 1,
+        "seq": 4,
+        "name": "Round 4",
+        "abbreviation": "R4",
+        "stage": "P",
+        "draw_type": "P",
+        "break_category": null,
+        "draw_status": "N",
+        "feedback_weight": 0.7,
+        "silent": false,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 5,
+    "fields": {
+        "tournament": 1,
+        "seq": 5,
+        "name": "Open Quarterfinal",
+        "abbreviation": "OQF",
+        "stage": "E",
+        "draw_type": "F",
+        "break_category": 1,
+        "draw_status": "N",
+        "feedback_weight": 0.7,
+        "silent": true,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 6,
+    "fields": {
+        "tournament": 1,
+        "seq": 6,
+        "name": "ESL Semifinal",
+        "abbreviation": "SSF",
+        "stage": "E",
+        "draw_type": "F",
+        "break_category": 2,
+        "draw_status": "N",
+        "feedback_weight": 0.7,
+        "silent": true,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 7,
+    "fields": {
+        "tournament": 1,
+        "seq": 7,
+        "name": "Open Semifinal",
+        "abbreviation": "OSF",
+        "stage": "E",
+        "draw_type": "B",
+        "break_category": 1,
+        "draw_status": "N",
+        "feedback_weight": 0.7,
+        "silent": true,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 8,
+    "fields": {
+        "tournament": 1,
+        "seq": 8,
+        "name": "ESL Grand Final",
+        "abbreviation": "SGF",
+        "stage": "E",
+        "draw_type": "B",
+        "break_category": 2,
+        "draw_status": "N",
+        "feedback_weight": 0.7,
+        "silent": true,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 9,
+    "fields": {
+        "tournament": 1,
+        "seq": 9,
+        "name": "Novice Grand Final",
+        "abbreviation": "NGF",
+        "stage": "E",
+        "draw_type": "F",
+        "break_category": 3,
+        "draw_status": "N",
+        "feedback_weight": 0.7,
+        "silent": true,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "tournaments.round",
+    "pk": 10,
+    "fields": {
+        "tournament": 1,
+        "seq": 10,
+        "name": "Open Grand Final",
+        "abbreviation": "OGF",
+        "stage": "E",
+        "draw_type": "B",
+        "break_category": 1,
+        "draw_status": "N",
+        "feedback_weight": 0.7,
+        "silent": true,
+        "motions_released": false,
+        "starts_at": null
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 1,
+    "fields": {
+        "name": "01",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 2,
+    "fields": {
+        "name": "02",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 3,
+    "fields": {
+        "name": "03",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 4,
+    "fields": {
+        "name": "G01",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 5,
+    "fields": {
+        "name": "G02",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 6,
+    "fields": {
+        "name": "G03",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 7,
+    "fields": {
+        "name": "G04",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 8,
+    "fields": {
+        "name": "G05",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 9,
+    "fields": {
+        "name": "G06",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 10,
+    "fields": {
+        "name": "G08",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 11,
+    "fields": {
+        "name": "103",
+        "priority": 20,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 12,
+    "fields": {
+        "name": "104",
+        "priority": 20,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 13,
+    "fields": {
+        "name": "205",
+        "priority": 20,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 14,
+    "fields": {
+        "name": "308",
+        "priority": 20,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 15,
+    "fields": {
+        "name": "4.01",
+        "priority": 30,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 16,
+    "fields": {
+        "name": "4.03",
+        "priority": 30,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 17,
+    "fields": {
+        "name": "Basement A",
+        "priority": 30,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 18,
+    "fields": {
+        "name": "Basement B",
+        "priority": 30,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 19,
+    "fields": {
+        "name": "Z09",
+        "priority": 40,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 20,
+    "fields": {
+        "name": "Z10",
+        "priority": 40,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 21,
+    "fields": {
+        "name": "Main Hall",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 22,
+    "fields": {
+        "name": "Sub Hall",
+        "priority": 20,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venue",
+    "pk": 23,
+    "fields": {
+        "name": "Outside",
+        "priority": 10,
+        "tournament": 1
+    }
+},
+{
+    "model": "venues.venuecategory",
+    "pk": 1,
+    "fields": {
+        "name": "(Accessible)",
+        "description": "",
+        "display_in_venue_name": "S",
+        "display_in_public_tooltip": false,
+        "venues": [
+            21,
+            22
+        ]
+    }
+},
+{
+    "model": "venues.venuecategory",
+    "pk": 2,
+    "fields": {
+        "name": "Close to tab",
+        "description": "",
+        "display_in_venue_name": "-",
+        "display_in_public_tooltip": false,
+        "venues": [
+            19,
+            20
+        ]
+    }
+},
+{
+    "model": "venues.venuecategory",
+    "pk": 3,
+    "fields": {
+        "name": "Apple",
+        "description": "",
+        "display_in_venue_name": "P",
+        "display_in_public_tooltip": false,
+        "venues": [
+            1,
+            2,
+            3
+        ]
+    }
+},
+{
+    "model": "venues.venuecategory",
+    "pk": 4,
+    "fields": {
+        "name": "Banana",
+        "description": "",
+        "display_in_venue_name": "P",
+        "display_in_public_tooltip": false,
+        "venues": [
+            4,
+            5,
+            6
+        ]
+    }
+},
+{
+    "model": "venues.venuecategory",
+    "pk": 5,
+    "fields": {
+        "name": "Coconut",
+        "description": "",
+        "display_in_venue_name": "P",
+        "display_in_public_tooltip": false,
+        "venues": [
+            7,
+            8,
+            9,
+            10
+        ]
+    }
+},
+{
+    "model": "venues.venuecategory",
+    "pk": 6,
+    "fields": {
+        "name": "Date",
+        "description": "",
+        "display_in_venue_name": "P",
+        "display_in_public_tooltip": false,
+        "venues": [
+            11,
+            12,
+            13,
+            14
+        ]
+    }
+},
+{
+    "model": "venues.venuecategory",
+    "pk": 7,
+    "fields": {
+        "name": "Feijoa",
+        "description": "",
+        "display_in_venue_name": "P",
+        "display_in_public_tooltip": false,
+        "venues": [
+            15,
+            16
+        ]
+    }
+},
+{
+    "model": "venues.venuecategory",
+    "pk": 8,
+    "fields": {
+        "name": "Very Small",
+        "description": "",
+        "display_in_venue_name": "-",
+        "display_in_public_tooltip": false,
+        "venues": []
+    }
+},
+{
+    "model": "venues.venuecategory",
+    "pk": 9,
+    "fields": {
+        "name": "Kiwifruit",
+        "description": "",
+        "display_in_venue_name": "-",
+        "display_in_public_tooltip": false,
+        "venues": [
+            17,
+            18
+        ]
+    }
+},
+{
+    "model": "venues.venueconstraint",
+    "pk": 1,
+    "fields": {
+        "category": 2,
+        "priority": 56,
+        "subject_content_type": [
+            "participants",
+            "team"
+        ],
+        "subject_id": 74
+    }
+},
+{
+    "model": "venues.venueconstraint",
+    "pk": 2,
+    "fields": {
+        "category": 2,
+        "priority": 79,
+        "subject_content_type": [
+            "participants",
+            "team"
+        ],
+        "subject_id": 84
+    }
+},
+{
+    "model": "venues.venueconstraint",
+    "pk": 3,
+    "fields": {
+        "category": 1,
+        "priority": 96,
+        "subject_content_type": [
+            "participants",
+            "team"
+        ],
+        "subject_id": 91
+    }
+}
+]

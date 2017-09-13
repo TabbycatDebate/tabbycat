@@ -5,11 +5,18 @@
        @mouseleave="handleHoverOff">
 
     <div>
-      <span class="small">{{ team.short_name }}</span>
+      <span v-if="debugMode">
+        Team:{{ team.id }}<br>
+        Inst: {{ team.institution.id }}
+      </span>
+      <span class="small" v-else>
+        {{ team.short_name }}
+      </span>
     </div>
 
     <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
-      <div class="tooltip-inner conflictable hover-histories-1-ago">
+      <div class="tooltip-inner conflictable"
+           :class="'hover-histories-' + hasHistoryConflict + '-ago'">
         {{ hasHistoryConflict }} ago
       </div>
     </div>
@@ -24,6 +31,9 @@ import HighlightableMixin from '../allocations/HighlightableMixin.vue'
 import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
+  data: function () {
+    return { debugMode: false }
+  },
   mixins: [SlideOverSubjectMixin, SlideOverTeamMixin,
            HighlightableMixin, ConflictableMixin],
   props: { 'team': Object },
