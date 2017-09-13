@@ -4,11 +4,11 @@ import _ from 'lodash'
 export default {
 
   methods: {
-    unsendConflict: function(conflict, type, hoverOrPanel) {
+    unsendConflict: function(id, type, hoverOrPanel) {
       // Issue a Vue message to deactivate a given conflict (passes to the Conflictable)
-      var eventCode = 'unsetset-conflicts-for-' + type + '-' + conflict.id
-      console.log(eventCode, hoverOrPanel)
-      self.$eventHub.$emit(eventCode, hoverOrPanel)
+      var eventCode = 'unset-conflicts-for-' + type + '-' + id
+      console.log('\t', eventCode, hoverOrPanel)
+      this.$eventHub.$emit(eventCode, hoverOrPanel)
     },
     sendConflict: function(conflict, type, hoverOrPanel, clashOrHistory) {
       // Issue a Vue message to activate a given conflict (passes to the Conflictable)
@@ -18,7 +18,7 @@ export default {
       } else if (clashOrHistory === 'histories') {
         var state = conflict.ago
       }
-      console.log(eventCode, hoverOrPanel)
+      console.log('\t', eventCode, hoverOrPanel)
       this.$eventHub.$emit(eventCode, hoverOrPanel, type, state)
     },
     forEachConflict: function(conflictsList, callBack) {

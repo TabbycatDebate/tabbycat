@@ -21,16 +21,19 @@ export default {
       debate.debateAdjudicators.splice(adjIndex, 1)
     },
     saveMoveForType(adjudicatorId, fromDebate, toDebate, toPosition=null) {
+
       var adjudicator = this.adjudicatorsById[adjudicatorId]
       var currentChair = this.getPanellist(toDebate, false, "C").adjudicator
       var oldPosition = this.getPanellist(fromDebate, adjudicator, false).position
       var addToUnused = []
       var removeFromUnused = []
+
       // Data Logic
       if (toDebate === 'unused') {
         // Moving to unsed from panel
         this.removefromPanel(fromDebate, adjudicator)
         addToUnused.push(adjudicator)
+
       } else if (fromDebate === 'unused') {
         // Moving from unsued to a panel
         toDebate.debateAdjudicators.push({ 'adjudicator': adjudicator, 'position': toPosition })
@@ -43,6 +46,7 @@ export default {
           this.removefromPanel(toDebate, currentChair)
           addToUnused.push(currentChair)
         }
+
       } else if (toDebate !== 'unused' && fromDebate !== 'unused') {
         // If moving from panel to panel
         if (toPosition === 'C' && currentChair) {
@@ -56,6 +60,7 @@ export default {
           this.removefromPanel(fromDebate, adjudicator)
           toDebate.debateAdjudicators.push({ 'adjudicator': adjudicator, 'position': toPosition })
         }
+
       }
       // After saving the
       var movedPanellists = _.concat(toDebate.debateAdjudicators, fromDebate.debateAdjudicators)

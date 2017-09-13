@@ -14,15 +14,20 @@ export default {
   },
   watch: {
     filteredPanelConflicts: function() {
+      // Re-up all conflicts when the master conflicts dictionary changes
       this.$nextTick(function() {
+        // MUST wait for all data to finish resolving when panel info has been
+        // updated before recalculating conflicts
         this.deactivatePanelConflicts()
-        this.activatePanelConflicts() // Need to wait for DOM updates to trigger
+        this.activatePanelConflicts()
       })
     }
   },
-  mounted: function () {
+  mounted: function() {
     this.$nextTick(function() {
-      this.activatePanelConflicts()  // Need to wait for DOM
+      // MUST to wait for DOM to resolve on initial load before calculating
+      // conflicts
+      this.activatePanelConflicts()
     })
   },
   computed: {
@@ -50,36 +55,44 @@ export default {
       var self = this
       _.forEach(this.allPanelConflicts, function(adjOrTeamsConflicts) {
         // For all of the panel conflicts
-        self.forEachConflict(adjOrTeamsConflicts, function(conflict, type, clashOrHistory) {
-          // Drill down into each adj/teams conflicts and filter out those
-          // that cannot apply to the panel as-is
-          if (self.checkIfInPanel(conflict, type, clashOrHistory)) {
-            filteredConflicts[clashOrHistory][type].push(conflict)
+        self.forEachConflict(adjOrTeamsConflicts,
+          function(conflict, type, clashOrHistory) {
+            // Drill down into each adj/teams conflicts and filter out those
+            // that cannot apply to the panel as-is
+            if (self.checkIfInPanel(conflict, type, clashOrHistory)) {
+              filteredConflicts[clashOrHistory][type].push(conflict)
+            }
           }
-        })
+        )
       })
       return filteredConflicts
     },
   },
   methods: {
     deactivatePanelConflicts: function() {
-      // Turn off all conflicts that might remain from beforehand
+      // Turn off all conflicts that might remain from previous panellists
+      console.log('deactivatePanelConflicts')
       var self = this
-      _.forEach(this.adjudicatorIds, function(dt, id) {
-        self.unsendConflict(conflict, 'team', 'panel')
+      _.forEach(this.adjudicatorIds, function(id, dt) {
+        self.unsendConflict(id, 'adjudicator', 'panel')
       })
-      _.forEach(this.teamIds, function(da, id) {
-        self.unsendConflict(conflict, 'adjudicator', 'panel')
+      _.forEach(this.teamIds, function(id, da) {
+        self.unsendConflict(id, 'team', 'panel')
       })
     },
     activatePanelConflicts: function() {
       // Turn on all conflicts as set by the filteredPanelConflicts()
+      console.log('activatePanelConflicts')
       var self = this
-      this.forEachConflict(this.filteredPanelConflicts, function(conflict, type, clashOrHistory) {
-        self.sendConflict(conflict, type, 'panel', clashOrHistory)
-      })
+      this.forEachConflict(this.filteredPanelConflicts,
+        function(conflict, type, clashOrHistory) {
+          self.sendConflict(conflict, type, 'panel', clashOrHistory)
+        }
+      )
     },
     checkIfInPanel: function(conflict, type, clashOrHistory) {
+      // For a given conflict from a team/adj check if it can actually apply
+      // to the panel
       if (type === 'institution') {
         return this.checkIfInPanelWithInstitution(conflict.id)
       } else if (type === 'team' && _.includes(this.teamIds, conflict.id)) {
