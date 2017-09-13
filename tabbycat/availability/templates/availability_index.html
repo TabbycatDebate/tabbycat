@@ -186,7 +186,32 @@
     </div>
   {% endif %}
 
-  {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_info.teams.total == 0 %}
+  {% if error_type == 'no_break_category' %}
+    <div class="alert alert-danger">
+      <i data-feather="alert-circle"></i>
+      {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}
+        This is an elimination round, but it doesn't have a break category.
+        Elimination rounds must be associated with a break category. Please
+        <a href="{{ change_round_url }}" class="alert-link">
+          set this round's break category in the Edit Database area.</a>
+      {% endblocktrans %}
+    </div>
+  {% endif %}
+
+  {% if round.is_break_round and round.draw_type != round.DRAW_ELIMINATION %}
+    <div class="alert alert-danger">
+      <i data-feather="alert-circle"></i>
+      {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}
+        This is an elimination round, but its draw type is
+        <strong>{{ draw_type }}</strong>.
+        The draw type of all elimination rounds must be "Elimination". Please
+        <a href="{{ change_round_url }}" class="alert-link">
+          change this round's draw type in the Edit Database area.</a>
+      {% endblocktrans %}
+    </div>
+  {% endif %}
+
+  {% if round.is_break_round and checkin_info.teams.total == 0 %}
     <div class="alert alert-warning">
       <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with break_category=round.break_category.name %}
@@ -198,7 +223,7 @@
     </div>
   {% endif %}
 
-  {% if round.draw_type == round.DRAW_FIRSTBREAK and checkin_info.teams.total == 1 %}
+  {% if round.is_break_round and checkin_info.teams.total == 1 %}
     <div class="alert alert-warning">
       <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with break_category=round.break_category.name %}
@@ -207,36 +232,6 @@
         like to
         <a href="{{ breakqual_teams_url }}" class="alert-link">
           review the break for the {{ break_category }} Break</a>.
-      {% endblocktrans %}
-    </div>
-  {% endif %}
-
-  {% if round.draw_type == round.DRAW_BREAK and error_type == 'no_last_round' %}
-    <div class="alert alert-danger">
-      <i data-feather="alert-circle"></i>
-      {% blocktrans trimmed with break_category=round.break_category.name %}
-        This is a subsequent elimination round, but there aren't any elimination
-        rounds in the same break category ({{ break_category }}) before
-        it. Is this round meant to be a <strong>first elimination</strong> round
-        instead? You can
-        <a href="{{ change_round_url }}" class="alert-link">
-          edit this round's draw type in the Edit Database area.</a>
-      {% endblocktrans %}
-    </div>
-  {% endif %}
-
-  {% if error_type == 'bad_draw_type_for_break_round' %}
-    <div class="alert alert-danger">
-      <i data-feather="alert-circle"></i>
-      {% blocktrans trimmed with draw_type=round.get_draw_type_display|lower %}
-        This is an elimination round, but its draw type is
-        <strong>{{ draw_type }}</strong>.
-        This combination isn't allowed — the draw type of elimination rounds must
-        be either <strong>first elimination</strong> (if it's the first
-        elimination round in its break category) or <strong>subsequent
-        elimination</strong>. Please
-        <a href="{{ change_round_url }}" class="alert-link">
-          change this round's draw type in the Edit Database area.</a>
       {% endblocktrans %}
     </div>
   {% endif %}

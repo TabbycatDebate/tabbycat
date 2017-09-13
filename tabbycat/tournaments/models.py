@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
-from django.utils.encoding import force_text
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
@@ -213,25 +212,18 @@ class Round(models.Model):
     DRAW_MANUAL = 'M'
     DRAW_ROUNDROBIN = 'D'
     DRAW_POWERPAIRED = 'P'
-    DRAW_FIRSTBREAK = 'F'
-    DRAW_BREAK = 'B'
+    DRAW_ELIMINATION = 'E'
     # Translators: These are choices for the type of draw a round should have.
     DRAW_CHOICES = ((DRAW_RANDOM, _('Random')),
                     (DRAW_MANUAL, _('Manual')),
                     (DRAW_ROUNDROBIN, _('Round-robin')),
                     (DRAW_POWERPAIRED, _('Power-paired')),
-                    (DRAW_FIRSTBREAK, _('First elimination')),
-                    (DRAW_BREAK, _('Subsequent elimination')), )
+                    (DRAW_ELIMINATION, _('Elimination')), )
 
     STAGE_PRELIMINARY = 'P'
     STAGE_ELIMINATION = 'E'
     STAGE_CHOICES = ((STAGE_PRELIMINARY, _('Preliminary')),
                      (STAGE_ELIMINATION, _('Elimination')), )
-
-    VALID_DRAW_TYPES_BY_STAGE = {
-        STAGE_PRELIMINARY: [DRAW_RANDOM, DRAW_MANUAL, DRAW_ROUNDROBIN, DRAW_POWERPAIRED],
-        STAGE_ELIMINATION: [DRAW_FIRSTBREAK, DRAW_BREAK],
-    }
 
     STATUS_NONE = 'N'
     STATUS_DRAFT = 'D'
@@ -292,13 +284,12 @@ class Round(models.Model):
         errors = {}
 
         # Draw type must be consistent with stage
-        valid_draw_types = Round.VALID_DRAW_TYPES_BY_STAGE[self.stage]
-        if self.draw_type not in valid_draw_types:
-            display_names = [force_text(name) for value, name in Round.DRAW_CHOICES if value in valid_draw_types]
-            errors['draw_type'] = ValidationError(_("A round in the %(stage)s stage must have a "
-                "draw type that is one of: %(valid)s"), params={
-                    'stage': self.get_stage_display().lower(),
-                    'valid': ", ".join(display_names)})
+        if self.stage == Round.STAGE_ELIMINATION and self.draw_type != Round.DRAW_ELIMINATION:
+            errors['draw_type'] = ValidationError(_("A round in the elimination stage must have "
+                "its draw type set to \"Elimination\"."))
+        elif self.stage == Round.STAGE_PRELIMINARY and self.draw_type == Round.DRAW_ELIMINATION:
+            errors['draw_type'] = ValidationError(_("A round in the preliminary stage cannot "
+                "have its draw type set to \"Elimination\"."))
 
         # Break rounds must have a break category
         if self.stage == Round.STAGE_ELIMINATION and self.break_category is None:
@@ -444,25 +435,11 @@ class Round(models.Model):
     @cached_property
     def prev(self):
         """Returns the round that comes before this round. If this is a break
-        round, then it returns the round in the same break category preceding
-        this round, or the last preliminary round if it's the first break round
-        in the category."""
+        round, then it returns the latest preceding round that is either in the
+        same break category or is a preliminary round."""
         rounds = self.tournament.round_set.filter(seq__lt=self.seq).order_by('-seq')
-        if self.draw_type == Round.DRAW_FIRSTBREAK:
-            rounds = rounds.filter(stage=Round.STAGE_PRELIMINARY)
-        elif self.draw_type == Round.DRAW_BREAK:
-            rounds = rounds.filter(break_category=self.break_category)
-        try:
-            return rounds.first()
-        except Round.DoesNotExist:
-            return None
-
-    @cached_property
-    def next(self):
-        # Deprecated, believed to be not used, but kept just in case there's an
-        # oversight. Remove in version 1.5.
-        logger.error("There was a call to Round.next(), which is deprecated.", stack_info=True)
-        rounds = self.tournament.round_set.filter(seq__gt=self.seq).order_by('seq')
+        if self.is_break_round:
+            rounds = rounds.filter(Q(stage=Round.STAGE_PRELIMINARY) | Q(break_category=self.break_category))
         try:
             return rounds.first()
         except Round.DoesNotExist:

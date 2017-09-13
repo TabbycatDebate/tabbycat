@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import ugettext_lazy, ungettext
 
 from . import utils
 
@@ -25,14 +25,6 @@ from utils.misc import reverse_round
 from venues.models import Venue
 
 logger = logging.getLogger(__name__)
-
-
-# These need to be entire strings, for translations
-CHECK_IN_TITLES = {
-    Team: ugettext_lazy("Teams"),
-    Adjudicator: ugettext_lazy("Adjudicators"),
-    Venue: ugettext_lazy("Venues"),
-}
 
 
 class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
@@ -74,40 +66,53 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
     def _get_breaking_teams_dict(self):
         r = self.get_round()
-        if r.draw_type is r.DRAW_FIRSTBREAK:
+
+        if r.break_category is None:
+            self.error_type = 'no_break_category'
+            return {
+                'total': 0,
+                'in_now': 0,
+                'message': _("no teams are debating"),
+            }
+
+        if r.prev is None or not r.prev.is_break_round:
             break_size = r.break_category.breakingteam_set_competing.count()
-            teams_dict = {'title': CHECK_IN_TITLES[Team], 'total': break_size}
+            teams_dict = {'total': break_size}
             if break_size < 2:
                 teams_dict['in_now'] = 0
-                teams_dict['message'] = "%d breaking team%s — no debates can happen" % (break_size, "" if break_size == 1 else "s")
+                # Translators: nteams in this string can only be 0 or 1
+                teams_dict['message'] = ungettext(
+                    "%(nteams)d breaking team — no debates can happen",
+                    "%(nteams)d breaking teams — no debates can happen",  # in English, used when break_size == 0
+                    break_size) % {'nteams': break_size}
             else:
                 debates, bypassing = partial_break_round_split(break_size)
                 teams_dict['in_now'] = 2 * debates
-                teams_dict['message'] = "%s breaking teams are debating this round; %s team%s bypassing" % (
-                    2 * debates, bypassing, " is" if bypassing == 1 else "s are")
+                # Translators: ndebating in this string is always at least 2
+                teams_dict['message'] = ungettext(
+                    "%(ndebating)d breaking team is debating this round",  # never used, but needed for i18n
+                    "%(ndebating)d breaking teams are debating this round",
+                    2 * debates) % {'ndebating': 2 * debates}
+                if bypassing > 0:
+                    # Translators: This gets appended to the previous string (the one with
+                    # ndebating in it) if (and only if) nbypassing is greater than 0
+                    teams_dict['message'] += ungettext(
+                        "; %(nbypassing)d team is bypassing it",
+                        "; %(nbypassing)d teams are bypassing it",
+                        bypassing) % {'nbypassing': bypassing}
             return teams_dict
 
-        elif r.draw_type is r.DRAW_BREAK:
-            if r.prev is None:
-                self.error_type = 'no_last_round'
-                advancing_teams = 0
-            else:
-                advancing_teams = r.prev.debate_set.count()
+        else:
+            nadvancing = r.prev.debate_set.count()
 
             return {
-                'title'     : CHECK_IN_TITLES[Team],
-                'total'     : advancing_teams,
-                'in_now'    : advancing_teams,
-                'message'   : '%s advancing teams are debating this round' % advancing_teams
-            }
-
-        else: # this should never happen, but it did once...
-            self.error_type = 'bad_draw_type_for_break_round'
-            return {
-                'title'  : CHECK_IN_TITLES[Team],
-                'total'  : 0,
-                'in_now' : 0,
-                'message': "status unclear — see message above"
+                'total'     : nadvancing,
+                'in_now'    : nadvancing,
+                # Translators: nadvancing in this string is always at least 2
+                'message'   : ungettext(
+                    "%(nadvancing)s advancing team is debating this round",  # never used, but needed for i18n
+                    "%(nadvancing)s advancing teams are debating this round",
+                    nadvancing) % {'nadvancing': nadvancing}
             }
 
     def _get_dict(self, queryset_all):
@@ -115,7 +120,6 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         availability_queryset = RoundAvailability.objects.filter(content_type=contenttype)
         round = self.get_round()
         result = {
-            'title': CHECK_IN_TITLES[queryset_all.model],
             'total': queryset_all.count(),
             'in_now': availability_queryset.filter(round=round).count(),
         }
@@ -134,7 +138,15 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
     template_name = "base_availability.html"
 
     def get_page_title(self):
-        return CHECK_IN_TITLES[self.model] + " Availability"
+        # Can't construct with concatenation, need entire strings for translation
+        if self.model is Team:
+            return _("Team Availability")
+        elif self.model is Adjudicator:
+            return _("Adjudicator Availability")
+        elif self.model is Venue:
+            return _("Venue Availability")
+        else:
+            return "Availability"  # don't translate, this should never happen
 
     def get_context_data(self, **kwargs):
         kwargs['model'] = self.model._meta.label  # does not get translated

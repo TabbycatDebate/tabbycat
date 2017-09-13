@@ -1,3 +1,4 @@
+import logging
 import random
 
 from django.utils.translation import ugettext as _
@@ -8,6 +9,8 @@ from standings.teams import TeamStandingsGenerator
 
 from .models import Debate, DebateTeam
 from .generator import DrawGenerator, DrawUserError, ResultPairing
+
+logger = logging.getLogger(__name__)
 
 OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_institution"     : "draw_rules__avoid_same_institution",
@@ -37,11 +40,14 @@ def DrawManager(round, active_only=True):  # noqa: N802 (factory function)
             raise DrawUserError(_("The draw type %(type)s can't be used with British Parliamentary.") % {'type': round.get_draw_type_display()})
         else:
             raise DrawUserError(_("Unrecognised \"teams in debate\" option: %(option)s") % {'option': teams_in_debate})
+    logger.debug("Using draw manager class: %s", klass.__name__)
     return klass(round, active_only)
 
 
 class BaseDrawManager:
     """Creates, modifies and retrieves relevant Debate objects relating to a draw."""
+
+    generator_type = None
 
     def __init__(self, round, active_only=True):
         self.round = round
@@ -53,6 +59,9 @@ class BaseDrawManager:
             return ["avoid_institution", "avoid_history", "history_penalty", "institution_penalty"]
         else:
             return []
+
+    def get_generator_type(self):
+        return self.generator_type
 
     def get_teams(self):
         if self.active_only:
@@ -131,7 +140,9 @@ class BaseDrawManager:
         if options.get("side_allocatons") == "preallocated":
             self._populate_team_side_allocations(teams)
 
-        drawer = DrawGenerator(self.teams_in_debate, self.draw_type, teams,
+        generator_type = self.get_generator_type()
+        logger.debug("Using generator type: %s", generator_type)
+        drawer = DrawGenerator(self.teams_in_debate, generator_type, teams,
                 results=results, rrseq=rrseq, **options)
         pairings = drawer.generate()
         self._make_debates(pairings)
@@ -140,7 +151,7 @@ class BaseDrawManager:
 
 
 class RandomDrawManager(BaseDrawManager):
-    draw_type = "random"
+    generator_type = "random"
 
     def get_relevant_options(self):
         options = super().get_relevant_options()
@@ -150,11 +161,11 @@ class RandomDrawManager(BaseDrawManager):
 
 
 class ManualDrawManager(BaseDrawManager):
-    draw_type = "manual"
+    generator_type = "manual"
 
 
 class PowerPairedDrawManager(BaseDrawManager):
-    draw_type = "power_paired"
+    generator_type = "power_paired"
 
     def get_relevant_options(self):
         options = super().get_relevant_options()
@@ -180,7 +191,7 @@ class PowerPairedDrawManager(BaseDrawManager):
 
 
 class RoundRobinDrawManager(BaseDrawManager):
-    draw_type = "round_robin"
+    generator_type = "round_robin"
 
     def get_rrseq(self):
         prior_rrs = list(self.round.tournament.round_set.filter(draw_type=Round.DRAW_ROUNDROBIN).order_by('seq'))
@@ -199,21 +210,24 @@ class BaseEliminationDrawManager(BaseDrawManager):
         return [bt.team for bt in breaking_teams]
 
 
-class FirstEliminationDrawManager(BaseEliminationDrawManager):
-    draw_type = "first_elimination"
-
-
 class EliminationDrawManager(BaseEliminationDrawManager):
-    draw_type = "elimination"
+    generator_type = "elimination"
+
+    def get_generator_type(self):
+        if self.round.prev.is_break_round:
+            return "elimination"
+        else:
+            return "first_elimination"
 
     def get_results(self):
-        last_round = self.round.break_category.round_set.filter(
-                seq__lt=self.round.seq).order_by('-seq').first()
-        debates = last_round.debate_set_with_prefetches(ordering=('room_rank',), results=True,
-                adjudicators=False, speakers=False, divisions=False, venues=False)
-        pairings = [ResultPairing.from_debate(debate, tournament=self.round.tournament)
-                    for debate in debates]
-        return pairings
+        if self.round.prev is not None and self.round.prev.is_break_round:
+            debates = self.round.prev.debate_set_with_prefetches(ordering=('room_rank',), results=True,
+                    adjudicators=False, speakers=False, divisions=False, venues=False)
+            pairings = [ResultPairing.from_debate(debate, tournament=self.round.tournament)
+                        for debate in debates]
+            return pairings
+        else:
+            return None
 
 
 DRAW_MANAGER_CLASSES = {
@@ -221,8 +235,7 @@ DRAW_MANAGER_CLASSES = {
     ('two', Round.DRAW_POWERPAIRED): PowerPairedDrawManager,
     ('two', Round.DRAW_ROUNDROBIN): RoundRobinDrawManager,
     ('two', Round.DRAW_MANUAL): ManualDrawManager,
-    ('two', Round.DRAW_FIRSTBREAK): FirstEliminationDrawManager,
-    ('two', Round.DRAW_BREAK): EliminationDrawManager,
+    ('two', Round.DRAW_ELIMINATION): EliminationDrawManager,
     ('bp', Round.DRAW_RANDOM): RandomDrawManager,
     ('bp', Round.DRAW_MANUAL): ManualDrawManager,
     ('bp', Round.DRAW_POWERPAIRED): PowerPairedDrawManager,

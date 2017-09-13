@@ -3,7 +3,12 @@
 <div class="card">
 
   <div class="card-body">
-    <h5 class="card-title mb-0">{{ info.title }}</h5>
+    <h5 class="card-title mb-0">
+      {% if type == "teams" %}{% trans "Teams" %}
+      {% elif type == "adjs" %}{% trans "Adjudicators" %}
+      {% elif type == "venues" %}{% trans "Venues" %}
+      {% endif %}
+    </h5>
   </div>
 
   <div class="list-group list-group-flush">
