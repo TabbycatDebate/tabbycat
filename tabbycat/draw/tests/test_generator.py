@@ -3,7 +3,8 @@ import copy
 
 from collections import OrderedDict
 
-from .. import DrawFatalError, DrawGenerator, DrawUserError, Pairing
+from .. import DrawFatalError, DrawGenerator, DrawUserError
+from ..generator.pairing import Pairing
 from ..generator.utils import partial_break_round_split
 from .utils import TestDivision, TestTeam
 
