@@ -1,8 +1,6 @@
 import logging
 from itertools import product
 
-from collections import Counter
-
 from django import forms
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -419,7 +417,7 @@ class BaseBallotSetForm(BaseResultForm):
 
         for side, team in zip(self.sides, teams):
 
-            speaker_counts = Counter()
+            speaker_positions = dict()
             for pos in range(1, self.last_substantive_position + 1):
                 speaker = self.cleaned_data.get(self._fieldname_speaker(side, pos))
                 if speaker is None:
@@ -430,20 +428,27 @@ class BaseBallotSetForm(BaseResultForm):
                 if team is not None and speaker not in team.speakers:
                     self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
                         _("The speaker %(speaker)s doesn't appear to be on team %(team)s."),
-                        params={'speaker': speaker.name, 'team': team.short_name}, code='speaker_wrongteam')
+                        params={'speaker': speaker.name, 'team': team.short_name},
+                        code='speaker_wrongteam')
                     )
 
                 # Don't increment the speaker count if the speech is marked as a ghost
                 if not self.cleaned_data.get(self._fieldname_ghost(side, pos)):
-                    speaker_counts[speaker] += 1
+                    speaker_positions.setdefault(speaker, []).append(pos)
 
             # The substantive speakers must be unique.
-            for speaker, count in speaker_counts.items():
-                if count > 1:
-                    self.add_error(None, forms.ValidationError(
-                        _("The speaker %(speaker)s appears to have given multiple (%(count)d) substantive speeches for the %(side)s team."),
-                        params={'speaker': speaker.name, 'side': self._side_name(side), 'count': count}, code='speaker_repeat'
-                    ))
+            for speaker, positions in speaker_positions.items():
+                if len(positions) > 1:
+                    # Translators: count is always at least 2
+                    message = ungettext(
+                        "%(speaker)s appears to have given %(count)d substantive speech.",  # never used, needed for i18n
+                        "%(speaker)s appears to have given %(count)d substantive speeches.",
+                        len(positions)
+                    )
+                    params = {'speaker': speaker.name, 'count': len(positions)}
+                    for pos in positions:
+                        self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
+                            message, params=params, code='speaker_repeat'))
 
             if self.using_replies:
                 reply_speaker = cleaned_data.get(self._fieldname_speaker(side, self.reply_position))
@@ -457,7 +462,7 @@ class BaseBallotSetForm(BaseResultForm):
                     ))
 
                 # The reply speaker must have given a substantive speech.
-                if speaker_counts[reply_speaker] == 0:
+                if len(speaker_positions[reply_speaker]) == 0:
                     self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
                         _("The reply speaker for this team did not give a substantive speech."),
                         code='reply_speaker_not_repeat'
