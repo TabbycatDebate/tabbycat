@@ -1,9 +1,8 @@
 {% extends "base.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load static i18n %}
 
-{% block head-title %}Motions{% endblock %}
-{% block page-title %}Motions{% endblock %}
+{% block head-title %}{% trans "Motions" %}{% endblock %}
+{% block page-title %}{% trans "Motions" %}{% endblock %}
 
 {% block content %}
 
@@ -18,10 +17,14 @@
           {% for motion in round.motion_set.all %}
             <li class="list-group-item">{{ motion.text }}</li>
           {% empty %}
-            <li class="list-group-item text-info"><em>There are no motions available for this round.</em></li>
+            <li class="list-group-item text-info"><em>{% trans "There are no motions available for this round." %}</em></li>
           {% endfor %}
+        {% elif pref.enable_motions %}
+          {# Translators: Used when there are expected to be several motions per round (e.g. Australs) #}
+          <li class="list-group-item text-info"><em>{% trans "The motions for this round have not been released." %}</em></li>
         {% else %}
-          <li class="list-group-item text-info"><em>The motions for this round have not been released.</em></li>
+          {# Translators: Used when there is expected to be one motion per round (e.g. WUDC) #}
+          <li class="list-group-item text-info"><em>{% trans "The motion for this round has not been released." %}</em></li>
         {% endif %}
       </div>
     </div>

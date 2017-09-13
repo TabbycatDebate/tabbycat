@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% load add_field_css %}
-{% load debate_tags %}
+{% load add_field_css debate_tags i18n %}
 
 {% block nav %}{% endblock %}
 {% block header %}{% endblock %}
@@ -14,7 +13,9 @@
     <div>
       <button class="btn btn-lg btn-success btn-block"
               data-toggle="modal" data-target="#myModal">
-        Reveal Motions for {{ round.name }}
+        {% blocktrans trimmed with round_name=round.name %}
+          Reveal Motions for {{ round_name }}
+        {% endblocktrans %}
       </button>
     </div>
   </div>
@@ -26,7 +27,7 @@
 
           <div class="modal-body d-flex align-items-center justify-content-center">
             <div class="display-3 text-danger">
-              😳 There are no motions for this round entered into Tabbycat.
+              😳 {% trans "There are no motions for this round entered into Tabbycat." %}
             </div>
           </div>
 
