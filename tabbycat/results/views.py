@@ -488,6 +488,11 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
             'teamscore_set__debate_team', 'teamscore_set__debate_team__team'
         ).select_related('debate__round').order_by('-timestamp')[:ndebates]
 
+        def format_dt(dt):
+            # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
+            return _("%(team_name)s as %(side_abbr)s") % {
+                'team_name': dt.team.short_name, 'side_abbr': dt.get_side_name(t, 'abbr')}
+
         results_objects = []
         for ballotsub in ballotsubs:
             try:
@@ -515,38 +520,28 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
                             advancing.append(teamscore.debate_team)
                         else:
                             eliminated.append(teamscore.debate_team)
-                    result = _("Advancing: %(advancing1)s as %(advancing1_side)s, "
-                               "%(advancing2)s as %(advancing2_side)s<br>\n"
-                               "Eliminated: %(eliminated1)s as %(eliminated1_side)s, "
-                               "%(eliminated2)s as %(eliminated2_side)s")
+
+                    result = _("Advancing: %(advancing_list)s<br>\n"
+                               "Eliminated: %(eliminated_list)s")
                     result = result % {
-                        'advancing1': advancing[0].team.short_name,
-                        'advancing2': advancing[1].team.short_name,
-                        'eliminated1': eliminated[0].team.short_name,
-                        'eliminated2': eliminated[1].team.short_name,
-                        'advancing1_side': advancing[0].get_side_name(t, 'abbr'),
-                        'advancing2_side': advancing[1].get_side_name(t, 'abbr'),
-                        'eliminated1_side': eliminated[0].get_side_name(t, 'abbr'),
-                        'eliminated2_side': eliminated[1].get_side_name(t, 'abbr'),
+                        'advancing_list': ", ".join(format_dt(dt) for dt in advancing),
+                        'eliminated_list': ", ".join(format_dt(dt) for dt in eliminated),
                     }
 
                 else:  # BP preliminary round
                     ordered = [None] * 4
                     for teamscore in ballotsub.teamscore_set.all():
                         ordered[teamscore.points] = teamscore.debate_team
-                    result = _("1st: %(first)s as %(first_side)s<br>\n"
-                               "2nd: %(second)s as %(second_side)s<br>\n"
-                               "3rd: %(third)s as %(third_side)s<br>\n"
-                               "4th: %(fourth)s as %(fourth_side)s")
+
+                    result = _("1st: %(first_team)s<br>\n"
+                               "2nd: %(second_team)s<br>\n"
+                               "3rd: %(third_team)s<br>\n"
+                               "4th: %(fourth_team)s")
                     result = result % {
-                        'first':  ordered[3].team.short_name,
-                        'second': ordered[2].team.short_name,
-                        'third':  ordered[1].team.short_name,
-                        'fourth': ordered[0].team.short_name,
-                        'first_side':  ordered[3].get_side_name(t, 'abbr'),
-                        'second_side': ordered[2].get_side_name(t, 'abbr'),
-                        'third_side':  ordered[1].get_side_name(t, 'abbr'),
-                        'fourth_side': ordered[0].get_side_name(t, 'abbr'),
+                        'first_team':  format_dt(ordered[3]),
+                        'second_team': format_dt(ordered[2]),
+                        'third_team':  format_dt(ordered[1]),
+                        'fourth_team': format_dt(ordered[0]),
                     }
 
             except (IndexError, AttributeError):
