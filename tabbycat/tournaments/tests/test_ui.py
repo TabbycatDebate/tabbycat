@@ -17,4 +17,4 @@ class CoreFunctionsTests(SeleniumTournamentTestCase):
         # Wait until the response is received
         timeout = 5
         WebDriverWait(self.selenium, timeout).until(
-            lambda driver: driver.find_element_by_css_selector('#messages-container > div.alert-success'))
+            lambda driver: driver.find_element_by_css_selector('#messages-container > .alert'))
