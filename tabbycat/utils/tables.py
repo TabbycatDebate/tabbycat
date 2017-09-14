@@ -346,10 +346,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
         other_teams = {dt.side: dt.team.short_name for dt in ts.debate_team.debate.debateteam_set.all()}
         other_team_strs = []
         for side in self.tournament.sides:
-            line = _("%(team)s (%(side)s)") % {
-                'team': other_teams.get(side, "??"),
-                'side': get_side_name(self.tournament, side, 'abbr')
-            }
+            if ts.debate_team.debate.sides_confirmed:
+                line = _("%(team)s (%(side)s)") % {
+                    'team': other_teams.get(side, "??"),
+                    'side': get_side_name(self.tournament, side, 'abbr')
+                }
+            else:
+                line = other_teams.get(side, "??")
             if side == ts.debate_team.side:
                 line = "<strong>" + line + "</strong>"
             other_team_strs.append(line)
@@ -359,7 +362,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'title': ""
         }}
 
-        side = ts.debate_team.get_side_name()
+        # Translators: "TBC" stands for "to be confirmed".
+        side = ts.debate_team.get_side_name() if ts.debate_team.debate.sides_confirmed else _("side TBC")
 
         if ts.debate_team.debate.round.is_break_round:
             cell = self._result_cell_class_four_elim(ts.win, cell)
@@ -849,7 +853,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         results_data = [self._result_cell(ts) for ts in teamscores]
         self.add_column(_("Result"), results_data)
-        self.add_column(_("Side"), [ts.debate_team.get_side_name().capitalize() for ts in teamscores])
+        sides_data = [ts.debate_team.get_side_name().capitalize()
+            # Translators: "TBC" stands for "to be confirmed".
+            if ts.debate_team.debate.sides_confirmed else _("TBC") for ts in teamscores]
+        self.add_column(_("Side"), sides_data)
 
     def add_team_results_columns(self, teams, rounds):
         """ Takes an iterable of Teams, assumes their round_results match rounds"""
