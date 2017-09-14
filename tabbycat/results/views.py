@@ -549,7 +549,6 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
                         'fourth_side': ordered[0].get_side_name(t, 'abbr'),
                     }
 
-
             except (IndexError, AttributeError):
                 logger.exception("Error constructing latest result string")
                 result = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
