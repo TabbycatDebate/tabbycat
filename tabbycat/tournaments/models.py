@@ -320,7 +320,6 @@ class Round(models.Model):
         debates_in_round = self.debate_set.count()
         debates_with_one_chair = self.debate_set.filter(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR).annotate(
                 num_chairs=Count('debateadjudicator')).filter(num_chairs=1).count()
-        logger.debug("%d debates without chair", debates_in_round - debates_with_one_chair)
         return debates_in_round - debates_with_one_chair
 
     def num_debates_with_even_panel(self):
@@ -333,13 +332,13 @@ class Round(models.Model):
             panellists=Count('debateadjudicator'),
             odd_panellists=Count('debateadjudicator') % 2
         ).filter(panellists__gt=0, odd_panellists=0).count()
-        logger.debug("%d debates with even panel", debates_with_even_panel)
         return debates_with_even_panel
 
     def num_debates_without_venue(self):
-        debates_without_venue = self.debate_set.filter(venue__isnull=True).count()
-        logger.debug("%d debates without venue", debates_without_venue)
-        return debates_without_venue
+        return self.debate_set.filter(venue__isnull=True).count()
+
+    def num_debates_with_sides_unconfirmed(self):
+        return self.debate_set.filter(sides_confirmed=False).count()
 
     @cached_property
     def is_break_round(self):

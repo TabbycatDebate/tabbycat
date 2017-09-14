@@ -26,6 +26,19 @@
   {% endif %}
 {% endblock %}
 
+{% block page-alerts %}
+  {% with sides_unconfirmed=round.num_debates_with_sides_unconfirmed %}
+    {% if sides_unconfirmed > 0 and pref.draw_side_allocations != 'manual-ballot' %}
+      {% blocktrans trimmed asvar text count ndebates=sides_unconfirmed %}
+        1 debate does not have its sides confirmed.
+      {% plural %}
+        {{ ndebates }} debates do not have their sides confirmed.
+      {% endblocktrans %}
+      {% include "components/item-alert.html" with type="warning" %}
+    {% endif %}
+  {% endwith %}
+{% endblock %}
+
 {% block content %}
 
   <div class="row mb-4">
@@ -64,7 +77,7 @@
                 {% include "components/item-alert.html" with type="danger" %}
               {% endif %}
 
-              {% if even_panel > 0 %}
+              {% if pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
                 {% blocktrans trimmed asvar text count ndebates=even_panel %}
                   1 debate has a panel with an even number of adjudicators.
                 {% plural %}
