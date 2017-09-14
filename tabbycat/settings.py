@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'en'
 USE_I18N = True
 
-TABBYCAT_VERSION = '1.5.0-dev'
+TABBYCAT_VERSION = '2.0.0-dev'
 TABBYCAT_CODENAME = 'Iberian Lynx'
-READTHEDOCS_VERSION = 'v1.5.0'
+READTHEDOCS_VERSION = 'v2.0.0'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
