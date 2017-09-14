@@ -12,6 +12,12 @@
       {% trans "Advancing Teams" as title %}
       {% include "components/form-title.html" %}
 
+      {% if form.advancing.errors %}
+        <div class="list-group-item">
+          {{ form.advancing.errors }}
+        </div>
+      {% endif %}
+
       <div class="list-group-item scoresheet p-3">
         <div class="card-deck px-2">
           {% for checkbox in form.advancing %}
