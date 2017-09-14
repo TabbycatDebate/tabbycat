@@ -486,45 +486,69 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
             debate__round__tournament=t, confirmed=True
         ).prefetch_related(
             'teamscore_set__debate_team', 'teamscore_set__debate_team__team'
-        ).order_by('-timestamp')[:ndebates]
+        ).select_related('debate__round').order_by('-timestamp')[:ndebates]
 
         results_objects = []
         for ballotsub in ballotsubs:
             try:
-                if t.pref('teams_in_debate') == 'bp':
-                    ordered = [None] * 4
-                    for teamscore in ballotsub.teamscore_set.all():
-                        ordered[teamscore.points] = teamscore
-                    result = _("1st: %(first)s as %(first_side)s<br>"
-                               "2nd: %(second)s as %(second_side)s<br>"
-                               "3rd: %(third)s as %(third_side)s<br>"
-                               "4th: %(fourth)s as %(fourth_side)s")
-                    result = result % {
-                        'first':  ordered[3].debate_team.team.short_name,
-                        'second': ordered[2].debate_team.team.short_name,
-                        'third':  ordered[1].debate_team.team.short_name,
-                        'fourth': ordered[0].debate_team.team.short_name,
-                        'first_side':  ordered[3].debate_team.get_side_name(t, 'abbr'),
-                        'second_side': ordered[2].debate_team.get_side_name(t, 'abbr'),
-                        'third_side':  ordered[1].debate_team.get_side_name(t, 'abbr'),
-                        'fourth_side': ordered[0].debate_team.get_side_name(t, 'abbr'),
-                    }
-
-                else:
+                if t.pref('teams_in_debate') == 'two':
                     winner = None
                     loser = None
                     for teamscore in ballotsub.teamscore_set.all():
                         if teamscore.win:
-                            winner = teamscore
+                            winner = teamscore.debate_team
                         else:
-                            loser = teamscore
+                            loser = teamscore.debate_team
                     result = _("%(winner)s (%(winner_side)s) won against %(loser)s (%(loser_side)s)")
                     result = result % {
-                        'winner': winner.debate_team.team.short_name,
-                        'winner_side': winner.debate_team.get_side_name(t, 'abbr'),
-                        'loser': loser.debate_team.team.short_name,
-                        'loser_side': loser.debate_team.get_side_name(t, 'abbr'),
+                        'winner': winner.team.short_name,
+                        'winner_side': winner.get_side_name(t, 'abbr'),
+                        'loser': loser.team.short_name,
+                        'loser_side': loser.get_side_name(t, 'abbr'),
                     }
+
+                elif ballotsub.debate.round.is_break_round:
+                    advancing = []
+                    eliminated = []
+                    for teamscore in ballotsub.teamscore_set.all():
+                        if teamscore.win:
+                            advancing.append(teamscore.debate_team)
+                        else:
+                            eliminated.append(teamscore.debate_team)
+                    result = _("Advancing: %(advancing1)s as %(advancing1_side)s, "
+                               "%(advancing2)s as %(advancing2_side)s<br>\n"
+                               "Eliminated: %(eliminated1)s as %(eliminated1_side)s, "
+                               "%(eliminated2)s as %(eliminated2_side)s")
+                    result = result % {
+                        'advancing1': advancing[0].team.short_name,
+                        'advancing2': advancing[1].team.short_name,
+                        'eliminated1': eliminated[0].team.short_name,
+                        'eliminated2': eliminated[1].team.short_name,
+                        'advancing1_side': advancing[0].get_side_name(t, 'abbr'),
+                        'advancing2_side': advancing[1].get_side_name(t, 'abbr'),
+                        'eliminated1_side': eliminated[0].get_side_name(t, 'abbr'),
+                        'eliminated2_side': eliminated[1].get_side_name(t, 'abbr'),
+                    }
+
+                else:  # BP preliminary round
+                    ordered = [None] * 4
+                    for teamscore in ballotsub.teamscore_set.all():
+                        ordered[teamscore.points] = teamscore.debate_team
+                    result = _("1st: %(first)s as %(first_side)s<br>\n"
+                               "2nd: %(second)s as %(second_side)s<br>\n"
+                               "3rd: %(third)s as %(third_side)s<br>\n"
+                               "4th: %(fourth)s as %(fourth_side)s")
+                    result = result % {
+                        'first':  ordered[3].team.short_name,
+                        'second': ordered[2].team.short_name,
+                        'third':  ordered[1].team.short_name,
+                        'fourth': ordered[0].team.short_name,
+                        'first_side':  ordered[3].get_side_name(t, 'abbr'),
+                        'second_side': ordered[2].get_side_name(t, 'abbr'),
+                        'third_side':  ordered[1].get_side_name(t, 'abbr'),
+                        'fourth_side': ordered[0].get_side_name(t, 'abbr'),
+                    }
+
 
             except (IndexError, AttributeError):
                 logger.exception("Error constructing latest result string")
