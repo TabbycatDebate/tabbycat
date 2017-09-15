@@ -124,23 +124,26 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
         return self._add_debate_standing_columns(debates, standings, 'iterrankings',
                 'rankings_info', rankingformat, formatsort)
 
-    def add_debate_side_counts(self, debates, round):
+    def add_debate_side_history_columns(self, debates, round):
         # Note that the spaces used in the separator are nonbreaking spaces, not normal spaces
         separator = " " if self.tournament.pref('teams_in_debate') == 'bp' else " / "
 
-        for i, side in enumerate(self.tournament.sides):
-            teams = [d.get_team(side) for d in debates]
+        # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
+        teams_by_side = [[d.get_team(side) for d in debates] for side in self.tournament.sides]
+        all_teams = [team for teams in teams_by_side for team in teams]
+        side_counts = get_side_counts(all_teams, self.tournament.sides, round.seq)
 
-            # Translators: e.g. team would be "negative team" or "affirmative team".
-            tooltip = _("Number of times this %(team)s has been on each side") % {
-                'team': get_side_name(self.tournament, side, "team"),
+        for i, (side, teams) in enumerate(zip(self.tournament.sides, teams_by_side)):
+            # Translators: e.g. team would be "Affirmative" or "Opening government"
+            tooltip = _("%(team)s: side history<br>\n"
+                "(number of times the team has been on each side before this round)") % {
+                'team': get_side_name(self.tournament, side, 'full'),
             }
-            # Translators: "SC" stands for "side count"
-            key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), _("SC"))
+            tooltip = tooltip.capitalize()
+            # Translators: "SH" stands for "side history"
+            key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), _("SH"))
             header = {'key': key, 'tooltip': tooltip, 'text': key}
 
-            sides = self.tournament.sides
-            side_counts = get_side_counts(teams, sides, round.seq)
             cells = [{'text': separator.join(map(str, side_counts[team.id]))} for team in teams]
             if i == 0:
                 for cell in cells:
