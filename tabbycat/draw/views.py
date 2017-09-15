@@ -192,15 +192,15 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         round = self.get_round()
         self.page_emoji = '👀'
         if round.draw_status == Round.STATUS_NONE:
-            title = _("No draw for %(round)s")
+            title = _("No Draw for %(round)s")
         elif round.draw_status == Round.STATUS_DRAFT:
-            title = _("Draft draw for %(round)s")
+            title = _("Draft Draw for %(round)s")
         elif round.draw_status == Round.STATUS_CONFIRMED:
             self.page_emoji = '👏'
-            title = _("Confirmed draw for %(round)s")
+            title = _("Confirmed Draw for %(round)s")
         elif round.draw_status == Round.STATUS_RELEASED:
             self.page_emoji = '👏'
-            title = _("Released draw for %(round)s")
+            title = _("Released Draw for %(round)s")
         else:
             logger.error("Unrecognised draw status: %s", round.draw_status)
             title = "Draw for %(round)s"  # don't translate, this should never happen
@@ -302,7 +302,7 @@ class AdminDrawWithDetailsView(AdminDrawView):
     use_template_subtitle = False  # Use the "for Round n" subtitle
 
     def get_page_title(self):
-        return _("Draw with details")
+        return _("Draw with Details")
 
     def get_template_names(self):
         return ["draw_subpage.html"]
@@ -336,6 +336,7 @@ class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemp
 
     def get_tables(self):
         if self.get_tournament().pref('teams_in_debate') != 'bp':
+            logger.warning("Tried to access position balance report for a non-BP tournament")
             return []
 
         return [self.get_summary_table(), self.get_draw_table()]

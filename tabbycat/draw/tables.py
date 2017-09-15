@@ -86,16 +86,15 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
         cells = []
 
         for debate in standings_by_debate:
-            metrics_by_team = []  # will be list of lists, one list of metrics for each side
-            for i, standing in enumerate(debate):
-                metrics = []  # metrics for this team
-                for metric in islice(getattr(standing, itermethod)(), limit):
-                    metrics.append({'text': formattext(metric), 'sort': formatsort(metric)})
-                if i == 0:
-                    for cell in metrics:
+            row = []
+            iterators = [islice(getattr(standing, itermethod)(), limit) for standing in debate]
+            for metrics in zip(*iterators):
+                for i, metric in enumerate(metrics):
+                    cell = {'text': formattext(metric), 'sort': formatsort(metric)}
+                    if i == 0:
                         cell['class'] = 'highlight-col'
-                metrics_by_team.append(metrics)
-            cells.append([y for x in zip(*metrics_by_team) for y in x])
+                    row.append(cell)
+            cells.append(row)
 
         headers = self._debate_standings_headers(standings, infomethod, limit)
         self.add_columns(headers, cells)
