@@ -172,6 +172,11 @@ thead,
     border-top: 3px solid theme-color("info");
   }
 
+  // For highlighting boundaries between metrics in "draw with details"
+  &.highlight-col {
+    border-left: 1px solid theme-color("secondary");
+  }
+
   &.checkbox-target:hover,
   &.checkbox-target input:hover {
     cursor: pointer;

@@ -236,6 +236,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         if (r.draw_status == Round.STATUS_DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = self.get_tournament().pref('team_standings_precedence')
+            # For BP, list only the first two metrics (not enough space otherwise)
+            if self.get_tournament().pref('teams_in_debate') == 'bp':
+                metrics = metrics[:2]
             generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'))
             standings = generator.generate(teams, round=r.prev)
             if not r.is_break_round:

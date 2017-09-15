@@ -65,7 +65,7 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
                     'side_name': get_side_name(self.tournament, side, 'full'),
                     'metric_name': info['name'].capitalize(),
                 }
-                tooltip = tooltip.strip().capitalize()
+                tooltip = tooltip.capitalize()
                 key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), info['abbr'])
 
                 header = {
@@ -85,10 +85,13 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
 
         for debate in standings_by_debate:
             metrics_by_team = []  # will be list of lists, one list of metrics for each side
-            for standing in debate:
+            for i, standing in enumerate(debate):
                 metrics = []  # metrics for this team
                 for metric in getattr(standing, itermethod)():
                     metrics.append({'text': formattext(metric), 'sort': formatsort(metric)})
+                if i == 0:
+                    for cell in metrics:
+                        cell['class'] = 'highlight-col'
                 metrics_by_team.append(metrics)
             cells.append([y for x in zip(*metrics_by_team) for y in x])
 
@@ -116,7 +119,10 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
                 'rankings_info', rankingformat, formatsort)
 
     def add_debate_side_counts(self, debates, round):
-        for side in self.tournament.sides:
+        # Note that the spaces used in the separator are nonbreaking spaces, not normal spaces
+        separator = " " if self.tournament.pref('teams_in_debate') == 'bp' else " / "
+
+        for i, side in enumerate(self.tournament.sides):
             teams = [d.get_team(side) for d in debates]
 
             # Translators: e.g. team would be "negative team" or "affirmative team".
@@ -129,5 +135,8 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
 
             sides = self.tournament.sides
             side_counts = get_side_counts(teams, sides, round.seq)
-            cells = [{'text': " / ".join(map(str, side_counts[team.id]))} for team in teams]
+            cells = [{'text': separator.join(map(str, side_counts[team.id]))} for team in teams]
+            if i == 0:
+                for cell in cells:
+                    cell['class'] = 'highlight-col'
             self.add_column(header, cells)
