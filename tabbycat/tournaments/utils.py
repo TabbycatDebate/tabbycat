@@ -67,10 +67,10 @@ BP_SIDE_NAMES = {  # stop-gap before this system gets refactored
     "oo_team": _("opening opposition team"),
     "cg_team": _("closing government team"),
     "co_team": _("closing opposition team"),
-    "og_abbr": pgettext_lazy("team name", "OG"),
-    "oo_abbr": pgettext_lazy("team name", "OO"),
-    "cg_abbr": pgettext_lazy("team name", "CG"),
-    "co_abbr": pgettext_lazy("team name", "CO"),
+    "og_abbr": pgettext_lazy("BP position", "OG"),
+    "oo_abbr": pgettext_lazy("BP position", "OO"),
+    "cg_abbr": pgettext_lazy("BP position", "CG"),
+    "co_abbr": pgettext_lazy("BP position", "CO"),
 }
 
 
