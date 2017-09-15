@@ -8,7 +8,8 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
-from django.utils.html import mark_safe
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 
@@ -38,6 +39,7 @@ from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
+from .tables import AdminDrawTableBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -215,7 +217,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             sort_key = _("Bracket")
             sort_order = 'desc'
 
-        table = TabbycatTableBuilder(view=self, sort_key=sort_key, sort_order=sort_order)
+        table = AdminDrawTableBuilder(view=self, sort_key=sort_key, sort_order=sort_order)
 
         if r.draw_status == Round.STATUS_NONE:
             return table # Return Blank
@@ -269,13 +271,16 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     def _add_break_rank_columns(self, table, draw, category):
         tournament = self.get_tournament()
         for side in tournament.sides:
-            # Translators: e.g. possessive might be "affirmative's" to get "affirmative's break rank"
-            tooltip = _("%(possessive)s break rank" % {'possessive': get_side_name(tournament, side, 'possessive')})
-            # Translators: e.g. initial might be "A" for affirmative to get "ABR"
+            # Translators: e.g. "Affirmative: Break rank"
+            tooltip = _("%(side_name)s: Break rank") % {
+                'side_name': get_side_name(tournament, side, 'full')
+            }
             tooltip = tooltip.capitalize()
-            key = _("%(initial)sBR") % {'initial': get_side_name(tournament, side, 'initial')}
+            # Translators: "BR" stands for "Break rank"
+            key = format_html("{}<br>{}", get_side_name(tournament, side, 'abbr'), _("BR"))
+
             table.add_column(
-                {'tooltip': tooltip, 'key': key},
+                {'tooltip': tooltip, 'key': key, 'text': key},
                 [d.get_team(side).break_rank_for_category(category) for d in draw]
             )
 
