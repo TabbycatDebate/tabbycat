@@ -90,7 +90,7 @@ class SubrankAnnotator(BaseRankWithinGroupAnnotator):
 
     key = "subrank"
     name = "subrank"
-    abbr = "SubR"
+    abbr = "Sub"
 
     def __init__(self, metrics):
         self.group_key = metricgetter(metrics[0])
@@ -101,7 +101,7 @@ class DivisionRankAnnotator(BaseRankWithinGroupAnnotator):
 
     key = "division_rank"
     name = "division rank"
-    abbr = "DivR"
+    abbr = "Div"
 
     def __init__(self, metrics):
         self.rank_key = metricgetter(*metrics)
@@ -115,7 +115,7 @@ class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
 
     key = "institution"
     name = "rank from institution"
-    abbr = "InstR"
+    abbr = "Inst"
 
     def __init__(self, metrics):
         self.rank_key = metricgetter(*metrics)

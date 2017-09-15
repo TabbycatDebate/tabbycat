@@ -68,11 +68,11 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
                 tooltip = tooltip.capitalize()
                 key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), info['abbr'])
 
+                # Never use icons in this type of column, because we need to differentiate between sides
                 header = {
                     'key': key,  # no need to translate
                     'tooltip': tooltip,
-                    'icon': info['icon'],
-                    'text': key if info['icon'] is None else None
+                    'text': key
                 }
                 headers.append(header)
 
