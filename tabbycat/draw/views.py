@@ -305,7 +305,47 @@ class AdminDrawWithDetailsView(AdminDrawView):
         return _("Draw with details")
 
     def get_template_names(self):
-        return ["draw_details.html"]
+        return ["draw_subpage.html"]
+
+
+class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
+    page_title = _("Position Balance Report")
+    tables_orientation = 'rows'
+
+    def get_summary_table(self):
+        table = AdminDrawTableBuilder(view=self, title=_("Teams with position imbalances"))
+
+        return table
+
+    def get_draw_table(self):
+        tournament = self.get_tournament()
+
+        draw = self.get_round().debate_set_with_prefetches(ordering=('room_rank',), institutions=True)
+        table = AdminDrawTableBuilder(view=self, title=_("Annotated draw"))
+
+        table.add_debate_bracket_columns(draw)
+
+        # Just act as if all sides are confirmed (i.e. ignore the sides_confirmed field)
+        # If any sides aren't confirmed, there will be a warning on the page.
+        for side in tournament.sides:
+            key = get_side_name(tournament, side, 'abbr')
+            teams = [debate.get_team(side) for debate in draw]
+            table.add_team_columns(teams, key=key)
+
+        return table
+
+    def get_tables(self):
+        if self.get_tournament().pref('teams_in_debate') != 'bp':
+            return []
+
+        return [self.get_summary_table(), self.get_draw_table()]
+
+    def get_template_names(self):
+        # Show an error page if this isn't a BP tournament
+        if self.get_tournament().pref('teams_in_debate') != 'bp':
+            return ['position_balance_error.html']
+        else:
+            return ['position_balance.html']
 
 
 # ==============================================================================

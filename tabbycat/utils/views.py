@@ -92,7 +92,7 @@ class JsonDataResponsePostView(View):
 
 
 class VueTableTemplateView(TemplateView):
-    """Mixing that provides shortcuts for adding data when building arrays that
+    """Mixin that provides shortcuts for adding data when building arrays that
     will end up as rows within a Vue table. Each cell can be represented
     either as a string value or a dictionary to enable richer inline content
     (emoji, links, etc). Functions below return blocks of content (ie not just

@@ -138,7 +138,7 @@ def get_side_name(tournament, side, name_type):
     elif side in ('og', 'oo', 'cg', 'co'):
         return force_text(BP_SIDE_NAMES["%s_%s" % (side, name_type)])
     else:
-        raise ValueError("get_side_name() side must be one of: 'aff', 'neg', 'og', 'oo', 'cg', 'co', not: %r" % side)
+        raise ValueError("get_side_name() side must be one of: 'aff', 'neg', 'og', 'oo', 'cg', 'co', not: %r" % (side,))
 
 
 def _get_side_name(name_type):

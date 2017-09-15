@@ -1,0 +1,11 @@
+{% extends "draw_subpage.html" %}
+{% load debate_tags i18n %}
+
+{% block page-alerts %}
+  {% if round.num_debates_with_sides_unconfirmed > 0 %}
+    {% blocktrans trimmed asvar message %}
+      It looks like sides aren't confirmed for some debates in this round. This position balance report is generated using the "unconfirmed sides" in the database, and as a consequence, may not make much sense. It's best to confirm sides in all debates before looking at this report.
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type="warning" %}
+  {% endif %}
+{% endblock %}
