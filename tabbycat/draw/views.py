@@ -202,7 +202,8 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             self.page_emoji = '👏'
             title = _("Released draw for %(round)s")
         else:
-            title = "Draw, unknown status"  # Don't translate, this should never happen
+            logger.error("Unrecognised draw status: %s", round.draw_status)
+            title = "Draw for %(round)s"  # don't translate, this should never happen
         return title % {'round': round.name}
 
     def get_table(self):
@@ -291,7 +292,8 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         elif round.draw_status in [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]:
             return ["draw_status_confirmed.html"]
         else:
-            raise ValueError(round.draw_status)
+            logger.error("Unrecognised draw status: %s", round.draw_status)
+            return ["base.html"]
 
 
 class AdminDrawWithDetailsView(AdminDrawView):
