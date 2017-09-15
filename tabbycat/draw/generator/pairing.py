@@ -108,8 +108,8 @@ class Pairing(BasePairing):
         """Puts whoever has the biggest (aff - neg) difference on the negative
         side, or chooses randomly if this is the same for both teams."""
 
-        aff_affs, aff_negs = self.teams[0].side_counts
-        neg_affs, neg_negs = self.teams[1].side_counts
+        aff_affs, aff_negs = self.teams[0].side_history
+        neg_affs, neg_negs = self.teams[1].side_history
         aff_imbalance = aff_affs - aff_negs
         neg_imbalance = neg_affs - neg_negs
 

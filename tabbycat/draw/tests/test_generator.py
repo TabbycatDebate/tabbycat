@@ -19,7 +19,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def test_invalid_option(self):
-        teams = [TestTeam(*args, side_counts=[0, 0]) for args in self.teams]
+        teams = [TestTeam(*args, side_history=[0, 0]) for args in self.teams]
 
         def go():
             self.rd = DrawGenerator("two", "random", teams, None, random=True)
@@ -27,7 +27,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
 
     def test_draw(self):
         for i in range(100):
-            teams = [TestTeam(*args, side_counts=[0, 0]) for args in self.teams]
+            teams = [TestTeam(*args, side_history=[0, 0]) for args in self.teams]
             self.rd = DrawGenerator("two", "random", teams, None, avoid_conflicts="on")
             _draw = self.rd.generate()
             for pairing in _draw:
@@ -67,7 +67,7 @@ class TestRoundRobinDrawGenerator(unittest.TestCase):
         self.assertEqual(matches, expected_matches)
 
     def test_draw(self):
-        teams = [TestTeam(*args, side_counts=[0, 0]) for args in self.teams]
+        teams = [TestTeam(*args, side_history=[0, 0]) for args in self.teams]
         for i, t in enumerate(teams):
             t.division = TestDivision(i)
             t.short_name = t.id
@@ -383,32 +383,32 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
     # situation with lots of swaps and manually figuring out the anticipated
     # result.
     standings = dict()
-    standings[1] = [((12, 'B', 4, [26, 11, 15, 14]), {"side_counts": [2, 2], "allocated_side": "aff"}),
-                    ((2,  'D', 3, [22, 16, 20, 10]), {"side_counts": [2, 2], "allocated_side": "aff"}),
-                    ((3,  'E', 3, [23, 20, 25,  4]), {"side_counts": [2, 2], "allocated_side": "aff"}),
-                    ((11, 'B', 3, [1,  12, 23, 22]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((6,  'E', 3, [19, 15, 18,  9]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((17, 'E', 3, [21, 14,  7, 25]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((4,  'B', 3, [18, 25,  5,  3]), {"side_counts": [3, 1], "allocated_side": "aff"}),
-                    ((14, 'A', 3, [24, 17,  9, 12]), {"side_counts": [2, 2], "allocated_side": "aff"}),
-                    ((8,  'A', 3, [15, 24,  1, 15]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((7,  'D', 2, [16,  9, 17, 16]), {"side_counts": [2, 2], "allocated_side": "aff"}),
-                    ((9,  'D', 2, [5,   7, 14,  6]), {"side_counts": [2, 2], "allocated_side": "aff"}),
-                    ((15, 'B', 2, [8,   6, 12,  8]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((18, 'B', 2, [4,  21,  6, 21]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((22, 'A', 2, [2,  10, 16, 11]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((23, 'A', 2, [3,  19, 11,  5]), {"side_counts": [2, 2], "allocated_side": "aff"}),
-                    ((24, 'B', 2, [14,  8, 19, 20]), {"side_counts": [3, 1], "allocated_side": "aff"}),
-                    ((25, 'A', 2, [10,  4,  3, 17]), {"side_counts": [3, 1], "allocated_side": "aff"}),
-                    ((1,  'C', 1, [11, 26,  8, 19]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((5,  'C', 1, [9,  13,  4, 23]), {"side_counts": [1, 3], "allocated_side": "neg"}),
-                    ((10, 'B', 1, [25, 22, 13,  2]), {"side_counts": [1, 3], "allocated_side": "aff"}),
-                    ((16, 'D', 1, [7,   2, 22,  7]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((20, 'E', 1, [13,  3,  2, 24]), {"side_counts": [2, 2], "allocated_side": "aff"}),
-                    ((21, 'A', 1, [17, 18, 26, 18]), {"side_counts": [2, 2], "allocated_side": "aff"}),
-                    ((19, 'B', 1, [6,  23, 24,  1]), {"side_counts": [1, 3], "allocated_side": "neg"}),
-                    ((26, 'B', 1, [12,  1, 21, 13]), {"side_counts": [2, 2], "allocated_side": "neg"}),
-                    ((13, 'C', 0, [20,  5, 10, 26]), {"side_counts": [2, 2], "allocated_side": "neg"})]
+    standings[1] = [((12, 'B', 4, [26, 11, 15, 14]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((2,  'D', 3, [22, 16, 20, 10]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((3,  'E', 3, [23, 20, 25,  4]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((11, 'B', 3, [1,  12, 23, 22]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((6,  'E', 3, [19, 15, 18,  9]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((17, 'E', 3, [21, 14,  7, 25]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((4,  'B', 3, [18, 25,  5,  3]), {"side_history": [3, 1], "allocated_side": "aff"}),
+                    ((14, 'A', 3, [24, 17,  9, 12]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((8,  'A', 3, [15, 24,  1, 15]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((7,  'D', 2, [16,  9, 17, 16]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((9,  'D', 2, [5,   7, 14,  6]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((15, 'B', 2, [8,   6, 12,  8]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((18, 'B', 2, [4,  21,  6, 21]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((22, 'A', 2, [2,  10, 16, 11]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((23, 'A', 2, [3,  19, 11,  5]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((24, 'B', 2, [14,  8, 19, 20]), {"side_history": [3, 1], "allocated_side": "aff"}),
+                    ((25, 'A', 2, [10,  4,  3, 17]), {"side_history": [3, 1], "allocated_side": "aff"}),
+                    ((1,  'C', 1, [11, 26,  8, 19]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((5,  'C', 1, [9,  13,  4, 23]), {"side_history": [1, 3], "allocated_side": "neg"}),
+                    ((10, 'B', 1, [25, 22, 13,  2]), {"side_history": [1, 3], "allocated_side": "aff"}),
+                    ((16, 'D', 1, [7,   2, 22,  7]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((20, 'E', 1, [13,  3,  2, 24]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((21, 'A', 1, [17, 18, 26, 18]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((19, 'B', 1, [6,  23, 24,  1]), {"side_history": [1, 3], "allocated_side": "neg"}),
+                    ((26, 'B', 1, [12,  1, 21, 13]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((13, 'C', 0, [20,  5, 10, 26]), {"side_history": [2, 2], "allocated_side": "neg"})]
 
     expected = dict()
     expected[1] = [dict(

@@ -3,7 +3,7 @@ from itertools import islice
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 
-from participants.utils import get_side_counts
+from participants.utils import get_side_history
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
 from utils.tables import TabbycatTableBuilder
@@ -131,7 +131,7 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
         # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
         teams_by_side = [[d.get_team(side) for d in debates] for side in self.tournament.sides]
         all_teams = [team for teams in teams_by_side for team in teams]
-        side_counts = get_side_counts(all_teams, self.tournament.sides, round.seq)
+        side_history = get_side_history(all_teams, self.tournament.sides, round.seq)
 
         for i, (side, teams) in enumerate(zip(self.tournament.sides, teams_by_side)):
             # Translators: e.g. team would be "Affirmative" or "Opening government"
@@ -144,7 +144,7 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
             key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), _("SH"))
             header = {'key': key, 'tooltip': tooltip, 'text': key}
 
-            cells = [{'text': separator.join(map(str, side_counts[team.id]))} for team in teams]
+            cells = [{'text': separator.join(map(str, side_history[team.id]))} for team in teams]
             if i == 0:
                 for cell in cells:
                     cell['class'] = 'highlight-col'

@@ -142,7 +142,7 @@ class BasePairDrawGenerator(BaseDrawGenerator):
         "side_allocations" - Side allocation method, one of:
             "balance" - the team that has affirmed less in prior rounds affirms,
                 or randomly if both teams have affirmed the same number of times.
-                If used, team objects must have an `side_counts` attribute.
+                If used, team objects must have an `side_history` attribute.
             "preallocated" - teams were pre-allocated sides. If used, teams must
                 have an 'allocated_side' attribute.
             "none" - leave sides as they were when the pairings were drawn.

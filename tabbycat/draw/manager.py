@@ -3,7 +3,7 @@ import random
 
 from django.utils.translation import ugettext as _
 
-from participants.utils import get_side_counts
+from participants.utils import get_side_history
 from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
 
@@ -78,17 +78,17 @@ class BaseDrawManager:
         # Only needed for RoundRobinDrawManager
         return None
 
-    def _populate_side_counts(self, teams):
+    def _populate_side_history(self, teams):
         sides = self.round.tournament.sides
 
         if self.round.prev:
             prev_seq = self.round.prev.seq
-            side_counts = get_side_counts(teams, sides, prev_seq)
+            side_history = get_side_history(teams, sides, prev_seq)
             for team in teams:
-                team.side_counts = side_counts[team.id]
+                team.side_history = side_history[team.id]
         else:
             for team in teams:
-                team.side_counts = [0] * len(sides)
+                team.side_history = [0] * len(sides)
 
     def _populate_team_side_allocations(self, teams):
         tsas = dict()
@@ -137,7 +137,7 @@ class BaseDrawManager:
         results = self.get_results()
         rrseq = self.get_rrseq()
 
-        self._populate_side_counts(teams)
+        self._populate_side_history(teams)
         if options.get("side_allocatons") == "preallocated":
             self._populate_team_side_allocations(teams)
 

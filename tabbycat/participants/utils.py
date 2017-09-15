@@ -43,7 +43,7 @@ def annotate_side_count_kwargs(sides, seq):
     return {'%s_count' % side: RawSQL(query, (side, Round.STAGE_PRELIMINARY, seq)) for side in sides}
 
 
-def get_side_counts(teams, sides, seq):
+def get_side_history(teams, sides, seq):
     """Returns a dict where keys are the team IDs in `teams`, and values are
     lists of integers of the same length as `sides`, being the number of debates
     that team has had on the corresponding side in `sides`, up to and including

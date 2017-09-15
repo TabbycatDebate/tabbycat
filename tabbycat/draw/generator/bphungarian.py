@@ -81,7 +81,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.check_teams_for_attribute("points")
-        self.check_teams_for_attribute("side_counts")
+        self.check_teams_for_attribute("side_history")
         self.munkres = munkres.Munkres()
 
     def generate(self):
@@ -236,7 +236,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
                 if team.points not in allowed:
                     row.extend([munkres.DISALLOWED] * 4)
                 else:
-                    row.extend([cost(pos, team.side_counts) ** exponent for pos in range(4)])
+                    row.extend([cost(pos, team.side_history) ** exponent for pos in range(4)])
             assert len(row) == nteams
             costs.append(row)
 

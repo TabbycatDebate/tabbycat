@@ -3,10 +3,10 @@ import unittest
 from ..generator.bphungarian import BPHungarianDrawGenerator
 from .utils import TestTeam
 
-DUMMY_TEAMS = [TestTeam(1, 'A', side_counts=[0, 0, 0, 0]),
-               TestTeam(2, 'B', side_counts=[0, 0, 0, 0]),
-               TestTeam(3, 'C', side_counts=[0, 0, 0, 0]),
-               TestTeam(4, 'D', side_counts=[0, 0, 0, 0])]
+DUMMY_TEAMS = [TestTeam(1, 'A', side_history=[0, 0, 0, 0]),
+               TestTeam(2, 'B', side_history=[0, 0, 0, 0]),
+               TestTeam(3, 'C', side_history=[0, 0, 0, 0]),
+               TestTeam(4, 'D', side_history=[0, 0, 0, 0])]
 
 
 class TestDefineRooms(unittest.TestCase):

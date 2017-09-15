@@ -38,7 +38,7 @@ assert(T % 2 == 0)
 
 teams = list()
 for i in range(1, T+1):
-    team = TestTeam(i, random.choice(string.ascii_uppercase[:I]), 0, list(), side_counts=[0, 0])
+    team = TestTeam(i, random.choice(string.ascii_uppercase[:I]), 0, list(), side_history=[0, 0])
     teams.append(team)
 
 brackets = dict()
@@ -59,8 +59,8 @@ for i in range(R):
         for winner, loser in zip(winners, losers):
             winner.hist.append(loser)
             loser.hist.append(winner)
-            winner_side_diff = winner.side_counts[0] - winner.side_counts[1]
-            loser_side_diff = loser.side_counts[0] - loser.side_counts[1]
+            winner_side_diff = winner.side_history[0] - winner.side_history[1]
+            loser_side_diff = loser.side_history[0] - loser.side_history[1]
             if winner_side_diff > loser_side_diff:
                 aff = loser
                 neg = winner
@@ -71,19 +71,19 @@ for i in range(R):
                 shuffled = [winner, loser]
                 random.shuffle(shuffled)
                 aff, neg = shuffled
-            aff.side_counts[0] += 1
-            neg.side_counts[1] += 1
+            aff.side_history[0] += 1
+            neg.side_history[1] += 1
         for team in winners:
             team.points += 1
 
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
-    print("({id}, '{inst}', {points}, {hist}, {side_counts}),".format(
+    print("({id}, '{inst}', {points}, {hist}, {side_history}),".format(
         id=team.id, inst=team.institution, points=team.points,
-        hist=[t.id for t in team.hist], side_counts=team.side_counts))
+        hist=[t.id for t in team.hist], side_history=team.side_history))
 
 print("")
 
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
-    print("{id}, {inst}, {points}, {hist}, {side_counts}".format(
+    print("{id}, {inst}, {points}, {hist}, {side_history}".format(
         id=team.id, inst=team.institution, points=team.points,
-        hist=", ".join([str(t.id) for t in team.hist]), side_counts=team.side_counts))
+        hist=", ".join([str(t.id) for t in team.hist]), side_history=team.side_history))
