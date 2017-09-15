@@ -1,15 +1,6 @@
 {% extends "draw_base.html" %}
 {% load humanize static debate_tags i18n %}
 
-{% block page-title %}{% blocktrans trimmed with round_name=round.name %}
-  Draw for {{ round_name }}
-{% endblocktrans %}{% endblock %}
-{% block head-title %}
-  <span class="emoji">👀</span> {% blocktrans trimmed with round_name=round.name %}
-  Draw for {{ round_name }}
-{% endblocktrans %}
-{% endblock %}
-
 {% block sub-title %}
   {% if round.draw_status == round.STATUS_CONFIRMED %}
     {% trans "draw is confirmed but not released;" %}
@@ -29,12 +20,12 @@
 {% block page-alerts %}
   {% with sides_unconfirmed=round.num_debates_with_sides_unconfirmed %}
     {% if sides_unconfirmed > 0 and pref.draw_side_allocations != 'manual-ballot' %}
-      {% blocktrans trimmed asvar text count ndebates=sides_unconfirmed %}
+      {% blocktrans trimmed asvar message count ndebates=sides_unconfirmed %}
         1 debate does not have its sides confirmed.
       {% plural %}
         {{ ndebates }} debates do not have their sides confirmed.
       {% endblocktrans %}
-      {% include "components/item-alert.html" with type="warning" %}
+      {% include "components/alert.html" with type="warning" %}
     {% endif %}
   {% endwith %}
 {% endblock %}

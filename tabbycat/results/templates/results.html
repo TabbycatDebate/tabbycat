@@ -27,32 +27,32 @@
 {% block page-alerts %}
   {% if pref.enable_motions and round.motion_set.count == 0 %}
     {% roundurl 'motions-edit' current_round as motions_url %}
-    {% blocktrans trimmed asvar text %}
+    {% blocktrans trimmed asvar message %}
       Currently there are no motions entered for this round, so debate results
       cannot be entered. <a href="{{ motions_url }}" class="alert-link">Add Motions.</a>
     {% endblocktrans %}
-    {% include "components/item-alert.html" with type="danger" %}
+    {% include "components/alert.html" with type="danger" %}
   {% endif %}
 
   {% with sides_unconfirmed=round.num_debates_with_sides_unconfirmed %}
     {% if sides_unconfirmed > 0 and pref.draw_side_allocations != 'manual-ballot' %}
-      {% blocktrans trimmed asvar text count ndebates=sides_unconfirmed %}
+      {% blocktrans trimmed asvar message count ndebates=sides_unconfirmed %}
         One debate does not have its sides confirmed. Results for this debate cannot be entered until its side allocations are marked as confirmed.
       {% plural %}
         {{ ndebates }} debate do not have their sides confirmed. Results for these debates cannot be entered until their side allocations are marked as confirmed.
       {% endblocktrans %}
-      {% include "components/item-alert.html" with type="danger" %}
+      {% include "components/alert.html" with type="danger" %}
     {% endif %}
   {% endwith %}
 
   {% with num_even_panel=round.num_debates_with_even_panel %}
     {% if pref.ballots_per_debate == 'per-adj' and num_even_panel > 0 %}
-      {% blocktrans trimmed asvar text count num_even_panel=num_even_panel %}
+      {% blocktrans trimmed asvar message count num_even_panel=num_even_panel %}
          One debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
       {% plural %}
         {{ num_even_panel }} debates have panels with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
       {% endblocktrans %}
-      {% include "components/item-alert.html" with type="warning" %}
+      {% include "components/alert.html" with type="warning" %}
     {% endif %}
   {% endwith %}
 {% endblock %}

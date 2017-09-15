@@ -191,8 +191,6 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     def get_page_title(self):
         round = self.get_round()
         self.page_emoji = '👀'
-        if self.detailed:
-            title = _("Draw with details for %(round)s")
         if round.draw_status == Round.STATUS_NONE:
             title = _("No draw for %(round)s")
         elif round.draw_status == Round.STATUS_DRAFT:
@@ -204,7 +202,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             self.page_emoji = '👏'
             title = _("Released draw for %(round)s")
         else:
-            raise ValueError("Unrecognised draw status: " + str(round.draw_status))
+            title = "Draw, unknown status"  # Don't translate, this should never happen
         return title % {'round': round.name}
 
     def get_table(self):
@@ -286,12 +284,8 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
     def get_template_names(self):
         round = self.get_round()
-        if self.detailed:
-            return ["draw_details.html"]
         if round.draw_status == Round.STATUS_NONE:
-            messages.warning(self.request, _("No draw exists yet — go to the "
-                "check-ins section for this round to generate a draw."))
-            return ["base.html"]
+            return ["draw_status_none.html"]
         elif round.draw_status == Round.STATUS_DRAFT:
             return ["draw_status_draft.html"]
         elif round.draw_status in [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]:
@@ -303,9 +297,13 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 class AdminDrawWithDetailsView(AdminDrawView):
     detailed = True
     page_emoji = '👀'
+    use_template_subtitle = False  # Use the "for Round n" subtitle
 
     def get_page_title(self):
-        return _("Draw with details") % {'round': self.get_round().name}
+        return _("Draw with details")
+
+    def get_template_names(self):
+        return ["draw_details.html"]
 
 
 # ==============================================================================
