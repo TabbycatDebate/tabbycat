@@ -1,3 +1,5 @@
+from itertools import islice
+
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 
@@ -54,10 +56,10 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
             key = side_abbr if all_sides_confirmed else _("Team %(num)d") % {'num': i}
             self.add_column(key, team_data)
 
-    def _debate_standings_headers(self, standings, info_method):
+    def _debate_standings_headers(self, standings, info_method, limit=None):
         info_list = getattr(standings, info_method)()
         headers = []
-        for info in info_list:
+        for i, info in enumerate(islice(info_list, limit)):
             for side in self.tournament.sides:
                 # Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
                 # "Opening government: Total speaker score", "Closing opposition: Number of firsts"
@@ -78,7 +80,7 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
 
         return headers
 
-    def _add_debate_standing_columns(self, debates, standings, itermethod, infomethod, formattext, formatsort):
+    def _add_debate_standing_columns(self, debates, standings, itermethod, infomethod, formattext, formatsort, limit=None):
         standings_by_debate = [standings.get_standings(
                 [d.get_team(side) for side in self.tournament.sides]) for d in debates]
         cells = []
@@ -87,7 +89,7 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
             metrics_by_team = []  # will be list of lists, one list of metrics for each side
             for i, standing in enumerate(debate):
                 metrics = []  # metrics for this team
-                for metric in getattr(standing, itermethod)():
+                for metric in islice(getattr(standing, itermethod)(), limit):
                     metrics.append({'text': formattext(metric), 'sort': formatsort(metric)})
                 if i == 0:
                     for cell in metrics:
@@ -95,7 +97,7 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
                 metrics_by_team.append(metrics)
             cells.append([y for x in zip(*metrics_by_team) for y in x])
 
-        headers = self._debate_standings_headers(standings, infomethod)
+        headers = self._debate_standings_headers(standings, infomethod, limit)
         self.add_columns(headers, cells)
 
     def add_debate_metric_columns(self, debates, standings):
@@ -109,8 +111,12 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
                 return float(x)
             except (TypeError, ValueError):
                 return 99999
+
+        # In BP, only list first two metrics, there's not enough space for more
+        limit = 2 if self.tournament.pref('teams_in_debate') == 'bp' else None
+
         return self._add_debate_standing_columns(debates, standings, 'itermetrics',
-                'metrics_info', metricformat, formatsort)
+                'metrics_info', metricformat, formatsort, limit)
 
     def add_debate_ranking_columns(self, debates, standings):
         def formatsort(x):
