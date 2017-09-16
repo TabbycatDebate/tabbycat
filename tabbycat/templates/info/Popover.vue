@@ -46,7 +46,7 @@ export default {
       if (this.popContent.length > 0) {
         var content = this.$refs.popHTML.innerHTML
       } else {
-        var content = false
+        var content = ""
       }
 
       $(event.target).popover({
