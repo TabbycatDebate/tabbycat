@@ -26,7 +26,9 @@
               </div><div class="card-deck px-2">
             {% endif %}
             <div class="card m-2 px-3">
-              {{ checkbox|addboundwidgetcss:"form-control" }}
+              <div class="form-check pl-4 pt-1 h6">
+                {{ checkbox|addboundwidgetcss:"form-check-input" }}
+              </div>
             </div>
           {% endfor %}
         </div>

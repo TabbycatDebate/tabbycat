@@ -1,16 +1,13 @@
 {% load add_field_css %}
 
-<div class="form-group {% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %}">
+<div class="form-check {% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %}">
 
   {% if not field.is_hidden %}
-    <label for="{{ field.id_for_label }}">
+    <label for="{{ field.id_for_label }}" class="form-check-label">
+      {{ field|addcss:"form-check-input" }}
       {{ field.label }}
     </label>
   {% endif %}
-
-  <div class="form-check">
-  {{ field|addcss:"form-control" }}
-  </div>
 
   {% if field.help_text  %}
     <small class="form-text text-muted">{{ field.help_text }}</small>

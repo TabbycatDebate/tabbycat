@@ -3,9 +3,9 @@
 
 {% block sub-title %}
   {% if round.draw_status == round.STATUS_CONFIRMED %}
-    {% trans "draw is confirmed but not released;" %}
+    {% trans "draw is not released;" %}
   {% elif round.draw_status == round.STATUS_RELEASED %}
-    {% trans "draw is confirmed and released;" %}
+    {% trans "draw is released;" %}
   {% else %}
     {# don't translate this, it should never happen #}
     DRAW STATUS ERROR,
@@ -17,24 +17,11 @@
   {% endif %}
 {% endblock %}
 
-{% block page-alerts %}
-  {% with sides_unconfirmed=round.num_debates_with_sides_unconfirmed %}
-    {% if sides_unconfirmed > 0 and pref.draw_side_allocations != 'manual-ballot' %}
-      {% blocktrans trimmed asvar message count ndebates=sides_unconfirmed %}
-        1 debate does not have its sides confirmed.
-      {% plural %}
-        {{ ndebates }} debates do not have their sides confirmed.
-      {% endblocktrans %}
-      {% include "components/alert.html" with type="warning" %}
-    {% endif %}
-  {% endwith %}
-{% endblock %}
-
 {% block content %}
 
   <div class="row mb-4">
 
-    <div class="col-md-6 col">
+    <div class="col">
       <div class="card">
 
         <div class="card-body">
@@ -102,7 +89,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 mt-md-0 col mt-3">
+    <div class="col mt-md-0 mt-3">
       <div class="card">
 
         <div class="card-body">
@@ -153,6 +140,34 @@
 
       </div>
     </div>
+
+    {% with sides_unconfirmed=round.num_debates_with_sides_unconfirmed %}
+      {% if sides_unconfirmed > 0 and pref.draw_side_allocations != 'manual-ballot' %}
+        <div class="col">
+          <div class="card">
+
+            <div class="card-body">
+              <h5 class="card-title mb-0">{% trans "Side Allocations" %}</h5>
+            </div>
+
+            <div class="list-group list-group-flush">
+
+              {% blocktrans trimmed asvar text count ndebates=sides_unconfirmed %}
+                1 debate does not have its sides confirmed.
+              {% plural %}
+                {{ ndebates }} debates do not have their sides confirmed.
+              {% endblocktrans %}
+              {% include "components/item-alert.html" with type="warning" %}
+
+              {% roundurl 'draw-matchups-edit' as url %}
+              {% include "components/item-action.html" with text="Allocate Sides" success=True %}
+
+            </div>
+
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
 
   </div>
 

@@ -175,7 +175,7 @@ thead,
 
   // For highlighting boundaries between metrics in "draw with details"
   &.highlight-col {
-    border-left: 1px solid theme-color("primary");
+    border-left: 2px dotted $droppable-bg;
   }
 
   &.checkbox-target:hover,

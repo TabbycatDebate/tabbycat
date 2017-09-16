@@ -14,7 +14,7 @@
     <form action="{% tournamenturl 'breakqual-generate-all' category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
-        <i data-feather="repeat"></i> Delete and Regenerate All Breaks
+        Delete and Regenerate All Breaks <i data-feather="repeat"></i>
       </button>
     </form>
   {% else %}
@@ -23,7 +23,7 @@
         {% csrf_token %}
         <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control"
                 id="generateBreakingTeams" type="submit">
-          Generate the Break for All Categories
+          Generate the Break for All Categories <i data-feather="chevron-right"></i>
         </button>
       </form>
     </div>
@@ -48,7 +48,7 @@
 
     {% url 'admin:breakqual_breakcategory_change' category.id as url %}
     {% blocktrans trimmed asvar p1 with category=category.get_rule_display %}
-      This break uses the <strong>{{ category }}</strong> rule — if you intended to use a different rule, you should <a href="{{ url }}"> edit the rule for this break category in the Edit Database area</a>, then delete and regenerate all breaks. lease double-check this before announcing the break or releasing it to the public. The code that generates the break is not robustly tested for corner cases.
+      This break uses the <strong>{{ category }}</strong> rule — if you intended to use a different rule, you should <a href="{{ url }}"> edit the rule for this break category in the Edit Database area</a>, then delete and regenerate all breaks. Please double-check this before announcing the break or releasing it to the public. The code that generates the break is not robustly tested for corner cases.
     {% endblocktrans %}
     {% include "components/explainer-card.html" with type="warning" %}
 
@@ -71,17 +71,12 @@
         breaks.
       </div>
     {% else %}
-      <div class="alert alert-info">
-        <i data-feather="alert-circle"></i>
-        <p>
-          The break hasn't yet been generated. Would you like to generate
-          the break for all categories?
-        </p>
-        <p>
-          (It's safe to generate the break before all preliminary rounds are
-          complete, if you're curious. You can regenerate it later.)
-        </p>
-      </div>
+
+      {% blocktrans trimmed asvar p1 %}
+        The break hasn't yet been generated. Would you like to generate the break for all categories? It's safe to generate the break before all preliminary rounds are complete, if you're curious — you can regenerate it later.
+      {% endblocktrans %}
+      {% include "components/explainer-card.html" with type="info" %}
+
     {% endif %}
   {% endif %}
 {% endblock %}

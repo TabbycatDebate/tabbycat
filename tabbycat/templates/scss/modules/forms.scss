@@ -36,12 +36,6 @@ input[type=number] {
   text-align: center;
 }
 
-input[type="radio"],
-input[type="checkbox"] {
-  width: 20px; // Mostly for integer scale questions; need to align with labels
-  height: 38px;
-}
-
 input[type="range"] {
   min-width: 70px; // Fix for IE Edge; doesn't show otherwise
   width: 100%; // Fix for importance slider

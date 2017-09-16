@@ -66,10 +66,10 @@
         {% trans "Ballot Status" as title %}
         {% include "components/form-title.html" %}
 
-        <div class="list-group-item pb-0">
+        <div class="list-group-item">
           <div class="row">
-            {% include "components/form-field.html" with field=form.discarded double=True %}
-            {% include "components/form-field.html" with field=form.confirmed double=True %}
+            {% include "components/form-check.html" with field=form.discarded double=True %}
+            {% include "components/form-check.html" with field=form.confirmed double=True %}
           </div>
         </div>
 
