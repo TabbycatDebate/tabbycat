@@ -7,13 +7,15 @@
     {% include "components/form-title.html" %}
 
     {% if form.choose_sides %}
-      <div class="form-group">
-        <label class="col-sm-2 col-md-2 col-xs-6 " >
-          {% trans "Sides" %}
-        </label>
-        <div class="col-sm-10">
-          {{ form.choose_sides|addcss:"choose-sides form-control required" }}
-          {{ form.choose_sides.errors }}
+      <div class="list-group-item">
+        <div class="form-group">
+          <label class="col-sm-2 col-md-2 col-xs-6 " >
+            {% trans "Sides" %}
+          </label>
+          <div class="col-sm-10">
+            {{ form.choose_sides|addcss:"choose-sides form-control required" }}
+            {{ form.choose_sides.errors }}
+          </div>
         </div>
       </div>
       <div hidden>
@@ -24,19 +26,23 @@
     {% endif %}
 
     {% if pref.enable_motions %}
-      {% include "components/form-field.html" with field=form.motion %}
+      <div class="list-group-item">
+        {% include "components/form-field.html" with field=form.motion %}
+      </div>
     {% endif %}
 
     {% if pref.motion_vetoes_enabled %}
-      {% for field in form.motion_veto_fields %}
-        {% include "components/form-field.html" %}
-      {% endfor %}
+      <div class="list-group-item">
+        {% for field in form.motion_veto_fields %}
+          {% include "components/form-field.html" %}
+        {% endfor %}
+      </div>
     {% endif %}
 
     <div class="list-group-item pb-3">
       <div class="form-group">
         <label>{% trans "'Iron' speeches" %}</label>
-        <select class="required custom-select" id="hasIron" name="iron"
+        <select class="required custom-select form-control" id="hasIron" name="iron"
                 tabindex="{{ form.irontabindex }}" required="" aria-required="true">
           <option value="0">
             {% trans "No, there were no speakers who spoke multiple times" %}

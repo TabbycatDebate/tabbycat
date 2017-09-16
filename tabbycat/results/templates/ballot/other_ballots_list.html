@@ -1,14 +1,5 @@
 {% load add_field_css debate_tags humanize i18n %}
 
-{% if ballotsub.confirmed %}
-  {% trans "This ballot set is <strong>confirmed</strong>." as message %}
-  {% include "components/alert.html" with type="success" %}
-{% endif %}
-{% if ballotsub.discarded %}
-  {% trans "This ballot set is <strong>discarded</strong>." as message %}
-  {% include "components/alert.html" with type="warning" %}
-{% endif %}
-
 <ul class="list-group">
 
   {% with nballotsubs=all_ballotsubs.count %}
@@ -33,14 +24,25 @@
     {% endif %}
   {% endwith %}
 
+  {% if ballotsub.confirmed %}
+    <li class="list-group-item list-group-item-success">
+      {% trans "This ballot set is <strong>confirmed</strong>." %}
+    </li>
+  {% endif %}
+  {% if ballotsub.discarded %}
+    <li class="list-group-item list-group-item-warning">
+      {% trans "This ballot set is <strong>discarded</strong>." %}
+    </li>
+  {% endif %}
+
   {% for other in all_ballotsubs %}
-    <li class="list-group-item">
+    <li class="list-group-item small">
       {% if other != ballotsub %}
         <a href="{% tournamenturl 'results-ballotset-edit' other.id %}">
       {% endif %}
 
         {% if other == ballotsub %}
-          <span class="badge badge-secondary">{% trans "CURRENTLY VIEWING" %}</span>
+          <span class="badge badge-success float-right">{% trans "CURRENTLY VIEWING" %}</span>
         {% endif %}
 
         {% blocktrans trimmed with version=other.version%}

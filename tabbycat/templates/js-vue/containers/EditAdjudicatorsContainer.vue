@@ -48,6 +48,7 @@
                         :panel-teams="debate.debateTeams"
                         :percentiles="percentileThresholds"
                         :locked="debate.locked"
+                        :round-info="roundInfo"
                         :adj-positions="adjPositions"></debate-panel>
         </template>
 

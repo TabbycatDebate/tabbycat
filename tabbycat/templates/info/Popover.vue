@@ -46,7 +46,7 @@ export default {
       if (this.popContent.length > 0) {
         var content = this.$refs.popHTML.innerHTML
       } else {
-        var content = false
+        var content = ""
       }
 
       $(event.target).popover({
@@ -59,8 +59,11 @@ export default {
         container: event.target, // Must be same as what triggers the event
         offset: '0,-40' // Shift so hover is easier
       })
-      $(event.target).popover('show')
 
+      // Popovers are disabled sometimes; e.g. on a scrolling draw page
+      if ($(event.target).hasClass("disable-hover") === false){
+        $(event.target).popover('show')
+      }
     },
     hidePopover: function(event) {
 

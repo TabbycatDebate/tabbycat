@@ -53,9 +53,9 @@
     </div>
   </div>
 
-  <div class="btn btn-primary btn-stop-scrolling fixed-top text-white mt-3 mr-3"
+  <div class="btn btn-secondary btn-sm btn btn-stop-scrolling fixed-top text-white mt-2 mr-2"
      data-target="draw-xs" id="stop_scrolling">
-    Stop Scrolling
+    Stop Scroll
   </div>
 
 {% endblock %}
@@ -64,15 +64,19 @@
   {{ block.super }}
   <script>
     function startScrolling() {
+      console.log('startScrolling');
       $('[data-toggle="tooltip"]').attr("data-toggle", "notip").css("pointer-events", "none")
       $('.table').addClass("hide-hover") // Hide the row highlight effect
+      $('.hover-target').addClass("disable-hover") // Suppress popovers while scrolling
       $('.popover').hide() // Hide any currently triggered popovers
       $('#stop_scrolling').show();
     }
     function stopScrolling() {
+      console.log('stopScrolling');
       $('[data-toggle="notip"]').attr("data-toggle", "tooltip").css("pointer-events", "auto")
       $('html, body').stop()
       $('.table').removeClass("hide-hover")
+      $('.hover-target').removeClass("disable-hover")
       $('#stop_scrolling').hide();
     }
     $(document).ready( function() {
@@ -84,7 +88,9 @@
           { scrollTop: $(document).height() - $(window).height()},
           speed, // duration
           "linear", // easing
-          function() { stopScrolling() } // on complete function
+          function() {
+            stopScrolling()
+          } // on complete function
         );
         return false;
       });
