@@ -388,6 +388,7 @@ class DrawForDragAndDropMixin(RoundMixin):
         round_info = {
             'adjudicatorPositions': adjudicator_positions, # Depends on prefs
             'adjudicatorDoubling': t.pref('duplicate_adjs'),
+            'teamsInDebate': t.pref('teams_in_debate'),
             'backUrl': reverse_round('draw', round),
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
             'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,

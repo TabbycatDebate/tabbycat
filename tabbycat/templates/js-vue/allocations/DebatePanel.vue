@@ -33,7 +33,7 @@ export default {
   mixins: [DebateConflictsMixin],
   components: { DroppableGeneric, DraggableAdjudicator },
   props: ['panelAdjudicators', 'adjPositions', 'panelTeams', 'debateId',
-          'percentiles', 'locked', ],
+          'percentiles', 'locked', 'roundInfo'],
   computed: {
     adjudicatorIds: function() {
       return _.map(this.panelAdjudicators, function(da) {
@@ -54,7 +54,7 @@ export default {
       var css = 'flex-horizontal '
       var adjs = this.getAdjudicatorsByPosition(this.panelAdjudicators, position).length
       if ((position === "C" && adjs === 0) ||
-          (position === "P" && adjs % 2 != 0)) {
+          (position === "P" && adjs % 2 != 0 && this.roundInfo.teamsInDebate !== 'bp')) {
         return css += 'panel-incomplete'
       }
       return css

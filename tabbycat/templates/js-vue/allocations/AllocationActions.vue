@@ -34,7 +34,7 @@
               Personal <span class="d-xl-inline d-none">Clash</span>
             </button>
             <button class="btn panel-incomplete">
-              Unbalanced
+              Incomplete
             </button>
           </template>
           <template v-if="highlights.gender">
