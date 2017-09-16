@@ -37,7 +37,7 @@ class BaseTableBuilder:
         self.table_class = kwargs.get('table_class', "")
         self.sort_key = kwargs.get('sort_key', '')
         self.sort_order = kwargs.get('sort_order', '')
-        self.empty_title = kwargs.get('empty_title', "No Data Available")
+        self.empty_title = kwargs.get('empty_title', _("No Data Available"))
 
     @staticmethod
     def _convert_header(header):
