@@ -1,51 +1,74 @@
-==================================
-Comparison With Other Tab Software
-==================================
+=======================
+Tab Software Comparison
+=======================
 
-This page is, obviously, written by the developers of Tabbycat. We like Tabbycat. However you're probably here because you are interested in using Tabbycat and wondering if it is the best option for your tournament. Rarely is there a single best option for everyone: different softwares have made different trade-offs in their development focus on different aspects of tabbing. We have authored this in conjunction with experienced tab directors and chief adjudicators to fairly and accurately evaluate when and why you would you another software over Tabbycat, or vice-versa. As such we are limiting the discussion to the major software using for both British Parliamentary and World Schools / Australasian variations of two-team formats. As with all our documentation, this page is open-source and we welcome :ref:`feedback and contributions <contributing>`.
+This page is, obviously, written by the developers of Tabbycat. We like Tabbycat. However you're probably here because you are interested in using Tabbycat; either in the abstract or for a particular upcoming tournament. Given that Tabbycat is a new entrant to the world of BP tabbing we thought it would be useful to make a document like this that outlines how it compares to the more established options.
 
-Preliminary Notes
------------------
+Rarely is there a single best option for everyone and every situation: different tab programs imagine the tabbing process in a distinct way and have made distinct trade-offs in their development process and design decisions.
 
-While some features may be critical to a tournament, all of the software mentioned here fulfil the basic functionality of generating draws, allocation adjudicators, and entering results. What is more difficult to capture are the various philosophies behind each software and the user experiences of how they handle the hundreds of small details that constitute the tabbing process. Trade-offs are often less about what a software *can* do than what it can accommodate: whether it gels with how you want to use it and whether it does so in a manner you expected. We believe one of our advantages is in the polish in Tabbycat's design and feature set, which has been iterated over a long period of time (the 'basic' functions of Tabbycat were functional since 2010) so would always encourage you to take it for a test drive.
+We have authored this in conjunction with experienced tab directors and chief adjudicators to try and give a fair and accurate evaluation of when, and why, you would use Tabbycat over other software and vice-versa. At present the guide just focuses on the major options available for the British Parliamentary format, although we'd like to see this to expand to incorporate the other formats that Tabbycat supports at some point in the future. As with all of our documentation, this page is open-source and we welcome :ref:`feedback and contributions <contributing>`.
 
-- Note about licensing
-- Note about flexiblity and configuration
+Major Features
+--------------
 
-Major Features Comparison
--------------------------
+All of the software discussed here does the basics necessary to actually run a tournament: generating draws, allocating adjudicators, entering results, etc. Occasionally though there are special features or capabilities outside of these core tasks that are crucial to your vision of how a tournament should be tabbed. For these occasions, we've attempted to compile a feature comparison table below so you can identify the core abilities of each platform.
 
-===========================  =========== =========== =========== =========== ============
-Software                     Tabbycat    T2          Tournaman   Argotabs    Handtabbing
-===========================  =========== =========== =========== =========== ============
-Actively developed           ?           ?           ?           ?           ?
-Actively maintained          ?           ?           ?           ?           ?
-Open Source                  ?           ?           ?           ?           ?
-Online operation/interfaces  ✅           ✅           X           ✅           X
-LAN operation/interface      ✅           ?           ?           ?           X
-Offline operation/interface  ✅           ?           ?           ?           ✅
-Supported Formats            Various     BP          BP          Most 2-team All
-===========================  =========== =========== =========== =========== ============
+That said, we've produced such a check-list with a degree of trepidation. The raw specifications of a technology rarely define the core experience of what it is like to use that technology; whether it be a phone, a car, or indeed, a piece of tabbing software. That is to say the trade-offs between software are often less about what they can do than about what they can do *easily*. Each program has made different design decisions about the million tiny details that comprise the tabbing process, and for Tabbycat in particular we think the levels of polish and usability in even the 'basic' functionality is something that sets it apart.
 
+===========================  =========== =========== =========== ============
+Software                     Tabbycat    Tabbie2     Tournaman   Handtabs
+===========================  =========== =========== =========== ============
+Actively developed           ✅          ✅           ❔           ❔
+Actively maintained          ✅          ✅           ✅           ❔
+Open Source                  ✅          ✅           ❔           ❔
+Documentation                ❔          ❔           ❔           ❔
+Online operation/interfaces  ✅          ✅           ❌           ❌
+LAN operation/interface      ✅          🔶           ✅           ❌
+Offline operation/interface  ✅          🔶           ✅           ✅
+===========================  =========== =========== =========== ============
 
-TODO:
+===========================  =========== =========== =========== ============
+Software                     Tabbycat    Tabbie2     Tournaman   Handtabs
+===========================  =========== =========== =========== ============
+Supported Formats            Various      BP          BP          Various
+Parallel breaks (i.e. ESL)   ✅          ✅          ❔          ❔
+Parallel tabs (i.e. ESL)     ✅          ✅          ❔          ❔
+WUDC Draw Compliance         ✅          ✅          ✅          ✅
+Position rotation            ❔          ❔          ❔          ❔
+Adjudicator allocation       ❔          ❔          ❔          ❔
+Energy/Importance            ❔          ❔          ❔          ❔
+Shadow Panels                ❔          ✅          ❔          ❔
+Diversity allocation         ❔          ❔          ❔          ❔
+Diversity highlighting       ❔          ❔          ❔          ❔
+===========================  =========== =========== =========== ============
 
-- WUDC Draw compliance
-- Data Import options
-- Online Tab release
-- Translations
+===========================  =========== =========== =========== ============
+Software                     Tabbycat    Tabbie2     Tournaman   Handtabs
+===========================  =========== =========== =========== ============
+Printable Ballots            ✅          ✅          ❔          ❔
+Printable Feedback           ✅          ✅          ❔          ❔
+eBallots                     ✅          ✅          ❔          ❔
+eFeedback                    ✅          ✅          ❔          ❔
+Configurable Questions       ✅          ❔          ❔          ❔
+Mobile UI                    ✅          ✅          ❔          ❔
+===========================  =========== =========== =========== ============
 
-- Printable Ballots
-- Printable Feedback
-- EBallots
-- EFeedback
-  - Configurable Questions
+🔶 I think so; unclear? Difficult to setup
 
-- Networked Entry
-  - 'Assistant Users'
-- Shadow Panels
-- Mobile UI
-- Documentation
+Note: have excluded small misc features that are marginal or exclusive to one software
+
+<!-- Features to Add
+
+- Venue accessibility features
+- Assistant data entry options
+- Data validation methods for ballots?
+- Running break rounds
+- Import options
+    - CSV
+    - Manual
+    - ???
+ -->
+
 
 Comparison with T2
 ------------------
@@ -74,12 +97,6 @@ Small feature comparisons
 - Differences in allocation algorithms and interfaces
 - Documentation and learning options
 
-Comparison with ArgoTabs
-------------------------
-
-- idk how argo tabs works but its really well designs and code, so maybe give it a shot
-- does it work for anything that’s not WSDC?
-
 Comparison with Tournaman
 -------------------------
 
@@ -89,12 +106,12 @@ A crucial limitation, and strength, of tournaman, is that it is a native Windows
 - Note about networked access (if you need networks you're probably want online)
 - Note about OSS vs closed source; Tournaman note feature evolving
 
-Comparison with Excel/Hand Tabbing
-----------------------------------
+Comparison with Hand-Tabbing (i.e. using a spreadsheet)
+-------------------------------------------------------
 
-For small tournaments, hand tabbing is often the most quick and intuitive option. It has fewer setup costs, is easy to debug, and ...
+Hand tabbing is easy, until it isn't. Traditionally, hand-tabbing has been the go-to option for small tournaments as hey, you're pretty handy with a spreadsheet right? Or some since-retired elder has passed down an elaborate series of Excel macros and pointed you in the right direction. Either way, making draws in spreadsheets (or on paper) seems like a pretty approachable task; ultimately it's all cells and formula and tabs. However it does however require you to have a good working knowledge of how rules work and how your spreadsheet software of choice can be made to work them.
 
-However it relies on the person tabbing to have a good understanding of draw mathematics, and a high degree of accuracy (or disregard) for results.
+That process might be easy for you, or it might not be. But, either way, we'd like to think that Tabbycat offers a better alternative to hand-tabbing regardless of how well you can actually hand-tab. The setup costs of creating a copy of Tabbycat are pretty low and you can speed through the process of draw creation, adjudicator allocation, and result entry at a pace. It's still not going to be as fast a spreadsheet, but we think it's getting pretty close. And in exchange you get a much stronger guarantee of your draws being correct, options for online data entry and tab release, and a much more pleasant experience. Give it a shot!
 
-It is up to you whether the setup costs are worth it. Tabbycat, and other software, also offer conveniences, such as for draw or tab release that are better than posting excel sheets.
+TODO: fix last sentence
 
