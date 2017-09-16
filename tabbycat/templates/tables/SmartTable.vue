@@ -14,7 +14,9 @@
 
     <tbody>
       <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
-        <td class="empty-cell text-center text-muted">No Data Available</td>
+        <td class="empty-cell text-center text-muted">
+          {{ emptyTitle }}
+        </td>
       </tr>
       <tr v-for="row in dataFilteredByKey">
         <td v-for="(cellData, cellIndex) in row"
@@ -40,7 +42,8 @@ export default {
   mixins: [SortableTableMixin],
   components: { SmartHeader, SmartCell, FeedbackTrend, AvailabilityCheckCell,
                 BreakingCheckCell },
-  props: { tableHeaders: Array, tableContent: Array, tableClass: String },
+  props: { tableHeaders: Array, tableContent: Array, tableClass: String,
+           emptyTitle: String },
   computed: {
     rows: function() {
       var rows = []

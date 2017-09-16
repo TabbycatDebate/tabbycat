@@ -232,7 +232,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             sort_key = _("Bracket")
             sort_order = 'desc'
 
-        table = AdminDrawTableBuilder(view=self, sort_key=sort_key, sort_order=sort_order)
+        table = AdminDrawTableBuilder(view=self, sort_key=sort_key,
+                                      sort_order=sort_order,
+                                      empty_title="No Debates for this Round")
 
         draw = r.debate_set_with_prefetches(ordering=('room_rank',), institutions=True, venues=True)
         populate_history(draw)
@@ -356,7 +358,8 @@ class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemp
         standings = generator.generate(teams, round=round.prev)
 
         summary_table = PositionBalanceReportSummaryTableBuilder(view=self,
-                title=_("Teams with position imbalances"))
+                title=_("Teams with position imbalances"),
+                empty_title=_("No teams with position imbalances"))
         summary_table.build(draw, teams, side_histories_before, side_histories_now, standings)
 
         draw_table = PositionBalanceReportDrawTableBuilder(view=self, title=_("Annotated draw"))

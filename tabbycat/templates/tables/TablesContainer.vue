@@ -20,7 +20,8 @@
             :table-headers="table.head" :table-content="table.data"
             :table-class="table.class"
             :default-sort-key="table.sort_key"
-            :default-sort-order="table.sort_order">
+            :default-sort-order="table.sort_order"
+            :empty-title="table.empty_title">
           </smart-table>
         </div>
       </div>
