@@ -102,7 +102,7 @@ class TournamentMixin(TabbycatPageTitlesMixin):
             return super().dispatch(request, *args, **kwargs)
         except (MultipleDebateTeamsError, NoDebateTeamFoundError) as e:
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
-                logger.exception("Debate team side assignment error, redirecting to admin:draw_debate_changelist")
+                logger.exception("Debate team side assignment error, redirecting to tournament-fix-debate-teams")
                 messages.error(request, _("You've been redirected to this page because of a problem with "
                         "how teams are assigned to sides in a debate."))
                 return redirect_tournament('tournament-fix-debate-teams', tournament)
