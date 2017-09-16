@@ -157,23 +157,27 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         "variance": "_position_cost_variance",
     }
 
+    @staticmethod
+    def get_entropy_position_cost_function(α):
+        if α == 1.0:
+            logger.info("Using Shannon entropy (α = 1)")
+            return BPHungarianDrawGenerator._position_cost_shannon_entropy
+        elif α == 0.0:
+            logger.info("Using min-entropy (α = 0)")
+            return BPHungarianDrawGenerator._position_cost_min_entropy
+        elif α > 0.0:
+            logger.info("Using Rényi entropy with α = %f", α)
+            return BPHungarianDrawGenerator._get_position_cost_renyi_entropy_function(α)
+        else:
+            raise DrawUserError(_("The Rényi order can't be negative, and it's currently set "
+                "to %(alpha)f.") % {'alpha': α})
+
     def get_position_cost_function(self):
         """Extension of self.get_option_function() that includes special
         handling for the "entropy" option."""
         if self.options["position_cost"] == "entropy":
             α = self.options["renyi_order"]  # noqa: N806
-            if α == 1.0:
-                logger.info("Using Shannon entropy (α = 1)")
-                return self._position_cost_shannon_entropy
-            elif α == 0.0:
-                logger.info("Using min-entropy (α = 0)")
-                return self._position_cost_min_entropy
-            elif α > 0.0:
-                logger.info("Using Rényi entropy with α = %f", α)
-                return self._get_position_cost_renyi_entropy_function(α)
-            else:
-                raise DrawUserError(_("The Rényi order can't be negative, and it's currently set "
-                    "to %(alpha)f.") % {'alpha': α})
+            return self.get_entropy_position_cost_function(α)
         else:  # fall back to general implementation
             return self.get_option_function("position_cost", self.POSITION_COST_FUNCTIONS)
 

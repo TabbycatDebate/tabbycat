@@ -18,6 +18,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
 from participants.models import Adjudicator, Institution, Team
+from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
@@ -39,7 +40,8 @@ from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
-from .tables import AdminDrawTableBuilder
+from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
+        PositionBalanceReportSummaryTableBuilder)
 
 logger = logging.getLogger(__name__)
 
@@ -206,7 +208,20 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             title = "Draw for %(round)s"  # don't translate, this should never happen
         return title % {'round': round.name}
 
-    def get_table(self):
+    def get_bp_position_balance_table(self):
+        tournament = self.get_tournament()
+        r = self.get_round()
+        draw = r.debate_set_with_prefetches(ordering=('room_rank',), institutions=True, venues=True)
+        teams = Team.objects.filter(debateteam__debate__round=r)
+        side_histories_before = get_side_history(teams, tournament.sides, r.prev.seq)
+        side_histories_now = get_side_history(teams, tournament.sides, r.seq)
+        generator = TeamStandingsGenerator(('points',), ())
+        standings = generator.generate(teams, round=r.prev)
+        draw_table = PositionBalanceReportDrawTableBuilder(view=self)
+        draw_table.build(draw, teams, side_histories_before, side_histories_now, standings)
+        return draw_table
+
+    def get_standard_table(self):
         r = self.get_round()
 
         if r.is_break_round:
@@ -218,11 +233,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
         table = AdminDrawTableBuilder(view=self, sort_key=sort_key, sort_order=sort_order)
 
-        if r.draw_status == Round.STATUS_NONE:
-            return table # Return Blank
-
         draw = r.debate_set_with_prefetches(ordering=('room_rank',), institutions=True, venues=True)
         populate_history(draw)
+
         if r.is_break_round:
             table.add_room_rank_columns(draw)
         else:
@@ -252,6 +265,16 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             table.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
 
         return table
+
+    def get_table(self):
+        r = self.get_round()
+        if r.draw_status == Round.STATUS_NONE:
+            return TabbycatTableBuilder(view=self)  # blank
+        elif r.draw_status == Round.STATUS_DRAFT and r.prev is not None  and \
+                self.get_tournament().pref('teams_in_debate') == 'bp':
+            return self.get_bp_position_balance_table()
+        else:
+            return self.get_standard_table()
 
     def get_context_data(self, **kwargs):
         # Need to call super() first, so that get_table() can populate
@@ -312,39 +335,38 @@ class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemp
     page_title = _("Position Balance Report")
     tables_orientation = 'rows'
 
-    def get_summary_table(self):
-        table = AdminDrawTableBuilder(view=self, title=_("Teams with position imbalances"))
-
-        return table
-
-    def get_draw_table(self):
-        tournament = self.get_tournament()
-
-        draw = self.get_round().debate_set_with_prefetches(ordering=('room_rank',), institutions=True)
-        table = AdminDrawTableBuilder(view=self, title=_("Annotated draw"))
-
-        table.add_debate_bracket_columns(draw)
-
-        # Just act as if all sides are confirmed (i.e. ignore the sides_confirmed field)
-        # If any sides aren't confirmed, there will be a warning on the page.
-        for side in tournament.sides:
-            key = get_side_name(tournament, side, 'abbr')
-            teams = [debate.get_team(side) for debate in draw]
-            table.add_team_columns(teams, key=key)
-
-        return table
-
     def get_tables(self):
         if self.get_tournament().pref('teams_in_debate') != 'bp':
             logger.warning("Tried to access position balance report for a non-BP tournament")
             return []
+        if self.get_round().prev is None:
+            logger.warning("Tried to access position balance report for first round")
+            return []
 
-        return [self.get_summary_table(), self.get_draw_table()]
+        tournament = self.get_tournament()
+        round = self.get_round()
+        draw = round.debate_set_with_prefetches(ordering=('room_rank',), institutions=True)
+        teams = Team.objects.filter(debateteam__debate__round=round)
+        side_histories_before = get_side_history(teams, tournament.sides, round.prev.seq)
+        side_histories_now = get_side_history(teams, tournament.sides, round.seq)
+        generator = TeamStandingsGenerator(('points',), ())
+        standings = generator.generate(teams, round=round.prev)
+
+        summary_table = PositionBalanceReportSummaryTableBuilder(view=self,
+                title=_("Teams with position imbalances"))
+        summary_table.build(draw, teams, side_histories_before, side_histories_now, standings)
+
+        draw_table = PositionBalanceReportDrawTableBuilder(view=self, title=_("Annotated draw"))
+        draw_table.build(draw, teams, side_histories_before, side_histories_now, standings)
+
+        return [summary_table, draw_table]
 
     def get_template_names(self):
-        # Show an error page if this isn't a BP tournament
+        # Show an error page if this isn't a BP tournament or if it's the first round
         if self.get_tournament().pref('teams_in_debate') != 'bp':
-            return ['position_balance_error.html']
+            return ['position_balance_nonbp.html']
+        elif self.get_round().prev is None:
+            return ['position_balance_round1.html']
         else:
             return ['position_balance.html']
 

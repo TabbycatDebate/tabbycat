@@ -2,14 +2,22 @@ from itertools import islice
 
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
-
+from django.utils.translation import ugettext_lazy
+from participants.models import Team
 from participants.utils import get_side_history
+from standings.teams import TeamStandingsGenerator
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
 from utils.tables import TabbycatTableBuilder
 
+from .generator.bphungarian import BPHungarianDrawGenerator
 
-class AdminDrawTableBuilder(TabbycatTableBuilder):
+
+class BaseDrawTableBuilder(TabbycatTableBuilder):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.side_history_separator = " " if self.tournament.pref('teams_in_debate') == 'bp' else " / "
 
     def highlight_rows_by_column_value(self, column):
         highlighted_rows = [i for i in range(1, len(self.data))
@@ -18,6 +26,36 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
             self.data[i] = [self._convert_cell(cell) for cell in self.data[i]]
             for cell in self.data[i]:
                 cell['class'] = cell.get('class', '') + ' highlight-row'
+
+    def _prepend_side_header(self, side, name, abbr):
+        # Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
+        # "Opening government: Total speaker score", "Closing opposition: Number of firsts"
+        tooltip = _("%(side_name)s: %(metric_name)s") % {
+            'side_name': get_side_name(self.tournament, side, 'full'),
+            'metric_name': name.capitalize(),
+        }
+        tooltip = tooltip.capitalize()
+        key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), abbr)
+
+        # Never use icons in this type of column, because we need to differentiate between sides
+        header = {
+            'key': key,  # no need to translate
+            'tooltip': tooltip,
+            'text': key
+        }
+
+        return header
+
+    def _side_history_by_team(self, side_histories, teams):
+        """Given a list of side histories (returned by get_side_history()),
+        returns cells that can be used to show the side history for each team
+        in `teams`."""
+        # Note that the spaces used in the separator are nonbreaking spaces, not normal spaces
+        return [{'text': self.side_history_separator.join(map(str, side_histories[team.id]))}
+                for team in teams]
+
+
+class AdminDrawTableBuilder(BaseDrawTableBuilder):
 
     def add_room_rank_columns(self, debates):
         header = {
@@ -61,23 +99,8 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
         headers = []
         for i, info in enumerate(islice(info_list, limit)):
             for side in self.tournament.sides:
-                # Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
-                # "Opening government: Total speaker score", "Closing opposition: Number of firsts"
-                tooltip = _("%(side_name)s: %(metric_name)s") % {
-                    'side_name': get_side_name(self.tournament, side, 'full'),
-                    'metric_name': info['name'].capitalize(),
-                }
-                tooltip = tooltip.capitalize()
-                key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), info['abbr'])
-
-                # Never use icons in this type of column, because we need to differentiate between sides
-                header = {
-                    'key': key,  # no need to translate
-                    'tooltip': tooltip,
-                    'text': key
-                }
+                header = self._prepend_side_header(side, info['name'], info['abbr'])
                 headers.append(header)
-
         return headers
 
     def _add_debate_standing_columns(self, debates, standings, itermethod, infomethod, formattext, formatsort, limit=None):
@@ -124,27 +147,211 @@ class AdminDrawTableBuilder(TabbycatTableBuilder):
                 'rankings_info', rankingformat, formatsort)
 
     def add_debate_side_history_columns(self, debates, round):
-        # Note that the spaces used in the separator are nonbreaking spaces, not normal spaces
-        separator = " " if self.tournament.pref('teams_in_debate') == 'bp' else " / "
-
         # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
         teams_by_side = [[d.get_team(side) for d in debates] for side in self.tournament.sides]
-        all_teams = [team for teams in teams_by_side for team in teams]
-        side_history = get_side_history(all_teams, self.tournament.sides, round.seq)
+        all_teams = [team for d in debates for team in d.teams]
+        side_histories = get_side_history(all_teams, self.tournament.sides, round.seq)
 
         for i, (side, teams) in enumerate(zip(self.tournament.sides, teams_by_side)):
             # Translators: e.g. team would be "Affirmative" or "Opening government"
-            tooltip = _("%(team)s: side history<br>\n"
-                "(number of times the team has been on each side before this round)") % {
-                'team': get_side_name(self.tournament, side, 'full'),
-            }
-            tooltip = tooltip.capitalize()
-            # Translators: "SH" stands for "side history"
-            key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), _("SH"))
-            header = {'key': key, 'tooltip': tooltip, 'text': key}
-
-            cells = [{'text': separator.join(map(str, side_history[team.id]))} for team in teams]
+            name = _("side history<br>\n(number of times the team has been on each side before this round)")
+            abbr = _("SH")
+            header = self._prepend_side_header(side, name, abbr)
+            cells = self._side_history_by_team(side_histories, teams)
             if i == 0:
                 for cell in cells:
                     cell['class'] = 'highlight-col'
             self.add_column(header, cells)
+
+
+class BasePositionBalanceReportTableBuilder(BaseDrawTableBuilder):
+    """Really more of a mixin than a builder, just adds some common
+    functionality."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.exponent = self.tournament.pref('bp_position_cost_exponent')
+
+        cost_pref = self.tournament.pref('bp_position_cost')
+        α = self.tournament.pref('bp_renyi_order')
+        if cost_pref == "entropy":
+            self.position_cost_func = BPHungarianDrawGenerator.get_entropy_position_cost_function(α)
+        else:
+            self.position_cost_func = getattr(BPHungarianDrawGenerator, BPHungarianDrawGenerator.POSITION_COST_FUNCTIONS[cost_pref])
+
+    def get_position_cost(self, pos, team):
+        before = self.side_histories_before[team.id]
+        return self.position_cost_func(pos, before) ** self.exponent
+
+    def get_imbalance_category(self, team):
+        """Returns the highlighting category for the team. Requires
+        `self.side_histories_before` and `self.side_histories_now` to be
+        populated.
+
+        Categories work like this:
+         - Teams that sunk from ideal to non-ideal: "danger"
+         - Teams that could have gone from non-ideal to ideal, but didn't: "danger"
+         - Teams that were so imbalanced last round that they are still non-ideal,
+           but still did the best they could: "warning"
+         - Teams that resolved a previous imbalance: "success"
+         - Teams that were ideal both before and now: None
+
+        "Ideal" means that their history is as even as possible, i.e., the
+        maximum and minimum number in the history differ by at most 1.
+        """
+        before = self.side_histories_before[team.id]
+        now = self.side_histories_now[team.id]
+
+        ideal_before = max(before) - min(before) <= 1
+        ideal_now = max(now) - min(now) <= 1
+
+        if ideal_before and ideal_now:
+            return None
+        elif ideal_before and not ideal_now:
+            return "danger", "regression", 1
+        elif ideal_now and not ideal_before:
+            return "success", "resolved", 4
+        elif now.count(min(before)) < before.count(min(before)):
+            return "warning", "improving", 3
+        else:
+            return "danger", "still-bad", 2
+
+
+class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBuilder):
+
+    STATUSES = {
+        "regression": ugettext_lazy("Went from balanced to imbalanced"),
+        "resolved": ugettext_lazy("Went from imbalanced to balanced"),
+        "improving": ugettext_lazy("Best improvement possible, still imbalanced"),
+        "still-bad": ugettext_lazy("Was imbalanced and still imbalanced"),
+    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.sort_key = _("Cost")
+
+    def build(self, draw, teams, side_histories_before, side_histories_now, standings):
+        self.side_histories_before = side_histories_before
+        self.side_histories_now = side_histories_now
+        self.standings = standings
+
+        # Filter for just those teams that are "noteworthy"
+        teams = [team for team in teams if self.get_imbalance_category(team) is not None]
+        self.add_team_columns(teams)
+
+        # Points
+        infos = self.standings.get_standings(teams)
+        header = {'key': _("Pts"), 'tooltip': _("Points")}
+        self.add_column(header, [info.metrics['points'] for info in infos])
+
+        # Sides
+        sides_lookup = {dt.team_id: dt.side for debate in draw
+                for dt in debate.debateteam_set.all()}
+        sides = [sides_lookup[team.id] for team in teams]
+        poses = [self.tournament.sides.index(side) for side in sides]  # used later
+        names = {side: get_side_name(self.tournament, side, 'abbr') for side in self.tournament.sides}
+        header = {'key': _("Side"), 'tooltip': _("Position this round")}
+        self.add_column(header, [names[side] for side in sides])
+
+        # Side counts before and now
+        header = {'key': _("Before"), 'tooltip': _("Side history before this round")}
+        cells = self._side_history_by_team(self.side_histories_before, teams)
+        self.add_column(header, cells)
+
+        header = {'key': _("After"), 'tooltip': _("Side history after this round")}
+        side_histories_now_highlighted = []
+        for team, pos in zip(teams, poses):
+            history = [str(x) for x in self.side_histories_now[team.id]]
+            history[pos] = "<strong>" + history[pos] + "</strong>"
+            history_str = self.side_history_separator.join(history)
+            side_histories_now_highlighted.append(history_str)
+        self.add_column(header, side_histories_now_highlighted)
+
+        # Position cost
+        header = {'key': _("Cost"), 'tooltip': _("Position cost")}
+        cells = [metricformat(self.get_position_cost(pos, team)) for pos, team in zip(poses, teams)]
+        self.add_column(header, cells)
+
+        # Status
+        cells = []
+        for team in teams:
+            style, category, sort = self.get_imbalance_category(team)
+            cells.append({
+                'text': self.STATUSES[category],
+                'sort': sort,
+                'class': 'text-' + style
+            })
+        self.add_column(_("Status"), cells)
+
+        # Sort by points as secondary sort (will be sorted by cost in Vue)
+        self.data.sort(key=lambda x: x[1]['sort'], reverse=True)
+
+
+class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilder):
+
+    def build(self, debates, teams, side_histories_before, side_histories_now, standings):
+        self.debates = debates
+        self.teams = teams
+        self.side_histories_before = side_histories_before
+        self.side_histories_now = side_histories_now
+        self.standings = standings
+
+        self.add_permitted_points_column()
+
+        # Just act as if all sides are confirmed (i.e. ignore the sides_confirmed field)
+        # If any sides aren't confirmed, there will be a warning on the page.
+        for side in self.tournament.sides:
+            self.add_all_columns_for_team(side)
+
+        self.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
+
+    def add_permitted_points_column(self):
+        points = [info.metrics['points'] for info in self.standings]
+        points.sort(reverse=True)
+        pref = self.tournament.pref('bp_pullup_distribution')
+        define_rooms_func = getattr(BPHungarianDrawGenerator, BPHungarianDrawGenerator.DEFINE_ROOM_FUNCTIONS[pref])
+        rooms = define_rooms_func(points)
+        data = [sorted(allowed, reverse=True) for level, allowed in rooms]
+        cells = []
+        for datum in data:
+            strs = [str(x) for x in datum]
+            strs[0] = "<strong>%s</strong>" % strs[0]
+            cells.append(", ".join(strs))
+        header = {
+            'key': _("Room"),
+            'tooltip': _("Teams with this many points are permitted in this debate<br>\n(bracket in bold)"),
+        }
+        self.add_column(header, cells)
+
+    def add_all_columns_for_team(self, side):
+        teams = [debate.get_team(side) for debate in self.debates]
+        side_abbr = get_side_name(self.tournament, side, 'abbr')
+        self.add_team_columns(teams, key=side_abbr)
+
+        # Highlight the team column
+        for row in self.data:
+            row[-1]['class'] = 'highlight-col'
+
+        # Points of team
+        infos = self.standings.get_standings(teams)
+        header = self._prepend_side_header(side, _("Points"), _("Pts"))
+        self.add_column(header, [info.metrics['points'] for info in infos])
+
+        # Side history after last round
+        header = self._prepend_side_header(side, _("side history before this round"), _("SH"))
+        cells = self._side_history_by_team(self.side_histories_before, teams)
+        self.add_column(header, cells)
+
+        # Position cost incurred, post-weighting
+        header = self._prepend_side_header(side, _("position cost"), _("Cost"))
+        pos = self.tournament.sides.index(side)
+        cells = [metricformat(self.get_position_cost(pos, team)) for team in teams]
+        self.add_column(header, cells)
+
+        # Highlight according to category
+        for row, team in zip(self.data, teams):
+            category = self.get_imbalance_category(team)
+            if category is None:
+                continue
+            for cell in row[-4:]:
+                cell['class'] = cell.get('class', '') + ' table-' + category[0]
