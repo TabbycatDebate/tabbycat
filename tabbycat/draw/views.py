@@ -359,7 +359,7 @@ class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemp
 
         summary_table = PositionBalanceReportSummaryTableBuilder(view=self,
                 title=_("Teams with position imbalances"),
-                empty_title=_("No teams with position imbalances"))
+                empty_title=_("No teams with position imbalances! Hooray!") + " 😊")
         summary_table.build(draw, teams, side_histories_before, side_histories_now, standings)
 
         draw_table = PositionBalanceReportDrawTableBuilder(view=self, title=_("Annotated draw"))
