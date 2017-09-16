@@ -3,9 +3,7 @@ from itertools import islice
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
-from participants.models import Team
 from participants.utils import get_side_history
-from standings.teams import TeamStandingsGenerator
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
 from utils.tables import TabbycatTableBuilder
@@ -173,7 +171,7 @@ class BasePositionBalanceReportTableBuilder(BaseDrawTableBuilder):
         self.exponent = self.tournament.pref('bp_position_cost_exponent')
 
         cost_pref = self.tournament.pref('bp_position_cost')
-        α = self.tournament.pref('bp_renyi_order')
+        α = self.tournament.pref('bp_renyi_order')  # noqa: N806
         if cost_pref == "entropy":
             self.position_cost_func = BPHungarianDrawGenerator.get_entropy_position_cost_function(α)
         else:

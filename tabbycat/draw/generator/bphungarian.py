@@ -158,7 +158,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
     }
 
     @staticmethod
-    def get_entropy_position_cost_function(α):
+    def get_entropy_position_cost_function(α):  # noqa: N803
         if α == 1.0:
             logger.info("Using Shannon entropy (α = 1)")
             return BPHungarianDrawGenerator._position_cost_shannon_entropy

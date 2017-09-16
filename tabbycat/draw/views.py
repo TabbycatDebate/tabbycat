@@ -271,7 +271,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         r = self.get_round()
         if r.draw_status == Round.STATUS_NONE:
             return TabbycatTableBuilder(view=self)  # blank
-        elif r.draw_status == Round.STATUS_DRAFT and r.prev is not None  and \
+        elif r.draw_status == Round.STATUS_DRAFT and r.prev is not None and \
                 self.get_tournament().pref('teams_in_debate') == 'bp':
             return self.get_bp_position_balance_table()
         else:
