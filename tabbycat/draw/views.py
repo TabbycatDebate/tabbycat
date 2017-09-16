@@ -219,6 +219,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         standings = generator.generate(teams, round=r.prev)
         draw_table = PositionBalanceReportDrawTableBuilder(view=self)
         draw_table.build(draw, teams, side_histories_before, side_histories_now, standings)
+        self.highlighted_cells_exist = any(draw_table.get_imbalance_category(team) is not None for team in teams)
         return draw_table
 
     def get_standard_table(self):
@@ -288,6 +289,8 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             data['debates_with_adj_conflicts'] = _count(self.adjudicator_conflicts)
         if hasattr(self, 'venue_conflicts'):
             data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
+        if hasattr(self, 'highlighted_cells_exist'):
+            data['highlighted_cells_exist'] = self.highlighted_cells_exist
         return data
 
     def _add_break_rank_columns(self, table, draw, category):
