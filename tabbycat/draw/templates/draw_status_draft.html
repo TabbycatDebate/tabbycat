@@ -1,5 +1,5 @@
 {% extends "base_vue_table.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block page-subnav-actions %}
   <form id="confirmForm" method="POST" action="{% roundurl 'draw-confirm' %}">
@@ -8,4 +8,21 @@
       Confirm Draw <i data-feather="chevron-right"></i>
     </button>
   </form>
+{% endblock %}
+
+{% block content %}
+
+{% if round.draw_status == 'D' and round.prev and pref.teams_in_debate == 'bp' %}
+    {% blocktrans trimmed asvar p1 %}
+      Highlighted cells relate to changes in position balance, as follows: Red
+      indicates that the team could not be allocated a position that maintains
+      position balance. Yellow indicates that the team was previously
+      imbalanced, and is given the best position possible in this draw, but is
+      nonetheless still imbalanced. Green indicates that the team's previous
+      imbalance is resolved with this draw.
+    {% endblocktrans %}
+    {% include "components/explainer-card.html" with type="info" %}
+{% endif %}
+
+{{ block.super }}
 {% endblock %}
