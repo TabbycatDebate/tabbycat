@@ -21,7 +21,7 @@
     <a href="{% roundurl 'draw-details' %}" class="btn btn-outline-primary ">
       {% trans "Draw Details" %}
     </a>
-    {% if pref.teams_in_debate == 'bp' and round.prev %}
+    {% if pref.teams_in_debate == 'bp' and round.prev and not round.is_break_round %}
       <a href="{% roundurl 'draw-position-balance' %}" class="btn btn-outline-primary ">
         {% trans "Position Balance" %}
       </a>

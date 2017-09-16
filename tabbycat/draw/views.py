@@ -273,8 +273,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
         r = self.get_round()
         if r.draw_status == Round.STATUS_NONE:
             return TabbycatTableBuilder(view=self)  # blank
-        elif r.draw_status == Round.STATUS_DRAFT and r.prev is not None and \
-                self.get_tournament().pref('teams_in_debate') == 'bp':
+        elif self.get_tournament().pref('teams_in_debate') == 'bp' and \
+                r.draw_status == Round.STATUS_DRAFT and r.prev is not None and \
+                not r.is_break_round:
             return self.get_bp_position_balance_table()
         else:
             return self.get_standard_table()
@@ -347,6 +348,9 @@ class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemp
         if self.get_round().prev is None:
             logger.warning("Tried to access position balance report for first round")
             return []
+        if self.get_round().is_break_round:
+            logger.warning("Tried to access position balance report for a break round")
+            return []
 
         tournament = self.get_tournament()
         round = self.get_round()
@@ -373,6 +377,8 @@ class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemp
             return ['position_balance_nonbp.html']
         elif self.get_round().prev is None:
             return ['position_balance_round1.html']
+        elif self.get_round().is_break_round:
+            return ['position_balance_break.html']
         else:
             return ['position_balance.html']
 
