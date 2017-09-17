@@ -117,7 +117,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         table = TabbycatTableBuilder(view=self, sort_key=_("Venue"))
         table.add_debate_venue_columns(debates)
         table.add_debate_results_columns(debates)
-        table.add_debate_ballot_link_column(debates)
+        if not (tournament.pref('teams_in_debate') == 'bp' and round.is_break_round):
+            table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True)
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([d.confirmed_ballot.motion
@@ -143,7 +144,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         table = TabbycatTableBuilder(view=self, sort_key=_("Team"))
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
         table.add_debate_result_by_team_columns(teamscores)
-        table.add_debate_ballot_link_column(debates)
+        if not (tournament.pref('teams_in_debate') == 'bp' and round.is_break_round):
+            table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True)
         if tournament.pref('show_motions_in_results'):
             table.add_motion_column([debate.confirmed_ballot.motion

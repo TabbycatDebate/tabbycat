@@ -742,10 +742,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         elif self.tournament.pref('ballots_released'):
             ballot_links_header = {'key': _("Ballot"), 'icon': 'search'}
-            ballot_links_data = [{
-                'text': _("View Ballot"),
-                'link': reverse_tournament('results-public-scoresheet-view', self.tournament, kwargs={'pk': debate.id})
-            } if debate else "" for debate in debates]
+            ballot_links_data = []
+            for debate in debates:
+                if not debate.confirmed_ballot:
+                    ballot_links_data.append("")
+                elif self.tournament.pref('teams_in_debate') == 'bp' and debate.round.is_break_round:
+                    ballot_links_data.append("")
+                else:
+                    ballot_links_data.append({
+                        'text': _("View Ballot"),
+                        'link': reverse_tournament('results-public-scoresheet-view', self.tournament, kwargs={'pk': debate.id})
+                    })
             self.add_column(ballot_links_header, ballot_links_data)
 
     def add_debate_result_by_team_columns(self, teamscores):
