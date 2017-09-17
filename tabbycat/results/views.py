@@ -582,7 +582,6 @@ class BallotCheckinView(LoginRequiredMixin, RoundMixin, TemplateView):
 class BaseBallotCheckinJsonResponseView(LoginRequiredMixin, RoundMixin, JsonDataResponsePostView):
 
     def get_debate(self):
-
         venue_id = self.request.POST.get('venue')
 
         if venue_id is None:
@@ -629,8 +628,7 @@ class BallotCheckinGetDetailsView(BaseBallotCheckinJsonResponseView):
             'exists': True,
             'venue': debate.venue.name,
             'venue_id': debate.venue.id,
-            'aff_team': debate.aff_team.short_name,
-            'neg_team': debate.neg_team.short_name,
+            'teams': [team.short_name for team in debate.teams],
             'num_adjs': len(debate.adjudicators),
             'adjudicators': [adj.name for adj in debate.adjudicators.voting()],
             'ballots_left': ballot_checkin_number_left(self.get_round()),
