@@ -12,6 +12,13 @@
 
 {% block content %}
 
+{% if round.is_break_round %}
+  {% blocktrans trimmed asvar p1 %}
+    Tabbycat assigns sides in elimination rounds randomly. However, because in elimination rounds, many tournaments draw lots for sides in front of an audience, the sides are marked as "unconfirmed", so that it doesn't look like sides have been pre-assigned. After you confirm the draw, you'll need to confirm sides on the "Edit Sides/Matchups" page, even if you wish to accept Tabbycat's random assignment.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="warning" %}
+{% endif %}
+
 {% if round.draw_status == 'D' and round.prev and not round.is_break_round and pref.teams_in_debate == 'bp' and highlighted_cells_exist %}
     {% blocktrans trimmed asvar p1 %}
       Highlighted cells relate to changes in position balance, as follows:

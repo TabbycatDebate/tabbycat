@@ -157,7 +157,7 @@
               {% plural %}
                 {{ ndebates }} debates do not have their sides confirmed.
               {% endblocktrans %}
-              {% include "components/item-alert.html" with type="warning" %}
+              {% include "components/item-alert.html" with type="danger" %}
 
               {% roundurl 'draw-matchups-edit' as url %}
               {% include "components/item-action.html" with text="Allocate Sides" success=True %}
