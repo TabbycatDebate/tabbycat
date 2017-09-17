@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.views.generic.base import TemplateView, View
 from django.http import JsonResponse
 from django.utils.functional import cached_property
+from django.utils.translation import ugettext as _
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -126,11 +127,11 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDa
         round = self.get_round()
         self.log_action()
         if round.draw_status == Round.STATUS_RELEASED:
-            info = "Draw is already released, unrelease draw to redo auto-allocations."
+            info = _("Draw is already released, unrelease draw to redo auto-allocations.")
             logger.warning(info)
             raise BadJsonRequestError(info)
         if round.draw_status != Round.STATUS_CONFIRMED:
-            info = "Draw is not confirmed, confirm draw to run auto-allocations."
+            info = _("Draw is not confirmed, confirm draw to run auto-allocations.")
             logger.warning(info)
             raise BadJsonRequestError(info)
 
@@ -171,7 +172,7 @@ class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
         # Check all the adjudicators are part of the tournament
         adjs = Adjudicator.objects.filter(Q(tournament=self.get_tournament()) | Q(tournament__isnull=True), id__in=adj_ids)
         if len(adjs) != len(posted_debateadjudicators):
-            raise BadJsonRequestError("Not all adjudicators specified are associated with the tournament")
+            raise BadJsonRequestError(_("Not all adjudicators specified are associated with the tournament."))
         adj_name_lookup = {adj.id: adj.name for adj in adjs}  # for debugging messages
 
         # Update or create positions of adjudicators in debate

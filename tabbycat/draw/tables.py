@@ -151,8 +151,8 @@ class AdminDrawTableBuilder(BaseDrawTableBuilder):
         side_histories = get_side_history(all_teams, self.tournament.sides, round.seq)
 
         for i, (side, teams) in enumerate(zip(self.tournament.sides, teams_by_side)):
-            # Translators: e.g. team would be "Affirmative" or "Opening government"
             name = _("side history<br>\n(number of times the team has been on each side before this round)")
+            # Translators: Abbreviation for "side history"
             abbr = _("SH")
             header = self._prepend_side_header(side, name, abbr)
             cells = self._side_history_by_team(side_histories, teams)

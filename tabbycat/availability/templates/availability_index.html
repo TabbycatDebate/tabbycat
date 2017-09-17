@@ -98,14 +98,14 @@
       <i data-feather="alert-circle"></i>
       {% roundurl 'results-round-list' round=round.prev as prev_round_results_url %}
       {% blocktrans trimmed with prev_round=round.prev.name count previous_unconfirmed=previous_unconfirmed %}
-        Note: One debate from {{ prev_round }}
+        One debate from {{ prev_round }}
         <strong>does not have a completed ballot</strong>. This may lead to a
         draw that fails or is incorrect, depending on your draw rules.
         <a href="{{ prev_round_results_url }}" class="alert-link">
           Enter results from {{ prev_round }}.
         </a>
       {% plural %}
-        Note: {{ previous_unconfirmed }} debates from {{ prev_round }}
+        {{ previous_unconfirmed }} debates from {{ prev_round }}
         <strong>do not have a completed ballot</strong>. This may lead to a
         draw that fails or is incorrect, depending on your draw rules.
         <a href="{{ prev_round_results_url }}" class="alert-link">

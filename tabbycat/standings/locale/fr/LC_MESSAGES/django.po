@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-28 14:48+1000\n"
+"POT-Creation-Date: 2017-09-18 05:26+1000\n"
 "PO-Revision-Date: 2017-08-21 23:19-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -168,87 +168,129 @@ msgstr ""
 msgid "who-beat-whom (in divisions)"
 msgstr ""
 
-#: standings/templates/standings_menu.html:6
+#: standings/templates/speaker_standings.html:7
+msgid ""
+"Note that speakers are being sorted by their <strong>average score</strong>."
+msgstr ""
+
+#: standings/templates/speaker_standings.html:9
+msgid ""
+"Note that speakers are being sorted by their <strong>total score</strong>. "
+"Any speaker who misses a single debate will be severely punished in these "
+"rankings."
+msgstr ""
+
+#: standings/templates/speaker_standings.html:14
+#, python-format
+msgid ""
+"Also, speakers can miss up to %(count)s debates before they are omitted from "
+"the speaker tab."
+msgstr ""
+
+#: standings/templates/speaker_standings.html:19
+#, python-format
+msgid ""
+"These settings can be changed in the <a href=\"%(standings_config_url)s\" "
+"class=\"alert-link\">Standings section of this tournament's configuration</"
+"a>."
+msgstr ""
+
+#: standings/templates/standings_menu.html:7
 msgid "Overview"
 msgstr "Aperçu"
 
-#: standings/templates/standings_menu.html:13
+#: standings/templates/standings_menu.html:11
 msgid "Teams"
 msgstr "Équipes"
 
-#: standings/templates/standings_menu.html:18
+#: standings/templates/standings_menu.html:16
 msgid "Divisions"
 msgstr "Divisions"
 
-#: standings/templates/standings_menu.html:26
+#: standings/templates/standings_menu.html:21
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: standings/templates/standings_menu.html:31
+#: standings/templates/standings_menu.html:26
 msgid "Replies"
 msgstr "Résponses"
 
-#: standings/templates/standings_menu.html:37
+#: standings/templates/standings_menu.html:32
 #, python-format
 msgid "%(category_name)s Speakers"
 msgstr "Orateurs de la catégorie %(category_name)s"
 
-#: standings/templates/standings_menu.html:47
+#: standings/templates/standings_menu.html:44
 msgid "Motions Balance"
 msgstr "Équilibre des motions"
 
-#: standings/templates/standings_menu.html:52
+#: standings/templates/standings_menu.html:48
 msgid "Diversity Overview"
 msgstr "Aperçu de la diversité"
 
+#: standings/views.py:91
+#, python-format
+msgid ""
+"<p>There was an error generating the standings: <em>%(message)s</em></p>"
+msgstr ""
+
+#: standings/views.py:96
+#, python-format
+msgid ""
+"<p>You may need to double-check the <a href=\"%(standings_options_url)s\" "
+"class=\"alert-link\">standings configuration under the Setup section</a>. If "
+"this issue persists and you're not sure how to fix it, please contact the "
+"developers.</p>"
+msgstr ""
+
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
-#: standings/views.py:131
+#: standings/views.py:156
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
 msgstr "%(title)s (seulement les %(limit)d en tête)"
 
-#: standings/views.py:209
+#: standings/views.py:237
 msgid "Speaker Standings"
 msgstr "Classement des orateurs"
 
-#: standings/views.py:245
+#: standings/views.py:273
 msgid "Speaker Tab"
 msgstr "Tab des orateurs"
 
-#: standings/views.py:263
+#: standings/views.py:291
 #, python-format
 msgid "%(category)s Speaker Standings"
 msgstr "Classement des orateurs de la catégorie %(category)s"
 
-#: standings/views.py:281
+#: standings/views.py:309
 #, python-format
 msgid "%(category)s Speaker Tab"
 msgstr "Tab des orateurs de la catégorie %(category)s"
 
-#: standings/views.py:295
+#: standings/views.py:323
 msgid "Reply Speaker Standings"
 msgstr "Classement des orateurs de réponse de la catégorie %(category_name)s"
 
-#: standings/views.py:327
+#: standings/views.py:355
 msgid "Reply Speaker Tab"
 msgstr "Tab des orateurs de réponse de la catégorie %(category_name)s"
 
-#: standings/views.py:339
+#: standings/views.py:367
 msgid "Team Standings"
 msgstr "Classement des équipes"
 
-#: standings/views.py:395
+#: standings/views.py:429
 msgid "Division Standings"
 msgstr "Classement par division"
 
-#: standings/views.py:405
+#: standings/views.py:439
 msgid "Team Tab"
 msgstr "Tab des équipes"
 
-#: standings/views.py:421
+#: standings/views.py:455
 msgid "Motions Tab"
 msgstr "Tab des motions"
 
-#: standings/views.py:463
+#: standings/views.py:497
 msgid "Current Team Standings"
 msgstr "Classement actuel des équipes"

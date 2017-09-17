@@ -47,10 +47,10 @@
               {% endif %}
 
               {% if not pref.duplicate_adjs and duplicates %}
-                {% blocktrans trimmed asvar text with adjudicators=duplicates|join:", " count ndebates=duplicates|length %}
+                {% blocktrans trimmed asvar text with adjudicators=duplicates|join:", " count nadjs=duplicates|length %}
                   <strong>{{ adjudicators }}</strong> is adjudicating multiple debates.
                 {% plural %}
-                  The following <strong>{{ ndebates }}</strong> adjudicators are adjudicating multiple debates: <strong>{{ adjudicators }}</strong>
+                  The following <strong>{{ nadjs }}</strong> adjudicators are adjudicating multiple debates: <strong>{{ adjudicators }}</strong>
                 {% endblocktrans %}
                 {% include "components/item-alert.html" with type="danger" %}
               {% endif %}

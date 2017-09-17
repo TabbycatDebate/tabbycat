@@ -81,23 +81,24 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             teams_dict = {'total': break_size}
             if break_size < 2:
                 teams_dict['in_now'] = 0
-                # Translators: nteams in this string can only be 0 or 1
                 teams_dict['message'] = ungettext(
+                    # Translators: nteams in this string can only be 0 or 1
                     "%(nteams)d breaking team — no debates can happen",
                     "%(nteams)d breaking teams — no debates can happen",  # in English, used when break_size == 0
                     break_size) % {'nteams': break_size}
             else:
                 debates, bypassing = partial_break_round_split(break_size)
                 teams_dict['in_now'] = 2 * debates
-                # Translators: ndebating in this string is always at least 2
                 teams_dict['message'] = ungettext(
+                    # Translators: ndebating in this string is always at least 2
                     "%(ndebating)d breaking team is debating this round",  # never used, but needed for i18n
                     "%(ndebating)d breaking teams are debating this round",
                     2 * debates) % {'ndebating': 2 * debates}
                 if bypassing > 0:
-                    # Translators: This gets appended to the previous string (the one with
-                    # ndebating in it) if (and only if) nbypassing is greater than 0
                     teams_dict['message'] += ungettext(
+                        # Translators: This gets appended to the previous string (the one with
+                        # ndebating in it) if (and only if) nbypassing is greater than 0.
+                        # "It" refers to this round.
                         "; %(nbypassing)d team is bypassing it",
                         "; %(nbypassing)d teams are bypassing it",
                         bypassing) % {'nbypassing': bypassing}
@@ -114,8 +115,8 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             return {
                 'total'     : nadvancing,
                 'in_now'    : nadvancing,
-                # Translators: nadvancing in this string is always at least 2
                 'message'   : ungettext(
+                    # Translators: nadvancing in this string is always at least 2
                     "%(nadvancing)s advancing team is debating this round",  # never used, but needed for i18n
                     "%(nadvancing)s advancing teams are debating this round",
                     nadvancing) % {'nadvancing': nadvancing}

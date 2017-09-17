@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 16:38+1000\n"
+"POT-Creation-Date: 2017-09-18 05:26+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,7 +133,7 @@ msgstr ""
 msgid "Save Venue Categories"
 msgstr ""
 
-#: venues/templates/venue_categories_edit.html:13
+#: venues/templates/venue_categories_edit.html:11
 msgid ""
 "Venue categories allow you to <ul> <li>group venues together into \"zones\" "
 "to display in the draw and make navigation easier for participants, and/or</"
@@ -142,7 +142,7 @@ msgid ""
 "li> </ul>"
 msgstr ""
 
-#: venues/templates/venue_categories_edit.html:23
+#: venues/templates/venue_categories_edit.html:20
 #, python-format
 msgid ""
 "If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" "
@@ -154,7 +154,7 @@ msgstr ""
 msgid "Venue Constraints"
 msgstr ""
 
-#: venues/templates/venue_constraints_edit.html:10
+#: venues/templates/venue_constraints_edit.html:9
 msgid ""
 "Venue constraints tell the venue allocator to try to keep the specified team "
 "or adjudicator, or all teams (but not adjudicators) from the specified "
@@ -164,30 +164,26 @@ msgid ""
 "which are taken if a higher-priority constraint couldn't be met."
 msgstr ""
 
-#: venues/templates/venue_constraints_edit.html:23
-msgid "There are some problems with the data on this form:"
-msgstr ""
-
-#: venues/templates/venue_constraints_edit.html:69
+#: venues/templates/venue_constraints_edit.html:41
 msgid "Save Venue Constraints"
 msgstr ""
 
-#: venues/templates/venue_constraints_edit.html:72
+#: venues/templates/venue_constraints_edit.html:44
 msgid "Save and Add More"
 msgstr ""
 
-#: venues/views.py:94
+#: venues/views.py:100
 #, python-format
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: venues/views.py:100
+#: venues/views.py:106
 msgid "No changes were made to the venue categories."
 msgstr ""
 
-#: venues/views.py:170
+#: venues/views.py:176
 #, python-format
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."

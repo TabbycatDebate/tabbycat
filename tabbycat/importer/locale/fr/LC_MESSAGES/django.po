@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-28 14:48+1000\n"
+"POT-Creation-Date: 2017-09-18 05:26+1000\n"
 "PO-Revision-Date: 2017-08-27 21:54-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -93,14 +93,22 @@ msgstr "Addition de juges"
 msgid "(Step %(step)s of %(count)s)"
 msgstr "(Étape %(step)s de %(count)s)"
 
-#: importer/templates/simple_import_adjudicators_details.html:13
+#: importer/templates/simple_import_adjudicators_details.html:12
+#: importer/templates/simple_import_institutions_details.html:18
+#: importer/templates/simple_import_teams_details.html:17
+#: importer/templates/simple_import_venues_details.html:12
+msgid "Previous Step"
+msgstr "Étape précédente"
+
+#: importer/templates/simple_import_adjudicators_details.html:17
 #, fuzzy, python-format
 msgid ""
 "As per this tournament's configuration, an adjudicator's rating must be "
-"between %(min_score)s and %(max_score)s. Adjudicators marked as 'shared' "
-"will not be associated with any particular tournament but will be available "
-"to any tournament which has the <a href=\"%(options_league_url)s\" class="
-"\"alert-link\">\"Share Adjudicators\" setting</a> enabled."
+"between %(pref.adj_min_score)s and %(pref.adj_max_score)s. Adjudicators "
+"marked as 'shared' will not be associated with any particular tournament but "
+"will be available to any tournament which has the \"<a href="
+"\"%(options_league_url)s\" class=\"alert-link\">Share Adjudicators setting</"
+"a>\" enabled."
 msgstr ""
 "Que par la configuration de ce tournoi, cote de l’arbitre doit être entre %s "
 "(min_score) et % (max_score) s. arbitres marqués comme « partagé » ne sera "
@@ -108,31 +116,12 @@ msgstr ""
 "pour n’importe quel tournoi qui a le <a href=\"%(options_league_url)s\" "
 "class=\"alert-link\">paramètre « part Adjudicators »</a> est activé."
 
-#: importer/templates/simple_import_adjudicators_details.html:31
-#: importer/templates/simple_import_institutions_details.html:18
-#: importer/templates/simple_import_teams_details.html:17
-#: importer/templates/simple_import_venues_details.html:37
-msgid "Previous Step"
-msgstr "Étape précédente"
-
-#: importer/templates/simple_import_adjudicators_details.html:37
-#: importer/templates/simple_import_adjudicators_numbers.html:36
-#: importer/templates/simple_import_institutions_details.html:24
-#: importer/templates/simple_import_institutions_raw.html:27
-#: importer/templates/simple_import_teams_details.html:23
-#: importer/templates/simple_import_teams_numbers.html:36
-#: importer/templates/simple_import_venues_details.html:43
-#: importer/templates/simple_import_venues_raw.html:27
-msgid "There are some problems with the data on this form:"
-msgstr ""
-"Des problèmes en lien avec les données sur ce formulaire sont apparus :"
-
-#: importer/templates/simple_import_adjudicators_details.html:52
+#: importer/templates/simple_import_adjudicators_details.html:48
 #, python-format
 msgid "Adjudicators for %(institution_name)s"
 msgstr "Juges de %(institution_name)s"
 
-#: importer/templates/simple_import_adjudicators_details.html:114
+#: importer/templates/simple_import_adjudicators_details.html:69
 msgid "Save All Adjudicators"
 msgstr "Enregistrer tous les juges"
 
@@ -145,7 +134,7 @@ msgstr ""
 "Vous devez <a href=\"%(import_institutions_url)s\" class=\"alert-link"
 "\">ajouter des institutions</a> avant d’ajouter des juges."
 
-#: importer/templates/simple_import_adjudicators_numbers.html:24
+#: importer/templates/simple_import_adjudicators_numbers.html:23
 msgid ""
 "Specify the number of new adjudicators to add per institution. In the next "
 "step you can specify their names and ratings."
@@ -153,10 +142,17 @@ msgstr ""
 "Spécifiez le nombre de nouveaux juges à ajouter par institution. Dans "
 "l’étape suivante, vous pouvez spécifier leurs noms et leurs évaluations."
 
-#: importer/templates/simple_import_adjudicators_numbers.html:59
-#: importer/templates/simple_import_institutions_raw.html:35
-#: importer/templates/simple_import_teams_numbers.html:59
-#: importer/templates/simple_import_venues_raw.html:35
+#: importer/templates/simple_import_adjudicators_numbers.html:32
+#: importer/templates/simple_import_institutions_raw.html:30
+msgid "There are some problems with the data on this form:"
+msgstr ""
+"Des problèmes en lien avec les données sur ce formulaire sont apparus :"
+
+#: importer/templates/simple_import_adjudicators_numbers.html:54
+#: importer/templates/simple_import_teams_numbers.html:53
+#, fuzzy
+#| msgid "Next Step"
+msgctxt "button"
 msgid "Next Step"
 msgstr "Étape suivante"
 
@@ -165,7 +161,7 @@ msgstr "Étape suivante"
 msgid "Simple Importer"
 msgstr "Importateur simple"
 
-#: importer/templates/simple_import_index.html:11
+#: importer/templates/simple_import_index.html:9
 msgid ""
 "There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-"
 "data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. "
@@ -180,33 +176,45 @@ msgstr ""
 "plus facile à utiliser et marche bien pour les tournois petits et pour les "
 "tournois de taille moyenne."
 
-#: importer/templates/simple_import_index.html:23
-msgctxt "link"
+#: importer/templates/simple_import_index.html:16
+#, fuzzy
+#| msgctxt "link"
+#| msgid "Add Institutions"
 msgid "Add Institutions"
 msgstr "Ajouter des institutions"
 
-#: importer/templates/simple_import_index.html:29
-msgctxt "link"
+#: importer/templates/simple_import_index.html:21
+#, fuzzy
+#| msgctxt "link"
+#| msgid "Add Teams"
 msgid "Add Teams"
 msgstr "Ajouter des équipes"
 
-#: importer/templates/simple_import_index.html:35
-msgctxt "link"
+#: importer/templates/simple_import_index.html:25
+#, fuzzy
+#| msgctxt "page title"
+#| msgid "Add Adjudicators"
 msgid "Add Adjudicators"
-msgstr "Ajouter des juges"
+msgstr "Addition de juges"
 
-#: importer/templates/simple_import_index.html:41
-msgctxt "link"
+#: importer/templates/simple_import_index.html:29
+#, fuzzy
+#| msgctxt "link"
+#| msgid "Add Venues"
 msgid "Add Venues"
 msgstr "Ajouter des lieux"
 
-#: importer/templates/simple_import_index.html:47
-msgctxt "link"
+#: importer/templates/simple_import_index.html:33
+#, fuzzy
+#| msgctxt "link"
+#| msgid "Add/Edit Venue Categories"
 msgid "Add/Edit Venue Categories"
 msgstr "Ajouter/modifier des catégories de lieux"
 
-#: importer/templates/simple_import_index.html:53
-msgctxt "link"
+#: importer/templates/simple_import_index.html:37
+#, fuzzy
+#| msgctxt "link"
+#| msgid "Add/Edit Venue Constraints"
 msgid "Add/Edit Venue Constraints"
 msgstr "Ajouter/modifier des contraintes de lieux"
 
@@ -218,9 +226,14 @@ msgctxt "page title"
 msgid "Add Institutions"
 msgstr "Addition d'institutions"
 
-#: importer/templates/simple_import_institutions_details.html:66
+#: importer/templates/simple_import_institutions_details.html:40
 msgid "Save All Institutions"
 msgstr "Enregistrer toutes les Institutions"
+
+#: importer/templates/simple_import_institutions_raw.html:41
+#: importer/templates/simple_import_venues_raw.html:40
+msgid "Next Step"
+msgstr "Étape suivante"
 
 #: importer/templates/simple_import_teams_details.html:4
 #: importer/templates/simple_import_teams_details.html:6
@@ -230,16 +243,16 @@ msgctxt "page title"
 msgid "Add Teams"
 msgstr "Addition d'équipes"
 
-#: importer/templates/simple_import_teams_details.html:38
+#: importer/templates/simple_import_teams_details.html:32
 #, python-format
 msgid "Teams for %(institution_name)s"
 msgstr "Équipes de %(institution_name)s"
 
-#: importer/templates/simple_import_teams_details.html:85
+#: importer/templates/simple_import_teams_details.html:46
 msgid "Save All Teams"
 msgstr "Enregistrer toutes les équipes"
 
-#: importer/templates/simple_import_teams_numbers.html:14
+#: importer/templates/simple_import_teams_numbers.html:15
 #, fuzzy, python-format
 msgid ""
 "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add "
@@ -266,23 +279,23 @@ msgctxt "page title"
 msgid "Add Venues"
 msgstr "Addition de lieux"
 
-#: importer/templates/simple_import_venues_details.html:12
+#: importer/templates/simple_import_venues_details.html:16
 #, fuzzy
 msgid ""
 "Venues with lower priorities are allocated in the draw last. If you have "
 "more venues than you need you can mark the worst venues with a lower "
-"priority number."
+"priority number\""
 msgstr ""
 "Sites avec les priorités sont alloués au tirage au sort enfin. Si vous avez "
 "plus de lieux que vous avez besoin vous peuvent marquer les pires lieux avec "
 "un numéro de priorité inférieur."
 
-#: importer/templates/simple_import_venues_details.html:21
+#: importer/templates/simple_import_venues_details.html:18
 #, fuzzy, python-format
 msgid ""
 "Venues marked as 'shared' will not be associated with any particular "
-"tournament but will be available to any tournament which has the <a href="
-"\"%(options_league_url)s\" class=\"alert-link\">\"Share Venues\" setting</a> "
+"tournament but will be available to any tournament which has the <a "
+"href='%(options_league_url)s' class='alert-link'>'Share Venues' setting</a> "
 "enabled."
 msgstr ""
 "Marqué comme « partagé » des lieux ne sera pas associés à n’importe quel "
@@ -290,16 +303,20 @@ msgstr ""
 "a le <a href=\"%(options_league_url)s\" class=\"alert-link\">paramètre "
 "« lieux de partage »</a> est activé."
 
-#: importer/templates/simple_import_venues_details.html:96
+#: importer/templates/simple_import_venues_details.html:35
 msgid "Save All Venues"
 msgstr "Enregistrer tous les lieux"
 
-#: importer/views.py:77
+#: importer/views.py:78
 #, fuzzy, python-format
 msgid "Added %(count)d %(model_plural)s."
 msgstr "Ajouté % (count) d % (model_plural) s."
 
-#: importer/views.py:161
+#: importer/views.py:162
 #, python-format
 msgid "Adjudicator %(number)d"
 msgstr "Juge %(number)d"
+
+#~ msgctxt "link"
+#~ msgid "Add Adjudicators"
+#~ msgstr "Ajouter des juges"

@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 16:38+1000\n"
+"POT-Creation-Date: 2017-09-18 05:26+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1054,6 +1054,125 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:1059
 msgid "Public cross draw pages"
+msgstr ""
+
+#: options/templates/preferences_index.html:4
+#: options/templates/preferences_index.html:5
+msgid "Configuration"
+msgstr ""
+
+#: options/templates/preferences_index.html:15
+msgid "Score Rules"
+msgstr ""
+
+#: options/templates/preferences_index.html:16
+msgid "The range of scores that can awarded to speeches, replies, and teams"
+msgstr ""
+
+#: options/templates/preferences_index.html:20
+msgid "Draw Rules"
+msgstr ""
+
+#: options/templates/preferences_index.html:21
+msgid ""
+"How teams are paired in the draw and how adjudicators are auto-allocated"
+msgstr ""
+
+#: options/templates/preferences_index.html:25
+msgid "Debate Rules"
+msgstr ""
+
+#: options/templates/preferences_index.html:26
+msgid ""
+"How many speeches in a debate, how motions are decided, and whether reply "
+"speeches are used"
+msgstr ""
+
+#: options/templates/preferences_index.html:30
+msgid "Standings"
+msgstr ""
+
+#: options/templates/preferences_index.html:31
+msgid "How teams and speakers are ranked in the released tabs"
+msgstr ""
+
+#: options/templates/preferences_index.html:36
+msgid "Feedback"
+msgstr ""
+
+#: options/templates/preferences_index.html:37
+msgid "How adjudicators are ranked and who can submit feedback"
+msgstr ""
+
+#: options/templates/preferences_index.html:47
+msgid "Tab Release"
+msgstr ""
+
+#: options/templates/preferences_index.html:48
+msgid "When to release a public tab is made visible and what data it shows"
+msgstr ""
+
+#: options/templates/preferences_index.html:52
+msgid "Data Entry"
+msgstr ""
+
+#: options/templates/preferences_index.html:53
+msgid ""
+"How ballots and feedback are entered, including online submission options"
+msgstr ""
+
+#: options/templates/preferences_index.html:57
+msgid "Public Features"
+msgstr ""
+
+#: options/templates/preferences_index.html:58
+msgid "What information the site displays on the publicly accessible pages"
+msgstr ""
+
+#: options/templates/preferences_index.html:62
+msgid "UI Options"
+msgstr ""
+
+#: options/templates/preferences_index.html:63
+msgid "Small tweaks in what information is presented by the interface"
+msgstr ""
+
+#: options/templates/preferences_index.html:67
+msgid "League Options"
+msgstr ""
+
+#: options/templates/preferences_index.html:68
+msgid ""
+"Special options for running large multi-venue multi-level debating "
+"competitions. Warning: these features are not fully tested or supported."
+msgstr ""
+
+#: options/templates/preferences_index.html:80
+msgid "Manually Set Current Round"
+msgstr ""
+
+#: options/templates/preferences_index.html:81
+msgid ""
+"Tabbycat will prompt you to advance the current round on each round's "
+"results page. However, if there are special circumstances that require you "
+"to override this and set the current round to something else, use this page."
+msgstr ""
+
+#: options/templates/preferences_index.html:88
+msgid "Presets"
+msgstr ""
+
+#: options/templates/preferences_index.html:89
+msgid ""
+"These modify common settings for basic rules; double check our <a href="
+"\"https://tabbycat.readthedocs.io/\" target=\"_blank\">documentation</a> to "
+"ensure they are correct for your tournament. Each links will display what "
+"settings it changes before applying them."
+msgstr ""
+
+#: options/templates/preferences_index.html:100
+#, python-format
+msgid "Apply %(preset_name)s"
 msgstr ""
 
 #: options/views.py:103

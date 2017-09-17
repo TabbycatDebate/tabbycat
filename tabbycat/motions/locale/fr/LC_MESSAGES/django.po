@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-28 14:48+1000\n"
+"POT-Creation-Date: 2017-09-18 05:26+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,19 +18,31 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: motions/templates/assign.html:4 motions/templates/assign.html:5
+msgid "Assign Motions"
+msgstr ""
+
+#: motions/templates/assign.html:9
+msgid "Back to Display"
+msgstr ""
+
+#: motions/templates/assign.html:42
+msgid "Save Motion Assignments"
+msgstr ""
+
 #: motions/templates/balance_results_2vs2.html:42
 msgid "No teams debated this topic"
 msgstr ""
 
-#: motions/templates/balance_results_bp.html:21
+#: motions/templates/balance_results_bp.html:25
 msgid "average points per position"
 msgstr ""
 
-#: motions/templates/balance_results_bp.html:45
-msgid "results per position"
+#: motions/templates/balance_results_bp.html:55
+msgid "results distribution"
 msgstr ""
 
-#: motions/templates/balance_results_bp.html:57
+#: motions/templates/balance_results_bp.html:68
 msgid "No results for this topic"
 msgstr ""
 
@@ -38,6 +50,76 @@ msgstr ""
 msgid "No teams vetoed this topic"
 msgstr ""
 
-#: motions/templates/motions_edit.html:65
-msgid "There are some problems with the data on this form:"
+#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:5
+msgid "Edit Motions"
+msgstr ""
+
+#: motions/templates/motions_edit.html:9
+msgid "Display Draw"
+msgstr ""
+
+#: motions/templates/motions_edit.html:15
+msgid "Unrelease Motions to Public"
+msgstr ""
+
+#: motions/templates/motions_edit.html:23
+msgid ""
+"Releasing motions makes them available the public-facing pages of this site. "
+"If your tournament is configured to display a running list of motions, or to "
+"allow adjudicators to submit ballots that require motion selection, you will "
+"need to release each round's motions before that can happen."
+msgstr ""
+
+#: motions/templates/motions_edit.html:30
+msgid "Release Motions to Public"
+msgstr ""
+
+#: motions/templates/motions_edit.html:36
+msgid "Assign Motions to Divisions"
+msgstr ""
+
+#: motions/templates/motions_edit.html:43
+msgid "Enter Results"
+msgstr ""
+
+#: motions/templates/motions_edit.html:50
+msgid ""
+"Results cannot be entered without motions. Enter at least one motion below "
+"and then hit \\"
+msgstr ""
+
+#: motions/templates/motions_edit.html:56
+#, python-format
+msgid ""
+"You have released the motions, but they will not show to the public unless "
+"the 'public view of motions' setting is enabled in <a class=\"alert-link\" "
+"href=\"%(config_url)s\">this tournament's configuration</a>."
+msgstr ""
+
+#: motions/templates/public_motions.html:4
+#: motions/templates/public_motions.html:5
+msgid "Motions"
+msgstr ""
+
+#: motions/templates/public_motions.html:20
+msgid "There are no motions available for this round."
+msgstr ""
+
+#. Translators: Used when there are expected to be several motions per round (e.g. Australs)
+#: motions/templates/public_motions.html:24
+msgid "The motions for this round have not been released."
+msgstr ""
+
+#. Translators: Used when there is expected to be one motion per round (e.g. WUDC)
+#: motions/templates/public_motions.html:27
+msgid "The motion for this round has not been released."
+msgstr ""
+
+#: motions/templates/show.html:16
+#, python-format
+msgid "Reveal Motions for %(round_name)s"
+msgstr ""
+
+#: motions/templates/show.html:30
+msgid "There are no motions for this round entered into Tabbycat."
 msgstr ""

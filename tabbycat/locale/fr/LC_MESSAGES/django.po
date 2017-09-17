@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-28 14:48+1000\n"
+"POT-Creation-Date: 2017-09-18 05:26+1000\n"
 "PO-Revision-Date: 2017-08-27 21:58-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,33 +22,24 @@ msgstr ""
 msgid "You need to delete the above objects first."
 msgstr "Vous devez d’abord supprimer les objets ci-dessus."
 
-#: templates/base_eligibility.html:5
-msgid "Saving…"
-msgstr "Enregistrement en cours…"
-
-#: templates/base_eligibility.html:14
-msgid "Please correct the errors below."
-msgstr "Veuillez corriger les erreurs indiquées."
-
-#: templates/base_formset.html:8
-msgid "There are some problems with the data on this form:"
-msgstr ""
-"Des problèmes en lien avec les données sure ce formulaire sont apparus :"
-
-#: templates/base_formset.html:57
+#: templates/base_formset.html:26
 msgid "Save and Add More"
 msgstr "Enregistrer et ajouter davantage"
 
-#: templates/footer.html:12
+#: templates/components/form-errors.html:4
+msgid "Whoops! There was an error with one or more fields"
+msgstr ""
+
+#: templates/footer.html:13
 #, python-format
 msgid "%(tournament)s runs on"
 msgstr "%(tournament)s fonctionne sur"
 
-#: templates/footer.html:14
+#: templates/footer.html:15
 msgid "This site runs on"
 msgstr "Ce site fonctionne sur"
 
-#: templates/footer.html:20
+#: templates/footer.html:21
 msgid ""
 "Tabbycat is an open-source project developed by volunteers, and is free to "
 "use for tabbing non-profit, non-fundraising tournaments."
@@ -57,7 +48,7 @@ msgstr ""
 "l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
 "collecter des fonds."
 
-#: templates/footer.html:24
+#: templates/footer.html:25
 #, python-format
 msgid ""
 "For a tournament of this size, we suggest a donation of <strong>$%(amount)s</"
@@ -66,11 +57,11 @@ msgstr ""
 "Pour un tournoi de cette taille, nous suggérons une donation de <strong>"
 "%(amount)s $</strong>."
 
-#: templates/footer.html:28
+#: templates/footer.html:29
 msgid "Learn more about donating."
 msgstr "En savoir plus à propos des donations."
 
-#: templates/footer.html:32
+#: templates/footer.html:33
 #, python-format
 msgid ""
 "<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or "
@@ -79,11 +70,11 @@ msgstr ""
 "<a href=\"%(donations_link)s\">Donations à Tabbycat des individuels ou des "
 "organisations</a> sont très appréciées."
 
-#: templates/footer.html:39
+#: templates/footer.html:41
 msgid "Still timing debates with the stopwatch app?"
 msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
 
-#: templates/footer.html:41
+#: templates/footer.html:43
 #, python-format
 msgid ""
 "Using an app designed for debate timekeeping makes speaking and adjudicating "
@@ -100,109 +91,138 @@ msgstr ""
 "debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
 "\">Debatekeeper (Android)</a>."
 
-#: templates/footer.html:49
+#: templates/footer.html:52
 msgid "Need ballots?"
 msgstr "Avez-vous besoin des bulletins&nbsp;?"
 
-#: templates/footer.html:51
+#: templates/footer.html:54
+#, fuzzy
+#| msgid ""
+#| "Use <a href=\"http://debatingballot.com\" target=\"_blank"
+#| "\">debatingBallot.com</a> to design and print great ballots online."
 msgid ""
-"Use <a href=\"http://debatingballot.com\" target=\"_blank\">debatingBallot."
-"com</a> to design and print great ballots online."
+"Use <a href=\"http://philipbelesky.github.io/ballots/\" target=\"_blank"
+"\">debatingBallot.com</a> to design and print great ballots online."
 msgstr ""
 "Utilisez <a href=\"http://debatingballot.com\" target=\"_blank"
 "\">DebatingBallot.com</a> pour dessiner et d'imprimer des bulletins beaux en "
 "ligne."
 
-#: templates/footer.html:62
+#: templates/footer.html:67
 msgid "GitHub"
 msgstr "GitHub"
 
-#: templates/footer.html:65
+#: templates/footer.html:73
 msgid "Documentation"
 msgstr "Documentation"
 
-#: templates/footer.html:68
+#: templates/footer.html:79
 msgid "Support"
 msgstr "Aide"
 
-#: templates/footer.html:71
+#: templates/footer.html:85
 msgid "Facebook Group"
 msgstr "Groupe sur Facebook"
 
-#: templates/footer.html:74
+#: templates/footer.html:91
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
 
-#: templates/nav/admin_nav.html:18
-#, python-format
-msgid "<strong>%(other_tournament)s</strong> (Admin)"
-msgstr "<strong>%(other_tournament)s</strong> (admin)"
-
-#: templates/nav/admin_nav.html:25
-#, python-format
-msgid "<strong>%(other_tournament)s</strong> (Public)"
-msgstr "<strong>%(other_tournament)s</strong> (public)"
-
-#: templates/nav/admin_nav.html:35
-msgid "Site Home"
-msgstr "Page d'accueil du site"
-
-#: templates/nav/admin_nav.html:41
-msgid "New Tournament"
-msgstr "Nouveau tournoi"
-
-#: templates/nav/admin_nav.html:47 templates/nav/admin_nav.html:171
-msgid "Edit Database"
-msgstr "Modification de la base de données"
-
-#: templates/nav/admin_nav.html:65
+#: templates/nav/admin_nav.html:39 templates/nav/admin_nav.html:98
+#: templates/nav/admin_nav.html:127 templates/nav/admin_nav.html:172
 msgid "Overview"
 msgstr "Aperçu"
 
-#: templates/nav/admin_nav.html:75 templates/nav/public_nav.html:114
-msgid "Sides"
-msgstr "Côtés"
-
-#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:104
-msgid "Divisions"
-msgstr "Divisions"
-
-#: templates/nav/admin_nav.html:96
-msgid "Feedback"
-msgstr "Commentaires"
-
-#: templates/nav/admin_nav.html:105 templates/nav/public_nav.html:119
-msgid "Standings"
-msgstr "Classement"
-
-#: templates/nav/admin_nav.html:122
+#: templates/nav/admin_nav.html:45
 msgid "Setup"
 msgstr "Configuration"
 
-#: templates/nav/admin_nav.html:136
+#: templates/nav/admin_nav.html:52
 msgid "Configuration"
 msgstr "Configuration"
 
-#: templates/nav/admin_nav.html:145
+#: templates/nav/admin_nav.html:56
 msgid "Import Data"
 msgstr "Importation des données"
 
-#: templates/nav/admin_nav.html:154 templates/nav/public_nav.html:129
+#: templates/nav/admin_nav.html:60 templates/nav/public_nav.html:145
 msgid "Participants"
 msgstr "Participants"
 
-#: templates/nav/admin_nav.html:163
+#: templates/nav/admin_nav.html:65
 msgid "Private URLs"
 msgstr "URLs privées"
 
-#: templates/nav/admin_nav.html:189
+#: templates/nav/admin_nav.html:68
+msgid "Edit Database"
+msgstr "Modification de la base de données"
+
+#: templates/nav/admin_nav.html:76 templates/nav/public_nav.html:130
+msgid "Sides"
+msgstr "Côtés"
+
+#: templates/nav/admin_nav.html:86 templates/nav/admin_nav.html:134
+#: templates/nav/public_nav.html:120
+msgid "Divisions"
+msgstr "Divisions"
+
+#: templates/nav/admin_nav.html:92
+msgid "Feedback"
+msgstr "Commentaires"
+
+#: templates/nav/admin_nav.html:120 templates/nav/public_nav.html:135
+msgid "Standings"
+msgstr "Classement"
+
+#: templates/nav/admin_nav.html:130
+#, fuzzy
+#| msgid "Team Tab"
+msgid "Teams"
+msgstr "Tab des équipes"
+
+#: templates/nav/admin_nav.html:138
+#, fuzzy
+#| msgid "Speaker Tab"
+msgid "Speakers"
+msgstr "Tab des orateurs"
+
+#: templates/nav/admin_nav.html:143
+#, fuzzy
+#| msgid "Replies Tab"
+msgid "Replies"
+msgstr "Tab des discours de résponse"
+
+#: templates/nav/admin_nav.html:148
+#, fuzzy, python-format
+#| msgid "%(category_name)s Speaker Tab"
+msgid "%(category_name)s Speakers"
+msgstr "Tab des orateurs de la catégorie %(category_name)s"
+
+#: templates/nav/admin_nav.html:154 templates/nav/public_nav.html:125
+#: templates/nav/round_panel.html:59
+msgid "Motions"
+msgstr "Motions"
+
+#: templates/nav/admin_nav.html:157 templates/nav/public_nav.html:140
+msgid "Diversity"
+msgstr "Aperçu de la diversité"
+
+#: templates/nav/admin_nav.html:166
 msgid "Breaks"
 msgstr "Qualifications"
 
-#: templates/nav/admin_nav.html:203
-#, python-format
-msgid "Log Out (%(user)s)"
-msgstr "Déconnexion (%(user)s)"
+#: templates/nav/admin_nav.html:176
+#, fuzzy, python-format
+#| msgid "%(category_name)s Speaker Tab"
+msgid "%(category_name)s"
+msgstr "Tab des orateurs de la catégorie %(category_name)s"
+
+#: templates/nav/admin_nav.html:193
+#, fuzzy
+#| msgctxt "button"
+#| msgid "Log In"
+msgid "Log Out"
+msgstr "Connexion"
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
@@ -233,47 +253,39 @@ msgstr "Tirages"
 msgid "View All"
 msgstr "Afficher tout"
 
-#: templates/nav/public_nav.html:71 templates/nav/round_panel.html:93
+#: templates/nav/public_nav.html:73 templates/nav/round_panel.html:69
 msgid "Results"
 msgstr "Résultats"
 
-#: templates/nav/public_nav.html:87
+#: templates/nav/public_nav.html:96
 msgid "Break"
 msgstr "Qualification"
 
-#: templates/nav/public_nav.html:95
+#: templates/nav/public_nav.html:110
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: templates/nav/public_nav.html:109 templates/nav/round_panel.html:81
-msgid "Motions"
-msgstr "Motions"
-
-#: templates/nav/public_nav.html:124
-msgid "Diversity"
-msgstr "Aperçu de la diversité"
-
-#: templates/nav/public_nav.html:134
+#: templates/nav/public_nav.html:150
 msgid "Feedback Progress"
 msgstr "Progrès des commentaires"
 
-#: templates/nav/public_nav.html:139
+#: templates/nav/public_nav.html:155
 msgid "Enter Ballot"
 msgstr "Saisie d'un bulletin"
 
-#: templates/nav/public_nav.html:144
+#: templates/nav/public_nav.html:160
 msgid "Enter Feedback"
 msgstr "Saisie d'une commentaire"
 
-#: templates/nav/round_panel.html:44
+#: templates/nav/round_panel.html:26
 msgid "Check-Ins"
 msgstr "Enregistrements"
 
-#: templates/nav/round_panel.html:57
+#: templates/nav/round_panel.html:37
 msgid "Draw"
 msgstr "Tirage"
 
-#: templates/nav/round_panel.html:70
+#: templates/nav/round_panel.html:49
 msgid "Display"
 msgstr "Affichage"
 
@@ -282,7 +294,7 @@ msgctxt "page title"
 msgid "Login"
 msgstr "Connexion"
 
-#: templates/registration/login.html:30
+#: templates/registration/login.html:29
 msgctxt "page title"
 msgid "Log in to Tabbycat"
 msgstr "Connexion à Tabbycat"
@@ -291,7 +303,7 @@ msgstr "Connexion à Tabbycat"
 msgid "Your username and password didn't match."
 msgstr "Votre nom d'utilisateur et votre mot de passe n'ont pas correspondu."
 
-#: templates/registration/login.html:42
+#: templates/registration/login.html:44
 msgid ""
 "Your account doesn't have access to this page. To proceed, please log in "
 "with an account that has access."
@@ -299,16 +311,19 @@ msgstr ""
 "Votre compte ne vous permet pas d'accéder cette page. Pour continuer, "
 "veuillez vous connecter."
 
-#: templates/registration/login.html:44
+#: templates/registration/login.html:47
 msgid "Please log in to see this page."
 msgstr "Veuillez vous connecter afin de voir ce page."
 
-#: templates/registration/login.html:57
+#: templates/registration/login.html:59 templates/style_guide.html:153
 msgctxt "button"
 msgid "Log In"
 msgstr "Connexion"
 
-#: templates/registration/login.html:61
+#: templates/registration/login.html:60 templates/style_guide.html:154
+#, fuzzy
+#| msgid "I forgot my password"
+msgctxt "button"
 msgid "I forgot my password"
 msgstr "J'ai oublié mon mot de passe"
 
@@ -318,39 +333,33 @@ msgctxt "page title"
 msgid "Password changed"
 msgstr "Mot de passe modifié avec succès"
 
-#: templates/registration/password_change_done.html:15
+#: templates/registration/password_change_done.html:16
 msgid "Your password has been changed."
 msgstr "Votre mot de passe a bien été modifié."
 
-#: templates/registration/password_change_done.html:21
+#: templates/registration/password_change_done.html:22
 msgid "Go to the home page"
 msgstr "Aller sur la page d’accueil"
 
 #: templates/registration/password_change_form.html:4
-#: templates/registration/password_change_form.html:14
+#: templates/registration/password_change_form.html:19
 msgctxt "page title"
 msgid "Password Change"
 msgstr "Modification du mot de passe"
 
 #: templates/registration/password_change_form.html:20
-#: templates/registration/password_reset_confirm.html:21
-msgid "Please correct the error below."
-msgid_plural "Please correct the errors below."
-msgstr[0] "Veuillez corriger l'erreur ci-dessous."
-msgstr[1] "Veuillez corriger les erreurs ci-dessous."
+#, fuzzy
+#| msgid "Please enter your old password, then enter a new one"
+msgid "Please enter your old password, then enter a new one."
+msgstr "Veuillez saisir votre ancien mot de passe, puis saisissez un nouveau"
 
-#: templates/registration/password_change_form.html:29
-msgid "Please enter your old password, then enter a new one"
-msgstr ""
-"Veuillez saisir votre ancien mot de passe, puis saisissez un nouveau"
-
-#: templates/registration/password_change_form.html:45
-#: templates/registration/password_reset_confirm.html:46
+#: templates/registration/password_change_form.html:25
+#: templates/registration/password_reset_confirm.html:38
 msgctxt "button"
 msgid "Change my password"
 msgstr "Modifier mon mot de passe"
 
-#: templates/registration/password_change_form.html:50
+#: templates/registration/password_change_form.html:26
 msgid "Cancel and go back to the site home page"
 msgstr "Annuler et revenir à la page d’accueil du site"
 
@@ -360,12 +369,12 @@ msgctxt "page title"
 msgid "Password reset complete"
 msgstr "Réinitialisation du mot de passe effectuée"
 
-#: templates/registration/password_reset_complete.html:15
+#: templates/registration/password_reset_complete.html:16
 msgid "Your password has been reset."
 msgstr "Votre mot de passe a été réinitialisé."
 
 #. Translators: This text appears on a button that takes the user to the login page after a password reset.
-#: templates/registration/password_reset_complete.html:22
+#: templates/registration/password_reset_complete.html:23
 msgid "Go to the login page"
 msgstr "Aller à la page de connexion"
 
@@ -375,11 +384,11 @@ msgctxt "page title"
 msgid "Password Reset Confirmation"
 msgstr "Confirmation de réinitialisation de mot de passe"
 
-#: templates/registration/password_reset_confirm.html:30
+#: templates/registration/password_reset_confirm.html:26
 msgid "Please enter a new password (twice):"
 msgstr "Veuillez saisir un nouveau mot de passe (deux fois) :"
 
-#: templates/registration/password_reset_confirm.html:52
+#: templates/registration/password_reset_confirm.html:44
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
@@ -394,7 +403,7 @@ msgctxt "page title"
 msgid "Password reset e-mail sent"
 msgstr "Courriel de réinitialisation de mot de passe a été envoyé"
 
-#: templates/registration/password_reset_done.html:15
+#: templates/registration/password_reset_done.html:16
 msgid ""
 "We've e-mailed you instructions for setting your password, if an account "
 "exists with the e-mail address you entered. You should receive them shortly."
@@ -403,7 +412,7 @@ msgstr ""
 "mot de passe a été envoyé à l'adresse électronique que vous avez fournie. "
 "Vous devriez le recevoir rapidement."
 
-#: templates/registration/password_reset_done.html:18
+#: templates/registration/password_reset_done.html:19
 msgid ""
 "If you don't receive an e-mail, please make sure you've entered the address "
 "you registered with, and check your spam folder."
@@ -413,7 +422,7 @@ msgstr ""
 "courriers indésirables / spam."
 
 #. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
-#: templates/registration/password_reset_done.html:25
+#: templates/registration/password_reset_done.html:26
 msgid "Return to the login page"
 msgstr "Retourner à la page de connexion"
 
@@ -454,27 +463,27 @@ msgctxt "page title"
 msgid "Password Reset"
 msgstr "Réinitialisation de mot de passe"
 
-#: templates/registration/password_reset_form.html:15
-msgid "Please enter a valid e-mail address."
-msgstr "Veuillez saisir une adresse e-mail valide."
-
-#: templates/registration/password_reset_form.html:28
+#: templates/registration/password_reset_form.html:27
 msgid ""
 "Enter your e-mail address below, and we'll e-mail you a password reset link."
 msgstr ""
 "Saisissez votre adresse courriel ci-dessous, et nous vous enverrons un lien "
 "de réinitialisation de mot de passe."
 
-#: templates/registration/password_reset_form.html:36
+#: templates/registration/password_reset_form.html:34
+msgid "Please enter a valid e-mail address."
+msgstr "Veuillez saisir une adresse e-mail valide."
+
+#: templates/registration/password_reset_form.html:39
 msgid "E-mail address"
 msgstr "Adresse de courriel"
 
-#: templates/registration/password_reset_form.html:44
+#: templates/registration/password_reset_form.html:50
 msgctxt "button"
 msgid "Reset my password"
 msgstr "Réinitialiser mon mot de passe"
 
-#: templates/registration/password_reset_form.html:49
+#: templates/registration/password_reset_form.html:53
 msgid "Back to the login page"
 msgstr "Retour à la page de connexion"
 
@@ -482,6 +491,73 @@ msgstr "Retour à la page de connexion"
 #, python-format
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
+
+#: templates/style_guide.html:19
+msgid ""
+"This style of info card announces critical information. <a href=\"\">Link</"
+"a>."
+msgstr ""
+
+#: templates/style_guide.html:22
+msgid "This style of info card announces general <a href=\"\">information</a>."
+msgstr ""
+
+#: templates/style_guide.html:116
+msgctxt "page title"
+msgid "Form Title"
+msgstr ""
+
+#: templates/style_guide.html:117
+msgid "Sub Title Title"
+msgstr ""
+
+#: urls.py:87
+#, python-format
+msgid "Later, %(username)s — you were logged out!"
+msgstr ""
+
+#: urls.py:90
+msgid "Later! You were logged out!"
+msgstr ""
+
+#: urls.py:97
+#, python-format
+msgid "Hi, %(username)s — you just logged in!"
+msgstr ""
+
+#: urls.py:100
+msgid "Welcome! You just logged in!"
+msgstr ""
+
+#~ msgid "Saving…"
+#~ msgstr "Enregistrement en cours…"
+
+#~ msgid "Please correct the errors below."
+#~ msgstr "Veuillez corriger les erreurs indiquées."
+
+#~ msgid "There are some problems with the data on this form:"
+#~ msgstr ""
+#~ "Des problèmes en lien avec les données sure ce formulaire sont apparus :"
+
+#~ msgid "<strong>%(other_tournament)s</strong> (Admin)"
+#~ msgstr "<strong>%(other_tournament)s</strong> (admin)"
+
+#~ msgid "<strong>%(other_tournament)s</strong> (Public)"
+#~ msgstr "<strong>%(other_tournament)s</strong> (public)"
+
+#~ msgid "Site Home"
+#~ msgstr "Page d'accueil du site"
+
+#~ msgid "New Tournament"
+#~ msgstr "Nouveau tournoi"
+
+#~ msgid "Log Out (%(user)s)"
+#~ msgstr "Déconnexion (%(user)s)"
+
+#~ msgid "Please correct the error below."
+#~ msgid_plural "Please correct the errors below."
+#~ msgstr[0] "Veuillez corriger l'erreur ci-dessous."
+#~ msgstr[1] "Veuillez corriger les erreurs ci-dessous."
 
 #~ msgid "%(side_abbr)s%(metric_abbr)s"
 #~ msgstr "%(metric_abbr)s%(side_abbr)s"
