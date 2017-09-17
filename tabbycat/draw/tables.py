@@ -87,7 +87,7 @@ class AdminDrawTableBuilder(BaseDrawTableBuilder):
             for debate in debates:
                 team = debate.get_team(side)
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbr
-                team_data.append(self._team_cell(team, subtext=subtext))
+                team_data.append(self._team_cell(team, subtext=subtext, hide_emoji=False))
 
             key = side_abbr if all_sides_confirmed else _("Team %(num)d") % {'num': i}
             self.add_column(key, team_data)
@@ -317,6 +317,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             cells.append(", ".join(strs))
         header = {
             'key': _("Room"),
+            'icon': "bar-chart",
             'tooltip': _("Teams with this many points are permitted in this debate<br>\n(bracket in bold)"),
         }
         self.add_column(header, cells)
@@ -324,7 +325,8 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
     def add_all_columns_for_team(self, side):
         teams = [debate.get_team(side) for debate in self.debates]
         side_abbr = get_side_name(self.tournament, side, 'abbr')
-        self.add_team_columns(teams, key=side_abbr)
+
+        self.add_team_columns(teams, key=side_abbr, hide_emoji=True)
 
         # Highlight the team column
         for row in self.data:
@@ -332,16 +334,16 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
 
         # Points of team
         infos = self.standings.get_standings(teams)
-        header = self._prepend_side_header(side, _("Points"), _("Pts"))
+        header = { 'key': _("Pts"), 'tooltip': side_abbr + " " + _("Points"), 'icon': 'star'}
         self.add_column(header, [info.metrics['points'] for info in infos])
 
         # Side history after last round
-        header = self._prepend_side_header(side, _("side history before this round"), _("SH"))
+        header = self._prepend_side_header(side, _("side history before this round"), _("Sides"))
         cells = self._side_history_by_team(self.side_histories_before, teams)
         self.add_column(header, cells)
 
         # Position cost incurred, post-weighting
-        header = self._prepend_side_header(side, _("position cost"), _("Cost"))
+        header = self._prepend_side_header(side, _("position cost"), "Cost")
         pos = self.tournament.sides.index(side)
         cells = [metricformat(self.get_position_cost(pos, team)) for team in teams]
         self.add_column(header, cells)
