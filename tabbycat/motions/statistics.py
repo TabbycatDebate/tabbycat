@@ -19,12 +19,12 @@ class MotionStats:
 
         if t.pref('teams_in_debate') == 'two':
             self.isBP = False
-            self.debate_rooms = len(results_data) / 2
-            self.round_rooms = len(results) / 2
+            self.debate_rooms = int(len(results_data) / 2)
+            self.round_rooms = int(len(results) / 2)
         else:
             self.isBP = True
-            self.debate_rooms = len(results_data) / 4
-            self.round_rooms = self.debate_rooms
+            self.debate_rooms = int(len(results_data) / 4)
+            self.round_rooms = int(self.debate_rooms)
 
         self.placings = self.gather_placings(self.points_dict(), results_data)
         self.result_balance = self.determine_balance()
@@ -42,7 +42,12 @@ class MotionStats:
     # Calculate points per position and debate
     def gather_placings(self, placings_data, results):
         for result in results:
-            placings_data[result.debate_team.side][result.points] += 1
+            if result.points is not None: # Some finals rounds etc wont have points
+                placings_data[result.debate_team.side][result.points] += 1
+            elif result.win is True: # Out rounds
+                placings_data[result.debate_team.side][3] += 1
+            elif result.win is False: # Out rounds
+                placings_data[result.debate_team.side][0] += 1
 
         return placings_data
 
@@ -128,7 +133,10 @@ class MotionStats:
                 all_points.append(points * count)
                 counts += count
 
-            avgs_for_side[side] = sum(all_points) / float(counts)
+            if counts > 0: # Avoid divide by zero
+                avgs_for_side[side] = sum(all_points) / float(counts)
+            else:
+                avgs_for_side[side] = 1.5
 
         return avgs_for_side
 

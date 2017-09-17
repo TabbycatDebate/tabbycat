@@ -7,16 +7,23 @@
       <div class="progress">
 
         {% for position, average in am.points_average.items %}
-          {% widthratio average 6 100 as average_width %}
-          <div class="progress-bar progress-bar-{{ position }}"
-               style="width: {{ average_width }}%">
-            {{ position.upper }} {{ average|floatformat }}
-          </div>
+          {% if am.results_rates.items > 1 %}
+            {% widthratio average 6 100 as average_width %}
+          {% else %}
+            {% widthratio average 3 100 as average_width %}
+          {% endif %}
+          {% if average > 0 %}
+            <div class="progress-bar progress-bar-{{ position }}"
+                 style="width: {{ average_width }}%">
+              {{ position.upper }} {{ average|floatformat }}
+            </div>
+          {% endif %}
         {% endfor %}
 
       </div>
       <h6 class="mt-2 text-center text-muted">
         {% trans "average points per position" %}
+        from {{ am.debate_rooms }} debate{{ am.debate_rooms|pluralize }}
       </h6>
     </div>
   </div>
@@ -33,14 +40,19 @@
             <div class="progress-bar progress-points-{{ points }}"
                  style="width: {{ average }}%" data-toggle="tooltip"
                  title="{{ average }}% of {{ position }} results were for {{ points }} points">
-              {% if average > 0 %}{{ points|floatformat }}s{% endif %}
+              {% if average > 0 %}
+                {% if points == 3 %}1<small>st</small>
+                {% elif points == 2 %}2<small>nd</small>
+                {% elif points == 1 %}3<small>rd</small>
+                {% else %}4<small>th</small>{% endif %}
+              {% endif %}
             </div>
 
           {% endfor %}
 
         </div>
-        <h6 class="mt-2 text-center text-muted">{{ position.upper }}
-          {% trans "results per position" %}
+        <h6 class="mt-2 text-center text-muted">
+          {{ position.upper }} {% trans "results distribution" %}
         </h6>
       </div>
 
