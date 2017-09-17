@@ -12,7 +12,7 @@
 
 {% block content %}
 
-{% if round.draw_status == 'D' and round.prev and pref.teams_in_debate == 'bp' and highlighted_cells_exist %}
+{% if round.draw_status == 'D' and round.prev and not round.is_break_round and pref.teams_in_debate == 'bp' and highlighted_cells_exist %}
     {% blocktrans trimmed asvar p1 %}
       Highlighted cells relate to changes in position balance, as follows:
       <ul>
