@@ -1,27 +1,15 @@
 from django.utils.translation import ugettext as _
 
-from .common import BaseBPDrawGenerator, DrawFatalError, DrawUserError
+from .common import BaseBPDrawGenerator, DrawFatalError, DrawUserError, EliminationDrawMixin
 from .pairing import BPPairing
 from .utils import ispow2
 
 
-class BaseBPEliminationDrawGenerator(BaseBPDrawGenerator):
+class BaseBPEliminationDrawGenerator(EliminationDrawMixin, BaseBPDrawGenerator):
 
     can_be_first_round = False
     requires_even_teams = False
     DEFAULT_OPTIONS = {}
-
-    def generate(self):
-        pairings = self.make_pairings()
-        self.shuffle_sides(pairings)
-        return pairings
-
-    def shuffle_sides(self, pairings):
-        for pairing in pairings:
-            pairing.shuffle_sides()
-
-    def make_pairings(self):
-        raise NotImplementedError
 
     def _four_way_fold(self, teams, start_rank=0):
         """Returns pairings folded four-way, with room ranks numbered from

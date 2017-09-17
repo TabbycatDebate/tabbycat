@@ -4,27 +4,18 @@ import logging
 
 from django.utils.translation import ugettext as _
 
-from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
+from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError, EliminationDrawMixin
 from .pairing import Pairing
 from .utils import ispow2, partial_break_round_split
 
 logger = logging.getLogger(__name__)
 
 
-class BaseEliminationDrawGenerator(BasePairDrawGenerator):
+class BaseEliminationDrawGenerator(EliminationDrawMixin, BasePairDrawGenerator):
 
     can_be_first_round = False
     requires_even_teams = False
-
-    DEFAULT_OPTIONS = {"side_allocations": "random"}
-
-    def generate(self):
-        pairings = self.make_pairings()
-        self.allocate_sides(pairings)
-        return pairings
-
-    def make_pairings(self):
-        raise NotImplementedError
+    DEFAULT_OPTIONS = {}
 
     def _make_pairings(self, teams, num_bye_rooms):
         """Folds the teams in `teams`, assigning consecutive room ranks starting

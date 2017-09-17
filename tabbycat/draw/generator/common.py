@@ -199,6 +199,22 @@ class BaseBPDrawGenerator(BaseDrawGenerator):
     TEAMS_PER_DEBATE = 4
 
 
+class EliminationDrawMixin:
+    """Mixin for elimination draws."""
+
+    def generate(self):
+        pairings = self.make_pairings()
+        self.shuffle_sides(pairings)
+        return pairings
+
+    def shuffle_sides(self, pairings):
+        for pairing in pairings:
+            pairing.shuffle_sides()
+
+    def make_pairings(self):
+        raise NotImplementedError
+
+
 class ManualDrawGenerator(BaseDrawGenerator):
     """Returns an empty draw."""
 
