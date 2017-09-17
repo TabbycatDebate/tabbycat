@@ -19,7 +19,7 @@
 {% blocktrans trimmed asvar p1 %}This style of info card announces critical information. <a href="">Link</a>.{% endblocktrans %}
 {% include "components/explainer-card.html" with type="warning" %}
 
-{% blocktrans trimmed asvar p1 %}This style of info card announces critical <a href="">information</a>.{% endblocktrans %}
+{% blocktrans trimmed asvar p1 %}This style of info card announces general <a href="">information</a>.{% endblocktrans %}
 {% include "components/explainer-card.html" with type="info" %}
 
 <h6 class="mt-5">Nav actions</h6>
@@ -81,16 +81,16 @@
 <div class="btn btn-success">
   Primary Data-Altering Action
 </div>
-<div class="btn btn-success" disabled>
+<div class="btn btn-primary" disabled>
   Secondary Data-Altering Action
 </div>
-<div class="btn btn-primary" disabled>
+<div class="btn btn-primary disabled">
   Disabled SDA
 </div>
 <div class="btn btn-danger">
   Destructive Action
 </div>
-<div class="btn btn-danger" disabled>
+<div class="btn btn-danger disabled">
   Disabled DA
 </div>
 

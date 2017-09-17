@@ -25,11 +25,15 @@
   border-right: 0;
   color: $sidebar-muted-text;
 
+  &:hover {
+    color: lighten($sidebar-muted-text, 20%);
+  }
+
   &.active,
   &[aria-expanded="true"] {
     background: darken($sidebar-bg, 5%);
     border-color: darken($sidebar-bg, 10%);
-    color: #fff;
+    color: lighten($sidebar-muted-text, 20%);
   }
 
   &[aria-expanded="true"] .feather-chevron-down {

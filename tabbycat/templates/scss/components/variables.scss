@@ -1,65 +1,19 @@
 //------------------------------------------------------------------------------
-// Bootstrap overrides and custom variables
-// Note these take precedences over bootstrap as they are not set as default
+// Tabbycat Custom Layout Variables
+// Note that these need to come after custom.scss and bootstrap files as they
+// make use of some mixins and variables defined there
 //------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Boostrap Type
-//------------------------------------------------------------------------------
-
-// $font-size-base: 14px !default;
-$font-family-sans-serif: "Interface-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
-
-$headings-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-$headings-font-weight: 700;
-
-//------------------------------------------------------------------------------
-// Bootstrap Colors
-//------------------------------------------------------------------------------
-
-$colors: (
-  blue: #3498db,
-  green: #43ca75,
-  cyan: #3b9ad8,
-  yellow: #f8bd30,
-  red: #e34e42,
-) !default;
-
-$text-primary:            #333;
-
-$state-success-text:      #3c763d;
-$state-success-bg:        #dff0d8;
-
-$state-info-text:         #31708f;
-$state-info-bg:           #d9edf7;
-
-$state-warning-text:      #8a6d3b;
-$state-warning-bg:        #fcf8e3;
-
-$state-danger-text:       #a94442;
-$state-danger-bg:         #f2dede;
-
-// theme-color("danger")-alt:        #a700a5;
-
-//------------------------------------------------------------------------------
-// Bootstrap Details
-//------------------------------------------------------------------------------
-
-$border-radius:          0.25rem !default;
-$border-radius-lg:       0.3rem !default;
-$border-radius-sm:       0.2rem !default;
 
 //------------------------------------------------------------------------------
 // Custom Colors
 //------------------------------------------------------------------------------
 
 // Layout Colors
-$body-bg:                 #f3f4f9;
-$alt-bg:                  #fff; // For tables etc
+$alt-bg:                  #fff;     // For tables etc
 $table-bg-hover:          #e3e3e3;
-$sidebar-bg:              #30404f;
-$sidebar-muted-text:      #adb6bf;
-$droppable-bg:            #e2e2e2;
+$sidebar-bg:              #354052;  // Matches that of Jet
+$sidebar-muted-text:      $gray-400;
+$droppable-bg:            $gray-200;
 
 // Gender Highlights
 $male:                    #36b6c0;
@@ -74,33 +28,34 @@ $break-cat-3:             #00c79b;
 $break-cat-4:             #90f;
 
 // Region Category Highlights
-$region-cat-0:#c70062;
-$region-cat-1:#00c79b;
-$region-cat-2:#b1e001;
-$region-cat-3:#476c5e;
-$region-cat-4:#ff2983;
-$region-cat-5:#6a268c;
-$region-cat-6:#00c0cf;
-$region-cat-7:#0051cf;
-$region-cat-8:#777;
+$region-cat-0:            #c70062;
+$region-cat-1:            #00c79b;
+$region-cat-2:            #b1e001;
+$region-cat-3:            #476c5e;
+$region-cat-4:            #ff2983;
+$region-cat-5:            #6a268c;
+$region-cat-6:            #00c0cf;
+$region-cat-7:            #0051cf;
+$region-cat-8:            #777;
 
-$conflict-clash: #e34e42;
-$conflict-institution: #ef9b08;
-$conflict-history-base: #3498db;
-$incomplete-panel: #a982a4;
+$conflict-clash:          #e34e42;
+$conflict-institution:    #ef9b08;
+$conflict-history-base:   #3498db;
+$incomplete-panel:        #a982a4;
 
-$adj-ranking-0: hsla(175, 90%, 40%, 1); // A+
-$adj-ranking-1: hsla(140, 90%, 42%, 1); // A
-$adj-ranking-2: hsla(90, 90%, 38%, 1); // A-
-$adj-ranking-3: hsla(55, 90%, 45%, 1); // B+
-$adj-ranking-4: hsla(30, 95%, 60%, 1); // B
-$adj-ranking-5: hsla(0, 95%, 48%, 1); // B-
-$adj-ranking-6: hsla(0, 100%, 34%, 1); // C+
-$adj-ranking-7: hsla(0, 0%, 60%, 1);
-$adj-ranking-8: hsla(0, 0%, 50%, 1);
+$adj-ranking-0:           hsla(175, 90%, 40%, 1); // A+
+$adj-ranking-1:           hsla(140, 90%, 42%, 1); // A
+$adj-ranking-2:           hsla(90, 90%, 38%, 1); // A-
+$adj-ranking-3:           hsla(55, 90%, 45%, 1); // B+
+$adj-ranking-4:           hsla(30, 95%, 60%, 1); // B
+$adj-ranking-5:           hsla(0, 95%, 48%, 1); // B-
+$adj-ranking-6:           hsla(0, 100%, 34%, 1); // C+
+$adj-ranking-7:           hsla(0, 0%, 60%, 1);
+$adj-ranking-8:           hsla(0, 0%, 50%, 1);
+
 
 //------------------------------------------------------------------------------
-// Custom Layout
+// Layout Details
 //------------------------------------------------------------------------------
 
 $sidebar-width: 155px;
@@ -108,7 +63,7 @@ $tooltip-max-width: 330px;
 $footer-height: 175px;
 
 //------------------------------------------------------------------------------
-// Custom Mixins
+// Mixins
 //------------------------------------------------------------------------------
 
 // For diversity and allocation highlights

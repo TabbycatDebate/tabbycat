@@ -58,7 +58,7 @@ input[type="range"] {
 // Inline form errors from django
 .errorlist,
 label.error {
-  color: $state-danger-text;
+  color: theme-color("danger");
   margin: 0;
   padding: 0;
   list-style-type: none;
