@@ -17,6 +17,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from divisions.models import Division
+from options.dynamic_preferences_registry import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
 from participants.utils import get_side_history
 from standings.base import StandingsError
@@ -340,6 +341,28 @@ class AdminDrawWithDetailsView(AdminDrawView):
 class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     page_title = _("Position Balance Report")
     tables_orientation = 'rows'
+
+    def get_context_data(self, **kwargs):
+        kwargs['cost_func'] = self.get_position_cost_function_str()
+        return super().get_context_data(**kwargs)
+
+    def get_position_cost_function_str(self):
+        tournament = self.get_tournament()
+        cost_func = tournament.pref('bp_position_cost')
+        if cost_func == 'entropy':
+            renyi_order = tournament.pref('bp_renyi_order')
+            cost_func_str = _("Rényi entropy of order %(order)s" % {'order': renyi_order})
+            if renyi_order == 1:
+                # Translators: This is appended to the string "Rényi entropy of order 1.0"
+                cost_func_str += _(" (<i>i.e.</i>, Shannon entropy)")
+            return mark_safe(cost_func_str)
+        else:
+            for k, v in BPPositionCost.choices:
+                if k == cost_func:
+                    return v
+            else:
+                logger.error("Unknown position cost function option: %s", cost_func)
+                return "Unknown"  # don't translate, should never happen
 
     def get_tables(self):
         if self.get_tournament().pref('teams_in_debate') != 'bp':

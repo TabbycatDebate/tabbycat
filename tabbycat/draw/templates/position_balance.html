@@ -6,6 +6,17 @@
     {% blocktrans trimmed asvar message %}
       It looks like sides aren't confirmed for some debates in this round. This position balance report is generated using the "unconfirmed sides" in the database, and as a consequence, may not make much sense. It's best to confirm sides in all debates before looking at this report.
     {% endblocktrans %}
-    {% include 'components/alert.html' with type="warning" %}
+    {% include "components/alert.html" with type="warning" %}
   {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  {% blocktrans trimmed asvar p1 with exponent=pref.bp_position_cost_exponent %}
+    Your current position cost function is <strong>{{ cost_func }}</strong>, raised to an exponent of <strong>{{ exponent }}</strong>. <a href="http://tabbycat.readthedocs.io/en/feature-bp/features/draw-generation-bp.html" target=_"blank">What does this mean?</a> (opens documentation in new tab)
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+
+  {{ block.super }}
+
 {% endblock %}
