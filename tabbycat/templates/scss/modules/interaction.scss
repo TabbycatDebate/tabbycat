@@ -13,8 +13,8 @@
     }
   }
 
-  > span {
-    border-bottom: 2px ridge $gray-200;
+  .tooltip-trigger {
+    border-bottom: 2px inset $gray-300;
   }
 
   .popover span {

@@ -8,16 +8,14 @@
   <div class="card-columns">
 
     {% for feedback in feedbacks %}
-
       {% include 'feedback_card.html' %}
-
-    {% empty %}
-
-      <div class="alert alert-info">
-        <i data-feather="alert-circle"></i>No feedback has been submitted yet.
-      </div>
-
     {% endfor %}
 
   </div>
+
+  {% if not feedbacks %}
+    <!-- Can't use empty as card-columns div messes up the alert -->
+    {% include "components/alert.html" with type="info" message="No feedback has been submitted yet" %}
+  {% endif %}
+
 {% endblock content %}

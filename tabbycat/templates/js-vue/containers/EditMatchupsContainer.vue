@@ -46,7 +46,7 @@
             <div slot="hvenue"></div>
 
             <template slot="hteams">
-              <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
+              <div class="vue-sortable thead flex-cell flex-12"
                    v-for="position in positions" @click="updateSorting(position.side)"
                    data-toggle="tooltip" :title="'The ' + position.full + ' team'">
                 <span>{{ position.abbr }}</span>

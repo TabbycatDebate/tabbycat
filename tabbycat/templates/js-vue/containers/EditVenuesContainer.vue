@@ -18,7 +18,7 @@
                    :sort-key="sortKey" :sort-order="sortOrder"
                    :round-info="roundInfo">
         <div @click="updateSorting('venue')" slot="hvenue"
-             class="vue-sortable thead flex-cell flex-12 vue-droppable-container">
+             class="vue-sortable thead flex-cell flex-12 ">
           <span>Venue </span>
           <span :class="sortClasses('venue')"></span>
         </div>

@@ -17,22 +17,23 @@
              @click="updateSorting('importance')" data-toggle="tooltip"
              title="The debate's priority. Higher priorities will be allocated
               better adjudicators during auto-allocation." >
-          <span>Priority</span>
+          <span class="tooltip-trigger">Priority</span>
           <span :class="sortClasses('importance')"></span>
         </div>
+
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
-          <div :class="['thead flex-cell text-center vue-droppable-container',
+          <div :class="['thead vue-sortable flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
             <span>Chair</span>
           </div>
           <div v-if="adjPositions.indexOf('P') !== -1"
-               :class="['thead flex-cell text-center vue-droppable-container',
+               :class="['thead vue-sortable flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 17: 16)]">
             <span>Panel</span>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
-               :class="['thead flex-cell text-center vue-droppable-container',
+               :class="['thead vue-sortable flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10: 16)]">
             <span>Trainees</span>
           </div>

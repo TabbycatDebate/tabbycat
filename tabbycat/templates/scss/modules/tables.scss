@@ -47,21 +47,21 @@
 thead,
 .thead {
   @extend .subtitle;
-
+  font-size: $font-size-base;
+  line-height: $font-size-base;
   background: $alt-bg; // Fixed header needs a background while scrolling
+  min-height: 40px; // Must accomodate vue-sort key without resizing
 }
 
 .vue-sortable {
-  white-space: nowrap; // Stop a toggle being pushed into 2 rows
-  min-width: 30px; // Don't let the sort keys resize widths
+  min-width: 46px; // Must accomodate sorting arrows
 
   .vue-sort-key {
-    margin-bottom: -3px;
-  }
+    display: inline; // VIP
 
-  .vue-sort-key .feather {
-    margin-left: -5px;
-    margin-right: -5px;
+    .feather {
+      margin-left: -6px;
+    }
   }
 
   // By default don't show if not hovering or active
@@ -130,11 +130,27 @@ thead,
   padding: 8px 4px; // Narrow spacing post-BP
 }
 
+.table > thead > tr > th,
+.draw-container .thead {
+  padding-bottom: 12px;
+}
+
 // Icons in headers
 .table > thead > tr > th .feather,
 .draw-container .thead .feather {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px; // Need to match font size of header text
+  padding-bottom: 4px; // Space out the underline
+  margin-bottom: -6px;
+  box-sizing: initial;
+
+  &.tooltip-trigger {
+    padding-bottom: 2px
+  }
+}
+
+.draw-container .thead .feather {
+  margin-top: -4px;
 }
 
 // Icons in cells (may as well make them big to match text size)

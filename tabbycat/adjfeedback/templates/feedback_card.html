@@ -20,7 +20,6 @@
       <div class="list-group-item text-info" data-toggle="tooltip"
         title="This is most likely because the team or adjudicator who submitted
          this feedback has done submitted several times on the same person.">
-        <i data-feather="info"></i>
         This feedback is not confirmed; it will not affect this adjudicator's score.
       </div>
     {% endif %}
@@ -49,17 +48,17 @@
             {% else %}
               <i data-feather="x" class="text-danger"></i>
             {% endif %}
-            <span title="{{ item.question.text }}" data-toggle="tooltip">
+            <span title="{{ item.question.text }}" class="text-heading" data-toggle="tooltip">
               {{ item.question.reference }}
             </span>
           {% elif item.question.answer_type == 'f' %}
             <span class="text-secondary">{{ item.question.text }}</span>
-            <span class="text-heading">{{ item.answer|floatformat:"2" }}</span>
+            <div class="text-heading">{{ item.answer|floatformat:"2" }}</div>
           {% elif item.question.answer_type == 'tl' %}
-            <span class="text-heading">{{ item.answer }}</span>
+            <div class="text-heading">{{ item.answer }}</div>
           {% else %}
             <span class="text-secondary">{{ item.question.text }}</span>
-            <span class="text-heading">{{ item.answer }}</span>
+            <div class="text-heading">{{ item.answer }}</div>
           {% endif %}
         </div>
       {% endif %}
