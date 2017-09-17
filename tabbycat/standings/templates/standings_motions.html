@@ -12,7 +12,7 @@
     {% for round, round_motions in motions_by_round %}
       <div class="list-group mt-3">
 
-        <div class="list-group-item disabled strong">
+        <div class="list-group-item disabled text-center strong">
           {{ round.name }}
         </div>
 
@@ -20,7 +20,7 @@
 
           <div class="list-group-item pb-0">
 
-            <h4 class="mb-3">
+            <h4 class="mb-3 text-center">
               {% if round_motions|length > 1 %}{{ am.motion.seq }}.{% endif %}
               {{ am.motion }}
             </h4>
