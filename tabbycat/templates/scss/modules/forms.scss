@@ -38,7 +38,8 @@ input[type=number] {
 
 input[type="range"] {
   min-width: 70px; // Fix for IE Edge; doesn't show otherwise
-  width: 100%; // Fix for importance slider
+  width: 90%; // Fix for importance slider
+  margin: 0 0 0 10%;
 }
 
 // Labels in list groups need to vertically center with inputs

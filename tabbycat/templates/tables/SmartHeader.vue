@@ -5,12 +5,14 @@
           :data-toggle="header['tooltip'] ? 'tooltip' : null"
           @hover="header['tooltip'] ? showTooltip  : null">
 
-      <i v-if="header['icon']" :data-feather="header['icon']"></i>
+      <span><!-- wrapped for the tooltip underline style -->
 
-      <span v-if="header['text']" v-html="header['text']"></span>
+        <i v-if="header['icon']" :data-feather="header['icon']"></i>
+        <span v-if="header['text']" v-html="header['text']"></span>
+        <span v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('text')">
+          <span>{{ header['key'] }}</span>
+        </span>
 
-      <span v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('text')">
-        <span>{{ header['key'] }}</span>
       </span>
 
     </span>

@@ -13,8 +13,8 @@
     }
   }
 
-  span {
-    border-bottom: 2px dotted #ccc;
+  > span {
+    border-bottom: 2px ridge $gray-200;
   }
 
   .popover span {

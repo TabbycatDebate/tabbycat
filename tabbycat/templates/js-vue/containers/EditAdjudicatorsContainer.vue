@@ -13,8 +13,10 @@
                    :sort-key="sortKey" :sort-order="sortOrder"
                    :round-info="roundInfo">
 
-        <div class="thead flex-cell flex-5 vue-sortable" @click="updateSorting('importance')"
-             data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
+        <div slot="himportance" class="thead flex-cell flex-5 vue-sortable"
+             @click="updateSorting('importance')" data-toggle="tooltip"
+             title="The debate's priority. Higher priorities will be allocated
+              better adjudicators during auto-allocation." >
           <span>Priority</span>
           <span :class="sortClasses('importance')"></span>
         </div>
