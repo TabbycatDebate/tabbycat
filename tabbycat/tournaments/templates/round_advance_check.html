@@ -15,7 +15,7 @@
 
   <form action="{% roundurl 'tournament-advance-round' %}" method="POST">
     {% csrf_token %}
-    <button class="btn {{increment_ok|yesno:"btn-success,btn-danger"}}" id="createDraw" type="submit" >
+    <button class="btn {{increment_ok|yesno:"btn-success,btn-danger"}}" id="createDraw" type="submit">
       {% if increment_ok %}
         Advance to Next Round
         <i data-feather="chevron-right"></i>

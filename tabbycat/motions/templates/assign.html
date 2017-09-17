@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post" action="" class=" col-md-12">
+  <form method="post" class="col-md-12">
     {% csrf_token %}
     {{ formset.management_form }}
 

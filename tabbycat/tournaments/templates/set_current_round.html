@@ -58,7 +58,7 @@
 <div class="card">
   <div class="card-body">
 
-    <form action="." method="POST" class="">
+    <form action="." method="POST">
 
       {% csrf_token %}
 
@@ -67,7 +67,7 @@
       {% endif %}
 
       <div class="form-group">
-        <div class=" row">
+        <div class="row">
           <label for="{{ form.current_round.id_for_label }}">
             {{ form.current_round.label }}
           </label>

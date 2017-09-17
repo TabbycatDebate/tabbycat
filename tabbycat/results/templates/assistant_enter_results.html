@@ -2,7 +2,7 @@
 {% load static debate_tags i18n %}
 
 {% block content %}
-  <form id="resultsForm" action="." method="POST" class="">
+  <form id="resultsForm" action="." method="POST">
     {% csrf_token %}
     {% include "ballot/ballot_set.html" %}
     <div class="row">

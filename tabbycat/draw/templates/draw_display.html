@@ -20,7 +20,7 @@
         {% endif %}
       </a>
     {% else %}
-      <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary ">
+      <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary">
         Schedule Debates
       </a>
     {% endif %}
@@ -111,7 +111,7 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
 
-      <form id="startTimeForm" method="POST" action="{% roundurl 'draw-start-time-set' %}" class="">
+      <form id="startTimeForm" method="POST" action="{% roundurl 'draw-start-time-set' %}">
         <div class="modal-body list-group list-group-flush">
 
           {% include "components/form-title.html" with title="Change Start Time" %}
@@ -119,7 +119,7 @@
           <div class="list-group-item pb-3">
             <div class="form-group">
               <label>Start at</label>
-              <input class="form-control" placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time" ></input>
+              <input class="form-control" placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time"></input>
             </div>
           </div>
 

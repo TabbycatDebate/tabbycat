@@ -9,14 +9,14 @@
     <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
   </a>
   {% if round.motions_released %}
-    <form class="" id="unreleaseForm" method="POST" action="{% roundurl 'motions-unrelease' %}">
+    <form id="unreleaseForm" method="POST" action="{% roundurl 'motions-unrelease' %}">
       {% csrf_token %}
       <button class="btn btn-danger " type="submit">
         {% trans "Unrelease Motions to Public" %}
       </button>
     </form>
   {% else %}
-    <form class="" id="releaseForm" method="POST" action="{% roundurl 'motions-release' %}">
+    <form id="releaseForm" method="POST" action="{% roundurl 'motions-release' %}">
       {% csrf_token %}
       <button class="btn btn-primary " type="submit"
         data-toggle="tooltip" data-placement="bottom"
@@ -32,7 +32,7 @@
     </form>
   {% endif %}
   {% if pref.enable_division_motions %}
-    <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary ">
+    <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary">
       {% trans "Assign Motions to Divisions" %}
     </a>
   {% endif %}
@@ -68,10 +68,10 @@
     {% include "components/form-errors.html" with errors=formset.errors %}
   {% endif %}
 
-  <form method="POST" action="" class="">
+  <form method="POST">
     {% csrf_token %}
 
-    <div class="card-deck pr-3 mb-3 ">
+    <div class="card-deck pr-3 mb-3">
 
       {{ formset.management_form }}
 

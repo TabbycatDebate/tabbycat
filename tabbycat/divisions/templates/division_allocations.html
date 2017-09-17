@@ -8,13 +8,13 @@
 {% block page-subnav-sections %}
   <form method="POST" action="{% tournamenturl 'create_division_allocation' %}">
     {% csrf_token %}
-    <button class="btn btn-primary " type="submit" >
+    <button class="btn btn-primary " type="submit">
       Auto-Allocate Teams
     </button>
   </form>
   <form method="POST" action="{% tournamenturl 'create_byes' %}">
     {% csrf_token %}
-    <button class="btn btn-primary " type="submit" >
+    <button class="btn btn-primary " type="submit">
       Auto-Allocate Bye Teams
     </button>
   </form>
@@ -31,7 +31,7 @@
 
   <form method="POST" action="{% tournamenturl 'create_division' %}">
     {% csrf_token %}
-    <button class="btn btn-success " type="submit" >
+    <button class="btn btn-success " type="submit">
       <i data-feather="plus-circle"></i> Add New Division
     </button>
   </form>

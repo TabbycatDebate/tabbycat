@@ -42,7 +42,7 @@
 
   {% include "includes/public_enter_results_info.html" %}
 
-  <form id="resultsForm" action="." method="POST" class="">
+  <form id="resultsForm" action="." method="POST">
     {% csrf_token %}
     {% include "ballot/ballot_set.html" %}
 
@@ -62,9 +62,9 @@
                 <div class="col-sm-9 col-md-6">
                   {{ form.password|addcss:"form-control" }}
                 </div>
-                <div class="col-md-2 col-xs-10 ">
+                <div class="col-md-2 col-xs-10">
                   {% if form.password.errors %}
-                    <label for="{{ form.password.id_for_label }}" >{{ form.password.errors }}</label>
+                    <label for="{{ form.password.id_for_label }}">{{ form.password.errors }}</label>
                   {% endif %}
                 </div>
               </div>

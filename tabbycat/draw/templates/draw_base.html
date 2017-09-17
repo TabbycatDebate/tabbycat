@@ -7,22 +7,22 @@
   </a>
 
   {% if pref.allocation_confirmations %}
-    <a href="{% roundurl 'draw-schedule-confirmations' %}" class="btn btn-outline-primary ">
+    <a href="{% roundurl 'draw-schedule-confirmations' %}" class="btn btn-outline-primary">
       {% trans "Confirm Shifts" %}
     </a>
   {% endif %}
   <div class="btn-group" role="group">
-    <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary ">
+    <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary">
       {% trans "Edit Sides/Matchups" %}
     </a>
-    <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-primary ">
+    <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-primary">
       {% trans "Redo Draw" %}
     </a>
-    <a href="{% roundurl 'draw-details' %}" class="btn btn-outline-primary ">
+    <a href="{% roundurl 'draw-details' %}" class="btn btn-outline-primary">
       {% trans "Draw Details" %}
     </a>
     {% if pref.teams_in_debate == 'bp' and round.prev and not round.is_break_round %}
-      <a href="{% roundurl 'draw-position-balance' %}" class="btn btn-outline-primary ">
+      <a href="{% roundurl 'draw-position-balance' %}" class="btn btn-outline-primary">
         {% trans "Position Balance" %}
       </a>
     {% endif %}

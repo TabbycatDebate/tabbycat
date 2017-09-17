@@ -24,7 +24,7 @@
     You probably don't want to do this if any results have been entered!
   </div>
 
-  <form class="" method="POST" action="{% roundurl 'draw-regenerate' %}">
+  <form method="POST" action="{% roundurl 'draw-regenerate' %}">
     {% csrf_token %}
     <button class="btn btn-block btn-danger " type="submit">
       Yes, I want to delete the current draw for {{ round.name }}

@@ -38,7 +38,7 @@
                 {% if vc.placeholder_date %}
                   <input type="date" class="form-control" name="{{ vc.id }}" value='{{ vc.placeholder_date|date:"Y" }}-{{ vc.placeholder_date|date:"m" }}-{{ vc.placeholder_date|date:"d" }}'>
                 {% else %}
-                  <input type="date" class="form-control" name="{{ vc.id }}" value="">
+                  <input type="date" class="form-control" name="{{ vc.id }}">
                 {% endif %}
                 </div>
               </div>

@@ -67,6 +67,7 @@ Note: have excluded small misc features that are marginal or exclusive to one so
     - CSV
     - Manual
     - ???
+- Printable ID cards stuff
  -->
 
 

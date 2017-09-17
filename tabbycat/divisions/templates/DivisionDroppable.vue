@@ -16,7 +16,7 @@
     <div class="panel-footer division-footer">
       <select name="select" class="btn-sm"
               v-model="division.venue_category"  v-if="vcs.length > 0">
-        <option value=""></option>
+        <option></option>
         <option v-for="vc in vcs" :value="vc.id">
           At {{ vc.name }} (capacity for {{ vc.total_capacity }} teams)
         </option>
