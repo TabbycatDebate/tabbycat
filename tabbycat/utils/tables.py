@@ -730,15 +730,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
             data.append(row)
         self.add_columns(headers, data)
 
-    def add_checkbox_columns(self, states, references, key):
-        state_header = {'key': key}
-        state_data = [{
-            'sort': state,
-            'class': 'checkbox-target',
-            'text': '<input type="checkbox" class="vue-table-checkbox" data-target="%s" %s>' % (reference, 'checked' if state else ''),
-        } for state, reference in zip(states, references)]
-        self.add_column(state_header, state_data)
-
     def add_debate_ballot_link_column(self, debates):
         ballot_links_header = {'key': _("Ballot"), 'icon': 'search'}
 

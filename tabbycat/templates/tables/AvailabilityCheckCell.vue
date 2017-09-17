@@ -5,7 +5,10 @@
     <span v-if="cellData['sort']" hidden>
       {{ cellData.available }}
     </span>
-    <input type="checkbox" v-model="cellData.available" @click="checkUpdate">
+    <label class="custom-control custom-checkbox" @click="checkUpdate">
+      <input type="checkbox" class="custom-control-input" v-model="cellData.available">
+      <span class="custom-control-indicator"></span>
+    </label>
 
   </td>
 

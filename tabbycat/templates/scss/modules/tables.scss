@@ -55,6 +55,10 @@ thead,
   white-space: nowrap; // Stop a toggle being pushed into 2 rows
   min-width: 30px; // Don't let the sort keys resize widths
 
+  .vue-sort-key {
+    margin-bottom: -3px;
+  }
+
   .vue-sort-key .feather {
     margin-left: -5px;
     margin-right: -5px;

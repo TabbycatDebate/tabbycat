@@ -5,7 +5,10 @@
     <span v-if="cellData['sort']" hidden>
       {{ cellData.breaking }}
     </span>
-    <input type="checkbox" v-model="cellData.breaking" @click="checkUpdate">
+    <label class="custom-control custom-checkbox" @click="checkUpdate">
+      <input type="checkbox" class="custom-control-input" v-model="cellData.breaking">
+      <span class="custom-control-indicator"></span>
+    </label>
 
   </td>
 

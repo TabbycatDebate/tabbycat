@@ -43,6 +43,7 @@
             <div slot="hbracket"></div>
             <div slot="hliveness"></div>
             <div slot="himportance"></div>
+            <div slot="hvenue"></div>
 
             <template slot="hteams">
               <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
@@ -54,7 +55,7 @@
             </template>
 
             <div slot="hpanel"></div>
-            <div slot="hextra" class="vue-sortable thead flex-cell flex-12"
+            <div slot="hextra" class="vue-sortable thead flex-cell flex-8"
                  data-toggle="tooltip" title="Some types of draws (e.g.
                  out-rounds) do not specify the positions of each team at the
                  time of draw generation. Once a debate's sides have been
@@ -70,6 +71,7 @@
             <div slot="sbracket"></div>
             <div slot="sliveness"></div>
             <div slot="simportance"></div>
+            <div slot="svenue"></div>
 
             <template v-for="dt in debate.debateTeams">
               <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
@@ -83,7 +85,7 @@
             </template>
 
             <div slot="spanel"></div>
-            <draw-sides-status slot="sextra" class="draw-cell flex-12"
+            <draw-sides-status slot="sextra" class="draw-cell flex-8"
                                :debate="debate" :save-url="saveSidesStatusUrl">
               {{ debate.confirmedSides }} Confirmed
             </draw-sides-status>

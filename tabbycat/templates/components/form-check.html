@@ -1,11 +1,12 @@
 {% load add_field_css %}
 
-<div class="form-check {% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %}">
+<div class="{% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %} pt-1">
 
   {% if not field.is_hidden %}
-    <label for="{{ field.id_for_label }}" class="form-check-label">
-      {{ field|addcss:"form-check-input" }}
-      {{ field.label }}
+    <label for="{{ field.id_for_label }}" class="custom-control custom-checkbox pt-0">
+      {{ field|addcss:"custom-control-input" }}
+      <span class="custom-control-indicator"></span>
+      <span class="custom-control-description">{{ field.label }}</span>
     </label>
   {% endif %}
 
