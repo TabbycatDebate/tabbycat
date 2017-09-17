@@ -13,7 +13,7 @@
     <div class="row">
       <div class="col mb-2">
 
-        <div class="card border-warning text-warning">
+        <div class="card border-info text-info">
           <div class="card-body">
             This interface is intended to easily swap the positions of teams,
             as often required for final rounds. However it can be used to create
@@ -37,12 +37,12 @@
       <div class="col mb-3 mt-3">
 
           <draw-header :positions="positions"  @resort="updateSorting"
-                       :sort-key="sortKey" :sort-order="sortOrder">
+                       :sort-key="sortKey" :sort-order="sortOrder"
+                       :round-info="roundInfo">
 
             <div slot="hbracket"></div>
             <div slot="hliveness"></div>
             <div slot="himportance"></div>
-            <div slot="hvenue"></div>
 
             <template slot="hteams">
               <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
@@ -54,8 +54,12 @@
             </template>
 
             <div slot="hpanel"></div>
-            <div slot="hextra" class="thead flex-cell flex-18">
-              Sides Status
+            <div slot="hextra" class="vue-sortable thead flex-cell flex-12"
+                 data-toggle="tooltip" title="Some types of draws (e.g.
+                 out-rounds) do not specify the positions of each team at the
+                 time of draw generation. Once a debate's sides have been
+                 finalised its side status should be set as confirmed.">
+              <span>Sides Status</span>
             </div>
 
           </draw-header>
@@ -66,7 +70,6 @@
             <div slot="sbracket"></div>
             <div slot="sliveness"></div>
             <div slot="simportance"></div>
-            <div slot="svenue"></div>
 
             <template v-for="dt in debate.debateTeams">
               <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
@@ -80,7 +83,7 @@
             </template>
 
             <div slot="spanel"></div>
-            <draw-sides-status slot="sextra" class="thead flex-cell flex-18"
+            <draw-sides-status slot="sextra" class="draw-cell flex-12"
                                :debate="debate" :save-url="saveSidesStatusUrl">
               {{ debate.confirmedSides }} Confirmed
             </draw-sides-status>

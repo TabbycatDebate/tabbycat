@@ -1,7 +1,7 @@
 <template>
   <div class="draw-header subtitle">
 
-    <slot name="hbracket">
+    <slot name="hbracket" v-if="roundInfo.roundIsPrelim">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('bracket')"
            data-toggle="tooltip" title="Debate's Bracket">
         <i data-feather="bar-chart-2"></i>
@@ -9,7 +9,7 @@
       </div>
     </slot>
 
-    <slot name="hliveness">
+    <slot name="hliveness" v-if="roundInfo.roundIsPrelim">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('liveness')"
            data-toggle="tooltip" title="How many break categories are live in this room">
         <i data-feather="heart"></i>
@@ -60,8 +60,6 @@ import SortableHeaderMixin from '../../tables/SortableHeaderMixin.vue'
 
 export default {
   mixins: [SortableHeaderMixin],
-  props: {
-    positions: Array,
-  },
+  props: { positions: Array, roundInfo: Object },
 }
 </script>

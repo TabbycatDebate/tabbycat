@@ -10,7 +10,8 @@
 
     <div class="mb-3">
       <draw-header :positions="positions" @resort="updateSorting"
-                   :sort-key="sortKey" :sort-order="sortOrder">
+                   :sort-key="sortKey" :sort-order="sortOrder"
+                   :round-info="roundInfo">
 
         <div class="thead flex-cell flex-5 vue-sortable" @click="updateSorting('importance')"
              data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">

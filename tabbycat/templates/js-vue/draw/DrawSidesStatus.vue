@@ -7,7 +7,7 @@
         <input type="checkbox" class="custom-control-input"
                v-model="debate.sidesConfirmed" @click="checkUpdate">
         <span class="custom-control-indicator"></span>
-        <span :class="['custom-control-description', debate.sidesConfirmed ? 'text-success' : 'text-warning']">
+        <span :class="['custom-control-description', debate.sidesConfirmed ? 'text-success' : 'text-danger']">
           <span v-if="!debate.sidesConfirmed">un</span>confirmed
         </span>
       </label>

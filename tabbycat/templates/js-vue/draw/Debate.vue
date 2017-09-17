@@ -1,13 +1,13 @@
 <template>
   <div class="draw-row">
 
-    <slot name="sbracket">
+    <slot name="sbracket" v-if="roundInfo.roundIsPrelim">
       <div class="draw-cell flex-1 flex-horizontal-center">
         {{ debate.bracket }}
       </div>
     </slot>
 
-    <slot name="sliveness">
+    <slot name="sliveness" v-if="roundInfo.roundIsPrelim">
       <div class="draw-cell flex-1 flex-horizontal-center">
         {{ debate.liveness }}
       </div>

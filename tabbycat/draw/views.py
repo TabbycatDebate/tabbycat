@@ -723,6 +723,7 @@ class SaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
 
     def modify_debate(self, debate, posted_debate):
         debate.sides_confirmed = posted_debate['sidesStatus']
+        debate.save()
         return debate
 
 
