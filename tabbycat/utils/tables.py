@@ -345,7 +345,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return {'text': self.BLANK_TEXT}
 
         other_teams = {dt.side: dt.team.short_name for dt in ts.debate_team.debate.debateteam_set.all()}
-        other_team_strs = []
+        other_team_strs = [_("Teams in debate:")]
         for side in self.tournament.sides:
             if ts.debate_team.debate.sides_confirmed:
                 line = _("%(team)s (%(side)s)") % {
@@ -363,30 +363,27 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'title': ""
         }}
 
-        # Translators: "TBC" stands for "to be confirmed".
-        side = ts.debate_team.get_side_name() if ts.debate_team.debate.sides_confirmed else _("side TBC")
-
         if ts.debate_team.debate.round.is_break_round:
             cell = self._result_cell_class_four_elim(ts.win, cell)
             if ts.win is True:
                 cell['text'] = _("advancing")
-                cell['popover']['title'] = _("Advancing from %(side)s") % {'side': side}
+                cell['popover']['title'] = _("Advancing")
             elif ts.win is False:
                 cell['text'] = _("eliminated")
-                cell['popover']['title'] = _("Not advancing from %(side)s") % {'side': side}
+                cell['popover']['title'] = _("Eliminated")
             else:
                 cell['text'] = "–"
-                cell['popover']['title'] = _("No result for debate from %(side)s") % {'side': side}
+                cell['popover']['title'] = _("No result for debate")
         else:
             cell = self._result_cell_class_four(ts.points, cell)
             places = {0: _("4th"), 1: _("3rd"), 2: _("2nd"), 3: _("1st")}
             if ts.points is not None:
                 place = places.get(ts.points, "??")
                 cell['text'] = place
-                cell['popover']['title'] = _("%(place)s from %(side)s") % {'place': place, 'side': side}
+                cell['popover']['title'] = _("Took %(place)s") % {'place': place}
             else:
                 cell['text'] = "–"
-                cell['popover']['title'] = _("No result for debate from %(side)s") % {'side': side}
+                cell['popover']['title'] = _("No result for debate")
 
         if show_score and ts.score is not None:
             cell['subtext'] = metricformat(ts.score)
