@@ -79,13 +79,13 @@
     <ul class="list-group">
 
       {% roundurl 'draw-display-by-venue' round as url %}
-      {% include "components/item-action.html" with text="Display Draw ordered by Venue" subtext="(for the briefing room)" emoji="🏫" %}
+      {% include "components/item-action.html" with text="Display Draw ordered by Venue" subtext="(for the briefing room)" emoji="🏫" blank=True %}
 
       {% roundurl 'draw-display-by-team' round as url %}
-      {% include "components/item-action.html" with text="Display Draw ordered by Team" subtext="(for the briefing room)" emoji="👭" %}
+      {% include "components/item-action.html" with text="Display Draw ordered by Team" subtext="(for the briefing room)" emoji="👭" blank=True %}
 
       {% roundurl 'motions-display' round as url %}
-      {% include "components/item-action.html" with text="Display Motions" subtext="(for the briefing room)" emoji="📃" %}
+      {% include "components/item-action.html" with text="Display Motions" subtext="(for the briefing room)" emoji="📃" blank=True %}
 
     </ul>
 
