@@ -47,6 +47,7 @@
 thead,
 .thead {
   @extend .subtitle;
+
   font-size: $font-size-base;
   line-height: $font-size-base;
   background: $alt-bg; // Fixed header needs a background while scrolling
@@ -145,7 +146,7 @@ thead,
   box-sizing: initial;
 
   &.tooltip-trigger {
-    padding-bottom: 2px
+    padding-bottom: 2px;
   }
 }
 

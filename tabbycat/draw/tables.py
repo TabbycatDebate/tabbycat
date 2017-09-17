@@ -334,7 +334,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
 
         # Points of team
         infos = self.standings.get_standings(teams)
-        header = { 'key': _("Pts"), 'tooltip': side_abbr + " " + _("Points"), 'icon': 'star'}
+        header = {'key': _("Pts"), 'tooltip': side_abbr + " " + _("Points"), 'icon': 'star'}
         self.add_column(header, [info.metrics['points'] for info in infos])
 
         # Side history after last round
