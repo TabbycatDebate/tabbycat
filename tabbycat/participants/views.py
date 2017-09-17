@@ -122,7 +122,6 @@ class BaseTeamRecordView(BaseRecordView):
         teamscores = TeamScore.objects.filter(
             debate_team__team=self.object,
             ballot_submission__confirmed=True,
-            debate_team__debate__round__draw_status=Round.STATUS_RELEASED
         ).select_related(
             'debate_team__debate__round'
         ).prefetch_related(
@@ -131,6 +130,7 @@ class BaseTeamRecordView(BaseRecordView):
         )
         if not tournament.pref('all_results_released'):
             teamscores = teamscores.filter(
+                debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
                 debate_team__debate__round__silent=False,
                 debate_team__debate__round__seq__lt=tournament.current_round.seq
             )
@@ -184,7 +184,6 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         tournament = self.get_tournament()
         debateadjs = DebateAdjudicator.objects.filter(
             adjudicator=self.object,
-            debate__round__draw_status=Round.STATUS_RELEASED
         ).select_related(
             'debate__round'
         ).prefetch_related(
@@ -194,6 +193,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         )
         if not tournament.pref('all_results_released'):
             debateadjs = debateadjs.filter(
+                debate__round__draw_status=Round.STATUS_RELEASED,
                 debate__round__silent=False,
                 debate__round__seq__lt=tournament.current_round.seq,
             )
