@@ -54,11 +54,7 @@
 
     {% csrf_token %}
 
-    {% if pref.teams_in_debate == 'bp' and debate.round.is_break_round %}
-      {% include "ballot/bp_elimination_ballot.html" %}
-    {% else %}
-      {% include "ballot/ballot_set.html" %}
-    {% endif %}
+    {% include "ballot/ballot_set.html" %}
 
     <div class="card mt-3">
       <div class="list-group list-group-flush">
