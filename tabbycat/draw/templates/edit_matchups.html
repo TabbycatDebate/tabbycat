@@ -12,7 +12,8 @@
                              :round-info="roundInfo"
                              :initial-Unallocated-items="unallocatedItems"
                              :default-sort-key="'bracket'"
-                             :default-sort-order="'desc'">
+                             :default-sort-order="'desc'"
+                             :save-sides-status-url="saveSidesStatusUrl">
     </edit-matchups-container>
 
   </div>
@@ -25,6 +26,7 @@
       debates: {{ vueDebates|safe }},
       roundInfo: {{ vueRoundInfo|safe }},
       unallocatedItems: {{ vueUnusedTeams|safe }},
+      saveSidesStatusUrl: '{{ saveSidesStatusUrl }}'
     }
   </script>
   {{ block.super }}

@@ -666,7 +666,8 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
         return super().annotate_draw(draw, serialised_draw)
 
     def get_context_data(self, **kwargs):
-        unused = [t for t in self.get_round().unused_teams()]
+        r = self.get_round()
+        unused = [t for t in r.unused_teams()]
         serialized_unused = [t.serialize() for t in unused]
         break_thresholds = self.break_thresholds
         for t, serialt in zip(unused, serialized_unused):
@@ -674,6 +675,7 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
             serialt = self.annotate_region_classes(serialt)
 
         kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
+        kwargs['saveSidesStatusUrl'] = reverse_round('save-debate-sides-status', r)
         return super().get_context_data(**kwargs)
 
 
@@ -712,6 +714,15 @@ class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
 
         debate._populate_teams()
 
+        return debate
+
+
+class SaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
+    action_log_type = ActionLogEntry.ACTION_TYPE_SIDES_SAVE
+    allows_creation = False
+
+    def modify_debate(self, debate, posted_debate):
+        debate.sides_confirmed = posted_debate['sidesStatus']
         return debate
 
 

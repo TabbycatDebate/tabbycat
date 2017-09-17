@@ -260,6 +260,7 @@ class Debate(models.Model):
             'position': position,
             'adjudicator': adj.serialize(round=round),
         } for adj, position in self.adjudicators.with_debateadj_types()]
+        debate['sidesConfirmed'] = self.sides_confirmed
         return debate
 
 

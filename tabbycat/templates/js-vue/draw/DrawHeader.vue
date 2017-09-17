@@ -1,7 +1,7 @@
 <template>
   <div class="draw-header subtitle">
 
-    <slot name="hbacket">
+    <slot name="hbracket">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('bracket')"
            data-toggle="tooltip" title="Debate's Bracket">
         <i data-feather="bar-chart-2"></i>
@@ -9,7 +9,7 @@
       </div>
     </slot>
 
-    <slot name="hcats">
+    <slot name="hliveness">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('liveness')"
            data-toggle="tooltip" title="How many break categories are live in this room">
         <i data-feather="heart"></i>
@@ -49,6 +49,8 @@
         Panel
       </div>
     </slot>
+
+    <slot name="hextra"></slot>
 
   </div>
 </template>

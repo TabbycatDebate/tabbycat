@@ -38,6 +38,12 @@
 
           <draw-header :positions="positions"  @resort="updateSorting"
                        :sort-key="sortKey" :sort-order="sortOrder">
+
+            <div slot="hbracket"></div>
+            <div slot="hliveness"></div>
+            <div slot="himportance"></div>
+            <div slot="hvenue"></div>
+
             <template slot="hteams">
               <div class="vue-sortable thead flex-cell flex-12 vue-droppable-container"
                    v-for="position in positions" @click="updateSorting(position.side)"
@@ -46,9 +52,22 @@
                 <span :class="sortClasses(position.full)"></span>
               </div>
             </template>
+
+            <div slot="hpanel"></div>
+            <div slot="hextra" class="thead flex-cell flex-18">
+              Sides Status
+            </div>
+
           </draw-header>
+
           <debate v-for="debate in dataOrderedByKey"
                   :debate="debate" :key="debate.id" :round-info="roundInfo">
+
+            <div slot="sbracket"></div>
+            <div slot="sliveness"></div>
+            <div slot="simportance"></div>
+            <div slot="svenue"></div>
+
             <template v-for="dt in debate.debateTeams">
               <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
                    :slot="'s-' + dt.side">
@@ -59,6 +78,13 @@
                 </droppable-generic>
               </div>
             </template>
+
+            <div slot="spanel"></div>
+            <draw-sides-status slot="sextra" class="thead flex-cell flex-18"
+                               :debate="debate" :save-url="saveSidesStatusUrl">
+              {{ debate.confirmedSides }} Confirmed
+            </draw-sides-status>
+
           </debate>
 
       </div>
@@ -79,11 +105,13 @@
 import TeamMovingMixin from '../ajax/TeamMovingMixin.vue'
 import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import DraggableTeam from '../draganddrops/DraggableTeam.vue'
+import DrawSidesStatus from '../draw/DrawSidesStatus.vue'
 import _ from 'lodash'
 
 export default {
   mixins: [TeamMovingMixin, DrawContainerMixin],
-  components: { DraggableTeam },
+  components: { DraggableTeam, DrawSidesStatus },
+  props: ['saveSidesStatusUrl'],
   computed: {
     unallocatedTeamsByWins: function() {
       return _.reverse(_.sortBy(this.unallocatedItems, ['wins']))

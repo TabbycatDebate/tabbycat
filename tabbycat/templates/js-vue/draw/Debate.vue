@@ -1,13 +1,17 @@
 <template>
   <div class="draw-row">
 
-    <div class="draw-cell flex-1 flex-horizontal-center">
-      {{ debate.bracket }}
-    </div>
+    <slot name="sbracket">
+      <div class="draw-cell flex-1 flex-horizontal-center">
+        {{ debate.bracket }}
+      </div>
+    </slot>
 
-    <div class="draw-cell flex-1 flex-horizontal-center">
-      {{ debate.liveness }}
-    </div>
+    <slot name="sliveness">
+      <div class="draw-cell flex-1 flex-horizontal-center">
+        {{ debate.liveness }}
+      </div>
+    </slot>
 
     <slot name="simportance">
       <div class="draw-cell flex-1 flex-horizontal-center">
@@ -40,6 +44,8 @@
         </div>
       </div>
     </slot>
+
+    <slot name="sextra"></slot>
 
   </div>
 </template>
