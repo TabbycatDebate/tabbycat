@@ -290,7 +290,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['iconClass'] = "text-success"
             cell['sort'] = 2
         elif advancing is False:
-            cell['popover']['title'] = _("%(team)s is not advancing") % {'team': team_name}
+            cell['popover']['title'] = _("%(team)s was eliminated") % {'team': team_name}
             cell['icon'] = "chevron-down"
             cell['iconClass'] = "text-danger"
             cell['sort'] = 1
