@@ -1,6 +1,7 @@
+import logging
 from django.test import TestCase
 
-from utils.tests import ConditionalTournamentViewBasicCheckMixin
+from utils.tests import ConditionalTournamentViewBasicCheckMixin, suppress_logs
 
 
 class PublicDiversityViewTest(ConditionalTournamentViewBasicCheckMixin, TestCase):
@@ -16,6 +17,10 @@ class PublicTeamStandingsViewTest(ConditionalTournamentViewBasicCheckMixin, Test
 class PublicRepliesTabViewTest(ConditionalTournamentViewBasicCheckMixin, TestCase):
     view_name = 'standings-public-tab-replies'
     view_toggle = 'tab_release__replies_tab_released'
+
+    def test_unset_preference(self):
+        with suppress_logs('standings.metrics', logging.INFO):
+            super().test_unset_preference()
 
 
 class PublicMotionsTabViewTest(ConditionalTournamentViewBasicCheckMixin, TestCase):
