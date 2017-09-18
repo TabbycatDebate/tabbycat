@@ -2,7 +2,7 @@
 <div class="list-group-item pt-3 pb-4">
 
   {% if form.errors %}
-    {% include "components/form-errors.html" with errors=form.errors %}
+    {% include "components/form-errors.html" with errors=form.non_field_errors %}
   {% endif %}
 
   {% if double or triple %}<div class="row">{% endif %}
