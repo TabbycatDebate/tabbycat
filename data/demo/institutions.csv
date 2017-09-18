@@ -1,14 +1,14 @@
-name,code,abbreviation,region
-California Institute of Technology,Caltech,Calt,CA
-Columbia University,Columbia,Colum,NY
-Cornell University,Cornell,Corn,NY
-Harvard University,Harvard,Harv,MA
-Johns Hopkins University,Johns Hopkins,JHU,MD
-Massachusetts Institute of Technology,MIT,MIT,MA
-Princeton University,Princeton,Prin,
-Stanford University,Stanford,Stan,CA
-"University of California, Berkeley",Berkeley,Cal,CA
-University of Chicago,Chicago,Chic,
-University of Pennsylvania,Pennsylvania,Penn,PA
-University of Toronto,Toronto,Toron,
-Yale University,Yale,Yale,CT
+name,code,region
+California Institute of Technology,Caltech,CA
+Columbia University,Columbia,NY
+Cornell University,Cornell,NY
+Harvard University,Harvard,MA
+Johns Hopkins University,Johns Hopkins,MD
+Massachusetts Institute of Technology,MIT,MA
+Princeton University,Princeton,
+Stanford University,Stanford,CA
+"University of California, Berkeley",Berkeley,CA
+University of Chicago,Chicago,
+University of Pennsylvania,Pennsylvania,PA
+University of Toronto,Toronto,
+Yale University,Yale,CT

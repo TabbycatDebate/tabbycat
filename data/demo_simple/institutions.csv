@@ -1,7 +1,7 @@
-name,code,abbreviation
-RMIT University,RMIT,RAD
-Melbourne University,Melbourne,MUDS
-Monash University,Monash,MAD
-Victoria University,Victoria,VIC
-Auckland University,Auckland,AKL
-Otago University,Otago,OUDCS
+name,code
+RMIT University,RMIT
+Melbourne University,Melbourne
+Monash University,Monash
+Victoria University,Victoria
+Auckland University,Auckland
+Otago University,Otago
