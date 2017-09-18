@@ -300,8 +300,11 @@ class DrawForDragAndDropMixin(RoundMixin):
                 breaks_seq[r.id] = i
             for bc in serialised_team['break_categories']:
                 bc['class'] = breaks_seq[bc['id']]
-                wins = serialised_team['wins']
-                bc['will_break'] = determine_liveness(thresholds[bc['id']], wins)
+                if self.get_tournament().pref('teams_in_debate') != 'bp':
+                    wins = serialised_team['wins']
+                    bc['will_break'] = determine_liveness(thresholds[bc['id']], wins)
+                else:
+                    bc['will_break'] = None # Not Implemented
 
         return serialised_team
 

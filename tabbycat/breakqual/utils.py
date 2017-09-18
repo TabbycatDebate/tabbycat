@@ -72,9 +72,6 @@ def liveness(self, team, teams_count, prelims, current_round):
 
     # The actual calculation should be shifed to be a cached method on
     # the relevant break category
-    # print("teams count", teams_count)
-    # print("prelims", prelims)
-    # print("current_round", current_round)
 
     highest_liveness = 3
     for bc in team.break_categories.all():

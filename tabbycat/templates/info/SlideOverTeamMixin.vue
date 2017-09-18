@@ -40,7 +40,9 @@ export default {
   methods: {
     titleForBC: function(bc, wins) {
       if (!_.isUndefined(bc.will_break)) {
-        return bc.will_break.toUpperCase() + ' for ' + bc.name
+        if (bc.will_break !== null) {
+          return bc.will_break.toUpperCase() + ' for ' + bc.name
+        }
       }
     },
     iconForBC: function(bc) {
