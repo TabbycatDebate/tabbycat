@@ -493,7 +493,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         for debate in debates:
             adjs_data = []
-            if show_splits and debate.confirmed_ballot \
+            # The purpose of the second condition is to short-circuit debate.confirmed_ballot
+            if show_splits and self.tournament.pref('ballots_per_debate') == 'per-adj' \
+                    and debate.confirmed_ballot \
                     and debate.confirmed_ballot.result.is_voting \
                     and debate.confirmed_ballot.result.is_valid() \
                     and (self.admin or self.tournament.pref('show_splitting_adjudicators')):

@@ -9,10 +9,10 @@ from .result import DebateResult
 
 
 def populate_wins(debates):
-    """Sets an attribute `_win` on each DebateTeam in each Debate, representing
-    whether they won the debate. For best results, the caller should already
-    have had
-        Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team'))
+    """Sets the attributes `_win` and `_points` on each DebateTeam in each
+    Debate, representing whether they won the debate and how many points they
+    got from it. For best results, the caller should already have had
+    Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team'))
     prefetched on the query set.
 
     This can be used for efficiency, since it retrieves all of the
@@ -28,8 +28,10 @@ def populate_wins(debates):
         teamscore = teamscores_by_debateteam_id.get(debateteam.id, None)
         if teamscore is not None:
             debateteam._win = teamscore.win
+            debateteam._points = teamscore.points
         else:
             debateteam._win = None
+            debateteam._points = None
 
 
 def populate_confirmed_ballots(debates, motions=False, results=False):

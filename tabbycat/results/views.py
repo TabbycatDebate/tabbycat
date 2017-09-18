@@ -113,6 +113,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         round = self.get_round()
         tournament = self.get_tournament()
         debates = round.debate_set_with_prefetches(results=True, wins=True)
+        populate_confirmed_ballots(debates, motions=True,
+                results=tournament.pref('ballots_per_debate') == 'per-adj')
 
         table = TabbycatTableBuilder(view=self, sort_key=_("Venue"))
         table.add_debate_venue_columns(debates)
@@ -132,14 +134,15 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         teamscores = TeamScore.objects.filter(debate_team__debate__round=round,
                 ballot_submission__confirmed=True).prefetch_related(
                 'debate_team__team__speaker_set', 'debate_team__team__institution',
-                'debate_team__debate__debateadjudicator_set__adjudicator')
+                'debate_team__debate__debateadjudicator_set__adjudicator',
+                'debate_team__debate__debateteam_set__team',
+                'debate_team__debate__round').select_related('ballot_submission')
         debates = [ts.debate_team.debate for ts in teamscores]
 
-        populate_opponents([ts.debate_team for ts in teamscores])
-
-        for side in [DebateTeam.SIDE_AFF, DebateTeam.SIDE_NEG]:
-            debates_for_side = [ts.debate_team.debate for ts in teamscores if ts.debate_team.side == side]
-            populate_confirmed_ballots(debates_for_side, motions=True)
+        if tournament.pref('teams_in_debate') == 'two':
+            populate_opponents([ts.debate_team for ts in teamscores])
+        populate_confirmed_ballots(debates, motions=True,
+                results=tournament.pref('ballots_per_debate') == 'per-adj')
 
         table = TabbycatTableBuilder(view=self, sort_key=_("Team"))
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
