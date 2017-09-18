@@ -14,7 +14,7 @@ from django.views.generic import FormView, TemplateView, View
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
-from draw.models import Debate, DebateTeam
+from draw.models import Debate
 from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
 from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin,
