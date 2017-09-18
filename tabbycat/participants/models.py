@@ -32,7 +32,7 @@ class Region(models.Model):
 
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
-    name_fields = ['code', 'name', 'abbreviation']
+    name_fields = ['code', 'name']
 
 
 class Institution(models.Model):
@@ -44,10 +44,6 @@ class Institution(models.Model):
         verbose_name=_("code"),
         # Translators: Change the examples to institutions native to your language; keep consistent between strings
         help_text=_("What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""))
-    abbreviation = models.CharField(max_length=8, default="",
-        verbose_name=_("abbreviation"),
-        # Translators: Change the examples to institutions native to your language; keep consistent between strings
-        help_text=_("For extremely confined spaces, e.g., \"Camb\", \"VicWgtn\""))
     region = models.ForeignKey(Region, models.SET_NULL, blank=True, null=True,
         verbose_name=_("region"))
 
@@ -64,13 +60,6 @@ class Institution(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-    @property
-    def short_code(self):
-        if self.abbreviation:
-            return self.abbreviation
-        else:
-            return self.code[:5]
 
     @property
     def serialize(self):
@@ -225,7 +214,7 @@ class Team(models.Model):
         institution = self.institution
         reference = self.short_reference or self.reference
         if self.use_institution_prefix:
-            short_name = institution.code or institution.abbreviation
+            short_name = institution.code
             if reference:
                 short_name += " " + reference
             return short_name
