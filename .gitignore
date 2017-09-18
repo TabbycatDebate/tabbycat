@@ -16,6 +16,7 @@ node_modules
 data/*
 
 # Default data to include
+!data/bp88team/
 !data/demo/
 !data/demo_simple/
 !data/sandbox/
