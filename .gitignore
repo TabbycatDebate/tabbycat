@@ -23,6 +23,7 @@ data/*
 !data/test/
 !data/presets/
 !data/fixtures/
+!data/migrate_fixtures.py
 
 # Docker
 dbdata

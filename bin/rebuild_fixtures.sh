@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -o errexit
 dj flush
 dj loaddata ./data/fixtures/$1.json
 dj migrate
