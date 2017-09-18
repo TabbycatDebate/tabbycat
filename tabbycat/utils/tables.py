@@ -759,7 +759,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         results_data = [self._result_cell(ts) for ts in teamscores]
         self.add_column(_("Result"), results_data)
-        sides_data = [ts.debate_team.get_side_name().capitalize()
+        sides_data = [ts.debate_team.get_side_name().title()
             # Translators: "TBC" stands for "to be confirmed".
             if ts.debate_team.debate.sides_confirmed else _("TBC") for ts in teamscores]
         self.add_column(_("Side"), sides_data)

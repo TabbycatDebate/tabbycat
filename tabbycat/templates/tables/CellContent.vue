@@ -1,27 +1,28 @@
 <template>
 
-  <div>
+  <div :data-toggle="cellData['tooltip'] ? tooltip : ''" :title="cellData['tooltip']">
 
     <!-- Icons or Emoji -->
     <i v-if="icon" :class="cellData['iconClass']" v-html="getFeatherIcon"></i>
     <i v-if="cellData['emoji']" class="emoji" >{{ cellData["emoji"] }}</i>
 
     <!-- Links and modals -->
-    <span v-if="cellData['link'] || cellData['modal']">
-      <a v-if="cellData['link']" :href="cellData['link']" >
+    <template v-if="cellData['link'] || cellData['modal']">
+      <a href="#" v-if="cellData['link']" :href="cellData['link']" >
         <span class="tooltip-trigger" v-html="cellData['text']"></span>
       </a>
-      <a v-if="cellData['modal']" :data-target="cellData['modal']" >
+      <a href="#" v-if="cellData['modal']" :data-target="cellData['modal']" >
         <span class="tooltip-trigger" v-html="cellData['text']"></span>
       </a>
-    </span>
-    <span v-else>
-      <span class="tooltip-trigger" v-html="cellData['text']"></span>
-    </span>
+    </template>
 
-    <span v-if="cellData['subtext']">
+    <template v-else>
+      <span class="tooltip-trigger" v-html="cellData['text']"></span>
+    </template>
+
+    <template v-if="cellData['subtext']">
       <br><span class="small" v-html="cellData['subtext']"></span>
-    </span>
+    </template>
 
   </div>
 
@@ -35,6 +36,13 @@ export default {
   mixins: [ FeatherMixin ],
   props: { cellData: Object },
   computed: {
+    tooltip: function() {
+      if (!_.isUndefined(this.cellData['tooltip'])) {
+        return 'tooltip'
+      } else {
+        return false
+      }
+    },
     icon: function() {
       if (!_.isUndefined(this.cellData['icon'])) {
         return this.cellData['icon']

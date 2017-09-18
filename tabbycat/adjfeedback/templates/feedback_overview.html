@@ -20,13 +20,23 @@
 
               {% csrf_token %}
 
+              <div class="list-group-item text-info py-3">
+                The score range for adjudicators is between <strong>{{ pref.adj_min_score }}</strong> and
+                <strong>{{ pref.adj_max_score }}</strong>. Decimals are permitted. This can be configured in
+                <a href="{% tournamenturl 'options-tournament-feedback' %}">Feedback settings</a>.
+              </div>
+              <div class="list-group-item text-info py-3">
+                The minimum score require to be allocated as a panellist or chair (when using the
+                auto-allocator) is <strong>{{ pref.adj_min_voting_score }}</strong>. This can be configured in
+                <a href="{% tournamenturl 'options-tournament-draw-rules' %}">Draw settings</a>.
+              </div>
               <div class="list-group-item">
                 <input id="id_adj_id" name="adj_id" type="hidden" />
-                <div class="form-group">
-                  <label>
-                    Test score
-                  </label>
-                  <input id="id_test_score" class="form-control" name="test_score" placeholder="3.5" type="number" step="any"></input>
+                <div class="form-group pb-3">
+                  <label>Test score</label>
+                  <input id="id_test_score" class="form-control" name="test_score" placeholder="3.5"
+                         min="{{ pref.adj_min_score }}" max="{{ pref.adj_max_score }}"
+                         type="number" step="any"></input>
                 </div>
               </div>
 

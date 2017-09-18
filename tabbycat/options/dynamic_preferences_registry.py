@@ -41,6 +41,15 @@ class SpeakerScoreStep(FloatPreference):
 
 
 @tournament_preferences_registry.register
+class MaximumMargin(FloatPreference):
+    help_text = _("The largest amount by which one team can beat another (0 means no limit)")
+    verbose_name = _("Maximum margin")
+    section = scoring
+    name = 'maximum_margin'
+    default = 0.0
+
+
+@tournament_preferences_registry.register
 class MinimumReplyScore(FloatPreference):
     help_text = _("Minimum allowed score for reply speeches")
     verbose_name = _("Minimum reply score")
@@ -65,15 +74,6 @@ class ReplyScoreStep(FloatPreference):
     section = scoring
     name = 'reply_score_step'
     default = 0.5
-
-
-@tournament_preferences_registry.register
-class MaximumMargin(FloatPreference):
-    help_text = _("The largest amount by which one team can beat another (0 means no limit)")
-    verbose_name = _("Maximum margin")
-    section = scoring
-    name = 'maximum_margin'
-    default = 0.0
 
 
 @tournament_preferences_registry.register
@@ -117,24 +117,6 @@ class AdjHistoryPenalty(IntegerPreference):
 
 
 @tournament_preferences_registry.register
-class AvoidSameInstitution(BooleanPreference):
-    help_text = _("If checked, the draw will try to avoid pairing teams against their own institution")
-    verbose_name = _("Avoid same institution")
-    section = draw_rules
-    name = 'avoid_same_institution'
-    default = True
-
-
-@tournament_preferences_registry.register
-class AvoidTeamHistory(BooleanPreference):
-    help_text = _("If checked, the draw will try to avoid having teams see each other twice")
-    verbose_name = _("Avoid team history")
-    section = draw_rules
-    name = 'avoid_team_history'
-    default = True
-
-
-@tournament_preferences_registry.register
 class TeamInstitutionPenalty(IntegerPreference):
     help_text = _("Penalty applied by conflict avoidance method for teams seeing their own institution")
     verbose_name = _("Team institution penalty")
@@ -150,6 +132,24 @@ class TeamHistoryPenalty(IntegerPreference):
     section = draw_rules
     name = 'team_history_penalty'
     default = 1000
+
+
+@tournament_preferences_registry.register
+class AvoidSameInstitution(BooleanPreference):
+    help_text = _("If checked, the draw will try to avoid pairing teams against their own institution")
+    verbose_name = _("Avoid same institution")
+    section = draw_rules
+    name = 'avoid_same_institution'
+    default = True
+
+
+@tournament_preferences_registry.register
+class AvoidTeamHistory(BooleanPreference):
+    help_text = _("If checked, the draw will try to avoid having teams see each other twice")
+    verbose_name = _("Avoid team history")
+    section = draw_rules
+    name = 'avoid_team_history'
+    default = True
 
 
 @tournament_preferences_registry.register
@@ -309,20 +309,6 @@ feedback = Section('feedback')
 
 
 @tournament_preferences_registry.register
-class FeedbackIntroduction(StringPreference):
-    help_text = _("Any explanatory text needed to introduce the feedback form")
-    verbose_name = _("Feedback introduction/explanation")
-    section = feedback
-    name = 'feedback_introduction'
-    default = ''
-
-    def get_field_kwargs(self):
-        kwargs = super().get_field_kwargs()
-        kwargs['required'] = False
-        return kwargs
-
-
-@tournament_preferences_registry.register
 class MinimumAdjScore(FloatPreference):
     help_text = _("Minimum possible adjudicator score that can be given")
     verbose_name = _("Minimum adjudicator score")
@@ -338,33 +324,6 @@ class MaximumAdjScore(FloatPreference):
     section = feedback
     name = 'adj_max_score'
     default = 5.0
-
-
-@tournament_preferences_registry.register
-class ShowUnaccredited(BooleanPreference):
-    help_text = _("Show if an adjudicator is a trainee (unaccredited)")
-    verbose_name = _("Show unaccredited")
-    section = feedback
-    name = 'show_unaccredited'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ScoreReturnLocation(StringPreference):
-    help_text = _("The location to return scoresheets to, printed on pre-printed ballots")
-    verbose_name = _("Score return location")
-    section = feedback
-    name = 'score_return_location'
-    default = 'TBA'
-
-
-@tournament_preferences_registry.register
-class FeedbackReturnLocation(StringPreference):
-    help_text = _("The location to return feedback to, printed on pre-printed feedback forms")
-    verbose_name = _("Feedback return location")
-    section = feedback
-    name = 'feedback_return_location'
-    default = 'TBA'
 
 
 @tournament_preferences_registry.register
@@ -401,6 +360,47 @@ class ShowUnexpectedFeedback(BooleanPreference):
     section = feedback
     name = 'show_unexpected_feedback'
     default = True
+
+
+@tournament_preferences_registry.register
+class ShowUnaccredited(BooleanPreference):
+    help_text = _("Show if an adjudicator is a trainee (unaccredited)")
+    verbose_name = _("Show unaccredited")
+    section = feedback
+    name = 'show_unaccredited'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ScoreReturnLocation(StringPreference):
+    help_text = _("The location to return scoresheets to, printed on pre-printed ballots")
+    verbose_name = _("Score return location")
+    section = feedback
+    name = 'score_return_location'
+    default = 'TBA'
+
+
+@tournament_preferences_registry.register
+class FeedbackReturnLocation(StringPreference):
+    help_text = _("The location to return feedback to, printed on pre-printed feedback forms")
+    verbose_name = _("Feedback return location")
+    section = feedback
+    name = 'feedback_return_location'
+    default = 'TBA'
+
+
+@tournament_preferences_registry.register
+class FeedbackIntroduction(StringPreference):
+    help_text = _("Any explanatory text needed to introduce the feedback form")
+    verbose_name = _("Feedback introduction/explanation")
+    section = feedback
+    name = 'feedback_introduction'
+    default = ''
+
+    def get_field_kwargs(self):
+        kwargs = super().get_field_kwargs()
+        kwargs['required'] = False
+        return kwargs
 
 
 # ==============================================================================
@@ -444,6 +444,16 @@ class SubstantiveSpeakers(IntegerPreference):
 
 
 @tournament_preferences_registry.register
+class SideNames(ChoicePreference):
+    help_text = _("What to call the teams")
+    verbose_name = _("Side names")
+    section = debate_rules
+    name = 'side_names'
+    choices = get_side_name_choices()
+    default = 'aff-neg'
+
+
+@tournament_preferences_registry.register
 class ReplyScores(BooleanPreference):
     help_text = _("Whether this style features scored reply speeches")
     verbose_name = _("Reply scores")
@@ -459,16 +469,6 @@ class MotionVetoes(BooleanPreference):
     section = debate_rules
     name = 'motion_vetoes_enabled'
     default = True
-
-
-@tournament_preferences_registry.register
-class SideNames(ChoicePreference):
-    help_text = _("What to call the teams")
-    verbose_name = _("Side names")
-    section = debate_rules
-    name = 'side_names'
-    choices = get_side_name_choices()
-    default = 'aff-neg'
 
 
 # ==============================================================================
@@ -563,15 +563,6 @@ class SpeakerTabReleaseLimit(IntegerPreference):
 
 
 @tournament_preferences_registry.register
-class SpeakerCategoryTabsReleased(BooleanPreference):
-    help_text = "Enables public display of those speaker category tabs that are marked to be public. Intended for use after the tournament."
-    verbose_name = "Release speaker category tabs to public"
-    section = tab_release
-    name = "speaker_category_tabs_released"
-    default = False
-
-
-@tournament_preferences_registry.register
 class RepliesTabReleased(BooleanPreference):
     help_text = _("Enables public display of the replies tab. Intended for use after the tournament.")
     verbose_name = _("Release replies tab to public")
@@ -587,6 +578,15 @@ class RepliesTabReleaseLimit(IntegerPreference):
     section = tab_release
     name = 'replies_tab_limit'
     default = 0
+
+
+@tournament_preferences_registry.register
+class SpeakerCategoryTabsReleased(BooleanPreference):
+    help_text = "Enables public display of those speaker category tabs that are marked to be public. Intended for use after the tournament."
+    verbose_name = "Release speaker category tabs to public"
+    section = tab_release
+    name = "speaker_category_tabs_released"
+    default = False
 
 
 @tournament_preferences_registry.register

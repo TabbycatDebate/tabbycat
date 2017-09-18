@@ -190,7 +190,7 @@ class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
     page_emoji = '🎉'
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key='name')
         table.add_adjudicator_columns(self.get_tournament().adjudicator_set.filter(breaking=True))
         return table
 

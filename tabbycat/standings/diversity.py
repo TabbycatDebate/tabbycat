@@ -228,7 +228,9 @@ def get_diversity_data_sets(t, for_public):
     # Speakers Results
     # ==========================================================================
 
-    if SpeakerScore.objects.filter(speaker__team__tournament=t).count() > 0:
+    # Don't show data if genders have not been set
+    gendered_speakers = Speaker.objects.filter(gender="M").count() + Speaker.objects.filter(gender="F").count()
+    if SpeakerScore.objects.filter(speaker__team__tournament=t).count() > 0 and gendered_speakers > 0:
         data_sets['speakers_results'].append(compile_data(
             'Average Score', SpeakerScore.objects.filter(speaker__team__tournament=t).exclude(position=t.reply_position), 'speaker__gender',
             filters=subset_filters, average=True, datum=True))
