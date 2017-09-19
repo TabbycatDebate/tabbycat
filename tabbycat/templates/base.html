@@ -1,4 +1,4 @@
-{% load static %}{% load debate_tags %}<!DOCTYPE html>
+{% load static i18n debate_tags %}<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -7,6 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <title>😸{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
+
+  {% trans " runs on Tabbycat — an open-source tab system that supports 2 and 4 team debating formats" as meta_info %}
+  {% if tournament %}
+    {% trans "The tab for "|add:tournament.short_name as meta_prefix %}
+  {% else %}
+    {% trans "This tab" as meta_prefix %}
+  {% endif %}
+  <meta name="description" content="{{ meta_prefix }}{{ meta_info }}" />
+  <meta property="og:description" content="{{ meta_prefix }}{{ meta_info }}" />
 
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
   {% block extra-css %}{% endblock %}
