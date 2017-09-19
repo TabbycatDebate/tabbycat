@@ -124,22 +124,3 @@
 .draw-xl {
   font-size: $font-size-base * 1.55;
 }
-
-//------------------------------------------------------------------------------
-// Ballot Entry
-//------------------------------------------------------------------------------
-
-.speaker-name {
-  text-align: left;
-}
-
-.iron-person {
-  padding: 10px 0 5px;
-
-  input {
-    float: right;
-    width: 21px;
-    height: 21px;
-    margin: 0 -4px 0 0;
-  }
-}

@@ -103,7 +103,7 @@ export default {
         self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
         self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedVenues))
         self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-        $.fn.showAlert('success', 'Successfully loadeded the auto allocation', 10000)
+        $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
         $.fn.resetButton(event.target)
       }).fail(function(response) {
         var info = response.responseJSON.message
