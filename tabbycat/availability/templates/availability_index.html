@@ -115,48 +115,6 @@
     </div>
   {% endif %}
 
-  {% if pref.teams_in_debate == 'two' and not checkin_info.teams.in_now|divisibleby:2  %}
-    <div class="alert alert-danger">
-      <i data-feather="alert-circle"></i>
-      {% trans "There is an uneven number of teams checked in for this round." %}
-    </div>
-  {% endif %}
-
-  {% if pref.teams_in_debate == 'bp' and not checkin_info.teams.in_now|divisibleby:4  %}
-    <div class="alert alert-danger">
-      <i data-feather="alert-circle"></i>
-      {% trans "The number of teams checked in for this round is not a multiple of 4." %}
-    </div>
-  {% endif %}
-
-  {% if min_adjudicators > checkin_info.adjs.in_now %}
-    <div class="alert alert-warning">
-      <i data-feather="alert-circle"></i>
-      {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
-      {% blocktrans trimmed with required_count=min_adjudicators|apnumber count count=min_adjudicators %}
-        There needs to be at least one adjudicator checked in, given the number
-        of debates.
-      {% plural %}
-        There need to be at least {{ required_count }} adjudicators checked in,
-        given the number of debates.
-      {% endblocktrans %}
-    </div>
-  {% endif %}
-
-  {% if min_venues > checkin_info.venues.in_now %}
-    <div class="alert alert-warning">
-      <i data-feather="alert-circle"></i>
-      {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
-      {% blocktrans trimmed with required_count=min_venues|apnumber count count=min_venues %}
-        There needs to be at least one venue checked in, given the number of
-        debates.
-      {% plural %}
-        There need to be at least {{ required_count }} venues checked in, given
-        the number of debates.
-      {% endblocktrans %}
-    </div>
-  {% endif %}
-
   {% if round.seq > current_round.seq and not round.is_break_round %}
     <div class="alert alert-warning">
       <i data-feather="alert-circle"></i>

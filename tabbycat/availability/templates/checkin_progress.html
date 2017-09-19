@@ -1,4 +1,4 @@
-{% load debate_tags i18n %}
+{% load debate_tags i18n humanize %}
 
 <div class="card">
 
@@ -37,23 +37,67 @@
       </div>
     {% endif %}
 
-    {% if type == "teams" and not round.is_break_round %}
-      {% roundurl 'availability-teams' round as url %}
-      {% trans "Check in teams" as text %}
-    {% elif type == "adjs" %}
-      {% roundurl 'availability-adjudicators' round as url %}
-      {% trans "Check in adjudicators" as text %}
-    {% elif type == "venues" %}
-      {% roundurl 'availability-venues' round as url %}
-      {% trans "Check in venues" as text %}
-    {% endif %}
+    {% if type == "teams" %}
 
-    {% if type != "teams" or not round.is_break_round %}
-      {% if info.in_now == 0 %}
-        {% include "components/item-action.html" with alone=True success=True %}
+      {% roundurl 'availability-teams' round as url %}
+      {% trans "Check in teams" as title_text %}
+
+      {% if pref.teams_in_debate == 'two' and not checkin_info.teams.in_now|divisibleby:2  %}
+        {% trans "There is an uneven number of teams checked in for this round." as text %}
+        {% include "components/item-alert.html" with type="danger" %}
+        {% include "components/item-action.html" with alone=True text=title_text success=True %}
+      {% elif pref.teams_in_debate == 'bp' and not checkin_info.teams.in_now|divisibleby:4  %}
+        {% trans "The number of teams checked in for this round is not a multiple of 4." as text %}
+        {% include "components/item-alert.html" with type="danger" %}
+        {% include "components/item-action.html" with alone=True text=title_text success=True %}
+      {% elif info.in_now == 0 and not round.is_break_round %}
+        {% include "components/item-action.html" with alone=True text=title_text success=True %}
       {% else %}
-        {% include "components/item-action.html" with alone=True type="primary" icon="check-circle" %}
+        {% include "components/item-action.html" with alone=True text=title_text type="primary" icon="check-circle" %}
       {% endif %}
+
+    {% elif type == "adjs" %}
+
+      {% roundurl 'availability-adjudicators' round as url %}
+      {% trans "Check in adjudicators" as title_text %}
+
+      {% if min_adjudicators > checkin_info.adjs.in_now %}
+        {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
+        {% blocktrans trimmed asvar text with required_count=min_adjudicators|apnumber count count=min_adjudicators %}
+          There needs to be at least one adjudicator checked in, given the number of debates.
+        {% plural %}
+          There need to be at least {{ required_count }} adjudicators checked in, given the number of debates.
+        {% endblocktrans %}
+        {% include "components/item-alert.html" with type="danger" %}
+        {% include "components/item-action.html" with alone=True text=title_text success=True %}
+      {% elif info.in_now == 0 %}
+        {% include "components/item-action.html" with alone=True text=title_text success=True %}
+      {% else %}
+        {% include "components/item-action.html" with alone=True text=title_text type="primary" icon="check-circle" %}
+      {% endif %}
+
+    {% elif type == "venues" %}
+
+      {% roundurl 'availability-venues' round as url %}
+      {% trans "Check in venues" as title_text %}
+
+      {% if min_venues > checkin_info.venues.in_now %}
+        {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
+        {% blocktrans trimmed asvar text with required_count=min_venues|apnumber count count=min_venues %}
+          There needs to be at least one venue checked in, given the number of
+          debates.
+        {% plural %}
+          There need to be at least {{ required_count }} venues checked in, given
+          the number of debates.
+        {% endblocktrans %}
+        {% include "components/item-alert.html" with type="danger" %}
+        {% include "components/item-action.html" with alone=True text=title_text success=True %}
+      {% elif info.in_now == 0 %}
+        {% include "components/item-action.html" with alone=True text=title_text success=True %}
+      {% else %}
+        {% include "components/item-action.html" with alone=True text=title_text type="primary" icon="check-circle" %}
+      {% endif %}
+
     {% endif %}
 
   </div>

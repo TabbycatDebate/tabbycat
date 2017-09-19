@@ -60,6 +60,12 @@ thead,
   .vue-sort-key {
     display: inline; // VIP
 
+    .sorting-placeholder-for-width { // Prevent tables from jumping on hover
+      width: 18px;
+      margin-left: -6px;
+      display: inline-block;
+    }
+
     .feather {
       margin-left: -6px;
     }
@@ -69,6 +75,13 @@ thead,
   .feather-chevrons-up,
   .feather-chevrons-down {
     display: none;
+  }
+
+  .vue-sort-active {
+
+    .sorting-placeholder-for-width {
+      display: none;
+    }
   }
 
   // When active show the currently active sort order
@@ -86,6 +99,10 @@ thead,
     cursor: pointer;
     // By default; if not sorting is active; show sort-desc
     .vue-sort-key {
+
+      .sorting-placeholder-for-width {
+        display: none;
+      }
 
       .feather-chevrons-down {
         display: none;
