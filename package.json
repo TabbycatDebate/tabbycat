@@ -22,7 +22,7 @@
     "event-stream": "3.3.4",
     "feather-icons": "^3.2.2",
     "gulp": "3.9.1",
-    "gulp-clean-css": "3.7.0",
+    "gulp-clean-css": "3.9.0",
     "gulp-concat": "2.6.1",
     "gulp-gzip": "1.4.0",
     "gulp-livereload": "3.8.1",
@@ -39,8 +39,9 @@
     "raven-js": "^3.16.0",
     "stats-percentile": "^2.0.0",
     "vinyl-source-stream": "1.1.0",
-    "vue": "2.4.2",
+    "vue": "2.4.4",
     "vue-hot-reload-api": "2.1.0",
+    "vue-template-compiler": "^2.4.4",
     "vueify": "9.4.1"
   },
   "scripts": {
