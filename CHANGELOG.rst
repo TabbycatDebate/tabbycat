@@ -6,17 +6,26 @@ Change Log
 -----
 *Release date: *
 
+- British Parliamentary support
+  - Full support for British Parliamentary format has been added and we're incredibly excited to see Tabbycat's unique features and design (finally) available as an option for those tabbing in the predominant global format.
+  - As part of the implementation of this format we've made significant improvements over existing tab software on how sides are allocated within BP draws that mean teams are less likely to have 'imbalanced' proportions of side allocations (for example having many more debates as Opening Government than Closing Opposition)
+  - New "Comparisons" page added to the documentation to outline some of the key differences between Tabbycat and other software in the context of BP tabbing.
 - Refreshed interface design
-  - Better tablet and mobile interfaces; including a fully responsive sidebar for the admin area
-  - More explicit and obvious calls-to-action for the key tasks necessary to running a round
-  - Redesign motions tab page
+  - The "Motions" stage of the per-round workflow has now been rolled into the Display area to better accommodate BP formats and consolidate the Draw/Motion 'release' process
   - Sidebar menu items now display all sub-items within a section, such as for Feedback, Standings, and Breaks
-  - Updated typography, icons, and colors, forms, and more!
+  - Better tablet and mobile interfaces; including a fully responsive sidebar for the admin area that maximises the content area
+  - More explicit and obvious calls-to-action for the key tasks necessary to running a round, with better interface alerts and text to help users understand when and why to perform crucial actions
+  - Redesigned motions tab page that gives a better idea of the sample size and distribution of results in both two- and three- team formats
+  - Refreshed the typography, icon set, core colours, forms elements, and more!
+- Improved handling of Break Rounds ballots and sides allocation
+  - The positions of teams within a break round are created by the initial draw generation in an 'unset' state in recognition that most tournaments assign these manually (through say a coin toss). This should help clarify when showing break rounds draws when sides are or are not finalised
+  - Break rounds ballots for formats where scores are not typically entered (i.e. BP) will only specify that you nominate the teams advancing rather than enter in scores
+- Now, like Break Categories, you can define arbitrary Categories such as 'Novice' or 'ESL' to create custom Speaker tabs for groups of Speakers
 - Quality of life improvements
   - After creating a new tournament you will now be prompted to apply a basic rules and public information preset
-  - Better handle errors that arise when a debate team is missing or where two teams have been assigned the same side
+  - Better handling of errors that arise when a debate team is missing or where two teams have been assigned the same side
   - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
-
+  - More of the tables that allow you to set or edit data (such as the check-in's tables for say Adjudicators) will now automatically save their results.
 
 1.4.3
 -----
