@@ -13,7 +13,7 @@ $font-family-sans-serif:  "Interface-Regular", -apple-system,
   "Apple Color Emoji", "Segoe UI Emoji",
   "Segoe UI Symbol" !default;
 $headings-font-family:    -apple-system, BlinkMacSystemFont, "Helvetica Neue",
-   Arial, sans-serif;
+  Arial, sans-serif;
 $headings-font-weight:    700;
 $font-size-base:          1rem; // Usually 16px;
 
@@ -22,14 +22,14 @@ $font-size-base:          1rem; // Usually 16px;
 //------------------------------------------------------------------------------
 
 // Theme colors
-$blue:                    #34a6f2; // Primary
+$blue:                    #008bf3; // Primary
 $green:                   #28c052; // Success
 $cyan:                    #3b9ad8; // Info
 $yellow:                  #fd7e14; // Warning
 $red:                     #e32c20; // Danger
 
 // Key Colors
-$body-bg:                 #ecf2f6;
+$body-bg:                 #f8fafc;
 
 //------------------------------------------------------------------------------
 // Bootstrap Layout Details Overrides

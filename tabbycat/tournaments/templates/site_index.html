@@ -35,7 +35,7 @@
         It looks like there aren't any tournaments on this site. Would you like to create one?
       {% endblocktrans %}
       {% url 'tournament-create' as url %}
-      {% include "components/item-action.html" with alone=True success=True %}
+      {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
 
     {% else %}
 

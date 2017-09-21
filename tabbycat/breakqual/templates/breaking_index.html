@@ -92,12 +92,12 @@
             {% if category.eligible == 0 %}
               {% tournamenturl 'breakqual-edit-eligibility' as url %}
               {% trans "Mark teams as eligibile" as text %}
-              {% include "components/item-action.html" with alone=True success=True %}
+              {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
             {% else %}
               {% tournamenturl 'breakqual-teams' category.slug as url %}
               {% if category.breaking == 0 %}
                 {% trans "Generate this break" as text %}
-                {% include "components/item-action.html" with alone=True success=True %}
+                {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
               {% else %}
                 {% trans "View this break" as text %}
                 {% include "components/item-action.html" with  type="primary" icon="check-circle" %}

@@ -83,9 +83,14 @@
   fill: theme-color("success");
 }
 
-.circle-current {
+.circle-todo {
   stroke: lighten(theme-color("warning"), 20);
   fill: theme-color("warning");
+}
+
+.circle-current {
+  stroke: lighten(theme-color("primary"), 20);
+  fill: theme-color("primary");
 }
 
 .circle-later {

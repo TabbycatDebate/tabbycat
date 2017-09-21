@@ -76,10 +76,11 @@
             {% endif %} {# active_adjs.count < draw.count #}
 
             {% roundurl 'edit-adj-allocation' as url %}
-            {% trans "Allocate Adjudicators" as title %}
             {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
-              {% include "components/item-action.html" with text=title success=True %}
+              {% trans "Allocate adjudicators" as title %}
+              {% include "components/item-action.html" with text=title type="success" to_complete=True %}
             {% else %}
+            {% trans "Edit adjudicator allocation" as title %}
               {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
             {% endif %}
 
@@ -127,10 +128,11 @@
             {% endif %}
 
             {% roundurl 'venues-edit' round as url %}
-            {% trans "Allocate Venues" as title %}
             {% if no_venue > 0 %}
-              {% include "components/item-action.html" with text=title success=True %}
+              {% trans "Allocate venues" as title %}
+              {% include "components/item-action.html" with text=title type="success" to_complete=True %}
             {% else %}
+              {% trans "Edit venue allocation" as title %}
               {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
             {% endif %}
 
@@ -160,7 +162,7 @@
               {% include "components/item-alert.html" with type="danger" %}
 
               {% roundurl 'draw-matchups-edit' as url %}
-              {% include "components/item-action.html" with text="Allocate Sides" success=True %}
+              {% include "components/item-action.html" with text="Allocate Sides" type="success" to_complete=True %}
 
             </div>
 

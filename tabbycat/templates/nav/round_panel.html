@@ -18,7 +18,7 @@
      class="list-group-item {% if availability_nav and round == r %}active{% endif %}">
     <i data-feather="circle" class="circle-icon
       {% if r.seq < current_round.seq %} circle-done
-      {% elif r == current_round and r.draw_status == r.STATUS_NONE %} circle-current
+      {% elif r == current_round and r.draw_status == r.STATUS_NONE %} circle-todo
       {% elif r.draw_status == r.STATUS_DRAFT %} circle-done
       {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-done
       {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
@@ -33,7 +33,7 @@
       {% elif r.draw_status == r.STATUS_NONE %} circle-later
       {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-done
       {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
-      {% else %} circle-current{% endif %}"></i>
+      {% else %} circle-todo{% endif %}"></i>
     {% trans "Draw" %}
   </a>
 
@@ -43,28 +43,18 @@
       {% if r.seq < current_round.seq %} circle-done
       {% elif r.draw_status == r.STATUS_NONE %} circle-later
       {% elif r.draw_status == r.STATUS_DRAFT %} circle-later
-      {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-current
+      {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-todo
       {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
-      {% else %} circle-current{% endif %}"></i>
+      {% else %} circle-todo{% endif %}"></i>
     {% trans "Display" %}
-  </a>
-
-  <a href="{% roundurl 'motions-edit' r %}" data-parent="#rh{{ r.id }}"
-    class="list-group-item {% if motions_nav and round == r %}active{% endif %}">
-    <i data-feather="circle" class="circle-icon
-      {% if r.motion__count > 0 %} circle-done
-      {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-current
-      {% elif r.draw_status == r.STATUS_RELEASED %} circle-current
-      {% else %} circle-later{% endif %}"></i>
-    {% trans "Motions" %}
   </a>
 
   <a href="{% roundurl 'results-round-list' r %}" data-parent="#rh{{ r.id }}"
      class="list-group-item {% if results_nav and round == r %}active{% endif %}">
     <i data-feather="circle" class="circle-icon
       {% if r.seq < current_round.seq %} circle-done
-      {% elif r.draw_status == r.STATUS_CONFIRMED %}circle-current
-      {% elif r.draw_status == r.STATUS_RELEASED %}circle-current
+      {% elif r.draw_status == r.STATUS_CONFIRMED %}circle-todo
+      {% elif r.draw_status == r.STATUS_RELEASED %}circle-todo
       {% else %} circle-later{% endif %}"></i>
     {% trans "Results" %}
   </a>

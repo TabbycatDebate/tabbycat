@@ -1,4 +1,5 @@
 import logging
+
 from django.test import TestCase
 
 from utils.tests import ConditionalTournamentViewBasicCheckMixin, suppress_logs

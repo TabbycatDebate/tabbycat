@@ -8,40 +8,12 @@
   <a class="btn btn-outline-primary " href="{% roundurl 'draw-display' %}">
     <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
   </a>
-  {% if round.motions_released %}
-    <form id="unreleaseForm" method="POST" action="{% roundurl 'motions-unrelease' %}">
-      {% csrf_token %}
-      <button class="btn btn-danger " type="submit">
-        {% trans "Unrelease Motions to Public" %}
-      </button>
-    </form>
-  {% else %}
-    <form id="releaseForm" method="POST" action="{% roundurl 'motions-release' %}">
-      {% csrf_token %}
-      <button class="btn btn-primary " type="submit"
-        data-toggle="tooltip" data-placement="bottom"
-        title="{% blocktrans trimmed %}
-          Releasing motions makes them available the public-facing pages of
-          this site. If your tournament is configured to display a running
-          list of motions, or to allow adjudicators to submit ballots that require
-          motion selection, you will need to release each round's motions before
-          that can happen.
-        {% endblocktrans %}">
-        {% trans "Release Motions to Public" %}
-      </button>
-    </form>
-  {% endif %}
+
   {% if pref.enable_division_motions %}
     <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary">
       {% trans "Assign Motions to Divisions" %}
     </a>
   {% endif %}
-{% endblock %}
-
-{% block page-subnav-actions %}
-  <a href="{% roundurl 'results-round-list' %}" class="btn btn-outline-success">
-    {% trans "Enter Results" %}<i data-feather="chevron-right"></i>
-  </a>
 {% endblock %}
 
 {% block page-alerts %}

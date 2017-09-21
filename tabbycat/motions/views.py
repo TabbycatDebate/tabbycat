@@ -111,7 +111,7 @@ class AssignMotionsView(SuperuserRequiredMixin, RoundMixin, ModelFormSetView):
 
 class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
-    round_redirect_pattern_name = 'motions-edit'
+    round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
         round = self.get_round()

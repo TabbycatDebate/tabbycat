@@ -2,6 +2,7 @@
 {% load debate_tags i18n %}
 
 {% block page-subnav-actions %}
+  <button class="invisible"></button>
   <form id="confirmForm" method="POST" action="{% roundurl 'draw-confirm' %}">
     {% csrf_token %}
     <button id="confirmDraw" class="btn btn-success" type="submit">
