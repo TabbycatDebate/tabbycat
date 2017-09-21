@@ -91,7 +91,7 @@
 
             {% if category.eligible == 0 %}
               {% tournamenturl 'breakqual-edit-eligibility' as url %}
-              {% trans "Mark teams as eligibile" as text %}
+              {% trans "Mark teams as eligible" as text %}
               {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
             {% else %}
               {% tournamenturl 'breakqual-teams' category.slug as url %}
