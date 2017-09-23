@@ -693,7 +693,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if self.tournament.pref('avoid_same_institution'):
                 institutions = [t.institution_id for t in debate.teams if t.institution_id is not None]
                 if len(set(institutions)) != len(institutions):
-                   conflicts.append(("warning", _("Teams are from the same institution")))
+                    conflicts.append(("warning", _("Teams are from the same institution")))
 
             conflicts.extend(adjudicator_conflicts_by_debate[debate])
             conflicts.extend(venue_conflicts_by_debate[debate])
