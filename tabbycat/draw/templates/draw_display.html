@@ -52,13 +52,11 @@
           {% trans "Edit motions" as edit_text %}
         {% endif %}
         {% if round.motion_set.count > 0 %}
-          {% if round.motion_set.count > 1 %}
-            {% blocktrans trimmed asvar text with motions_count=round.motion_set.count %}
-              {{ motions_count }} motions have been entered.
-            {% endblocktrans %}
-          {% else %}
-            {% trans "A motion has been entered." as text %}
-          {% endif %}
+          {% blocktrans trimmed asvar text count motions_count=round.motion_set.count %}
+            A motion has been entered.
+          {% plural %}
+            {{ motions_count }} motions have been entered.
+          {% endblocktrans %}
           {% include "components/item-alert.html" with type="" %}
           {% include "components/item-action.html" with text=edit_text type="primary" icon="check-circle" %}
         {% elif pref.enable_motions %}
