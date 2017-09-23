@@ -62,6 +62,7 @@ TABBYCAT_APPS = ('actionlog',
                  'tournaments',
                  'venues',
                  'utils',
+                 'users',
                  'standings',
                  'importer', )
 
@@ -117,8 +118,6 @@ TEMPLATES = [
         }
     }
 ]
-
-JET_DEFAULT_THEME = 'light-gray'
 
 # ==============================================================================
 # Caching
