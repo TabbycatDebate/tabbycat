@@ -178,10 +178,14 @@
               {% endblocktrans %}
             </h4>
           </div>
-          <div class="list-group-item">
-            <strong>{% trans "Institution:" %}</strong>
-            {{ adjudicator.institution.name }}
-          </div>
+
+          {% if adjudicator.institution %}
+            <div class="list-group-item">
+              <strong>{% trans "Institution:" %}</strong>
+              {{ adjudicator.institution.name }}
+            </div>
+          {% endif %}
+
           {% if adjudicator.institution.region %}
             <div class="list-group-item">
               <strong>{% trans "Region:" %}</strong>

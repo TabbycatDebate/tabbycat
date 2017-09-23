@@ -190,10 +190,13 @@
             </div>
           {% endif %} {# pref.public_break_categories or admin_page #}
 
-          <div class="list-group-item">
-            <strong>{% trans "Institution:" %}</strong>
-            {{ team.institution.name }}
-          </div>
+          {% if team.institution %}
+            <div class="list-group-item">
+              <strong>{% trans "Institution:" %}</strong>
+              {{ team.institution.name }}
+            </div>
+          {% endif %}
+
           {% if team.institution.region %}
             <div class="list-group-item">
               <strong>{% trans "Region:" %}</strong>

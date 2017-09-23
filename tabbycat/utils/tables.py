@@ -423,7 +423,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell = {'text': adj.name}
             if self._show_record_links:
                 cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
-            if subtext is 'institution':
+            if subtext == 'institution' and adj.institution is not None:
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
         self.add_column("Name", adj_data)
@@ -433,7 +433,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'key': _("Institution"),
                 'icon': 'home',
                 'tooltip': _("Institution"),
-            }, [adj.institution.code for adj in adjudicators])
+            }, [adj.institution.code if adj.institution else self.BLANK_TEXT for adj in adjudicators])
 
         if not hide_metadata:
             adjcore_header = {
@@ -481,11 +481,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 descriptors = []
                 if a['position'] != AdjudicatorAllocation.POSITION_ONLY:
                     descriptors.append(self.ADJ_POSITION_NAMES[a['position']])
-                descriptors.append("from %s" % a['adj'].institution.code)
+                if a['adj'].institution is not None:
+                    descriptors.append("from %s" % a['adj'].institution.code)
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>in minority</span>")
+                text = a['adj'].name
 
-                popover_data.append({'text': "%s (%s)" % (a['adj'].name, ", ".join(descriptors))})
+                if descriptors:
+                    text = "%s (%s)" % (text, ", ".join(descriptors))
+                popover_data.append({'text': text})
                 if self._show_record_links:
                     popover_data.append(self._adjudicator_record_link(a['adj']))
 
@@ -539,7 +543,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                          show_divisions=True, hide_institution=False, key=ugettext_lazy("Team")):
 
         team_data = [self._team_cell(team, hide_emoji=hide_emoji)
-                     if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams]
+                     if not getattr(team, 'anonymise', False)
+                     else self.BLANK_TEXT for team in teams]
         self.add_column(key, team_data)
 
         if break_categories:
@@ -550,7 +555,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'key': _("Institution"),
                 'icon': 'home',
                 'tooltip': _("Institution"),
-            }, [team.institution.code if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams])
+            }, [
+                team.institution.code
+                if not getattr(team, 'anonymise', False) and team.institution is not None
+                else self.BLANK_TEXT for team in teams
+            ])
 
         if show_divisions and self.tournament.pref('enable_divisions'):
             self.add_column({
@@ -678,7 +687,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if history > 0:
                 conflicts.append(("warning", ungettext("Teams have met once",
                         "Teams have met %(count)d times", history) % {'count': history}))
-            if len(set(t.institution_id for t in debate.teams)) != len(debate.teams):
+            institutions = [t.institution_id for t in debate.teams if t.institution_id is not None]
+            if len(set(institutions)) != len(institutions):
                 conflicts.append(("warning", _("Teams are from the same institution")))
             conflicts.extend(adjudicator_conflicts_by_debate[debate])
             conflicts.extend(venue_conflicts_by_debate[debate])
