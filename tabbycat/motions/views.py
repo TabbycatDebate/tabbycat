@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.db.models import Q
 from django.forms.models import modelformset_factory
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -79,17 +81,28 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
     def formset_valid(self, formset):
         motions = formset.save(commit=False)
         round = self.get_round()
-        for motion in motions:
+        for i, motion in enumerate(motions, start=1):
             if not self.get_tournament().pref('enable_motions'):
-                motion.seq = 1
-
+                motion.seq = i
             motion.round = round
             motion.save()
             self.log_action(content_object=motion)
         for motion in formset.deleted_objects:
             motion.delete()
-        messages.success(self.request, 'The motions have been saved.')
-        return redirect_round('motions-edit', round)
+
+        count = len(motions)
+        if not self.get_tournament().pref('enable_motions') and count == 1:
+            messages.success(self.request, _("The motion has been saved."))
+        elif count > 0:
+            messages.success(self.request, ungettext("%(count)d motion has been saved.",
+                "%(count)d motions have been saved.", count) % {'count': count})
+
+        count = len(formset.deleted_objects)
+        if count > 0:
+            messages.success(self.request, ungettext("%(count)d motion has been deleted.",
+                "%(count)d motions have been deleted.", count) % {'count': count})
+
+        return redirect_round('draw-display', round)
 
 
 class AssignMotionsView(SuperuserRequiredMixin, RoundMixin, ModelFormSetView):
@@ -117,7 +130,6 @@ class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin,
     def post(self, request, *args, **kwargs):
         round = self.get_round()
         round.motions_released = self.motions_released
-        messages.success(request, self.message_text)
         round.save()
         self.log_action()
         return super().post(request, *args, **kwargs)
@@ -127,14 +139,12 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
     motions_released = True
-    message_text = "Released the motions. They will now show on the public-facing pages of this website."
 
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE
     motions_released = False
-    message_text = "Unreleased the motions. They will no longer show on the public-facing pages of this website."
 
 
 class DisplayMotionsView(OptionalAssistantTournamentPageMixin, RoundMixin, TemplateView):
