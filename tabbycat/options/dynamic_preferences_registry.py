@@ -9,7 +9,79 @@ from .models import tournament_preferences_registry
 
 
 # ==============================================================================
-scoring = Section('scoring')
+draw_rules = Section('draw_rules') # To depricate
+# ==============================================================================
+
+# ==============================================================================
+debate_rules = Section('debate_rules')
+# ==============================================================================
+
+
+@tournament_preferences_registry.register
+class TeamsInDebate(ChoicePreference):
+    help_text = _("Two-team format (e.g. Australs, WSDC) or British Parliamentary")
+    verbose_name = _("Teams in debate")
+    section = debate_rules
+    name = 'teams_in_debate'
+    choices = [
+        ('two', _("Two-team format")),
+        ('bp', _("British Parliamentary (four teams)")),
+    ]
+    default = 'two'
+
+
+@tournament_preferences_registry.register
+class BallotsPerDebate(ChoicePreference):
+    help_text = _("Whether panels submit a ballot each or a single ballot for the debate. Note: BP must use one per debate.")
+    verbose_name = _("Ballots per debate")
+    section = debate_rules
+    name = 'ballots_per_debate'
+    choices = [
+        ('per-adj', _("One ballot per voting adjudicator")),
+        ('per-debate', _("Consensus ballot (one ballot per debate)")),
+    ]
+    default = 'per-adj'
+
+
+@tournament_preferences_registry.register
+class SubstantiveSpeakers(IntegerPreference):
+    help_text = _("How many substantive speakers on a team")
+    verbose_name = _("Substantive speakers")
+    section = debate_rules
+    name = 'substantive_speakers'
+    default = 3
+
+
+@tournament_preferences_registry.register
+class SideNames(ChoicePreference):
+    help_text = _("What to call the teams")
+    verbose_name = _("Side names")
+    section = debate_rules
+    name = 'side_names'
+    choices = get_side_name_choices()
+    default = 'aff-neg'
+
+
+@tournament_preferences_registry.register
+class ReplyScores(BooleanPreference):
+    help_text = _("Whether this style features scored reply speeches")
+    verbose_name = _("Reply scores")
+    section = debate_rules
+    name = 'reply_scores_enabled'
+    default = True
+
+
+@tournament_preferences_registry.register
+class MotionVetoes(BooleanPreference):
+    help_text = _("Enables the motion veto field on ballots, to track veto statistics")
+    verbose_name = _("Motion vetoes")
+    section = debate_rules
+    name = 'motion_vetoes_enabled'
+    default = True
+
+
+# ==============================================================================
+scoring = Section('scoring') # Relating to Team Scores and Speaker Scores Input
 # ==============================================================================
 
 
@@ -84,36 +156,10 @@ class MarginIncludesDissent(BooleanPreference):
     name = 'margin_includes_dissenters'
     default = False
 
+
 # ==============================================================================
-draw_rules = Section('draw_rules')
+two_team_draws = Section('two_team_draws') # Draw settings applicable to 2 vs 2
 # ==============================================================================
-
-
-@tournament_preferences_registry.register
-class VotingScore(FloatPreference):
-    help_text = _("The auto-allocator will only take adjudicators at or above this score as voting panellists")
-    verbose_name = _("Minimum adjudicator score to vote")
-    section = draw_rules
-    name = 'adj_min_voting_score'
-    default = 1.5
-
-
-@tournament_preferences_registry.register
-class AdjConflictPenalty(IntegerPreference):
-    help_text = _("Penalty applied by auto-allocator for adjudicator-team conflict")
-    verbose_name = _("Adjudicator-team conflict penalty")
-    section = draw_rules
-    name = 'adj_conflict_penalty'
-    default = 1000000
-
-
-@tournament_preferences_registry.register
-class AdjHistoryPenalty(IntegerPreference):
-    help_text = _("Penalty applied by auto-allocator for adjudicator-team history")
-    verbose_name = _("Adjudicator-team history penalty")
-    section = draw_rules
-    name = 'adj_history_penalty'
-    default = 10000
 
 
 @tournament_preferences_registry.register
@@ -214,6 +260,11 @@ class DrawAvoidConflicts(ChoicePreference):
     default = 'one_up_one_down'
 
 
+# ==============================================================================
+four_team_draws = Section('four_team_draws') # Draw settings applicable to BP
+# ==============================================================================
+
+
 @tournament_preferences_registry.register
 class BPPullupDistribution(ChoicePreference):
     help_text = _("In BP, how pullups are distributed. Only \"Anywhere\" is WUDC-compliant.")
@@ -277,34 +328,8 @@ class BPAssignmentMethod(ChoicePreference):
     default = 'hungarian_preshuffled'
 
 
-@tournament_preferences_registry.register
-class SkipAdjCheckins(BooleanPreference):
-    help_text = _("Automatically make all adjudicators available for all rounds")
-    verbose_name = _("Skip adjudicator check-ins")
-    section = draw_rules
-    name = 'draw_skip_adj_checkins'
-    default = False
-
-
-@tournament_preferences_registry.register
-class HidePanellistPosition(BooleanPreference):
-    help_text = _("Hide panellist positions in the UI (and don't allocate them)")
-    verbose_name = _("No panellist adjudicators")
-    section = draw_rules
-    name = 'no_panellist_position'
-    default = False
-
-
-@tournament_preferences_registry.register
-class HideTraineePosition(BooleanPreference):
-    help_text = _("Hide trainee positions in the UI (and don't allocate them)")
-    verbose_name = _("No trainee adjudicators")
-    section = draw_rules
-    name = 'no_trainee_position'
-    default = False
-
 # ==============================================================================
-feedback = Section('feedback')
+feedback = Section('feedback') # Explicitly about feedback
 # ==============================================================================
 
 
@@ -363,15 +388,6 @@ class ShowUnexpectedFeedback(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class ShowUnaccredited(BooleanPreference):
-    help_text = _("Show if an adjudicator is a trainee (unaccredited)")
-    verbose_name = _("Show unaccredited")
-    section = feedback
-    name = 'show_unaccredited'
-    default = False
-
-
-@tournament_preferences_registry.register
 class ScoreReturnLocation(StringPreference):
     help_text = _("The location to return scoresheets to, printed on pre-printed ballots")
     verbose_name = _("Score return location")
@@ -404,71 +420,71 @@ class FeedbackIntroduction(StringPreference):
 
 
 # ==============================================================================
-debate_rules = Section('debate_rules')
+draw_rules = Section('adjudicators') # Explicitly about auto-allocation
 # ==============================================================================
 
 
 @tournament_preferences_registry.register
-class TeamsInDebate(ChoicePreference):
-    help_text = _("Two-team format (e.g. Australs, WSDC) or British Parliamentary")
-    verbose_name = _("Teams in debate")
-    section = debate_rules
-    name = 'teams_in_debate'
-    choices = [
-        ('two', _("Two-team format")),
-        ('bp', _("British Parliamentary (four teams)")),
-    ]
-    default = 'two'
+class VotingScore(FloatPreference):
+    help_text = _("The auto-allocator will only take adjudicators at or above this score as voting panellists")
+    verbose_name = _("Minimum adjudicator score to vote")
+    section = draw_rules
+    name = 'adj_min_voting_score'
+    default = 1.5
 
 
 @tournament_preferences_registry.register
-class BallotsPerDebate(ChoicePreference):
-    help_text = _("Whether panels submit a ballot each or a single ballot for the debate. Note: BP must use one per debate.")
-    verbose_name = _("Ballots per debate")
-    section = debate_rules
-    name = 'ballots_per_debate'
-    choices = [
-        ('per-adj', _("One ballot per voting adjudicator")),
-        ('per-debate', _("Consensus ballot (one ballot per debate)")),
-    ]
-    default = 'per-adj'
+class AdjConflictPenalty(IntegerPreference):
+    help_text = _("Penalty applied by auto-allocator for adjudicator-team conflict")
+    verbose_name = _("Adjudicator-team conflict penalty")
+    section = draw_rules
+    name = 'adj_conflict_penalty'
+    default = 1000000
 
 
 @tournament_preferences_registry.register
-class SubstantiveSpeakers(IntegerPreference):
-    help_text = _("How many substantive speakers on a team")
-    verbose_name = _("Substantive speakers")
-    section = debate_rules
-    name = 'substantive_speakers'
-    default = 3
+class AdjHistoryPenalty(IntegerPreference):
+    help_text = _("Penalty applied by auto-allocator for adjudicator-team history")
+    verbose_name = _("Adjudicator-team history penalty")
+    section = draw_rules
+    name = 'adj_history_penalty'
+    default = 10000
 
 
 @tournament_preferences_registry.register
-class SideNames(ChoicePreference):
-    help_text = _("What to call the teams")
-    verbose_name = _("Side names")
-    section = debate_rules
-    name = 'side_names'
-    choices = get_side_name_choices()
-    default = 'aff-neg'
+class SkipAdjCheckins(BooleanPreference):
+    help_text = _("Automatically make all adjudicators available for all rounds")
+    verbose_name = _("Skip adjudicator check-ins")
+    section = draw_rules
+    name = 'draw_skip_adj_checkins'
+    default = False
 
 
 @tournament_preferences_registry.register
-class ReplyScores(BooleanPreference):
-    help_text = _("Whether this style features scored reply speeches")
-    verbose_name = _("Reply scores")
-    section = debate_rules
-    name = 'reply_scores_enabled'
-    default = True
+class HidePanellistPosition(BooleanPreference):
+    help_text = _("Hide panellist positions in the UI (and don't allocate them)")
+    verbose_name = _("No panellist adjudicators")
+    section = draw_rules
+    name = 'no_panellist_position'
+    default = False
 
 
 @tournament_preferences_registry.register
-class MotionVetoes(BooleanPreference):
-    help_text = _("Enables the motion veto field on ballots, to track veto statistics")
-    verbose_name = _("Motion vetoes")
-    section = debate_rules
-    name = 'motion_vetoes_enabled'
-    default = True
+class HideTraineePosition(BooleanPreference):
+    help_text = _("Hide trainee positions in the UI (and don't allocate them)")
+    verbose_name = _("No trainee adjudicators")
+    section = draw_rules
+    name = 'no_trainee_position'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ShowUnaccredited(BooleanPreference):
+    help_text = _("Show if an adjudicator is a trainee (unaccredited)")
+    verbose_name = _("Show unaccredited")
+    section = feedback
+    name = 'show_unaccredited'
+    default = False
 
 
 # ==============================================================================
@@ -520,6 +536,7 @@ class TeamStandingsExtraMetrics(MultiValueChoicePreference):
     nfields = 5
     allow_empty = True
     default = []
+
 
 # ==============================================================================
 tab_release = Section('tab_release')
