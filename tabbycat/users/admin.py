@@ -16,17 +16,16 @@ admin.site.unregister(Group) # No need to show groups
 class CustomUserLabelsMixin():
     def __init__(self, *args, **kwargs):
         super(CustomUserLabelsMixin, self).__init__(*args, **kwargs)
-        self.fields['is_staff'].label = _("Tab Assistant")
-        self.fields['is_staff'].help_text = _("Tab Assistant's can perform "
-            "data-entry tasks such as adding ballots, feedback, etc but cannot "
-            "access confidential areas or perform the tasks necessary to run a "
-            "tournament such as creating rounds, viewing feedback, etc.")
-        self.fields['is_superuser'].label = _("Tab Director")
-        self.fields['is_superuser'].help_text = _("Tab Director's have full "
-            "access all areas necessary to run a tournament. Often members of "
-            "the adjudication core are set as Tab Directors so they can more "
-            "easily view confidential areas such as Feedback and Standings. "
-            "Shown as 'Superuser Status' in the Users list.")
+        self.fields['is_staff'].help_text = _("Users with Staff status can"
+            " view and edit the Edit Database area. This is potentially "
+            "dangerous and should be reserved for the actual Tab Director(s).")
+        self.fields['is_superuser'].help_text = _("Superusers have full "
+            "access all areas of Tabbycat necessary to run a tournament. Users "
+            "who are not Superusers are still able to perform data-entry tasks "
+            "such as adding results and feedback but can't access confidential "
+            "areas such as the Breaks and Feedback sections. Members of "
+            "the adjudication core are generally given Superuser status if "
+            "they know what they are doing.")
 
 
 class UserChangeFormFormExtended(CustomUserLabelsMixin, UserChangeForm):
