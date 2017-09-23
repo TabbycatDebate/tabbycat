@@ -679,8 +679,8 @@ class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, Template
         # Make 'fake' debates as placeholders; need a unique ID (hence 9999)
         for i in range(0, floor(total_possible_rooms - len(serialised_draw))):
             serialised_draw.append({
-                'id': 999999 + i, 'debateTeams': {}, 'debateAdjudicators': [],
-                'bracket': 0, 'importance': 0, 'venue': None
+                'id': 999999 + i, 'debateTeams': [], 'debateAdjudicators': [],
+                'bracket': 0, 'importance': 0, 'venue': None, 'locked': False
             })
 
         return super().annotate_draw(draw, serialised_draw)

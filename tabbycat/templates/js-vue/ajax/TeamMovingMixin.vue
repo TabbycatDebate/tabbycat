@@ -9,7 +9,7 @@ export default {
       var presentTeams = _.filter(debate.debateTeams, function(dt) {
         return dt.team !== null;
       })
-      if (debate.debateTeams.length === presentTeams.length) {
+      if (presentTeams.length === this.roundInfo.teamPositions.length) {
         return true
       } else {
         return false
@@ -20,15 +20,21 @@ export default {
       var fromDebateTeam = this.findDebateTeamInDebateByTeam(team, fromDebate)
       var toDebateTeam = this.findDebateTeamInDebateBySide(toPosition, toDebate)
 
+      if (toDebateTeam === false && toDebate !== 'unused') {
+        // For totally new debates they wont even have the DT; so create it
+        if (!_.isUndefined(toDebateTeam)) {
+          toDebate.debateTeams.push({ 'side': toPosition, 'team': null })
+        }
+        // And re-calculate the toTeam
+        toDebateTeam = this.findDebateTeamInDebateBySide(toPosition, toDebate)
+      }
+
       if (toDebate !== 'unused' && fromDebate !== 'unused') {
         // Moving from one debate to another
         if (toDebateTeam.team !== null) {
           fromDebateTeam.team = toDebateTeam.team // If replacing a team (swap)
         } else {
           fromDebateTeam.team = null // If not replacing a team
-          // Update front end otherwise teams wont appear removed
-          this.$set(this.debatesById[fromDebate.id], 'debateTeams',
-                    fromDebate.debateTeams)
         }
         toDebateTeam.team = team
 
@@ -39,16 +45,19 @@ export default {
         }
         toDebateTeam.team = team
         this.unallocatedItems.splice(this.unallocatedItems.indexOf(team), 1)
-        this.$set(this.debatesById[toDebate.id], 'debateTeams',
-                  toDebate.debateTeams)
 
       } else if (toDebate === 'unused') {
         // Moving to the unused area
         fromDebateTeam.team = null
         this.unallocatedItems.push(team) // Need to push; not append
-        // Update front end otherwise teams wont appear removed
-        this.$set(this.debatesById[fromDebate.id], 'debateTeams',
-                  fromDebate.debateTeams)
+      }
+
+      // Update front end otherwise teams wont appear removed
+      if (toDebate !== 'unused') {
+        this.$set(this.debatesById[toDebate.id], 'debateTeams', toDebate.debateTeams)
+      }
+      if (fromDebate !== 'unused') {
+        this.$set(this.debatesById[fromDebate.id], 'debateTeams', fromDebate.debateTeams)
       }
 
       // Saving

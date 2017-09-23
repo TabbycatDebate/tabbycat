@@ -125,6 +125,9 @@ export default {
     adjPositions: function() {
       return this.roundInfo.adjudicatorPositions // Convenience
     },
+    teamPositions: function() {
+      return this.roundInfo.teamPositions // Convenience
+    },
   },
   methods: {
     moveToDebate(payload, assignedId, assignedPosition) {

@@ -5,6 +5,9 @@ import _ from 'lodash'
 export default {
   mixins: [MovingMixin],
   methods: {
+    debateCheckIfShouldSave(debate) {
+      return true
+    },
     getPanellist(debate, adjudicator=false, position=false) {
       var potentialPanellist = _.find(debate.debateAdjudicators, function(panellist) {
         if (adjudicator) { return panellist.adjudicator.id === adjudicator.id }

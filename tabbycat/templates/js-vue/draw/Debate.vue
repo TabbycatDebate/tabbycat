@@ -25,10 +25,11 @@
       </div>
     </slot>
 
-    <template v-for="dt in debate.debateTeams">
-      <slot :name="'s-' + dt.side">
+    <template v-for="position in roundInfo.teamPositions">
+      <slot :name="'s-' + position">
         <div class="draw-cell flex-6 draw-team-cell">
-          <draw-team v-if="dt.team" :team="dt.team"></draw-team>
+          <draw-team v-if="findTeamInDebateBySide(position, debate)"
+                     :team="findTeamInDebateBySide(position, debate)"></draw-team>
         </div>
       </slot>
     </template>
@@ -55,11 +56,24 @@ import DrawTeam from '../draw/DrawTeam.vue'
 import DrawVenue from '../draw/DrawVenue.vue'
 import DrawAdjudicator from '../draw/DrawAdjudicator.vue'
 import SlideOverSubjectMixin from '../../info/SlideOverSubjectMixin.vue'
+import FindDebateTeamMixin from '../draw/FindDebateTeamMixin.vue'
 import _ from 'lodash'
 
 export default {
   components: {DrawTeam, DrawVenue, DrawAdjudicator},
-  mixins: [SlideOverSubjectMixin],
+  mixins: [SlideOverSubjectMixin, FindDebateTeamMixin],
   props: { debate: Object, roundInfo: Object},
+  methods: {
+    findDebateTeamInDebateBySide(side, debate) { // Used in Edit Matchups
+      var debateTeam = _.find(debate.debateTeams, function(dt) {
+        return dt.side === side
+      });
+      if (!_.isUndefined(debateTeam)) {
+        return debateTeam
+      } else {
+        return false
+      }
+    },
+  }
 }
 </script>
