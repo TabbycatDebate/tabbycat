@@ -3,21 +3,15 @@
   <div{% if id %} id="{{ id }}"{% endif %} class="flex-horizontal form-spaced-choice">
 
     {% for group, options, index in widget.optgroups %}
-      {% if group %}
+      <ul{% if id %} id="{{ id }}_{{ index }}"{% endif %}>
 
-        {{ group }}
+        {% for option in options %}
+          <div class="choice">
+            {% include option.template_name with widget=option %}
+          </div>
+        {% endfor %}
 
-        <ul{% if id %} id="{{ id }}_{{ index }}"{% endif %}>
-
-          {% for option in options %}
-            <div class="choice">
-              {% include option.template_name with widget=option %}
-            </div>
-          {% endfor %}
-
-        </ul>
-
-      {% endif %}
+      </ul>
     {% endfor %}
 
   </div>
