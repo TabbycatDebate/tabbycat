@@ -169,7 +169,7 @@
     </div>
   {% endif %}
 
-  {% if round.is_break_round and checkin_info.teams.total == 0 %}
+  {% if round.is_break_round and not round.prev.is_break_round and checkin_info.teams.total == 0 %}
     <div class="alert alert-warning">
       <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with break_category=round.break_category.name %}
