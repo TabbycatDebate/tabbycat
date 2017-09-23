@@ -683,13 +683,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
             conflicts = [("primary", flag) for flag in debate.get_flags_display()]
             conflicts += [("primary", "%(team)s: %(flag)s" % {'team': debate.get_team(side).short_name, 'flag': flag})
                     for side in self.tournament.sides for flag in debate.get_dt(side).get_flags_display()]
-            history = debate.history
-            if history > 0:
-                conflicts.append(("warning", ungettext("Teams have met once",
-                        "Teams have met %(count)d times", history) % {'count': history}))
-            institutions = [t.institution_id for t in debate.teams if t.institution_id is not None]
-            if len(set(institutions)) != len(institutions):
-                conflicts.append(("warning", _("Teams are from the same institution")))
+
+            if self.tournament.pref('avoid_team_history'):
+                history = debate.history
+                if history > 0:
+                    conflicts.append(("warning", ungettext("Teams have met once",
+                            "Teams have met %(count)d times", history) % {'count': history}))
+
+            if self.tournament.pref('avoid_same_institution'):
+                institutions = [t.institution_id for t in debate.teams if t.institution_id is not None]
+                if len(set(institutions)) != len(institutions):
+                   conflicts.append(("warning", _("Teams are from the same institution")))
+
             conflicts.extend(adjudicator_conflicts_by_debate[debate])
             conflicts.extend(venue_conflicts_by_debate[debate])
             conflicts_by_debate.append(conflicts)

@@ -84,19 +84,9 @@ label.error {
 
 // IE Horizontal choice/radio options; align form elements & text horizontally
 .form-spaced-choice {
-  flex-wrap: wrap;
 
-  .choice {
-    padding: 0 10px;
-    flex: 1;
-  }
-
-  label {
-    display: block;
-    text-align: center;
-  }
-
-  input {
-    margin: 0 auto;
+  .form-control {
+    display: inline-block;
+    width: auto;
   }
 }

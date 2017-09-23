@@ -1,23 +1,15 @@
 {% with id=widget.attrs.id %}
 
-  <div{% if id %} id="{{ id }}"{% endif %} class="flex-horizontal form-spaced-choice">
+  <div{% if id %} id="{{ id }}"{% endif %} class="row form-spaced-choice">
 
     {% for group, options, index in widget.optgroups %}
-      {% if group %}
+      <div {% if id %} id="{{ id }}_{{ index }}"{% endif %} class="col-lg-2 col-md-3 col-6">
 
-        {{ group }}
+        {% for option in options %}
+          {% include option.template_name with widget=option %}
+        {% endfor %}
 
-        <ul{% if id %} id="{{ id }}_{{ index }}"{% endif %}>
-
-          {% for option in options %}
-            <div class="choice">
-              {% include option.template_name with widget=option %}
-            </div>
-          {% endfor %}
-
-        </ul>
-
-      {% endif %}
+      </div>
     {% endfor %}
 
   </div>

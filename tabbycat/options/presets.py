@@ -117,6 +117,8 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     debate_rules__motion_vetoes_enabled        = False
     data_entry__enable_motions                 = False
     # Draw Rules
+    draw_rules__avoid_same_institution         = False
+    draw_rules__avoid_team_history             = False
     draw_rules__bp_pullup_distribution         = 'anywhere'
     draw_rules__bp_position_cost               = 'entropy'
     draw_rules__bp_renyi_order                 = 1.0

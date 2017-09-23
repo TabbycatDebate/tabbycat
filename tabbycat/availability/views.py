@@ -5,6 +5,7 @@ from collections import OrderedDict
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Min
+from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
 from django.utils.translation import ugettext as _
@@ -110,7 +111,8 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
                 nadvancing *= 2
 
             # add teams that bypassed the last round
-            nadvancing += r.prev.debate_set.all().aggregate(Min('room_rank'))['room_rank__min'] - 1
+            nadvancing += r.prev.debate_set.all().aggregate(
+                    lowest_room=Coalesce(Min('room_rank') - 1, 0))['lowest_room']
 
             return {
                 'total'     : nadvancing,

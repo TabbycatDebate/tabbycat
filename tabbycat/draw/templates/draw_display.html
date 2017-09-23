@@ -93,7 +93,7 @@
             {% blocktrans trimmed asvar text with alert_link=alert_link %}
               You have released the draw, but it will not show to the public unless 'public view of draw' setting is enabled in <a class="alert-link" href="{{ alert_link }}"> this tournament's configuration</a>.
             {% endblocktrans %}
-            {% include "components/item-alert.html" with type="warning" %}
+            {% include "components/item-alert.html" with type="secondary" %}
           {% endif %}
 
           {% include "components/item-action.html" with type="primary" id="triggerReleaseDrawForm" url="" text=release_text icon="check-circle" %}
