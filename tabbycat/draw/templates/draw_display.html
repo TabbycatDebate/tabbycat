@@ -102,15 +102,15 @@
         {% else %}
 
           {% trans "Release Draw to Public" as release_text %}
-          {% if pref.public_ballots or pref.public_ballots_randomised or pref.public_feedback or public_feedback_randomised or pref.public_draw %}
+          {% if pref.public_ballots or pref.public_ballots_randomised or pref.public_feedback or pref.public_feedback_randomised or pref.public_draw %}
 
             {% if pref.public_ballots or pref.public_ballots_randomised %}
-              {% trans "Your configuration allows public ballot submissions. The draw must be released before submissions for this round can be added." as text %}
-              {% include "components/item-alert.html" with type="warning" %}
+              {% trans "Your have allowed public ballot submissions. The draw must be released before submissions for this round can be added." as text %}
+              {% include "components/item-alert.html" with type="danger" %}
             {% endif %}
-            {% if pref.public_feedback or public_feedback_randomised %}
-              {% trans "Your configuration allows public feedback submissions. The draw must be released before submissions for this round can be added." as text %}
-              {% include "components/item-alert.html" with type="warning" %}
+            {% if pref.public_feedback or pref.public_feedback_randomised %}
+              {% trans "Your have allowed public feedback submissions. The draw must be released before submissions for this round can be added." as text %}
+              {% include "components/item-alert.html" with type="danger" %}
             {% endif %}
             {% if pref.public_draw %}
               {% trans "Your tournament is configured to show the draw publicly. Releasing a draw will allow it to show it on this page." as text %}
@@ -158,7 +158,7 @@
               {% include "components/item-alert.html" with type="" %}
             {% else %}
               {% trans "Your tournament is not configured to show the motions for each round on the public site. There's no need to release the motions." as text %}
-              {% include "components/item-alert.html" with type="" %}
+              {% include "components/item-alert.html" with type="secondary" %}
             {% endif %}
 
           {% trans "Release Motions to Public" as text %}

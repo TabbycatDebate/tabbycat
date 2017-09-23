@@ -26,7 +26,7 @@ Change Log
   - Better handling of errors that arise when a debate team is missing or where two teams have been assigned the same side
   - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
   - More of the tables that allow you to set or edit data (such as the check-in's tables for say Adjudicators) will now automatically save their results.
-  - When adding/editing users extraneous fields have been hidden and the "Staff" and "Superuser" roles have been clarified as "Tab Assistant" and "Tab Director" roles.
+  - When adding/editing users extraneous fields have been hidden and the "Staff" and "Superuser" roles have new sub-text clarifying what they mean for users with those permissions.
 
 1.4.3
 -----
