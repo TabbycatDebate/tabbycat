@@ -1,3 +1,4 @@
+{% load i18n %}
 {# This snippet is used as part of the team_record.html and adjudicator_record.html templates. #}
 
 
@@ -6,52 +7,54 @@
   <div class="list-group list-group-flush">
 
     <div class="list-group-item">
-      <h4 class="card-title mb-0">Feedback Returns</h4>
+      <h4 class="card-title mb-0">{% trans "Feedback Returns" %}</h4>
     </div>
 
     {% for tracker in feedback_progress.trackers %}
       {% if tracker.fulfilled %}
         <div class="list-group-item text-success">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
-          Has submitted feedback for
-          <strong>{{ tracker.submission.adjudicator.name }}</strong> of
-          {{ tracker.submission.adjudicator.institution.code }}
+          {% blocktrans trimmed with adjudicator=tracker.submission.adjudicator.name %}
+            Has submitted feedback for <strong>{{ adjudicator }}</strong>
+          {% endblocktrans %}
         </div>
       {% elif tracker.expected and tracker.count == 0 %}
         <div class="list-group-item text-danger">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
-          Has not submitted feedback for
-          {% for target in tracker.acceptable_targets %}
-            {% if not forloop.first and forloop.last %}or{% endif %}
-            <strong>{{ target.name }}</strong> of
-            {{ target.institution.code }}{% if not forloop.last %},{% endif %}
-          {% endfor %}
           {% if tracker.acceptable_targets|length > 1 %}
-            (whoever gave the oral adjudication)
+            {% blocktrans trimmed with adjudicators=tracker.acceptable_target_names|join:", " %}
+              Has not submitted feedback for one of: <strong>{{ adjudicators }}</strong>
+              (whoever gave the oral adjudication)
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed with adjudicator=tracker.acceptable_target_names.0 %}
+              Has not submitted feedback for <strong>{{ adjudicator }}</strong>
+            {% endblocktrans %}
           {% endif %}
         </div>
       {% elif tracker.expected %}
         <div class="list-group-item text-warning">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
           <i data-feather="info"></i>
-          More feedback submissions than expected for this debate:
+          {% trans "More feedback submissions than expected for this debate:" %}
           {% for submission in tracker.acceptable_submissions %}
-              <strong>{{ submission.adjudicator.name }}</strong> of
-              {{ submission.adjudicator.institution.code }}{% if not forloop.last %},{% endif %}
+            <strong>{{ submission.adjudicator.name }}</strong>{% if not forloop.last %},{% endif %}
           {% endfor %}
         </div>
       {% else %} {# if not tracker.fulfilled and not tracker.expected #}
         <div class="list-group-item text-warning">
           <span class="badge badge-secondary">{{ tracker.round.name }}</span>
           <i data-feather="info"></i>
-          Unexpected feedback submission for
-          <strong>{{ tracker.submission.adjudicator.name }}</strong> of
-          {{ tracker.submission.adjudicator.institution.code }}
+          {% blocktrans trimmed with adjudicator=tracker.submission.adjudicator.name %}
+            Unexpected feedback submission for <strong>{{ adjudicator }}</strong>
+          {% endblocktrans %}
         </div>
       {% endif %}
     {% empty %}
       <div class="list-group-item">
-        <em>{{ participant_name }} doesn't have any feedback to submit.</em>
+        <em>{% blocktrans trimmed %}
+          {{ participant_name }} doesn't have any feedback to submit.
+        {% endblocktrans %}</em>
       </div>
     {% endfor %}
   </div>
