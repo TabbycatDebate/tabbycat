@@ -128,7 +128,7 @@ class BaseTeamRecordView(BaseRecordView):
             Prefetch('debate_team__debate__debateadjudicator_set', queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             'debate_team__debate__debateteam_set'
         )
-        if not tournament.pref('all_results_released'):
+        if not self.admin and not tournament.pref('all_results_released'):
             teamscores = teamscores.filter(
                 debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
                 debate_team__debate__round__silent=False,
@@ -191,7 +191,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             'debate__debateteam_set__team__speaker_set'
         )
-        if not tournament.pref('all_results_released'):
+        if not self.admin and not tournament.pref('all_results_released'):
             debateadjs = debateadjs.filter(
                 debate__round__draw_status=Round.STATUS_RELEASED,
                 debate__round__silent=False,
