@@ -42,7 +42,7 @@ from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
-        PositionBalanceReportSummaryTableBuilder)
+        PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
 
 logger = logging.getLogger(__name__)
 
@@ -87,10 +87,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
             table.add_round_column(d.round for d in draw) # For mass draws
 
         table.add_debate_venue_columns(draw)
-
-        for side in tournament.sides:
-            table.add_team_columns([d.get_team(side) for d in draw], hide_institution=True,
-                key=get_side_name(tournament, side, 'abbr'))
+        table.add_debate_team_columns(draw)
 
         if tournament.pref('enable_division_motions'):
             table.add_motion_column(d.division_motion for d in draw)
@@ -102,7 +99,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         tournament = self.get_tournament()
         round = self.get_round()
         draw = self.get_draw()
-        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
+        table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key)
         self.populate_table(draw, table, round, tournament)
         return table
 
