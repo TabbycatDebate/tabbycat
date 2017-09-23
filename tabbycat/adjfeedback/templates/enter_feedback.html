@@ -15,10 +15,12 @@
   {% endif %}
 
   <form id="feedbackForm" method="POST">
+    {% csrf_token %}
+
     <div class="card">
       <div class="list-group list-group-flush">
 
-        <div class="list-group-item">
+        <div class="list-group-item pb-4">
 
           {% if form.errors %}
             {% trans "There are some problems with this feedback submission. Please review and correct them." as message %}
@@ -29,7 +31,6 @@
             <p>{{ pref.feedback_introduction|safe }}</p>
           {% endif %}
 
-            {% csrf_token %}
 
           {% for field in form %}
             {% include "components/form-field.html" %}
