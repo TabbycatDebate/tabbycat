@@ -1,8 +1,17 @@
 {% extends "base.html" %}
 {% load add_field_css debate_tags i18n %}
 
-{% block head-title %}{% trans "Edit Motions" %}{% endblock %}
-{% block page-title %}{% trans "Edit Motions" %}{% endblock %}
+{% block head-title %}{% blocktrans trimmed count nmotions=formset|length %}
+  Edit Motion
+{% plural %}
+  Edit Motions
+{% endblocktrans %}{% endblock %}
+
+{% block page-title %}{% blocktrans trimmed count nmotions=formset|length %}
+  Edit Motion
+{% plural %}
+  Edit Motions
+{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'draw-display' %}">
@@ -67,7 +76,12 @@
 
     </div>
 
-    {% include "components/form-submit.html" with title="Save Motions" %}
+    {% blocktrans trimmed asvar button_text count nmotions=formset|length %}
+      Save Motion
+    {% plural %}
+      Save Motions
+    {% endblocktrans %}
+    {% include "components/form-submit.html" with title=button_text %}
 
   </form>
 

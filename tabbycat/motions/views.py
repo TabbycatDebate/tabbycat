@@ -62,13 +62,14 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
         if not tournament.pref('enable_divisions'):
             excludes.append('divisions')
 
+        nexisting = self.get_formset_queryset().count()
         if tournament.pref('enable_motions'):
             delete = True
-            extras = max(3 - self.get_formset_queryset().count(), 0)
+            extras = max(3 - nexisting, 0)
         else:
             excludes.append('seq')
-            extras = max(1 - self.get_formset_queryset().count(), 0)
-            delete = False
+            extras = max(1 - nexisting, 0)
+            delete = nexisting > 1  # if there's more than one, allow deletion
 
         return dict(can_delete=delete, extra=extras, exclude=excludes)
 

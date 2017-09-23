@@ -44,29 +44,49 @@
       </div>
       <div class="list-group list-group-flush">
         {% roundurl 'motions-edit' round as url %}
-        {% if pref.motion_vetoes_enabled %}
-          {% trans "Enter a motion" as enter_text %}
-          {% trans "Edit the motion" as edit_text %}
+        {% if pref.enable_motions %}
+          {# Motions enabled, so we expect there to be several. #}
+          {% if round.motion_set.exists %}
+            {% blocktrans trimmed asvar text count motions_count=round.motion_set.count %}
+              {{ motions_count }} motion has been entered.
+            {% plural %}
+              {{ motions_count }} motions have been entered.
+            {% endblocktrans %}
+            {% include "components/item-alert.html" with type="" %}
+            {% trans "Edit motions" as edit_text %}
+            {% include "components/item-action.html" with text=edit_text type="primary" icon="check-circle" %}
+          {% else %}
+            {% trans "Your configuration/format requires motions to be specified as part of ballot entry. Make sure they are added before results come in!" as text %}
+            {% include "components/item-alert.html" with type="danger" %}
+            {% trans "Enter motions" as enter_text %}
+            {% include "components/item-action.html" with text=enter_text type="success" to_complete=True  %}
+          {% endif %}
+
         {% else %}
-          {% trans "Enter motions" as enter_text %}
-          {% trans "Edit motions" as edit_text %}
-        {% endif %}
-        {% if round.motion_set.count > 0 %}
-          {% blocktrans trimmed asvar text count motions_count=round.motion_set.count %}
-            A motion has been entered.
-          {% plural %}
-            {{ motions_count }} motions have been entered.
-          {% endblocktrans %}
-          {% include "components/item-alert.html" with type="" %}
-          {% include "components/item-action.html" with text=edit_text type="primary" icon="check-circle" %}
-        {% elif pref.enable_motions %}
-          {% trans "Your configuration/format requires motions to be specified as part of ballot entry. Make sure they are added before results come in!" as text %}
-          {% include "components/item-alert.html" with type="danger" %}
-          {% include "components/item-action.html" with text=enter_text type="success" to_complete=True  %}
-        {% else %}
-          {% trans "A motion should be added if you want to display it to the auditorium or print in on your ballots (using the links below) or to display it (later) on the public motions page." as text %}
-          {% include "components/item-alert.html" with type="warning" %}
-          {% include "components/item-action.html" with text=enter_text type="success" to_complete=True %}
+          {# Motions disabled, so we expect there to be exactly one. #}
+          {% if round.motion_set.exists %}
+            {% if round.motion_set.count == 1 %}
+              {# As expected. #}
+              {% trans "A motion has been entered." as text %}
+              {% include "components/item-alert.html" with type="" %}
+            {% else %}
+              {# The singular below never gets used, but is required for i18n. #}
+              {# Translators: Used when only one motion is expected, but there is more than one. #}
+              {% blocktrans trimmed asvar text count motions_count=round.motion_set.count %}
+                {{ motions_count }} motion has been entered.
+              {% plural %}
+                {{ motions_count }} motions have been entered.
+              {% endblocktrans %}
+              {% include "components/item-alert.html" with type="warning" %}
+            {% endif %}
+            {% trans "Edit the motion" as edit_text %}
+            {% include "components/item-action.html" with text=edit_text type="primary" icon="check-circle" %}
+          {% else %}
+            {% trans "A motion should be added if you want to display it to the auditorium or print in on your ballots (using the links below) or to display it (later) on the public motions page." as text %}
+            {% include "components/item-alert.html" with type="warning" %}
+            {% trans "Enter a motion" as enter_text %}
+            {% include "components/item-action.html" with text=enter_text type="success" to_complete=True %}
+          {% endif %}
         {% endif %}
       </div>
 
