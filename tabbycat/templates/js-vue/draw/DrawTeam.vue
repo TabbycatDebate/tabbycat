@@ -4,12 +4,14 @@
        @mouseenter="handleHoverOn"
        @mouseleave="handleHoverOff">
 
-    <div>
+    <div class="small">
       <span v-if="debugMode">
-        Team:{{ team.id }}<br>
-        Inst: {{ team.institution.id }}
+        {{ team.id }} {{ team.short_name }}<br>
+        <span class="text-muted">
+          {{ team.institution.id }} {{ team.institution.code }}
+        </span>
       </span>
-      <span class="small" v-else>
+      <span v-else>
         {{ team.short_name }}
       </span>
     </div>

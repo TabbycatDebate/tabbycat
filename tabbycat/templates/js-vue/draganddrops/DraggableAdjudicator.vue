@@ -42,6 +42,9 @@ export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin,
            HighlightableMixin, ConflictableMixin],
   props: { 'adjudicator': Object, 'debateId': null, 'percentiles': Array },
+  data: function () {
+    return { debugMode: false }
+  },
   computed: {
     initialledName: function() {
       // Translate Joe Blogs into Joe B.
