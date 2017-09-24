@@ -18,44 +18,55 @@
   }
 }
 
-.admin-sidebar .list-group-item {
+.admin-sidebar > .list-group > .list-group-item {
   background: $sidebar-bg;
   border-radius: 0;
   border-left: 0;
   border-right: 0;
-  color: $sidebar-muted-text;
+  padding: 0;
 
-  &:hover {
-    color: lighten($sidebar-muted-text, 20%);
-  }
+  a {
+    color: $sidebar-muted-text;
+    display: block;
 
-  &.active,
-  &[aria-expanded="true"] {
-    background: darken($sidebar-bg, 5%);
-    border-color: darken($sidebar-bg, 10%);
-    color: lighten($sidebar-muted-text, 20%);
-  }
+    &:hover {
+      color: lighten($sidebar-muted-text, 20%);
+      text-decoration: none;
+    }
 
-  &[aria-expanded="true"] .feather-chevron-down {
-    display: none !important; // Need to override d-none for mobile
-  }
+    &.active,
+    &[aria-expanded="true"] {
+      background: darken($sidebar-bg, 5%);
+      border-color: darken($sidebar-bg, 10%);
 
-  &[aria-expanded="false"] .feather-chevron-up {
-    display: none !important; // Need to override d-none for mobile
+      a {
+        color: lighten($sidebar-muted-text, 20%);
+      }
+    }
+
+    &[aria-expanded="true"] .feather-chevron-down {
+      display: none !important; // Need to override d-none for mobile
+    }
+
+    &[aria-expanded="false"] .feather-chevron-up {
+      display: none !important; // Need to override d-none for mobile
+    }
   }
 }
 
 // Sub menu items
-.admin-sidebar .collapse .list-group-item,
-.admin-sidebar .collapsing .list-group-item {
-  @extend .small;
+.admin-sidebar .list-group-item > .collapse,
+.admin-sidebar .list-group-item > .collapsing {
 
-  background: darken($sidebar-bg, 5%);
-  border: 0;
+  .list-group-item {
+    background: darken($sidebar-bg, 5%);
+    border: 0;
 
-  .feather {
-    margin-right: 0.4rem;
+    .feather {
+      margin-right: 0.6rem;
+    }
   }
+
 }
 
 .admin-sidebar .tournament-title {
@@ -105,7 +116,7 @@
 // Applies just to phones
 @include media-breakpoint-up(xs) {
 
-  .admin-sidebar .list-group-item {
+  .admin-sidebar .list-group-item a {
     font-size: 12px;
     padding: 0.75rem 0.45rem;
   }
@@ -114,9 +125,10 @@
 // Applies just to tablets
 @include media-breakpoint-up(sm) {
 
-  .admin-sidebar .list-group-item {
+  .admin-sidebar .list-group-item a {
+
     font-size: 12px;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.6rem;
 
     .feather {
       width: 12px;
@@ -140,13 +152,14 @@
 // Applies just to screens
 @include media-breakpoint-up(lg) {
 
-  .admin-sidebar .list-group-item {
-    font-size: $font-size-sm;
+  .admin-sidebar .list-group-item a {
+
+    font-size: $font-size-base;
     padding: 0.5rem 1rem;
 
     .feather {
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       margin-right: 8px;
     }
 
@@ -159,7 +172,7 @@
 
   .admin-sidebar .collapse .list-group-item,
   .admin-sidebar .collapsing .list-group-item {
-    font-size: 12px;
+    font-size: $font-size-sm;
 
     .feather {
       margin-right: 12px; // Align sub text with main text
@@ -170,12 +183,17 @@
 // overlay sub levels on small screens
 @include media-breakpoint-down(sm) {
 
+  .admin-sidebar .list-group-item,
+  .admin-sidebar .list-group-item,
+  .admin-sidebar .list-group-item {
+    z-index: $z_2;
+  }
+
   .admin-sidebar .list-group .collapse.in,
   .admin-sidebar .list-group .collapsing,
   .admin-sidebar .list-group .collapse.show {
-    z-index: 111;
-    width: 190px;
-    background: red;
+    z-index: $z_2;
+    width: 150px;
     text-align: left;
 
     .feather {

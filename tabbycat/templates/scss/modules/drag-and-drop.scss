@@ -58,10 +58,13 @@
   }
 }
 
-.vue-draggable.vue-is-hovering,
+.vue-draggable:hover,
 .vue-draggable:active {
   cursor: move;
-  @include hover-highlights(#000);
+}
+
+.vue-is-hovering {
+  @include hover-highlights(#000)
 }
 
 .vue-is-dragging {

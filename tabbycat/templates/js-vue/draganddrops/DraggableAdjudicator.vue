@@ -4,8 +4,8 @@
                 highlightsStatus, 'ranking-' + percentileRanking.percentile]"
        @dragstart="dragStart"
        @dragend="dragEnd"
-       @mouseenter="handleHoverOn"
-       @mouseleave="handleHoverOff">
+       @mouseenter="showSlideOver(); showHoverConflicts()"
+       @mouseleave="hideSlideOver(); hideHoverConflicts()">
 
     <div class="draggable-prefix">
       <h4>{{ adjudicator.score }}</h4>
@@ -42,6 +42,9 @@ export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin,
            HighlightableMixin, ConflictableMixin],
   props: { 'adjudicator': Object, 'debateId': null, 'percentiles': Array },
+  data: function () {
+    return { debugMode: false }
+  },
   computed: {
     initialledName: function() {
       // Translate Joe Blogs into Joe B.
@@ -81,16 +84,6 @@ export default {
     }
   },
   methods: {
-    handleHoverOn: function(event) {
-      this.isHovering = true
-      this.showSlideOver()
-      this.showHoverConflicts()
-    },
-    handleHoverOff: function(event) {
-      this.isHovering = false
-      this.hideSlideOver()
-      this.hideHoverConflicts()
-    },
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-team', this);
     },

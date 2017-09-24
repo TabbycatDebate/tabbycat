@@ -426,7 +426,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if subtext == 'institution' and adj.institution is not None:
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
-        self.add_column("Name", adj_data)
+        self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'},
+                        adj_data)
 
         if self.tournament.pref('show_adjudicator_institutions') and not hide_institution:
             self.add_column({
@@ -439,7 +440,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             adjcore_header = {
                 'key': 'adjcore',
                 'tooltip': _("Member of the Adjudication Core"),
-                'icon': 'users',
+                'icon': 'user-minus',
             }
             self.add_boolean_column(adjcore_header, [adj.adj_core for adj in adjudicators])
 
@@ -540,12 +541,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(key, motion_data)
 
     def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
-                         show_divisions=True, hide_institution=False, key=ugettext_lazy("Team")):
+                         show_divisions=True, hide_institution=False):
 
         team_data = [self._team_cell(team, hide_emoji=hide_emoji)
                      if not getattr(team, 'anonymise', False)
                      else self.BLANK_TEXT for team in teams]
-        self.add_column(key, team_data)
+        self.add_column({'key': 'team', 'tooltip': _("Team"), 'icon': 'users'},
+                        team_data)
 
         if break_categories:
             self.add_column(_("Categories"), [", ".join(bc.name for bc in team.break_categories) for team in teams])
@@ -568,7 +570,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': _("Division"),
             }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
 
-    def add_speaker_columns(self, speakers, key=ugettext_lazy("Name")):
+    def add_speaker_columns(self, speakers):
         speaker_data = []
         for speaker in speakers:
             if getattr(speaker, 'anonymise', False):
@@ -576,7 +578,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             else:
                 speaker_data.append(speaker.name)
 
-        self.add_column(key, speaker_data)
+        self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'},
+                        speaker_data)
 
         speakercategory_set = self.tournament.speakercategory_set
         if not self.admin:
@@ -593,7 +596,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                         category_strs.append("<em>" + cat.name + "</em>")
                 categories_data.append(", ".join(category_strs))
 
-            self.add_column(_("Categories"), categories_data)
+            self.add_column({
+                'key': _("Category"),
+                'icon': 'user-check', # Not ideal but full name blows out tables
+                'tooltip': _("Categories")
+            }, categories_data)
 
     def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):
 

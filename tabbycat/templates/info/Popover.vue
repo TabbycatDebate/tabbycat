@@ -49,26 +49,31 @@ export default {
         var content = ""
       }
 
-      $(event.target).popover({
-        animation: true,
-        trigger: 'manual',
-        placement: 'left',
-        html: true,
-        title: this.cellData['title'],
-        content: content,
-        container: event.target, // Must be same as what triggers the event
-        offset: '0,-40' // Shift so hover is easier
-      })
-
       // Popovers are disabled sometimes; e.g. on a scrolling draw page
       if ($(event.target).hasClass("disable-hover") === false){
-        $(event.target).popover('show')
+
+        // Unclear if waiting for nextTick helps here, but there were errors
+        // being thrown where the tooltip element's this.config.template was
+        // null; possibly because the DOM hadn't been resolved yet?
+        this.$nextTick(function() {
+
+          $(event.target).popover({
+            animation: true,
+            trigger: 'manual',
+            placement: 'left',
+            html: true,
+            title: this.cellData['title'],
+            content: content,
+            container: event.target, // Must be same as what triggers the event
+            offset: '0,-40' // Shift so hover is easier
+          })
+          $(event.target).popover('show')
+
+        })
       }
     },
     hidePopover: function(event) {
-
       $(event.target).popover('dispose');
-
     },
   }
 }

@@ -1,15 +1,17 @@
 <template>
   <div :class="['hover-target', conflictsStatus,
                 highlightsIdentity, highlightsStatus]"
-       @mouseenter="handleHoverOn"
-       @mouseleave="handleHoverOff">
+       @mouseenter="showSlideOver(); showHoverConflicts()"
+       @mouseleave="hideSlideOver(); hideHoverConflicts()">
 
-    <div>
+    <div class="small">
       <span v-if="debugMode">
-        Team:{{ team.id }}<br>
-        Inst: {{ team.institution.id }}
+        {{ team.id }} {{ team.short_name }}<br>
+        <span class="text-muted">
+          {{ team.institution.id }} {{ team.institution.code }}
+        </span>
       </span>
-      <span class="small" v-else>
+      <span v-else>
         {{ team.short_name }}
       </span>
     </div>
@@ -32,7 +34,12 @@ import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
   data: function () {
-    return { debugMode: false }
+    return {
+      debugMode: false,
+      // Adjs get this from Draggable(); teams must get it from there otherwise
+      // it gets overwritten when merging options between Mixins
+      isHovering: false
+   }
   },
   mixins: [SlideOverSubjectMixin, SlideOverTeamMixin,
            HighlightableMixin, ConflictableMixin],
@@ -42,15 +49,5 @@ export default {
       return this.team
     }
   },
-  methods: {
-    handleHoverOn: function(event) {
-      this.showSlideOver()
-      this.showHoverConflicts()
-    },
-    handleHoverOff: function(event) {
-      this.hideSlideOver()
-      this.hideHoverConflicts()
-    },
-  }
 }
 </script>

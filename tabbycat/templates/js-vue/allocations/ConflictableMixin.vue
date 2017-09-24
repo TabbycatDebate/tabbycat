@@ -14,13 +14,12 @@ export default {
         hover: { team: false, adjudicator: false, institution: false, histories: false },
         panel: { team: false, adjudicator: false, institution: false, histories: false },
       },
-      debugMode: false
     }
   },
   mounted: function () {
     // Subscribe to conflict issued events on the main event hub
     // Each event is specific to the type of conflict but not to this instance
-    // These looklike 'set-conflicts-for-team (teamID, hoverOrPanel, clashOrHistory, type, state)
+    // These looklike 'set-conflicts-for-team (teamID, hoverOrPanel, ...)
 
     // Subscribe to set/unset events for this type (i.e. 'adj')
     this.$eventHub.$on('set-conflicts-for-' + this.conflictableType, this.setConflicts)
@@ -50,10 +49,18 @@ export default {
       if (!_.isUndefined(this.adjudicator)) { return this.adjudicator }
     },
     conflictingInstitutionIDs: function() {
-      return _.map(this.conflictable.conflicts.clashes.institution, 'id')
+      if (this.conflictableType === 'team') {
+        return [this.conflictable.institution.id]
+      } else {
+        // Adjs don't necessarily conflict with their own instutitions
+        return _.map(this.conflictable.conflicts.clashes.institution, 'id')
+      }
     },
     conflictsStatus: function() {
       var conflictsCSS = 'conflictable'
+      if (this.isHovering) {
+        conflictsCSS += " vue-is-hovering"
+      }
       _.forEach(this.isConflicted, function(types, hoverOrPanel) {
         _.forEach(types, function(status, type) {
           // Iterate over panel and hover states
@@ -69,7 +76,21 @@ export default {
     }
   },
   methods: {
+    issueInstitutionalConflictForTeam(state) {
+      if (!_.isUndefined(this.conflictable.institution)) {
+        // Teams dont have institutional clashes; must set manually
+        var id = this.conflictable.institution.id;
+        if (state === true) {
+          this.sendConflict({ id: id }, 'institution', 'institution', 'hover',
+                            'clashes', 'team')
+        } else {
+          this.unsendConflict({ id: id }, 'institution', 'institution', 'hover',
+                              'clashes', 'team')
+        }
+      }
+    },
     showHoverConflicts: function() {
+      this.isHovering = true
       if (this.debugMode) {
         console.debug('Conflictable showHoverConflicts() for', this.conflictableType,
           this.conflictable.id, this.isConflicted)
@@ -78,27 +99,36 @@ export default {
       var self = this
       this.forEachConflict(this.conflictable.conflicts,
         function(conflict, type, clashOrHistory) {
-          self.sendConflict(conflict, type, type, 'hover', clashOrHistory)
+          self.sendConflict(conflict, type, type, 'hover', clashOrHistory,
+                            self.conflictableType)
         }
       )
+      if (this.conflictableType === 'team') {
+        this.issueInstitutionalConflictForTeam(true)
+      }
     },
     hideHoverConflicts: function() {
+      this.isHovering = false
       // Issue hide conflict events; typically on ending hover
       var self = this
       this.forEachConflict(this.conflictable.conflicts,
         function(conflict, type, clashOrHistory) {
-          self.unsendConflict(conflict.id, type, type, 'hover', clashOrHistory)
+          self.unsendConflict(conflict, type, type, 'hover', clashOrHistory,
+                              self.conflictableType)
         }
       )
+      if (this.conflictableType === 'team') {
+        this.issueInstitutionalConflictForTeam(false)
+      }
     },
     setConflicts: function(id, hoverOrPanel, clashOrHistory,
-                               eventType, conflictType, state) {
+                               eventType, conflictType, state, issuerType) {
       // Receive a conflict message from elsewhere and activate the conflict
       if (id !== this.conflictable.id) {
         return // Conflict doesn't match what is broadcast
       }
       if (this.debugMode) {
-       this.debugLog('setConflicts() ', 2, id, hoverOrPanel, clashOrHistory, eventType, conflictType, state)
+       this.debugLog('setConflicts() ', 2, id, hoverOrPanel, clashOrHistory, eventType, conflictType, state, issuerType)
       }
       if (clashOrHistory === 'histories') {
         conflictType = 'histories' // Histories have seperate type; override it
@@ -106,12 +136,15 @@ export default {
       this.isConflicted[hoverOrPanel][conflictType] = state
     },
     setInstitutionConflicts: function(id, hoverOrPanel, clashOrHistory,
-                                      eventType, conflictType, state) {
+                                      eventType, conflictType, state, issuerType) {
       if (this.isHovering === true) {
         return // Don't show institutional conflicts on self (when hovering)
       }
+      if (issuerType === 'team'  && this.conflictableType === 'team') {
+        return // Teams can't conflict others (only applies to institutionals)
+      }
       if (this.debugMode) {
-        this.debugLog('setInstitutionConflicts()', 2, this.conflictable.id, hoverOrPanel, clashOrHistory, this.conflictableType, conflictType, state)
+        this.debugLog('setInstitutionConflicts()', 2, this.conflictable.id, hoverOrPanel, clashOrHistory, this.conflictableType, conflictType, state, issuerType)
       }
       // Check if the supplied institutional ID matches any of this object's clashes
       if (this.conflictingInstitutionIDs.indexOf(id) !== -1) {

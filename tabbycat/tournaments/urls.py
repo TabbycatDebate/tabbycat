@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^donations/$',
         views.TournamentDonationsView.as_view(),
         name='tournament-donations'),
-    url(r'^admin/overview/$',
+    url(r'^admin/$',
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
     url(r'^admin/configure/$',

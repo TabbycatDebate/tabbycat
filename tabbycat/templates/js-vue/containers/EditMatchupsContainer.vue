@@ -36,9 +36,8 @@
     <div class="row">
       <div class="col mb-3 mt-3">
 
-          <draw-header :positions="positions"  @resort="updateSorting"
-                       :sort-key="sortKey" :sort-order="sortOrder"
-                       :round-info="roundInfo">
+          <draw-header :round-info="roundInfo"  @resort="updateSorting"
+                       :sort-key="sortKey" :sort-order="sortOrder">
 
             <div slot="hbracket"></div>
             <div slot="hliveness"></div>
@@ -73,12 +72,13 @@
             <div slot="simportance"></div>
             <div slot="svenue"></div>
 
-            <template v-for="dt in debate.debateTeams">
+            <template v-for="position in roundInfo.teamPositions">
               <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
-                   :slot="'s-' + dt.side">
+                   :slot="'s-' + position">
                 <droppable-generic :assignment-id="debate.id"
-                                   :assignment-position="dt.side" :locked="debate.locked">
-                  <draggable-team v-if="dt.team" :team="dt.team"
+                                   :assignment-position="position" :locked="debate.locked">
+                   <draggable-team v-if="findTeamInDebateBySide(position, debate)"
+                                  :team="findTeamInDebateBySide(position, debate)"
                                   :debate-id="debate.id" :locked="debate.locked"></draggable-team>
                 </droppable-generic>
               </div>
@@ -111,10 +111,11 @@ import TeamMovingMixin from '../ajax/TeamMovingMixin.vue'
 import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
 import DraggableTeam from '../draganddrops/DraggableTeam.vue'
 import DrawSidesStatus from '../draw/DrawSidesStatus.vue'
+import FindDebateTeamMixin from '../draw/FindDebateTeamMixin.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [TeamMovingMixin, DrawContainerMixin],
+  mixins: [TeamMovingMixin, DrawContainerMixin, FindDebateTeamMixin],
   components: { DraggableTeam, DrawSidesStatus },
   props: ['saveSidesStatusUrl'],
   computed: {
@@ -126,22 +127,6 @@ export default {
     },
   },
   methods: {
-    findDebateTeamInDebateByTeam(team, debate) {
-      var debateTeam = _.find(debate.debateTeams, function(dt) {
-        if (dt.team !== null) {
-          return dt.team.id === team.id
-        } else {
-          return false
-        }
-      });
-      return debateTeam
-    },
-    findDebateTeamInDebateBySide(side, debate) {
-      var debateTeam = _.find(debate.debateTeams, function(dt) {
-        return dt.side === side
-      });
-      return debateTeam
-    },
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
         var team = this.allTeamsById[payload.team]

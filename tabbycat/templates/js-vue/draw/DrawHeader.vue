@@ -35,10 +35,10 @@
 
     <slot name="hteams">
       <div class="vue-sortable thead flex-cell flex-6 draw-team-cell"
-           v-for="position in positions" @click="resort(position.side)"
-           data-toggle="tooltip" :title="'The ' + position.position + ' team'">
-        <span>{{ position.abbr }}</span>
-        <span :class="sortClasses(position.side)"></span>
+           v-for="position in roundInfo.teamPositions" @click="resort(position)"
+           data-toggle="tooltip" :title="'The ' + position + ' team'">
+        <span>{{ position }}</span>
+        <span :class="sortClasses(position)"></span>
       </div>
     </slot>
 
@@ -58,6 +58,6 @@ import SortableHeaderMixin from '../../tables/SortableHeaderMixin.vue'
 
 export default {
   mixins: [SortableHeaderMixin],
-  props: { positions: Array, roundInfo: Object },
+  props: { roundInfo: Object },
 }
 </script>

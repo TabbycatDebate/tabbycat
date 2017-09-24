@@ -44,10 +44,8 @@ export default {
 
       this.saveMoveForType(movedItemId, clonedFromDebate, clonedToDebate, toPosition)
     },
-    debateCheckIfShouldSave(debate) {
-      return true
-    },
     determineDebatesToSave(fromDebate, toDebate) {
+      // Note children must implement a debateCheckIfShouldSave()
       if (fromDebate.id === toDebate.id && this.debateCheckIfShouldSave(toDebate)) {
         return [toDebate]
       }

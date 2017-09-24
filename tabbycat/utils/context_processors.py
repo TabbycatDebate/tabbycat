@@ -38,11 +38,10 @@ def get_menu_highlight(request):
                 menu['import_nav'] = True
             elif "private-urls" in path:
                 menu['private_urls_nav'] = True
+
         elif "feedback" in path:
             menu['feedback_nav'] = True
-            if "overview" in path:
-                menu['feedback_overview_nav'] = True
-            elif "latest" in path:
+            if "latest" in path:
                 menu['feedback_latest_nav'] = True
             elif "source" in path:
                 menu['feedback_source_nav'] = True
@@ -50,11 +49,14 @@ def get_menu_highlight(request):
                 menu['feedback_target_nav'] = True
             elif "progress" in path:
                 menu['feedback_progress_nav'] = True
+            elif "add" in path:
+                pass # No highlights
+            else:
+                menu['feedback_overview_nav'] = True
+
         elif "standings" in path:
             menu['standings_nav'] = True
-            if "overview" in path:
-                menu['standings_overview_nav'] = True
-            elif "team" in path:
+            if "team" in path:
                 menu['standings_team_nav'] = True
             elif "division" in path:
                 menu['standings_division_nav'] = True
@@ -66,6 +68,9 @@ def get_menu_highlight(request):
                 menu['feedback_motions_nav'] = True
             elif "diversity" in path:
                 menu['standings_diversity_nav'] = True
+            else:
+                menu['standings_overview_nav'] = True
+
         elif "round" in path:
             menu['round_nav'] = True
             if "availability" in path:
@@ -78,12 +83,16 @@ def get_menu_highlight(request):
                 menu['motions_nav'] = True
             elif "results" in path:
                 menu['results_nav'] = True
+
         elif "break" in path:
             menu['break_nav'] = True
-            if "overview" in path:
-                menu['break_overview_nav'] = True
-            elif "adjudicators" in path:
+            if "adjudicators" in path:
                 menu['break_adjudicators_nav'] = True
+            if "teams" in path:
+                menu['break_teams_nav'] = True
+            else:
+                menu['break_overview_nav'] = True
+
         elif "overview" in path:
             return {"overview_nav": True} # Other sections have overviews; go after
         elif "sides" in request.path:

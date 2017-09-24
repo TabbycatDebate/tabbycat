@@ -1,10 +1,27 @@
 {% extends "feedback_base.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load debate_tags i18n static %}
 
 {% block sub-title %}
   <span id="breaking_count">{{ breaking_count }}</span> marked as breaking;
   {{ c_trainees }} will trainee (score is < {{ pref.adj_min_voting_score }})
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% tournamenturl 'options-tournament-feedback' as option_url %}
+  {% if pref.feedback_paths == 'minimal' %}
+    {% trans "only chairs can submit feedback (on their panellists and trainees)" as preference_description %}
+  {% elif pref.feedback_paths == 'with-p-on-c' %}
+    {% trans "both chairs and pannellists can can submit feedback on each other; and chairs can submit on trainees" as preference_description %}
+  {% elif pref.feedback_paths == 'all-adjs' %}
+    {% trans "all adjudicators (including trainees) can submit feedback on every other member of the panel (including trainees)" as preference_description %}
+  {% endif %}
+  {% blocktrans trimmed asvar p1 with preference=preference_description %}
+    The current <a href="{{ option_url }}" class="alert-link">'feedback paths' configuration</a> means
+    that {{ preference_description }}.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+
 {% endblock %}
 
 {% block content %}
