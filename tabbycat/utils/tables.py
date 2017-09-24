@@ -584,7 +584,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                         category_strs.append("<em>" + cat.name + "</em>")
                 categories_data.append(", ".join(category_strs))
 
-            self.add_column(_("Categories"), categories_data)
+            self.add_column({
+                'key': _("Category"),
+                'icon': 'user-check', # Not ideal but full name blows out tables
+                'tooltip': _("Categories")
+            }, categories_data)
 
     def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):
 
