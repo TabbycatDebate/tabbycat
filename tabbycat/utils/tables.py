@@ -426,7 +426,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if subtext is 'institution':
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
-        self.add_column({ 'key': 'name', 'tooltip': _("Name"), 'icon': 'user'},
+        self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'},
                         adj_data)
 
         if self.tournament.pref('show_adjudicator_institutions') and not hide_institution:
@@ -541,7 +541,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         team_data = [self._team_cell(team, hide_emoji=hide_emoji)
                      if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams]
-        self.add_column({ 'key': 'team', 'tooltip': _("Team"), 'icon': 'users'},
+        self.add_column({'key': 'team', 'tooltip': _("Team"), 'icon': 'users'},
                         team_data)
 
         if break_categories:
@@ -569,7 +569,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             else:
                 speaker_data.append(speaker.name)
 
-        self.add_column({ 'key': 'name', 'tooltip': _("Name"), 'icon': 'user'},
+        self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'},
                         speaker_data)
 
         speakercategory_set = self.tournament.speakercategory_set
