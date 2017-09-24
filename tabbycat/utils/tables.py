@@ -537,12 +537,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(key, motion_data)
 
     def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
-                         show_divisions=True, hide_institution=False):
+                         show_divisions=True, hide_institution=False, key=None):
 
         team_data = [self._team_cell(team, hide_emoji=hide_emoji)
                      if not hasattr(team, 'anonymise') else self.BLANK_TEXT for team in teams]
-        self.add_column({'key': 'team', 'tooltip': _("Team"), 'icon': 'users'},
-                        team_data)
+        if key:
+            header = {'key': key, 'text': key}
+        else:
+            header = {'key': 'team', 'tooltip': _("Team"), 'icon': 'users'}
+        self.add_column(header, team_data)
 
         if break_categories:
             self.add_column(_("Categories"), [", ".join(bc.name for bc in team.break_categories) for team in teams])
