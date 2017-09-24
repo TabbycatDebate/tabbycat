@@ -25,7 +25,7 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
             for cell in self.data[i]:
                 cell['class'] = cell.get('class', '') + ' highlight-row'
 
-    def _prepend_side_header(self, side, name, abbr):
+    def _prepend_side_header(self, side, name, abbr, text_only=False):
         # Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
         # "Opening government: Total speaker score", "Closing opposition: Number of firsts"
         tooltip = _("%(side_name)s: %(metric_name)s") % {
@@ -39,7 +39,7 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
         header = {
             'key': key,  # no need to translate
             'tooltip': tooltip,
-            'text': key
+            'text': abbr if text_only else key
         }
 
         return header
@@ -342,12 +342,12 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
         self.add_column(header, [info.metrics['points'] for info in infos])
 
         # Side history after last round
-        header = self._prepend_side_header(side, _("side history before this round"), _("Sides"))
+        header = self._prepend_side_header(side, _("side history before this round"), _("Sides"), text_only=True)
         cells = self._side_history_by_team(self.side_histories_before, teams)
         self.add_column(header, cells)
 
         # Position cost incurred, post-weighting
-        header = self._prepend_side_header(side, _("position cost"), "Cost")
+        header = self._prepend_side_header(side, _("position cost"), _("Cost"), text_only=True)
         pos = self.tournament.sides.index(side)
         cells = [metricformat(self.get_position_cost(pos, team)) for team in teams]
         self.add_column(header, cells)
