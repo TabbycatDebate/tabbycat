@@ -9,7 +9,7 @@ export default {
   mixins: [ConflictUtilitiesMixin],
   data: function () { return { debugMode: false }},
   watch: {
-    filteredPanelConflicts: function() {
+    filteredConflicts: function() {
       // Re-calculate all conflicts when the master conflicts dictionary changes
       this.$nextTick(function() {
         // MUST wait for all data to finish resolving when panel info has been
