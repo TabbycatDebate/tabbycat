@@ -14,9 +14,8 @@
     </div>
 
     <div class="mb-3 mt-3">
-      <draw-header :positions="positions" @resort="updateSorting"
-                   :sort-key="sortKey" :sort-order="sortOrder"
-                   :round-info="roundInfo">
+      <draw-header :round-info="roundInfo" @resort="updateSorting"
+                   :sort-key="sortKey" :sort-order="sortOrder">
         <div @click="updateSorting('venue')" slot="hvenue"
              class="vue-sortable thead flex-cell flex-12 ">
           <span>Venue </span>

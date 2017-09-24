@@ -93,12 +93,9 @@ export default {
     unallocatedById: function() {
       return _.keyBy(this.unallocatedItems, 'id')
     },
-    positions: function() {
-      // All debates should have a full set of possible positions
-      return _.map(this.debates[0].debateTeams, function(dt){
-        return _.pick(dt, ['position', 'side', 'abbr']);
-      })
-    }
+    teamPositions: function() {
+      return this.roundInfo.teamPositions // Convenience
+    },
   },
   methods: {
     updateDebates: function(updatedDebates) {
@@ -134,9 +131,9 @@ export default {
         } else {
           return "" // Venues can be null
         }
-      } else if (_.includes(_.map(this.positions, 'side'), key)) {
+      } else if (_.includes(_.map(this.teamPositions), key)) {
         var teamAtSide = _.find(row.debateTeams, function(dt) {
-          return dt['side'] === key
+          return dt.side === key
         });
         if (teamAtSide.team !== null) {
           return teamAtSide.team.short_name

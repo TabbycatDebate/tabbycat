@@ -9,9 +9,8 @@
     </div>
 
     <div class="mb-3">
-      <draw-header :positions="positions" @resort="updateSorting"
-                   :sort-key="sortKey" :sort-order="sortOrder"
-                   :round-info="roundInfo">
+      <draw-header :round-info="roundInfo" @resort="updateSorting"
+                   :sort-key="sortKey" :sort-order="sortOrder">
 
         <div slot="himportance" class="thead flex-cell flex-5 vue-sortable"
              @click="updateSorting('importance')" data-toggle="tooltip"
@@ -124,9 +123,6 @@ export default {
     },
     adjPositions: function() {
       return this.roundInfo.adjudicatorPositions // Convenience
-    },
-    teamPositions: function() {
-      return this.roundInfo.teamPositions // Convenience
     },
   },
   methods: {

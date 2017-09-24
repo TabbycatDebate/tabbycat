@@ -36,9 +36,8 @@
     <div class="row">
       <div class="col mb-3 mt-3">
 
-          <draw-header :positions="positions"  @resort="updateSorting"
-                       :sort-key="sortKey" :sort-order="sortOrder"
-                       :round-info="roundInfo">
+          <draw-header :round-info="roundInfo"  @resort="updateSorting"
+                       :sort-key="sortKey" :sort-order="sortOrder">
 
             <div slot="hbracket"></div>
             <div slot="hliveness"></div>
