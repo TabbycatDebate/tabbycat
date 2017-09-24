@@ -50,7 +50,12 @@ export default {
       if (!_.isUndefined(this.adjudicator)) { return this.adjudicator }
     },
     conflictingInstitutionIDs: function() {
-      return _.map(this.conflictable.conflicts.clashes.institution, 'id')
+      if (this.conflictableType === 'team') {
+        return [this.conflictable.institution.id]
+      } else {
+        // Adjs don't necessarily conflict with their own instutitions
+        return _.map(this.conflictable.conflicts.clashes.institution, 'id')
+      }
     },
     conflictsStatus: function() {
       var conflictsCSS = 'conflictable'
