@@ -4,8 +4,8 @@
                 highlightsStatus, 'ranking-' + percentileRanking.percentile]"
        @dragstart="dragStart"
        @dragend="dragEnd"
-       @mouseenter="handleHoverOn"
-       @mouseleave="handleHoverOff">
+       @mouseenter="showSlideOver(); showHoverConflicts()"
+       @mouseleave="hideSlideOver(); hideHoverConflicts()">
 
     <div class="draggable-prefix">
       <h4>{{ adjudicator.score }}</h4>
@@ -84,16 +84,6 @@ export default {
     }
   },
   methods: {
-    handleHoverOn: function(event) {
-      this.isHovering = true
-      this.showSlideOver()
-      this.showHoverConflicts()
-    },
-    handleHoverOff: function(event) {
-      this.isHovering = false
-      this.hideSlideOver()
-      this.hideHoverConflicts()
-    },
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-team', this);
     },

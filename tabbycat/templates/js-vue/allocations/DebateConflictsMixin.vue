@@ -75,20 +75,23 @@ export default {
       // have been moved on
       var self = this
       _.forEach(this.adjudicatorIds, function(id, da) {
-        self.unsendConflict(id, 'adjudicator', 'adjudicator', 'panel', 'clashes')
-        self.unsendConflict(id, 'adjudicator', 'adjudicator', 'panel', 'histories')
-        self.unsendConflict(id, 'institution', 'adjudicator', 'panel', 'clashes')
+        self.unsendConflict({ id: id }, 'adjudicator', 'adjudicator', 'panel', 'clashes')
+        self.unsendConflict({ id: id }, 'adjudicator', 'adjudicator', 'panel', 'histories')
+        self.unsendConflict({ id: id }, 'institution', 'adjudicator', 'panel', 'clashes')
       })
       _.forEach(this.teamIds, function(id, dt) {
-        self.unsendConflict(id, 'team', 'team', 'panel', 'clashes')
-        self.unsendConflict(id, 'team', 'team', 'panel', 'histories')
-        self.unsendConflict(id, 'institution', 'team', 'panel', 'clashes')
+        self.unsendConflict({ id: id }, 'team', 'team', 'panel', 'clashes')
+        self.unsendConflict({ id: id }, 'team', 'team', 'panel', 'histories')
+        self.unsendConflict({ id: id }, 'institution', 'team', 'panel', 'clashes')
       })
     },
     activatePanelConflicts: function() {
       // Turn on all conflicts by activating what hs been set by
       // filteredPanelConflicts(). Calls/happens when a panel updates
       var self = this
+      if (this.debugMode) {
+        console.log('Activate panel conflicts for', this.debateId);
+      }
       this.forEachConflict(this.filteredConflicts, function(conflict, type, clashOrHistory) {
         if (type === 'institution') {
           self.activatePanelWithInstitutionalConflict(conflict) // See below

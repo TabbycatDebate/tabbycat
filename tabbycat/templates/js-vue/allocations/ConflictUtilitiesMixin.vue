@@ -4,7 +4,8 @@ import _ from 'lodash'
 export default {
 
   methods: {
-    sendConflict: function(conflict, eventType, conflictType, hoverOrPanel, clashOrHistory) {
+    sendConflict: function(conflict, eventType, conflictType, hoverOrPanel,
+                           clashOrHistory, issuerType) {
       // Issue a Vue message to activate a given conflict type
       var eventCode = 'set-conflicts-for-' + eventType
       var state = true
@@ -12,19 +13,24 @@ export default {
         var state = conflict.ago // Override; histories use int values
       }
       if (this.debugMode) {
-        this.debugLog(eventCode, 1, conflict.id, hoverOrPanel, clashOrHistory, eventType, conflictType, state)
+        this.debugLog(eventCode, 1, conflict.id, hoverOrPanel, clashOrHistory,
+                      eventType, conflictType, state, issuerType)
       }
 
-      this.$eventHub.$emit(eventCode, conflict.id, hoverOrPanel, clashOrHistory, eventType, conflictType, state)
+      this.$eventHub.$emit(eventCode, conflict.id, hoverOrPanel, clashOrHistory,
+                           eventType, conflictType, state, issuerType)
     },
-    unsendConflict: function(id, eventType, conflictType, hoverOrPanel, clashOrHistory) {
+    unsendConflict: function(conflict, eventType, conflictType, hoverOrPanel,
+                             clashOrHistory, issuerType) {
       // Issue a Vue message to deactivate a given conflict type
       var eventCode = 'unset-conflicts-for-' + eventType
       if (this.debugMode) {
-        // this.debugLog(eventCode, 1, id, hoverOrPanel, clashOrHistory, eventType, conflictType, false)
+        this.debugLog(eventCode, 1, conflict.id, hoverOrPanel, clashOrHistory,
+                      eventType, conflictType, false, issuerType)
       }
 
-      this.$eventHub.$emit(eventCode, id, hoverOrPanel, clashOrHistory, eventType, conflictType, false)
+      this.$eventHub.$emit(eventCode, conflict.id, hoverOrPanel, clashOrHistory,
+                           eventType, conflictType, false, issuerType)
     },
     forEachConflict: function(conflictsList, callBack) {
       // Utility function that traverses/loops over a list of conflicts and
@@ -43,8 +49,8 @@ export default {
         })
       })
     },
-    debugLog: function(title, tabLevel, id,
-                       hoverOrPanel, clashOrHistory, eventType, conflictType, state) {
+    debugLog: function(title, tabLevel, id, hoverOrPanel, clashOrHistory,
+                       eventType, conflictType, state, issuerType) {
       // Crappy utility for trying to trace when/why conflicts dont show up
       // the spacer business is so it will print nice to console
       if (_.isUndefined(this.conflictable)) {
@@ -57,7 +63,8 @@ export default {
         ("\t".repeat(tabLevel) + title + spacer).substring(0, 45 - (tabLevel * 4)),
         ('to ' + eventType + ' #' + id + spacer).substring(0, 25),
         ('of type ' + conflictType + spacer).substring(0, 25),
-        (' as ' + state + ' for ' + clashOrHistory + ' / ' + hoverOrPanel + spacer).substring(0, 35)
+        (' as ' + state + ' for ' + clashOrHistory + ' / ' + hoverOrPanel + spacer).substring(0, 35),
+        (' from a ' + issuerType).substring(0, 15)
       )
     },
   }
