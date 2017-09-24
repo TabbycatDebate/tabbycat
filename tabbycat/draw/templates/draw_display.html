@@ -101,7 +101,13 @@
       </div>
       <div class="list-group list-group-flush">
 
-        {% if round.draw_status == round.STATUS_RELEASED %}
+        {% if round.draw_status == round.STATUS_NONE %}
+          {% trans "You have not generated a draw for this round yet. There is nothing to release." as text %}
+          {% include "components/item-alert.html" with type="info" %}
+        {% elif round.draw_status == round.STATUS_DRAFT %}
+          {% trans "The draw for this round is still in a draft state. Confirm the draw before releasing it." as text %}
+          {% include "components/item-alert.html" with type="warning" %}
+        {% elif round.draw_status == round.STATUS_RELEASED %}
           {% trans "Unrelease Draw to Public" as release_text %}
           {% tournamenturl 'options-tournament-public-features' as alert_link %}
 
