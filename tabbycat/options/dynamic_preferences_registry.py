@@ -337,7 +337,7 @@ class FeedbackPaths(ChoicePreference):
         ('with-p-on-c', _("Panellists on chairs, chairs on panellists and trainees")),
         ('all-adjs', _("All adjudicators (including trainees) on each other")),
     )
-    default = 'minimal'
+    default = 'with-p-on-c'
 
 
 @tournament_preferences_registry.register
