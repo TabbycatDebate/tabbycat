@@ -6,32 +6,16 @@
 {% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
 {% block diversity_active %}active{% endblock %}
 
-
 {% block page-subnav-sections %}
-  <div class="nav nav-pills navbar-left btn-group">
-    <button class="btn btn-outline-secondary h6">
-      Key
-    </button>
-    <button class="btn btn-primary gender-display gender-male h6">
-      Male identifying
-    </button>
-    <button class="btn btn-primary gender-display gender-nm h6">
-      Non-cis male identifying
-    </button>
-    <button class="btn btn-primary gender-display gender-unknown h6">
-      Unknown
-    </button>
-  </div>
+  {% if user.is_superuser %}
+    {{ block.super }}
+  {% endif %}
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <div class="nav nav-pills float-right btn-group mb-3">
-    {% for r in regions %}
-      <button disabled class="btn btn-primary region-display region-{{ r.seq }} h6">
-        {{ r.name }}
-      </button>
-    {% endfor %}
-  </div>
+  {% if user.is_superuser %}
+    {{ block.super }}
+  {% endif %}
 {% endblock %}
 
 {% block page-alerts %}
@@ -41,6 +25,33 @@
 {% endblock %}
 
 {% block content %}
+
+    <div class="d-lg-flex justify-content-lg-between mb-4">
+      <div class="nav nav-pills navbar-left btn-group">
+        <button class="btn btn-outline-secondary h6">
+          Gender Key
+        </button>
+        <button class="btn btn-primary gender-display gender-male h6">
+          Male identifying
+        </button>
+        <button class="btn btn-primary gender-display gender-nm h6">
+          Non-cis male identifying
+        </button>
+        <button class="btn btn-primary gender-display gender-unknown h6">
+          Unknown
+        </button>
+      </div>
+      <div class="nav nav-pills float-right btn-group">
+        <button class="btn btn-outline-secondary h6">
+          Region Key
+        </button>
+        {% for r in regions %}
+          <button disabled class="btn btn-primary region-display region-{{ r.seq }} h6">
+            {{ r.name }}
+          </button>
+        {% endfor %}
+      </div>
+    </div>
 
   <div id="vueMount">
     <diversity-container :graphs-data="graphsData"></diversity-container>

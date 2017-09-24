@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     # Display
-    url(r'^overview/$',
+    url(r'^$',
         views.AdminBreakIndexView.as_view(),
         name='breakqual-index'),
     url(r'^teams/(?P<category>\w+)/$',
