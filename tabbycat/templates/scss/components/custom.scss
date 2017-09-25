@@ -22,14 +22,23 @@ $font-size-base:          1rem; // Usually 16px;
 //------------------------------------------------------------------------------
 
 // Theme colors
-$blue:                    #008bf3; // Primary
+$purple:                  #79589f; // Primary
 $green:                   #28c052; // Success
-$cyan:                    #3b9ad8; // Info
+$blue:                    #17a2b8; // Info
 $yellow:                  #fd7e14; // Warning
 $red:                     #e32c20; // Danger
 
 // Key Colors
 $body-bg:                 #f8fafc;
+$body-color:              #212529; // Gray-900 equivalent
+
+$theme-colors: (
+  primary: $purple,
+  success: $green,
+  info: $blue,
+  warning: $yellow,
+  danger: $red,
+);
 
 //------------------------------------------------------------------------------
 // Bootstrap Layout Details Overrides

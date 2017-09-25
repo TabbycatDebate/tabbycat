@@ -1,22 +1,14 @@
-<a href="{{ url }}" {% if blank %}target="_blank"{% endif %} {% if id %}id="{{ id }}"{% endif %}
-   class="list-group-item list-group-item-action
-   {% if to_complete %}
-    bg-primary text-white
-   {% else %}
-    text-{% if type %}{{ type }}{% else %}primary{% endif %}
-   {% endif %}">
+<div class="list-group-item text-{% if type %}{{ type }}{% else %}info{% endif %}">
 
   <div class="row align-items-center">
 
     <div class="col-auto pr-1">
-      {% if to_complete %}
-        <i data-feather="check-square"></i>
-      {% elif icon %}
+      {% if icon %}
         <i data-feather="{{ icon }}"></i>
       {% elif emoji %}
         <span class="emoji">{{ emoji }}</span>
       {% else %}
-        <i data-feather="edit"></i>
+        <i data-feather="info"></i>
       {% endif %}
     </div>
 
@@ -29,16 +21,23 @@
         {{ text|safe }}
       {% endif %}
 
+      {% if p1 %}
+        <p class="card-text mb-0">
+          {{ p1|safe }}
+        </p>
+      {% endif %}
+      {% if p2 %}
+        <p class="card-text mt-3 mb-0">
+          {{ p2|safe }}
+        </p>
+      {% endif %}
+
       {% if subtext %}
         <span class="text-muted">{{ subtext }}</span>
       {% endif %}
 
     </div>
 
-    <div class="col-auto pr-1">
-      <i data-feather="chevron-right"></i>
-    </div>
-
   </div>
 
-</a>
+</div>
