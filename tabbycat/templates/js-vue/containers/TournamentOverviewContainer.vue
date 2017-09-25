@@ -6,7 +6,7 @@
       <div class="col">
         <div class="card mt-3">
           <div class="card-body">
-            <h5 class="mb-2 text-center">Latest Actions</h5>
+            <h5 class="mb-2 text-center">Ballots Status</h5>
             <ballots-graph :poll-url="ballotsUrl"></ballots-graph>
           </div>
         </div>
@@ -68,28 +68,28 @@ export default {
     this.updateResults()
   },
   methods: {
-      updateActions: function() {
-        this.fetchData(this.actionsUrl, 'actions');
-      },
-      updateResults: function() {
-        this.fetchData(this.resultsUrl, 'results');
-      },
-      fetchData: function (apiURL, resource) {
-        var xhr = new XMLHttpRequest()
-        var self = this
-        xhr.open('GET', apiURL)
-        xhr.onload = function () {
-          console.log('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText)
-          if (resource === 'actions') {
-            self.latestActions = JSON.parse(xhr.responseText);
-            setTimeout(self.updateActions, self.pollFrequency);
-          } else {
-            self.latestResults = JSON.parse(xhr.responseText);
-            setTimeout(self.updateResults, self.pollFrequency);
-          }
+    updateActions: function() {
+      this.fetchData(this.actionsUrl, 'actions');
+    },
+    updateResults: function() {
+      this.fetchData(this.resultsUrl, 'results');
+    },
+    fetchData: function (apiURL, resource) {
+      var xhr = new XMLHttpRequest()
+      var self = this
+      xhr.open('GET', apiURL)
+      xhr.onload = function () {
+        console.log('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText)
+        if (resource === 'actions') {
+          self.latestActions = JSON.parse(xhr.responseText);
+          setTimeout(self.updateActions, self.pollFrequency);
+        } else {
+          self.latestResults = JSON.parse(xhr.responseText);
+          setTimeout(self.updateResults, self.pollFrequency);
         }
-        xhr.send()
       }
+      xhr.send()
+    }
   }
 }
 </script>
