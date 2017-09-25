@@ -22,20 +22,47 @@
 // Motions Tab
 //------------------------------------------------------------------------------
 
+.progress-bar-aff {
+  background-color: $aff;
+}
+
+.progress-bar-neg {
+  background-color: $neg;
+}
+
 .progress-bar-og {
-  background-color: theme-color("primary");
+  background-color: $og;
 }
 
 .progress-bar-oo {
-  background-color: theme-color("warning");
+  background-color: $oo;
 }
 
 .progress-bar-cg {
-  background-color: $break-cat-4;
+  background-color: $cg;
 }
 
 .progress-bar-co {
-  background-color: $break-cat-2;
+  background-color: $co;
+}
+
+.text-aff {
+  color: $aff;
+}
+.text-neg {
+  color: $neg;
+}
+.text-og {
+  color: $og;
+}
+.text-oo {
+  color: $oo;
+}
+.text-cg {
+  color: $cg;
+}
+.text-co {
+  color: $co;
 }
 
 .progress-points-3 {

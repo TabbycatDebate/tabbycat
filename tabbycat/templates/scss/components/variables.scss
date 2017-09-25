@@ -12,7 +12,7 @@
 $alt-bg:                  #fff;     // For tables etc
 $table-bg-hover:          #e3e3e3;
 $sidebar-bg:              #333c47;  // Matches that of Jet
-$sidebar-muted-text:      $gray-400;
+$sidebar-muted-text:      $gray-200;
 $droppable-bg:            $gray-200;
 
 // Gender Highlights
@@ -38,11 +38,13 @@ $region-cat-6:            #00c0cf;
 $region-cat-7:            #0051cf;
 $region-cat-8:            #777;
 
+// Conflicts Colors
 $conflict-clash:          #e34e42;
 $conflict-institution:    #ef9b08;
 $conflict-history-base:   #3498db;
 $incomplete-panel:        #a982a4;
 
+// Adj Rankings
 $adj-ranking-0:           hsla(175, 90%, 40%, 1); // A+
 $adj-ranking-1:           hsla(140, 90%, 42%, 1); // A
 $adj-ranking-2:           hsla(90, 90%, 38%, 1); // A-
@@ -52,6 +54,14 @@ $adj-ranking-5:           hsla(0, 95%, 48%, 1); // B-
 $adj-ranking-6:           hsla(0, 100%, 34%, 1); // C+
 $adj-ranking-7:           hsla(0, 0%, 60%, 1);
 $adj-ranking-8:           hsla(0, 0%, 50%, 1);
+
+// Team Positions
+$aff:                     theme-color("info");
+$neg:                     theme-color("danger");
+$og:                      theme-color("info");
+$oo:                      theme-color("warning");
+$cg:                      adjust-hue($og, 15deg);
+$co:                      adjust-hue($oo, 15deg);
 
 //------------------------------------------------------------------------------
 // Layout Details

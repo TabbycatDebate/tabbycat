@@ -30,7 +30,7 @@
     display: block;
 
     &:hover {
-      color: lighten($sidebar-muted-text, 20%);
+      color: lighten(theme-color("primary"), 15%);
       text-decoration: none;
     }
 
@@ -60,7 +60,7 @@
     border: 0;
 
     .feather {
-      margin-right: 0.6rem;
+      margin-right: 0.8rem;
     }
   }
 
@@ -97,8 +97,8 @@
 }
 
 .circle-current {
-  stroke: lighten(theme-color("primary"), 20);
-  fill: theme-color("primary");
+  stroke: lighten(theme-color("info"), 20);
+  fill: theme-color("info");
 }
 
 .circle-later {

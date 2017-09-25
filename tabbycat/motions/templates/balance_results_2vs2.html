@@ -1,46 +1,46 @@
 {% load i18n %}
 
-{% if am.debate_rooms > 0 %}
+<div class="row">
 
-  <div class="mb-3">
+  {% if am.debate_rooms > 0 %}
 
-    <div class="btn-group btn-group-xs">
-
+    <div class="col">
       {% for position, count in am.placings.items %}
-
-        <div class="btn btn-primary">
-          <span class="{% if forloop.counter == 1 %}text-success{% else %}text-danger{% endif %}">
-            {{ count.1 }} {{ position }} win{{ count.1|pluralize}}
-          </span>
-        </div>
-
+        <span class="text-{{ position}} inline-block pr-3">
+          {{ count.1 }} {{ position }} win{{ count.1|pluralize}}
+        </span>
       {% endfor %}
-
     </div>
 
-    <div class="btn-group btn-group-xs float-right">
-      <div class="btn btn-primary" data-toggle="tooltip" title="{{ am.result_balance.1 }}">
-        <span class="text-muted">{{ am.result_balance.0 }}</span>
-      </div>
+    <div class="col-auto" data-toggle="tooltip" title="{{ am.result_balance.1 }}">
+      <span class="text-muted">{{ am.result_balance.0 }}</span>
     </div>
 
-    <div class="progress">
-      <div class="progress-bar bg-success" style="width: {{ am.results_rates.aff.0 }}%">
-        {% if am.results_rates.aff.0 != "0" %}{{ am.results_rates.aff.0 }}%{% endif %}
-      </div>
-      <div class="progress-bar progress-bar-danger" style="width: {{ am.results_rates.neg.0 }}%">
-        {% if am.results_rates.neg.0 != "0" %}{{ am.results_rates.neg.0 }}%{% endif %}
-      </div>
-    </div>
+  {% else %}
 
-  </div>
-
-{% else %}
-
-  <div class="btn-group btn-group-xs pull-left">
-    <div class="btn btn-primary" disabled="disabled">
+    <div class="col text-muted">
       {% trans "No teams debated this topic" %}
     </div>
-  </div>
 
-{% endif %}
+  {% endif %}
+
+</div>
+
+<div class="row pb-3">
+  <div class="col">
+
+    <div class="progress">
+      <div class="progress-bar progress-bar-aff" style="width: {{ am.results_rates.aff.1 }}%">
+        {% if am.results_rates.aff.1|floatformat:"0" != "0" %}
+          {{ am.results_rates.aff.1|floatformat:"0" }}%
+        {% endif %}
+      </div>
+      <div class="progress-bar progress-bar-neg" style="width: {{ am.results_rates.neg.1 }}%">
+        {% if am.results_rates.neg.1|floatformat:"0" != "0" %}
+          {{ am.results_rates.neg.1|floatformat:"0" }}%
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,12 +1,12 @@
 <template>
   <div>
 
-    <div class="row" v-if="roundStatus">
+    <div class="row" v-if="roundStatus === 'R' || roundStatus === 'C'">
 
       <div class="col">
-        <div class="card bg-info text-white bg-info text-white">
-          <div class="card-header h5 text-center">Number of Ballots In</div>
+        <div class="card mt-3">
           <div class="card-body">
+            <h5 class="mb-2 text-center">Latest Actions</h5>
             <ballots-graph :poll-url="ballotsUrl"></ballots-graph>
           </div>
         </div>
@@ -17,29 +17,29 @@
     <div class="row">
 
       <div class="col mt-3">
-        <div class="card border-info">
+        <div class="card">
           <div class="card-body">
-            <h5 class="text-info mb-0"><i data-feather="clock"></i> Latest Actions</h5>
+            <h5 class="mb-0">Latest Actions</h5>
           </div>
           <ul class="list-group list-group-flush">
             <updates-list v-for="action in latestActions" :key="action.timestamp"
                           :item="action"></updates-list>
-            <li class="list-group-item list-group-item-primary" v-if="!latestActions">Loading...</li>
-            <li class="list-group-item list-group-item-light" v-if="latestActions.length === 0">No Actions Yet</li>
+            <li class="list-group-item text-secondary" v-if="!latestActions">Loading...</li>
+            <li class="list-group-item text-secondary" v-if="latestActions.length === 0">No Actions Yet</li>
           </ul>
         </div>
       </div>
 
       <div class="col mt-3">
-        <div class="card border-info">
+        <div class="card">
           <div class="card-body">
-            <h5 class="text-info mb-0"><i data-feather="clock"></i> Latest Results</h5>
+            <h5 class="mb-0">Latest Results</h5>
           </div>
           <ul class="list-group list-group-flush">
             <updates-list v-for="result in latestResults" :key="result.timestamp"
                           :item="result"></updates-list>
-            <li class="list-group-item list-group-item-primary" v-if="!latestResults">Loading...</li>
-            <li class="list-group-item list-group-item-light" v-if="latestResults.length === 0">No Results Yet</li>
+            <li class="list-group-item text-secondary" v-if="!latestResults">Loading...</li>
+            <li class="list-group-item text-secondary" v-if="latestResults.length === 0">No Results Yet</li>
           </ul>
         </div>
       </div>
