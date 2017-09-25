@@ -42,10 +42,10 @@ class HungarianAllocator(Allocator):
 
         if normalised_adj_score > 5.0:
             logger.warning("Normalised score %s is larger than 5.0 (raw score %s, min %s, max %s)",
-                normalised_adj_score, adj._hungarian_score, score_min, score_max)
+                normalised_adj_score, adj._hungarian_score, self.min_score, self.max_score)
         elif normalised_adj_score < 0.0:
             logger.warning("Normalised score %s is smaller than 0.0 (raw score %s, min %s, max %s)",
-                normalised_adj_score, adj._hungarian_score, score_min, score_max)
+                normalised_adj_score, adj._hungarian_score, self.min_score, self.max_score)
 
         cost += self.conflict_penalty * adj.conflicts_with_team(debate.aff_team)
         cost += self.conflict_penalty * adj.conflicts_with_team(debate.neg_team)
