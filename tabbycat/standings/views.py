@@ -116,7 +116,6 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         return mark_safe(message + instructions)
 
 
-
 class PublicTabMixin(PublicTournamentPageMixin):
     """Mixin for views that should only be allowed when the tab is released publicly."""
     cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
