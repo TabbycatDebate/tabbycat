@@ -14,6 +14,8 @@ $table-bg-hover:          #e3e3e3;
 $sidebar-bg:              #333c47;  // Matches that of Jet
 $sidebar-muted-text:      $gray-200;
 $droppable-bg:            $gray-200;
+$navbar-light-bg:         $alt-bg; // Footer and Top Navbar
+$navbar-light-border:     $gray-200; // Footer and Top Navbar
 
 // Gender Highlights
 $male:                    #36b6c0;
@@ -42,7 +44,7 @@ $region-cat-8:            #777;
 $conflict-clash:          #e34e42;
 $conflict-institution:    #ef9b08;
 $conflict-history-base:   #3498db;
-$incomplete-panel:        #a982a4;
+$incomplete-panel:        $gray-600;
 
 // Adj Rankings
 $adj-ranking-0:           hsla(175, 90%, 40%, 1); // A+

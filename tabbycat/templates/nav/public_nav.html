@@ -45,17 +45,25 @@
   </li>
   {% endif %}
   {% if pref.show_all_draws > 0 %}
-    <li class="nav-item {% if draw_nav %}active{% endif %}"><a class="nav-link" href="#" data-toggle="dropdown">{% trans "Draws" %}<b class="caret"></b></a>
-      <ul class="dropdown-menu">
+    <li class="nav-item dropdown {% if draw_nav %}active{% endif %}">
+      <a class="nav-link dropdown-toggle" href="#" id="drawsDrop"
+         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {% trans "Draws" %}<b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="drawsDrop">
         {% for r in tournament.round_set.all %}
           {% if r.draw_status == r.STATUS_RELEASED %}
-            <li><a class="nav-link" href="{% roundurl 'draw-public-for-round' r %}">{{ r.name }}</a></li>
+            <li>
+              <a class="nav-link dropdown-item" href="{% roundurl 'draw-public-for-round' r %}">
+                {{ r.name }}
+              </a>
+            </li>
           {% endif %}
         {% endfor %}
         {% if pref.enable_mass_draws > 0 %}
           <li role="separator" class="divider"></li>
           <li>
-            <a class="public-draw-nav" href="{% tournamenturl 'draw-public-all-draws' %}">
+            <a class="nav-link dropdown-item" href="{% tournamenturl 'draw-public-all-draws' %}">
               {% trans "View All" %}
             </a>
           </li>
@@ -76,10 +84,11 @@
       {% for r in tournament.round_set.all %}
         {% if not r.silent or pref.all_results_released %}
           {% if r.seq < current_round.seq or pref.all_results_released %}
-            <a class="nav-link dropdown-item"
-               href="{% roundurl 'results-public-round' r %}">
-              {{ r.name }}
-            </a>
+            <li>
+              <a class="nav-link dropdown-item" href="{% roundurl 'results-public-round' r %}">
+                {{ r.name }}
+              </a>
+            </li>
           {% endif %}
         {% endif %}
       {% endfor %}
