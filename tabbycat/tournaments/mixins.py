@@ -11,7 +11,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.views.generic.detail import SingleObjectMixin
 
 from actionlog.mixins import LogActionMixin
@@ -115,7 +115,11 @@ class RoundMixin(TournamentMixin):
     round_redirect_pattern_name = None
 
     def get_page_subtitle(self):
-        return 'as of %s' % self.get_round().name
+        if not getattr(self, "page_subtitle") and not getattr(self, "use_template_subtitle", False) \
+                and self.get_round() is not None:
+            return _("for %(round)s") % {'round': self.get_round().name}
+        else:
+            return super().get_page_subtitle()
 
     def get_round(self):
         # First look in self,

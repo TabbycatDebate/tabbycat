@@ -1,12 +1,13 @@
 import json
 import logging
 
-from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count
 from django.utils.html import mark_safe
+from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
+from django.views.generic.base import TemplateView
 
 import motions.statistics as motion_statistics
 from motions.models import Motion
@@ -87,7 +88,7 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         "<em>%(message)s</em></p>"
     )
 
-    standings_error_instructions = ugettext_lazy(
+    admin_standings_error_instructions = ugettext_lazy(
         "<p>You may need to double-check the "
         "<a href=\"%(standings_options_url)s\" class=\"alert-link\">"
         "standings configuration under the Setup section</a>. "
@@ -95,15 +96,25 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         "contact the developers.</p>"
     )
 
+    public_standings_error_instructions = ugettext_lazy(
+        "<p>The tab director will need to resolve this issue.</p>"
+    )
+
     def get_rounds(self):
         """Returns all of the rounds that should be included in the tab."""
         return self.get_tournament().prelim_rounds(until=self.get_round()).order_by('seq')
 
     def get_standings_error_message(self, e):
+        if self.request.user.is_superuser:
+            instructions = self.admin_standings_error_instructions
+        else:
+            instructions = self.public_standings_error_instructions
+
         message = self.standings_error_message % {'message': str(e)}
         standings_options_url = reverse_tournament('options-tournament-standings', self.get_tournament())
-        instructions = self.standings_error_instructions % {'standings_options_url': standings_options_url}
+        instructions %= {'standings_options_url': standings_options_url}
         return mark_safe(message + instructions)
+
 
 
 class PublicTabMixin(PublicTournamentPageMixin):
@@ -165,6 +176,9 @@ class BaseSpeakerStandingsView(BaseStandingsView):
 
     def get_standings(self):
         round = self.get_round()
+
+        if round is None:
+            raise StandingsError(_("The tab can't be displayed because all rounds so far in this tournament are silent."))
 
         speakers = self.get_speakers()
         metrics, extra_metrics = self.get_metrics()
@@ -388,6 +402,9 @@ class BaseTeamStandingsView(BaseStandingsView):
     def get_standings(self):
         tournament = self.get_tournament()
         round = self.get_round()
+
+        if round is None:
+            raise StandingsError(_("The tab can't be displayed because all rounds so far in this tournament are silent."))
 
         teams = tournament.team_set.exclude(type=Team.TYPE_BYE).select_related('institution').prefetch_related('speaker_set')
         metrics = tournament.pref('team_standings_precedence')
