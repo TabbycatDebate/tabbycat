@@ -1,20 +1,20 @@
-{% load debate_tags %}
-{% load i18n %}
+{% load debate_tags static i18n %}
 
 <div class="row mt-3">
 
-  <div class="navbar navbar-light bg-light container-fluid small">
+  <div class="navbar navbar-light container-fluid small">
 
     <div class="row mt-3 mb-2">
 
       <div class="col-lg-6 col-md-5">
-        <h6>
+        <h6 class="d-inline-block">
+          <img src="{% static 'logo.svg' %}" width="16" height="16">
           {% if tournament %}
             {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
           {% else %}
             {% blocktrans trimmed %}This site runs on {% endblocktrans %}
           {% endif %}
-          <span class="emoji">😸</span>Tabbycat
+          Tabbycat
           {% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}
         </h6>
         <p class="text-muted">
@@ -52,7 +52,7 @@
         <h6>{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
-            Use <a href="http://philipbelesky.github.io/ballots/" target="_blank">debatingBallot.com</a> to design and print great ballots online.
+            You can <a href="http://philipbelesky.github.io/ballots/" target="_blank"> customise and print</a> great ballots from your browser.
           {% endblocktrans %}
         </p>
       </div>
@@ -61,33 +61,33 @@
 
       <div class="col mt-2">
         <ul class="nav justify-content-center">
-          <li class="nav-item">
+          <li class="nav-item p-2">
             <i data-feather="github"></i>
-            <a class="nav-link" href="https://github.com/czlee/tabbycat/">
+            <a class="nav-link p-0 d-inline-block" href="https://github.com/czlee/tabbycat/">
               {% trans "GitHub" %}
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item p-2">
             <i data-feather="book"></i>
-            <a class="nav-link" href="http://tabbycat.readthedocs.io/en/stable/">
+            <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/">
               {% trans "Documentation" %}
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item p-2">
             <i data-feather="help-circle"></i>
-            <a class="nav-link" href="http://tabbycat.readthedocs.io/en/stable/about/support.html">
+            <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/about/support.html">
               {% trans "Support" %}
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item p-2">
             <i data-feather="facebook"></i>
-            <a class="nav-link" href="https://www.facebook.com/groups/tabbycat.debate/">
+            <a class="nav-link p-0 d-inline-block" href="https://www.facebook.com/groups/tabbycat.debate/">
               {% trans "Facebook Group" %}
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item p-2">
             <i data-feather="upload-cloud"></i>
-            <a class="nav-link" href="http://tabbycat.readthedocs.io/en/stable/install/heroku.html#installation-the-short-way">
+            <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/install/heroku.html#installation-the-short-way">
               {% trans "Set Up A Copy" %}
             </a>
           </li>

@@ -1,4 +1,18 @@
 //------------------------------------------------------------------------------
+// Top Navbar Customisation
+//------------------------------------------------------------------------------
+
+.navbar-light {
+  background: $navbar-light-bg;
+  border-bottom: 1px solid $navbar-light-border;
+  border-top: 1px solid $navbar-light-border;
+
+  .navbar-brand img {
+    margin-top: -3px; // Tweak icon spacing
+  }
+}
+
+//------------------------------------------------------------------------------
 // Admin Sidebar Customisation
 //------------------------------------------------------------------------------
 
@@ -30,7 +44,7 @@
     display: block;
 
     &:hover {
-      color: lighten($sidebar-muted-text, 20%);
+      color: lighten(theme-color("primary"), 15%);
       text-decoration: none;
     }
 
@@ -60,10 +74,9 @@
     border: 0;
 
     .feather {
-      margin-right: 0.6rem;
+      margin-right: 0.8rem;
     }
   }
-
 }
 
 .admin-sidebar .tournament-title {
@@ -97,8 +110,8 @@
 }
 
 .circle-current {
-  stroke: lighten(theme-color("primary"), 20);
-  fill: theme-color("primary");
+  stroke: lighten(theme-color("info"), 20);
+  fill: theme-color("info");
 }
 
 .circle-later {
@@ -115,7 +128,7 @@
 
   .admin-sidebar .list-group-item a {
     font-size: 12px;
-    padding: 0.75rem 0.45rem;
+    padding: 0.75rem 0.4rem;
   }
 }
 
@@ -123,7 +136,6 @@
 @include media-breakpoint-up(sm) {
 
   .admin-sidebar .list-group-item a {
-
     font-size: 12px;
     padding: 0.5rem 0.6rem;
 
@@ -150,7 +162,6 @@
 @include media-breakpoint-up(lg) {
 
   .admin-sidebar .list-group-item a {
-
     font-size: $font-size-base;
     padding: 0.5rem 1rem;
 

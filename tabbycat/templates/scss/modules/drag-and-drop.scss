@@ -64,7 +64,7 @@
 }
 
 .vue-is-hovering {
-  @include hover-highlights(#000)
+  @include hover-highlights(#000);
 }
 
 .vue-is-dragging {

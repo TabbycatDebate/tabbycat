@@ -3,24 +3,23 @@ from django.utils.functional import cached_property
 
 class MotionStats:
 
-    def __init__(self, motion, t, results, vetoes=None):
+    def __init__(self, motion, t, results, all_vetoes=None):
         self.motion = motion
         self.round = motion.round # Needed for regroup
         self.sides = t.sides
 
         if t.pref('enable_motions'):
             results_data = [r for r in results if r.ballot_submission.motion == motion]
-            if vetoes:
-                vetoes_data = [v for v in vetoes if v.motion == motion]
         else:
             results_data = [r for r in results if r.ballot_submission.debate.round == self.round]
-            if vetoes:
-                vetoes_data = [v for v in vetoes if v.motion.round == self.round]
+
+        if all_vetoes and len(all_vetoes) > 0:
+            vetoes_data = [v for v in all_vetoes if v.motion == motion]
 
         if t.pref('teams_in_debate') == 'two':
             self.isBP = False
             self.debate_rooms = int(len(results_data) / 2)
-            self.round_rooms = int(len(results) / 2)
+            self.round_rooms = int(len(results) / 4)
         else:
             self.isBP = True
             self.debate_rooms = int(len(results_data) / 4)
@@ -29,9 +28,12 @@ class MotionStats:
         self.placings = self.gather_placings(self.points_dict(), results_data)
         self.result_balance = self.determine_balance()
 
-        if vetoes:
+        if all_vetoes and len(all_vetoes) > 0:
             self.vetoes = self.gather_vetoes(self.points_dict(), vetoes_data)
             self.veto_balance = self.determine_balance(True)
+        else:
+            self.vetoes = False
+            self.veto_balance = False
 
     def points_dict(self):
         if self.isBP:
@@ -40,22 +42,22 @@ class MotionStats:
             return dict((s, {1: 0, 0: 0}) for s in self.sides)
 
     # Calculate points per position and debate
-    def gather_placings(self, placings_data, results):
-        for result in results:
+    def gather_placings(self, placings, results_data):
+        for result in results_data:
             if result.points is not None: # Some finals rounds etc wont have points
-                placings_data[result.debate_team.side][result.points] += 1
+                placings[result.debate_team.side][result.points] += 1
             elif result.win is True: # Out rounds
-                placings_data[result.debate_team.side][3] += 1
+                placings[result.debate_team.side][3] += 1
             elif result.win is False: # Out rounds
-                placings_data[result.debate_team.side][0] += 1
+                placings[result.debate_team.side][0] += 1
 
-        return placings_data
+        return placings
 
     # Calculate points per position and debate
-    def gather_vetoes(self, vetoes_data, vetoes):
-        for veto in vetoes:
-            vetoes_data[veto.debate_team.side][1] += 1
-        return vetoes_data
+    def gather_vetoes(self, vetoes, vetoes_data):
+        for veto in vetoes_data:
+            vetoes[veto.debate_team.side][1] += 1
+        return vetoes
 
     def determine_balance(self, for_vetoes=False):
         if self.debate_rooms < 10: # Too few wins/vetoes to calculate
@@ -105,7 +107,7 @@ class MotionStats:
 
     @cached_property
     def veto_rates(self):
-        return self.points_rates(self.placings, True)
+        return self.points_rates(self.vetoes, True)
 
     # For a given point figure out what % of total results it was
     def points_rates(self, data_set, vetoes=False):

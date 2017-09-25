@@ -23,7 +23,7 @@
       {% include "components/item-action.html" with icon="settings" url=tournament.get_absolute_url%}
     {% endif %}
 
-    {% include "components/item-action.html" with text=tournament.name emoji=tournament.emoji|default:"🏆" url=tournament.get_public_url%}
+    {% include "components/item-action.html" with text=tournament.name emoji="🏆" url=tournament.get_public_url%}
 
   </div>
 {% empty %}

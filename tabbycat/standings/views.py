@@ -479,6 +479,7 @@ class BaseMotionStandingsView(TournamentMixin, TemplateView):
             ballot_submission__debate__round__in=rounds).select_related(
             'debate_team', 'ballot_submission__debate__round',
             'ballot_submission__motion')
+
         if t.pref('motion_vetoes_enabled'):
             vetoes = DebateTeamMotionPreference.objects.filter(
                 preference=3,
@@ -486,7 +487,7 @@ class BaseMotionStandingsView(TournamentMixin, TemplateView):
                 ballot_submission__debate__round__in=rounds).select_related(
                 'debate_team', 'ballot_submission__motion')
         else:
-            vetoes = None
+            vetoes = False
 
         analysed_motions = [MotionStats(m, t, results, vetoes) for m in motions]
 

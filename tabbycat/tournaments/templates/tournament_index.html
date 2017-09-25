@@ -81,7 +81,7 @@
       updateBallotsURL: '{% tournamenturl 'results-ballots-graph-data' %}',
       updateActionsURL: '{% tournamenturl 'actionlog-latest-json' %}',
       updateResultsURL: '{% tournamenturl 'results-latest-json' %}',
-      roundStatus: '{{ round_status }}'
+      roundStatus: '{{ round.draw_status }}'
     }
   </script>
   {{ block.super }}

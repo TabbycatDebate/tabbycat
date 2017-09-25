@@ -1,7 +1,7 @@
 <template>
 
   <!-- ADD tooltip -->
-  <button :class="['btn btn-outline-secondary auto-save', customClasses, animationClass]" data-toggle="tooltip"
+  <button :class="['btn btn-link border-primary auto-save', customClasses, animationClass]" data-toggle="tooltip"
           data-placement="bottom" title="Changes are automatically saved; however do not edit/change allocations across multiple browsers/computers at the same time!">
     <span :class="[animationClass]">{{ savedAgoDisplay }}</span>
   </button>
