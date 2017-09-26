@@ -41,6 +41,7 @@
     "vinyl-source-stream": "1.1.0",
     "vue": "2.4.2",
     "vue-hot-reload-api": "2.1.0",
+    "vue-template-compiler": "^2.4.2",
     "vueify": "9.4.1"
   },
   "scripts": {
