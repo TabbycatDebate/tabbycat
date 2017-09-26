@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+1.4.4
+-----
+*Release date: 27 September 2017*
+
+- Fix Vue dependency issue preventing Heroku installs after a dependency release
+- Fix issue with formatting non-numeric standings metrics
+- Fix behaviour of public tabs when all rounds are silent
+
 1.4.3
 -----
 *Release date: 9 September 2017*
