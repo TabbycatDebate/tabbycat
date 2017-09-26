@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
-from participants.emoji import EMOJI_LIST
 from utils.managers import LookupByNameFieldsMixin
 
 import logging
