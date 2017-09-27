@@ -111,8 +111,8 @@ class MotionStats:
 
     # For a given point figure out what % of total results it was
     def points_rates(self, data_set, vetoes=False):
-        if self.debate_rooms == 0:
-            return data_set
+        if self.debate_rooms == 0 or not data_set:
+            return None
 
         rates_for_side = dict(self.points_dict())
         for side in self.sides:

@@ -198,13 +198,13 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         super().setUpClass()
         # Capabilities provide access to JS console
         capabilities = DesiredCapabilities.CHROME
-        capabilities['loggingPrefs'] = { 'browser':'ALL' }
+        capabilities['loggingPrefs'] = {'browser':'ALL'}
         cls.selenium = WebDriver(desired_capabilities=capabilities)
         cls.selenium.implicitly_wait(10)
 
-    def test_no_js_errors(cls):
+    def test_no_js_errors(self):
         # Check console for errors; fail the test if so
-        for entry in cls.selenium.get_log('browser'):
+        for entry in self.selenium.get_log('browser'):
             if entry['level'] == 'SEVERE':
                 raise RuntimeError('Page loaded in selenium has a JS error')
 
@@ -230,5 +230,3 @@ class SeleniumTournamentTestCase(TournamentTestsMixin, SeleniumTestCase):
         if self.unset_preferences:
             for pref in self.unset_preferences:
                 self.t.preferences[pref] = False
-
-
