@@ -22,19 +22,30 @@ $font-size-base:          1rem; // Usually 16px;
 //------------------------------------------------------------------------------
 
 // Theme colors
-$blue:                    #008bf3; // Primary
-$green:                   #28c052; // Success
-$cyan:                    #3b9ad8; // Info
-$yellow:                  #fd7e14; // Warning
-$red:                     #e32c20; // Danger
+$purple:                  #663da0; // Primary
+$green:                   #00bf8a; // Success
+$blue:                    #17a2b8; // Info
+$orange:                  #fd681d; // Warning
+$red:                     #d11879; // Danger
 
 // Key Colors
 $body-bg:                 #f8fafc;
+$body-color:              #212529; // Gray-900 equivalent
+
+$theme-colors: (
+  primary: $purple,
+  success: $green,
+  info: $blue,
+  warning: $orange,
+  danger: $red,
+);
 
 //------------------------------------------------------------------------------
 // Bootstrap Layout Details Overrides
 //------------------------------------------------------------------------------
 
-$border-radius:           0.25rem !default;
-$border-radius-lg:        0.3rem !default;
-$border-radius-sm:        0.2rem !default;
+$border-radius:             0.25rem !default;
+$border-radius-lg:          0.3rem !default;
+$border-radius-sm:          0.2rem !default;
+
+$navbar-light-hover-color:  $purple;

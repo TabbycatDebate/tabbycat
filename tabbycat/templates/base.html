@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>😸{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
+  <title>{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
 
   {% trans " runs on Tabbycat — an open-source tab system that supports 2 and 4 team debating formats" as meta_info %}
   {% if tournament %}
@@ -17,6 +17,8 @@
   <meta name="description" content="{{ meta_prefix }}{{ meta_info }}" />
   <meta property="og:description" content="{{ meta_prefix }}{{ meta_info }}" />
 
+  <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png' %}" sizes="32x32" />
+  <link rel="icon" type="image/png" href="{% static 'favicon-16x16.png' %}" sizes="16x16" />
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
   {% block extra-css %}{% endblock %}
   {% block extra-head %}{% endblock %}
@@ -51,7 +53,7 @@
       <!-- Insert a second level column structure for a side nav -->
       <div class="row">
         <div class="admin-sidebar col-md-2 col-1 float-left pl-0 pr-md-3 pr-0 collapse width show">
-          {% include "nav/admin_nav.html" %}
+          {% block sidebar %}{% include "nav/admin_nav.html" %}{% endblock %}
         </div>
         <main class="col-md-10 col-11 float-left pl-md-0 pl-3 main">
     {% endif %}

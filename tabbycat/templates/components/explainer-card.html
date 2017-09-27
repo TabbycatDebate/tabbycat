@@ -1,23 +1,7 @@
-<div class="card text-{{ type }} border-{{ type }} mb-3">
-  <div class="card-body row align-items-center">
+<div class="card border-{{ type }} mb-3">
+  <div class="list-group list-group-flush">
 
-      <div class="col-auto pt-1">
-        <i data-feather="info"></i>
-      </div>
-
-      <div class="col pl-2">
-        {% if p1 %}
-          <p class="card-text mb-0">
-            {{ p1|safe }}
-          </p>
-        {% endif %}
-        {% if p2 %}
-          <p class="card-text mt-3 mb-0">
-            {{ p2|safe }}
-          </p>
-        {% endif %}
-
-      </div>
+    {% include "components/item-info.html" %}
 
   </div>
 </div>

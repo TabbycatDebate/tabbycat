@@ -1,6 +1,6 @@
 <template>
 
-  <li class='list-group-item list-group-item-info d-flex justify-content-between align-items-center'>
+  <li class='list-group-item text-info d-flex justify-content-between align-items-center'>
     <div>
       <strong v-html="item.user"></strong> {{ item.type }} <em>{{ item.param }}</em>
     </div>

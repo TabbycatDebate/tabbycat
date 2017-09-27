@@ -3,7 +3,6 @@
 
 {% block head-title %}<span class="emoji">👋</span> {% trans "Welcome!" %}{% endblock %}
 {% block page-title %}Home{% endblock %}
-{% block nav %}{% endblock %}
 
 {% block content %}
 
@@ -23,7 +22,7 @@
       {% include "components/item-action.html" with icon="settings" url=tournament.get_absolute_url%}
     {% endif %}
 
-    {% include "components/item-action.html" with text=tournament.name emoji=tournament.emoji|default:"🏆" url=tournament.get_public_url%}
+    {% include "components/item-action.html" with text=tournament.name icon="award" url=tournament.get_public_url%}
 
   </div>
 {% empty %}
@@ -54,15 +53,15 @@
 
     {% trans "All Draws by Venue" as text %}
     {% url 'all_tournaments-all-venues' as url %}
-    {% include "components/item-action.html" with emoji="🎪" %}
+    {% include "components/item-action.html" with icon="map" %}
 
     {% trans "All Draws by School" as text %}
     {% url 'all_tournaments-all-institutions' as url %}
-    {% include "components/item-action.html" with emoji="🏢" %}
+    {% include "components/item-action.html" with icon="home" %}
 
     {% trans "All Teams and Divisions" as text %}
     {% url 'all_tournaments-all-teams' as url %}
-    {% include "components/item-action.html" with emoji="👯" %}
+    {% include "components/item-action.html" with icon="users" %}
 
   </div>
 {% endif %}

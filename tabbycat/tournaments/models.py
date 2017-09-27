@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
-from participants.emoji import EMOJI_LIST
 from utils.managers import LookupByNameFieldsMixin
 
 import logging
@@ -37,8 +36,6 @@ class Tournament(models.Model):
     short_name = models.CharField(max_length=25, blank=True, default="",
         verbose_name=_("short name"),
         help_text=_("The name used in the menu, e.g. \"Australs 2016\""))
-    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST,
-        verbose_name=_("emoji")) # uses null=True to allow multiple tournaments to have no emoji
     seq = models.IntegerField(blank=True, null=True,
         verbose_name=_("sequence number"),
         help_text=_("A number that determines the relative order in which tournaments are displayed on the homepage."))

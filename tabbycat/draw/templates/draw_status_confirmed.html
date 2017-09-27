@@ -33,7 +33,7 @@
 
             {% if active_adjs.count < draw.count %}
 
-              {% include "components/item-alert.html" with type=danger text="There are currently fewer checked-in adjudicators than there are rooms." %}
+              {% include "components/item-info.html" with type=danger text="There are currently fewer checked-in adjudicators than there are rooms." %}
 
             {% else %}
 
@@ -43,7 +43,7 @@
                 {% plural %}
                   {{ ndebates }} debates do not have a chair.
                 {% endblocktrans %}
-                {% include "components/item-alert.html" with type="danger" %}
+                {% include "components/item-info.html" with type="danger" %}
               {% endif %}
 
               {% if not pref.duplicate_adjs and duplicates %}
@@ -52,7 +52,7 @@
                 {% plural %}
                   The following <strong>{{ nadjs }}</strong> adjudicators are adjudicating multiple debates: <strong>{{ adjudicators }}</strong>
                 {% endblocktrans %}
-                {% include "components/item-alert.html" with type="danger" %}
+                {% include "components/item-info.html" with type="danger" %}
               {% endif %}
 
               {% if pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
@@ -61,7 +61,7 @@
                 {% plural %}
                   {{ ndebates }} debates have panels with an even number of adjudicators.
                 {% endblocktrans %}
-                {% include "components/item-alert.html" with type="warning" %}
+                {% include "components/item-info.html" with type="warning" %}
               {% endif %}
 
               {% if debates_with_adj_conflicts > 0 %}
@@ -70,7 +70,7 @@
                 {% plural %}
                   {{ ndebates }} debates have adjudicator conflicts.
                 {% endblocktrans %}
-                {% include "components/item-alert.html" with type="warning" %}
+                {% include "components/item-info.html" with type="warning" %}
               {% endif %}
 
             {% endif %} {# active_adjs.count < draw.count #}
@@ -81,7 +81,7 @@
               {% include "components/item-action.html" with text=title type="success" to_complete=True %}
             {% else %}
             {% trans "Edit adjudicator allocation" as title %}
-              {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
+              {% include "components/item-action.html" with text=title type="primary" %}
             {% endif %}
 
           {% endwith %}
@@ -106,7 +106,7 @@
               {% plural %}
                 {{ ndebates }} debates do not have a venue.
               {% endblocktrans %}
-              {% include "components/item-alert.html" with type="danger" %}
+              {% include "components/item-info.html" with type="danger" %}
             {% endif %}
 
             {% if duplicates %}
@@ -115,7 +115,7 @@
               {% plural %}
                 The following <strong>{{ ndebates }}</strong> venues have multiple debates in them: <strong>{{ venues }}</strong>
               {% endblocktrans %}
-              {% include "components/item-alert.html" with type="danger" %}
+              {% include "components/item-info.html" with type="danger" %}
             {% endif %}
 
             {% if debates_with_venue_conflicts > 0 %}
@@ -124,7 +124,7 @@
               {% plural %}
                 {{ ndebates }} debates have venue constraint violations.
               {% endblocktrans %}
-              {% include "components/item-alert.html" with type="danger" %}
+              {% include "components/item-info.html" with type="danger" %}
             {% endif %}
 
             {% roundurl 'venues-edit' round as url %}
@@ -133,7 +133,7 @@
               {% include "components/item-action.html" with text=title type="success" to_complete=True %}
             {% else %}
               {% trans "Edit venue allocation" as title %}
-              {% include "components/item-action.html" with text=title type="primary" icon="check-circle" %}
+              {% include "components/item-action.html" with text=title type="primary" %}
             {% endif %}
 
           {% endwith %}
@@ -159,7 +159,7 @@
               {% plural %}
                 {{ ndebates }} debates do not have their sides confirmed.
               {% endblocktrans %}
-              {% include "components/item-alert.html" with type="danger" %}
+              {% include "components/item-info.html" with type="danger" %}
 
               {% roundurl 'draw-matchups-edit' as url %}
               {% include "components/item-action.html" with text="Allocate Sides" type="success" to_complete=True %}

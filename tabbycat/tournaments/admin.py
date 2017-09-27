@@ -10,7 +10,7 @@ from .models import Round, Tournament
 # ==============================================================================
 
 class TournamentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'seq', 'emoji', 'short_name', 'current_round', 'active')
+    list_display = ('name', 'slug', 'seq', 'short_name', 'current_round', 'active')
     ordering = ('seq', )
 
 
