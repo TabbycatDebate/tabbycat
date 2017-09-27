@@ -1,4 +1,3 @@
-from django.test import tag
 from selenium.webdriver.support.ui import WebDriverWait
 
 from utils.tests import SeleniumTournamentTestCase

@@ -1,4 +1,3 @@
-from django.test import tag
 from django.contrib.auth.models import User
 from selenium.webdriver.support.ui import WebDriverWait
 from utils.tests import SeleniumTournamentTestCase
