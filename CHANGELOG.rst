@@ -29,6 +29,16 @@ Change Log
     - More of the tables that allow you to set or edit data (such as the check-in's tables for say Adjudicators) will now automatically save their results.
     - When adding/editing users extraneous fields have been hidden and the "Staff" and "Superuser" roles have new sub-text clarifying what they mean for users with those permissions.
 
+
+1.4.4
+-----
+*Release date: 27 September 2017*
+
+- Fix Vue dependency issue preventing Heroku installs after a dependency release
+- Fix issue with formatting non-numeric standings metrics
+- Fix behaviour of public tabs when all rounds are silent
+
+
 1.4.3
 -----
 *Release date: 9 September 2017*
