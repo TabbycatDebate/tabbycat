@@ -25,10 +25,10 @@ Change Log
     - After creating a new tournament you will now be prompted to apply a basic rules and public information preset
     - Better handling of errors that arise when a debate team is missing or where two teams have been assigned the same side
     - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
-    - 'Feedback paths' now default to a more permissive setting (rather than only allowing Chairs to submit feedback) and the Feedback Overview page will note that current configuration.
-    - More of the tables that allow you to set or edit data (such as the check-in's tables for say Adjudicators) will now automatically save their results.
-    - When adding/editing users extraneous fields have been hidden and the "Staff" and "Superuser" roles have new sub-text clarifying what they mean for users with those permissions.
-    - Teams and adjudicators are no longer required to have institutions.
+    - 'Feedback paths' now default to a more permissive setting (rather than only allowing Chairs to submit feedback) and the Feedback Overview page will note that current configuration
+    - More of the tables that allow you to set or edit data (such as the check-in's tables for say Adjudicators) will now automatically save their results
+    - When adding/editing users extraneous fields have been hidden and the "Staff" and "Superuser" roles have new sub-text clarifying what they mean for users with those permissions
+    - Teams and adjudicators are no longer required to have institutions
 
 
 1.4.4

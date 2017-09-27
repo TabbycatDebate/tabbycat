@@ -15,11 +15,11 @@
         {% for tournament in all_tournaments %}
           {% if user.is_authenticated %}
             <a class="dropdown-item" href="{{ tournament.get_absolute_url  }}">
-              {% if user.is_superuser %}Admin{% else %}Assistant{% endif %}
+              <i data-feather="settings"></i>{% if user.is_superuser %}Admin{% else %}Assistant{% endif %}
               area for <strong>{{ tournament }}</strong>
             </a>
             <a class="dropdown-item" href="{{ tournament.get_public_url  }}">
-              Public area for <strong>{{ tournament }}</strong>
+              <i data-feather="eye"></i>Public area for <strong>{{ tournament }}</strong>
             </a>
           {% else %}
             <a class="dropdown-item" href="{{ tournament.get_public_url }}">
@@ -29,7 +29,7 @@
           <div class="dropdown-divider"></div>
         {% endfor %}
 
-        <a class="dropdown-item" href="/">Site Home</a>
+        <a class="dropdown-item" href="/"><i data-feather="home"></i>Site Home</a>
       </div>
 
     </div>

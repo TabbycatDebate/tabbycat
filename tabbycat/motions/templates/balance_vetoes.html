@@ -27,18 +27,21 @@
 
   <div class="row pb-3">
     <div class="col">
-
       <div class="progress">
-        <div class="progress-bar progress-bar-aff" style="width: {{ am.veto_rates.aff.1 }}%">
-          {% if am.veto_rates.aff.1|floatformat:"0" != "0" %}
-            {{ am.veto_rates.aff.1|floatformat:"0" }}%
-          {% endif %}
-        </div>
-        <div class="progress-bar progress-bar-neg" style="width: {{ am.veto_rates.neg.1 }}%">
-          {% if am.veto_rates.neg.1|floatformat:"0" != "0" %}
-            {{ am.veto_rates.neg.1|floatformat:"0" }}%
-          {% endif %}
-        </div>
+        {% if am.veto_rates.aff.1 %}
+          <div class="progress-bar progress-bar-aff" style="width: {{ am.veto_rates.aff.1 }}%">
+            {% if am.veto_rates.aff.1|floatformat:"0" != "0" %}
+              {{ am.veto_rates.aff.1|floatformat:"0" }}%
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if am.veto_rates.neg.1 %}
+          <div class="progress-bar progress-bar-neg" style="width: {{ am.veto_rates.neg.1 }}%">
+            {% if am.veto_rates.neg.1|floatformat:"0" != "0" %}
+              {{ am.veto_rates.neg.1|floatformat:"0" }}%
+            {% endif %}
+          </div>
+        {% endif %}
       </div>
 
     </div>
