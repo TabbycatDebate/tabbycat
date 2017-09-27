@@ -22068,7 +22068,6 @@
     "fields": {
         "name": "demo",
         "short_name": "demo",
-        "emoji": null,
         "seq": null,
         "slug": "demo",
         "current_round": 4,

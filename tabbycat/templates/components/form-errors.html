@@ -4,4 +4,4 @@
   {% trans "Whoops! There was an error with one or more fields" as message %}
 {% endif %}
 
-{% include "components/alert.html" with type="danger" extra=errors %}
+{% include "components/alert.html" with type="danger" extra=errors|cut:'__all__' %}

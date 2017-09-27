@@ -35,7 +35,9 @@
 
             {% if form.errors %}
               {% trans "Your username and password didn't match." as message %}
-              {% include "components/form-errors.html" with errors=form.errors %}
+              {% for error in form.errors %}
+                {% include "components/form-errors.html" with errors=form.errors %}
+              {% endfor %}
             {% endif %}
 
             {% if next %}
