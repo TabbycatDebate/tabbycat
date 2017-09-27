@@ -114,7 +114,9 @@ class ConditionalTournamentViewBasicCheckMixin(ConditionalTournamentTestsMixin):
 @modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
 class TournamentTestCase(TournamentTestsMixin, TestCase):
     """Extension of django.test.TestCase that provides methods for testing a
-    populated view on a tournament, with a prepopulated database."""
+    populated view on a tournament, with a prepopulated database.
+    Selenium tests can't inherit from this otherwise fixtures wont be loaded;
+    as per https://stackoverflow.com/questions/12041315/how-to-have-django-test-case-and-selenium-server-use-same-database"""
     pass
 
 
@@ -202,7 +204,9 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         super().tearDownClass()
 
 
-class SeleniumTournamentTestCase(TournamentTestCase, SeleniumTestCase):
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+@modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
+class SeleniumTournamentTestCase(TournamentTestsMixin, SeleniumTestCase):
     """ Basically reimplementing BaseTournamentTest; but use cls not self """
 
     set_preferences = None
