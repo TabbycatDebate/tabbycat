@@ -690,8 +690,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         conflicts_by_debate = []
         for debate in debates:
             # conflicts is a list of (level, message) tuples
-            conflicts = [("primary", flag) for flag in debate.get_flags_display()]
-            conflicts += [("primary", "%(team)s: %(flag)s" % {'team': debate.get_team(side).short_name, 'flag': flag})
+            conflicts = [("secondary", flag) for flag in debate.get_flags_display()]
+            conflicts += [("secondary", "%(team)s: %(flag)s" % {'team': debate.get_team(side).short_name, 'flag': flag})
                     for side in self.tournament.sides for flag in debate.get_dt(side).get_flags_display()]
 
             if self.tournament.pref('avoid_team_history'):
