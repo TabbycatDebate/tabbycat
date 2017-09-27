@@ -26,8 +26,10 @@ export default {
     this.$eventHub.$on('unset-conflicts-for-' + this.conflictableType, this.setConflicts)
 
     // Subscribe to set/unset events for institutions sent by hovers
-    this.$eventHub.$on('set-conflicts-for-institution', this.setInstitutionConflicts)
-    this.$eventHub.$on('unset-conflicts-for-institution', this.setInstitutionConflicts)
+    if (this.conflictable.institution !== null) {
+      this.$eventHub.$on('set-conflicts-for-institution', this.setInstitutionConflicts)
+      this.$eventHub.$on('unset-conflicts-for-institution', this.setInstitutionConflicts)
+    }
   },
   computed: {
     hasHistoryConflict: function() {
@@ -79,21 +81,23 @@ export default {
     issueInstitutionalConflictForTeam(state) {
       if (!_.isUndefined(this.conflictable.institution)) {
         // Teams dont have institutional clashes; must set manually
-        var id = this.conflictable.institution.id;
-        if (state === true) {
-          this.sendConflict({ id: id }, 'institution', 'institution', 'hover',
-                            'clashes', 'team')
-        } else {
-          this.unsendConflict({ id: id }, 'institution', 'institution', 'hover',
-                              'clashes', 'team')
+        if (this.conflictable.institution !== null) {
+          var id = this.conflictable.institution.id;
+          if (state === true) {
+            this.sendConflict({ id: id }, 'institution', 'institution',
+                              'hover', 'clashes', 'team')
+          } else {
+            this.unsendConflict({ id: id }, 'institution', 'institution',
+                                'hover', 'clashes', 'team')
+          }
         }
       }
     },
     showHoverConflicts: function() {
       this.isHovering = true
       if (this.debugMode) {
-        console.debug('Conflictable showHoverConflicts() for', this.conflictableType,
-          this.conflictable.id, this.isConflicted)
+        console.debug('Conflictable showHoverConflicts() for',
+          this.conflictableType, this.conflictable.id, this.isConflicted)
       }
       // Issue conflict events; typically on beginning hover
       var self = this

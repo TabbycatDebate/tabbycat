@@ -1,9 +1,9 @@
 <template>
 
-  <div :class="[item.class, 'btn btn-outline-secondary']" >
+  <button :class="[item.class, 'btn btn-outline-secondary']" >
     <i v-html="getFeatherIcon"></i>
     {{ item.title }}
-  </div>
+  </button>
 
 </template>
 

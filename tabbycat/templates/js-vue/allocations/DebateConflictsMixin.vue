@@ -109,7 +109,9 @@ export default {
       var self = this
 
       var teamsMatches = _.filter(this.teams, function(team) {
-        return team.institution.id === conflict.id;
+        if (team.institution !== null) {
+          return team.institution.id === conflict.id;
+        }
       });
       // Find teams of the same institution as the conflict
       _.forEach(teamsMatches, function(team) {

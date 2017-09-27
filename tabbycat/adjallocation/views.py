@@ -62,8 +62,9 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
         if for_type == 'for_teams':
             # Teams don't show in AdjudicatorInstitutionConflict; need to
             # add own institutional clash manually to reverse things
-            ic = [{'id': serialized_adj_or_team['institution']['id']}]
-            serialized_adj_or_team['conflicts']['clashes']['institution'] = ic
+            if serialized_adj_or_team['institution']:
+                ic = [{'id': serialized_adj_or_team['institution']['id']}]
+                serialized_adj_or_team['conflicts']['clashes']['institution'] = ic
 
         return serialized_adj_or_team
 

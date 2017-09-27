@@ -14,9 +14,11 @@ export default {
                        'icon': 'wifi' }]
       // Percentile rankings only on Edit Adjudicators page
       if (!_.isUndefined(this.percentileRanking)) {
+        var css = 'ranking-display ranking-' + this.percentileRanking.percentile
+        ratings[0]['class'] = css
         ratings.push({
           'title': this.percentileRanking.grade + this.percentileRanking.text,
-          'class': 'ranking-display ranking-' + this.percentileRanking.percentile
+          'class': css
         })
       }
       return ratings
@@ -31,7 +33,7 @@ export default {
     },
     annotateDataForSlideOver: function() {
       return this.adjudicator
-    }
+    },
   },
   methods: {
     formatForSlideOver: function(subject) {

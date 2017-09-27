@@ -12,13 +12,17 @@ export default {
       }
     },
     institutionDetailForSlideOver: function(adjorteam) {
-      var title = adjorteam.institution.name
-      var css = ''
-      if (adjorteam.region !== null && !_.isUndefined(adjorteam.region)) {
-        title += ' (' + adjorteam.region.name + ')'
-        css += 'region-display region-' + adjorteam.region.class
+      if (adjorteam.institution !== null) {
+        var title = adjorteam.institution.name
+        var css = ''
+        if (adjorteam.region !== null && !_.isUndefined(adjorteam.region)) {
+          title += ' (' + adjorteam.region.name + ')'
+          css += 'region-display region-' + adjorteam.region.class
+        }
+        return [{ 'title': title, 'icon': 'globe', 'class': css }]
+      } else {
+        return [{ 'title': "No Institution", 'icon': 'globe', 'class': '' }]
       }
-      return [{ 'title': title, 'icon': 'globe', 'class': css }]
     },
   }
 }
