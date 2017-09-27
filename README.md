@@ -1,4 +1,4 @@
-# 😸 Tabbycat
+# ![Tabbycat logo](tabbycat/static/favicon-32x32.png) Tabbycat
 
 [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)
 [![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/)
