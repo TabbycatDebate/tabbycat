@@ -3,7 +3,7 @@ import json
 import logging
 
 from django.core.urlresolvers import reverse
-from django.test import Client, modify_settings, override_settings, TestCase
+from django.test import Client, modify_settings, override_settings, tag, TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -188,6 +188,7 @@ class BaseDebateTestCase(TestCase):
         self.t.delete()
 
 
+@tag('selenium') # Exclude from Travis
 class SeleniumTestCase(StaticLiveServerTestCase):
     """Used to verify rendered html and javascript functionality on the site as
     rendered. Opens a Chrome window and checks for JS/DOM state on the fixture

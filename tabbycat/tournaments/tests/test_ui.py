@@ -6,7 +6,6 @@ from utils.tests import SeleniumTournamentTestCase
 
 class CoreFunctionsTests(SeleniumTournamentTestCase):
 
-    @tag('functional')
     def test_login(self):
         user = User.objects.create_user('testadmin', '', 'testadmin')
         user.is_superuser = True

@@ -11,7 +11,6 @@ class CoreStandingsTests(SeleniumTournamentTestCase):
                        'tab_release__replies_tab_released',
                        'tab_release__motion_tab_released']
 
-    @tag('functional')
     def test_speaker_standings(self):
         test_url = self.get_view_url('standings-public-tab-speaker')
         self.selenium.get('%s%s' % (self.live_server_url, test_url))
