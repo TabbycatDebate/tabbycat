@@ -14,56 +14,33 @@
   {{ wizard.form.management_form }}
 
   <div class="row">
-    <div class="form-horizontal col-md-12 page-sub-nav">
-      <button type="submit" class="btn btn-default" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><span class="glyphicon glyphicon-chevron-left"></span>{% trans "Previous Step" %}</button>
+    <div class="col-md-12">
+      <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
     </div>
   </div>
 
-  {% if wizard.form.errors %}
-  <div class="alert alert-danger">
-    <p>{% trans "There are some problems with the data on this form:" %}</p>
-    {{ wizard.form.non_form_errors }}
-  </div>
-  {% endif %}
-
   <div class="row">
+    <div class="col">
 
-    {% for form in wizard.form %}{# actually a formset #}
-    <div class="col-md-6">
-      <div class="panel">
-        <div class="panel-body">
+      <div class="card mt-3">
 
-          <div class=" form-horizontal">
-            {% if form.non_field_errors %}
-              <div class="col-sm-12">
-                {{ form.non_field_errors }}
-              </div>
-            {% endif %}
-
-            {{ form.id }}
-            {% for field in form.visible_fields %}
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="{{ field.id_for_label }}">
-                  {{ field.label }}
-                </label>
-                <div class="col-sm-8">
-                  {{ field|addcss:"form-control" }}
-                  {{ field.errors }}
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-
+        <div class="list-group list-group-flush">
+          {% if wizard.form.non_form_errors %}
+            {% include "components/form-errors.html" with errors=wizard.form.non_form_errors %}
+          {% endif %}
         </div>
+
+        {% for form in wizard.form %}{# actually a formset #}
+
+          {{ form.id }}
+          {% include "components/form-main.html" with double=True %}
+
+        {% endfor %}
+
+        {% trans "Save All Institutions" as title %}
+        {% include "components/form-submit.html" %}
+
       </div>
-    </div>
-    {% endfor %}
-
-  </div>
-
-  <div class="row">
-    <div class=" form-horizontal col-md-12">
-      <input type="submit" class="btn btn-success btn-block" value="{% trans 'Save All Institutions' %}" />
     </div>
   </div>
 

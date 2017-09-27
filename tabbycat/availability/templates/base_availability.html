@@ -1,99 +1,44 @@
-{% extends "base_vue_table.html" %}
-{% load debate_tags %}
-{% load static %}
+{% extends "base.html" %}
+{% load debate_tags i18n %}
 
-{% block page-subnav-sections %}
-  <a href="{% roundurl 'availability-index' round %}" class="btn btn-default">
-    <span class="glyphicon glyphicon-chevron-left"></span>Overview
-  </a>
-  {% if round.is_break_round and page_title == 'Adjudicator Check-Ins' %}
-    <a class="btn btn-primary submit-disable"
-       href="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
-      Check In All Breaking
-    </a>
-  {% endif %}
-  {% if round.seq > 1 %}
-    <button id="select_previous" class="btn btn-default" type="button">
-      Copy from Previous
-    </button>
-  {% endif %}
-  <div class="btn-group">
-    <button id="select_all" class="btn btn-default">
-      Select All
-    </button>
-    <button id="select_none" class="btn btn-default">
-      Select None
-    </button>
+{% block content %}
+
+  <div id="vueMount">
+    <availability-container :tables-data=tablesData
+                            :round-info=roundInfo
+                            :translations=translations
+                            :urls=urls
+                             orientation={{ tables_orientation|safe }} >
+    </availability-container>
   </div>
-  {{ block.super }}
-{% endblock %}
 
-{% block page-subnav-actions %}
-  <button id="save_availability" class="btn btn-success submit-disable" >
-    <span class="glyphicon glyphicon-floppy-disk"></span> Save Selected
-  </button>
-{% endblock %}
+{% endblock content %}
 
 {% block js %}
 
-  {{ block.super }}
   <script>
-
-    var updateURL = '{{ update_url }}';
-    var overviewURL = '{% roundurl 'availability-index' round %}';
-
-    $('#select_all').click(function() {
-      $(":checkbox.vue-table-checkbox").each(function(){
-        $(this).prop('checked', true);
-      });
-      return false;
-    });
-
-    $('#select_none').click(function() {
-      $(":checkbox.vue-table-checkbox").each(function(){
-        $(this).prop('checked', false);
-      });
-      return false;
-    });
-
-    $('#select_previous').click(function() {
-      $(":checkbox.vue-table-checkbox").each(function(){
-        var prev_round = $(this).parents("td").siblings("td").first();
-        var prev_active = prev_round.children(".hidden").text().trim();
-        if (prev_active === 'true') {
-          $(this).prop('checked', true);
-        } else {
-          $(this).prop('checked', false);
-        }
-      });
-      return false;
-    });
-
-    $('#save_availability').click(function() {
-      var references = [], btn = $(this);
-      $(":checkbox.vue-table-checkbox").each(function(){
-        if ($(this).prop('checked')) {
-          references.push(parseInt($(this).attr('data-target')));
-        }
-      });
-      $.ajax({
-        type: "POST",
-        url: updateURL,
-        data: {
-          references: references,
-        },
-        success: function(data, status) {
-          $.fn.showAlert('success', 'Saved availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the check-ins overview page?</a>', 2000);
-          btn.button('reset');
-        },
-        error: function(xhr, error, ex) {
-          $.fn.showAlert('danger', 'Error saving availabilities. <a href="' + overviewURL +'" class="alert-link">Return to the check-ins overview page?</a>', 5000);
-          btn.button('reset');
-        }
-      });
-      return false;
-    });
-
+    window.vueData = {
+      tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
+      roundInfo: {
+        'seq': {{ round.seq }},
+        'break': '{{ round.is_break_round }}',
+        'model': '{{ model }}'
+      },
+      urls: {
+        'back': '{% roundurl "availability-index" round %}',
+        'breakingAdjs': '{% roundurl "availability-checkin-breaking-adjudicators" %}',
+        'save': '{{ saveURL|safe }}'
+      },
+      translations: {
+        'Select All': '{% trans "Select All" %}',
+        'Select None': '{% trans "Select None" %}',
+        'Check-Ins': '{% trans "Check-Ins" %}',
+        'Check In All Breaking': '{% trans "Check In All Breaking" %}',
+        'Copy from Previous': '{% trans "Copy from Previous" %}',
+        'Save Selected': '{% trans "Save Selected" %}'
+      }
+    }
   </script>
+  {{ block.super }}
 
-{% endblock %}
+{% endblock js %}

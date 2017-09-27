@@ -35,6 +35,6 @@ class Command(RoundCommand):
                 self.stdout.write("{0:30} {1:30}".format(aff.short_name, neg.short_name))
 
         for team in affs:
-            team.teamsideallocation_set.create(round=round, side=DebateTeam.SIDE_AFFIRMATIVE)
+            team.teamsideallocation_set.create(round=round, side=DebateTeam.SIDE_AFF)
         for team in negs:
-            team.teamsideallocation_set.create(round=round, side=DebateTeam.SIDE_NEGATIVE)
+            team.teamsideallocation_set.create(round=round, side=DebateTeam.SIDE_NEG)

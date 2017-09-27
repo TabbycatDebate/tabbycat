@@ -1,9 +1,9 @@
 <template>
   <div :style="{ width: '49.5%', display: 'inline-block' }">
 
-    <h5 class="text-center no-top-padding vertical-spacing">
+    <h6 class="text-center text-muted pt-0 mb-3">
       {{ title }}<br>({{ total }})
-    </h5>
+    </h6>
 
   </div>
 </template>

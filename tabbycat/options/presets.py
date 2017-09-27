@@ -1,3 +1,10 @@
+import logging
+
+from .dynamic_preferences_registry import tournament_preferences_registry
+
+logger = logging.getLogger(__name__)
+
+
 def _all_subclasses(cls):
     for subclass in cls.__subclasses__():
         yield from _all_subclasses(subclass)
@@ -6,6 +13,48 @@ def _all_subclasses(cls):
 
 def all_presets():
     yield from _all_subclasses(PreferencesPreset)
+
+
+def presets_for_form():
+    presets = all_presets()
+    choices = []
+    for index, preset in enumerate(presets):
+        if preset.show_in_list:
+            choices.append((preset.name, preset.name))
+
+    choices.sort(key=lambda x: x[1]) # Sort by name
+    return choices
+
+
+def public_presets_for_form():
+    return [('Public Information Options', 'Enable Public Information'),
+            (False, 'Disable Public Information')]
+
+
+def get_preferences_data(selected_preset, tournament):
+    preset_preferences = []
+    # Create an instance of the class and iterate over its properties for the UI
+    for key in dir(selected_preset):
+        value = getattr(selected_preset, key)
+        if '__' in key and not key.startswith('__'):
+            # Lookup the base object
+            section, name = key.split('__', 1)
+            try:
+                preset_object = tournament_preferences_registry[section][name]
+                current_value = tournament.preferences[key]
+            except KeyError:
+                logger.exception("Bad preference key: %s", key)
+                continue
+            preset_preferences.append({
+                'key': key,
+                'name': preset_object.verbose_name,
+                'current_value': current_value,
+                'new_value': value,
+                'help_text': preset_object.help_text,
+                'changed': current_value != value,
+            })
+    preset_preferences.sort(key=lambda x: x['key'])
+    return preset_preferences
 
 
 class PreferencesPreset:
@@ -34,6 +83,8 @@ class AustralsPreferences(PreferencesPreset):
     draw_rules__draw_pairing_method            = 'slide'
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
     # Debate Rules
+    debate_rules__teams_in_debate              = 'two'
+    debate_rules__ballots_per_debate           = 'per-adj'
     debate_rules__substantive_speakers         = 3
     debate_rules__reply_scores_enabled         = True
     debate_rules__motion_vetoes_enabled        = True
@@ -42,7 +93,41 @@ class AustralsPreferences(PreferencesPreset):
     # Standings Rules
     standings__standings_missed_debates        = 2  # TODO= check this
     standings__team_standings_precedence       = ['wins', 'speaks_sum']
-    standings__rank_speakers_by                = 'total'
+    standings__rank_speakers_by                = 'average' # constitutional
+    # UI Options
+    ui_options__show_team_institutions         = False
+    ui_options__show_adjudicator_institutions  = True
+
+
+class BritishParliamentaryPreferences(PreferencesPreset):
+    name         = "British Parliamentary Rules"
+    description  = ("2 vs 2 vs 2 vs 2. Compliant with WUDC rules.")
+    show_in_list = True
+
+    scoring__score_min                         = 50.0
+    scoring__score_max                         = 100.0
+    scoring__score_step                        = 1.0
+    scoring__maximum_margin                    = 0.0
+    # Debate Rules
+    debate_rules__substantive_speakers         = 2
+    debate_rules__teams_in_debate              = 'bp'
+    debate_rules__ballots_per_debate           = 'per-debate'
+    debate_rules__side_names                   = 'gov-opp'
+    debate_rules__reply_scores_enabled         = False
+    debate_rules__motion_vetoes_enabled        = False
+    data_entry__enable_motions                 = False
+    # Draw Rules
+    draw_rules__avoid_same_institution         = False
+    draw_rules__avoid_team_history             = False
+    draw_rules__bp_pullup_distribution         = 'anywhere'
+    draw_rules__bp_position_cost               = 'entropy'
+    draw_rules__bp_renyi_order                 = 1.0
+    draw_rules__bp_position_cost_exponent      = 4.0
+    draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
+    # Standings Rules
+    standings__standings_missed_debates        = 2  # TODO check this?
+    standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
+    standings__rank_speakers_by                = 'average' # TODO check this?
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
@@ -86,6 +171,8 @@ class AustralianEastersPreferences(AustralsPreferences):
     debate_rules__reply_scores_enabled         = False
     debate_rules__motion_vetoes_enabled        = True
     data_entry__enable_motions                 = True
+    # Standings Rules
+    standings__rank_speakers_by                = 'average' # constitutional
 
 
 class NZEastersPreferences(AustralsPreferences):
@@ -205,6 +292,7 @@ class WSDCPreferences(AustralsPreferences):
     draw_rules__avoid_same_institution         = False
     # Standings
     standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg']
+    standings__rank_speakers_by                = 'average' # Speakers sub in/out
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = False
@@ -212,7 +300,7 @@ class WSDCPreferences(AustralsPreferences):
 
 class WADLPreferences(PreferencesPreset):
     name         = "WADL Options"
-    show_in_list = True
+    show_in_list = False
     description  = ("Example high school league setup. Many features not "
         "supported in conjunction with other settings.")
 
@@ -262,7 +350,7 @@ class WADLPreferences(PreferencesPreset):
 
 class PublicInformation(PreferencesPreset):
     name         = "Public Information Options"
-    show_in_list = True
+    show_in_list = False
     description  = ("For tournaments hosted online: this sets it up so that "
         "people can access the draw and other generally useful information "
         "via the tab site.")
@@ -276,13 +364,12 @@ class PublicInformation(PreferencesPreset):
 
 class TabRelease(PreferencesPreset):
     name         = "Tab Release Options"
-    show_in_list = True
+    show_in_list = False
     description  = ("For when a tab is ready to be released. This will publicly "
         "display the results of all rounds, the team tab, the speaker tab, etc")
 
     tab_release__team_tab_released             = True
     tab_release__speaker_tab_released          = True
-    tab_release__replies_tab_released          = True
     tab_release__motion_tab_released           = True
     tab_release__ballots_released              = True
     tab_release__all_results_released          = True

@@ -1,25 +1,23 @@
 <template>
-  <div class="col-md-12 draw-container">
+  <div class="draw-container">
 
-    <div class="row nav-pills">
-      <a class="btn btn-default submit-disable" :href="roundInfo.backUrl">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back to Draw
-      </a>
-      <button class="btn btn-primary submit-disable" @click="createAutoAllocation">
-        Auto Allocate
-      </button>
-      <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
+    <div class="row page-navs">
+      <div class="col d-flex justify-content-between">
+        <a class="btn btn-outline-primary " :href="roundInfo.backUrl">
+          <i data-feather="chevron-left"></i> Back to Draw
+        </a>
+        <button class="btn btn-success " @click="createAutoAllocation">
+          Auto Allocate all Venues
+        </button>
+        <auto-save-counter :css="'btn-md pull-right'"></auto-save-counter>
+      </div>
     </div>
 
-    <div class="row vertical-spacing">
-      <div id="messages-container"></div>
-    </div>
-
-    <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions" @resort="updateSorting"
+    <div class="mb-3 mt-3">
+      <draw-header :round-info="roundInfo" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
         <div @click="updateSorting('venue')" slot="hvenue"
-             class="vue-sortable thead flex-cell flex-12 vue-droppable-container">
+             class="vue-sortable thead flex-cell flex-12 ">
           <span>Venue </span>
           <span :class="sortClasses('venue')"></span>
         </div>
@@ -95,21 +93,22 @@ export default {
     },
     createAutoAllocation: function(event) {
       var self = this
-      $(event.target).button('loading')
+      $.fn.loadButton(event.target)
       $.post({
         url: this.roundInfo.autoUrl,
-        success: function(data, textStatus, jqXHR) {
-          $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
-          self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
-          self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedVenues))
-          self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-          $(event.target).button('reset')
-        },
-        error: function(data, textStatus, jqXHR) {
-          $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
-        },
-        dataType: "json"
-      });
+        dataType: 'json',
+      }).done(function(data, textStatus, jqXHR) {
+        // Success handler
+        self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
+        self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedVenues))
+        self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
+        $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
+        $.fn.resetButton(event.target)
+      }).fail(function(response) {
+        var info = response.responseJSON.message
+        $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
+        $.fn.resetButton(event.target)
+      })
     },
   }
 }

@@ -5,6 +5,9 @@ import _ from 'lodash'
 export default {
   mixins: [MovingMixin],
   methods: {
+    debateCheckIfShouldSave(debate) {
+      return true
+    },
     saveMoveForType(venueId, fromDebate, toDebate) {
       var venue = this.allVenuesById[venueId]
       var addToUnused = []

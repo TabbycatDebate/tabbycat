@@ -1,0 +1,41 @@
+{% load add_field_css debate_tags i18n %}
+
+<div class="list-group-item js-team-speakers s{{ position.pos }}">
+  <div class="row">
+    <div class="col-2 pt-2 p-lg-2 pr-0 p-1 speaker-position-label">
+      {{ position.name }}
+    </div>
+
+    <div class="col mb-0 pr-md-2 pr-1 form-group {{ position.speaker.errors|yesno:'error,' }}">
+
+      {% if forloop.parentloop.parentloop.first %}
+
+        {# On the first form, display the speaker selection dropdown. #}
+        {{ position.speaker|addcss:"js-speaker form-control custom-select required" }}
+        {{ position.speaker.errors }}
+
+        <label class="iron-person small custom-control custom-checkbox pt-0 m-0" style="display: none;"
+               data-toggle="tooltip" data-placement="bottom"
+               title="{% trans "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate." %}">
+          {{ position.ghost|addcss:"custom-control-input" }}
+          <span class="custom-control-indicator mt-2"></span>
+          <span class="custom-control-description">{{ position.ghost.label_tag }}</span>
+          {{ position.ghost.errors }}
+        </label>
+
+      {% else %}
+
+        {# On every other form, display a disabled field that JavaScript will populate when the selection in the first form changes. #}
+        <div type="text" id="disabledTextInput" class="btn speaker-name" disabled></div>
+
+      {% endif %}
+
+    </div>
+
+    <div class="col-4 form-group {{ team.side_code }} pr-md-2 pr-1 score {{ position.score_errors|yesno:'error,' }}">
+      {{ position.score|addcss:"form-control" }}
+      {{ position.score.errors }}
+    </div>
+
+  </div>
+</div>

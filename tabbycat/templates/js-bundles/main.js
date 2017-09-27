@@ -8,17 +8,22 @@ var $ = require("jquery");
 global.jQuery = $; // Set for bootstrap
 window.$ = $; // Set for browser window
 
-require("bootstrap"); // Need to call boostrap functions from within Vue etc
+// Hover over options Needs to come before bootstrap
+import Popper from 'popper.js';
+window.Popper = Popper;
+
+// Import bootstrap javascript plugins
+require("bootstrap");
+
+// Icons
+import feather from 'feather-icons';
 
 // Mount global jquery stuff here
 $(document).ready(function(){
+
   // Enable hover tooltips for all elements
   $('[data-toggle=tooltip]').tooltip({
     'html': true
-  });
-  // Disable buttons post submission
-  $('.submit-disable').on('click', function () {
-    var $btn = $(this).button('loading');
   });
   // Make larger click targets for checkboxes in tables
   $('.checkbox-target').on('click', function (e) {
@@ -28,17 +33,30 @@ $(document).ready(function(){
       checkBox.trigger("change");
     }
   });
+  // Feather shim for icons
+  feather.replace();
+  // Remove the pre-expanded sidebar states for mobile (they overlap)
+  if ($(window).width() < 768) {
+    $("#sidebar .collapse").removeClass("show");
+  };
+
 });
 
 // Add alerts programmatically
 $.fn.extend({
   showAlert: function(alerttype, message, timeout) {
-    $('#messages-container').append('<div id="alertdiv" class="alert alert-' + alerttype + ' fade in"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span>' + message + '</span></div>');
+    $('#messages-container').append('<div id="alertdiv" class="alert alert-' + alerttype + ' fade show"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span>' + message + '</div>');
     if (timeout && timeout !== 0) {
       setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
         $("#alertdiv").alert('close');
       }, timeout);
     }
+  },
+  loadButton: function(button) {
+    $(button).prop("disabled", true);
+  },
+  resetButton: function(button) {
+    $(button).prop("disabled", false);
   }
 });
 

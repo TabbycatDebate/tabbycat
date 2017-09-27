@@ -1,10 +1,14 @@
 from django.utils.translation import ugettext_lazy as _
 
-from .common import BaseDrawGenerator, DrawFatalError, DrawUserError, ManualDrawGenerator, Pairing
-from .elimination import FirstEliminationDrawGenerator, EliminationDrawGenerator
+from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError, ManualDrawGenerator
+from .pairing import ResultPairing, BPEliminationResultPairing
+from .elimination import FirstEliminationDrawGenerator, SubsequentEliminationDrawGenerator
 from .powerpair import PowerPairedDrawGenerator, PowerPairedWithAllocatedSidesDrawGenerator
-from .random import RandomDrawGenerator, RandomWithAllocatedSidesDrawGenerator
+from .random import RandomBPDrawGenerator, RandomDrawGenerator, RandomWithAllocatedSidesDrawGenerator
 from .roundrobin import RoundRobinDrawGenerator
+from .bphungarian import BPHungarianDrawGenerator
+from .bpelimination import (PartialBPEliminationDrawGenerator, AfterPartialBPEliminationDrawGenerator,
+    FirstBPEliminationDrawGenerator, SubsequentBPEliminationDrawGenerator)
 
 
 # Flag codes must NOT have commas in them, because they go into a comma-delimited list.
@@ -24,34 +28,52 @@ DRAW_FLAG_DESCRIPTIONS = {
 }
 
 
-def DrawGenerator(draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)
+def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, **kwargs):  # noqa: N802 (factory function)
     """Factory for draw objects.
     Takes a list of options and returns an appropriate subclass of BaseDrawGenerator.
     'draw_type' is mandatory and can be any of 'random', 'power_paired',
         'first_elimination' and 'elimination'.
     """
 
-    default_side_allocations = BaseDrawGenerator.BASE_DEFAULT_OPTIONS['side_allocations']
+    if teams_per_debate == 'two':
+        if draw_type == "random":
+            if kwargs.get('side_allocations') == "preallocated":
+                klass = RandomWithAllocatedSidesDrawGenerator
+            else:
+                klass = RandomDrawGenerator
+        elif draw_type == "manual":
+            klass = ManualDrawGenerator
+        elif draw_type == "round_robin":
+            klass = RoundRobinDrawGenerator
+        elif draw_type == "power_paired":
+            if kwargs.get('side_allocations') == "preallocated":
+                klass = PowerPairedWithAllocatedSidesDrawGenerator
+            else:
+                klass = PowerPairedDrawGenerator
+        elif draw_type == "first_elimination":
+            klass = FirstEliminationDrawGenerator
+        elif draw_type == "elimination":
+            klass = SubsequentEliminationDrawGenerator
+        else:
+            raise ValueError("Unrecognised draw type for two-team draw: {}".format(draw_type))
 
-    if draw_type == "random":
-        if kwargs.get('side_allocations', default_side_allocations) == "preallocated":
-            klass = RandomWithAllocatedSidesDrawGenerator
+    elif teams_per_debate == 'bp':
+        if draw_type == "random":
+            klass = RandomBPDrawGenerator
+        elif draw_type == "power_paired":
+            klass = BPHungarianDrawGenerator
+        elif draw_type == "partial_elimination":
+            klass = PartialBPEliminationDrawGenerator
+        elif draw_type == "after_partial_elimination":
+            klass = AfterPartialBPEliminationDrawGenerator
+        elif draw_type == "first_elimination":
+            klass = FirstBPEliminationDrawGenerator
+        elif draw_type == "elimination":
+            klass = SubsequentBPEliminationDrawGenerator
         else:
-            klass = RandomDrawGenerator
-    elif draw_type == "manual":
-        klass = ManualDrawGenerator
-    elif draw_type == "round_robin":
-        klass = RoundRobinDrawGenerator
-    elif draw_type == "power_paired":
-        if kwargs.get('side_allocations', default_side_allocations) == "preallocated":
-            klass = PowerPairedWithAllocatedSidesDrawGenerator
-        else:
-            klass = PowerPairedDrawGenerator
-    elif draw_type == "first_elimination":
-        klass = FirstEliminationDrawGenerator
-    elif draw_type == "elimination":
-        klass = EliminationDrawGenerator
+            raise ValueError("Unrecognised draw type for BP draw: {}".format(draw_type))
+
     else:
-        raise ValueError("Unrecognised draw type: {}".format(draw_type))
+        raise ValueError("Unrecognised teams-per-debate option: {}".format(teams_per_debate))
 
     return klass(teams, results, rrseq, **kwargs)

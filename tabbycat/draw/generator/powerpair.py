@@ -1,42 +1,54 @@
 import random
 from collections import OrderedDict
 
-from .common import BaseDrawGenerator, DrawFatalError, Pairing
+from .common import BasePairDrawGenerator, DrawFatalError
+from .pairing import Pairing
 from .one_up_one_down import OneUpOneDownSwapper
 
 
-class PowerPairedDrawGenerator(BaseDrawGenerator):
+class PowerPairedDrawGenerator(BasePairDrawGenerator):
     """Power-paired draw.
-    If there are allocated sides, use PowerPairedWithAllocatedSidesDrawGenerator instead.
+
+    If there are allocated sides, use PowerPairedWithAllocatedSidesDrawGenerator
+    instead.
+
     Options:
-        "odd_bracket" - Odd bracket resolution method, values can be one of:
-            "pullup_top"    - pull up the top team from the next bracket down.
-            "pullup_bottom" - pull up the bottom team from the next bracket down.
-            "pullup_random" - pull up a random team from the next bracket down.
-            "intermediate"  - the bottom team from the odd bracket and the top team
-                from the next bracket down face each other in an intermediate bubble.
-            "intermediate_bubble_up_down" - like "intermediate", but will swap teams
-                that conflict by history or institution.
-            or a function taking a dict mapping floats to lists of Team-like objects,
-                and operating on the dict in-place.
-        "pairing_method" - How to pair teams, values can be one of:
+        "odd_bracket" - Odd bracket resolution method. Permitted values:
+
+            "pullup_top"    - Pull up the top team from the next bracket down.
+            "pullup_bottom" - Pull up the bottom team from the next bracket down.
+            "pullup_random" - Pull up a random team from the next bracket down.
+            "intermediate"  - The bottom team from the odd bracket and the top
+                              team from the next bracket down face each other in
+                              an intermediate bubble.
+            "intermediate_bubble_up_down" - Like "intermediate", but will swap
+                              teams that conflict by history or institution.
+
+            or a function taking a dict mapping floats to lists of Team-like
+            objects, and operating on the dict in-place.
+
+        "pairing_method" - How to pair teams. Permitted values:
             (best explained by example, these examples have a ten-team bracket)
+
             "slide"  - 1 vs 6, 2 vs 7, ..., 5 vs 10.
             "fold"   - 1 vs 10, 2 vs 9, ..., 5 vs 6.
-            "random" - pairs chosen randomly.
+            "random" - Pairs chosen randomly.
+
             or a function taking a dict mapping floats to even-length lists of
-                Team-like objects, and returning a list of Pairing objects with
-                those teams.
-        "avoid_conflicts" - How to avoid conflicts.
-            "one_up_one_down" - swap conflicted teams with the debate above or below,
-                in accordance with Australasian Intervarsity Debating Association rules.
-            "off" - which turns off conflict avoidance.
+            Team-like objects, and returning a list of Pairing objects with
+            those teams.
+
+        "avoid_conflicts" - How to avoid conflicts. Permitted values:
+
+            "off"             - Do not attempt to avoid conflicts.
+            "one_up_one_down" - Swap conflicted teams with the debate above or
+                                below, in accordance with Australasian
+                                Intervarsity Debating Association rules.
     """
 
     can_be_first_round = False
     requires_even_teams = True
     requires_prev_results = False
-    draw_type = "preliminary"
 
     DEFAULT_OPTIONS = {
         "odd_bracket"    : "intermediate_bubble_up_down",
@@ -45,20 +57,20 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     }
 
     def __init__(self, *args, **kwargs):
-        super(PowerPairedDrawGenerator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.check_teams_for_attribute("points")
 
     def generate(self):
         self._brackets = self._make_raw_brackets()
-        self.resolve_odd_brackets(self._brackets)  # Operates in-place
+        self.resolve_odd_brackets(self._brackets)  # operates in-place
         self._pairings = self.generate_pairings(self._brackets)
-        self.avoid_conflicts(self._pairings)  # Operates in-place
+        self.avoid_conflicts(self._pairings)  # operates in-place
         self._draw = list()
         for bracket in self._pairings.values():
             self._draw.extend(bracket)
 
-        self.allocate_sides(self._draw)  # Operates in-place
-        self.annotate_team_flags(self._draw)  # Operates in-place
+        self.allocate_sides(self._draw)  # operates in-place
+        self.annotate_team_flags(self._draw)  # operates in-place
         return self._draw
 
     def _make_raw_brackets(self):
@@ -78,10 +90,10 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     # Odd bracket resolutions
 
     ODD_BRACKET_FUNCTIONS = {
-        "pullup_top"                  : "_pullup_top",
-        "pullup_bottom"               : "_pullup_bottom",
-        "pullup_random"               : "_pullup_random",
-        "intermediate"                : "_intermediate_bubbles",
+        "pullup_top"                 : "_pullup_top",
+        "pullup_bottom"              : "_pullup_bottom",
+        "pullup_random"              : "_pullup_random",
+        "intermediate"               : "_intermediate_bubbles",
         "intermediate_bubble_up_down": "_intermediate_bubbles_with_up_down"
     }
 
@@ -139,7 +151,7 @@ class PowerPairedDrawGenerator(BaseDrawGenerator):
     def _intermediate_bubbles_with_up_down(self, brackets):
         """Operates in-place.
         Requires Team.institution and Team.seen() to be defined."""
-        self._intermediate_bubbles(brackets)  # Operates in-place
+        self._intermediate_bubbles(brackets)  # operates in-place
         # Check each of the intermediate bubbles for conflicts.
         # If there is one, try swapping the top team with the bottom team
         # of the bracket above. Failing that, try the same with the bottom

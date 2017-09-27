@@ -1,9 +1,12 @@
 
-// Our overrides (load before bootstrap)
-@import 'components/variables';
+// Boostrap overrides/customisation (load before bootstrap)
+@import 'components/custom';
 
 // Bootstrap (custom module selection)
 @import 'components/bootstrap-custom';
+
+// Tabbycat key variables/mixins (load after bootstrap)
+@import 'components/variables';
 
 // General styles
 @import 'modules/flexbox';
@@ -24,7 +27,6 @@
 @import 'components/page-specific';
 @import 'components/diversity-highlights';
 @import 'components/allocation-highlights';
-@import 'components/sidebar-round-progress';
 
 //------------------------------------------------------------------------------
 // To Refactor

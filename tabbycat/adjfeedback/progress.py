@@ -61,6 +61,9 @@ class BaseFeedbackExpectedSubmissionTracker:
         else:
             return None
 
+    def acceptable_target_names(self):
+        return [adj.name for adj in self.acceptable_targets()]
+
 
 class FeedbackExpectedSubmissionFromTeamTracker(BaseFeedbackExpectedSubmissionTracker):
     """Represents a single piece of expected feedback from a team on any valid

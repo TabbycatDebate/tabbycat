@@ -58,19 +58,19 @@ export default {
         _.forEach(clashesList, function(clash) {
           var clashName = false
           if (clashesType === 'team') {
-            if (!_.isUndefined(self.teamsById[clash])) {
-              var clashName = self.teamsById[clash].short_name
-              var clashIcon = 'glyphicon-comment'
+            if (!_.isUndefined(self.teamsById[clash.id])) {
+              var clashName = self.teamsById[clash.id].short_name
+              var clashIcon = 'message-circle'
             }
           } else if (clashesType === 'adjudicator') {
-            if (!_.isUndefined(self.adjudicatorsById[clash])) {
-              var clashName = self.adjShortName(self.adjudicatorsById[clash].name)
-              var clashIcon = 'glyphicon-user'
+            if (!_.isUndefined(self.adjudicatorsById[clash.id])) {
+              var clashName = self.adjShortName(self.adjudicatorsById[clash.id].name)
+              var clashIcon = 'user'
             }
           } else if (clashesType === 'institution') {
-            if (!_.isUndefined(self.institutionsById[clash])) {
-              var clashName = self.institutionsById[clash].code
-              var clashIcon = 'glyphicon-globe'
+            if (!_.isUndefined(self.institutionsById[clash.id])) {
+              var clashName = self.institutionsById[clash.id].code
+              var clashIcon = 'globe'
             }
           }
           // Institution/Teams/Adjs may be clashed but not present in this draw
@@ -93,21 +93,24 @@ export default {
         _.forEach(historiesList, function(history) {
           if (historiesType === 'team') {
             if (_.isUndefined(self.teamsById[history.id])) {
-              var historyName = 'Unknown' // Saw someone not in current draw
+              var historyName = false // Saw someone not in current draw
             } else {
               var historyName = self.teamsById[history.id].short_name
             }
           } else if (historiesType === 'adjudicator') {
             if (_.isUndefined(self.adjudicatorsById[history.id])) {
-              var historyName = 'Unknown' // Saw someone not in current draw
+              var historyName = false // Saw someone not in current draw
             } else {
               var historyName = self.adjShortName(self.adjudicatorsById[history.id].name)
             }
           }
-          var css = 'conflictable hover-histories-' + history.ago + '-ago'
-          // Only show last 2 rounds for small screens
-          if (history.ago > 2) { css += ' visible-lg-block' }
-          formattedHistories.push({'title': historyName, 'ago': history.ago, 'class': css})
+          // Only push if the team/adj is present in the draw
+          if (historyName) {
+            var css = 'conflictable hover-histories-' + history.ago + '-ago'
+            // Only show last 2 rounds for small screens
+            if (history.ago > 2) { css += ' visible-lg-block' }
+            formattedHistories.push({'title': historyName, 'ago': history.ago, 'class': css})
+          }
         })
       })
       // Order by rounds;
@@ -117,7 +120,7 @@ export default {
       _.forEach(formattedHistories, function(history, index) {
         if (!_.includes(countedRounds, history.ago)) {
           formattedHistories.splice(index, 0, {
-            'title': '-' + history.ago, 'icon': 'glyphicon-time',
+            'title': '-' + history.ago, 'icon': 'clock',
             'class': history.ago > 2 ? ' visible-lg-block' : ' '
           })
           countedRounds.push(history.ago)

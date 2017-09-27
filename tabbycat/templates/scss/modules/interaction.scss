@@ -9,20 +9,28 @@
   &:hover {
     cursor: help; // for tooltips
     span {
-      border-color: $brand-primary;
+      border-color: theme-color("primary");
     }
   }
 
-  span {
-    border-bottom: 2px dotted #ccc;
+  .tooltip-trigger {
+    border-bottom: 2px inset $gray-300;
+  }
+
+  .popover span {
+    border-bottom: 0; // De-inherit (popovers must be children of hover-target)
+  }
+
+  .popover a:hover {
+    cursor: pointer; // De-inherit (popovers must be children of hover-target)
   }
 }
 
 .popover {
-  max-width: 350px;
+  max-width: 400px;
 }
 
-.popover-content {
+.popover-body {
   // For popovers we use list-groups which need to remove the original padding
   padding: 0;
 
@@ -75,6 +83,10 @@
   .list-group-item {
     padding: 7px 3px; // Tighten up spacing of the sub elements
     border-radius: 0;
+
+    .feather {
+      margin-right: 0;
+    }
   }
 
   .list-group-item:first-child {
@@ -91,8 +103,9 @@
 }
 
 .modal-xl { // For motions page; probably feedback also (want super big modals)
-  height: 92%;
-  width: 95%;
+  height: 92vh;
+  width: 96vw;
+  max-width: 2500px; // override
 
   .modal-content {
     height: 100%;
@@ -106,6 +119,7 @@
 
 .spinning {
   animation: spin 1s infinite linear;
+  color: theme-color("primary");
 }
 @keyframes spin {
 
@@ -129,6 +143,10 @@
   opacity: 0;
 }
 
+.auto-save {
+  min-width: 112px; // Don't want it resizing as text updates
+}
+
 .save-flash {
   animation-name: flash-animation;
   animation-duration: 5s;
@@ -137,7 +155,7 @@
 @keyframes flash-animation {
 
   from {
-    color: $brand-success;
+    color: theme-color("success");
   }
 
   to {

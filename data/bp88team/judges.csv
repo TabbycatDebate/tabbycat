@@ -1,0 +1,81 @@
+name,institution,test_score,institution_conflicts,team_conflicts,adj_conflicts,gender,adj_core,independent,trainee,email
+Laila Filemonsen,Mithlond,5,,,,female,1,,,LailaFilemonsen@dayrep.com
+Jana Fuchs,Erebor,5,,,Sofia Ricketson,female,1,,,JanaFuchs@jourrapide.com
+Sonny Björk,Northern Mirkwood,5,,,,male,1,,,SonnyBjork@rhyta.com
+Urszula Grabowska,Rivendell,5,,,,female,1,,,UrszulaGrabowska@cuvox.de
+Loránd Herceg,Northern Mirkwood,5,Rivendell,,,male,1,,,HercegLorand@dayrep.com
+Park P'eng,Éothéod,4,UG Lebennin,,Hrund Hrafnkelsdóttir,female,,1,,ParkPeng@cuvox.de
+Caitlin Ingram,UG Lebennin,4,,,,female,,1,,CaitlinIngram@fleckens.hu
+Reyna Chavez,Bree,5,,,,female,,1,,ReynaRChavez@jourrapide.com
+Eleanor Weston,Ithilien,5,Isengard,,,female,,1,,EleanorWeston@armyspy.com
+Masa Fujimura,Dale,5,,,,male,,1,,MasaFujimura@rhyta.com
+Uchechukwu Ugorji,Dol Amroth,4,,,,female,,1,,UchechukwuUgorji@gustr.com
+Lea Bumgarner,UG Ringló Vale,5,,,,female,,1,,LeaBumgarner@fleckens.hu
+Marvin Lowery,Erebor,5,,,Abraham Welde,male,,1,,MarvinPLowery@cuvox.de
+Marina Björgólfsson,Minas Tirith,5,,,,male,,1,,MarinaBjorgolfsson@rhyta.com
+Christophe Salois,Staddle,5,,Southern Mirkwood NV,,male,,1,,ChristopheSalois@rhyta.com
+Boubker Edelenbos,Erebor,5,,,,male,,,,BoubkerEdelenbos@cuvox.de
+Lan Lê,Ithilien,3,,,,female,,,,LeThiChiLan@einrot.com
+Klara Sandberg,Bree,3,RI Rohan,,,female,,,,KlaraSandberg@jourrapide.com
+Camilla Evensen,Bree,2,,,,female,,,,CamillaEvensen@rhyta.com
+Kosisochukwu Chidimma,UG Lebennin,2,,,,female,,,,KosisochukwuChidimma@fleckens.hu
+Semere Awate,Pelargir,4,Ithilien,,,male,,,,SemereAwate@rhyta.com
+Eduardo Pinto,Pelargir,1,,,,male,,,,EduardoCostaPinto@cuvox.de
+Evelyn Pinto,Dorwinion,1,RI Rohan,,,female,,,,EvelynPereiraPinto@teleworm.us
+Dario Marinović,Isengard,2,,,,male,,,,DarioMarinovic@fleckens.hu
+Keiran White,Éothéod,3,,,,male,,,,KeiranWhite@superrito.com
+Addison MacDonald,Minas Tirith,2,,,,female,,,,AddisonMacDonald@armyspy.com
+Hana Haik,Ithilien,1,,,,female,,,,HanaSimahHaik@rhyta.com
+Ivona Perić,Éothéod,2,,,,female,,,,IvonaPeric@fleckens.hu
+Franco Marchesi,Éothéod,1,,,,male,,,,FrancoMarchesi@fleckens.hu
+Rô Nghiêm,Lórien,1,,,,male,,,,NghiemNguyenRo@cuvox.de
+Edita Rehberger,Edoras,4,,,,female,,,,EditaRehberger@rhyta.com
+Theodor Mascarenas,RI Rohan,1,Northern Mirkwood,,,male,,,,TheodorMascarenasBarragan@armyspy.com
+Megan Pearson,Northern Mirkwood,2,,Isengard TK,,female,,,,MeganPearson@teleworm.us
+Tim Button,Éothéod,2,,,,male,,,,TimButton@einrot.com
+Isak Jensen,Dale,2,,,,male,,,,IsakJensen@armyspy.com
+Rashidah Bazzi,UG Ringló Vale,1,,,,female,,,,RashidahTasnimBazzi@teleworm.us
+Olivia Lorenzen,RI Rohan,2,Bree,,,female,,,,OliviaNLorenzen@jourrapide.com
+Sofia Ricketson,Staddle,2,,,,female,,,,SofiaRicketson@jourrapide.com
+Thindra Jonasson,RI Rohan,1,,Mithlond BD,,female,,,,ThindraJonasson@rhyta.com
+Facino Lombardi,Dale,1,,,,male,,,,FacinoLombardi@superrito.com
+Yesenia Abramova,Caras Galadhon,5,,,,female,,,,YeseniaAbramova@rhyta.com
+Cintio Armijo,RI Rohan,4,,,,male,,,,CintioArmijoRojas@gustr.com
+Anzor Dratchev,Iron Hills,3,,,,male,,,,AnzorDratchev@fleckens.hu
+Crispus Underhill,Upbourn,3,Caras Galadhon,,,male,,,,CrispusUnderhill@rhyta.com
+Kathrin Frankfurter,UG Anfalas,5,,,,female,,,,KathrinFrankfurter@teleworm.us
+Tea van der Poel,RI Rohan,1,,,,female,,,,TeavanderPoel@teleworm.us
+Carly Cunningham,Éothéod,2,,,,female,,,,CarlyCunningham@armyspy.com
+Dennis Villalpando,Dale,2,,,,male,,,,DennisVillalpandoGaribay@superrito.com
+Zac Grainger,Edoras,3,,,,male,,,,ZacGrainger@teleworm.us
+Kevin Werner,Minas Tirith,3,,,,male,,,,KevinWerner@armyspy.com
+Tao Huang,RI Rohan,2,,,,female,,,,TaoHuang@dayrep.com
+Johanna Holm,Mithlond,2,,,,female,,,,JohannaHolm@gustr.com
+Hrund Hrafnkelsdóttir,Dale,2,,,,female,,,,HrundHrafnkelsdottir@superrito.com
+Tellervo Hyssälä,UG Lossarnach,5,Isengard,,,female,,,,TellervoHyssala@armyspy.com
+Aaliyah Robinson,Dale,2,,,,female,,,,AaliyahRobinson@dayrep.com
+Czesława Kucharska,Northern Mirkwood,2,,,Semere Awate,female,,,,CzeslawaKucharska@einrot.com
+Hoàn Đặng,Lórien,3,UG Ringló Vale,,,male,,,,angVinhHoan@superrito.com
+Lian Ts'ai,Bree,5,Minas Tirith,,,female,,,,LianTsai@gustr.com
+Kim Gunnarsson,Staddle,3,,,,female,,,,KimGunnarsson@superrito.com
+Ellen Karlsdóttir,Southern Mirkwood,2,,,,female,,,,EllenKarlsdottir@gustr.com
+Rós Guðgeirsdóttir,Isengard,4,,,,female,,,,RosGugeirsdottir@rhyta.com
+Nail Degtyaryov,UG Ringló Vale,3,Minas Tirith,,,male,,,,NailDegtyaryov@gustr.com
+Maria Aasen,Bree,4,Hobbiton,,Christophe Salois,female,,,,MariaAasen@dayrep.com
+Elmurza Chichigov,Edoras,2,,,,male,,,,ElmurzaChichigov@superrito.com
+Fareeq Shamon,Edoras,4,,,,male,,,,FareeqMutaShamon@gustr.com
+Ruairidh Kennedy,The Shire,2,,,,male,,,,RuairidhKennedy@teleworm.us
+Oliver Murray,UG Lebennin,3,Iron Hills,,,male,,,,OliverMurray@gustr.com
+Khaza Dratchev,Southern Mirkwood,1,,,,female,,,,KhazaDratchev@armyspy.com
+Artin Mårtensson,Ithilien,5,Éothéod,,,male,,,,ArtinMartensson@superrito.com
+Neven Barišić,UG Ringló Vale,3,,,,male,,,,NevenBarisic@jourrapide.com
+Jiří Makovička,Dol Amroth,3,,,Isak Jensen,male,,,,JiriMakovicka@einrot.com
+Bella Halcomb,Pelargir,1,,,,female,,,,BellaHalcomb@teleworm.us
+Gabriel Curran,Rivendell,5,,Caras Galadhon SD,,male,,,,GabrielCurran@jourrapide.com
+Merry Brandagamba,Dol Amroth,1,,,,male,,,1,MerryBrandagamba@gustr.com
+Diego Barbosa,Bree,1,,,,male,,,1,DiegoAlmeidaBarbosa@armyspy.com
+Davi Correia,RI Rohan,1,,,,male,,,1,DaviSousaCorreia@teleworm.us
+Krešimir Mihaljević,Rivendell,1,,,,male,,,1,KresimirMihaljevic@teleworm.us
+Chukwubuikem Iloabuchi,Lórien,1,,,,male,,,1,ChukwubuikemIloabuchi@superrito.com
+Abraham Welde,Bree,1,,,,male,,,1,AbrahamWelde@dayrep.com
+Camille Lajoie,Pelargir,1,Staddle,,,female,,,1,CamilleLajoie@jourrapide.com

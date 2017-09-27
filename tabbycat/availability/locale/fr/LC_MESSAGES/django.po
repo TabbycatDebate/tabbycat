@@ -2,90 +2,169 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 07:27+1000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2017-09-18 05:26+1000\n"
+"PO-Revision-Date: 2017-09-17 10:54-0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.3\n"
 
-#: availability/templates/availability_index.html:9
-#: availability/templates/availability_index.html:14
-msgid "Check In Teams"
-msgstr ""
+#: availability/apps.py:7
+msgid "Availability"
+msgstr "Disponibilité"
 
-#: availability/templates/availability_index.html:19
-msgid "Check In Adjs"
-msgstr ""
-
-#: availability/templates/availability_index.html:23
-msgid "Check In Venues"
-msgstr ""
-
-#: availability/templates/availability_index.html:31
+#: availability/templates/availability_index.html:11
 msgid "Check In All Breaking Adjs"
-msgstr ""
+msgstr "Enregistrer tous les juges qualifiant"
 
-#: availability/templates/availability_index.html:38
+#: availability/templates/availability_index.html:18
 msgid "Check In Everything"
-msgstr ""
+msgstr "Enregistrer tout"
 
-#: availability/templates/availability_index.html:45
+#: availability/templates/availability_index.html:25
 #, python-format
 msgid "Copy from %(prev_round)s"
-msgstr ""
+msgstr "Copier de %(prev_round)s"
 
-#: availability/templates/availability_index.html:59
+#: availability/templates/availability_index.html:40
 msgid "View Draw"
+msgstr "Afficher le tirage"
+
+#: availability/templates/availability_index.html:48
+#: availability/templates/availability_index.html:53
+#: availability/templates/availability_index.html:58
+#: availability/templates/availability_index.html:63
+#: availability/templates/availability_index.html:68
+#: availability/templates/availability_index.html:73
+#: availability/templates/availability_index.html:78
+#: availability/templates/availability_index.html:83
+#: availability/templates/availability_index.html:87
+msgid "Generate Draw"
+msgstr "Générer le tirage"
+
+#: availability/templates/availability_index.html:52
+msgid "The draw cannot be generated until some teams have been checked in."
 msgstr ""
+"La génération du tirage n'est pas possible avant que des équipes aient été "
+"enregistrées."
+
+#: availability/templates/availability_index.html:57
+msgid ""
+"The draw cannot be generated until some adjudicators have been checked in."
+msgstr ""
+"La génération du tirage n'est pas possible avant que des juges aient été "
+"enregistrés."
+
+#: availability/templates/availability_index.html:62
+msgid "The draw cannot be generated until some venues have been checked in."
+msgstr ""
+"La génération du tirage n'est pas possible avant que des lieux aient été "
+"enregistrés."
 
 #: availability/templates/availability_index.html:67
-#: availability/templates/availability_index.html:73
-#: availability/templates/availability_index.html:79
-#: availability/templates/availability_index.html:85
-#: availability/templates/availability_index.html:91
-#: availability/templates/availability_index.html:97
-#: availability/templates/availability_index.html:103
-#: availability/templates/availability_index.html:107
-msgid "Generate Draw"
+msgid ""
+"There aren't enough venues checked in for the number of debates — the draw "
+"may not generate properly."
 msgstr ""
+"Il n'y a pas assez de lieux enregistrés pour le nombre de débats — le tirage "
+"ne se générera peut-être pas correctement."
 
-#: availability/templates/availability_index.html:118
+#: availability/templates/availability_index.html:72
+msgid ""
+"There aren't enough adjudicators checked in for the number of debates — the "
+"draw may not generate properly."
+msgstr ""
+"Il n'y a pas assez de juges enregistrés pour le nombre de débats — le tirage "
+"ne se générera peut-être pas correctement."
+
+#: availability/templates/availability_index.html:77
+msgid ""
+"There is an uneven number of teams checked in — the draw may not generate "
+"properly."
+msgstr ""
+"Il y a un nombre impair d'équipes enregistrées — le tirage ne se générera "
+"peut-être pas correctement."
+
+#: availability/templates/availability_index.html:82
+msgid ""
+"The number of teams checked in is not a multiple of 4 — the draw may not "
+"generate properly."
+msgstr ""
+"Le nombre d’équipes enregistrées n’est pas un multiple de 4 — le tirage ne "
+"se générera peut-être pas correctement."
+
+#: availability/templates/availability_index.html:100
 #, python-format
 msgid ""
-"Note: %(previous_unconfirmed)s debates from <strong>%(prev_round)s do not "
-"have a completed ballot</strong> — this may lead to a draw that fails or is "
-"incorrect <em>depending</em> on your draw rules."
-msgstr ""
+"One debate from %(prev_round)s <strong>does not have a completed ballot</"
+"strong>. This may lead to a draw that fails or is incorrect, depending on "
+"your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link"
+"\"> Enter results from %(prev_round)s. </a>"
+msgid_plural ""
+"%(previous_unconfirmed)s debates from %(prev_round)s <strong>do not have a "
+"completed ballot</strong>. This may lead to a draw that fails or is "
+"incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s"
+"\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
+msgstr[0] ""
+"Un débat de %(prev_round)s <strong>n'a pas de bulletin complet</strong>. Ce "
+"manque peut engendrer un tirage qui échoue ou qui est incorrect, en fonction "
+"de vos règles du tirage. <a href=\"%(prev_round_results_url)s\" class="
+"\"alert-link\"> Entrez les résultats de %(prev_round)s. </a>"
+msgstr[1] ""
+"%(previous_unconfirmed)s débats de %(prev_round)s <strong>n'ont pas de "
+"bulletin complet</strong>. Ce manque peut engendrer un tirage qui échoue ou "
+"qui est incorrect, en fonction de vos règles du tirage. <a href="
+"\"%(prev_round_results_url)s\" class=\"alert-link\"> Entrez les résultats de "
+"%(prev_round)s. </a>"
+
+#: availability/templates/availability_index.html:121
+msgid "There is an uneven number of teams checked in for this round."
+msgstr "Il y a un nombre impair d'équipes enregistrées pour ce tour."
 
 #: availability/templates/availability_index.html:128
-msgid "There is an uneven number of teams checked in for this round."
+msgid "The number of teams checked in for this round is not a multiple of 4."
 msgstr ""
+"Le nombre d'équipes enregistrées pour ce tour n'est pas un multiple de 4."
 
-#: availability/templates/availability_index.html:134
+#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#: availability/templates/availability_index.html:136
 #, python-format
 msgid ""
-"There need to be at least %(min_adjudicators)s adjudicators checked in given "
+"There needs to be at least one adjudicator checked in, given the number of "
+"debates."
+msgid_plural ""
+"There need to be at least %(required_count)s adjudicators checked in, given "
 "the number of debates."
-msgstr ""
+msgstr[0] ""
+"Il faut au moins un(e) juge enregistré(e) pour satisfier le nombre de débats."
+msgstr[1] ""
+"Il faut au moins %(required_count)s juges enregistrés pour satisfier le "
+"nombre de débats."
 
-#: availability/templates/availability_index.html:143
+#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#: availability/templates/availability_index.html:150
 #, python-format
 msgid ""
-"There need to be at least %(min_venues)s venues checked in given the number "
-"of debates."
-msgstr ""
+"There needs to be at least one venue checked in, given the number of debates."
+msgid_plural ""
+"There need to be at least %(required_count)s venues checked in, given the "
+"number of debates."
+msgstr[0] ""
+"Il faut au moins un lieu enregistré pour satisfier le nombre de débats."
+msgstr[1] ""
+"Il faut au moins %(required_count)s lieux enregistrés pour satisfier le "
+"nombre de débats."
 
-#: availability/templates/availability_index.html:153
+#: availability/templates/availability_index.html:164
 #, python-format
 msgid ""
 "This is a page for <strong>%(round_name)s</strong>, however the current "
@@ -93,8 +172,12 @@ msgid ""
 "forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance to "
 "the next round?</a>"
 msgstr ""
+"Il s'agit de <strong>%(round_name)s</strong>, cependant le tour actuel est "
+"toujours configuré comme <strong>%(current_round_name)s</strong>. Avez-vous "
+"oublié <a href=\"%(advance_round_url)s\" class=\"alert-link\">d'avancer au "
+"prochain tour?</a>"
 
-#: availability/templates/availability_index.html:167
+#: availability/templates/availability_index.html:179
 #, python-format
 msgid ""
 "This is the first round, but its draw type is <strong>%(draw_type)s</"
@@ -102,16 +185,53 @@ msgid ""
 "can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
 "draw type in the Edit Database area.</a>"
 msgstr ""
+"Ce tour est le premier, mais son type de tirage est <strong>%(draw_type)s</"
+"strong>. Souhaitiez-vous pour qu’il soit plutôt <strong>aléatoire</strong> ? "
+"Vous pouvez <a href=\"%(change_round_url)s\" class=\"alert-link\">modifier "
+"le type de tirage de ce tour dans la zone pour modifier la base de données.</"
+"a>"
 
-#: availability/templates/availability_index.html:179
+#: availability/templates/availability_index.html:192
+#, python-format
+msgid ""
+"This is an elimination round, but it doesn't have a break category. "
+"Elimination rounds must be associated with a break category. Please <a href="
+"\"%(change_round_url)s\" class=\"alert-link\"> set this round's break "
+"category in the Edit Database area.</a>"
+msgstr ""
+"Il s’agit d’un tour éliminatoire, mais le tour n'a pas de catégorie de "
+"qualification. Il faut que tous les tours éliminatoires soient associés à "
+"une catégorie de qualification. Veuillez <a href=\"%(change_round_url)s\" "
+"class=\"alert-link\">définir la catégorie de qualification de ce tour dans "
+"la zone pour modifier la base de données.</a>"
+
+#: availability/templates/availability_index.html:204
+#, python-format
+msgid ""
+"This is an elimination round, but its draw type is <strong>%(draw_type)s</"
+"strong>. The draw type of all elimination rounds must be \"Elimination\". "
+"Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this "
+"round's draw type in the Edit Database area.</a>"
+msgstr ""
+"Il s’agit d’un tour éliminatoire, mais son type de tirage est <strong>"
+"%(draw_type)s</strong>. Les types de tirage de tous les tours éliminatoires "
+"doivent être « Élimination ». Veuillez <a href=\"%(change_round_url)s\" "
+"class=\"alert-link\">modifier le type de tirage de ce tour dans la zone pour "
+"modifier la base de données.</a>"
+
+#: availability/templates/availability_index.html:217
 #, python-format
 msgid ""
 "There don't appear to be any teams breaking in the %(break_category)s Break. "
 "Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated "
 "the break for the %(break_category)s Break</a> yet?"
 msgstr ""
+"Il semble qu'il n'y ait aucune équipe qualifiante dans la catégorie "
+"%(break_category)s. Avez-vous <a href=\"%(breakqual_teams_url)s\" class="
+"\"alert-link\">générer la qualification pour la catégorie "
+"%(break_category)s</a>?"
 
-#: availability/templates/availability_index.html:190
+#: availability/templates/availability_index.html:229
 #, python-format
 msgid ""
 "There's only one team breaking in the %(break_category)s Break. You can't "
@@ -119,24 +239,190 @@ msgid ""
 "href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for "
 "the %(break_category)s Break</a>."
 msgstr ""
+"Il n'y a qu'une équipe qualifiante dans la catégorie %(break_category)s. "
+"Vous ne pouvez pas générer le tirage pour un tour éliminatoire avec "
+"seulement une équipe. Vous voudriez peut-être <a href="
+"\"%(breakqual_teams_url)s\" class=\"alert-link\">réexaminer la qualification "
+"pour la catégorie %(break_category)s</a>."
 
-#: availability/templates/availability_index.html:202
-#, python-format
-msgid ""
-"This is a subsequent elimination round, but there aren't any elimination "
-"rounds in the same break category (%(break_category)s) before it. Is this "
-"round meant to be a <strong>first elimination</strong> round instead? You "
-"can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
-"draw type in the Edit Database area.</a>"
-msgstr ""
+#: availability/templates/base_availability.html:33
+msgid "Select All"
+msgstr "Sélectionner tout"
 
-#: availability/templates/availability_index.html:215
+#: availability/templates/base_availability.html:34
+msgid "Select None"
+msgstr "Sélectionner aucun"
+
+#: availability/templates/base_availability.html:35 availability/views.py:33
+msgid "Check-Ins"
+msgstr "Enregistrements"
+
+#: availability/templates/base_availability.html:36
+msgid "Check In All Breaking"
+msgstr "Enregistrer tous les juges qualifiant"
+
+#: availability/templates/base_availability.html:37
+msgid "Copy from Previous"
+msgstr "Copier du tour précédent"
+
+#: availability/templates/base_availability.html:38
+msgid "Save Selected"
+msgstr "Enregistrer les sélectionnés"
+
+#: availability/templates/checkin_progress.html:7
+msgid "Teams"
+msgstr "Équipes"
+
+#: availability/templates/checkin_progress.html:8
+msgid "Adjudicators"
+msgstr "Juges"
+
+#: availability/templates/checkin_progress.html:9
+msgid "Venues"
+msgstr "Lieux"
+
+#: availability/templates/checkin_progress.html:42
+msgid "Check in teams"
+msgstr "Enregistrement des équipes"
+
+#: availability/templates/checkin_progress.html:45
+msgid "Check in adjudicators"
+msgstr "Enregistrement des juges"
+
+#: availability/templates/checkin_progress.html:48
+msgid "Check in venues"
+msgstr "Enregistrement des lieux"
+
+#: availability/views.py:76
+msgid "no teams are debating"
+msgstr "aucune équipe ne débattre"
+
+#. Translators: nteams in this string can only be 0 or 1
+#: availability/views.py:86
 #, python-format
-msgid ""
-"This is an elimination round, but its draw type is <strong>%(draw_type)s</"
-"strong>. This combination isn't allowed — the draw type of elimination "
-"rounds must be either <strong>first elimination</strong> (if it's the first "
-"elimination round in its break category) or <strong>subsequent elimination</"
-"strong>. Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> "
-"change this round's draw type in the Edit Database area.</a>"
+msgid "%(nteams)d breaking team — no debates can happen"
+msgid_plural "%(nteams)d breaking teams — no debates can happen"
+msgstr[0] "%(nteams)d équipe qualifiante — aucun débat ne peut avoir lieu"
+msgstr[1] "%(nteams)d équipes qualifiantes — aucun débat ne peut avoir lieu"
+
+#. Translators: ndebating in this string is always at least 2
+#: availability/views.py:94
+#, python-format
+msgid "%(ndebating)d breaking team is debating this round"
+msgid_plural "%(ndebating)d breaking teams are debating this round"
+msgstr[0] "%(ndebating)d équipe qualifiante débat dans ce tour"
+msgstr[1] "%(ndebating)d équipes qualifiantes débattent dans ce tour"
+
+#. Translators: This gets appended to the previous string (the one with
+#. ndebating in it) if (and only if) nbypassing is greater than 0.
+#. "It" refers to this round.
+#: availability/views.py:102
+#, python-format
+msgid "; %(nbypassing)d team is bypassing it"
+msgid_plural "; %(nbypassing)d teams are bypassing it"
+msgstr[0] "; %(nbypassing)d équipe le dépasse"
+msgstr[1] "; %(nbypassing)d équipes le dépassent"
+
+#. Translators: nadvancing in this string is always at least 2
+#: availability/views.py:120
+#, python-format
+msgid "%(nadvancing)s advancing team is debating this round"
+msgid_plural "%(nadvancing)s advancing teams are debating this round"
+msgstr[0] "%(nadvancing)s équipe avançante débat dans ce tour"
+msgstr[1] "%(nadvancing)s équipes avançantes débattent dans ce tour"
+
+#: availability/views.py:150
+msgid "Team Availability"
+msgstr "Disponibilité des équipes"
+
+#: availability/views.py:152
+msgid "Adjudicator Availability"
+msgstr "Disponibilité des juges"
+
+#: availability/views.py:154
+msgid "Venue Availability"
+msgstr "Disponibilité des lieux"
+
+#: availability/views.py:171
+msgid "Active Now"
+msgstr "Actif actuellement"
+
+#: availability/views.py:180
+#, python-format
+msgid "Active in %(prev_round)s"
+msgstr "Actif dans %(prev_round)s"
+
+#: availability/views.py:228
+msgid "Venue"
+msgstr "Lieu"
+
+#: availability/views.py:229
+msgid "Display Name (for the draw)"
+msgstr "Nom d'affichage (pour le tirage)"
+
+#: availability/views.py:230
+msgid "Categories"
+msgstr "Catégories"
+
+#: availability/views.py:231
+msgid "Priority"
+msgstr "Priorité"
+
+#: availability/views.py:249
+msgid "Checked in all teams, adjudicators and venues."
 msgstr ""
+"Toutes les équipes, tous les juges et tous les lieux ont été enregistrés."
+
+#: availability/views.py:256
+msgid "Checked in all breaking adjudicators."
+msgstr "Tous les juges qualifiants ont été enregistrés."
+
+#: availability/views.py:264
+msgid "Checked in all teams, adjudicators and venues from previous round."
+msgstr ""
+"Toutes les équipes, tous les juges et tous les lieux du tour précédent ont "
+"été enregistrés."
+
+#~ msgid "Check In Adjs"
+#~ msgstr "Enregistrer les juges"
+
+#~ msgid ""
+#~ "This is an elimination round, but its draw type is <strong>%(draw_type)s</"
+#~ "strong>. This combination isn't allowed — the draw type of elimination "
+#~ "rounds must be either <strong>first elimination</strong> (if it's the "
+#~ "first elimination round in its break category) or <strong>subsequent "
+#~ "elimination</strong>. Please <a href=\"%(change_round_url)s\" class="
+#~ "\"alert-link\"> change this round's draw type in the Edit Database area.</"
+#~ "a>"
+#~ msgstr ""
+#~ "Ce tour est éliminatoire, mais son type de tirage est <strong>"
+#~ "%(draw_type)s</strong>. Cette combinaison n'est pas permise — le type de "
+#~ "tirage de tous les tours éliminatoires doit être soit <strong>premier "
+#~ "éliminatoire</strong> (s'il est le premier tour éliminatoire dans sa "
+#~ "catégorie soit <strong>éliminatoire subséquent</strong>. Veuillez <a href="
+#~ "\"%(change_round_url)s\" class=\"alert-link\">changer le type de tirage "
+#~ "de ce tour dans la zone pour modifier la base de données.</a>"
+
+#~ msgid "Overview"
+#~ msgstr "Aperçu"
+
+#~ msgid "Team Check-Ins"
+#~ msgstr "Enregistrement des équipes"
+
+#~ msgid "Venue Check-Ins"
+#~ msgstr "Enregistrement des lieux"
+
+#~ msgid ""
+#~ "Saved availabilities. <a href=\"%(index_url)s\" class=\"alert-link\"> "
+#~ "Return to the check-ins overview page?</a>"
+#~ msgstr ""
+#~ "Les disponibilités sont enregistrées. <a href=\"%(index_url)s\" class="
+#~ "\"alert-link\">Retourner à l'aperçu des enregistrements ?</a>"
+
+#~ msgid ""
+#~ "Error saving availabilities. <a href=\"%(index_url)s\" class=\"alert-link"
+#~ "\"> Return to the check-ins overview page?</a>"
+#~ msgstr ""
+#~ "Une erreur s'est produite lors d'enregistrement des disponibilités. <a "
+#~ "href=\"%(index_url)s\" class=\"alert-link\">Retourner à l'aperçu des "
+#~ "enregistrements ?</a>"

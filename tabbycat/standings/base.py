@@ -107,7 +107,7 @@ class Standings:
 
     This class is designed to be accessed directly by Django templates. The
     `metrics_info` method returns an iterator yielding dictionaries with keys
-    "key", "name", "abbr" and "glyphicon". For example:
+    "key", "name", "abbr" and "icon". For example:
 
     Django template:
 
@@ -129,7 +129,7 @@ class Standings:
     `BaseStandingInfo`.
     """
 
-    _SPEC_FIELDS = ("key", "name", "abbr", "glyphicon")
+    _SPEC_FIELDS = ("key", "name", "abbr", "icon")
 
     def __init__(self, instances, rank_filter=None):
         self.infos = {instance: StandingInfo(self, instance) for instance in instances}
@@ -204,13 +204,13 @@ class Standings:
         except KeyError as e:
             raise ValueError("{!r} isn't in these standings.".format(e.args[0]))
 
-    def record_added_metric(self, key, name, abbr, glyphicon):
+    def record_added_metric(self, key, name, abbr, icon):
         self.metric_keys.append(key)
-        self._metric_specs.append((key, name, abbr, glyphicon))
+        self._metric_specs.append((key, name, abbr, icon))
 
-    def record_added_ranking(self, key, name, abbr, glyphicon):
+    def record_added_ranking(self, key, name, abbr, icon):
         self.ranking_keys.append(key)
-        self._ranking_specs.append((key, name, abbr, glyphicon))
+        self._ranking_specs.append((key, name, abbr, icon))
 
     def add_metric(self, instance, key, value):
         assert not self.ranked, "Can't add metrics once standings object is sorted"

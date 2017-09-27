@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags i18n %}
+
+{% block head-title %}{% blocktrans trimmed count nmotions=formset|length %}
+  Edit Motion
+{% plural %}
+  Edit Motions
+{% endblocktrans %}{% endblock %}
+
+{% block page-title %}{% blocktrans trimmed count nmotions=formset|length %}
+  Edit Motion
+{% plural %}
+  Edit Motions
+{% endblocktrans %}{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-outline-primary " href="{% roundurl 'draw-display' %}">
+    <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
+  </a>
+
+  {% if pref.enable_division_motions %}
+    <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary">
+      {% trans "Assign Motions to Divisions" %}
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  {% if formset.errors %}
+    {% include "components/form-errors.html" with errors=formset.errors %}
+  {% endif %}
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <div class="card-deck pr-3 mb-3">
+
+      {{ formset.management_form }}
+
+      {% for form in formset %}
+        <div class="card mr-0">
+          <div class="list-group list-group-flush">
+            <div class="list-group-item">
+
+              {% if formset.non_field_errors %}
+                {% include "components/form-errors.html" with errors=form.non_field_errors %}
+              {% endif %}
+              {% for field in form %}
+                {% include "components/form-field.html" %}
+              {% endfor %}
+
+            </div>
+          </div>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+    {% blocktrans trimmed asvar button_text count nmotions=formset|length %}
+      Save Motion
+    {% plural %}
+      Save Motions
+    {% endblocktrans %}
+    {% include "components/form-submit.html" with title=button_text %}
+
+  </form>
+
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+
+    $(document).ready( function() {
+      $(window).keydown( function(e){
+        if(e.keyCode == 13) {
+          e.preventDefault();
+          return false;
+        }
+      } );
+    } );
+
+  </script>
+{% endblock js %}

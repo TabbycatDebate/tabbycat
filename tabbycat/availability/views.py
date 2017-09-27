@@ -1,9 +1,15 @@
+import json
 import logging
+from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.db.models import Min
+from django.db.models.functions import Coalesce
+from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy, ungettext
 
 from . import utils
 
@@ -15,7 +21,8 @@ from participants.models import Adjudicator, Team
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
-from utils.mixins import PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import SuperuserRequiredMixin
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round
 from venues.models import Venue
 
@@ -24,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
     template_name = 'availability_index.html'
-    page_title = 'Check-Ins Overview'
+    page_title = ugettext_lazy("Check-Ins")
     page_emoji = '📍'
 
     def get_context_data(self, **kwargs):
@@ -40,54 +47,81 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         else:
             teams = self._get_dict(tournament.team_set)
 
+        # Basic check before enable the button to advance
         adjs = self._get_dict(tournament.relevant_adjudicators)
         venues = self._get_dict(tournament.relevant_venues)
-
-        # Basic check before enable the button to advance
         kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0 and venues['in_now'] > 0
-        kwargs['checkin_types'] = [teams, adjs, venues]
-        kwargs['min_adjudicators'] = teams['in_now'] // 2
-        kwargs['min_venues'] = teams['in_now'] // 2
+
+        # Order needs to be predictable when iterating through values
+        kwargs['checkin_info'] = OrderedDict([('teams', teams), ('adjs', adjs), ('venues', venues)])
+
+        # Check the number of teams/adjudicators is sufficient
+        if tournament.pref('teams_in_debate') == 'two':
+            per_room_divisor = 2
+        else:
+            per_room_divisor = 4
+        kwargs['min_adjudicators'] = teams['in_now'] // per_room_divisor
+        kwargs['min_venues'] = teams['in_now'] // per_room_divisor
 
         kwargs['error_type'] = getattr(self, 'error_type', None)
         return super().get_context_data(**kwargs)
 
     def _get_breaking_teams_dict(self):
         r = self.get_round()
-        if r.draw_type is r.DRAW_FIRSTBREAK:
+
+        if r.break_category is None:
+            self.error_type = 'no_break_category'
+            return {
+                'total': 0,
+                'in_now': 0,
+                'message': _("no teams are debating"),
+            }
+
+        if r.prev is None or not r.prev.is_break_round:
             break_size = r.break_category.breakingteam_set_competing.count()
-            teams_dict = {'type': 'Team', 'total': break_size}
+            teams_dict = {'total': break_size}
             if break_size < 2:
                 teams_dict['in_now'] = 0
-                teams_dict['message'] = "%d breaking team%s — no debates can happen" % (break_size, "" if break_size == 1 else "s")
+                teams_dict['message'] = ungettext(
+                    # Translators: nteams in this string can only be 0 or 1
+                    "%(nteams)d breaking team — no debates can happen",
+                    "%(nteams)d breaking teams — no debates can happen",  # in English, used when break_size == 0
+                    break_size) % {'nteams': break_size}
             else:
                 debates, bypassing = partial_break_round_split(break_size)
                 teams_dict['in_now'] = 2 * debates
-                teams_dict['message'] = "%s breaking teams are debating this round; %s team%s bypassing" % (
-                    2 * debates, bypassing, " is" if bypassing == 1 else "s are")
+                teams_dict['message'] = ungettext(
+                    # Translators: ndebating in this string is always at least 2
+                    "%(ndebating)d breaking team is debating this round",  # never used, but needed for i18n
+                    "%(ndebating)d breaking teams are debating this round",
+                    2 * debates) % {'ndebating': 2 * debates}
+                if bypassing > 0:
+                    teams_dict['message'] += ungettext(
+                        # Translators: This gets appended to the previous string (the one with
+                        # ndebating in it) if (and only if) nbypassing is greater than 0.
+                        # "It" refers to this round.
+                        "; %(nbypassing)d team is bypassing it",
+                        "; %(nbypassing)d teams are bypassing it",
+                        bypassing) % {'nbypassing': bypassing}
             return teams_dict
 
-        elif r.draw_type is r.DRAW_BREAK:
-            if r.prev is None:
-                self.error_type = 'no_last_round'
-                advancing_teams = 0
-            else:
-                advancing_teams = r.prev.debate_set.count()
+        else:
+            nadvancing = r.prev.debate_set.count()
+            if self.get_tournament().pref('teams_in_debate') == 'bp':
+                nadvancing *= 2
+
+            # add teams that bypassed the last round
+            nadvancing += r.prev.debate_set.all().aggregate(
+                    lowest_room=Coalesce(Min('room_rank') - 1, 0))['lowest_room']
 
             return {
-                'type'      : 'Team',
-                'total'     : advancing_teams,
-                'in_now'    : advancing_teams,
-                'message'   : '%s advancing teams are debating this round' % advancing_teams
-            }
-
-        else: # this should never happen, but it did once...
-            self.error_type = 'bad_draw_type_for_break_round'
-            return {
-                'type' : 'Team',
-                'total': 0,
-                'in_now' : 0,
-                'message': "status unclear — see message above"
+                'total'     : nadvancing,
+                'in_now'    : nadvancing,
+                'message'   : ungettext(
+                    # Translators: nadvancing in this string is always at least 2
+                    "%(nadvancing)s advancing team is debating this round",  # never used, but needed for i18n
+                    "%(nadvancing)s advancing teams are debating this round",
+                    nadvancing) % {'nadvancing': nadvancing}
             }
 
     def _get_dict(self, queryset_all):
@@ -95,7 +129,6 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
         availability_queryset = RoundAvailability.objects.filter(content_type=contenttype)
         round = self.get_round()
         result = {
-            'type': queryset_all.model._meta.verbose_name.title(),
             'total': queryset_all.count(),
             'in_now': availability_queryset.filter(round=round).count(),
         }
@@ -114,10 +147,19 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
     template_name = "base_availability.html"
 
     def get_page_title(self):
-        return self.model._meta.verbose_name.title() + " Check-Ins"
+        # Can't construct with concatenation, need entire strings for translation
+        if self.model is Team:
+            return _("Team Availability")
+        elif self.model is Adjudicator:
+            return _("Adjudicator Availability")
+        elif self.model is Venue:
+            return _("Venue Availability")
+        else:
+            return "Availability"  # don't translate, this should never happen
 
     def get_context_data(self, **kwargs):
-        kwargs['update_url'] = reverse_round(self.update_view, self.get_round())
+        kwargs['model'] = self.model._meta.label  # does not get translated
+        kwargs['saveURL'] = reverse_round(self.update_view, self.get_round())
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
@@ -126,16 +168,20 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
     def get_table(self):
         round = self.get_round()
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
-
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
-        table.add_checkbox_columns([inst.available for inst in queryset],
-            [inst.id for inst in queryset], "Active Now")
+        table.add_column(_("Active Now"), [{
+            'component': 'availability-check-cell',
+            'available': inst.available,
+            'sort': inst.available,
+            'id': inst.id,
+            'prev': inst.prev_available if round.prev else False,
+        } for inst in queryset])
 
         if round.prev:
-            table.add_column("Active in %s" % round.prev.abbreviation, [{
+            table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}, [{
                 'sort': inst.prev_available,
-                'icon': 'glyphicon-ok' if inst.prev_available else ''
+                'icon': 'check' if inst.prev_available else ''
             } for inst in queryset])
 
         self.add_description_columns(table, queryset)
@@ -181,10 +227,10 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
         for v in venues:
             v.cats = ", ".join([vc.name for vc in v.venuecategory_set.all()])
 
-        table.add_column("Venue", [v.name for v in venues])
-        table.add_column("Display Name (for the draw)", [v.display_name for v in venues])
-        table.add_column("Categories", [v.cats for v in venues])
-        table.add_column("Priority", [v.priority for v in venues])
+        table.add_column(_("Venue"), [v.name for v in venues])
+        table.add_column(_("Display Name (for the draw)"), [v.display_name for v in venues])
+        table.add_column(_("Categories"), [v.cats for v in venues])
+        table.add_column(_("Priority"), [v.priority for v in venues])
 
 
 # ==============================================================================
@@ -202,14 +248,14 @@ class BaseBulkActivationView(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirec
 
 
 class CheckInAllInRoundView(BaseBulkActivationView):
-    activation_msg = 'Checked in all teams, adjudicators and venues.'
+    activation_msg = ugettext_lazy("Checked in all teams, adjudicators and venues.")
 
     def activate_function(self):
         utils.activate_all(self.get_round())
 
 
 class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
-    activation_msg = 'Checked in all breaking adjudicators.'
+    activation_msg = ugettext_lazy("Checked in all breaking adjudicators.")
 
     def activate_function(self):
         utils.set_availability(self.get_tournament().relevant_adjudicators.filter(breaking=True),
@@ -217,7 +263,7 @@ class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
 
 
 class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
-    activation_msg = 'Checked in all teams, adjudicators and venues from previous round.'
+    activation_msg = ugettext_lazy("Checked in all teams, adjudicators and venues from previous round.")
 
     def activate_function(self):
         t = self.get_tournament()
@@ -243,15 +289,20 @@ class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
 class BaseAvailabilityUpdateView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, View):
 
     def post(self, request, *args, **kwargs):
+
+        body = self.request.body.decode('utf-8')
+        posted_info = json.loads(body)
+
         try:
-            references = request.POST.getlist('references[]')
-            utils.set_availability_by_id(self.model, references, self.get_round())
+            utils.set_availability_by_id(self.model, posted_info, self.get_round())
             self.log_action()
-            return HttpResponse('ok')
 
         except:
-            logger.exception("Error handling availability updates")
-            return HttpResponseBadRequest()
+            message = "Error handling availability updates"
+            logger.exception(message)
+            return JsonResponse({'status': 'false', 'message': message}, status=500)
+
+        return JsonResponse(json.dumps(True), safe=False)
 
 
 class UpdateAdjudicatorsAvailabilityView(BaseAvailabilityUpdateView):

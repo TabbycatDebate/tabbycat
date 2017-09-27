@@ -4,23 +4,25 @@
                 highlightsStatus, 'ranking-' + percentileRanking.percentile]"
        @dragstart="dragStart"
        @dragend="dragEnd"
-       @mouseenter="handleHoverOn"
-       @mouseleave="handleHoverOff">
+       @mouseenter="showSlideOver(); showHoverConflicts()"
+       @mouseleave="hideSlideOver(); hideHoverConflicts()">
 
     <div class="draggable-prefix">
       <h4>{{ adjudicator.score }}</h4>
     </div>
     <div class="draggable-title">
-      <h5 class="no-top-margin no-bottom-margin">
-        {{ initialledName }}
+      <h5 class="mt-0 mb-0">
+        <span v-if="debugMode">{{ adjudicator.id }} </span>{{ initialledName }}
       </h5>
       <span class="small subtitle" v-if="adjudicator.institution">
+        <span v-if="debugMode">{{ adjudicator.institution.id }}</span>
         {{ adjudicator.institution.code }}
       </span>
     </div>
 
     <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
-      <div class="tooltip-inner conflictable hover-histories-1-ago">
+      <div class="tooltip-inner conflictable"
+           :class="'hover-histories-' + hasHistoryConflict + '-ago'">
         {{ hasHistoryConflict }} ago
       </div>
     </div>
@@ -40,6 +42,9 @@ export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin,
            HighlightableMixin, ConflictableMixin],
   props: { 'adjudicator': Object, 'debateId': null, 'percentiles': Array },
+  data: function () {
+    return { debugMode: false }
+  },
   computed: {
     initialledName: function() {
       // Translate Joe Blogs into Joe B.
@@ -79,16 +84,6 @@ export default {
     }
   },
   methods: {
-    handleHoverOn: function(event) {
-      this.isHovering = true
-      this.showSlideOver()
-      this.showHoverConflicts()
-    },
-    handleHoverOff: function(event) {
-      this.isHovering = false
-      this.hideSlideOver()
-      this.hideHoverConflicts()
-    },
     handleDragStart: function(event) {
       // this.$dispatch('started-dragging-team', this);
     },

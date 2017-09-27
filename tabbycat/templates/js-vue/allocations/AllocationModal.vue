@@ -22,8 +22,7 @@
             required to panel in settings.
           </div>
           <button type="submit" class="btn btn-block btn-success"
-                  @click="createAutoAllocation"
-                  data-loading-text="Loading Auto Allocation...">
+                  @click="createAutoAllocation">
             Create Automatic Allocation
           </button>
         </div>
@@ -37,27 +36,28 @@ export default {
   props: { roundInfo: Object, },
   methods: {
     resetAutoAllocationModal: function(button) {
-      $(button).button('reset');
-      $('#confirmAutoAlert').modal('hide');
+      $('#confirmAutoAlert').modal('hide')
+      $.fn.resetButton(button)
     },
     createAutoAllocation: function(event) {
       var self = this
-      $(event.target).button('loading')
+      $.fn.loadButton(event.target)
       $.post({
         url: this.roundInfo.autoUrl,
-        success: function(data, textStatus, jqXHR) {
-          self.resetAutoAllocationModal(event.target)
-          $.fn.showAlert('success', '<strong>Success:</strong> loaded the auto allocation', 10000)
-          self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
-          self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedAdjudicators))
-          self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-        },
-        error: function(data, textStatus, jqXHR) {
-          self.resetAutoAllocationModal(event.target)
-          $.fn.showAlert('danger', '<strong>Auto Allocation failed:</strong> ' + data.responseText, 0)
-        },
-        dataType: "json"
-      });
+        dataType: 'json',
+      }).done(function(data, textStatus, jqXHR) {
+        // Success handler
+        self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
+        self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedAdjudicators))
+        self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
+        self.resetAutoAllocationModal(event.target)
+        $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
+      }).fail(function(response) {
+        // Handle Failure
+        var info = response.responseJSON.message
+        $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
+        self.resetAutoAllocationModal(event.target)
+      })
     },
   }
 }

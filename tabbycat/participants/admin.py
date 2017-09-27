@@ -27,7 +27,7 @@ class RegionAdmin(admin.ModelAdmin):
 
 @admin.register(Institution)
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'abbreviation', 'region')
+    list_display = ('name', 'code', 'region')
     ordering = ('name', )
     search_fields = ('name', )
 

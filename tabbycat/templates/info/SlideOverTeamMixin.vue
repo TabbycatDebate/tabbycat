@@ -26,9 +26,9 @@ export default {
       var teamInfo = { 'title': this.team.short_name }
       var speakersInfo = _.map(this.team.speakers, function(s) {
         return {
-          'title': s.name + ' (' + s.gender + ')',
+          'title': s.name + self.genderBrackets(s.gender),
           'class': 'gender-display gender-' + s.gender,
-          'icon': 'glyphicon-user'
+          'icon': 'user'
         }
       })
       return _.concat(teamInfo, speakersInfo)
@@ -40,13 +40,15 @@ export default {
   methods: {
     titleForBC: function(bc, wins) {
       if (!_.isUndefined(bc.will_break)) {
-        return bc.will_break.toUpperCase() + ' for ' + bc.name
+        if (bc.will_break !== null) {
+          return bc.will_break.toUpperCase() + ' for ' + bc.name
+        }
       }
     },
     iconForBC: function(bc) {
-      if (bc.will_break === 'dead') { return 'glyphicon-remove' } else
-      if (bc.will_break === 'safe') { return 'glyphicon-ok' } else
-      if (bc.will_break === 'live') { return 'glyphicon-star' }
+      if (bc.will_break === 'dead') { return 'x' } else
+      if (bc.will_break === 'safe') { return 'check' } else
+      if (bc.will_break === 'live') { return 'star' }
     },
     formatForSlideOver: function(subject) {
       return {

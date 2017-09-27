@@ -10,9 +10,12 @@ urlpatterns = [
     url(r'^donations/$',
         views.TournamentDonationsView.as_view(),
         name='tournament-donations'),
-    url(r'^admin/overview/$',
+    url(r'^admin/$',
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
+    url(r'^admin/configure/$',
+        views.ConfigureTournamentView.as_view(),
+        name='tournament-configure'),
 
     # Round Progression
     url(r'^admin/round/(?P<round_seq>\d+)/advance/check/$',
@@ -26,7 +29,7 @@ urlpatterns = [
         name='tournament-set-current-round'),
 
     # Action Logs App
-    url(r'^admin/action_log/',
+    url(r'^admin/actionlog/',
         include('actionlog.urls')),
 
     # Allocations App
@@ -100,4 +103,9 @@ urlpatterns = [
     # Venues App
     url(r'^admin/venues/',
         include('venues.urls_admin')),
+
+    # Error Pages
+    url(r'^admin/fix-debate-teams/$',
+        views.FixDebateTeamsView.as_view(),
+        name='tournament-fix-debate-teams'),
 ]

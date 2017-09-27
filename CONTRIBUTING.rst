@@ -46,6 +46,8 @@ For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `AirBnB jav
 
     $ npm run eslint
 
+For the front end interface design there is a style guide available at "/style/" once a tournament has been setup.
+
 Versioning convention
 =====================
 
@@ -102,7 +104,7 @@ Release Checklist
     3. Docker (OS X, Windows 10*) and Docker Toolbox (Windows 10 Home) methods
     4. Using Bash and Powershell on Windows
     5. Using Terminal on OS X (at least test out a fresh install of the npm/pip  dependencies)
-6. Check that the last Travis CI build passed
+6. Check that the last Travis CI build passed and run the full local test suite (this will include the Selenium tests that are not on Travis)
 7. Shift remaining issues from the Github Milestone
 8. Create and finish the release branch as per git-flow
 9. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub

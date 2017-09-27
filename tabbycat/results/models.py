@@ -186,7 +186,8 @@ class TeamScore(models.Model):
     debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE, db_index=True,
         verbose_name=_("debate team"))
 
-    points = models.PositiveSmallIntegerField(verbose_name=_("points"))
+    points = models.PositiveSmallIntegerField(null=True, blank=True,
+        verbose_name=_("points"))
     win = models.NullBooleanField(null=True, blank=True,
         verbose_name=_("win"))
     margin = ScoreField(null=True, blank=True,

@@ -3,7 +3,8 @@ import copy
 
 from collections import OrderedDict
 
-from .. import DrawFatalError, DrawGenerator, DrawUserError, Pairing
+from .. import DrawFatalError, DrawGenerator, DrawUserError
+from ..generator.pairing import Pairing, ResultPairing
 from ..generator.utils import partial_break_round_split
 from .utils import TestDivision, TestTeam
 
@@ -18,21 +19,21 @@ class TestRandomDrawGenerator(unittest.TestCase):
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
     def test_invalid_option(self):
-        teams = [TestTeam(*args, aff_count=0) for args in self.teams]
+        teams = [TestTeam(*args, side_history=[0, 0]) for args in self.teams]
 
         def go():
-            self.rd = DrawGenerator("random", teams, None, random=True)
+            self.rd = DrawGenerator("two", "random", teams, None, random=True)
         self.assertRaises(ValueError, go)
 
     def test_draw(self):
         for i in range(100):
-            teams = [TestTeam(*args, aff_count=0) for args in self.teams]
-            self.rd = DrawGenerator("random", teams, None, avoid_conflicts="on")
+            teams = [TestTeam(*args, side_history=[0, 0]) for args in self.teams]
+            self.rd = DrawGenerator("two", "random", teams, None, avoid_conflicts="on")
             _draw = self.rd.generate()
             for pairing in _draw:
-                if pairing.aff_team.seen(pairing.neg_team) or \
-                        pairing.neg_team.seen(pairing.aff_team) or \
-                        pairing.aff_team.institution == pairing.neg_team.institution:
+                aff = pairing.teams[0]
+                neg = pairing.teams[1]
+                if aff.seen(neg) or neg.seen(aff) or aff.institution == neg.institution:
                     print(pairing)
                     self.assertEqual(pairing.flags, ["max_swapped"])
                 else:
@@ -48,7 +49,7 @@ class TestRoundRobinDrawGenerator(unittest.TestCase):
     def rr_permutation(self, teams, rounds, expected_matches):
         pairings = []
         for i in range(0, rounds):
-            rd = DrawGenerator("round_robin", teams, results=None, rrseq=i+1)
+            rd = DrawGenerator("two", "round_robin", teams, results=None, rrseq=i+1)
             _draw = rd.generate()
             for pairing in _draw:
                 pairings.append(pairing)
@@ -66,7 +67,7 @@ class TestRoundRobinDrawGenerator(unittest.TestCase):
         self.assertEqual(matches, expected_matches)
 
     def test_draw(self):
-        teams = [TestTeam(*args, aff_count=0) for args in self.teams]
+        teams = [TestTeam(*args, side_history=[0, 0]) for args in self.teams]
         for i, t in enumerate(teams):
             t.division = TestDivision(i)
             t.short_name = t.id
@@ -91,7 +92,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
 
     def setUp(self):
         self.b2 = copy.deepcopy(self.brackets)
-        self.ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None)
+        self.ppd = DrawGenerator("two", "power_paired", DUMMY_TEAMS, None)
 
     def tearDown(self):
         del self.b2
@@ -382,32 +383,32 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
     # situation with lots of swaps and manually figuring out the anticipated
     # result.
     standings = dict()
-    standings[1] = [((12, 'B', 4, [26, 11, 15, 14]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((2,  'D', 3, [22, 16, 20, 10]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((3,  'E', 3, [23, 20, 25,  4]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((11, 'B', 3, [1,  12, 23, 22]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((6,  'E', 3, [19, 15, 18,  9]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((17, 'E', 3, [21, 14,  7, 25]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((4,  'B', 3, [18, 25,  5,  3]), {"aff_count": 3, "allocated_side": "aff"}),
-                    ((14, 'A', 3, [24, 17,  9, 12]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((8,  'A', 3, [15, 24,  1, 15]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((7,  'D', 2, [16,  9, 17, 16]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((9,  'D', 2, [5,   7, 14,  6]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((15, 'B', 2, [8,   6, 12,  8]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((18, 'B', 2, [4,  21,  6, 21]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((22, 'A', 2, [2,  10, 16, 11]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((23, 'A', 2, [3,  19, 11,  5]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((24, 'B', 2, [14,  8, 19, 20]), {"aff_count": 3, "allocated_side": "aff"}),
-                    ((25, 'A', 2, [10,  4,  3, 17]), {"aff_count": 3, "allocated_side": "aff"}),
-                    ((1,  'C', 1, [11, 26,  8, 19]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((5,  'C', 1, [9,  13,  4, 23]), {"aff_count": 1, "allocated_side": "neg"}),
-                    ((10, 'B', 1, [25, 22, 13,  2]), {"aff_count": 1, "allocated_side": "aff"}),
-                    ((16, 'D', 1, [7,   2, 22,  7]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((20, 'E', 1, [13,  3,  2, 24]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((21, 'A', 1, [17, 18, 26, 18]), {"aff_count": 2, "allocated_side": "aff"}),
-                    ((19, 'B', 1, [6,  23, 24,  1]), {"aff_count": 1, "allocated_side": "neg"}),
-                    ((26, 'B', 1, [12,  1, 21, 13]), {"aff_count": 2, "allocated_side": "neg"}),
-                    ((13, 'C', 0, [20,  5, 10, 26]), {"aff_count": 2, "allocated_side": "neg"})]
+    standings[1] = [((12, 'B', 4, [26, 11, 15, 14]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((2,  'D', 3, [22, 16, 20, 10]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((3,  'E', 3, [23, 20, 25,  4]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((11, 'B', 3, [1,  12, 23, 22]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((6,  'E', 3, [19, 15, 18,  9]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((17, 'E', 3, [21, 14,  7, 25]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((4,  'B', 3, [18, 25,  5,  3]), {"side_history": [3, 1], "allocated_side": "aff"}),
+                    ((14, 'A', 3, [24, 17,  9, 12]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((8,  'A', 3, [15, 24,  1, 15]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((7,  'D', 2, [16,  9, 17, 16]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((9,  'D', 2, [5,   7, 14,  6]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((15, 'B', 2, [8,   6, 12,  8]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((18, 'B', 2, [4,  21,  6, 21]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((22, 'A', 2, [2,  10, 16, 11]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((23, 'A', 2, [3,  19, 11,  5]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((24, 'B', 2, [14,  8, 19, 20]), {"side_history": [3, 1], "allocated_side": "aff"}),
+                    ((25, 'A', 2, [10,  4,  3, 17]), {"side_history": [3, 1], "allocated_side": "aff"}),
+                    ((1,  'C', 1, [11, 26,  8, 19]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((5,  'C', 1, [9,  13,  4, 23]), {"side_history": [1, 3], "allocated_side": "neg"}),
+                    ((10, 'B', 1, [25, 22, 13,  2]), {"side_history": [1, 3], "allocated_side": "aff"}),
+                    ((16, 'D', 1, [7,   2, 22,  7]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((20, 'E', 1, [13,  3,  2, 24]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((21, 'A', 1, [17, 18, 26, 18]), {"side_history": [2, 2], "allocated_side": "aff"}),
+                    ((19, 'B', 1, [6,  23, 24,  1]), {"side_history": [1, 3], "allocated_side": "neg"}),
+                    ((26, 'B', 1, [12,  1, 21, 13]), {"side_history": [2, 2], "allocated_side": "neg"}),
+                    ((13, 'C', 0, [20,  5, 10, 26]), {"side_history": [2, 2], "allocated_side": "neg"})]
 
     expected = dict()
     expected[1] = [dict(
@@ -479,7 +480,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
 
     def do_draw(self, standings, options):
         standings = [TestTeam(*args, **kwargs) for args, kwargs in standings]
-        self.ppd = DrawGenerator("power_paired", standings, None, **options)
+        self.ppd = DrawGenerator("two", "power_paired", standings, None, **options)
         return self.ppd.generate()
 
     def test_draw(self):
@@ -488,8 +489,9 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                 standings = self.standings[standings_key]
                 kwargs, expected = self.expected[expected_key]
                 draw = self.do_draw(standings, kwargs)
+
                 for actual, (exp_aff, exp_neg, exp_flags, exp_aff_flags, exp_neg_flags, same_affs) in zip(draw, expected):
-                    actual_teams = (actual.aff_team.id, actual.neg_team.id)
+                    actual_teams = tuple([t.id for t in actual.teams])
                     expected_teams = (exp_aff, exp_neg)
 
                     if same_affs:
@@ -499,12 +501,12 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
 
                     self.assertEqual(actual.flags, exp_flags)
 
-                    if exp_aff == actual.aff_team.id:
-                        self.assertEqual(actual.get_team_flags(actual.aff_team), exp_aff_flags)
-                        self.assertEqual(actual.get_team_flags(actual.neg_team), exp_neg_flags)
+                    if exp_aff == actual.teams[0].id:
+                        self.assertEqual(actual.get_team_flags(actual.teams[0]), exp_aff_flags)
+                        self.assertEqual(actual.get_team_flags(actual.teams[1]), exp_neg_flags)
                     else:
-                        self.assertEqual(actual.get_team_flags(actual.neg_team), exp_aff_flags)
-                        self.assertEqual(actual.get_team_flags(actual.aff_team), exp_neg_flags)
+                        self.assertEqual(actual.get_team_flags(actual.teams[1]), exp_aff_flags)
+                        self.assertEqual(actual.get_team_flags(actual.teams[0]), exp_neg_flags)
 
 
 class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.TestCase):
@@ -721,7 +723,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
         for method, expected_results in self.expecteds.items():
             for index, expected in expected_results.items():
                 with self.subTest(method=method, index=index):
-                    ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket=method)
+                    ppd = DrawGenerator("two", "power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket=method)
                     brackets = copy.deepcopy(self.brackets[index])
                     ppd.resolve_odd_brackets(brackets)
                     self.assertDictEqual(brackets, expected)
@@ -729,7 +731,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
     def test_pullup_invalid(self):
         for method in ["pullup_top", "pullup_bottom", "pullup_random", "intermediate1", "intermediate2"]:
             with self.subTest(method=method):
-                ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket=method)
+                ppd = DrawGenerator("two", "power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket=method)
                 brackets = copy.deepcopy(self.brackets[99])
                 self.assertRaises(DrawFatalError, ppd.resolve_odd_brackets, brackets)
 
@@ -738,7 +740,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             # Just doing the third one because it's hardest, too lazy to write
             # random tests for the others.
             b2 = copy.deepcopy(self.brackets[3])
-            ppd = DrawGenerator("power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket="pullup_random")
+            ppd = DrawGenerator("two", "power_paired", DUMMY_TEAMS, None, side_allocations="preallocated", odd_bracket="pullup_random")
             ppd.resolve_odd_brackets(b2)
 
             self.assertEqual(b2[5]["aff"], [1, 2])
@@ -791,7 +793,7 @@ class BaseTestEliminationDrawGenerator(unittest.TestCase):
     def assertPairingsEqual(self, actual, expected):  # noqa: N802
         """Checks pairings without regard to sides."""
         for a, p in zip(actual, expected):
-            self.assertCountEqual((a.aff_team.id, a.neg_team.id), p)
+            self.assertCountEqual([team.id for team in a.teams], p)
 
 
 class TestPartialEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
@@ -811,7 +813,7 @@ class TestPartialEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
     def run_draw(self, break_size, expected):
         # Make the test team objects and generate their pairings
         teams = [TestTeam(*args) for args in self.team_data][:break_size]
-        self.fed = DrawGenerator("first_elimination", teams)
+        self.fed = DrawGenerator("two", "first_elimination", teams)
         pairings = self.fed.generate()
         self.assertPairingsEqual(pairings, expected)
 
@@ -834,7 +836,7 @@ class TestEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
 
         pairings = list()
         for i, (teams, winner) in enumerate(args, start=start_rank):
-            pairing = Pairing(_p(teams), 0, i, winner=_t(winner))
+            pairing = ResultPairing(_p(teams), 0, i, winner=_t(winner))
             pairings.append(pairing)
         return pairings
 
@@ -857,11 +859,11 @@ class TestEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
         # Test when number of teams is not a power of two
         teams = self._teams(1, 7, 3, 8, 9, 11)
         results = self._results(3, ([1, 5], 1), ([6, 7], 7), ([3, 2], 3), ([4, 8], 8))
-        self.ed = DrawGenerator("elimination", teams, results=results)
+        self.ed = DrawGenerator("two", "elimination", teams, results=results)
         self.assertRaises(DrawUserError, self.ed.generate)
 
     def run_draw(self, teams, results, expected):
-        self.ed = DrawGenerator("elimination", teams, results=results)
+        self.ed = DrawGenerator("two", "elimination", teams, results=results)
         pairings = self.ed.generate()
         self.assertPairingsEqual(pairings, expected)
 

@@ -11,6 +11,17 @@ should not appear in any of them.
 """
 
 
+def get_scoresheet_class(tournament):
+    """Returns the correct scoresheet class for the given tournament's options."""
+    teams_in_debate = tournament.pref('teams_in_debate')
+    if teams_in_debate == 'two':
+        return HighPointWinsRequiredScoresheet
+    elif teams_in_debate == 'bp':
+        return BPScoresheet
+    else:
+        raise ValueError("Unrecognised teams_in_debate option: {}".format(teams_in_debate))
+
+
 class BaseScoresheet:
 
     def __init__(self, *args, **kwargs):
@@ -95,7 +106,7 @@ class BaseTwoTeamScoresheet(BaseScoresheet):
         return self._get_winner()
 
     def is_valid(self):
-        return super().is_complete() and self.winner() is not None
+        return super().is_valid() and self.winner() is not None
 
 
 class ResultOnlyScoresheet(DeclaredWinnerMixin, BaseTwoTeamScoresheet):
@@ -144,9 +155,27 @@ class LowPointWinsAllowedScoresheet(ScoresMixin, ResultOnlyScoresheet):
     pass
 
 
-SCORESHEET_CLASSES = {
-    'winner-only': ResultOnlyScoresheet,
-    'high-required': HighPointWinsRequiredScoresheet,
-    'tied-allowed': TiedPointWinsAllowedScoresheet,
-    'low-allowed': LowPointWinsAllowedScoresheet,
-}
+class BPScoresheet(ScoresMixin, BaseScoresheet):
+
+    sides = ['og', 'oo', 'cg', 'co']
+
+    def is_valid(self):
+        if not super().is_valid():
+            return False
+        totals = [self.get_total(side) for side in self.sides]
+        return len(set(totals)) == len(totals)
+
+    def rank(self, side):
+        if not self.is_valid():
+            return None
+        totals = [self.get_total(side) for side in self.sides]
+        totals.sort(reverse=True)
+        side_total = self.get_total(side)
+        return totals.index(side_total) + 1
+
+    def ranked_sides(self):
+        if not self.is_valid():
+            return None
+        total_by_side = [(self.get_total(side), side) for side in self.sides]
+        total_by_side.sort(reverse=True)
+        return [side for total, side in total_by_side]

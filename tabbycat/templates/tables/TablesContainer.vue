@@ -1,33 +1,28 @@
 <template>
-  <div>
+  <div class="row">
 
-    <div class="row">
-      <div class="col-md-12 half-vertical-spacing hidden-print">
-        <div class="input-group">
-          <input id="table-search" type="search"
-                 v-model="filterKey" @keyup="updateTableFilters"
-                 class="form-control table-search" placeholder="Find in Table">
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-search"></span>
-          </span>
-        </div>
+    <div class="col-12 mb-1 hidden-print">
+      <div class="input-group">
+        <input class="form-control" id="table-search" type="search"
+               v-model="filterKey" @keyup="updateTableFilters"
+               placeholder="Find in Table">
+        <span class="input-group-addon">
+          <i data-feather="search"></i>
+        </span>
       </div>
     </div>
 
-    <div class="row">
-      <div v-for="(table, i) in tablesData" :class="tableClass">
-        <div class="panel panel-default table-container" :id="getTableId(i)">
-          <div class="panel-heading" v-if="table.title">
-            <h4 class="panel-title">{{ table.title }}</h4>
-          </div>
-          <div class="panel-body">
-            <smart-table
-              :table-headers="table.head" :table-content="table.data"
-              :table-class="table.class"
-              :default-sort-key="table.sort_key"
-              :default-sort-order="table.sort_order">
-            </smart-table>
-          </div>
+    <div class="col mb-3" v-for="(table, i) in tablesData" :class="tableClass">
+      <div class="card table-container" :id="getTableId(i)">
+        <div class="card-body">
+          <h4 class="card-title" v-if="table.title">{{ table.title }}</h4>
+          <smart-table
+            :table-headers="table.head" :table-content="table.data"
+            :table-class="table.class"
+            :default-sort-key="table.sort_key"
+            :default-sort-order="table.sort_order"
+            :empty-title="table.empty_title">
+          </smart-table>
         </div>
       </div>
     </div>

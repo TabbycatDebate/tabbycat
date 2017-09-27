@@ -1,95 +1,234 @@
 //------------------------------------------------------------------------------
-// Public Header
+// Top Navbar Customisation
 //------------------------------------------------------------------------------
 
-.navbar-toggle {
-  margin-right: 0; // Too much padding
-}
+.navbar-light {
+  background: $navbar-light-bg;
+  border-bottom: 1px solid $navbar-light-border;
+  border-top: 1px solid $navbar-light-border;
 
-.navbar-brand {
-  height: auto;
-}
-
-.navbar-brand-primary.navbar-nav {
-  margin-bottom: 0; // Mobile spacing fix
-}
-
-//------------------------------------------------------------------------------
-// Admin Sidebar
-//------------------------------------------------------------------------------
-
-// Offset the sidebar; should be nav-sidebar + 15
-.nav-sidebar-offset {
-  padding-left: $sidebar-width;
-}
-
-.override-sidebar-offset { // For fullscreen pages
-
-  .nav-sidebar-offset {
-    padding-left: 0;
+  .navbar-brand img {
+    margin-top: -3px; // Tweak icon spacing
+    margin-right: 6px;
+    margin-left: -2px;
   }
 }
 
-.nav-sidebar {
-  background: $sidebar-bg;
-  width: $sidebar-width;
+//------------------------------------------------------------------------------
+// Admin Sidebar Customisation
+//------------------------------------------------------------------------------
+
+// Used to take the full height appearnce
+.fake-sidebar {
+  height: 100vh;
   position: fixed;
-  height: 100%;
-  z-index: $z_3;
-  padding-left: 0;
-  padding-top: 0; // So the pill hover isn't flush
+  left: 0;
+  top: 0;
 
-  .overflow-scroll-wrapper {
-    overflow-y: auto;
-    height: 100%;
-    padding-bottom: 10px;
-  }
-
-  // Title Element
-  .tournament-select {
-    padding: 16px;
-    margin-left: 0;
-    border-radius: 0;
-    text-transform: uppercase;
-    color: $sidebar-muted-text;
-
-    .caret {
-      margin-top: 5px;
-    }
-
-    .emoji {
-      margin-right: 7px; // Align the the other icons
-    }
-
-    &:hover,
-    &.active {
-      background: none;
-      color: #fff;
-    }
-  }
-
-  .dropdown-menu {
+  .list-group-item {
     width: 100%;
+    background: $sidebar-bg;
+    height: 100%;
+    z-index: 0;
+    border-radius: 0;
   }
 }
 
-//------------------------------------------------------------------------------
-// Tournament Drop Down Menu
-//------------------------------------------------------------------------------
+.admin-sidebar > .list-group > .list-group-item {
+  background: $sidebar-bg;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  padding: 0;
 
-// Tournament Nav
-.tournament-select-menu {
-  width: $sidebar-width - 7px;
-  margin-left: 3px;
-  margin-top: 3px;
-  min-width: auto;
+  a {
+    color: $sidebar-muted-text;
+    display: block;
 
-  > li > a {
-    padding: 3px 5px 3px 8px;
+    &:hover {
+      color: lighten(theme-color("primary"), 15%);
+      text-decoration: none;
+    }
 
-    .badge {
-      font-size: 10px;
+    &.active,
+    &[aria-expanded="true"] {
+      background: darken($sidebar-bg, 5%);
+      border-color: darken($sidebar-bg, 10%);
+      color: lighten($sidebar-muted-text, 20%);
+    }
+
+    &[aria-expanded="true"] .feather-chevron-down {
+      display: none !important; // Need to override d-none for mobile
+    }
+
+    &[aria-expanded="false"] .feather-chevron-up {
+      display: none !important; // Need to override d-none for mobile
     }
   }
 }
 
+// Sub menu items
+.admin-sidebar .list-group-item > .collapse,
+.admin-sidebar .list-group-item > .collapsing {
+
+  .list-group-item {
+    background: darken($sidebar-bg, 5%);
+    border: 0;
+
+    .feather {
+      margin-right: 0.8rem;
+    }
+  }
+}
+
+.admin-sidebar .tournament-title {
+  min-height: 70px;
+}
+
+.sidebar-expand {
+  float: right;
+  display: inline;
+}
+
+//------------------------------------------------------------------------------
+// Circle Icons
+//------------------------------------------------------------------------------
+
+.circle-icon {
+  @extend .d-none;
+  @extend .d-md-inline;
+
+  z-index: 99; // Float above progress line
+}
+
+.circle-done {
+  stroke: lighten(theme-color("success"), 20);
+  fill: theme-color("success");
+}
+
+.circle-todo {
+  stroke: lighten(theme-color("warning"), 20);
+  fill: theme-color("warning");
+}
+
+.circle-current {
+  stroke: lighten(theme-color("info"), 20);
+  fill: theme-color("info");
+}
+
+.circle-later {
+  stroke: lighten($gray-600, 20);
+  fill: $gray-600;
+}
+
+//------------------------------------------------------------------------------
+// Responsive tweaks
+//------------------------------------------------------------------------------
+
+// Applies just to phones
+@include media-breakpoint-up(xs) {
+
+  .admin-sidebar .list-group-item a {
+    font-size: 12px;
+    padding: 0.75rem 0.4rem;
+  }
+}
+
+// Applies just to tablets
+@include media-breakpoint-up(sm) {
+
+  .admin-sidebar .list-group-item a {
+    font-size: 12px;
+    padding: 0.5rem 0.6rem;
+
+    .feather {
+      width: 12px;
+      height: 12px;
+      margin-right: 4px;
+    }
+
+    .feather-chevron-down,
+    .feather-chevron-up {
+      margin-top: 2px;
+      margin-right: 0;
+    }
+  }
+
+  .admin-sidebar .collapse .list-group-item,
+  .admin-sidebar .collapsing .list-group-item {
+    font-size: 10px;
+  }
+}
+
+// Applies just to screens
+@include media-breakpoint-up(lg) {
+
+  .admin-sidebar .list-group-item a {
+    font-size: $font-size-base;
+    padding: 0.5rem 1rem;
+
+    .feather {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+    }
+
+    .feather-chevron-down,
+    .feather-chevron-up {
+      margin-top: 2px;
+      margin-right: 0;
+    }
+  }
+
+  .admin-sidebar .collapse .list-group-item,
+  .admin-sidebar .collapsing .list-group-item {
+    font-size: $font-size-sm;
+
+    .feather {
+      margin-right: 12px; // Align sub text with main text
+    }
+  }
+}
+
+// overlay sub levels on small screens
+@include media-breakpoint-down(sm) {
+
+  .admin-sidebar .list-group-item,
+  .admin-sidebar .list-group-item,
+  .admin-sidebar .list-group-item {
+    z-index: $z_2;
+  }
+
+  .admin-sidebar .list-group .collapse.in,
+  .admin-sidebar .list-group .collapsing,
+  .admin-sidebar .list-group .collapse.show {
+    z-index: $z_2;
+    width: 150px;
+    text-align: left;
+
+    .feather {
+      margin-right: 12px;
+    }
+  }
+}
+
+// Change transition animation to width when entire sidebar is toggled
+.admin-sidebar.collapse {
+  -webkit-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-transition-duration: 0.2s;
+  -o-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+}
+
+.admin-sidebar.collapsing {
+  opacity: 0.8;
+  width: 0;
+  -webkit-transition-timing-function: ease-in;
+  -o-transition-timing-function: ease-in;
+  transition-timing-function: ease-in;
+  -webkit-transition-property: width;
+  -o-transition-property: width;
+  transition-property: width;
+}

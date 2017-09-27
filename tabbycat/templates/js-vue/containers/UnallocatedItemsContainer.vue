@@ -4,15 +4,19 @@
     @dragenter="dragEnter"
     @dragleave="dragLeave"
     @drop="drop"
-    :class="{ 'vue-is-drag-enter': isDroppable }"
-    class="navbar navbar-default navbar-fixed-bottom vue-droppable unallocated-items"
+    class="navbar navbar-default fixed-bottom p-0"
     :style="{height: height + 'px'}" ref="resizeableElement">
 
-    <slot><!-- Container sets unallocated items here --></slot>
+    <section class="resize-handler" @dragover.prevent @mousedown="resizeStart">
+      <i data-feather="menu" class="align-self-center mx-auto"></i>
+    </section>
 
-    <div class="resize-handler navbar-toggle collapsed"
-         @dragover.prevent @mousedown="resizeStart">
-      <span class="glyphicon glyphicon-menu-hamburger"></span>
+    <div class="vue-droppable unallocated-items pt-4 p-2
+                justify-content-center d-flex flex-wrap"
+         :class="{ 'vue-is-drag-enter': isDroppable }">
+
+      <slot><!-- Container sets unallocated items here --></slot>
+
     </div>
 
   </nav>

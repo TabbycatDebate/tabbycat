@@ -2,7 +2,7 @@
   <div>
 
     <svg id="ballotsStatusGraph" class="d3-graph" style="margin-top: -15px; margin-bottom: -15px;" width="100%"></svg>
-    <div v-if="graphData" class="text-center">No ballots in for this round yet</div>
+    <div v-if="!graphData" class="text-center">No ballots in for this round yet</div>
 
   </div>
 </template>
@@ -24,10 +24,11 @@ export default {
   },
   methods: {
     fetchData: function () {
+      console.log(this.pollUr)
       var xhr = new XMLHttpRequest()
       xhr.open('GET', this.pollUrl)
       var self = this
-      xhr.onload = function () {
+      xhr.onload = function(event) {
         self.graphData = JSON.parse(xhr.responseText)
         if (self.graphData.length > 0) {
           initChart(self); // Don't init if no data is present
@@ -37,7 +38,7 @@ export default {
       xhr.send()
     }
   },
-  created: function() {
+  mounted: function() {
     this.fetchData();
   },
 }
@@ -51,7 +52,7 @@ function initChart(vueContext){
   var y = d3.scale.linear().range([vueContext.height, 0])
   var z = d3.scale.ordinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
 
-  d3.selectAll("svg > *").remove(); // Remove prior graph
+  d3.selectAll("#ballotsStatusGraph > svg > *").remove(); // Remove prior graph
 
   // Create Canvas and Scales
   var svg = d3.select("#ballotsStatusGraph")

@@ -8,50 +8,50 @@
 .conflictable {
 
   &.hover-histories-1-ago {
-    background: darken($conflict-history-base, 20%);
+    @include hover-highlights(darken($conflict-history-base, 20%));
   }
 
   &.hover-histories-2-ago {
-    background: lighten($conflict-history-base, 0%);
+    @include hover-highlights(lighten($conflict-history-base, 0%));
   }
 
   &.hover-histories-3-ago {
-    background: lighten($conflict-history-base, 15%);
+    @include hover-highlights(lighten($conflict-history-base, 15%));
   }
 
   &.hover-histories-4-ago {
-    background: lighten($conflict-history-base, 30%);
+    @include hover-highlights(lighten($conflict-history-base, 30%));
   }
 
   &.hover-histories-5-ago {
-    background: lighten($conflict-history-base, 34%);
+    @include hover-highlights(lighten($conflict-history-base, 34%), theme-color("primary"));
   }
 
   &.hover-histories-6-ago {
-    background: lighten($conflict-history-base, 36%);
+    @include hover-highlights(lighten($conflict-history-base, 36%), theme-color("primary"));
   }
 
   &.hover-histories-7-ago {
-    background: lighten($conflict-history-base, 40%);
+    @include hover-highlights(lighten($conflict-history-base, 40%), theme-color("primary"));
   }
 
   &.hover-histories-8-ago {
-    background: lighten($conflict-history-base, 44%);
+    @include hover-highlights(lighten($conflict-history-base, 44%), theme-color("primary"));
   }
 
   &.hover-histories-9-ago {
-    background: lighten($conflict-history-base, 48%);
+    @include hover-highlights(lighten($conflict-history-base, 48%), theme-color("primary"));
   }
 
   // Must be below histories (to take precedence)
   &.hover-institution {
-    background: $conflict-institution;
+    @include hover-highlights($conflict-institution);
   }
 
   // Must be below histories + institutions (ie to take precedence)
   &.hover-adjudicator,
   &.hover-team {
-    background: $conflict-clash;
+    @include hover-highlights($conflict-clash);
   }
 
   &.panel-histories-1-ago {
@@ -99,21 +99,5 @@
   &.panel-adjudicator,
   &.panel-team, {
     border-color: darken($conflict-clash, 10%);
-  }
-}
-
-// Ensure text is treated nicely when a conflict state is active
-.hover-adjudicator,
-.hover-team,
-.hover-institution,
-.hover-histories-1-ago,
-.hover-histories-2-ago,
-.hover-histories-3-ago {
-  color: #fff;
-
-  span,
-  span a,
-  .text-muted {
-    color: #fff;
   }
 }

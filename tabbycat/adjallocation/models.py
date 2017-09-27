@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 class DebateAdjudicatorManager(models.Manager):
@@ -14,44 +15,58 @@ class DebateAdjudicator(models.Model):
     TYPE_TRAINEE = 'T'
 
     TYPE_CHOICES = (
-        (TYPE_CHAIR,   'chair'),
-        (TYPE_PANEL,   'panellist'),
-        (TYPE_TRAINEE, 'trainee'),
+        (TYPE_CHAIR,   _("chair")),
+        (TYPE_PANEL,   _("panellist")),
+        (TYPE_TRAINEE, _("trainee")),
     )
 
     objects = DebateAdjudicatorManager()
 
-    debate = models.ForeignKey('draw.Debate', models.CASCADE)
-    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE)
-    type = models.CharField(max_length=2, choices=TYPE_CHOICES)
-    timing_confirmed = models.NullBooleanField(verbose_name="Available? ")
+    debate = models.ForeignKey('draw.Debate', models.CASCADE,
+        verbose_name=_("debate"))
+    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
+        verbose_name=_("adjudicator"))
+    type = models.CharField(max_length=2, choices=TYPE_CHOICES,
+        verbose_name=_("type"))
+    timing_confirmed = models.NullBooleanField(verbose_name=_("available?"))
 
     def __str__(self):
         return '{} in {} ({})'.format(self.adjudicator, self.debate, self.get_type_display())
 
     class Meta:
+        verbose_name = _("debate adjudicator")
+        verbose_name_plural = _("debate adjudicators")
         unique_together = ('debate', 'adjudicator')
 
 
 class AdjudicatorConflict(models.Model):
-    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE)
-    team = models.ForeignKey('participants.Team', models.CASCADE)
+    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
+        verbose_name=_("adjudicator"))
+    team = models.ForeignKey('participants.Team', models.CASCADE,
+        verbose_name=_("team"))
 
     class Meta:
-        verbose_name = "adjudicator-team conflict"
+        verbose_name = _("adjudicator-team conflict")
+        verbose_name_plural = _("adjudicator-team conflicts")
 
 
 class AdjudicatorAdjudicatorConflict(models.Model):
-    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_source_set")
-    conflict_adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_target_set", verbose_name="Adjudicator")
+    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_source_set",
+        verbose_name=_("adjudicator 1"))
+    conflict_adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_target_set",
+        verbose_name=_("adjudicator 2"))
 
     class Meta:
-        verbose_name = "adjudicator-adjudicator conflict"
+        verbose_name = _("adjudicator-adjudicator conflict")
+        verbose_name_plural = _("adjudicator-adjudicator conflicts")
 
 
 class AdjudicatorInstitutionConflict(models.Model):
-    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE)
-    institution = models.ForeignKey('participants.Institution', models.CASCADE)
+    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
+        verbose_name=_("adjudicator"))
+    institution = models.ForeignKey('participants.Institution', models.CASCADE,
+        verbose_name=_("institution"))
 
     class Meta:
-        verbose_name = "adjudicator-institution conflict"
+        verbose_name = _("adjudicator-institution conflict")
+        verbose_name_plural = _("adjudicator-institution conflicts")

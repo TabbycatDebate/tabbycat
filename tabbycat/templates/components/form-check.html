@@ -1,0 +1,21 @@
+{% load add_field_css %}
+
+<div class="{% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %} pt-1">
+
+  {% if not field.is_hidden %}
+    <label for="{{ field.id_for_label }}" class="custom-control custom-checkbox pt-0">
+      {{ field|addcss:"custom-control-input" }}
+      <span class="custom-control-indicator"></span>
+      <span class="custom-control-description">{{ field.label }}</span>
+    </label>
+  {% endif %}
+
+  {% if field.help_text  %}
+    <small class="form-text text-muted">{{ field.help_text }}</small>
+  {% endif %}
+
+  {% if field.errors %}
+    {{ field.errors }}
+  {% endif %}
+
+</div>

@@ -82,21 +82,22 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
     # Create relevant scores
     result = DebateResult(bsub)
 
-    for side in ['aff', 'neg']:
-        speakers = getattr(debate, '%s_team' % side).speakers
+    for side in t.sides:
+        speakers = debate.get_team(side).speakers
         for i in range(1, t.last_substantive_position+1):
             result.set_speaker(side, i, speakers[i-1])
             result.set_ghost(side, i, False)
 
-        reply_speaker = random.randint(0, t.last_substantive_position-1) if reply_random else 0
-        result.set_speaker(side, t.reply_position, speakers[reply_speaker])
-        result.set_ghost(side, t.reply_position, False)
+        if t.reply_position is not None:
+            reply_speaker = random.randint(0, t.last_substantive_position-1) if reply_random else 0
+            result.set_speaker(side, t.reply_position, speakers[reply_speaker])
+            result.set_ghost(side, t.reply_position, False)
 
-        if result.is_voting:
-            for scoresheet in result.scoresheets.values():
-                fill_scoresheet_randomly(scoresheet, t)
-        else:
-            fill_scoresheet_randomly(result.scoresheet, t)
+    if result.is_voting:
+        for scoresheet in result.scoresheets.values():
+            fill_scoresheet_randomly(scoresheet, t)
+    else:
+        fill_scoresheet_randomly(result.scoresheet, t)
 
     result.save()
 
@@ -118,8 +119,17 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
         debate.result_status = Debate.STATUS_DRAFT
     debate.save()
 
-    logger.info("{debate} won by {team} on {motion}".format(
-        debate=debate.matchup, team=result.winning_side(),
-        motion=bsub.motion and bsub.motion.reference or "<No motion>"))
+    if t.pref('teams_in_debate') == 'two':
+        logger.info("%(debate)s won by %(team)s on %(motion)s", {
+            'debate': debate.matchup,
+            'team': result.winning_side(),
+            'motion': bsub.motion and bsub.motion.reference or "<No motion>"
+        })
+    elif t.pref('teams_in_debate') == 'bp':
+        logger.info("%(debate)s: %(ranked)s on %(motion)s", {
+            'debate': debate.matchup,
+            'ranked': ", ".join(result.scoresheet.ranked_sides()),
+            'motion': bsub.motion and bsub.motion.reference or "<No motion>"
+        })
 
     return result

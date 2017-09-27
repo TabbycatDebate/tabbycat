@@ -2,20 +2,88 @@
 // Checkins
 //------------------------------------------------------------------------------
 
-.round-progresses {
+.progress {
+  // margin-bottom: 0; // Progress bars have bottom margins; need to offset
+  height: 30px; // Increase height from standard
+  margin-top: 4px;
+  margin-bottom: 0;
 
-  .row:first-child {
-    margin-bottom: 10px; // Space out the bars slightly
+  .progress-bar {
+    line-height: 30px;
   }
+}
 
-  .progress {
-    margin-bottom: 0; // Progress bars have bottom margins; need to offset
-  }
+.progress-empty span {
+  color: #000; // If its showing 0/x make the text visible and not flush
+  margin-left: 10px;
+}
 
-  .progress-empty span {
-    color: #000; // If its showing 0/x make the text visible and not flush
-    margin-left: 10px;
-  }
+//------------------------------------------------------------------------------
+// Motions Tab
+//------------------------------------------------------------------------------
+
+.progress-bar-aff {
+  background-color: $aff;
+}
+
+.progress-bar-neg {
+  background-color: $neg;
+}
+
+.progress-bar-og {
+  background-color: $og;
+}
+
+.progress-bar-oo {
+  background-color: $oo;
+}
+
+.progress-bar-cg {
+  background-color: $cg;
+}
+
+.progress-bar-co {
+  background-color: $co;
+}
+
+.text-aff {
+  color: $aff;
+}
+
+.text-neg {
+  color: $neg;
+}
+
+.text-og {
+  color: $og;
+}
+
+.text-oo {
+  color: $oo;
+}
+
+.text-cg {
+  color: $cg;
+}
+
+.text-co {
+  color: $co;
+}
+
+.progress-points-3 {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.progress-points-2 {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.progress-points-1 {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.progress-points-0 {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 //------------------------------------------------------------------------------
@@ -36,7 +104,7 @@
     display: flex;
     flex-direction: column;
 
-    .panel-body {
+    .card-body {
       flex: 1;
     }
   }
@@ -66,47 +134,25 @@
 }
 
 .btn-stop-scrolling {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: $z_3;
+  left: auto;
 }
 
 .draw-xs {
-  font-size: $font-size-base * 1.25;
+  font-size: $font-size-base * 0.75;
 }
 
 .draw-s {
-  font-size: $font-size-base * 1.5;
+  font-size: $font-size-base * 0.95;
 }
 
 .draw-m {
-  font-size: $font-size-base * 1.75;
+  font-size: $font-size-base * 1.15;
 }
 
 .draw-l {
-  font-size: $font-size-base * 2;
+  font-size: $font-size-base * 1.35;
 }
 
 .draw-xl {
-  font-size: $font-size-base * 2.25;
-}
-
-//------------------------------------------------------------------------------
-// Ballot Entry
-//------------------------------------------------------------------------------
-
-.speaker-name {
-  text-align: left;
-}
-
-.iron-person {
-  padding: 10px 0 5px;
-
-  input {
-    float: right;
-    width: 21px;
-    height: 21px;
-    margin: 0 -4px 0 0;
-  }
+  font-size: $font-size-base * 1.55;
 }

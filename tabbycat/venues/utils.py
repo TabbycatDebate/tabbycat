@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import ugettext as _
 
 from venues.models import VenueConstraint
 
@@ -14,18 +15,17 @@ def venue_conflicts_display(debates):
     for vc in VenueConstraint.objects.filter_for_debates(debates).select_related('category'):
         constraints.setdefault((vc.subject_content_type_id, vc.subject_id), []).append(vc)
 
-    def _add_constraint_message(debate, instance_name, instance, venue):
+    def _add_constraint_message(debate, instance, venue, success_message, failure_message, message_args):
         key = (ContentType.objects.get_for_model(instance).id, instance.id)
         if key not in constraints:
             return
         for constraint in constraints[key]:
             if constraint.category in venue.venuecategory_set.all():
-                conflict_messages[debate].append(("success", "Venue constraint of {name} ({category}) met".format(
-                        name=instance_name, category=constraint.category.name)))
+                message_args['category'] = constraint.category.name
+                conflict_messages[debate].append(("success", success_message % message_args))
                 return
         else:
-            conflict_messages[debate].append(("danger", "Venue does not meet any constraint of {name}".format(
-                    name=instance_name)))
+            conflict_messages[debate].append(("danger", failure_message % message_args))
 
     conflict_messages = {debate: [] for debate in debates}
     for debate in debates:
@@ -34,11 +34,21 @@ def venue_conflicts_display(debates):
             continue
 
         for team in debate.teams:
-            _add_constraint_message(debate, team.short_name, team, venue)
-            _add_constraint_message(debate, "institution {} ({})".format(team.institution.code, team.short_name),
-                    team.institution, venue)
+            _add_constraint_message(debate, team, venue,
+                _("Venue constraint of %(name)s met (%(category)s)"),
+                _("Venue does not meet any constraint of %(name)s"),
+                {'name': team.short_name})
+
+            if team.institution is not None:
+                _add_constraint_message(debate, team.institution, venue,
+                    _("Venue constraint of %(team)s met (%(category)s, via institution %(institution)s)"),
+                    _("Venue does not meet any constraint of institution %(institution)s (%(team)s)"),
+                    {'instititution': team.institution.code, 'team': team.short_name})
 
         for adjudicator in debate.adjudicators.all():
-            _add_constraint_message(debate, adjudicator.name, adjudicator, venue)
+            _add_constraint_message(debate, adjudicator, venue,
+                _("Venue constraint of %(name)s met (%(category)s)"),
+                _("Venue does not meet any constraint of %(name)s"),
+                {'name': adjudicator.name})
 
     return conflict_messages

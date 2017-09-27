@@ -57,6 +57,9 @@ class Debate(models.Model):
         verbose_name=_("result status"))
     ballot_in = models.BooleanField(default=False,
         verbose_name=_("ballot in"))
+    sides_confirmed = models.BooleanField(default=True,
+        verbose_name=_("sides confirmed"),
+        help_text=_("If unchecked, the sides assigned to teams in this debate are just placeholders."))
 
     class Meta:
         verbose_name = _("debate")
@@ -74,14 +77,18 @@ class Debate(models.Model):
     @property
     def matchup(self):
         # This method is used by __str__, so it's not allowed to crash (ever)
+        if not self.sides_confirmed:
+            teams_list = ", ".join([dt.team.short_name for dt in self.debateteam_set.all()])
+            # Translators: This is appended to a list of teams, e.g. "Auckland
+            # 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
+            # space.
+            return teams_list + ugettext(" (sides not confirmed)")
         try:
-            return "%s vs %s" % (self.aff_team.short_name, self.neg_team.short_name)
+            # Translators: This goes between teams in a debate, e.g. "Auckland 1
+            # vs Vic Wellington 1". Mind the leading and trailing spaces.
+            return ugettext(" vs ").join(self.get_team(side).short_name for side in self.round.tournament.sides)
         except (ObjectDoesNotExist, MultipleObjectsReturned):
-            dts = self.debateteam_set.all()
-            if all(dt.side == DebateTeam.SIDE_UNALLOCATED for dt in dts):
-                return ", ".join([dt.team.short_name for dt in dts])
-            else:
-                return self._teams_and_sides_display()
+            return self._teams_and_sides_display()
 
     def _teams_and_sides_display(self):
         return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_display())
@@ -119,16 +126,12 @@ class Debate(models.Model):
 
         for dt in dts:
             self._teams.append(dt.team)
-            if dt.side == DebateTeam.SIDE_AFFIRMATIVE:
-                if 'aff_team' in self._team_properties:
-                    self._multiple_found.extend(['aff_team', 'aff_dt'])
-                self._team_properties['aff_team'] = dt.team
-                self._team_properties['aff_dt'] = dt
-            elif dt.side == DebateTeam.SIDE_NEGATIVE:
-                if 'neg_team' in self._team_properties:
-                    self._multiple_found.extend(['neg_team', 'neg_dt'])
-                self._team_properties['neg_team'] = dt.team
-                self._team_properties['neg_dt'] = dt
+            team_key = '%s_team' % dt.side
+            dt_key = '%s_dt' % dt.side
+            if team_key in self._team_properties:
+                self._multiple_found.extend([team_key, dt_key])
+            self._team_properties[team_key] = dt.team
+            self._team_properties[dt_key] = dt
 
     def _team_property(attr):  # noqa: N805
         """Used to construct properties that rely on self._populate_teams()."""
@@ -138,12 +141,12 @@ class Debate(models.Model):
                 self._populate_teams()
             if attr in self._multiple_found:
                 raise MultipleDebateTeamsError("Multiple debate teams found for '%s' in debate ID %d. "
-                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
+                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
             try:
                 return self._team_properties[attr]
             except KeyError:
                 raise NoDebateTeamFoundError("No debate team found for '%s' in debate ID %d. "
-                        "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
+                    "Teams in debate are: %s." % (attr, self.id, self._teams_and_sides_display()))
         return _property
 
     @property
@@ -154,10 +157,22 @@ class Debate(models.Model):
             self._populate_teams()
         return self._teams
 
+    def debateteams_ordered(self):
+        for side in self.round.tournament.sides:
+            yield self.get_dt(side)
+
     aff_team = _team_property('aff_team')
     neg_team = _team_property('neg_team')
+    og_team = _team_property('og_team')
+    oo_team = _team_property('oo_team')
+    cg_team = _team_property('cg_team')
+    co_team = _team_property('co_team')
     aff_dt = _team_property('aff_dt')
     neg_dt = _team_property('neg_dt')
+    og_dt = _team_property('og_dt')
+    oo_dt = _team_property('oo_dt')
+    cg_dt = _team_property('cg_dt')
+    co_dt = _team_property('co_dt')
 
     def get_team(self, side):
         return getattr(self, '%s_team' % side)
@@ -220,16 +235,32 @@ class Debate(models.Model):
             # return a fake one if it is not
             return Motion(text='-', reference='-')
 
+    # For the front end need to ensure that there are no gaps in the debateTeams
+    def serial_debateteams_ordered(self):
+        t = self.round.tournament
+        for side in t.sides:
+            sdt = {'side': side, 'team': None,
+                   'position': get_side_name(t, side, 'full'),
+                   'abbr': get_side_name(t, side, 'abbr')}
+            try:
+                debate_team = self.get_dt(side)
+                sdt['team'] = debate_team.team.serialize()
+            except ObjectDoesNotExist:
+                pass
+
+            yield sdt
+
     def serialize(self):
         round = self.round
         debate = {'id': self.id, 'bracket': self.bracket,
                   'importance': self.importance, 'locked': False}
         debate['venue'] = self.venue.serialize() if self.venue else None
-        debate['teams'] = {
-            dt.get_side_name(round.tournament):dt.team.serialize() for dt in self.debateteam_set.all()}
-        debate['panel'] = [{
-            'adjudicator': adj.serialize(round=round), 'position': position,
+        debate['debateTeams'] = list(self.serial_debateteams_ordered())
+        debate['debateAdjudicators'] = [{
+            'position': position,
+            'adjudicator': adj.serialize(round=round),
         } for adj, position in self.adjudicators.with_debateadj_types()]
+        debate['sidesConfirmed'] = self.sides_confirmed
         return debate
 
 
@@ -241,12 +272,18 @@ class DebateTeamManager(models.Manager):
 
 
 class DebateTeam(models.Model):
-    SIDE_AFFIRMATIVE = 'aff'
-    SIDE_NEGATIVE = 'neg'
-    SIDE_UNALLOCATED = '-'
-    SIDE_CHOICES = ((SIDE_AFFIRMATIVE, _("affirmative")),
-                    (SIDE_NEGATIVE, _("negative")),
-                    (SIDE_UNALLOCATED, _("unallocated")), )
+    SIDE_AFF = 'aff'
+    SIDE_NEG = 'neg'
+    SIDE_OG = 'og'
+    SIDE_OO = 'oo'
+    SIDE_CG = 'cg'
+    SIDE_CO = 'co'
+    SIDE_CHOICES = ((SIDE_AFF, _("affirmative")),
+                    (SIDE_NEG, _("negative")),
+                    (SIDE_OG, _("opening government")),
+                    (SIDE_OO, _("opening opposition")),
+                    (SIDE_CG, _("closing government")),
+                    (SIDE_CO, _("closing opposition")))
 
     objects = DebateTeamManager()
 
@@ -287,8 +324,22 @@ class DebateTeam(models.Model):
             # If the verbose description can't be found, just show the raw flag
             return [DRAW_FLAG_DESCRIPTIONS.get(f, f) for f in self.flags.split(",")]
 
-    def get_result_display(self):
-        if self.win is True:
+    def get_result_display(self, tournament=None):
+        if not tournament:
+            tournament = self.team.tournament
+
+        if self.win is None:
+            if self.points is 3:
+                return "1st"
+            elif self.points is 2:
+                return "2nd"
+            elif self.points is 2:
+                return "3rd"
+            elif self.points is 2:
+                return "4th"
+            else:
+                return ugettext("result unknown")
+        elif self.win is True:
             return ugettext("won")
         elif self.win is False:
             return ugettext("lost")
@@ -311,13 +362,30 @@ class DebateTeam(models.Model):
                 self._win = None
             return self._win
 
-    def get_side_name(self, tournament=None):
+    @property
+    def points(self):
+        """Convenience function. Returns the number of points this team received
+        or None if there isn't a confirmed result.
+
+        This result is stored for the lifetime of the instance -- it won't
+        update on the same instance if a result is entered."""
+        try:
+            return self._points
+        except AttributeError:
+            try:
+                self._points = self.teamscore_set.get(ballot_submission__confirmed=True).points
+            except ObjectDoesNotExist:
+                self._points = None
+            return self._points
+
+    def get_side_name(self, tournament=None, name_type='full'):
         """Should be used instead of get_side_display() on views.
         `tournament` can be passed in if known, for performance."""
-        if self.side in [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]:
-            return get_side_name(tournament or self.debate.round.tournament, self.side, 'full')
-        else:
-            return self.get_side_display()
+        try:
+            return get_side_name(tournament or self.debate.round.tournament,
+                                 self.side, name_type)
+        except KeyError:
+            return self.get_side_display()  # fallback
 
 
 class MultipleDebateTeamsError(DebateTeam.MultipleObjectsReturned):

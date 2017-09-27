@@ -4,14 +4,25 @@ import _ from 'lodash'
 
 export default {
   methods: {
-    institutionDetailForSlideOver: function(adjorteam) {
-      var title = adjorteam.institution.name
-      var css = ''
-      if (adjorteam.region !== null && !_.isUndefined(adjorteam.region)) {
-        title += ' (' + adjorteam.region.name + ')'
-        css += 'region-display region-' + adjorteam.region.class
+    genderBrackets: function(gender) {
+      if (gender) {
+        return '(' + gender + ')'
+      } else {
+        return ''
       }
-      return [{ 'title': title, 'icon': 'glyphicon-globe', 'class': css }]
+    },
+    institutionDetailForSlideOver: function(adjorteam) {
+      if (adjorteam.institution !== null) {
+        var title = adjorteam.institution.name
+        var css = ''
+        if (adjorteam.region !== null && !_.isUndefined(adjorteam.region)) {
+          title += ' (' + adjorteam.region.name + ')'
+          css += 'region-display region-' + adjorteam.region.class
+        }
+        return [{ 'title': title, 'icon': 'globe', 'class': css }]
+      } else {
+        return [{ 'title': "No Institution", 'icon': 'globe', 'class': '' }]
+      }
     },
   }
 }

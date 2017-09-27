@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head-title %}<span class="emoji">👋</span> Top Level Title with Emoji{% endblock %}
+{% block page-title %}Tabbycat Style Guide{% endblock %}
+{% block nav %}{% endblock %}
+
+{% block content %}
+
+<h6 class="mt-5">Alerts (notify of system events)</h6>
+
+{% include "components/alert.html" with type="info" message="This is an alert of an informative event that has happened." %}
+{% include "components/alert.html" with type="success" message="This is an alert of a succesful event that has happened." %}
+{% include "components/alert.html" with type="warning" message="This is a message of a warning." %}
+{% include "components/alert.html" with type="danger" message="This is a message of an error or bad thing that happened" %}
+
+<h6 class="mt-5">Nav actions</h6>
+
+  <div class="list-group mt-2">
+    {% include "components/item-action.html" with text="Nav Action Item" icon="feather" %}
+  </div>
+
+<h6 class="mt-5">Calls to Action (promp for necessary actions)</h6>
+
+{% include "components/item-action.html" with url="#" alone=True text="Go to the draw area to allocate adjudicators." type="success" to_complete=True %}
+
+
+<h6 class="mt-5">Info Cards (explain crucial information on a page)</h6>
+
+{% blocktrans trimmed asvar p1 %}This style of info card announces critical information. <a href="">Link</a>.{% endblocktrans %}
+{% include "components/explainer-card.html" with type="warning" %}
+
+{% blocktrans trimmed asvar p1 %}This style of info card announces general <a href="">information</a>.{% endblocktrans %}
+{% include "components/explainer-card.html" with type="info" p2="This is a second paragraph" %}
+
+<h6 class="mt-5">Action Cards (i.e. for checkins)</h6>
+
+<div class="row mb-4">
+
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-0">Thing B</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        {% include "components/item-info.html" with p1="This is a possibly important issue to be rectified with the below action" type="warning" %}
+        {% include "components/item-info.html" with p1="This is a crucial issue to be rectified with the below action" type="danger" %}
+        {% include "components/item-action.html" with text="Edit a thing" type="primary" %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-0">Thing C</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        {% include "components/item-info.html" with p1="This is an informative note relevant to the below action" type="info" %}
+        {% include "components/item-info.html" with p1="This is an even less informative note" type="secondary" %}
+        {% include "components/item-action.html" with text="Do a thing" type="success" to_complete=True  %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<h6 class="mt-5">Cards (for sections of info or link blocks)</h6>
+
+<div class="card mt-3">
+  <div class="card-body text-info border-info">
+    <h4 class="card-title"><i data-feather="clock"></i>Info Title</h4>
+     Info description
+  </div>
+  <ul class="list-group list-group-flush">
+    <a href="" class="list-group-item list-group-item-action">
+      <h5 class="list-group-item-heading">Title</h5>
+      Body
+    </a>
+  </ul>
+</div>
+
+<h6 class="mt-5">Tables</h6>
+
+<div class="card table-container">
+  <div class="card-body">
+    <h4 class="card-title">Optional Table Title</h4>
+    <table class="table table-responsive">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Title</th>
+          <th>Title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Content</td>
+          <td>Content</td>
+          <td>Content</td>
+        </tr>
+        <tr>
+          <td>Content</td>
+          <td>Content</td>
+          <td>Content</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h6 class="mt-5">Action Buttons (for forms or headers with actions)</h6>
+
+<div class="btn btn-success">
+  Primary Data-Altering Action
+</div>
+<div class="btn btn-success disabled">
+  Disabled PDAA
+</div>
+<div class="btn btn-primary" disabled>
+  Secondary Data-Altering Action
+</div>
+<div class="btn btn-primary disabled">
+  Disabled SDA
+</div>
+<div class="btn btn-danger">
+  Destructive Action
+</div>
+<div class="btn btn-danger disabled">
+  Disabled DA
+</div>
+
+<hr>
+
+<div class="btn btn-info">
+  Info (unused?)
+</div>
+<div class="btn btn-warning">
+  Warning (unused?)
+</div>
+
+<h6 class="mt-5">Nav Buttons (acting as links or navigation items in headers)</h6>
+
+<div class="btn btn-outline-primary">
+  A link to somewhere
+</div>
+<div class="btn btn-outline-primary active">
+  An active link to somewhere (typically indicates current page)
+</div>
+
+<h6 class="mt-5">Forms</h6>
+
+<div class="card mt-3">
+
+  <div class="list-group list-group-flush">
+  <form>
+
+    {% trans "Form Title" context "page title" as title %}
+    {% trans "Sub Title Title" as text %}
+    {% include "components/form-title.html" with icon="feather" %}
+
+    <div class="list-group-item pb-4">
+
+      <div class="alert alert-danger mt-2">
+        <i data-feather="alert-circle"></i>
+        This is an error message raised by the form
+      </div>
+
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">Label A</label>
+        <input class="form-control" type="password" name="old_password" required="" id="id_old_password">
+        <small class="form-text text-muted">Hint for form field</small>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">Label B</label>
+        <input class="form-control" type="password" name="old_password" required="" id="id_old_password">
+        <small class="form-text text-muted">Hint for form field</small>
+        <ul class="errorlist"><li>Error for form field</li></ul>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-lg-6">
+          <label for="{{ field.id_for_label }}">Label C</label>
+          <input class="form-control" type="password" name="old_password" required="" id="id_old_password">
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="{{ field.id_for_label }}">Label D</label>
+          <input class="form-control" type="password" name="old_password" required="" id="id_old_password">
+        </div>
+      </div>
+
+    </div>
+
+    {% trans "Log In" context "button" as title %}
+    {% trans "I forgot my password" context "button" as subtitle %}
+    {% url 'password_reset' as suburl %}
+    {% include "components/form-submit.html" %}
+
+  </form>
+  </div>
+
+</div>
+
+<h6 class="mt-5">Diversity Colors</h6>
+
+<button class="btn btn-primary gender-display gender-male h6">Male identifying</button>
+<button class="btn btn-primary gender-display gender-nm h6">Non-cis male identifying</button>
+<button class="btn btn-primary gender-display gender-unknown h6">Unknown</button>
+
+<hr>
+
+<button class="btn btn-primary region-display region-1 h6">region-1</button>
+<button class="btn btn-primary region-display region-2 h6">region-2</button>
+<button class="btn btn-primary region-display region-3 h6">region-3</button>
+<button class="btn btn-primary region-display region-4 h6">region-4</button>
+<button class="btn btn-primary region-display region-5 h6">region-5</button>
+<button class="btn btn-primary region-display region-6 h6">region-6</button>
+<button class="btn btn-primary region-display region-7 h6">region-7</button>
+
+<h6 class="mt-5">Allocation Conflicts Colors</h6>
+
+<button class="btn conflictable hover-institution h6">hover-institution</button>
+<button class="btn conflictable hover-team h6">hover-team</button>
+<button class="btn conflictable hover-adjudicator h6">hover-adjudicator</button>
+<button class="btn panel-incomplete h6">panel-incomplete</button>
+
+<hr>
+
+<button class="btn btn-link conflictable panel-institution h6">panel-institution</button>
+<button class="btn btn-link conflictable panel-team h6">panel-team</button>
+<button class="btn btn-link conflictable panel-adjudicator h6">panel-adjudicator</button>
+
+<h6 class="mt-5">Allocation Histories Colors</h6>
+
+<button class="btn conflictable hover-histories-1-ago h6">1-ago</button>
+<button class="btn conflictable hover-histories-2-ago h6">2-ago</button>
+<button class="btn conflictable hover-histories-3-ago h6">3-ago</button>
+<button class="btn conflictable hover-histories-4-ago h6">4-ago</button>
+<button class="btn conflictable hover-histories-5-ago h6">5-ago</button>
+<button class="btn conflictable hover-histories-6-ago h6">6-ago</button>
+<button class="btn conflictable hover-histories-7-ago h6">7-ago</button>
+<button class="btn conflictable hover-histories-8-ago h6">8-ago</button>
+<button class="btn conflictable hover-histories-9-ago h6">9-ago</button>
+
+<hr>
+
+<button class="btn btn-link conflictable panel-histories-1-ago h6">1-ago</button>
+<button class="btn btn-link conflictable panel-histories-2-ago h6">2-ago</button>
+<button class="btn btn-link conflictable panel-histories-3-ago h6">3-ago</button>
+<button class="btn btn-link conflictable panel-histories-4-ago h6">4-ago</button>
+<button class="btn btn-link conflictable panel-histories-5-ago h6">5-ago</button>
+<button class="btn btn-link conflictable panel-histories-6-ago h6">6-ago</button>
+<button class="btn btn-link conflictable panel-histories-7-ago h6">7-ago</button>
+<button class="btn btn-link conflictable panel-histories-8-ago h6">8-ago</button>
+<button class="btn btn-link conflictable panel-histories-9-ago h6">9-ago</button>
+
+
+<h6 class="mt-5">Allocation Adj Ranking Colors</h6>
+
+<button class="btn ranking-display ranking-90 h6">ranking-90%</button>
+<button class="btn ranking-display ranking-80 h6">ranking-80%</button>
+<button class="btn ranking-display ranking-70 h6">ranking-70%</button>
+<button class="btn ranking-display ranking-60 h6">ranking-60%</button>
+<button class="btn ranking-display ranking-50 h6">ranking-50%</button>
+<button class="btn ranking-display ranking-40 h6">ranking-40%</button>
+<button class="btn ranking-display ranking-30 h6">ranking-30%</button>
+<button class="btn ranking-display ranking-20 h6">ranking-20%</button>
+<button class="btn ranking-display ranking-10 h6">ranking-10%</button>
+
+<h6 class="mt-5">Positions Colors</h6>
+
+<div class="progress">
+  <div class="progress-bar progress-bar-og" style="width: 56%">OG </div>
+  <div class="progress-bar progress-bar-oo" style="width: 56%">OO </div>
+  <div class="progress-bar progress-bar-cg" style="width: 39%">CG </div>
+  <div class="progress-bar progress-bar-co" style="width: 50%">CO </div>
+</div>
+
+<hr>
+
+<div class="progress">
+  <div class="progress-bar progress-bar-aff" style="width: 36.7%">
+    Aff
+  </div>
+  <div class="progress-bar progress-bar-neg" style="width: 24.2%">
+    Neg
+  </div>
+</div>
+
+{% endblock content %}

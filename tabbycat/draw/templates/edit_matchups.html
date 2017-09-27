@@ -2,32 +2,8 @@
 {% load static debate_tags i18n %}
 {% load debate_tags %}
 
-{% block head-title %}Edit Sides or Matchups for {{ round.abbreviation }}{% endblock %}
-{% block page-title %}Edit Sides or Matchups for {{ round.abbreviation }}{% endblock %}
-
-{% block page-alerts %}
-  <div class="alert alert-warning">
-    <p>
-      {% blocktrans trimmed %}
-        This interface is intended to easily swap the positions of teams within
-        a debate, such as for final rounds where these are not known in advance.
-        However it can also be used to create new debates and edit existing
-        matchups. This should be done with caution; edits to matchups will
-        <em>remove any round results for the teams that are moved</em>. In
-        general you should only ever edit draws this way before they are
-        released; and only then if you don't want a 'correct' draw.
-      {% endblocktrans %}
-    </p>
-    <p>
-      {% blocktrans trimmed %}
-        Note that changes to matchups will only be saved once a debate has
-        <em>all of its team slots filled</em>. You can create new debates by
-        dragging into the blank rows at the bottom, but debates cannot be
-        deleted here — you will need to go into the Edit Database area for that.
-      {% endblocktrans %}
-    </p>
-  </div>
-{% endblock %}
+{% block head-title %}Edit Sides/Matchups for {{ round.abbreviation }}{% endblock %}
+{% block page-title %}Edit Sides/Matchups for {{ round.abbreviation }}{% endblock %}
 
 {% block content %}
   <div id="vueMount">
@@ -36,7 +12,8 @@
                              :round-info="roundInfo"
                              :initial-Unallocated-items="unallocatedItems"
                              :default-sort-key="'bracket'"
-                             :default-sort-order="'desc'">
+                             :default-sort-order="'desc'"
+                             :save-sides-status-url="saveSidesStatusUrl">
     </edit-matchups-container>
 
   </div>
@@ -49,6 +26,7 @@
       debates: {{ vueDebates|safe }},
       roundInfo: {{ vueRoundInfo|safe }},
       unallocatedItems: {{ vueUnusedTeams|safe }},
+      saveSidesStatusUrl: '{{ saveSidesStatusUrl }}'
     }
   </script>
   {{ block.super }}

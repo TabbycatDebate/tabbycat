@@ -1,11 +1,27 @@
+"""Draw generators for randomly drawn rounds, both two-team and BP."""
+
 import random
 
 from django.utils.translation import ugettext as _
 
-from .common import BaseDrawGenerator, DrawUserError, Pairing
+from .common import BaseBPDrawGenerator, BasePairDrawGenerator, DrawUserError
+from .pairing import BPPairing, Pairing
 
 
-class RandomDrawGenerator(BaseDrawGenerator):
+class RandomPairingsMixin:
+    """Provides actual random part of it, generic to pair and BP draws.
+    Classes using this mixin must define self.TEAMS_PER_DEBATE.
+    """
+
+    def make_random_pairings(self, teams):
+        teams = list(teams)  # Make a copy
+        random.shuffle(teams)
+        args = [iter(teams)] * self.TEAMS_PER_DEBATE  # recipe from Python itertools docs
+        pairings = [self.pairing_class(teams=t, bracket=0, room_rank=0) for t in zip(*args)]
+        return pairings
+
+
+class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
     """Random draw.
     If there are allocated sides, use RandomDrawWithSideConstraints instead.
     Options:
@@ -19,12 +35,12 @@ class RandomDrawGenerator(BaseDrawGenerator):
     can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
-    draw_type = "preliminary"
+    pairing_class = Pairing
 
     DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
     def generate(self):
-        self._draw = self._make_initial_pairings()
+        self._draw = self.make_random_pairings(self.teams)
         self.avoid_conflicts(self._draw)  # Operates in-place
         self.allocate_sides(self._draw)  # Operates in-place
         return self._draw
@@ -89,9 +105,23 @@ class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
             raise DrawUserError(_("There were %(aff_count)d affirmative teams but %(neg_count)d negative "
                     "teams.") % {'aff_count': len(aff_teams), 'neg_count': len(neg_teams)})
         if len(aff_teams) + len(neg_teams) != len(self.teams):
-            raise DrawUserError(_("One or more teams had an allocated side that wasn't 'aff' or 'neg'."))
+            raise DrawUserError(_("One or more teams had an allocated side that wasn't affirmative or negative."))
 
         random.shuffle(aff_teams)
         random.shuffle(neg_teams)
         pairings = [Pairing(teams=t, bracket=0, room_rank=0) for t in zip(aff_teams, neg_teams)]
         return pairings
+
+
+class RandomBPDrawGenerator(RandomPairingsMixin, BaseBPDrawGenerator):
+
+    can_be_first_round = True
+    requires_even_teams = True
+    requires_prev_result = False
+    pairing_class = BPPairing
+
+    DEFAULT_OPTIONS = {}
+
+    def generate(self):
+        self._draw = self.make_random_pairings(self.teams)
+        return self._draw

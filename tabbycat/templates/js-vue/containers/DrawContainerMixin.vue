@@ -25,10 +25,8 @@ export default {
       unallocatedItems: this.initialUnallocatedItems,
       headers: [
         {'key':'bracket'},{'key':'liveness'},{'key':'importance'},
-        {'key':'venue'},
-        {'key':'affirmative'},{'key':'negative'},
+        {'key':'venue'},{'key':'aff'},{'key':'neg'},
         {'key':'og'},{'key':'oo'},{'key':'cg'},{'key':'co'},
-        // Team positions
       ]
     }
   },
@@ -47,18 +45,21 @@ export default {
     teams: function() {
       // Return all teams (in debates) as a single array
       var allTeams = _.map(this.debates, function(debate) {
-        return _.values(debate.teams)
+        return _.map(debate.debateTeams, function(dt) {
+          return dt.team
+        })
       })
       return _.flattenDeep(allTeams)
     },
     adjudicators: function() {
       // Return all adjs (in debates) as a single array
       var allPanellists = _.map(this.debates, function(debate) {
-        return _.map(debate.panel, function(panel) {
+        return _.map(debate.debateAdjudicators, function(panel) {
           return panel.adjudicator
         })
       })
-      return _.flattenDeep(allPanellists)
+      var allAdjudicators = allPanellists.concat(this.unallocatedItems)
+      return _.flattenDeep(allAdjudicators)
     },
     venues: function() {
       // Return all teams as a single array
@@ -78,20 +79,23 @@ export default {
     },
     institutionsById: function() {
       var teamInstitutions = _.map(this.teams, function(team) {
-        return team.institution
+        if (team !== null) {
+          return team.institution
+        }
       })
       var adjInstitutions = _.map(this.adjudicators, function(adjudicator) {
         return adjudicator.institution
       })
-      var uniqueInstitutions = _.uniq(teamInstitutions.concat(adjInstitutions))
+      var allInstitutions = teamInstitutions.concat(adjInstitutions)
+      var uniqueInstitutions = _.uniq(allInstitutions)
       return _.keyBy(uniqueInstitutions, 'id')
     },
     unallocatedById: function() {
       return _.keyBy(this.unallocatedItems, 'id')
     },
-    positions: function() {
-      return this.debates[0].positions // Shortcut function
-    }
+    teamPositions: function() {
+      return this.roundInfo.teamPositions // Convenience
+    },
   },
   methods: {
     updateDebates: function(updatedDebates) {
@@ -102,31 +106,37 @@ export default {
     },
     // Duplicating sortableHeaderMixin; but can't inheret in a slot
     sortClasses: function(key) {
-      var baseCSS = "glyphicon vue-sort-key "
-      if (this.sortKey === key) {
-        if (this.sortOrder === "asc") {
-          return baseCSS + "text-success glyphicon-sort-by-attributes-alt"
-        } else {
-          return baseCSS + "text-success glyphicon-sort-by-attributes"
+      var baseCSS = "vue-sort-key "
+      if (!_.isUndefined(this.sortKey) && !_.isUndefined(key)) {
+        if (this.sortKey.toLowerCase() === key.toLowerCase()) {
+          if (this.sortOrder === "asc") {
+            return baseCSS + "vue-sort-active sort-asc"
+          } else {
+            return baseCSS + "vue-sort-active sort-desc"
+          }
         }
       }
-      return baseCSS + "text-muted glyphicon-sort"
+      return baseCSS + "text-muted"
     },
     getSortableProperty(row, orderedHeaderIndex) {
       // Rather than an array of cells (as in Table) row is a Debate
       // So just return the relevant property
-      if (typeof row[this.sortKey] === 'string' ||
-          typeof row[this.sortKey] === 'number') {
-        return row[this.sortKey]
-      } else if (this.sortKey === 'venue') {
+      var key = this.sortKey
+      if (typeof row[key] === 'string' ||
+          typeof row[key] === 'number') {
+        return row[key]
+      } else if (key === 'venue') {
         if (!_.isNull(row.venue)) {
           return row.venue.name
         } else {
           return "" // Venues can be null
         }
-      } else if (_.includes(["affirmative", "negative"], this.sortKey)) {
-        if (!_.isUndefined(row.teams[this.sortKey])) {
-          return row.teams[this.sortKey].short_name
+      } else if (_.includes(_.map(this.teamPositions), key)) {
+        var teamAtSide = _.find(row.debateTeams, function(dt) {
+          return dt.side === key
+        });
+        if (teamAtSide.team !== null) {
+          return teamAtSide.team.short_name
         } else {
           return ""  // Teams in a position can be null
         }

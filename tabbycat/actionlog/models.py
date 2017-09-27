@@ -36,6 +36,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_VENUES_AUTOALLOCATE      = 've.auto'
     ACTION_TYPE_VENUE_CATEGORIES_EDIT    = 've.ca.edit'
     ACTION_TYPE_MATCHUP_SAVE             = 'mu.save'
+    ACTION_TYPE_SIDES_SAVE               = 'ms.save'
     ACTION_TYPE_DRAW_RELEASE             = 'dr.rele'
     ACTION_TYPE_DRAW_UNRELEASE           = 'dr.unre'
     ACTION_TYPE_DIVISIONS_SAVE           = 'dv.save'
@@ -81,6 +82,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_DRAW_RELEASE            , _("Released draw")),
         (ACTION_TYPE_DRAW_UNRELEASE          , _("Unreleased draw")),
         (ACTION_TYPE_MATCHUP_SAVE            , _("Saved a matchup manual edit")),
+        (ACTION_TYPE_SIDES_SAVE              , _("Saved the sides status of a matchup")),
         (ACTION_TYPE_DIVISIONS_SAVE          , _("Saved divisions")),
         (ACTION_TYPE_MOTION_EDIT             , _("Added/edited motion")),
         (ACTION_TYPE_MOTIONS_RELEASE         , _("Released motions")),

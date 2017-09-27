@@ -1,18 +1,17 @@
 {% extends "base.html" %}
-{% load add_field_css %}
-{% load debate_tags %}
+{% load add_field_css debate_tags i18n %}
 
-{% block head-title %}Assign Motions for {{ round.name }}{% endblock %}
-{% block page-title %}Assign Motions for {{ round.name }}{% endblock %}
+{% block head-title %}{% trans "Assign Motions" %}{% endblock %}
+{% block page-title %}{% trans "Assign Motions" %}{% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-default submit-disable" href="{% roundurl 'draw' %}">
-    <span class="glyphicon glyphicon-chevron-left"></span> Back to Display
+  <a class="btn btn-primary " href="{% roundurl 'draw' %}">
+    <i data-feather="chevron-left"></i> {% trans "Back to Display" %}
   </a>
 {% endblock %}
 
 {% block content %}
-  <form method="post" action="" class="form-horizontal col-md-12">
+  <form method="post" class="col-md-12">
     {% csrf_token %}
     {{ formset.management_form }}
 
@@ -26,9 +25,7 @@
             <p class="list-group-item-text">{{ form.instance.text }}</p>
           </li>
           {% if form.errors %}
-            <li class="list-group-item">
-              <div class="error">{{ form.errors }}</div>
-            </li>
+            {% include "components/form-errors.html" with errors=form.errors %}
           {% endif %}
           {% if form.divisions %}
             {% for d in form.divisions %}
@@ -42,7 +39,7 @@
     </div>
 
     <div class="row">
-      <input class="btn btn-block btn-success" type="submit" name="submit" value="Save Motion Assignments" />
+      <input class="btn btn-block btn-success" type="submit" name="submit" value="{% trans "Save Motion Assignments" %}" />
     </div>
 
   </form>

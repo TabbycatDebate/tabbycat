@@ -1,5 +1,5 @@
 <template>
-  <div :class="['panel panel-default', { 'panel-danger': hasEvenNumbers }]">
+  <div :class="['card', { 'panel-danger': hasEvenNumbers }]">
 
     <div class="panel-heading text-center">
       <h5 class="panel-title">
@@ -8,15 +8,15 @@
     </div>
 
     <droppable-generic :assignment-id="division.id"
-                       :extra-css="'panel-body division-droppable'">
+                       :extra-css="'card-body division-droppable'">
       <draggable-team v-for="team in teams" :key="team.id":team="team">
       </draggable-team>
     </droppable-generic>
 
     <div class="panel-footer division-footer">
-      <select name="select" class="form-control btn-sm"
+      <select name="select" class="btn-sm"
               v-model="division.venue_category"  v-if="vcs.length > 0">
-        <option value=""></option>
+        <option></option>
         <option v-for="vc in vcs" :value="vc.id">
           At {{ vc.name }} (capacity for {{ vc.total_capacity }} teams)
         </option>
@@ -37,7 +37,7 @@ export default {
   props: [ 'division', 'vcs', 'teams', 'saveVenueCategoryUrl'],
   computed: {
     hasEvenNumbers: function () {
-      return (this.teams.length % 2) == 1;
+      return (this.debateTeams.length % 2) == 1;
     },
     venueCategory: function() {
       return this.division.venue_category

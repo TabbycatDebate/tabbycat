@@ -20,7 +20,8 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, ModelFormSetView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Speaker, SpeakerCategory, Team
@@ -121,15 +122,15 @@ class BaseTeamRecordView(BaseRecordView):
         teamscores = TeamScore.objects.filter(
             debate_team__team=self.object,
             ballot_submission__confirmed=True,
-            debate_team__debate__round__draw_status=Round.STATUS_RELEASED
         ).select_related(
             'debate_team__debate__round'
         ).prefetch_related(
             Prefetch('debate_team__debate__debateadjudicator_set', queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             'debate_team__debate__debateteam_set'
         )
-        if not tournament.pref('all_results_released'):
+        if not self.admin and not tournament.pref('all_results_released'):
             teamscores = teamscores.filter(
+                debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
                 debate_team__debate__round__silent=False,
                 debate_team__debate__round__seq__lt=tournament.current_round.seq
             )
@@ -183,7 +184,6 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         tournament = self.get_tournament()
         debateadjs = DebateAdjudicator.objects.filter(
             adjudicator=self.object,
-            debate__round__draw_status=Round.STATUS_RELEASED
         ).select_related(
             'debate__round'
         ).prefetch_related(
@@ -191,8 +191,9 @@ class BaseAdjudicatorRecordView(BaseRecordView):
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             'debate__debateteam_set__team__speaker_set'
         )
-        if not tournament.pref('all_results_released'):
+        if not self.admin and not tournament.pref('all_results_released'):
             debateadjs = debateadjs.filter(
+                debate__round__draw_status=Round.STATUS_RELEASED,
                 debate__round__silent=False,
                 debate__round__seq__lt=tournament.current_round.seq,
             )

@@ -1,6 +1,11 @@
 """Miscellaneous utilities for the draw."""
 
 
+def ispow2(n):
+    """Returns True if n is a power of 2. Works for positive integers only."""
+    return n & (n - 1) == 0
+
+
 def nextpow2(n):
     return 1 << (n-1).bit_length()
 

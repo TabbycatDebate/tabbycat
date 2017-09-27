@@ -1,4 +1,6 @@
+import json
 import logging
+from collections import OrderedDict
 from threading import Lock
 
 from django.conf import settings
@@ -7,6 +9,8 @@ from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import management
 from django.core.urlresolvers import reverse_lazy
+from django.db.models import Q
+from django.db.models.expressions import RawSQL
 from django.http import Http404
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
@@ -23,11 +27,13 @@ from importer.base import TournamentDataImporterError
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin
+from utils.mixins import CacheMixin, SuperuserRequiredMixin, TabbycatPageTitlesMixin
+from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
-from .forms import SetCurrentRoundForm, TournamentForm
+from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
+from .utils import get_side_name
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -157,7 +163,7 @@ class BlankSiteStartView(FormView):
         form.save()
         user = authenticate(username=self.request.POST['username'], password=self.request.POST['password1'])
         login(self.request, user)
-        messages.success(self.request, "Welcome! You've created an account for %s." % user.username)
+        messages.info(self.request, "Welcome! You've created an account for %s." % user.username)
 
         return super().form_valid(form)
 
@@ -166,13 +172,17 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""
 
     model = Tournament
-    form_class = TournamentForm
+    form_class = TournamentStartForm
     template_name = "create_tournament.html"
 
     def get_context_data(self, **kwargs):
         kwargs["preexisting_small_demo"] = Tournament.objects.filter(slug="demo_simple").exists()
         kwargs["preexisting_large_demo"] = Tournament.objects.filter(slug="demo").exists()
         return super().get_context_data(**kwargs)
+
+    def get_success_url(self):
+        t = Tournament.objects.order_by('id').last()
+        return reverse_tournament('tournament-configure', tournament=t)
 
 
 class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
@@ -191,9 +201,21 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
             logger.error("Error importing demo tournament: " + str(e))
         else:
             messages.success(self.request, "Created new demo tournament. You "
-                "can access it below.")
+                "can now configure it below.")
 
-        return redirect('tabbycat-index')
+        new_tournament = Tournament.objects.order_by('id').last()
+        return redirect(reverse_tournament('tournament-configure', tournament=new_tournament))
+
+
+class ConfigureTournamentView(SuperuserRequiredMixin, UpdateView, TournamentMixin):
+    model = Tournament
+    form_class = TournamentConfigureForm
+    template_name = "configure_tournament.html"
+    slug_url_kwarg = 'tournament_slug'
+
+    def get_success_url(self):
+        t = self.get_tournament()
+        return reverse_tournament('tournament-admin-home', tournament=t)
 
 
 class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
@@ -233,8 +255,45 @@ class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
         return context
 
 
-class FixDebateTeamsView(SuperuserRequiredMixin, TemplateView):
+class FixDebateTeamsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
     template_name = "fix_debate_teams.html"
+
+    def get_incomplete_debates(self):
+        tournament = self.get_tournament()
+        annotations = {  # annotates with the number of DebateTeams on each side in the debate
+            side: RawSQL("""
+                SELECT DISTINCT COUNT('a')
+                FROM draw_debateteam
+                WHERE draw_debate.id = draw_debateteam.debate_id
+                AND draw_debateteam.side = %s""", (side,))
+            for side in tournament.sides
+        }
+        debates = Debate.objects.filter(round__tournament=tournament)
+        debates = debates.prefetch_related('debateteam_set__team').annotate(**annotations)
+
+        # A debate is incomplete if there isn't exactly one team on each side
+        incomplete_debates = debates.filter(~Q(**{side: 1 for side in tournament.sides}))
+
+        # Finally, go through and populate lists of teams on each side
+        for debate in incomplete_debates:
+            debate.teams_on_each_side = OrderedDict((side, []) for side in tournament.sides)
+            for dt in debate.debateteam_set.all():
+                try:
+                    debate.teams_on_each_side[dt.side].append(dt.team)
+                except KeyError:
+                    pass
+
+        return incomplete_debates
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs['side_names'] = [get_side_name(tournament, side, 'full') for side in tournament.sides]
+        kwargs['incomplete_debates'] = self.get_incomplete_debates()
+        return super().get_context_data(**kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        # bypass the TournamentMixin checks, to avoid potential redirect loops
+        return TemplateView.dispatch(self, request, *args, **kwargs)
 
 
 class TournamentPermanentRedirectView(RedirectView):
@@ -257,3 +316,53 @@ class DonationsView(CacheMixin, TemplateView):
 
 class TournamentDonationsView(TournamentMixin, TemplateView):
     template_name = 'donations.html'
+
+
+class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
+    template_name = 'style_guide.html'
+    page_subtitle = 'Contextual sub title'
+
+
+# ==============================================================================
+# Base classes for other apps
+# ==============================================================================
+
+class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogActionMixin, JsonDataResponsePostView):
+    """For AJAX issued updates which post a Debate dictionary; which is then
+    modified and return back via a JSON response"""
+    allows_creation = False
+    required_json_fields = []
+
+    def modify_debate(self, debate, posted_debate):
+        """Modifies the Debate object `debate` using the information in the dict
+        `posted_debate`, and returns the modified debate.
+        Must be implemented by subclasses."""
+        raise NotImplementedError
+
+    def get_debate(self, id):
+        """Returns the debate with ID `id`. If the debate doesn't exist and
+        `self.allows_creation` is True, it creates a new debate (and saves it)
+        and returns it. If the debate doesn't exist and `self.allows_creation`
+        is False, it raises a BadJsonRequestError.
+        """
+        r = self.get_round()
+        try:
+            return Debate.objects.get(round=r, pk=id)
+        except Debate.DoesNotExist:
+            if not self.allows_creation:
+                logger.exception("Debate with ID %d in round %s doesn't exist, and allows_creation was False", id, r)
+                raise BadJsonRequestError("Debate ID %d doesn't exist" % (id,))
+            logger.info("Debate with ID %d in round %s doesn't exist, creating new debate", id, r.name)
+            return Debate.objects.create(round=r)
+
+    def post_data(self):
+        try:
+            posted_debate = json.loads(self.body)
+        except ValueError:
+            logger.exception("Bad JSON provided for drag-and-drop edit")
+            raise BadJsonRequestError("Malformed JSON provided")
+
+        debate = self.get_debate(posted_debate['id'])
+        debate = self.modify_debate(debate, posted_debate)
+        self.log_action()
+        return json.dumps(debate.serialize())

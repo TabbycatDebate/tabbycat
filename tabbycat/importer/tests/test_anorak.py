@@ -69,8 +69,8 @@ class TestImporterAnorak(TestCase):
     def test_venues(self):
         f = self._open_csv_file(self.TESTDIR, "venues")
         self.importer.import_venues(f)
-        self.assertCountsDictEqual(self.importer.counts, {vm.VenueCategory: 8, vm.Venue: 23,
-                vm.VenueCategory.venues.through: 22})
+        self.assertCountsDictEqual(self.importer.counts, {vm.VenueCategory: 8, vm.Venue: 24,
+                vm.VenueCategory.venues.through: 23})
         self.assertFalse(self.importer.errors)
 
     def test_institutions(self):

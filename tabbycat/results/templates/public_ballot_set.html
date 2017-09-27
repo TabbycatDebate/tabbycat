@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block page-title %}Ballot for {{ debate.matchup }} {{ debate.round.name }}{% endblock %}
-{% block head-title %}Ballot for {{ debate.matchup }}{% endblock %}
+
+{% block page-title %}{% blocktrans trimmed with matchup=debate.matchup %}
+  Ballot for {{ matchup }}
+{% endblocktrans %}{% endblock %}
+{% block head-title %}{% blocktrans trimmed with matchup=debate.matchup %}
+  Ballot for {{ matchup }}
+{% endblocktrans %}{% endblock %}
 {% block sub-title %}
     {{ debate.round.name }} @
     {% if debate.division.venue_category %}
@@ -12,31 +17,31 @@
 {% endblock %}
 
 {% block page-subnav-sections %}
-<div class="btn-group">
-  <a class="btn btn-default" href="{% roundurl 'results-public-round' debate.round %}">
-    <span class="glyphicon glyphicon-chevron-left"></span>
-    Return to Results for {{ debate.round.name }}
+  <a class="btn btn-outline-primary" href="{% roundurl 'results-public-round' debate.round %}">
+    <i data-feather="chevron-left"></i>
+    {% blocktrans trimmed with round_name=debate.round.name %}
+      Return to Results for {{ round_name }}
+    {% endblocktrans %}
   </a>
-</div>
 {% endblock %}
 
 {% block content %}
 
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">Motion</h4>
+  {% if motion.text  %}
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Motion</h4>
+        {{ motion.text }}
+      </div>
     </div>
-    <div class="panel-body">
-      {{ motion.text }}
-    </div>
-  </div>
+  {% endif %}
 
   {% for sheet in result.as_dicts %}
 
-    <div class="panel panel-default">
+    <div class="card mt-3">
 
-      <div class="panel-heading">
-        <h4 class="panel-title">
+      <div class="card-body pb-1">
+        <h4 class="card-title">
           {% if sheet.adjudicator %}
             {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code %}
               From {{ name }} ({{ institution }})
@@ -45,25 +50,32 @@
             {% trans "Scoresheet" %}
           {% endif %}
         </h4>
-      </div>
 
-      <div class="panel-body">
-        {% for team in sheet.teams %}
-          <ul class="list-group col-md-6 no-bottom-margin">
-            {% for position in team.speakers %}
-              <li class="list-group-item">
-                <div class="col-md-2 col-xs-3 strong">{{ position.name }}</div>
-                {{ position.speaker }}
-                <span class="badge">{{ position.score }}</span>
+        <div class="row pl-3 pt-3 p-0">
+
+          {% for team in sheet.teams %}
+            <div class="col-6 list-group mb-3">
+
+              {% for position in team.speakers %}
+                <li class="list-group-item">
+                  <strong>{{ position.name }}</strong>
+                  {{ position.speaker }}
+                  <span class="badge badge-secondary float-right">
+                    {{ position.score }}
+                  </span>
+                </li>
+              {% endfor %}
+              <li class="list-group-item list-group-item-{{ team.win_style }}">
+                <em>Total for {{ team.team.short_name }} ({{ team.side }})</em>
+                <span class="badge badge-secondary float-right">
+                  {{ team.total }}
+                </span>
               </li>
-            {% endfor %}
-            <li class="list-group-item list-group-item-{{ team.win|yesno:"success,danger" }}">
-              <div class="col-md-2 col-xs-3"></div>
-              <em>Total for {{ team.team.short_name }} ({{ team.side }})</em>
-              <span class="badge">{{ team.total }}</span>
-            </li>
-          </ul>
-        {% endfor %}
+
+            </div>
+          {% endfor %}
+
+        </div>
       </div>
 
     </div>

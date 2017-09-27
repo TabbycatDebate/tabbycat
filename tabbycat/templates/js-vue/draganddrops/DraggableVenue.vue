@@ -11,7 +11,7 @@
     </div>
 
     <div class="draggable-title">
-      <h5 class="no-top-margin no-bottom-margin">{{ titleWithLimit }}</h5>
+      <h5 class="mt-0 mb-0">{{ titleWithLimit }}</h5>
       <span class="small text-muted subtitle" v-for="c in venue.categories">
         {{ c.name }}
       </span>

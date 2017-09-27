@@ -12,37 +12,40 @@ export default {
       var debate = this.debatesById[debateId]
       // Used for debugging
       var niceName = "debate " + debate.id + " ("
-      _.forEach(debate.teams, function(team) {
-        niceName += team.short_name + ", "
+      _.forEach(debate.debateTeams, function(dt) {
+        if (dt.team !== null) {
+          niceName += dt.team.short_name + ", "
+        }
       })
       niceName = niceName.substring(0, niceName.length - 2)
       niceName += ")"
       return niceName
     },
     saveMove(movedItemId, fromDebateId, toDebateId, toPosition=null) {
-      // We clone each object so we can roll back to the originals if it fails
-      var toDebate = this.debatesById[toDebateId]
+
       var fromDebate = this.debatesById[fromDebateId]
       if (_.isUndefined(fromDebate)) { // Undefined if coming from unused
         fromDebate = 'unused'
       }
+      var toDebate = this.debatesById[toDebateId]
       if (_.isUndefined(toDebate)) { // Undefined if going to unused
         toDebate = 'unused'
       }
+
       // We clone each object so we can roll back to the originals if it fails
       var clonedToDebate = _.cloneDeep(toDebate)
+
       if (toDebate.id === fromDebate.id) {
         // For in-panel swaps we want them referring to the same variable
         var clonedFromDebate = clonedToDebate
       } else {
         var clonedFromDebate = _.cloneDeep(fromDebate)
       }
+
       this.saveMoveForType(movedItemId, clonedFromDebate, clonedToDebate, toPosition)
     },
-    debateCheckIfShouldSave(debate) {
-      return true
-    },
     determineDebatesToSave(fromDebate, toDebate) {
+      // Note children must implement a debateCheckIfShouldSave()
       if (fromDebate.id === toDebate.id && this.debateCheckIfShouldSave(toDebate)) {
         return [toDebate]
       }
@@ -89,30 +92,34 @@ export default {
         // stored before they were sent over; as they come back without the
         // initial annotations and thus don't have conflicts, regions, etc
 
-         // Only swap out on the edit adjs page
+        // Only swap out on the edit adjs page
         if (returnPayload.reallocateToPanel) {
           // Break categories aren't supplied by the server; set from old debate
           newDebate.liveness = savedDebate.liveness
+
           // For teams they dont change so we can use the global variable
-          newDebate.teams = _.mapValues(newDebate.teams, function(newDebateTeam) {
-            var id = newDebateTeam.id
-            if (_.has(self.teamsById, id)) {
-              return self.teamsById[id]
-            } else {
-              console.error('ERROR: Couldnt find team ', newDebateTeam.short_name)
-              return newDebateTeam
+          newDebate.debateTeams = _.map(newDebate.debateTeams, function(dt) {
+            if (dt.team !== null) {
+              var id = dt.team.id
+              if (_.has(self.teamsById, id)) {
+                dt.team = self.teamsById[id]
+              } else {
+                console.error('ERROR: Couldnt find team ', dt.team.short_name)
+              }
             }
+            return dt
           })
+
           // For adjudicators we saved/stored a list of all adjs when saving and need to restore
           var originalAdjsById = returnPayload.reallocateToPanel
-          newDebate.panel = _.map(newDebate.panel, function(newPanellist) {
-            var id = newPanellist.adjudicator.id
-            if (_.has( originalAdjsById, id)) {
-              return { adjudicator: originalAdjsById[id], position: newPanellist.position}
+          newDebate.debateAdjudicators = _.map(newDebate.debateAdjudicators, function(da) {
+            var id = da.adjudicator.id
+            if (_.has(originalAdjsById, id)) {
+              da.adjudicator = originalAdjsById[id]
             } else {
-              console.error('ERROR: Couldnt find adj ', newPanellist.adjudicator.name)
-              return { adjudicator: newPanellist.adjudicator, position: newPanellist.position}
+              console.error('ERROR: Couldnt find adj ', da.adjudicator.name)
             }
+            return da
           })
         }
 

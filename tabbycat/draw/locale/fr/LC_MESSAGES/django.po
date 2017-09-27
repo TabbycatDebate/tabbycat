@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-16 07:27+1000\n"
-"PO-Revision-Date: 2017-06-19 12:52+1200\n"
+"POT-Creation-Date: 2017-09-18 05:26+1000\n"
+"PO-Revision-Date: 2017-09-17 12:21-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -16,104 +16,200 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
+
+#: draw/admin.py:67
+#, python-format
+msgid "%(count)d debate had its status set to %(status)s."
+msgid_plural "%(count)d debates had their statuses set to %(status)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: draw/admin.py:74
+#, python-format
+msgid "Set result status to %(status)s"
+msgstr ""
+
+#: draw/admin.py:84
+#, python-format
+msgid "%(count)d debate was marked as having its sides confirmed."
+msgid_plural "%(count)d debates were marked as having their sides confirmed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: draw/admin.py:93
+#, python-format
+msgid "%(count)d debate was marked as having its sides not confirmed."
+msgid_plural ""
+"%(count)d debates were marked as having their sides not confirmed."
+msgstr[0] ""
+msgstr[1] ""
 
 #: draw/apps.py:7
 msgid "Draw"
-msgstr "Tirage au sort"
+msgstr "Tirage"
 
-#: draw/generator/__init__.py:12
+#: draw/generator/__init__.py:16
 msgid "Too many swaps"
 msgstr "Trop d'échanges"
 
-#: draw/generator/__init__.py:13
+#: draw/generator/__init__.py:17
 msgid "One-up-one-down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:14
+#: draw/generator/__init__.py:18
 msgid "One-up-one-down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:15
+#: draw/generator/__init__.py:19
 msgid "One-up-one-down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:16
+#: draw/generator/__init__.py:20
 msgid "Bubble up (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:17
+#: draw/generator/__init__.py:21
 msgid "Bubble down (history)"
 msgstr ""
 
-#: draw/generator/__init__.py:18
+#: draw/generator/__init__.py:22
 msgid "Bubble up (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:19
+#: draw/generator/__init__.py:23
 msgid "Bubble down (institution)"
 msgstr ""
 
-#: draw/generator/__init__.py:20
+#: draw/generator/__init__.py:24
 msgid "Bubble up (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:21
+#: draw/generator/__init__.py:25
 msgid "Bubble down (to accommodate)"
 msgstr ""
 
-#: draw/generator/__init__.py:22
+#: draw/generator/__init__.py:26
 msgid "Can't bubble up/down"
 msgstr ""
 
-#: draw/generator/__init__.py:23
+#: draw/generator/__init__.py:27
 msgid "Pull-up team"
 msgstr ""
 
-#: draw/generator/common.py:181
-msgid "There was not an even number of active teams."
-msgstr "Le nombre d'équipes actives n'est pas pair."
+#: draw/generator/bpelimination.py:49 draw/generator/elimination.py:78
+#, python-format
+msgid "%d debates in the previous round don't have a result."
+msgstr "%d débats au tour précédent n'ont pas un résultat."
 
-#: draw/generator/common.py:183
+#: draw/generator/bpelimination.py:51
+#, python-format
+msgid ""
+"%d debates in the previous round don't have exactly two teams advancing."
+msgstr ""
+"%d débats au tour précédent n'ont pas exactement deux équipes avançantes."
+
+#: draw/generator/bpelimination.py:84
+#, python-format
+msgid ""
+"The room ranks of the partial elimination round indicate that an odd number "
+"of teams (%(nbypassing)d) bypassed it."
+msgstr ""
+
+#: draw/generator/bpelimination.py:88
+#, python-format
+msgid ""
+"The room ranks of the partial elimination round indicate that %(nbypassing)d "
+"teams bypassed it, but %(advancing)d teams advanced from it."
+msgstr ""
+
+#: draw/generator/bpelimination.py:135
+#, python-format
+msgid "The number of debates (%d) in the last round is not a power of two."
+msgstr ""
+"Le nombre d’équipes (%d) dans le tour précédent n’est pas une puissance de "
+"deux."
+
+#: draw/generator/bphungarian.py:172
+#, python-format
+msgid "The Rényi order can't be negative, and it's currently set to %(alpha)f."
+msgstr ""
+
+#: draw/generator/common.py:52
+#, python-format
+msgid ""
+"The number of teams presented for the draw was not a multiple of %(num)d."
+msgstr ""
+"Le nombre d’équipes présenté pour le tirage n'est pas un multiple de %(num)d."
+
+#: draw/generator/common.py:55
 msgid "There were no teams for the draw."
-msgstr "Il n’y a pas d’équipes pour le tirage au sort."
+msgstr "Il n’y a pas d’équipes pour le tirage."
 
-#: draw/generator/elimination.py:51
+#: draw/generator/elimination.py:53
 #, python-format
 msgid ""
 "There are only %d teams breaking in this category; there need to be at least "
 "two to generate an elimination round draw."
 msgstr ""
 "Il n'y a que %d équipes « breaking » dans cette catégorie ; il faut au moins "
-"deux pour générer un tirage au sort pour un tour d'éliminatoire."
+"deux pour générer un tirage pour un tour d'éliminatoire."
 
-#: draw/generator/elimination.py:76
+#: draw/generator/elimination.py:85
 #, python-format
-msgid "%d debates in the previous round don't have a result."
-msgstr "%d débats au tour précédent n'ont pas un résultat."
+msgid "The number of teams (%d) in this round is not a power of two."
+msgstr "Le nombre d’équipes (%d) dans ce tour n’est pas une puissance de deux."
 
-#: draw/generator/elimination.py:83
+#: draw/generator/random.py:105
 #, python-format
-msgid "The number of teams (%d) in this round is not a power of two"
-msgstr "Le nombre d’équipes (%d) dans ce tour n’est pas une puissance de deux"
+msgid ""
+"There were %(aff_count)d affirmative teams but %(neg_count)d negative teams."
+msgstr ""
+
+#: draw/generator/random.py:108
+msgid ""
+"One or more teams had an allocated side that wasn't affirmative or negative."
+msgstr ""
+
+#: draw/manager.py:39
+#, python-format
+msgid "The draw type %(type)s can't be used with two-team formats."
+msgstr ""
+
+#: draw/manager.py:41
+#, python-format
+msgid "The draw type %(type)s can't be used with British Parliamentary."
+msgstr ""
+
+#: draw/manager.py:43
+#, python-format
+msgid "Unrecognised \"teams in debate\" option: %(option)s"
+msgstr ""
+
+#: draw/manager.py:255
+#, python-format
+msgid ""
+"The break size (%(size)d) for this break category was invalid. It must be "
+"either six times or four times a power of two."
+msgstr ""
 
 #: draw/models.py:27
-msgid "None"
-msgstr "Aucun"
+msgid "none"
+msgstr "aucun"
 
 #: draw/models.py:28
-msgid "Postponed"
-msgstr "Reporté"
+msgid "postponed"
+msgstr "repoussé"
 
 #: draw/models.py:29
-msgid "Draft"
-msgstr "Brouillon"
+msgid "draft"
+msgstr "brouillon"
 
 #: draw/models.py:30
-msgid "Confirmed"
-msgstr "Confirmé"
+msgid "confirmed"
+msgstr "confirmé"
 
-#: draw/models.py:35 draw/models.py:320
+#: draw/models.py:35 draw/models.py:406
 msgid "round"
 msgstr "tour"
 
@@ -153,61 +249,221 @@ msgstr "état de résultat"
 msgid "ballot in"
 msgstr "bulletin reçu"
 
-#: draw/models.py:62 draw/models.py:254
+#: draw/models.py:61
+msgid "sides confirmed"
+msgstr "côtés confirmés"
+
+#: draw/models.py:62
+msgid ""
+"If unchecked, the sides assigned to teams in this debate are just "
+"placeholders."
+msgstr ""
+
+#: draw/models.py:65 draw/models.py:291
 msgid "debate"
 msgstr "débat"
 
-#: draw/models.py:63
+#: draw/models.py:66
 msgid "debates"
 msgstr "débats"
 
-#: draw/models.py:247
+#. Translators: This is appended to a list of teams, e.g. "Auckland
+#. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
+#. space.
+#: draw/models.py:85
+msgid " (sides not confirmed)"
+msgstr ""
+
+#. Translators: This goes between teams in a debate, e.g. "Auckland 1
+#. vs Vic Wellington 1". Mind the leading and trailing spaces.
+#: draw/models.py:89
+msgid " vs "
+msgstr ""
+
+#: draw/models.py:281
 msgid "affirmative"
 msgstr "affirmatif"
 
-#: draw/models.py:248
+#: draw/models.py:282
 msgid "negative"
 msgstr "négatif"
 
-#: draw/models.py:249
-msgid "unallocated"
-msgstr "pas attributé"
+#: draw/models.py:283
+msgid "opening government"
+msgstr "premier gouvernement"
 
-#: draw/models.py:256 draw/models.py:322
+#: draw/models.py:284
+msgid "opening opposition"
+msgstr "première opposition"
+
+#: draw/models.py:285
+msgid "closing government"
+msgstr "seconde gouvernement"
+
+#: draw/models.py:286
+msgid "closing opposition"
+msgstr "seconde opposition"
+
+#: draw/models.py:293 draw/models.py:408
 msgid "team"
 msgstr "équipe"
 
-#: draw/models.py:258 draw/models.py:324
+#: draw/models.py:295 draw/models.py:410
 msgid "side"
 msgstr "côté"
 
-#: draw/models.py:261
+#: draw/models.py:301
 msgid "debate team"
 msgstr "débat-équipe"
 
-#: draw/models.py:262
+#: draw/models.py:302
 msgid "debate teams"
 msgstr "débat-équipes"
 
-#: draw/models.py:282
-msgid "won"
-msgstr "a gagné"
-
-#: draw/models.py:284
-msgid "lost"
-msgstr "a perdu"
-
-#: draw/models.py:286
+#: draw/models.py:341 draw/models.py:347
 msgid "result unknown"
 msgstr "résultat inconnu"
 
-#: draw/models.py:328
+#: draw/models.py:343
+msgid "won"
+msgstr "a gagné"
+
+#: draw/models.py:345
+msgid "lost"
+msgstr "a perdu"
+
+#: draw/models.py:414
 msgid "team side allocation"
 msgstr "attribution de côté à une équipe"
 
-#: draw/models.py:329
+#: draw/models.py:415
 msgid "team side allocations"
 msgstr "attributions de côté à une équipe"
+
+#. Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
+#. "Opening government: Total speaker score", "Closing opposition: Number of firsts"
+#: draw/tables.py:31
+#, python-format
+msgid "%(side_name)s: %(metric_name)s"
+msgstr "%(side_name)s : %(metric_name)s"
+
+#: draw/tables.py:60 draw/views.py:229
+msgid "Room rank"
+msgstr "Rang de salle"
+
+#: draw/tables.py:62
+msgid "Room rank of this debate"
+msgstr "Rang de salle de ce débat"
+
+#: draw/tables.py:68 draw/views.py:232
+msgid "Bracket"
+msgstr "Tranche"
+
+#: draw/tables.py:70
+msgid "Bracket of this debate"
+msgstr ""
+
+#: draw/tables.py:92
+#, python-format
+msgid "Team %(num)d"
+msgstr "Équipe %(num)d"
+
+#: draw/tables.py:154
+msgid ""
+"side history<br>\n"
+"(number of times the team has been on each side before this round)"
+msgstr ""
+"historique des côtés<br>\n"
+"(nombre de fois que l'équipe a été sur chaque côté avant ce tour)"
+
+#. Translators: Abbreviation for "side history"
+#: draw/tables.py:156
+msgid "SH"
+msgstr "HC"
+
+#: draw/tables.py:221
+msgid "Went from balanced to imbalanced"
+msgstr ""
+
+#: draw/tables.py:222
+msgid "Went from imbalanced to balanced"
+msgstr ""
+
+#: draw/tables.py:223
+msgid "Best improvement possible, still imbalanced"
+msgstr ""
+
+#: draw/tables.py:224
+msgid "Was imbalanced and still imbalanced"
+msgstr ""
+
+#: draw/tables.py:229 draw/tables.py:269
+msgid "Cost"
+msgstr "Coût"
+
+#: draw/tables.py:242 draw/tables.py:337
+msgid "Pts"
+msgstr "Pts"
+
+#: draw/tables.py:242 draw/tables.py:337
+msgid "Points"
+msgstr "Points"
+
+#: draw/tables.py:251
+msgid "Side"
+msgstr "Côté"
+
+#: draw/tables.py:251
+msgid "Position this round"
+msgstr "Position dans ce tour"
+
+#: draw/tables.py:255
+msgid "Before"
+msgstr "Avant"
+
+#: draw/tables.py:255
+msgid "Side history before this round"
+msgstr "Historique de côté avant ce tour"
+
+#: draw/tables.py:259
+msgid "After"
+msgstr "Après"
+
+#: draw/tables.py:259
+msgid "Side history after this round"
+msgstr "Historique de côté après ce tour"
+
+#: draw/tables.py:269
+msgid "Position cost"
+msgstr "Coût de position"
+
+#: draw/tables.py:282
+msgid "Status"
+msgstr "État"
+
+#: draw/tables.py:319
+msgid "Room"
+msgstr "Salle"
+
+#: draw/tables.py:321
+msgid ""
+"Teams with this many points are permitted in this debate<br>\n"
+"(bracket in bold)"
+msgstr ""
+"Les équipes qui ont ce nombre de points sont permises dans ce débat<br>\n"
+"(tranche en caractères gras)"
+
+#: draw/tables.py:341
+msgid "side history before this round"
+msgstr "historique de côté avant ce tour"
+
+#: draw/tables.py:341
+msgid "Sides"
+msgstr "Côtés"
+
+#: draw/tables.py:346
+msgid "position cost"
+msgstr "coût de position"
 
 #: draw/templates/admin/draw/debateteam/delete_warning.html:5
 msgid ""
@@ -219,18 +475,18 @@ msgstr ""
 
 #: draw/templates/admin/draw/debateteam/delete_warning.html:10
 msgid ""
-"Tabbycat requires that all debates have exactly one affirmative and exactly "
-"one negative debate team, and no other debate teams, at all times. If you "
-"delete any debate teams, you must then either replace each one with a new "
-"debate team in the same debate, or delete the associated debate objects. If "
-"you don't do this correctly, many pages <strong>will</strong> crash."
+"Tabbycat requires that all debates have <strong>exactly</strong> one debate "
+"team for each side, and no other debate teams, at all times. If you delete "
+"any debate teams, you must then either replace each one with a new debate "
+"team in the same debate, or delete the associated debate objects. If you "
+"don't do this correctly, many pages <strong>will</strong> crash."
 msgstr ""
-"Tabbycat exige que tous les débats aient exactement une débat-équipe "
-"affirmative et exactement une débat-équipe négative, et aucune autre débat-"
-"équipe, à tout moment. Si vous supprimez n’importe quelle débat-équipe, vous "
-"devez alors remplacer chacune d’elles avec une nouvelle débat-équipe dans le "
-"même débat, ou supprimer les objets associés de débat. Si vous ne le faites "
-"pas correctement, nombreux pages <strong>planteront certainement</strong>."
+"Tabbycat exige que tous les débats aient <strong>exactement</strong> une "
+"débat-équipe pour chaque côté, et aucune autre débat-équipe, à tout moment. "
+"Si vous supprimez n’importe quelle débat-équipe, vous devez alors remplacer "
+"chacune d’elles avec une nouvelle débat-équipe dans le même débat, ou "
+"supprimer les objets associés de débat. Si vous ne le faites pas "
+"correctement, nombreux pages <strong>planteront certainement</strong>."
 
 #: draw/templates/admin/draw/debateteam/delete_warning.html:15
 #: draw/templates/admin/draw/debateteam/edit_warning.html:15
@@ -240,9 +496,9 @@ msgid ""
 "them have exactly one affirmative and one negative team."
 msgstr ""
 "Il s’agit d’une source commune d’erreurs. Si cela vous arrive, vérifiez les "
-"débats (sous la section de Tirage au sort dans cette zone pour modifier la "
-"base de données) pour s'assurer que chacune a exactement une équipe "
-"affirmative et une équipe négative."
+"débats (sous la section de Tirage dans cette zone pour modifier la base de "
+"données) pour s'assurer que chacune a exactement une équipe affirmative et "
+"une équipe négative."
 
 #: draw/templates/admin/draw/debateteam/edit_warning.html:5
 msgid "WARNING!!! If you are editing debate teams, read this first!"
@@ -251,24 +507,357 @@ msgstr ""
 
 #: draw/templates/admin/draw/debateteam/edit_warning.html:10
 msgid ""
-"Tabbycat requires that there be exactly one affirmative and one negative "
-"debate team, and no other debate teams, in each debate. If you edit debate "
+"Tabbycat requires that there be <strong>exactly</strong> one debate team for "
+"each side, and no other debate teams, in each debate. If you edit debate "
 "teams in the database, you must ensure that this remains the case. If you "
 "don't do this correctly, many pages <strong>will</strong> crash."
 msgstr ""
-"Tabbycat exige que chaque débat ait exactement une débat-équipe affirmative "
-"et une débat-équipe négative, et aucune autre débat-équipe. Si vous modifiez "
+"Tabbycat exige qu'il y ait <strong>exactement</strong> une débat-équipe pour "
+"chaque côté, et aucune autre débat-équipe, à chaque débat. Si vous modifiez "
 "les débat-équipes dans la base de données, vous devez vous assurer que cela "
 "reste le cas. Si vous ne le faites pas correctement, nombreux pages "
 "<strong>planteront certainement</strong>."
 
-#. Translators: e.g. possessive might be "affirmative's" to get "affirmative's break rank"
-#: draw/views.py:248
-#, python-format
-msgid "%(possessive)s break rank"
-msgstr "rang de break %(possessive)s"
+#: draw/templates/draw_base.html:6
+msgid "Check-Ins"
+msgstr "Enregistrements"
 
-#: draw/views.py:251
+#: draw/templates/draw_base.html:11
+msgid "Confirm Shifts"
+msgstr ""
+
+#: draw/templates/draw_base.html:16
+msgid "Edit Sides/Matchups"
+msgstr "Modifier les côtés/appariements"
+
+#: draw/templates/draw_base.html:19
+msgid "Redo Draw"
+msgstr "Refaire le tirage"
+
+#: draw/templates/draw_base.html:22
+msgid "Draw Details"
+msgstr "Tirage detaillé"
+
+#: draw/templates/draw_base.html:26
+msgid "Position Balance"
+msgstr "Équilibre des positions"
+
+#: draw/templates/draw_base.html:34
+msgid "Display Draw"
+msgstr "Afficher le tirage"
+
+#: draw/templates/draw_status_confirmed.html:6
+msgid "draw is not released;"
+msgstr "tirage n'est pas publié;"
+
+#: draw/templates/draw_status_confirmed.html:8
+msgid "draw is released;"
+msgstr "tirage est publié;"
+
+#: draw/templates/draw_status_confirmed.html:14
+msgid "motions are released"
+msgstr "motions sont publiées"
+
+#: draw/templates/draw_status_confirmed.html:16
+msgid "motions are not released"
+msgstr "motions ne sont pas publiées"
+
+#: draw/templates/draw_status_confirmed.html:28
+msgid "Adjudicator Allocations"
+msgstr "Attributions des juges"
+
+#: draw/templates/draw_status_confirmed.html:41
 #, python-format
-msgid "%(initial)sBR"
-msgstr "RB%(initial)s"
+msgid "1 debate does not have a chair."
+msgid_plural "%(ndebates)s debates do not have a chair."
+msgstr[0] "1 débat n'a pas de président."
+msgstr[1] "%(ndebates)s débats n'ont pas de président."
+
+#: draw/templates/draw_status_confirmed.html:50
+#, python-format
+msgid "<strong>%(adjudicators)s</strong> is adjudicating multiple debates."
+msgid_plural ""
+"The following <strong>%(nadjs)s</strong> adjudicators are adjudicating "
+"multiple debates: <strong>%(adjudicators)s</strong>"
+msgstr[0] "<strong>%(adjudicators)s</strong> juge plusieurs débats."
+msgstr[1] ""
+"Les <strong>%(nadjs)s</strong> juges suivant(e)s jugent plusieurs débats : "
+"<strong>%(adjudicators)s</strong>"
+
+#: draw/templates/draw_status_confirmed.html:59
+#, python-format
+msgid "1 debate has a panel with an even number of adjudicators."
+msgid_plural ""
+"%(ndebates)s debates have panels with an even number of adjudicators."
+msgstr[0] "1 débat a un panel qui a un nombre pair de juges."
+msgstr[1] "%(ndebates)s débats ont un panel qui a un nombre pair de juges."
+
+#: draw/templates/draw_status_confirmed.html:68
+#, python-format
+msgid "1 debate has an adjudicator conflict."
+msgid_plural "%(ndebates)s debates have adjudicator conflicts."
+msgstr[0] "1 débat a un conflit de juge"
+msgstr[1] "%(ndebates)s débats ont des conflits de juge"
+
+#: draw/templates/draw_status_confirmed.html:79
+msgid "Allocate Adjudicators"
+msgstr "Attribution des juges"
+
+#: draw/templates/draw_status_confirmed.html:96
+msgid "Venue Allocations"
+msgstr "Attribution des lieux"
+
+#: draw/templates/draw_status_confirmed.html:103
+#, python-format
+msgid "1 debate does not have a venue."
+msgid_plural "%(ndebates)s debates do not have a venue."
+msgstr[0] "1 débat n’a pas de lieu."
+msgstr[1] "%(ndebates)s débats n’ont pas de lieu."
+
+#: draw/templates/draw_status_confirmed.html:112
+#, python-format
+msgid "There are multiple debates in <strong>%(venues)s</strong>."
+msgid_plural ""
+"The following <strong>%(ndebates)s</strong> venues have multiple debates in "
+"them: <strong>%(venues)s</strong>"
+msgstr[0] "Il y a plusieurs débats dans <strong>%(venues)s</strong>."
+msgstr[1] ""
+"Dans les <strong>%(ndebates)s</strong> lieux suivants, il y a plusieurs "
+"débats : <strong>%(venues)s</strong>"
+
+#: draw/templates/draw_status_confirmed.html:121
+#, python-format
+msgid "1 debate has a venue constraint violation."
+msgid_plural "%(ndebates)s debates have venue constraint violations."
+msgstr[0] ""
+msgstr[1] ""
+
+#: draw/templates/draw_status_confirmed.html:130
+msgid "Allocate Venues"
+msgstr "Attribution des lieux"
+
+#: draw/templates/draw_status_confirmed.html:150
+msgid "Side Allocations"
+msgstr "Attributions des côtés"
+
+#: draw/templates/draw_status_confirmed.html:155
+#, python-format
+msgid "1 debate does not have its sides confirmed."
+msgid_plural "%(ndebates)s debates do not have their sides confirmed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: draw/templates/draw_status_draft.html:16
+msgid ""
+"Highlighted cells relate to changes in position balance, as follows: <ul> "
+"<li>Red cells indicates that the team could not be allocated a position that "
+"maintains position balance.</li> <li>Yellow cells indicate that the team was "
+"previously imbalanced, and is given the best position possible in this draw, "
+"but is nonetheless still imbalanced.</li> <li>Green cells indicate that the "
+"team's previous imbalance is resolved with this draw.</li> </ul>"
+msgstr ""
+
+#: draw/templates/draw_status_none.html:6
+#, python-format
+msgid ""
+"A draw for %(round_name)s hasn't yet been generated. To generate one, go to "
+"the <a href=\"%(checkins_url)s\" class=\"alert-link\">Check-Ins section</a>."
+msgstr ""
+
+#: draw/templates/position_balance.html:6
+msgid ""
+"It looks like sides aren't confirmed for some debates in this round. This "
+"position balance report is generated using the \"unconfirmed sides\" in the "
+"database, and as a consequence, may not make much sense. It's best to "
+"confirm sides in all debates before looking at this report."
+msgstr ""
+
+#: draw/templates/position_balance_break.html:6
+msgid "Position balance reports aren't computed for elimination rounds."
+msgstr ""
+"Les rapports sur l'équilibre des positions ne se produisent pas pour les "
+"tours éliminatoires."
+
+#: draw/templates/position_balance_nonbp.html:6
+msgid ""
+"Position balance reports are only available for British Parliamentary "
+"tournaments."
+msgstr ""
+"Les rapports sur l'équilibre des positions ne sont disponible que pour les "
+"tournois de parlementaire britannique."
+
+#: draw/templates/position_balance_round1.html:6
+msgid ""
+"Position balance reports aren't computed for the first round of a tournament."
+msgstr ""
+"Un rapport sur l'équilibre des positions ne se produit pas pour le premier "
+"tour d'un tournoi."
+
+#: draw/views.py:55
+#, python-format
+msgid "Draw for %(round)s"
+msgstr "Tirage de %(round)s"
+
+#: draw/views.py:68
+#, python-format
+msgid "debates start at %(time)s"
+msgstr "les débats commenceront à %(time)s"
+
+#: draw/views.py:120
+#, python-format
+msgid "The draw for %(round)s has yet to be released."
+msgstr "Le tirage de %(round)s n'a pas encore été publié."
+
+#: draw/views.py:148
+#, python-format
+msgid "All Debates for All Rounds of %(tournament)s"
+msgstr "Tous les débats pour tous les tours de %(tournament)s"
+
+#: draw/views.py:197
+#, python-format
+msgid "No Draw for %(round)s"
+msgstr "Aucun tirage pour %(round)s"
+
+#: draw/views.py:199
+#, python-format
+msgid "Draft Draw for %(round)s"
+msgstr "Tirage préliminaire de %(round)s"
+
+#: draw/views.py:202
+#, python-format
+msgid "Confirmed Draw for %(round)s"
+msgstr "Tirage confirmé de %(round)s"
+
+#: draw/views.py:205
+#, python-format
+msgid "Released Draw for %(round)s"
+msgstr "Tirage publié de %(round)s"
+
+#. Translators: e.g. "Affirmative: Break rank"
+#: draw/views.py:303
+#, python-format
+msgid "%(side_name)s: Break rank"
+msgstr "%(side_name)s : rang dans la qualification"
+
+#. Translators: "BR" stands for "Break rank"
+#: draw/views.py:308
+msgid "BR"
+msgstr "RQ"
+
+#: draw/views.py:334
+msgid "Draw with Details"
+msgstr "Tirage detaillé"
+
+#: draw/views.py:341
+msgid "Position Balance Report"
+msgstr "Rapport sur l'équilibre des positions"
+
+#: draw/views.py:365
+msgid "Teams with position imbalances"
+msgstr ""
+
+#: draw/views.py:366
+msgid "No teams with position imbalances! Hooray!"
+msgstr ""
+
+#: draw/views.py:369
+msgid "Annotated draw"
+msgstr ""
+
+#: draw/views.py:402
+#, python-format
+msgid "Could not create draw for %(round)s, there was already a draw!"
+msgstr ""
+
+#: draw/views.py:410
+#, python-format
+msgid ""
+"<p>The draw could not be created, for the following reason: <em>%(message)s</"
+"em></p>\n"
+"<p>Please fix this issue before attempting to create the draw.</p>"
+msgstr ""
+
+#: draw/views.py:418
+#, python-format
+msgid ""
+"The draw could not be created, because the following error occurred: <em>"
+"%(message)s</em></p>\n"
+"<p>If this issue persists and you're not sure how to resolve it, please "
+"contact the developers.</p>"
+msgstr ""
+
+#: draw/views.py:427
+#, python-format
+msgid ""
+"<p>The team standings could not be generated, because the following error "
+"occurred: <em>%(message)s</em></p>\n"
+"<p>Because generating the draw uses the current team standings, this "
+"prevents the draw from being generated.</p>"
+msgstr ""
+
+#: draw/views.py:443
+msgid ""
+"Venues were not auto-allocated because there are one or more adjudicator "
+"venue constraints. You should run venue allocations after allocating "
+"adjudicators."
+msgstr ""
+
+#: draw/views.py:472
+msgid "Deleted the draw. You can now recreate it as normal."
+msgstr ""
+
+#: draw/views.py:492
+msgid ""
+"Released the draw. It will now show on the public-facing pages of this "
+"website."
+msgstr ""
+
+#: draw/views.py:508
+msgid ""
+"Unreleased the draw. It will no longer show on the public-facing pages of "
+"this website."
+msgstr ""
+
+#: draw/views.py:521
+#, python-format
+msgid ""
+"Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with "
+"a colon, for example: \"13:57\"."
+msgstr ""
+
+#: draw/views.py:616
+msgid "Side Pre-Allocations"
+msgstr "Attributions de côté à une équipe"
+
+#: draw/views.py:754
+msgid "All Draws for All Teams"
+msgstr ""
+
+#: draw/views.py:769
+#, python-format
+msgid "All Debates for Teams from %(institution)s"
+msgstr ""
+
+#: draw/views.py:788
+msgid ""
+"This venue category does not exist or the URL for it might have changed. Try "
+"finding it again from the homepage."
+msgstr ""
+
+#: draw/views.py:795
+#, python-format
+msgid "All Debates at %(venue_category)s"
+msgstr ""
+
+#: draw/views.py:797
+msgid "Unknown Venue Category"
+msgstr ""
+
+#~ msgid "unallocated"
+#~ msgstr "pas attributé"
+
+#~ msgid "%(initial)sBR"
+#~ msgstr "RB%(initial)s"
+
+#~ msgid "None"
+#~ msgstr "Aucun"

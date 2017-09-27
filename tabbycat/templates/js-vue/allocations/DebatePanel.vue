@@ -11,7 +11,7 @@
                          :locked="locked">
 
         <draggable-adjudicator
-          v-for="da in getAdjudicatorsByPosition(panel, position)"
+          v-for="da in getAdjudicatorsByPosition(panelAdjudicators, position)"
           :adjudicator="da.adjudicator" :debate-id="debateId"
           :percentiles="percentiles" :key="da.adjudicator.id"
           :locked="locked">
@@ -32,16 +32,29 @@ import _ from 'lodash'
 export default {
   mixins: [DebateConflictsMixin],
   components: { DroppableGeneric, DraggableAdjudicator },
-  props: ['panel', 'teams', 'debateId', 'percentiles', 'locked', 'adjPositions'],
+  props: ['panelAdjudicators', 'adjPositions', 'panelTeams', 'debateId',
+          'percentiles', 'locked', 'roundInfo'],
+  computed: {
+    adjudicatorIds: function() {
+      return _.map(this.panelAdjudicators, function(da) {
+        return da.adjudicator.id
+      })
+    },
+    teamIds: function() {
+      return _.map(this.panelTeams, function(dt) {
+        return dt.team.id
+      })
+    },
+  },
   methods: {
-    getAdjudicatorsByPosition: function(panel, position) {
-      return _.filter(panel, { 'position': position })
+    getAdjudicatorsByPosition: function(panelAdjudicators, position) {
+      return _.filter(panelAdjudicators, { 'position': position })
     },
     getCSSForPosition: function(position) {
       var css = 'flex-horizontal '
-      var adjs = this.getAdjudicatorsByPosition(this.panel, position).length
+      var adjs = this.getAdjudicatorsByPosition(this.panelAdjudicators, position).length
       if ((position === "C" && adjs === 0) ||
-          (position === "P" && adjs % 2 != 0)) {
+          (position === "P" && adjs % 2 != 0 && this.roundInfo.teamsInDebate !== 'bp')) {
         return css += 'panel-incomplete'
       }
       return css

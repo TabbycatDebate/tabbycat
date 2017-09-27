@@ -1,13 +1,26 @@
 //------------------------------------------------------------------------------
 // Web Fonts
 //------------------------------------------------------------------------------
+
 // Primary Typeface
 @font-face {
-  font-family: 'LatoLatinWeb';
-  src: url('/static/fonts/lato-normal.woff2') format('woff2'), url('/static/fonts/lato-normal.woff') format('woff');
+  font-family: 'Inter-UI-Regular';
+  src: url('/static/fonts/Inter-UI-Regular.woff2') format('woff2'), url('/static/fonts/Inter-UI-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
+}
+
+h6,
+.h6 {
+  font-size: $small-font-size;
+  text-transform: uppercase;
+}
+
+.text-heading {
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+  color: $headings-color;
 }
 
 //------------------------------------------------------------------------------
@@ -26,7 +39,6 @@
 
 .subtitle {
   text-transform: uppercase;
-  font-size: $font-size-h6;
   font-weight: normal;
 }
 
@@ -37,17 +49,4 @@
 // Otherwise alert links are too dull
 .alert-link {
   text-decoration: underline;
-}
-
-//------------------------------------------------------------------------------
-// Buttons
-//------------------------------------------------------------------------------
-
-// Actionable elements (buttons, navs) should be distinct
-.nav {
-  font-family: $headings-font-family;
-}
-
-.nav-pills a.btn-default {
-  color: $brand-primary;
 }

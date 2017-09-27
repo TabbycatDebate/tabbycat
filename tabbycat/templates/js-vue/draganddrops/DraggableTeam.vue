@@ -9,11 +9,12 @@
        @mouseleave="show = false" -->
 
     <div class="draggable-prefix">
-      <h4>{{ team.wins }}</h4>
+      <h4><span v-if="debugMode">{{ team.id }} </span>{{ team.wins }}</h4>
     </div>
     <div class="draggable-title">
-      <h5 class="no-top-margin no-bottom-margin">{{ titleWithLimit }}</h5>
+      <h5 class="mt-0 mb-0">{{ titleWithLimit }}</h5>
       <span class="small subtitle">
+        <span v-if="debugMode">{{ team.institution.id }}</span>
         {{ team.institution.code }}
       </span>
     </div>

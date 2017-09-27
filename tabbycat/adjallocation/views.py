@@ -1,19 +1,23 @@
 import json
 import logging
 
+from django.db.models import Q
 from django.views.generic.base import TemplateView, View
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import JsonResponse
 from django.utils.functional import cached_property
+from django.utils.translation import ugettext as _
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from breakqual.models import BreakCategory
 from draw.models import Debate
 from participants.models import Adjudicator, Region
-# from participants.utils import regions_ordered
+from participants.prefetch import populate_feedback_scores
 from tournaments.models import Round
-from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, SaveDragAndDropDebateMixin
-from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin
+from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin
+from tournaments.views import BaseSaveDragAndDropDebateJsonView
+from utils.mixins import SuperuserRequiredMixin
+from utils.views import BadJsonRequestError, JsonDataResponsePostView
 
 from .allocator import allocate_adjudicators
 from .hungarian import HungarianAllocator
@@ -37,7 +41,9 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
 
     def get_unallocated_adjudicators(self):
         round = self.get_round()
-        unused_adjs = [a.serialize(round) for a in round.unused_adjudicators()]
+        unused_adj_instances = round.unused_adjudicators().select_related('institution__region')
+        populate_feedback_scores(unused_adj_instances)
+        unused_adjs = [a.serialize(round) for a in unused_adj_instances]
         unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
         unused_adjs = [self.annotate_conflicts(a, 'for_adjs') for a in unused_adjs]
         return json.dumps(unused_adjs)
@@ -55,20 +61,23 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
 
         if for_type == 'for_teams':
             # Teams don't show in AdjudicatorInstitutionConflict; need to
-            # add own institution manually to reverse things
-            institution = serialized_adj_or_team['institution']['id']
-            serialized_adj_or_team['conflicts']['clashes']['institution'] = [institution]
+            # add own institutional clash manually to reverse things
+            if serialized_adj_or_team['institution']:
+                ic = [{'id': serialized_adj_or_team['institution']['id']}]
+                serialized_adj_or_team['conflicts']['clashes']['institution'] = ic
 
         return serialized_adj_or_team
 
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
         for debate in serialised_draw:
-            for panellist in debate['panel']:
-                panellist['adjudicator'] = self.annotate_conflicts(panellist['adjudicator'], 'for_adjs')
-                panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
-            for (position, team) in debate['teams'].items():
-                team = self.annotate_conflicts(team, 'for_teams')
+            for da in debate['debateAdjudicators']:
+                da['adjudicator'] = self.annotate_conflicts(da['adjudicator'], 'for_adjs')
+                da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
+            for dt in debate['debateTeams']:
+                if not dt['team']:
+                    continue
+                dt['team'] = self.annotate_conflicts(dt['team'], 'for_teams')
 
         return super().annotate_draw(draw, serialised_draw)
 
@@ -116,20 +125,22 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDa
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
     def post_data(self):
+        round = self.get_round()
+        self.log_action()
+        if round.draw_status == Round.STATUS_RELEASED:
+            info = _("Draw is already released, unrelease draw to redo auto-allocations.")
+            logger.warning(info)
+            raise BadJsonRequestError(info)
+        if round.draw_status != Round.STATUS_CONFIRMED:
+            info = _("Draw is not confirmed, confirm draw to run auto-allocations.")
+            logger.warning(info)
+            raise BadJsonRequestError(info)
+
         allocate_adjudicators(self.get_round(), HungarianAllocator)
         return {
             'debates': self.get_draw(),
             'unallocatedAdjudicators': self.get_unallocated_adjudicators()
         }
-
-    def post(self, request, *args, **kwargs):
-        round = self.get_round()
-        if round.draw_status == Round.STATUS_RELEASED:
-            return HttpResponseBadRequest("Draw is already released, unrelease draw to redo auto-allocations.")
-        if round.draw_status != Round.STATUS_CONFIRMED:
-            return HttpResponseBadRequest("Draw is not confirmed, confirm draw to run auto-allocations.")
-        self.log_action()
-        return super().post(request, *args, **kwargs)
 
 
 class SaveDebateImportance(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
@@ -145,46 +156,33 @@ class SaveDebateImportance(SuperuserRequiredMixin, RoundMixin, LogActionMixin, V
         return JsonResponse(json.dumps(posted_info), safe=False)
 
 
-class SaveDebatePanel(SaveDragAndDropDebateMixin):
+class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
     def get_moved_item(self, id):
         return Adjudicator.objects.get(pk=id)
 
     def modify_debate(self, debate, posted_debate):
-        panellists = posted_debate['panel']
-        message = "Processing change for %s" % debate.id
+        posted_debateadjudicators = posted_debate['debateAdjudicators']
 
-        # below are DEBUG
-        for da in DebateAdjudicator.objects.filter(debate=debate).order_by('type'):
-            message += "\nExisting: %s" % da
-        for panellist in panellists:
-            message += "\nNew: %s %s" % (panellist['adjudicator']['name'], panellist['position'])
+        # Delete adjudicators who aren't in the posted information
+        adj_ids = [da['adjudicator']['id'] for da in posted_debateadjudicators]
+        delete_count, deleted = debate.debateadjudicator_set.exclude(adjudicator_id__in=adj_ids).delete()
+        logger.debug("Deleted %d debate adjudicators from [%s]", delete_count, debate.matchup)
 
-        for da in DebateAdjudicator.objects.filter(debate=debate):
-            message += "\n\tChecking %s" % da
-            match = next((p for p in panellists if p["adjudicator"]["id"] == da.adjudicator.id), None)
-            if match:
-                message += "\n\t\tExists in panel already %s" % da
-                if match['position'] == da.type:
-                    message += "\n\t\t\tPASS — Is in same position %s" % da
-                else:
-                    da.type = match['position']
-                    da.save()
-                    message += "\n\t\t\tUPDATE — Changed position to %s" % da
-                # Updated or not needed to be touched; remove from consideration for adding
-                panellists.remove(match)
-            else:
-                message += "\n\tDELETE — No longer needed; deleting %s" % da
-                da.delete()
+        # Check all the adjudicators are part of the tournament
+        adjs = Adjudicator.objects.filter(Q(tournament=self.get_tournament()) | Q(tournament__isnull=True), id__in=adj_ids)
+        if len(adjs) != len(posted_debateadjudicators):
+            raise BadJsonRequestError(_("Not all adjudicators specified are associated with the tournament."))
+        adj_name_lookup = {adj.id: adj.name for adj in adjs}  # for debugging messages
 
-        for p in panellists:
-            adjudicator = Adjudicator.objects.get(pk=p["adjudicator"]["id"])
-            new_allocation = DebateAdjudicator.objects.create(debate=debate,
-                adjudicator=adjudicator, type=p["position"])
-            new_allocation.save() # Move to new location
-            message += "\n\tNEW — Creating new allocation %s" % new_allocation
+        # Update or create positions of adjudicators in debate
+        for debateadj in posted_debateadjudicators:
+            adj_id = debateadj['adjudicator']['id']
+            adjtype = debateadj['position']
+            obj, created = DebateAdjudicator.objects.update_or_create(debate=debate,
+                    adjudicator_id=adj_id, defaults={'type': adjtype})
+            logger.debug("%s debate adjudicator: %s is now %s in [%s]", "Created" if created else "Updated",
+                    adj_name_lookup[adj_id], obj.get_type_display(), debate.matchup)
 
-        message += "\n---"
-        # print(message)
         return debate

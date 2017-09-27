@@ -1,0 +1,10 @@
+{% load debate_tags %}
+
+<div class="progress mb-1">
+  <div class="progress-bar bg-{{ type }}
+              {% if value == 0 %}progress-empty{% endif %}"
+       role="progressbar" aria-valuenow="{{ value }}"
+       aria-valuemin="0" aria-valuemax="{{ total }}"
+       style="width: {% percentage value total %}%;">
+  </div>
+</div>

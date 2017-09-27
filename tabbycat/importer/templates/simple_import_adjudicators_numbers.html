@@ -20,12 +20,8 @@
 
 {% else %}
 
-  <div class="alert alert-info">
-    <p>{% blocktrans trimmed %}
-      Specify the number of new adjudicators to add per institution. In the next step
-      you can specify their names and ratings.
-    {% endblocktrans %}</p>
-  </div>
+  {% blocktrans trimmed asvar p1 %}Specify the number of new adjudicators to add per institution. In the next step you can specify their names and ratings.{% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
 
   <form method="POST">
     {% csrf_token %}
@@ -38,8 +34,8 @@
     </div>
     {% endif %}
 
-    <div class="panel panel-default">
-      <ul class="list-group">
+    <div class="card pt-3">
+      <ul class="list-group list-group-flush">
 
         {% for field in wizard.form %}
           <li class="list-group-item">
@@ -55,9 +51,8 @@
           </li>
         {% endfor %}
 
-        <li class="list-group-item">
-          <input type="submit" class="btn btn-primary btn-block" value="{% trans 'Next Step' %}" />
-        </li>
+        {% trans "Next Step" context "button" as title %}
+        {% include "components/form-submit.html" %}
 
       </ul>
     </div>

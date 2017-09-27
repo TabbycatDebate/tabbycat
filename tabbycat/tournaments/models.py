@@ -4,11 +4,9 @@ from django.db import models
 from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
-from django.utils.encoding import force_text
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
-from participants.emoji import EMOJI_LIST
 from utils.managers import LookupByNameFieldsMixin
 
 import logging
@@ -17,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 PROHIBITED_TOURNAMENT_SLUGS = [
     'jet', 'database', 'admin', 'accounts',   # System
-    'start', 'create', 'donations', 'load_demo', # Setup Wizards
+    'start', 'create', 'donations', 'load-demo', # Setup Wizards
     'draw', 'participants', 'favicon.ico',  # Cross-Tournament app's view roots
     't', '__debug__', 'static']  # Misc
 
@@ -34,12 +32,10 @@ def validate_tournament_slug(value):
 class Tournament(models.Model):
     name = models.CharField(max_length=100,
         verbose_name=_("name"),
-        help_text=_("The full name used on the homepage, e.g. \"Australasian Intervarsity Debating Championships 2016\""))
+        help_text=_("The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""))
     short_name = models.CharField(max_length=25, blank=True, default="",
         verbose_name=_("short name"),
         help_text=_("The name used in the menu, e.g. \"Australs 2016\""))
-    emoji = models.CharField(max_length=2, blank=True, null=True, unique=True, choices=EMOJI_LIST,
-        verbose_name=_("emoji")) # uses null=True to allow multiple tournaments to have no emoji
     seq = models.IntegerField(blank=True, null=True,
         verbose_name=_("sequence number"),
         help_text=_("A number that determines the relative order in which tournaments are displayed on the homepage."))
@@ -83,6 +79,18 @@ class Tournament(models.Model):
         except KeyError:
             self._prefs[name] = self.preferences.get_by_name(name)
             return self._prefs[name]
+
+    @property
+    def sides(self):
+        """Returns a list of side codes."""
+        option = self.pref('teams_in_debate')
+        if option == 'two':
+            return ['aff', 'neg']
+        elif option == 'bp':
+            return ['og', 'oo', 'cg', 'co']
+        else:
+            logger.error("Invalid sides option: %s", option)
+            return ['aff', 'neg']  # return default, just to keep it going
 
     @property
     def last_substantive_position(self):
@@ -201,25 +209,18 @@ class Round(models.Model):
     DRAW_MANUAL = 'M'
     DRAW_ROUNDROBIN = 'D'
     DRAW_POWERPAIRED = 'P'
-    DRAW_FIRSTBREAK = 'F'
-    DRAW_BREAK = 'B'
+    DRAW_ELIMINATION = 'E'
     # Translators: These are choices for the type of draw a round should have.
     DRAW_CHOICES = ((DRAW_RANDOM, _('Random')),
                     (DRAW_MANUAL, _('Manual')),
                     (DRAW_ROUNDROBIN, _('Round-robin')),
                     (DRAW_POWERPAIRED, _('Power-paired')),
-                    (DRAW_FIRSTBREAK, _('First elimination')),
-                    (DRAW_BREAK, _('Subsequent elimination')), )
+                    (DRAW_ELIMINATION, _('Elimination')), )
 
     STAGE_PRELIMINARY = 'P'
     STAGE_ELIMINATION = 'E'
     STAGE_CHOICES = ((STAGE_PRELIMINARY, _('Preliminary')),
                      (STAGE_ELIMINATION, _('Elimination')), )
-
-    VALID_DRAW_TYPES_BY_STAGE = {
-        STAGE_PRELIMINARY: [DRAW_RANDOM, DRAW_MANUAL, DRAW_ROUNDROBIN, DRAW_POWERPAIRED],
-        STAGE_ELIMINATION: [DRAW_FIRSTBREAK, DRAW_BREAK],
-    }
 
     STATUS_NONE = 'N'
     STATUS_DRAFT = 'D'
@@ -280,13 +281,12 @@ class Round(models.Model):
         errors = {}
 
         # Draw type must be consistent with stage
-        valid_draw_types = Round.VALID_DRAW_TYPES_BY_STAGE[self.stage]
-        if self.draw_type not in valid_draw_types:
-            display_names = [force_text(name) for value, name in Round.DRAW_CHOICES if value in valid_draw_types]
-            errors['draw_type'] = ValidationError(_("A round in the %(stage)s stage must have a "
-                "draw type that is one of: %(valid)s"), params={
-                    'stage': self.get_stage_display().lower(),
-                    'valid': ", ".join(display_names)})
+        if self.stage == Round.STAGE_ELIMINATION and self.draw_type != Round.DRAW_ELIMINATION:
+            errors['draw_type'] = ValidationError(_("A round in the elimination stage must have "
+                "its draw type set to \"Elimination\"."))
+        elif self.stage == Round.STAGE_PRELIMINARY and self.draw_type == Round.DRAW_ELIMINATION:
+            errors['draw_type'] = ValidationError(_("A round in the preliminary stage cannot "
+                "have its draw type set to \"Elimination\"."))
 
         # Break rounds must have a break category
         if self.stage == Round.STAGE_ELIMINATION and self.break_category is None:
@@ -295,17 +295,20 @@ class Round(models.Model):
         if errors:
             raise ValidationError(errors)
 
+    # --------------------------------------------------------------------------
+    # Checks for potential errors
+    # --------------------------------------------------------------------------
+
     def duplicate_panellists(self):
-        """ Checks if there any duplicate allocations """
-        from adjallocation.models import DebateAdjudicator
+        """Returns a QuerySet of adjudicators who are allocated twice in the round."""
         from participants.models import Adjudicator
-        das = list(DebateAdjudicator.objects.filter(
-            debate__round=self).select_related('round', 'adjudicator').values_list('adjudicator_id', flat=True))
-        double_allocated_das = list(set([x for x in das if das.count(x) > 1]))
-        if len(double_allocated_das) > 0:
-            return Adjudicator.objects.filter(id__in=double_allocated_das)
-        else:
-            return None
+        return Adjudicator.objects.filter(debateadjudicator__debate__round=self).annotate(
+                Count('debateadjudicator')).filter(debateadjudicator__count__gt=1)
+
+    def duplicate_venues(self):
+        from venues.models import Venue
+        return Venue.objects.filter(debate__round=self).annotate(Count('debate')).filter(
+                debate__count__gt=1)
 
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
@@ -314,7 +317,6 @@ class Round(models.Model):
         debates_in_round = self.debate_set.count()
         debates_with_one_chair = self.debate_set.filter(debateadjudicator__type=DebateAdjudicator.TYPE_CHAIR).annotate(
                 num_chairs=Count('debateadjudicator')).filter(num_chairs=1).count()
-        logger.debug("%d debates without chair", debates_in_round - debates_with_one_chair)
         return debates_in_round - debates_with_one_chair
 
     def num_debates_with_even_panel(self):
@@ -327,13 +329,13 @@ class Round(models.Model):
             panellists=Count('debateadjudicator'),
             odd_panellists=Count('debateadjudicator') % 2
         ).filter(panellists__gt=0, odd_panellists=0).count()
-        logger.debug("%d debates with even panel", debates_with_even_panel)
         return debates_with_even_panel
 
     def num_debates_without_venue(self):
-        debates_without_venue = self.debate_set.filter(venue__isnull=True).count()
-        logger.debug("%d debates without venue", debates_without_venue)
-        return debates_without_venue
+        return self.debate_set.filter(venue__isnull=True).count()
+
+    def num_debates_with_sides_unconfirmed(self):
+        return self.debate_set.filter(sides_confirmed=False).count()
 
     @cached_property
     def is_break_round(self):
@@ -351,19 +353,20 @@ class Round(models.Model):
         return self.debate_set.order_by(*ordering).select_related(*related)
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
-            teams=True, adjudicators=True, speakers=True, divisions=True, ballotsubs=False,
-            wins=False, results=False, venues=True, institutions=False):
+            teams=True, adjudicators=True, speakers=True, divisions=True, wins=False,
+            results=False, venues=True, institutions=False):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
         from adjallocation.models import DebateAdjudicator
         from draw.models import DebateTeam
+        from participants.models import Speaker
         from results.prefetch import populate_confirmed_ballots, populate_wins
 
         debates = self.debate_set.all()
         if filter_kwargs:
             debates = debates.filter(**filter_kwargs)
-        if ballotsubs or results:
+        if results:
             debates = debates.prefetch_related('ballotsubmission_set', 'ballotsubmission_set__submitter')
         if adjudicators:
             debates = debates.prefetch_related(
@@ -374,22 +377,23 @@ class Round(models.Model):
             debates = debates.select_related('division', 'division__venue_category')
         if venues:
             debates = debates.select_related('venue').prefetch_related('venue__venuecategory_set')
+
         if teams or wins or institutions or speakers:
+            debateteam_prefetch_queryset = DebateTeam.objects.select_related('team')
+            if institutions:
+                debateteam_prefetch_queryset = debateteam_prefetch_queryset.select_related('team__institution')
+            if speakers:
+                debateteam_prefetch_queryset = debateteam_prefetch_queryset.prefetch_related(
+                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')))
             debates = debates.prefetch_related(
-                Prefetch('debateteam_set',
-                    queryset=DebateTeam.objects.select_related(
-                        'team__institution' if institutions else 'team')
-                )
-            )
-        if speakers:
-            debates = debates.prefetch_related('debateteam_set__team__speaker_set')
+                Prefetch('debateteam_set', queryset=debateteam_prefetch_queryset))
 
         if ordering:
             debates = debates.order_by(*ordering)
 
         # These functions populate relevant attributes of each debate, operating in-place
-        if ballotsubs or results:
-            populate_confirmed_ballots(debates, motions=True, results=results)
+        if results:
+            populate_confirmed_ballots(debates, motions=True, results=True)
         if wins:
             populate_wins(debates)
 
@@ -427,25 +431,11 @@ class Round(models.Model):
     @cached_property
     def prev(self):
         """Returns the round that comes before this round. If this is a break
-        round, then it returns the round in the same break category preceding
-        this round, or the last preliminary round if it's the first break round
-        in the category."""
+        round, then it returns the latest preceding round that is either in the
+        same break category or is a preliminary round."""
         rounds = self.tournament.round_set.filter(seq__lt=self.seq).order_by('-seq')
-        if self.draw_type == Round.DRAW_FIRSTBREAK:
-            rounds = rounds.filter(stage=Round.STAGE_PRELIMINARY)
-        elif self.draw_type == Round.DRAW_BREAK:
-            rounds = rounds.filter(break_category=self.break_category)
-        try:
-            return rounds.first()
-        except Round.DoesNotExist:
-            return None
-
-    @cached_property
-    def next(self):
-        # Deprecated, believed to be not used, but kept just in case there's an
-        # oversight. Remove in version 1.5.
-        logger.error("There was a call to Round.next(), which is deprecated.", stack_info=True)
-        rounds = self.tournament.round_set.filter(seq__gt=self.seq).order_by('seq')
+        if self.is_break_round:
+            rounds = rounds.filter(Q(stage=Round.STAGE_PRELIMINARY) | Q(break_category=self.break_category))
         try:
             return rounds.first()
         except Round.DoesNotExist:

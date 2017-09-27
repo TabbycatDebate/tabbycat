@@ -10,64 +10,53 @@
 
 {% block content %}
   <!-- Surround with a form so that we can press 'Enter' on the venue field to submit. -->
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div class=" form-horizontal">
+
+  <div class="card">
+    <div class="card-body pt-4">
+
         <div class="form-group">
-          <label for="venue" class="col-sm-1 control-label">Venue</label>
-          <div class="col-sm-6">
-            <input id="venue" class="form-control" type="text" name="venue" list="venues_list" />
-            <datalist id="venues_list">
-              {% for venue in venue_options %}
-                <option data-value="{{ venue.id }}" value="{{ venue.display_name }}">
-              {% endfor %}
-            </datalist>
-          </div>
-          <div class="col-sm-4 help-block">
-            Type or select the ballot's <strong>venue</strong>, then hit Enter.
-          </div>
+          <label class="form-control-label">Type or select the ballot's <strong>venue</strong>, then hit Enter.</label>
+          <input id="venue" class="form-control" type="text" name="venue" list="venues_list" />
+          <datalist id="venues_list">
+            {% for venue in venue_options %}
+              <option data-value="{{ venue.id }}" value="{{ venue.display_name }}">
+            {% endfor %}
+          </datalist>
         </div>
+
         <div class="debate-details" id="debate_details">
-          <div class="form-group">
-            <label class="col-sm-1 control-label"></label>
-            <div class="col-sm-10">
-              <p id="message" class="alert alert-warning form-control-static h4">
-                Please check all these details before you check the ballot in.
-              </p>
+
+          <p id="message" class="alert alert-warning">
+            Please check all these details before you check the ballot in.
+          </p>
+
+          <div class="row mb-3">
+            <div class="btn-group col" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary">Venue</button>
+              <button type="button" class="btn btn-primary" id="venue_confirm"></button>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-sm-1 control-label">Venue</label>
-            <div class="col-sm-6">
-              <p id="venue_confirm" class="form-control-static detail"></p>
+
+          <div class="row mb-3">
+            <div class="btn-group col" id="teams" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary">Teams</button>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-sm-1 control-label">Affirmative</label>
-            <div class="col-sm-6">
-              <p id="aff_team" class="form-control-static detail"></p>
+
+          <div class="row mb-3">
+            <div class="btn-group col" id="adjudicators" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary">Ballots from</button>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-sm-1 control-label">Negative</label>
-            <div class="col-sm-6">
-              <p id="neg_team" class="form-control-static detail"></p>
-            </div>
+
+          <div class="form-group pt-2">
+            <button id="checkin_btn" class="btn btn-block btn-success mt-3">
+              Check this ballot in
+            </button>
           </div>
-          <div class="form-group">
-            <label class="col-sm-1 control-label"></label>
-            <div class="col-sm-6">
-              <p class="form-control-static">There should be <span id="num_ballots"></span>, <span id="ballot_from"></span></p>
-              <ul class="" id="adjudicators"></ul>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-1 col-sm-10">
-              <button id="checkin_btn" class="btn btn-block btn-success">Check this ballot in</button>
-            </div>
-          </div>
+
         </div>
-        <p id="success" class="alert alert-success fade in alert-dismissable col-sm-offset-1 col-sm-6" data-dismiss="alert"></p>
+        <p id="success" class="alert alert-success mb-0 alert-dismissable" data-dismiss="alert"></p>
       </div>
     </div>
   </div>
@@ -82,8 +71,10 @@
       $('#success').hide();
 
       $('#venue').keyup(function(e) {
+
         if (e.keyCode != 13) return;
         $('#success').removeClass('alert-success alert-danger').html("Retrieving info...");
+
         var val = $('#venue').val(); // The selected text
         var venueID = $('#venues_list').children('option[value="'+val+'"]').attr('data-value');
         if (venueID == null) {
@@ -91,7 +82,8 @@
           $('#success').html("There aren't any venues with the name \"" + val + "\". It might not have a debate in it, or its ballot might have already been checked in.").addClass('alert-danger').show();
           return;
         }
-        $.ajax( {
+
+        $.ajax({
           type: "POST",
           url: "{% roundurl 'results-ballot-checkin-details' %}",
           data: {venue: venueID},
@@ -99,8 +91,12 @@
             if (data.exists) {
               $('#venue_confirm').text(data.venue);
               $('#venue_confirm').attr('data-value', data.venue_id);
-              $('#aff_team').text(data.aff_team);
-              $('#neg_team').text(data.neg_team);
+
+              $('#teams .team').empty();
+              $.each(data.teams, function(index, value) {
+                $('#teams').append("<button class='team btn btn-primary'>" + value + "</button>");
+              });
+
               var num_ballots_text, from_text;
               if (data.num_adjs == 1) {
                 $('#num_ballots').text("1 ballot");
@@ -111,10 +107,12 @@
                 $('#ballot_from').text("one from each of");
                 $('#checkin_btn').text("Check these ballots in");
               }
-              $('#adjudicators').empty();
+
+              $('#adjudicators .adj').empty();
               $.each(data.adjudicators, function(index, value) {
-                $('#adjudicators').append("<li>" + value + "</li>");
+                $('#adjudicators').append("<button class='adj btn btn-primary'>" + value + "</button>");
               });
+
               $('#debate_details').show();
               $('#success').hide();
             // If not, show the error message.

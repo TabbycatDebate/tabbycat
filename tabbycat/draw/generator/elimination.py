@@ -1,28 +1,21 @@
+"""Draw generators for two-team elimination rounds."""
+
 import logging
 
 from django.utils.translation import ugettext as _
 
-from .common import BaseDrawGenerator, DrawFatalError, DrawUserError, Pairing
-from .utils import partial_break_round_split
+from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError, EliminationDrawMixin
+from .pairing import Pairing
+from .utils import ispow2, partial_break_round_split
 
 logger = logging.getLogger(__name__)
 
 
-class BaseEliminationDrawGenerator(BaseDrawGenerator):
+class BaseEliminationDrawGenerator(EliminationDrawMixin, BasePairDrawGenerator):
 
     can_be_first_round = False
     requires_even_teams = False
-    draw_type = "elimination"
-
-    DEFAULT_OPTIONS = {"side_allocations": "random"}
-
-    def generate(self):
-        pairings = self.make_pairings()
-        self.allocate_sides(pairings)
-        return pairings
-
-    def make_pairings(self):
-        raise NotImplementedError
+    DEFAULT_OPTIONS = {}
 
     def _make_pairings(self, teams, num_bye_rooms):
         """Folds the teams in `teams`, assigning consecutive room ranks starting
@@ -61,7 +54,7 @@ class FirstEliminationDrawGenerator(BaseEliminationDrawGenerator):
         return self._make_pairings(teams, bypassing)
 
 
-class EliminationDrawGenerator(BaseEliminationDrawGenerator):
+class SubsequentEliminationDrawGenerator(BaseEliminationDrawGenerator):
     """Class for second or subsequent elimination round.
     For this draw type, 'teams' should be the teams that automatically
     advanced to this round (i.e., bypassed the previous break round).
@@ -71,7 +64,7 @@ class EliminationDrawGenerator(BaseEliminationDrawGenerator):
 
     def make_pairings(self):
         self.results.sort(key=lambda x: x.room_rank)
-        winners = [p.winner for p in self.results]
+        winners = [pairing.winner for pairing in self.results]
         if winners.count(None) > 0:
             raise DrawUserError(_("%d debates in the previous round don't have a result.") % winners.count(None))
 
@@ -79,7 +72,7 @@ class EliminationDrawGenerator(BaseEliminationDrawGenerator):
         teams = self.teams[:bypassing] + winners
         logger.info("%d teams bypassed the previous round and %d teams won the last round" % (bypassing, len(winners)))
 
-        if len(teams) & (len(teams) - 1) != 0:
+        if not ispow2(len(teams)):
             raise DrawUserError(_("The number of teams (%d) in this round is not a power of two.") % len(teams))
 
         return self._make_pairings(teams, 0)

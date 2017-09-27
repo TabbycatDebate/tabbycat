@@ -1,49 +1,111 @@
-{% load debate_tags %}
+{% load debate_tags i18n humanize %}
 
-<div class="panel panel-default">
+<div class="card">
 
-  <div class="panel-heading">
-    <h4 class="panel-title">{{ ct.type }} Check-Ins</h4>
-  </div>
-  <div class="panel-body round-progresses">
-
-    <div class="row">
-      <div class="col-md-1 col-sm-1">{{ round.abbreviation }}</div>
-      <div class="col-md-11 col-sm-11">
-        <div class="progress">
-          <div class="progress-bar progress-bar-success
-                      {% if ct.in_now == 0 %}progress-empty{% endif %}"
-               role="progressbar" aria-valuenow="{{ ct.in_now }}"
-               aria-valuemin="0" aria-valuemax="{{ ct.total }}"
-               style="width: {% percentage ct.in_now ct.total %}%;">
-            <span>{{ ct.in_now }}/{{ ct.total }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      {% if ct.in_before is not None %}
-        <div class="col-md-1 col-sm-1">{{ round.prev.abbreviation }}</div>
-        <div class="col-md-11 col-sm-11">
-          <div class="progress">
-            <div class="progress-bar progress-bar-info
-                        {% if ct.in_before == 0 %}progress-empty{% endif %}"
-                 role="progressbar" aria-valuenow="{{ ct.in_now }}"
-                 aria-valuemin="0" aria-valuemax="{{ ct.total }}"
-                 style="width: {% percentage ct.in_before ct.total %}%;">
-              <span>{{ ct.in_before }}/{{ ct.total }}</span>
-            </div>
-          </div>
-        </div>
+  <div class="card-body">
+    <h5 class="card-title mb-0">
+      {% if type == "teams" %}{% trans "Teams" %}
+      {% elif type == "adjs" %}{% trans "Adjudicators" %}
+      {% elif type == "venues" %}{% trans "Venues" %}
       {% endif %}
+    </h5>
+  </div>
+
+  <div class="list-group list-group-flush">
+
+    <div class="list-group-item">
+      <div class="d-flex justify-content-end">
+        <span class="mr-auto">{{ round.name }}</span>
+        <strong>{{ info.in_now }}/{{ info.total }}</strong>
+      </div>
+      {% include "components/progress-bar.html" with value=info.in_now total=info.total type="success" %}
     </div>
 
-    {% if ct.message %}
-      <div class="col-md-5">
-      {{ ct.message }}
+    {% if info.in_before is not None %}
+      <div class="list-group-item">
+        <div class="d-flex justify-content-end">
+          <span class="mr-auto">{{ round.prev.name }}</span>
+          <strong>{{ info.in_before }}/{{ info.total }}</strong>
+        </div>
+        {% include "components/progress-bar.html" with value=info.in_before total=info.total type="info" %}
       </div>
     {% endif %}
 
+    {% if info.message %}
+      <div class="list-group-item list-group-item-info">
+        {{ info.message }}
+      </div>
+    {% endif %}
+
+    {% if type == "teams" %}
+
+      {% roundurl 'availability-teams' round as url %}
+      {% trans "Check in teams" as title_text %}
+
+      {% if round.is_break_round %}
+        {% trans "No need to check teams in" as title_text %}
+        {% include "components/item-info.html" with text=title_text type="secondary" %}
+      {% elif pref.teams_in_debate == 'two' and not checkin_info.teams.in_now|divisibleby:2  %}
+        {% trans "There is an uneven number of teams checked in for this round." as text %}
+        {% include "components/item-info.html" with type="danger" %}
+        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+      {% elif pref.teams_in_debate == 'bp' and not checkin_info.teams.in_now|divisibleby:4  %}
+        {% trans "The number of teams checked in for this round is not a multiple of 4." as text %}
+        {% include "components/item-info.html" with type="danger" %}
+        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+      {% elif info.in_now == 0 and not round.is_break_round %}
+        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+      {% else %}
+        {% trans "Edit team check-ins" as title_text %}
+        {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
+      {% endif %}
+
+    {% elif type == "adjs" %}
+
+      {% roundurl 'availability-adjudicators' round as url %}
+      {% trans "Check in adjudicators" as title_text %}
+
+      {% if min_adjudicators > checkin_info.adjs.in_now %}
+        {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
+        {% blocktrans trimmed asvar text with required_count=min_adjudicators|apnumber count count=min_adjudicators %}
+          There needs to be at least one adjudicator checked in, given the number of debates.
+        {% plural %}
+          There need to be at least {{ required_count }} adjudicators checked in, given the number of debates.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="danger" %}
+        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+      {% elif info.in_now == 0 %}
+        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+      {% else %}
+        {% trans "Edit adjudicator check-ins" as title_text %}
+        {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
+      {% endif %}
+
+    {% elif type == "venues" %}
+
+      {% roundurl 'availability-venues' round as url %}
+      {% trans "Check in venues" as title_text %}
+
+      {% if min_venues > checkin_info.venues.in_now %}
+        {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
+        {% blocktrans trimmed asvar text with required_count=min_venues|apnumber count count=min_venues %}
+          There needs to be at least one venue checked in, given the number of
+          debates.
+        {% plural %}
+          There need to be at least {{ required_count }} venues checked in, given
+          the number of debates.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="danger" %}
+        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+      {% elif info.in_now == 0 %}
+        {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
+      {% else %}
+        {% trans "Edit venue check-ins" as title_text %}
+        {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
+      {% endif %}
+
+    {% endif %}
+
   </div>
+
 </div>

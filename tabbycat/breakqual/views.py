@@ -6,7 +6,8 @@ from django.views.generic import FormView, TemplateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from utils.misc import reverse_tournament
-from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixin, VueTableTemplateView
+from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
 
@@ -189,7 +190,7 @@ class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
     page_emoji = '🎉'
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self)
+        table = TabbycatTableBuilder(view=self, sort_key='name')
         table.add_adjudicator_columns(self.get_tournament().adjudicator_set.filter(breaking=True))
         return table
 

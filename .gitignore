@@ -11,18 +11,19 @@ tabbycat/static/fonts/
 
 # Dependencies
 node_modules
-package-lock.json
 
 # Data to ignore
 data/*
 
 # Default data to include
+!data/bp88team/
 !data/demo/
 !data/demo_simple/
 !data/sandbox/
 !data/test/
 !data/presets/
 !data/fixtures/
+!data/migrate_fixtures.py
 
 # Docker
 dbdata

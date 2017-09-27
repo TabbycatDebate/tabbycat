@@ -34,6 +34,13 @@ import PrintableBallot from  '../../printing/templates/PrintableBallot.vue'
 vueComponents['PrintableBallot'] = PrintableBallot
 
 //------------------------------------------------------------------------------
+// Other
+//------------------------------------------------------------------------------
+
+import AvailabilityContainer from  '../js-vue/containers/AvailabilityContainer.vue'
+vueComponents['AvailabilityContainer'] = AvailabilityContainer
+
+//------------------------------------------------------------------------------
 // Draw Containers
 //------------------------------------------------------------------------------
 

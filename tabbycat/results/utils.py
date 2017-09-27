@@ -81,14 +81,43 @@ _ORDINALS = {
 }
 
 
+_BP_POSITION_NAMES = [
+    # Translators: Abbreviation for Prime Minister
+    [ugettext_lazy("PM"),
+    # Translators: Abbreviation for Deputy Prime Minister
+     ugettext_lazy("DPM")],
+    # Translators: Abbreviation for Leader of the Opposition
+    [ugettext_lazy("LO"),
+    # Translators: Abbreviation for Deputy Leader of the Opposition
+     ugettext_lazy("DLO")],
+    # Translators: Abbreviation for Member for the Government
+    [ugettext_lazy("MG"),
+    # Translators: Abbreviation for Government Whip
+     ugettext_lazy("GW")],
+    # Translators: Abbreviation for Member for the Opposition
+    [ugettext_lazy("MO"),
+    # Translators: Abbreviation for Opposition Whip
+     ugettext_lazy("OW")]
+]
+
+
 def side_and_position_names(tournament):
     """Yields 2-tuples (side, positions), where position is a list of position
     names, all being translated human-readable names. This should eventually
     be extended to return an appropriate list for the tournament configuration.
     """
-    sides = [get_side_name(tournament, side, 'full').title() for side in ('aff', 'neg')]
-    for side in sides:
-        positions = [_("Reply") if pos == tournament.reply_position
-            else _ORDINALS[pos]
-            for pos in tournament.positions]
-        yield side, positions
+    sides = [get_side_name(tournament, side, 'full').title() for side in tournament.sides]
+
+    if tournament.pref('teams_in_debate') == 'bp' \
+            and tournament.last_substantive_position == 2 \
+            and tournament.reply_position is None:
+
+        for side, positions in zip(sides, _BP_POSITION_NAMES):
+            yield side, positions
+
+    else:
+        for side in sides:
+            positions = [_("Reply") if pos == tournament.reply_position
+                else _ORDINALS[pos]
+                for pos in tournament.positions]
+            yield side, positions

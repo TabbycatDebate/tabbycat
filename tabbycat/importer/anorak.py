@@ -27,8 +27,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         ("manual", "m"): tm.Round.DRAW_MANUAL,
         ("round robin", "d"): tm.Round.DRAW_ROUNDROBIN,
         ("power paired", "p"): tm.Round.DRAW_POWERPAIRED,
-        ("first elimination", "1st elimination", "1e", "f"): tm.Round.DRAW_FIRSTBREAK,
-        ("subsequent elimination", "2nd elimination", "2e", "b"): tm.Round.DRAW_BREAK,
+        ("elimination", "break", "e", "b"): tm.Round.DRAW_ELIMINATION,
     })
 
     lookup_gender = make_lookup("gender", {
@@ -38,8 +37,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     })
 
     lookup_team_position = make_lookup("team position", {
-        ("affirmative", "aff", "a"): dm.DebateTeam.SIDE_AFFIRMATIVE,
-        ("negative", "neg", "n"): dm.DebateTeam.SIDE_NEGATIVE,
+        ("affirmative", "aff", "a"): dm.DebateTeam.SIDE_AFF,
+        ("negative", "neg", "n"): dm.DebateTeam.SIDE_NEG,
     })
 
     lookup_feedback_answer_type = make_lookup("feedback answer type", {

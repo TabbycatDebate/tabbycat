@@ -13,7 +13,7 @@ span.emoji {
   // Allows us to use <i> and other elements where layout requirements are loose
   display: inline-block;
   margin-right: 1px;
-  min-width: 20px;
+  min-width: 14px;
 }
 
 .small .emoji {
@@ -21,29 +21,49 @@ span.emoji {
 }
 
 //------------------------------------------------------------------------------
-// Glyphicons
+// Icon Styles
 //------------------------------------------------------------------------------
 
+.feather {
+  height: 18px; // Line height of default text @13px is ~18.5px
+  width: 18px;
+}
+
+.list-group-item,
+.alert,
+.card-title {
+
+  .feather {
+    margin-bottom: -3px;
+    margin-right: 10px;
+  }
+
+  .emoji {
+    margin-left: 1px;
+    margin-right: 11px;
+  }
+}
+
 // Icons should have brighter colors (using text-success is too dull)
-.glyphicon {
+.feather {
 
   &.text-success {
-    color: $brand-success;
+    color: theme-color("success");
   }
 
   &.text-danger {
-    color: $brand-danger;
+    color: theme-color("danger");
   }
 
   &.text-warning {
-    color: $brand-warning;
+    color: theme-color("warning");
   }
 
   &.text-info {
-    color: $brand-info;
+    color: theme-color("info");
   }
 
   &.text-primary {
-    color: $brand-primary;
+    color: theme-color("primary");
   }
 }

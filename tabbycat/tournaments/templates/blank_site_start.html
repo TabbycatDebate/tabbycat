@@ -3,84 +3,47 @@
 
 {% block nav %}{% endblock %}
 
-{% block head-title %}<span class="emoji">👋</span>{% trans "Hello!" %}{% endblock %}
-{% block page-title %}Tabbycat{% endblock %}
+{% block head-title %}{% endblock %}
+{% block page-title %}Welcome to Tabbycat{% endblock %}
 
 {% block content %}
 
-<div class="alert alert-info">
-  <p>
-    Tabbycat is free to use for non-profit and non-fundraising tournaments
-    (although donations are encouraged). If your tournament is run for profit
-    or for fundraising, please note that there is a
-    <a href="{% url 'donations' %}">required payment</a>. For more details,
-    see the <a href="http://tabbycat.readthedocs.io/en/stable/about/licence.html">
-    Tabbycat licence agreement</a>.
-  </p>
-</div>
+<div class="row">
+  <div class="col-lg-8 ml-lg-auto mr-md-auto">
 
-<div class="panel panel-default">
-  <div class="panel-body">
+    <div class="card">
 
-    <h4>
-      {% blocktrans trimmed %}
-        Welcome to your new Tabbycat installation!
-      {% endblocktrans %}
-    </h4>
-    <p>
-      {% blocktrans trimmed %}
-        To get started, you'll need to create the first user account. This account
-        is a "superuser" account: it will be able to edit anything on the site.
-        Therefore, you should use a strong password.
-      {% endblocktrans %}
-    </p>
-    <p>
-      {% blocktrans trimmed %}
-        You can only create this account once, but if you like, you can change the
-        username and password after it's created, or add new superusers afterwards.
-      {% endblocktrans %}
-    </p>
-    <p>
-      {% blocktrans trimmed %}
-        The e-mail address is used for password resets. You don't have to
-        provide one, but if you don't, you won't be able to reset your password
-        if you forget it.
-      {% endblocktrans %}
-    </p>
-
-    <form action="." method="POST" class="form-horizontal">
+      <div class="list-group list-group-flush">
+      <form action="." method="POST">
       {% csrf_token %}
 
-      {% if form.errors %}
-        <div class="alert alert-danger">
-          {% blocktrans trimmed %}
-          Whoops! There was an error with one or more fields.
-          {% endblocktrans %}
-          {{ form.non_field_errors }}
-        </div>
-      {% endif %}
+        {% trans "Welcome to Tabbycat!" as title %}
+        {% include "components/form-title.html" with emoji="👋" %}
 
-      {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.id_for_label }}" class="col-md-2 control-label">{{ field.label }}</label>
-          <div class="col-md-6">
-            {{ field|addcss:"form-control" }}
-          </div>
-          {% if field.errors %}
-            {{ field.errors }}
-          {% endif %}
-        </div>
-      {% endfor %}
+        {% blocktrans trimmed asvar p1 %}
+          To get started, you'll need to create the first user account. This account
+          is a "superuser" account: it will be able to edit anything on the site.
+          Therefore, you should use a strong password.
+        {% endblocktrans %}
+         {% blocktrans trimmed asvar p2 %}
+          You can only create this account once, but if you like, you can change the
+          username and password after it's created, or add new superusers afterwards.
+        {% endblocktrans %}
+        {% blocktrans trimmed asvar p3 %}
+          The e-mail address is used for password resets. You don't have to
+          provide one, but if you don't, you won't be able to reset your password
+          if you forget it.
+        {% endblocktrans %}
+        {% include "components/form-title.html" with title=None %}
 
-      <div class="form-group">
-        <div class="col-md-offset-2 col-md-6 col-sm-4">
-          <button type="submit" class="btn btn-block btn-success form-control">
-            {% trans "Create Account" %}
-          </button>
-        </div>
+        {% include "components/form-main.html" %}
+        {% trans "Create Account" as title %}
+        {% include "components/form-submit.html" %}
+
+      </form>
       </div>
+    </div>
 
-    </form>
   </div>
 </div>
 

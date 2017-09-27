@@ -11,27 +11,29 @@ export default {
   computed: {
     ratingsFeature: function() {
       var ratings = [{ 'title': this.adjudicator.score + ' Feedback Score',
-                       'icon': 'glyphicon-signal' }]
+                       'icon': 'wifi' }]
       // Percentile rankings only on Edit Adjudicators page
       if (!_.isUndefined(this.percentileRanking)) {
+        var css = 'ranking-display ranking-' + this.percentileRanking.percentile
+        ratings[0]['class'] = css
         ratings.push({
           'title': this.percentileRanking.grade + this.percentileRanking.text,
-          'class': 'ranking-display ranking-' + this.percentileRanking.percentile
+          'class': css
         })
       }
       return ratings
     },
     genderFeature: function() {
       var gender = [
-        { 'title': this.adjudicator.name + ' (' + this.adjudicator.gender + ')',
+        { 'title': this.adjudicator.name + this.genderBrackets(this.adjudicator.gender),
           'class': 'gender-display gender-' + this.adjudicator.gender,
-          'icon': 'glyphicon-user' }
+          'icon': 'user' }
       ]
       return gender
     },
     annotateDataForSlideOver: function() {
       return this.adjudicator
-    }
+    },
   },
   methods: {
     formatForSlideOver: function(subject) {

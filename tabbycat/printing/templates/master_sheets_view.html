@@ -19,13 +19,13 @@
   {% for tournament in active_tournaments %}
     {% if tournament.debates|length > 0 %}
 
-    <div class="panel panel-default printable-mastersheet">
+    <div class="card printable-mastersheet">
       <div class="panel-heading">
         <h4 class="panel-title">{{ tournament.short_name }}</h4>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
 
-        <table id="" class="table">
+        <table  class="table">
           <thead>
             <tr class="h5 table-division">
               <col style="width:3%">
@@ -51,7 +51,7 @@
               <tr class="
                 {% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B' or debate.result_status == 'P'%}active text-muted{% endif %}
                 {% ifchanged debate.division.name %}table-division-top{% endifchanged %}
-              ">
+             ">
                 <td>{{ debate.division.name }}</td>
                 <td>{{ debate.venue.display_name }}</td>
                 <td>{{ debate.aff_team.short_name }}</td>
@@ -79,12 +79,12 @@
     {% endif %}
   {% endfor %}
 
-  <div class="panel panel-default">
+  <div class="card">
     <div class="panel-heading">
       <h4 class="panel-title">Additional Comments from the Head Ajudicator</h4>
     </div>
-    <div class="panel-body">
-      <table id="" class="table">
+    <div class="card-body">
+      <table  class="table">
         <thead>
           <tr class="h4 table-division">
             <th></th>

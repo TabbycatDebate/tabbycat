@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^create/',
         tournaments.views.CreateTournamentView.as_view(),
         name='tournament-create'),
-    url(r'^load_demo/',
+    url(r'^load-demo/',
         tournaments.views.LoadDemoView.as_view(),
         name='load-demo'),
 
@@ -35,9 +35,9 @@ urlpatterns = [
     url(r'^donations/',
         tournaments.views.DonationsView.as_view(),
         name='donations'),
-    url(r'^fix_debate_teams/$',
-        tournaments.views.FixDebateTeamsView.as_view(),
-        name='fix-debate-teams'),
+    url(r'^style/$',
+        tournaments.views.StyleGuideView.as_view(),
+        name='style-guide'),
 
     # Admin area
     url(r'^jet/',
@@ -55,7 +55,7 @@ urlpatterns = [
     url(r'^accounts/',
         include('django.contrib.auth.urls')),
 
-    # Favicon for old browsers that ignore the head link
+    # Favicon for old browsers that ignore <head> links and always load via root
     url(r'^favicon\.ico$',
         RedirectView.as_view(url='/static/favicon.ico')),
 
@@ -87,21 +87,21 @@ if settings.DEBUG:  # Only serve debug toolbar when on DEBUG
 @receiver(user_logged_out)
 def on_user_logged_out(sender, request, **kwargs):
     if kwargs.get('user'):
-        messages.success(request,
+        messages.info(request,
             _("Later, %(username)s — you were logged out!") % {'username': kwargs['user'].username},
             fail_silently=True)
     else: # should never happen, but just in case
-        messages.success(request, _("Later! You were logged out!"), fail_silently=True)
+        messages.info(request, _("Later! You were logged out!"), fail_silently=True)
 
 
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
     if kwargs.get('user'):
-        messages.success(request,
+        messages.info(request,
             _("Hi, %(username)s — you just logged in!")  % {'username': kwargs['user'].username},
             fail_silently=True)
     else: # should never happen, but just in case
-        messages.success(request, _("Welcome! You just logged in!"), fail_silently=True)
+        messages.info(request, _("Welcome! You just logged in!"), fail_silently=True)
 
 
 # ==============================================================================

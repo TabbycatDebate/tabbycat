@@ -29,9 +29,11 @@
         returnLocation: '{{ pref.feedback_return_location }}',
         // Formatting
         showTabRoomRow: true,
+        showEmoji: {% if pref.show_emoji %}true{% else %}false{% endif %},
         // From Django
         round: '{{ round.abbreviation }}',
         hasReplies: {% if pref.reply_scores_enabled %}true{% else %}false{% endif %},
+        isBP: {% if pref.teams_in_debate == 'two' %}false{% else %}true{% endif %},
         speakersCount: {{ pref.substantive_speakers }},
         // Rules
         infoText: 'Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication.',
@@ -44,11 +46,9 @@
         substantiveMin: '{{ pref.score_min }}',
         substantiveMax: '{{ pref.score_max }}',
         substantiveStep: '{{ pref.score_step }}',
-        hasReplies: '{{ pref.reply_scores_enabled }}',
         replyMin: '{{ pref.reply_score_min }}',
         replyMax: '{{ pref.reply_score_max }}',
         replyStep: '{{ pref.reply_score_step }}',
-        positions: {{ positions|safe }},
         motions: {{ motions|safe }},
       },
       // From Django

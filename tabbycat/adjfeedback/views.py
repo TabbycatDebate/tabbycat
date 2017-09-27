@@ -19,9 +19,9 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 
 from utils.misc import reverse_tournament
-from utils.mixins import (CacheMixin, JsonDataResponseView, PostOnlyRedirectView,
-                          SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin,
-                          VueTableTemplateView)
+from utils.mixins import (CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin,
+                          SuperuserRequiredMixin)
+from utils.views import JsonDataResponseView, PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
@@ -56,7 +56,7 @@ class GetAdjFeedbackJSON(LoginRequiredMixin, TournamentMixin, JsonDataResponseVi
 class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
 
     template_name = 'feedback_overview.html'
-    page_title = 'Adjudicator Feedback Summary'
+    page_title = 'Feedback Overview'
     page_emoji = '🙅'
 
     def get_adjudicators(self):
@@ -123,7 +123,7 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
 
         teams = tournament.team_set.all()
         team_table = TabbycatTableBuilder(
-            view=self, title='From Teams', sort_key='Name')
+            view=self, title='From Teams', sort_key='Team')
         team_table.add_team_columns(teams)
         team_feedback_data = []
         for team in teams:
@@ -140,7 +140,7 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
 
         adjs = tournament.adjudicator_set.all()
         adj_table = TabbycatTableBuilder(
-            view=self, title='From Adjudicators', sort_key='Feedbacks')
+            view=self, title='From Adjudicators', sort_key='Name')
         adj_table.add_adjudicator_columns(adjs)
         adj_feedback_data = []
         for adj in adjs:
@@ -200,7 +200,11 @@ class LatestFeedbackView(FeedbackCardsView):
     template_name = "feedback_latest.html"
 
     def get_feedback_queryset(self):
-        return AdjudicatorFeedback.objects.order_by('-timestamp')[:50].select_related(
+        t = self.get_tournament()
+        return AdjudicatorFeedback.objects.filter(
+            Q(adjudicator__tournament=t) |
+            Q(adjudicator__tournament__isnull=True)).order_by(
+            '-timestamp')[:30].select_related(
             'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
 
 

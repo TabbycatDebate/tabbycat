@@ -10,7 +10,7 @@ export default {
       var categories = _.map(this.venue.categories, function(vc) {
         return {
           'title': self.getCategoryName(vc),
-          'icon': 'glyphicon-tags'
+          'icon': 'tag'
         }
       })
       return categories
@@ -29,7 +29,7 @@ export default {
         'tiers': [{
           'features': [
             [{ 'title': this.venue.name + ' (Priority of ' + this.venue.priority + ')',
-               'icon': 'glyphicon-map-marker' }],
+               'icon': 'map-pin' }],
             null,
             this.venueCategoriesFeature,
           ]

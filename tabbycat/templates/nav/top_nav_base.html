@@ -1,87 +1,84 @@
-{% load debate_tags %}
+{% load debate_tags static i18n %}
 
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light">
 
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapsed-main-nav" aria-expanded="false">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
+  {% if all_tournaments.count > 1 or user.is_authenticated %}
+    <div class="nav-item dropdown">
 
-    {% if all_tournaments.count > 1 or user.is_authenticated %}
-      <ul id="nav_brand" class="nav navbar-nav navbar-left navbar-brand-primary">
-        <li class="dropdown">
-          <a href="#" class="navbar-brand dash-nav dropdown-toggle" data-toggle="dropdown">{{ tournament }}<b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            {% for tournament in all_tournaments %}
-              {% if user.is_authenticated %}
-                <li>
-                  <a href="{{ tournament.get_absolute_url  }}">
-                    {% if user.is_superuser %}Admin{% else %}Assistant{% endif %}
-                    area for <strong>{{ tournament }}</strong>
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ tournament.get_public_url  }}">
-                    Public area for <strong>{{ tournament }}</strong>
-                  </a>
-                </li>
-              {% else %}
-                <li>
-                  <a href="{{ tournament.get_public_url  }}">
-                    {{ tournament }}
-                  </a>
-                </li>
-              {% endif %}
-            {% endfor %}
-            <li role="separator" class="divider"></li>
-            <li>
-              <a class="" href="/">
-                Site Home
-              </a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    {% else %}
+      <a class="navbar-brand dropdown-toggle" id="tournamentdrop"
+         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img src="{% static 'logo.svg' %}" width="32" height="32" alt="">{% if tournament %}{{ tournament }}{% else %}Tabbycat{% endif %}
+      </a>
+
+      <div class="dropdown-menu" aria-labelledby="tournamentdrop">
+
+        {% for tournament in all_tournaments %}
+          {% if user.is_authenticated %}
+            <a class="dropdown-item" href="{{ tournament.get_absolute_url  }}">
+              {% if user.is_superuser %}Admin{% else %}Assistant{% endif %}
+              area for <strong>{{ tournament }}</strong>
+            </a>
+            <a class="dropdown-item" href="{{ tournament.get_public_url  }}">
+              Public area for <strong>{{ tournament }}</strong>
+            </a>
+          {% else %}
+            <a class="dropdown-item" href="{{ tournament.get_public_url }}">
+              {{ tournament }}
+            </a>
+          {% endif %}
+          <div class="dropdown-divider"></div>
+        {% endfor %}
+
+        <a class="dropdown-item" href="/">Site Home</a>
+      </div>
+
+    </div>
+  {% else %}
+    <div class="nav-item">
+
       {% if tournament %}
         <a class="navbar-brand" href="{{ tournament.get_public_url  }}">
-          {{ tournament }}
+          <img src="{% static 'logo.svg' %}" width="32" height="32" alt="">{{ tournament }}
         </a>
       {% else %}
         <a class="navbar-brand" href="/">
-          < Return Home
+          <img src="{% static 'logo.svg' %}" width="32" height="32" alt="">Tabbycat
         </a>
       {% endif %}
-    {% endif %}
 
-    <div class="collapse navbar-collapse" id="collapsed-main-nav">
+    </div>
+  {% endif %}
 
-      <ul class="nav navbar-nav">
-        {% if 'admin/' in request.path %}
-          {% include "nav/assistant_nav.html" %}
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsed-main-nav" aria-controls="collapsed-main-nav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="collapsed-main-nav">
+
+    <ul class="navbar-nav mr-auto">
+
+      {% if 'admin/' in request.path %}
+        {% include "nav/assistant_nav.html" %}
+      {% else %}
+        {% include "nav/public_nav.html" %}
+      {% endif %}
+
+    </ul>
+
+    <ul class="navbar-nav navbar-my-lg-0">
+      <li class="nav-item">
+        {% if user.is_authenticated %}
+          <a class="nav-link" href="{% url 'logout' %}">
+            Log Out ({{ user }})
+          </a>
         {% else %}
-          {% include "nav/public_nav.html" %}
+          <a class="nav-link" href="{% url 'login' %}">
+            Login
+          </a>
         {% endif %}
-      </ul>
-      <ul id="" class="nav navbar-nav navbar-right">
-        <li class="">
-          {% if user.is_authenticated %}
-            <a class="" href="{% url 'logout' %}">
-              Log Out ({{ user }})
-            </a>
-          {% else %}
-            <a class="" href="{% url 'login' %}">
-              Login
-            </a>
-          {% endif %}
-        </li>
-      </ul>
+      </li>
+    </ul>
 
-    </div><!-- /.navbar-collapse -->
+  </div>
 
-
-  </div><!-- /.container-fluid -->
-</nav><!-- /.navbar -->
+</nav>

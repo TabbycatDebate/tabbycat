@@ -7,21 +7,22 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.views.generic.detail import SingleObjectMixin
 
-from actionlog.mixins import LogActionMixin
+from adjallocation.models import DebateAdjudicator
 from breakqual.utils import calculate_live_thresholds, determine_liveness
-from draw.models import Debate, MultipleDebateTeamsError, NoDebateTeamFoundError
-from participants.models import Region
-from tournaments.utils import get_side_name
+from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
+from participants.models import Region, Speaker
+from participants.prefetch import populate_feedback_scores, populate_win_counts
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import JsonDataResponsePostView, SuperuserRequiredMixin, TabbycatPageTitlesMixin
+from utils.mixins import TabbycatPageTitlesMixin
 
 
 from .models import Round, Tournament
@@ -101,11 +102,10 @@ class TournamentMixin(TabbycatPageTitlesMixin):
             return super().dispatch(request, *args, **kwargs)
         except (MultipleDebateTeamsError, NoDebateTeamFoundError) as e:
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
-                logger.exception("Debate team side assignment error, redirecting to admin:draw_debate_changelist")
-                messages.error(request, _("Teams don't appear to be correctly assigned to sides "
-                        "in a debate. Please resolve this problem before continuing: "
-                        "%(error)s") % {'error': e})
-                return redirect('fix-debate-teams')
+                logger.exception("Debate team side assignment error, redirecting to tournament-fix-debate-teams")
+                messages.error(request, _("You've been redirected to this page because of a problem with "
+                        "how teams are assigned to sides in a debate."))
+                return redirect_tournament('tournament-fix-debate-teams', tournament)
             else:
                 logger.exception("Debate team side assignment error, redirecting to tournament-public-index")
                 messages.error(request, _("There's a problem with how teams are assigned to sides "
@@ -129,7 +129,11 @@ class RoundMixin(TournamentMixin):
     round_redirect_pattern_name = None
 
     def get_page_subtitle(self):
-        return 'as of %s' % self.get_round().name
+        if not getattr(self, "page_subtitle") and not getattr(self, "use_template_subtitle", False) \
+                and self.get_round() is not None:
+            return _("for %(round)s") % {'round': self.get_round().name}
+        else:
+            return super().get_page_subtitle()
 
     def get_round(self):
         # First look in self,
@@ -180,7 +184,7 @@ class PublicTournamentPageMixin(TournamentMixin):
     """
 
     public_page_preference = None
-    disabled_message = "That page isn't enabled for this tournament."
+    disabled_message = ugettext_lazy("That page isn't enabled for this tournament.")
 
     def get_disabled_message(self):
         return self.disabled_message
@@ -188,7 +192,7 @@ class PublicTournamentPageMixin(TournamentMixin):
     def dispatch(self, request, *args, **kwargs):
         tournament = self.get_tournament()
         if tournament is None:
-            messages.info(self.request, "That tournament no longer exists.")
+            messages.info(self.request, _("That tournament no longer exists."))
             return redirect('tabbycat-index')
         if self.public_page_preference is None:
             raise ImproperlyConfigured("public_page_preference isn't set on this view.")
@@ -297,8 +301,11 @@ class DrawForDragAndDropMixin(RoundMixin):
                 breaks_seq[r.id] = i
             for bc in serialised_team['break_categories']:
                 bc['class'] = breaks_seq[bc['id']]
-                wins = serialised_team['wins']
-                bc['will_break'] = determine_liveness(thresholds[bc['id']], wins)
+                if self.get_tournament().pref('teams_in_debate') != 'bp':
+                    wins = serialised_team['wins']
+                    bc['will_break'] = determine_liveness(thresholds[bc['id']], wins)
+                else:
+                    bc['will_break'] = None # Not Implemented
 
         return serialised_team
 
@@ -331,14 +338,17 @@ class DrawForDragAndDropMixin(RoundMixin):
         for debate in serialised_draw:
             break_thresholds = self.break_thresholds
             liveness = 0
-            for (position, team) in debate['teams'].items():
+            for dt in debate['debateTeams']:
+                team = dt['team']
+                if not team:
+                    continue
                 team = self.annotate_break_classes(team, break_thresholds)
                 team = self.annotate_region_classes(team)
                 if team['break_categories'] is not None:
-                    liveness += len([bc for bc in team['break_categories'] if
-                                     bc['will_break'] == 'live'])
-            for panellist in debate['panel']:
-                panellist['adjudicator'] = self.annotate_region_classes(panellist['adjudicator'])
+                    liveness += len([bc for bc in team['break_categories']
+                                     if bc['will_break'] == 'live'])
+            for da in debate['debateAdjudicators']:
+                da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
 
             debate['liveness'] = liveness
 
@@ -349,27 +359,41 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     def get_draw(self):
         round = self.get_round()
-        draw = round.debate_set_with_prefetches(ordering=('-importance', 'room_rank',),
-                                                speakers=True, divisions=False,
-                                                institutions=True, wins=True)
+
+        # The use-case for prefetches here is so intense that we'll just implement
+        # a separate one (as opposed to use Round.debate_set_with_prefetches())
+        draw = round.debate_set.select_related('round__tournament').prefetch_related(
+            Prefetch('debateadjudicator_set',
+                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution__region')),
+            Prefetch('debateteam_set',
+                queryset=DebateTeam.objects.select_related(
+                    'team__institution__region'
+                ).prefetch_related(
+                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
+                )),
+            'debateteam_set__team__break_categories',
+        )
+        populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
+        populate_feedback_scores([da.adjudicator for debate in draw for da in debate.debateadjudicator_set.all()])
+
         serialised_draw = [d.serialize() for d in draw]
         draw = self.annotate_draw(draw, serialised_draw)
         return json.dumps(serialised_draw)
 
     def get_round_info(self):
         round = self.get_round()
-        tournament = self.get_tournament()
+        t = self.get_tournament()
         adjudicator_positions = ["C"]
-        if not tournament.pref('no_panellist_position'):
+        if not t.pref('no_panellist_position'):
             adjudicator_positions += "P"
-        if not tournament.pref('no_trainee_position'):
+        if not t.pref('no_trainee_position'):
             adjudicator_positions += "T"
 
         round_info = {
-            'positions': [get_side_name(tournament, "aff", "full"),
-                          get_side_name(tournament, "neg", "full")],
-            'adjudicatorPositions': adjudicator_positions,
-            'adjudicatorDoubling': tournament.pref('duplicate_adjs'),
+            'adjudicatorPositions': adjudicator_positions, # Depends on prefs
+            'adjudicatorDoubling': t.pref('duplicate_adjs'),
+            'teamsInDebate': t.pref('teams_in_debate'),
+            'teamPositions': t.sides,
             'backUrl': reverse_round('draw', round),
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
             'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,
@@ -383,33 +407,3 @@ class DrawForDragAndDropMixin(RoundMixin):
         kwargs['vueDebates'] = self.get_draw()
         kwargs['vueRoundInfo'] = self.get_round_info()
         return super().get_context_data(**kwargs)
-
-
-class SaveDragAndDropDebateMixin(JsonDataResponsePostView, SuperuserRequiredMixin, RoundMixin, LogActionMixin):
-    """For AJAX issued updates which post a Debate dictionary; which is then
-    modified and return back via a JSON response"""
-    allows_creation = False
-
-    def modify_debate(self):
-        # Children must modify the debate object and return it
-        raise NotImplementedError
-
-    def get_debate(self, id):
-        if Debate.objects.filter(pk=id).exists():
-            debate = Debate.objects.get(pk=id)
-            return debate
-        elif self.allow_creation:
-            print('Creating debate')
-            debate = Debate.objects.create(round=self.get_round())
-            debate.save()
-            return debate
-        else:
-            raise ValueError('SaveDragAndDropDebateMixin posted a debate ID that doesnt exist')
-
-    def post_data(self):
-        body = self.request.body.decode('utf-8')
-        posted_debate = json.loads(body)
-        debate = self.get_debate(posted_debate['id'])
-        debate = self.modify_debate(debate, posted_debate)
-        self.log_action()
-        return json.dumps(debate.serialize())

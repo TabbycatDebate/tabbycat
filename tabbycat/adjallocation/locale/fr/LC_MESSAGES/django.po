@@ -1,0 +1,116 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-18 05:26+1000\n"
+"PO-Revision-Date: 2017-09-17 00:38-0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.3\n"
+
+#: adjallocation/apps.py:7
+msgid "Adjudicator Allocation"
+msgstr "Allocation des juges"
+
+#: adjallocation/models.py:18
+msgid "chair"
+msgstr "président"
+
+#: adjallocation/models.py:19
+msgid "panellist"
+msgstr "panéliste"
+
+#: adjallocation/models.py:20
+msgid "trainee"
+msgstr "stagiaire"
+
+#: adjallocation/models.py:26
+msgid "debate"
+msgstr "débat"
+
+#: adjallocation/models.py:28 adjallocation/models.py:44
+#: adjallocation/models.py:66
+msgid "adjudicator"
+msgstr "juge"
+
+#: adjallocation/models.py:30
+msgid "type"
+msgstr "type"
+
+#: adjallocation/models.py:31
+msgid "available?"
+msgstr "disponible?"
+
+#: adjallocation/models.py:37
+msgid "debate adjudicator"
+msgstr "débat-adjudicateur"
+
+#: adjallocation/models.py:38
+msgid "debate adjudicators"
+msgstr "débat-adjudicateurs"
+
+#: adjallocation/models.py:46
+msgid "team"
+msgstr "équipe"
+
+#: adjallocation/models.py:49
+msgid "adjudicator-team conflict"
+msgstr "conflit entre juge et équipe"
+
+#: adjallocation/models.py:50
+msgid "adjudicator-team conflicts"
+msgstr "conflits entre juge et équipe"
+
+#: adjallocation/models.py:55
+msgid "adjudicator 1"
+msgstr "juge 1"
+
+#: adjallocation/models.py:57
+msgid "adjudicator 2"
+msgstr "juge 2"
+
+#: adjallocation/models.py:60
+msgid "adjudicator-adjudicator conflict"
+msgstr "conflit entre juge et juge"
+
+#: adjallocation/models.py:61
+msgid "adjudicator-adjudicator conflicts"
+msgstr "conflits entre juge et juge"
+
+#: adjallocation/models.py:68
+msgid "institution"
+msgstr "institution"
+
+#: adjallocation/models.py:71
+msgid "adjudicator-institution conflict"
+msgstr "conflit entre juge et institution"
+
+#: adjallocation/models.py:72
+msgid "adjudicator-institution conflicts"
+msgstr "conflits entre juge et institution"
+
+#: adjallocation/views.py:130
+msgid "Draw is already released, unrelease draw to redo auto-allocations."
+msgstr ""
+"Le tirage est déjà publié; il faut le dépublier pour pouvoir refaire "
+"l'allocation automatique."
+
+#: adjallocation/views.py:134
+msgid "Draw is not confirmed, confirm draw to run auto-allocations."
+msgstr ""
+"Le tirage n'est pas encore confirmé; il faut le confirmer pour pouvoir faire "
+"l'allocation automatique."
+
+#: adjallocation/views.py:175
+msgid "Not all adjudicators specified are associated with the tournament."
+msgstr "Certains juges spécifiés ne sont pas associés au tournoi."

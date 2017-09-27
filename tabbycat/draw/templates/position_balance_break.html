@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block page-alerts %}
+  {% roundurl 'availability-index' as checkins_url %}
+  {% trans "Position balance reports aren't computed for elimination rounds." as message %}
+  {% include 'components/alert.html' with type="info" %}
+{% endblock %}

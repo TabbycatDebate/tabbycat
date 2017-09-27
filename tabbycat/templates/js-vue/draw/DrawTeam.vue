@@ -1,15 +1,24 @@
 <template>
   <div :class="['hover-target', conflictsStatus,
                 highlightsIdentity, highlightsStatus]"
-       @mouseenter="handleHoverOn"
-       @mouseleave="handleHoverOff">
+       @mouseenter="showSlideOver(); showHoverConflicts()"
+       @mouseleave="hideSlideOver(); hideHoverConflicts()">
 
-    <div>
-      <span>{{ team.short_name }}</span>
+    <div class="small">
+      <span v-if="debugMode">
+        {{ team.id }} {{ team.short_name }}<br>
+        <span class="text-muted">
+          {{ team.institution.id }} {{ team.institution.code }}
+        </span>
+      </span>
+      <span v-else>
+        {{ team.short_name }}
+      </span>
     </div>
 
     <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
-      <div class="tooltip-inner conflictable hover-histories-1-ago">
+      <div class="tooltip-inner conflictable"
+           :class="'hover-histories-' + hasHistoryConflict + '-ago'">
         {{ hasHistoryConflict }} ago
       </div>
     </div>
@@ -24,6 +33,14 @@ import HighlightableMixin from '../allocations/HighlightableMixin.vue'
 import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
+  data: function () {
+    return {
+      debugMode: false,
+      // Adjs get this from Draggable(); teams must get it from there otherwise
+      // it gets overwritten when merging options between Mixins
+      isHovering: false
+   }
+  },
   mixins: [SlideOverSubjectMixin, SlideOverTeamMixin,
            HighlightableMixin, ConflictableMixin],
   props: { 'team': Object },
@@ -32,15 +49,5 @@ export default {
       return this.team
     }
   },
-  methods: {
-    handleHoverOn: function(event) {
-      this.showSlideOver()
-      this.showHoverConflicts()
-    },
-    handleHoverOff: function(event) {
-      this.hideSlideOver()
-      this.hideHoverConflicts()
-    },
-  }
 }
 </script>

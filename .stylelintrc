@@ -18,7 +18,7 @@
       ignore: ["after-comment"],
     }],
     "selector-list-comma-newline-after": "always",
-    "selector-no-id": true,
+    "selector-max-id": 0,
 
     "declaration-property-value-blacklist": {
       "/^border/": ["none"],

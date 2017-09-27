@@ -1,67 +1,47 @@
 //------------------------------------------------------------------------------
-// General Utilities
+// Full screen pages
 //------------------------------------------------------------------------------
 
-.vertical-spacing {
-  margin-bottom: $line-height-computed;
+.override-sidebar-offset .admin-sidebar,
+.override-sidebar-offset .fake-sidebar,
+.override-sidebar-offset .footer {
+  display: none !important;
 }
 
-.half-vertical-spacing {
-  margin-bottom: $line-height-computed * 0.5;
-}
+.override-sidebar-offset {
+  margin-bottom: 0; // Override footer offset
 
-.no-top-margin {
-  margin-top: 0;
-}
-
-.no-bottom-padding {
-  padding-bottom: 0; // Mostly for panel-body elements
-}
-
-.no-bottom-margin {
-  margin-bottom: 0; // Used by infographics
-}
-
-.no-side-padding {
-  padding-left: 0;
-  padding-right: 0;
-}
-
-//------------------------------------------------------------------------------
-// Headers
-//------------------------------------------------------------------------------
-
-.head-title {
-  padding: 0 0 16px 5px;
-
-  small {
-    line-height: $font-size-h3 * $headings-line-height * 1.2;
+  .main {
+    @extend .col-12;
+    @extend .pl-3;
+    // padding-right: 0;
   }
 }
 
-// For the admin area
-.white-bg {
-  background: $alt-bg;
+//------------------------------------------------------------------------------
+// Lists
+//------------------------------------------------------------------------------
+
+// Override some boostrap color defaults and automatically add color variations
+@each $color, $value in $theme-colors {
+
+  .alert-#{$color},
+  .text-#{$color} {
+
+    a {
+      @include alert-variant(theme-color-level($color, -10), theme-color-level($color, -9), theme-color-level($color, 6));
+
+      text-decoration: underline;
+      background: none;
+      font-weight: bold;
+    }
+  }
 }
 
 //------------------------------------------------------------------------------
 // Page Sub Navs
 //------------------------------------------------------------------------------
 
-.page-sub-nav {
-
-  .btn,
-  .input-group {
-    margin-bottom: $line-height-computed;
-  }
-
-  .navbar-right {
-    padding-right: 15px; // compensate for the pull-rights negative margin
-  }
-
-  .dropdown,
-  form {
-    display: inline-block; // Need this to bring their alignment up
-  }
+.page-navs .btn {
+  @extend .mb-4; // Need to do here so they don't blow out on button-less pages
 }
-

@@ -1,18 +1,18 @@
 import logging
 from collections import OrderedDict
 
-from .common import BaseDrawGenerator, Pairing
+from .common import BasePairDrawGenerator
+from .pairing import Pairing
 
 logger = logging.getLogger(__name__)
 
 
-class RoundRobinDrawGenerator(BaseDrawGenerator):
+class RoundRobinDrawGenerator(BasePairDrawGenerator):
     """ Class for round-robin stype matchups using divisions """
 
     can_be_first_round = True
     requires_rrseq = True
     requires_even_teams = False
-    draw_type = "preliminary"
 
     PAIRING_FUNCTIONS = {
         "random": "_pairings_random"

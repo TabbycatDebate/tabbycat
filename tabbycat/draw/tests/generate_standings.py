@@ -15,14 +15,14 @@ import string
 import random
 import argparse
 
-from draw.tests.utils import TestTeam
-from draw.generator import DrawGenerator
-
 draw_dir = os.path.abspath(os.path.join("..", ".."))
 if draw_dir not in sys.path:
     sys.path.append(draw_dir)
 print(draw_dir)
 del draw_dir
+
+from draw.tests.utils import TestTeam     # noqa: E402 (has to come after path modification above)
+from draw.generator import DrawGenerator  # noqa: E402 (has to come after path modification above)
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("rounds", type=int, help="Number of rounds")
@@ -38,7 +38,7 @@ assert(T % 2 == 0)
 
 teams = list()
 for i in range(1, T+1):
-    team = TestTeam(i, random.choice(string.uppercase[:I]), 0, list(), aff_count=0)
+    team = TestTeam(i, random.choice(string.ascii_uppercase[:I]), 0, list(), side_history=[0, 0])
     teams.append(team)
 
 brackets = dict()
@@ -48,34 +48,42 @@ for i in range(R):
     brackets.clear()
     for wins in wins_set:
         brackets[wins] = [t for t in teams if t.points == wins]
-    ppdg = DrawGenerator("power_paired", teams)
+    ppdg = DrawGenerator("two", "power_paired", teams)
     ppdg._pullup_top(brackets)
 
     for wins, bracket_teams in brackets.items():
         random.shuffle(bracket_teams)
-        N = len(bracket_teams)/2
+        N = len(bracket_teams) // 2
         winners = bracket_teams[:N]
         losers = bracket_teams[N:]
         for winner, loser in zip(winners, losers):
             winner.hist.append(loser)
             loser.hist.append(winner)
-            if winner.aff_count > loser.aff_count:
-                loser.aff_count += 1
-            elif loser.aff_count > winner.aff_count:
-                winner.aff_count += 1
+            winner_side_diff = winner.side_history[0] - winner.side_history[1]
+            loser_side_diff = loser.side_history[0] - loser.side_history[1]
+            if winner_side_diff > loser_side_diff:
+                aff = loser
+                neg = winner
+            elif loser_side_diff > winner_side_diff:
+                aff = winner
+                neg = loser
             else:
-                random.choice([winner, loser]).aff_count += 1
+                shuffled = [winner, loser]
+                random.shuffle(shuffled)
+                aff, neg = shuffled
+            aff.side_history[0] += 1
+            neg.side_history[1] += 1
         for team in winners:
             team.points += 1
 
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
-    print("({id}, '{inst}', {points}, {hist}, {aff_count}),".format(
+    print("({id}, '{inst}', {points}, {hist}, {side_history}),".format(
         id=team.id, inst=team.institution, points=team.points,
-        hist=[t.id for t in team.hist], aff_count=team.aff_count))
+        hist=[t.id for t in team.hist], side_history=team.side_history))
 
 print("")
 
 for team in sorted(teams, key=lambda x: x.points, reverse=True):
-    print("{id}, {inst}, {points}, {hist}, {aff_count}".format(
+    print("{id}, {inst}, {points}, {hist}, {side_history}".format(
         id=team.id, inst=team.institution, points=team.points,
-        hist=", ".join([str(t.id) for t in team.hist]), aff_count=team.aff_count))
+        hist=", ".join([str(t.id) for t in team.hist]), side_history=team.side_history))

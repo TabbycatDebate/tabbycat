@@ -8,14 +8,15 @@
 {% block nav %}{% endblock %}
 
 {% block content %}
-  <div class="panel panel-default">
-    <div class="panel-body h4">
+
+  <div class="card">
+    <div class="card-body h4">
       Something's gone really wrong which really shouldn't go wrong. Bother.
       <a href="/">Go back to the homepage I guess?</a>
     </div>
   </div>
 
-  <div class="alert alert-warning" id="error-reporting" style="display: none;">
+  <div class="alert alert-warning mt-3" id="error-reporting" style="display: none;">
       <p>
         <strong>Tab Directors:</strong>
         {% if 'k' in tabbycat_version %}

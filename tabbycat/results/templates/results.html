@@ -1,82 +1,99 @@
 {% extends "base_vue_table.html" %}
-{% load humanize %}
-{% load debate_tags %}
+{% load humanize debate_tags i18n %}
 
-{% block page-title %}Enter Results for {{ round.name }}{% endblock %}
-{% block head-title %}<span class="emoji">📩</span>Enter Results{% endblock %}
-{% block sub-title %}for {{ round.name }}{% endblock %}
+{% block page-title %}{% trans "Enter Results" %}{% endblock %}
+{% block head-title %}<span class="emoji">📩</span> {% trans "Enter Results" %}{% endblock %}
 
 {% block page-subnav-sections %}
   {% if user.is_superuser %}
-    <a href="{% roundurl 'motions-edit' %}" class="btn btn-default">
-      <span class="glyphicon glyphicon-chevron-left"></span> Back to Motions
+    <a href="{% roundurl 'motions-edit' %}" class="btn btn-outline-primary">
+      <i data-feather="chevron-left"></i> {% trans "Edit Motions" %}
     </a>
-    <a class="btn btn-default submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
-      Check In Ballots
+    <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
+      {% trans "Check In Ballots" %}
     </a>
   {% endif %}
+
 {% endblock %}
 
 {% block page-subnav-actions %}
   {% if user.is_superuser and round.seq < tournament.round_set.count and current_round == round %}
-    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-success{% else %}btn-danger{% endif %} submit-disable" href="{% roundurl 'tournament-advance-round-check' %}">
-      Advance to Next Round <span class="glyphicon glyphicon-chevron-right"></span>
+    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
+      {% trans "Advance to Next Round" %} <i data-feather="chevron-right"></i>
     </a>
   {% endif %}
 {% endblock %}
 
 {% block page-alerts %}
-  {% if not has_motions %}
-    <div class="alert alert-danger">
+  {% if pref.enable_motions and round.motion_set.count == 0 %}
+    {% roundurl 'motions-edit' current_round as motions_url %}
+    {% blocktrans trimmed asvar message %}
       Currently there are no motions entered for this round, so debate results
-      cannot be entered. <a href="{% roundurl 'motions-edit' current_round %}" class="alert-link">Add Motions.</a>
-    </div>
+      cannot be entered. <a href="{{ motions_url }}" class="alert-link">Add Motions.</a>
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="danger" %}
   {% endif %}
-  {% with even_panel=round.num_debates_with_even_panel %}
-    {% if even_panel > 0 %}
-      <div class="alert alert-warning">
-        {{ even_panel|apnumber|capfirst }} debate{{ even_panel|pluralize:" has a panel,s have panels" }} with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
-      </div>
+
+  {% with sides_unconfirmed=round.num_debates_with_sides_unconfirmed %}
+    {% if sides_unconfirmed > 0 and pref.draw_side_allocations != 'manual-ballot' %}
+      {% blocktrans trimmed asvar message count ndebates=sides_unconfirmed %}
+        One debate does not have its sides confirmed. Results for this debate cannot be entered until its side allocations are marked as confirmed.
+      {% plural %}
+        {{ ndebates }} debate do not have their sides confirmed. Results for these debates cannot be entered until their side allocations are marked as confirmed.
+      {% endblocktrans %}
+      {% include "components/alert.html" with type="danger" %}
+    {% endif %}
+  {% endwith %}
+
+  {% with num_even_panel=round.num_debates_with_even_panel %}
+    {% if pref.ballots_per_debate == 'per-adj' and num_even_panel > 0 %}
+      {% blocktrans trimmed asvar message count num_even_panel=num_even_panel %}
+         One debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
+      {% plural %}
+        {{ num_even_panel }} debates have panels with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
+      {% endblocktrans %}
+      {% include "components/alert.html" with type="warning" %}
     {% endif %}
   {% endwith %}
 {% endblock %}
 
 {% block content %}
 
-  <div class="row">
-    <div class="col-sm-12">
+  <div class="row mb-4">
 
-      <div class="btn-group btn-group-justified vertical-spacing" role="group">
-
-        {% if not user.is_superuser %}
-          <a class="btn btn-default submit-disable" href="{% roundurl 'results-ballot-checkin' round %}">
-            Check-In Ballots
-          </a>
-        {% endif %}
-        <span class="btn btn-primary" disabled>
-          {{ stats.ballot_in }} / {{ stats.total }} Checked In <span class="glyphicon glyphicon-inbox"></span>
-        </span>
-        <span class="btn btn-danger" disabled>
-          {{ stats.none }} / {{ stats.total }} Unknown <span class="glyphicon glyphicon-remove"></span>
-        </span>
-        <span class="btn btn-warning" disabled>
-          {{ stats.draft }} / {{ stats.total }} Unconfirmed <span class="glyphicon glyphicon-adjust"></span>
-        </span>
-        <span class="btn btn-success" disabled>
-          {{ stats.confirmed }} / {{ stats.total }} Confirmed <span class="glyphicon glyphicon-ok"></span>
-        </span>
-        {% if pref.enable_postponements %}
-          <span class="btn btn-default" disabled>
-            {{ stats.postponed }} / {{ stats.total }} Postponed <span class="glyphicon glyphicon-pause"></span>
-          </span>
-          <span class="btn btn-default" disabled>
-            Byes <span class="glyphicon glyphicon-fast-forward"></span>
-          </span>
-        {% endif %}
+    <div class="col-md-3 col-12">
+      <span class="btn btn-block btn-primary disabled">
+        {{ stats.ballot_in }} {% trans "Checked In" %} <i data-feather="inbox"></i>
+      </span>
+    </div>
+    <div class="col-md-3 col-12">
+      <span class="btn btn-block btn-danger disabled">
+        {{ stats.none }} {% trans "Unknown" %} <i data-feather="x"></i>
+       </span>
+    </div>
+    <div class="col-md-3 col-12">
+      <span class="btn btn-block btn-warning disabled">
+        {{ stats.draft }} {% trans "Unconfirmed" %} <i data-feather="circle"></i>
+       </span>
+    </div>
+    <div class="col-md-3 col-12">
+      <span class="btn btn-block btn-success disabled">
+        {{ stats.confirmed }} {% trans "Confirmed" %} <i data-feather="check"></i>
+       </span>
+    </div>
+    {% if pref.enable_postponements %}
+      <div class="col-md-3 col-12">
+        <span class="btn btn-block btn-primary disabled">
+          {{ stats.postponed }} {% trans "Postponed" %} <i data-feather="pause"></i>
+         </span>
       </div>
-
-    </div><!-- end col -->
-  </div><!-- end row -->
+      <div class="col-md-3 col-12">
+        <span class="btn btn-block btn-primary disabled">
+          {% trans "Byes" %} <span class="icon fast-forward"></span>
+         </span>
+      </div>
+    {% endif %}
+  </div>
 
   {{ block.super }}
 
@@ -102,7 +119,7 @@
           var debate_id = $(this).attr("debate-id");
           $("#postpone_debate_id").val(debate_id);
           $("#postponeForm").submit();
-          $(this).html("<i>Postponing…</i>");
+          $(this).html("<i>{% trans "Postponing…" %}</i>");
           return false;
         });
       });
@@ -112,7 +129,7 @@
           var debate_id = $(this).attr("debate-id");
           $("#unpostpone_debate_id").val(debate_id);
           $("#unpostponeForm").submit();
-          $(this).html("<i>Unpostponing…</i>");
+          $(this).html("<i>{% trans "Unpostponing…" %}</i>");
           return false;
         });
       });

@@ -1,27 +1,32 @@
-{% extends "base.html" %}
-{% load debate_tags %}
+{% extends "feedback_base.html" %}
+{% load debate_tags i18n %}
 
 {% block head-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
 {% block page-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
-{% block page-subnav-sections %}{% endblock %}
 
 {% block content %}
 
-  <div class="row">
-  {% for feedback in feedbacks %}
+  {% if feedbacks.count == 0 %}
 
-    <div class="col-md-4">
-      {% include 'feedback_card.html' %}
-    </div>
-
-    {% if forloop.counter|divisibleby:3 %}
-      </div><div class="row">
+    {% if source_type == 'from' %}
+      {% blocktrans trimmed asvar message %}
+        {{ source_name }} hasn't submitted any feedback yet.
+      {% endblocktrans %}
     {% endif %}
+    {% if source_type == 'on' %}
+      {% blocktrans trimmed asvar message %}
+        {{ source_name }} hasn't received any feedback yet.
+      {% endblocktrans %}
+    {% endif %}
+    {% include "components/alert.html" with type="info" %}
 
-  {% empty %}
-    <div class="alert alert-info">{{ source_name }} hasn't submitted any feedback yet.</div>
+  {% endif %}
 
-  {% endfor %}
+  <div class="card-columns">
+
+    {% for feedback in feedbacks %}
+      {% include 'feedback_card.html' %}
+    {% endfor %}
+
   </div>
-
 {% endblock content %}

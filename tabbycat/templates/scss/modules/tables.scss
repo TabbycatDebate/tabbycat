@@ -2,9 +2,27 @@
 // Overall Layout
 //------------------------------------------------------------------------------
 
-.panel-body .table {
+.table-container {
+  overflow-x: scroll;
+
+  .card-title {
+    @extend .p-1;
+  }
+
+  .card-body {
+    @extend .px-2;
+  }
+}
+
+.table {
+  font-size: $font-size-sm;
   background: $alt-bg; // For when tables blow out on mobile
-  margin-bottom: 0; // Panel body has its own bottom padding
+  margin-bottom: 0; // Handled by the container elements
+
+  th {
+    border-top: 0;
+  }
+
   > tbody > tr:hover td {
     background-color: $table-bg-hover;
 
@@ -22,16 +40,6 @@
   }
 }
 
-// For the quick search; needs to fit within the row
-.table-search {
-  height: 41px;
-  border-width: 1px;
-}
-
-.table-container {
-  overflow-y: scroll; // Don't blow out page width when overflows occur
-}
-
 //------------------------------------------------------------------------------
 // HEADER STYLES
 //------------------------------------------------------------------------------
@@ -40,31 +48,150 @@ thead,
 .thead {
   @extend .subtitle;
 
+  font-size: $font-size-base;
+  line-height: $font-size-base;
   background: $alt-bg; // Fixed header needs a background while scrolling
-  line-height: 18px; // Otherwise the border is too clone to the text
-
-  .glyphicon {
-    line-height: 18px; // Otherwise the border is too clone to the text
-  }
+  min-height: 40px; // Must accomodate vue-sort key without resizing
 }
 
 .vue-sortable {
-  white-space: nowrap; // Stop a toggle being pushed into 2 rows
-
-  &:hover,
-  &:hover .glyphicon {
-    color: $brand-success;
-    cursor: pointer;
-  }
+  min-width: 46px; // Must accomodate sorting arrows
 
   .vue-sort-key {
-    margin-left: -2px; // There is always a space after the key; reduce this gap
+    display: inline; // VIP
+
+    .sorting-placeholder-for-width { // Prevent tables from jumping on hover
+      width: 18px;
+      margin-left: -6px;
+      display: inline-block;
+    }
+
+    .feather {
+      margin-left: -6px;
+    }
+  }
+
+  // By default don't show if not hovering or active
+  .feather-chevrons-up,
+  .feather-chevrons-down {
+    display: none;
+  }
+
+  .vue-sort-active {
+
+    .sorting-placeholder-for-width {
+      display: none;
+    }
+  }
+
+  // When active show the currently active sort order
+  .sort-by-desc .feather-chevrons-down {
+    display: inline;
+  }
+
+  .sort-by-asc .feather-chevrons-up {
+    display: inline;
+  }
+
+  &:hover {
+    @extend .text-primary;
+
+    cursor: pointer;
+    // By default; if not sorting is active; show sort-desc
+    .vue-sort-key {
+
+      .sorting-placeholder-for-width {
+        display: none;
+      }
+
+      .feather-chevrons-down {
+        display: none;
+      }
+
+      .feather-chevrons-up {
+        display: inline;
+      }
+    }
+
+    // When hovering over active sorting show the sorting order a click activates
+    .sort-by-desc {
+
+      .feather-chevrons-down {
+        display: none;
+      }
+
+      .feather-chevrons-up {
+        display: inline;
+      }
+    }
+
+    .sort-by-asc {
+
+      .feather-chevrons-down {
+        display: inline;
+      }
+
+      .feather-chevrons-up {
+        display: none;
+      }
+    }
   }
 }
 
 //------------------------------------------------------------------------------
 // CELL STYLES
 //------------------------------------------------------------------------------
+
+.table > thead > tr > th,
+.table > tbody > tr > td,
+.draw-container .thead {
+  padding: 8px 4px; // Narrow spacing post-BP
+}
+
+.table > thead > tr > th,
+.draw-container .thead {
+  padding-bottom: 12px;
+}
+
+// Icons in headers
+.table > thead > tr > th .feather,
+.draw-container .thead .feather {
+  width: 18px;
+  height: 18px; // Need to match font size of header text
+  padding-bottom: 4px; // Space out the underline
+  margin-bottom: -6px;
+  box-sizing: initial;
+
+  &.tooltip-trigger {
+    padding-bottom: 2px;
+  }
+}
+
+.draw-container .thead .feather {
+  margin-top: -4px;
+}
+
+// Icons in cells (may as well make them big to match text size)
+.table > tbody > tr > td .feather {
+  width: 24px;
+  height: 24px;
+  margin-bottom: -6px;
+  margin-right: -3px;
+}
+
+// Bump emoji size in tables
+.table > tbody > tr > td .emoji {
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.team-name {
+  min-width: 125px; // BP team cells need a good width when using abbreviations
+}
+
+.venue-name {
+  min-width: 75px; // With BP cells ensure venue names don't get squished
+}
 
 .table > tbody > tr > th,
 .table > tbody > tr > td {
@@ -80,7 +207,12 @@ thead,
 
   // For highlighting bracket boundaries
   &.highlight-row {
-    border-top: 3px solid $brand-info;
+    border-top: 3px solid theme-color("info");
+  }
+
+  // For highlighting boundaries between metrics in "draw with details"
+  &.highlight-col {
+    border-left: 2px dotted $droppable-bg;
   }
 
   &.checkbox-target:hover,
@@ -94,20 +226,7 @@ thead,
 //------------------------------------------------------------------------------
 
 // For Phones
-@media (max-width: $screen-sm-min) {
-
-  .table-container {
-    margin-right: -15px;
-    margin-left: -15px;
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
-
-    .panel-body {
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
+@media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
 
   .team-name .emoji {
     display: block; // Fix ugly wrapping and make names easier to identify
@@ -121,5 +240,23 @@ thead,
 
   .table > tbody > tr > td:first-child {
     padding-left: 10px; // Compensate for reduced left margins on phones
+  }
+
+  // Table widths on mobile devices should span the screen
+  .table-container {
+    margin-left: -15px;
+    margin-right: -15px;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+
+    .card-body {
+      padding: 0.5rem 0;
+    }
+  }
+
+  // But not in the admin interface
+  .main .table-container {
+    margin-left: 0;
   }
 }

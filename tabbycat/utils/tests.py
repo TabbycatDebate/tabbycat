@@ -70,6 +70,45 @@ class TournamentTestsMixin:
         return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
 
+class ConditionalTournamentTestsMixin(TournamentTestsMixin):
+    """Mixin that provides tests for testing a view class that is conditionally
+    shown depending on whether a user preference is set.
+
+    Subclasses must inherit from TestCase separately. This can't be a TestCase
+    subclass, because it provides tests which would be run on the base class."""
+
+    view_toggle = None
+
+    def validate_response(self, response):
+        raise NotImplementedError
+
+    def test_set_preference(self):
+        # Check a page IS resolving when the preference is set
+        self.t.preferences[self.view_toggle] = True
+        response = self.get_response()
+
+        # 200 OK should be issued if setting is not enabled
+        self.assertEqual(response.status_code, 200)
+        self.validate_response(response)
+
+    def test_unset_preference(self):
+        # Check a page is not resolving when the preference is not set
+        self.t.preferences[self.view_toggle] = False
+
+        with self.assertLogs('tournaments.mixins', logging.WARNING):
+            response = self.get_response()
+
+        # 302 redirect should be issued if setting is not enabled
+        self.assertEqual(response.status_code, 302)
+
+
+class ConditionalTournamentViewBasicCheckMixin(ConditionalTournamentTestsMixin):
+    """Simply checks the view and only fails if an error is thrown"""
+
+    def validate_response(self, response):
+        return True
+
+
 # Remove whitenoise middleware as it won't resolve on Travis
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 @modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
@@ -86,8 +125,10 @@ class TableViewTestsMixin:
     # This can't be a TestCase subclass, because it is inherited by
     # ConditionalTableViewTestsMixin, which provides tests.
 
-    def validate_table_data(self, r):
+    def validate_response(self, response):
+        self.validate_table_data(response)
 
+    def validate_table_data(self, r):
         if 'tableData' in r.context and self.table_data():
             data = len(json.loads(r.context['tableData']))
             self.assertEqual(self.table_data(), data)
@@ -110,33 +151,9 @@ class TableViewTestsMixin:
         return False
 
 
-class ConditionalTableViewTestsMixin(TableViewTestsMixin, TournamentTestsMixin):
-    """Mixin that provides tests for testing a view class that is conditionally
-    shown depending on whether a user preference is set.
-
-    Subclasses must inherit from TestCase separately. This can't be a TestCase
-    subclass, because it provides tests which would be run on the base class."""
-
-    view_toggle = None
-
-    def test_set_preference(self):
-        # Check a page IS resolving when the preference is set
-        self.t.preferences[self.view_toggle] = True
-        response = self.get_response()
-
-        # 200 OK should be issued if setting is not enabled
-        self.assertEqual(response.status_code, 200)
-        self.validate_table_data(response)
-
-    def test_unset_preference(self):
-        # Check a page is not resolving when the preference is not set
-        self.t.preferences[self.view_toggle] = False
-
-        with self.assertLogs('tournaments.mixins', logging.WARNING):
-            response = self.get_response()
-
-        # 302 redirect should be issued if setting is not enabled
-        self.assertEqual(response.status_code, 302)
+class ConditionalTableViewTestsMixin(TableViewTestsMixin, ConditionalTournamentTestsMixin):
+    """Combination of TableViewTestsMixin and ConditionalTournamentTestsMixin,
+    for convenience."""
 
 
 class BaseDebateTestCase(TestCase):

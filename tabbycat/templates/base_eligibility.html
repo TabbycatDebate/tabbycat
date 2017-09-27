@@ -2,28 +2,25 @@
 {% load debate_tags static i18n %}
 
 {% block page-subnav-actions %}
-  <button class="btn btn-success submit-disable" id="submit-nav" data-loading-text="{% trans "Saving…" %}">
-    <span class="glyphicon glyphicon-floppy-disk"></span> {% block save-button-text %}{% endblock %}
+  <button class="btn btn-success " id="submit-nav">
+    {% block save-button-text %}{% endblock %}
   </button>
 {% endblock %}
 
 {% block page-alerts %}
   {% if form.errors %}
-    <div class="alert alert-danger">
-      <button type="button" class="close">&times;</button>
-      {% trans "Please correct the errors below." %}
-      {{ form.errors }}
-    </div>
+    {% include "components/form-errors.html" with errors=form.errors %}
   {% endif %}
 {% endblock %}
 
 {% block content %}
 
-  <form id="eligibilityForm" action="." method="POST" class="form-horizontal">
+  <form id="eligibilityForm" action="." method="POST">
     {% csrf_token %}
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <table class="table">
+
+    <div class="card table-container">
+      <div class="card-body">
+        <table class="table table-responsive">
           <thead>
             <tr>
               {% block eligibility-table-headers %}

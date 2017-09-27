@@ -21,7 +21,7 @@
       <h1 class="text-center">{{ venue.name }}</h1>
 
       {% for debate in venue.debates %}
-        <div class="panel panel-default">
+        <div class="card">
           <div class="panel-heading text-center">
             <h3 class="panel-title">
               {{ debate.round.tournament.short_name }} Division

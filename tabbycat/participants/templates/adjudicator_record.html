@@ -1,21 +1,23 @@
 {% extends "base_vue_table.html" %}
-{% load debate_tags %}
+{% load debate_tags team_link i18n %}
 
 {% block page-subnav-sections %}{% endblock %}<!-- No need for searching -->
 
 {% block content %}
 
-  <div class="row">
+  <div class="card-deck">
 
     {% if pref.public_draw or admin_page %}
-      <div class="col-lg-6">
-        <div class="panel {% if debateadjudicator and draw_released %}panel-primary{% else %}panel-default{% endif %}">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              In This Round
-              ({{ current_round.name }})
+      <div class="card {% if debateadjudications and draw_released %}panel-primary{% else %}panel-default{% endif %}">
+        <div class="list-group list-group-flush">
+
+          <div class="list-group-item">
+            <h4 class="card-title mb-0">
+              {% blocktrans trimmed with round_name=current_round.name %}
+                In This Round ({{ round_name }})
+              {% endblocktrans %}
               {% if admin_page and not draw_released %}
-                <em>(Not Released to Public)</em>
+                <em>{% trans "(Not Released to Public)" %}</em>
               {% endif %}
             </h4>
           </div>
@@ -23,127 +25,196 @@
           {% if draw_released or admin_page %}
             {% for debateadjudicator in debateadjudications %}
               {% with debate=debateadjudicator.debate %}
-                <ul class="list-group">
 
-                  {# Position, teams and venue #}
-                  <li class="list-group-item lead {% if draw_released %}active{% endif %}">
-                    {{ adjudicator.name }} is
-                    {% if debate.adjudicators|length > 1 %}
-                      {% if debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
-                        the
-                      {% else %}
-                        a
-                      {% endif %}
-                      <strong>{{ debateadjudicator.get_type_display|lower }}</strong>
-                    {% endif %}
-                    adjudicating
-                    {% if admin_page %}
-                      <a href="{% tournamenturl 'participants-team-record' debate.aff_team.pk %}"
-                         class="list-group-item-text">{{ debate.aff_team.short_name }}</a> vs
-                      <a href="{% tournamenturl 'participants-team-record' debate.neg_team.pk %}"
-                         class="list-group-item-text">{{ debate.neg_team.short_name }}</a> in
+                {# Position, teams and venue #}
+                <div class="list-group-item lead {% if draw_released %}active{% endif %}">
+
+                  {# (Two-team formats) #}
+                  {% if pref.teams_in_debate == 'two' %}
+                    {% team_record_link debate.aff_team admin_page as aff %}
+                    {% team_record_link debate.neg_team admin_page as neg %}
+
+                    {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
+                      {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:"Venue TBA" %}
+                        {{ adj_name }} is the <strong>chair</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
+                    {% elif debate.adjudicators|length > 1 %}
+                      {% blocktrans trimmed with adj_name=adjudicator.name type=debateadjudicator.get_type_display venue=debate.venue.display_name|default:"Venue TBA" %}
+                        {{ adj_name }} is a <strong>{{ type }}</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
                     {% else %}
-                      <a href="{% tournamenturl 'participants-public-team-record' debate.aff_team.pk %}"
-                         class="list-group-item-text">{{ debate.aff_team.short_name }}</a> vs
-                      <a href="{% tournamenturl 'participants-public-team-record' debate.neg_team.pk %}"
-                         class="list-group-item-text">{{ debate.neg_team.short_name }}</a> in
+                      {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:"Venue TBA" %}
+                        {{ adj_name }} is adjudicating {{ aff }} vs {{ neg }} in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
                     {% endif %}
-                    <strong>{{ debate.venue.display_name }}</strong>.
-                  </li>
 
-                  {# Round start time #}
-                  {% if current_round.starts_at %}
-                    <li class="list-group-item">
-                      The round begins at {{ current_round.starts_at }}
-                    </li>
-                  {% endif %} {# current_round.starts_at #}
+                  {# (British Parliamentary) #}
+                  {% elif pref.teams_in_debate == 'bp' %}
 
-                  {# Adjudicators #}
-                  {% if not pref.no_panellist_position or not pref.no_trainee_position %}
-                    <li class="list-group-item">
-                      {% if debate.adjudicators|length > 1 %}
-                        {% with adjudicators=debate.adjudicators %}
-                          <strong>Adjudicator{{ adjudicators|length|pluralize }}:</strong>
-                          {% for adj, adjtype in adjudicators.with_positions %}
+                    {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
+                      {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:"Venue TBA" %}
+                        {{ adj_name }} is the <strong>chair</strong> adjudicating in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
+                    {% elif debate.adjudicators|length > 1 %}
+                      {% blocktrans trimmed with adj_name=adjudicator.name type=debateadjudicator.get_type_display venue=debate.venue.display_name|default:"Venue TBA" %}
+                        {{ adj_name }} is a <strong>{{ type }}</strong> adjudicating in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
+                    {% else %}
+                      {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:"Venue TBA" %}
+                        {{ adj_name }} is adjudicating in <strong>{{ venue }}</strong>.
+                      {% endblocktrans %}
+                    {% endif %}
+
+                  {% endif %}
+                </div>
+
+                {# Round start time #}
+                {% if current_round.starts_at %}
+                  <div class="list-group-item">
+                    {% blocktrans trimmed with start_time=current_round.starts_at %}
+                      The round begins at {{ start_time }}
+                    {% endblocktrans %}
+                  </div>
+                {% endif %} {# current_round.starts_at #}
+
+                {# Teams (only in BP -- in two-team, it's displayed above) #}
+                {% if pref.teams_in_debate == 'bp' %}
+                  <div class="list-group-item">
+                    <strong>{% trans "Teams:" %}</strong>
+                    {% for dt in debate.debateteams_ordered %}
+                      {% team_record_link dt.team admin_page %}{% if debate.sides_confirmed %} ({{ dt.get_side_name }}){% endif %}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                  </div>
+                {% endif %} {# pref.teams_in_debate == 'bp' #}
+
+                {# Adjudicators #}
+                {% if not pref.no_panellist_position or not pref.no_trainee_position %}
+                  <div class="list-group-item">
+                    {% if debate.adjudicators|length > 1 %}
+                      {% with adjudicators=debate.adjudicators %}
+                        <strong>
+                          {% blocktrans trimmed count counter=adjudicators|length %}
+                            Adjudicator:
+                          {% plural %}
+                            Adjudicators:
+                          {% endblocktrans %}
+                        </strong>
+                        {% for adj, adjtype in adjudicators.with_positions %}
+                          {% if adj != debateadjudicator.adjudicator %}
                             <a href="{% if admin_page %}{% tournamenturl 'participants-adjudicator-record' adj.pk %}{% else %}{% tournamenturl 'participants-public-adjudicator-record' adj.pk %}{% endif %}">
                               {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
-                          {% endfor %}
-                        {% endwith %}
-                      {% else %}
-                        <em>There are no panellists or trainees assigned to this debate.</em>
-                      {% endif %} {# debate.adjudicators|length > 1 #}
-                    </li>
-                  {% endif %} {# not pref.no_panellist_position or not pref.no_trainee_position #}
+                          {% else %}
+                            {{ adj.name }}{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endwith %}
+                    {% else %}
+                      <em>{% trans "There are no panellists or trainees assigned to this debate." %}</em>
+                    {% endif %} {# debate.adjudicators|length > 1 #}
+                  </div>
+                {% endif %} {# not pref.no_panellist_position or not pref.no_trainee_position #}
 
-                  {# Motions #}
-                  {% if pref.public_motions or admin_page %}
-                    <li class="list-group-item">
-                      {% if current_round.motions_released or admin_page %}
-                        {% if not current_round.motions_released %}
-                          <em>Motions are not released to public.</em><br />
-                        {% endif %}
-                        {% if debate.round.motion_set.count == 1 %}
-                          <strong>Motion:</strong> {{ debate.round.motion_set.first.text }}
-                        {% else %}
-                          {% for motion in debate.round.motion_set.all %}
-                            <strong>Motion {{ motion.seq }}:</strong> {{ motion.text }}<br />
-                          {% endfor %}
-                        {% endif %}
-                      {% else %} {# elif not (current_round.motions_released or admin_page) #}
-                        <em>The motion(s) for this round haven't yet been released.</em>
-                      {% endif %} {# current_round.motions_released or admin_page #}
-                    </li>
-                  {% endif %} {# pref.public_motions or admin_page #}
-                </ul>
+                {# Motions #}
+                {% if pref.public_motions or admin_page %}
+                  <div class="list-group-item">
+                    {% if current_round.motions_released or admin_page %}
+                      {% if not current_round.motions_released %}
+                        <em>{% trans "Motions are not released to public." %}</em><br />
+                      {% endif %}
+                      {% if debate.round.motion_set.all|length == 1 %}
+                        <strong>{% trans "Motion:" %}</strong> {{ debate.round.motion_set.first.text }}
+                      {% else %}
+                        {% for motion in debate.round.motion_set.all %}
+                          <strong>
+                            {% blocktrans trimmed with seq=motion.seq %}
+                              Motion {{ seq }}:
+                            {% endblocktrans %}
+                          </strong>
+                          {{ motion.text }}<br />
+                        {% endfor %}
+                      {% endif %}
+                    {% else %} {# elif not (current_round.motions_released or admin_page) #}
+                      <em>{% trans "The motion(s) for this round haven't yet been released." %}</em>
+                    {% endif %} {# current_round.motions_released or admin_page #}
+                  </div>
+                {% endif %} {# pref.public_motions or admin_page #}
+
               {% endwith %}
+
             {% empty %} {# elif not debateadjudicator #}
-              <div class="panel-body">
-                <em>{{ adjudicator.name }} is not adjudicating this round.</em>
+
+              <div class="list-group-item">
+                <em>
+                  {% blocktrans trimmed with adj_name=adjudicator.name %}
+                    {{ adj_name }} is not adjudicating this round.
+                  {% endblocktrans %}
+                </em>
               </div>
+
             {% endfor %} {# debateadjudicator #}
+
           {% else %} {# elif not (draw_released or admin_page) #}
-            <div class="panel-body">
-              <em>The draw for this round hasn't yet been released.</em>
+
+            <div class="list-group-item">
+              <em>{% trans "The draw for this round hasn't yet been released." %}</em>
             </div>
+
           {% endif %} {# draw_released or admin_page #}
+
         </div>
       </div>
+
     {% endif %} {# pref.public_draw or admin_page #}
 
     {% if pref.public_participants or admin_page %}
-      <div class="col-lg-6">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">About {{ adjudicator.name }}</h4>
+
+      <div class="card">
+        <div class="list-group list-group-flush">
+          <div class="list-group-item">
+            <h4 class="card-title mb-0">
+              {# Just call it 'name' since this string is also used with teams #}
+              {% blocktrans trimmed with name=adjudicator.name %}
+                About {{ name }}
+              {% endblocktrans %}
+            </h4>
           </div>
 
-          <ul class="list-group">
-
-            <li class="list-group-item">
-              <strong>Institution:</strong>
+          {% if adjudicator.institution %}
+            <div class="list-group-item">
+              <strong>{% trans "Institution:" %}</strong>
               {{ adjudicator.institution.name }}
-            </li>
-            {% if adjudicator.institution.region %}
-              <li class="list-group-item">
-                <strong>Region:</strong>
-                {{ adjudicator.institution.region.name }}
-              </li>
-            {% endif %}
+            </div>
+          {% endif %}
 
-            {% if adjudicator.independent %}
-              <li class="list-group-item">
-                <em>{{ adjudicator.name }} is an independent adjudicator.</em>
-              </li>
-            {% endif %}
+          {% if adjudicator.institution.region %}
+            <div class="list-group-item">
+              <strong>{% trans "Region:" %}</strong>
+              {{ adjudicator.institution.region.name }}
+            </div>
+          {% endif %}
 
-            {% if adjudicator.adj_core %}
-              <li class="list-group-item">
-                <em>{{ adjudicator.name }} is on the adjudication core.</em>
-              </li>
-            {% endif %}
-          </ul>
+          {% if adjudicator.independent %}
+            <div class="list-group-item">
+              <em>
+                {% blocktrans trimmed with adj_name=adjudicator.name %}
+                  {{ adj_name }} is an independent adjudicator.
+                {% endblocktrans %}
+              </em>
+            </div>
+          {% endif %}
+
+          {% if adjudicator.adj_core %}
+            <div class="list-group-item">
+              <em>
+                {% blocktrans trimmed with adj_name=adjudicator.name %}
+                  {{ adj_name }} is on the adjudication core.
+                {% endblocktrans %}
+              </em>
+            </div>
+          {% endif %}
         </div>
       </div>
+
     {% endif %} {# pref.public_participants or admin_page #}
 
   </div>

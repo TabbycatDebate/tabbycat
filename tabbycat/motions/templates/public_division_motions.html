@@ -16,9 +16,9 @@
 {% block content %}
 
   {% if rounds.all.count > 0 %}
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <table class="table">
+    <div class="card table-container">
+      <div class="card-body">
+        <table class="table table-responsive">
           <thead>
             <tr>
               <th>RSeq</th>
@@ -54,7 +54,7 @@
                 </td>
                 <td>{{ motion.text }}</td>
                 {% if pref.enable_flagged_motions %}
-                  <td>{% if motion.flagged %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+                  <td>{% if motion.flagged %}<i data-feather="check"></i>{% endif %}</td>
                 {% endif %}
               </tr>
             {% endfor %}

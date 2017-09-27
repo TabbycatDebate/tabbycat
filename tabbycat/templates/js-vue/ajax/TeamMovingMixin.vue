@@ -6,53 +6,60 @@ export default {
   mixins: [MovingMixin],
   methods: {
     debateCheckIfShouldSave(debate) {
-      var expectedTeams = this.roundInfo.positions.length
-      var hasEnoughTeams = _.keys(debate.teams).length === expectedTeams
-      return hasEnoughTeams
+      var presentTeams = _.filter(debate.debateTeams, function(dt) {
+        return dt.team !== null;
+      })
+      if (presentTeams.length === this.roundInfo.teamPositions.length) {
+        return true
+      } else {
+        return false
+      }
     },
     saveMoveForType(teamId, fromDebate, toDebate, toPosition) {
       var team = this.allTeamsById[teamId]
+      var fromDebateTeam = this.findDebateTeamInDebateByTeam(team, fromDebate)
+      var toDebateTeam = this.findDebateTeamInDebateBySide(toPosition, toDebate)
+
+      if (toDebateTeam === false && toDebate !== 'unused') {
+        // For totally new debates they wont even have the DT; so create it
+        if (!_.isUndefined(toDebateTeam)) {
+          toDebate.debateTeams.push({ 'side': toPosition, 'team': null })
+        }
+        // And re-calculate the toTeam
+        toDebateTeam = this.findDebateTeamInDebateBySide(toPosition, toDebate)
+      }
 
       if (toDebate !== 'unused' && fromDebate !== 'unused') {
-
         // Moving from one debate to another
-        var fromPosition = _.findKey(fromDebate.teams, team);
-        if (toDebate.teams[toPosition]) {
-          // Replacing a team
-          fromDebate.teams[fromPosition] = toDebate.teams[toPosition]
+        if (toDebateTeam.team !== null) {
+          fromDebateTeam.team = toDebateTeam.team // If replacing a team (swap)
         } else {
-          // If not replacing a team
-          delete fromDebate.teams[fromPosition]
-          // Update front end otherwise teams wont appear removed
-          this.$set(this.debatesById[fromDebate.id], 'teams', fromDebate.teams)
+          fromDebateTeam.team = null // If not replacing a team
         }
-        // Set the move and update the front end
-        toDebate.teams[toPosition] = team
-        this.$set(this.debatesById[toDebate.id], 'teams', toDebate.teams)
-
-      } else if (toDebate === 'unused') {
-
-        // Moving to the unused area
-        var fromPosition = _.findKey(fromDebate.teams, team);
-        delete fromDebate.teams[fromPosition]
-        this.unallocatedItems.push(team) // Need to push; not append
-        // Update front end otherwise teams wont appear removed
-        this.$set(this.debatesById[fromDebate.id], 'teams', fromDebate.teams)
+        toDebateTeam.team = team
 
       } else if (fromDebate === 'unused') {
-
         // Moving to a debate
-        if (toDebate.teams[toPosition]) {
-          // If replacing a team move them to unused
-          this.unallocatedItems.push(toDebate.teams[toPosition])
+        if (toDebateTeam.team !== null) {
+          this.unallocatedItems.push(toDebateTeam.team) // If replacing a team
         }
-        // Set the move and update the front end
-        toDebate.teams[toPosition] = team
-        this.$set(this.debatesById[toDebate.id], 'teams', toDebate.teams)
-        // Remove from unallocated
+        toDebateTeam.team = team
         this.unallocatedItems.splice(this.unallocatedItems.indexOf(team), 1)
 
+      } else if (toDebate === 'unused') {
+        // Moving to the unused area
+        fromDebateTeam.team = null
+        this.unallocatedItems.push(team) // Need to push; not append
       }
+
+      // Update front end otherwise teams wont appear removed
+      if (toDebate !== 'unused') {
+        this.$set(this.debatesById[toDebate.id], 'debateTeams', toDebate.debateTeams)
+      }
+      if (fromDebate !== 'unused') {
+        this.$set(this.debatesById[fromDebate.id], 'debateTeams', fromDebate.debateTeams)
+      }
+
       // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
       // Note: Don't care about locking/restoring state for debate teams

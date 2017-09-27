@@ -1,130 +1,111 @@
 {% extends "base.html" %}
-{% load debate_tags %}
-{% load add_field_css %}
+{% load debate_tags add_field_css i18n %}
 
-{% block page-title %}🔧Tournament Configuration{% endblock %}
-{% block head-title %}<span class="emoji">🔧</span>Tournament Configuration{% endblock %}
+{% block page-title %}{% trans "Configuration" %}{% endblock %}
+{% block head-title %}<span class="emoji">🔧</span> {% trans "Configuration" %}{% endblock %}
 
 {% block content %}
 
 <div class="row">
 
-  <div class="col-md-6">
+  <div class="col-md-6 col-12">
     <ul class="list-group">
-        <a href="{% tournamenturl 'options-tournament-scoring' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">💯</span>Score Rules
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine the range of points that can awarded to speeches, replies, and teams.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-draw-rules' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">📏</span>Draw Rules
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how teams are matched together in the draw and how adjudicators are auto-allocated.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-debate-rules' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">⚖</span>Debate Rules
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how many speeches there are per side, how motions are decided, and whether replies are delivered.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-standings' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">📊</span>Standings
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how teams and speakers are ranked for in the released tabs.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-feedback' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">🙅</span>Feedback
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how an adj can be scored and who can submit feedback.
-          </p>
-        </a>
+
+      {% tournamenturl 'options-tournament-scoring' as url %}
+      {% trans "Score Rules" as title %}
+      {% trans "The range of scores that can awarded to speeches, replies, and teams" as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="💯" text=title extra=description %}
+
+      {% tournamenturl 'options-tournament-draw-rules' as url %}
+      {% trans "Draw Rules" as title %}
+      {% trans "How teams are paired in the draw and how adjudicators are auto-allocated" as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="📏" text=title extra=description %}
+
+      {% tournamenturl 'options-tournament-debate-rules' as url %}
+      {% trans "Debate Rules" as title %}
+      {% trans "How many speeches in a debate, how motions are decided, and whether reply speeches are used" as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="⚖" text=title extra=description %}
+
+      {% tournamenturl 'options-tournament-standings' as url %}
+      {% trans "Standings" as title %}
+      {% trans "How teams and speakers are ranked in the released tabs" as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="📊" text=title extra=description %}
+
+      {% tournamenturl 'options-tournament-feedback' as url %}
+      {% trans "Feedback" as title %}
+      {% trans "How adjudicators are ranked and who can submit feedback" as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="🙅" text=title extra=description %}
+
     </ul>
   </div>
-  <div class="col-md-6">
+
+  <div class="col-md-6 col">
     <ul class="list-group">
-        <a href="{% tournamenturl 'options-tournament-tab-release' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">🚨</span>Tab Release
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine when to release a public tab is made visible and what data it shows.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-data-entry' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">📝</span>Data Entry
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine how ballots and feedback are entered, including online submission options.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-public-features' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">📢</span>Public Features
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine what information the site displays to the publicly accessible page.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-ui' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">💻</span>UI Options
-          </h4>
-          <p class="list-group-item-text">
-            The settings that determine small tweaks in what information is presented by the interface.
-          </p>
-        </a>
-        <a href="{% tournamenturl 'options-tournament-league' %}" class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <span class="emoji">🏫</span>League Options
-          </h4>
-          <p class="list-group-item-text">
-            Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported.
-          </p>
-        </a>
+
+      {% tournamenturl 'options-tournament-tab-release' as url %}
+      {% trans "Tab Release" as title %}
+      {% trans "When to release a public tab is made visible and what data it shows" as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="🚨" text=title extra=description %}
+
+      {% tournamenturl 'options-tournament-data-entry' as url %}
+      {% trans "Data Entry" as title %}
+      {% trans "How ballots and feedback are entered, including online submission options" as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="📝" text=title extra=description %}
+
+      {% tournamenturl 'options-tournament-public-features' as url %}
+      {% trans "Public Features" as title %}
+      {% trans "What information the site displays on the publicly accessible pages" as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="📢" text=title extra=description %}
+
+      {% tournamenturl 'options-tournament-ui' as url %}
+      {% trans "UI Options" as title %}
+      {% trans "Small tweaks in what information is presented by the interface" as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="💻" text=title extra=description %}
+
+      {% tournamenturl 'options-tournament-league' as url %}
+      {% trans "League Options" as title %}
+      {% trans "Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported." as description %}
+      {% include "components/item-action.html" with type="secondary" emoji="🏫" text=title extra=description %}
+
     </ul>
   </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <ul class="list-group">
-      <div class="list-group-item list-group-item-info">
-        <p class="list-group-item-text">Note: these presets only modify common
-        the settings for basic rules; double check our
-        <a href="https://tabbycat.readthedocs.io/" target="_blank">documentation</a> to ensure they are
-        correct for your tournament. These links will display settings changes
-        and give you the option to confirm them.</p>
+
+  <div class="w-100"></div>
+
+  <div class="col">
+
+    <ul class="list-group mt-3">
+      {% tournamenturl 'tournament-set-current-round' as url %}
+      {% trans "Manually Set Current Round" as title %}
+      {% trans "Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page." as description %}
+      {% include "components/item-action.html" with type="secondary" icon="clock" text=title extra=description %}
+    </ul>
+
+    <div class="card mt-3">
+
+      <div class="card-body text-info border-info">
+        <h4 class="card-title"><i data-feather="clipboard"></i> {% trans "Presets" %}</h4>
+        {% blocktrans trimmed %}
+          These modify common settings for basic rules; double check our
+          <a href="https://tabbycat.readthedocs.io/" target="_blank">documentation</a>
+          to ensure they are correct for your tournament. Each links will display what
+          settings it changes before applying them.
+        {% endblocktrans %}
       </div>
-      {% for preset in presets %}
-        <a href="{% tournamenturl 'options-presets-confirm' preset.slugified_name %}" class="list-group-item">
-          <h4 class="list-group-item-heading">Apply {{ preset.name }}</h4>
-          <p>{{ preset.description }}</p>
-        </a>
-      {% endfor %}
-    </ul>
+
+      <ul class="list-group list-group-flush">
+        {% for preset in presets %}
+          {% tournamenturl 'options-presets-confirm' preset.slugified_name as url %}
+          {% blocktrans trimmed asvar title with preset_name=preset.name %}
+            Apply {{ preset_name }}
+          {% endblocktrans %}
+          {% include "components/item-action.html" with type="secondary" icon="play" text=title extra=preset.description %}
+        {% endfor %}
+      </ul>
+
+    </div>
+
   </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <ul class="list-group">
-      <a href="{% tournamenturl 'tournament-set-current-round' %}" class="list-group-item">
-        <h4 class="list-group-item-heading">Manually Set Current Round</h4>
-        <p>Tabbycat will prompt you to advance the current round on each round's results page. However, if there are special circumstances that require you to override this and set the current round to something else, use this page.</p>
-      </a>
-    </ul>
-  </div>
+
 </div>
 {% endblock content %}

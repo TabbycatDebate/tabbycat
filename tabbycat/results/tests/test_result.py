@@ -105,7 +105,7 @@ class BaseTestDebateResult(TestCase):
         rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
         self.debate = Debate.objects.create(round=rd, venue=venue)
 
-        sides = [DebateTeam.SIDE_AFFIRMATIVE, DebateTeam.SIDE_NEGATIVE]
+        sides = [DebateTeam.SIDE_AFF, DebateTeam.SIDE_NEG]
         for team, side in zip(Team.objects.all(), sides):
             DebateTeam.objects.create(debate=self.debate, team=team, side=side)
 
@@ -181,9 +181,8 @@ class BaseTestDebateResult(TestCase):
         )
 
     def _unset_sides(self):
-        for dt in self.debate.debateteam_set.all():
-            dt.side = DebateTeam.SIDE_UNALLOCATED
-            dt.save()
+        self.debate.sides_confirmed = False
+        self.debate.save()
 
 
 class GeneralSpeakerTestsMixin:
@@ -203,7 +202,8 @@ class GeneralSpeakerTestsMixin:
     def test_save_speaker_with_unknown_sides(self):
         self._unset_sides()
         result = self.save_blank_result()
-        self.assertRaises(TypeError, result.set_speaker, 'aff', 1, None)
+        speaker = self.teams[0].speaker_set.first()
+        self.assertRaises(TypeError, result.set_speaker, 'aff', 1, speaker)
 
     @incomplete_test
     def test_unfilled_debateteam(self, result):

@@ -50,6 +50,7 @@ supporting many custom variations of the above formats too.
    features/breaks
    features/data-entry
    features/draw-generation
+   features/draw-generation-bp
    features/printing
    features/standings-rules
    features/data-importers
@@ -62,6 +63,7 @@ supporting many custom variations of the above formats too.
    :maxdepth: 1
    :caption: About
 
+   about/comparisons
    about/support
    about/authors
    about/changelog

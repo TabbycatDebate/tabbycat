@@ -2,79 +2,75 @@ import itertools
 
 from django.db.models import Max
 from django.utils.encoding import force_text
-from django.utils.translation import pgettext_lazy, ugettext_lazy
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy, ugettext
 
 from .models import Round
 
 
 BREAK_ROUND_NAMES = [
-    ('Grand Final', 'GF'),
-    ('Semifinals', 'SF'),
-    ('Quarterfinals', 'QF'),
-    ('Octofinals', 'OF'),
-    ('Double-Octofinals', 'DOF'),
-    ('Triple-Octofinals', 'TOF'),
+    # Translators: abbreviation for "grand final"
+    (_("Grand Final"), _("GF")),
+    # Translators: abbreviation for "semifinals"
+    (_("Semifinals"), _("SF")),
+    # Translators: abbreviation for "quarterfinals"
+    (_("Quarterfinals"), _("QF")),
+    # Translators: abbreviation for "octofinals"
+    (_("Octofinals"), _("OF")),
+    # Translators: abbreviation for "double-octofinals"
+    (_("Double-Octofinals"), _("DOF")),
+    # Translators: abbreviation for "triple-octofinals"
+    (_("Triple-Octofinals"), _("TOF")),
 ]
 
 SIDE_NAMES = {
     'aff-neg': {
-        "aff_full": ugettext_lazy("affirmative"),
-        "neg_full": ugettext_lazy("negative"),
-        # Translators: This is combined with other strings, e.g. in French it would be "de l'affirmatif"
-        "aff_possessive": ugettext_lazy("affirmative's"),
-        # Translators: This is combined with other strings, e.g. in French it would be "du négatif"
-        "neg_possessive": ugettext_lazy("negative's"),
-        "aff_team": ugettext_lazy("affirmative team"),
-        "neg_team": ugettext_lazy("negative team"),
-        "aff_abbr": ugettext_lazy("Aff"),
-        "neg_abbr": ugettext_lazy("Neg"),
-        # Translators: Capitalised first letter of "Affirmative", used in abbreviations
-        "aff_initial": pgettext_lazy("team name", "A"),
-        # Translators: Capitalised first letter of "Negative", used in abbreviations
-        "neg_initial": pgettext_lazy("team name", "N"),
+        "aff_full": _("affirmative"),
+        "neg_full": _("negative"),
+        "aff_team": _("affirmative team"),
+        "neg_team": _("negative team"),
+        "aff_abbr": _("Aff"),
+        "neg_abbr": _("Neg"),
     },
     'gov-opp': {
-        "aff_full": ugettext_lazy("government"),
-        "neg_full": ugettext_lazy("opposition"),
-        "aff_possessive": ugettext_lazy("government's"),
-        "neg_possessive": ugettext_lazy("opposition's"),
-        "aff_team": ugettext_lazy("government team"),
-        "neg_team": ugettext_lazy("opposition team"),
-        "aff_abbr": ugettext_lazy("Gov"),
-        "neg_abbr": ugettext_lazy("Opp"),
-        # Translators: Capitalised first letter of "Government", used in abbreviations
-        "aff_initial": pgettext_lazy("team name", "G"),
-        # Translators: Capitalised first letter of "Opposition", used in abbreviations
-        "neg_initial": pgettext_lazy("team name", "O"),
+        "aff_full": _("government"),
+        "neg_full": _("opposition"),
+        "aff_team": _("government team"),
+        "neg_team": _("opposition team"),
+        "aff_abbr": _("Gov"),
+        "neg_abbr": _("Opp"),
     },
     'prop-opp': {
-        "aff_full": ugettext_lazy("proposition"),
-        "neg_full": ugettext_lazy("opposition"),
-        "aff_possessive": ugettext_lazy("proposition's"),
-        "neg_possessive": ugettext_lazy("opposition's"),
-        "aff_team": ugettext_lazy("proposition team"),
-        "neg_team": ugettext_lazy("opposition team"),
-        "aff_abbr": ugettext_lazy("Prop"),
-        "neg_abbr": ugettext_lazy("Opp"),
-        # Translators: Capitalised first letter of "Proposition", used in abbreviations
-        "aff_initial": pgettext_lazy("team name", "P"),
-        # Translators: Capitalised first letter of "Opposition", used in abbreviations
-        "neg_initial": pgettext_lazy("team name", "O"),
+        "aff_full": _("proposition"),
+        "neg_full": _("opposition"),
+        "aff_team": _("proposition team"),
+        "neg_team": _("opposition team"),
+        "aff_abbr": _("Prop"),
+        "neg_abbr": _("Opp"),
     },
     'pro-con': {
-        "aff_full": ugettext_lazy("pro"),
-        "neg_full": ugettext_lazy("con"),
-        "aff_possessive": ugettext_lazy("pro's"),
-        "neg_possessive": ugettext_lazy("con's"),
-        "aff_team": ugettext_lazy("pro team"),
-        "neg_team": ugettext_lazy("con team"),
-        "aff_abbr": ugettext_lazy("Pro"),
-        "neg_abbr": ugettext_lazy("Con"),
-        # Translators: Capitalised first letter of "Pro", used in abbreviations
-        "aff_initial": pgettext_lazy("team name", "P"),
-        # Translators: Capitalised first letter of "Con", used in abbreviations
-        "neg_initial": pgettext_lazy("team name", "C"),
+        "aff_full": _("pro"),
+        "neg_full": _("con"),
+        "aff_team": _("pro team"),
+        "neg_team": _("con team"),
+        "aff_abbr": _("Pro"),
+        "neg_abbr": _("Con"),
     },
+}
+
+BP_SIDE_NAMES = {  # stop-gap before this system gets refactored
+    "og_full": _("opening government"),
+    "oo_full": _("opening opposition"),
+    "cg_full": _("closing government"),
+    "co_full": _("closing opposition"),
+    "og_team": _("opening government team"),
+    "oo_team": _("opening opposition team"),
+    "cg_team": _("closing government team"),
+    "co_team": _("closing opposition team"),
+    "og_abbr": pgettext_lazy("BP position", "OG"),
+    "oo_abbr": pgettext_lazy("BP position", "OO"),
+    "cg_abbr": pgettext_lazy("BP position", "CG"),
+    "co_abbr": pgettext_lazy("BP position", "CO"),
 }
 
 
@@ -87,8 +83,9 @@ def auto_make_rounds(tournament, num_rounds):
         Round(
             tournament=tournament,
             seq=i,
-            name='Round %d' % i,
-            abbreviation='R%d' % i,
+            name=ugettext("Round %(number)d") % {'number': i},
+            # Translators: This stands for "Round %(number)d".
+            abbreviation=ugettext("R%(number)d") % {'number': i},
             stage=Round.STAGE_PRELIMINARY,
             draw_type=Round.DRAW_RANDOM if (i == 1) else Round.DRAW_POWERPAIRED,
             feedback_weight=min((i-1)*0.1, 0.5),
@@ -102,7 +99,8 @@ def auto_make_break_rounds(tournament, num_break, break_category):
     method should be used."""
 
     num_prelim = tournament.prelim_rounds().aggregate(Max('seq'))['seq__max']
-    break_rounds = itertools.chain(BREAK_ROUND_NAMES, itertools.repeat(('Unknown break round', 'UBR')))
+    # Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
+    break_rounds = itertools.chain(BREAK_ROUND_NAMES, itertools.repeat((_("Unknown break round"), _("UBR"))))
 
     for i, (name, abbr) in zip(range(num_break), break_rounds):
         Round(
@@ -112,7 +110,7 @@ def auto_make_break_rounds(tournament, num_break, break_category):
             stage=Round.STAGE_ELIMINATION,
             name=name,
             abbreviation=abbr,
-            draw_type=Round.DRAW_FIRSTBREAK if i == num_break-1 else Round.DRAW_BREAK,
+            draw_type=Round.DRAW_ELIMINATION,
             feedback_weight=0.5,
             silent=True,
         ).save()
@@ -134,10 +132,13 @@ def get_side_name(tournament, side, name_type):
     will return something like "Affirmative" or "Proposition" or "Gobierno",
     depending on the side name option and language setting.
     """
-    names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
-    if side not in ('aff', 'neg'):
-        raise ValueError("get_side_name() side must be 'aff' or 'neg', not: %r" % side)
-    return force_text(names["%s_%s" % (side, name_type)])
+    if side in ('aff', 'neg'):
+        names = SIDE_NAMES.get(tournament.pref('side_names'), SIDE_NAMES['aff-neg'])
+        return force_text(names["%s_%s" % (side, name_type)])
+    elif side in ('og', 'oo', 'cg', 'co'):
+        return force_text(BP_SIDE_NAMES["%s_%s" % (side, name_type)])
+    else:
+        raise ValueError("get_side_name() side must be one of: 'aff', 'neg', 'og', 'oo', 'cg', 'co', not: %r" % (side,))
 
 
 def _get_side_name(name_type):
@@ -165,7 +166,3 @@ aff_abbr = _get_side_name('aff_abbr')
 neg_abbr = _get_side_name('neg_abbr')
 aff_team = _get_side_name('aff_team')
 neg_team = _get_side_name('neg_team')
-aff_possessive = _get_side_name('aff_possessive')
-neg_possessive = _get_side_name('neg_possessive')
-aff_initial = _get_side_name('aff_initial')
-neg_initial = _get_side_name('neg_initial')

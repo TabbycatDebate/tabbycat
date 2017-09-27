@@ -1,22 +1,23 @@
-{% load debate_tags %}
-{% load i18n %}
+{% load debate_tags static i18n %}
 
-<div class="tabbycat-footer row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
+<div class="row mt-3">
 
-  <div class="navbar navbar-default container-fluid small text-muted">
+  <div class="navbar navbar-light container-fluid small">
 
-    <div class="row">
-      <div class="col-md-6">
-        <h6>
+    <div class="row mt-3 mb-2">
+
+      <div class="col-lg-6 col-md-5">
+        <h6 class="d-inline-block">
+          <img src="{% static 'logo.svg' %}" width="16" height="16">
           {% if tournament %}
             {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
           {% else %}
             {% blocktrans trimmed %}This site runs on {% endblocktrans %}
           {% endif %}
-          <span class="emoji">😸</span> Tabbycat
+          Tabbycat
           {% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}
         </h6>
-        <p>
+        <p class="text-muted">
           {% blocktrans trimmed %}
             Tabbycat is an open-source project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
           {% endblocktrans %}
@@ -35,9 +36,10 @@
           {% endif %}
         </p>
       </div>
-      <div class="col-md-4">
+
+      <div class="col-lg-4 col-md-4 mt-2 mt-md-0">
         <h6>{% blocktrans trimmed %}Still timing debates with the stopwatch app?{% endblocktrans %}</h6>
-        <p>
+        <p class="text-muted">
           {% blocktrans trimmed %}
             Using an app designed for debate timekeeping makes speaking and adjudicating easier!
             Check out <a href="https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%20Installs&mt=8">Timekept</a> (iPhone/iPad)
@@ -45,33 +47,49 @@
           {% endblocktrans %}
         </p>
       </div>
-      <div class="col-md-2">
+
+      <div class="col-lg-2 col-md-3 mt-2 mt-md-0">
         <h6>{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
-        <p>
+        <p class="text-muted">
           {% blocktrans trimmed %}
-            Use <a href="http://debatingballot.com" target="_blank">debatingBallot.com</a> to design and print great ballots online.
+            You can <a href="http://philipbelesky.github.io/ballots/" target="_blank"> customise and print</a> great ballots from your browser.
           {% endblocktrans %}
         </p>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <ul class="nav navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link " href="https://github.com/czlee/tabbycat/"><span class="glyphicon glyphicon-console"></span> {% trans "GitHub" %}</a>
+     <div class="w-100"></div>
+
+      <div class="col mt-2">
+        <ul class="nav justify-content-center">
+          <li class="nav-item p-2">
+            <i data-feather="github"></i>
+            <a class="nav-link p-0 d-inline-block" href="https://github.com/czlee/tabbycat/">
+              {% trans "GitHub" %}
+            </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/stable/"><span class="glyphicon glyphicon-info-sign"></span> {% trans "Documentation" %}</a>
+          <li class="nav-item p-2">
+            <i data-feather="book"></i>
+            <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/">
+              {% trans "Documentation" %}
+            </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/stable/about/support.html"><span class="glyphicon glyphicon-question-sign"></span> {% trans "Support" %}</a>
+          <li class="nav-item p-2">
+            <i data-feather="help-circle"></i>
+            <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/about/support.html">
+              {% trans "Support" %}
+            </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link " href="https://www.facebook.com/groups/tabbycat.debate/"><span class="glyphicon glyphicon-user"></span> {% trans "Facebook Group" %}</a>
+          <li class="nav-item p-2">
+            <i data-feather="facebook"></i>
+            <a class="nav-link p-0 d-inline-block" href="https://www.facebook.com/groups/tabbycat.debate/">
+              {% trans "Facebook Group" %}
+            </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link " href="http://tabbycat.readthedocs.io/en/stable/install/heroku.html#installation-the-short-way"><span class="glyphicon glyphicon-open"></span> {% trans "Set Up A Copy" %}</a>
+          <li class="nav-item p-2">
+            <i data-feather="upload-cloud"></i>
+            <a class="nav-link p-0 d-inline-block" href="http://tabbycat.readthedocs.io/en/stable/install/heroku.html#installation-the-short-way">
+              {% trans "Set Up A Copy" %}
+            </a>
           </li>
         </ul>
       </div>
@@ -79,3 +97,4 @@
 
   </div>
 </div>
+

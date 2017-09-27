@@ -17,11 +17,11 @@
   }
 
   background: #fff; // Need to override default :hover bg state that gets stuck
-  margin: 4px 4px 0 0; // Need spacing offsets so they don't bunch
-  padding: 5px 6px;
+  margin: 3px 3px 0 0; // Need spacing offsets so they don't bunch
+  padding: 4px 6px;
   position: relative; // Needs this so the "seen ago" hover tooltip will show
-  border: 4px solid $btn-default-border;
-  height: 42px;
+  border: 4px solid $input-border-color;
+  height: 43px;
   text-align: left;
   @extend .flex-horizontal;
 
@@ -29,26 +29,42 @@
   .draggable-prefix {
     @extend .flex-vertical-center; // Vertically center score
     padding-right: 6px;
+
+    h4 {
+      margin-bottom: 0;
+      font-family: $font-family-sans-serif;
+      font-weight: normal;
+      letter-spacing: -1px;
+      color: theme-color("secondary");
+    }
   }
 
   .draggable-title {
     overflow: hidden; // Needed for Windows/IE
-    line-height: 8px; // Compress text/sub-text spacing
+    line-height: 12px; // Compress text/sub-text spacing
+
+    h5 {
+      font-size: 15px;
+    }
 
     .subtitle {
-      font-size: 11px; // Extra small subtext
+      display: block;
+      margin-top: -1px;
+      font-size: 10px; // Extra small subtext
+      color: theme-color("secondary");
     }
     // @extend .flex-inline;
     // @extend .flex-vertical-center;
   }
 }
 
-.vue-draggable.vue-is-hovering,
+.vue-draggable:hover,
 .vue-draggable:active {
-  background: #000 !important;
-  border-color: $gray;
   cursor: move;
-  color: #fff;
+}
+
+.vue-is-hovering {
+  @include hover-highlights(#000);
 }
 
 .vue-is-dragging {
@@ -56,8 +72,8 @@
 }
 
 .vue-draggable.locked {
-  cursor: no-drop;
   opacity: 0.33;
+  pointer-events: none;
 }
 
 //------------------------------------------------------------------------------
@@ -83,14 +99,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  color: $brand-success;
+  color: theme-color("success");
   @extend .flex-vertical-center;
   @extend .flex-horizontal-center;
-
-  .spinning {
-    width: 25px; // Need a set height/width to it rotates around a central axis
-    height: 24px;
-  }
 }
 
 .draw-cell .vue-droppable {
@@ -112,20 +123,29 @@
 }
 
 .vue-is-drag-enter {
-  background: $brand-success;
+  background: theme-color("success") !important;
 }
 
 //------------------------------------------------------------------------------
 // Resizeable
 //------------------------------------------------------------------------------
 
+.unallocated-items {
+  height: 100%;
+  width: 100%;
+  z-index: $z_3; // Need to hover abovve underlying .tooltips
+
+  > div {
+    display: inline-flex;
+  }
+}
+
 .resize-handler {
-  width: 40px;
-  height: 40px;
-  position: absolute;
-  right: 6px;
-  top: -2px;
-  font-size: 18px;
+  width: 100%;
+  text-align: center;
+  height: 18px;
+  margin-bottom: -28px;
+  z-index: $z_3 + 1;
 
   &:hover {
     cursor: ns-resize;

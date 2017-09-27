@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% load add_field_css %}
-{% load debate_tags %}
+{% load add_field_css debate_tags i18n %}
 
 {% block nav %}{% endblock %}
 {% block header %}{% endblock %}
@@ -9,32 +8,51 @@
 
 {% block content %}
 
-  <div class="container-fluid flex-vertical-center" style="height: 600px">
-    <div class="row flex-1">
-      <div class="col-md-4 col-md-offset-4">
-        <button class="btn btn-lg btn-success btn-block"
-                data-toggle="modal" data-target="#myModal">
-          Reveal Motions for {{ round.name }}
-        </button>
-      </div>
+  <div class="container-fluid d-flex align-items-center justify-content-center"
+       style="width: 100%; height: 95vh;">
+    <div>
+      <button class="btn btn-lg btn-success btn-block"
+              data-toggle="modal" data-target="#myModal">
+        {% blocktrans trimmed with round_name=round.name %}
+          Reveal Motions for {{ round_name }}
+        {% endblocktrans %}
+      </button>
     </div>
   </div>
 
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
-      <div class="modal-content flex-vertical">
-        <div class="modal-body flex-1 flex-vertical">
-          {% for m in motions %}
-            <div class="flex-1 flex-vertical-center">
-              <h1 class="display-1">
-                {% if motions|length > 1 %}
-                  <span class="text-muted">{{ forloop.counter }}.</span>
-                {% endif %}
-                {{ m.text }}
-              </span>
+      <div class="modal-content">
+        {% if motions|length == 0 %}
+
+          <div class="modal-body d-flex align-items-center justify-content-center">
+            <div class="display-3 text-danger">
+              😳 {% trans "There are no motions for this round entered into Tabbycat." %}
             </div>
-          {% endfor %}
-        </div>
+          </div>
+
+        {% elif motions|length == 1 %}
+
+          <div class="modal-body display-2 d-flex align-items-center justify-content-center text-center">
+            {{ motions.0.text }}
+          </div>
+
+        {% else %}
+
+          <div class="modal-body d-flex flex-column">
+            {% for m in motions %}
+              <div class="display-4 col d-flex align-items-center">
+                <div>
+                  {% if motions|length > 1 %}
+                    <span class="text-muted">{{ forloop.counter }}.</span>
+                  {% endif %}
+                  {{ m.text }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+        {% endif %}
       </div>
     </div>
   </div>

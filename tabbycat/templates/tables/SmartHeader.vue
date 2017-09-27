@@ -1,20 +1,25 @@
 <template>
-  <th class="vue-sortable" @click="resort(header['key'])">
+  <th class="vue-sortable" @click="resort(header['key'])"
+      :title="header['tooltip']"
+      :data-toggle="header['tooltip'] ? 'tooltip' : null"
+      @hover="header['tooltip'] ? showTooltip  : null">
 
-    <span :title="header['tooltip']"
-          :data-toggle="header['tooltip'] ? 'tooltip' : null"
-          @hover="header['tooltip'] ? showTooltip  : null">
+    <i v-if="header['icon']" :data-feather="header['icon']"
+       :class="[header['tooltip'] ? 'tooltip-trigger'  : '']"></i>
 
-      <span v-if="header['icon']" class="glyphicon" :class="header['icon']"></span>
-      <span v-if="header['text']" v-html="header['text']"></span>
+    <span v-if="header['text']" v-html="header['text']"
+          :class="[header['tooltip'] ? 'tooltip-trigger'  : '']"></span>
 
-      <span v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('text')">
-        <span>{{ header['key'] }}</span>
-      </span>
-
+    <span v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('text')"
+          :class="[header['tooltip'] ? 'tooltip-trigger'  : '']">
+      <span>{{ header['key'] }}</span>
     </span>
 
-    <span :class="sortClasses(header['key'])"></span>
+    <div :class="sortClasses(header['key'])">
+      <span class="sorting-placeholder-for-width"></span>
+      <i data-feather="chevrons-down"></i>
+      <i data-feather="chevrons-up"></i>
+    </div>
 
   </th>
 </template>

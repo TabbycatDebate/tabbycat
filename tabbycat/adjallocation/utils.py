@@ -29,25 +29,25 @@ def adjudicator_conflicts_display(debates):
             for team in debate.teams:
                 if team.id in adjteamconflicts.get(adjudicator.id, []):
                     conflict_messages[debate].append(("danger",
-                        "Conflict between <strong>{adj}</strong> & <strong>{team}</strong>".format(
+                        "Conflict: <strong>{adj}</strong> & <strong>{team}</strong>".format(
                             adj=adjudicator.name, team=team.short_name)
                     ))
                 if team.institution_id in adjinstconflicts.get(adjudicator.id, []):
                     conflict_messages[debate].append(("danger",
-                        "Conflict between <strong>{adj}</strong> & institution <strong>{inst}</strong> ({team})".format(
+                        "Conflict: <strong>{adj}</strong> & institution <strong>{inst}</strong> ({team})".format(
                             adj=adjudicator.name, team=team.short_name, inst=team.institution.code)
                     ))
 
         for adj1, adj2 in permutations(debate.adjudicators.all(), 2):
             if adj2.id in adjadjconflicts.get(adj1.id, []):
                 conflict_messages[debate].append(("danger",
-                    "Conflict between <strong>{adj}</strong> & <strong>{other}</strong>".format(
+                    "Conflict: <strong>{adj}</strong> & <strong>{other}</strong>".format(
                         adj=adj1.name, other=adj2.name)
                 ))
 
             if adj2.institution_id in adjinstconflicts.get(adj1.id, []):
                 conflict_messages[debate].append(("warning",
-                    "Conflict between <strong>{adj}</strong> & institution <strong>{inst}</strong> ({other})".format(
+                    "Conflict: <strong>{adj}</strong> & institution <strong>{inst}</strong> ({other})".format(
                         adj=adj1.name, other=adj2.name, inst=adj2.institution.code)
                 ))
 
@@ -88,7 +88,7 @@ def populate_clashes(conflicts, conflict, type, for_type):
     if adj_or_team_id not in conflicts[for_type]:
         conflicts[for_type][adj_or_team_id] = {'team': [], 'institution': [], 'adjudicator': []}
 
-    conflicts[for_type][adj_or_team_id][type].append(conflictee_id)
+    conflicts[for_type][adj_or_team_id][type].append({'id': conflictee_id})
     return conflicts
 
 

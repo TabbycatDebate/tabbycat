@@ -1,0 +1,48 @@
+{% if alone == True %}<div class="list-item-group">{% endif %}
+
+  <a href="{{ url }}" {% if blank %}target="_blank"{% endif %} {% if id %}id="{{ id }}"{% endif %}
+   class="list-group-item list-group-item-action
+   {% if to_complete %}
+    bg-primary text-white
+   {% else %}
+    text-{% if type %}{{ type }}{% else %}primary{% endif %}
+   {% endif %}">
+
+    <div class="row align-items-center">
+
+      <div class="col-auto pr-1">
+        {% if to_complete %}
+          <i data-feather="check-square"></i>
+        {% elif icon %}
+          <i data-feather="{{ icon }}"></i>
+        {% elif emoji %}
+          <span class="emoji">{{ emoji }}</span>
+        {% else %}
+          <i data-feather="edit"></i>
+        {% endif %}
+      </div>
+
+      <div class="col pl-0 pr-0">
+
+        {% if extra %}
+          <h5>{{ text|safe }}</h5>
+          {{ extra }}
+        {% else %}
+          {{ text|safe }}
+        {% endif %}
+
+        {% if subtext %}
+          <span class="text-muted">{{ subtext }}</span>
+        {% endif %}
+
+      </div>
+
+      <div class="col-auto pr-1">
+        <i data-feather="chevron-right"></i>
+      </div>
+
+    </div>
+
+  </a>
+
+{% if alone == True %}</div>{% endif %}

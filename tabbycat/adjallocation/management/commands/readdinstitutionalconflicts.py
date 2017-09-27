@@ -13,6 +13,8 @@ class Command(TournamentCommand):
         missing = 0
 
         for adj in tournament.adjudicator_set.all():
+            if adj.institution is None:
+                continue
             aic, created = AdjudicatorInstitutionConflict.objects.get_or_create(
                 adjudicator=adj, institution=adj.institution
             )

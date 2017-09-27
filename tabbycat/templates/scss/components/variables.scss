@@ -1,60 +1,27 @@
 //------------------------------------------------------------------------------
-// Bootstrap overrides and custom variables
-// Note these take precedences over bootstrap as they are not set as default
+// Tabbycat Custom Layout Variables
+// Note that these need to come after custom.scss and bootstrap files as they
+// make use of some mixins and variables defined there
 //------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Boostrap Type
-//------------------------------------------------------------------------------
-
-$font-family-sans-serif: "LatoLatinWeb", Helvetica, Arial, sans-serif;
-$headings-font-family: Helvetica, Arial, sans-serif;
-$headings-font-weight: bold;
-$icon-font-path: '/static/fonts/';
-
-//------------------------------------------------------------------------------
-// Bootstrap Colors
-//------------------------------------------------------------------------------
-
-$brand-primary:           #3498db;
-$text-primary:            #333;
-
-$brand-success:           #43ca75;
-$state-success-text:      #3c763d;
-$state-success-bg:        #dff0d8;
-
-$brand-info:              #3b9ad8;
-$state-info-text:         #31708f;
-$state-info-bg:           #d9edf7;
-
-$brand-warning:           #f8bd30;
-$state-warning-text:      #8a6d3b;
-$state-warning-bg:        #fcf8e3;
-
-$brand-danger:            #e34e42;
-$state-danger-text:       #a94442;
-$state-danger-bg:         #f2dede;
-
-$brand-danger-alt:        #a700a5;
-
-// Layout Colors
-$body-bg:                 #f3f4f9;
-$alt-bg:                  #fff; // For tables etc
-$table-bg-hover:          #e3e3e3;
-$sidebar-bg:              #30404f;
-$sidebar-bg-highlight:    rgba(0, 0, 0, 0.3);
-$sidebar-muted-text:      #adb6bf;
-$droppable-bg:            #e2e2e2;
 
 //------------------------------------------------------------------------------
 // Custom Colors
 //------------------------------------------------------------------------------
 
+// Layout Colors
+$alt-bg:                  #fff;     // For tables etc
+$table-bg-hover:          #e3e3e3;
+$sidebar-bg:              #333c47;  // Matches that of Jet
+$sidebar-muted-text:      $gray-200;
+$droppable-bg:            $gray-200;
+$navbar-light-bg:         $alt-bg; // Footer and Top Navbar
+$navbar-light-border:     $gray-200; // Footer and Top Navbar
+
 // Gender Highlights
 $male:                    #36b6c0;
 $female:                  #ed6b19;
 $other:                   #dbd302;
-$unknown:                 #ccc;
+$unknown:                 #868e96;
 
 // Break Category Highlights
 $break-cat-1:             #57e2ff;
@@ -63,42 +30,69 @@ $break-cat-3:             #00c79b;
 $break-cat-4:             #90f;
 
 // Region Category Highlights
-$region-cat-0:#c70062;
-$region-cat-1:#00c79b;
-$region-cat-2:#b1e001;
-$region-cat-3:#476c5e;
-$region-cat-4:#ff2983;
-$region-cat-5:#6a268c;
-$region-cat-6:#00c0cf;
-$region-cat-7:#0051cf;
-$region-cat-8:#777;
+$region-cat-0:            #c70062;
+$region-cat-1:            #00c79b;
+$region-cat-2:            #b1e001;
+$region-cat-3:            #476c5e;
+$region-cat-4:            #ff2983;
+$region-cat-5:            #6a268c;
+$region-cat-6:            #00c0cf;
+$region-cat-7:            #0051cf;
+$region-cat-8:            #777;
 
-$conflict-clash: #e34e42;
-$conflict-institution: #ef9b08;
-$conflict-history-base: #3498db;
-$incomplete-panel: #a982a4;
+// Conflicts Colors
+$conflict-clash:          #e34e42;
+$conflict-institution:    #ef9b08;
+$conflict-history-base:   #3498db;
+$incomplete-panel:        $gray-600;
 
-$adj-ranking-0: hsla(175, 90%, 40%, 1); // A+
-$adj-ranking-1: hsla(140, 90%, 42%, 1); // A
-$adj-ranking-2: hsla(90, 90%, 38%, 1); // A-
-$adj-ranking-3: hsla(55, 90%, 45%, 1); // B+
-$adj-ranking-4: hsla(30, 95%, 60%, 1); // B
-$adj-ranking-5: hsla(0, 95%, 48%, 1); // B-
-$adj-ranking-6: hsla(0, 100%, 34%, 1); // C+
-$adj-ranking-7: hsla(0, 0%, 60%, 1);
-$adj-ranking-8: hsla(0, 0%, 50%, 1);
+// Adj Rankings
+$adj-ranking-0:           hsla(175, 90%, 40%, 1); // A+
+$adj-ranking-1:           hsla(140, 90%, 42%, 1); // A
+$adj-ranking-2:           hsla(90, 90%, 38%, 1); // A-
+$adj-ranking-3:           hsla(55, 90%, 45%, 1); // B+
+$adj-ranking-4:           hsla(30, 95%, 60%, 1); // B
+$adj-ranking-5:           hsla(0, 95%, 48%, 1); // B-
+$adj-ranking-6:           hsla(0, 100%, 34%, 1); // C+
+$adj-ranking-7:           hsla(0, 0%, 60%, 1);
+$adj-ranking-8:           hsla(0, 0%, 50%, 1);
+
+// Team Positions
+$aff:                     theme-color("info");
+$neg:                     theme-color("danger");
+$og:                      theme-color("info");
+$oo:                      theme-color("warning");
+$cg:                      adjust-hue($og, 15deg);
+$co:                      adjust-hue($oo, 15deg);
 
 //------------------------------------------------------------------------------
-// Custom Layout
+// Layout Details
 //------------------------------------------------------------------------------
 
-$sidebar-width: 155px;
 $tooltip-max-width: 330px;
+$footer-height: 175px;
+
+//------------------------------------------------------------------------------
+// Mixins
+//------------------------------------------------------------------------------
+
+// For diversity and allocation highlights
+@mixin hover-highlights($baseColor, $textColor: #fff) {
+  background-color: $baseColor;
+  border-color: darken($baseColor, 5);
+  color: $textColor;
+
+  h4,
+  .subtitle {
+    color: opacify($textColor, 0.75);
+  }
+}
 
 //------------------------------------------------------------------------------
 // Z-Index Hierarchy
 //------------------------------------------------------------------------------
 
 $z_1: 2030; // Mostly modals
-$z_2: 1530; // Hover elements like tooltips or the adj info sliderover display
-$z_3: 1030; // Fixed floating elements like unallocated spots or fixed headers
+$z_2: 1050; // Hover elements like tooltips or the adj info sliderover display
+// Note that boostrap nav items are 1030; so these should be below:
+$z_3: 730; // Fixed floating elements like unallocated spots or fixed headers

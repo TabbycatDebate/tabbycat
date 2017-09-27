@@ -1,0 +1,5 @@
+{% if pref.teams_in_debate == 'bp' and debate.round.is_break_round %}
+  {% include "ballot/bp_elimination_ballot.html" %}
+{% else %}
+  {% include "ballot/standard_ballot_set.html" %}
+{% endif %}

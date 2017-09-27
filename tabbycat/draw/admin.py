@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.core.exceptions import MultipleObjectsReturned
 from django.db.models import Prefetch
 from django.utils.translation import ugettext_lazy, ungettext
 
@@ -45,8 +44,7 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 @admin.register(Debate)
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'round', 'bracket', 'get_aff_team', 'get_neg_team',
-                    'result_status')
+    list_display = ('id', 'round', 'bracket', 'matchup', 'result_status')
     list_filter = ('round__tournament', 'round', 'division')
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
     raw_id_fields = ('venue', 'division')
@@ -59,20 +57,6 @@ class DebateAdmin(admin.ModelAdmin):
             Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team__tournament')),
             'venue__venuecategory_set',
         )
-
-    def get_aff_team(self, obj):
-        try:
-            return obj.aff_team
-        except MultipleObjectsReturned:
-            return "<multiple affirmative teams>"
-    get_aff_team.short_description = "Affirmative team"
-
-    def get_neg_team(self, obj):
-        try:
-            return obj.neg_team
-        except MultipleObjectsReturned:
-            return "<multiple negative teams>"
-    get_neg_team.short_description = "Negative team"
 
     actions = list()
     for value, verbose_name in Debate.STATUS_CHOICES:
@@ -93,3 +77,23 @@ class DebateAdmin(admin.ModelAdmin):
 
         actions.append(_make_set_result_status(value, verbose_name))
     del value, verbose_name  # for fail-fast
+
+    def mark_as_sides_confirmed(self, request, queryset):
+        updated = queryset.update(sides_confirmed=True)
+        message = ungettext(
+            "%(count)d debate was marked as having its sides confirmed.",
+            "%(count)d debates were marked as having their sides confirmed.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
+
+    def mark_as_sides_not_confirmed(self, request, queryset):
+        updated = queryset.update(sides_confirmed=False)
+        message = ungettext(
+            "%(count)d debate was marked as having its sides not confirmed.",
+            "%(count)d debates were marked as having their sides not confirmed.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
+
+    actions.extend(['mark_as_sides_confirmed', 'mark_as_sides_not_confirmed'])

@@ -1178,7 +1178,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1194,7 +1195,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1210,7 +1212,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1226,7 +1229,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1242,7 +1246,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1258,7 +1263,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1274,7 +1280,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1290,7 +1297,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1306,7 +1314,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1322,7 +1331,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1338,7 +1348,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1354,7 +1365,8 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false
+        "ballot_in": false,
+        "sides_confirmed": true
     }
 },
 {
@@ -1868,7 +1880,6 @@
     "fields": {
         "name": "California Institute of Technology",
         "code": "Caltech",
-        "abbreviation": "Calt",
         "region": 6
     }
 },
@@ -1878,7 +1889,6 @@
     "fields": {
         "name": "Columbia University",
         "code": "Columbia",
-        "abbreviation": "Colum",
         "region": 1
     }
 },
@@ -1888,7 +1898,6 @@
     "fields": {
         "name": "Cornell University",
         "code": "Cornell",
-        "abbreviation": "Corn",
         "region": 1
     }
 },
@@ -1898,7 +1907,6 @@
     "fields": {
         "name": "Harvard University",
         "code": "Harvard",
-        "abbreviation": "Harv",
         "region": 2
     }
 },
@@ -1908,7 +1916,6 @@
     "fields": {
         "name": "Johns Hopkins University",
         "code": "Johns Hopkins",
-        "abbreviation": "JHU",
         "region": 3
     }
 },
@@ -1918,7 +1925,6 @@
     "fields": {
         "name": "Massachusetts Institute of Technology",
         "code": "MIT",
-        "abbreviation": "MIT",
         "region": 2
     }
 },
@@ -1928,7 +1934,6 @@
     "fields": {
         "name": "Princeton University",
         "code": "Princeton",
-        "abbreviation": "Prin",
         "region": null
     }
 },
@@ -1938,7 +1943,6 @@
     "fields": {
         "name": "Stanford University",
         "code": "Stanford",
-        "abbreviation": "Stan",
         "region": 6
     }
 },
@@ -1948,7 +1952,6 @@
     "fields": {
         "name": "University of California, Berkeley",
         "code": "Berkeley",
-        "abbreviation": "Cal",
         "region": 6
     }
 },
@@ -1958,7 +1961,6 @@
     "fields": {
         "name": "University of Chicago",
         "code": "Chicago",
-        "abbreviation": "Chic",
         "region": null
     }
 },
@@ -1968,7 +1970,6 @@
     "fields": {
         "name": "University of Pennsylvania",
         "code": "Pennsylvania",
-        "abbreviation": "Penn",
         "region": 5
     }
 },
@@ -1978,7 +1979,6 @@
     "fields": {
         "name": "University of Toronto",
         "code": "Toronto",
-        "abbreviation": "Toron",
         "region": null
     }
 },
@@ -1988,7 +1988,6 @@
     "fields": {
         "name": "Yale University",
         "code": "Yale",
-        "abbreviation": "Yale",
         "region": 4
     }
 },
@@ -8385,7 +8384,6 @@
     "fields": {
         "name": "demo",
         "short_name": "demo",
-        "emoji": null,
         "seq": null,
         "slug": "demo",
         "current_round": 2,

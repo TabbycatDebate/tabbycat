@@ -34,7 +34,7 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
 
 @admin.register(TeamScore)
 class TeamScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
-    list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'score')
+    list_display = ('id', 'ballot_submission', 'get_round', 'get_team', 'points', 'win', 'score')
     search_fields = ('debate_team__debate__round__seq', 'debate_team__debate__round__tournament__name',
                      'debate_team__team__reference', 'debate_team__team__institution__code')
     list_filter = ('debate_team__debate__round', )

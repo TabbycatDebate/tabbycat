@@ -3,9 +3,9 @@ seq,name,abbreviation,stage,draw_type,silent,feedback_weight,break_category
 2,Round 2,R2,P,P,0,0.7,
 3,Round 3,R3,P,P,0,0.7,
 4,Round 4,R4,P,P,0,0.7,
-5,Open Quarterfinal,OQF,E,F,1,0.7,open
-6,ESL Semifinal,SSF,E,F,1,0.7,esl
-7,Open Semifinal,OSF,E,B,1,0.7,open
-8,ESL Grand Final,SGF,E,B,1,0.7,esl
-9,Novice Grand Final,NGF,E,F,1,0.7,novice
-10,Open Grand Final,OGF,E,B,1,0.7,open
+5,Open Quarterfinal,OQF,E,E,1,0.7,open
+6,ESL Semifinal,SSF,E,E,1,0.7,esl
+7,Open Semifinal,OSF,E,E,1,0.7,open
+8,ESL Grand Final,SGF,E,E,1,0.7,esl
+9,Novice Grand Final,NGF,E,E,1,0.7,novice
+10,Open Grand Final,OGF,E,E,1,0.7,open

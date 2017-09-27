@@ -8,23 +8,20 @@
 
 {% block content %}
 
-  <div class="alert alert-info">
-    <p>
-      {% blocktrans trimmed %}
-        Venue categories allow you to
-          <ul>
-            <li>group venues together into "zones" to display in the draw and make navigation easier for participants, and/or</li>
-            <li>specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.</li>
-          </ul>
-      {% endblocktrans %}
-    </p>
-    <p>
-      {% url 'admin:venues_venuecategory_changelist' as edit_db_url %}
-      {% blocktrans trimmed %}
-        If you want to delete venue categories, use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
-      {% endblocktrans %}
-    </p>
-  </div>
+  {% blocktrans trimmed asvar p1 %}
+    Venue categories allow you to
+    <ul>
+      <li>group venues together into "zones" to display in the draw and make navigation easier for participants, and/or</li>
+      <li>specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.</li>
+    </ul>
+  {% endblocktrans %}
+
+  {% url 'admin:venues_venuecategory_changelist' as edit_db_url %}
+  {% blocktrans trimmed asvar p2 %}
+    If you want to delete venue categories, use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
+  {% endblocktrans %}
+
+  {% include "components/explainer-card.html" with type="info" %}
 
   {{ block.super }}
 

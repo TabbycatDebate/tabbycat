@@ -1,36 +1,39 @@
 <template>
-  <div class="col-md-12 draw-container allocation-container">
+  <div class="draw-container allocation-container">
 
     <allocation-actions :round-info="roundInfo"
                         :percentiles="percentileThresholds"></allocation-actions>
 
     <div class="row">
-      <div class="vertical-spacing allocation-messages" id="messages-container"></div>
+      <div class="mb-3 col allocation-messages" id="messages-container"></div>
     </div>
 
-    <div class="vertical-spacing">
-      <draw-header :positions="roundInfo.positions" @resort="updateSorting"
+    <div class="mb-3">
+      <draw-header :round-info="roundInfo" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
 
-        <div class="thead flex-cell flex-4" @click="updateSorting('importance')"
-             data-toggle="tooltip" title="Set the debate's priority (higher importances will be allocated better panels)." slot="himportance">
-          <span>Priority</span>
+        <div slot="himportance" class="thead flex-cell flex-5 vue-sortable"
+             @click="updateSorting('importance')" data-toggle="tooltip"
+             title="The debate's priority. Higher priorities will be allocated
+              better adjudicators during auto-allocation." >
+          <span class="tooltip-trigger">Priority</span>
           <span :class="sortClasses('importance')"></span>
         </div>
+
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
-          <div :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 6 : adjPositions.length > 1 ? 8 : 12)]">
+          <div :class="['thead vue-sortable flex-cell text-center',
+                        'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
             <span>Chair</span>
           </div>
           <div v-if="adjPositions.indexOf('P') !== -1"
-               :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 24: 16)]">
+               :class="['thead vue-sortable flex-cell text-center',
+                        'flex-' + (adjPositions.length > 2 ? 17: 16)]">
             <span>Panel</span>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
-               :class="['thead flex-cell text-center vue-droppable-container',
-                        'flex-' + (adjPositions.length > 2 ? 6: 16)]">
+               :class="['thead vue-sortable flex-cell text-center',
+                        'flex-' + (adjPositions.length > 2 ? 10: 16)]">
             <span>Trainees</span>
           </div>
         </template>
@@ -39,15 +42,16 @@
       <debate v-for="debate in dataOrderedByKey"
               :debate="debate" :key="debate.id" :round-info="roundInfo">
 
-        <div class="draw-cell flex-4" slot="simportance">
+        <div class="draw-cell flex-5" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>
         <template slot="svenue"><!-- Hide Venues --></template>
         <template slot="spanel">
-          <debate-panel :panel="debate.panel" :debate-id="debate.id"
-                        :teams="debate.teams"
+          <debate-panel :panel-adjudicators="debate.debateAdjudicators" :debate-id="debate.id"
+                        :panel-teams="debate.debateTeams"
                         :percentiles="percentileThresholds"
                         :locked="debate.locked"
+                        :round-info="roundInfo"
                         :adj-positions="adjPositions"></debate-panel>
         </template>
 
@@ -126,8 +130,8 @@ export default {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move
         var thisDebate = this.debatesById[payload.debate]
-        var fromPanellist = _.find(thisDebate.panel, function(panellist) {
-          return panellist.adjudicator.id === payload.adjudicator;
+        var fromPanellist = _.find(thisDebate.debateAdjudicators, function(da) {
+          return da.adjudicator.id === payload.adjudicator;
         })
         if (assignedPosition === fromPanellist.position) {
           return // Moving to same debate/position; do nothing

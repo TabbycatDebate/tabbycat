@@ -2,106 +2,103 @@
 {% load add_field_css debate_tags static i18n %}
 
 {% block head-title %}
-    {% if new %}
-      {% blocktrans trimmed with matchup=debate.matchup %}
-        New Ballot Set for {{ matchup }}
-      {% endblocktrans %}
-    {% else %}
-      {% blocktrans trimmed with matchup=debate.matchup %}
-        Edit Ballot Set for {{ matchup }}
-      {% endblocktrans %}
-    {% endif %}
-    <small>
-      {% blocktrans trimmed with round=debate.round.name venue_category=debate.division.venue_category.name venue=debate.venue.display_name %}
-        {{ round }} @ {{ venue_category }} {{ venue }}
-      {% endblocktrans %}
-    </small>
+  {% if new %}
+    {% blocktrans trimmed with matchup=debate.matchup %}
+      New Ballot Set for {{ matchup }}
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with matchup=debate.matchup %}
+      Edit Ballot Set for {{ matchup }}
+    {% endblocktrans %}
+  {% endif %}
+{% endblock %}
+
+{% block sub-title %}
+  {% blocktrans trimmed with round=debate.round.name venue_category=debate.division.venue_category.name venue=debate.venue.display_name %}
+    {{ round }} @ {{ venue_category }} {{ venue }}
+  {% endblocktrans %}
 {% endblock %}
 
 {% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}{% endblock %}
+
 {% block page-subnav-sections %}
-  <a class="btn btn-default" href="{% roundurl 'results-round-list' debate.round %}">
-    <span class="glyphicon glyphicon-chevron-left"></span>
+  <a class="btn btn-outline-primary" href="{% roundurl 'results-round-list' debate.round %}">
+    <i data-feather="chevron-left"></i>
     {% trans "Back to All Results" %}
   </a>
   {% if not new %}
-    <a class="btn btn-default" href="{% tournamenturl 'results-ballotset-new' debate.id %}">
+    <a class="btn btn-primary" href="{% tournamenturl 'results-ballotset-new' debate.id %}">
       {% trans "Create a new ballot set for this debate" %}
     </a>
   {% endif %}
 {% endblock %}
 
 {% block page-alerts %}
-  {% if debate.adjudicators.is_even %}
-    <div class="alert alert-warning">
-      {% blocktrans trimmed %}
-        This debate has a panel with an even number of voting adjudicators.
-        If the adjudicators split evenly, the debate will be awarded to the team
-        for which the chair voted.
-      {% endblocktrans %}
-    </div>
+
+  {% if pref.ballots_per_debate == 'per-adj' and debate.adjudicators.is_even %}
+    {% blocktrans trimmed asvar message %}
+      This debate has a panel with an even number of voting adjudicators.
+      If the adjudicators split evenly, the debate will be awarded to the team
+      for which the chair voted.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" %}
   {% endif %}
 
-  {% include "other_ballots_list.html" %}
+  {% include "ballot/other_ballots_list.html" %}
+
 {% endblock %}
 
 {% block content %}
-  <form id="resultsForm" class="form-horizontal" action="." method="POST">
+
+  <form id="resultsForm" action="." method="POST">
+
     {% csrf_token %}
-    {% include "enter_results_ballot_set.html" %}
-    <div class="row">
-        <div class="col-sm-12">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">{% trans "Ballot Status" %}</h4>
+
+    {% include "ballot/ballot_set.html" %}
+
+    <div class="card mt-3">
+      <div class="list-group list-group-flush">
+
+        {% trans "Ballot Status" as title %}
+        {% include "components/form-title.html" %}
+
+        <div class="list-group-item">
+          <div class="row">
+            {% include "components/form-check.html" with field=form.discarded double=True %}
+            {% include "components/form-check.html" with field=form.confirmed double=True %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="list-group list-group-flush">
+
+        {% blocktrans trimmed asvar title %}
+          Debate Status <small>(for the debate itself, not just this
+          particular ballot set)</small>
+        {% endblocktrans %}
+        {% include "components/form-title.html" %}
+
+        <div class="list-group-item pb-4">
+          {% include "components/form-field.html" with field=form.debate_result_status %}
+        </div>
+
+        <div class="list-group-item pt-3 pb-1">
+          <div class="row">
+            <div class="col-md-6 col form-group">
+              <input id="submit" class="save btn btn-success btn-block " type="submit" value="{% trans "Save Ballot" %}" tabindex="{{ form.nexttabindex }}" />
             </div>
-            <div class="panel-body form-panel">
-              <div class="form-group col-md-6">
-                {{ form.discarded }}
-                {{ form.discarded.errors }}
-                <label>
-                  {% trans "This ballot is discarded" %}
-                </label>
-              </div>
-              <div class="form-group col-md-6">
-                {{ form.confirmed }}
-                {{ form.confirmed.errors }}
-                <label>
-                  {% trans "This is the confirmed ballot" %}
-                </label>
-              </div>
+            <div class="col-md-6 col form-group">
+              <a class="btn btn-primary btn-block btn-danger" href="{% roundurl 'results-round-list' debate.round %}" tabindex="{{ form.nexttabindex|add:1 }}">{% trans "Cancel Entry" %}</a>
             </div>
           </div>
         </div>
+
+      </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                {% blocktrans trimmed %}
-                  Debate Status <small>(for the debate itself, not just this
-                  particular ballot set)</small>
-                {% endblocktrans %}
-              </h4>
-            </div>
-            <div class="panel-body form-panel">
-              <div class="form-group">
-                <div class="col-sm-4 col-xs-12">
-                  {{ form.debate_result_status|addcss:"form-control" }}
-                  {{ form.debate_result_status.errors }}
-                </div>
-                <div class="col-sm-4 col-xs-9">
-                  <input id="submit" class="save btn btn-success btn-block submit-disable" type="submit" value="{% trans "Save Ballot" %}" tabindex="{{ form.nexttabindex }}" data-loading-text="Saving..." />
-                </div>
-                <div class="col-sm-4 col-xs-9">
-                  <a class="btn btn-default btn-block btn-danger" href="{% roundurl 'results-round-list' debate.round %}" tabindex="{{ form.nexttabindex|add:1 }}">{% trans "Cancel Entry" %}</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    </div>
+
   </form>
 {% endblock content %}
 

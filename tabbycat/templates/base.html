@@ -1,13 +1,24 @@
-{% load static %}{% load debate_tags %}<!DOCTYPE html>
+{% load static i18n debate_tags %}<!DOCTYPE html>
 <html lang="en">
 <head>
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <title>{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
-  <link rel="icon" type="image/png" href="/static/favicon.ico" />
-  <!--[if IE]><link rel="shortcut icon" href="{% static 'favicon.ico' %}"/><![endif]-->
+
+  {% trans " runs on Tabbycat — an open-source tab system that supports 2 and 4 team debating formats" as meta_info %}
+  {% if tournament %}
+    {% trans "The tab for "|add:tournament.short_name as meta_prefix %}
+  {% else %}
+    {% trans "This tab" as meta_prefix %}
+  {% endif %}
+  <meta name="description" content="{{ meta_prefix }}{{ meta_info }}" />
+  <meta property="og:description" content="{{ meta_prefix }}{{ meta_info }}" />
+
+  <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png' %}" sizes="32x32" />
+  <link rel="icon" type="image/png" href="{% static 'favicon-16x16.png' %}" sizes="16x16" />
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
   {% block extra-css %}{% endblock %}
   {% block extra-head %}{% endblock %}
@@ -21,78 +32,108 @@
 
 <body class="{% block body-class %}{% endblock %}">
 
-  {% block body %}<!-- Needed for old edit adjs page -->
-    <div class="col-md-12 accommodate-footer ">
+  {% block nav %}
+    {% if 'admin/' not in request.path %}
+      {% include "nav/top_nav_base.html" %}
+    {% elif user.is_authenticated and not user.is_superuser %}
+      {% include "nav/top_nav_base.html" %}
+    {% endif %}
+  {% endblock nav %}
 
-      {% block nav %}
-        <div class="row ">
-          {% if 'admin/' in request.path and user.is_superuser %}
-            <div class="nav-sidebar">
-              <div class="overflow-scroll-wrapper">
-                {% include "nav/admin_nav.html" %}
-              </div>
-            </div><!-- /.main-col -->
-          {% else %}
-            {% include "nav/top_nav_base.html" %}
-          {% endif %}
+  <div class="container-fluid">
+
+    {% if 'admin/' in request.path and user.is_superuser %}
+      <!-- Fake full height for menu -->
+      <div class="row">
+        <div class="col-md-2 col-1 float-left pl-0 pr-lg-3 pr-md-3 pr-0 d-none d-sm-block width fake-sidebar">
+          <div class="list-group-item"></div>
         </div>
-      {% endblock nav %}
-
-      {% block header %}
-        <div class="row head-title {% if 'admin/' in request.path and user.is_superuser %}white-bg vertical-spacing nav-sidebar-offset{% endif %}">
-          <div class="col-md-12">
-            <h3>
-              {% if page_title %}
-                {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
-              {% else %}
-                {% block head-title %}{% endblock %}
-              {% endif %}
-              {% if page_subtitle %}
-                <small class="pull-right">{{ page_subtitle }}</small>
-              {% else %}
-                <small class="pull-right">{% block sub-title %}{% endblock %}</small>
-              {% endif %}
-            </h3>
-          </div>
-        </div>
-      {% endblock header %}
-
-      {% block subheader %}
-        <div class="row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
-          <div class="col-md-12 page-sub-nav">
-            <ul class="nav nav-pills navbar-left">
-              {% block page-subnav-sections %}{% endblock %}
-            </ul>
-            <div class="nav btn-group navbar-right">
-              {% block page-subnav-actions %}{% endblock %}
-            </div>
-          </div>
-        </div>
-
-        <div class="row {% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
-          <div class="col-md-12">
-            <div class="form-inline messages db-hide" id="messages-container">
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} updated">
-                    {{ message }}
-                  </div>
-                {% endfor %}
-              {% endif %}
-              {% block page-alerts %}{% endblock %}
-            </div>
-          </div>
-        </div>
-      {% endblock subheader %}
-
-      <div class="{% if 'admin/' in request.path and user.is_superuser %}nav-sidebar-offset{% endif %}">
-        {% block content %}{% endblock content %}
       </div>
 
-      {% block footer %}{% include "footer.html" %}{% endblock footer %}
+      <!-- Insert a second level column structure for a side nav -->
+      <div class="row">
+        <div class="admin-sidebar col-md-2 col-1 float-left pl-0 pr-md-3 pr-0 collapse width show">
+          {% block sidebar %}{% include "nav/admin_nav.html" %}{% endblock %}
+        </div>
+        <main class="col-md-10 col-11 float-left pl-md-0 pl-3 main">
+    {% endif %}
 
-    </div><!-- /.main-col col-md-12 accommodate-footer -->
-  {% endblock body %}
+    {% block header %}
+      <div class="row d-print-none {% if 'admin/' in request.path and user.is_superuser %}mb-3{% endif %}">
+        <div class="col mt-4 mb-3 h3">
+
+          {% if page_title %}
+            {% if page_title %}<span class="emoji">{{ page_emoji }}</span>{% endif %}{{ page_title }}
+          {% else %}
+            {% block head-title %}{% endblock %}
+          {% endif %}
+          {% if page_subtitle %}
+            <small class="text-muted d-md-inline d-none">{{ page_subtitle }}</small>
+          {% else %}
+            <small class="text-muted d-md-inline d-none">{% block sub-title %}{% endblock %}</small>
+          {% endif %}
+
+        </div>
+      </div>
+    {% endblock header %}
+
+    {% block subheader %}
+
+      <div class="row page-navs">
+        <div class="col">
+          <div class="d-lg-flex justify-content-lg-between">
+            {% block page-subnav-sections %}{% endblock %}
+            {% block page-subnav-actions %}{% endblock %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row d-print-none">
+        <div class="col" id="messages-container">
+          {% if messages %}
+            {% for message in messages %}
+              {% include "components/alert.html" with type=message.tags message=message %}
+            {% endfor %}
+          {% endif %}
+          {% block page-alerts %}{% endblock %}
+        </div>
+      </div>
+
+    {% endblock subheader %}
+
+    <div class="row">
+      <div class="col">
+        {% block content %}{% endblock content %}
+      </div>
+    </div>
+
+    {% if 'admin/' in request.path and user.is_superuser %}
+
+        </main>
+      </div>
+
+    {% endif %}
+
+  </div>
+
+  {% if 'admin/' not in request.path %}
+    <footer class="footer">
+      <div class="container-fluid">
+        {% block footer %}{% include "footer.html" %}{% endblock footer %}
+      </div>
+    </footer>
+  {% else %}
+    <footer class="footer">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col d-none d-sm-block"></div>
+          <div class="col-sm-10 col">
+            {% block footeradmin %}{% include "footer.html" %}{% endblock footeradmin %}
+          </div>
+        </div>
+      </div>
+    </footer>
+  {% endif %}
 
   {% block modals %}
     <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true">
