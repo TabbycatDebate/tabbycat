@@ -132,6 +132,7 @@ class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin,
         round.motions_released = self.motions_released
         round.save()
         self.log_action()
+        messages.success(request, self.message_text)
         return super().post(request, *args, **kwargs)
 
 
@@ -139,12 +140,14 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
     motions_released = True
+    message_text = _("Released the motion(s).")
 
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_UNRELEASE
     motions_released = False
+    message_text = _("Unreleased the motion(s).")
 
 
 class DisplayMotionsView(OptionalAssistantTournamentPageMixin, RoundMixin, TemplateView):

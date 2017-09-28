@@ -262,7 +262,7 @@ class BaseBallotSetForm(BaseResultForm):
         Most fields are required, unless forfeits are enabled.
         """
 
-        # 2. Choose sides field
+        # 1. Choose sides field
         if self.choosing_sides:  # false in BP regardless of choosing sides setting
             teams = self.debate.teams
             assert len(teams) == 2
@@ -280,7 +280,7 @@ class BaseBallotSetForm(BaseResultForm):
             for team in self.debate.teams:
                 self.fields['team_%d' % team.id] = forms.ModelChoiceField(queryset=team.speakers, required=False)
 
-        # 3. Motions fields
+        # 2. Motions fields
         if self.using_motions:
             self.fields['motion'] = MotionModelChoiceField(queryset=self.motions,
                 required=not self.using_forfeits)
@@ -292,10 +292,10 @@ class BaseBallotSetForm(BaseResultForm):
                     queryset=self.motions, required=False
                 )
 
-        # 4. Speaker fields
+        # 3. Speaker fields
         for side, pos in product(self.sides, self.positions):
 
-            # 4(a). Speaker identity
+            # 3(a). Speaker identity
             if self.choosing_sides:
                 queryset = Speaker.objects.filter(team__in=self.debate.teams)
             else:
@@ -303,13 +303,13 @@ class BaseBallotSetForm(BaseResultForm):
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(
                 queryset=queryset, required=not self.using_forfeits)
 
-            # 4(b). Ghost fields
+            # 3(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
                 label=_("Mark as a duplicate speech"))
 
         self.create_score_fields()
 
-        # 5. Forfeit field
+        # 4. Forfeit field
         if self.using_forfeits:
             choices = [(side, _("Forfeit by the %(side)s") % {'side': self._side_name(side)}) for side in self.sides]
             self.fields['forfeit'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, required=False)

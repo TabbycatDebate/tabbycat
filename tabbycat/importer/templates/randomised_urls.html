@@ -10,22 +10,22 @@
   {% else %}
     <a class="btn btn-outline-secondary" href="#" data-toggle="tooltip" title="You need to create some URLs before they can be viewed">
   {% endif %}
-      View URLs
+      {% trans "View URLs" %}
     </a>
   <div class="btn-group">
     <a class="btn btn-outline-primary" href="{% tournamenturl 'printing-feedback-urls' %}" target="_blank">
-      Print Feedback URLs
+      {% trans "Print Feedback URLs" %}
     </a>
     <a class="btn btn-outline-primary" href="{% tournamenturl 'printing-ballot-urls' %}" target="_blank">
-      Print Ballot URLs
+      {% trans "Print Ballot URLs" %}
     </a>
   </div>
   <div class="btn-group">
     <a class="btn btn-outline-primary" href="{% tournamenturl 'email-feedback-urls' %}">
-      Email Feedback URLs
+      {% trans "Email Feedback URLs" %}
     </a>
     <a class="btn btn-outline-primary" href="{% tournamenturl 'email-ballot-urls' %}">
-      Email Ballot URLs
+      {% trans "Email Ballot URLs" %}
     </a>
   </div>
 {% endblock %}
@@ -87,11 +87,11 @@
             <table class="table table-responsive">
               <thead>
                 <tr>
-                  <th>Adjudicator</th>
-                  <th>Feedback URL</th>
-                  <th>Ballot URL</th>
+                  <th>{% trans "Adjudicator" %}</th>
+                  <th>{% trans "Feedback URL" %}</th>
+                  <th>{% trans "Ballot URL" %}</th>
                   {% if pref.allocation_confirmations %}
-                    <th>Shifts URL</th>
+                    <th>{% trans "Shifts URL" %}</th>
                   {% endif %}
                 </tr>
               </thead>
@@ -114,13 +114,13 @@
                         </td>
                       {% endif %}
                     {% else %}
-                      <td class="text-warning">no URL</td>
-                      <td class="text-warning">no URL</td>
+                      <td class="text-warning">{% trans "no URL" %}</td>
+                      <td class="text-warning">{% trans "no URL" %}</td>
                     {% endif %}
                   </tr>
                 {% empty %}
                   <tr>
-                    <td colspan="3">No adjudicators have private URLs.</td>
+                    <td colspan="3">{% trans "No adjudicators have private URLs." %}</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -135,8 +135,8 @@
             <table class="table table-responsive">
               <thead>
                 <tr>
-                  <th>Team</th>
-                  <th>Feedback URL</th>
+                  <th>{% trans "Team" %}</th>
+                  <th>{% trans "Feedback URL" %}</th>
                 </tr>
               </thead>
               <tbody>
@@ -149,13 +149,13 @@
                       {% if team.url_key %}
                         <small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' team.url_key %}</small>
                       {% else %}
-                        no URL
+                        {% trans "no URL" %}
                       {% endif %}
                     </td>
                   </tr>
                 {% empty %}
                   <tr>
-                    <td colspan="3">No teams have private URLs.</td>
+                    <td colspan="2">{% trans "No teams have private URLs." %}</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -171,13 +171,13 @@
     <div class="card">
       <div class="card-body">
         <div class="card-title">
-          <h5>There are no private URLs assigned</h5>
+          <h5>{% trans "There are no private URLs assigned." %}</h5>
         </div>
         <hr>
         <form action="{% tournamenturl 'randomised-urls-generate' %}" method="POST">
         {% csrf_token %}
         <button class="btn btn-success btn-block" id="generateRandomisedUrls" type="submit">
-          Generate private URLs
+          {% trans "Generate Private URLs" %}
         </button>
         </form>
       </div>

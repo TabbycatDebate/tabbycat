@@ -96,7 +96,7 @@ function refresh_totals(scoresheet) {
         if (i === 0) {
           totals_elements[team].addClass('btn-success');
         } else if (i === 1) {
-          totals_elements[team].addClass('btn-primary');
+          totals_elements[team].addClass('btn-info');
         } else if (i === 2) {
           totals_elements[team].addClass('btn-warning');
         } else if (i === 3) {

@@ -509,7 +509,7 @@ class DrawReleaseView(DrawStatusEdit):
         round.draw_status = Round.STATUS_RELEASED
         round.save()
         self.log_action()
-        messages.success(request, _("Released the draw. It will now show on the public-facing pages of this website."))
+        messages.success(request, _("Released the draw."))
         return super().post(request, *args, **kwargs)
 
 
@@ -520,12 +520,12 @@ class DrawUnreleaseView(DrawStatusEdit):
     def post(self, request, *args, **kwargs):
         round = self.get_round()
         if round.draw_status != Round.STATUS_RELEASED:
-            return HttpResponseBadRequest("Draw status is not RELEASED")
+            return HttpResponseBadRequest("Draw status is not released")
 
         round.draw_status = Round.STATUS_CONFIRMED
         round.save()
         self.log_action()
-        messages.success(request, _("Unreleased the draw. It will no longer show on the public-facing pages of this website."))
+        messages.success(request, _("Unreleased the draw."))
         return super().post(request, *args, **kwargs)
 
 
