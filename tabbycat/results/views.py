@@ -412,15 +412,19 @@ class PublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePublicN
     model = Adjudicator
     pk_url_kwarg = 'adj_id'
     allow_null_tournament = True
-    public_page_preference = 'public_ballots'
     private_url = False
+
+    def is_page_enabled(self, tournament):
+        return tournament.pref('participant_ballots') == 'public'
 
 
 class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, BasePublicNewBallotSetView):
     model = Adjudicator
     allow_null_tournament = True
-    public_page_preference = 'public_ballots_randomised'
     private_url = True
+
+    def is_page_enabled(self, tournament):
+        return tournament.pref('participant_ballots') == 'private-urls'
 
 
 class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
@@ -710,7 +714,8 @@ class PublicBallotSubmissionIndexView(CacheMixin, PublicTournamentPageMixin, Tem
     """Public view listing all debate-adjudicators for the current round, as
     links for them to enter their ballots."""
 
-    public_page_preference = 'public_ballots'
+    def is_page_enabled(self, tournament):
+        return tournament.pref('participant_ballots') == 'public'
 
     def is_draw_released(self):
         round = self.get_tournament().current_round

@@ -414,10 +414,10 @@ class TeamsInDebate(ChoicePreference):
     verbose_name = _("Teams in debate")
     section = debate_rules
     name = 'teams_in_debate'
-    choices = [
+    choices = (
         ('two', _("Two-team format")),
         ('bp', _("British Parliamentary (four teams)")),
-    ]
+    )
     default = 'two'
 
 
@@ -427,10 +427,10 @@ class BallotsPerDebate(ChoicePreference):
     verbose_name = _("Ballots per debate")
     section = debate_rules
     name = 'ballots_per_debate'
-    choices = [
+    choices = (
         ('per-adj', _("One ballot per voting adjudicator")),
         ('per-debate', _("Consensus ballot (one ballot per debate)")),
-    ]
+    )
     default = 'per-adj'
 
 
@@ -624,39 +624,31 @@ data_entry = Section('data_entry')
 
 
 @tournament_preferences_registry.register
-class PublicBallots(BooleanPreference):
-    help_text = _("Enables public interface to add ballots using normal URLs")
-    verbose_name = _("Enable public ballots with normal URLs")
+class ParticipantBallotSubmissions(ChoicePreference):
+    help_text = _("Whether adjudicators can submit ballots themselves, and how they do so")
+    verbose_name = _("Ballot submissions from adjudicators")
     section = data_entry
-    name = 'public_ballots'
-    default = False
+    name = 'participant_ballots'
+    choices = (
+        ('off', _("Disabled (tab staff only)")),
+        ('private-urls', _("Use private URLs")),
+        ('public', _("Use publicly accessible form")),
+    )
+    default = 'off'
 
 
 @tournament_preferences_registry.register
-class PublicBallotsRandomised(BooleanPreference):
-    help_text = _("Enables public interface to add ballots using private (randomised, per-person) URLs")
-    verbose_name = _("Enable public ballots with private URLs")
+class ParticipantFeedbackSubmissions(ChoicePreference):
+    help_text = _("Whether participants can submit feedback themselves, and how they do so")
+    verbose_name = _("Feedback submissions from participants")
     section = data_entry
-    name = 'public_ballots_randomised'
-    default = False
-
-
-@tournament_preferences_registry.register
-class PublicFeedback(BooleanPreference):
-    help_text = _("Enables public interface to add feedback using normal URLs")
-    verbose_name = _("Enable public feedback with normal URLs")
-    section = data_entry
-    name = 'public_feedback'
-    default = False
-
-
-@tournament_preferences_registry.register
-class PublicFeedbackRandomised(BooleanPreference):
-    help_text = _("Enables public interface to add feedback using private (randomised, per-person) URLs")
-    verbose_name = _("Enable public feedback with private URLs")
-    section = data_entry
-    name = 'public_feedback_randomised'
-    default = False
+    name = 'participant_feedback'
+    choices = (
+        ('off', _("Disabled (tab staff only)")),
+        ('private-urls', _("Use private URLs")),
+        ('public', _("Use publicly accessible form")),
+    )
+    default = 'off'
 
 
 @tournament_preferences_registry.register

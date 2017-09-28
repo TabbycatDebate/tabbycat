@@ -189,14 +189,17 @@ class PublicTournamentPageMixin(TournamentMixin):
     def get_disabled_message(self):
         return self.disabled_message
 
+    def is_page_enabled(self, tournament):
+        if self.public_page_preference is None:
+            raise ImproperlyConfigured("public_page_preference isn't set on this view.")
+        return tournament.pref(self.public_page_preference)
+
     def dispatch(self, request, *args, **kwargs):
         tournament = self.get_tournament()
         if tournament is None:
             messages.info(self.request, _("That tournament no longer exists."))
             return redirect('tabbycat-index')
-        if self.public_page_preference is None:
-            raise ImproperlyConfigured("public_page_preference isn't set on this view.")
-        if tournament.pref(self.public_page_preference):
+        if self.is_page_enabled(tournament):
             return super().dispatch(request, *args, **kwargs)
         else:
             logger.warning("Tried to access a disabled public page")

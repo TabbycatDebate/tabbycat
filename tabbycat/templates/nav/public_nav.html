@@ -159,12 +159,12 @@
     <a class="nav-link" href="{% tournamenturl 'public_feedback_progress' %}">{% trans "Feedback Progress" %}</a>
   </li>
 {% endif %}
-{% if pref.public_ballots %}
+{% if pref.participant_ballots == 'public' %}
   <li class="nav-item {% if enter_ballots_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'results-public-ballot-submission-index' %}">{% trans "Enter Ballot" %}</a>
   </li>
 {% endif %}
-{% if pref.public_feedback %}
+{% if pref.participant_feedback == 'public' %}
   <li class="nav-item {% if enter_feedback_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'adjfeedback-public-add-index' %}">{% trans "Enter Feedback" %}</a>
   </li>

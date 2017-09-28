@@ -125,17 +125,22 @@ class BaseResultForm(forms.Form):
     discarded = forms.BooleanField(required=False)
     debate_result_status = forms.ChoiceField(choices=Debate.STATUS_CHOICES)
 
-    def __init__(self, ballotsub, *args, **kwargs):
+    def __init__(self, ballotsub, password=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ballotsub = ballotsub
         self.debate = ballotsub.debate
         self.tournament = self.debate.round.tournament
+
+        self.has_tournament_password = password and self.tournament.pref('public_use_password')
 
         self.initial.update({
             'debate_result_status': self.debate.result_status,
             'confirmed': self.ballotsub.confirmed,
             'discarded': self.ballotsub.discarded
         })
+
+        if self.has_tournament_password:
+            self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
 
     def _side_name(self, side):
         return get_side_name(self.tournament, side, 'full')
@@ -217,8 +222,6 @@ class BaseBallotSetForm(BaseResultForm):
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
                                self.tournament.pref('teams_in_debate') == 'two')
 
-        self.has_tournament_password = kwargs.pop('password', False) and self.tournament.pref('public_use_password')
-
         self.sides = self.tournament.sides
         self.positions = self.tournament.positions
         self.last_substantive_position = self.tournament.last_substantive_position  # also used in template
@@ -250,7 +253,6 @@ class BaseBallotSetForm(BaseResultForm):
 
     def create_fields(self):
         """Dynamically generate fields for this ballot:
-         - password
          - choose_sides,         if sides need to be chosen by the user
          - motion,               if there is more than one motion
          - <side>_motion_veto,   if motion vetoes are being noted, one for each team
@@ -259,10 +261,6 @@ class BaseBallotSetForm(BaseResultForm):
 
         Most fields are required, unless forfeits are enabled.
         """
-
-        # 1. Tournament password field
-        if self.has_tournament_password:
-            self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
 
         # 2. Choose sides field
         if self.choosing_sides:  # false in BP regardless of choosing sides setting

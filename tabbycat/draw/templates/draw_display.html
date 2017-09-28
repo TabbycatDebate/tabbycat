@@ -123,7 +123,7 @@
           {% if pref.public_draw %}
             {% trans "Draw has been released." as text %}
             {% include "components/item-info.html" with type="" %}
-          {% elif pref.public_ballots or pref.public_ballots_randomised or pref.public_feedback or pref.public_feedback_randomised %}
+          {% elif pref.participant_ballots != 'off' or pref.participant_feedback != 'off' %}
             {% blocktrans trimmed asvar text %}
               You have released the draw, so ballots and/or feedback can be submitted from the public forms (if enabled). However, the draw itself will not show to the public unless the "public view of draw" setting is enabled in <a class="alert-link" href="{{ alert_link }}"> this tournament's configuration</a>.
             {% endblocktrans %}
@@ -142,14 +142,14 @@
           {% trans "Release draw to public" as release_text %}
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}</form>
 
-          {% if pref.public_ballots or pref.public_ballots_randomised or pref.public_feedback or pref.public_feedback_randomised or pref.public_draw %}
+          {% if pref.participant_ballots != 'off' or pref.participant_feedback != 'off' or pref.public_draw %}
 
-            {% if pref.public_ballots or pref.public_ballots_randomised %}
-              {% trans "Your have enabled public ballot submissions. The draw must be released before ballots for this round can be submitted." as text %}
+            {% if pref.participant_ballots != 'off' %}
+              {% trans "Your tournament allows ballots to be submitted online by adjudicators. The draw must be released before they can do so." as text %}
               {% include "components/item-info.html" with type="danger" %}
             {% endif %}
-            {% if pref.public_feedback or pref.public_feedback_randomised %}
-              {% trans "Your have enabled public feedback submissions. The draw must be released before ballots for this round can be submitted." as text %}
+            {% if pref.participant_feedback != 'off' %}
+              {% trans "Your tournament allows feedback to be submitted online by participants. The draw must be released before they can do so." as text %}
               {% include "components/item-info.html" with type="danger" %}
             {% endif %}
             {% if pref.public_draw %}
@@ -177,42 +177,56 @@
   <div class="col">
     <div class="card">
 
+      {% if pref.enable_motions or pref.motion_vetoes_enabled %}
+        {% trans "Release Motions" as release_motions_title %}
+        {% trans "Release motions to public" as release_text %}
+        {% trans "Unrelease motions to public" as unrelease_text %}
+      {% else %}
+        {% trans "Release Motion" as release_motions_title %}
+        {% trans "Release motion to public" as release_text %}
+        {% trans "Unrelease motion to public" as unrelease_text %}
+      {% endif %}
+
       <div class="card-body">
-        <h5 class="card-title mb-0">Release Motions</h5>
+        <h5 class="card-title mb-0">{{ release_motions_title }}</h5>
       </div>
       <div class="list-group list-group-flush">
 
         {% if not round.motions_released %}
-          {% trans "Release motions to public" as release_text %}
+
           <form id="releaseMotionsForm" method="POST" hidden
                 action="{% roundurl 'motions-release' %}">{% csrf_token %}</form>
 
-          {% if pref.public_ballots or pref.public_ballots_randomised %}
-            {% if pref.enable_motions %}
-              {% trans "Your tournament is configured to require motions to be selected in ballots and to allow public ballot submissions. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted." as text %}
-            {% elif pref.motion_vetoes_enabled %}
-              {% trans "Your tournament is configured to allow motions to be vetoed and to allow public ballot submissions. Ensure that you release the motions before debates finish, otherwise ballots will not be able to nominate vetoes." as text %}
-            {% endif %}
+          {% if pref.participant_ballots != 'off' and pref.enable_motions %}
+            {% trans "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted." as text %}
+            {% include "components/item-info.html" with type="danger" %}
+            {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
+          {% elif pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
+            {% trans "Your tournament is configured to allow motions to be vetoed and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to nominate vetoes." as text %}
             {% include "components/item-info.html" with type="danger" %}
             {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.public_motions %}
-            {% trans "Your tournament is configured to show the motions for each round on the public site. You'll need to first release this motion for it to show there." as text %}
+            {% trans "Your tournament is configured to show the motion(s) for each round on the public site. You'll need to first release the motion(s) for it to show there." as text %}
             {% include "components/item-info.html" with type="" %}
             {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% else %}
-            {% trans "Your tournament is not configured to show the motions for each round on the public site. There's no need to release the motions." as text %}
+            {% trans "Your tournament is not configured to show the motion(s) for each round on the public site. There's no need to release the motion(s)." as text %}
             {% include "components/item-info.html" with type="secondary" %}
             {% include "components/item-action.html" with type="secondary" id="triggerReleaseMotionsForm" text=release_text url="" %}
           {% endif %}
-
 
         {% else %}
 
           <form id="releaseMotionsForm" method="POST" hidden
                 action="{% roundurl 'motions-unrelease' %}">{% csrf_token %}</form>
           {# "and" takes precedence over "or" #}
-          {% if pref.public_motions or pref.public_ballots and pref.enable_motions or pref.public_ballots_randomised and pref.enable_motions or pref.public_ballots and pref.motion_vetoes_enabled or pref.public_ballots_randomised and pref.motion_vetoes_enabled %}
-            {% include "components/item-info.html" with type="" text="Motions are released" %}
+          {% if pref.public_motions or pref.participant_ballots != 'off' and pref.enable_motions or pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
+            {% if pref.enable_motions or pref.motion_vetoes_enabled %}
+              {% trans "Motions have been released." as text %}
+            {% else %}
+              {% trans "The motion has been released." as text %}
+            {% endif %}
+            {% include "components/item-info.html" with type="" %}
           {% else %}
             {% tournamenturl 'options-tournament-public-features' as alert_link %}
             {% blocktrans trimmed asvar text %}
@@ -223,8 +237,8 @@
             {% include "components/item-info.html" with type="warning" %}
           {% endif %}
 
-          {% trans "Unrelease motions to public" as text %}
-          {% include "components/item-action.html" with type="primary" id="triggerReleaseMotionsForm" url="" %}
+
+          {% include "components/item-action.html" with type="primary" id="triggerReleaseMotionsForm" url="" text=unrelease_text %}
 
         {% endif %}
       </div>

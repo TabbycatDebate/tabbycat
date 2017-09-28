@@ -318,7 +318,9 @@ class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddF
     lists all possible sources; public users should then choose themselves."""
 
     template_name = 'public_add_feedback.html'
-    public_page_preference = 'public_feedback'
+
+    def is_page_enabled(self, tournament):
+        return tournament.pref('participant_feedback') == 'public'
 
 
 class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormView):
@@ -406,7 +408,9 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
 
 class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is a randomised one."""
-    public_page_preference = 'public_feedback_randomised'
+
+    def is_page_enabled(self, tournament):
+        return tournament.pref('participant_feedback') == 'private-urls'
 
     def get_success_url(self):
         # Redirect to non-cached page: their original private URL
@@ -422,7 +426,9 @@ class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Pub
 
 class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is by object ID."""
-    public_page_preference = 'public_feedback'
+
+    def is_page_enabled(self, tournament):
+        return tournament.pref('participant_feedback') == 'public'
 
     def get_success_url(self):
         # Redirect to non-cached page: the public feedback form

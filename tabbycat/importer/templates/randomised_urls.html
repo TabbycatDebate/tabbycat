@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">🎲</span> Private URLs{% endblock %}
 {% block page-title %}🎲 Private URLs{% endblock %}
@@ -36,67 +36,43 @@
     <div class="card-body pb-0">
       <p>
         {% if exists %}
-          The private URLs for public ballot and/or feedback submission are given below.
+          {% trans "The private URLs for ballot and/or feedback submission from participants are given below." %}
         {% else %}
-          Private URLs are used for public ballot and/or feedback submission. You
-          should use them if you have a means of distributing crazy-looking URLs to
-          participants, and are too worried about fraud to use a publicly accessible
-          page where <em>anyone</em> can enter <em>any</em> submission. The URLs
-          will look something like this:
-          <strong><small><p>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' '9dnflp3z' %}</small></strong>.
-          </p><p>
+          {% blocktrans trimmed %}
+            Private URLs are used to allow participants to submit ballots and/or
+            feedback online. You should use them if you have a means of
+            distributing crazy-looking URLs to participants, and are too worried
+            about fraud to use a publicly accessible page where <em>anyone</em>
+            can enter <em>any</em> submission. The URLs will look something like
+            this:
+          {% endblocktrans %}
+        </p><p>
+          <strong><small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' '9dnflp3z' %}</small></strong>.
+        </p><p>
         {% endif %}
-        Anyone with the URL can access the relevant data entry page. The idea is
-        that it's hard to guess another key (the random-looking string), so you should
-        make each URL accessible only to the team or adjudicator in question.
-        <a href="http://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls">
-        Read more about private URLs.</a>
+        {% blocktrans trimmed %}
+          Anyone with the URL can access the relevant data entry page. The idea is
+          that it's hard to guess another key (the random-looking string), so you should
+          make each URL accessible only to the team or adjudicator in question.
+          <a href="http://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls">
+          Read more about private URLs.</a>
+        {% endblocktrans %}
       </p>
     </div>
 
   </div>
 
-  {% if not pref.public_ballots_randomised and not pref.public_feedback_randomised and not pref.allocation_confirmations %}
+  {% if pref.participant_ballots != 'private-urls' and pref.participant_feedback != 'private-urls' and not pref.allocation_confirmations %}
     <div class="card border-warning text-warning mb-3">
       <div class="card-body">
-        The <strong>public ballots with private URLs</strong> and
-        <strong>public feedback with  private URLs</strong> configuration
-        settings are both disabled. Any generated URLs will not work unless you
-        enable them on the
-        <a href="{% tournamenturl 'options-tournament-data-entry' %}">tournament
-        configuration page</a>.
-      </div>
-    </div>
-  {% endif %}
-
-  {% if pref.public_ballots and pref.public_ballots_randomised %}
-    <div class="card border-warning text-warning mb-3">
-      <div class="card-body">
-        The <strong>public ballots</strong> (non-private) configuration setting
-        is enabled, which means that the
-        <a href="{% tournamenturl 'results-public-ballot-submission-index' %}">
-        page in the public interface from which anyone can enter any ballot</a>,
-        without knowing any special URLs, is enabled. This defeats the purpose of
-        the <strong>public ballots with private URLs</strong> setting. You may wish to
-        consider disabling the non-private setting on the
-        <a href="{% tournamenturl 'options-tournament-data-entry' %}">tournament
-        configuration page</a>.
-      </div>
-    </div>
-  {% endif %}
-
-  {% if pref.public_feedback and pref.public_feedback_randomised %}
-    <div class="card border-warning text-warning mb-3">
-      <div class="card-body">
-        The <strong>public feedback</strong> (non-private) configuration
-        setting is enabled, which means that the
-        <a href="{% tournamenturl 'adjfeedback-public-add-index' %}">page in the
-        public interface from which anyone can enter any feedback</a>, without
-        knowing any special URLs, is enabled. This defeats the purpose of the
-        <strong>public feedback with private URLs</strong> setting. You may wish to
-        consider disabling the non-private settings on the
-        <a href="{% tournamenturl 'options-tournament-data-entry' %}">tournament
-        configuration page</a>.
+        {% tournamenturl 'options-tournament-data-entry' as data_entry_options_url %}
+        {% blocktrans trimmed %}
+          Neither <strong>participant ballot submissions</strong> nor
+          <strong>participant feedback submissions</strong> are configured to be
+          from private URLs. Any generated URLs will not work unless you
+          configure those settings accordingly on the
+          <a href="{{ data_entry_options_url }}">tournament configuration page</a>.
+        {% endblocktrans %}
       </div>
     </div>
   {% endif %}
