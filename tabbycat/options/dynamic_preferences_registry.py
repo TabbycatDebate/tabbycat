@@ -254,7 +254,7 @@ class BPRenyiOrder(FloatPreference):
 
     def validate(self, value):
         if value < 0.0:
-            raise ValidationError("The Rényi order must be a nonnegative number.")
+            raise ValidationError(_("The Rényi order must be a nonnegative number."))
 
 
 @tournament_preferences_registry.register
@@ -269,7 +269,7 @@ class BPPositionCostExponent(FloatPreference):
 
     def validate(self, value):
         if value < 0.0:
-            raise ValidationError("The position cost exponent must be a nonnegative number.")
+            raise ValidationError(_("The position cost exponent must be a nonnegative number."))
 
 
 @tournament_preferences_registry.register
