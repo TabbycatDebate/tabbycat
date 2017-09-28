@@ -180,6 +180,12 @@ if os.environ.get('SENDGRID_USERNAME', ''):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'except_importer_base': {
+            '()': 'utils.logging.ExceptFilter',
+            'name': 'importer.base',
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
@@ -188,6 +194,7 @@ LOGGING = {
         'sentry': {
             'level': 'WARNING',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+            'filters': ['except_importer_base'],
         },
     },
     'loggers': {
