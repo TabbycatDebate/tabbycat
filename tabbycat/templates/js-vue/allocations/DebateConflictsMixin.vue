@@ -7,7 +7,9 @@ export default {
   // acting across the entire adj/team pool (for hovers) and instead only
   // focusing it on conflicts within a debate panel / debate teams
   mixins: [ConflictUtilitiesMixin],
-  data: function () { return { debugMode: false }},
+  data: function () {
+    return { debugMode: false }
+  },
   watch: {
     filteredConflicts: function() {
       // Re-calculate all conflicts when the master conflicts dictionary changes
@@ -51,7 +53,7 @@ export default {
     filteredConflicts: function() {
       // Traverse the combined conflicts object and delete those not relevant
       // to the panel. This allows us to (later) activate all the leftovers
-      var filteredConflicts = {
+      var subset = {
         'clashes': { 'adjudicator': [], 'institution': [], 'team': [] },
         'histories': { 'adjudicator': [], 'institution': [], 'team': [] }
       }
@@ -62,11 +64,13 @@ export default {
           // Drill down into each adj/teams conflicts and filter out those
           // that cannot apply to the panel as-is
           if (self.checkIfInPanel(conflict, type, clashOrHistory)) {
-            filteredConflicts[clashOrHistory][type].push(conflict)
+            subset[clashOrHistory][type].push(conflict)
           }
         })
       })
-      return filteredConflicts
+      // De-duplicate the institutional IDs; often they are multiple overlaps
+      subset['clashes']['institution'] = _.uniqBy(subset['clashes']['institution'], 'id')
+      return subset
     },
   },
   methods: {
@@ -74,6 +78,9 @@ export default {
       // Turn off all conflicts that might remain from previous panellists who
       // have been moved on
       var self = this
+      if (this.debugMode) {
+        console.log('Deactivate panel conflicts for', this.debateId);
+      }
       _.forEach(this.adjudicatorIds, function(id, da) {
         self.unsendConflict({ id: id }, 'adjudicator', 'adjudicator', 'panel', 'clashes')
         self.unsendConflict({ id: id }, 'adjudicator', 'adjudicator', 'panel', 'histories')
