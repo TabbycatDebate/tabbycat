@@ -42,6 +42,7 @@ class BaseMetricAnnotator:
     abbr = None  # must be set by subclasses
     icon = None
     ranked_only = False
+    repeatable = False
 
     def run(self, queryset, standings, round=None):
         standings.record_added_metric(self.key, self.name, self.abbr, self.icon)
@@ -67,6 +68,7 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
     implementing `annotate()`."""
 
     ranked_only = True  # Repeated metrics don't make sense outside the precedence
+    repeatable = True
 
     def __init__(self, index, keys):
         self.index = index

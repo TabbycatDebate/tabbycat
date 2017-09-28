@@ -4,6 +4,8 @@ from operator import itemgetter
 import random
 import logging
 
+from django.utils.translation import ugettext as _
+
 from .metrics import RepeatedMetricAnnotator
 
 logger = logging.getLogger(__name__)
@@ -274,8 +276,8 @@ class BaseStandingsGenerator:
         # Set up annotators
         self._interpret_metrics(metrics, extra_metrics)
         self._interpret_rankings(rankings)
-        self._check_annotators(self.metric_annotators, "metric")
-        self._check_annotators(self.ranking_annotators, "ranking")
+        self._check_annotators(self.metric_annotators, _("The same metric would be added twice:"))
+        self._check_annotators(self.ranking_annotators, _("The same ranking would be added twice:"))
 
     def generate(self, queryset, round=None):
         """Generates standings for the objects in queryset. Returns a
@@ -306,7 +308,8 @@ class BaseStandingsGenerator:
 
         return standings
 
-    def _check_annotators(self, annotators, type_str):
+    @staticmethod
+    def _check_annotators(annotators, error_str):
         """Checks the given list of annotators to ensure there are no conflicts.
         A conflict occurs if two annotators would add annotations of the same
         name."""
@@ -314,7 +317,7 @@ class BaseStandingsGenerator:
         for annotator in annotators:
             names.append(annotator.key)
         if len(names) != len(set(names)):
-            raise StandingsError("The same {} would be added twice:\n{!r}".format(type_str, names))
+            raise StandingsError(error_str + "\n" + repr(names))
 
     def _interpret_metrics(self, metrics, extra_metrics):
         """Given a list of metric keys, sets:
@@ -339,7 +342,10 @@ class BaseStandingsGenerator:
         all_metrics = [(m, True) for m in metrics] + [(m, False) for m in extra_metrics]
 
         for i, (metric, ranked) in enumerate(all_metrics):
-            klass = self.metric_annotator_classes[metric]
+            try:
+                klass = self.metric_annotator_classes[metric]
+            except KeyError:
+                raise StandingsError(_("Unrecognized metric code: \"%(code)s\"") % {'code': metric})
 
             if issubclass(klass, RepeatedMetricAnnotator):
                 earlier_keys = tuple(m for m in self.precedence[0:i] if m != metric)

@@ -1,4 +1,6 @@
+from django.core.validators import MinValueValidator
 from django.forms import ValidationError
+from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, Section, StringPreference
 
@@ -48,6 +50,7 @@ class MaximumMargin(FloatPreference):
     section = scoring
     name = 'maximum_margin'
     default = 0.0
+    field_kwargs = {'validators': [MinValueValidator(0.0)]}
 
 
 @tournament_preferences_registry.register
@@ -251,10 +254,7 @@ class BPRenyiOrder(FloatPreference):
     section = draw_rules
     name = 'bp_renyi_order'
     default = 1.0
-
-    def validate(self, value):
-        if value < 0.0:
-            raise ValidationError(_("The Rényi order must be a nonnegative number."))
+    field_kwargs = {'validators': [MinValueValidator(0.0)]}
 
 
 @tournament_preferences_registry.register
@@ -266,10 +266,7 @@ class BPPositionCostExponent(FloatPreference):
     section = draw_rules
     name = 'bp_position_cost_exponent'
     default = 4.0
-
-    def validate(self, value):
-        if value < 0.0:
-            raise ValidationError(_("The position cost exponent must be a nonnegative number."))
+    field_kwargs = {'validators': [MinValueValidator(0.0)]}
 
 
 @tournament_preferences_registry.register
@@ -405,11 +402,7 @@ class FeedbackIntroduction(StringPreference):
     section = feedback
     name = 'feedback_introduction'
     default = ''
-
-    def get_field_kwargs(self):
-        kwargs = super().get_field_kwargs()
-        kwargs['required'] = False
-        return kwargs
+    field_kwargs = {'required': True}
 
 
 # ==============================================================================
@@ -517,6 +510,17 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
     nfields = 8
     allow_empty = True
     default = ['wins', 'speaks_avg']
+
+    def validate(self, value):
+        super().validate(value)
+
+        # Check that non-repeatable metrics aren't listed twice
+        classes = [TeamStandingsGenerator.metric_annotator_classes[metric] for metric in value]
+        duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
+        if duplicates:
+            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            raise ValidationError(_("The following metrics can't be listed twice: "
+                    "%(duplicates)s") % {'duplicates': duplicates_str})
 
 
 @tournament_preferences_registry.register
