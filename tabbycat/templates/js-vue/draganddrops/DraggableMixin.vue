@@ -18,13 +18,13 @@ export default {
     draggableClasses: function() {
       var draggableCSS = "vue-draggable btn btn-sm "
       if (this.isHovering) {
-        draggableCSS += "vue-is-hovering"
+        draggableCSS += "vue-is-hovering "
       }
       if (this.isDragging) {
-        return draggableCSS += "vue-is-dragging"
+        return draggableCSS += "vue-is-dragging "
       }
       if (this.locked) {
-        return draggableCSS += "locked"
+        return draggableCSS += "locked "
       }
       return draggableCSS
     },

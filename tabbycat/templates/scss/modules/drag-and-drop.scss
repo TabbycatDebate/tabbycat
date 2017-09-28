@@ -67,8 +67,9 @@
   @include hover-highlights(#000);
 }
 
-.vue-is-dragging {
-  opacity: 0.5 !important;
+.vue-is-dragging, .vue-draggable:active { // :active is the 'ghost' drag element
+  opacity: 0.66 !important;
+  @include hover-highlights(#000);
 }
 
 .vue-draggable.locked {
