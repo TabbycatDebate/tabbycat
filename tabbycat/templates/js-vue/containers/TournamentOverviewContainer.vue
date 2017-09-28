@@ -79,7 +79,7 @@ export default {
       var self = this
       xhr.open('GET', apiURL)
       xhr.onload = function () {
-        console.log('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText)
+        console.debug('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText)
         if (resource === 'actions') {
           self.latestActions = JSON.parse(xhr.responseText);
           setTimeout(self.updateActions, self.pollFrequency);
