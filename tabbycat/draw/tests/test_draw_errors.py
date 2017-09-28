@@ -4,6 +4,8 @@ from django.contrib.messages import ERROR
 
 from availability.utils import set_availability
 from draw.generator import DrawUserError
+from options.models import TournamentPreferenceModel
+from options.serializers import MultiValueSerializer
 from standings.base import StandingsError
 from utils.misc import reverse_round
 from utils.tests import suppress_logs, TournamentTestCase
@@ -51,5 +53,10 @@ class TestCreateDrawViewErrors(TournamentTestCase):
         self.run_test_for_error_response(logging.WARNING, DrawUserError)
 
     def test_bad_standings(self):
-        self.t.preferences['standings__team_standings_precedence'] = ['wins', 'speaks_sum', 'wins']
+        TournamentPreferenceModel.objects.update_or_create(instance=self.t, section='standings',
+                name='team_standings_precedence',
+                defaults={'raw_value': MultiValueSerializer.separator.join(['wins', 'speaks_sum', 'wins'])})
         self.run_test_for_error_response(logging.ERROR, StandingsError)
+        TournamentPreferenceModel.objects.update_or_create(instance=self.t, section='standings',
+                name='team_standings_precedence',
+                defaults={'raw_value': MultiValueSerializer.separator.join(['wins', 'speaks_sum'])})
