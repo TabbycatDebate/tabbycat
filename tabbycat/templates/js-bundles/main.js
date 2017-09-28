@@ -18,6 +18,24 @@ require("bootstrap");
 // Icons
 import feather from 'feather-icons';
 
+// Add alerts programmatically
+$.fn.extend({
+  showAlert: function(alerttype, message, timeout) {
+    $('#messages-container').append('<div id="alertdiv" class="alert alert-' + alerttype + ' fade show"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span>' + message + '</div>');
+    if (timeout && timeout !== 0) {
+      setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
+        $("#alertdiv").alert('close');
+      }, timeout);
+    }
+  },
+  loadButton: function(button) {
+    $(button).prop("disabled", true);
+  },
+  resetButton: function(button) {
+    $(button).prop("disabled", false);
+  }
+});
+
 // Mount global jquery stuff here
 $(document).ready(function(){
 
@@ -40,24 +58,13 @@ $(document).ready(function(){
     $("#sidebar .collapse").removeClass("show");
   };
 
-});
+  // Auto disable submit buttons for forms upon submission (prevent double-sub)
+  $('form').submit(function(event){
+    $("[type=submit]", this).each(function(){
+      $.fn.loadButton(this);
+    });
+  });
 
-// Add alerts programmatically
-$.fn.extend({
-  showAlert: function(alerttype, message, timeout) {
-    $('#messages-container').append('<div id="alertdiv" class="alert alert-' + alerttype + ' fade show"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span>' + message + '</div>');
-    if (timeout && timeout !== 0) {
-      setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
-        $("#alertdiv").alert('close');
-      }, timeout);
-    }
-  },
-  loadButton: function(button) {
-    $(button).prop("disabled", true);
-  },
-  resetButton: function(button) {
-    $(button).prop("disabled", false);
-  }
 });
 
 //------------------------------------------------------------------------------
