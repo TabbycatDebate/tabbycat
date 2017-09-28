@@ -28,9 +28,17 @@ export default {
         this.debugLog(eventCode, 1, conflict.id, hoverOrPanel, clashOrHistory,
                       eventType, conflictType, false, issuerType)
       }
-
       this.$eventHub.$emit(eventCode, conflict.id, hoverOrPanel, clashOrHistory,
                            eventType, conflictType, false, issuerType)
+    },
+    resetConflictsFor: function(entityType, entityID, hoverOrPanel) {
+      // Deactivate all conflicts; such as when a panel changes composition
+      var eventCode = 'reset-conflicts-for-' + entityType + '-' + entityID
+      if (this.debugMode) {
+        this.debugLog(eventCode, 1, entityID, hoverOrPanel, 'both',
+                      entityType, 'all', false, 'panel change')
+      }
+      this.$eventHub.$emit(eventCode, hoverOrPanel)
     },
     forEachConflict: function(conflictsList, callBack) {
       // Utility function that traverses/loops over a list of conflicts and

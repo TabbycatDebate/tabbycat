@@ -82,14 +82,10 @@ export default {
         console.log('Deactivate panel conflicts for', this.debateId);
       }
       _.forEach(this.adjudicatorIds, function(id, da) {
-        self.unsendConflict({ id: id }, 'adjudicator', 'adjudicator', 'panel', 'clashes')
-        self.unsendConflict({ id: id }, 'adjudicator', 'adjudicator', 'panel', 'histories')
-        self.unsendConflict({ id: id }, 'institution', 'adjudicator', 'panel', 'clashes')
+        self.resetConflictsFor('adjudicator', id, 'panel')
       })
       _.forEach(this.teamIds, function(id, dt) {
-        self.unsendConflict({ id: id }, 'team', 'team', 'panel', 'clashes')
-        self.unsendConflict({ id: id }, 'team', 'team', 'panel', 'histories')
-        self.unsendConflict({ id: id }, 'institution', 'team', 'panel', 'clashes')
+        self.resetConflictsFor('team', id, 'panel')
       })
     },
     activatePanelConflicts: function() {
