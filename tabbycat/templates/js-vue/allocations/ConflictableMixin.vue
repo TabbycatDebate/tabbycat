@@ -140,6 +140,10 @@ export default {
       }
       if (clashOrHistory === 'histories') {
         conflictType = 'histories' // Histories have seperate type; override it
+        var currentHistory = this.isConflicted[hoverOrPanel][conflictType]
+        if (currentHistory && state >= currentHistory) {
+          return // We only want the most recent history 'seen' state to show
+        }
       }
       this.isConflicted[hoverOrPanel][conflictType] = state
     },

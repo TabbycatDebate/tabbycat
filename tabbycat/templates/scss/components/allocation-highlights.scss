@@ -20,27 +20,27 @@
   }
 
   &.hover-histories-4-ago {
-    @include hover-highlights(lighten($conflict-history-base, 30%));
+    @include hover-highlights(lighten($conflict-history-base, 25%));
   }
 
   &.hover-histories-5-ago {
-    @include hover-highlights(lighten($conflict-history-base, 34%), theme-color("primary"));
+    @include hover-highlights(lighten($conflict-history-base, 40%), $gray-800);
   }
 
   &.hover-histories-6-ago {
-    @include hover-highlights(lighten($conflict-history-base, 36%), theme-color("primary"));
+    @include hover-highlights(lighten($conflict-history-base, 44%), $gray-800);
   }
 
   &.hover-histories-7-ago {
-    @include hover-highlights(lighten($conflict-history-base, 40%), theme-color("primary"));
+    @include hover-highlights(lighten($conflict-history-base, 46%), $gray-800);
   }
 
   &.hover-histories-8-ago {
-    @include hover-highlights(lighten($conflict-history-base, 44%), theme-color("primary"));
+    @include hover-highlights(lighten($conflict-history-base, 48%), $gray-800);
   }
 
   &.hover-histories-9-ago {
-    @include hover-highlights(lighten($conflict-history-base, 48%), theme-color("primary"));
+    @include hover-highlights(lighten($conflict-history-base, 50%), $gray-800);
   }
 
   // Must be below histories (to take precedence)
