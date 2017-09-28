@@ -29,9 +29,9 @@
         </div>
 
         <div class="list-group list-group-flush">
-          {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel duplicates=round.duplicate_panellists %}
+          {% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel duplicates=round.duplicate_panellists active_adjs=round.active_adjudicators.count debates_in_round=round.debate_set.count %}
 
-            {% if active_adjs.count < draw.count %}
+            {% if active_adjs < debates_in_round %}
 
               {% include "components/item-info.html" with type=danger text="There are currently fewer checked-in adjudicators than there are rooms." %}
 
@@ -73,14 +73,14 @@
                 {% include "components/item-info.html" with type="warning" %}
               {% endif %}
 
-            {% endif %} {# active_adjs.count < draw.count #}
+            {% endif %} {# active_adjs < debates_in_round #}
 
             {% roundurl 'edit-adj-allocation' as url %}
-            {% if active_adjs.count < draw.count or no_chair > 0 or even_panel > 0 %}
+            {% if active_adjs < debates_in_round or no_chair > 0 or pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
               {% trans "Allocate adjudicators" as title %}
               {% include "components/item-action.html" with text=title type="success" to_complete=True %}
             {% else %}
-            {% trans "Edit adjudicator allocation" as title %}
+              {% trans "Edit adjudicator allocation" as title %}
               {% include "components/item-action.html" with text=title type="primary" %}
             {% endif %}
 
