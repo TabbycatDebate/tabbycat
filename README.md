@@ -4,8 +4,7 @@
 
 # Tabbycat
 
-[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=latest)](http://tabbycat.readthedocs.io/en/latest/)
-[![Docs](https://readthedocs.org/projects/tabbycat/badge/?version=stable)](http://tabbycat.readthedocs.io/en/stable/)
+[![Docs](https://readthedocs.org/projects/tabbycat/badge/)](http://tabbycat.readthedocs.io/en/stable/)
 [![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat)
 [![Dependency Status](https://gemnasium.com/badges/github.com/czlee/tabbycat.svg)](https://gemnasium.com/github.com/czlee/tabbycat)
 [![Code Climate](https://codeclimate.com/github/czlee/tabbycat/badges/gpa.svg)](https://codeclimate.com/github/czlee/tabbycat)
