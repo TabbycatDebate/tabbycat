@@ -113,7 +113,7 @@ export default {
     // Internal state storing the status of which diversity highlight is being toggled
     return {
       highlights: { region: false, gender: false, category: false, ranking: false },
-      highlightLabels: { region: 'region', gender: 'gender', category: 'category', ranking: 'rank' }
+      highlightLabels: { region: 'region', gender: 'gender', category: 'category', ranking: 'ranking' }
     }
   },
   methods: {

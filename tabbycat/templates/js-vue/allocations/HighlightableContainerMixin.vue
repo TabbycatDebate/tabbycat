@@ -7,15 +7,12 @@ export default {
   created: function() {
     this.$eventHub.$on('set-highlights', this.setHighlights)
   },
-  computed: {
-
-  },
   methods: {
     setHighlights(highlights) {
-      _.forEach(this.debateTeams, function(item) {
+      _.forEach(this.teams, function(item) {
         item.highlights = highlights
       })
-      _.forEach(this.debateAdjudicators, function(item) {
+      _.forEach(this.adjudicators, function(item) {
         item.highlights = highlights
       })
       _.forEach(this.unallocatedItems, function(item) {
