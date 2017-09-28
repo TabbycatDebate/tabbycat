@@ -122,8 +122,8 @@
 }
 
 .circle-later {
-  stroke: lighten($gray-600, 20);
-  fill: $gray-600;
+  stroke: lighten(theme-color("secondary"), 20);
+  fill: theme-color("secondary");
 }
 
 //------------------------------------------------------------------------------

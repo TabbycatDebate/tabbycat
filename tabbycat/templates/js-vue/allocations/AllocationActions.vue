@@ -81,7 +81,8 @@
       <div class="btn-group">
         <div class="btn-group btn-group-sm">
           <button v-for="label in highlightLabels" @click="toggleHighlight(label)"
-                  :class="['btn btn-primary hoverable disabled', highlights[label] ? 'active' : '']">
+                  :class="['btn btn-outline-primary hoverable disabled',
+                           highlights[label] ? 'btn-primary active' : '']">
             <span :class="highlights[label] ? 'd-none' : ''">
               <i data-feather="eye"></i>
             </span>

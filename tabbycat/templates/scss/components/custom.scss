@@ -28,16 +28,30 @@ $blue:                    #17a2b8; // Info
 $orange:                  #fd681d; // Warning
 $red:                     #d11879; // Danger
 
+// Bootstrap defaults; just copied here so they can be referred to
+$gray-100: #f8f9fa !default;
+// $gray-200: #e9ecef !default;
+// $gray-300: #dee2e6 !default;
+// $gray-400: #ced4da !default;
+// $gray-500: #adb5bd !default;
+$gray-600: #868e96 !default;
+// $gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+
 // Key Colors
 $body-bg:                 #f8fafc;
-$body-color:              #212529; // Gray-900 equivalent
+$body-color:              $gray-900; // Gray-900 equivalent; for body text
 
 $theme-colors: (
   primary: $purple,
+  secondary: $gray-600,
   success: $green,
   info: $blue,
   warning: $orange,
   danger: $red,
+  light: $gray-100,
+  dark: $gray-800
 );
 
 //------------------------------------------------------------------------------
