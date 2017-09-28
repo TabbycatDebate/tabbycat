@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, Section, StringPreference
 
@@ -251,6 +252,10 @@ class BPRenyiOrder(FloatPreference):
     name = 'bp_renyi_order'
     default = 1.0
 
+    def validate(self, value):
+        if value < 0.0:
+            raise ValidationError("The Rényi order must be a nonnegative number.")
+
 
 @tournament_preferences_registry.register
 class BPPositionCostExponent(FloatPreference):
@@ -261,6 +266,10 @@ class BPPositionCostExponent(FloatPreference):
     section = draw_rules
     name = 'bp_position_cost_exponent'
     default = 4.0
+
+    def validate(self, value):
+        if value < 0.0:
+            raise ValidationError("The position cost exponent must be a nonnegative number.")
 
 
 @tournament_preferences_registry.register
