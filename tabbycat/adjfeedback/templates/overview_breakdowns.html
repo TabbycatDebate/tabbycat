@@ -1,0 +1,49 @@
+{% load debate_tags i18n %}
+
+<div class="card">
+  <div class="card-body text-center pb-1">
+    <div class="progress">
+      {% for threshold in c_thresholds reversed %}
+
+        {% widthratio threshold.count c_total 100 as c_percentage %}
+        <div class="progress-bar ranking-display ranking-{{ threshold.class }}" role="progressbar"
+             style="width: {{ c_percentage }}%;" data-toggle="tooltip"
+             title="{{ threshold.count }} adjudicator{{ threshold.count|pluralize }} currently have
+             an average feedback score between {{ threshold.min }} and {{ threshold.max }}. That is
+             {{ c_percentage|floatformat:"0" }}% of the judging pool.">
+          {{ threshold.min }}-{{ threshold.max }} <!-- too cramped if only a small % -->
+        </div>
+
+      {% endfor %}
+    </div>
+    <h6 class="pt-3 text-center text-secondary">Feedback Score Distributions</h6>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body text-center pb-1">
+    <div class="progress">
+      <div class="progress-bar position-display chair" role="progressbar"
+           style="width: {% percentage c_chairs c_total %}%;" data-toggle="tooltip"
+           title="The top {{ c_chairs }} adjudicators are initially allocated as chairs because
+           there are {{ c_chairs }} debates per round.">
+        {{ c_chairs }} Chair{{ c_chairs|pluralize }}
+      </div>
+      <div class="progress-bar position-display panellist" role="progressbar"
+           style="width: {% percentage c_panellists c_total %}%;" data-toggle="tooltip"
+           title="Adjudicators are initially allocated as panellists if their score (measured
+           relative to other adjudicators) is not high enough to warrant chairing but not low
+           enough to be classified as a trainee.">
+        {{ c_panellists }} Panellist{{ c_panellists|pluralize }}
+      </div>
+      <div class="progress-bar position-display trainee" role="progressbar"
+           style="width: {% percentage c_trainees c_total %}%;" data-toggle="tooltip"
+           title="Adjudicators are initially allocated as trainees if their average score is less
+           than the 'minimum voting score' (currently {{ pref.adj_min_voting_score }}) set in this
+           tournament's Draw Rules configuration.">
+        {{ c_trainees }} Trainee{{ c_trainees|pluralize }}
+      </div>
+    </div>
+    <h6 class="pt-3 text-center text-secondary">Auto-Allocate Distributions</h6>
+  </div>
+</div>

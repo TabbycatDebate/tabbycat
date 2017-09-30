@@ -66,13 +66,29 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView
         else:
             return Adjudicator.objects.filter(tournament=t)
 
+    def in_threshold(self, adjudicators, min, max, weight):
+        matches = ([a for a in adjudicators if a.weighted_score(weight) >= min and a.weighted_score(weight) < max])
+        return len(matches)
+
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
         adjudicators = self.get_adjudicators()
-        kwargs['breaking_count'] = adjudicators.filter(breaking=True).count()
         weight = t.current_round.feedback_weight
-        kwargs['c_trainees'] = len([a for a in adjudicators if
-            a.weighted_score(weight) < t.pref('adj_min_voting_score')])
+
+        kwargs['c_breaking'] = adjudicators.filter(breaking=True).count()
+        kwargs['c_total'] = adjudicators.count()
+        kwargs['c_chairs'] = int(t.team_set.count() / 2)
+        kwargs['c_trainees'] = self.in_threshold(adjudicators, 0.0, t.pref('adj_min_voting_score'), weight)
+        kwargs['c_panellists'] = kwargs['c_total'] - kwargs['c_chairs'] - kwargs['c_trainees']
+
+        max_s, min_s = int(t.pref('adj_max_score')), int(t.pref('adj_min_score'))
+        step = max(((max_s - min_s) / 5), 1)
+        kwargs['c_thresholds'] = []
+        for i in range(min_s, max_s, int(step)):
+            kwargs['c_thresholds'].append(
+                {'min': i, 'max': i + step, 'class': (i * 10) + 30,
+                'count': self.in_threshold(adjudicators, i, i + step + 0.01, weight)})
+
         return super().get_context_data(**kwargs)
 
     def get_table(self):

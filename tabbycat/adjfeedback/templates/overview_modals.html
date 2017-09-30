@@ -1,0 +1,71 @@
+{% load debate_tags i18n %}
+
+<div class="modal fade" id="edit-test-score" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form id="testScoreForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-test-score' %}">
+        <div class="modal-body pb-0 pt-0">
+          <div class="list-group list-group-flush">
+
+            {% include "components/form-title.html" with title="Change Test Score" %}
+
+            {% csrf_token %}
+
+            <div class="list-group-item text-info py-3">
+              The score range for adjudicators is between <strong>{{ pref.adj_min_score }}</strong> and
+              <strong>{{ pref.adj_max_score }}</strong>. Decimals are permitted. This can be configured in
+              <a href="{% tournamenturl 'options-tournament-feedback' %}">Feedback settings</a>.
+            </div>
+            <div class="list-group-item text-info py-3">
+              The minimum score require to be allocated as a panellist or chair (when using the
+              auto-allocator) is <strong>{{ pref.adj_min_voting_score }}</strong>. This can be configured in
+              <a href="{% tournamenturl 'options-tournament-draw-rules' %}">Draw settings</a>.
+            </div>
+            <div class="list-group-item">
+              <input id="id_adj_id" name="adj_id" type="hidden" />
+              <div class="form-group pb-3">
+                <label>Test score</label>
+                <input id="id_test_score" class="form-control" name="test_score" placeholder="3.5"
+                       min="{{ pref.adj_min_score }}" max="{{ pref.adj_max_score }}"
+                       type="number" step="any"></input>
+              </div>
+            </div>
+
+            {% include "components/form-submit.html" with title="Save Test Score" %}
+
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% if pref.enable_adj_notes > 0 %}
+  <div class="modal fade" id="edit-note" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header  text-center">
+          <h3>Edit Note</h3>
+        </div>
+        <div class="modal-body">
+          <form id="adjNoteForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-note' %}">
+            {% csrf_token %}
+            <input id="id_adj_id_note" name="adj_id" type="hidden" />
+            <div class="form-group">
+              <div class="col-sm-12">
+                <textarea id="id_note" name="note" placeholder="" rows="20"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <button type="submit" value="Save" class="btn btn-block btn-success">
+                  Save
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

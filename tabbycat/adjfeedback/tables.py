@@ -59,9 +59,8 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_feedback_graphs(self, adjudicators):
         feedback_head = {
             'key': 'Feedback',
-            'text': 'Feedback as <span class="position-display chair">&nbsp;Chair&nbsp;</span>' +
-            ' <span class="position-display panellist">&nbsp;Panellist&nbsp;</span>' +
-            ' <span class="position-display trainee">&nbsp;Trainee&nbsp;</span>'
+            'text': 'Feedback Results',
+            'tooltip': 'Hover over the data points to show the average score received in that round'
         }
         feedback_graph_data = [{
             'graphData': adj.feedback_data,
