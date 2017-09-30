@@ -76,6 +76,9 @@
     {% include "components/item-action.html" with icon="edit" %}
 
   {% endif %}
+</div>
+
+<div class="list-group mt-3">
   {% if user.is_authenticated %}
 
     {% blocktrans asvar text %}Change Password ({{ user }}){% endblocktrans %}
@@ -84,7 +87,7 @@
 
     {% blocktrans asvar text %}Log Out ({{ user }}){% endblocktrans %}
     {% url 'logout' as url %}
-    {% include "components/item-action.html" with icon="rotate-cw" %}
+    {% include "components/item-action.html" with icon="log-out" %}
 
   {% else %}
 
