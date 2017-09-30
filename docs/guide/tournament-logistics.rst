@@ -55,6 +55,8 @@ Having effective registration systems and processes is one of the most important
 
   - At this point our recommendation is to, in most cases, not use specialised registration systems as they are somewhat less intuitive and less flexible than setting up good Google Forms/Sheets.
 
+  - If, for whatever reason, the registration team are not able to give you 'live' access to the data they have on hand, make sure they send you copies of it (even if it is incomplete) well before you need it to setup the tab itself. You want to be able to verify what data is actually being collected and how it is formatted well in advance.
+
 - You should have access to *all* of the data collected; often registration teams will make (false) assumptions about what you do or do not need. It is better to have everything and then selectively filter out what is not relevant to the tab.
 - It is critical that the registration team should check in with you before setting up forms asking for information. Every additional time that registration asks for data there will be less and less participation in the process, so you should aim to gather all that you need at the first opportunity; typically during the canonical individual registration phase. Particular information that should not be overlooked for tab purposes:
 
@@ -299,7 +301,7 @@ If at all feasible you want to train that volunteers acting as runners and/or da
 
   .. rst-class:: spaced-list
 
-  - Volunteering is a pretty thankless and often stressful job. It's also quite a dull and mechanical process: deliver paper; collect paper; enter numbers; check numbers. As much as possible you want your volunteers to feel welcome and a key part of a team. When meeting everyone for the first time try and run the introductions in a non-perfunctory manner and get to know people's background/interests and outline how valuable they are to the tournament.
+  - Volunteering is typically thankless and often stressful. It's also quite a dull and mechanical process: deliver paper; collect paper; enter numbers; check numbers. Given the rather unglamorous nature of their role you want your volunteers to feel welcome and a crucial part of a wider team. When meeting everyone for the first time try and run the introductions in a non-perfunctory manner and get to know people's background/interests and outline how valuable they are to the tournament.
   - As part of this process you should, note their cell phone numbers or whatever means you will use to coordinate communication between the team.
   - Figure out what will be happening during downtime and how you can make it more enjoyable. Would volunteers like to watch debates, work in the tab room, etc. Is there anything they would like during those down times (music, snacks, coffee, etc.).
 
@@ -342,7 +344,7 @@ Most tab software will have at least some options for you to configure those aut
 
 .. note:: This process of tweaking the automatic allocation settings is one you should also revisit as the rounds progress.
 
-How to approach diversity (typically in terms of region and gender) across an allocation in particular is something that some members of an adjudication core will not have had to considered in the context of a large tournament with time pressure or in terms of having to make explicit trade-offs. Again, you should make it clear how the software can accommodate this, and get the adjudication core to plan for how (in general) they want to approach this. Often it will form the final phase of the allocation process, and so can easily be forgotten or skipped over; or people will have different philosophies of how to approach this which are only raised at critical points.
+How to approach diversity (typically in terms of region and gender) across an allocation in particular is something that some members of an adjudication core will not have had to consider in the context of a large tournament with time pressure or in terms of having to make explicit trade-offs. Again, you should make it clear how the software can accommodate this, and get the adjudication core to plan for how (in general) they want to approach this. Often it will form the final phase of the allocation process, and so can easily be forgotten or skipped over; or people will have different philosophies of how to approach this which are only raised at critical points.
 
 Outline that there will usually be a trade-off between the quality of each allocations and the speed at which the tournament runs. When time is not a factor, many adjudication cores will often take an hour or more in order to create a perfect allocation; but they should know though that aiming for perfect during many rounds will break the schedule. You should try and get them to set some sort of time goal for allocations, and (during the rounds) ensure that they are aware of when they are going too fast or too slow. Depending on your personal preferences and the norms surrounding tab direction in your circuit you may want to actual enforce these time limits.
 
