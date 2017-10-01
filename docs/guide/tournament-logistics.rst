@@ -120,6 +120,11 @@ Conflicts/Clashes (registration/equity/adjudication core)
 
 - As mentioned in the previous section, the adjudication core (possibly with equity) should provide some degree of guidance about what kinds of debating-related conflicts should be provided. People should be able to self-define what constitutes a conflict, but there are circumstances where they are overly cautious and can be reassured that it is not necessary. The opposite problem may occur also, where many people may have a very high bar for what defines a conflict which could lead to perceptions of bias from other participants.
 - Generally, it is preferable that each form nominates a single conflict, and people are asked to re-submit for each conflict they are adding.
+
+  - To save you some hassle the conflict form should make this very clear (i.e. that one conflict = one submission; ensure the field labels reinforce this)
+  - The conflict form should also make clear that you shouldn't use the form if you don't have any conflicts (i.e. people will submit 'None', 'None' etc)
+  - The conflicts form should also make clear that adjudicator's don't need to submit a conflict for their current institution and that team's don't need to submit conflicts for adjudicators from their current institution.
+
 - In poorly-structured conflict forms, identifying exactly who is doing the conflicting and who is being conflicted is a nightmare. You want to structure the questions to minimise this ambiguity. A form should definitely ask:
 
   - Who are you (the conflict-specifier)?

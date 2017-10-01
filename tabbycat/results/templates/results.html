@@ -21,6 +21,8 @@
     <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
       {% trans "Advance to Next Round" %} <i data-feather="chevron-right"></i>
     </a>
+  {% else %}
+    <div class="hidden"></div><!-- Just keeps the spacing consistent -->
   {% endif %}
 {% endblock %}
 
@@ -59,40 +61,39 @@
 
 {% block content %}
 
-  <div class="row mb-4">
+  <div class="card mb-3">
+    <div class="card-body text-center pb-1">
+      <div class="progress">
 
-    <div class="col-md-3 col-12">
-      <span class="btn btn-block btn-primary disabled">
-        {{ stats.ballot_in }} {% trans "Checked In" %} <i data-feather="inbox"></i>
-      </span>
-    </div>
-    <div class="col-md-3 col-12">
-      <span class="btn btn-block btn-danger disabled">
-        {{ stats.none }} {% trans "Unknown" %} <i data-feather="x"></i>
-       </span>
-    </div>
-    <div class="col-md-3 col-12">
-      <span class="btn btn-block btn-warning disabled">
-        {{ stats.draft }} {% trans "Unconfirmed" %} <i data-feather="circle"></i>
-       </span>
-    </div>
-    <div class="col-md-3 col-12">
-      <span class="btn btn-block btn-success disabled">
-        {{ stats.confirmed }} {% trans "Confirmed" %} <i data-feather="check"></i>
-       </span>
-    </div>
-    {% if pref.enable_postponements %}
-      <div class="col-md-3 col-12">
-        <span class="btn btn-block btn-primary disabled">
-          {{ stats.postponed }} {% trans "Postponed" %} <i data-feather="pause"></i>
-         </span>
+        <div class="progress-bar bg-warning" role="progressbar"
+             style="width: {% percentage stats.none stats.total %}%;"
+             data-toggle="tooltip" title="{% trans "Unknown" %}">
+          <i data-feather="x"></i>&nbsp;&nbsp;{{ stats.none }}
+        </div>
+        <div class="progress-bar bg-primary" role="progressbar"
+             style="width: {% percentage stats.ballot_in stats.total %}%;"
+             data-toggle="tooltip" title="{% trans "Checked In" %}">
+          <i data-feather="inbox"></i>&nbsp;&nbsp;{{ stats.ballot_in }}
+        </div>
+        <div class="progress-bar bg-info" role="progressbar"
+             style="width: {% percentage stats.draft stats.total %}%"
+             data-toggle="tooltip" title="{% trans "Unconfirmed" %} ">
+          <i data-feather="circle"></i>&nbsp;&nbsp;{{ stats.draft }}
+        </div>
+        <div class="progress-bar bg-success" role="progressbar"
+             style="width: {% percentage stats.confirmed stats.total %}%"
+             data-toggle="tooltip" title="{% trans "Confirmed" %}">
+          <i data-feather="check"></i>&nbsp;&nbsp;{{ stats.confirmed }}
+        </div>
+        {% if pref.enable_postponements %}
+          <div class="progress-bar bg-secondary" role="progressbar"
+               style="width: {% percentage stats.postponed stats.total %}%"
+            {{ stats.postponed }} {% trans "Postponed" %}&nbsp;&nbsp;<i data-feather="pause"></i>
+          </div>
+        {% endif %}
       </div>
-      <div class="col-md-3 col-12">
-        <span class="btn btn-block btn-primary disabled">
-          {% trans "Byes" %} <span class="icon fast-forward"></span>
-         </span>
-      </div>
-    {% endif %}
+      <h6 class="pt-3 text-center text-secondary">{% trans "Ballot Statuses" %}</h6>
+    </div>
   </div>
 
   {{ block.super }}
