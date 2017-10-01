@@ -148,6 +148,6 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution', 'tournament', 'trainee',
                     'independent', 'adj_core', 'gender')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
-    list_filter = ('tournament', 'name')
+    list_filter = ('tournament', 'name', 'institution')
     inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
