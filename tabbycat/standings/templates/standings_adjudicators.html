@@ -1,0 +1,11 @@
+{% extends "base_vue_table.html" %}
+
+{% block content %}
+
+  <div class="card-deck mb-3">
+    {% include "overview_breakdowns.html" %}
+  </div>
+
+  {{ block.super }}
+
+{% endblock %}

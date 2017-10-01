@@ -53,11 +53,8 @@ class GetAdjFeedbackJSON(LoginRequiredMixin, TournamentMixin, JsonDataResponseVi
         return data
 
 
-class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
-
-    template_name = 'feedback_overview.html'
-    page_title = 'Feedback Overview'
-    page_emoji = '🙅'
+class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
+    """ Also inherited by the adjudicator's tab """
 
     def get_adjudicators(self):
         t = self.get_tournament()
@@ -97,11 +94,26 @@ class FeedbackOverview(LoginRequiredMixin, TournamentMixin, VueTableTemplateView
         populate_feedback_scores(adjudicators)
         # Gather stats necessary to construct the graphs
         adjudicators = get_feedback_overview(t, adjudicators)
-        table = FeedbackTableBuilder(view=self, sort_key='Overall Score',
-                                     sort_order='desc')
+        table = FeedbackTableBuilder(view=self, sort_key=self.sort_key,
+                                     sort_order=self.sort_order)
+        table = self.annotate_table(table, adjudicators)
+        return table
+
+
+class FeedbackOverview(LoginRequiredMixin, BaseFeedbackOverview):
+
+    page_title = 'Feedback Overview'
+    page_emoji = '🙅'
+    for_public = False
+    sort_key = 'Overall Score'
+    sort_order = 'desc'
+    template_name = 'feedback_overview.html'
+
+    def annotate_table(self, table, adjudicators):
         table.add_adjudicator_columns(adjudicators, hide_institution=True, subtext='institution')
         table.add_breaking_checkbox(adjudicators)
-        table.add_score_columns(adjudicators)
+        table.add_weighted_score_columns(adjudicators)
+        table.add_test_score_columns(adjudicators, editable=True)
         table.add_feedback_graphs(adjudicators)
         table.add_feedback_link_columns(adjudicators)
         table.add_feedback_misc_columns(adjudicators)

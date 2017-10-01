@@ -26,8 +26,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         self.add_column(breaking_header, breaking_data)
 
-    def add_score_columns(self, adjudicators):
-
+    def add_weighted_score_columns(self, adjudicators):
         feedback_weight = self.tournament.current_round.feedback_weight
         scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
 
@@ -43,17 +42,25 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         } for adj in adjudicators]
         self.add_column(overall_header, overall_data)
 
+    def add_test_score_columns(self, adjudicators, editable=False):
         test_header = {
             'key': 'Test Score',
             'icon': 'clipboard',
             'tooltip': 'Test score result',
         }
-        test_data = [{
-            'text': '%0.1f' % adj.test_score if adj.test_score is not None else 'N/A',
-            'modal': adj.id,
-            'class': 'edit-test-score',
-            'tooltip': 'Click to edit test score',
-        } for adj in adjudicators]
+        if editable:
+            test_data = [{
+                'text': '%0.1f' % adj.test_score if adj.test_score is not None else 'N/A',
+                'modal': adj.id,
+                'class': 'edit-test-score',
+                'tooltip': 'Click to edit test score',
+            } for adj in adjudicators]
+        else:
+            test_data = [{
+                'text': '%0.1f' % adj.test_score if adj.test_score is not None else 'N/A',
+                'tooltip': 'Assigned test score',
+            } for adj in adjudicators]
+
         self.add_column(test_header, test_data)
 
     def add_feedback_graphs(self, adjudicators):

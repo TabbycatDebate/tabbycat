@@ -63,6 +63,12 @@
       {% include "components/item-action.html" with icon="corner-up-right" %}
     {% endif %}
 
+    {% if pref.adjudicators_tab_released %}
+      {% trans "Adjudicator Tab" as text %}
+      {% tournamenturl 'standings-public-adjudicators-tab' as url %}
+      {% include "components/item-action.html" with icon="sun" %}
+    {% endif %}
+
     {% if pref.motion_tab_released %}
       {% trans "Motions Tab" as text %}
       {% tournamenturl 'standings-public-tab-motions' as url %}

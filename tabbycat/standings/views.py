@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.views.generic.base import TemplateView
 
+from adjfeedback.views import BaseFeedbackOverview
 from motions.models import DebateTeamMotionPreference, Motion
 from motions.statistics import MotionStats
 from participants.models import Speaker, SpeakerCategory, Team
@@ -578,3 +579,28 @@ class PublicDiversityStandingsView(PublicTournamentPageMixin, BaseDiversityStand
     cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
     public_page_preference = 'public_diversity'
     for_public = True
+
+
+# ==============================================================================
+# Adjudication
+# ==============================================================================
+
+class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
+    public_page_preference = 'adjudicators_tab_released'
+    page_title = 'Feedback Overview'
+    page_emoji = '🙅'
+    for_public = False
+    sort_key = 'Name'
+    sort_order = 'asc'
+    template_name = 'standings_adjudicators.html'
+
+    def annotate_table(self, table, adjudicators):
+        t = self.get_tournament()
+        table.add_adjudicator_columns(adjudicators)
+        if t.pref('adjudicators_tab_shows') == 'final' or t.pref('adjudicators_tab_shows') == 'all':
+            table.add_weighted_score_columns(adjudicators)
+        if t.pref('adjudicators_tab_shows') == 'test' or t.pref('adjudicators_tab_shows') == 'all':
+            table.add_test_score_columns(adjudicators)
+        if t.pref('adjudicators_tab_shows') == 'all':
+            table.add_feedback_graphs(adjudicators)
+        return table

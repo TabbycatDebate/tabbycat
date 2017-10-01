@@ -614,6 +614,29 @@ class MotionTabReleased(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class AdjudicatorsTabRelease(BooleanPreference):
+    help_text = _("Enables public display of the feedback scores of all adjudicators")
+    verbose_name = _("Release adjudicator tab to public")
+    section = tab_release
+    name = 'adjudicators_tab_released'
+    default = False
+
+
+@tournament_preferences_registry.register
+class AdjudicatorsTabShows(ChoicePreference):
+    help_text = _("What (if released) the adjudicator tab shows")
+    verbose_name = _("Adjudicator tab displays")
+    section = tab_release
+    name = 'adjudicators_tab_shows'
+    choices = (
+        ('test', _("Only shows test score")),
+        ('final', _("Only shows final score")),
+        ('all', _("Only shows test, final, and per-round scores")),
+    )
+    default = 'final'
+
+
+@tournament_preferences_registry.register
 class BallotsReleased(BooleanPreference):
     help_text = _("Enables public display of every adjudicator's ballot. Intended for use after the tournament.")
     verbose_name = _("Release ballots to public")

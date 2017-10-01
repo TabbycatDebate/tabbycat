@@ -11,7 +11,7 @@
              title="{{ threshold.count }} adjudicator{{ threshold.count|pluralize }} currently have
              an average feedback score between {{ threshold.min }} and {{ threshold.max }}. That is
              {{ c_percentage|floatformat:"0" }}% of the judging pool.">
-          {{ threshold.min }}-{{ threshold.max }} <!-- too cramped if only a small % -->
+          {{ threshold.min|floatformat:"0" }}-{{ threshold.max|floatformat:"0" }} <!-- too cramped if only a small % -->
         </div>
 
       {% endfor %}

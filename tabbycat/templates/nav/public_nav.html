@@ -29,6 +29,11 @@
     <a class="nav-link" href="{% tournamenturl 'standings-public-tab-replies' %}">{% trans "Replies Tab" %}</a>
   </li>
 {% endif %}
+{% if pref.adjudicators_tab_released %}
+  <li class="nav-item {% if adjudicators_nav %}active{% endif %}">
+    <a class="nav-link" href="{% tournamenturl 'standings-public-adjudicators-tab' %}">{% trans "Adjudicator Tab" %}</a>
+  </li>
+{% endif %}
 {% if pref.motion_tab_released > 0 %}
   <li class="nav-item {% if motions_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'standings-public-tab-motions' %}">{% trans "Motions Tab" %}</a>
