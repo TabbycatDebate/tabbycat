@@ -11,11 +11,6 @@
   {% endblocktrans %}
 {% endblock %}
 
-{% block page-subnav-sections %}
-  {{ tournament.welcome_msg|safe|linebreaks }}
-{% endblock %}
-
-
 {% block page-alerts %}
   {% if not pref.team_tab_released and not pref.motion_tab_released and not pref.public_draw and not pref.public_results and not pref.public_divisions and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and pref.participant_ballots == 'off' and pref.participant_feedback == 'off' and not pref.show_all_draws %}
     <div class="alert alert-info">
@@ -27,6 +22,14 @@
 {% endblock %}
 
 {% block content %}
+
+  {% if tournament.welcome_msg %}
+    <div class="card">
+      <div class="card-body pb-0">
+        {{ tournament.welcome_msg|safe|linebreaks }}
+      </div>
+    </div>
+  {% endif %}
 
  <div class="list-group mt-2">
 
