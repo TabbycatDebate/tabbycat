@@ -21,26 +21,25 @@
     <div class="list-group-item">
       <div class="row">
 
-        <div class="col mr-0 col-mr-auto pl-md-2 pl-1 btn-group">
-          <div readonly disabled
-               class="btn btn-outline-secondary" />
-            Margin
-          </div>
-          <div name="{{ team.side_code }}_margin" type="text" readonly disabled
-               class="btn btn-secondary {{ team.side_code }}_margin"  />
+        <div class="col-6 mr-0 col-mr-auto pl-md-2 pl-1 btn-group">
+
+          <button class="btn btn-outline-secondary btn-no-hover" readonly />Rank</button>
+          <button name="{{ team.side_code }}_rank" type="text"
+                  class="btn btn-secondary btn-no-hover {{ team.side_code }}_rank" readonly  />
+            ?
+          </button>
+          <button class="btn btn-outline-secondary btn-no-hover" readonly />Margin</button>
+          <button name="{{ team.side_code }}_margin" type="text"
+                  class="btn btn-secondary btn-no-hover {{ team.side_code }}_margin" readonly  />
             +0
-          </div>
+          </button>
         </div>
 
-        <div class="col btn-group pr-md-2 pr-1">
-          <div readonly disabled
-               class="btn btn-outline-secondary" />
-            Total
-          </div>
-          <div name="{{ team.side_code }}_total" type="text" readonly disabled
-               class="btn btn-block btn-secondary {{ team.side_code }}_total"  />
-            00
-          </div>
+        <div class="col"></div>
+
+        <div class="col-4 btn-group pr-md-2 pr-1">
+          <button name="{{ team.side_code }}_total" type="text"
+                  class="btn btn-block btn-secondary btn-no-hover {{ team.side_code }}_total" readonly />00</button>
         </div>
 
       </div>

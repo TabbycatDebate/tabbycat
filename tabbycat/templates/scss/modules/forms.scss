@@ -11,8 +11,14 @@
   }
 }
 
+// Same as .btn; but .btn-link removes this radius for some reason
 .btn-link {
-  border-radius: 0.25rem; // Same as .btn; but .btn-link removes for some reason
+  border-radius: $border-radius;
+}
+
+// Disable hovers without using disable class (it dulls)
+.btn-no-hover {
+  pointer-events: none;
 }
 
 // Use mostly transparent backgrounds rather than fully transparent

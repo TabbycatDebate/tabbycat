@@ -24,6 +24,8 @@ function refresh_totals(scoresheet) {
     // 2-team
     $aff_total = $('.aff_total', $scoresheet);
     $neg_total = $('.neg_total', $scoresheet);
+    $aff_rank = $('.aff_rank', $scoresheet);
+    $neg_rank = $('.neg_rank', $scoresheet);
     $aff_margin = $('.aff_margin', $scoresheet);
     $neg_margin = $('.neg_margin', $scoresheet);
     var aff = sum($('.aff.score input', $scoresheet));
@@ -31,21 +33,27 @@ function refresh_totals(scoresheet) {
     $aff_total.text(aff);
     $neg_total.text(neg);
 
-    $aff_total.removeClass(allClasses);
-    $neg_total.removeClass(allClasses);
+    $aff_rank.removeClass(allClasses);
+    $neg_rank.removeClass(allClasses);
     if (aff > neg) {
-      $aff_total.addClass('btn-success');
-      $neg_total.addClass('btn-danger');
+      $aff_rank.addClass('btn-success');
+      $neg_rank.addClass('btn-danger');
+      $aff_rank.text('Won');
+      $neg_rank.text('Lost');
       $aff_margin.text("+" + Number(aff - neg));
       $neg_margin.text(Number(neg - aff));
     } else if (neg > aff) {
-      $aff_total.addClass('btn-danger');
-      $neg_total.addClass('btn-success');
+      $aff_rank.addClass('btn-danger');
+      $neg_rank.addClass('btn-success');
+      $aff_rank.text('Lost');
+      $neg_rank.text('Won');
       $aff_margin.text(Number(aff - neg));
       $neg_margin.text("+" + Number(neg - aff));
     } else {
-      $aff_total.addClass('btn-dark');
-      $neg_total.addClass('btn-dark');
+      $aff_rank.addClass('btn-dark');
+      $neg_rank.addClass('btn-dark');
+      $aff_rank.text('Tie');
+      $neg_rank.text('Tie');
       $aff_margin.text(Number(aff - neg));
       $neg_margin.text(Number(neg - aff));
     }
@@ -55,11 +63,13 @@ function refresh_totals(scoresheet) {
     var totals_elements = {}
     var margins_elements = {}
     var total_scores = {}
+    var rank_elements = {}
 
     for (var i = 0; i <= positions.length - 1; i++) {
       var team = positions[i];
       totals_elements[team] = $('.' + team + '_total', $scoresheet);
       margins_elements[team] = $('.' + team + '_margin', $scoresheet);
+      rank_elements[team] = $('.' + team + '_rank', $scoresheet);
       var team_total = sum($('.' + team + '.score input', $scoresheet));
       // Update totals scores only if both speaker scores have been entered
       if (team_total > 99) {
@@ -91,20 +101,26 @@ function refresh_totals(scoresheet) {
         }
       }
 
-      totals_elements[team].removeClass(allClasses);
+      rank_elements[team].removeClass(allClasses);
+      rank_elements[team].text("?");
       if (!tie && sortedScores.length > 3) {
         if (i === 0) {
-          totals_elements[team].addClass('btn-success');
+          rank_elements[team].addClass('btn-success');
+          rank_elements[team].text("1st");
         } else if (i === 1) {
-          totals_elements[team].addClass('btn-info');
+          rank_elements[team].addClass('btn-info');
+          rank_elements[team].text("2nd");
         } else if (i === 2) {
-          totals_elements[team].addClass('btn-warning');
+          rank_elements[team].addClass('btn-warning');
+          rank_elements[team].text("3rd");
         } else if (i === 3) {
-          totals_elements[team].addClass('btn-danger');
+          rank_elements[team].addClass('btn-danger');
+          rank_elements[team].text("4th");
         }
       }
       if (tie) {
-        totals_elements[team].addClass('btn-dark');
+        rank_elements[team].addClass('btn-dark');
+          rank_elements[team].text("TIE");
       }
 
       // Display margin
