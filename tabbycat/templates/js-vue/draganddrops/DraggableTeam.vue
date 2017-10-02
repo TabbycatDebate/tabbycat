@@ -15,7 +15,8 @@
       <h5 class="mt-0 mb-0">{{ titleWithLimit }}</h5>
       <span class="small subtitle">
         <span v-if="debugMode">{{ team.institution.id }}</span>
-        {{ team.institution.code }}
+        <span v-if="team.institution">{{ team.institution.code }}</span>
+        <span v-else="">No Institution</span>
       </span>
     </div>
 

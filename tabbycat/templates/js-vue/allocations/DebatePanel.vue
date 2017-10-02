@@ -55,7 +55,6 @@ export default {
       var adjs = this.getAdjudicatorsByPosition(this.panelAdjudicators, position).length
       if ((position === "C" && adjs === 0) || (position === "P" && adjs % 2 != 0)) {
         return css += 'panel-incomplete'
-        console.log('imbalanced')
       }
       return css
     }
