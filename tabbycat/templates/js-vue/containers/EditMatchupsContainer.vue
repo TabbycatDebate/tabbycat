@@ -79,7 +79,8 @@
                                    :assignment-position="position" :locked="debate.locked">
                    <draggable-team v-if="findTeamInDebateBySide(position, debate)"
                                   :team="findTeamInDebateBySide(position, debate)"
-                                  :debate-id="debate.id" :locked="debate.locked"></draggable-team>
+                                  :debate-id="debate.id" :locked="debate.locked"
+                                  :round-info="roundInfo"></draggable-team>
                 </droppable-generic>
               </div>
             </template>

@@ -29,7 +29,8 @@
       <slot :name="'s-' + position">
         <div class="draw-cell flex-6 draw-team-cell">
           <draw-team v-if="findTeamInDebateBySide(position, debate)"
-                     :team="findTeamInDebateBySide(position, debate)"></draw-team>
+                     :team="findTeamInDebateBySide(position, debate)"
+                     :round-info="roundInfo"></draw-team>
         </div>
       </slot>
     </template>

@@ -15,7 +15,7 @@
 
     <unallocated-items-container>
       <div v-for="team in unallocatedTeams">
-        <draggable-team :team="team"></draggable-team>
+        <draggable-team :team="team" :round-info="roundInfo"></draggable-team>
       </div>
     </unallocated-items-container>
 

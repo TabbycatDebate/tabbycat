@@ -11,7 +11,11 @@ export default {
   computed: {
     breakCategoriesFeature: function() {
       var self = this
-      var winInfo = [{ 'title': self.team.wins + ' wins' }]
+      if (this.roundInfo.teamsInDebate === 'bp') {
+        var resultsInfo = [{ 'title': 'On ' + self.team.points + ' points' }]
+      } else {
+        var resultsInfo = [{ 'title': 'On ' + self.team.wins + ' wins' }]
+      }
       var bcInfo = _.map(this.team.break_categories, function(bc) {
         return {
           'title': self.titleForBC(bc),
@@ -19,7 +23,7 @@ export default {
           'icon': self.iconForBC(bc)
         }
       })
-      return winInfo.concat(bcInfo)
+      return resultsInfo.concat(bcInfo)
     },
     teamInfoFeature: function() {
       var self = this

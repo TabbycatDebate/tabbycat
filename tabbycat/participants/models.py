@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Sum
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
@@ -281,6 +282,16 @@ class Team(models.Model):
                     debate_team__team=self, win=True).count()
             return self._wins_count
 
+    @property
+    def points_count(self):
+        try:
+            return self._points_count
+        except AttributeError:
+            from results.models import TeamScore
+            self._points_count = TeamScore.objects.filter(ballot_submission__confirmed=True,
+                    debate_team__team=self).aggregate(Sum('points'))['points__sum']
+            return self._points_count
+
     @cached_property
     def speakers(self):
         return self.speaker_set.all()
@@ -344,6 +355,7 @@ class Team(models.Model):
         team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
         team['highlights'] = {'region': False, 'gender': False, 'category': False}
         team['wins'] = self.wins_count
+        team['points'] = self.points_count
         return team
 
 

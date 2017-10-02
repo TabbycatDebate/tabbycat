@@ -43,7 +43,7 @@ export default {
   },
   mixins: [SlideOverSubjectMixin, SlideOverTeamMixin,
            HighlightableMixin, ConflictableMixin],
-  props: { 'team': Object },
+  props: { 'team': Object, 'roundInfo': Object },
   computed: {
     highlightableObject: function() {
       return this.team

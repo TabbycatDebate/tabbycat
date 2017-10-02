@@ -29,7 +29,7 @@ import SlideOverTeamMixin from '../../info/SlideOverTeamMixin.vue'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverTeamMixin],
-  props: { 'team': Object, 'debateId': null },
+  props: { 'team': Object, 'debateId': null, 'roundInfo': Object },
   computed: {
     titleWithLimit: function() {
       var limit = 15
