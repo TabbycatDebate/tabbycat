@@ -11,6 +11,10 @@
   }
 }
 
+.btn-link {
+  border-radius: 0.25rem; // Same as .btn; but .btn-link removes for some reason
+}
+
 // Use mostly transparent backgrounds rather than fully transparent
 @each $color, $value in $theme-colors {
 

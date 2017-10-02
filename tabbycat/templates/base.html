@@ -116,7 +116,7 @@
 
   </div>
 
-  {% if 'admin/' not in request.path %}
+  {% if 'admin/' not in request.path or not user.is_superuser %}
     <footer class="footer">
       <div class="container-fluid">
         {% block footer %}{% include "footer.html" %}{% endblock footer %}
