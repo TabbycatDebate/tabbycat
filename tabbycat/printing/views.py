@@ -181,6 +181,15 @@ class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
     assistant_page_permissions = ['all_areas']
     template_name = 'scoresheet_list.html'
 
+    def add_ballot_data(self, adj, debate_info):
+        ballot_data = {
+            'author': adj['adjudicator']['name'],
+            'authorInstitution': adj['adjudicator']['institution']['code'],
+            'authorPosition': adj['position'],
+        }
+        ballot_data.update(debate_info)  # Extend with debateInfo keys
+        return ballot_data
+
     def get_context_data(self, **kwargs):
         motions = self.get_round().motion_set.order_by('seq')
         draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
@@ -201,14 +210,11 @@ class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
                 ballot_data.update(debate_info)  # Extend with debateInfo keys
                 ballots.append(ballot_data)
             else:
-                for adj in (a for a in debate_info['debateAdjudicators'] if a['position'] != "T"):
-                    ballot_data = {
-                        'author': adj['adjudicator']['name'],
-                        'authorInstitution': adj['adjudicator']['institution']['code'],
-                        'authorPosition': adj['position'],
-                    }
-                    ballot_data.update(debate_info)  # Extend with debateInfo keys
-                    ballots.append(ballot_data)
+                for adj in (a for a in debate_info['debateAdjudicators'] if a['position'] == "C"):
+                    ballots.append(self.add_ballot_data(adj, debate_info))
+                if self.get_tournament().pref('ballots_per_debate') == 'per-adj':
+                    for adj in (a for a in debate_info['debateAdjudicators'] if a['position'] == "P"):
+                        ballots.append(self.add_ballot_data(adj, debate_info))
 
         kwargs['ballots'] = json.dumps(ballots)
         kwargs['motions'] = json.dumps([
