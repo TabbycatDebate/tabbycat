@@ -36,6 +36,10 @@
       font-weight: normal;
       letter-spacing: -1px;
       color: theme-color("secondary");
+
+      small {
+        font-size: 65%;
+      }
     }
   }
 

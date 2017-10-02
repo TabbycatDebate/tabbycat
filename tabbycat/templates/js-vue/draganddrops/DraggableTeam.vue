@@ -16,7 +16,6 @@
       <span class="small subtitle">
         <span v-if="debugMode">{{ team.institution.id }}</span>
         <span v-if="team.institution">{{ team.institution.code }}</span>
-        <span v-else="">No Institution</span>
       </span>
     </div>
 

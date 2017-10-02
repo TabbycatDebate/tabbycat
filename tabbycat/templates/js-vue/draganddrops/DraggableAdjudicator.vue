@@ -8,7 +8,7 @@
        @mouseleave="hideSlideOver(); hideHoverConflicts()">
 
     <div class="draggable-prefix">
-      <h4>{{ adjudicator.score }}</h4>
+      <h4 v-html="shrunkScore"></h4>
     </div>
     <div class="draggable-title">
       <h5 class="mt-0 mb-0">
@@ -60,6 +60,11 @@ export default {
         return firstNames + " " + lastInitial
       }
       return names.join(" ")
+    },
+    shrunkScore: function() {
+      var score = this.adjudicator.score.split(".")[0]
+      score += "<small>." + this.adjudicator.score.split(".")[1] + "</small>"
+      return score
     },
     highlightableObject: function() {
       return this.adjudicator
