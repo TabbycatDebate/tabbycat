@@ -18,7 +18,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         elif debate.result_status == Debate.STATUS_NONE and debate.ballot_in:
             return "inbox", "text-warning", 1, _("Ballot is In")
         elif debate.result_status == Debate.STATUS_DRAFT:
-            return "sliders", "text-info", 2, _("Ballot is Unconfirmed")
+            return "circle", "text-info", 2, _("Ballot is Unconfirmed")
         elif debate.result_status == Debate.STATUS_CONFIRMED:
             return "check", "text-success", 3, _("Ballot is Confirmed")
         elif debate.result_status == Debate.STATUS_POSTPONED:

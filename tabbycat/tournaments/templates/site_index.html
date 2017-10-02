@@ -66,7 +66,7 @@
   </div>
 {% endif %}
 
-<div class="list-group mt-3">
+<div class="list-group mt-1">
   {% if user.is_superuser %}
 
     {% trans "New Tournament" as text %}{% url 'tournament-create' as url %}
@@ -78,7 +78,7 @@
   {% endif %}
 </div>
 
-<div class="list-group mt-3">
+<div class="list-group mt-1">
   {% if user.is_authenticated %}
 
     {% blocktrans asvar text %}Change Password ({{ user }}){% endblocktrans %}
