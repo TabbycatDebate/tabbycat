@@ -53,9 +53,9 @@ export default {
     getCSSForPosition: function(position) {
       var css = 'flex-horizontal '
       var adjs = this.getAdjudicatorsByPosition(this.panelAdjudicators, position).length
-      if ((position === "C" && adjs === 0) ||
-          (position === "P" && adjs % 2 != 0 && this.roundInfo.teamsInDebate !== 'bp')) {
+      if ((position === "C" && adjs === 0) || (position === "P" && adjs % 2 != 0)) {
         return css += 'panel-incomplete'
+        console.log('imbalanced')
       }
       return css
     }
