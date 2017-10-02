@@ -105,7 +105,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     show_in_list = True
 
     scoring__score_min                         = 50.0
-    scoring__score_max                         = 100.0
+    scoring__score_max                         = 99.0
     scoring__score_step                        = 1.0
     scoring__maximum_margin                    = 0.0
     # Debate Rules
@@ -125,9 +125,9 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     draw_rules__bp_position_cost_exponent      = 4.0
     draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
     # Standings Rules
-    standings__standings_missed_debates        = 2  # TODO check this?
+    standings__standings_missed_debates        = 10 # Speakers always show
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
-    standings__rank_speakers_by                = 'average' # TODO check this?
+    standings__rank_speakers_by                = 'total' # Missing debates hurts totals
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
