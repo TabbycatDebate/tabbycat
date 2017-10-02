@@ -74,7 +74,11 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
 
         kwargs['c_breaking'] = adjudicators.filter(breaking=True).count()
         kwargs['c_total'] = adjudicators.count()
-        kwargs['c_chairs'] = int(t.team_set.count() / 2)
+        if t.pref('teams_in_debate') == 'bp':
+            kwargs['c_chairs'] = int(t.team_set.count() / 4)
+        else:
+            kwargs['c_chairs'] = int(t.team_set.count() / 2)
+
         kwargs['c_trainees'] = self.in_threshold(adjudicators, 0.0, t.pref('adj_min_voting_score'), weight)
         kwargs['c_panellists'] = kwargs['c_total'] - kwargs['c_chairs'] - kwargs['c_trainees']
 
