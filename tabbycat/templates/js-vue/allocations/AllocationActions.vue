@@ -2,7 +2,7 @@
 
   <div><!-- Need extra top level element; modal cant be inside a .fixed-top -->
 
-    <nav class="navbar navbar-default fixed-top allocation-actions pt-3 pb-3 d-flex justify-content-between">
+    <nav class="navbar navbar-default fixed-top allocation-actions navbar-light pt-3 pb-3 d-flex justify-content-between">
 
       <div class="btn-group">
         <div class="btn-group btn-group-sm">
