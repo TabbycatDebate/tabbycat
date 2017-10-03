@@ -85,10 +85,10 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         max_s, min_s = int(t.pref('adj_max_score')), int(t.pref('adj_min_score'))
         step = max(((max_s - min_s) / 5), 1)
         kwargs['c_thresholds'] = []
-        threshold_classes = ['30', '40', '50', '60', '80'] # CSS suffix
+        threshold_classes = ['30', '40', '50', '60', '70', '80'] # CSS suffix
         for i in range(min_s, max_s, int(step)):
             kwargs['c_thresholds'].append(
-                {'min': i, 'max': i + step, 'class': threshold_classes[i],
+                {'min': i, 'max': i + step, 'class': threshold_classes.pop(1),
                  'count': self.in_threshold(adjudicators, i, i + step + 0.01, weight)})
 
         return super().get_context_data(**kwargs)
