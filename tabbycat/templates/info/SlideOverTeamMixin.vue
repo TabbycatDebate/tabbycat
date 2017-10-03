@@ -45,7 +45,9 @@ export default {
     titleForBC: function(bc, wins) {
       if (!_.isUndefined(bc.will_break)) {
         if (bc.will_break !== null) {
-          return bc.will_break.toUpperCase() + ' for ' + bc.name
+          return bc.will_break.toUpperCase() + ' for ' + bc.name + ' Break'
+        } else {
+          return bc.name + ' Break'
         }
       }
     },
@@ -53,6 +55,7 @@ export default {
       if (bc.will_break === 'dead') { return 'x' } else
       if (bc.will_break === 'safe') { return 'check' } else
       if (bc.will_break === 'live') { return 'star' }
+      else { return '' }
     },
     formatForSlideOver: function(subject) {
       return {

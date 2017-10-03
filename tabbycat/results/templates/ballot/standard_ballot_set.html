@@ -18,10 +18,20 @@
         {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code asvar title %}
           Ballot from {{ name }} ({{ institution }})
         {% endblocktrans %}
+        {% include "components/form-title.html" %}
       {% else %}
-        {% trans "Scoresheet" as title %}
+        <div class="list-group-item pt-4">
+          <h4 class="card-title  float-left mt-0 {% if not text %}mb-2{% endif %}">
+            {% trans "Scoresheet" %}
+          </h4>
+            {% for da in debate.adjudicators.voting_with_positions reversed %}
+              <div class="badge badge-secondary float-right ml-2 mt-1">
+                <p class="mb-0">{{ da.0.name }} ({% if da.1 == "o" %}Solo Chair{% elif da.1 == "c" %}Chair{% elif da.1 == "p" %}Panellist{% elif da.1 == "t" %}Trainee{% endif %})</p>
+              </div>
+            {% endfor %}
+
+        </div>
       {% endif %}
-      {% include "components/form-title.html" %}
 
       {% if form.choosing_sides %}
         <p class="sides-before-scores-warning text-warning col-xs-12">
