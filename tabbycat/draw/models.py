@@ -324,25 +324,23 @@ class DebateTeam(models.Model):
             # If the verbose description can't be found, just show the raw flag
             return [DRAW_FLAG_DESCRIPTIONS.get(f, f) for f in self.flags.split(",")]
 
-    def get_result_display(self, tournament=None):
-        if not tournament:
-            tournament = self.team.tournament
+    def get_result_display(self):
 
         if self.win is None:
             if self.points is 3:
-                return "1st"
+                return "Placed 1st"
             elif self.points is 2:
-                return "2nd"
-            elif self.points is 2:
-                return "3rd"
-            elif self.points is 2:
-                return "4th"
+                return "Placed 2nd"
+            elif self.points is 1:
+                return "Placed 3rd"
+            elif self.points is 0:
+                return "Placed 4th"
             else:
                 return ugettext("result unknown")
         elif self.win is True:
-            return ugettext("won")
+            return ugettext("Won")
         elif self.win is False:
-            return ugettext("lost")
+            return ugettext("Lost")
         else:
             return ugettext("result unknown")
 
