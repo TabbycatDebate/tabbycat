@@ -534,7 +534,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
         add_team_round_results_public(teams, rounds)
 
         # Pre-sort, as Vue tables can't do two sort keys
-        teams = sorted(teams, key=lambda t: (-t.total_points, t.short_name))
+        teams = sorted(teams, key=lambda t: (-t.points, t.short_name))
 
         if tournament.pref('teams_in_debate') == 'bp':
             measure = _("Points")
@@ -549,7 +549,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
-        table.add_column(measure, [team.total_points for team in teams])
+        table.add_column(measure, [team.points for team in teams])
         table.add_team_results_columns(teams, rounds)
 
         messages.info(self.request, message)

@@ -283,7 +283,7 @@ class Team(models.Model):
             return self._wins_count
 
     @property
-    def points(self):
+    def points_count(self):
         try:
             return self._points
         except AttributeError:
@@ -355,7 +355,7 @@ class Team(models.Model):
         team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
         team['highlights'] = {'region': False, 'gender': False, 'category': False}
         team['wins'] = self.wins_count
-        team['points'] = self.points
+        team['points'] = self.points_count
         return team
 
 

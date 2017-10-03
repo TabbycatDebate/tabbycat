@@ -61,7 +61,7 @@ def add_team_round_results_public(teams, rounds, opponents=False):
     add_team_round_results(teams, rounds, opponents=opponents,
         lookup=(lambda teams, x: [t for t in teams if t == x][0]), id_attr='id')
     for team in teams:
-        team.total_points = sum([ts.points for ts in team.round_results if ts])
+        team.points = sum([ts.points for ts in team.round_results if ts])
 
 
 def add_speaker_round_results(standings, rounds, tournament, replies=False):
