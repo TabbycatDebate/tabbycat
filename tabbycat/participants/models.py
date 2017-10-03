@@ -283,14 +283,14 @@ class Team(models.Model):
             return self._wins_count
 
     @property
-    def points_count(self):
+    def points(self):
         try:
-            return self._points_count
+            return self._points
         except AttributeError:
             from results.models import TeamScore
-            self._points_count = TeamScore.objects.filter(ballot_submission__confirmed=True,
+            self._points = TeamScore.objects.filter(ballot_submission__confirmed=True,
                     debate_team__team=self).aggregate(Sum('points'))['points__sum']
-            return self._points_count
+            return self._points
 
     @cached_property
     def speakers(self):
@@ -355,7 +355,7 @@ class Team(models.Model):
         team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
         team['highlights'] = {'region': False, 'gender': False, 'category': False}
         team['wins'] = self.wins_count
-        team['points'] = self.points_count
+        team['points'] = self.points
         return team
 
 

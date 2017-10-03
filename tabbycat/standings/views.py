@@ -524,29 +524,35 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         if round is None or round.silent:
             return TabbycatTableBuilder() # empty (as precaution)
-        if tournament.pref('teams_in_debate') == 'bp':
-            measure = "Points"
-        else:
-            measure = "Wins"
 
         teams = tournament.team_set.prefetch_related('speaker_set').order_by(
                 'institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
         rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
 
+        # Can't use prefetch.populate_win_counts, since that doesn't exclude
+        # silent rounds and future rounds appropriately
         add_team_round_results_public(teams, rounds)
 
         # Pre-sort, as Vue tables can't do two sort keys
-        teams = sorted(teams, key=lambda t: (-t.points, t.short_name))
+        teams = sorted(teams, key=lambda t: (-t.total_points, t.short_name))
+
+        if tournament.pref('teams_in_debate') == 'bp':
+            measure = _("Points")
+            message = _("This list is sorted by team points, and then by "
+                "team name within each group — it does not indicate each team's "
+                "ranking within each group. It also excludes silent rounds (if any).")
+        else:
+            measure = _("Wins")
+            message = _("This list is sorted by wins, and then by "
+                "team name within each group — it does not indicate each team's "
+                "ranking within each group. It also excludes silent rounds (if any).")
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
-        table.add_column(measure, [team.points for team in teams])
+        table.add_column(measure, [team.total_points for team in teams])
         table.add_team_results_columns(teams, rounds)
 
-        messages.info(self.request, "This list is sorted by wins, and then by "
-            "team name within each group — it does not indicate each team's "
-            "ranking within each group. It also excludes results from silent "
-            "rounds unless the full tab has been released.")
+        messages.info(self.request, message)
 
         return table
 

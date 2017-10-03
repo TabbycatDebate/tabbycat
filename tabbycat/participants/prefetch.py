@@ -1,4 +1,4 @@
-from django.db.models import Avg, Count
+from django.db.models import Avg, Case, Count, Sum, When
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
@@ -6,23 +6,28 @@ from participants.models import Adjudicator, Team
 
 
 def populate_win_counts(teams):
-    """Populates the `_win_count` attribute of the teams in `teams`.
-    Operates in-place."""
+    """Populates the `_win_count` and `_points` attributes of the teams in
+    `teams`. Operates in-place."""
 
     teams_by_id = {team.id: team for team in teams}
 
     teams_annotated = Team.objects.filter(
         id__in=teams_by_id.keys(),
-        debateteam__teamscore__ballot_submission__confirmed=True,
-        debateteam__teamscore__win=True
-    ).annotate(win_count_annotation=Count('debateteam__teamscore'))
+        debateteam__teamscore__ballot_submission__confirmed=True
+    ).annotate(
+        points_annotation=Sum('debateteam__teamscore__points'),
+        win_count_annotation=Count(Case(When(debateteam__teamscore__win=True, then=1)))
+    )
 
     for team in teams_annotated:
         teams_by_id[team.id]._wins_count = team.win_count_annotation
+        teams_by_id[team.id]._points = team.points_annotation
 
     for team in teams:
         if not hasattr(team, '_wins_count'):
             team._wins_count = 0
+        if not hasattr(team, '_points'):
+            team._points = 0
 
 
 def populate_feedback_scores(adjudicators):
