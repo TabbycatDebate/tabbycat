@@ -81,6 +81,8 @@ def get_menu_highlight(request):
                 menu['draw_nav'] = True # After display
             elif "motions" in path:
                 menu['motions_nav'] = True
+            elif "checkin" in path:
+                menu['checkins_nav'] = True
             elif "results" in path:
                 menu['results_nav'] = True
 
