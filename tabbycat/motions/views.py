@@ -157,4 +157,5 @@ class DisplayMotionsView(OptionalAssistantTournamentPageMixin, RoundMixin, Templ
 
     def get_context_data(self, **kwargs):
         kwargs['motions'] = self.get_round().motion_set.all()
+        kwargs['infos'] = self.get_round().motion_set.exclude(info_slide="")
         return super().get_context_data(**kwargs)

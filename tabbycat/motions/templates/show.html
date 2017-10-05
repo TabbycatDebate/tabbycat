@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load add_field_css debate_tags i18n %}
+{% load add_field_css debate_tags i18n  %}
 
 {% block nav %}{% endblock %}
 {% block header %}{% endblock %}
@@ -11,16 +11,22 @@
   <div class="container-fluid d-flex align-items-center justify-content-center"
        style="width: 100%; height: 95vh;">
     <div>
-      <button class="btn btn-lg btn-success btn-block"
-              data-toggle="modal" data-target="#myModal">
+      <button class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#motionPop">
         {% blocktrans trimmed with round_name=round.name %}
-          Reveal Motions for {{ round_name }}
+          Reveal Motion{{ motions|pluralize }} for {{ round_name }}
         {% endblocktrans %}
       </button>
+      {% if infos %}
+        <button class="btn btn-lg btn-info btn-block mt-5" data-toggle="modal" data-target="#infoPop">
+          {% blocktrans trimmed with round_name=round.name %}
+            Reveal Info Slide{{ infos|pluralize }} for {{ round_name }}
+          {% endblocktrans %}
+        </button>
+      {% endif %}
     </div>
   </div>
 
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade" id="motionPop" tabindex="-1" role="dialog" aria-labelledby="motionPop" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         {% if motions|length == 0 %}
@@ -53,6 +59,23 @@
           </div>
 
         {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="infoPop" tabindex="-1" role="dialog" aria-labelledby="infoPop" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+
+
+        <div class="modal-body d-flex flex-column">
+          {% for info in infos %}
+            <div class="display-4 col d-flex align-items-center">
+              {{ info.info_slide }}
+            </div>
+          {% endfor %}
+        </div>
+
       </div>
     </div>
   </div>

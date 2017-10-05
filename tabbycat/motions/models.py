@@ -14,9 +14,9 @@ class Motion(models.Model):
     reference = models.CharField(max_length=100,
         verbose_name=_("reference"),
         help_text=_("Shortcode for the motion, e.g., \"Bananas\""))
-    # info_slide = models.TextField(
-    #     verbose_name=_("info_slide"),
-    #     help_text=_("The information slide for this topic; if it has one"))
+    info_slide = models.TextField(
+        verbose_name=_("info slide"), default="",
+        help_text=_("The information slide for this topic; if it has one"))
     flagged = models.BooleanField(default=False,
         verbose_name=_("flagged"),
         help_text=_("For WADL: Allows for particular motions to be flagged as contentious"))
