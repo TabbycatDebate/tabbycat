@@ -36,7 +36,7 @@
     <div class="row">
       <div class="col mb-3 mt-3">
 
-          <draw-header :round-info="roundInfo"  @resort="updateSorting"
+          <draw-header :round-info="roundInfo" @resort="updateSorting"
                        :sort-key="sortKey" :sort-order="sortOrder">
 
             <div slot="hbracket"></div>
@@ -46,10 +46,9 @@
 
             <template slot="hteams">
               <div class="vue-sortable thead flex-cell flex-12"
-                   v-for="position in positions" @click="updateSorting(position.side)"
-                   data-toggle="tooltip" :title="'The ' + position.full + ' team'">
-                <span>{{ position.abbr }}</span>
-                <span :class="sortClasses(position.full)"></span>
+                   v-for="position in teamPositions" @click="updateSorting(position)">
+                <span>{{ position }}</span>
+                <span :class="sortClasses(position)"></span>
               </div>
             </template>
 
