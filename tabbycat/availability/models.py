@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import ugettext_lazy as _
 
 
 class RoundAvailability(models.Model):
@@ -10,15 +11,18 @@ class RoundAvailability(models.Model):
         models.Q(app_label='venues', model='venue')
 
     content_type = models.ForeignKey(ContentType, models.CASCADE,
-        limit_choices_to=CONTENT_TYPE_CHOICES)
-    object_id = models.PositiveIntegerField()
+        limit_choices_to=CONTENT_TYPE_CHOICES,
+        verbose_name=_("content type"))
+    object_id = models.PositiveIntegerField(verbose_name=_("object id"))
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    round = models.ForeignKey('tournaments.Round', models.CASCADE)
+    round = models.ForeignKey('tournaments.Round', models.CASCADE,
+        verbose_name=_("round"))
 
     class Meta:
         unique_together = [('round', 'content_type', 'object_id')]
-        verbose_name_plural = 'round availabilities'
+        verbose_name = _("round availability")
+        verbose_name_plural = _("round availabilities")
 
     def __repr__(self):
         return "<RoundAvailability: %s in %s>" % (self.content_object, self.round.name)
