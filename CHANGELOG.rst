@@ -23,6 +23,7 @@ Change Log
 - Now, like Break Categories, you can define arbitrary Categories such as 'Novice' or 'ESL' to create custom Speaker tabs for groups of Speakers
 - Quality of life improvements
     - After creating a new tournament you will now be prompted to apply a basic rules and public information preset
+    - Information Slides can now be added to the system; either for showing to an auditorium within Tabbycat or for displaying alongside the public list of motions and/or the motions tab.
     - Better handling of errors that arise when a debate team is missing or where two teams have been assigned the same side
     - The Feedback Overview page now makes it more clear how the score is determined, the current distribution of scores, and how scores affect the distribution of chairs, panellists, and trainees.
     - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
