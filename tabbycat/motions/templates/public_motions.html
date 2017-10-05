@@ -15,7 +15,14 @@
         {% include "components/form-title.html" with title=round.name %}
         {% if round.motions_released %}
           {% for motion in round.motion_set.all %}
-            <li class="list-group-item">{{ motion.text }}</li>
+            <li class="list-group-item">
+              {{ motion.text }}
+              {% if motion.info_slide %}
+                <span class="h5 mb-0 mt-1 badge badge-secondary float-right"
+                      data-toggle="modal" data-target="#info_{{ motion.id }}">View Info Slide</span>
+                {% include 'motions_info.html' %}
+              {% endif %}
+            </li>
           {% empty %}
             <li class="list-group-item text-info"><em>{% trans "There are no motions available for this round." %}</em></li>
           {% endfor %}
