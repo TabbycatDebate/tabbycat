@@ -1,0 +1,31 @@
+{% load humanize static debate_tags i18n %}
+{% with no_venue=round.num_debates_without_venue duplicates=round.duplicate_venues %}
+
+  {% if no_venue > 0 %}
+    {% blocktrans trimmed asvar text count ndebates=no_venue %}
+      1 debate does not have a venue.
+    {% plural %}
+      {{ ndebates }} debates do not have a venue.
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="danger" %}
+  {% endif %}
+
+  {% if duplicates %}
+    {% blocktrans trimmed asvar text with venues=duplicates|join:", " count ndebates=duplicates|length %}
+      There are multiple debates in <strong>{{ venues }}</strong>.
+    {% plural %}
+      The following <strong>{{ ndebates }}</strong> venues have multiple debates in them: <strong>{{ venues }}</strong>
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="danger" %}
+  {% endif %}
+
+  {% if debates_with_venue_conflicts > 0 %}
+    {% blocktrans trimmed asvar text count ndebates=debates_with_venue_conflicts %}
+      1 debate has a venue constraint violation.
+    {% plural %}
+      {{ ndebates }} debates have venue constraint violations.
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="danger" %}
+  {% endif %}
+
+{% endwith %}

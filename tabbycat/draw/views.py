@@ -155,10 +155,34 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, Ba
 
 
 # ==============================================================================
+# Draw Alerts Utilities (Admin)
+# ==============================================================================
+
+class DrawAlertsView():
+    """ Shared between the Admin Draw page and Admin Display Page"""
+
+    def get_context_data(self, **kwargs):
+        # Need to call super() first, so that get_table() can populate
+        # self.venue_conflicts and self.adjudicator_conflicts.
+        data = super().get_context_data(**kwargs)
+
+        def _count(conflicts):
+            return [len([x for x in c if x[0] != 'success']) > 0 for c in conflicts.values()].count(True)
+
+        if hasattr(self, 'adjudicator_conflicts'):
+            data['debates_with_adj_conflicts'] = _count(self.adjudicator_conflicts)
+        if hasattr(self, 'venue_conflicts'):
+            data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
+        if hasattr(self, 'highlighted_cells_exist'):
+            data['highlighted_cells_exist'] = self.highlighted_cells_exist
+        return data
+
+
+# ==============================================================================
 # Viewing Draw (Admin)
 # ==============================================================================
 
-class AdminDrawDisplay(LoginRequiredMixin, BaseDrawTableView):
+class AdminDrawDisplay(LoginRequiredMixin, BaseDrawTableView, DrawAlertsView):
 
     assistant_page_permissions = ['all_areas', 'results_draw']
     template_name = 'draw_display.html'
@@ -184,7 +208,7 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
 # Draw Creation (Admin)
 # ==============================================================================
 
-class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
+class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView, DrawAlertsView):
     detailed = False
     use_template_subtitle = True
 
@@ -277,22 +301,6 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
             return self.get_bp_position_balance_table()
         else:
             return self.get_standard_table()
-
-    def get_context_data(self, **kwargs):
-        # Need to call super() first, so that get_table() can populate
-        # self.venue_conflicts and self.adjudicator_conflicts.
-        data = super().get_context_data(**kwargs)
-
-        def _count(conflicts):
-            return [len([x for x in c if x[0] != 'success']) > 0 for c in conflicts.values()].count(True)
-
-        if hasattr(self, 'adjudicator_conflicts'):
-            data['debates_with_adj_conflicts'] = _count(self.adjudicator_conflicts)
-        if hasattr(self, 'venue_conflicts'):
-            data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
-        if hasattr(self, 'highlighted_cells_exist'):
-            data['highlighted_cells_exist'] = self.highlighted_cells_exist
-        return data
 
     def _add_break_rank_columns(self, table, draw, category):
         tournament = self.get_tournament()

@@ -5,24 +5,33 @@
 {% block page-title %}Draw Display for {{ round.name }}{% endblock %}
 
 {% block page-subnav-sections %}
-{% if user.is_superuser %}
+  {% if user.is_superuser %}
 
-    <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
-      <i data-feather="chevron-left"></i> View Draw
-    </a>
-
-    {% if not pref.enable_debate_scheduling %}
-      <a href="" class="btn {% if round.starts_at %}btn-primary{% else %}btn-primary{% endif %}"
-         data-toggle="modal" data-target="#editStartTime">
-        {% if round.starts_at %}Debates Start at {{ round.starts_at }}{% else %}Add Start Time{% endif %}
+      <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
+        <i data-feather="chevron-left"></i> View Draw
       </a>
-    {% else %}
-      <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary">
-        Schedule Debates
-      </a>
-    {% endif %}
 
-{% endif %}
+      {% if not pref.enable_debate_scheduling %}
+        <a href="" class="btn {% if round.starts_at %}btn-primary{% else %}btn-primary{% endif %}"
+           data-toggle="modal" data-target="#editStartTime">
+          {% if round.starts_at %}Debates Start at {{ round.starts_at }}{% else %}Add Start Time{% endif %}
+        </a>
+      {% else %}
+        <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary">
+          Schedule Debates
+        </a>
+      {% endif %}
+
+  {% endif %}
+{% endblock %}
+
+{% block page-alerts %}
+
+  <div class="mb-3">
+    {% include "draw_alerts_venues.html" %}
+    {% include "draw_alerts_adjudicators.html" %}
+  </div>
+
 {% endblock %}
 
 {% block page-subnav-actions %}
@@ -36,7 +45,7 @@
 {% if user.is_superuser %}
 <div class="row mb-4">
 
-  <div class="col">
+  <div class="col-md col-12 mb-md-0 mb-3">
     <div class="card">
 
       <div class="card-body">
@@ -96,7 +105,7 @@
     </div>
   </div>
 
-  <div class="col">
+  <div class="col-md col-12 mb-md-0 mb-3">
     <div class="card">
 
       <div class="card-body">
@@ -174,7 +183,7 @@
     </div>
   </div>
 
-  <div class="col">
+  <div class="col-md col-12">
     <div class="card">
 
       {% if pref.enable_motions or pref.motion_vetoes_enabled %}

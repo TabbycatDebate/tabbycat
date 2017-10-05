@@ -1,0 +1,41 @@
+{% load humanize static debate_tags i18n %}
+
+{% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel duplicates=round.duplicate_panellists active_adjs=round.active_adjudicators.count debates_in_round=round.debate_set.count %}
+
+  {% if no_chair > 0 %}
+    {% blocktrans trimmed asvar text count ndebates=no_chair %}
+      1 debate does not have a chair.
+    {% plural %}
+      {{ ndebates }} debates do not have a chair.
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="danger" %}
+  {% endif %}
+
+  {% if not pref.duplicate_adjs and duplicates %}
+    {% blocktrans trimmed asvar text with adjudicators=duplicates|join:", " count nadjs=duplicates|length %}
+      <strong>{{ adjudicators }}</strong> is adjudicating multiple debates.
+    {% plural %}
+      The following <strong>{{ nadjs }}</strong> adjudicators are adjudicating multiple debates: <strong>{{ adjudicators }}</strong>
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="danger" %}
+  {% endif %}
+
+  {% if pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
+    {% blocktrans trimmed asvar text count ndebates=even_panel %}
+      1 debate has a panel with an even number of adjudicators.
+    {% plural %}
+      {{ ndebates }} debates have panels with an even number of adjudicators.
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="warning" %}
+  {% endif %}
+
+  {% if debates_with_adj_conflicts > 0 %}
+    {% blocktrans trimmed asvar text count ndebates=debates_with_adj_conflicts %}
+      1 debate has an adjudicator conflict.
+    {% plural %}
+      {{ ndebates }} debates have adjudicator conflicts.
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="warning" %}
+  {% endif %}
+
+{% endwith %}
