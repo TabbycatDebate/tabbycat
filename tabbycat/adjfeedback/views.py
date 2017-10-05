@@ -91,6 +91,9 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
                 {'min': i, 'max': i + step, 'class': threshold_classes.pop(1),
                  'count': self.in_threshold(adjudicators, i, i + step + 0.01, weight)})
 
+        kwargs['test_percent'] = (1.0 - weight) * 100
+        kwargs['feedback_percent'] = weight * 100
+
         return super().get_context_data(**kwargs)
 
     def get_table(self):

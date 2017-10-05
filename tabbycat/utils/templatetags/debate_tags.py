@@ -220,6 +220,11 @@ def divide_to_int(number_a, number_b):
 @register.simple_tag
 def percentage(number_a, number_b):
     if number_b > 0:
-        return number_a / number_b * 100
+        return number_a / number_b * 100 # Used for progress bars
     else:
         return 0
+
+
+@register.simple_tag
+def subtract(number_a, number_b):
+    return number_a - number_b # Used in Feedback Overview
