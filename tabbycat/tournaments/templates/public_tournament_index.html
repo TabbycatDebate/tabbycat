@@ -122,20 +122,20 @@
           {{ category_name }} Break
         {% endblocktrans %}
         {% tournamenturl 'breakqual-public-teams' category.slug as url %}
-        {% include "components/item-action.html" %}
+        {% include "components/item-action.html" with icon="pie-chart" %}
       {% endfor %}
     {% endif %}
 
     {% if pref.public_breaking_adjs %}
       {% trans "Breaking Adjudicators" as text %}
       {% tournamenturl 'breakqual-public-adjs' as url %}
-      {% include "components/item-action.html" %}
+      {% include "components/item-action.html" with icon="shield" %}
     {% endif %}
 
     {% if pref.public_diversity %}
       {% trans "Diversity Overview" as text %}
       {% tournamenturl 'standings-public-diversity' as url %}
-      {% include "components/item-action.html" %}
+      {% include "components/item-action.html" with icon="globe" %}
     {% endif %}
 
     {% if pref.public_participants %}
@@ -153,13 +153,13 @@
     {% if pref.participant_ballots == 'public' %}
       {% trans "Enter Ballot" as text %}
       {% tournamenturl 'results-public-ballot-submission-index' as url %}
-      {% include "components/item-action.html" %}
+      {% include "components/item-action.html" with icon="plus-circle" %}
     {% endif %}
 
     {% if pref.participant_feedback == 'public' %}
       {% trans "Enter Feedback" as text %}
       {% tournamenturl 'adjfeedback-public-add-index' as url %}
-      {% include "components/item-action.html" %}
+      {% include "components/item-action.html" with icon="plus-square" %}
     {% endif %}
 
     {% if pref.show_all_draws > 0 %}

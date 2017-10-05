@@ -12,7 +12,7 @@
       {% if r.seq < current_round.seq or pref.all_results_released %}
 
         {% roundurl 'results-public-round' r as url %}
-        {% include "components/item-action.html" with text="Results for "|add:r.name %}
+        {% include "components/item-action.html" with icon="trending-up" text="Results for "|add:r.name %}
 
       {% endif %}
     {% endif %}
