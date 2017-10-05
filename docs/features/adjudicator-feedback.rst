@@ -127,10 +127,10 @@ formula:
 
   \textrm{score} = (1-w)\times\textrm{test score} + w\times\textrm{average feedback score}
 
-where :math:`w` is the feedback weight for the round.
+where :math:`w` is the feedback weight for the round. Note that because the feedback score is averaged across all pieces of feedback (rather than on a per-round total) rounds in which a person receives feedback from many sources (say from all teams and all panellists) could impact their average score much more than a round in which they only receive feedback from one or two sources.
 
 Under this formula, each round's feedback weight can be used to determine the
-relative influence of the test score vs  feedback in determining the overall
+relative influence of the test score vs feedback in determining the overall
 score. As an example, say that an adjudicator received 5.0 as their test score,
 but their average feedback rating has thus far been 2.0. If the current rounds'
 feedback weight is set to 0.75, then their overall score would be 2.75. If the

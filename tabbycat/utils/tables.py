@@ -440,7 +440,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             adjcore_header = {
                 'key': 'adjcore',
                 'tooltip': _("Member of the Adjudication Core"),
-                'icon': 'user-minus',
+                'icon': 'user-check',
             }
             self.add_boolean_column(adjcore_header, [adj.adj_core for adj in adjudicators])
 

@@ -631,7 +631,7 @@ class AdjudicatorsTabShows(ChoicePreference):
     choices = (
         ('test', _("Only shows test score")),
         ('final', _("Only shows final score")),
-        ('all', _("Only shows test, final, and per-round scores")),
+        ('all', _("Shows test, final, and per-round scores")),
     )
     default = 'final'
 

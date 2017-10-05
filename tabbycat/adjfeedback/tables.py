@@ -31,14 +31,14 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
 
         overall_header = {
-            'key': 'Overall Score',
-            'icon': 'crosshair',
+            'key': 'Score',
+            'text': 'Score',
             'tooltip': 'Current weighted score',
         }
         overall_data = [{
             'sort': scores[adj],
             'text': '<strong>%0.1f</strong>' % scores[adj] if scores[adj] is not None else 'N/A',
-            'tooltip': 'Current weighted average of all feedback',
+            'tooltip': 'This adjudicator\'s current rating.',
         } for adj in adjudicators]
         self.add_column(overall_header, overall_data)
 
@@ -66,7 +66,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_feedback_graphs(self, adjudicators):
         feedback_head = {
             'key': 'Feedback',
-            'text': 'Feedback Results',
+            'text': 'Feedback',
             'tooltip': 'Hover over the data points to show the average score received in that round'
         }
         feedback_graph_data = [{

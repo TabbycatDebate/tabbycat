@@ -30,16 +30,19 @@
           <h5 class="mb-0 mt-2">
             {{ test_percent|floatformat:"0" }}%
           </h5>
-          <small>test</small>
+          <small>Test</small>
         </div>
         <div class="col pl-0 mb-0">
           <h5 class="mb-0 mt-2">
             {{ feedback_percent|floatformat:"0" }}%
           </h5>
-          <small>feedback</small>
+          <small>Feedback</small>
         </div>
       </div>
-      <h6 class="pt-2 text-secondary">{{ current_round.abbreviation }} Score Factors</h6>
+      <h6 class="pt-2 text-secondary" data-toggle="tooltip"
+          title="The proportion of an adjudicator's score determined by feedback vs the
+                 test is set on a per-round basis. This is the mix for the current round
+                 ({{ current_round.abbreviation }}).">Score Components</h6>
     </div>
   </div>
 </div>

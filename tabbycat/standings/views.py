@@ -609,4 +609,10 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
             table.add_test_score_columns(adjudicators)
         if t.pref('adjudicators_tab_shows') == 'all':
             table.add_feedback_graphs(adjudicators)
+        messages.info(self.request, ("An adjudicator's score is determined by "
+            "a customisable mix of their test score and their feedback ratings."
+            " The current mix is specified below as the 'Score Components.' "
+            "Feedback ratings are determined by averaging the results of all "
+            "individual pieces of feedback across all rounds. "
+            "<a href='http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."))
         return table

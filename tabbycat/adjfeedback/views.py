@@ -113,7 +113,7 @@ class FeedbackOverview(LoginRequiredMixin, BaseFeedbackOverview):
     page_title = 'Feedback Overview'
     page_emoji = '🙅'
     for_public = False
-    sort_key = 'Overall Score'
+    sort_key = 'Score'
     sort_order = 'desc'
     template_name = 'feedback_overview.html'
 
