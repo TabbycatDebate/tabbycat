@@ -15,18 +15,16 @@ logger = logging.getLogger(__name__)
 
 PROHIBITED_TOURNAMENT_SLUGS = [
     'jet', 'database', 'admin', 'accounts',   # System
-    'start', 'create', 'donations', 'load-demo', # Setup Wizards
+    'start', 'create', 'load-demo', # Setup Wizards
     'draw', 'participants', 'favicon.ico',  # Cross-Tournament app's view roots
-    't', '__debug__', 'static']  # Misc
+    '__debug__', 'static', 'donations', 'style']  # Misc
 
 
 def validate_tournament_slug(value):
     if value in PROHIBITED_TOURNAMENT_SLUGS:
-        raise ValidationError(
-            _("You can't use any of the following as tournament slugs, because "
-            "they're reserved for Tabbycat system URLs: %(prohibited_list)s."),
-            params={'prohibited_list': ", ".join(PROHIBITED_TOURNAMENT_SLUGS)}
-        )
+        raise ValidationError(_("You can't use this as a tournament slug, "
+            "because it's reserved for a Tabbycat system URL. Please try "
+            "another one."))
 
 
 class Tournament(models.Model):

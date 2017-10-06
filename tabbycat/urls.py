@@ -44,8 +44,6 @@ urlpatterns = [
         include('jet.urls', 'jet')),
     url(r'^database/',
         include(admin.site.urls)),
-    url(r'^admin/(?P<page>[-\w_/]*)$',
-        RedirectView.as_view(url='/database/%(page)s', permanent=True)),
 
     # Accounts
     url(r'^accounts/logout/$',
@@ -58,11 +56,6 @@ urlpatterns = [
     # Favicon for old browsers that ignore <head> links and always load via root
     url(r'^favicon\.ico$',
         RedirectView.as_view(url='/static/favicon.ico')),
-
-    # Redirect for old-style tournament URLs
-    # Avoid keyword argument name 'tournament_slug' to avoid triggering DebateMiddleware
-    url(r'^t/(?P<slug>[-\w_]+)/(?P<page>[-\w_/]*)$',
-        tournaments.views.TournamentPermanentRedirectView.as_view()),
 
     # Tournament URLs
     url(r'^(?P<tournament_slug>[-\w_]+)/',

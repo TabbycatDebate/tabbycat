@@ -11,12 +11,11 @@ from django.core import management
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
-from django.http import Http404
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic.base import RedirectView, TemplateView
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
 
 from actionlog.mixins import LogActionMixin
@@ -294,20 +293,6 @@ class FixDebateTeamsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
     def dispatch(self, request, *args, **kwargs):
         # bypass the TournamentMixin checks, to avoid potential redirect loops
         return TemplateView.dispatch(self, request, *args, **kwargs)
-
-
-class TournamentPermanentRedirectView(RedirectView):
-    """Redirect old-style /t/<slug>/... URLs to new-style /<slug>/... URLs."""
-
-    url = "/%(slug)s/%(page)s"
-    permanent = True
-
-    def get_redirect_url(self, *args, **kwargs):
-        slug = kwargs['slug']
-        if not Tournament.objects.filter(slug=slug).exists():
-            logger.warning("Tried to redirect non-existent tournament slug '%s'" % slug)
-            raise Http404("There isn't a tournament with slug '%s'." % slug)
-        return super().get_redirect_url(*args, **kwargs)
 
 
 class DonationsView(CacheMixin, TemplateView):
