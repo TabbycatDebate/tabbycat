@@ -66,7 +66,6 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
                                       randomly beforehand.
     """
 
-    can_be_first_round = False
     requires_even_teams = True
     requires_prev_result = False
 

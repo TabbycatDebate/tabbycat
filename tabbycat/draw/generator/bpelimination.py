@@ -7,7 +7,6 @@ from .utils import ispow2
 
 class BaseBPEliminationDrawGenerator(EliminationDrawMixin, BaseBPDrawGenerator):
 
-    can_be_first_round = False
     requires_even_teams = False
     DEFAULT_OPTIONS = {}
 

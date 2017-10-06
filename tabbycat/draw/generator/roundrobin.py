@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 class RoundRobinDrawGenerator(BasePairDrawGenerator):
     """ Class for round-robin stype matchups using divisions """
 
-    can_be_first_round = True
     requires_rrseq = True
     requires_even_teams = False
 

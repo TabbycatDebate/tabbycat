@@ -36,7 +36,6 @@ class BaseDrawGenerator:
 
     # Subclasses must define BASE_DEFAULT_OPTIONS
 
-    can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
     requires_rrseq = False
@@ -166,7 +165,6 @@ class BasePairDrawGenerator(BaseDrawGenerator):
 
     TEAMS_PER_DEBATE = 2
 
-    can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
     requires_rrseq = False
@@ -218,7 +216,6 @@ class EliminationDrawMixin:
 class ManualDrawGenerator(BaseDrawGenerator):
     """Returns an empty draw."""
 
-    can_be_first_round = True
     requires_even_teams = False
     requires_prev_results = False
 

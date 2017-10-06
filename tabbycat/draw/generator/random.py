@@ -32,7 +32,6 @@ class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
             this values is "off", turned on if anything else.
     """
 
-    can_be_first_round = True
     requires_even_teams = True
     requires_prev_results = False
     pairing_class = Pairing
@@ -115,7 +114,6 @@ class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
 
 class RandomBPDrawGenerator(RandomPairingsMixin, BaseBPDrawGenerator):
 
-    can_be_first_round = True
     requires_even_teams = True
     requires_prev_result = False
     pairing_class = BPPairing

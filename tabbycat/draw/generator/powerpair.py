@@ -46,7 +46,6 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                                 Intervarsity Debating Association rules.
     """
 
-    can_be_first_round = False
     requires_even_teams = True
     requires_prev_results = False
 

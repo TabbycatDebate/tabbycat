@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 class BaseEliminationDrawGenerator(EliminationDrawMixin, BasePairDrawGenerator):
 
-    can_be_first_round = False
     requires_even_teams = False
     DEFAULT_OPTIONS = {}
 
