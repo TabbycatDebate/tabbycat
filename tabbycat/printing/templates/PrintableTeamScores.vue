@@ -113,9 +113,9 @@ export default {
         } else if (this.dt.position === "opening opposition") {
           if (order === 1) { return "LO" } else { return "DLO" }
         } else if (this.dt.position === "closing government") {
-          if (order === 1) { return "GM" } else { return "GW" }
+          if (order === 1) { return "MG" } else { return "GW" }
         } else if (this.dt.position === "closing opposition") {
-          if (order === 1) { return "OM" } else { return "OW" }
+          if (order === 1) { return "MO" } else { return "OW" }
         }
       }
     }
