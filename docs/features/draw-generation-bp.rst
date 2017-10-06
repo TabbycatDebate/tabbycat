@@ -37,6 +37,8 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
     - - *Hungarian*\*
       - **Hungarian with preshuffling**
 
+.. _draw-bp-big-picture:
+
 The big picture
 ===============
 
@@ -118,6 +120,8 @@ The available options are as follows:
 - **All in the same room:** All of the pullup teams will be paired into the same room. This means that there will be at most one pullup room per bracket, effectively creating an "intermediate bracket".
 
 .. note:: While it can be argued that the `All in the same room` setting is fairer, it is prohibited by the WUDC constitution. If your tournament follows WUDC rules, you cannot use this setting.
+
+  The teams that get pulled up aren't specifically chosen---they're just assigned as part of the algorithm described :ref:`above <draw-bp-big-picture>`, which optimises for position balance. Tabbycat doesn't support taking anything else into account when choosing pullup teams. (WUDC rules wouldn't allow it, either.)
 
 .. _draw-bp-position-cost-section:
 
