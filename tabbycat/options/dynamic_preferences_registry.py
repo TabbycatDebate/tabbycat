@@ -12,7 +12,7 @@ from .models import tournament_preferences_registry
 
 
 # ==============================================================================
-scoring = Section('scoring')
+scoring = Section('scoring', verbose_name=_("Score Rules"))
 # ==============================================================================
 
 
@@ -89,7 +89,7 @@ class MarginIncludesDissent(BooleanPreference):
     default = False
 
 # ==============================================================================
-draw_rules = Section('draw_rules')
+draw_rules = Section('draw_rules', verbose_name=_("Draw Rules"))
 # ==============================================================================
 
 
@@ -310,7 +310,7 @@ class HideTraineePosition(BooleanPreference):
     default = False
 
 # ==============================================================================
-feedback = Section('feedback')
+feedback = Section('feedback', verbose_name=_("Feedback"))
 # ==============================================================================
 
 
@@ -406,7 +406,7 @@ class FeedbackIntroduction(StringPreference):
 
 
 # ==============================================================================
-debate_rules = Section('debate_rules')
+debate_rules = Section('debate_rules', verbose_name=_("Debate Rules"))
 # ==============================================================================
 
 
@@ -474,7 +474,7 @@ class MotionVetoes(BooleanPreference):
 
 
 # ==============================================================================
-standings = Section('standings')
+standings = Section('standings', verbose_name=_("Standings"))
 # ==============================================================================
 
 
@@ -535,7 +535,7 @@ class TeamStandingsExtraMetrics(MultiValueChoicePreference):
     default = []
 
 # ==============================================================================
-tab_release = Section('tab_release')
+tab_release = Section('tab_release', verbose_name=_("Tab Release"))
 # ==============================================================================
 
 
@@ -655,7 +655,7 @@ class AllResultsReleased(BooleanPreference):
 
 
 # ==============================================================================
-data_entry = Section('data_entry')
+data_entry = Section('data_entry', verbose_name=_("Data Entry"))
 # ==============================================================================
 
 
@@ -740,7 +740,7 @@ class AssistantAccess(ChoicePreference):
 
 
 # ==============================================================================
-public_features = Section('public_features')
+public_features = Section('public_features', verbose_name=_("Public Features"))
 # ==============================================================================
 
 
@@ -853,7 +853,7 @@ class FeedbackProgress(BooleanPreference):
 
 
 # ==============================================================================
-ui_options = Section('ui_options')
+ui_options = Section('ui_options', verbose_name=_("UI Options"))
 # ==============================================================================
 
 
@@ -933,7 +933,7 @@ class PublicMotionsOrder(ChoicePreference):
     default = 'reverse'
 
 # ==============================================================================
-league_options = Section('league_options')
+league_options = Section('league_options', verbose_name=_("League Options"))
 # ==============================================================================
 
 

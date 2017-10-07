@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
-{% block head-title %}❔ Confirm {{ preset_title }} Presets{% endblock %}
-{% block page-title %}❔ Confirm {{ preset_title }} Presets{% endblock %}
+{% block head-title %}❔ {% blocktrans %}Confirm {{ preset_title }} Presets{% endblocktrans %}{% endblock %}
+{% block page-title %}{% blocktrans %}Confirm {{ preset_title }} Presets{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary "
      href="{% tournamenturl 'options-tournament-index' %}">
-    <i data-feather="chevron-left"></i> Back to Configuration
+    <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
   </a>
 {% endblock %}
 
@@ -17,8 +17,7 @@
 
     <ul class="list-group">
       <li class="list-group-item">
-        <span class="badge badge-secondary">{{ unchanged_preferences.length }}</span>
-        <h4>Preferences that will not change</h4>
+        <h4>{% trans "Preferences that will not change" %} ({{ unchanged_preferences|length }})</h4>
       </li>
       {% for preference in unchanged_preferences %}
         <li class="list-group-item">
@@ -32,27 +31,21 @@
 
   {% endif %}
 
-  {% include "preferences_changed.html" with preferences=changed_preferences title="Preferences that will change" %}
+  {% trans "Preferences that will change" as title %}
+  {% include "preferences_changed.html" with preferences=changed_preferences %}
 
-
-<div class="card mt-3">
-
-  <ul class="list-group list-group-flush">
-
-    <li class="list-group-item">
-      <button id="applyPresets" class="btn btn-success btn-block">
-        Apply {{ preset_title }} Presets
-      </button>
-      <form id="applyPresetsForm" method="POST">
-        {% csrf_token %}
-      </form>
-    </li>
-
-  </ul>
-
-</div>
-
-
+  <div class="card mt-3">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <button id="applyPresets" class="btn btn-success btn-block">
+          {% blocktrans %}Apply {{ preset_title }} Presets{% endblocktrans %}
+        </button>
+        <form id="applyPresetsForm" method="POST">
+          {% csrf_token %}
+        </form>
+      </li>
+    </ul>
+  </div>
 {% endblock content %}
 
 {% block js %}

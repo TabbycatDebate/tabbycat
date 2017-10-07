@@ -1,16 +1,22 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% load add_field_css %}
 
-{% block page-title %}🔧 Edit Configuration{% endblock %}
-{% block head-title %}<span class="emoji">🔧</span>Edit Configuration{% endblock %}
+{% block page-title %}{% blocktrans trimmed with section_name=section.verbose_name %}
+  Configuration: {{ section_name }}
+{% endblocktrans %}{% endblock %}
+{% block head-title %}<span class="emoji">🔧</span>
+  {% blocktrans trimmed with section_name=section.verbose_name %}
+    Edit Configuration: {{ section_name }}
+  {% endblocktrans %}
+{% endblock %}
 
 {% block page-subnav-sections %}
 
   <a class="btn btn-outline-primary"
      href="{% tournamenturl 'options-tournament-index' %}">
-    <i data-feather="chevron-left"></i> Back to Configuration
+    <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
   </a>
 
 {% endblock %}

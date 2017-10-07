@@ -47,7 +47,7 @@ class TournamentPreferenceFormView(SuperuserRequiredMixin, LogActionMixin, Tourn
     action_log_type = ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT
 
     def form_valid(self, *args, **kwargs):
-        messages.success(self.request, "Tournament option saved.")
+        messages.success(self.request, _("Tournament option saved."))
         return super().form_valid(*args, **kwargs)
 
     def get_success_url(self):
@@ -55,9 +55,13 @@ class TournamentPreferenceFormView(SuperuserRequiredMixin, LogActionMixin, Tourn
 
     def get_form_class(self, *args, **kwargs):
         tournament = self.get_tournament()
-        form_class = tournament_preference_form_builder(instance=tournament,
-                                                        section=self.section_slug)
+        form_class = tournament_preference_form_builder(instance=tournament, section=self.section_slug)
         return form_class
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['section'] = self.registry.section_objects[self.section_slug]
+        return context
 
 
 class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
