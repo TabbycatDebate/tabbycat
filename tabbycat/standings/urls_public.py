@@ -1,11 +1,17 @@
 from django.conf.urls import url
+from django.views.generic.base import RedirectView
 
 from . import views
 
 urlpatterns = [
-    url(r'^current_standings/$',
+    url(r'^current-standings/$',
         views.PublicCurrentTeamStandingsView.as_view(),
         name='standings-public-teams-current'),
+
+    # Transitional provision added 7/10/2017, remove after 7/11/2017
+    url(r'^current_standings/$',
+        RedirectView.as_view(url='/%(tournament_slug)s/tab/current-standings/', permanent=True)),
+
     url(r'^team/$',
         views.PublicTeamTabView.as_view(),
         name='standings-public-tab-team'),
