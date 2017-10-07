@@ -13,7 +13,7 @@
 
 {% block content %}
 
-  {% if unchanged_preferences.length > 0 %}
+  {% if unchanged_preferences|length > 0 %}
 
     <ul class="list-group">
       <li class="list-group-item">
@@ -33,6 +33,25 @@
   {% endif %}
 
   {% include "preferences_changed.html" with preferences=changed_preferences title="Preferences that will change" %}
+
+
+<div class="card mt-3">
+
+  <ul class="list-group list-group-flush">
+
+    <li class="list-group-item">
+      <button id="applyPresets" class="btn btn-success btn-block">
+        Apply {{ preset_title }} Presets
+      </button>
+      <form id="applyPresetsForm" method="POST">
+        {% csrf_token %}
+      </form>
+    </li>
+
+  </ul>
+
+</div>
+
 
 {% endblock content %}
 

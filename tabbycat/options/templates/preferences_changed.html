@@ -31,14 +31,6 @@
         </div>
       </li>
     {% endfor %}
-    <li class="list-group-item">
-      <button id="applyPresets" class="btn btn-success btn-block">
-        Apply {{ preset_title }} Presets
-      </button>
-      <form id="applyPresetsForm" method="POST">
-        {% csrf_token %}
-      </form>
-    </li>
 
   </ul>
 
