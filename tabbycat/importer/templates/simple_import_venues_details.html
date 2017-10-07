@@ -14,7 +14,7 @@
   </div>
 
   {% blocktrans asvar p1 %}Venues with lower priorities are allocated in the draw last. If you have more venues than you need you can mark the worst venues with a lower priority number"{% endblocktrans %}
-  {% tournamenturl 'options-tournament-league' as options_league_url %}
+  {% tournamenturl 'options-tournament-section' section='league_options' as options_league_url %}
   {% blocktrans asvar p2 %}Venues marked as 'shared' will not be associated with any particular tournament but will be available to any tournament which has the <a href='{{ options_league_url }}' class='alert-link'>'Share Venues' setting</a> enabled.{% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 

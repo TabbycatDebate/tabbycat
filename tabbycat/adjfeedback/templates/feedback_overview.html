@@ -5,7 +5,7 @@
 
 {% block page-alerts %}
 
-  {% tournamenturl 'options-tournament-feedback' as option_url %}
+  {% tournamenturl 'options-tournament-section' section='feedback' as option_url %}
   {% if pref.feedback_paths == 'minimal' %}
     {% trans "only chairs can submit feedback (on their panellists and trainees)" as preference_description %}
   {% elif pref.feedback_paths == 'with-p-on-c' %}

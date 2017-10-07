@@ -127,7 +127,7 @@
 
           {% trans "Unrelease draw to public" as release_text %}
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}</form>
-          {% tournamenturl 'options-tournament-public-features' as alert_link %}
+          {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
 
           {% if pref.public_draw %}
             {% trans "Draw has been released." as text %}
@@ -237,7 +237,7 @@
             {% endif %}
             {% include "components/item-info.html" with type="" %}
           {% else %}
-            {% tournamenturl 'options-tournament-public-features' as alert_link %}
+            {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
             {% blocktrans trimmed asvar text %}
               You have released the motions, but they will not show to the public unless
               the "public view of motions" setting is enabled in

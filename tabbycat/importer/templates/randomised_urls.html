@@ -79,7 +79,7 @@
   {% if pref.participant_ballots != 'private-urls' and pref.participant_feedback != 'private-urls' and not pref.allocation_confirmations %}
     <div class="card border-warning text-warning mb-3">
       <div class="card-body">
-        {% tournamenturl 'options-tournament-data-entry' as data_entry_options_url %}
+        {% tournamenturl 'options-tournament-section' section='data_entry' as data_entry_options_url %}
         {% blocktrans trimmed %}
           Neither <strong>participant ballot submissions</strong> nor
           <strong>participant feedback submissions</strong> are configured to be

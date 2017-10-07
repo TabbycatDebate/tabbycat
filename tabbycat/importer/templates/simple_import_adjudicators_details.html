@@ -13,7 +13,7 @@
   </div>
 </div>
 
-{% tournamenturl 'options-tournament-league' as options_league_url %}
+{% tournamenturl 'options-tournament-section' section='league_options' as options_league_url %}
   {% blocktrans trimmed asvar settings_info with min=pref.adj_min_score max=pref.adj_max_score %}
     As per this tournament's configuration, an adjudicator's rating must be between
     <strong>{{ min }}</strong> and <strong>{{ max }}</strong>. Adjudicators marked as 'shared' will

@@ -11,27 +11,27 @@
   <div class="col-md-6 col-12 mb-3">
     <ul class="list-group">
 
-      {% tournamenturl 'options-tournament-scoring' as url %}
+      {% tournamenturl 'options-tournament-section' section='scoring' as url %}
       {% trans "Score Rules" as title %}
       {% trans "The range of scores that can awarded to speeches, replies, and teams" as description %}
       {% include "components/item-action.html" with type="primary" emoji="💯" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-draw-rules' as url %}
+      {% tournamenturl 'options-tournament-section' section='draw_rules' as url %}
       {% trans "Draw Rules" as title %}
       {% trans "How teams are paired in the draw and how adjudicators are auto-allocated" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📏" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-debate-rules' as url %}
+      {% tournamenturl 'options-tournament-section' section='debate_rules' as url %}
       {% trans "Debate Rules" as title %}
       {% trans "How many speeches in a debate, how motions are decided, and whether reply speeches are used" as description %}
       {% include "components/item-action.html" with type="primary" emoji="⚖" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-standings' as url %}
+      {% tournamenturl 'options-tournament-section' section='standings' as url %}
       {% trans "Standings" as title %}
       {% trans "How teams and speakers are ranked in the released tabs" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📊" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-feedback' as url %}
+      {% tournamenturl 'options-tournament-section' section='feedback' as url %}
       {% trans "Feedback" as title %}
       {% trans "How adjudicators are ranked and who can submit feedback" as description %}
       {% include "components/item-action.html" with type="primary" emoji="🙅" text=title extra=description %}
@@ -42,27 +42,27 @@
   <div class="col-md-6 col mb-3">
     <ul class="list-group">
 
-      {% tournamenturl 'options-tournament-tab-release' as url %}
+      {% tournamenturl 'options-tournament-section' section='tab_release' as url %}
       {% trans "Tab Release" as title %}
       {% trans "When to release a public tab is made visible and what data it shows" as description %}
       {% include "components/item-action.html" with type="primary" emoji="🚨" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-data-entry' as url %}
+      {% tournamenturl 'options-tournament-section' section='data_entry' as url %}
       {% trans "Data Entry" as title %}
       {% trans "How ballots and feedback are entered, including online submission options" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📝" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-public-features' as url %}
+      {% tournamenturl 'options-tournament-section' section='public_features' as url %}
       {% trans "Public Features" as title %}
       {% trans "What information the site displays on the publicly accessible pages" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📢" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-ui' as url %}
+      {% tournamenturl 'options-tournament-section' section='ui_options' as url %}
       {% trans "UI Options" as title %}
       {% trans "Small tweaks in what information is presented by the interface" as description %}
       {% include "components/item-action.html" with type="primary" emoji="💻" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-league' as url %}
+      {% tournamenturl 'options-tournament-section' section='league_options' as url %}
       {% trans "League Options" as title %}
       {% trans "Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported." as description %}
       {% include "components/item-action.html" with type="primary" emoji="🏫" text=title extra=description %}
