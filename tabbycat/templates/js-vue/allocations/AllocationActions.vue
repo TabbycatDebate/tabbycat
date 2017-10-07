@@ -28,10 +28,10 @@
               Seen <span class="d-xl-inline d-none">Before</span>
             </button>
             <button class="btn conflictable conflicts-toolbar hover-institution">
-              Institutional <span class="d-xl-inline d-none">Clash</span>
+              Institutional <span class="d-xl-inline d-none">Conflict</span>
             </button>
             <button class="btn conflictable conflicts-toolbar hover-adjudicator">
-              Personal <span class="d-xl-inline d-none">Clash</span>
+              Personal <span class="d-xl-inline d-none">Conflict</span>
             </button>
             <button class="btn panel-incomplete">
               Incomplete
