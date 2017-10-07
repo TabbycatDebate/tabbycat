@@ -26,32 +26,32 @@
 
 {% block content %}
 
-    <div class="d-lg-flex justify-content-lg-between mb-4">
-      <div class="nav nav-pills navbar-left btn-group">
-        <button class="btn btn-outline-secondary h6">
-          Key
-        </button>
-        <button class="btn btn-primary gender-display gender-male h6">
-          Male identifying
-        </button>
-        <button class="btn btn-primary gender-display gender-nm h6">
-          Non-cis male identifying
-        </button>
-        <button class="btn btn-primary gender-display gender-unknown h6">
-          Unknown
-        </button>
-      </div>
-      <div class="nav nav-pills float-right btn-group">
-        <button class="btn btn-outline-secondary h6">
-          Key
-        </button>
-        {% for r in regions %}
-          <button class="btn btn-primary region-display region-{{ r.seq }} h6">
-            {{ r.name }}
-          </button>
-        {% endfor %}
-      </div>
+  <div class="d-lg-flex justify-content-lg-between mb-4 clearfix">
+    <div class="nav nav-pills navbar-left btn-group">
+      <button class="btn btn-outline-secondary h6">
+        Key
+      </button>
+      <button class="btn btn-primary gender-display gender-male h6">
+        Male identifying
+      </button>
+      <button class="btn btn-primary gender-display gender-nm h6">
+        Non-cis male identifying
+      </button>
+      <button class="btn btn-primary gender-display gender-unknown h6">
+        Unknown
+      </button>
     </div>
+    <div class="nav nav-pills float-right btn-group mt-md-0 mt-3">
+      <button class="btn btn-outline-secondary h6">
+        Key
+      </button>
+      {% for r in regions %}
+        <button class="btn btn-primary region-display region-{{ r.seq }} h6">
+          {{ r.name }}
+        </button>
+      {% endfor %}
+    </div>
+  </div>
 
   <div id="vueMount">
     <diversity-container :graphs-data="graphsData"></diversity-container>

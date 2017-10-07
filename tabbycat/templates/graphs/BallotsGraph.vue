@@ -1,8 +1,11 @@
 <template id="ballots-graph">
   <div>
 
-    <svg id="ballotsStatusGraph" class="d3-graph" style="margin-top: -15px; margin-bottom: -15px;" width="100%"></svg>
-    <div v-if="!graphData" class="text-center">No ballots in for this round yet</div>
+    <svg id="ballotsStatusGraph" class="d3-graph"
+         style="margin-top: -15px; margin-bottom: -15px; width: 100%;"></svg>
+    <div v-if="!graphData" class="text-center">
+      No ballots in for this round yet
+    </div>
 
   </div>
 </template>

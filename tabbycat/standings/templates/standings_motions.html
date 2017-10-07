@@ -1,6 +1,5 @@
 {% extends "standings_base.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load debate_tags static i18n %}
 
 {% block page-title %}💭Motions Tab{% endblock %}
 {% block head-title %}<span class="emoji">💭</span>💭Motions Tab{% endblock %}
@@ -19,19 +18,21 @@
         </div>
 
         {% for am in round_motions %}
-          <div class="list-group-item pb-0">
+          <div class="list-group-item pb-0 text-center">
+
+            <h4 class="mb-3 mt-1">
+              {{ am.motion }}
+            </h4>
 
             {% with motion=am.motion %}
               {% if motion.info_slide %}
-                <span class="h5 mb-0 mt-3 badge badge-secondary float-right"
-                      data-toggle="modal" data-target="#info_{{ motion.id }}">View Info Slide</span>
+                <span class="h6 badge badge-light text-secondary mx-auto mb-3 mt-0"
+                      data-toggle="modal" data-target="#info_{{ motion.id }}">
+                  {% trans "View Info Slide" %}
+                </span>
                 {% include 'motions_info.html' %}
               {% endif %}
             {% endwith %}
-
-            <h4 class="mb-3 mt-2 text-center">
-              {{ am.motion }}
-            </h4>
 
             <div class="row">
 

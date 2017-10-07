@@ -1,7 +1,7 @@
 <template>
   <div class="card-deck">
 
-    <div class="card mb-3">
+    <div class="card mt-3">
       <div class="card-body text-center px-0">
         <h5 class="card-title mb-4">Speaker Demographics</h5>
         <donut-chart v-for="set in graphsData.speakers_gender"
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div class="card mb-3">
+    <div class="card mt-3">
       <div class="card-body text-center px-0">
         <h5 class="card-title mb-4">Adjudicator Demographics</h5>
         <donut-chart v-for="set in graphsData.adjudicators_gender"
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div class="card mb-3">
+    <div class="card mt-3">
       <div class="card-body text-center">
         <h5 class="card-title mb-4">Speaker Results</h5>
         <text-display v-for="set in graphsData.speakers_results"
@@ -64,7 +64,7 @@
       </div>
     </div>
 
-    <div class="card mb-3">
+    <div class="card mt-3">
       <div class="card-body text-center">
         <h5 class="card-title mb-4">Adjudicator Results</h5>
         <text-display v-for="set in graphsData.adjudicators_results"

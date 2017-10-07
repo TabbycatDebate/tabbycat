@@ -18,8 +18,10 @@
             <li class="list-group-item">
               {{ motion.text }}
               {% if motion.info_slide %}
-                <span class="h5 mb-0 mt-1 badge badge-secondary float-right"
-                      data-toggle="modal" data-target="#info_{{ motion.id }}">View Info Slide</span>
+                <span class="h6 badge badge-light text-secondary float-md-right d-block mb-0 mt-md-1 mt-2"
+                      data-toggle="modal" data-target="#info_{{ motion.id }}">
+                  {% trans "View Info Slide" %}
+                </span>
                 {% include 'motions_info.html' %}
               {% endif %}
             </li>
