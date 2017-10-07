@@ -51,7 +51,7 @@
           {% include "draw_alerts_venues.html" %}
 
           {% roundurl 'venues-edit' round as url %}
-          {% if no_venue > 0 %}
+          {% if round.num_debates_without_venue > 0 %}
             {% trans "Allocate venues" as title %}
             {% include "components/item-action.html" with text=title type="success" to_complete=True %}
           {% else %}
