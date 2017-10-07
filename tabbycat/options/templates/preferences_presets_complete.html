@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block page-title %}{% blocktrans %}{{ preset_title }} Presets Applied{% endblocktrans %}{% endblock %}
-{% block head-title %}<span class="emoji">✅</span> {% blocktrans %}{{ preset_title }} Presets Applied{% endblocktrans %}{% endblock %}
+{% block page-title %}{% blocktrans %}Presets Applied: {{ preset_title }}{% endblocktrans %}{% endblock %}
+{% block head-title %}<span class="emoji">✅</span> {% blocktrans %}Presets Applied: {{ preset_title }}{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-primary "
