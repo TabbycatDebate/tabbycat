@@ -116,7 +116,7 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
             instructions = self.public_standings_error_instructions
 
         message = self.standings_error_message % {'message': str(e)}
-        standings_options_url = reverse_tournament('options-tournament-standings', self.get_tournament())
+        standings_options_url = reverse_tournament('options-tournament-section', self.get_tournament(), kwargs={'section': 'standings'})
         instructions %= {'standings_options_url': standings_options_url}
         return mark_safe(message + instructions)
 

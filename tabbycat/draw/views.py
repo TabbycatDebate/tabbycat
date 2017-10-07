@@ -453,7 +453,7 @@ class CreateDrawView(DrawStatusEdit):
                 "<p>Because generating the draw uses the current team standings, this "
                 "prevents the draw from being generated.</p>"
             ) % {'message': str(e)}
-            standings_options_url = reverse_tournament('options-tournament-standings', self.get_tournament())
+            standings_options_url = reverse_tournament('options-tournament-section', self.get_tournament(), kwargs={'section': 'standings'})
             instructions = BaseStandingsView.admin_standings_error_instructions % {'standings_options_url': standings_options_url}
             messages.error(request, mark_safe(message + instructions))
             logger.exception("Error generating standings for draw: " + str(e))
