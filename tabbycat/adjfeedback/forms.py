@@ -19,10 +19,10 @@ from .utils import expected_feedback_targets
 logger = logging.getLogger(__name__)
 
 ADJUDICATOR_POSITION_NAMES = {
-    AdjudicatorAllocation.POSITION_CHAIR: 'chair',
-    AdjudicatorAllocation.POSITION_ONLY: 'solo',
-    AdjudicatorAllocation.POSITION_PANELLIST: 'panellist',
-    AdjudicatorAllocation.POSITION_TRAINEE: 'trainee'
+    AdjudicatorAllocation.POSITION_CHAIR: ugettext_lazy("chair"),
+    AdjudicatorAllocation.POSITION_ONLY: ugettext_lazy("solo"),
+    AdjudicatorAllocation.POSITION_PANELLIST: ugettext_lazy("panellist"),
+    AdjudicatorAllocation.POSITION_TRAINEE: ugettext_lazy("trainee")
 }
 
 
@@ -162,7 +162,8 @@ class BaseFeedbackForm(forms.Form):
         # Feedback questions defined for the tournament
         adj_min_score = self._tournament.pref('adj_min_score')
         adj_max_score = self._tournament.pref('adj_max_score')
-        score_label = mark_safe("Overall score (%s=worst; %s=best)" % (int(adj_min_score), int(adj_max_score)))
+        score_label = mark_safe(_("Overall score (%(min)d=worst; %(max)d=best)") % {
+                'min': int(adj_min_score), 'max': int(adj_max_score)})
         self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
 
         for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
@@ -222,7 +223,9 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
 
     def adj_choice(adj, debate, pos):
         value = '%d-%d' % (debate.id, adj.id)
-        display = '%s (%s, %s)' % (adj.name, debate.round.name, ADJUDICATOR_POSITION_NAMES[pos])
+        # Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2", adjpos="chair"
+        display = _("%(name)s (%(round)s %(adjpos)s)") % {'name': adj.name,
+            'round': debate.round.name, 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
         return (value, display)
 
     debateadjs = DebateAdjudicator.objects.filter(
@@ -238,7 +241,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     else:
         debateadjs = debateadjs.filter(debate__round__draw_status=Round.STATUS_RELEASED)
 
-    choices = [(None, '-- Adjudicators --')]
+    choices = [(None, _("-- Adjudicators --"))]
     for debateadj in debateadjs:
         targets = expected_feedback_targets(debateadj, tournament.pref('feedback_paths'))
         for target, pos in targets:
@@ -251,7 +254,8 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
         _enforce_required = enforce_required
         question_filter = dict(from_adj=True)
 
-        target = RequiredTypedChoiceField(choices=choices, coerce=BaseFeedbackForm.coerce_target, label='Adjudicator this feedback is about')
+        target = RequiredTypedChoiceField(choices=choices, coerce=BaseFeedbackForm.coerce_target,
+                label=_("Adjudicator this feedback is about"))
 
         def save(self):
             """Saves the form and returns the AdjudicatorFeedback object."""
@@ -272,20 +276,19 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
 
     def adj_choice(adj, debate, pos):
         value = '%d-%d' % (debate.id, adj.id)
-        if tournament.pref('feedback_from_teams') == 'all-adjs':
-            if pos == AdjudicatorAllocation.POSITION_ONLY:
-                pos_text = ''
-            else:
-                pos_text = ' ' + ADJUDICATOR_POSITION_NAMES[pos]
-        else:
-            if pos == AdjudicatorAllocation.POSITION_CHAIR:
-                pos_text = '—chair gave oral'
-            elif pos == AdjudicatorAllocation.POSITION_PANELLIST:
-                pos_text = '—chair rolled, this panellist gave oral'
-            elif pos == AdjudicatorAllocation.POSITION_ONLY:
-                pos_text = ''
 
-        display = '{name} ({r}{pos})'.format(name=adj.name, r=debate.round.name, pos=pos_text)
+        if pos == AdjudicatorAllocation.POSITION_ONLY:
+            display = _("%(name)s (%(round)s)")
+        elif tournament.pref('feedback_from_teams') == 'all-adjs':
+            # Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round 3", adjpos="panellist"
+            display = _("%(name)s (%(round)s %(adjpos)s)")
+        elif pos == AdjudicatorAllocation.POSITION_CHAIR:
+            # feedback expected only on orallist
+            display = _("%(name)s (%(round)s — chair gave oral)")
+        else:
+            display = _("%(name)s (%(round)s — chair rolled, this panellist gave oral)")
+
+        display %= {'name': adj.name, 'round': debate.round.name, 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
         return (value, display)
 
     # Only include non-silent rounds for teams.
@@ -299,7 +302,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     else:
         debates = debates.filter(round__draw_status=Round.STATUS_RELEASED)
 
-    choices = [(None, '-- Adjudicators --')]
+    choices = [(None, _("-- Adjudicators --"))]
     for debate in debates:
         if tournament.pref('feedback_from_teams') == 'all-adjs':
             das = debate.adjudicators.with_positions()

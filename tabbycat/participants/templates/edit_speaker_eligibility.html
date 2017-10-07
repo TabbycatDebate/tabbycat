@@ -13,12 +13,12 @@
 {% endblock %}
 
 {% block eligibility-table-headers %}
-  <th>Speaker</th>
-  <th>Team</th>
+  <th>{% trans "Speaker" %}</th>
+  <th>{% trans "Team" %}</th>
   {% if pref.show_emoji %}
     <th class="team-emoji"></th>
   {% endif %}
-  <th>Institution</th>
+  <th>{% trans "Institution" %}</th>
 {% endblock %}
 
 {% block eligibility-table-cells %}

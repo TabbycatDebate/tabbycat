@@ -51,7 +51,7 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
         self.standings = self.get_standings()
         table = TabbycatTableBuilder(view=self, title=self.object.name, sort_key='Rk')
         table.add_ranking_columns(self.standings)
-        table.add_column("Break", [tsi.break_rank for tsi in self.standings])
+        table.add_column(_("Break"), [tsi.break_rank for tsi in self.standings])
         table.add_team_columns([tsi.team for tsi in self.standings])
         table.add_metric_columns(self.standings)
         return table
@@ -122,8 +122,8 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, SuperuserRequire
 
     def get_table(self):
         table = super().get_table()  # as for public view, but add some more columns
-        table.add_column("Eligible for", [", ".join(bc.name for bc in tsi.team.break_categories.all()) for tsi in self.standings])
-        table.add_column("Edit Remark", [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings])
+        table.add_column(_("Eligible for"), [", ".join(bc.name for bc in tsi.team.break_categories.all()) for tsi in self.standings])
+        table.add_column(_("Edit Remark"), [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings])
         return table
 
     def get_form_kwargs(self):
@@ -149,7 +149,7 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, SuperuserRequire
                         {'category': self.object.name})
 
         else:
-            messages.success(self.request, "Changes to breaking team remarks saved.")
+            messages.success(self.request, _("Changes to breaking team remarks saved."))
 
         return super().form_valid(form)
 
@@ -186,7 +186,7 @@ class GenerateAllBreaksView(GenerateBreakMixin, LogActionMixin, TournamentMixin,
 
 class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
 
-    page_title = 'Breaking Adjudicators'
+    page_title = _("Breaking Adjudicators")
     page_emoji = '🎉'
 
     def get_table(self):
@@ -223,5 +223,5 @@ class EditEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, Tournament
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Break eligibility saved.")
+        messages.success(self.request, _("Break eligibility saved."))
         return super().form_valid(form)

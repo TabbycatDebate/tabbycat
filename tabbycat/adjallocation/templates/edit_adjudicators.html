@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block nav %}{% endblock %}
 {% block header %}{% endblock %}
@@ -8,7 +8,9 @@
 {% block page-subnav-sections %}{% endblock page-subnav-sections %}
 {% block body-class %}override-sidebar-offset{% endblock %}
 
-{% block page-title %}Edit Adjudicators for {{ round.abbreviation }}{% endblock %}
+{% block page-title %}{% blocktrans trimmed with round_abbr=round.abbreviation %}
+Edit Adjudicators for {{ round_abbr }}
+{% endblocktrans %}{% endblock %}
 
 {% block content %}
 <div id="vueMount">
