@@ -402,7 +402,7 @@ class FeedbackIntroduction(StringPreference):
     section = feedback
     name = 'feedback_introduction'
     default = ''
-    field_kwargs = {'required': True}
+    field_kwargs = {'required': False}
 
 
 # ==============================================================================
