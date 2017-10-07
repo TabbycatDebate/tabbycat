@@ -1,9 +1,9 @@
 {% extends "printables_list.html" %}
 
 {% block head-title %}
-  Scoresheets for {{ round.abbreviation }}
+  Scoresheets
 {% endblock %}
-{% block page-title %}Printable Scoresheets Forms for {{ round.name }}{% endblock %}
+{% block page-title %}Printable Scoresheets for {{ round.name }}{% endblock %}
 
 {% block content %}
 
@@ -31,7 +31,7 @@
         showTabRoomRow: true,
         showEmoji: {% if pref.show_emoji %}true{% else %}false{% endif %},
         // From Django
-        round: '{{ round.abbreviation }}',
+        round: '{{ round.name }}',
         hasReplies: {% if pref.reply_scores_enabled %}true{% else %}false{% endif %},
         isBP: {% if pref.teams_in_debate == 'two' %}false{% else %}true{% endif %},
         speakersCount: {{ pref.substantive_speakers }},

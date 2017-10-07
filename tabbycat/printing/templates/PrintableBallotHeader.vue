@@ -21,7 +21,7 @@
       </div>
     </template>
     <div v-else class="db-flex-static db-align-vertical-end">
-      <h2>{{ ballot.venue.name }}</h2>
+      <h2>{{ ballot.venue.display_name }}</h2>
     </div>
 
   </header>
