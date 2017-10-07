@@ -210,24 +210,20 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
 
 class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView, DrawAlertsView):
     detailed = False
-    use_template_subtitle = True
 
     def get_page_title(self):
         round = self.get_round()
         self.page_emoji = '👀'
         if round.draw_status == Round.STATUS_NONE:
-            title = _("No Draw for %(round)s")
+            title = _("No Draw")
         elif round.draw_status == Round.STATUS_DRAFT:
-            title = _("Draft Draw for %(round)s")
-        elif round.draw_status == Round.STATUS_CONFIRMED:
+            title = _("Draft Draw")
+        elif round.draw_status in [Round.STATUS_CONFIRMED, Round.STATUS_RELEASED]:
             self.page_emoji = '👏'
-            title = _("Confirmed Draw for %(round)s")
-        elif round.draw_status == Round.STATUS_RELEASED:
-            self.page_emoji = '👏'
-            title = _("Released Draw for %(round)s")
+            title = _("Draw")
         else:
             logger.error("Unrecognised draw status: %s", round.draw_status)
-            title = "Draw for %(round)s"  # don't translate, this should never happen
+            title = _("Draw")
         return title % {'round': round.name}
 
     def get_bp_position_balance_table(self):

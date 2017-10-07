@@ -1,22 +1,6 @@
 {% extends "draw_base.html" %}
 {% load humanize static debate_tags i18n %}
 
-{% block sub-title %}
-  {% if round.draw_status == round.STATUS_CONFIRMED %}
-    {% trans "draw is not released;" %}
-  {% elif round.draw_status == round.STATUS_RELEASED %}
-    {% trans "draw is released;" %}
-  {% else %}
-    {# don't translate this, it should never happen #}
-    DRAW STATUS ERROR,
-  {% endif %}
-  {% if round.motions_released %}
-    {% trans "motions are released" %}
-  {% else %}
-    {% trans "motions are not released" %}
-  {% endif %}
-{% endblock %}
-
 {% block content %}
 
   <div class="row mb-4">
