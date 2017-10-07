@@ -180,6 +180,8 @@ class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
             kwargs['adjs'] = Adjudicator.objects.all().order_by('name')
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
             tournament.team_set.filter(url_key__isnull=False).exists()
+        kwargs['blank_exists'] = tournament.adjudicator_set.filter(url_key__isnull=True).exists() or \
+            tournament.team_set.filter(url_key__isnull=True).exists()
         kwargs['tournament_slug'] = tournament.slug
         return super().get_context_data(**kwargs)
 
@@ -191,17 +193,33 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
     def post(self, request, *args, **kwargs):
         tournament = self.get_tournament()
 
-        # Only works if there are no randomised URLs now
-        if tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
-                tournament.team_set.filter(url_key__isnull=False).exists():
-            messages.error(
-                self.request, "There are already private URLs. " +
-                "You must use the Django management commands to populate or " +
-                "delete private URLs.")
+        nexisting_adjs = tournament.adjudicator_set.filter(url_key__isnull=False).count()
+        nexisting_teams = tournament.team_set.filter(url_key__isnull=False).count()
+        blank_adjs = tournament.adjudicator_set.filter(url_key__isnull=True)
+        blank_teams = tournament.team_set.filter(url_key__isnull=True)
+        nblank_adjs = blank_adjs.count()
+        nblank_teams = blank_teams.count()
+
+        if nblank_adjs == 0 and nblank_teams == 0:
+            messages.error(self.request, _("All adjudicators and teams already have private URLs. "
+                "If you want to delete them, use the Edit Database area."))
+
         else:
-            populate_url_keys(tournament.adjudicator_set.all())
-            populate_url_keys(tournament.team_set.all())
-            messages.success(self.request, "Private URLs were generated for all teams and adjudicators.")
+            populate_url_keys(blank_adjs)
+            populate_url_keys(blank_teams)
+
+            if nexisting_adjs == 0 and nexisting_teams == 0:
+                messages.success(self.request, _("Private URLs were generated for all %(nblank_adjs)d "
+                    "adjudicators and all %(nblank_teams)d teams.") % {
+                    'nblank_adjs': nblank_adjs, 'nblank_teams': nblank_teams,
+                })
+            else:
+                messages.success(self.request, _("Private URLs were generated for %(nblank_adjs)d "
+                    "adjudicators and %(nblank_teams)d teams. The already-existing private URLs for "
+                    "%(nexisting_adjs)d adjudicators and %(nexisting_teams)d teams were left intact.") % {
+                    'nblank_adjs': nblank_adjs, 'nblank_teams': nblank_teams,
+                    'nexisting_adjs': nexisting_adjs, 'nexisting_teams': nexisting_teams,
+                })
 
         return super().post(request, *args, **kwargs)
 

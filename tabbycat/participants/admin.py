@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django import forms
+from django.utils.translation import ungettext
+from django.utils.translation import ugettext_lazy as _
 
 from draw.models import TeamSideAllocation
 from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict
@@ -88,6 +90,7 @@ class TeamAdmin(admin.ModelAdmin):
     list_filter = ('tournament', 'division', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline)
     raw_id_fields = ('division', )
+    actions = ['delete_url_key']
 
     def get_queryset(self, request):
         return super(TeamAdmin, self).get_queryset(request).prefetch_related(
@@ -103,6 +106,16 @@ class TeamAdmin(admin.ModelAdmin):
                 Tournament.objects.count() == 1):
             kwargs["initial"] = BreakCategory.objects.filter(is_general=True)
         return super().formfield_for_manytomany(db_field, request, **kwargs)
+
+    def delete_url_key(self, request, queryset):
+        updated = queryset.update(url_key=None)
+        message = ungettext(
+            "%(count)d team had its URL key removed.",
+            "%(count)d teams had their URL keys removed.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
+    delete_url_key.short_description = _("Delete URL key")
 
 
 # ==============================================================================
@@ -151,3 +164,14 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     list_filter = ('tournament', 'name', 'institution')
     inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
+    actions = ['delete_url_key']
+
+    def delete_url_key(self, request, queryset):
+        updated = queryset.update(url_key=None)
+        message = ungettext(
+            "%(count)d adjudicator had their URL key removed.",
+            "%(count)d adjudicators had their URL keys removed.",
+            updated
+        ) % {'count': updated}
+        self.message_user(request, message)
+    delete_url_key.short_description = _("Delete URL key")

@@ -7,27 +7,41 @@
 {% block page-subnav-sections %}
   {% if exists %}
     <a class="btn btn-outline-primary" href="{% tournamenturl 'randomised-urls-view' %}">
-  {% else %}
-    <a class="btn btn-outline-secondary" href="#" data-toggle="tooltip" title="You need to create some URLs before they can be viewed">
-  {% endif %}
       {% trans "View URLs" %}
     </a>
-  <div class="btn-group">
-    <a class="btn btn-outline-primary" href="{% tournamenturl 'printing-feedback-urls' %}" target="_blank">
-      {% trans "Print Feedback URLs" %}
-    </a>
-    <a class="btn btn-outline-primary" href="{% tournamenturl 'printing-ballot-urls' %}" target="_blank">
-      {% trans "Print Ballot URLs" %}
-    </a>
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-outline-primary" href="{% tournamenturl 'email-feedback-urls' %}">
-      {% trans "Email Feedback URLs" %}
-    </a>
-    <a class="btn btn-outline-primary" href="{% tournamenturl 'email-ballot-urls' %}">
-      {% trans "Email Ballot URLs" %}
-    </a>
-  </div>
+    <div class="btn-group">
+      <a class="btn btn-outline-primary" href="{% tournamenturl 'printing-feedback-urls' %}" target="_blank">
+        {% trans "Print Feedback URLs" %}
+      </a>
+      <a class="btn btn-outline-primary" href="{% tournamenturl 'printing-ballot-urls' %}" target="_blank">
+        {% trans "Print Ballot URLs" %}
+      </a>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-outline-primary" href="{% tournamenturl 'email-feedback-urls' %}">
+        {% trans "Email Feedback URLs" %}
+      </a>
+      <a class="btn btn-outline-primary" href="{% tournamenturl 'email-ballot-urls' %}">
+        {% trans "Email Ballot URLs" %}
+      </a>
+    </div>
+    {% if blank_exists %}
+      <div class="btn-group">
+        <form action="{% tournamenturl 'randomised-urls-generate' %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-outline-success" id="generateRandomisedUrls" type="submit" data-toggle="tooltip" title="{% trans "This button only generates private URLs for participants who do not already have one." %}">
+          {% trans "Generate Private URLs" %}
+        </button>
+        </form>
+      </div>
+    {% else %}
+      <div class="btn-group">
+        <button class="btn btn-outline-secondary" id="generateRandomisedUrls" data-toggle="tooltip" title="{% trans "All participants already have private URLs." %}">
+          {% trans "Generate Private URLs" %}
+        </button>
+      </div>
+    {% endif %}
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -46,8 +60,8 @@
             can enter <em>any</em> submission. The URLs will look something like
             this:
           {% endblocktrans %}
-        </p><p>
-          <strong><small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' '9dnflp3z' %}</small></strong>.
+        </p><p align="center">
+          <strong><small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' '9dnflp3z' %}</small></strong>
         </p><p>
         {% endif %}
         {% blocktrans trimmed %}
@@ -145,13 +159,13 @@
                     <td>
                       {% include "tables/team.html" with team=team %}
                     </td>
-                    <td>
-                      {% if team.url_key %}
+                    {% if team.url_key %}
+                      <td>
                         <small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' team.url_key %}</small>
-                      {% else %}
-                        {% trans "no URL" %}
-                      {% endif %}
-                    </td>
+                      </td>
+                    {% else %}
+                      <td class="text-warning">{% trans "no URL" %}</td>
+                    {% endif %}
                   </tr>
                 {% empty %}
                   <tr>
