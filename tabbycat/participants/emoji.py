@@ -154,7 +154,7 @@ EMOJI_LIST = (
     # DOESN’T SHOW ("⚒", ""),  # Hammer and Pick
     # DOESN’T SHOW ("⚙", ""),  # Gear
     # DOESN’T SHOW ("⚗", ""),  # Alembic
-    # DOESN’T SHOW ("⚖", ""),  # Scales
+    # USED BY UI ("⚖", ""),  # Scales
     # DOESN’T SHOW ("⚔", ""),  # Crossed Swords
     # DOESN’T SHOW ("⚰", ""),  # Coffin
     # DOESN’T SHOW ("⚱", ""),  # Funeral Urn

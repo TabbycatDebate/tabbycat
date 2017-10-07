@@ -340,6 +340,7 @@ class AdminDrawWithDetailsView(AdminDrawView):
 
 
 class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
+    page_emoji = "⚖"
     page_title = _("Position Balance Report")
     tables_orientation = 'rows'
 
