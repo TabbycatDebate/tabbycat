@@ -22,20 +22,14 @@ def populate_url_keys(queryset, length=8):
             try:
                 instance.save()
             except IntegrityError:
-                logger.warning(
-                    "URL key was not unique, trying again (%d of %d", i,
-                    num_attempts)
+                logger.warning("URL key was not unique, trying again (%d of %d", i, num_attempts)
                 continue
             else:
                 break
         else:
-            logger.error("Could not generate unique URL for %r after %d tries",
-                         instance, num_attempts)
-            return
+            logger.error("Could not generate unique URL for %r after %d tries", instance, num_attempts)
 
 
 def delete_url_keys(queryset):
     """Deletes URL keys from every instance in the given QuerySet."""
-    for instance in queryset:
-        instance.url_key = None
-        instance.save()
+    queryset.update(url_key=None)

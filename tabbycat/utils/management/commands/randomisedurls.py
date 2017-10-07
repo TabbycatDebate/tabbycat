@@ -10,32 +10,20 @@ class Command(TournamentCommand):
     help = "Generates or deletes private URLs"
 
     def add_arguments(self, parser):
-        subparsers = parser.add_subparsers(dest="subcommand",
-                                           parser_class=ArgumentParser,
-                                           metavar="{generate,delete}")
+        subparsers = parser.add_subparsers(dest="subcommand", parser_class=ArgumentParser,
+              metavar="{generate,delete}")
         subparsers.required = True
 
         generate = subparsers.add_parser("generate")
         super(Command, self).add_arguments(generate)
-        generate.add_argument('--teams-only',
-                              action="store_true",
-                              default=False,
-                              help="Only generate private URLs for teams")
-        generate.add_argument(
-            '--adjs-only',
-            action="store_true",
-            default=False,
+        generate.add_argument('--teams-only', action="store_true", default=False,
+            help="Only generate private URLs for teams")
+        generate.add_argument('--adjs-only', action="store_true", default=False,
             help="Only generate private URLs for adjudicators")
-        generate.add_argument('-l',
-                              '--length',
-                              type=int,
-                              default=8,
-                              help="Length of URL key to generate (default 8)")
-        generate.add_argument('-O',
-                              '--overwrite',
-                              action="store_true",
-                              default=False,
-                              help="Overwrite existing URL keys")
+        generate.add_argument('-l', '--length', type=int, default=8,
+            help="Length of URL key to generate (default 8)")
+        generate.add_argument('-O', '--overwrite', action="store_true", default=False,
+            help="Overwrite existing URL keys")
 
         delete = subparsers.add_parser("delete")
         super(Command, self).add_arguments(delete)
