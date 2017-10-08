@@ -7,16 +7,23 @@
 
   {% tournamenturl 'options-tournament-section' section='feedback' as option_url %}
   {% if pref.feedback_paths == 'minimal' %}
-    {% trans "only chairs can submit feedback (on their panellists and trainees)" as preference_description %}
+    {% blocktrans trimmed asvar p1 %}
+      The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> allows and expects only chairs to submit feedback (on their panellists and trainees).
+    {% endblocktrans %}
   {% elif pref.feedback_paths == 'with-p-on-c' %}
-    {% trans "both chairs and pannellists can can submit feedback on each other; and chairs can submit on trainees" as preference_description %}
+    {% blocktrans trimmed asvar p1 %}
+      The current <a href="{{ option_url }}" class="alert-link">feedback
+      configuration</a> allows and expects both chairs and panellists to submit
+      feedback on each other, and also chairs to submit on trainees.
+    {% endblocktrans %}
   {% elif pref.feedback_paths == 'all-adjs' %}
-    {% trans "all adjudicators (including trainees) can submit feedback on every other member of the panel (including trainees)" as preference_description %}
+    {% blocktrans trimmed asvar p1 %}
+      The current <a href="{{ option_url }}" class="alert-link">feedback
+      configuration</a> allows and expects all adjudicators (including trainees)
+      to submit feedback on every other member of the panel (including
+      trainees).
+    {% endblocktrans %}
   {% endif %}
-  {% blocktrans trimmed asvar p1 with preference=preference_description %}
-    The current <a href="{{ option_url }}" class="alert-link">'feedback paths' configuration</a> means
-    that {{ preference_description }}.
-  {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
 {% endblock %}
