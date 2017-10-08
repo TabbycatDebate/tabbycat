@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block eligibility-table-headers %}
-  <th>Team</th>
+  <th>{% trans "Team" %}</th>
   {% if pref.show_emoji %}
     <th class="team-emoji"></th>
   {% endif %}
-  <th>Institution</th>
+  <th>{% trans "Institution" %}</th>
 {% endblock %}
 
 {% block eligibility-table-cells %}

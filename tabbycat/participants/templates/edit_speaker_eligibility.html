@@ -36,11 +36,10 @@
 
 {% block page-alerts %}
   {% if not form.get_category_queryset.exists %}
-    <div class="alert alert-warning">
-      {% tournamenturl 'participants-speaker-categories-edit' as categories_url %}
-      {% blocktrans trimmed %}
-        It looks like there aren't any speaker categories are defined. If you'd like to produce category-specific speaker tabs, such as a novice or ESL tab, use the <a href="{{ categories_url }}" class="alert-link">Speaker Categories</a> page to define them, then return to this page to set speaker eligibility.
-      {% endblocktrans %}
-    </div>
+    {% tournamenturl 'participants-speaker-categories-edit' as categories_url %}
+    {% blocktrans trimmed asvar message %}
+      It looks like there aren't any speaker categories are defined. If you'd like to produce category-specific speaker tabs, such as a novice or ESL tab, use the <a href="{{ categories_url }}" class="alert-link">Speaker Categories</a> page to define them, then return to this page to set speaker eligibility.
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='warning' %}
   {% endif %}
 {% endblock %}
