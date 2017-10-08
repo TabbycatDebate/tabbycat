@@ -20,7 +20,7 @@
 
     <div class="card table-container">
       <div class="card-body">
-        <table class="table table-responsive">
+        <table class="table table-responsive" id="eligibility-table">
           <thead>
             <tr>
               {% block eligibility-table-headers %}
@@ -79,7 +79,7 @@
       $(".select-all").each(function () {
         $(this).click(function () {
           var category = $(this).attr("category");
-          $("input[type='checkbox'][value='" + category + "']").each(function () {
+          $("#eligibility-table input[type='checkbox'][value='" + category + "']").each(function () {
             $(this).prop("checked", true);
           });
           updateCounts(category);
@@ -89,14 +89,14 @@
       $(".select-none").each(function () {
         $(this).click(function () {
           var category = $(this).attr("category");
-          $("input[type='checkbox'][value='" + category + "']").each(function () {
+          $("#eligibility-table input[type='checkbox'][value='" + category + "']").each(function () {
             $(this).prop("checked", false);
           });
           updateCounts(category);
         });
       });
 
-      $(".dataTable input[type='checkbox']").click(function () {
+      $("#eligibility-table input[type='checkbox']").change(function () {
         updateCounts($(this).val());
       });
 
