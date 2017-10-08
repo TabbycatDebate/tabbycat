@@ -513,6 +513,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
     public_page_preference = 'public_team_standings'
     page_title = ugettext_lazy("Current Team Standings")
     page_emoji = '🌟'
+    template_name = 'current_standings.html'
 
     def get_table(self):
         tournament = self.get_tournament()
@@ -535,24 +536,12 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         # Pre-sort, as Vue tables can't do two sort keys
         teams = sorted(teams, key=lambda t: (-t.points, t.short_name))
-
-        if tournament.pref('teams_in_debate') == 'bp':
-            measure = _("Points")
-            message = _("This list is sorted by team points, and then by "
-                "team name within each group — it does not indicate each team's "
-                "ranking within each group. It also excludes silent rounds (if any).")
-        else:
-            measure = _("Wins")
-            message = _("This list is sorted by wins, and then by "
-                "team name within each group — it does not indicate each team's "
-                "ranking within each group. It also excludes silent rounds (if any).")
+        measure = _("Points") if tournament.pref('teams_in_debate') == 'bp' else _("Wins")
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
         table.add_column(measure, [team.points for team in teams])
         table.add_team_results_columns(teams, rounds)
-
-        messages.info(self.request, message)
 
         return table
 
