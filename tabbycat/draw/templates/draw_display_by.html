@@ -5,9 +5,8 @@
 {% block body-class %}override-sidebar-offset{% endblock %}
 
 {% block nav %}
-  {# For admins the draw opens without menu (for displaying publicly)#}
-  {% if 'admin/' in request.path and user.is_superuser %}
-  {% else %}
+  {# For admins and assistants, the draw opens without menu (for displaying in the briefing room) #}
+  {% if 'admin/' not in request.path or not user.is_authenticated %}
     {{ block.super }}
   {% endif %}
 {% endblock %}
