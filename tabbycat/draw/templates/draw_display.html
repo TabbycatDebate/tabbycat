@@ -1,24 +1,30 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}Draw Display for {{ round.name }}{% endblock %}
-{% block page-title %}Draw Display for {{ round.name }}{% endblock %}
+{% block head-title %}📺 {% trans "Display Draw" %}{% endblock %}
+{% block page-title %}{% trans "Display Draw" %}{% endblock %}
 
 {% block page-subnav-sections %}
   {% if user.is_superuser %}
 
       <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
-        <i data-feather="chevron-left"></i> View Draw
+        <i data-feather="chevron-left"></i> {% trans "View Draw" %}
       </a>
 
       {% if not pref.enable_debate_scheduling %}
         <a href="" class="btn {% if round.starts_at %}btn-primary{% else %}btn-primary{% endif %}"
            data-toggle="modal" data-target="#editStartTime">
-          {% if round.starts_at %}Debates start at {{ round.starts_at }}{% else %}Add Start Time{% endif %}
+          {% if round.starts_at %}
+            {% blocktrans trimmed with start_time=round.starts_at %}
+              Debates start at {{ start_time }}
+            {% endblocktrans %}
+          {% else %}
+            {% trans "Add Start Time" %}
+          {% endif %}
         </a>
       {% else %}
         <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary">
-          Schedule Debates
+          {% trans "Schedule Debates" %}
         </a>
       {% endif %}
 
@@ -49,7 +55,7 @@
     <div class="card">
 
       <div class="card-body">
-        <h5 class="card-title mb-0">Motion Details</h5>
+        <h5 class="card-title mb-0">{% trans "Motion Details" %}</h5>
       </div>
       <div class="list-group list-group-flush">
         {% roundurl 'motions-edit' round as url %}

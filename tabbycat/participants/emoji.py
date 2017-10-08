@@ -762,7 +762,7 @@ EMOJI_LIST = (
     # LAME ("🎥", ""),  # Movie Camera
     # LAME ("🎦", ""),  # Cinema
     ("🎬", "🎬"),  # Clapper Board
-    # LAME ("📺", ""),  # Television
+    # USED BY UI ("📺", ""),  # Television
     ("📷", "📷"),  # Camera
     # LAME ("📹", ""),  # Video Camera
     # LAME ("📼", ""),  # Videocassette
