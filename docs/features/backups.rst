@@ -50,7 +50,7 @@ To capture a backup::
 
     $ heroku pg:backups:capture
 
-To download the most-recently captured backup::
+To download the most recently captured backup::
 
     $ heroku pg:backups:download
 
@@ -70,3 +70,13 @@ using the
 and
 `pg_restore <https://www.postgresql.org/docs/current/static/app-pgrestore.html>`_
 commands.
+
+Restoring a Heroku backup to a local installation
+=================================================
+
+As detailed in the `Heroku Dev Center <https://devcenter.heroku.com/articles/heroku-postgres-import-export#restore-to-local-database>`_, you can restore a downloaded Heroku backup to a local installation. This might be useful if, say, your internet connection breaks irrecoverably in the middle of a tournament and you need to run offline. Of course, for this to work, you need to have downloaded your backup before your internet connection broke.
+
+Assuming your download is called ``latest.dump`` (this is the default name), your PostgreSQL username is ``tabbycat``, and you wish to call your local database ``fromheroku`` (if not, replace arguments as appropriate)::
+
+    $ createdb fromheroku -h localhost -U tabbycat
+    $ pg_restore --no-acl --no-owner -h localhost -U tabbycat -d fromheroku latest.dump
