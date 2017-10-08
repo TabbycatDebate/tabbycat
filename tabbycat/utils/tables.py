@@ -218,7 +218,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             return {'text': '', 'link': False}
 
-    def _team_cell(self, team, hide_emoji=True, subtext=None):
+    def _team_cell(self, team, hide_emoji=True, subtext=None, highlight=False):
         cell = {
             'text': team.short_name,
             'emoji': team.emoji if self.tournament.pref('show_emoji') and not hide_emoji else None,
@@ -226,6 +226,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'class': 'team-name',
             'popover': {'title': team.long_name, 'content': []}
         }
+        if highlight:
+            cell['class'] += ' font-weight-bold table-secondary'
         if subtext:
             cell['subtext'] = subtext
         if self._show_speakers_in_draw:

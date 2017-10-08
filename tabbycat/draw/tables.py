@@ -1,4 +1,4 @@
-from itertools import islice
+from itertools import islice, zip_longest
 
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
@@ -55,17 +55,17 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
 
 class PublicDrawTableBuilder(BaseDrawTableBuilder):
 
-    def add_debate_team_columns(self, debates):
+    def add_debate_team_columns(self, debates, highlight=[]):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
 
         for i, side in enumerate(self.tournament.sides, start=1):
             side_abbr = get_side_name(self.tournament, side, 'abbr')
 
             team_data = []
-            for debate in debates:
+            for debate, hl in zip_longest(debates, highlight):
                 team = debate.get_team(side)
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbr
-                team_data.append(self._team_cell(team, subtext=subtext, hide_emoji=False))
+                team_data.append(self._team_cell(team, subtext=subtext, hide_emoji=False, highlight=team == hl))
 
             key = side_abbr if all_sides_confirmed else _("Team %(num)d") % {'num': i}
             self.add_column(key, team_data)

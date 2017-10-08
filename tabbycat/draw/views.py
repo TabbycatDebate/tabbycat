@@ -81,7 +81,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         draw = round.debate_set_with_prefetches()
         return draw
 
-    def populate_table(self, draw, table, round, tournament):
+    def populate_table(self, draw, table, round, tournament, highlight=[]):
         if hasattr(self, 'cross_tournament') and self.cross_tournament is True:
             table.add_tournament_column(d.round.tournament for d in draw) # For cross-tournament draws
 
@@ -89,7 +89,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
             table.add_round_column(d.round for d in draw) # For mass draws
 
         table.add_debate_venue_columns(draw)
-        table.add_debate_team_columns(draw)
+        table.add_debate_team_columns(draw, highlight)
 
         if tournament.pref('enable_division_motions'):
             table.add_motion_column(d.division_motion for d in draw)
@@ -215,9 +215,11 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
     sort_key = 'Team'
 
     def populate_table(self, draw, table, round, tournament):
-        draw, teams = zip(*[(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)])
-        table.add_team_columns(teams, hide_institution=True, key="Team")
-        super().populate_table(draw, table, round, tournament)
+        # draw, teams = zip(*[(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)])
+        # table.add_team_columns(teams, hide_institution=True, key="Team")
+        draw, teams = zip(*sorted(((debate, debate.get_team(side))
+            for debate, side in product(draw, tournament.sides)), key=lambda x: x[1].short_name))
+        super().populate_table(draw, table, round, tournament, highlight=teams)
 
 
 # ==============================================================================
