@@ -6,7 +6,7 @@ urlpatterns = [
 
     # Traditional sheets
     url(r'^round/(?P<round_seq>\d+)/print/scoresheets/$',
-        views.PrintScoreSheetsView.as_view(),
+        views.PrintScoresheetsView.as_view(),
         name='printing-scoresheets'),
     url(r'^round/(?P<round_seq>\d+)/print/feedback/$',
         views.PrintFeedbackFormsView.as_view(),

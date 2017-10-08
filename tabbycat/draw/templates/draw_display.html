@@ -153,11 +153,13 @@
 
           {% if pref.participant_ballots != 'off' or pref.participant_feedback != 'off' or pref.public_draw %}
 
-            {% if pref.participant_ballots != 'off' %}
+            {% if pref.participant_ballots != 'off' and pref.participant_feedback != 'off' %}
+              {% trans "Your tournament allows ballots and feedback to be submitted online by adjudicators. The draw must be released before they can do so." as text %}
+              {% include "components/item-info.html" with type="danger" %}
+            {% elif pref.participant_ballots != 'off' %}
               {% trans "Your tournament allows ballots to be submitted online by adjudicators. The draw must be released before they can do so." as text %}
               {% include "components/item-info.html" with type="danger" %}
-            {% endif %}
-            {% if pref.participant_feedback != 'off' %}
+            {% elif pref.participant_feedback != 'off' %}
               {% trans "Your tournament allows feedback to be submitted online by participants. The draw must be released before they can do so." as text %}
               {% include "components/item-info.html" with type="danger" %}
             {% endif %}

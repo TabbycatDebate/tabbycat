@@ -4,7 +4,9 @@
     <div class="db-align-vertical-end db-flex-item-3">
       <h2>
         {{ roundInfo.round }} {{ roundInfo.kind }} from {{ ballot.author }}
-        ({{ authorPositionWithSoloCheck(ballot.authorPosition) }})
+        <span v-if="roundInfo.votingBallots">
+          ({{ authorPositionWithSoloCheck(ballot.authorPosition) }})
+        </span>
         <span v-if="ballot.target">on {{ ballot.target }}
           <span v-if="ballot.targetPosition === 'C' || ballot.targetPosition === 'o'">(Chair)</span>
           <span v-if="ballot.targetPosition === 'P'">(Panellist)</span>

@@ -1,9 +1,30 @@
 {% extends "printables_list.html" %}
+{% load i18n %}
 
 {% block head-title %}
-  Feedback Forms for {{ round.abbreviation }}<small>
+  {% trans "Feedback Forms" %}
 {% endblock %}
-{% block page-title %}Printable Feedback Forms for {{ round.name }}{% endblock %}
+{% block page-title %}{% blocktrans trimmed with round_name=round.name %}
+Printable Feedback Forms for {{ round_name }}
+{% endblocktrans %}{% endblock %}
+
+{% block page-alerts %}
+  {% if not team_questions_exist or not adj_questions_exist %}
+    {% if not team_questions_exist and not adj_questions_exist %}
+      {% trans "No feedback questions have been added for either teams or adjudicators to answer." as first_sentence %}
+    {% elif not team_questions_exist %}
+      {% trans "No feedback questions have been added for teams to answer." as first_sentence %}
+    {% elif not adj_questions_exist %}
+      {% trans "No feedback questions have been added for adjudicators to answer." as first_sentence %}
+    {% endif %}
+    {% blocktrans trimmed asvar message %}
+      {{ first_sentence }}
+      Check the <a href="http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html" target="_blank">documentation</a> for information on how to add these (otherwise these forms will be quite bare).
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" %}
+  {% endif %}
+  {{ block.super }}
+{% endblock %}
 
 {% block content %}
 

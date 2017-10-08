@@ -1,9 +1,12 @@
 {% extends "printables_list.html" %}
+{% load i18n %}
 
 {% block head-title %}
-  Scoresheets
+  {% trans "Scoresheets" %}
 {% endblock %}
-{% block page-title %}Printable Scoresheets for {{ round.name }}{% endblock %}
+{% block page-title %}{% blocktrans trimmed with round_name=round.name %}
+Printable Scoresheets for {{ round_name }}
+{% endblocktrans %}{% endblock %}
 
 {% block content %}
 
@@ -27,6 +30,7 @@
       roundInfo: {
         tournamentName: '{{ tournament.short_name }}',
         returnLocation: '{{ pref.feedback_return_location }}',
+        votingBallots: {% if pref.ballots_per_debate == 'per-adj' %}true{% else %}false{% endif %},
         // Formatting
         showTabRoomRow: true,
         showEmoji: {% if pref.show_emoji %}true{% else %}false{% endif %},

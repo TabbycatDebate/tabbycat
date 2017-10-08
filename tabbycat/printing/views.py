@@ -1,6 +1,6 @@
 import json
 
-from django.contrib import messages
+from django.utils.translation import ugettext as _
 from django.views.generic.base import TemplateView
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
@@ -71,14 +71,6 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
     assistant_page_permissions = ['all_areas', 'results_draw']
     template_name = 'feedback_list.html'
 
-    def has_team_questions(self):
-        return AdjudicatorFeedbackQuestion.objects.filter(
-            tournament=self.get_round().tournament, from_team=True).exists()
-
-    def has_adj_questions(self):
-        return AdjudicatorFeedbackQuestion.objects.filter(
-            tournament=self.get_round().tournament, from_adj=True).exists()
-
     def add_defaults(self):
         t = self.get_tournament()
         default_questions = []
@@ -126,11 +118,11 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
         ballots = []
 
         if team_paths == 'orallist' and debate.adjudicators.chair:
-            ballots.append(self.construct_info(debate.venue, team, "Team",
+            ballots.append(self.construct_info(debate.venue, team, _("Team"),
                                                debate.adjudicators.chair, ""))
         elif team_paths == 'all-adjs':
             for target in debate.debateadjudicator_set.all():
-                ballots.append(self.construct_info(debate.venue, team, "Team",
+                ballots.append(self.construct_info(debate.venue, team, _("Team"),
                                                    target.adjudicator, ""))
 
         return ballots
@@ -153,19 +145,8 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
         draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
         # Sort by venue categories to ensure it matches the draw
         draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
-        message = ""
-        ballots = []
-        if not self.has_team_questions():
-            message += "No feedback questions have been added " + \
-                       "for teams on adjudicators."
-        if not self.has_adj_questions():
-            message += "No feedback questions have been added " + \
-                       "for adjudicators on adjudicators. "
-        if message is not "":
-            messages.warning(self.request, message + "Check the " +
-                "documentation for information on how to add these" +
-                " (otherwise these forms will be quite bare).")
 
+        ballots = []
         for debate in draw:
             for team in debate.teams:
                 ballots.extend(self.get_team_feedbacks(debate, team))
@@ -173,10 +154,14 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
 
         kwargs['ballots'] = json.dumps(ballots)
         kwargs['questions'] = json.dumps(self.questions_dict())
+
+        kwargs['team_questions_exist'] = self.get_tournament().adjudicatorfeedbackquestion_set.filter(from_team=True).exists()
+        kwargs['adj_questions_exist'] = self.get_tournament().adjudicatorfeedbackquestion_set.filter(from_adj=True).exists()
+
         return super().get_context_data(**kwargs)
 
 
-class PrintScoreSheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, TemplateView):
+class PrintScoresheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, TemplateView):
 
     assistant_page_permissions = ['all_areas']
     template_name = 'scoresheet_list.html'

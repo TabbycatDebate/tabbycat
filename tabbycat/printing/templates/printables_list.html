@@ -1,14 +1,15 @@
 {% extends "base.html" %}
-{% load static %}
+{% load i18n static %}
 
 {% block nav %}{% endblock %}
 {% block footer %}{% endblock %}
 {% block body-class %}override-sidebar-offset{% endblock %}
 
 {% block page-alerts %}
-  <div class="alert alert-info">
-    Use CTRL+P for printing or saving to PDF. Be sure to set the appropriate <strong>orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Safari or Firefox.</small>
-  </div>
+  {% blocktrans trimmed asvar p1 %}
+    Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate <strong>orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Safari or Firefox.
+  {% endblocktrans %}
+{% include "components/explainer-card.html" with type="info" %}
 {% endblock %}
 
 {% block extra-css %}
