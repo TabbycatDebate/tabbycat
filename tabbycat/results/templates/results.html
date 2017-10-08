@@ -6,8 +6,8 @@
 
 {% block page-subnav-sections %}
   {% if user.is_superuser %}
-    <a href="{% roundurl 'motions-edit' %}" class="btn btn-outline-primary">
-      <i data-feather="chevron-left"></i> {% trans "Edit Motions" %}
+    <a href="{% roundurl 'draw-display' %}" class="btn btn-outline-primary">
+      <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
     </a>
     <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
       {% trans "Check In Ballots" %}

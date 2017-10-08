@@ -5,13 +5,11 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy, ungettext
 
 from adjallocation.allocation import AdjudicatorAllocation
-from adjallocation.utils import adjudicator_conflicts_display
 from draw.models import Debate
 from participants.models import Team
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
 from utils.misc import reverse_tournament
-from venues.utils import venue_conflicts_display
 
 from .mixins import SuperuserRequiredMixin
 
@@ -683,9 +681,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     times_data.append(["", ""])
             self.add_columns(times_headers, times_data)
 
-    def add_draw_conflicts_columns(self, debates):
-        venue_conflicts_by_debate = venue_conflicts_display(debates)  # dict of {debate: [conflicts]}
-        adjudicator_conflicts_by_debate = adjudicator_conflicts_display(debates)  # dict of {debate: [conflicts]}
+    def add_draw_conflicts_columns(self, debates, venue_conflicts, adjudicator_conflicts):
 
         conflicts_by_debate = []
         for debate in debates:
@@ -705,8 +701,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 if len(set(institutions)) != len(institutions):
                     conflicts.append(("warning", _("Teams are from the same institution")))
 
-            conflicts.extend(adjudicator_conflicts_by_debate[debate])
-            conflicts.extend(venue_conflicts_by_debate[debate])
+            conflicts.extend(adjudicator_conflicts[debate])
+            conflicts.extend(venue_conflicts[debate])
             conflicts_by_debate.append(conflicts)
 
         conflicts_header = {'key': _("Conflicts/Flags")}
@@ -715,8 +711,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'class': 'small'
         } for debate_conflicts in conflicts_by_debate]
         self.add_column(conflicts_header, conflicts_data)
-
-        return adjudicator_conflicts_by_debate, venue_conflicts_by_debate
 
     def _standings_headers(self, info_list):
         headers = []

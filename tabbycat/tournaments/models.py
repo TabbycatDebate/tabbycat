@@ -297,17 +297,20 @@ class Round(models.Model):
     # Checks for potential errors
     # --------------------------------------------------------------------------
 
+    @cached_property
     def duplicate_panellists(self):
         """Returns a QuerySet of adjudicators who are allocated twice in the round."""
         from participants.models import Adjudicator
         return Adjudicator.objects.filter(debateadjudicator__debate__round=self).annotate(
                 Count('debateadjudicator')).filter(debateadjudicator__count__gt=1)
 
+    @cached_property
     def duplicate_venues(self):
         from venues.models import Venue
         return Venue.objects.filter(debate__round=self).annotate(Count('debate')).filter(
                 debate__count__gt=1)
 
+    @cached_property
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
         more than one chair."""
@@ -317,6 +320,7 @@ class Round(models.Model):
                 num_chairs=Count('debateadjudicator')).filter(num_chairs=1).count()
         return debates_in_round - debates_with_one_chair
 
+    @cached_property
     def num_debates_with_even_panel(self):
         """Returns the number of debates in the round, in which there are an
         positive and even number of voting judges."""
@@ -329,9 +333,11 @@ class Round(models.Model):
         ).filter(panellists__gt=0, odd_panellists=0).count()
         return debates_with_even_panel
 
+    @cached_property
     def num_debates_without_venue(self):
         return self.debate_set.filter(venue__isnull=True).count()
 
+    @cached_property
     def num_debates_with_sides_unconfirmed(self):
         return self.debate_set.filter(sides_confirmed=False).count()
 

@@ -1,6 +1,6 @@
 {% load humanize static debate_tags i18n %}
 
-{% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel duplicates=round.duplicate_panellists active_adjs=round.active_adjudicators.count debates_in_round=round.debate_set.count %}
+{% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel duplicates=round.duplicate_panellists %}
 
   {% if no_chair > 0 %}
     {% blocktrans trimmed asvar text count ndebates=no_chair %}

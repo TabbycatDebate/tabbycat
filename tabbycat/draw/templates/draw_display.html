@@ -14,7 +14,7 @@
       {% if not pref.enable_debate_scheduling %}
         <a href="" class="btn {% if round.starts_at %}btn-primary{% else %}btn-primary{% endif %}"
            data-toggle="modal" data-target="#editStartTime">
-          {% if round.starts_at %}Debates Start at {{ round.starts_at }}{% else %}Add Start Time{% endif %}
+          {% if round.starts_at %}Debates start at {{ round.starts_at }}{% else %}Add Start Time{% endif %}
         </a>
       {% else %}
         <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary">
@@ -299,7 +299,7 @@
       <form id="startTimeForm" method="POST" action="{% roundurl 'draw-start-time-set' %}">
         <div class="modal-body list-group list-group-flush">
 
-          {% include "components/form-title.html" with title="Change Start Time" %}
+          {% include "components/form-title.html" with title="Change Start Time" text="" %}
 
           <div class="list-group-item pb-3">
             <div class="form-group">

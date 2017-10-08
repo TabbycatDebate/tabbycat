@@ -4,18 +4,19 @@ import logging
 from itertools import product
 from math import floor
 
-from django.views.generic.base import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.utils.functional import cached_property
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
+from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
+from adjallocation.utils import adjudicator_conflicts_display
 from divisions.models import Division
 from options.dynamic_preferences_registry import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
@@ -35,6 +36,7 @@ from utils.misc import reverse_round, reverse_tournament
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
 from venues.models import VenueCategory, VenueConstraint
+from venues.utils import venue_conflicts_display
 
 from .dbutils import delete_round_draw
 from .generator import DrawFatalError, DrawUserError
@@ -158,8 +160,22 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, Ba
 # Draw Alerts Utilities (Admin)
 # ==============================================================================
 
-class DrawAlertsView():
+class AdminDrawUtiltiiesMixin:
     """ Shared between the Admin Draw page and Admin Display Page"""
+
+    def get_draw(self):
+        if not hasattr(self, '_draw'):
+            self._draw = self.get_round().debate_set_with_prefetches(ordering=('room_rank',),
+                    institutions=True, venues=True)
+        return self._draw
+
+    @cached_property
+    def adjudicator_conflicts(self):
+        return adjudicator_conflicts_display(self.get_draw())
+
+    @cached_property
+    def venue_conflicts(self):
+        return venue_conflicts_display(self.get_draw())
 
     def get_context_data(self, **kwargs):
         # Need to call super() first, so that get_table() can populate
@@ -169,10 +185,10 @@ class DrawAlertsView():
         def _count(conflicts):
             return [len([x for x in c if x[0] != 'success']) > 0 for c in conflicts.values()].count(True)
 
-        if hasattr(self, 'adjudicator_conflicts'):
-            data['debates_with_adj_conflicts'] = _count(self.adjudicator_conflicts)
-        if hasattr(self, 'venue_conflicts'):
-            data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
+        data['debates_with_adj_conflicts'] = _count(self.adjudicator_conflicts)
+        data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
+        data['active_adjs'] = self.get_round().active_adjudicators.count()
+        data['debates_in_round'] = self.get_round().debate_set.count()
         if hasattr(self, 'highlighted_cells_exist'):
             data['highlighted_cells_exist'] = self.highlighted_cells_exist
         return data
@@ -182,7 +198,7 @@ class DrawAlertsView():
 # Viewing Draw (Admin)
 # ==============================================================================
 
-class AdminDrawDisplay(LoginRequiredMixin, BaseDrawTableView, DrawAlertsView):
+class AdminDrawDisplay(AdminDrawUtiltiiesMixin, OptionalAssistantTournamentPageMixin, RoundMixin, TemplateView):
 
     assistant_page_permissions = ['all_areas', 'results_draw']
     template_name = 'draw_display.html'
@@ -208,7 +224,7 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
 # Draw Creation (Admin)
 # ==============================================================================
 
-class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView, DrawAlertsView):
+class AdminDrawView(RoundMixin, SuperuserRequiredMixin, AdminDrawUtiltiiesMixin, VueTableTemplateView):
     detailed = False
 
     def get_page_title(self):
@@ -229,7 +245,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView, Dr
     def get_bp_position_balance_table(self):
         tournament = self.get_tournament()
         r = self.get_round()
-        draw = r.debate_set_with_prefetches(ordering=('room_rank',), institutions=True, venues=True)
+        draw = self.get_draw()
         teams = Team.objects.filter(debateteam__debate__round=r)
         side_histories_before = get_side_history(teams, tournament.sides, r.prev.seq)
         side_histories_now = get_side_history(teams, tournament.sides, r.seq)
@@ -252,9 +268,9 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView, Dr
 
         table = AdminDrawTableBuilder(view=self, sort_key=sort_key,
                                       sort_order=sort_order,
-                                      empty_title="No Debates for this Round")
+                                      empty_title=_("No Debates for this Round"))
 
-        draw = r.debate_set_with_prefetches(ordering=('room_rank',), institutions=True, venues=True)
+        draw = self.get_draw()
         populate_history(draw)
 
         if r.is_break_round:
@@ -280,7 +296,7 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView, Dr
         elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
-        self.adjudicator_conflicts, self.venue_conflicts = table.add_draw_conflicts_columns(draw)
+        table.add_draw_conflicts_columns(draw, self.venue_conflicts, self.adjudicator_conflicts)
 
         if not r.is_break_round:
             table.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
