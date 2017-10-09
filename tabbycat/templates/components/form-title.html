@@ -1,11 +1,14 @@
 <div class="list-group-item pt-4">
 
   {% if title %}
-    <h4 class="card-title mt-0 {% if not text %}mb-2{% endif %}">
+    <h4 class="card-title mt-0 {% if not text %}mb-2{% endif %} d-inline-block">
       {% if icon %}<i data-feather="lock"></i>{% endif %}
       {% if emoji %}<span class="emoji">{{ emoji }}</span>{% endif %}
       {{ title|safe }}
     </h4>
+    {% if subtitle %}
+      <h4 class="text-secondary float-right"><small>{{ subtitle }}</small></h4>
+    {% endif %}
   {% endif %}
 
   {% if text %}

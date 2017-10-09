@@ -33,22 +33,23 @@
 
     {% if pref.motion_vetoes_enabled %}
       <div class="list-group-item">
-        {% for field in form.motion_veto_fields %}
-          {% include "components/form-field.html" %}
-        {% endfor %}
+        <div class="row">
+          {% for field in form.motion_veto_fields %}
+            {% include "components/form-field.html" with double=True %}
+          {% endfor %}
+        </div>
       </div>
     {% endif %}
 
-    <div class="list-group-item pb-3">
+    <div class="list-group-item pb-3 pt-3">
       <div class="form-group">
-        <label>{% trans "'Iron' speeches" %}</label>
         <select class="required custom-select form-control" id="hasIron" name="iron"
                 tabindex="{{ form.irontabindex }}" required="" aria-required="true">
           <option value="0">
-            {% trans "No, there were no speakers who spoke multiple times" %}
+            {% trans "There were no speakers who spoke multiple times (i.e. no 'Iron' person speeches)" %}
           </option>
           <option value="1">
-            {% trans "Yes, there were speakers who spoke multiple times" %}
+            {% trans "There were speakers who spoke multiple times (i.e. one or more 'Iron' person speeches)" %}
           </option>
         </select>
       </div>

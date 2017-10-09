@@ -1,8 +1,9 @@
 {% load add_field_css %}
 
-<div class="form-group {% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %}">
+<div class="form-group {% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %}
+            {% if hide_label %}pt-2{% endif %}">
 
-  {% if not field.is_hidden %}
+  {% if not field.is_hidden and not hide_label %}
     <label for="{{ field.id_for_label }}">
       {{ field.label }}
     </label>
