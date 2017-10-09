@@ -60,12 +60,13 @@
       <div class="list-group list-group-flush">
 
         {% trans "Ballot Status" as title %}
+        {% trans "only the confirmed ballot set will affect this debate's result" as subtitle %}
         {% include "components/form-title.html" %}
 
         <div class="list-group-item">
           <div class="row">
-            {% include "components/form-check.html" with field=form.discarded double=True %}
             {% include "components/form-check.html" with field=form.confirmed double=True %}
+            {% include "components/form-check.html" with field=form.discarded double=True %}
           </div>
         </div>
 
@@ -76,13 +77,13 @@
       <div class="list-group list-group-flush">
 
         {% blocktrans trimmed asvar title %}
-          Debate Status <small>(for the debate itself, not just this
-          particular ballot set)</small>
+          Debate Status
         {% endblocktrans %}
+        {% trans "all debates must be confirmed to advance to the next round" as subtitle %}
         {% include "components/form-title.html" %}
 
         <div class="list-group-item pb-4">
-          {% include "components/form-field.html" with field=form.debate_result_status %}
+          {% include "components/form-field.html" with field=form.debate_result_status hide_label=True %}
         </div>
 
         <div class="list-group-item pt-3 pb-1">
