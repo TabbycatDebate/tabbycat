@@ -92,7 +92,7 @@
               $('#venue_confirm').text(data.venue);
               $('#venue_confirm').attr('data-value', data.venue_id);
 
-              $('#teams .team').empty();
+              $('#teams .team').remove();
               $.each(data.teams, function(index, value) {
                 $('#teams').append("<button class='team btn btn-primary'>" + value + "</button>");
               });
@@ -108,7 +108,7 @@
                 $('#checkin_btn').text("Check these ballots in");
               }
 
-              $('#adjudicators .adj').empty();
+              $('#adjudicators .adj').remove();
               $.each(data.adjudicators, function(index, value) {
                 $('#adjudicators').append("<button class='adj btn btn-primary'>" + value + "</button>");
               });
