@@ -4,8 +4,10 @@
 Backups
 =======
 
-Tabbycat doesn't provide an in-built backup system; instead you should create copies of your database directly. Heroku provides a very good backup utility for all sites hosted on Heroku which makes this easy, and for Heroku-based Tabbycat sites,
-we strongly recommend it.
+Tabbycat doesn't provide an in-built backup system; instead you should create
+copies of your database directly. Heroku provides a very good backup utility for
+all sites hosted on Heroku which makes this easy, and for Heroku-based Tabbycat
+sites, we strongly recommend it.
 
 You should **always** back up the database before deleting *any* data while in
 the Edit Database area, because deleting data cannot be undone. It is also a
@@ -17,7 +19,11 @@ You may, as a matter of standard practice at large tournaments, wish to back up
 the database twice per round: Once just after you've generated the draw and
 allocated adjudicators, and once just after you've finished entering results.
 
-If taking backups from an online copy of Tabbycat you should ensure you download the backup to your local machine. While completely loosing internet access or having an outage in a critical web service (i.e. Heroku) is exceedingly rare, having a local copy of your backups means you can restore your tab to a local/offline machine if this ever happens.
+If you're using an online version of Tabbycat, it's a good idea to download the
+backups. While it's extremely rare to lose internet access or have an outage in
+a critical web service (*i.e.*, Heroku), having a local copy of your backups
+allows you to :ref:`restore your tab to a local installation <backup-restore-to-local>`
+if this ever happens.
 
 Installations on Heroku
 =======================
@@ -71,10 +77,17 @@ and
 `pg_restore <https://www.postgresql.org/docs/current/static/app-pgrestore.html>`_
 commands.
 
+.. _backup-restore-to-local:
+
 Restoring a Heroku backup to a local installation
 =================================================
 
-As detailed in the `Heroku Dev Center <https://devcenter.heroku.com/articles/heroku-postgres-import-export#restore-to-local-database>`_, you can restore a downloaded Heroku backup to a local installation. This might be useful if, say, your internet connection breaks irrecoverably in the middle of a tournament and you need to run offline. Of course, for this to work, you need to have downloaded your backup before your internet connection broke.
+As detailed in the `Heroku Dev Center <https://devcenter.heroku.com/articles/heroku-postgres-import-export#restore-to-local-database>`_,
+you can restore a downloaded Heroku backup to a local installation. This might
+be useful if, say, your internet connection breaks irrecoverably in the middle
+of a tournament and you need to run offline. Of course, for this to work, you
+need to have downloaded your backup before your internet connection broke---a
+good reason to download a copy of your backups as soon as you make them.
 
 Assuming your download is called ``latest.dump`` (this is the default name), your PostgreSQL username is ``tabbycat``, and you wish to call your local database ``fromheroku`` (if not, replace arguments as appropriate)::
 
