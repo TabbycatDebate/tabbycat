@@ -7,10 +7,17 @@
   border-bottom: 1px solid $navbar-light-border;
   border-top: 1px solid $navbar-light-border;
 
-  .navbar-brand img {
-    margin-top: -3px; // Tweak icon spacing
-    margin-right: 6px;
-    margin-left: -2px;
+  .navbar-brand {
+
+    &:hover {
+      cursor: pointer; // Drop-down links seem to clash with the nav-brand?
+    }
+
+    img {
+      margin-top: -3px; // Tweak icon spacing
+      margin-right: 6px;
+      margin-left: -2px;
+    }
   }
 }
 
