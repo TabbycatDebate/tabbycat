@@ -213,7 +213,7 @@ class AdminDrawDisplayForRoundByVenueView(OptionalAssistantTournamentPageMixin, 
 class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, BaseDrawTableView):
 
     assistant_page_permissions = ['all_areas', 'results_draw']
-    sort_key = 'Team'
+    sort_key = '' # Leave with default sort order
 
     def populate_table(self, draw, table, round, tournament):
         # Old version, remove when we decide to stick with the new version
