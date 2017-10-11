@@ -53,8 +53,7 @@
       <div class="progress">
         <div class="progress-bar position-display chair" role="progressbar"
              style="width: {% percentage c_chairs c_total %}%;" data-toggle="tooltip"
-             title="The top {{ c_chairs }} adjudicators are initially allocated as chairs because
-             there are {{ c_chairs }} debates per round.">
+             title="There are {{ c_chairs }} debates per round; thus there need to be {{ c_chairs }} chairs.">
           {{ c_chairs }} Chair{{ c_chairs|pluralize }}
         </div>
         <div class="progress-bar position-display panellist" role="progressbar"
