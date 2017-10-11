@@ -7,11 +7,16 @@ A partial list of major national and international tournaments (that we know of)
 2017
 ----
 
+- `ANU Spring IV <https://anus2017.herokuapp.com>`_
 - `Australian Easters <https://easters2017.herokuapp.com>`_
+- `Australasian Wom*ns Debating Championships <http://awdc2017.herokuapp.com/>`_
 - Asia World Schools Debating Championship
-- Cambodia United Asian Debating Championships
+- `Asia British Parliamentary Championships <http://abp2017.herokuapp.com/>`_
+- Cambodia United Asian Debating Championship
 - `New Zealand Easters <https://nzeasters2017.herokuapp.com>`_
+- `UCD Law Society IV <https://ucdlawsociv.herokuapp.com>`_
 - `UQ Australs <https://australs2017.herokuapp.com>`_
+- `Victoria Cup IV <https://viccup2017.herokuapp.com>`_
 
 2016
 ----
