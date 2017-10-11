@@ -6,22 +6,27 @@
 
 {% block page-subnav-sections %}
   {% if exists %}
-    <a class="btn btn-outline-primary" href="{% tournamenturl 'randomised-urls-view' %}">
+    <a class="btn btn-outline-primary {% if private_urls_nav %}active{% endif %}"
+       href="{% tournamenturl 'randomised-urls-view' %}">
       {% trans "View URLs" %}
     </a>
     <div class="btn-group">
-      <a class="btn btn-outline-primary" href="{% tournamenturl 'printing-feedback-urls' %}" target="_blank">
+      <a class="btn btn-outline-primary"
+         href="{% tournamenturl 'printing-feedback-urls' %}" target="_blank">
         {% trans "Print Feedback URLs" %}
       </a>
-      <a class="btn btn-outline-primary" href="{% tournamenturl 'printing-ballot-urls' %}" target="_blank">
+      <a class="btn btn-outline-primary"
+         href="{% tournamenturl 'printing-ballot-urls' %}" target="_blank">
         {% trans "Print Ballot URLs" %}
       </a>
     </div>
     <div class="btn-group">
-      <a class="btn btn-outline-primary" href="{% tournamenturl 'email-feedback-urls' %}">
+      <a class="btn btn-outline-primary {% if email_feedback_nav %}active{% endif %}"
+         href="{% tournamenturl 'email-feedback-urls' %}">
         {% trans "Email Feedback URLs" %}
       </a>
-      <a class="btn btn-outline-primary" href="{% tournamenturl 'email-ballot-urls' %}">
+      <a class="btn btn-outline-primary {% if email_ballot_nav %}active{% endif %}"
+         href="{% tournamenturl 'email-ballot-urls' %}">
         {% trans "Email Ballot URLs" %}
       </a>
     </div>

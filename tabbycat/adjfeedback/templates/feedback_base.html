@@ -2,7 +2,7 @@
 {% load debate_tags %}
 
 {% block page-subnav-sections %}
-  <div class="btn-group">
+  <div class="btn-group flex-wrap">
     <a class="btn btn-outline-primary {% if feedback_overview_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-overview' %}">
       Overview

@@ -32,8 +32,17 @@ def get_menu_highlight(request):
             menu['options_nav'] = True
             if "options" in path:
                 menu['configuration_nav'] = True
-            elif "participants" in path:
+            elif "list" in path:
                 menu['participants_nav'] = True
+            elif "categories" in path:
+                menu['speaker_cats_nav'] = True
+            elif "eligibility" in path:
+                menu['speaker_eligibility_nav'] = True
+            elif "email" in path:
+                if "feedback" in path:
+                    menu['email_feedback_nav'] = True
+                if "ballot" in path:
+                    menu['email_ballot_nav'] = True
             elif "simple" in path:
                 menu['import_nav'] = True
             elif "private-urls" in path:
