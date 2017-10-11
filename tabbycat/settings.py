@@ -335,6 +335,9 @@ if os.environ.get('TRAVIS', '') == 'true':
 # Local Overrides and Docker
 # ==============================================================================
 
+# Hide league-related configuration options unless explicitly enabled
+LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
+
 if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
     DEBUG = True # Just to be sure
     ALLOWED_HOSTS = ["*"]

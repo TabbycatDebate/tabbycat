@@ -62,10 +62,12 @@
       {% trans "Small tweaks in what information is presented by the interface" as description %}
       {% include "components/item-action.html" with type="primary" emoji="💻" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-section' section='league_options' as url %}
-      {% trans "League Options" as title %}
-      {% trans "Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported." as description %}
-      {% include "components/item-action.html" with type="primary" emoji="🏫" text=title extra=description %}
+      {% if show_leagues %}
+        {% tournamenturl 'options-tournament-section' section='league_options' as url %}
+        {% trans "League Options" as title %}
+        {% trans "Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported." as description %}
+        {% include "components/item-action.html" with type="primary" emoji="🏫" text=title extra=description %}
+      {% endif %}
 
     </ul>
   </div>
