@@ -1,8 +1,11 @@
 <template>
   <div :style="{ width: '49.5%', display: 'inline-block' }">
 
-    <h6 class="text-center text-muted pt-0 mb-3">
+    <h6 v-if="total > 0" class="text-center text-muted pt-0 mb-3">
       {{ title }}<br>({{ total }})
+    </h6>
+    <h6 v-if="total === 0" class="text-center text-muted pt-1 mb-1">
+      no data for<br> {{ title }}
     </h6>
 
   </div>
@@ -20,7 +23,7 @@ export default {
     regions: Array,
   },
   mounted: function() {
-    if (this.graphData !== undefined) {
+    if (this.graphData !== undefined && this.total > 0) {
       InitChart(this); // Only init if we have some info
     }
   },
@@ -78,7 +81,7 @@ function InitChart(vueContext){
       .attr("transform", "translate(" + (vueContext.radius + vueContext.padding) + "," + (vueContext.radius + vueContext.padding) + ")");
 
   var path = svg.selectAll("path")
-      .data(pie(vueContext.graphData))
+      .data(pie(vueContext.graphData.reverse()))
     .enter().append("path")
       .attr("class", function(d, i) { return "d3-hoverable " + vueContext.colorclass(vueContext.graphData[i].label); })
       .attr("d", arc)

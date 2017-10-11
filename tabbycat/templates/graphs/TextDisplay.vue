@@ -35,11 +35,12 @@ export default {
       return parseFloat(Math.round(value * 100) / 100).toFixed(2);
     },
     offset: function(value) {
-      var off = this.set.datum - value
-      if (off > 0) {
-        return "+" + this.round(off)
+      if (value > this.set.datum) {
+        return "+" + this.round(value - this.set.datum)
+      } else if (value < this.set.datum) {
+        return "-" + this.round(this.set.datum - value)
       } else {
-        return this.round(off)
+        return "=="
       }
     }
   }
