@@ -13,6 +13,21 @@
 {% block content %}
 
   {% if user.is_superuser %}
+
+    {% if round.is_break_round %}
+      {% tournamenturl 'tournament-donations' as url %}
+      {% blocktrans trimmed with amount=tournament.billable_teams asvar text %}
+        We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would
+        make a donation to the project in order to support it's ongoing development and maintenance.
+        For a tournament of this size, we suggest a donation of <strong>${{ amount }}</strong>.
+        Note that if your tournament is run for profit, or for fundraising, making this payment is a
+        mandatory condition of Tabbycat's software license.
+        <a href="{{ url }}">Learn more about donating.</a>
+      {% endblocktrans %}
+      {% include "components/item-info.html" with type="info" icon="heart" %}
+      <hr>
+    {% endif %}
+
     {% if blank %}
 
       <div class="card border-info text-info mb-3">
@@ -64,6 +79,7 @@
       {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
 
     {% endif %}
+
   {% endif %}
 
   <div id="vueMount">
