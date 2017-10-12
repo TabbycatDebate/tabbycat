@@ -17,6 +17,7 @@
     "bootstrap": "^4.0.0-beta",
     "browserify": "14.4.0",
     "d3": "3.5.17",
+    "datalist-polyfill": "^1.11.0",
     "envify": "^4.0.0",
     "eslint": "^4.3.0",
     "event-stream": "3.3.4",

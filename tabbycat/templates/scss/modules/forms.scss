@@ -77,6 +77,15 @@ label.error {
   font-size: $font-size-sm;
 }
 
+// Special Polyfill for Safari (needs tweaking from the default styles in lib)
+.polyfilling {
+  margin-top: 0 !important;
+  margin-left: 0 !important;
+  z-index: $z_2;
+  padding: 10px;
+  border-color: $gray-600;
+}
+
 //------------------------------------------------------------------------------
 // Custom Widgets
 //------------------------------------------------------------------------------

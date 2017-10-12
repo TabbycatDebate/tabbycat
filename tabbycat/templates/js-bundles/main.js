@@ -18,6 +18,9 @@ require("bootstrap");
 // Icons
 import feather from 'feather-icons';
 
+// Polyfill Safari support for datalists (ballot checkins + constraints import)
+require("datalist-polyfill");
+
 // Add alerts programmatically
 $.fn.extend({
   showAlert: function(alerttype, message, timeout) {
