@@ -7,7 +7,6 @@ import draw.models as dm
 import motions.models as mm
 import participants.models as pm
 import tournaments.models as tm
-import tournaments.utils
 import venues.models as vm
 from participants.emoji import set_emoji
 
@@ -58,6 +57,23 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         ("suffix"): vm.VenueCategory.DISPLAY_SUFFIX,
         ("prefix"): vm.VenueCategory.DISPLAY_PREFIX
     })
+
+    order = [
+        'venue_categories',
+        'venues',
+        'regions',
+        'institutions',
+        'break_categories',
+        'teams',
+        'speakers',
+        'adjudicators',
+        'rounds',
+        'motions',
+        'sides',
+        'adj_feedback_questions',
+        'adj_venue_constraints',
+        'team_venue_constraints',
+    ]
 
     def import_rounds(self, f):
         """Imports rounds from a file.
@@ -387,11 +403,3 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             return line
 
         self._import(f, vm.VenueConstraint, team_venue_constraints_interpreter)
-
-    def auto_make_rounds(self, num_rounds):
-        """Makes the number of rounds specified. The first one is random and the
-        rest are all power-paired. The last one is silent. This is intended as a
-        convenience function. For anything more complicated, the user should use
-        import_rounds() instead."""
-        tournaments.utils.auto_make_rounds(self.tournament, num_rounds)
-        self.logger.info("Auto-made %d rounds", num_rounds)

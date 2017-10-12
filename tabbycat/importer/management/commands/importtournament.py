@@ -9,6 +9,7 @@ import participants.models as pm
 import venues.models as vm
 from draw.models import DebateTeam
 from tournaments.models import Tournament
+from tournaments.utils import auto_make_rounds
 from importer.importers.anorak import AnorakTournamentDataImporter
 from importer.importers import DUPLICATE_INFO, TournamentDataImporterFatal
 
@@ -20,20 +21,27 @@ class Command(BaseCommand):
         parser.add_argument('path', help="Directory to import tournament data from")
         parser.add_argument('items', help="Items to import (default: import all)", nargs="*", default=[])
 
+        parser.add_argument('-i', '--importer', type=str, default='anorak',
+                            help='Which importer to use (default: anorak)')
+
         parser.add_argument('-r', '--auto-rounds', type=int, metavar='N', default=None,
                             help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
         parser.add_argument('--force', action='store_true', default=False,
                             help='Do not prompt before deleting tournament that already exists.')
         parser.add_argument('--keep-existing', action='store_true', default=False,
                             help='Keep existing tournament and data, skipping lines if they are duplicates.')
+        parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
+                            help='Don\'t crash if there is an error, just skip and keep going.')
+
+        # Cleaning shared objects
+        parser.add_argument('--clean-shared', action='store_true', default=False,
+                            help='Delete all shared objects from the database. Overrides --keep-existing.')
         parser.add_argument('--delete-institutions', action='store_true', default=False,
                             help='Delete all institutions from the database. Overrides --keep-existing.')
         parser.add_argument('--delete-venue-categories', action='store_true', default=False,
                             help='Delete all venue categories from the database. Overrides --keep-existing.')
         parser.add_argument('--delete-regions', action='store_true', default=False,
                             help='Delete all regions categories from the database. Overrides --keep-existing.')
-        parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
-                            help='Don\'t crash if there is an error, just skip and keep going.')
 
         # Tournament options
         parser.add_argument('-s', '--slug', type=str, action='store', default=None,
@@ -49,31 +57,19 @@ class Command(BaseCommand):
         self.color = not options['no_color']
         self.dirpath = self.get_data_path(options['path'])
 
-        if options['delete_institutions']:
-            self.delete_institutions()
-        if options['delete_venue_categories']:
-            self.delete_venue_categories()
-        if options['delete_regions']:
-            self.delete_regions()
+        self.clean_shared_instances()
+
         self.make_tournament()
         loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
         self.importer = AnorakTournamentDataImporter(
             self.t, loglevel=loglevel, strict=options['strict'], expect_unique=not options['keep_existing'])
 
-        self._make('venue_categories')
-        self._make('venues')
-        self._make('regions')
-        self._make('institutions')
-        self._make('break_categories')
-        self._make('teams')
-        self._make('speakers')
-        self._make('judges', self.importer.import_adjudicators)
-        self.make_rounds()
-        self._make('motions')
-        self._make('sides')
-        self._make('questions', self.importer.import_adj_feedback_questions)
-        self._make('adj_venue_constraints')
-        self._make('team_venue_constraints')
+        # Importer classes specify what they import, and in what order
+        for item in self.importer.order:
+            if item == 'rounds':
+                self.make_rounds()
+            else:
+                self._make(item)
 
     def _print_stage(self, message):
         if self.verbosity > 0:
@@ -117,16 +113,15 @@ class Command(BaseCommand):
             self._warning("Skipping '{0:s}': {1:s}".format(filename, e.strerror))
             return None
 
-    def _make(self, filename, import_method=None):
-        """Imports objects from the given file using the given import method.
-        If the import method isn't given, it is inferred from the file name."""
-        if self.options['items'] and filename not in self.options['items']:
+    def _make(self, model):
+        """Imports objects of the specified model, by calling the import_<model>
+        method to import from the file <model>.csv."""
+        if self.options['items'] and model not in self.options['items']:
             return
-        f = self._open_csv_file(filename)
-        if import_method is None:
-            import_method = getattr(self.importer, 'import_' + filename)
+        f = self._open_csv_file(model)
+        import_method = getattr(self.importer, 'import_' + model)
         if f is not None:
-            self._print_stage("Importing %s.csv" % filename)
+            self._print_stage("Importing %s.csv" % model)
             self.importer.reset_counts()
             try:
                 import_method(f)
@@ -153,20 +148,20 @@ class Command(BaseCommand):
         data_path = os.path.join(base_path, arg)
         return _check_return(data_path)
 
-    def delete_institutions(self):
-        """Deletes all institutions from the database."""
-        self._warning("Deleting all institutions from the database")
-        pm.Institution.objects.all().delete()
+    def clean_shared_instances(self):
+        """Removes shared instances from the database, depending on what options
+        the user selected."""
+        if self.options['clean_shared'] or self.options['delete_institutions']:
+            self._warning("Deleting all institutions from the database")
+            pm.Institution.objects.all().delete()
 
-    def delete_venue_categories(self):
-        """Deletes all venue categories from the database."""
-        self._warning("Deleting all venue categories from the database")
-        vm.VenueCategory.objects.all().delete()
+        if self.options['clean_shared'] or self.options['delete_venue_categories']:
+            self._warning("Deleting all venue categories from the database")
+            vm.VenueCategory.objects.all().delete()
 
-    def delete_regions(self):
-        """Deletes all regions from the database."""
-        self._warning("Deleting all regions from the database")
-        pm.Region.objects.all().delete()
+        if self.options['clean_shared'] or self.options['delete_regions']:
+            self._warning("Deleting all regions from the database")
+            pm.Region.objects.all().delete()
 
     def make_tournament(self):
         """Given the path, does everything necessary to create the tournament,
@@ -184,7 +179,9 @@ class Command(BaseCommand):
         else:
             if os.path.exists(self._csv_file_path('rounds')):
                 self._warning("Ignoring file 'rounds.csv' because --auto-rounds used")
-            self.importer.auto_make_rounds(self.options['auto_rounds'])
+            num_rounds = self.options['auto_rounds']
+            auto_make_rounds(self.t, num_rounds)
+            self._print_stage("Auto-made %d rounds" % num_rounds)
 
     def resolve_tournament_fields(self):
         """Figures out what the tournament slug, name and short name should be,
@@ -208,7 +205,7 @@ class Command(BaseCommand):
                 response = input("Are you sure? ")
                 if response != "yes":
                     raise CommandError("Cancelled by user.")
-            DebateTeam.objects.filter(team__tournament__slug=slug).delete()
+            DebateTeam.objects.filter(team__tournament__slug=slug).delete()  # protected from cascade deletion
             Tournament.objects.filter(slug=slug).delete()
 
         elif not exists and self.options['keep_existing']:

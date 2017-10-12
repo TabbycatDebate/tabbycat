@@ -62,10 +62,6 @@ class TestImporterAnorak(TestCase):
         self.assertCountsDictEqual(self.importer.counts, {tm.Round: 10})
         self.assertFalse(self.importer.errors)
 
-    def test_auto_make_rounds(self):
-        self.importer.auto_make_rounds(7)
-        self.assertEqual(self.t.round_set.count(), 7)
-
     def test_venues(self):
         f = self._open_csv_file(self.TESTDIR, "venues")
         self.importer.import_venues(f)
