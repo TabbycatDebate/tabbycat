@@ -48,6 +48,7 @@ class AdjudicatorConflict(models.Model):
     class Meta:
         verbose_name = _("adjudicator-team conflict")
         verbose_name_plural = _("adjudicator-team conflicts")
+        unique_together = ('adjudicator', 'team')
 
 
 class AdjudicatorAdjudicatorConflict(models.Model):
@@ -59,6 +60,7 @@ class AdjudicatorAdjudicatorConflict(models.Model):
     class Meta:
         verbose_name = _("adjudicator-adjudicator conflict")
         verbose_name_plural = _("adjudicator-adjudicator conflicts")
+        unique_together = ('adjudicator', 'conflict_adjudicator')
 
 
 class AdjudicatorInstitutionConflict(models.Model):
@@ -70,3 +72,4 @@ class AdjudicatorInstitutionConflict(models.Model):
     class Meta:
         verbose_name = _("adjudicator-institution conflict")
         verbose_name_plural = _("adjudicator-institution conflicts")
+        unique_together = ('adjudicator', 'institution')
