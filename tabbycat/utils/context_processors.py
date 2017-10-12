@@ -127,6 +127,8 @@ def get_menu_highlight(request):
             return {'overview_nav': True}
         elif "results" in request.path and "add" in request.path:
             return {'enter_ballots_nav': True}
+        elif "feedback" in request.path and "add" in request.path:
+            return {'enter_feedback_nav': True}
         elif "results" in request.path and "admin" in request.path:
             return {'ballots_nav': True}
         elif "results" in request.path:
