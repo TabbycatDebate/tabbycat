@@ -69,17 +69,21 @@ export default {
         return this.dataOrderedByKey
       }
       var filterKey = this.filterKey
-      return _.filter(this.dataOrderedByKey, function(row) {
-        // Filter through all rows; within each row check...
-        var rowContainsMatch = false
-        _.forEach(row, function(cell) {
-          // ...and see if  has cells whose text-string contains filterKey
-          if (_.includes(_.lowerCase(cell.text), _.lowerCase(filterKey))) {
-            rowContainsMatch = true
-          }
+      if (filterKey.length < 3) {
+        return this.dataOrderedByKey; // Filtering is CPU heavy for low chars
+      } else {
+        return _.filter(this.dataOrderedByKey, function(row) {
+          // Filter through all rows; within each row check...
+          var rowContainsMatch = false
+          _.forEach(row, function(cell) {
+            // ...and see if  has cells whose text-string contains filterKey
+            if (_.includes(_.lowerCase(cell.text), _.lowerCase(filterKey))) {
+              rowContainsMatch = true
+            }
+          })
+          return rowContainsMatch
         })
-        return rowContainsMatch
-      })
+      }
     }
   }
 }
