@@ -9,8 +9,8 @@ import participants.models as pm
 import venues.models as vm
 from draw.models import DebateTeam
 from tournaments.models import Tournament
-from importer.anorak import AnorakTournamentDataImporter
-from importer.base import DUPLICATE_INFO, TournamentDataImporterFatal
+from importer.importers.anorak import AnorakTournamentDataImporter
+from importer.importers import DUPLICATE_INFO, TournamentDataImporterFatal
 
 
 class Command(BaseCommand):

@@ -17,8 +17,8 @@ import participants.models as pm
 import tournaments.models as tm
 import venues.models as vm
 
-from ..anorak import AnorakTournamentDataImporter
-from ..base import TournamentDataImporterError
+from ..importers.anorak import AnorakTournamentDataImporter
+from ..importers import TournamentDataImporterError
 
 
 class TestImporterAnorak(TestCase):

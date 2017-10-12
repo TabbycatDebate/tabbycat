@@ -75,7 +75,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     # When adding or changing an answer type, here are the other places you need
     # to edit:
     #   - forms.py : BaseFeedbackForm._make_question_field()
-    #   - importer/anorak.py : AnorakTournamentDataImporter.FEEDBACK_ANSWER_TYPES
+    #   - importer/importers/anorak.py : AnorakTournamentDataImporter.FEEDBACK_ANSWER_TYPES
 
     ANSWER_TYPE_BOOLEAN_CHECKBOX = 'bc'
     ANSWER_TYPE_BOOLEAN_SELECT = 'bs'
