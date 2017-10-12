@@ -730,5 +730,5 @@ class PublicBallotSubmissionIndexView(CacheMixin, PublicTournamentPageMixin, Tem
     def get_context_data(self, **kwargs):
         if self.is_draw_released():
             kwargs['das'] = DebateAdjudicator.objects.filter(
-                debate__round=self.get_tournament().current_round).select_related('adjudicator', 'debate')
+                debate__round=self.get_tournament().current_round).select_related('adjudicator', 'debate').order_by('adjudicator__name')
         return super().get_context_data(**kwargs)

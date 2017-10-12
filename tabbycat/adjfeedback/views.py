@@ -334,8 +334,11 @@ class BaseAddFeedbackIndexView(TournamentMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
-        kwargs['adjudicators'] = tournament.adjudicator_set.all() if not tournament.pref('share_adjs') \
-            else Adjudicator.objects.all()
+        if not tournament.pref('share_adjs'):
+            kwargs['adjudicators'] = tournament.adjudicator_set.all().order_by('name')
+        else:
+            Adjudicator.objects.all().order_by('name')
+
         kwargs['teams'] = tournament.team_set.all()
         return super().get_context_data(**kwargs)
 
