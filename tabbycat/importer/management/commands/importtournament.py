@@ -69,7 +69,7 @@ class Command(BaseCommand):
             if item == 'rounds':
                 self.make_rounds()
             else:
-                self._make(item)
+                self.make(item)
 
     def _print_stage(self, message):
         if self.verbosity > 0:
@@ -113,7 +113,7 @@ class Command(BaseCommand):
             self._warning("Skipping '{0:s}': {1:s}".format(filename, e.strerror))
             return None
 
-    def _make(self, model):
+    def make(self, model):
         """Imports objects of the specified model, by calling the import_<model>
         method to import from the file <model>.csv."""
         if self.options['items'] and model not in self.options['items']:
@@ -175,7 +175,7 @@ class Command(BaseCommand):
         """Makes rounds using an automatic rounds maker if --auto-rounds is
         enabled, or using the CSV file if not."""
         if self.options['auto_rounds'] is None:
-            self._make('rounds')
+            self.make('rounds')
         else:
             if os.path.exists(self._csv_file_path('rounds')):
                 self._warning("Ignoring file 'rounds.csv' because --auto-rounds used")

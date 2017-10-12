@@ -93,7 +93,7 @@ class TestImporterAnorak(TestCase):
     def test_adjudicators(self):
         self.test_speakers()
         self.importer.reset_counts()
-        f = self._open_csv_file(self.TESTDIR, "judges")
+        f = self._open_csv_file(self.TESTDIR, "adjudicators")
         self.importer.import_adjudicators(f)
         self.assertCountsDictEqual(self.importer.counts, {
             pm.Adjudicator: 27,
@@ -113,7 +113,7 @@ class TestImporterAnorak(TestCase):
         self.assertFalse(self.importer.errors)
 
     def test_adj_feedback_questions(self):
-        f = self._open_csv_file(self.TESTDIR, "questions")
+        f = self._open_csv_file(self.TESTDIR, "adj_feedback_questions")
         self.importer.import_adj_feedback_questions(f)
         self.assertCountsDictEqual(self.importer.counts, {fm.AdjudicatorFeedbackQuestion: 11})
         self.assertFalse(self.importer.errors)
