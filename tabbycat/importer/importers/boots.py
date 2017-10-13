@@ -80,17 +80,19 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
 
         def team_interpreter(lineno, line):
             line = team_interpreter_part(lineno, line)
-            line['short_reference'] = line['reference'][:34]
+            if not line.get('short_reference'):
+                line['short_reference'] = line['reference'][:34]
             return line
         teams = self._import(f, pm.Team, team_interpreter)
         set_emoji(teams.values(), self.tournament)
 
         def break_category_interpreter(lineno, line):
-            if line['break_category']:
-                return {
-                    'team': teams[lineno],
-                    'breakcategory': bm.BreakCategory.objects.get(slug=line['break_category'])
-                }
+            if line.get('break_category'):
+                for category in line['break_category'].split('/'):
+                    yield {
+                        'team': teams[lineno],
+                        'breakcategory': self.tournament.breakcategory_set.get(slug=category)
+                    }
         self._import(f, pm.Team.break_categories.through, break_category_interpreter)
 
         def speakers_interpreter(lineno, line):
@@ -103,11 +105,10 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
 
         def speaker_category_interpreter(lineno, line):
             for i in [1, 2]:
-                category = line.get('speaker%d_category' % i)
-                if not category:
-                    continue
-                yield {
-                    'speakercategory': pm.SpeakerCategory.objects.get(slug=category),
-                    'speaker': speakers[(lineno, i)],
-                }
+                if line.get('speaker%d_category' % i):
+                    for category in line['speaker%d_category' % i].split('/'):
+                        yield {
+                            'speakercategory': self.tournament.speakercategory_set.get(slug=category),
+                            'speaker': speakers[(lineno, i)],
+                        }
         self._import(f, pm.Speaker.categories.through, speaker_category_interpreter)
