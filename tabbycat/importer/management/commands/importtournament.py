@@ -98,6 +98,11 @@ class Command(BaseCommand):
                 message = "\033[0;33mWarning: " + message + "\033[0m\n"
             self.stdout.write(message)
 
+    def _print_loud(self, message):
+        if self.color:
+            message = "\033[1;33m" + message + "\033[0m\n"
+        self.stdout.write(message)
+
     def _csv_file_path(self, filename):
         """Requires self.dirpath to be defined."""
         if not filename.endswith('.csv'):
@@ -200,9 +205,9 @@ class Command(BaseCommand):
         exists = Tournament.objects.filter(slug=slug).exists()
         if exists and not self.options['keep_existing'] and not self.options['items']:
             if not self.options['force']:
-                self.stdout.write("WARNING! A tournament with slug '" + slug + "' already exists.")
-                self.stdout.write("You are about to delete EVERYTHING for this tournament.")
-                response = input("Are you sure? ")
+                self._print_loud("WARNING! A tournament with slug '" + slug + "' already exists.")
+                self._print_loud("You are about to delete EVERYTHING for this tournament.")
+                response = input("Are you sure? (yes/no) ")
                 if response != "yes":
                     raise CommandError("Cancelled by user.")
             DebateTeam.objects.filter(team__tournament__slug=slug).delete()  # protected from cascade deletion

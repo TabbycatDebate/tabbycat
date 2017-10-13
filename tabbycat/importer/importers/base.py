@@ -14,7 +14,9 @@ logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
 
 
 def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
-    """Convenience function for building an interpreter."""
+    """Convenience function for building an interpreter. The default interpreter
+    (i.e. the one returned if no arguments are passed to this function) just
+    removes blank values."""
     def interpreter(lineno, line):
         # remove blank and unwanted values
         line = {fieldname: value for fieldname, value in line.items()
@@ -32,6 +34,14 @@ def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
 
 
 def make_lookup(name, choices):
+    """Convenience function for building a lookup function, which maps valid
+    user input values to a standardized string. Lookups are case-insensitive.
+    `name` is a string used in an error message if lookup fails.
+
+    `choices` should be a dict mapping a tuple of valid choices to a value. All
+    choices must be specified as lower-case. For example, one entry in the
+    choices dict might be: {('female', 'f'): 'F'}
+    """
     def lookup(val):
         if not val:
             return ''
@@ -139,9 +149,9 @@ class BaseTournamentDataImporter(object):
         self.errors = TournamentDataImporterError()
 
     def _import(self, csvfile, model, interpreter=make_interpreter(), expect_unique=None):
-        """Parses the object given in f, using the callable line_parser to parse
+        """Parses the object given in f, using the callable interpreter to parse
         each line, and passing the arguments to the given model's constructor.
-        `csvfile` can be any object that is supported by csv.reader(), which
+        `csvfile` can be any object that is supported by csv.DictReader(), which
         includes file objects and lists of strings.
 
         If `csvfile` supports the seek() method (e.g., file objects),
@@ -149,14 +159,17 @@ class BaseTournamentDataImporter(object):
         multiple times on the same file. This means that csvfile, if a file
         object, must be seekable.
 
-        `line_parser` takes a dict in the form returned by `csv.DictReader`, and
-        must return a dict of arguments that can be passed to the model
-        constructor. If `line_parser(line)` returns None, the line is skipped.
-        `line_parser` can be a generator; if so, one instance is created for
-        each dict yielded. If omitted, the dict returned by `csv.DictReader`
-        will be used directly.
+        `interpreter` takes a dict in the form returned by `csv.DictReader`, and
+        generally must return a dict of keyword argments that can be passed to
+        the model constructor. If `interpreter(line)` returns None, the line is
+        skipped. `interpreter` can be a generator or return a list of dicts; if
+        so, one instance is created for each dict yielded. If omitted, the dict
+        returned by `csv.DictReader` will be passed through a default
+        interpreter, which just removes blank fields.
 
         Returns a dict mapping line numbers to instances created in this import.
+        If `interpreter` is a generator or returns a list, the keys will be
+        2-tuples (lineno, itemno) instead.
 
         Callers may also access two attributes, which are updated every time
         this function is called. The first, `self.counts` is a Counter object
@@ -189,6 +202,7 @@ class BaseTournamentDataImporter(object):
                 if isinstance(line[k], str):
                     line[k] = line[k].strip()
 
+            # Interpret the line
             try:
                 kwargs_list = interpreter(lineno, line)
                 if isinstance(kwargs_list, GeneratorType):
@@ -207,6 +221,7 @@ class BaseTournamentDataImporter(object):
             else:
                 list_provided = True
 
+            # Create the instances
             for itemno, kwargs in enumerate(kwargs_list, start=1):
                 description = model.__name__ + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
 
@@ -221,11 +236,11 @@ class BaseTournamentDataImporter(object):
                     continue
                 kwargs_seen.append(kwargs_expect_unique)
 
-                # Retrieve the instance or create it if it doesn't exist
+                # Create (but don't save) an instance (or handle an error)
                 try:
                     inst = model.objects.get(**kwargs)
                 except ObjectDoesNotExist as e:
-                    inst = model(**kwargs)
+                    inst = model(**kwargs)  # normal case (create object)
                 except MultipleObjectsReturned as e:
                     if expect_unique:
                         errors.add(lineno, model, str(e))
@@ -264,12 +279,11 @@ class BaseTournamentDataImporter(object):
                     errors.update_with_validation_error(lineno, model, e)
                     continue
 
-                self.logger.debug("Listing to create: " + description)
-                if list_provided:
-                    instances[(lineno, itemno)] = inst
-                else:
-                    instances[lineno] = inst
+                key = (lineno, itemno) if list_provided else lineno
+                self.logger.debug("To create from line %s: %s", key, description)
+                instances[key] = inst
 
+        # Report errors, if any
         if errors:
             if self.strict:
                 for message in errors.itermessages():
@@ -280,9 +294,10 @@ class BaseTournamentDataImporter(object):
                     self.logger.warning(message)
                 self.errors.update(errors)
 
-        for inst in instances.values():
-            self.logger.debug("Made %s: %r", model._meta.verbose_name, inst)
+        # Create the instances
+        for lineno, inst in instances.items():
             inst.save()
+            self.logger.debug("Made %s from line %s: %r", model._meta.verbose_name, lineno, inst)
 
         self.logger.info("Imported %d %s", len(instances), model._meta.verbose_name_plural)
         if skipped_because_existing:
