@@ -76,10 +76,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     ]
 
     def import_rounds(self, f):
-        """Imports rounds from a file.
-        Each line has:
-            seq, name, abbreviation, stage, draw_type, silent, feedback_weight, break_category
-        """
         round_interpreter = make_interpreter(
             tournament=self.tournament,
             stage=self.lookup_round_stage,
@@ -94,19 +90,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self.tournament.save()
 
     def import_regions(self, f):
-        """Imports regions from a file.
-        Each line has:
-            name
-        """
         region_interpreter = make_interpreter()
         self._import(f, pm.Region, region_interpreter)
 
     def import_institutions(self, f, auto_create_regions=True):
-        """Imports institutions from a file, also creating regions as needed
-        (unless 'auto_create_regions' is False)
-        Each line has:
-            name, code, abbreviation, region
-        """
+        """Imports institutions, also creating regions as needed unless
+        'auto_create_regions' is False."""
 
         if auto_create_regions:
             def region_interpreter(line):
@@ -124,13 +113,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, pm.Institution, institution_interpreter)
 
     def import_venues(self, f, auto_create_categories=True):
-        """Imports venues from a file, also creating venue categories as needed
-        (unless 'auto_create_categories' is False). This function only adds one
-        category per venue; use `import_venue_categories` to create further
-        categories.
-
-        Each line has:
-            name, priority, category
+        """Imports venues, also creating venue categories as needed unless
+        'auto_create_categories' is False. This function only adds one category
+        per venue; use `import_venue_categories` to create further categories.
         """
 
         venue_interpreter = make_interpreter(
@@ -158,11 +143,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, vm.VenueCategory.venues.through, venue_category_venue_interpreter)
 
     def import_venue_categories(self, f):
-        """Imports venue categories from a file.
-        Each line has:
-            name,display_in_venue_name
-        """
-
         venue_category_interpreter = make_interpreter(
             display_in_venue_name=self.lookup_venue_category_display,
         )
@@ -170,20 +150,14 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, vm.VenueCategory, venue_category_interpreter, expect_unique=False)
 
     def import_break_categories(self, f):
-        """Imports break categories from a file.
-
-        Each line has:
-            name, slug, seq, break_size, is_general, priority, institution_cap
-        """
-
         break_category_interpreter = make_interpreter(
             tournament=self.tournament,
         )
         self._import(f, bm.BreakCategory, break_category_interpreter)
 
     def import_teams(self, f, create_dummy_speakers=False):
-        """Imports teams from a file. If 'create_dummy_speakers' is True,
-        it also creates dummy speakers."""
+        """Imports teams. If 'create_dummy_speakers' is True, it also creates
+        dummy speakers."""
 
         team_interpreter_part = make_interpreter(
             tournament=self.tournament,
@@ -207,13 +181,9 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             self._import(f, pm.Speaker, speakers_interpreter)
 
     def import_speakers(self, f, auto_create_teams=True):
-        """Imports speakers from a file, also creating teams as needed (unless
+        """Imports speakers, also creating teams as needed (unless
         'auto_create_teams' is False). Institutions are not created as needed;
         if an institution doesn't exist, an error is raised.
-
-        Each line has:
-            name, institution, team_name, use_team_name_as_prefix, gender,
-            pronoun, email.
         """
 
         if auto_create_teams:
@@ -246,15 +216,10 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, pm.Speaker, speaker_interpreter)
 
     def import_adjudicators(self, f, auto_conflict=True):
-        """Imports adjudicators from a file. Institutions are not created as
-        needed; if an institution doesn't exist, an error is raised. Conflicts
-        are created from the same file, if present. If 'auto_conflict' is True
-        (default), conflicts are created with adjudicators' own institutions.
-
-        Each line has:
-            name, institution, rating, gender, independent, trainee, cellphone,
-            adj_core, email, notes, institution_conflicts, team_conflicts,
-            adj_conflicts
+        """Imports adjudicators. Institutions are not created as needed; if an
+        institution doesn't exist, an error is raised. Conflicts are created
+        from the same file, if present. If 'auto_conflict' is True (default),
+        conflicts are created with adjudicators' own institutions.
         """
 
         adjudicator_interpreter = make_interpreter(
@@ -328,20 +293,12 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, am.AdjudicatorAdjudicatorConflict, adj_conflict_interpreter)
 
     def import_motions(self, f):
-        """Imports motions from a file.
-        Each line has:
-            round, motion_seq, reference, text
-        """
         motions_interpreter = make_interpreter(
             round=lambda x: tm.Round.objects.lookup(x, tournament=self.tournament),
         )
         self._import(f, mm.Motion, motions_interpreter)
 
     def import_sides(self, f):
-        """Imports sides from a file.
-        Each line has:
-            team_name, side_for_round1, side_for_round2, ...
-        """
         def side_interpreter(line):
             team = pm.Team.objects.lookup(line['team_name'])
             del line['team_name']
@@ -354,11 +311,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, dm.TeamSideAllocation, side_interpreter)
 
     def import_adj_feedback_questions(self, f):
-        """Imports adjudicator feedback questions from a file.
-        Each line has:
-            seq, reference, name, text, answer_type, required, from_adj, from_team,
-                min_value, max_value
-        """
         question_interpreter = make_interpreter(
             tournament=self.tournament,
             answer_type=self.lookup_feedback_answer_type,
@@ -367,10 +319,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, fm.AdjudicatorFeedbackQuestion, question_interpreter)
 
     def import_adj_venue_constraints(self, f):
-        """Imports venue constraints from a file.
-        Each line has:
-            adjudicator, category, priority
-        """
         adj_venue_constraints_interpreter_part = make_interpreter(
             adjudicator=lambda x: pm.Adjudicator.objects.get(name=x),
             category=lambda x: vm.VenueCategory.objects.get(name=x),
@@ -386,10 +334,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, vm.VenueConstraint, adj_venue_constraints_interpreter)
 
     def import_team_venue_constraints(self, f):
-        """Imports venue constraints from a file.
-        Each line has:
-            team, category, priority
-        """
         team_venue_constraints_interpreter_part = make_interpreter(
             team=pm.Team.objects.lookup,
             category=lambda x: vm.VenueCategory.objects.get(name=x),
