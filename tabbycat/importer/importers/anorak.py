@@ -173,8 +173,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         if create_dummy_speakers:
             def speakers_interpreter(lineno, line):
-                team = pm.Teams.objects.get(name=line['reference'],
-                    institution=pm.Institution.objects.lookup(line['institution']))
+                team = teams[lineno]
                 for name in ["1st Speaker", "2nd Speaker", "3rd Speaker", "Reply Speaker"]:
                     yield dict(name=name, team=team)
             self._import(f, pm.Speaker, speakers_interpreter)
