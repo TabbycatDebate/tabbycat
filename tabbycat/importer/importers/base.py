@@ -15,7 +15,7 @@ logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
 
 def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
     """Convenience function for building an interpreter."""
-    def interpreter(line):
+    def interpreter(lineno, line):
         # remove blank and unwanted values
         line = {fieldname: value for fieldname, value in line.items()
                 if value != '' and value is not None and fieldname not in DELETE}
@@ -33,6 +33,8 @@ def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
 
 def make_lookup(name, choices):
     def lookup(val):
+        if not val:
+            return ''
         for k, v in choices.items():
             if val.lower().replace("-", " ") in k:
                 return v
@@ -154,7 +156,7 @@ class BaseTournamentDataImporter(object):
         each dict yielded. If omitted, the dict returned by `csv.DictReader`
         will be used directly.
 
-        Returns a list of instances created in this import.
+        Returns a dict mapping line numbers to instances created in this import.
 
         Callers may also access two attributes, which are updated every time
         this function is called. The first, `self.counts` is a Counter object
@@ -174,7 +176,7 @@ class BaseTournamentDataImporter(object):
             csvfile.seek(0)
         reader = csv.DictReader(csvfile)
         kwargs_seen = list()
-        instances = list()
+        instances = dict()
         errors = TournamentDataImporterError()
         if expect_unique is None:
             expect_unique = self.expect_unique
@@ -188,7 +190,7 @@ class BaseTournamentDataImporter(object):
                     line[k] = line[k].strip()
 
             try:
-                kwargs_list = interpreter(line)
+                kwargs_list = interpreter(lineno, line)
                 if isinstance(kwargs_list, GeneratorType):
                     kwargs_list = list(kwargs_list) # force evaluation
             except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError,
@@ -200,9 +202,12 @@ class BaseTournamentDataImporter(object):
             if kwargs_list is None:
                 continue
             if isinstance(kwargs_list, dict):
+                list_provided = False
                 kwargs_list = [kwargs_list]
+            else:
+                list_provided = True
 
-            for kwargs in kwargs_list:
+            for itemno, kwargs in enumerate(kwargs_list, start=1):
                 description = model.__name__ + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
 
                 # Check if it's a duplicate
@@ -260,7 +265,10 @@ class BaseTournamentDataImporter(object):
                     continue
 
                 self.logger.debug("Listing to create: " + description)
-                instances.append(inst)
+                if list_provided:
+                    instances[(lineno, itemno)] = inst
+                else:
+                    instances[lineno] = inst
 
         if errors:
             if self.strict:
@@ -272,7 +280,7 @@ class BaseTournamentDataImporter(object):
                     self.logger.warning(message)
                 self.errors.update(errors)
 
-        for inst in instances:
+        for inst in instances.values():
             self.logger.debug("Made %s: %r", model._meta.verbose_name, inst)
             inst.save()
 

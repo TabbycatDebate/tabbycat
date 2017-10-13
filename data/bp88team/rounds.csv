@@ -8,8 +8,8 @@ seq,name,abbreviation,stage,draw_type,silent,feedback_weight,break_category
 7,Round 7,R7,P,P,0,0.7,
 8,Round 8,R8,P,P,1,0.7,
 9,Open Quarterfinal,OQF,E,E,1,0.7,open
-10,Novice Semifinal,SSF,E,E,1,0.7,novice
+10,Novice Semifinal,NSF,E,E,1,0.7,novice
 11,Open Semifinal,OSF,E,E,1,0.7,open
-12,ESL Grand Final,NGF,E,E,1,0.7,esl
-13,Novice Grand Final,SGF,E,E,1,0.7,novice
+12,ESL Grand Final,SGF,E,E,1,0.7,esl
+13,Novice Grand Final,NGF,E,E,1,0.7,novice
 14,Open Grand Final,OGF,E,E,1,0.7,open

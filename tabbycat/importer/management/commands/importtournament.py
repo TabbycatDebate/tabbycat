@@ -10,8 +10,7 @@ import venues.models as vm
 from draw.models import DebateTeam
 from tournaments.models import Tournament
 from tournaments.utils import auto_make_rounds
-from importer.importers.anorak import AnorakTournamentDataImporter
-from importer.importers import DUPLICATE_INFO, TournamentDataImporterFatal
+from importer.importers import DUPLICATE_INFO, importer_registry, TournamentDataImporterFatal
 
 
 class Command(BaseCommand):
@@ -21,7 +20,7 @@ class Command(BaseCommand):
         parser.add_argument('path', help="Directory to import tournament data from")
         parser.add_argument('items', help="Items to import (default: import all)", nargs="*", default=[])
 
-        parser.add_argument('-i', '--importer', type=str, default='anorak',
+        parser.add_argument('-i', '--importer', type=str, default='anorak', choices=importer_registry,
                             help='Which importer to use (default: anorak)')
 
         parser.add_argument('-r', '--auto-rounds', type=int, metavar='N', default=None,
@@ -58,10 +57,11 @@ class Command(BaseCommand):
         self.dirpath = self.get_data_path(options['path'])
 
         self.clean_shared_instances()
-
         self.make_tournament()
         loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
-        self.importer = AnorakTournamentDataImporter(
+
+        importer_class = importer_registry[self.options['importer']]
+        self.importer = importer_class(
             self.t, loglevel=loglevel, strict=options['strict'], expect_unique=not options['keep_existing'])
 
         # Importer classes specify what they import, and in what order
