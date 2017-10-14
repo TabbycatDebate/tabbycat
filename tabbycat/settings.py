@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = 'en'
 USE_I18N = True
 
-TABBYCAT_VERSION = '1.4.4'
+TABBYCAT_VERSION = '1.4.5'
 TABBYCAT_CODENAME = 'Havana Brown'
-READTHEDOCS_VERSION = 'v1.4.4'
+READTHEDOCS_VERSION = 'v1.4.5'
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),

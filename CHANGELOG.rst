@@ -2,13 +2,20 @@
 Change Log
 ==========
 
+1.4.5
+-----
+*Release date: 14 October 2017*
+
+- Added warning message when adjudicator scores are outside the expected range
+- Fixed handling of uniqueness failure in simple importer for teams
+
 1.4.4
 -----
 *Release date: 27 September 2017*
 
-- Fix Vue dependency issue preventing Heroku installs after a dependency release
-- Fix issue with formatting non-numeric standings metrics
-- Fix behaviour of public tabs when all rounds are silent
+- Fixed Vue dependency issue preventing Heroku installs after a dependency release
+- Fixed issue with formatting non-numeric standings metrics
+- Fixed behaviour of public tabs when all rounds are silent
 
 1.4.3
 -----
@@ -45,7 +52,7 @@ Change Log
     - Added 'ranking' toggles to visibly highlight adjudicator strengths and more easily identify unbalanced panels
     - Each interface's table is now sortable by a debate's importance, bracket, liveness, etc.
 - Added a new "Tournament Logistics" guide to the documentation that outlines some general best practices for tabbing tournaments. Thanks to Viran Weerasekera, Valerie Tierney, Molly Dale, Madeline Schultz, and Vail Bromberger for contributing to this document
-- Add (basic) support for the Canadian Parliamentary format by allowing for consensus ballots and providing a preset. However note that only some of the common draw rules are supported (check our documentation for more information)
+- Added (basic) support for the Canadian Parliamentary format by allowing for consensus ballots and providing a preset. However note that only some of the common draw rules are supported (check our documentation for more information)
 - Added an ESL/EFL tab release option and status field
 - Added a chi-squared test to measure motion balance in the motion standings/balance. Thanks to Viran Weerasekera for contributing this
 - The Auto Allocate function for adjudicators will now also allocate trainees to solo-chaired debates
