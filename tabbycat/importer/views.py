@@ -20,7 +20,7 @@ from venues.models import Venue
 
 from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
                     ImportVenuesRawForm, NumberForEachInstitutionForm,
-                    TeamDetailsForm, VenueDetailsForm)
+                    TeamDetailsForm, TeamDetailsFormSet, VenueDetailsForm)
 
 logger = logging.getLogger(__name__)
 
@@ -137,7 +137,7 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
     model = Team
     form_list = [
         ('numbers', NumberForEachInstitutionForm),
-        ('details', modelformset_factory(Team, form=TeamDetailsForm, extra=0)),
+        ('details', modelformset_factory(Team, form=TeamDetailsForm, formset=TeamDetailsFormSet, extra=0)),
     ]
 
     def get_details_instance_initial(self, i):

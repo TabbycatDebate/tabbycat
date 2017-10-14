@@ -255,6 +255,17 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         return team
 
 
+class TeamDetailsFormSet(forms.BaseModelFormSet):
+
+    def get_unique_error_message(self, unique_check):
+        # Overrides the base implementation
+        if unique_check == ('reference', 'institution', 'tournament'):
+            return _("Every team in a single tournament from the same institution must "
+                "have a different name. Please correct the duplicate data.")
+        else:
+            return super().get_unique_error_message(unique_check)
+
+
 class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitutionObjectDetailsForm):
 
     class Meta:
