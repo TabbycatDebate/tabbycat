@@ -10,16 +10,24 @@
             {% widthratio threshold.count c_total 100 as c_percentage %}
             <div class="progress-bar ranking-display ranking-{{ threshold.class }}" role="progressbar"
                  style="width: {{ c_percentage }}%;" data-toggle="tooltip"
-                 title="{{ threshold.count }} adjudicator{{ threshold.count|pluralize }} currently have
-                 an average feedback score equal to or above {{ threshold.min }} but below {{ threshold.max }}. That is
-                 {{ c_percentage|floatformat:"0" }}% of the judging pool.">
+                 title="{% blocktrans trimmed with min=threshold.min max=threshold.max percent=c_percentage|floatformat:"0" count count=threshold.count %}
+                   {{ count }} adjudicator currently has a score equal to or above
+                   {{ min }} and below {{ max }}. That is {{ percent }}% of the adjudicator pool.
+                 {% plural %}
+                   {{ count }} adjudicators currently have a score equal to or above
+                   {{ min }} and below {{ max }}. That is {{ percent }}% of the adjudicator pool.
+                 {% endblocktrans %}">
               {{ threshold.min|floatformat:"0" }}-{{ threshold.max|floatformat:"0" }} <!-- too cramped if only a small % -->
             </div>
           {% endif %}
 
         {% endfor %}
       </div>
-      <h6 class="pt-3 text-center text-secondary">Score Distributions (range is {{ pref.adj_min_score }}-{{ pref.adj_max_score }})</h6>
+      <h6 class="pt-3 text-center text-secondary">
+        {% blocktrans trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score %}
+          Score Distributions (range is {{ min_score }}–{{ max_score }})
+        {% endblocktrans %}
+      </h6>
     </div>
   </div>
 </div>
@@ -32,19 +40,21 @@
           <h5 class="mb-0 mt-2">
             {{ test_percent|floatformat:"0" }}%
           </h5>
-          <small>Test</small>
+          <small>{% trans "Test" %}</small>
         </div>
         <div class="col pl-0 mb-0">
           <h5 class="mb-0 mt-2">
             {{ feedback_percent|floatformat:"0" }}%
           </h5>
-          <small>Feedback</small>
+          <small>{% trans "Feedback" %}</small>
         </div>
       </div>
       <h6 class="pt-2 text-secondary" data-toggle="tooltip"
-          title="The proportion of an adjudicator's score determined by feedback vs the
-                 test is set on a per-round basis. This is the mix for the current round
-                 ({{ current_round.abbreviation }}).">Score Aspects</h6>
+          title="{% blocktrans trimmed with round=current_round.abbreviation %}
+            The proportion of an adjudicator's score determined by feedback vs the
+            test is set on a per-round basis. This is the mix for the current round
+            ({{ round }}).
+          {% endblocktrans %}">{% trans "Score Aspects" %}</h6>
     </div>
   </div>
 </div>
@@ -55,25 +65,49 @@
       <div class="progress">
         <div class="progress-bar position-display chair" role="progressbar"
              style="width: {% percentage c_chairs c_total %}%;" data-toggle="tooltip"
-             title="There are {{ c_chairs }} debates per round; thus there need to be {{ c_chairs }} chairs.">
-          {{ c_chairs }} Chair{{ c_chairs|pluralize }}
+             title="{% blocktrans trimmed count count=c_chairs %}
+                There is {{ c_chairs }} debate per round; thus there needs to be {{ c_chairs }} chair.
+              {% plural %}
+                There are {{ c_chairs }} debates per round; thus there need to be {{ c_chairs }} chairs.
+              {% endblocktrans %}">
+          {% blocktrans trimmed count c_chairs=c_chairs %}
+            {{ c_chairs }} chair
+          {% plural %}
+            {{ c_chairs }} chairs
+          {% endblocktrans %}
         </div>
         <div class="progress-bar position-display panellist" role="progressbar"
              style="width: {% percentage c_panellists c_total %}%;" data-toggle="tooltip"
-             title="Adjudicators are initially allocated as panellists if their score (measured
-             relative to other adjudicators) is not high enough to warrant chairing but not low
-             enough to be classified as a trainee.">
-          {{ c_panellists }} Panellist{{ c_panellists|pluralize }}
+             title="{% blocktrans trimmed %}
+              Adjudicators are initially allocated as panellists if their score (measured
+              relative to other adjudicators) is not high enough to warrant chairing but not low
+              enough to be classified as a trainee.
+             {% endblocktrans %}">
+          {% blocktrans trimmed count c_panellists=c_panellists %}
+            {{ c_panellists }} panellist
+          {% plural %}
+            {{ c_panellists }} panellists
+          {% endblocktrans %}
         </div>
         <div class="progress-bar position-display trainee" role="progressbar"
              style="width: {% percentage c_trainees c_total %}%;" data-toggle="tooltip"
-             title="Adjudicators are initially allocated as trainees if their average score is less
-             than the 'minimum voting score' (currently {{ pref.adj_min_voting_score }}) set in this
-             tournament's Draw Rules configuration.">
-          {{ c_trainees }} Trainee{{ c_trainees|pluralize }}
+             title="{% blocktrans trimmed with min_voting=pref.adj_min_voting_score %}
+              Adjudicators are initially allocated as trainees if their average score is less
+              than the 'minimum voting score' (currently {{ min_voting }}) set in this
+              tournament's Draw Rules configuration.
+             {% endblocktrans %}">
+          {% blocktrans trimmed count c_trainees=c_trainees %}
+            {{ c_trainees }} trainee
+          {% plural %}
+            {{ c_trainees }} trainees
+          {% endblocktrans %}
         </div>
       </div>
-      <h6 class="pt-3 text-center text-secondary">Auto-Allocate Distributions ({{ pref.adj_min_voting_score }} to vote)</h6>
+      <h6 class="pt-3 text-center text-secondary">
+        {% blocktrans trimmed with min_voting_score=pref.adj_min_voting_score %}
+          Auto-Allocate Distributions ({{ min_voting_score }} to vote)
+        {% endblocktrans %}
+      </h6>
     </div>
   </div>
 </div>
