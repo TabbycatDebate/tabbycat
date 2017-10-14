@@ -125,16 +125,15 @@ class BaseTournamentObjectDetailsForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.tournament = tournament
 
-    def validate_unique(self):
-        """Overrides ModelForm.validate_unique to include tournament in the check."""
-        exclude = self._get_validation_exclusions()
+    def _get_validation_exclusions(self):
+        exclude = super()._get_validation_exclusions()
         if 'tournament' in exclude:
             exclude.remove('tournament')
+        return exclude
+
+    def full_clean(self):
         self.instance.tournament = self.tournament
-        try:
-            self.instance.validate_unique(exclude=exclude)
-        except ValidationError as e:
-            self._update_errors(e)
+        return super().full_clean()
 
 
 class SharedBetweenTournamentsObjectForm(BaseTournamentObjectDetailsForm):
