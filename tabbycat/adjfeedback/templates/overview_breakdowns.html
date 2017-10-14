@@ -66,9 +66,9 @@
         <div class="progress-bar position-display chair" role="progressbar"
              style="width: {% percentage c_chairs c_total %}%;" data-toggle="tooltip"
              title="{% blocktrans trimmed count count=c_chairs %}
-                There is {{ c_chairs }} debate per round; thus there needs to be {{ c_chairs }} chair.
+                There is {{ c_chairs }} debate per round, so there needs to be {{ c_chairs }} chair.
               {% plural %}
-                There are {{ c_chairs }} debates per round; thus there need to be {{ c_chairs }} chairs.
+                There are {{ c_chairs }} debates per round, so there need to be {{ c_chairs }} chairs.
               {% endblocktrans %}">
           {% blocktrans trimmed count c_chairs=c_chairs %}
             {{ c_chairs }} chair
@@ -79,9 +79,8 @@
         <div class="progress-bar position-display panellist" role="progressbar"
              style="width: {% percentage c_panellists c_total %}%;" data-toggle="tooltip"
              title="{% blocktrans trimmed %}
-              Adjudicators are initially allocated as panellists if their score (measured
-              relative to other adjudicators) is not high enough to warrant chairing but not low
-              enough to be classified as a trainee.
+              All adjudicators with a score high enough to vote, but who aren't allocated as chairs,
+              are allocated as panellists by the auto-allocator.
              {% endblocktrans %}">
           {% blocktrans trimmed count c_panellists=c_panellists %}
             {{ c_panellists }} panellist
@@ -92,7 +91,7 @@
         <div class="progress-bar position-display trainee" role="progressbar"
              style="width: {% percentage c_trainees c_total %}%;" data-toggle="tooltip"
              title="{% blocktrans trimmed with min_voting=pref.adj_min_voting_score %}
-              Adjudicators are initially allocated as trainees if their average score is less
+              Adjudicators are allocated as trainees by the auto-allocator if their score is less
               than the 'minimum voting score' (currently {{ min_voting }}) set in this
               tournament's Draw Rules configuration.
              {% endblocktrans %}">
