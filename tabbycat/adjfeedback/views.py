@@ -1,5 +1,6 @@
 import json
 import logging
+import math
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -63,46 +64,55 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         else:
             return Adjudicator.objects.filter(tournament=t)
 
-    def in_threshold(self, adjudicators, min, max, weight):
-        matches = ([a for a in adjudicators if min <= a.weighted_score(weight) and a.weighted_score(weight) < max])
-        return len(matches)
-
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
         adjudicators = self.get_adjudicators()
         weight = t.current_round.feedback_weight
+        scores = [a.weighted_score(weight) for a in adjudicators]
 
         kwargs['c_breaking'] = adjudicators.filter(breaking=True).count()
-        kwargs['c_total'] = adjudicators.count()
-        if t.pref('teams_in_debate') == 'bp':
-            kwargs['c_chairs'] = int(t.team_set.count() / 4)
-        else:
-            kwargs['c_chairs'] = int(t.team_set.count() / 2)
 
-        kwargs['c_trainees'] = self.in_threshold(adjudicators, 0.0, t.pref('adj_min_voting_score'), weight)
-        kwargs['c_panellists'] = kwargs['c_total'] - kwargs['c_chairs'] - kwargs['c_trainees']
+        ntotal = len(scores)
+        nchairs = t.team_set.count() // (4 if t.pref('teams_in_debate') == 'bp' else 2)
+        ntrainees = [x < t.pref('adj_min_voting_score') for x in scores].count(True)
+        npanellists = ntotal - nchairs - ntrainees
 
-        max_s, min_s = t.pref('adj_max_score'), t.pref('adj_min_score')
-        step = max(int(round((max_s - min_s) / 5)), 1)
-        kwargs['c_thresholds'] = []
-        threshold_classes = ['80', '70', '60', '50', '40', '30'] # CSS suffix
-        for i in range(int(round(max_s)), int(round(min_s)), step * -1):
-            if i == int(round(max_s)):
-                max_range = i + 1 # Include absolute upper limit; i.e. 5.0 score
-            else:
-                max_range = i
+        max_score = int(math.ceil(t.pref('adj_max_score')))
+        min_score = int(math.floor(t.pref('adj_min_score')))
+        range_width = max_score - min_score
+        band_widths = [range_width // 5] * 5
+        for i in range(range_width - sum(band_widths)):
+            band_widths[i] += 1
+        band_widths = [x for x in band_widths if x > 0]
+        bands = []
+        threshold = max_score
+        for width in band_widths:
+            bands.append((threshold - width, threshold))
+            threshold = threshold - width
+        if not threshold == min_score:
+            logger.error("Feedback bands calculation didn't work")
 
-            kwargs['c_thresholds'].append(
-                {'min': i - step, 'max': i, 'class': threshold_classes.pop(0),
-                 'count': self.in_threshold(adjudicators, i - step, max_range, weight)})
+        band_specs = []
+        threshold_classes = ['80', '70', '60', '50', '40'] # CSS suffix
+        for (band_min, band_max), threshold_class in zip(bands, threshold_classes):
+            band_specs.append({
+                'min': band_min, 'max': band_max, 'class': threshold_class,
+                'count': [x >= band_min and x < band_max for x in scores].count(True)
+            })
+        band_specs[0]['count'] += [x == max_score for x in scores].count(True)
 
-        kwargs['test_percent'] = (1.0 - weight) * 100
-        kwargs['feedback_percent'] = weight * 100
+        noutside_range = [x < min_score or x > max_score for x in scores].count(True)
 
-        # Adjudicators with scores outside the score range
-        scores = [a.weighted_score(weight) for a in adjudicators]
-        kwargs['nadjs_outside_range'] = [x < t.pref('adj_min_score') or
-                x > t.pref('adj_max_score') for x in scores].count(True)
+        kwargs.update({
+            'c_total': ntotal,
+            'c_chairs': nchairs,
+            'c_panellists': npanellists,
+            'c_trainees': ntrainees,
+            'c_thresholds': band_specs,
+            'nadjs_outside_range': noutside_range,
+            'test_percent': (1.0 - weight) * 100,
+            'feedback_percent': weight * 100,
+        })
 
         return super().get_context_data(**kwargs)
 
