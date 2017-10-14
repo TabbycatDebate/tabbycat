@@ -100,7 +100,7 @@ class SpeakerCategory(models.Model):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=40, db_index=True,
+    name = models.CharField(max_length=70, db_index=True,
         verbose_name=_("name"))
     barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True,
