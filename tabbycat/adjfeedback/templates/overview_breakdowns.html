@@ -4,20 +4,22 @@
   <div class="card">
     <div class="card-body text-center pb-1">
       <div class="progress">
-        {% for threshold in c_thresholds reversed %}
+        {% for threshold in c_thresholds %}
 
-          {% widthratio threshold.count c_total 100 as c_percentage %}
-          <div class="progress-bar ranking-display ranking-{{ threshold.class }}" role="progressbar"
-               style="width: {{ c_percentage }}%;" data-toggle="tooltip"
-               title="{{ threshold.count }} adjudicator{{ threshold.count|pluralize }} currently have
-               an average feedback score between {{ threshold.min }} and {{ threshold.max }}. That is
-               {{ c_percentage|floatformat:"0" }}% of the judging pool.">
-            {{ threshold.min|floatformat:"0" }}-{{ threshold.max|floatformat:"0" }} <!-- too cramped if only a small % -->
-          </div>
+          {% if threshold.count != 0 %}
+            {% widthratio threshold.count c_total 100 as c_percentage %}
+            <div class="progress-bar ranking-display ranking-{{ threshold.class }}" role="progressbar"
+                 style="width: {{ c_percentage }}%;" data-toggle="tooltip"
+                 title="{{ threshold.count }} adjudicator{{ threshold.count|pluralize }} currently have
+                 an average feedback score equal to or above {{ threshold.min }} but below {{ threshold.max }}. That is
+                 {{ c_percentage|floatformat:"0" }}% of the judging pool.">
+              {{ threshold.min|floatformat:"0" }}-{{ threshold.max|floatformat:"0" }} <!-- too cramped if only a small % -->
+            </div>
+          {% endif %}
 
         {% endfor %}
       </div>
-      <h6 class="pt-3 text-center text-secondary">Feedback Score Distributions</h6>
+      <h6 class="pt-3 text-center text-secondary">Score Distributions (range is {{ pref.adj_min_score }}-{{ pref.adj_max_score }})</h6>
     </div>
   </div>
 </div>
@@ -42,7 +44,7 @@
       <h6 class="pt-2 text-secondary" data-toggle="tooltip"
           title="The proportion of an adjudicator's score determined by feedback vs the
                  test is set on a per-round basis. This is the mix for the current round
-                 ({{ current_round.abbreviation }}).">Score Components</h6>
+                 ({{ current_round.abbreviation }}).">Score Aspects</h6>
     </div>
   </div>
 </div>
@@ -71,7 +73,7 @@
           {{ c_trainees }} Trainee{{ c_trainees|pluralize }}
         </div>
       </div>
-      <h6 class="pt-3 text-center text-secondary">Auto-Allocate Distributions</h6>
+      <h6 class="pt-3 text-center text-secondary">Auto-Allocate Distributions ({{ pref.adj_min_voting_score }} to vote)</h6>
     </div>
   </div>
 </div>

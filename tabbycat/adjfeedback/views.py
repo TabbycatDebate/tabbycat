@@ -64,7 +64,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
             return Adjudicator.objects.filter(tournament=t)
 
     def in_threshold(self, adjudicators, min, max, weight):
-        matches = ([a for a in adjudicators if a.weighted_score(weight) >= min and a.weighted_score(weight) < max])
+        matches = ([a for a in adjudicators if min <= a.weighted_score(weight) and a.weighted_score(weight) < max])
         return len(matches)
 
     def get_context_data(self, **kwargs):
@@ -82,14 +82,19 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         kwargs['c_trainees'] = self.in_threshold(adjudicators, 0.0, t.pref('adj_min_voting_score'), weight)
         kwargs['c_panellists'] = kwargs['c_total'] - kwargs['c_chairs'] - kwargs['c_trainees']
 
-        max_s, min_s = int(t.pref('adj_max_score')), int(t.pref('adj_min_score'))
-        step = max(((max_s - min_s) / 5), 1)
+        max_s, min_s = t.pref('adj_max_score'), t.pref('adj_min_score')
+        step = max(int(round((max_s - min_s) / 5)), 1)
         kwargs['c_thresholds'] = []
-        threshold_classes = ['30', '40', '50', '60', '70', '80'] # CSS suffix
-        for i in range(min_s, max_s, int(step)):
+        threshold_classes = ['80', '70', '60', '50', '40', '30'] # CSS suffix
+        for i in range(int(round(max_s)), int(round(min_s)), step * -1):
+            if i == int(round(max_s)):
+                max_range = i + 1 # Include absolute upper limit; i.e. 5.0 score
+            else:
+                max_range = i
+
             kwargs['c_thresholds'].append(
-                {'min': i, 'max': i + step, 'class': threshold_classes.pop(1),
-                 'count': self.in_threshold(adjudicators, i, i + step + 0.01, weight)})
+                {'min': i - step, 'max': i, 'class': threshold_classes.pop(0),
+                 'count': self.in_threshold(adjudicators, i - step, max_range, weight)})
 
         kwargs['test_percent'] = (1.0 - weight) * 100
         kwargs['feedback_percent'] = weight * 100
