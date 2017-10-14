@@ -1,10 +1,33 @@
 {% extends "feedback_base.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load debate_tags static i18n %}
 
 {% block sub-title %}
   <span id="breaking_count">{{ breaking_count }}</span> marked as breaking;
   {{ c_trainees }} will trainee (score is < {{ pref.adj_min_voting_score }})
+{% endblock %}
+
+{% block page-alerts %}
+  {% if nadjs_outside_range > 0 %}
+    <div class="alert alert-warning">
+      {% blocktrans trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score count nadjs_outside_range=nadjs_outside_range %}
+        There is <strong>{{ nadjs_outside_range }} adjudicator</strong> with
+        a score <strong>outside the permitted range</strong> of adjudicator
+        scores, which is currently set as {{ min_score }} to {{ max_score }}.
+      {% plural %}
+        There are <strong>{{ nadjs_outside_range }} adjudicators</strong> with
+        scores <strong>outside the permitted range</strong> of adjudicator
+        scores, which is currently set as {{ min_score }} to {{ max_score }}.
+      {% endblocktrans %}
+      {% tournamenturl 'options-tournament-feedback' as feedback_settings_url %}
+      {% blocktrans trimmed %}
+      This can cause adjudicator auto-allocation to behave in unexpected ways.
+      If you'd like to use a wider score range, you can configure this in
+      <a href="{{ feedback_settings_url }}" class="alert-link"> feedback
+      settings</a>.
+      {% endblocktrans %}
+    </div>
+  {% endif %}
+  {{ block.super }}
 {% endblock %}
 
 {% block content %}
