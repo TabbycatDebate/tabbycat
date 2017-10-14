@@ -99,6 +99,11 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         kwargs['test_percent'] = (1.0 - weight) * 100
         kwargs['feedback_percent'] = weight * 100
 
+        # Adjudicators with scores outside the score range
+        scores = [a.weighted_score(weight) for a in adjudicators]
+        kwargs['nadjs_outside_range'] = [x < t.pref('adj_min_score') or
+                x > t.pref('adj_max_score') for x in scores].count(True)
+
         return super().get_context_data(**kwargs)
 
     def get_table(self):
