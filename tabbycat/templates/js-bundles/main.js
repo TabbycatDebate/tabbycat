@@ -32,10 +32,11 @@ $.fn.extend({
     }
   },
   loadButton: function(button) {
-    $(button).prop("disabled", true);
+    // Can't use disable attr as some submission button need to pass their value
+    $(button).addClass("disabled");
   },
   resetButton: function(button) {
-    $(button).prop("disabled", false);
+    $(button).removeClass("disabled");
   }
 });
 

@@ -94,6 +94,7 @@
 {% block content %}
 {% if generated %}
   <form action="." method="POST">
+
     {% csrf_token %}
 
     {{ block.super }}
@@ -113,14 +114,14 @@
       <div class="card-body row">
         <div class="form-inline col-md-6">
           <button class="btn btn-primary btn-block btn-success" type="submit" name="save_update_all">
-              {% trans "Save Remarks and Update All Breaks" %}
+            {% trans "Save Remarks and Update All Breaks" %}
           </button>
         </div>
         <div class="form-inline col-md-6">
-          <button class="btn btn-primary btn-block btn-success }}" type="submit" name="save_update_one">
-              {% blocktrans trimmed with category_name=category.name %}
-                Save Remarks and Update the {{ category_name }} Break
-              {% endblocktrans %}
+          <button class="btn btn-primary btn-block btn-success" type="submit" name="save_update_one">
+            {% blocktrans trimmed with category_name=category.name %}
+              Save Remarks and Update the {{ category_name }} Break
+            {% endblocktrans %}
           </button>
         </div>
       </div>
