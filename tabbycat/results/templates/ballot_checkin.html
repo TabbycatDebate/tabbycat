@@ -96,7 +96,7 @@
 
         if (venueID == null) {
           $('#debate_details').hide();
-          $('#success').html("There aren't any venues with the name \"" + val + "\". It might not have a debate in it, or its ballot might have already been checked in.").addClass('alert-danger mb-2').show();
+          $('#success').html("There aren't any venues with that name \"" + $('#venue').val() + "\". It might not have a debate in it, or its ballot might have already been checked in.").addClass('alert-danger mb-2').show();
           return;
         }
 
@@ -152,17 +152,17 @@
       $('#checkin_btn').click(function() {
         $('#success').removeClass('alert-success alert-danger').html("Checking in...");
         $('#debate_details').hide();
-        var val = $('#venue_confirm').attr('data-value');
+        var venue_id = $('#venue_confirm').attr('data-value');
         $.ajax( {
           type: "POST",
           url: "{% roundurl 'results-ballot-checkin-post' %}",
-          data: {venue: val},
+          data: {venue: venue_id},
           success: function(data, status) {
             if (data.success) {
               $('#success').html("Thanks! Checked in the ballot for "
                 + data.matchup + " (" + data.venue + ").")
                 .addClass('alert-success').show();
-              $('#venues_list').children('option[data-value="'+val+'"]').remove()
+              $('#venues_list').children('option[data-value="'+ venue_id +'"]').remove()
               $('#venue').val('').focus();
 
             } else {
