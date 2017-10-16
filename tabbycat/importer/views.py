@@ -1,11 +1,12 @@
 import logging
+from smtplib import SMTPException
 
-from django.core.mail import send_mail
-from django.conf import settings
 from django.contrib import messages
+from django.db.models import Q
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.views.generic import TemplateView
 
 from formtools.wizard.views import SessionWizardView
@@ -15,13 +16,15 @@ from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.mixins import TournamentMixin
 from utils.misc import reverse_tournament
 from utils.mixins import SuperuserRequiredMixin
-from utils.views import PostOnlyRedirectView
+from utils.tables import TabbycatTableBuilder
 from utils.urlkeys import populate_url_keys
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from venues.models import Venue
 
 from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
                     ImportVenuesRawForm, NumberForEachInstitutionForm,
                     TeamDetailsForm, TeamDetailsFormSet, VenueDetailsForm)
+from .utils import send_randomised_url_emails
 
 logger = logging.getLogger(__name__)
 
@@ -166,10 +169,7 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
 # Randomised URL creation
 # ==============================================================================
 
-class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
-
-    template_name = 'randomised_urls.html'
-    show_emails = False
+class RandomisedUrlsMixin(TournamentMixin):
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
@@ -184,6 +184,65 @@ class RandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
             tournament.team_set.filter(url_key__isnull=True).exists()
         kwargs['tournament_slug'] = tournament.slug
         return super().get_context_data(**kwargs)
+
+    def get_speakers_tables(self):
+        tournament = self.get_tournament()
+
+        def _build_url(speaker):
+            if speaker.team.url_key is None:
+                return "—"
+            path = reverse_tournament('adjfeedback-public-add-from-team-randomised', tournament,
+                kwargs={'url_key': speaker.team.url_key})
+            return self.request.build_absolute_uri(path)
+
+        speakers = Speaker.objects.filter(team__tournament=tournament,
+                team__url_key__isnull=False, email__isnull=False)
+        table1 = TabbycatTableBuilder(view=self, title=_("Speakers who will be sent e-mails"), sort_key=_("Team"))
+        table1.add_speaker_columns(speakers, categories=False)
+        table1.add_team_columns([speaker.team for speaker in speakers])
+        table1.add_column(_("Email"), [speaker.email for speaker in speakers])
+        table1.add_column(_("Feedback URL"), [_build_url(speaker) for speaker in speakers])
+
+        speakers_with_null = Speaker.objects.filter(
+                Q(team__url_key__isnull=True) | Q(email__isnull=True), team__tournament=tournament)
+        table2 = TabbycatTableBuilder(view=self, title=_("Speakers who will not be sent e-mails"), sort_key=_("Team"))
+        table2.add_speaker_columns(speakers_with_null, categories=False)
+        table2.add_team_columns([speaker.team for speaker in speakers_with_null])
+        table2.add_column(_("Email"), [speaker.email for speaker in speakers_with_null])
+        table2.add_column(_("Feedback URL"), [_build_url(speaker) for speaker in speakers_with_null])
+
+        return [table1, table2]
+
+    def get_adjudicators_tables(self, url_name, url_header):
+        tournament = self.get_tournament()
+
+        def _build_url(adjudicator):
+            if adjudicator.url_key is None:
+                return "—"
+            path = reverse_tournament(url_name, tournament, kwargs={'url_key': adjudicator.url_key})
+            return self.request.build_absolute_uri(path)
+
+        adjudicators = Adjudicator.objects.filter(tournament=tournament,
+                url_key__isnull=False, email__isnull=False)
+        table1 = TabbycatTableBuilder(view=self, title=_("Adjudicators who will be sent e-mails"), sort_key=_("Name"))
+        table1.add_adjudicator_columns(adjudicators, hide_institution=True, hide_metadata=True)
+        table1.add_column(_("Email"), [adj.email for adj in adjudicators])
+        table1.add_column(url_header, [_build_url(adj) for adj in adjudicators])
+
+        adjudicators_with_null = Adjudicator.objects.filter(
+                Q(url_key__isnull=True) | Q(email__isnull=True), tournament=tournament)
+        table2 = TabbycatTableBuilder(view=self, title=_("Adjudicators who will not be sent e-mails"), sort_key=_("Name"))
+        table2.add_adjudicator_columns(adjudicators_with_null, hide_institution=True, hide_metadata=True)
+        table2.add_column(_("Email"), [adj.email for adj in adjudicators_with_null])
+        table2.add_column(url_header, [_build_url(adj) for adj in adjudicators_with_null])
+
+        return [table1, table2]
+
+
+class RandomisedUrlsView(RandomisedUrlsMixin, SuperuserRequiredMixin, TemplateView):
+
+    template_name = 'randomised_urls.html'
+    show_emails = False
 
 
 class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
@@ -209,11 +268,13 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
             populate_url_keys(blank_teams)
 
             if nexisting_adjs == 0 and nexisting_teams == 0:
+                # too hard to pluralize, will do it when we hit a language that actually needs it
                 messages.success(self.request, _("Private URLs were generated for all %(nblank_adjs)d "
                     "adjudicators and all %(nblank_teams)d teams.") % {
                     'nblank_adjs': nblank_adjs, 'nblank_teams': nblank_teams,
                 })
             else:
+                # too hard to pluralize, will do it when we hit a language that actually needs it
                 messages.success(self.request, _("Private URLs were generated for %(nblank_adjs)d "
                     "adjudicators and %(nblank_teams)d teams. The already-existing private URLs for "
                     "%(nexisting_adjs)d adjudicators and %(nexisting_teams)d teams were left intact.") % {
@@ -224,107 +285,145 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
         return super().post(request, *args, **kwargs)
 
 
-class EmailRandomisedUrlsView(RandomisedUrlsView):
+class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
     show_emails = True
     template_name = 'randomised_urls_email_list.html'
+    tables_orientation = 'rows'
 
     def get_context_data(self, **kwargs):
         kwargs['url_type'] = self.url_type
         return super().get_context_data(**kwargs)
 
 
-class EmailBallotUrlsView(EmailRandomisedUrlsView):
+class EmailBallotUrlsView(BaseEmailRandomisedUrlsView):
 
     url_type = 'ballot'
 
+    def get_tables(self):
+        return self.get_adjudicators_tables('results-public-ballotset-new-randomised', _("Ballot URL"))
 
-class EmailFeedbackUrlsView(EmailRandomisedUrlsView):
+
+class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
 
     url_type = 'feedback'
 
+    def get_tables(self):
+        speaker_table, speaker_table_null = self.get_speakers_tables()
+        adjudicator_table, adjudicator_table_null = self.get_adjudicators_tables(
+                'adjfeedback-public-add-from-adjudicator-randomised', _("Feedback URL"))
+        return [speaker_table, adjudicator_table, speaker_table_null, adjudicator_table_null]
 
-class ConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+
+class BaseConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
 
     tournament_redirect_pattern_name = 'randomised-urls-view'
+
+
+class ConfirmEmailBallotUrlsView(BaseConfirmEmailRandomisedUrlsView):
 
     def post(self, request, *args, **kwargs):
 
         tournament = self.get_tournament()
-        speakers = Speaker.objects.filter(team__tournament=tournament,
-            team__url_key__isnull=False, email__isnull=False)
+
+        subject = _("Your personal ballot submission URL for %(tournament)s")
+        message = _(
+            "Hi %(name)s,\n\n"
+            "At %(tournament)s, we are using an online ballot system. You can submit "
+            "your ballots at the following URL. This URL is unique to you — do not share it with "
+            "anyone, as anyone who knows it can submit ballots on your team's behalf. This URL "
+            "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
+            "Your personal private ballot submission URL is:\n"
+            "%(url)s"
+        )
         adjudicators = tournament.adjudicator_set.filter(
-            url_key__isnull=False, email__isnull=False)
+                url_key__isnull=False, email__isnull=False)
 
-        if self.url_type is 'feedback':
-            for speaker in speakers:
-                if speaker.email is None:
-                    continue
+        try:
+            nadjudicators = send_randomised_url_emails(
+                request, tournament, adjudicators,
+                'results-public-ballotset-new-randomised',
+                lambda adj: adj.url_key,
+                subject, message
+            )
+        except SMTPException:
+            messages.error(request, _("There was a problem sending private ballot URLs to adjudicators."))
+        else:
+            messages.success(request, ungettext(
+                "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator.",
+                "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicators.",
+                nadjudicators
+            ) % {'nadjudicators': nadjudicators})
 
-                team_path = reverse_tournament(
-                    'adjfeedback-public-add-from-team-randomised',
-                    tournament, kwargs={'url_key': speaker.team.url_key})
-                team_link = self.request.build_absolute_uri(team_path)
-                message = (''
-                    'Hi %s, \n\n'
-                    'At %s we are using an online feedback system. As part of %s '
-                    'your team\'s feedback can be submitted at the following URL. '
-                    'This URL is unique to you — do not share it as anyone with '
-                    'this link can submit feedback on your team\s '
-                    ' behalf. It will not change so we suggest bookmarking it. '
-                    'The URL is: \n\n %s'
-                     % (speaker.name, tournament.short_name,
-                        speaker.team.short_name, team_link))
-
-                try:
-                    send_mail("Your Feedback URL for %s" % tournament.short_name,
-                        message, settings.DEFAULT_FROM_EMAIL, [speaker.email],
-                        fail_silently=False)
-                    logger.info("Sent email with key to %s (%s)" % (speaker.email, speaker.name))
-                except:
-                    logger.info("Failed to send email to %s speaker.email")
-
-        for adjudicator in adjudicators:
-            if adjudicator.email is None:
-                continue
-
-            if self.url_type is 'feedback':
-                adj_path = reverse_tournament(
-                    'adjfeedback-public-add-from-adjudicator-randomised',
-                    tournament, kwargs={'url_key': adjudicator.url_key})
-            elif self.url_type is 'ballot':
-                adj_path = reverse_tournament(
-                    'results-public-ballotset-new-randomised',
-                    tournament, kwargs={'url_key': adjudicator.url_key})
-
-            adj_link = self.request.build_absolute_uri(adj_path)
-            message = (''
-                'Hi %s, \n\n'
-                'At %s we are using an online %s system. Your %s '
-                'can be submitted at the following URL. This URL is unique to '
-                'you — do not share it as anyone with this link can submit '
-                '%ss on your behalf. It will not change so we suggest '
-                'bookmarking it. The URL is: \n\n %s'
-                 % (adjudicator.name, tournament.short_name, self.url_type,
-                    self.url_type, self.url_type, adj_link))
-
-            try:
-                send_mail("Your Feedback URL for %s" % tournament.short_name,
-                    message, settings.DEFAULT_FROM_EMAIL, [adjudicator.email],
-                    fail_silently=False)
-                logger.info("Sent email with key to %s (%s)" % (adjudicator.email, adjudicator.name))
-            except:
-                logger.info("Failed to send email %s" % adjudicator.email)
-
-        messages.success(self.request, "Emails were sent for all teams and adjudicators.")
         return super().post(request, *args, **kwargs)
 
 
-class ConfirmEmailBallotUrlsView(ConfirmEmailRandomisedUrlsView):
+class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
 
-    url_type = 'ballot'
+    def post(self, request, *args, **kwargs):
 
+        tournament = self.get_tournament()
+        success = True
 
-class ConfirmEmailFeedbackUrlsView(ConfirmEmailRandomisedUrlsView):
+        subject = _("Your team's feedback submission URL for %(tournament)s")
+        message = _(
+            "Hi %(name)s,\n\n"
+            "At %(tournament)s, we are using an online adjudicator feedback system. As part of "
+            "%(team)s, you can submit your feedback at the following URL. This URL is unique "
+            "to you — do not share it with anyone, as anyone who knows it can submit feedback on "
+            "your team's behalf. This URL will not change throughout this tournament, so we "
+            "suggest bookmarking it.\n\n"
+            "Your team's private feedback submission URL is:\n"
+            "%(url)s"
+        )
+        speakers = Speaker.objects.filter(team__tournament=tournament,
+                team__url_key__isnull=False, email__isnull=False)
 
-    url_type = 'feedback'
+        try:
+            nspeakers = send_randomised_url_emails(
+                request, tournament, speakers,
+                'adjfeedback-public-add-from-team-randomised',
+                lambda speaker: speaker.team.url_key,
+                subject, message
+            )
+        except SMTPException:
+            messages.error(request, _("There was a problem sending private feedback URLs to speakers."))
+            success = False
+
+        subject = _("Your personal feedback submission URL for %(tournament)s")
+        message = _(
+            "Hi %(name)s,\n\n"
+            "At %(tournament)s, we are using an online adjudicator feedback system. You can submit "
+            "your feedback at the following URL. This URL is unique to you — do not share it with "
+            "anyone, as anyone who knows it can submit feedback on your team's behalf. This URL "
+            "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
+            "Your personal private feedback submission URL is:\n"
+            "%(url)s"
+        )
+        adjudicators = tournament.adjudicator_set.filter(
+                url_key__isnull=False, email__isnull=False)
+
+        try:
+            nadjudicators = send_randomised_url_emails(
+                request, tournament, adjudicators,
+                'adjfeedback-public-add-from-adjudicator-randomised',
+                lambda adj: adj.url_key,
+                subject, message
+            )
+        except SMTPException:
+            messages.error(request, _("There was a problem sending private feedback URLs to adjudicators."))
+            success = False
+
+        if success:
+            # Translators: This goes in the "speakers_phrase" variable in "E-mails with private feedback URLs were sent..."
+            speakers_phrase = ungettext("%(nspeakers)d speaker",
+                "%(nspeakers)d speakers", nspeakers) % {'nspeakers': nspeakers}
+            # Translators: This goes in the "adjudicators_phrase" variable in "E-mails with private feedback URLs were sent..."
+            adjudicators_phrase = ungettext("%(nadjudicators)d adjudicator",
+                "%(nadjudicators)d adjudicators", nadjudicators) % {'nadjudicators': nadjudicators}
+            messages.success(request, _("E-mails with private feedback URLs were sent to "
+                "%(speakers_phrase)s and %(adjudicators_phrase)s") % {
+                'speakers_phrase': speakers_phrase, 'adjudicators_phrase': adjudicators_phrase
+            })
+
+        return super().post(request, *args, **kwargs)

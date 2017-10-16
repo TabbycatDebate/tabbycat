@@ -573,7 +573,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': _("Division"),
             }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
 
-    def add_speaker_columns(self, speakers):
+    def add_speaker_columns(self, speakers, categories=True):
         speaker_data = []
         for speaker in speakers:
             if getattr(speaker, 'anonymise', False):
@@ -584,26 +584,27 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'},
                         speaker_data)
 
-        speakercategory_set = self.tournament.speakercategory_set
-        if not self.admin:
-            speakercategory_set = speakercategory_set.filter(public=True)
+        if categories:
+            speakercategory_set = self.tournament.speakercategory_set
+            if not self.admin:
+                speakercategory_set = speakercategory_set.filter(public=True)
 
-        if speakercategory_set.exists():
-            categories_data = []
-            for speaker in speakers:
-                category_strs = []
-                for cat in speaker.categories.all():
-                    if cat.public:
-                        category_strs.append(cat.name)
-                    elif self.admin:
-                        category_strs.append("<em>" + cat.name + "</em>")
-                categories_data.append(", ".join(category_strs))
+            if speakercategory_set.exists():
+                categories_data = []
+                for speaker in speakers:
+                    category_strs = []
+                    for cat in speaker.categories.all():
+                        if cat.public:
+                            category_strs.append(cat.name)
+                        elif self.admin:
+                            category_strs.append("<em>" + cat.name + "</em>")
+                    categories_data.append(", ".join(category_strs))
 
-            self.add_column({
-                'key': _("Category"),
-                'icon': 'user-check', # Not ideal but full name blows out tables
-                'tooltip': _("Categories")
-            }, categories_data)
+                self.add_column({
+                    'key': _("Category"),
+                    'icon': 'user-check', # Not ideal but full name blows out tables
+                    'tooltip': _("Categories")
+                }, categories_data)
 
     def add_debate_venue_columns(self, debates, with_times=True, for_admin=False):
 
