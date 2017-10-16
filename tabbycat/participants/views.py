@@ -50,12 +50,12 @@ class BaseParticipantsListView(VueTableTemplateView):
         t = self.get_tournament()
 
         adjudicators = t.adjudicator_set.select_related('institution')
-        adjs_table = TabbycatTableBuilder(view=self, title="Adjudicators", sort_key="Name")
+        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key=_("Name"))
         adjs_table.add_adjudicator_columns(adjudicators)
 
         speakers = Speaker.objects.filter(team__tournament=t).select_related(
                 'team', 'team__institution').prefetch_related('team__speaker_set', 'categories')
-        speakers_table = TabbycatTableBuilder(view=self, title="Speakers", sort_key="Name")
+        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key=_("Name"))
         speakers_table.add_speaker_columns(speakers)
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
