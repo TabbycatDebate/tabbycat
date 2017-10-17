@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+{% extends "base_vue_table.html" %}
 {% load debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">🎲</span> Private URLs{% endblock %}
-{% block page-title %}🎲 Private URLs{% endblock %}
+{% block page-title %}Private URLs{% endblock %}
 
 {% block page-subnav-sections %}
   {% include 'randomised_urls_nav.html' %}
@@ -57,92 +57,7 @@
 
   {% if exists %}
 
-    <div class="row">
-
-      <div class="col">
-        <div class="card table-container">
-          <div class="card-body">
-            <table class="table table-responsive">
-              <thead>
-                <tr>
-                  <th>{% trans "Adjudicator" %}</th>
-                  <th>{% trans "Feedback URL" %}</th>
-                  <th>{% trans "Ballot URL" %}</th>
-                  {% if pref.allocation_confirmations %}
-                    <th>{% trans "Shifts URL" %}</th>
-                  {% endif %}
-                </tr>
-              </thead>
-              <tbody>
-                {% for adj in adjs %}
-                  <tr>
-                    <td>
-                      {{ adj.name }}
-                    </td>
-                    {% if adj.url_key %}
-                      <td>
-                        <small>{% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}</small>
-                      </td>
-                      <td>
-                        <small>{% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}</small>
-                      </td>
-                      {% if pref.allocation_confirmations %}
-                        <td>
-                          <small>{% tournament_absurl 'participants-public-confirm-shift' adj.url_key %}</small>
-                        </td>
-                      {% endif %}
-                    {% else %}
-                      <td class="text-warning">{% trans "no URL" %}</td>
-                      <td class="text-warning">{% trans "no URL" %}</td>
-                    {% endif %}
-                  </tr>
-                {% empty %}
-                  <tr>
-                    <td colspan="3">{% trans "No adjudicators have private URLs." %}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="col mt-3">
-        <div class="card table-container">
-          <div class="card-body">
-            <table class="table table-responsive">
-              <thead>
-                <tr>
-                  <th>{% trans "Team" %}</th>
-                  <th>{% trans "Feedback URL" %}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for team in teams %}
-                  <tr>
-                    <td>
-                      {% include "tables/team.html" with team=team %}
-                    </td>
-                    {% if team.url_key %}
-                      <td>
-                        <small>{% tournament_absurl 'adjfeedback-public-add-from-team-randomised' team.url_key %}</small>
-                      </td>
-                    {% else %}
-                      <td class="text-warning">{% trans "no URL" %}</td>
-                    {% endif %}
-                  </tr>
-                {% empty %}
-                  <tr>
-                    <td colspan="2">{% trans "No teams have private URLs." %}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    {{ block.super }}
 
   {% else %}
 
@@ -162,5 +77,6 @@
     </div>
 
   {% endif %}
+
 
 {% endblock content %}

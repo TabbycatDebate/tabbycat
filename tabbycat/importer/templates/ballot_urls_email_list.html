@@ -1,0 +1,35 @@
+{% extends "base_vue_table.html" %}
+{% load debate_tags i18n %}
+
+{% block page-title %}{% trans "Email Private Ballot URLs" %}{% endblock %}
+{% block head-title %}{% trans "Email Private Ballot URLs" %}{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include 'randomised_urls_nav.html' %}
+{% endblock page-subnav-sections %}
+
+{% block content %}
+
+  {% blocktrans trimmed asvar p1 %}
+    Review the list of adjudicators who are due to be sent an email with their private ballot URL, then click the button at the bottom of the page to send the emails.
+  {% endblocktrans %}
+  {% include 'components/explainer-card.html' with type='info' %}
+
+  {% if adjudicators_no_email %}
+    {% blocktrans trimmed with adjudicators_list=adjudicators_no_email|join:", " asvar p1 %}
+      The following adjudicators have a URL key but don't have an e-mail address, so won't get e-mails:
+      {{ adjudicators_list }}
+    {% endblocktrans %}
+    {% include 'components/explainer-card.html' with type='warning' %}
+  {% endif %}
+
+  {{ block.super }}
+
+  <form action="{% tournamenturl 'confirm-ballot-urls-send' %}" method="POST" class="mb-3">
+    {% csrf_token %}
+    <button class="btn btn-success btn-block" type="submit">
+      {% trans "Send emails with private ballot URLs to adjudicators" %}
+    </button>
+  </form>
+
+{% endblock content %}

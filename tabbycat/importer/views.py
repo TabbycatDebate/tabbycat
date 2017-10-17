@@ -2,7 +2,6 @@ import logging
 from smtplib import SMTPException
 
 from django.contrib import messages
-from django.db.models import Q
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
@@ -173,76 +172,54 @@ class RandomisedUrlsMixin(TournamentMixin):
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
-        kwargs['teams'] = tournament.team_set.all().order_by('short_name')
-        if not tournament.pref('share_adjs'):
-            kwargs['adjs'] = tournament.adjudicator_set.all().order_by('name')
-        else:
-            kwargs['adjs'] = Adjudicator.objects.all().order_by('name')
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
             tournament.team_set.filter(url_key__isnull=False).exists()
         kwargs['blank_exists'] = tournament.adjudicator_set.filter(url_key__isnull=True).exists() or \
             tournament.team_set.filter(url_key__isnull=True).exists()
-        kwargs['tournament_slug'] = tournament.slug
         return super().get_context_data(**kwargs)
 
-    def get_speakers_tables(self):
-        tournament = self.get_tournament()
 
-        def _build_url(speaker):
-            if speaker.team.url_key is None:
-                return "—"
-            path = reverse_tournament('adjfeedback-public-add-from-team-randomised', tournament,
-                kwargs={'url_key': speaker.team.url_key})
-            return self.request.build_absolute_uri(path)
-
-        speakers = Speaker.objects.filter(team__tournament=tournament,
-                team__url_key__isnull=False, email__isnull=False)
-        table1 = TabbycatTableBuilder(view=self, title=_("Speakers who will be sent e-mails"), sort_key=_("Team"))
-        table1.add_speaker_columns(speakers, categories=False)
-        table1.add_team_columns([speaker.team for speaker in speakers])
-        table1.add_column(_("Email"), [speaker.email for speaker in speakers])
-        table1.add_column(_("Feedback URL"), [_build_url(speaker) for speaker in speakers])
-
-        speakers_with_null = Speaker.objects.filter(
-                Q(team__url_key__isnull=True) | Q(email__isnull=True), team__tournament=tournament)
-        table2 = TabbycatTableBuilder(view=self, title=_("Speakers who will not be sent e-mails"), sort_key=_("Team"))
-        table2.add_speaker_columns(speakers_with_null, categories=False)
-        table2.add_team_columns([speaker.team for speaker in speakers_with_null])
-        table2.add_column(_("Email"), [speaker.email for speaker in speakers_with_null])
-        table2.add_column(_("Feedback URL"), [_build_url(speaker) for speaker in speakers_with_null])
-
-        return [table1, table2]
-
-    def get_adjudicators_tables(self, url_name, url_header):
-        tournament = self.get_tournament()
-
-        def _build_url(adjudicator):
-            if adjudicator.url_key is None:
-                return "—"
-            path = reverse_tournament(url_name, tournament, kwargs={'url_key': adjudicator.url_key})
-            return self.request.build_absolute_uri(path)
-
-        adjudicators = Adjudicator.objects.filter(tournament=tournament,
-                url_key__isnull=False, email__isnull=False)
-        table1 = TabbycatTableBuilder(view=self, title=_("Adjudicators who will be sent e-mails"), sort_key=_("Name"))
-        table1.add_adjudicator_columns(adjudicators, hide_institution=True, hide_metadata=True)
-        table1.add_column(_("Email"), [adj.email for adj in adjudicators])
-        table1.add_column(url_header, [_build_url(adj) for adj in adjudicators])
-
-        adjudicators_with_null = Adjudicator.objects.filter(
-                Q(url_key__isnull=True) | Q(email__isnull=True), tournament=tournament)
-        table2 = TabbycatTableBuilder(view=self, title=_("Adjudicators who will not be sent e-mails"), sort_key=_("Name"))
-        table2.add_adjudicator_columns(adjudicators_with_null, hide_institution=True, hide_metadata=True)
-        table2.add_column(_("Email"), [adj.email for adj in adjudicators_with_null])
-        table2.add_column(url_header, [_build_url(adj) for adj in adjudicators_with_null])
-
-        return [table1, table2]
-
-
-class RandomisedUrlsView(RandomisedUrlsMixin, SuperuserRequiredMixin, TemplateView):
+class RandomisedUrlsView(RandomisedUrlsMixin, SuperuserRequiredMixin, VueTableTemplateView):
 
     template_name = 'randomised_urls.html'
-    show_emails = False
+    tables_orientation = 'columns'
+
+    def get_teams_table(self):
+        tournament = self.get_tournament()
+
+        def _build_url(team):
+            if team.url_key is None:
+                return {'text': _("no URL"), 'class': 'text-warning'}
+            path = reverse_tournament('adjfeedback-public-add-from-team-randomised', tournament,
+                kwargs={'url_key': team.url_key})
+            return {'text': self.request.build_absolute_uri(path), 'class': 'small'}
+
+        teams = tournament.team_set.all()
+        table = TabbycatTableBuilder(view=self, title=_("Teams"), sort_key=_("Team"))
+        table.add_team_columns(teams)
+        table.add_column(_("Feedback URL"), [_build_url(team) for team in teams])
+
+        return table
+
+    def get_adjudicators_table(self):
+        tournament = self.get_tournament()
+
+        def _build_url(adjudicator, url_name):
+            if adjudicator.url_key is None:
+                return {'text': _("no URL"), 'class': 'text-warning'}
+            path = reverse_tournament(url_name, tournament, kwargs={'url_key': adjudicator.url_key})
+            return {'text': self.request.build_absolute_uri(path), 'class': 'small'}
+
+        adjudicators = Adjudicator.objects.all() if tournament.pref('share_adjs') else tournament.adjudicator_set.all()
+        table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key=_("Name"))
+        table.add_adjudicator_columns(adjudicators, hide_institution=True, hide_metadata=True)
+        table.add_column(_("Feedback URL"), [_build_url(adj, 'adjfeedback-public-add-from-adjudicator-randomised') for adj in adjudicators])
+        table.add_column(_("Ballot URL"), [_build_url(adj, 'results-public-ballotset-new-randomised') for adj in adjudicators])
+
+        return table
+
+    def get_tables(self):
+        return [self.get_adjudicators_table(), self.get_teams_table()]
 
 
 class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
@@ -287,32 +264,77 @@ class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOn
 
 class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
-    show_emails = True
-    template_name = 'randomised_urls_email_list.html'
     tables_orientation = 'rows'
 
     def get_context_data(self, **kwargs):
         kwargs['url_type'] = self.url_type
+
+        kwargs['adjudicators_no_email'] = self.get_tournament().adjudicator_set.filter(
+            url_key__isnull=False, email__isnull=True
+        ).values_list('name', flat=True)
         return super().get_context_data(**kwargs)
+
+    def get_adjudicators_table(self, url_name, url_header):
+        tournament = self.get_tournament()
+
+        def _build_url(adjudicator):
+            path = reverse_tournament(url_name, tournament, kwargs={'url_key': adjudicator.url_key})
+            return self.request.build_absolute_uri(path)
+
+        adjudicators = Adjudicator.objects.filter(tournament=tournament,
+                url_key__isnull=False, email__isnull=False)
+        title = _("Adjudicators who will be sent e-mails (%(n)s)") % {'n': adjudicators.count()}
+        table = TabbycatTableBuilder(view=self, title=title, sort_key=_("Name"))
+        table.add_adjudicator_columns(adjudicators, hide_institution=True, hide_metadata=True)
+        table.add_column(_("Email"), [adj.email for adj in adjudicators])
+        table.add_column(url_header, [_build_url(adj) for adj in adjudicators])
+
+        return table
 
 
 class EmailBallotUrlsView(BaseEmailRandomisedUrlsView):
 
+    template_name = 'ballot_urls_email_list.html'
     url_type = 'ballot'
 
-    def get_tables(self):
-        return self.get_adjudicators_tables('results-public-ballotset-new-randomised', _("Ballot URL"))
+    def get_table(self):
+        return self.get_adjudicators_table('results-public-ballotset-new-randomised', _("Ballot URL"))
 
 
 class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
 
+    template_name = 'feedback_urls_email_list.html'
     url_type = 'feedback'
 
+    def get_context_data(self, **kwargs):
+        kwargs['speakers_no_email'] = Speaker.objects.filter(team__tournament=self.get_tournament(),
+            team__url_key__isnull=False, email__isnull=True).values_list('name', flat=True)
+        return super().get_context_data(**kwargs)
+
+    def get_speakers_table(self):
+        tournament = self.get_tournament()
+
+        def _build_url(speaker):
+            path = reverse_tournament('adjfeedback-public-add-from-team-randomised', tournament,
+                kwargs={'url_key': speaker.team.url_key})
+            return self.request.build_absolute_uri(path)
+
+        speakers = Speaker.objects.filter(team__tournament=tournament,
+                team__url_key__isnull=False, email__isnull=False)
+        title = _("Speakers who will be sent e-mails (%(n)s)") % {'n': speakers.count()}
+        table = TabbycatTableBuilder(view=self, title=title, sort_key=_("Team"))
+        table.add_speaker_columns(speakers, categories=False)
+        table.add_team_columns([speaker.team for speaker in speakers])
+        table.add_column(_("Email"), [speaker.email for speaker in speakers])
+        table.add_column(_("Feedback URL"), [_build_url(speaker) for speaker in speakers])
+
+        return table
+
     def get_tables(self):
-        speaker_table, speaker_table_null = self.get_speakers_tables()
-        adjudicator_table, adjudicator_table_null = self.get_adjudicators_tables(
+        speaker_table = self.get_speakers_table()
+        adjudicator_table = self.get_adjudicators_table(
                 'adjfeedback-public-add-from-adjudicator-randomised', _("Feedback URL"))
-        return [speaker_table, adjudicator_table, speaker_table_null, adjudicator_table_null]
+        return [speaker_table, adjudicator_table]
 
 
 class BaseConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):

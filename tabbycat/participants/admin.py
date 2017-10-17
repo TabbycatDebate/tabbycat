@@ -63,7 +63,7 @@ class SpeakerCategoryAdmin(admin.ModelAdmin):
 
 class SpeakerInline(admin.TabularInline):
     model = Speaker
-    fields = ('name', 'gender')
+    fields = ('name', 'email', 'gender')
 
 
 class TeamSideAllocationInline(admin.TabularInline):
