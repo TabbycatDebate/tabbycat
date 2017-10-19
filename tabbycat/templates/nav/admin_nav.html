@@ -64,7 +64,7 @@
          class="list-group-item {% if participants_nav %}active{% endif %}" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="user"></i>{% trans "Participants" %}
       </a>
-      <a href="{% tournamenturl 'randomised-urls-view' %}"
+      <a href="{% tournamenturl 'privateurls-list' %}"
          class="list-group-item {% if private_urls_nav %}active{% endif %}"
          data-parent="#rh{{ r.id }}">
         <span class="circle-icon small-circle"></span><i data-feather="link"></i>{% trans "Private URLs" %}

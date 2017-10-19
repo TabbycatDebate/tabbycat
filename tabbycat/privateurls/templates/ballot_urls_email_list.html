@@ -5,7 +5,7 @@
 {% block head-title %}{% trans "Email Private Ballot URLs" %}{% endblock %}
 
 {% block page-subnav-sections %}
-  {% include 'randomised_urls_nav.html' %}
+  {% include 'private_urls_nav.html' %}
 {% endblock page-subnav-sections %}
 
 {% block content %}
@@ -25,7 +25,7 @@
 
   {{ block.super }}
 
-  <form action="{% tournamenturl 'confirm-ballot-urls-send' %}" method="POST" class="mb-3">
+  <form action="{% tournamenturl 'privateurls-email-ballot-send' %}" method="POST" class="mb-3">
     {% csrf_token %}
     <button class="btn btn-success btn-block" type="submit">
       {% trans "Send emails with private ballot URLs to adjudicators" %}

@@ -5,7 +5,7 @@
 {% block head-title %}{% trans "Email Private Feedback URLs" %}{% endblock %}
 
 {% block page-subnav-sections %}
-  {% include 'randomised_urls_nav.html' %}
+  {% include 'private_urls_nav.html' %}
 {% endblock page-subnav-sections %}
 
 {% block content %}
@@ -33,7 +33,7 @@
 
   {{ block.super }}
 
-  <form action="{% tournamenturl 'confirm-feedback-urls-send' %}" method="POST" class="mb-3">
+  <form action="{% tournamenturl 'privateurls-email-feedback-send' %}" method="POST" class="mb-3">
     {% csrf_token %}
     <button class="btn btn-success btn-block" type="submit">
       {% trans "Send emails with private feedback URLs to speakers and adjudicators" %}
