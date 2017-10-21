@@ -2,7 +2,8 @@ from django.core.validators import MinValueValidator
 from django.forms import ValidationError
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
-from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, Section, StringPreference
+from dynamic_preferences.preferences import Section
+from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, StringPreference
 
 from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
