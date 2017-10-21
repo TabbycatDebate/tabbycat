@@ -85,13 +85,13 @@ class TournamentMixin(TabbycatPageTitlesMixin):
         if tournament.current_round_id is None:
             full_path = self.request.get_full_path()
             if hasattr(self.request, 'user') and self.request.user.is_authenticated:
-                logger.error("Current round wasn't set, redirecting to set-current-round page, was looking for %s" % full_path)
+                logger.warning("Current round wasn't set, redirecting to set-current-round page, was looking for %s" % full_path)
                 set_current_round_url = reverse_tournament('tournament-set-current-round', self.get_tournament())
                 redirect_url = add_query_parameter(set_current_round_url, 'next', full_path)
                 return HttpResponseRedirect(redirect_url)
             else:
-                logger.error("Current round wasn't set, redirecting to site index, was looking for %s" % full_path)
-                messages.error(request, _("There's a problem with the data for the tournament "
+                logger.warning("Current round wasn't set, redirecting to site index, was looking for %s" % full_path)
+                messages.warning(request, _("There's a problem with the data for the tournament "
                     "%(tournament_name)s. Please contact a tab director and ask them to set its "
                     "current round.") % {'tournament_name': tournament.name})
                 home_url = reverse('tabbycat-index')
@@ -102,13 +102,13 @@ class TournamentMixin(TabbycatPageTitlesMixin):
             return super().dispatch(request, *args, **kwargs)
         except (MultipleDebateTeamsError, NoDebateTeamFoundError) as e:
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
-                logger.exception("Debate team side assignment error, redirecting to tournament-fix-debate-teams")
-                messages.error(request, _("You've been redirected to this page because of a problem with "
+                logger.warning("Debate team side assignment error, redirecting to tournament-fix-debate-teams")
+                messages.warning(request, _("You've been redirected to this page because of a problem with "
                         "how teams are assigned to sides in a debate."))
                 return redirect_tournament('tournament-fix-debate-teams', tournament)
             else:
-                logger.exception("Debate team side assignment error, redirecting to tournament-public-index")
-                messages.error(request, _("There's a problem with how teams are assigned to sides "
+                logger.warning("Debate team side assignment error, redirecting to tournament-public-index")
+                messages.warning(request, _("There's a problem with how teams are assigned to sides "
                         "in a debate. The tab director will need to resolve this issue."))
                 return redirect_tournament('tournament-public-index', tournament)
 

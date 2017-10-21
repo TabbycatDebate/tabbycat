@@ -71,24 +71,18 @@
       {% endif %}
 
       <div class="form-group">
-        <div class="row">
-          <label for="{{ form.current_round.id_for_label }}">
-            {{ form.current_round.label }}
-          </label>
-          <div class="col-sm-6">
-            {{ form.current_round|addcss:"form-control" }}
-            {{ form.current_round.errors }}
-          </div>
-        </div>
+        <label for="{{ form.current_round.id_for_label }}">
+          {{ form.current_round.label }}
+        </label>
+        {{ form.current_round|addcss:"form-control" }}
+        {{ form.current_round.errors }}
       </div>
 
       <input type="hidden" name="next" value="{{ next }}" />
 
-      <div class="form-group">
-        <button type="submit" class="btn btn-block btn-success form-control">
-          {% trans "Set Current Round" %}
-        </button>
-      </div>
+      <button type="submit" class="btn btn-block btn-success form-control">
+        {% trans "Set Current Round" %}
+      </button>
 
     </form>
 
