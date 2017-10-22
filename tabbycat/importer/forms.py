@@ -3,6 +3,7 @@ import logging
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.utils.translation import ugettext as _
 
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -229,6 +230,11 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
 
     def clean_emails(self):
         emails = self.clean_details('emails')
+        for email in emails:
+            try:
+                validate_email(email)
+            except ValidationError as e:
+                self.add_error('emails', _("An email address is invalid."))
         return emails
 
     def clean_short_reference(self):
