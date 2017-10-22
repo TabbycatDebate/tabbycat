@@ -31,12 +31,13 @@ $.fn.extend({
       }, timeout);
     }
   },
-  loadButton: function(button) {
+  loadButton: function(button, triggeredForm) {
     // Can't use disable attr as some submission button need to pass their value
-    $(button).addClass("disabled");
+    $('button').prop('disabled', true);
+    //$(triggeredForm).submit(); // Resubmit after disabled (to prevent recursion)
   },
   resetButton: function(button) {
-    $(button).removeClass("disabled");
+    $('button').prop('disabled', false);
   }
 });
 
@@ -63,10 +64,30 @@ $(document).ready(function(){
   };
 
   // Auto disable submit buttons for forms upon submission (prevent double-sub)
-  $('form').submit(function(event){
-    $("[type=submit]", this).each(function(){
-      $.fn.loadButton(this);
-    });
+  $('form').submit(function(event) {
+    var triggeredForm = this;
+    var triggeredButton = $("[type=submit]:focus")[0]; // CLicked button
+
+    if ($(triggeredButton).prop('disabled') === undefined ||
+        $(triggeredButton).prop('disabled') === false) {
+      //event.preventDefault(); // Prevent form submission until new field added
+      var submitValue = $(triggeredButton).attr('value');
+      var submitName = $(triggeredButton).attr('name');
+      // Add new dummy field with the button's values
+      // (so they pass through despite disabled state)
+      if (submitValue !== undefined || submitName !== undefined) {
+        $('<input />')
+          .attr('type', 'hidden')
+          .attr('name', submitName)
+          .attr('value', submitValue)
+          .appendTo(triggeredForm);
+      }
+      $.fn.loadButton(triggeredButton, triggeredForm);
+    }
+  });
+  // Auto disable submit buttons for buttons that POST
+  $('.submit-disable').click(function(event){
+    $.fn.loadButton(event.target);
   });
 
 });

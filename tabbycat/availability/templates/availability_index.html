@@ -48,17 +48,17 @@
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% elif checkin_info.teams.in_now == 0 %}
-      <button class="btn btn-danger  disabled"
+      <button class="btn btn-danger disabled"
         data-toggle="tooltip" title="{% trans "The draw cannot be generated until some teams have been checked in." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% elif checkin_info.adjs.in_now == 0 %}
-      <button class="btn btn-danger  disabled"
+      <button class="btn btn-danger disabled"
         data-toggle="tooltip" title="{% trans "The draw cannot be generated until some adjudicators have been checked in." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% elif checkin_info.venues.in_now == 0 %}
-      <button class="btn btn-danger  disabled"
+      <button class="btn btn-danger disabled"
         data-toggle="tooltip" title="{% trans "The draw cannot be generated until some venues have been checked in." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
@@ -83,7 +83,7 @@
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% else %}
-      <button class="btn btn-success " id="createDraw">
+      <button class="btn btn-success" id="createDraw">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% endif %}
@@ -216,10 +216,11 @@
   {{ block.super }}
   <script>
     $(document).ready( function() {
-      $("#createDraw").click( function() {
+      $("#createDraw").click(function(event) {
+        $.fn.loadButton(event.target); // Prevent double submission
         $("#createForm").submit();
         return false;
-      } );
-    } );
+      });
+    });
   </script>
 {% endblock js %}

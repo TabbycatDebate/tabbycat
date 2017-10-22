@@ -8,6 +8,7 @@
 {% block content %}
 
 <form method="POST">
+
   {% csrf_token %}
   {{ wizard.management_form }}
   {{ wizard.form.management_form }}
