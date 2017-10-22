@@ -1,5 +1,7 @@
 from django.contrib import admin, messages
 from django.db.models import Prefetch
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 
 from draw.models import DebateTeam
 
@@ -10,13 +12,12 @@ from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 # Adjudicator Feedback Questions
 # ==============================================================================
 
+@admin.register(AdjudicatorFeedbackQuestion)
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type',
                     'required', 'from_adj', 'from_team')
     list_filter  = ('tournament',)
     ordering     = ('tournament', 'seq')
-
-admin.site.register(AdjudicatorFeedbackQuestion, AdjudicatorFeedbackQuestionAdmin)
 
 
 # ==============================================================================
@@ -52,6 +53,7 @@ class RoundListFilter(admin.SimpleListFilter):
 # Adjudicator Feedbacks
 # ==============================================================================
 
+@admin.register(AdjudicatorFeedback)
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     list_display  = ('adjudicator', 'confirmed', 'score', 'version', 'get_source')
     search_fields = ('adjudicator__name', 'adjudicator__institution__code',
@@ -78,7 +80,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
             return "<ERROR: both source team and source adjudicator>"
         else:
             return obj.source_team or obj.source_adjudicator
-    get_source.short_description = "Source"
+    get_source.short_description = _("Source")
 
     # Dynamically generate inline tables for different answer types
     inlines = []
@@ -88,29 +90,40 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
             {"model": _answer_type_class, "__module__": __name__})
         inlines.append(_inline_class)
 
-    def _construct_message_for_user(self, request, count, action, **kwargs):
-        message_bit = "1 feedback submission was " if count == 1 else "{:d} feedback submissions were ".format(count)
-        self.message_user(request, message_bit + action, **kwargs)
-
     def mark_as_confirmed(self, request, queryset):
         original_count = queryset.count()
         for fb in queryset.order_by('version').all():
             fb.confirmed = True
             fb.save()
         final_count = queryset.filter(confirmed=True).count()
-        self._construct_message_for_user(
-            request, final_count, "marked as confirmed. Note that this may " +
-            "have caused other feedback to be marked as unconfirmed.")
+
+        message = ungettext(
+            "1 feedback submission was marked as confirmed. Note that this may "
+            "have caused other feedback to be marked as unconfirmed.",
+            "%(count)d feedback submissions were marked as confirmed. Note that "
+            "this may have caused other feedback to be marked as unconfirmed.",
+            final_count
+        ) % {'count': final_count}
+        self.message_user(request, message)
+
         difference = original_count - final_count
         if difference > 0:
-            self._construct_message_for_user(
-                request, difference, "not marked as confirmed, probably " +
-                "because other feedback that conflicts with it was also " +
-                "marked as confirmed.", level=messages.WARNING)
+            message = ungettext(
+                "1 feedback submission was not marked as confirmed, probably "
+                "because other feedback that conflicts with it was also marked "
+                "as confirmed.",
+                "%(count)d feedback submissions were not marked as confirmed, "
+                "probably because other feedback that conflicts with it was "
+                "also marked as confirmed.",
+                difference
+            ) % {'count': difference}
+            self.message_user(request, message, level=messages.WARNING)
 
     def mark_as_unconfirmed(self, request, queryset):
         count = queryset.update(confirmed=False)
-        self._construct_message_for_user(request, count,
-                                         "marked as unconfirmed.")
-
-admin.site.register(AdjudicatorFeedback, AdjudicatorFeedbackAdmin)
+        message = ungettext(
+            "1 feedback submission was marked as unconfirmed.",
+            "%(count)d feedback submissions were marked as unconfirmed.",
+            count
+        ) % {'count': count}
+        self.message_user(request, message)
