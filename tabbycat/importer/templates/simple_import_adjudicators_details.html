@@ -7,11 +7,9 @@
 
 {% block content %}
 
-<div class="row">
-  <div class="col-md-12">
+  <div class="mb-3">
     <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
   </div>
-</div>
 
 {% tournamenturl 'options-tournament-section' section='league_options' as options_league_url %}
   {% blocktrans trimmed asvar settings_info with min=pref.adj_min_score max=pref.adj_max_score %}
@@ -21,7 +19,6 @@
     has the "<a href="{{ options_league_url }}" class="alert-link">Share Adjudicators setting</a>" enabled.
   {% endblocktrans %}
 {% include "components/explainer-card.html" with type="info" p1=settings_info %}
-
 
 <form method="POST">
 

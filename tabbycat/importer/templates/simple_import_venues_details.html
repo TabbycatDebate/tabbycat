@@ -7,10 +7,8 @@
 
 {% block content %}
 
-  <div class="row">
-    <div class="col-md-12">
-      <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
-    </div>
+  <div class="mb-3">
+    <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
   </div>
 
   {% blocktrans asvar p1 %}Venues with lower priorities are allocated in the draw last. If you have more venues than you need you can mark the worst venues with a lower priority number"{% endblocktrans %}
