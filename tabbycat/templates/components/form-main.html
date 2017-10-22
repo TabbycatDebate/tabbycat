@@ -6,23 +6,23 @@
     {% include "components/form-errors.html" with errors=form.non_field_errors %}
   {% endif %}
 
-  {% if double or triple %}<div class="row">{% endif %}
+  {% if double or triple or quadruple %}<div class="row">{% endif %}
 
     {% if form.visible_fields %}
 
       {% for field in form.visible_fields %}
-        {% include "components/form-field.html" with double=double %}
+        {% include "components/form-field.html" %}
       {% endfor %}
 
     {% else %}
 
       {% for field in form %}
-        {% include "components/form-field.html" with double=double %}
+        {% include "components/form-field.html" %}
       {% endfor %}
 
     {% endif %}
 
-  {% if double or triple %}</div>{% endif %}
+  {% if double or triple or quadruple %}</div>{% endif %}
 
   <div hidden>
     {% for field in form.hidden_fields %}
